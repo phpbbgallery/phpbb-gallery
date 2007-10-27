@@ -8,6 +8,7 @@
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
+//test the change thing
 class acp_gallery
 {
 	var $u_action;
