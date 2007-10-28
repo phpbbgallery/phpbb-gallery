@@ -27,7 +27,7 @@ $user->setup('mods/gallery');
 //
 include($album_root_path . 'includes/common.'.$phpEx);
 
-$board_config['topics_per_page'] = 15;
+$config['topics_per_page'] = 15;
 
 $start = request_var('start', 0);
 
@@ -78,19 +78,19 @@ $template->assign_vars(array(
 switch( $mode )
 {
 	case 'joined':
-		$order_by = "user_regdate ASC LIMIT $start, " . $board_config['topics_per_page'];
+		$order_by = "user_regdate ASC LIMIT $start, " . $config['topics_per_page'];
 		break;
 	case 'username':
-		$order_by = "username $sort_order LIMIT $start, " . $board_config['topics_per_page'];
+		$order_by = "username $sort_order LIMIT $start, " . $config['topics_per_page'];
 		break;
 	case 'pics':
-		$order_by = "pics $sort_order LIMIT $start, " . $board_config['topics_per_page'];
+		$order_by = "pics $sort_order LIMIT $start, " . $config['topics_per_page'];
 		break;
 	case 'last_pic':
-		$order_by = "last_pic $sort_order LIMIT $start, " . $board_config['topics_per_page'];
+		$order_by = "last_pic $sort_order LIMIT $start, " . $config['topics_per_page'];
 		break;
 	default:
-		$order_by = "user_regdate $sort_order LIMIT $start, " . $board_config['topics_per_page'];
+		$order_by = "user_regdate $sort_order LIMIT $start, " . $config['topics_per_page'];
 		break;
 }
 
@@ -199,12 +199,12 @@ if ($total = $db->sql_fetchrow($result))
 {
 	$total_galleries = $total['total'];
 
-	$pagination = generate_pagination("album_personal_index.$phpEx?mode=$mode&amp;order=$sort_order", $total_galleries, $board_config['topics_per_page'], $start);
+	$pagination = generate_pagination("album_personal_index.$phpEx?mode=$mode&amp;order=$sort_order", $total_galleries, $config['topics_per_page'], $start);
 }
 
 $template->assign_vars(array(
 	'PAGINATION' => $pagination,
-	'PAGE_NUMBER' => sprintf($user->lang['PAGE_OF'], ( floor( $start / $board_config['topics_per_page'] ) + 1 ), ceil( $total_galleries / $board_config['topics_per_page'] ))
+	'PAGE_NUMBER' => sprintf($user->lang['PAGE_OF'], ( floor( $start / $config['topics_per_page'] ) + 1 ), ceil( $total_galleries / $config['topics_per_page'] ))
 	)
 );
 

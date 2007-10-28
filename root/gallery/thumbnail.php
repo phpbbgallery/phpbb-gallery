@@ -130,7 +130,7 @@ if (($album_config['hotlink_prevent'] == 1) && (isset($HTTP_SERVER_VARS['HTTP_RE
 		$good_referers = explode(',', $album_config['hotlink_allowed']);
 	}
 
-	$good_referers[] = $board_config['server_name'] . $board_config['script_path'];
+	$good_referers[] = $config['server_name'] . $config['script_path'];
 
 	$errored = TRUE;
 
