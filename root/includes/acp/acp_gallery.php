@@ -243,7 +243,7 @@ class acp_gallery
 				);
 		
 				// Get the list of phpBB usergroups
-				$sql = "SELECT group_id, group_name
+				$sql = "SELECT group_id, group_name, group_type
 						FROM " . GROUPS_TABLE . "
 						ORDER BY group_name ASC";
 				$result = $db->sql_query($sql);
@@ -274,7 +274,7 @@ class acp_gallery
 				{
 					$template->assign_block_vars('grouprow', array(
 						'GROUP_ID' => $groupdata[$i]['group_id'],
-						'GROUP_NAME' => $groupdata[$i]['group_name'],
+						'GROUP_NAME' => ($groupdata[$i]['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $groupdata[$i]['group_name']] : $groupdata[$i]['group_name'],
 		
 						'VIEW_CHECKED' => (in_array($groupdata[$i]['group_id'], $view_groups)) ? 'checked="checked"' : '',
 		

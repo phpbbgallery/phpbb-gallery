@@ -79,7 +79,7 @@ for ($i = 0; $i < count($catrows); $i++)
 	if( $catrows[$i]['cat_moderator_groups'] != '')
 	{
 		// We have usergroup_ID, now we need usergroup name
-		$sql = "SELECT group_id, group_name
+		$sql = "SELECT group_id, group_name, group_type
 				FROM " . GROUPS_TABLE . "
 				WHERE group_type <> " . GROUP_HIDDEN . "
 					AND group_id IN (". $catrows[$i]['cat_moderator_groups'] .")
@@ -98,7 +98,8 @@ for ($i = 0; $i < count($catrows); $i++)
 
 		for ($j = 0; $j < count($grouprows); $j++)
 		{
-			$group_link = '<a href="'. append_sid("{$phpbb_root_path}memberlist.$phpEx?mode=group&g=" . $grouprows[$j]['group_id']) . '">' . $grouprows[$j]['group_name'] . '</a>';
+			$group_name = ($grouprows[$j]['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $grouprows[$j]['group_name']] : $grouprows[$j]['group_name'];
+			$group_link = '<a href="'. append_sid("{$phpbb_root_path}memberlist.$phpEx?mode=group&g=" . $grouprows[$j]['group_id']) . '">' . $group_name . '</a>';
 
 			$moderators_list .= ($moderators_list == '') ? $group_link : ', ' . $group_link;
 		}
