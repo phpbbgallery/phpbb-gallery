@@ -42,12 +42,13 @@ $user_id = request_var('user_id', $user->data['user_id']);
 // Check $user_id
 // ------------------------------------
 
-if ($user_id == $user->data['user_id'])
+if(!$user->data['is_registered'])
 {
-	if(!$user->data['is_registered'] || $user->data['is_bot'])
-	{
-		login_box("gallery/album_personal.$phpEx", $user->lang['LOGIN_EXPLAIN_PERSONAL_GALLERY']);
-	}
+   if ($user->data['is_bot'])
+   {
+      redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
+   }
+   login_box("gallery/album_personal.$phpEx", $user->lang['LOGIN_EXPLAIN_PERSONAL_GALLERY']);
 }
 
 
