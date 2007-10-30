@@ -433,9 +433,21 @@ class acp_gallery
 			}
 			// Here we insert a new row into the db
 			/**/
-			$sql = "INSERT INTO " . ALBUM_CAT_TABLE . " (cat_title, cat_desc, cat_desc_bbcode_uid, cat_desc_bbcode_bitfield, cat_order, cat_view_level, cat_upload_level, cat_rate_level, cat_comment_level, cat_edit_level, cat_delete_level, cat_approval)
-					VALUES ('" . $db->sql_escape($cat_title) . "', '" . $db->sql_escape($message_parser->message) . "', '" . $db->sql_escape($message_parser->bbcode_uid) . "', '" . $db->sql_escape($message_parser->bbcode_bitfield) . "', '" . $db->sql_escape($cat_order) . "', '" . $db->sql_escape($view_level) . "', '" . $db->sql_escape($upload_level) . "', '" . $db->sql_escape($rate_level) . "', '" . $db->sql_escape($comment_level) . "', '" . $db->sql_escape($edit_level) . "', '" . $db->sql_escape($delete_level) . "', '" . $db->sql_escape($cat_approval) . "')";
-			$result = $db->sql_query($sql);
+			$sql_ary = array(
+				'cat_title'				=> $cat_title,
+				'cat_desc'				=> $message_parser->message,
+				'cat_desc_bbcode_uid'	=> $message_parser->bbcode_uid,
+				'cat_desc_bbcode_bitfield'	=> $message_parser->bbcode_bitfield,
+				'cat_order'				=> $cat_order,
+				'cat_view_level'		=> $view_level,
+				'cat_upload_level'		=> $upload_level,
+				'cat_rate_level'		=> $rate_level,
+				'cat_comment_level'		=> $comment_level,
+				'cat_edit_level'		=> $edit_level,
+				'cat_delete_level'		=> $delete_level,
+				'cat_approval'			=> $cat_approval,
+			);
+			$db->sql_query('INSERT INTO ' . ALBUM_CAT_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 
 			// Return a message...
 			//$message = $user->lang['NEW_CATEGORY_CREATED'] . "<br /><br />" . sprintf($user->lang['Click_return_album_category'], "<a href=\"" . append_sid("admin_album_cat.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
@@ -563,11 +575,22 @@ class acp_gallery
 			$message_parser->parse(true, true, true, true, false, true, true, true);
 			// Now we update this row
 			/**/
-			$sql = "UPDATE ". ALBUM_CAT_TABLE ."
-					SET cat_title = '" . $db->sql_escape($cat_title) . "', cat_desc = '" . $db->sql_escape($message_parser->message) . "', cat_desc_bbcode_uid = '" . $db->sql_escape($message_parser->bbcode_uid) . "', cat_desc_bbcode_bitfield = '" . $db->sql_escape($message_parser->bbcode_bitfield) . "', cat_view_level = '" . $db->sql_escape($view_level) . "', cat_upload_level = '" . $db->sql_escape($upload_level) . "', cat_rate_level = '" . $db->sql_escape($rate_level) . "', cat_comment_level = '" . $db->sql_escape($comment_level) . "', cat_edit_level = '" . $db->sql_escape($edit_level) . "', cat_delete_level = '" . $db->sql_escape($delete_level) . "', cat_approval = '" . $db->sql_escape($cat_approval) . "'
-					WHERE cat_id = '$cat_id'";
-			$result = $db->sql_query($sql);
-	
+			$sql_ary = array(
+				'cat_title'				=> $cat_title,
+				'cat_desc'				=> $message_parser->message,
+				'cat_desc_bbcode_uid'	=> $message_parser->bbcode_uid,
+				'cat_desc_bbcode_bitfield'	=> $message_parser->bbcode_bitfield,
+				//'cat_order'			=> $cat_order,
+				'cat_view_level'		=> $view_level,
+				'cat_upload_level'		=> $upload_level,
+				'cat_rate_level'		=> $rate_level,
+				'cat_comment_level'		=> $comment_level,
+				'cat_edit_level'		=> $edit_level,
+				'cat_delete_level'		=> $delete_level,
+				'cat_approval'			=> $cat_approval,
+			);
+			$db->sql_query('UPDATE ' . ALBUM_CAT_TABLE . ' ' . $db->sql_build_array('UPDATE', $sql_ary));
+
 			// Return a message...
 			//$message =  . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_ALBUM'], "<a href=\"" . append_sid("admin_album_cat.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 			
