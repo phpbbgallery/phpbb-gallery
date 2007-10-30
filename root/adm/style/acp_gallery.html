@@ -1,6 +1,30 @@
 <!-- INCLUDE overall_header.html -->
+<!-- IF S_MANAGE_ALBUMS -->
+<h1>{L_ACP_GALLERY_MANAGE_ALBUMS}</h1>
+<p>{L_ACP_MANAGE_ALBUMS_EXPLAIN}</p>
+<!-- ELSEIF S_CREATE_ALBUM2 -->
+<h1>{L_ACP_EDIT_ALBUM_TITLE}</h1>
+<p>{L_ACP_EDIT_ALBUM_EXPLAIN}</p>
+<!-- ELSEIF S_CREATE_ALBUM -->
+<h1>{L_ACP_CREATE_ALBUM_TITLE}</h1>
+<p>{L_ACP_CREATE_ALBUM_EXPLAIN}</p>
+<!-- ELSEIF S_DELETE_ALBUM -->
+<h1>{L_DELETE_ALBUM}</h1>
+<p>{L_DELETE_ALBUM_EXPLAIN}</p>
+<!-- ELSEIF S_CONFIGURE_GALLERY -->
 <h1>{L_GALLERY_CONFIG}</h1>
 <p>{L_GALLERY_CONFIG_EXPLAIN}</p>
+<!-- ELSEIF S_ALBUM_PERMISSIONS_SELECT_ALBUM -->
+<h1>{L_ALBUM_AUTH_TITLE}</h1>
+<p>{L_ALBUM_AUTH_TITLE_EXPLAIN}</p>
+<!-- ELSEIF S_ALBUM_PERMISSIONS_SELECT_GROUPS -->
+<h1>{L_ALBUM_AUTH_TITLE}</h1>
+<p>{L_ALBUM_AUTH_EXPLAIN}</p>
+<!-- ELSEIF S_GALLERY_OVERVIEW -->
+<h1>{L_ACP_GALLERY_OVERVIEW}</h1>
+<p>{L_ACP_GALLERY_OVERVIEW_EXPLAIN}</p>
+<!-- ENDIF -->
+
 
 <!-- IF S_MANAGE_ALBUMS -->
 <table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline">
@@ -279,7 +303,7 @@
 <form action="{S_ALBUM_ACTION}" method="post">
 <table width="50%" align="center" cellpadding="3" cellspacing="1" border="0" class="forumline">
 	<tr>
-		<th class="thHead" colspan="2" height="28">{L_SELECT_CAT}</th>
+		<th class="thHead" colspan="2" height="28">{L_SELECT_A_ALBUM}</th>
 	</tr>
 	<tr>
 		<td class="row1" height="25">
@@ -289,7 +313,7 @@
 				<!-- END catrow -->
 			</select>
 		</td>
-		<td class="row1" width="100%" align="center"><input name="submit" type="submit" value="{L_LOOK_UP_CAT}" class="liteoption" /></td>
+		<td class="row1" width="100%" align="center"><input name="submit" type="submit" value="{L_LOOK_UP_ALBUM}" class="liteoption" /></td>
 	</tr>
 </table>
 </form>
