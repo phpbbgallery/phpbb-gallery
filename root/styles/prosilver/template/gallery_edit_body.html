@@ -1,0 +1,71 @@
+<!-- INCLUDE overall_header.html -->
+
+<script language="JavaScript" type="text/javascript">
+<!--
+function checkAlbumForm() {
+	formErrors = false;
+
+	if (document.editform.pic_title.value.length < 2)
+	{
+		formErrors = "{L_UPLOAD_NO_TITLE}";
+	}
+	else if (document.editform.pic_desc.value.length > {S_PIC_DESC_MAX_LENGTH})
+	{
+		formErrors = "{L_DESC_TOO_LONG}";
+	}
+
+	if (formErrors)
+	{
+		alert(formErrors);
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+// -->
+</script>
+
+<h2><a href="#">{PIC_TITLE}</a></h2>
+
+<form name="editform" action="{S_ALBUM_ACTION}" method="post" onsubmit="return checkAlbumForm()">
+
+<div class="panel" id="postingbox">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<h3>{L_EDIT_PIC_INFO}</h3>
+		<fieldset>
+			<dl>
+				<dt><label for="title">{L_PIC_TITLE}:</label></dt>
+				<dd><input class="inputbox autowidth" type="text" name="pic_title" size="60" value="{PIC_TITLE}" /></dd>
+			</dl>
+			<dl>
+				<dt><label for="description">{L_PIC_DESC}:</label><br />{L_PLAIN_TEXT_ONLY}<br />{L_MAX_LENGTH}: <b>{S_PIC_DESC_MAX_LENGTH}</b></dt>
+				<dd><textarea class="inputbox" cols="60" rows="4" name="pic_desc" size="60">{PIC_DESC}</textarea></dd>
+			</dl>
+		</fieldset>
+		
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+
+<div class="panel bg2">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<fieldset class="submit-buttons">
+			<input type="reset" accesskey="r" tabindex="8" value="{L_RESET}" class="button2" />&nbsp;
+			<input type="submit" accesskey="s" tabindex="6" name="submit" value="{L_SUBMIT}" class="button1" />&nbsp;
+		</fieldset>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+
+</form>
+
+<br />
+
+<!-- Please keep this little notice visible -->
+<div class="copyright">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a></div>
+
+<!-- INCLUDE overall_footer.html -->

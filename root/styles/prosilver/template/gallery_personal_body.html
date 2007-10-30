@@ -1,0 +1,120 @@
+<!-- INCLUDE overall_header.html -->
+
+<!-- IF U_MCP --><p>[&nbsp;<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</p><!-- ENDIF -->
+<h2><a href="{U_PERSONAL_GALLERY}">{L_PERSONAL_GALLERY_OF_USER}</a></h2>
+
+<!-- IF FORUM_DESC or MODERATORS or U_MCP -->
+<p>
+	<!-- NOTE: remove the style="display: none" when you want to have the forum description on the forum body -->
+	<!-- IF FORUM_DESC --><span style="display: none">{FORUM_DESC}<br /></span><!-- ENDIF -->
+	<!-- IF MODERATORS --><strong><!-- IF S_SINGLE_MODERATOR -->{L_MODERATOR}<!-- ELSE -->{L_MODERATORS}<!-- ENDIF -->:</strong> {MODERATORS}<!-- ENDIF -->
+</p>
+<!-- ENDIF -->
+<br />
+<div class="topic-actions">
+	<!-- IF S_YOUR_PERSONAL_GALLERY -->
+	<div class="buttons">
+		<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span>{L_UPLOAD_PIC}</span></a></div>
+	</div>
+	<!-- ENDIF -->
+	<div class="pagination">
+		{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+	</div>
+</div>
+
+<div class="forumbg">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="icon">
+					<dt>{L_PERSONAL_GALLERY_OF_USER}</dt>
+				</dl>
+			</li>
+		</ul>
+		<ul class="topiclist topics">
+			<li class="bg2">		
+				<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline">
+					<!-- BEGIN no_pics -->
+					<tr>
+						<td class="row1" align="center" height="50"><span class="gen">{L_PERSONAL_ALBUM_NOT_CREATED}</span></td>
+					</tr>
+					<!-- END no_pics -->
+					<!-- BEGIN picrow -->
+					<tr>
+						<!-- BEGIN piccol -->
+						<td align="center" width="{S_COL_WIDTH}" class="row1"><span class="genmed"><a href="{picrow.piccol.U_PIC}" {TARGET_BLANK}><img src="{picrow.piccol.THUMBNAIL}" border="0" alt="{picrow.piccol.DESC}" title="{picrow.piccol.DESC}" vspace="10" /></a></span></td>
+						<!-- END piccol -->
+						<!-- BEGIN nopiccol --> 
+						<td align="center" width="{S_COL_WIDTH}" class="row1">&nbsp;</span></td> 
+						<!-- END nopiccol -->
+					</tr>
+					<tr>
+						<!-- BEGIN pic_detail -->
+						<td class="row2">
+							<span class="gensmall">
+								{L_PIC_TITLE}: {picrow.pic_detail.TITLE}<br />
+								{L_POSTED}: {picrow.pic_detail.TIME}<br />
+								{L_VIEW}: {picrow.pic_detail.VIEW}<br />
+								{picrow.pic_detail.RATING}
+								{picrow.pic_detail.COMMENTS}
+								{picrow.pic_detail.IP}
+								{picrow.pic_detail.EDIT}  {picrow.pic_detail.DELETE}  {picrow.pic_detail.LOCK}
+							</span>
+						</td>
+						<!-- END pic_detail -->
+						<!-- BEGIN picnodetail --> 
+						<td class="row2">&nbsp;</td> 
+						<!-- END picnodetail -->
+					</tr>
+					<!-- END picrow -->
+				</table>
+			</li>
+		</ul>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+
+<form action="{U_PERSONAL_GALLERY}" method="post">
+<fieldset class="display-options">
+	<label>{L_SELECT_SORT_METHOD}: 
+		<select name="sort_method">
+			<option {SORT_TIME} value='pic_time'>{L_TIME}</option>
+			<option {SORT_PIC_TITLE} value='pic_title'>{L_PIC_TITLE}</option>
+			<option {SORT_VIEW} value='pic_view_count'>{L_VIEW}</option>
+			{SORT_RATING_OPTION}
+			{SORT_COMMENTS_OPTION}
+			{SORT_NEW_COMMENT_OPTION}
+		</select>
+	</label>
+	<label>{L_ORDER}: 
+		<select name="sort_order">
+			<option {SORT_ASC} value='ASC'>{L_ASC}</option>
+			<option {SORT_DESC} value='DESC'>{L_DESC}</option>
+		</select> <input type="submit" name="sort" value="{L_SORT}" class="button2" />
+	</label>
+</fieldset>
+</form>
+<hr />
+<div class="topic-actions">
+	<!-- IF S_YOUR_PERSONAL_GALLERY -->
+	<div class="buttons">
+		<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span>{L_UPLOAD_PIC}</span></a></div>
+	</div>
+	<!-- ENDIF -->
+	<div class="pagination">
+		{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+	</div>
+</div>
+<br />
+{ALBUM_JUMPBOX}
+
+<!-- IF S_DISPLAY_ONLINE_LIST -->
+	<h3><a href="{U_VIEWONLINE}">{L_WHO_IS_ONLINE}</a></h3>
+	<p>{LOGGED_IN_USER_LIST}</p>
+<!-- ENDIF -->
+
+<!-- Please keep this little notice visible -->
+<div class="copyright">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a></div>
+
+<!-- INCLUDE overall_footer.html -->

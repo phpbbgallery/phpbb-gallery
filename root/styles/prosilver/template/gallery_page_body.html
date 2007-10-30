@@ -1,0 +1,193 @@
+<!-- INCLUDE overall_header.html -->
+
+<script type="text/javascript">
+<!--
+function checkRateForm() {
+	if (document.rateform.rate.value == -1)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+function checkCommentForm() {
+	formErrors = false;
+
+	if (document.commentform.comment.value.length < 2)
+	{
+		formErrors = "{L_COMMENT_NO_TEXT}";
+	}
+	else if (document.commentform.comment.value.length > {S_MAX_LENGTH})
+	{
+		formErrors = "{L_COMMENT_TOO_LONG}";
+	}
+
+	if (formErrors) {
+		alert(formErrors);
+		return false;
+	} else {
+		return true;
+	}
+}
+// -->
+</script>
+
+<h2><a href="#">{PIC_TITLE}</a></h2>
+
+<div class="post bg2">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<div style="text-align: center; padding: 20px;"><img src="{U_PIC}" border="0" vspace="10" alt="{PIC_TITLE}" title="{PIC_TITLE}" /></div>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+
+<h3>{L_DETAILS}</h3>
+<br />
+<div class="post bg2">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<fieldset class="fields1">
+			<dl>
+				<dt><label>{L_POSTER}:</label></dt>
+				<dd>{POSTER}</dd>
+			</dl>
+			<dl>
+				<dt><label>{L_PIC_TITLE}:</label></dt>
+				<dd>{PIC_TITLE}</dd>
+			</dl>
+			<dl>
+				<dt><label>{L_PIC_DESC}:</label></dt>
+				<dd>{PIC_DESC}</dd>
+			</dl>
+			<dl>
+				<dt><label>{L_POSTED}:</label></dt>
+				<dd>{PIC_TIME}</dd>
+			</dl>
+			<dl>
+				<dt><label>{L_VIEW}:</label></dt>
+				<dd>{PIC_VIEW}</dd>
+			</dl>
+		</fieldset>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+
+<!-- IF L_RATING -->
+<a name="rating"></a>
+<h3>{L_RATING}</h3>
+<br />
+<div class="post bg2">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<fieldset class="fields1">
+			<dl>
+				<dt><label>{L_RATING}:</label></dt>
+				<dd>{PIC_RATING}</dd>
+			</dl>
+			<!-- IF L_YOUR_RATING -->
+			<dl>
+				<dt><label>{L_YOUR_RATING}:</label></dt>
+				<dd>{S_RATEBOX}</dd>
+			</dl>
+			<!-- ENDIF -->
+		</fieldset>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+<!-- ENDIF -->
+
+<!-- IF L_COMMENTS -->
+<!-- IF L_POST_COMMENT -->
+<a name="rating"></a>
+<h3>{L_POST_COMMENT}</h3>
+<br />
+<form name="commentform" action="{S_ALBUM_ACTION}" method="post" onsubmit="return checkCommentForm;">
+<div class="post bg2">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<fieldset class="fields1">
+			<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT and S_CAN_COMMENT -->
+			<dl>
+				<dt><label>{L_USERNAME}:</label></dt>
+				<dd><input class="inputbox autowidth" type="text" name="comment_username" size="60" maxlength="32" /></dd>
+			</dl>
+			<!-- ENDIF -->
+			<dl>
+				<dt><label>{L_YOUR_COMMENT}:</label></dt>
+				<dd>{S_COMMENTBOX}</dd>
+			</dl>
+		</fieldset>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+</form>
+
+<!-- ENDIF -->
+<a name="comments"></a>
+<h3>{L_COMMENTS}</h3>
+<!-- IF L_NO_COMMENTS -->
+<div class="post bg2">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<fieldset class="fields1">
+			<dl>
+				<dt><label>{L_COMMENTS}:</label></dt>
+				<dd>{L_NO_COMMENTS}</dd>
+			</dl>
+		</fieldset>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+<!-- ELSE -->
+<div class="topic-actions">
+	<!--div class="buttons">
+		<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span>{L_UPLOAD_PIC}</span></a></div>
+	</div-->
+	<div class="pagination">
+		{PIC_COMMENTS} {L_COMMENTS} &bull; {PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+	</div>
+</div>
+<!-- BEGIN commentrow -->
+<a name="{commentrow.ID}"></a>
+<div class="post {commentrow.S_ROW_STYLE}">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<div class="postbody">
+			<p class="author"><a href="#"><img src="../styles/prosilver/imageset/icon_post_target.gif" width="11" height="9" alt="{L_COMMENT}" title="{L_COMMENT}" /></a>by <strong>{commentrow.POSTER}</strong> on {commentrow.TIME} </p>
+			<div class="content">{commentrow.TEXT}</div>
+			{commentrow.EDIT_INFO}
+			<!--span class="genmed">{commentrow.IP}<br /><b>{commentrow.EDIT}&nbsp;{commentrow.DELETE}</b></span-->
+		</div>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+<!-- END commentrow -->
+
+<form action="{S_ALBUM_ACTION}" method="post">
+<fieldset class="display-options" style="margin-top: 0; ">
+	<label>{L_ORDER}: <select name="sort_order"><option {SORT_ASC} value='ASC'>{L_ASC}</option><option {SORT_DESC} value='DESC'>{L_DESC}</option></select>&nbsp;<input type="submit" name="submit" value="{L_GO}" class="button2" /></label>
+</fieldset>
+</form>
+<hr />
+
+
+<div class="topic-actions">
+	<!--div class="buttons">
+		<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span>{L_UPLOAD_PIC}</span></a></div>
+	</div-->
+	<div class="pagination">
+		{PIC_COMMENTS} {L_COMMENTS} &bull; {PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+	</div>
+</div>
+<!-- ENDIF -->
+<!-- ENDIF -->
+<!--a href="{U_PREVIOUS}" class="cattitle">{L_PREVIOUS}</a>&nbsp;&nbsp;<a href="{U_NEXT}" class="cattitle">{L_NEXT}</a-->
+
+<!-- Please keep this little notice visible -->
+<div class="copyright">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a></div>
+
+<!-- INCLUDE overall_footer.html -->
