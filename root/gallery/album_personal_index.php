@@ -162,29 +162,26 @@ for ($i = 0; $i < count($memberrow); $i++)
 */
 
 	if(!isset($album_config['last_pic_title_length'])) 
-	{ 
+	{
 		$album_config['last_pic_title_length'] = 25; 
-	} 
+	}
 	$pic_title_full = $pic_title; 
 	if (strlen($pic_title) > $album_config['last_pic_title_length']) 
-	{ 
+	{
 		$pic_title = substr($pic_title, 0, $album_config['last_pic_title_length']) . '...'; 
-	} 
-	
+	}
 	$last_pic_info = $user->lang['IMAGE_TITLE'] . ': <a href="'; 
-	
-	$last_pic_info .= ($album_config['fullpic_popup']) ? append_sid("album_pic.$phpEx?pic_id=". $pic_id) .'" title="' . $pic_title_full . '" target="_blank">' : append_sid("album_page.$phpEx?pic_id=". $pic_id) .'" title="' . $pic_title_full . '">'; 
-	
+	$last_pic_info .= ($album_config['fullpic_popup']) ? append_sid("image_page.$phpEx?pic_id=". $pic_id) .'" title="' . $pic_title_full . '">' : append_sid("image_page.$phpEx?pic_id=". $pic_id) .'" title="' . $pic_title_full . '">'; 
 	$last_pic_info .= $pic_title . '</a><br />' . $user->lang['POSTED_ON_DATE'] . ' ' . $user->format_date($memberrow[$i]['pic_time']);
-	
-	$template->assign_block_vars('memberrow', array( 
-		'ROW_CLASS' => ( !($i % 2) ) ? 'bg1' : 'bg2', 
-		'USERNAME' => $memberrow[$i]['username'], 
-		'U_VIEWGALLERY' => append_sid("album_personal.$phpEx?user_id=". $memberrow[$i]['user_id']), 
+
+	$template->assign_block_vars('memberrow', array(
+		'ROW_CLASS' => ( !($i % 2) ) ? 'bg1' : 'bg2',
+		'USERNAME' => $memberrow[$i]['username'],
+		'U_VIEWGALLERY' => append_sid("album_personal.$phpEx?user_id=". $memberrow[$i]['user_id']),
 		'JOINED' => $user->format_date($memberrow[$i]['user_regdate']),
 		'LAST_PIC' => $last_pic_info,
-		'PICS' => $pic_number) 
-	); 
+		'PICS' => $pic_number,
+	));
 }
 
 $sql = "SELECT COUNT(DISTINCT u.user_id) AS total
