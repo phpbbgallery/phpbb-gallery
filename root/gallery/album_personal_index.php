@@ -28,11 +28,8 @@ $user->setup('mods/gallery');
 include($album_root_path . 'includes/common.'.$phpEx);
 
 $config['topics_per_page'] = 15;
-
 $start = request_var('start', 0);
-
 $mode = request_var('mode', 'joined');
-
 $sort_order = request_var('order', 'ASC');
 
 //
