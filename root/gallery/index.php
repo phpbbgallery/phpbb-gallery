@@ -316,6 +316,7 @@ $template->assign_vars(array(
 	'U_USERS_PERSONAL_GALLERIES' => append_sid("album_personal_index.$phpEx"),
 	'L_USERS_PERSONAL_GALLERIES' => $user->lang['USERS_PERSONAL_ALBUMS'],
 
+	'S_LOGIN_ACTION'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login'),
 	'S_COLS' => $album_config['cols_per_page'],
 	'S_COL_WIDTH' => (100/$album_config['cols_per_page']) . '%',
 	'TARGET_BLANK' => ($album_config['fullpic_popup']) ? 'target="_blank"' : '',
