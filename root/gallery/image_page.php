@@ -639,15 +639,31 @@ if ($album_config['comment'])
 	}
 }
 
+// Build the navigation
 $template->assign_block_vars('navlinks', array(
-	'FORUM_NAME'	=> $user->lang['GALLERY'],
-	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"))
-);
+	'FORUM_NAME'   => $user->lang['GALLERY'],
+	'U_VIEW_FORUM'   => append_sid("{$album_root_path}index.$phpEx"),
+		));
 
-$template->assign_block_vars('navlinks', array(
-	'FORUM_NAME'	=> $thiscat['cat_title'],
-	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']))
-);
+if ($cat_id != PERSONAL_GALLERY)
+{
+   $template->assign_block_vars('navlinks', array(
+		'FORUM_NAME'   => $thiscat['cat_title'],
+		'U_VIEW_FORUM'   => append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']),
+		));
+}
+else
+{
+	$template->assign_block_vars('navlinks', array(
+		'FORUM_NAME'   => $user->lang['PERSONAL_ALBUMS'],
+		'U_VIEW_FORUM'   => append_sid("{$album_root_path}album_personal_index.$phpEx"),
+		));
+
+	$template->assign_block_vars('navlinks', array(
+		'FORUM_NAME'   => sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $poster),
+		'U_VIEW_FORUM'   => append_sid("{$album_root_path}album_personal.$phpEx", 'user_id=' . $user_id),
+		));
+}
 
 // Output page
 $page_title = $user->lang['VIEW_IMAGE'];
