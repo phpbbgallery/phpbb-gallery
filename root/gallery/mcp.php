@@ -35,27 +35,24 @@ include($album_root_path . 'includes/common.'.$phpEx);
 // ------------------------------------
 
 $pic_id = request_var('pic_id', 0);
+$cat_id = request_var('cat_id', 0);
 
-if($pic_id)
+if($pic_id <> 0)
 {
-	$sql = "SELECT *
-			FROM ". ALBUM_TABLE ."
-			WHERE pic_id = '$pic_id'";
+	$sql = 'SELECT *
+			FROM ' . ALBUM_TABLE . '
+			WHERE pic_id = ' . $pic_id;
 	$result = $db->sql_query($sql);
+
 	$thispic = $db->sql_fetchrow($result);
+
 	if( empty($thispic) )
 	{
 		trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_WARNING);
 	}
+
 	$cat_id = $thispic['pic_cat_id'];
 	$user_id = $thispic['pic_user_id'];
-}
-else
-{
-	if(!$cat_id = request_var('cat_id', 0))
-	{
-		trigger_error($user->lang['NO_ALBUM_SPECIFIED'], E_USER_WARNING);
-	}
 }
 
 
