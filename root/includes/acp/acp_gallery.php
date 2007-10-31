@@ -610,7 +610,11 @@ class acp_gallery
 				'cat_approval'			=> $cat_approval,
 			);
 			
-			$db->sql_query('UPDATE ' . ALBUM_CAT_TABLE . ' ' . $db->sql_build_array('UPDATE', $sql_ary));
+			$sql = 'UPDATE ' . ALBUM_CAT_TABLE . ' 
+					SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+					WHERE cat_id  = ' . (int) $cat_id;
+
+			$db->sql_query($sql);
 
 			// Return a message...
 			//$message =  . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_ALBUM'], "<a href=\"" . append_sid("admin_album_cat.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
