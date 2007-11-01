@@ -32,19 +32,25 @@ include($album_root_path . 'includes/common.'.$phpEx);
 // Check the request
 // ------------------------------------
 
-if(!$pic_id = request_var('id', 0))
+$pic_id = request_var('id', 0);
+
+if( $pic_id == 0)
 {
 	trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
 }
 
+// ------------------------------------
+// Salting the form...yumyum ...
+// ------------------------------------
+add_form_key('image_delete');
 
 // ------------------------------------
 // Get this pic info
 // ------------------------------------
 
-$sql = "SELECT *
-		FROM ". ALBUM_TABLE ."
-		WHERE pic_id = '$pic_id'";
+$sql = 'SELECT *
+		FROM ' . ALBUM_TABLE . '
+		WHERE pic_id = ' . $pic_id;
 $result = $db->sql_query($sql);
 
 $thispic = $db->sql_fetchrow($result);
@@ -65,11 +71,11 @@ if(empty($thispic))
 // Get the current Category Info
 // ------------------------------------
 
-if ($cat_id != PERSONAL_GALLERY)
+if ($cat_id <> PERSONAL_GALLERY)
 {
-	$sql = "SELECT *
-			FROM ". ALBUM_CAT_TABLE ."
-			WHERE cat_id = '$cat_id'";
+	$sql = 'SELECT *
+			FROM ' . ALBUM_CAT_TABLE . '
+			WHERE cat_id = ' . $cat_id;
 	$result = $db->sql_query($sql);
 
 	$thiscat = $db->sql_fetchrow($result);
@@ -93,9 +99,13 @@ $album_user_access = album_user_access($cat_id, $thiscat, 0, 0, 0, 0, 0, 1); // 
 
 if ($album_user_access['delete'] == 0)
 {
-	if (!$user->data['is_registered'] || $user->data['is_bot'])
+	if (!$user->data['is_registered'])
 	{
-		login_box("gallery/image_delete.$phpEx?id=$pic_id");
+		if ($user->data['is_bot'])
+		{
+			redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
+		}
+		login_box("gallery/image_delete.$phpEx?id=$pic_id", $user->lang['LOGIN_INFO']);
 	}
 	else
 	{
@@ -104,9 +114,9 @@ if ($album_user_access['delete'] == 0)
 }
 else
 {
-	if ((!$album_user_access['moderator']) && ($user->data['user_type'] != USER_FOUNDER))
+	if ((!$album_user_access['moderator']) && ($user->data['user_type'] <> USER_FOUNDER))
 	{
-		if ($thispic['pic_user_id'] != $user->data['user_id'])
+		if ($thispic['pic_user_id'] <> $user->data['user_id'])
 		{
 			trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 		}
@@ -140,14 +150,14 @@ if(!isset($_POST['confirm']))
 	}
 	
 	$template->assign_vars(array(
-		'MESSAGE_TITLE' => $user->lang['CONFIRM'],
+		'MESSAGE_TITLE' 	=> $user->lang['CONFIRM'],
 
-		'MESSAGE_TEXT' => $user->lang['ALBUM_DELETE_CONFIRM'],
+		'MESSAGE_TEXT' 		=> $user->lang['ALBUM_DELETE_CONFIRM'],
 
-		'L_NO' => $user->lang['NO'],
-		'L_YES' => $user->lang['YES'],
+		'L_NO' 				=> $user->lang['NO'],
+		'L_YES' 			=> $user->lang['YES'],
 
-		'S_CONFIRM_ACTION' => append_sid("image_delete.$phpEx?id=$pic_id"),
+		'S_CONFIRM_ACTION' 	=> append_sid("image_delete.$phpEx?id=$pic_id"),
 		)
 	);
 	
@@ -165,26 +175,32 @@ if(!isset($_POST['confirm']))
 }
 else
 {
+	// Check the salt... yumyum
+	if (!check_form_key('image_delete'))
+	{
+		trigger_error('FORM_INVALID');
+	}
+	
 	// --------------------------------
 	// It's confirmed. First delete all comments
 	// --------------------------------
-	$sql = "DELETE FROM " . ALBUM_COMMENT_TABLE . "
-			WHERE comment_pic_id = '$pic_id'";
+	$sql = 'DELETE FROM ' . ALBUM_COMMENT_TABLE . '
+			WHERE comment_pic_id = ' . $pic_id;
 	$result = $db->sql_query($sql);
 
 
 	// --------------------------------
 	// Delete all ratings
 	// --------------------------------
-	$sql = "DELETE FROM " . ALBUM_RATE_TABLE . "
-			WHERE rate_pic_id = '$pic_id'";
+	$sql = 'DELETE FROM ' . ALBUM_RATE_TABLE . '
+			WHERE rate_pic_id = ' . $pic_id;
 	$result = $db->sql_query($sql);
 
 
 	// --------------------------------
 	// Delete cached thumbnail
 	// --------------------------------
-	if (($thispic['pic_thumbnail'] != '') && @file_exists(ALBUM_CACHE_PATH . $thispic['pic_thumbnail']))
+	if (($thispic['pic_thumbnail'] <> '') && @file_exists(ALBUM_CACHE_PATH . $thispic['pic_thumbnail']))
 	{
 		@unlink(ALBUM_CACHE_PATH . $thispic['pic_thumbnail']);
 	}
@@ -199,18 +215,17 @@ else
 	// --------------------------------
 	// Delete DB entry
 	// --------------------------------
-	$sql = "DELETE FROM ". ALBUM_TABLE ."
-			WHERE pic_id = '$pic_id'";
+	$sql = 'DELETE FROM ' . ALBUM_TABLE . '
+			WHERE pic_id = ' . $pic_id;
 	$result = $db->sql_query($sql);
 
 
 	// --------------------------------
 	// Complete... now send a message to user
 	// --------------------------------
-
 	$message = $user->lang['IMAGES_DELETED_SUCCESSFULLY'];
 
-	if ($cat_id != PERSONAL_GALLERY)
+	if ($cat_id <> PERSONAL_GALLERY)
 	{
 		$template->assign_vars(array(
 			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("album.$phpEx?id=$cat_id") . '">')
@@ -227,10 +242,9 @@ else
 		$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_PERSONAL_ALBUM'], "<a href=\"" . append_sid("album_personal.$phpEx?user_id=$user_id") . "\">", "</a>");
 	}
 	
-	$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("album.$phpEx") . "\">", "</a>");
+	$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
 	
 	trigger_error($message, E_USER_WARNING);
-
 }
 
 

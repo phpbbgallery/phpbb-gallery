@@ -28,22 +28,20 @@ $user->setup('mods/gallery');
 include($album_root_path . 'includes/common.'.$phpEx);
 
 
-
-$cat_id = request_var('album_id', 0);
-
-
 // ------------------------------------
 // Get the current Category Info
 // ------------------------------------
 
-if ($cat_id != PERSONAL_GALLERY)
+$cat_id = request_var('album_id', 0);
+
+if ($cat_id <> PERSONAL_GALLERY)
 {
-	$sql = "SELECT c.*, COUNT(p.pic_id) AS count
-			FROM ". ALBUM_CAT_TABLE ." AS c
-				LEFT JOIN ". ALBUM_TABLE ." AS p ON c.cat_id = p.pic_cat_id
-			WHERE c.cat_id = '$cat_id'
+	$sql = 'SELECT c.*, COUNT(p.pic_id) AS count
+			FROM ' . ALBUM_CAT_TABLE . ' AS c
+				LEFT JOIN ' . ALBUM_TABLE . ' AS p ON c.cat_id = p.pic_cat_id
+			WHERE c.cat_id = ' . $cat_id . '
 			GROUP BY c.cat_id
-			LIMIT 1";
+			LIMIT 1';
 	$result = $db->sql_query($sql);
 
 	$thiscat = $db->sql_fetchrow($result);
@@ -69,8 +67,12 @@ $album_user_access = album_user_access($cat_id, $thiscat, 0, 1, 0, 0, 0, 0); // 
 
 if ($album_user_access['upload'] == 0)
 {
-	if (!$user->data['is_registered'] || $user->data['is_bot'])
+	if (!$user->data['is_registered'])
 	{
+		if ($user->data['is_bot'])
+		{
+			redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
+		}
 		login_box("gallery/upload.$phpEx?album_id=$cat_id", $user->lang['LOGIN_EXPLAIN_UPLOAD']);
 	}
 	else
@@ -86,7 +88,7 @@ if ($album_user_access['upload'] == 0)
 +----------------------------------------------------------
 */
 
-if ($cat_id != PERSONAL_GALLERY)
+if ($cat_id <> PERSONAL_GALLERY)
 {
 	// ------------------------------------
 	// Check Album Configuration Quota
@@ -110,7 +112,7 @@ if ($cat_id != PERSONAL_GALLERY)
 
 	$check_user_limit = FALSE;
 
-	if (($user->data['user_type'] != USER_FOUNDER) && $user->data['is_registered'] && !$user->data['is_bot'])
+	if (($user->data['user_type'] <> USER_FOUNDER) && $user->data['is_registered'] && !$user->data['is_bot'])
 	{
 		if ($album_user_access['moderator'])
 		{
@@ -129,12 +131,12 @@ if ($cat_id != PERSONAL_GALLERY)
 	}
 
 	// Do the check here
-	if ($check_user_limit != FALSE)
+	if ($check_user_limit <> FALSE)
 	{
-		$sql = "SELECT COUNT(pic_id) AS count
-				FROM ". ALBUM_TABLE ."
-				WHERE pic_user_id = '". $user->data['user_id'] ."'
-					AND pic_cat_id = '$cat_id'";
+		$sql = 'SELECT COUNT(pic_id) AS count
+				FROM ' . ALBUM_TABLE . '
+				WHERE pic_user_id = ' . $user->data['user_id'] . '
+					AND pic_cat_id = ' . $cat_id;
 		$result = $db->sql_query($sql);
 		
 		$row = $db->sql_fetchrow($result);
@@ -154,6 +156,12 @@ else
 	}
 }
 
+// ------------------------------------
+// Salting the form...yumyum ...
+// ------------------------------------
+add_form_key('upload');
+
+
 /*
 +----------------------------------------------------------
 | Main work here...
@@ -165,9 +173,9 @@ if(!isset($_POST['pic_title']))
 	// --------------------------------
 	// Build categories select
 	// --------------------------------
-	$sql = "SELECT *
-			FROM " . ALBUM_CAT_TABLE ."
-			ORDER BY cat_order ASC";
+	$sql = 'SELECT *
+			FROM ' . ALBUM_CAT_TABLE . '
+			ORDER BY cat_order ASC';
 	$result = $db->sql_query($sql);
 
 	$catrows = array();
@@ -193,63 +201,63 @@ if(!isset($_POST['pic_title']))
 
 	for ($i = 0; $i < count($catrows); $i++)
 	{
-		$select_cat .= '<option value="'. $catrows[$i]['cat_id'] .'" ';
+		$select_cat .= '<option value="' . $catrows[$i]['cat_id'] . '" ';
 		$select_cat .= ($cat_id == $catrows[$i]['cat_id']) ? 'selected="selected"' : '';
-		$select_cat .= '>'. $catrows[$i]['cat_title'] .'</option>';
+		$select_cat .= '>' . $catrows[$i]['cat_title'] . '</option>';
 	}
 
 	$select_cat .= '</select>';
 
 	$template->assign_vars(array(
-		'U_VIEW_CAT' => ($cat_id != PERSONAL_GALLERY) ? append_sid("album.$phpEx?id=$cat_id") : append_sid("album_personal.$phpEx"),
-		'CAT_TITLE' => $thiscat['cat_title'],
+		'U_VIEW_CAT' 				=> ($cat_id != PERSONAL_GALLERY) ? append_sid("album.$phpEx?id=$cat_id") : append_sid("album_personal.$phpEx"),
+		'CAT_TITLE' 				=> $thiscat['cat_title'],
 
-		'L_UPLOAD_PIC' => $user->lang['UPLOAD_IMAGE'],
+		'L_UPLOAD_PIC' 				=> $user->lang['UPLOAD_IMAGE'],
 
-		'L_USERNAME' => $user->lang['USERNAME'],
-		'L_PIC_TITLE' => $user->lang['IMAGE_TITLE'],
+		'L_USERNAME' 				=> $user->lang['USERNAME'],
+		'L_PIC_TITLE' 				=> $user->lang['IMAGE_TITLE'],
 
-		'L_PIC_DESC' => $user->lang['IMAGE_DESC'],
-		'L_PLAIN_TEXT_ONLY' => $user->lang['PLAIN_TEXT_ONLY'],
-		'L_MAX_LENGTH' => $user->lang['MAX_LENGTH'],
-		'S_PIC_DESC_MAX_LENGTH' => $album_config['desc_length'],
+		'L_PIC_DESC' 				=> $user->lang['IMAGE_DESC'],
+		'L_PLAIN_TEXT_ONLY' 		=> $user->lang['PLAIN_TEXT_ONLY'],
+		'L_MAX_LENGTH' 				=> $user->lang['MAX_LENGTH'],
+		'S_PIC_DESC_MAX_LENGTH' 	=> $album_config['desc_length'],
 
-		'L_UPLOAD_PIC_FROM_MACHINE' => $user->lang['FILE'],
-		'L_UPLOAD_TO_CATEGORY' => $user->lang['UPLOAD_TO_ALBUM'],
+		'L_UPLOAD_PIC_FROM_MACHINE'	=> $user->lang['FILE'],
+		'L_UPLOAD_TO_CATEGORY' 		=> $user->lang['UPLOAD_TO_ALBUM'],
 
-		'SELECT_CAT' => $select_cat,
+		'SELECT_CAT' 				=> $select_cat,
 
-		'L_MAX_FILESIZE' => $user->lang['MAX_FILE_SIZE'],
-		'S_MAX_FILESIZE' => $album_config['max_file_size'],
+		'L_MAX_FILESIZE' 			=> $user->lang['MAX_FILE_SIZE'],
+		'S_MAX_FILESIZE' 			=> $album_config['max_file_size'],
 
-		'L_MAX_WIDTH' => $user->lang['MAX_WIDTH'],
-		'L_MAX_HEIGHT' => $user->lang['MAX_HEIGHT'],
+		'L_MAX_WIDTH' 				=> $user->lang['MAX_WIDTH'],
+		'L_MAX_HEIGHT' 				=> $user->lang['MAX_HEIGHT'],
 
-		'S_MAX_WIDTH' => $album_config['max_width'],
-		'S_MAX_HEIGHT' => $album_config['max_height'],
+		'S_MAX_WIDTH' 				=> $album_config['max_width'],
+		'S_MAX_HEIGHT' 				=> $album_config['max_height'],
 
-		'L_ALLOWED_JPG' => $user->lang['JPG_ALLOWED'],
-		'L_ALLOWED_PNG' => $user->lang['PNG_ALLOWED'],
-		'L_ALLOWED_GIF' => $user->lang['GIF_ALLOWED'],
+		'L_ALLOWED_JPG' 			=> $user->lang['JPG_ALLOWED'],
+		'L_ALLOWED_PNG' 			=> $user->lang['PNG_ALLOWED'],
+		'L_ALLOWED_GIF' 			=> $user->lang['GIF_ALLOWED'],
 
-		'S_JPG' => ($album_config['jpg_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
-		'S_PNG' => ($album_config['png_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
-		'S_GIF' => ($album_config['gif_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
+		'S_JPG' 					=> ($album_config['jpg_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
+		'S_PNG' 					=> ($album_config['png_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
+		'S_GIF' 					=> ($album_config['gif_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
 
-		'L_UPLOAD_NO_TITLE' => $user->lang['UPLOAD_NO_TITLE'],
-		'L_UPLOAD_NO_FILE' => $user->lang['UPLOAD_NO_FILE'],
-		'L_DESC_TOO_LONG' => $user->lang['DESC_TOO_LONG'],
+		'L_UPLOAD_NO_TITLE' 		=> $user->lang['UPLOAD_NO_TITLE'],
+		'L_UPLOAD_NO_FILE' 			=> $user->lang['UPLOAD_NO_FILE'],
+		'L_DESC_TOO_LONG' 			=> $user->lang['DESC_TOO_LONG'],
 
 		// Manual Thumbnail
-		'L_UPLOAD_THUMBNAIL' => $user->lang['UPLOAD_THUMBNAIL'],
-		'L_UPLOAD_THUMBNAIL_EXPLAIN' => $user->lang['UPLOAD_THUMBNAIL_EXPLAIN'],
-		'L_THUMBNAIL_SIZE' => $user->lang['THUMBNAIL_SIZE'],
-		'S_THUMBNAIL_SIZE' => $album_config['thumbnail_size'],
+		'L_UPLOAD_THUMBNAIL' 			=> $user->lang['UPLOAD_THUMBNAIL'],
+		'L_UPLOAD_THUMBNAIL_EXPLAIN' 	=> $user->lang['UPLOAD_THUMBNAIL_EXPLAIN'],
+		'L_THUMBNAIL_SIZE' 				=> $user->lang['THUMBNAIL_SIZE'],
+		'S_THUMBNAIL_SIZE' 				=> $album_config['thumbnail_size'],
 
-		'L_RESET' => $user->lang['RESET'],
-		'L_SUBMIT' => $user->lang['SUBMIT'],
+		'L_RESET' 					=> $user->lang['RESET'],
+		'L_SUBMIT' 					=> $user->lang['SUBMIT'],
 
-		'S_ALBUM_ACTION' => append_sid("upload.$phpEx?album_id=$cat_id"),
+		'S_ALBUM_ACTION' 			=> append_sid("upload.$phpEx?album_id=$cat_id"),
 		)
 	);
 
@@ -260,12 +268,14 @@ if(!isset($_POST['pic_title']))
 	
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'	=> $user->lang['GALLERY'],
-		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"))
+		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
+		)
 	);
 	
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'	=> $thiscat['cat_title'],
-		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']))
+		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']),
+		)
 	);
 
 	// Output page
@@ -282,15 +292,20 @@ if(!isset($_POST['pic_title']))
 }
 else
 {
+	// Check the salt... yumyum
+	if (!check_form_key('upload'))
+	{
+		trigger_error('FORM_INVALID');
+	}
 	// --------------------------------
 	// Check posted info
 	// --------------------------------
 
-	$pic_title = request_var('pic_title', '', true);
+	$pic_title 		= request_var('pic_title', '', true);
 
-	$pic_desc = substr(request_var('pic_desc', '', true), 0, $album_config['desc_length']);
+	$pic_desc		= substr(request_var('pic_desc', '', true), 0, $album_config['desc_length']);
 
-	$pic_username = (!$user->data['is_registered']) ? substr(request_var('pic_username', ''), 0, 32) : str_replace("'", "''", $user->data['username']);
+	$pic_username 	= (!$user->data['is_registered']) ? substr(request_var('pic_username', ''), 0, 32) : str_replace("'", "''", $user->data['username']);
 
 	if(empty($pic_title))
 	{
@@ -309,7 +324,7 @@ else
 
 	if (!$user->data['is_registered'])
 	{
-		if ($pic_username != '')
+		if ($pic_username <> '')
 		{
 			include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 			$result = validate_username($pic_username);
@@ -325,15 +340,15 @@ else
 	// Get File Upload Info
 	// --------------------------------
 
-	$filetype = $_FILES['pic_file']['type'];
-	$filesize = $_FILES['pic_file']['size'];
-	$filetmp = $_FILES['pic_file']['tmp_name'];
+	$filetype 	= $_FILES['pic_file']['type'];
+	$filesize 	= $_FILES['pic_file']['size'];
+	$filetmp 	= $_FILES['pic_file']['tmp_name'];
 
 	if ($album_config['gd_version'] == 0)
 	{
-		$thumbtype = $_FILES['pic_thumbnail']['type'];
-		$thumbsize = $_FILES['pic_thumbnail']['size'];
-		$thumbtmp = $_FILES['pic_thumbnail']['tmp_name'];
+		$thumbtype 	= $_FILES['pic_thumbnail']['type'];
+		$thumbsize 	= $_FILES['pic_thumbnail']['size'];
+		$thumbtmp 	= $_FILES['pic_thumbnail']['tmp_name'];
 	}
 
 
@@ -341,9 +356,9 @@ else
 	// Prepare variables
 	// --------------------------------
 
-	$pic_time = time();
-	$pic_user_id = $user->data['user_id'];
-	$pic_user_ip = $user->ip;
+	$pic_time 		= time();
+	$pic_user_id 	= $user->data['user_id'];
+	$pic_user_ip 	= $user->ip;
 
 
 	// --------------------------------
@@ -378,7 +393,7 @@ else
 				trigger_error($user->lang['NOT_ALLOWED_FILE_TYPE'], E_USER_WARNING);
 			}
 			$pic_filetype = '.jpg';
-			break;
+		break;
 
 		case 'image/png':
 		case 'image/x-png':
@@ -387,7 +402,7 @@ else
 				trigger_error($user->lang['NOT_ALLOWED_FILE_TYPE'], E_USER_WARNING);
 			}
 			$pic_filetype = '.png';
-			break;
+		break;
 
 		case 'image/gif':
 			if ($album_config['gif_allowed'] == 0)
@@ -395,14 +410,15 @@ else
 				trigger_error($user->lang['NOT_ALLOWED_FILE_TYPE'], E_USER_WARNING);
 			}
 			$pic_filetype = '.gif';
-			break;
+		break;
+		
 		default:
 			trigger_error($user->lang['NOT_ALLOWED_FILE_TYPE'], E_USER_WARNING);
 	}
 
 	if ($album_config['gd_version'] == 0)
 	{
-		if ($filetype != $thumbtype)
+		if ($filetype <> $thumbtype)
 		{
 			trigger_error($user->lang['FILETYPE_AND_THUMBTYPE_DO_NOT_MATCH'], E_USER_WARNING);
 		}
@@ -433,7 +449,7 @@ else
 
 	$ini_val = ( @phpversion() >= '4.0.0' ) ? 'ini_get' : 'get_cfg_var';
 
-	if ( @$ini_val('open_basedir') != '' )
+	if ( @$ini_val('open_basedir') <> '' )
 	{
 		if ( @phpversion() < '4.0.3' )
 		{
@@ -509,13 +525,15 @@ else
 		{
 			case '.jpg': 
 				$read_function = 'imagecreatefromjpeg'; 
-				break; 
+			break; 
+			
 			case '.png': 
 				$read_function = 'imagecreatefrompng'; 
-				break; 
+			break; 
+			
 			case '.gif': 
 				$read_function = 'imagecreatefromgif'; 
-				break;
+			break;
 		}
 
 		$src = @$read_function(ALBUM_UPLOAD_PATH  . $pic_filename);
@@ -530,13 +548,13 @@ else
 			// Resize it
 			if ($pic_width > $pic_height)
 			{
-				$thumbnail_width = $album_config['thumbnail_size'];
-				$thumbnail_height = $album_config['thumbnail_size'] * ($pic_height/$pic_width);
+				$thumbnail_width 	= $album_config['thumbnail_size'];
+				$thumbnail_height 	= $album_config['thumbnail_size'] * ($pic_height/$pic_width);
 			}
 			else
 			{
-				$thumbnail_height = $album_config['thumbnail_size'];
-				$thumbnail_width = $album_config['thumbnail_size'] * ($pic_width/$pic_height);
+				$thumbnail_height 	= $album_config['thumbnail_size'];
+				$thumbnail_width 	= $album_config['thumbnail_size'] * ($pic_width/$pic_height);
 			}
 
 			// Create thumbnail + 16 Pixel extra for imagesize text 
@@ -571,13 +589,15 @@ else
 			{
 				case '.jpg':
 					@imagejpeg($thumbnail, ALBUM_CACHE_PATH . $pic_thumbnail, $album_config['thumbnail_quality']);
-					break;
+				break;
+				
 				case '.png':
 					@imagepng($thumbnail, ALBUM_CACHE_PATH . $pic_thumbnail);
-					break;
+				break;
+				
 				case '.gif':
 					@imagegif($thumbnail, ALBUM_CACHE_PATH . $pic_thumbnail);
-					break;
+				break;
 			}
 
 			@chmod(ALBUM_CACHE_PATH . $pic_thumbnail, 0777);
@@ -601,9 +621,20 @@ else
 	// Insert into DB
 	// --------------------------------
 
-	$sql = "INSERT INTO ". ALBUM_TABLE ." (pic_filename, pic_thumbnail, pic_title, pic_desc, pic_user_id, pic_user_ip, pic_username, pic_time, pic_cat_id, pic_approval)
-			VALUES ('" . $db->sql_escape($pic_filename) . "', '" . $db->sql_escape($pic_thumbnail) . "', '" . $db->sql_escape($pic_title) . "', '" . $db->sql_escape($pic_desc) . "', '" . $db->sql_escape($pic_user_id) . "', '" . $db->sql_escape($pic_user_ip) . "', '" . $db->sql_escape($pic_username) . "', '" . $db->sql_escape($pic_time) . "', '" . $db->sql_escape($cat_id) . "', '" . $db->sql_escape($pic_approval) . "')";
-	$result = $db->sql_query($sql);
+	$sql_ary = array(
+		'pic_filename' 		=> $pic_filename,
+		'pic_thumbnail'		=> $pic_thumbnail,
+		'pic_title'			=> $pic_title,
+		'pic_desc'			=> $pic_desc,
+		'pic_user_id'		=> $pic_user_id,
+		'pic_user_ip'		=> $pic_user_ip,
+		'pic_username'		=> $pic_username,
+		'pic_time'			=> $pic_time,
+		'pic_cat_id'		=> $cat_id,
+		'pic_approval'		=> $pic_approval,
+		);
+		
+	$db->sql_query('INSERT INTO ' . ALBUM_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 
 
 	// --------------------------------
@@ -619,7 +650,7 @@ else
 		$message = $user->lang['ALBUM_UPLOAD_NEED_APPROVAL'];
 	}
 
-	if ($cat_id != PERSONAL_GALLERY)
+	if ($cat_id <> PERSONAL_GALLERY)
 	{
 		if ($thiscat['cat_approval'] == 0)
 		{

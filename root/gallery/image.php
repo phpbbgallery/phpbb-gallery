@@ -32,7 +32,9 @@ include($album_root_path . 'includes/common.'.$phpEx);
 // Check the request
 // ------------------------------------
 
-if (!$pic_id = request_var('pic_id', 0))
+$pic_id = request_var('pic_id', 0);
+
+if ( $pic_id == 0 )
 {
 	die($user->lang['NO_IMAGE_SPECIFIED']);
 }
@@ -42,9 +44,9 @@ if (!$pic_id = request_var('pic_id', 0))
 // Get this pic info
 // ------------------------------------
 
-$sql = "SELECT *
-		FROM ". ALBUM_TABLE ."
-		WHERE pic_id = '$pic_id'";
+$sql = 'SELECT *
+		FROM ' . ALBUM_TABLE . '
+		WHERE pic_id = ' . $pic_id;
 $result = $db->sql_query($sql);
 
 $thispic = $db->sql_fetchrow($result);
@@ -66,11 +68,11 @@ if (empty($thispic) || !file_exists(ALBUM_UPLOAD_PATH . $pic_filename) )
 // Get the current Category Info
 // ------------------------------------
 
-if ($cat_id != PERSONAL_GALLERY)
+if ($cat_id <> PERSONAL_GALLERY)
 {
-	$sql = "SELECT *
-			FROM ". ALBUM_CAT_TABLE ."
-			WHERE cat_id = '$cat_id'";
+	$sql = 'SELECT *
+			FROM ' . ALBUM_CAT_TABLE . '
+			WHERE cat_id = ' . $cat_id;
 	$result = $db->sql_query($sql);
 
 	$thiscat = $db->sql_fetchrow($result);
@@ -101,11 +103,11 @@ if ($album_user_access['view'] == 0)
 // Check Pic Approval
 // ------------------------------------
 
-if ($user->data['user_type'] != USER_FOUNDER)
+if ($user->data['user_type'] <> USER_FOUNDER)
 {
 	if (($thiscat['cat_approval'] == ADMIN) || (($thiscat['cat_approval'] == MOD) && !$album_user_access['moderator']))
 	{
-		if ($thispic['pic_approval'] != 1)
+		if ($thispic['pic_approval'] <> 1)
 		{
 			die($user->lang['NOT_AUTHORISED']);
 		}
@@ -124,7 +126,7 @@ if (($album_config['hotlink_prevent'] == 1) && (isset($HTTP_SERVER_VARS['HTTP_RE
 
 	$good_referers = array();
 
-	if ($album_config['hotlink_allowed'] != '')
+	if ($album_config['hotlink_allowed'] <> '')
 	{
 		$good_referers = explode(',', $album_config['hotlink_allowed']);
 	}
@@ -137,7 +139,7 @@ if (($album_config['hotlink_prevent'] == 1) && (isset($HTTP_SERVER_VARS['HTTP_RE
 	{
 		$good_referers[$i] = trim($good_referers[$i]);
 
-		if( (strstr($check_referer, $good_referers[$i])) && ($good_referers[$i] != '') )
+		if( (strstr($check_referer, $good_referers[$i])) && ($good_referers[$i] <> '') )
 		{
 			$errored = FALSE;
 		}
@@ -161,9 +163,9 @@ if (($album_config['hotlink_prevent'] == 1) && (isset($HTTP_SERVER_VARS['HTTP_RE
 // Increase view counter
 // ------------------------------------
 
-$sql = "UPDATE ". ALBUM_TABLE ."
+$sql = 'UPDATE ' . ALBUM_TABLE . '
 		SET pic_view_count = pic_view_count + 1
-		WHERE pic_id = '$pic_id'";
+		WHERE pic_id = ' . $pic_id;
 $result = $db->sql_query($sql);
 
 
@@ -175,13 +177,16 @@ switch ( $pic_filetype )
 {
 	case '.png':
 		header('Content-type: image/png');
-		break;
+	break;
+	
 	case '.gif':
 		header('Content-type: image/gif');
-		break;
+	break;
+	
 	case '.jpg':
 		header('Content-type: image/jpeg');
-		break;
+	break;
+	
 	default:
 		die('The filename data in the DB was corrupted');
 }
