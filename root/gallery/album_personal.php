@@ -56,9 +56,9 @@ if(!$user->data['is_registered'])
 // Get the username of this gallery's owner
 // ------------------------------------
 
-$sql = "SELECT username
-		FROM " . USERS_TABLE . "
-		WHERE user_id = $user_id";
+$sql = 'SELECT username
+		FROM ' . USERS_TABLE . '
+		WHERE user_id = ' . $user_id;
 
 $result = $db->sql_query($sql);
 
@@ -120,10 +120,10 @@ $pics_per_page = $album_config['rows_per_page'] * $album_config['cols_per_page']
 // Count Pics
 // ------------------------------------
 
-$sql = "SELECT COUNT(pic_id) AS count
-		FROM ". ALBUM_TABLE ."
-		WHERE pic_cat_id = ". PERSONAL_GALLERY ."
-			AND pic_user_id = $user_id";
+$sql = 'SELECT COUNT(pic_id) AS count
+		FROM ' . ALBUM_TABLE . '
+		WHERE pic_cat_id = ' . PERSONAL_GALLERY . '
+			AND pic_user_id = ' . $user_id;
 $result = $db->sql_query($sql);
 
 $row = $db->sql_fetchrow($result);
@@ -139,15 +139,15 @@ if ($total_pics > 0)
 {
 	$limit_sql = ($start == 0) ? $pics_per_page : $start .','. $pics_per_page;
 
-	$sql = "SELECT p.pic_id, p.pic_title, p.pic_desc, p.pic_user_id, p.pic_user_ip, p.pic_time, p.pic_view_count, p.pic_lock, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
-			FROM ". ALBUM_TABLE ." AS p
-				LEFT JOIN ". ALBUM_RATE_TABLE ." AS r ON p.pic_id = r.rate_pic_id
-				LEFT JOIN ". ALBUM_COMMENT_TABLE ." AS c ON p.pic_id = c.comment_pic_id
-			WHERE p.pic_cat_id = ". PERSONAL_GALLERY ."
-				AND p.pic_user_id = $user_id
+	$sql = 'SELECT p.pic_id, p.pic_title, p.pic_desc, p.pic_user_id, p.pic_user_ip, p.pic_time, p.pic_view_count, p.pic_lock, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
+			FROM ' . ALBUM_TABLE . ' AS p
+				LEFT JOIN ' . ALBUM_RATE_TABLE . ' AS r ON p.pic_id = r.rate_pic_id
+				LEFT JOIN ' . ALBUM_COMMENT_TABLE . ' AS c ON p.pic_id = c.comment_pic_id
+			WHERE p.pic_cat_id = ' . PERSONAL_GALLERY . '
+				AND p.pic_user_id = ' . $user_id . '
 			GROUP BY p.pic_id
-			ORDER BY $sort_method $sort_order
-			LIMIT $limit_sql";
+			ORDER BY ' . $sort_method . ' ' . $sort_order . ' 
+			LIMIT ' . $limit_sql;
 	$result = $db->sql_query($sql);
 
 	$picrow = array();
@@ -185,22 +185,22 @@ if ($total_pics > 0)
 			}
 
 			$template->assign_block_vars('picrow.piccol', array(
-				'U_PIC' => ($album_config['fullpic_popup']) ? append_sid("image.$phpEx?pic_id=". $picrow[$j]['pic_id']) : append_sid("image_page.$phpEx?id=". $picrow[$j]['pic_id']),
-				'THUMBNAIL' => append_sid("thumbnail.$phpEx?pic_id=". $picrow[$j]['pic_id']),
-				'DESC' => $picrow[$j]['pic_desc']
+				'U_PIC' 		=> ($album_config['fullpic_popup']) ? append_sid("image.$phpEx?pic_id=" . $picrow[$j]['pic_id']) : append_sid("image_page.$phpEx?id=" . $picrow[$j]['pic_id']),
+				'THUMBNAIL' 	=> append_sid("thumbnail.$phpEx?pic_id=" . $picrow[$j]['pic_id']),
+				'DESC' 			=> $picrow[$j]['pic_desc'],
 				)
 			);
 
 			$template->assign_block_vars('picrow.pic_detail', array(
-				'TITLE' => $picrow[$j]['pic_title'],
-				'TIME' => $user->format_date($picrow[$j]['pic_time']),
-				'VIEW' => $picrow[$j]['pic_view_count'],
-				'RATING' => ($album_config['rate'] == 1) ? ( '<a href="'. append_sid("image_page.$phpEx?id=". $picrow[$j]['pic_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $picrow[$j]['rating'] . '<br />') : '',
-				'COMMENTS' => ($album_config['comment'] == 1) ? ( '<a href="'. append_sid("image_page.$phpEx?id=". $picrow[$j]['pic_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $picrow[$j]['comments'] . '<br />') : '',
-				'EDIT' => ( ($user->data['user_type'] == USER_FOUNDER) || ($user->data['user_id'] == $picrow[$j]['pic_user_id']) ) ? '<a href="'. append_sid("edit.$phpEx?pic_id=". $picrow[$j]['pic_id']) . '">' . $user->lang['EDIT_IMAGE'] . '</a>' : '',
-				'DELETE' => ( ($user->data['user_type'] == USER_FOUNDER) || ($user->data['user_id'] == $picrow[$j]['pic_user_id']) ) ? '<a href="'. append_sid("image_delete.$phpEx?id=". $picrow[$j]['pic_id']) . '">' . $user->lang['DELETE_IMAGE'] . '</a>' : '',
-				'LOCK' => ($user->data['user_type'] == USER_FOUNDER) ? '<a href="'. append_sid("mcp.$phpEx?mode=". (($picrow[$j]['pic_lock'] == 0) ? 'lock' : 'unlock') ."&amp;pic_id=". $picrow[$j]['pic_id']) .'">'. (($picrow[$j]['pic_lock'] == 0) ? $user->lang['LOCK'] : $user->lang['UNLOCK']) .'</a>' : '',
-				'IP' => ($user->data['user_type'] == USER_FOUNDER) ? $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $picrow[$j]['pic_user_ip'] . '">' . $picrow[$j]['pic_user_ip'] .'</a><br />' : ''
+				'TITLE' 	=> $picrow[$j]['pic_title'],
+				'TIME' 		=> $user->format_date($picrow[$j]['pic_time']),
+				'VIEW' 		=> $picrow[$j]['pic_view_count'],
+				'RATING' 	=> ($album_config['rate'] == 1) ? ( '<a href="' . append_sid("image_page.$phpEx?id=" . $picrow[$j]['pic_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $picrow[$j]['rating'] . '<br />') : '',
+				'COMMENTS' 	=> ($album_config['comment'] == 1) ? ( '<a href="' . append_sid("image_page.$phpEx?id=" . $picrow[$j]['pic_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $picrow[$j]['comments'] . '<br />') : '',
+				'EDIT' 		=> ( ($user->data['user_type'] == USER_FOUNDER) || ($user->data['user_id'] == $picrow[$j]['pic_user_id']) ) ? '<a href="' . append_sid("edit.$phpEx?pic_id=" . $picrow[$j]['pic_id']) . '">' . $user->lang['EDIT_IMAGE'] . '</a>' : '',
+				'DELETE' 	=> ( ($user->data['user_type'] == USER_FOUNDER) || ($user->data['user_id'] == $picrow[$j]['pic_user_id']) ) ? '<a href="' . append_sid("image_delete.$phpEx?id=" . $picrow[$j]['pic_id']) . '">' . $user->lang['DELETE_IMAGE'] . '</a>' : '',
+				'LOCK' 		=> ($user->data['user_type'] == USER_FOUNDER) ? '<a href="' . append_sid("mcp.$phpEx?mode=" . (($picrow[$j]['pic_lock'] == 0) ? 'lock' : 'unlock') . "&amp;pic_id=" . $picrow[$j]['pic_id']) . '">'. (($picrow[$j]['pic_lock'] == 0) ? $user->lang['LOCK'] : $user->lang['UNLOCK']) . '</a>' : '',
+				'IP' 		=> ($user->data['user_type'] == USER_FOUNDER) ? $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $picrow[$j]['pic_user_ip'] . '">' . $picrow[$j]['pic_user_ip'] . '</a><br />' : '',
 				)
 			);
 		}
@@ -212,8 +212,8 @@ if ($total_pics > 0)
 	// --------------------------------
 
 	$template->assign_vars(array(
-		'PAGINATION' => generate_pagination(append_sid("album_personal.$phpEx?user_id=$user_id&amp;sort_method=$sort_method&amp;sort_order=$sort_order"), $total_pics, $pics_per_page, $start),
-		'PAGE_NUMBER' => sprintf($user->lang['PAGE_OF'], ( floor( $start / $pics_per_page ) + 1 ), ceil( $total_pics / $pics_per_page ))
+		'PAGINATION' 	=> generate_pagination(append_sid("album_personal.$phpEx?user_id=$user_id&amp;sort_method=$sort_method&amp;sort_order=$sort_order"), $total_pics, $pics_per_page, $start),
+		'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $pics_per_page ) + 1 ), ceil( $total_pics / $pics_per_page )),
 		)
 	);
 }
@@ -237,19 +237,19 @@ $sort_rating_option = '';
 $sort_comments_option = '';
 if( $album_config['rate'] == 1 )
 {
-	$sort_rating_option = '<option value="rating" ';
+	$sort_rating_option  = '<option value="rating" ';
 	$sort_rating_option .= ($sort_method == 'rating') ? 'selected="selected"' : '';
-	$sort_rating_option .= '>' . $user->lang['RATING'] .'</option>';
+	$sort_rating_option .= '>' . $user->lang['RATING'] . '</option>';
 }
 if( $album_config['comment'] == 1 )
 {
-	$sort_comments_option = '<option value="comments" ';
+	$sort_comments_option  = '<option value="comments" ';
 	$sort_comments_option .= ($sort_method == 'comments') ? 'selected="selected"' : '';
-	$sort_comments_option .= '>' . $user->lang['COMMENTS'] .'</option>';
+	$sort_comments_option .= '>' . $user->lang['COMMENTS'] . '</option>';
 
-	$sort_new_comment_option = '<option value="new_comment" ';
+	$sort_new_comment_option  = '<option value="new_comment" ';
 	$sort_new_comment_option .= ($sort_method == 'new_comment') ? 'selected="selected"' : '';
-	$sort_new_comment_option .= '>' . $user->lang['NEW_COMMENT'] .'</option>';
+	$sort_new_comment_option .= '>' . $user->lang['NEW_COMMENT'] . '</option>';
 }
 
 if( $user_id == $user->data['user_id'] )
@@ -258,45 +258,46 @@ if( $user_id == $user->data['user_id'] )
 }
 
 $template->assign_vars(array(
-	'U_UPLOAD_PIC' => append_sid("upload.$phpEx?album_id=". PERSONAL_GALLERY),
-	'L_UPLOAD_PIC' => $user->lang['UPLOAD_IMAGE'],
+	'U_UPLOAD_PIC' 					=> append_sid("upload.$phpEx?album_id=" . PERSONAL_GALLERY),
+	'L_UPLOAD_PIC' 					=> $user->lang['UPLOAD_IMAGE'],
 
-	'L_PERSONAL_ALBUM_NOT_CREATED' => sprintf($user->lang['PERSONAL_ALBUM_NOT_CREATED'], $username),
+	'L_PERSONAL_ALBUM_NOT_CREATED' 	=> sprintf($user->lang['PERSONAL_ALBUM_NOT_CREATED'], $username),
 
-	'TARGET_BLANK' => ($album_config['fullpic_popup']) ? 'target="_blank"' : '',
+	'TARGET_BLANK' 					=> ($album_config['fullpic_popup']) ? 'target="_blank"' : '',
 
-	'S_COLS' => $album_config['cols_per_page'],
-	'S_COL_WIDTH' => (100/$album_config['cols_per_page']) . '%',
+	'S_COLS' 						=> $album_config['cols_per_page'],
+	'S_COL_WIDTH' 					=> (100/$album_config['cols_per_page']) . '%',
 
-	'L_VIEW' => $user->lang['VIEWS'],
-	'L_POSTED' => $user->lang['POSTED'],
+	'L_VIEW' 						=> $user->lang['VIEWS'],
+	'L_POSTED' 						=> $user->lang['POSTED'],
 
-	'U_PERSONAL_GALLERY' => append_sid("album_personal.$phpEx?user_id=$user_id"),
-	'L_YOUR_PERSONAL_GALLERY' => $user->lang['YOUR_PERSONAL_ALBUM'],
-	'L_PERSONAL_GALLERY_EXPLAIN' => $user->lang['PERSONAL_ALBUM_EXPLAIN'],
+	'U_PERSONAL_GALLERY' 			=> append_sid("album_personal.$phpEx?user_id=$user_id"),
+	'L_YOUR_PERSONAL_GALLERY' 		=> $user->lang['YOUR_PERSONAL_ALBUM'],
+	'L_PERSONAL_GALLERY_EXPLAIN' 	=> $user->lang['PERSONAL_ALBUM_EXPLAIN'],
 
-	'L_PERSONAL_GALLERY_OF_USER' => sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $username),
+	'L_PERSONAL_GALLERY_OF_USER' 	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $username),
 
-	'L_SELECT_SORT_METHOD' => $user->lang['SELECT_SORT_METHOD'],
-	'L_ORDER' => $user->lang['ORDER'],
-	'L_SORT' => $user->lang['SORT'],
+	'L_SELECT_SORT_METHOD' 			=> $user->lang['SELECT_SORT_METHOD'],
+	'L_ORDER' 						=> $user->lang['ORDER'],
+	'L_SORT' 						=> $user->lang['SORT'],
 
-	'L_TIME' => $user->lang['TIME'],
-	'L_PIC_TITLE' => $user->lang['IMAGE_TITLE'],
+	'L_TIME' 						=> $user->lang['TIME'],
+	'L_PIC_TITLE' 					=> $user->lang['IMAGE_TITLE'],
 
-	'SORT_TIME' => ($sort_method == 'pic_time') ? 'selected="selected"' : '',
-	'SORT_PIC_TITLE' => ($sort_method == 'pic_title') ? 'selected="selected"' : '',
-	'SORT_VIEW' => ($sort_method == 'pic_view_count') ? 'selected="selected"' : '',
+	'SORT_TIME' 					=> ($sort_method == 'pic_time') ? 'selected="selected"' : '',
+	'SORT_PIC_TITLE' 				=> ($sort_method == 'pic_title') ? 'selected="selected"' : '',
+	'SORT_VIEW' 					=> ($sort_method == 'pic_view_count') ? 'selected="selected"' : '',
 
-	'SORT_RATING_OPTION' => $sort_rating_option,
-	'SORT_COMMENTS_OPTION' => $sort_comments_option,
-	'SORT_NEW_COMMENT_OPTION' => $sort_new_comment_option,
+	'SORT_RATING_OPTION' 			=> $sort_rating_option,
+	'SORT_COMMENTS_OPTION' 			=> $sort_comments_option,
+	'SORT_NEW_COMMENT_OPTION' 		=> $sort_new_comment_option,
 
-	'L_ASC' => $user->lang['SORT_ASCENDING'],
-	'L_DESC' => $user->lang['SORT_DESCENDING'],
+	'L_ASC' 						=> $user->lang['SORT_ASCENDING'],
+	'L_DESC' 						=> $user->lang['SORT_DESCENDING'],
 
-	'SORT_ASC' => ($sort_order == 'ASC') ? 'selected="selected"' : '',
-	'SORT_DESC' => ($sort_order == 'DESC') ? 'selected="selected"' : '')
+	'SORT_ASC' 						=> ($sort_order == 'ASC') ? 'selected="selected"' : '',
+	'SORT_DESC' 					=> ($sort_order == 'DESC') ? 'selected="selected"' : '',
+	)
 );
 
 /*
@@ -307,17 +308,20 @@ $template->assign_vars(array(
 
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> $user->lang['GALLERY'],
-	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"))
+	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
+	)
 );
 
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],
-	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal_index.$phpEx"))
+	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal_index.$phpEx"),
+	)
 );
 
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $username),
-	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal.$phpEx", 'user_id=' . $user_id))
+	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal.$phpEx", 'user_id=' . $user_id),
+	)
 );
 
 $page_title = $user->lang['GALLERY'];

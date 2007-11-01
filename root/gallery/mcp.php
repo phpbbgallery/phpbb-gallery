@@ -65,9 +65,9 @@ if( ($cat_id == PERSONAL_GALLERY) && (($_GET['mode'] == 'lock') || ($_GET['mode'
 }
 else
 {
-	$sql = "SELECT *
-			FROM ". ALBUM_CAT_TABLE ."
-			WHERE cat_id = '$cat_id'";
+	$sql = 'SELECT *
+			FROM ' . ALBUM_CAT_TABLE . '
+			WHERE cat_id = ' . $cat_id;
 	$result = $db->sql_query($sql);
 
 	$thiscat = $db->sql_fetchrow($result);
@@ -83,6 +83,10 @@ $auth_data = album_user_access($cat_id, $thiscat, 0, 0, 0, 0, 0, 0); // MODERATO
 // END category info
 //
 
+// ------------------------------------
+// Salting the form...yumyum ...
+// ------------------------------------
+add_form_key('mcp');
 
 // ------------------------------------
 // set $mode (select action)
@@ -137,9 +141,13 @@ else
 // ------------------------------------
 if ($auth_data['moderator'] == 0)
 {
-	if (!$user->data['is_registered'] || $user->data['is_bot'])
+	if (!$user->data['is_registered'])
 	{
-		login_box("gallery/mcp.$phpEx?cat_id=$cat_id");
+		if ($user->data['is_bot'])
+		{
+			redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
+		}
+		login_box("gallery/mcp.$phpEx?cat_id=$cat_id", $user->lang['LOGIN_INFO']);
 	}
 	else
 	{
@@ -149,7 +157,6 @@ if ($auth_data['moderator'] == 0)
 //
 // END permissions
 //
-
 
 
 /*
@@ -172,9 +179,9 @@ if ($mode == '')
 	$sort_order = request_var('sort_order', 'DESC');
 
 	// Count Pics
-	$sql = "SELECT COUNT(pic_id) AS count
-			FROM ". ALBUM_TABLE ."
-			WHERE pic_cat_id = '$cat_id'";
+	$sql = 'SELECT COUNT(pic_id) AS count
+			FROM ' . ALBUM_TABLE . '
+			WHERE pic_cat_id = ' . $cat_id;
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
 
@@ -188,21 +195,21 @@ if ($mode == '')
 		$limit_sql = ($start == 0) ? $pics_per_page : $start . ', ' . $pics_per_page;
 
 		$pic_approval_sql = '';
-		if (($user->data['user_type'] != USER_FOUNDER) && ($thiscat['cat_approval'] == ALBUM_ADMIN))
+		if (($user->data['user_type'] <> USER_FOUNDER) && ($thiscat['cat_approval'] == ALBUM_ADMIN))
 		{
 			// because he went through my Permission Checking above so he must be at least a Moderator
-			$pic_approval_sql = 'AND p.pic_approval = 1';
+			$pic_approval_sql = ' AND p.pic_approval = 1';
 		}
 
-		$sql = "SELECT p.pic_id, p.pic_title, p.pic_user_id, p.pic_user_ip, p.pic_username, p.pic_time, p.pic_cat_id, p.pic_view_count, p.pic_lock, p.pic_approval, u.user_id, u.username, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(c.comment_id) AS comments, MAX(c.comment_id) AS new_comment
-				FROM ". ALBUM_TABLE ." AS p
-					LEFT JOIN ". USERS_TABLE ." AS u ON p.pic_user_id = u.user_id
-					LEFT JOIN ". ALBUM_RATE_TABLE ." AS r ON p.pic_id = r.rate_pic_id
-					LEFT JOIN ". ALBUM_COMMENT_TABLE ." AS c ON p.pic_id = c.comment_pic_id
-				WHERE p.pic_cat_id = '$cat_id' $pic_approval_sql
+		$sql = 'SELECT p.pic_id, p.pic_title, p.pic_user_id, p.pic_user_ip, p.pic_username, p.pic_time, p.pic_cat_id, p.pic_view_count, p.pic_lock, p.pic_approval, u.user_id, u.username, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(c.comment_id) AS comments, MAX(c.comment_id) AS new_comment
+				FROM ' . ALBUM_TABLE . ' AS p
+					LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
+					LEFT JOIN ' . ALBUM_RATE_TABLE . ' AS r ON p.pic_id = r.rate_pic_id
+					LEFT JOIN ' . ALBUM_COMMENT_TABLE . ' AS c ON p.pic_id = c.comment_pic_id
+				WHERE p.pic_cat_id = ' . $cat_id . ' ' . $pic_approval_sql . '
 				GROUP BY p.pic_id
-				ORDER BY $sort_method $sort_order
-				LIMIT $limit_sql";
+				ORDER BY ' . $sort_method . ' ' . $sort_order . '
+				LIMIT ' . $limit_sql;
 		$result = $db->sql_query($sql);
 
 		$picrow = array();
@@ -224,21 +231,21 @@ if ($mode == '')
 			}
 
 			$template->assign_block_vars('picrow', array(
-				'PIC_ID' => $picrow[$i]['pic_id'],
-				'PIC_TITLE' => '<a href="'. append_sid("image.$phpEx?pic_id=". $picrow[$i]['pic_id']) .'" target="_blank">'. $picrow[$i]['pic_title'] .'</a>',
-				'POSTER' => $pic_poster,
-				'TIME' => $user->format_date($picrow[$i]['pic_time']),
-				'RATING' => ($picrow[$i]['rating'] == 0) ? $user->lang['NOT_RATED'] : round($picrow[$i]['rating'], 2),
-				'COMMENTS' => $picrow[$i]['comments'],
-				'LOCK' => ($picrow[$i]['pic_lock'] == 0) ? '' : $user->lang['LOCKED'],
-				'APPROVAL' => ($picrow[$i]['pic_approval'] == 0) ? $user->lang['NOT_APPROVED'] : $user->lang['APPROVED']
+				'PIC_ID' 		=> $picrow[$i]['pic_id'],
+				'PIC_TITLE' 	=> '<a href="'. append_sid("image.$phpEx?pic_id=". $picrow[$i]['pic_id']) .'" target="_blank">'. $picrow[$i]['pic_title'] .'</a>',
+				'POSTER' 		=> $pic_poster,
+				'TIME' 			=> $user->format_date($picrow[$i]['pic_time']),
+				'RATING' 		=> ($picrow[$i]['rating'] == 0) ? $user->lang['NOT_RATED'] : round($picrow[$i]['rating'], 2),
+				'COMMENTS' 		=> $picrow[$i]['comments'],
+				'LOCK' 			=> ($picrow[$i]['pic_lock'] == 0) ? '' : $user->lang['LOCKED'],
+				'APPROVAL' 		=> ($picrow[$i]['pic_approval'] == 0) ? $user->lang['NOT_APPROVED'] : $user->lang['APPROVED']
 				)
 			);
 		}
 
 		$template->assign_vars(array(
-			'PAGINATION' => generate_pagination(append_sid("mcp.$phpEx?cat_id=$cat_id&amp;sort_method=$sort_method&amp;sort_order=$sort_order"), $total_pics, $pics_per_page, $start),
-			'PAGE_NUMBER' => sprintf($user->lang['PAGE_OF'], ( floor( $start / $pics_per_page ) + 1 ), ceil( $total_pics / $pics_per_page ))
+			'PAGINATION' 	=> generate_pagination(append_sid("mcp.$phpEx?cat_id=$cat_id&amp;sort_method=$sort_method&amp;sort_order=$sort_order"), $total_pics, $pics_per_page, $start),
+			'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $pics_per_page ) + 1 ), ceil( $total_pics / $pics_per_page ))
 			)
 		);
 	}
@@ -250,76 +257,78 @@ if ($mode == '')
 
 	$sort_rating_option = '';
 	$sort_comments_option = '';
+	
 	if( $album_config['rate'] == 1 )
 	{
-		$sort_rating_option = '<option value="rating" ';
+		$sort_rating_option  = '<option value="rating" ';
 		$sort_rating_option .= ($sort_method == 'rating') ? 'selected="selected"' : '';
-		$sort_rating_option .= '>' . $user->lang['RATING'] .'</option>';
+		$sort_rating_option .= '>' . $user->lang['RATING'] . '</option>';
 	}
+	
 	if( $album_config['comment'] == 1 )
 	{
-		$sort_comments_option = '<option value="comments" ';
+		$sort_comments_option  = '<option value="comments" ';
 		$sort_comments_option .= ($sort_method == 'comments') ? 'selected="selected"' : '';
-		$sort_comments_option .= '>' . $user->lang['COMMENTS'] .'</option>';
-		$sort_new_comment_option = '<option value="new_comment" ';
+		$sort_comments_option .= '>' . $user->lang['COMMENTS'] . '</option>';
+		$sort_new_comment_option  = '<option value="new_comment" ';
 		$sort_new_comment_option .= ($sort_method == 'new_comment') ? 'selected="selected"' : '';
-		$sort_new_comment_option .= '>' . $user->lang['NEW_COMMENT'] .'</option>';
+		$sort_new_comment_option .= '>' . $user->lang['NEW_COMMENT'] . '</option>';
 	}
 
 	$template->assign_vars(array(
-		'U_VIEW_CAT' => append_sid("mcp.$phpEx?cat_id=$cat_id"),
-		'CAT_TITLE' => $thiscat['cat_title'],
+		'U_VIEW_CAT' 			=> append_sid("mcp.$phpEx?cat_id=$cat_id"),
+		'CAT_TITLE' 			=> $thiscat['cat_title'],
 
-		'L_CATEGORY' => $user->lang['ALBUM'],
-		'L_MODCP' => $user->lang['MODCP'],
+		'L_CATEGORY' 			=> $user->lang['ALBUM'],
+		'L_MODCP' 				=> $user->lang['MODCP'],
 
-		'L_NO_PICS' => $user->lang['NO_IMAGES'],
+		'L_NO_PICS' 			=> $user->lang['NO_IMAGES'],
 
-		'L_VIEW' => $user->lang['VIEWS'],
-		'L_POSTER' => $user->lang['POSTER'],
-		'L_POSTED' => $user->lang['POSTED'],
+		'L_VIEW' 				=> $user->lang['VIEWS'],
+		'L_POSTER' 				=> $user->lang['POSTER'],
+		'L_POSTED' 				=> $user->lang['POSTED'],
 
-		'S_ALBUM_ACTION' => append_sid("mcp.$phpEx?cat_id=$cat_id"),
+		'S_ALBUM_ACTION' 		=> append_sid("mcp.$phpEx?cat_id=$cat_id"),
 
-		'L_SELECT_SORT_METHOD' => $user->lang['SELECT_SORT_METHOD'],
-		'L_ORDER' => $user->lang['ORDER'],
-		'L_SORT' => $user->lang['SORT'],
+		'L_SELECT_SORT_METHOD' 	=> $user->lang['SELECT_SORT_METHOD'],
+		'L_ORDER' 				=> $user->lang['ORDER'],
+		'L_SORT' 				=> $user->lang['SORT'],
 
-		'L_TIME' => $user->lang['TIME'],
-		'L_PIC_TITLE' => $user->lang['IMAGE_TITLE'],
-		'L_POSTER' => $user->lang['POSTER'],
-		'L_RATING' => $user->lang['RATING'],
-		'L_COMMENTS' => $user->lang['COMMENTS'],
-		'L_STATUS' => $user->lang['STATUS'],
-		'L_APPROVAL' => $user->lang['APPROVAL'],
-		'L_SELECT' => $user->lang['SELECT'],
-		'L_DELETE' => $user->lang['DELETE'],
-		'L_MOVE' => $user->lang['MOVE'],
-		'L_LOCK' => $user->lang['LOCK'],
-		'L_UNLOCK' => $user->lang['UNLOCK'],
+		'L_TIME' 				=> $user->lang['TIME'],
+		'L_PIC_TITLE' 			=> $user->lang['IMAGE_TITLE'],
+		'L_POSTER' 				=> $user->lang['POSTER'],
+		'L_RATING' 				=> $user->lang['RATING'],
+		'L_COMMENTS' 			=> $user->lang['COMMENTS'],
+		'L_STATUS' 				=> $user->lang['STATUS'],
+		'L_APPROVAL' 			=> $user->lang['APPROVAL'],
+		'L_SELECT' 				=> $user->lang['SELECT'],
+		'L_DELETE' 				=> $user->lang['DELETE'],
+		'L_MOVE' 				=> $user->lang['MOVE'],
+		'L_LOCK' 				=> $user->lang['LOCK'],
+		'L_UNLOCK' 				=> $user->lang['UNLOCK'],
 
-		'DELETE_BUTTON' => ($auth_data['delete'] == 1) ? '<input type="submit" class="liteoption" name="delete" value="'. $user->lang['DELETE'] .'" />' : '',
+		'DELETE_BUTTON' 		=> ($auth_data['delete'] == 1) ? '<input type="submit" class="liteoption" name="delete" value="' . $user->lang['DELETE'] . '" />' : '',
 
-		'APPROVAL_BUTTON' => ( ($user->data['user_type'] != USER_FOUNDER) && ($thiscat['cat_approval'] == ALBUM_ADMIN) ) ? '' : '<input type="submit" class="liteoption" name="approval" value="'. $user->lang['APPROVE'] .'" />',
+		'APPROVAL_BUTTON' 		=> ( ($user->data['user_type'] <> USER_FOUNDER) && ($thiscat['cat_approval'] == ALBUM_ADMIN) ) ? '' : '<input type="submit" class="liteoption" name="approval" value="' . $user->lang['APPROVE'] . '" />',
 
-		'UNAPPROVAL_BUTTON' => ( ($user->data['user_type'] != USER_FOUNDER) && ($thiscat['cat_approval'] == ALBUM_ADMIN) ) ? '' : '<input type="submit" class="liteoption" name="unapproval" value="'. $user->lang['UNAPPROVE'] .'" />',
+		'UNAPPROVAL_BUTTON' 	=> ( ($user->data['user_type'] <> USER_FOUNDER) && ($thiscat['cat_approval'] == ALBUM_ADMIN) ) ? '' : '<input type="submit" class="liteoption" name="unapproval" value="' . $user->lang['UNAPPROVE'] . '" />',
 
-		'L_USERNAME' => $user->lang['SORT_USERNAME'],
+		'L_USERNAME' 			=> $user->lang['SORT_USERNAME'],
 
-		'SORT_TIME' => ($sort_method == 'pic_time') ? 'selected="selected"' : '',
-		'SORT_PIC_TITLE' => ($sort_method == 'pic_title') ? 'selected="selected"' : '',
-		'SORT_USERNAME' => ($sort_method == 'pic_user_id') ? 'selected="selected"' : '',
-		'SORT_VIEW' => ($sort_method == 'pic_view_count') ? 'selected="selected"' : '',
+		'SORT_TIME' 			=> ($sort_method == 'pic_time') ? 'selected="selected"' : '',
+		'SORT_PIC_TITLE' 		=> ($sort_method == 'pic_title') ? 'selected="selected"' : '',
+		'SORT_USERNAME' 		=> ($sort_method == 'pic_user_id') ? 'selected="selected"' : '',
+		'SORT_VIEW' 			=> ($sort_method == 'pic_view_count') ? 'selected="selected"' : '',
 
-		'SORT_RATING_OPTION' => $sort_rating_option,
-		'SORT_COMMENTS_OPTION' => $sort_comments_option,
-		'SORT_NEW_COMMENT_OPTION' => $sort_new_comment_option,
+		'SORT_RATING_OPTION' 		=> $sort_rating_option,
+		'SORT_COMMENTS_OPTION' 		=> $sort_comments_option,
+		'SORT_NEW_COMMENT_OPTION' 	=> $sort_new_comment_option,
 
-		'L_ASC' => $user->lang['SORT_ASCENDING'],
-		'L_DESC' => $user->lang['SORT_DESCENDING'],
+		'L_ASC' 				=> $user->lang['SORT_ASCENDING'],
+		'L_DESC' 				=> $user->lang['SORT_DESCENDING'],
 
-		'SORT_ASC' => ($sort_order == 'ASC') ? 'selected="selected"' : '',
-		'SORT_DESC' => ($sort_order == 'DESC') ? 'selected="selected"' : ''
+		'SORT_ASC' 				=> ($sort_order == 'ASC') ? 'selected="selected"' : '',
+		'SORT_DESC' 			=> ($sort_order == 'DESC') ? 'selected="selected"' : ''
 		)
 	);
 
@@ -346,13 +355,14 @@ else
 		// MOVE
 		//-----------------------------
 
-		if( !isset($_POST['target']) )
+		$target = request_var('target', 0);
+		if( $target == 0)
 		{
 			// if "target" has not been set, we will open the category select form
 			//
 			// we must check POST method now
 			$pic_id_array = array();
-			if ($pic_id != FALSE) // from GET
+			if ($pic_id <> FALSE) // from GET
 			{
 				$pic_id_array[] = $pic_id;
 			}
@@ -384,10 +394,10 @@ else
 			//
 			// Create categories select
 			//
-			$sql = "SELECT *
-					FROM ". ALBUM_CAT_TABLE ."
-					WHERE cat_id <> '$cat_id'
-					ORDER BY cat_order ASC";
+			$sql = 'SELECT *
+					FROM ' . ALBUM_CAT_TABLE . '
+					WHERE cat_id <> ' . $cat_id . '
+					ORDER BY cat_order ASC';
 			$result = $db->sql_query($sql);
 
 			$catrows = array();
@@ -419,10 +429,10 @@ else
 			// end write
 
 			$template->assign_vars(array(
-				'S_ALBUM_ACTION' => append_sid("mcp.$phpEx?mode=move&amp;cat_id=$cat_id"),
-				'L_MOVE' => $user->lang['MOVE'],
-				'L_MOVE_TO_CATEGORY' => $user->lang['MOVE_TO_ALBUM'],
-				'S_CATEGORY_SELECT' => $category_select)
+				'S_ALBUM_ACTION' 		=> append_sid("mcp.$phpEx?mode=move&amp;cat_id=$cat_id"),
+				'L_MOVE' 				=> $user->lang['MOVE'],
+				'L_MOVE_TO_CATEGORY' 	=> $user->lang['MOVE_TO_ALBUM'],
+				'S_CATEGORY_SELECT' 	=> $category_select)
 			);
 
 			// Output page
@@ -438,6 +448,11 @@ else
 		}
 		else
 		{
+			// Check the salt... yumyum
+			if (!check_form_key('mcp'))
+			{
+				trigger_error('FORM_INVALID');
+			}
 			// Do the MOVE action
 			//
 			// Now we only get $pic_id[] via POST (after the select target screen)
@@ -460,19 +475,21 @@ else
 
 			// well, we got the array of pic_id but we must do a check to make sure all these
 			// pics are in this category (prevent some naughty moderators to access un-authorised pics)
-			$sql = "SELECT pic_id
-					FROM ". ALBUM_TABLE ."
-					WHERE pic_id IN ($pic_id_sql) AND pic_cat_id <> $cat_id";
+			$sql = 'SELECT pic_id
+					FROM ' . ALBUM_TABLE . '
+					WHERE pic_id IN (' . $pic_id_sql . ') 
+						AND pic_cat_id <> ' . $cat_id;
 			$result = $db->sql_query($sql);
+			
 			if( $db->sql_affectedrows($result) > 0 )
 			{
 				trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 			}
 
 			// Update the DB
-			$sql = "UPDATE ". ALBUM_TABLE ."
-					SET pic_cat_id = ". intval($_POST['target']) ."
-					WHERE pic_id IN ($pic_id_sql)";
+			$sql = 'UPDATE ' . ALBUM_TABLE . '
+					SET pic_cat_id = ' . intval($target) . '
+					WHERE pic_id IN (' . $pic_id_sql . ')';
 			$result = $db->sql_query($sql);
 
 			$message = $user->lang['IMAGES_MOVED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$cat_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?cat_id=$cat_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
@@ -487,7 +504,7 @@ else
 		//-----------------------------
 
 		// we must check POST method now
-		if ($pic_id != FALSE) // from GET
+		if ($pic_id <> FALSE) // from GET
 		{
 			$pic_id_sql = $pic_id;
 		}
@@ -514,9 +531,10 @@ else
 
 		// well, we got the array of pic_id but we must do a check to make sure all these
 		// pics are in this category (prevent some naughty moderators to access un-authorised pics)
-		$sql = "SELECT pic_id
-				FROM ". ALBUM_TABLE ."
-				WHERE pic_id IN ($pic_id_sql) AND pic_cat_id <> $cat_id";
+		$sql = 'SELECT pic_id
+				FROM ' . ALBUM_TABLE . '
+				WHERE pic_id IN (' . $pic_id_sql . ') 
+					AND pic_cat_id <> ' . $cat_id;
 		$result = $db->sql_query($sql);
 		if( $db->sql_affectedrows($result) > 0 )
 		{
@@ -524,14 +542,14 @@ else
 		}
 
 		// update the DB
-		$sql = "UPDATE ". ALBUM_TABLE ."
+		$sql = 'UPDATE '. ALBUM_TABLE . '
 				SET pic_lock = 1
-				WHERE pic_id IN ($pic_id_sql)";
+				WHERE pic_id IN (' . $pic_id_sql . ')';
 		$result = $db->sql_query($sql);
 
 		$message = $user->lang['IMAGES_LOCKED_SUCCESSFULLY'] .'<br /><br />';
 
-		if ($cat_id != PERSONAL_GALLERY)
+		if ($cat_id <> PERSONAL_GALLERY)
 		{
 			$message .= sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$cat_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?cat_id=$cat_id") . "\">", "</a>") . "<br /><br />";
 		}
@@ -551,7 +569,7 @@ else
 		//-----------------------------
 
 		// we must check POST method now
-		if ($pic_id != FALSE) // from GET
+		if ($pic_id <> FALSE) // from GET
 		{
 			$pic_id_sql = $pic_id;
 		}
@@ -578,24 +596,25 @@ else
 
 		// well, we got the array of pic_id but we must do a check to make sure all these
 		// pics are in this category (prevent some naughty moderators to access un-authorised pics)
-		$sql = "SELECT pic_id
-				FROM ". ALBUM_TABLE ."
-				WHERE pic_id IN ($pic_id_sql) AND pic_cat_id <> $cat_id";
+		$sql = 'SELECT pic_id
+				FROM ' . ALBUM_TABLE . '
+				WHERE pic_id IN (' . $pic_id_sql . ') 
+					AND pic_cat_id <> ' . $cat_id;
 		$result = $db->sql_query($sql);
 		if( $db->sql_affectedrows($result) > 0 )
 		{
 			trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 		}
-
+		
 		// update the DB
-		$sql = "UPDATE ". ALBUM_TABLE ."
+		$sql = 'UPDATE ' . ALBUM_TABLE . '
 				SET pic_lock = 0
-				WHERE pic_id IN ($pic_id_sql)";
+				WHERE pic_id IN (' . $pic_id_sql . ')';
 		$result = $db->sql_query($sql);
 
-		$message = $user->lang['IMAGES_UNLOCKED_SUCCESSFULLY'] .'<br /><br />';
+		$message = $user->lang['IMAGES_UNLOCKED_SUCCESSFULLY'] . '<br /><br />';
 
-		if ($cat_id != PERSONAL_GALLERY)
+		if ($cat_id <> PERSONAL_GALLERY)
 		{
 			$message .= sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$cat_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?cat_id=$cat_id") . "\">", "</a>") . "<br /><br />";
 		}
@@ -615,7 +634,7 @@ else
 		//-----------------------------
 
 		// we must check POST method now
-		if ($pic_id != FALSE) // from GET
+		if ($pic_id <> FALSE) // from GET
 		{
 			$pic_id_sql = $pic_id;
 		}
@@ -642,9 +661,10 @@ else
 
 		// well, we got the array of pic_id but we must do a check to make sure all these
 		// pics are in this category (prevent some naughty moderators to access un-authorised pics)
-		$sql = "SELECT pic_id
-				FROM ". ALBUM_TABLE ."
-				WHERE pic_id IN ($pic_id_sql) AND pic_cat_id <> $cat_id";
+		$sql = 'SELECT pic_id
+				FROM ' . ALBUM_TABLE . '
+				WHERE pic_id IN (' . $pic_id_sql . ') 
+					AND pic_cat_id <> ' . $cat_id;
 		$result = $db->sql_query($sql);
 		if( $db->sql_affectedrows($result) > 0 )
 		{
@@ -652,9 +672,9 @@ else
 		}
 
 		// update the DB
-		$sql = "UPDATE ". ALBUM_TABLE ."
+		$sql = 'UPDATE '. ALBUM_TABLE . '
 				SET pic_approval = 1
-				WHERE pic_id IN ($pic_id_sql)";
+				WHERE pic_id IN (' . $pic_id_sql . ')';
 		$result = $db->sql_query($sql);
 
 		$message = $user->lang['IMAGES_APPROVED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$cat_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?cat_id=$cat_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
@@ -668,7 +688,7 @@ else
 		//-----------------------------
 
 		// we must check POST method now
-		if ($pic_id != FALSE) // from GET
+		if ($pic_id <> FALSE) // from GET
 		{
 			$pic_id_sql = $pic_id;
 		}
@@ -695,19 +715,21 @@ else
 
 		// well, we got the array of pic_id but we must do a check to make sure all these
 		// pics are in this category (prevent some naughty moderators to access un-authorised pics)
-		$sql = "SELECT pic_id
-				FROM ". ALBUM_TABLE ."
-				WHERE pic_id IN ($pic_id_sql) AND pic_cat_id <> $cat_id";
+		$sql = 'SELECT pic_id
+				FROM ' . ALBUM_TABLE . '
+				WHERE pic_id IN (' . $pic_id_sql . ') 
+					AND pic_cat_id <> ' . $cat_id;
 		$result = $db->sql_query($sql);
+		
 		if( $db->sql_affectedrows($result) > 0 )
 		{
 			trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 		}
 
 		// update the DB
-		$sql = "UPDATE ". ALBUM_TABLE ."
+		$sql = 'UPDATE ' . ALBUM_TABLE . '
 				SET pic_approval = 0
-				WHERE pic_id IN ($pic_id_sql)";
+				WHERE pic_id IN (' . $pic_id_sql . ')';
 		$result = $db->sql_query($sql);
 
 		$message = $user->lang['IMAGES_UNAPPROVED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$cat_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?cat_id=$cat_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
@@ -729,7 +751,7 @@ else
 		{
 			// we must check POST method now
 			$pic_id_array = array();
-			if ($pic_id != FALSE) // from GET
+			if ($pic_id <> FALSE) // from GET
 			{
 				$pic_id_array[] = $pic_id;
 			}
@@ -749,11 +771,12 @@ else
 					trigger_error('No pics specified', E_USER_WARNING);
 				}
 			}
-      if ( isset($_POST['cancel']) )
-         {
-            $redirect = "mcp.$phpEx?cat_id=$cat_id";
-            redirect(append_sid($redirect, true));
-         }			
+			
+			if ( isset($_POST['cancel']) )
+			{
+				$redirect = "mcp.$phpEx?cat_id=$cat_id";
+				redirect(append_sid($redirect, true));
+			}			
 
 			// We must send out the $pic_id_array to store data between page changing
 			$hidden_field = '';
@@ -763,12 +786,12 @@ else
 			}
 
 			$template->assign_vars(array(
-				'MESSAGE_TITLE' => $user->lang['CONFIRM'],
-				'MESSAGE_TEXT' => $user->lang['ALBUM_DELETE_CONFIRM'],
-				'S_HIDDEN_FIELDS' => $hidden_field,
-				'L_NO' => $user->lang['NO'],
-				'L_YES' => $user->lang['YES'],
-				'S_CONFIRM_ACTION' => append_sid("mcp.$phpEx?mode=delete&amp;cat_id=$cat_id"),
+				'MESSAGE_TITLE' 	=> $user->lang['CONFIRM'],
+				'MESSAGE_TEXT' 		=> $user->lang['ALBUM_DELETE_CONFIRM'],
+				'S_HIDDEN_FIELDS' 	=> $hidden_field,
+				'L_NO' 				=> $user->lang['NO'],
+				'L_YES' 			=> $user->lang['YES'],
+				'S_CONFIRM_ACTION' 	=> append_sid("mcp.$phpEx?mode=delete&amp;cat_id=$cat_id"),
 				)
 			);
 
@@ -785,6 +808,12 @@ else
 		}
 		else
 		{
+			// Check the salt... yumyum
+			if (!check_form_key('mcp'))
+			{
+				trigger_error('FORM_INVALID');
+			}
+			
 			//
 			// Do the delete here...
 			//
@@ -807,31 +836,34 @@ else
 
 			// well, we got the array of pic_id but we must do a check to make sure all these
 			// pics are in this category (prevent some naughty moderators to access un-authorised pics)
-			$sql = "SELECT pic_id
-					FROM ". ALBUM_TABLE ."
-					WHERE pic_id IN ($pic_id_sql) AND pic_cat_id <> $cat_id";
+			$sql = 'SELECT pic_id
+					FROM ' . ALBUM_TABLE . '
+					WHERE pic_id IN (' . $pic_id_sql . ') 
+						AND pic_cat_id <> ' . $cat_id;
 			$result = $db->sql_query($sql);
+			
 			if( $db->sql_affectedrows($result) > 0 )
 			{
 				trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 			}
 
 			// Delete all comments
-			$sql = "DELETE FROM ". ALBUM_COMMENT_TABLE ."
-					WHERE comment_pic_id IN ($pic_id_sql)";
+			$sql = 'DELETE FROM ' . ALBUM_COMMENT_TABLE . '
+					WHERE comment_pic_id IN (' . $pic_id_sql . ')';
 			$result = $db->sql_query($sql);
 
 			// Delete all ratings
-			$sql = "DELETE FROM ". ALBUM_RATE_TABLE ."
-					WHERE rate_pic_id IN ($pic_id_sql)";
+			$sql = 'DELETE FROM ' . ALBUM_RATE_TABLE . '
+					WHERE rate_pic_id IN (' . $pic_id_sql . ')';
 			$result = $db->sql_query($sql);
 
 			// Delete Physical Files
 			// first we need filenames
-			$sql = "SELECT pic_filename, pic_thumbnail
-					FROM ". ALBUM_TABLE ."
-					WHERE pic_id IN ($pic_id_sql)";
+			$sql = 'SELECT pic_filename, pic_thumbnail
+					FROM ' . ALBUM_TABLE . '
+					WHERE pic_id IN (' . $pic_id_sql . ')';
 			$result = $db->sql_query($sql);
+			
 			$filerow = array();
 			while( $row = $db->sql_fetchrow($result) )
 			{
@@ -839,7 +871,7 @@ else
 			}
 			for ($i = 0; $i < count($filerow); $i++)
 			{
-				if( ($filerow[$i]['pic_thumbnail'] != '') && (@file_exists(ALBUM_CACHE_PATH . $filerow[$i]['pic_thumbnail'])) )
+				if( ($filerow[$i]['pic_thumbnail'] <> '') && (@file_exists(ALBUM_CACHE_PATH . $filerow[$i]['pic_thumbnail'])) )
 				{
 					@unlink(ALBUM_CACHE_PATH . $filerow[$i]['pic_thumbnail']);
 				}
@@ -847,8 +879,8 @@ else
 			}
 
 			// Delete DB entry
-			$sql = "DELETE FROM ". ALBUM_TABLE ."
-					WHERE pic_id IN ($pic_id_sql)";
+			$sql = 'DELETE FROM ' . ALBUM_TABLE . '
+					WHERE pic_id IN (' . $pic_id_sql . ')';
 			$result = $db->sql_query($sql);
 
 			$message = $user->lang['IMAGES_DELETED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$cat_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?cat_id=$cat_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
