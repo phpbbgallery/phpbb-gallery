@@ -32,7 +32,9 @@ include($album_root_path . 'includes/common.'.$phpEx);
 // Check the request
 // ------------------------------------
 
-if(!$pic_id = request_var('pic_id', 0))
+$pic_id = request_var('pic_id', 0);
+
+if( $pic_id == 0 )
 {
 	trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
 }
@@ -42,9 +44,9 @@ if(!$pic_id = request_var('pic_id', 0))
 // Get this pic info
 // ------------------------------------
 
-$sql = "SELECT *
-		FROM ". ALBUM_TABLE ."
-		WHERE pic_id = '$pic_id'";
+$sql = 'SELECT *
+		FROM ' . ALBUM_TABLE . '
+		WHERE pic_id = ' . $pic_id;
 $result = $db->sql_query($sql);
 
 $thispic = $db->sql_fetchrow($result);
@@ -65,11 +67,11 @@ if( empty($thispic) )
 // Get the current Category Info
 // ------------------------------------
 
-if ($cat_id != PERSONAL_GALLERY)
+if ($cat_id <> PERSONAL_GALLERY)
 {
-	$sql = "SELECT *
-			FROM ". ALBUM_CAT_TABLE ."
-			WHERE cat_id = '$cat_id'";
+	$sql = 'SELECT *
+			FROM ' . ALBUM_CAT_TABLE . '
+			WHERE cat_id = ' . $cat_id;
 	$result = $db->sql_query($sql);
 
 	$thiscat = $db->sql_fetchrow($result);
@@ -79,7 +81,7 @@ else
 	$thiscat = init_personal_gallery_cat($user_id);
 }
 
-if (empty($thiscat))
+if ( empty($thiscat) )
 {
 	trigger_error($user->lang['ALBUM_NOT_EXIST'], E_USER_WARNING);
 }
@@ -91,11 +93,16 @@ if (empty($thiscat))
 
 $album_user_access = album_user_access($cat_id, $thiscat, 0, 0, 0, 0, 1, 0); // EDIT
 
-if ($album_user_access['edit'] == 0)
+if ( $album_user_access['edit'] == 0 )
 {
-	if (!$user->data['is_registered'] || $user->data['is_bot'])
+	// Only registered users can go beyond this point
+	if (!$user->data['is_registered'])
 	{
-		login_box("gallery/edit.$phpEx?pic_id=$pic_id");
+		if ($user->data['is_bot'])
+		{
+			redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
+		}
+		login_box("gallery/edit.$phpEx?pic_id=$pic_id", $user->lang['LOGIN_INFO']);
 	}
 	else
 	{
@@ -104,9 +111,9 @@ if ($album_user_access['edit'] == 0)
 }
 else
 {	
-	if ((!$album_user_access['moderator']) && ($user->data['user_type'] != USER_FOUNDER))
+	if ((!$album_user_access['moderator']) && ($user->data['user_type'] <> USER_FOUNDER))
 	{
-		if ($thispic['pic_user_id'] != $user->data['user_id'])
+		if ($thispic['pic_user_id'] <> $user->data['user_id'])
 		{
 			trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 		}
@@ -120,34 +127,37 @@ else
 +----------------------------------------------------------
 */
 
+// Salting the form...yumyum ...
+add_form_key('edit_gallery');
+
+
 if(!isset($_POST['pic_title']))
 {
-
 	$template->assign_vars(array(
-		'L_EDIT_PIC_INFO' => $user->lang['EDIT_IMAGE_INFO'],
+		'L_EDIT_PIC_INFO' 		=> $user->lang['EDIT_IMAGE_INFO'],
 
-		'CAT_TITLE' => $thiscat['cat_title'],
-		'U_VIEW_CAT' => ($cat_id != PERSONAL_GALLERY) ? append_sid("album.$phpEx?id=$cat_id") : append_sid("album_personal.$phpEx?user_id=$user_id"),
+		'CAT_TITLE' 			=> $thiscat['cat_title'],
+		'U_VIEW_CAT' 			=> ($cat_id <> PERSONAL_GALLERY) ? append_sid("album.$phpEx?id=$cat_id") : append_sid("album_personal.$phpEx?user_id=$user_id"),
 
-		'L_PIC_TITLE' => $user->lang['IMAGE_TITLE'],
-		'PIC_TITLE' => $thispic['pic_title'],
-		'PIC_DESC' => $thispic['pic_desc'],
+		'L_PIC_TITLE' 			=> $user->lang['IMAGE_TITLE'],
+		'PIC_TITLE' 			=> $thispic['pic_title'],
+		'PIC_DESC' 				=> $thispic['pic_desc'],
 
-		'L_PIC_DESC' => $user->lang['IMAGE_DESC'],
-		'S_PIC_DESC_MAX_LENGTH' => $album_config['desc_length'],
+		'L_PIC_DESC' 			=> $user->lang['IMAGE_DESC'],
+		'S_PIC_DESC_MAX_LENGTH'	=> $album_config['desc_length'],
 
-		'S_ALBUM_ACTION' => append_sid("edit.$phpEx?pic_id=$pic_id"),
+		'S_ALBUM_ACTION' 		=> append_sid("edit.$phpEx?pic_id=$pic_id"),
 		)
 	);
 	
 	$template->assign_block_vars('navlinks', array(
-		'FORUM_NAME'	=> $user->lang['GALLERY'],
-		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"))
+		'FORUM_NAME'			=> $user->lang['GALLERY'],
+		'U_VIEW_FORUM'			=> append_sid("{$album_root_path}index.$phpEx"))
 	);
 	
 	$template->assign_block_vars('navlinks', array(
-		'FORUM_NAME'	=> $thiscat['cat_title'],
-		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']))
+		'FORUM_NAME'			=> $thiscat['cat_title'],
+		'U_VIEW_FORUM'			=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']))
 	);
 
 	// Output page
@@ -163,6 +173,12 @@ if(!isset($_POST['pic_title']))
 }
 else
 {
+	// Check the salt... yumyum
+	if (!check_form_key('edit_gallery'))
+	{
+		trigger_error('FORM_INVALID');
+	}
+
 	// --------------------------------
 	// Check posted info
 	// --------------------------------
@@ -171,7 +187,7 @@ else
 
 	$pic_desc = utf8_substr(request_var('pic_desc', '', true), 0, $album_config['desc_length']);
 
-	if(empty($pic_title))
+	if(	empty($pic_title) )
 	{
 		trigger_error($user->lang['MISSING_IMAGE_TITLE'], E_USER_WARNING);
 	}
@@ -180,12 +196,17 @@ else
 	// --------------------------------
 	// Update the DB
 	// --------------------------------
-
-	$sql = "UPDATE " . ALBUM_TABLE . "
-			SET pic_title = '" . $db->sql_escape($pic_title) . "', pic_desc= '" . $db->sql_escape($pic_desc) . "'
-			WHERE pic_id = '$pic_id'";
-	$result = $db->sql_query($sql);
-
+	
+	$sql_ary = array(
+		'pic_title'		=> $pic_title,
+		'pic_desc'		=> $pic_desc,
+		);
+		
+	$sql = 'UPDATE ' . ALBUM_TABLE . ' 
+		SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+		WHERE pic_id = ' . (int) $pic_id;
+	
+	$db->sql_query($sql);
 
 	// --------------------------------
 	// Complete... now send a message to user
@@ -193,7 +214,7 @@ else
 
 	$message = $user->lang['IMAGES_UPDATED_SUCCESSFULLY'];
 
-	if ($cat_id != PERSONAL_GALLERY)
+	if ($cat_id <> PERSONAL_GALLERY)
 	{
 		$template->assign_vars(array(
 			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("album.$phpEx?id=$cat_id") . '">')
@@ -213,7 +234,6 @@ else
 	$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("album.$phpEx") . "\">", "</a>");
 
 	trigger_error($message, E_USER_WARNING);
-
 }
 
 
