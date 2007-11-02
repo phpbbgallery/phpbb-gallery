@@ -42,9 +42,9 @@ if (!$pic_id = request_var('pic_id', 0))
 // Get this pic info
 // ------------------------------------
 
-$sql = "SELECT *
-		FROM ". ALBUM_TABLE ."
-		WHERE pic_id = '$pic_id'";
+$sql = 'SELECT *
+		FROM ' . ALBUM_TABLE . '
+		WHERE pic_id = ' . $pic_id;
 $result = $db->sql_query($sql);
 
 $thispic = $db->sql_fetchrow($result);
@@ -66,11 +66,11 @@ if( empty($thispic) or !file_exists(ALBUM_UPLOAD_PATH . $pic_filename) )
 // Get the current Category Info
 // ------------------------------------
 
-if ($cat_id != PERSONAL_GALLERY)
+if ($cat_id <> PERSONAL_GALLERY)
 {
-	$sql = "SELECT *
-			FROM ". ALBUM_CAT_TABLE ."
-			WHERE cat_id = '$cat_id'";
+	$sql = 'SELECT *
+			FROM ' . ALBUM_CAT_TABLE . '
+			WHERE cat_id = ' . $cat_id;
 	$result = $db->sql_query($sql);
 
 	$thiscat = $db->sql_fetchrow($result);
@@ -102,11 +102,11 @@ if ($album_user_access['view'] == 0)
 // Check Pic Approval
 // ------------------------------------
 
-if ($user->data['user_type'] != USER_FOUNDER)
+if ($user->data['user_type'] <> USER_FOUNDER)
 {
 	if (($thiscat['cat_approval'] == ADMIN) || (($thiscat['cat_approval'] == MOD) && !$album_user_access['moderator']))
 	{
-		if ($thispic['pic_approval'] != 1)
+		if ($thispic['pic_approval'] <> 1)
 		{
 			die($user->lang['NOT_AUTHORISED']);
 		}
@@ -125,7 +125,7 @@ if (($album_config['hotlink_prevent'] == 1) && (isset($HTTP_SERVER_VARS['HTTP_RE
 
 	$good_referers = array();
 
-	if ($album_config['hotlink_allowed'] != '')
+	if ($album_config['hotlink_allowed'] <> '')
 	{
 		$good_referers = explode(',', $album_config['hotlink_allowed']);
 	}
@@ -138,7 +138,7 @@ if (($album_config['hotlink_prevent'] == 1) && (isset($HTTP_SERVER_VARS['HTTP_RE
 	{
 		$good_referers[$i] = trim($good_referers[$i]);
 
-		if ((strstr($check_referer, $good_referers[$i])) && ($good_referers[$i] != ''))
+		if ((strstr($check_referer, $good_referers[$i])) && ($good_referers[$i] <> ''))
 		{
 			$errored = FALSE;
 		}
@@ -162,7 +162,10 @@ if (($album_config['hotlink_prevent'] == 1) && (isset($HTTP_SERVER_VARS['HTTP_RE
 // Send Thumbnail to browser
 // ------------------------------------
 
-if (($pic_filetype != '.jpg') && ($pic_filetype != '.png') && ($pic_filetype != '.gif'))
+/************************************
+* Alter Code - Da wir keine anderen File Typen benutzen als jpg, png und gif könnte dieser Codeteil wegfallen. 
+*
+if (($pic_filetype <> '.jpg') && ($pic_filetype <> '.png') && ($pic_filetype <> '.gif'))
 {
 	// --------------------------------
 	// GD does not support GIF so we must SEND a premade No-thumbnail pic then EXIT
@@ -174,21 +177,23 @@ if (($pic_filetype != '.jpg') && ($pic_filetype != '.png') && ($pic_filetype != 
 }
 else
 {
+*/
 	// --------------------------------
 	// Check thumbnail cache. If cache is available we will SEND & EXIT
 	// --------------------------------
 
-	if (($album_config['thumbnail_cache'] == 1) && ($pic_thumbnail != '') && file_exists(ALBUM_CACHE_PATH . $pic_thumbnail))
+	if (($album_config['thumbnail_cache'] == 1) && ($pic_thumbnail <> '') && file_exists(ALBUM_CACHE_PATH . $pic_thumbnail))
 	{
 		switch ($pic_filetype)
 		{
-		  case '.gif':
+			case '.gif':
 			case '.jpg':
 				header('Content-type: image/jpeg');
-				break;
+			break;
+			
 			case '.png':
 				header('Content-type: image/png');
-				break;
+			break;
 		}
 
 		readfile(ALBUM_CACHE_PATH . $pic_thumbnail);
@@ -207,16 +212,18 @@ else
 	$gd_errored = FALSE;
 	switch ($pic_filetype)
 	{
-	 case '.gif':
-      $read_function = 'imagecreatefromgif';
-      $pic_filetype = '.jpg';
-   break;
+		case '.gif':
+			$read_function = 'imagecreatefromgif';
+			$pic_filetype = '.jpg';
+		break;
+		
 		case '.jpg':
 			$read_function = 'imagecreatefromjpeg';
-			break;
+		break;
+		
 		case '.png':
 			$read_function = 'imagecreatefrompng';
-			break;
+		break;
 	}
 
 	$src = @$read_function(ALBUM_UPLOAD_PATH  . $pic_filename);
@@ -316,8 +323,10 @@ else
 		readfile('images/nothumbnail.jpg');
 		exit;
 	}
+/* Alter Code - Da wir keine anderen File Typen benutzen als jpg, png und gif könnte dieser Codeteil wegfallen.
+/*
 }
-
+*/
 
 // +------------------------------------------------------+
 // |  Powered by Photo Album 2.x.x (c) 2002-2003 Smartor  |

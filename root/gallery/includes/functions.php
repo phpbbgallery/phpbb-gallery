@@ -41,14 +41,15 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	// Here the array which this function would return. Now we initiate it!
 	// --------------------------------
 	$album_user_access = array(
-		'view' => 0,
-		'upload' => 0,
-		'rate' => 0,
-		'comment' => 0,
-		'edit' => 0,
-		'delete' => 0,
-		'moderator' => 0
+		'view' 		=> 0,
+		'upload' 	=> 0,
+		'rate' 		=> 0,
+		'comment' 	=> 0,
+		'edit' 		=> 0,
+		'delete' 	=> 0,
+		'moderator' => 0,
 	);
+	
 	$album_user_access_keys = array_keys($album_user_access);
 	//
 	// END initiation $album_user_access
@@ -69,12 +70,12 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 
 		if ($personal_gallery_access['upload'])
 		{
-			$album_user_access['upload'] = 1;
-			$album_user_access['rate'] = 1;
-			$album_user_access['comment'] = 1;
+			$album_user_access['upload'] 	= 1;
+			$album_user_access['rate'] 		= 1;
+			$album_user_access['comment'] 	= 1;
 
-			$album_user_access['edit'] = 1;
-			$album_user_access['delete'] = 1;
+			$album_user_access['edit'] 		= 1;
+			$album_user_access['delete'] 	= 1;
 
 			if ($auth->acl_get('a_') && $user->data['is_registered'] && !$user->data['is_bot'])
 			{
@@ -148,32 +149,32 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	// --------------------------------
 	$access_type = array();
 
-	if ($view_check != 0)
+	if ($view_check <> 0)
 	{
 		$access_type[] = 'view';
 	}
 
-	if ($upload_check != 0)
+	if ($upload_check <> 0)
 	{
 		$access_type[] = 'upload';
 	}
 
-	if ($rate_check != 0)
+	if ($rate_check <> 0)
 	{
 		$access_type[] = 'rate';
 	}
 
-	if ($comment_check != 0)
+	if ($comment_check <> 0)
 	{
 		$access_type[] = 'comment';
 	}
 
-	if ($edit_check != 0)
+	if ($edit_check <> 0)
 	{
 		$access_type[] = 'edit';
 	}
 
-	if ($delete_check != 0)
+	if ($delete_check <> 0)
 	{
 		$access_type[] = 'delete';
 	}
@@ -212,9 +213,9 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 		$sql .= ', cat_moderator_groups';
 	}
 
-	$sql .= "
-			FROM ". ALBUM_CAT_TABLE ."
-			WHERE cat_id = '$cat_id'";
+	$sql .= '
+			FROM ' . ALBUM_CAT_TABLE . '
+			WHERE cat_id = ' . $cat_id;
 	//
 	// END SQL query generating
 	//
@@ -245,35 +246,35 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	$groups_access = array();
 	for ($i = 0; $i < count($access_type); $i++)
 	{
-		switch ($thiscat['cat_'. $access_type[$i] .'_level'])
+		switch ($thiscat['cat_' . $access_type[$i] . '_level'])
 		{
 			case ALBUM_GUEST:
 				$album_user_access[$access_type[$i]] = 1;
-				break;
+			break;
 
 			case ALBUM_USER:
 				if ($user->data['is_registered'] && !$user->data['is_bot'])
 				{
 					$album_user_access[$access_type[$i]] = 1;
 				}
-				break;
+			break;
 
 			case ALBUM_PRIVATE:
-				if( ($thiscat['cat_'. $access_type[$i] .'_groups'] != '') and ($user->data['is_registered']) )
+				if( ($thiscat['cat_' . $access_type[$i] . '_groups'] <> '') and ($user->data['is_registered']) )
 				{
 					$groups_access[] = $access_type[$i];
 				}
-				break;
+			break;
 
 			case ALBUM_MOD:
 				// this will be checked later
-				break;
+			break;
 
 			case ALBUM_ADMIN:
 				// ADMIN already returned before at the checking code
 				// at the top of this function. So this user cannot be authorised
 				$album_user_access[$access_type[$i]] = 0;
-				break;
+			break;
 
 			default:
 				$album_user_access[$access_type[$i]] = 0;
@@ -287,7 +288,7 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	// --------------------------------
 	// We can return now if $groups_access is empty AND $moderator_check == 0
 	// --------------------------------
-	if( ($moderator_check == 1) and ($thiscat['cat_moderator_groups'] != '') )
+	if( ($moderator_check == 1) and ($thiscat['cat_moderator_groups'] <> '') )
 	{
 		// We can merge them now
 		$groups_access[] = 'moderator';
@@ -311,10 +312,11 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	// So avoiding PRIVATE will speed up your album. However, these queries are very fast
 	for ($i = 0; $i < count($groups_access); $i++)
 	{
-		$sql = "SELECT group_id, user_id
-				FROM ". USER_GROUP_TABLE ."
-				WHERE user_id = '". $user->data['user_id'] ."' AND user_pending = 0
-					AND group_id IN (". $thiscat['cat_'. $groups_access[$i] .'_groups'] .")";
+		$sql = 'SELECT group_id, user_id
+				FROM ' . USER_GROUP_TABLE . '
+				WHERE user_id = ' . $user->data['user_id'] . ' 
+					AND user_pending = 0
+					AND group_id IN (' . $thiscat['cat_' . $groups_access[$i] . '_groups'] . ')';
 		$result = $db->sql_query($sql);
 
 		if( $db->sql_affectedrows($result) > 0 )
@@ -335,7 +337,7 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	{
 		for ($i = 0; $i < count($album_user_access); $i++)
 		{
-			if( $thiscat['cat_'. $album_user_access_keys[$i] .'_level'] != ALBUM_ADMIN )
+			if( $thiscat['cat_' . $album_user_access_keys[$i] . '_level'] <> ALBUM_ADMIN )
 			{
 				$album_user_access[$album_user_access_keys[$i]] = 1;
 			}
@@ -366,8 +368,8 @@ function personal_gallery_access($check_view, $check_upload)
 
 	// This array will contain the result
 	$personal_gallery_access = array(
-		'view' => 0,
-		'upload' => 0,
+		'view' 		=> 0,
+		'upload' 	=> 0,
 	);
 
 	// --------------------------------
@@ -382,7 +384,7 @@ function personal_gallery_access($check_view, $check_upload)
 				{
 					$personal_gallery_access['upload'] = 1;
 				}
-				break;
+			break;
 
 			case ALBUM_PRIVATE:
 				if( ($user->data['is_registered']) && ($user->data['user_type'] == 3) )
@@ -391,10 +393,11 @@ function personal_gallery_access($check_view, $check_upload)
 				}
 				else if(!empty($album_config['personal_gallery_private']) && $user->data['is_registered'] && !$user->data['is_bot'])
 				{
-					$sql = "SELECT group_id, user_id
-							FROM ". USER_GROUP_TABLE ."
-							WHERE user_id = '". $user->data['user_id'] ."' AND user_pending = 0
-								AND group_id IN (". $album_config['personal_gallery_private'] .")";
+					$sql = 'SELECT group_id, user_id
+							FROM ' . USER_GROUP_TABLE . '
+							WHERE user_id = ' . $user->data['user_id'] . ' 
+								AND user_pending = 0
+								AND group_id IN (' . $album_config['personal_gallery_private'] . ')';
 					$result = $db->sql_query($sql);
 
 					if( $db->sql_affectedrows($result) > 0 )
@@ -402,14 +405,14 @@ function personal_gallery_access($check_view, $check_upload)
 						$personal_gallery_access['upload'] = 1;
 					}
 				}
-				break;
+			break;
 
 			case ALBUM_ADMIN:
 				if($user->data['is_registered'] && $user->data['user_type'] == 3)
 				{
 					$personal_gallery_access['upload'] = 1;
 				}
-				break;
+			break;
 		}
 	}
 
@@ -422,14 +425,14 @@ function personal_gallery_access($check_view, $check_upload)
 		{
 			case ALBUM_GUEST:
 				$personal_gallery_access['view'] = 1;
-				break;
+			break;
 
 			case ALBUM_USER:
 				if ($user->data['is_registered'] && !$user->data['is_bot'])
 				{
 					$personal_gallery_access['view'] = 1;
 				}
-				break;
+			break;
 
 			case ALBUM_PRIVATE:
 				if( ($user->data['is_registered']) && ($user->data['user_type'] == 3) )
@@ -438,10 +441,11 @@ function personal_gallery_access($check_view, $check_upload)
 				}
 				else if(!empty($album_config['personal_gallery_private']) && $user->data['is_registered'] && !$user->data['is_bot'])
 				{
-					$sql = "SELECT group_id, user_id
-							FROM ". USER_GROUP_TABLE ."
-							WHERE user_id = '". $user->data['user_id'] ."' AND user_pending = 0
-								AND group_id IN (". $album_config['personal_gallery_private'] .")";
+					$sql = 'SELECT group_id, user_id
+							FROM ' . USER_GROUP_TABLE . '
+							WHERE user_id = ' . $user->data['user_id'] . ' 
+								AND user_pending = 0
+								AND group_id IN (' . $album_config['personal_gallery_private'] . ')';
 					$result = $db->sql_query($sql);
 
 					if( $db->sql_affectedrows($result) > 0 )
@@ -449,7 +453,7 @@ function personal_gallery_access($check_view, $check_upload)
 						$personal_gallery_access['view'] = 1;
 					}
 				}
-				break;
+			break;
 		}
 	}
 
@@ -469,10 +473,10 @@ function init_personal_gallery_cat($user_id = 0)
 		$user_id = $user->data['user_id'];
 	}
 
-	$sql = "SELECT COUNT(pic_id) AS count
-			FROM " . ALBUM_TABLE . "
-			WHERE pic_cat_id = " . PERSONAL_GALLERY . "
-				AND pic_user_id = " . $user_id;
+	$sql = 'SELECT COUNT(pic_id) AS count
+			FROM ' . ALBUM_TABLE . '
+			WHERE pic_cat_id = ' . PERSONAL_GALLERY . '
+				AND pic_user_id = ' . $user_id;
 
 	$result = $db->sql_query($sql);
 
@@ -480,11 +484,11 @@ function init_personal_gallery_cat($user_id = 0)
 
 	$count = $row['count'];
 
-	if ($user_id != $user->data['user_id'])
+	if ($user_id <> $user->data['user_id'])
 	{
-		$sql = "SELECT user_id, username
-				FROM ". USERS_TABLE ."
-				WHERE user_id = $user_id";
+		$sql = 'SELECT user_id, username
+				FROM ' . USERS_TABLE . '
+				WHERE user_id = ' . $user_id;
 
 		$result = $db->sql_query($sql);
 
@@ -497,26 +501,26 @@ function init_personal_gallery_cat($user_id = 0)
 	}
 
 	$thiscat = array(
-		'cat_id' => 0,
-		'cat_title' => sprintf($lang['Personal_Gallery_Of_User'], $username),
-		'cat_desc' => '',
-		'cat_order' => 0,
-		'count' => $count,
-		'cat_view_level' => $album_config['personal_gallery_view'],
-		'cat_upload_level' => $album_config['personal_gallery'],
-		'cat_rate_level' => $album_config['personal_gallery_view'],
-		'cat_comment_level' => $album_config['personal_gallery_view'],
-		'cat_edit_level' => $album_config['personal_gallery'],
-		'cat_delete_level' => $album_config['personal_gallery'],
-		'cat_view_groups' => $album_config['personal_gallery_private'],
-		'cat_upload_groups' => $album_config['personal_gallery_private'],
-		'cat_rate_groups' => $album_config['personal_gallery_private'],
-		'cat_comment_groups' => $album_config['personal_gallery_private'],
-		'cat_edit_groups' => $album_config['personal_gallery_private'],
-		'cat_delete_groups' => $album_config['personal_gallery_private'],
-		'cat_delete_groups' => $album_config['personal_gallery_private'],
-		'cat_moderator_groups' => '',
-		'cat_approval' => 0
+		'cat_id' 				=> 0,
+		'cat_title' 			=> sprintf($lang['Personal_Gallery_Of_User'], $username),
+		'cat_desc' 				=> '',
+		'cat_order' 			=> 0,
+		'count' 				=> $count,
+		'cat_view_level' 		=> $album_config['personal_gallery_view'],
+		'cat_upload_level' 		=> $album_config['personal_gallery'],
+		'cat_rate_level' 		=> $album_config['personal_gallery_view'],
+		'cat_comment_level' 	=> $album_config['personal_gallery_view'],
+		'cat_edit_level' 		=> $album_config['personal_gallery'],
+		'cat_delete_level' 		=> $album_config['personal_gallery'],
+		'cat_view_groups' 		=> $album_config['personal_gallery_private'],
+		'cat_upload_groups' 	=> $album_config['personal_gallery_private'],
+		'cat_rate_groups' 		=> $album_config['personal_gallery_private'],
+		'cat_comment_groups' 	=> $album_config['personal_gallery_private'],
+		'cat_edit_groups' 		=> $album_config['personal_gallery_private'],
+		'cat_delete_groups' 	=> $album_config['personal_gallery_private'],
+		'cat_delete_groups' 	=> $album_config['personal_gallery_private'],
+		'cat_moderator_groups' 	=> '',
+		'cat_approval' 			=> 0,
 	);
 
 	return $thiscat;

@@ -172,27 +172,103 @@ $result = $db->sql_query($sql);
 // ------------------------------------
 // Okay, now we can send image to the browser
 // ------------------------------------
+$watermark_ok = false;
 
-switch ( $pic_filetype )
+if ($album_config['watermark_images'] == 1)
 {
-	case '.png':
-		header('Content-type: image/png');
-	break;
-	
-	case '.gif':
-		header('Content-type: image/gif');
-	break;
-	
-	case '.jpg':
-		header('Content-type: image/jpeg');
-	break;
-	
-	default:
-		die('The filename data in the DB was corrupted');
+	$marktype = substr($album_config['watermark_source'], strlen($album_config['watermark_source']) - 4, 4);
+	switch ( $marktype )
+	{
+		case '.png':
+			$nm = imagecreatefrompng($phpbb_root_path . $album_config['watermark_source']);
+		break;
+		
+		case '.gif':
+			$nm = imagecreatefromgif($phpbb_root_path . $album_config['watermark_source']);
+		break;
+		
+		case '.jpg':
+		case 'jpeg':
+			$nm = imagecreatefromjpeg($phpbb_root_path .$album_config['watermark_source']);
+		break;
+		
+		default:
+			$nm = false;
+	}
+
+	if ( $nm )
+	{
+		$sx = imagesx($nm);
+		$sy = imagesy($nm);
+
+		switch ( $pic_filetype )
+		{
+			case '.png':
+				$im = imagecreatefrompng(ALBUM_UPLOAD_PATH  . $thispic['pic_filename']);
+			break;
+			
+			case '.gif':
+				$im = imagecreatefromgif(ALBUM_UPLOAD_PATH  . $thispic['pic_filename']);
+			break;
+			
+			case '.jpg':
+			case 'jpeg':
+				$im = imagecreatefromjpeg(ALBUM_UPLOAD_PATH  . $thispic['pic_filename']);
+			break;
+			
+			default:
+				$im = false;
+		}
+
+		if ( $im )
+		{
+			$sx2 = imagesx($im);
+			$sy2 = imagesy($im);
+			imagecopymerge($im,$nm,(($sx2 * 0.5) - ($sx * 0.5)), ($sy2 - $sy - 5), 0,0,$sx,$sy,85);
+
+			$watermark_ok = true;
+		}
+	}
 }
 
-readfile(ALBUM_UPLOAD_PATH  . $thispic['pic_filename']);
+if ($watermark_ok)
+{
+	switch ( $pic_filetype )
+	{
+			case '.png':
+			case '.gif':
+				header('Content-type: image/png');
+				imagepng($im);
+			break;
+			
+			default:
+				header('Content-type: image/jpeg');
+				imagejpeg($im);
+			break;
+	}
+}
+else
+{
+	switch ( $pic_filetype )
+	{
+		case '.png':
+			header('Content-type: image/png');
+		break;
+		
+		case '.gif':
+			header('Content-type: image/gif');
+		break;
+		
+		case '.jpg':
+			header('Content-type: image/jpeg');
+		break;
+		
+		default:
+			die('The filename data in the DB was corrupted');
+	}
 
+	readfile(ALBUM_UPLOAD_PATH  . $thispic['pic_filename']);
+}
 exit;
 
 

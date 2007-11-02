@@ -17,8 +17,8 @@ if ( !defined('IN_PHPBB') )
 //
 // Get Album Config
 //
-$sql = "SELECT *
-		FROM " . ALBUM_CONFIG_TABLE;
+$sql = 'SELECT *
+		FROM ' . ALBUM_CONFIG_TABLE;
 $result = $db->sql_query($sql);
 
 while( $row = $db->sql_fetchrow($result) )

@@ -120,7 +120,40 @@ else
 	}
 }
 
+$template->assign_block_vars('navlinks', array(
+	'FORUM_NAME'	=> $user->lang['GALLERY'],
+	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
+	)
+);
 
+if ($cat_id == PERSONAL_GALLERY)
+{
+	$template->assign_block_vars('navlinks', array(
+		'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],
+		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal_index.$phpEx"),
+		)
+	);
+	
+	$template->assign_block_vars('navlinks', array(
+		'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $thispic['pic_username']),
+		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal.$phpEx", 'user_id=' . $user_id),
+		)
+	);
+}
+else
+{
+	$template->assign_block_vars('navlinks', array(
+		'FORUM_NAME'	=> $thiscat['cat_title'],
+		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']),
+		)
+	);
+
+	$template->assign_block_vars('navlinks', array(
+		'FORUM_NAME'	=> $user->lang['MODCP'],
+		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'cat_id=' . $thiscat['cat_id']),
+		)
+	);
+}
 /*
 +----------------------------------------------------------
 | Main work here...
@@ -149,7 +182,8 @@ if(!isset($_POST['pic_title']))
 		'S_ALBUM_ACTION' 		=> append_sid("edit.$phpEx?pic_id=$pic_id"),
 		)
 	);
-	
+
+/*	
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'			=> $user->lang['GALLERY'],
 		'U_VIEW_FORUM'			=> append_sid("{$album_root_path}index.$phpEx"))
@@ -159,6 +193,7 @@ if(!isset($_POST['pic_title']))
 		'FORUM_NAME'			=> $thiscat['cat_title'],
 		'U_VIEW_FORUM'			=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']))
 	);
+*/
 
 	// Output page
 	$page_title = $user->lang['GALLERY'];

@@ -140,6 +140,9 @@ $lang = array_merge($lang, array(
 	'USER_IMAGES_LIMIT'				=> 'Images limit per Album for each user (-1 = unlimited)',
 	
 	'VIEW_LEVEL'					=> 'View Level',
+	
+	'WATERMARK_IMAGES'				=> 'Watermark images',
+	'WATERMARK_SOURCE'		 		=> 'Watermark source file (relative to your phpbb root)',
 	)
 );
 

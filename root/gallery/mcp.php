@@ -27,70 +27,11 @@ $user->setup('mods/gallery');
 //
 include($album_root_path . 'includes/common.'.$phpEx);
 
-
-// ------------------------------------
-// Get the $pic_id from GET method then query out the category
-// If $pic_id not found we will assign it to FALSE
-// We will check $pic_id[] in POST method later (in $mode carry out)
-// ------------------------------------
-
-$pic_id = request_var('pic_id', 0);
-$cat_id = request_var('cat_id', 0);
-
-if($pic_id <> 0)
-{
-	$sql = 'SELECT *
-			FROM ' . ALBUM_TABLE . '
-			WHERE pic_id = ' . $pic_id;
-	$result = $db->sql_query($sql);
-
-	$thispic = $db->sql_fetchrow($result);
-
-	if( empty($thispic) )
-	{
-		trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_WARNING);
-	}
-
-	$cat_id = $thispic['pic_cat_id'];
-	$user_id = $thispic['pic_user_id'];
-}
-
-
-// ------------------------------------
-// Get the cat info
-// ------------------------------------
-if( ($cat_id == PERSONAL_GALLERY) && (($_GET['mode'] == 'lock') || ($_GET['mode'] == 'unlock')) )
-{
-	$thiscat = init_personal_gallery_cat($user_id);
-}
-else
-{
-	$sql = 'SELECT *
-			FROM ' . ALBUM_CAT_TABLE . '
-			WHERE cat_id = ' . $cat_id;
-	$result = $db->sql_query($sql);
-
-	$thiscat = $db->sql_fetchrow($result);
-}
-
-if (empty($thiscat))
-{
-	trigger_error($user->lang['ALBUM_NOT_EXIST'], E_USER_WARNING);
-}
-
-$auth_data = album_user_access($cat_id, $thiscat, 0, 0, 0, 0, 0, 0); // MODERATOR only
-//
-// END category info
-//
-
-// ------------------------------------
-// Salting the form...yumyum ...
-// ------------------------------------
-add_form_key('mcp');
-
 // ------------------------------------
 // set $mode (select action)
 // ------------------------------------
+$mode = request_var('mode', '');
+
 if( isset($_POST['mode']) )
 {
 	// Oh data from Mod CP
@@ -134,6 +75,66 @@ else
 //
 // END $mode (select action)
 //
+
+// ------------------------------------
+// Get the $pic_id from GET method then query out the category
+// If $pic_id not found we will assign it to FALSE
+// We will check $pic_id[] in POST method later (in $mode carry out)
+// ------------------------------------
+
+$pic_id = request_var('pic_id', 0);
+$cat_id = request_var('cat_id', 0);
+
+if($pic_id <> 0)
+{
+	$sql = 'SELECT *
+			FROM ' . ALBUM_TABLE . '
+			WHERE pic_id = ' . $pic_id;
+	$result = $db->sql_query($sql);
+
+	$thispic = $db->sql_fetchrow($result);
+
+	if( empty($thispic) )
+	{
+		trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_WARNING);
+	}
+
+	$cat_id = $thispic['pic_cat_id'];
+	$user_id = $thispic['pic_user_id'];
+}
+
+
+// ------------------------------------
+// Get the cat info
+// ------------------------------------
+if( ($cat_id == PERSONAL_GALLERY) && (($mode == 'lock') || ($mode == 'unlock')) )
+{
+	$thiscat = init_personal_gallery_cat($user_id);
+}
+else
+{
+	$sql = 'SELECT *
+			FROM ' . ALBUM_CAT_TABLE . '
+			WHERE cat_id = ' . $cat_id;
+	$result = $db->sql_query($sql);
+
+	$thiscat = $db->sql_fetchrow($result);
+}
+
+if (empty($thiscat))
+{
+	trigger_error($user->lang['ALBUM_NOT_EXIST'], E_USER_WARNING);
+}
+
+$auth_data = album_user_access($cat_id, $thiscat, 0, 0, 0, 0, 0, 0); // MODERATOR only
+//
+// END category info
+//
+
+// ------------------------------------
+// Salting the form...yumyum ...
+// ------------------------------------
+add_form_key('mcp');
 
 
 // ------------------------------------
@@ -332,6 +333,24 @@ if ($mode == '')
 		)
 	);
 
+	$template->assign_block_vars('navlinks', array(
+		'FORUM_NAME'	=> $user->lang['GALLERY'],
+		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
+		)
+	);
+
+	$template->assign_block_vars('navlinks', array(
+		'FORUM_NAME'	=> $thiscat['cat_title'],
+		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']),
+		)
+	);
+
+	$template->assign_block_vars('navlinks', array(
+		'FORUM_NAME'	=> $user->lang['MODCP'],
+		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'cat_id=' . $thiscat['cat_id']),
+		)
+	);
+
 	// Output page
 	$page_title = $user->lang['GALLERY'];
 	
@@ -434,6 +453,24 @@ else
 				'L_MOVE_TO_CATEGORY' 	=> $user->lang['MOVE_TO_ALBUM'],
 				'S_CATEGORY_SELECT' 	=> $category_select)
 			);
+			
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $user->lang['GALLERY'],
+				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
+				)
+			);
+
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $thiscat['cat_title'],
+				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']),
+				)
+			);
+
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $user->lang['MODCP'],
+				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'cat_id=' . $thiscat['cat_id']),
+				)
+			);
 
 			// Output page
 			$page_title = $user->lang['GALLERY'];
@@ -448,6 +485,24 @@ else
 		}
 		else
 		{
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $user->lang['GALLERY'],
+				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
+				)
+			);
+
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $thiscat['cat_title'],
+				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']),
+				)
+			);
+
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $user->lang['MODCP'],
+				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'cat_id=' . $thiscat['cat_id']),
+				)
+			);
+			
 			// Check the salt... yumyum
 			if (!check_form_key('mcp'))
 			{
@@ -502,7 +557,42 @@ else
 		//-----------------------------
 		// LOCK
 		//-----------------------------
+		
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['GALLERY'],
+			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
+			)
+		);
 
+		if ($cat_id == PERSONAL_GALLERY)
+		{
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],
+				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal_index.$phpEx"),
+				)
+			);
+			
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $thispic['pic_username']),
+				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal.$phpEx", 'user_id=' . $user_id),
+				)
+			);
+		}
+		else
+		{
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $thiscat['cat_title'],
+				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']),
+				)
+			);
+
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $user->lang['MODCP'],
+				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'cat_id=' . $thiscat['cat_id']),
+				)
+			);
+		}
+		
 		// we must check POST method now
 		if ($pic_id <> FALSE) // from GET
 		{
@@ -567,6 +657,41 @@ else
 		//-----------------------------
 		// UNLOCK
 		//-----------------------------
+
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['GALLERY'],
+			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
+			)
+		);
+		
+		if ($cat_id == PERSONAL_GALLERY)
+		{
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],
+				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal_index.$phpEx"),
+				)
+			);
+			
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $thispic['pic_username']),
+				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal.$phpEx", 'user_id=' . $user_id),
+				)
+			);
+		}
+		else
+		{
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $thiscat['cat_title'],
+				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']),
+				)
+			);
+
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $user->lang['MODCP'],
+				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'cat_id=' . $thiscat['cat_id']),
+				)
+			);
+		}
 
 		// we must check POST method now
 		if ($pic_id <> FALSE) // from GET
@@ -633,6 +758,24 @@ else
 		// APPROVAL
 		//-----------------------------
 
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['GALLERY'],
+			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
+			)
+		);
+
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $thiscat['cat_title'],
+			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']),
+			)
+		);
+
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['MODCP'],
+			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'cat_id=' . $thiscat['cat_id']),
+			)
+		);
+		
 		// we must check POST method now
 		if ($pic_id <> FALSE) // from GET
 		{
@@ -686,6 +829,24 @@ else
 		//-----------------------------
 		// UNAPPROVAL
 		//-----------------------------
+
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['GALLERY'],
+			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
+			)
+		);
+
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $thiscat['cat_title'],
+			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']),
+			)
+		);
+
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['MODCP'],
+			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'cat_id=' . $thiscat['cat_id']),
+			)
+		);		
 
 		// we must check POST method now
 		if ($pic_id <> FALSE) // from GET
@@ -741,6 +902,25 @@ else
 		//-----------------------------
 		// DELETE
 		//-----------------------------
+		
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['GALLERY'],
+			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
+			)
+		);
+		
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $thiscat['cat_title'],
+			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']),
+			)
+		);
+
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['MODCP'],
+			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'cat_id=' . $thiscat['cat_id']),
+			)
+		);
+
 
 		if ($auth_data['delete'] == 0)
 		{
@@ -890,8 +1070,27 @@ else
 	}
 	else
 	{
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['GALLERY'],
+			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
+			)
+		);
+
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $thiscat['cat_title'],
+			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']),
+			)
+		);
+
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['MODCP'],
+			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'cat_id=' . $thiscat['cat_id']),
+			)
+		);
+		
 		trigger_error('Invalid_mode', E_USER_WARNING);
 	}
+	
 }
 
 

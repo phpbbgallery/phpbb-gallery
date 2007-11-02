@@ -145,6 +145,9 @@ $lang = array_merge($lang, array(
 	'USER_IMAGES_LIMIT'					=> 'Bilder pro Album für jeden Benutzer (-1 = unbegrenzt)',
 	
 	'VIEW_LEVEL'						=> 'Betrachten Level',
+	
+	'WATERMARK_IMAGES'					=> 'Wasserzeichen aktivieren',
+	'WATERMARK_SOURCE'		 			=> 'Wasserzeichen Bild (Releativer Pfad zum Forums Root)',
 	)
 );
 

@@ -130,6 +130,7 @@ class acp_gallery
 			'MAX_HEIGHT' 						=> $new['max_height'],
 			'ROWS_PER_PAGE' 					=> $new['rows_per_page'],
 			'COLS_PER_PAGE' 					=> $new['cols_per_page'],
+			'WATERMARK_SOURCE' 					=> $new['watermark_source'],
 			'THUMBNAIL_QUALITY' 				=> $new['thumbnail_quality'],
 			'THUMBNAIL_SIZE' 					=> $new['thumbnail_size'],
 			'PERSONAL_GALLERY_LIMIT' 			=> $new['personal_gallery_limit'],
@@ -150,6 +151,10 @@ class acp_gallery
 			'GIF_DISABLED' 						=> ($new['gif_allowed'] == 0) ? 'checked="checked"' : '',
 		
 			'PIC_DESC_MAX_LENGTH' 				=> $new['desc_length'],
+			
+			'WATERMARK_ENABLED' 				=> ($new['watermark_images'] == 1) ? 'checked="checked"' : '',
+			'WATERMARK_DISABLED' 				=> ($new['watermark_images'] == 0) ? 'checked="checked"' : '',
+
 		
 			'HOTLINK_PREVENT_ENABLED' 			=> ($new['hotlink_prevent'] == 1) ? 'checked="checked"' : '',
 			'HOTLINK_PREVENT_DISABLED' 			=> ($new['hotlink_prevent'] == 0) ? 'checked="checked"' : '',
@@ -189,6 +194,9 @@ class acp_gallery
 		
 			'FULLPIC_POPUP_ENABLED' 			=> ($new['fullpic_popup'] == 1) ? 'checked="checked"' : '',
 			'FULLPIC_POPUP_DISABLED' 			=> ($new['fullpic_popup'] == 0) ? 'checked="checked"' : '',
+			
+		//	'L_WATERMARK_IMAGES' 				=> $user->lang['WATERMARK_IMAGES'],
+		//	'L_WATERMARK_SOURCE' 				=> $user->lang['WATERMARk_SOURCE'],
 		
 			'S_GUEST' 							=> ALBUM_GUEST,
 			'S_USER' 							=> ALBUM_USER,
