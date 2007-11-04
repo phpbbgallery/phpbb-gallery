@@ -64,6 +64,7 @@ $lang = array_merge($lang, array(
 	'CAN_RATE'							=> 'Kann Bewerten',
 	'CAN_UPLOAD'						=> 'Kann hochladen',
 	'CAN_VIEW'							=> 'Kann ansehen',
+	'CAN_CREATE'						=> 'Kann erstellen',
 
 	'CLEAR_CACHE'						=> 'Den Cache leeren',
 	'CLICK_RETURN_ALBUM_AUTH'			=> 'Klicke %shier%s um zu den Album Berechtigungen zurückzukehren',

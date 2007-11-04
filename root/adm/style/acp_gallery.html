@@ -23,6 +23,9 @@
 <!-- ELSEIF S_GALLERY_OVERVIEW -->
 <h1>{L_ACP_GALLERY_OVERVIEW}</h1>
 <p>{L_ACP_GALLERY_OVERVIEW_EXPLAIN}</p>
+<!-- ELSEIF S_PERSONAL_ALBUM_PERMISSIONS_SELECT_GROUPS -->
+<h1>{L_ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS}</h1>
+<p>{L_ALBUM_PERSONAL_GALLERY_EXPLAIN}</p>
 <!-- ENDIF -->
 
 
@@ -365,6 +368,32 @@
 		</td>
 	</tr>
 	<!-- END grouprow -->
+</table>
+<br />
+<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+</fieldset>
+{S_FORM_TOKEN}
+</form>
+
+<!-- ELSEIF S_PERSONAL_ALBUM_PERMISSIONS_SELECT_GROUPS -->
+<form action="{S_ALBUM_ACTION}" method="post">
+<table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline">
+	<tr>
+		<th class="thCornerL" height="25" nowrap="nowrap">{L_USERGROUPS}</th>
+		<th class="thTop" nowrap="nowrap">{L_CAN_CREATE}</th>
+	</tr>
+	<!-- BEGIN creation_grouprow -->
+	<tr>
+		<td class="row1" align="center" height="28"><span class="gen">{creation_grouprow.GROUP_NAME}</span></td>
+		<td class="row2" align="center">
+			<input name="view[]" type="checkbox" {creation_grouprow.PRIVATE_CHECKED} value="{creation_grouprow.GROUP_ID}" />
+		</td>
+
+	</tr>
+	<!-- END creation_grouprow -->
 </table>
 <br />
 <fieldset class="submit-buttons">

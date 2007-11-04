@@ -77,7 +77,7 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 			$album_user_access['edit'] 		= 1;
 			$album_user_access['delete'] 	= 1;
 
-			if ($auth->acl_get('a_') && $user->data['is_registered'] && !$user->data['is_bot'])
+			if ($auth->acl_get('a_board') && $user->data['is_registered'] && !$user->data['is_bot'])
 			{
 				$album_user_access['moderator'] = 1;
 			}
@@ -97,7 +97,7 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	// --------------------------------
 	// If the current user is an ADMIN (ALBUM_ADMIN == ADMIN)
 	// --------------------------------
-	if ($auth->acl_get('a_') && $user->data['is_registered'])
+	if ($auth->acl_get('a_board') && $user->data['is_registered'])
 	{
 		for ($i = 0; $i < count($album_user_access); $i++)
 		{

@@ -68,6 +68,10 @@ class acp_gallery
 				$this->album_permissions();
 			break;
 			
+			case 'album_personal_permissions':
+				$this->album_personal_permissions();
+			break;
+			
 			default:
 				$this->overview();
 			break;
@@ -335,6 +339,54 @@ class acp_gallery
 		
 				trigger_error($user->lang['ALBUM_AUTH_SUCCESSFULLY'] . adm_back_link($this->u_action));
 			}
+		}
+
+	}
+	
+	function album_personal_permissions()
+	{
+		global $db, $template, $user;
+		
+		if( !isset($_POST['submit']) )
+		{
+			// Get the list of phpBB usergroups
+			$sql = 'SELECT group_id, group_name, group_type
+					FROM ' . GROUPS_TABLE . '
+					ORDER BY group_name ASC';
+			$result = $db->sql_query($sql);
+	
+			while( $row = $db->sql_fetchrow($result) )
+			{
+				$groupdata[] = $row;
+			}
+			
+			// Get the current album settings for non created personal galleries
+			$sql = 'SELECT *
+					FROM ' . ALBUM_CONFIG_TABLE . "
+					WHERE config_name = 'personal_gallery_private'";
+			$result = $db->sql_query($sql);
+			
+			$row = $db->sql_fetchrow($result);
+			
+			$private_groups = explode(',', $row['config_value']);
+
+			for($i = 0; $i < count($groupdata); $i++)
+			{
+				$template->assign_block_vars('creation_grouprow', array(
+					'GROUP_ID' 			=> $groupdata[$i]['group_id'],
+					'GROUP_NAME' 		=> ($groupdata[$i]['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $groupdata[$i]['group_name']] : $groupdata[$i]['group_name'],
+					'PRIVATE_CHECKED' 	=> (in_array($groupdata[$i]['group_id'], $private_groups)) ? 'checked="checked"' : ''
+					) //end array
+				);
+				
+			}
+			
+			$template->assign_vars(array(/**/
+				'S_PERSONAL_ALBUM_PERMISSIONS_SELECT_GROUPS'	=> true,
+				'L_ALBUM_AUTH_TITEL'	=> $user->lang['ALBUM_PERSONAL_GALLERY_TITLE'],
+				'L_ALBUM_AUTH_EXPLAIN'	=> $user->lang['ALBUM_PERSONAL_GALLERY_EXPLAIN'],
+				'S_ALBUM_ACTION' 		=> $this->u_action,
+			));
 		}
 
 	}

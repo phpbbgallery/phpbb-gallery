@@ -40,6 +40,7 @@ $lang = array_merge($lang, array(
 	'ACP_GALLERY_MANAGE_CACHE'			=> 'Den Cache verwalten',
 	'ACP_GALLERY_CONFIGURE_GALLERY'		=> 'Galerie konfigurieren',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'		=> 'Album Berechtigungen',
+	'ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS'	=> 'Persönliche Alben Berechtigungen',
 	'ACP_GALLERY_OVERVIEW'				=> 'Übersicht',
 	'ACP_GALLERY_MANAGE_ALBUMS'			=> 'Verwalte Alben',
 	
