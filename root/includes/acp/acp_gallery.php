@@ -388,6 +388,28 @@ class acp_gallery
 				'S_ALBUM_ACTION' 		=> $this->u_action,
 			));
 		}
+		else
+		{		
+				// Is it salty ?
+				if (!check_form_key('acp_gallery'))
+				{
+					trigger_error('FORM_INVALID');
+				}
+		
+				$create_groups 		= @implode(',', $_POST['create']);
+
+				$sql_ary = array(
+					'config_value'		=> $create_groups,
+					);
+				
+				$sql = 'UPDATE ' . ALBUM_CONFIG_TABLE . ' 
+					SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
+					WHERE config_name = 'personal_gallery_private'";
+				$db->sql_query($sql);
+		
+				trigger_error($user->lang['ALBUM_AUTH_SUCCESSFULLY'] . adm_back_link($this->u_action));
+						
+		}
 
 	}
 	
