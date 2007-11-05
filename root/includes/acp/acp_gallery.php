@@ -22,7 +22,7 @@ class acp_gallery
 							
 		// Set up the page
 		$this->tpl_name 	= 'acp_gallery';
-		$this->page_title = 'ACP_GALLERY_' . strtoupper($mode);
+		//$this->page_title = 'ACP_GALLERY_TITLE' . strtoupper($mode);
 
 		// Salting the form...yumyum ...
 		add_form_key('acp_gallery');
@@ -34,14 +34,23 @@ class acp_gallery
 				switch ($action)
 				{
 					case 'create':
+						$title = 'GALLERY_ALBUMS_TITLE';
+						$this->page_title = $user->lang[$title];					
+
 						$this->create_album();
 					break;
 					
 					case 'edit':
+						$title = 'ACP_EDIT_ALBUM_TITLE';
+						$this->page_title = $user->lang[$title];
+						
 						$this->edit_album();
 					break;
 					
 					case 'delete':
+						$title = 'DELETE_ALBUM';
+						$this->page_title = $user->lang[$title];
+						
 						$this->delete_album();
 					break;
 					
@@ -50,29 +59,47 @@ class acp_gallery
 					break;
 					
 					default:
+						$title = 'ACP_GALLERY_MANAGE_ALBUMS';
+						$this->page_title = $user->lang[$title];
+
 						$this->manage_albums();
 					break;
 				}
 			break;
 			
 			case 'configure_gallery':
+				$title = 'GALLERY_CONFIG';
+				$this->page_title = $user->lang[$title];
+						
 				$this->configure_gallery();
 			break;
 			
 			case 'manage_cache':
+				$title = 'CLEAR_CACHE';
+				$this->page_title = $user->lang[$title];
+				
 				$this->tpl_name 	= 'confirm_body';
 				$this->manage_cache();
 			break;
 			
 			case 'album_permissions':
+				$title = 'ALBUM_AUTH_TITLE';
+				$this->page_title = $user->lang[$title];
+				
 				$this->album_permissions();
 			break;
 			
 			case 'album_personal_permissions':
+				$title = 'ALBUM_PERSONAL_GALLERY_TITLE';
+				$this->page_title = $user->lang[$title];			
+
 				$this->album_personal_permissions();
 			break;
 			
 			default:
+				$title = 'ACP_GALLERY_OVERVIEW';
+				$this->page_title = $user->lang[$title];
+				
 				$this->overview();
 			break;
 		}
@@ -82,7 +109,9 @@ class acp_gallery
 	{
 		global $template, $user;
 		$template->assign_vars(array(
-			'S_GALLERY_OVERVIEW'	=> true,
+			'S_GALLERY_OVERVIEW'			=> true,
+			'L_ACP_GALLERY_TITLE'			=> $user->lang['ACP_GALLERY_OVERVIEW'],
+			'L_ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['ACP_GALLERY_OVERVIEW_EXPLAIN'],
 		));
 	}
 	
@@ -127,6 +156,9 @@ class acp_gallery
 		$template->assign_vars(array(
 			'S_CONFIGURE_GALLERY'				=> true,
 			'S_ALBUM_CONFIG_ACTION' 			=> $this->u_action,
+			
+			'L_ACP_GALLERY_TITLE'				=> $user->lang['GALLERY_CONFIG'],
+			'L_ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['GALLERY_CONFIG_EXPLAIN'],
 		
 			'MAX_PICS' 							=> $new['max_pics'],
 			'MAX_FILE_SIZE' 					=> $new['max_file_size'],
@@ -158,7 +190,6 @@ class acp_gallery
 			
 			'WATERMARK_ENABLED' 				=> ($new['watermark_images'] == 1) ? 'checked="checked"' : '',
 			'WATERMARK_DISABLED' 				=> ($new['watermark_images'] == 0) ? 'checked="checked"' : '',
-
 		
 			'HOTLINK_PREVENT_ENABLED' 			=> ($new['hotlink_prevent'] == 1) ? 'checked="checked"' : '',
 			'HOTLINK_PREVENT_DISABLED' 			=> ($new['hotlink_prevent'] == 0) ? 'checked="checked"' : '',
@@ -199,9 +230,6 @@ class acp_gallery
 			'FULLPIC_POPUP_ENABLED' 			=> ($new['fullpic_popup'] == 1) ? 'checked="checked"' : '',
 			'FULLPIC_POPUP_DISABLED' 			=> ($new['fullpic_popup'] == 0) ? 'checked="checked"' : '',
 			
-		//	'L_WATERMARK_IMAGES' 				=> $user->lang['WATERMARK_IMAGES'],
-		//	'L_WATERMARK_SOURCE' 				=> $user->lang['WATERMARk_SOURCE'],
-		
 			'S_GUEST' 							=> ALBUM_GUEST,
 			'S_USER' 							=> ALBUM_USER,
 			'S_PRIVATE' 						=> ALBUM_PRIVATE,
@@ -237,7 +265,10 @@ class acp_gallery
 		
 			$template->assign_vars(array(
 				'S_ALBUM_PERMISSIONS_SELECT_ALBUM'	=> true,
-				'S_ALBUM_ACTION' 		=> $this->u_action,
+				'S_ALBUM_ACTION' 					=> $this->u_action,
+				
+				'L_ACP_GALLERY_TITLE'				=> $user->lang['ALBUM_AUTH_TITLE'],
+				'L_ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ALBUM_AUTH_EXPLAIN'],	
 			));
 		}
 		else
@@ -248,15 +279,19 @@ class acp_gallery
 		
 				$template->assign_vars(array(/**/
 					'S_ALBUM_PERMISSIONS_SELECT_GROUPS'	=> true,
-					'L_GROUPS' 			=> $user->lang['USERGROUPS'],
-					'L_VIEW' 			=> $user->lang['CAN_VIEW'],
-					'L_UPLOAD' 			=> $user->lang['CAN_UPLOAD'],
-					'L_RATE' 			=> $user->lang['CAN_RATE'],
-					'L_COMMENT' 		=> $user->lang['CAN_COMMENT'],
-					'L_EDIT' 			=> $user->lang['CAN_EDIT'],
-					'L_DELETE' 			=> $user->lang['CAN_DELETE'],
-					'L_IS_MODERATOR' 	=> $user->lang['IS_MODERATOR'],
-					'S_ALBUM_ACTION' 	=> $this->u_action . "&amp;cat_id=$cat_id",
+					
+					'L_ACP_GALLERY_TITLE'				=> $user->lang['ALBUM_AUTH_TITLE'],
+					'L_ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ALBUM_AUTH_EXPLAIN'],
+					
+					'L_GROUPS' 							=> $user->lang['USERGROUPS'],
+					'L_VIEW' 							=> $user->lang['CAN_VIEW'],
+					'L_UPLOAD' 							=> $user->lang['CAN_UPLOAD'],
+					'L_RATE' 							=> $user->lang['CAN_RATE'],
+					'L_COMMENT' 						=> $user->lang['CAN_COMMENT'],
+					'L_EDIT' 							=> $user->lang['CAN_EDIT'],
+					'L_DELETE' 							=> $user->lang['CAN_DELETE'],
+					'L_IS_MODERATOR' 					=> $user->lang['IS_MODERATOR'],
+					'S_ALBUM_ACTION' 					=> $this->u_action . "&amp;cat_id=$cat_id",
 					));
 		
 				// Get the list of phpBB usergroups
@@ -383,9 +418,10 @@ class acp_gallery
 			
 			$template->assign_vars(array(/**/
 				'S_PERSONAL_ALBUM_PERMISSIONS_SELECT_GROUPS'	=> true,
-				'L_ALBUM_AUTH_TITEL'	=> $user->lang['ALBUM_PERSONAL_GALLERY_TITLE'],
-				'L_ALBUM_AUTH_EXPLAIN'	=> $user->lang['ALBUM_PERSONAL_GALLERY_EXPLAIN'],
-				'S_ALBUM_ACTION' 		=> $this->u_action,
+				'S_ALBUM_ACTION' 								=> $this->u_action,
+				
+				'L_ACP_GALLERY_TITLE'							=> $user->lang['ALBUM_PERSONAL_GALLERY_TITLE'],
+				'L_ACP_GALLERY_TITLE_EXPLAIN'					=> $user->lang['ALBUM_PERSONAL_GALLERY_EXPLAIN'],
 			));
 		}
 		else
@@ -418,9 +454,13 @@ class acp_gallery
 		global $db, $user, $auth, $template, $cache;/**/
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;/**/
 		$template->assign_vars(array(
-			'S_MANAGE_ALBUMS'		=> true,
-			'S_ALBUM_ACTION'		=> $this->u_action . '&amp;action=create',
-			'TEST'					=> $this->u_action . '&amp;parent_id='
+			'S_MANAGE_ALBUMS'				=> true,
+			'S_ALBUM_ACTION'				=> $this->u_action . '&amp;action=create',
+			
+			'L_ACP_GALLERY_TITLE'			=> $user->lang['ACP_MANAGE_ALBUMS'],
+			'L_ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['ACP_MANAGE_ALBUMS_EXPLAIN'],
+
+			'TEST'							=> $this->u_action . '&amp;parent_id=',
 		));
 
 		$sql = 'SELECT *
@@ -456,43 +496,45 @@ class acp_gallery
 		if( !isset($_POST['cat_title']) )
 		{
 			$template->assign_vars(array(/**/
-				'S_CREATE_ALBUM'		=> true,
-				'L_ALBUM_CAT_TITLE' 	=> $user->lang['GALLERY_ALBUMS_TITLE'],
-				'L_ALBUM_CAT_EXPLAIN' 	=> $user->lang['ACP_CREATE_ALBUM_EXPLAIN'],
-				'S_ALBUM_ACTION' 		=> $this->u_action . '&amp;action=create',
-				'L_CAT_TITLE' 			=> $user->lang['ALBUM_TITLE'],
-				'L_CAT_DESC' 			=> $user->lang['ALBUM_DESC'],
-				'L_CAT_PERMISSIONS' 	=> $user->lang['ALBUM_PERMISSIONS'],
-				'L_VIEW_LEVEL' 			=> $user->lang['VIEW_LEVEL'],
-				'L_UPLOAD_LEVEL' 		=> $user->lang['UPLOAD_LEVEL'],
-				'L_RATE_LEVEL' 			=> $user->lang['RATE_LEVEL'],
-				'L_COMMENT_LEVEL' 		=> $user->lang['COMMENT_LEVEL'],
-				'L_EDIT_LEVEL' 			=> $user->lang['EDIT_LEVEL'],
-				'L_DELETE_LEVEL' 		=> $user->lang['DELETE_LEVEL'],
-				'L_PICS_APPROVAL' 		=> $user->lang['IMAGE_APPROVAL'],
-				'L_GUEST' 				=> $user->lang['GALLERY_ALL'], 
-				'L_REG' 				=> $user->lang['GALLERY_REG'], 
-				'L_PRIVATE' 			=> $user->lang['GALLERY_PRIVATE'], 
-				'L_MOD' 				=> $user->lang['GALLERY_MOD'], 
-				'L_ADMIN' 				=> $user->lang['GALLERY_ADMIN'],
+				'S_CREATE_ALBUM'				=> true,
+				
+				'L_ACP_GALLERY_TITLE'			=> $user->lang['GALLERY_ALBUMS_TITLE'],
+				'L_ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['ACP_CREATE_ALBUM_EXPLAIN'],
+				
+				'S_ALBUM_ACTION' 				=> $this->u_action . '&amp;action=create',
+				'L_CAT_TITLE' 					=> $user->lang['ALBUM_TITLE'],
+				'L_CAT_DESC' 					=> $user->lang['ALBUM_DESC'],
+				'L_CAT_PERMISSIONS' 			=> $user->lang['ALBUM_PERMISSIONS'],
+				'L_VIEW_LEVEL' 					=> $user->lang['VIEW_LEVEL'],
+				'L_UPLOAD_LEVEL' 				=> $user->lang['UPLOAD_LEVEL'],
+				'L_RATE_LEVEL' 					=> $user->lang['RATE_LEVEL'],
+				'L_COMMENT_LEVEL' 				=> $user->lang['COMMENT_LEVEL'],
+				'L_EDIT_LEVEL' 					=> $user->lang['EDIT_LEVEL'],
+				'L_DELETE_LEVEL' 				=> $user->lang['DELETE_LEVEL'],
+				'L_PICS_APPROVAL' 				=> $user->lang['IMAGE_APPROVAL'],
+				'L_GUEST' 						=> $user->lang['GALLERY_ALL'], 
+				'L_REG' 						=> $user->lang['GALLERY_REG'], 
+				'L_PRIVATE' 					=> $user->lang['GALLERY_PRIVATE'], 
+				'L_MOD' 						=> $user->lang['GALLERY_MOD'], 
+				'L_ADMIN' 						=> $user->lang['GALLERY_ADMIN'],
 
-				'L_DISABLED' 			=> $user->lang['DISABLED'],
+				'L_DISABLED' 					=> $user->lang['DISABLED'],
 
-				'VIEW_GUEST' 			=> 'selected="selected"',
-				'UPLOAD_REG' 			=> 'selected="selected"',
-				'RATE_REG' 				=> 'selected="selected"',
-				'COMMENT_REG' 			=> 'selected="selected"',
-				'EDIT_REG' 				=> 'selected="selected"',
-				'DELETE_MOD' 			=> 'selected="selected"',
-				'APPROVAL_DISABLED' 	=> 'selected="selected"',
+				'VIEW_GUEST' 					=> 'selected="selected"',
+				'UPLOAD_REG' 					=> 'selected="selected"',
+				'RATE_REG' 						=> 'selected="selected"',
+				'COMMENT_REG' 					=> 'selected="selected"',
+				'EDIT_REG' 						=> 'selected="selected"',
+				'DELETE_MOD' 					=> 'selected="selected"',
+				'APPROVAL_DISABLED' 			=> 'selected="selected"',
 
-				'S_MODE' 				=> 'new',
+				'S_MODE' 						=> 'new',
 
-				'S_GUEST' 				=> ALBUM_GUEST,
-				'S_USER' 				=> ALBUM_USER,
-				'S_PRIVATE' 			=> ALBUM_PRIVATE,
-				'S_MOD' 				=> ALBUM_MOD,
-				'S_ADMIN' 				=> ALBUM_ADMIN,
+				'S_GUEST' 						=> ALBUM_GUEST,
+				'S_USER' 						=> ALBUM_USER,
+				'S_PRIVATE' 					=> ALBUM_PRIVATE,
+				'S_MOD' 						=> ALBUM_MOD,
+				'S_ADMIN' 						=> ALBUM_ADMIN,
 				));
 		}
 		else
@@ -589,8 +631,9 @@ class acp_gallery
 				'S_CREATE_ALBUM'		=> true,
 				'S_CREATE_ALBUM2'		=> true,
 
-				'L_ALBUM_CAT_TITLE' 	=> $user->lang['GALLERY_ALBUMS_TITLE'],
-				'L_ALBUM_CAT_EXPLAIN' 	=> $user->lang['ACP_EDIT_ALBUM_EXPLAIN'],
+				'L_ACP_GALLERY_TITLE'			=> $user->lang['GALLERY_ALBUMS_TITLE'],
+				'L_ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['ACP_EDIT_ALBUM_EXPLAIN'],
+				
 				'S_ALBUM_ACTION' 		=> $this->u_action . '&amp;action=edit&amp;cat_id=' . $cat_id,
 				'L_CAT_TITLE' 			=> $user->lang['ALBUM_TITLE'],
 				'L_CAT_DESC' 			=> $user->lang['ALBUM_DESC'],
@@ -749,10 +792,12 @@ class acp_gallery
 
 			$template->assign_vars(array(
 				'S_DELETE_ALBUM'		=> true,
+
+				'L_ACP_GALLERY_TITLE'			=> $user->lang['DELETE_ALBUM'],
+				'L_ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['DELETE_ALBUM_EXPLAIN'],
 				
 				'S_ALBUM_ACTION' 		=>  $this->u_action . '&amp;action=delete&amp;cat_id=' . $cat_id,
 				'L_CAT_DELETE' 			=> $user->lang['DELETE_ALBUM'],
-				'L_CAT_DELETE_EXPLAIN' 	=> $user->lang['DELETE_ALBUM_EXPLAIN'],
 				'L_CAT_TITLE' 			=> $user->lang['ALBUM_TITLE'],
 				'S_CAT_TITLE' 			=> $thiscat['cat_title'],
 				'L_MOVE_CONTENTS' 		=> $user->lang['MOVE_CONTENTS'],
@@ -876,9 +921,10 @@ class acp_gallery
 		if( !isset($_POST['confirm']) )
 		{
 			$template->assign_vars(array(
-				'MESSAGE_TITLE' 	=> $user->lang['CLEAR_CACHE'],
-				'MESSAGE_TEXT' 		=> $user->lang['GALLERY_CLEAR_CACHE_CONFIRM'],
-				'S_CONFIRM_ACTION' 	=> $this->u_action,
+				'MESSAGE_TITLE' 		=> $user->lang['CLEAR_CACHE'],
+				'MESSAGE_TEXT' 			=> $user->lang['GALLERY_CLEAR_CACHE_CONFIRM'],
+				
+				'S_CONFIRM_ACTION' 		=> $this->u_action,
 				));
 		}
 		else
