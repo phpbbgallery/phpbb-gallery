@@ -36,19 +36,13 @@ if (empty($lang) || !is_array($lang))
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
 $lang = array_merge($lang, array(
-	'PHPBB_GALLERY'						=> 'phpBB Gallery',
-	'ACP_GALLERY_MANAGE_CACHE'			=> 'Den Cache verwalten',
-	'ACP_GALLERY_CONFIGURE_GALLERY'		=> 'Galerie konfigurieren',
-	'ACP_GALLERY_ALBUM_PERMISSIONS'		=> 'Album Berechtigungen',
+	'PHPBB_GALLERY'								=> 'phpBB Gallery',
+	'ACP_GALLERY_OVERVIEW'						=> 'Übersicht',
+	'ACP_GALLERY_MANAGE_ALBUMS'					=> 'Verwalte Alben',
+	'ACP_GALLERY_MANAGE_CACHE'					=> 'Den Cache verwalten',
+	'ACP_GALLERY_CONFIGURE_GALLERY'				=> 'Galerie konfigurieren',
+	'ACP_GALLERY_ALBUM_PERMISSIONS'				=> 'Album Berechtigungen',
 	'ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS'	=> 'Persönliche Alben Berechtigungen',
-	'ACP_GALLERY_OVERVIEW'				=> 'Übersicht',
-	'ACP_GALLERY_MANAGE_ALBUMS'			=> 'Verwalte Alben',
-	
-	'MANAGE_ALBUMS'						=> 'Verwalte Alben',
-	'GALLERY_OVERVIEW'					=> 'Galerie Übersicht',
-	'GALLERY_MANAGE_CACHE'				=> 'Den Cache verwalten',
-	'GALLERY_CONFIGURE_GALLERY'			=> 'Galerie konfigurieren',
-	'ALBUM_PERMISSIONS'					=> 'Album Berechtigungen',
 ));
 
 ?>
