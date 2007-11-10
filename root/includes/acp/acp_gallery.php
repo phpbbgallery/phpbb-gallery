@@ -12,21 +12,18 @@
 class acp_gallery
 {
 	var $u_action;
-					
 	function main($id, $mode)
 	{
 		global $user;
-					
+
 		$user->add_lang('mods/gallery_acp');
 		$user->add_lang('mods/gallery');
-							
+
 		// Set up the page
 		$this->tpl_name 	= 'acp_gallery';
-		//$this->page_title = 'ACP_GALLERY_TITLE' . strtoupper($mode);
-
 		// Salting the form...yumyum ...
 		add_form_key('acp_gallery');
-		
+
 		switch ($mode)
 		{
 			case 'manage_albums':
@@ -35,29 +32,29 @@ class acp_gallery
 				{
 					case 'create':
 						$title = 'GALLERY_ALBUMS_TITLE';
-						$this->page_title = $user->lang[$title];					
+						$this->page_title = $user->lang[$title];
 
 						$this->create_album();
 					break;
-					
+
 					case 'edit':
 						$title = 'ACP_EDIT_ALBUM_TITLE';
 						$this->page_title = $user->lang[$title];
-						
+
 						$this->edit_album();
 					break;
-					
+
 					case 'delete':
 						$title = 'DELETE_ALBUM';
 						$this->page_title = $user->lang[$title];
-						
+
 						$this->delete_album();
 					break;
-					
+
 					case 'move':
 						$this->move_album();
 					break;
-					
+
 					default:
 						$title = 'ACP_GALLERY_MANAGE_ALBUMS';
 						$this->page_title = $user->lang[$title];
@@ -70,22 +67,22 @@ class acp_gallery
 			case 'configure_gallery':
 				$title = 'GALLERY_CONFIG';
 				$this->page_title = $user->lang[$title];
-						
+
 				$this->configure_gallery();
 			break;
 			
 			case 'manage_cache':
 				$title = 'CLEAR_CACHE';
 				$this->page_title = $user->lang[$title];
-				
-				$this->tpl_name 	= 'confirm_body';
+				$this->tpl_name = 'confirm_body';
+
 				$this->manage_cache();
 			break;
 			
 			case 'album_permissions':
 				$title = 'ALBUM_AUTH_TITLE';
 				$this->page_title = $user->lang[$title];
-				
+
 				$this->album_permissions();
 			break;
 			
@@ -99,22 +96,22 @@ class acp_gallery
 			default:
 				$title = 'ACP_GALLERY_OVERVIEW';
 				$this->page_title = $user->lang[$title];
-				
+
 				$this->overview();
 			break;
 		}
 	}
-	
+
 	function overview()
 	{
 		global $template, $user;
 		$template->assign_vars(array(
 			'S_GALLERY_OVERVIEW'			=> true,
-			'L_ACP_GALLERY_TITLE'			=> $user->lang['ACP_GALLERY_OVERVIEW'],
-			'L_ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['ACP_GALLERY_OVERVIEW_EXPLAIN'],
+			'ACP_GALLERY_TITLE'				=> $user->lang['ACP_GALLERY_OVERVIEW'],
+			'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_GALLERY_OVERVIEW_EXPLAIN'],
 		));
 	}
-	
+
 	function configure_gallery()
 	{
 		global $db, $template, $user;
@@ -127,9 +124,8 @@ class acp_gallery
 			$config_name = $row['config_name'];
 			$config_value = $row['config_value'];
 			$default_config[$config_name] = isset($_POST['submit']) ? str_replace("'", "\'", $config_value) : $config_value;
-			
 			$new[$config_name] = request_var($config_name, $default_config[$config_name]);
-			
+
 			if( isset($_POST['submit']) )
 			{
 				// Is it salty ?
@@ -137,7 +133,7 @@ class acp_gallery
 				{
 					trigger_error('FORM_INVALID');
 				}
-				
+
 				$sql_ary = array(
 					'config_value'		=> $new[$config_name],
 				);
@@ -147,19 +143,19 @@ class acp_gallery
 				$db->sql_query($sql);
 			}
 		}
-	
+
 		if (isset($_POST['submit']))
 		{
 			trigger_error($user->lang['GALLERY_CONFIG_UPDATED'] . adm_back_link($this->u_action));
 		}
-		
+
 		$template->assign_vars(array(
 			'S_CONFIGURE_GALLERY'				=> true,
 			'S_ALBUM_CONFIG_ACTION' 			=> $this->u_action,
-			
-			'L_ACP_GALLERY_TITLE'				=> $user->lang['GALLERY_CONFIG'],
-			'L_ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['GALLERY_CONFIG_EXPLAIN'],
-		
+
+			'ACP_GALLERY_TITLE'					=> $user->lang['GALLERY_CONFIG'],
+			'ACP_GALLERY_TITLE_EXPLAIN'			=> $user->lang['GALLERY_CONFIG_EXPLAIN'],
+
 			'MAX_PICS' 							=> $new['max_pics'],
 			'MAX_FILE_SIZE' 					=> $new['max_file_size'],
 			'MAX_WIDTH' 						=> $new['max_width'],
@@ -170,52 +166,47 @@ class acp_gallery
 			'THUMBNAIL_QUALITY' 				=> $new['thumbnail_quality'],
 			'THUMBNAIL_SIZE' 					=> $new['thumbnail_size'],
 			'PERSONAL_GALLERY_LIMIT' 			=> $new['personal_gallery_limit'],
-		
+
 			'USER_PICS_LIMIT' 					=> $new['user_pics_limit'],
 			'MOD_PICS_LIMIT' 					=> $new['mod_pics_limit'],
-		
+
 			'THUMBNAIL_CACHE_ENABLED' 			=> ($new['thumbnail_cache'] == 1) ? 'checked="checked"' : '',
 			'THUMBNAIL_CACHE_DISABLED' 			=> ($new['thumbnail_cache'] == 0) ? 'checked="checked"' : '',
-		
+
 			'JPG_ENABLED' 						=> ($new['jpg_allowed'] == 1) ? 'checked="checked"' : '',
 			'JPG_DISABLED' 						=> ($new['jpg_allowed'] == 0) ? 'checked="checked"' : '',
-		
 			'PNG_ENABLED' 						=> ($new['png_allowed'] == 1) ? 'checked="checked"' : '',
 			'PNG_DISABLED' 						=> ($new['png_allowed'] == 0) ? 'checked="checked"' : '',
-		
 			'GIF_ENABLED' 						=> ($new['gif_allowed'] == 1) ? 'checked="checked"' : '',
 			'GIF_DISABLED' 						=> ($new['gif_allowed'] == 0) ? 'checked="checked"' : '',
-		
+
 			'PIC_DESC_MAX_LENGTH' 				=> $new['desc_length'],
-			
+
 			'WATERMARK_ENABLED' 				=> ($new['watermark_images'] == 1) ? 'checked="checked"' : '',
 			'WATERMARK_DISABLED' 				=> ($new['watermark_images'] == 0) ? 'checked="checked"' : '',
-		
+
 			'HOTLINK_PREVENT_ENABLED' 			=> ($new['hotlink_prevent'] == 1) ? 'checked="checked"' : '',
 			'HOTLINK_PREVENT_DISABLED' 			=> ($new['hotlink_prevent'] == 0) ? 'checked="checked"' : '',
-		
 			'HOTLINK_ALLOWED' 					=> $new['hotlink_allowed'],
-		
+
 			'PERSONAL_GALLERY_USER' 			=> ($new['personal_gallery'] == ALBUM_USER) ? 'checked="checked"' : '',
 			'PERSONAL_GALLERY_PRIVATE' 			=> ($new['personal_gallery'] == ALBUM_PRIVATE) ? 'checked="checked"' : '',
 			'PERSONAL_GALLERY_ADMIN' 			=> ($new['personal_gallery'] == ALBUM_ADMIN) ? 'checked="checked"' : '',
-		
 			'PERSONAL_GALLERY_VIEW_ALL' 		=> ($new['personal_gallery_view'] == ALBUM_GUEST) ? 'checked="checked"' : '',
 			'PERSONAL_GALLERY_VIEW_REG' 		=> ($new['personal_gallery_view'] == ALBUM_USER) ? 'checked="checked"' : '',
 			'PERSONAL_GALLERY_VIEW_PRIVATE' 	=> ($new['personal_gallery_view'] == ALBUM_PRIVATE) ? 'checked="checked"' : '',
-		
+
 			'RATE_ENABLED' 						=> ($new['rate'] == 1) ? 'checked="checked"' : '',
 			'RATE_DISABLED' 					=> ($new['rate'] == 0) ? 'checked="checked"' : '',
-		
 			'RATE_SCALE' 						=> $new['rate_scale'],
-		
+
 			'COMMENT_ENABLED' 					=> ($new['comment'] == 1) ? 'checked="checked"' : '',
 			'COMMENT_DISABLED' 					=> ($new['comment'] == 0) ? 'checked="checked"' : '',
-		
+
 			'NO_GD' 							=> ($new['gd_version'] == 0) ? 'checked="checked"' : '',
 			'GD_V1' 							=> ($new['gd_version'] == 1) ? 'checked="checked"' : '',
 			'GD_V2' 							=> ($new['gd_version'] == 2) ? 'checked="checked"' : '',
-		
+
 			'SORT_TIME' 						=> ($new['sort_method'] == 'pic_time') ? 'selected="selected"' : '',
 			'SORT_PIC_TITLE' 					=> ($new['sort_method'] == 'pic_title') ? 'selected="selected"' : '',
 			'SORT_USERNAME' 					=> ($new['sort_method'] == 'pic_user_id') ? 'selected="selected"' : '',
@@ -223,13 +214,12 @@ class acp_gallery
 			'SORT_RATING' 						=> ($new['sort_method'] == 'rating') ? 'selected="selected"' : '',
 			'SORT_COMMENTS' 					=> ($new['sort_method'] == 'comments') ? 'selected="selected"' : '',
 			'SORT_NEW_COMMENT' 					=> ($new['sort_method'] == 'new_comment') ? 'selected="selected"' : '',
-		
 			'SORT_ASC' 							=> ($new['sort_order'] == 'ASC') ? 'selected="selected"' : '',
 			'SORT_DESC' 						=> ($new['sort_order'] == 'DESC') ? 'selected="selected"' : '',
-		
+
 			'FULLPIC_POPUP_ENABLED' 			=> ($new['fullpic_popup'] == 1) ? 'checked="checked"' : '',
 			'FULLPIC_POPUP_DISABLED' 			=> ($new['fullpic_popup'] == 0) ? 'checked="checked"' : '',
-			
+
 			'S_GUEST' 							=> ALBUM_GUEST,
 			'S_USER' 							=> ALBUM_USER,
 			'S_PRIVATE' 						=> ALBUM_PRIVATE,
@@ -241,7 +231,7 @@ class acp_gallery
 	function album_permissions()
 	{
 		global $db, $template, $user;
-		
+
 		if( !isset($_POST['submit']) )
 		{
 			// Build the category selector
@@ -249,12 +239,12 @@ class acp_gallery
 					FROM ' . ALBUM_CAT_TABLE . '
 					ORDER BY cat_order ASC';
 			$result = $db->sql_query($sql);
-		
+
 			while( $row = $db->sql_fetchrow($result) )
 			{
 				$catrows[] = $row;
 			}
-		
+
 			for ($i = 0; $i < count($catrows); $i++)
 			{
 				$template->assign_block_vars('catrow', array(
@@ -262,13 +252,13 @@ class acp_gallery
 					'CAT_TITLE' => $catrows[$i]['cat_title'],
 					));
 			}
-		
+
 			$template->assign_vars(array(
 				'S_ALBUM_PERMISSIONS_SELECT_ALBUM'	=> true,
 				'S_ALBUM_ACTION' 					=> $this->u_action,
-				
-				'L_ACP_GALLERY_TITLE'				=> $user->lang['ALBUM_AUTH_TITLE'],
-				'L_ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ALBUM_AUTH_EXPLAIN'],	
+
+				'ACP_GALLERY_TITLE'				=> $user->lang['ALBUM_AUTH_TITLE'],
+				'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ALBUM_AUTH_EXPLAIN'],
 			));
 		}
 		else
@@ -276,58 +266,49 @@ class acp_gallery
 			if(!isset($_GET['cat_id']))
 			{
 				$cat_id = request_var('cat_id', 0);
-		
+
 				$template->assign_vars(array(
 					'S_ALBUM_PERMISSIONS_SELECT_GROUPS'	=> true,
-					
-					'L_ACP_GALLERY_TITLE'				=> $user->lang['ALBUM_AUTH_TITLE'],
-					'L_ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ALBUM_AUTH_EXPLAIN'],
-					
-					'L_GROUPS' 							=> $user->lang['USERGROUPS'],
-					'L_VIEW' 							=> $user->lang['CAN_VIEW'],
-					'L_UPLOAD' 							=> $user->lang['CAN_UPLOAD'],
-					'L_RATE' 							=> $user->lang['CAN_RATE'],
-					'L_COMMENT' 						=> $user->lang['CAN_COMMENT'],
-					'L_EDIT' 							=> $user->lang['CAN_EDIT'],
-					'L_DELETE' 							=> $user->lang['CAN_DELETE'],
-					'L_IS_MODERATOR' 					=> $user->lang['IS_MODERATOR'],
 					'S_ALBUM_ACTION' 					=> $this->u_action . "&amp;cat_id=$cat_id",
+
+					'ACP_GALLERY_TITLE'				=> $user->lang['ALBUM_AUTH_TITLE'],
+					'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ALBUM_AUTH_EXPLAIN'],
 					));
-		
+
 				// Get the list of phpBB usergroups
 				$sql = 'SELECT group_id, group_name, group_type
 						FROM ' . GROUPS_TABLE . '
 						ORDER BY group_name ASC';
 				$result = $db->sql_query($sql);
-		
+
 				while( $row = $db->sql_fetchrow($result) )
 				{
 					$groupdata[] = $row;
 				}
-		
+
 				// Get info of this cat
 				$sql = 'SELECT cat_id, cat_title, cat_view_groups, cat_upload_groups, cat_rate_groups, cat_comment_groups, cat_edit_groups, cat_delete_groups, cat_moderator_groups
 						FROM ' . ALBUM_CAT_TABLE . "
 						WHERE cat_id = '$cat_id'";
 				$result = $db->sql_query($sql);
-		
+
 				$thiscat = $db->sql_fetchrow($result);
-		
+
 				$view_groups 		= @explode(',', $thiscat['cat_view_groups']);
 				$upload_groups 		= @explode(',', $thiscat['cat_upload_groups']);
 				$rate_groups 		= @explode(',', $thiscat['cat_rate_groups']);
 				$comment_groups 	= @explode(',', $thiscat['cat_comment_groups']);
 				$edit_groups 		= @explode(',', $thiscat['cat_edit_groups']);
 				$delete_groups 		= @explode(',', $thiscat['cat_delete_groups']);
-		
+
 				$moderator_groups 	= @explode(',', $thiscat['cat_moderator_groups']);
-		
+
 				for ($i = 0; $i < count($groupdata); $i++)
 				{
 					$template->assign_block_vars('grouprow', array(
 						'GROUP_ID' 			=> $groupdata[$i]['group_id'],
 						'GROUP_NAME' 		=> ($groupdata[$i]['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $groupdata[$i]['group_name']] : $groupdata[$i]['group_name'],
-		
+
 						'VIEW_CHECKED' 		=> (in_array($groupdata[$i]['group_id'], $view_groups)) ? 'checked="checked"' : '',
 						'UPLOAD_CHECKED' 	=> (in_array($groupdata[$i]['group_id'], $upload_groups)) ? 'checked="checked"' : '',
 						'RATE_CHECKED' 		=> (in_array($groupdata[$i]['group_id'], $rate_groups)) ? 'checked="checked"' : '',
@@ -335,7 +316,7 @@ class acp_gallery
 						'EDIT_CHECKED' 		=> (in_array($groupdata[$i]['group_id'], $edit_groups)) ? 'checked="checked"' : '',
 						'DELETE_CHECKED' 	=> (in_array($groupdata[$i]['group_id'], $delete_groups)) ? 'checked="checked"' : '',
 						'MODERATOR_CHECKED' => (in_array($groupdata[$i]['group_id'], $moderator_groups)) ? 'checked="checked"' : '',
-						));
+					));
 				}
 			}
 			else
@@ -345,16 +326,16 @@ class acp_gallery
 				{
 					trigger_error('FORM_INVALID');
 				}
-				
+
 				$cat_id 		= request_var('cat_id', 0);
-		
+
 				$view_groups 		= @implode(',', $_POST['view']);
 				$upload_groups 		= @implode(',', $_POST['upload']);
 				$rate_groups 		= @implode(',', $_POST['rate']);
 				$comment_groups 	= @implode(',', $_POST['comment']);
 				$edit_groups 		= @implode(',', $_POST['edit']);
 				$delete_groups 		= @implode(',', $_POST['delete']);
-		
+
 				$moderator_groups 	= @implode(',', $_POST['moderator']);
 
 				$sql_ary = array(
@@ -366,12 +347,12 @@ class acp_gallery
 					'cat_delete_groups'		=> $delete_groups,
 					'cat_moderator_groups'	=> $moderator_groups,
 					);
-				
+
 				$sql = 'UPDATE ' . ALBUM_CAT_TABLE . ' 
 					SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 					WHERE cat_id = ' . (int) $cat_id;
 				$db->sql_query($sql);
-		
+
 				trigger_error($user->lang['ALBUM_AUTH_SUCCESSFULLY'] . adm_back_link($this->u_action));
 			}
 		}
@@ -381,7 +362,7 @@ class acp_gallery
 	function album_personal_permissions()
 	{
 		global $db, $template, $user;
-		
+
 		if( !isset($_POST['submit']) )
 		{
 			// Get the list of phpBB usergroups
@@ -389,20 +370,20 @@ class acp_gallery
 					FROM ' . GROUPS_TABLE . '
 					ORDER BY group_name ASC';
 			$result = $db->sql_query($sql);
-	
+
 			while( $row = $db->sql_fetchrow($result) )
 			{
 				$groupdata[] = $row;
 			}
-			
+
 			// Get the current album settings for non created personal galleries
 			$sql = 'SELECT *
 					FROM ' . ALBUM_CONFIG_TABLE . "
 					WHERE config_name = 'personal_gallery_private'";
 			$result = $db->sql_query($sql);
-			
+
 			$row = $db->sql_fetchrow($result);
-			
+
 			$private_groups = explode(',', $row['config_value']);
 
 			for($i = 0; $i < count($groupdata); $i++)
@@ -411,44 +392,39 @@ class acp_gallery
 					'GROUP_ID' 			=> $groupdata[$i]['group_id'],
 					'GROUP_NAME' 		=> ($groupdata[$i]['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $groupdata[$i]['group_name']] : $groupdata[$i]['group_name'],
 					'PRIVATE_CHECKED' 	=> (in_array($groupdata[$i]['group_id'], $private_groups)) ? 'checked="checked"' : ''
-					) //end array
-				);
-				
+				));
 			}
-			
+
 			$template->assign_vars(array(
 				'S_PERSONAL_ALBUM_PERMISSIONS_SELECT_GROUPS'	=> true,
 				'S_ALBUM_ACTION' 								=> $this->u_action,
-				
-				'L_ACP_GALLERY_TITLE'							=> $user->lang['ALBUM_PERSONAL_GALLERY_TITLE'],
-				'L_ACP_GALLERY_TITLE_EXPLAIN'					=> $user->lang['ALBUM_PERSONAL_GALLERY_EXPLAIN'],
+
+				'ACP_GALLERY_TITLE'							=> $user->lang['ALBUM_PERSONAL_GALLERY_TITLE'],
+				'ACP_GALLERY_TITLE_EXPLAIN'					=> $user->lang['ALBUM_PERSONAL_GALLERY_EXPLAIN'],
 			));
 		}
 		else
-		{		
-				// Is it salty ?
-				if (!check_form_key('acp_gallery'))
-				{
-					trigger_error('FORM_INVALID');
-				}
-		
-				$create_groups 		= @implode(',', $_POST['create']);
+		{
+			// Is it salty ?
+			if (!check_form_key('acp_gallery'))
+			{
+				trigger_error('FORM_INVALID');
+			}
+			$create_groups 		= @implode(',', $_POST['create']);
 
-				$sql_ary = array(
-					'config_value'		=> $create_groups,
-					);
-				
-				$sql = 'UPDATE ' . ALBUM_CONFIG_TABLE . ' 
-					SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
-					WHERE config_name = 'personal_gallery_private'";
-				$db->sql_query($sql);
-		
-				trigger_error($user->lang['ALBUM_AUTH_SUCCESSFULLY'] . adm_back_link($this->u_action));
-						
+			$sql_ary = array(
+				'config_value'		=> $create_groups,
+			);
+
+			$sql = 'UPDATE ' . ALBUM_CONFIG_TABLE . '
+				SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
+				WHERE config_name = 'personal_gallery_private'";
+			$db->sql_query($sql);
+
+			trigger_error($user->lang['ALBUM_AUTH_SUCCESSFULLY'] . adm_back_link($this->u_action));
 		}
-
 	}
-	
+
 	function manage_albums()
 	{
 		global $db, $user, $auth, $template, $cache;
@@ -456,18 +432,16 @@ class acp_gallery
 		$template->assign_vars(array(
 			'S_MANAGE_ALBUMS'				=> true,
 			'S_ALBUM_ACTION'				=> $this->u_action . '&amp;action=create',
-			
-			'L_ACP_GALLERY_TITLE'			=> $user->lang['ACP_MANAGE_ALBUMS'],
-			'L_ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['ACP_MANAGE_ALBUMS_EXPLAIN'],
 
-			'TEST'							=> $this->u_action . '&amp;parent_id=',
+			'ACP_GALLERY_TITLE'			=> $user->lang['ACP_MANAGE_ALBUMS'],
+			'ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['ACP_MANAGE_ALBUMS_EXPLAIN'],
 		));
 
 		$sql = 'SELECT *
 				FROM ' . ALBUM_CAT_TABLE . '
 				ORDER BY cat_order ASC';
 		$result = $db->sql_query($sql);
-		
+
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$catrow[] = $row;
@@ -483,11 +457,10 @@ class acp_gallery
 				'S_MOVE_DOWN' 		=> $this->u_action . '&amp;action=move&amp;move=15&amp;cat_id=' . $catrow[$i]['cat_id'],
 				'S_EDIT_ACTION' 	=> $this->u_action . '&amp;action=edit&amp;cat_id=' . $catrow[$i]['cat_id'],
 				'S_DELETE_ACTION' 	=> $this->u_action . '&amp;action=delete&amp;cat_id=' . $catrow[$i]['cat_id'],
-				));
+			));
 		}
-
 	}
-	
+
 	function create_album()
 	{
 		global $db, $user, $auth, $template, $cache;
@@ -497,28 +470,20 @@ class acp_gallery
 		{
 			$template->assign_vars(array(
 				'S_CREATE_ALBUM'				=> true,
-				
-				'L_ACP_GALLERY_TITLE'			=> $user->lang['GALLERY_ALBUMS_TITLE'],
-				'L_ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['ACP_CREATE_ALBUM_EXPLAIN'],
-				
+
+				'ACP_GALLERY_TITLE'			=> $user->lang['GALLERY_ALBUMS_TITLE'],
+				'ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['ACP_CREATE_ALBUM_EXPLAIN'],
+
 				'S_ALBUM_ACTION' 				=> $this->u_action . '&amp;action=create',
 				'L_CAT_TITLE' 					=> $user->lang['ALBUM_TITLE'],
 				'L_CAT_DESC' 					=> $user->lang['ALBUM_DESC'],
 				'L_CAT_PERMISSIONS' 			=> $user->lang['ALBUM_PERMISSIONS'],
-				'L_VIEW_LEVEL' 					=> $user->lang['VIEW_LEVEL'],
-				'L_UPLOAD_LEVEL' 				=> $user->lang['UPLOAD_LEVEL'],
-				'L_RATE_LEVEL' 					=> $user->lang['RATE_LEVEL'],
-				'L_COMMENT_LEVEL' 				=> $user->lang['COMMENT_LEVEL'],
-				'L_EDIT_LEVEL' 					=> $user->lang['EDIT_LEVEL'],
-				'L_DELETE_LEVEL' 				=> $user->lang['DELETE_LEVEL'],
 				'L_PICS_APPROVAL' 				=> $user->lang['IMAGE_APPROVAL'],
 				'L_GUEST' 						=> $user->lang['GALLERY_ALL'], 
 				'L_REG' 						=> $user->lang['GALLERY_REG'], 
 				'L_PRIVATE' 					=> $user->lang['GALLERY_PRIVATE'], 
 				'L_MOD' 						=> $user->lang['GALLERY_MOD'], 
 				'L_ADMIN' 						=> $user->lang['GALLERY_ADMIN'],
-
-				'L_DISABLED' 					=> $user->lang['DISABLED'],
 
 				'VIEW_GUEST' 					=> 'selected="selected"',
 				'UPLOAD_REG' 					=> 'selected="selected"',
@@ -544,7 +509,7 @@ class acp_gallery
 			{
 				trigger_error('FORM_INVALID');
 			}
-			
+
 			// Get posting variables
 			$cat_title 		= request_var('cat_title', '', true);
 			$cat_desc 		= request_var('cat_desc', '', true);
@@ -557,7 +522,7 @@ class acp_gallery
 			$cat_approval 	= request_var('cat_approval', 0);
 
 			// Get the last ordered category
-			$sql = 'SELECT cat_order 
+			$sql = 'SELECT cat_order
 					FROM ' . ALBUM_CAT_TABLE . '
 					ORDER BY cat_order DESC
 					LIMIT 1';
@@ -567,13 +532,11 @@ class acp_gallery
 			$cat_order 					= $last_order + 10;
 			$message_parser 			= new parse_message();
 			$message_parser->message 	= utf8_normalize_nfc(request_var('cat_desc', '', true));
-			
 			if($message_parser->message)
 			{
 				$message_parser->parse(true, true, true, true, false, true, true, true);
 			}
 			// Here we insert a new row into the db
-			/**/
 			$sql_ary = array(
 				'cat_title'					=> $cat_title,
 				'cat_desc'					=> $message_parser->message,
@@ -588,11 +551,7 @@ class acp_gallery
 				'cat_delete_level'			=> $delete_level,
 				'cat_approval'				=> $cat_approval,
 			);
-			
 			$db->sql_query('INSERT INTO ' . ALBUM_CAT_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
-
-			// Return a message...
-			//$message = $user->lang['NEW_CATEGORY_CREATED'] . "<br /><br />" . sprintf($user->lang['Click_return_album_category'], "<a href=\"" . append_sid("admin_album_cat.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 
 			trigger_error($user->lang['NEW_ALBUM_CREATED'] . adm_back_link($this->u_action));
 		}
@@ -600,50 +559,45 @@ class acp_gallery
 	
 	function edit_album()
 	{
-		global $db, $user, $auth, $template, $cache;/**/
-		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;/**/
-		include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);/**/
+		global $db, $user, $auth, $template, $cache;
+		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
+		include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
 		if (!$cat_id = request_var('cat_id', 0))
 		{
 			trigger_error('No Album ID', E_USER_WARNING);
 		}
-		
+
 		if(!isset($_POST['cat_title']))
 		{
 			$sql = 'SELECT *
 					FROM ' . ALBUM_CAT_TABLE . "
 					WHERE cat_id = '$cat_id'";
 			$result = $db->sql_query($sql);
-			
+
 			if( $db->sql_affectedrows($result) == 0 )
 			{
 				trigger_error('The requested album does not exist', E_USER_WARNING);
 			}
-			
+
 			$catrow = $db->sql_fetchrow($result);
-			
+
 			$message_parser 			= new parse_message();
 			$message_parser->message 	= $catrow['cat_desc'];
 			$message_parser->decode_message($catrow['cat_desc_bbcode_uid']);
-			
-			$template->assign_vars(array(/**/
+
+			$template->assign_vars(array(
 				'S_CREATE_ALBUM'		=> true,
 				'S_CREATE_ALBUM2'		=> true,
 
-				'L_ACP_GALLERY_TITLE'			=> $user->lang['GALLERY_ALBUMS_TITLE'],
-				'L_ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['ACP_EDIT_ALBUM_EXPLAIN'],
-				
+				'ACP_GALLERY_TITLE'			=> $user->lang['GALLERY_ALBUMS_TITLE'],
+				'ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['ACP_EDIT_ALBUM_EXPLAIN'],
+
 				'S_ALBUM_ACTION' 		=> $this->u_action . '&amp;action=edit&amp;cat_id=' . $cat_id,
 				'L_CAT_TITLE' 			=> $user->lang['ALBUM_TITLE'],
 				'L_CAT_DESC' 			=> $user->lang['ALBUM_DESC'],
 				'L_CAT_PERMISSIONS' 	=> $user->lang['ALBUM_PERMISSIONS'],
 				'L_PICS_APPROVAL' 		=> $user->lang['IMAGE_APPROVAL'],
-				'L_GUEST' 				=> $user->lang['GALLERY_ALL'], 
-				'L_REG' 				=> $user->lang['GALLERY_REG'], 
-				'L_PRIVATE' 			=> $user->lang['GALLERY_PRIVATE'], 
-				'L_MOD' 				=> $user->lang['GALLERY_MOD'], 
-				'L_ADMIN' 				=> $user->lang['GALLERY_ADMIN'],
 
 				'S_CAT_TITLE' 			=> $catrow['cat_title'],
 				'S_CAT_DESC' 			=> $message_parser->message,
@@ -704,7 +658,7 @@ class acp_gallery
 			{
 				trigger_error('FORM_INVALID');
 			}
-			
+
 			$cat_title 		= request_var('cat_title', '', true);
 			$view_level 	= request_var('cat_view_level', 1);
 			$upload_level 	= request_var('cat_upload_level', 0);
@@ -717,9 +671,8 @@ class acp_gallery
 			$message_parser 			= new parse_message();
 			$message_parser->message 	= utf8_normalize_nfc(request_var('cat_desc', '', true));
 			$message_parser->parse(true, true, true, true, false, true, true, true);
-			
+
 			// Now we update this row
-			/**/
 			$sql_ary = array(
 				'cat_title'				=> $cat_title,
 				'cat_desc'				=> $message_parser->message,
@@ -738,12 +691,8 @@ class acp_gallery
 			$sql = 'UPDATE ' . ALBUM_CAT_TABLE . ' 
 					SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 					WHERE cat_id  = ' . (int) $cat_id;
-
 			$db->sql_query($sql);
 
-			// Return a message...
-			//$message =  . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_ALBUM'], "<a href=\"" . append_sid("admin_album_cat.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-			
 			trigger_error($user->lang['ALBUM_UPDATED'] . adm_back_link($this->u_action));
 		}
 	}
@@ -756,7 +705,7 @@ class acp_gallery
 		{
 			trigger_error('No Album ID', E_USER_WARNING);
 		}
-		
+
 		if( !isset($_POST['submit']) )
 		{
 			$sql = 'SELECT cat_id, cat_title, cat_order
@@ -777,12 +726,11 @@ class acp_gallery
 					$catrow[] = $row;
 				}
 			}
-			
+
 			if(!$cat_found)
 			{
 				trigger_error('The requested album does not exist', E_USER_WARNING);
 			}
-
 			$select_to = '<select name="target"><option value="0">'. $user->lang['DELETE_ALL_IMAGES'] .'</option>';
 			for ($i = 0; $i < count($catrow); $i++)
 			{
@@ -793,8 +741,8 @@ class acp_gallery
 			$template->assign_vars(array(
 				'S_DELETE_ALBUM'		=> true,
 
-				'L_ACP_GALLERY_TITLE'			=> $user->lang['DELETE_ALBUM'],
-				'L_ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['DELETE_ALBUM_EXPLAIN'],
+				'ACP_GALLERY_TITLE'			=> $user->lang['DELETE_ALBUM'],
+				'ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['DELETE_ALBUM_EXPLAIN'],
 				
 				'S_ALBUM_ACTION' 		=>  $this->u_action . '&amp;action=delete&amp;cat_id=' . $cat_id,
 				'L_CAT_DELETE' 			=> $user->lang['DELETE_ALBUM'],
@@ -803,7 +751,7 @@ class acp_gallery
 				'L_MOVE_CONTENTS' 		=> $user->lang['MOVE_CONTENTS'],
 				'L_MOVE_DELETE' 		=> $user->lang['MOVE_AND_DELETE'],
 				'S_SELECT_TO' 			=> $select_to,
-				));
+			));
 		}
 		else
 		{
@@ -812,9 +760,8 @@ class acp_gallery
 			{
 				trigger_error('FORM_INVALID');
 			}
-			
 			$target = request_var('target', 0);
-			if(!$target) // Delete All
+			if(!$target)
 			{
 				// Get file information of all pics in this category
 				$sql = 'SELECT pic_id, pic_filename, pic_thumbnail, pic_cat_id
@@ -828,7 +775,7 @@ class acp_gallery
 					$picrow[] = $row;
 					$pic_id_row[] = $row['pic_id'];
 				}
-				if(count($picrow) > 0) // if this category is not empty
+				if(count($picrow) > 0)
 				{
 					// Delete all physical pic & cached thumbnail files
 					for ($i = 0; $i < count($picrow); $i++)
@@ -836,56 +783,46 @@ class acp_gallery
 						@unlink('../' . ALBUM_CACHE_PATH . $picrow[$i]['pic_thumbnail']);
 						@unlink('../' . ALBUM_UPLOAD_PATH . $picrow[$i]['pic_filename']);
 					}
-					
+
 					$pic_id_sql = '(' . implode(',', $pic_id_row) . ')';
-					
 					// Delete all related ratings
 					$sql = 'DELETE FROM ' . ALBUM_RATE_TABLE . '
 							WHERE rate_pic_id IN ' . $pic_id_sql;
 					$result = $db->sql_query($sql);
-					
 					// Delete all related comments
 					$sql = 'DELETE FROM ' . ALBUM_COMMENT_TABLE . '
 							WHERE comment_pic_id IN ' . $pic_id_sql;
 					$result = $db->sql_query($sql);
-					
 					// Delete pic entries in db
 					$sql = 'DELETE FROM ' . ALBUM_TABLE . "
 							WHERE pic_cat_id = '$cat_id'";
 					$result = $db->sql_query($sql);
 				}
-				
+
 				// This category is now emptied, we can remove it!
 				$sql = 'DELETE FROM ' . ALBUM_CAT_TABLE . "
 						WHERE cat_id = '$cat_id'";
 				$result = $db->sql_query($sql);
-				
 				// Re-order the rest of categories
 				$this->reorder_cat();
-				
-				// Return a message...
-				//$message = $user->lang['Category_deleted'] . "<br /><br />" . sprintf($user->lang['Click_return_album_category'], "<a href=\"" . append_sid("admin_album_cat.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-				
+
 				trigger_error($user->lang['ALBUM_DELETED'] . adm_back_link($this->u_action));
 			}
 			else // Move content...
-			{				
+			{
 				$sql = 'UPDATE ' . ALBUM_TABLE . "
 						SET pic_cat_id = '$target'
 						WHERE pic_cat_id = '$cat_id'";
 				$result = $db->sql_query($sql);
-				
+
 				// This category is now emptied, we can remove it!
 				$sql = 'DELETE FROM ' . ALBUM_CAT_TABLE . "
 						WHERE cat_id = '$cat_id'";
 				$result = $db->sql_query($sql);
-				
+
 				// Re-order the rest of categories
 				$this->reorder_cat();
-				
-				// Return a message...
-				//$message = $user->lang['Category_deleted'] . "<br /><br />" . sprintf($user->lang['Click_return_album_category'], "<a href=\"" . append_sid("admin_album_cat.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-				
+
 				trigger_error($user->lang['ALBUM_DELETED'] . adm_back_link($this->u_action));
 			}
 		}
@@ -899,7 +836,6 @@ class acp_gallery
 		{
 			trigger_error('No Album ID', E_USER_WARNING);
 		}
-		
 		$move = request_var('move', 0);
 
 		$sql = 'UPDATE ' . ALBUM_CAT_TABLE . "
@@ -908,9 +844,6 @@ class acp_gallery
 		$db->sql_query($sql);
 
 		$this->reorder_cat();
-
-		// Return a message...
-		//$message = $user->lang['Category_changed_order'] . "<br /><br />" . sprintf($user->lang['Click_return_album_category'], "<a href=\"" . append_sid("admin_album_cat.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 
 		trigger_error($user->lang['ALBUM_CHANGED_ORDER'] . adm_back_link($this->u_action));
 	}
@@ -923,14 +856,13 @@ class acp_gallery
 			$template->assign_vars(array(
 				'MESSAGE_TITLE' 		=> $user->lang['CLEAR_CACHE'],
 				'MESSAGE_TEXT' 			=> $user->lang['GALLERY_CLEAR_CACHE_CONFIRM'],
-				
 				'S_CONFIRM_ACTION' 		=> $this->u_action,
 				));
 		}
 		else
 		{
 			$cache_dir = @opendir('../' . ALBUM_DIR_NAME . ALBUM_CACHE_PATH);
-		
+
 			while( $cache_file = @readdir($cache_dir) )
 			{
 				if( preg_match('/(\.gif$|\.png$|\.jpg|\.jpeg)$/is', $cache_file) )
@@ -938,32 +870,27 @@ class acp_gallery
 					@unlink('../' . ALBUM_DIR_NAME . ALBUM_CACHE_PATH . $cache_file);
 				}
 			}
-		
+
 			@closedir($cache_dir);
-			
 			trigger_error($user->lang['THUMBNAIL_CACHE_CLEARED_SUCCESSFULLY'] . adm_back_link($this->u_action));
 		}
 	}
-	
 	function reorder_cat()
 	{
 		global $db;
-	
+
 		$sql = 'SELECT cat_id, cat_order
 				FROM ' . ALBUM_CAT_TABLE . '
 				WHERE cat_id <> 0
 				ORDER BY cat_order ASC';
 		$result = $db->sql_query($sql);
-	
 		$i = 10;
-	
 		while( $row = $db->sql_fetchrow($result) )
 		{
 			$sql = 'UPDATE ' . ALBUM_CAT_TABLE . "
 					SET cat_order = $i
 					WHERE cat_id = ". $row['cat_id'];
 			$db->sql_query($sql);
-			
 			$i += 10;
 		}
 	}
