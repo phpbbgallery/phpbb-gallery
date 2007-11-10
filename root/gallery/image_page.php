@@ -52,44 +52,44 @@ add_form_key('image_page');
 
 if( isset($_GET['mode']) )
 {
-   if( ($_GET['mode'] == 'next') || ($_GET['mode'] == 'previous') )
-   {
-      $sql = 'SELECT pic_id, pic_cat_id, pic_user_id
-            FROM ' . ALBUM_TABLE . '
-            WHERE pic_id = '. $pic_id;
+	if( ($_GET['mode'] == 'next') || ($_GET['mode'] == 'previous') )
+	{
+		$sql = 'SELECT pic_id, pic_cat_id, pic_user_id
+				FROM ' . ALBUM_TABLE . '
+				WHERE pic_id = '. $pic_id;
 
-      $result = $db->sql_query($sql);
+		$result = $db->sql_query($sql);
 
-      $row = $db->sql_fetchrow($result);
+		$row = $db->sql_fetchrow($result);
 
-      if( empty($row) )
-      {
-         trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_WARNING);
-      }
+		if( empty($row) )
+		{
+			trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_WARNING);
+		}
 
-      $sql = 'SELECT new.pic_id, new.pic_time
-            FROM ' . ALBUM_TABLE . ' AS new, ' . ALBUM_TABLE . ' AS cur
-            WHERE cur.pic_id = ' . $pic_id . '
-               AND new.pic_id <> cur.pic_id
-               AND new.pic_cat_id = cur.pic_cat_id';
+		$sql = 'SELECT new.pic_id, new.pic_time
+				FROM ' . ALBUM_TABLE . ' AS new, ' . ALBUM_TABLE . ' AS cur
+				WHERE cur.pic_id = ' . $pic_id . '
+					AND new.pic_id <> cur.pic_id
+					AND new.pic_cat_id = cur.pic_cat_id';
 
-      $sql .= ($_GET['mode'] == 'next') ? ' AND new.pic_time >= cur.pic_time' : ' AND new.pic_time <= cur.pic_time';
+		$sql .= ($_GET['mode'] == 'next') ? ' AND new.pic_time >= cur.pic_time' : ' AND new.pic_time <= cur.pic_time';
 
-      $sql .= ($row['pic_cat_id'] == PERSONAL_GALLERY) ? ' AND new.pic_user_id = cur.pic_user_id' : '';
+		$sql .= ($row['pic_cat_id'] == PERSONAL_GALLERY) ? ' AND new.pic_user_id = cur.pic_user_id' : '';
 
-      $sql .= ($_GET['mode'] == 'next') ? ' ORDER BY pic_time ASC LIMIT 1' : ' ORDER BY pic_time DESC LIMIT 1';
+		$sql .= ($_GET['mode'] == 'next') ? ' ORDER BY pic_time ASC LIMIT 1' : ' ORDER BY pic_time DESC LIMIT 1';
 
-      $result = $db->sql_query($sql);
+		$result = $db->sql_query($sql);
 
-      $row = $db->sql_fetchrow($result);
+		$row = $db->sql_fetchrow($result);
 
-      if( empty($row) )
-      {
-         trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_WARNING);
-      }
+		if( empty($row) )
+		{
+			trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_WARNING);
+		}
 
-      $pic_id = $row['pic_id']; // NEW pic_id
-   }
+		$pic_id = $row['pic_id']; // NEW pic_id
+	}
 } 
 
 
@@ -284,6 +284,13 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 		// Insert into DB
 		// --------------------------------
 		
+		include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+		$message_parser 			= new parse_message();
+		$message_parser->message 	= utf8_normalize_nfc($comment_text);
+		if($message_parser->message)
+		{
+			$message_parser->parse(true, true, true, true, false, true, true, true);
+		}
 		$sql_ary = array(
 			'comment_id'		=> $comment_id,
 			'comment_pic_id'	=> $pic_id,
@@ -291,7 +298,9 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 			'comment_username'	=> $comment_username,
 			'comment_user_ip'	=> $comment_user_ip,
 			'comment_time'		=> $comment_time,
-			'comment_text'		=> $comment_text,
+			'comment_text'					=> $message_parser->message,
+			'comment_text_bbcode_uid'		=> $message_parser->bbcode_uid,
+			'comment_text_bbcode_bitfield'	=> $message_parser->bbcode_bitfield,
 			);
 		
 		$db->sql_query('INSERT INTO ' . ALBUM_COMMENT_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
@@ -376,11 +385,11 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 
 // Next
 $sql = 'SELECT new.pic_id, new.pic_time
-      FROM ' . ALBUM_TABLE . ' AS new, ' . ALBUM_TABLE . ' AS cur
-      WHERE cur.pic_id = ' . $pic_id . '
-         AND new.pic_id <> cur.pic_id
-         AND new.pic_cat_id = cur.pic_cat_id
-         AND new.pic_time >= cur.pic_time';
+	FROM ' . ALBUM_TABLE . ' AS new, ' . ALBUM_TABLE . ' AS cur
+	WHERE cur.pic_id = ' . $pic_id . '
+		AND new.pic_id <> cur.pic_id
+		AND new.pic_cat_id = cur.pic_cat_id
+		AND new.pic_time >= cur.pic_time';
 
 $sql .= ($thispic['pic_cat_id'] == PERSONAL_GALLERY) ? ' AND new.pic_user_id = cur.pic_user_id' : '';
 $sql .= ' ORDER BY pic_time ASC LIMIT 1';
@@ -391,23 +400,23 @@ $row = $db->sql_fetchrow($result);
 
 if( empty($row) )
 {
-   $u_next = '';
-   $l_next = '';
+	$u_next = '';
+	$l_next = '';
 }
 else
 {
-   $new_pic_id = $row['pic_id'];
-   $u_next = append_sid("image_page.$phpEx?id=$new_pic_id");
-   $l_next = $user->lang['NEXT'] . "&nbsp;&raquo;";
+	$new_pic_id = $row['pic_id'];
+	$u_next = append_sid("image_page.$phpEx?id=$new_pic_id");
+	$l_next = $user->lang['NEXT'] . "&nbsp;&raquo;";
 }
 
 // Prev
 $sql = 'SELECT new.pic_id, new.pic_time
-      FROM ' . ALBUM_TABLE . ' AS new, ' . ALBUM_TABLE . ' AS cur
-      WHERE cur.pic_id = ' . $pic_id . '
-         AND new.pic_id <> cur.pic_id
-         AND new.pic_cat_id = cur.pic_cat_id
-         AND new.pic_time <= cur.pic_time';
+	FROM ' . ALBUM_TABLE . ' AS new, ' . ALBUM_TABLE . ' AS cur
+	WHERE cur.pic_id = ' . $pic_id . '
+		AND new.pic_id <> cur.pic_id
+		AND new.pic_cat_id = cur.pic_cat_id
+		AND new.pic_time <= cur.pic_time';
 
 $sql .= ($thispic['pic_cat_id'] == PERSONAL_GALLERY) ? ' AND new.pic_user_id = cur.pic_user_id' : '';
 $sql .= ' ORDER BY pic_time DESC LIMIT 1';
@@ -418,14 +427,14 @@ $row = $db->sql_fetchrow($result);
 
 if( empty($row) )
 {
-   $u_prev = '';
-   $l_prev = '';
+	$u_prev = '';
+	$l_prev = '';
 }
 else
 {
-   $new_pic_id = $row['pic_id'];
-   $u_prev = append_sid("image_page.$phpEx?id=$new_pic_id");
-   $l_prev = "&laquo;&nbsp;" . $user->lang['PREVIOUS'];
+	$new_pic_id = $row['pic_id'];
+	$u_prev = append_sid("image_page.$phpEx?id=$new_pic_id");
+	$l_prev = "&laquo;&nbsp;" . $user->lang['PREVIOUS'];
 }
 // end 
 
@@ -452,7 +461,7 @@ $template->assign_vars(array(
 	'U_PIC' 		=> append_sid("image.$phpEx?pic_id=$pic_id"),
 
 	'PIC_TITLE' 	=> $thispic['pic_title'],
-	'PIC_DESC' 		=> nl2br($thispic['pic_desc']),
+	'PIC_DESC' 		=> generate_text_for_display($thispic['pic_desc'], $thispic['pic_desc_bbcode_uid'], $thispic['pic_desc_bbcode_bitfield'], 7),
 
 	'POSTER' 		=> $poster,
 
@@ -650,7 +659,7 @@ if ($album_config['comment'])
 				
 				'S_ROW_STYLE' 	=> $row_style,
 
-				'TEXT' 			=> nl2br($commentrow[$i]['comment_text']),
+				'TEXT' 			=> generate_text_for_display($commentrow[$i]['comment_text'], $commentrow[$i]['comment_text_bbcode_uid'], $commentrow[$i]['comment_text_bbcode_bitfield'], 7),
 				'EDIT_INFO' 	=> $edit_info,
 
 				'EDIT' 			=> '',//missing feature ( ( $auth_data['edit'] && ($commentrow[$i]['comment_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($thiscat['cat_edit_level'] != ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="'. append_sid("edit.$phpEx?comment_id=". $commentrow[$i]['comment_id']) .'">'. $user->lang['EDIT_IMAGE'] .'</a>' : '',
@@ -676,13 +685,13 @@ if ($album_config['comment'])
 
 // Build the navigation
 $template->assign_block_vars('navlinks', array(
-	'FORUM_NAME'   	=> $user->lang['GALLERY'],
+	'FORUM_NAME'		=> $user->lang['GALLERY'],
 	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
 		));
 
 if ($cat_id <> PERSONAL_GALLERY)
 {
-   $template->assign_block_vars('navlinks', array(
+	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME' 	=> $thiscat['cat_title'],
 		'U_VIEW_FORUM' 	=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']),
 		));

@@ -302,9 +302,7 @@ else
 	// --------------------------------
 
 	$pic_title 		= request_var('pic_title', '', true);
-
-	$pic_desc		= substr(request_var('pic_desc', '', true), 0, $album_config['desc_length']);
-
+	$pic_desc		= utf8_substr(request_var('pic_desc', '', true), 0, $album_config['desc_length']);
 	$pic_username 	= (!$user->data['is_registered']) ? substr(request_var('pic_username', ''), 0, 32) : str_replace("'", "''", $user->data['username']);
 
 	if(empty($pic_title))
@@ -620,12 +618,21 @@ else
 	// --------------------------------
 	// Insert into DB
 	// --------------------------------
+	include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+	$message_parser 			= new parse_message();
+	$message_parser->message 	= utf8_normalize_nfc($pic_desc);
+	if($message_parser->message)
+	{
+		$message_parser->parse(true, true, true, true, false, true, true, true);
+	}
 
 	$sql_ary = array(
 		'pic_filename' 		=> $pic_filename,
 		'pic_thumbnail'		=> $pic_thumbnail,
 		'pic_title'			=> $pic_title,
-		'pic_desc'			=> $pic_desc,
+		'pic_desc'					=> $message_parser->message,
+		'pic_desc_bbcode_uid'		=> $message_parser->bbcode_uid,
+		'pic_desc_bbcode_bitfield'	=> $message_parser->bbcode_bitfield,
 		'pic_user_id'		=> $pic_user_id,
 		'pic_user_ip'		=> $pic_user_ip,
 		'pic_username'		=> $pic_username,

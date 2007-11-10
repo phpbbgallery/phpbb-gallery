@@ -91,7 +91,7 @@ class acp_gallery
 			
 			case 'album_personal_permissions':
 				$title = 'ALBUM_PERSONAL_GALLERY_TITLE';
-				$this->page_title = $user->lang[$title];			
+				$this->page_title = $user->lang[$title];
 
 				$this->album_personal_permissions();
 			break;
@@ -141,8 +141,8 @@ class acp_gallery
 				$sql_ary = array(
 					'config_value'		=> $new[$config_name],
 				);
-				$sql = 'UPDATE ' . ALBUM_CONFIG_TABLE . ' 
-					SET ' . $db->sql_build_array('UPDATE', $sql_ary) . " 
+				$sql = 'UPDATE ' . ALBUM_CONFIG_TABLE . '
+					SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
 					WHERE config_name = '$config_name'" ;
 				$db->sql_query($sql);
 			}
@@ -277,7 +277,7 @@ class acp_gallery
 			{
 				$cat_id = request_var('cat_id', 0);
 		
-				$template->assign_vars(array(/**/
+				$template->assign_vars(array(
 					'S_ALBUM_PERMISSIONS_SELECT_GROUPS'	=> true,
 					
 					'L_ACP_GALLERY_TITLE'				=> $user->lang['ALBUM_AUTH_TITLE'],
@@ -416,7 +416,7 @@ class acp_gallery
 				
 			}
 			
-			$template->assign_vars(array(/**/
+			$template->assign_vars(array(
 				'S_PERSONAL_ALBUM_PERMISSIONS_SELECT_GROUPS'	=> true,
 				'S_ALBUM_ACTION' 								=> $this->u_action,
 				
@@ -451,8 +451,8 @@ class acp_gallery
 	
 	function manage_albums()
 	{
-		global $db, $user, $auth, $template, $cache;/**/
-		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;/**/
+		global $db, $user, $auth, $template, $cache;
+		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 		$template->assign_vars(array(
 			'S_MANAGE_ALBUMS'				=> true,
 			'S_ALBUM_ACTION'				=> $this->u_action . '&amp;action=create',
@@ -478,7 +478,7 @@ class acp_gallery
 			$template->assign_block_vars('catrow', array(
 				'COLOR' 			=> ($i % 2) ? 'row1' : 'row2',
 				'TITLE' 			=> $catrow[$i]['cat_title'],
-				'DESC' 				=> generate_text_for_display($catrow[$i]['cat_desc'], $catrow[$i]['cat_desc_bbcode_uid'], $catrow[$i]['cat_desc_bbcode_bitfield'], 7),/**/
+				'DESC' 				=> generate_text_for_display($catrow[$i]['cat_desc'], $catrow[$i]['cat_desc_bbcode_uid'], $catrow[$i]['cat_desc_bbcode_bitfield'], 7),
 				'S_MOVE_UP' 		=> $this->u_action . '&amp;action=move&amp;move=-15&amp;cat_id=' . $catrow[$i]['cat_id'],
 				'S_MOVE_DOWN' 		=> $this->u_action . '&amp;action=move&amp;move=15&amp;cat_id=' . $catrow[$i]['cat_id'],
 				'S_EDIT_ACTION' 	=> $this->u_action . '&amp;action=edit&amp;cat_id=' . $catrow[$i]['cat_id'],
@@ -490,12 +490,12 @@ class acp_gallery
 	
 	function create_album()
 	{
-		global $db, $user, $auth, $template, $cache;/**/
-		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;/**/
-		include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);/**/
+		global $db, $user, $auth, $template, $cache;
+		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
+		include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 		if( !isset($_POST['cat_title']) )
 		{
-			$template->assign_vars(array(/**/
+			$template->assign_vars(array(
 				'S_CREATE_ALBUM'				=> true,
 				
 				'L_ACP_GALLERY_TITLE'			=> $user->lang['GALLERY_ALBUMS_TITLE'],
@@ -546,8 +546,8 @@ class acp_gallery
 			}
 			
 			// Get posting variables
-			$cat_title 		= request_var('cat_title', '', true);/**/
-			$cat_desc 		= request_var('cat_desc', '', true);/**/
+			$cat_title 		= request_var('cat_title', '', true);
+			$cat_desc 		= request_var('cat_desc', '', true);
 			$view_level 	= request_var('cat_view_level', 1);
 			$upload_level 	= request_var('cat_upload_level', 0);
 			$rate_level 	= request_var('cat_rate_level', 0);
