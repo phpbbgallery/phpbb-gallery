@@ -2,8 +2,8 @@
 
 <a name="maincontent"></a>
 
-<h1>{L_ACP_GALLERY_TITLE}</h1>
-<p>{L_ACP_GALLERY_TITLE_EXPLAIN}</p>
+<h1>{ACP_GALLERY_TITLE}</h1>
+<p>{ACP_GALLERY_TITLE_EXPLAIN}</p>
 
 
 <!-- IF S_MANAGE_ALBUMS -->
@@ -228,9 +228,9 @@
 		<td class="row2">
 			<select name="sort_method">
 				<option {SORT_TIME} value='pic_time'>{L_TIME}</option>
-				<option {SORT_PIC_TITLE} value='pic_title'>{L_PIC_TITLE}</option>
+				<option {SORT_PIC_TITLE} value='pic_title'>{L_IMAGE_TITLE}</option>
 				<option {SORT_USERNAME} value='username'>{L_USERNAME}</option>
-				<option {SORT_VIEW} value='pic_view_count'>{L_VIEW}</option>
+				<option {SORT_VIEW} value='pic_view_count'>{L_VIEWS}</option>
 				<option {SORT_RATING} value='rating'>{L_RATING}</option>
 				<option {SORT_COMMENTS} value='comments'>{L_COMMENTS}</option>
 				<option {SORT_NEW_COMMENT} value='new_comment'>{L_NEW_COMMENT}</option>
@@ -310,13 +310,13 @@
 <form action="{S_ALBUM_ACTION}" method="post">
 <table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline">
 	<tr>
-		<th class="thCornerL" height="25" nowrap="nowrap">{L_GROUPS}</th>
-		<th class="thTop" nowrap="nowrap">{L_VIEW}</th>
-		<th class="thTop" nowrap="nowrap">{L_UPLOAD}</th>
-		<th class="thTop" nowrap="nowrap">{L_RATE}</th>
-		<th class="thTop" nowrap="nowrap">{L_COMMENT}</th>
-		<th class="thTop" nowrap="nowrap">{L_EDIT}</th>
-		<th class="thTop" nowrap="nowrap">{L_DELETE}</th>
+		<th class="thCornerL" height="25" nowrap="nowrap">{L_USERGROUPS}</th>
+		<th class="thTop" nowrap="nowrap">{L_CAN_VIEW}</th>
+		<th class="thTop" nowrap="nowrap">{L_CAN_UPLOAD}</th>
+		<th class="thTop" nowrap="nowrap">{L_CAN_RATE}</th>
+		<th class="thTop" nowrap="nowrap">{L_CAN_COMMENT}</th>
+		<th class="thTop" nowrap="nowrap">{L_CAN_EDIT}</th>
+		<th class="thTop" nowrap="nowrap">{L_CAN_DELETE}</th>
 		<th class="thCornerR" nowrap="nowrap">{L_IS_MODERATOR}</th>
 	</tr>
 	<!-- BEGIN grouprow -->
