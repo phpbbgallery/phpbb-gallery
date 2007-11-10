@@ -140,7 +140,7 @@ for ($i = 0; $i < count($catrows); $i++)
 		// ----------------------------
 
 		$sql = 'SELECT p.pic_id, p.pic_title, p.pic_user_id, p.pic_username, p.pic_time, p.pic_cat_id, u.user_id, u.username
-				FROM ' . ALBUM_TABLE . ' AS p	
+				FROM ' . ALBUM_TABLE . ' AS p
 					LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
 				WHERE p.pic_cat_id = ' . $catrows[$i]['cat_id'] . ' ' . $pic_approval_sql . ' 
 					ORDER BY p.pic_time DESC
@@ -178,7 +178,7 @@ for ($i = 0; $i < count($catrows); $i++)
 			$last_pic_info .= '<a href="' . append_sid("{$phpbb_root_path}memberlist.$phpEx?mode=viewprofile&amp;u=" . $lastrow['user_id']) . '" class="username-coloured">' . $lastrow['username'] . '</a> ';
 		}
 //		$last_pic_info .= '<a href="' . append_sid("../memberlist.$phpEx?mode=viewprofile&amp;u=". $lastrow['user_id']) .'" style="color: #' . $user->data['user_colour'] . ';" class="username-coloured">'. $lastrow['username'] .'</a> ';
-		$last_pic_info .= '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $lastrow['pic_id']) . '"><img src="{$phpbb_root_path}styles/prosilver/imageset/icon_topic_latest.gif" width="11" height="9" alt="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" title="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" /></a><br />';
+		$last_pic_info .= '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $lastrow['pic_id']) . '"><img src="' . $phpbb_root_path . 'styles/prosilver/imageset/icon_topic_latest.gif" width="11" height="9" alt="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" title="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" /></a><br />';
 		$last_pic_info .= $user->lang['POSTED_ON_DATE'] . ' ' . $user->format_date($lastrow['pic_time']);
 	}
 	// END of Last Pic
