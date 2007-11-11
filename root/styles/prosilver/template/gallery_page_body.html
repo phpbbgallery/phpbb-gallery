@@ -56,11 +56,11 @@ function checkCommentForm() {
 				<dd>{POSTER}</dd>
 			</dl>
 			<dl>
-				<dt><label>{L_PIC_TITLE}:</label></dt>
+				<dt><label>{L_IMAGE_TITLE}:</label></dt>
 				<dd>{PIC_TITLE}</dd>
 			</dl>
 			<dl>
-				<dt><label>{L_PIC_DESC}:</label></dt>
+				<dt><label>{L_IMAGE_DESC}:</label></dt>
 				<dd>{PIC_DESC}</dd>
 			</dl>
 			<dl>
@@ -68,7 +68,7 @@ function checkCommentForm() {
 				<dd>{PIC_TIME}</dd>
 			</dl>
 			<dl>
-				<dt><label>{L_VIEW}:</label></dt>
+				<dt><label>{L_VIEWS}:</label></dt>
 				<dd>{PIC_VIEW}</dd>
 			</dl>
 		</fieldset>
@@ -173,7 +173,7 @@ function checkCommentForm() {
 
 	<form action="{S_ALBUM_ACTION}" method="post">
 	<fieldset class="display-options" style="margin-top: 0; ">
-		<label>{L_ORDER}: <select name="sort_order"><option {SORT_ASC} value='ASC'>{L_ASC}</option><option {SORT_DESC} value='DESC'>{L_DESC}</option></select>&nbsp;<input type="submit" name="submit" value="{L_GO}" class="button2" /></label>
+		<label>{L_ORDER}: <select name="sort_order"><option {SORT_ASC} value='ASC'>{L_SORT_ASCENDING}</option><option {SORT_DESC} value='DESC'>{L_SORT_DESCENDING}</option></select>&nbsp;<input type="submit" name="submit" value="{L_GO}" class="button2" /></label>
 	</fieldset>
 	</form>
 	<hr />
@@ -189,7 +189,7 @@ function checkCommentForm() {
 	<!-- ENDIF -->
 <!-- ENDIF -->
 
-<!--a href="{U_PREVIOUS}" class="cattitle">{L_PREVIOUS}</a>&nbsp;&nbsp;<a href="{U_NEXT}" class="cattitle">{L_NEXT}</a-->
+<!--a href="{U_PREVIOUS}" class="cattitle">{PREVIOUS}</a>&nbsp;&nbsp;<a href="{U_NEXT}" class="cattitle">{NEXT}</a-->
 
 <!-- Please keep this little notice visible -->
 <div class="copyright">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a></div>

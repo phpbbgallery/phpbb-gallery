@@ -37,11 +37,12 @@ $cat_id = request_var('album_id', 0);
 if ($cat_id <> PERSONAL_GALLERY)
 {
 	$sql = 'SELECT c.*, COUNT(p.pic_id) AS count
-			FROM ' . ALBUM_CAT_TABLE . ' AS c
-				LEFT JOIN ' . ALBUM_TABLE . ' AS p ON c.cat_id = p.pic_cat_id
-			WHERE c.cat_id = ' . $cat_id . '
-			GROUP BY c.cat_id
-			LIMIT 1';
+		FROM ' . ALBUM_CAT_TABLE . ' AS c
+		LEFT JOIN ' . ALBUM_TABLE . ' AS p
+			ON c.cat_id = p.pic_cat_id
+		WHERE c.cat_id = ' . $cat_id . '
+		GROUP BY c.cat_id
+		LIMIT 1';
 	$result = $db->sql_query($sql);
 
 	$thiscat = $db->sql_fetchrow($result);
@@ -65,18 +66,18 @@ if (empty($thiscat))
 
 $album_user_access = album_user_access($cat_id, $thiscat, 0, 1, 0, 0, 0, 0); // UPLOAD
 
-if ($album_user_access['upload'] == 0)
+if (!$album_user_access['upload'])
 {
 	if (!$user->data['is_registered'])
+	{
+		login_box("gallery/upload.$phpEx?album_id=$cat_id", $user->lang['LOGIN_EXPLAIN_UPLOAD']);
+	}
+	else
 	{
 		if ($user->data['is_bot'])
 		{
 			redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
 		}
-		login_box("gallery/upload.$phpEx?album_id=$cat_id", $user->lang['LOGIN_EXPLAIN_UPLOAD']);
-	}
-	else
-	{
 		trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 	}
 }
@@ -134,11 +135,11 @@ if ($cat_id <> PERSONAL_GALLERY)
 	if ($check_user_limit <> FALSE)
 	{
 		$sql = 'SELECT COUNT(pic_id) AS count
-				FROM ' . ALBUM_TABLE . '
-				WHERE pic_user_id = ' . $user->data['user_id'] . '
-					AND pic_cat_id = ' . $cat_id;
+			FROM ' . ALBUM_TABLE . '
+			WHERE pic_user_id = ' . $user->data['user_id'] . '
+				AND pic_cat_id = ' . $cat_id;
 		$result = $db->sql_query($sql);
-		
+
 		$row = $db->sql_fetchrow($result);
 		$own_pics = $row['count'];
 
@@ -174,17 +175,17 @@ if(!isset($_POST['pic_title']))
 	// Build categories select
 	// --------------------------------
 	$sql = 'SELECT *
-			FROM ' . ALBUM_CAT_TABLE . '
-			ORDER BY cat_order ASC';
+		FROM ' . ALBUM_CAT_TABLE . '
+		ORDER BY cat_order ASC';
 	$result = $db->sql_query($sql);
 
 	$catrows = array();
 
 	while( $row = $db->sql_fetchrow($result) )
 	{
-		$thiscat_access = album_user_access($row['cat_id'], $row, 0, 1, 0, 0, 0, 0); // UPLOAD
+		$thiscat_access = album_user_access($row['cat_id'], $row, 0, 1, 0, 0, 0, 0);// UPLOAD
 
-		if ($thiscat_access['upload'] == 1)
+		if ($thiscat_access['upload'])
 		{
 			$catrows[] = $row;
 		}
@@ -211,57 +212,21 @@ if(!isset($_POST['pic_title']))
 	$template->assign_vars(array(
 		'U_VIEW_CAT' 				=> ($cat_id != PERSONAL_GALLERY) ? append_sid("album.$phpEx?id=$cat_id") : append_sid("album_personal.$phpEx"),
 		'CAT_TITLE' 				=> $thiscat['cat_title'],
-
-		'L_UPLOAD_PIC' 				=> $user->lang['UPLOAD_IMAGE'],
-
-		'L_USERNAME' 				=> $user->lang['USERNAME'],
-		'L_PIC_TITLE' 				=> $user->lang['IMAGE_TITLE'],
-
-		'L_PIC_DESC' 				=> $user->lang['IMAGE_DESC'],
-		'L_PLAIN_TEXT_ONLY' 		=> $user->lang['PLAIN_TEXT_ONLY'],
-		'L_MAX_LENGTH' 				=> $user->lang['MAX_LENGTH'],
 		'S_PIC_DESC_MAX_LENGTH' 	=> $album_config['desc_length'],
-
-		'L_UPLOAD_PIC_FROM_MACHINE'	=> $user->lang['FILE'],
-		'L_UPLOAD_TO_CATEGORY' 		=> $user->lang['UPLOAD_TO_ALBUM'],
-
 		'SELECT_CAT' 				=> $select_cat,
-
-		'L_MAX_FILESIZE' 			=> $user->lang['MAX_FILE_SIZE'],
 		'S_MAX_FILESIZE' 			=> $album_config['max_file_size'],
-
-		'L_MAX_WIDTH' 				=> $user->lang['MAX_WIDTH'],
-		'L_MAX_HEIGHT' 				=> $user->lang['MAX_HEIGHT'],
-
 		'S_MAX_WIDTH' 				=> $album_config['max_width'],
 		'S_MAX_HEIGHT' 				=> $album_config['max_height'],
-
-		'L_ALLOWED_JPG' 			=> $user->lang['JPG_ALLOWED'],
-		'L_ALLOWED_PNG' 			=> $user->lang['PNG_ALLOWED'],
-		'L_ALLOWED_GIF' 			=> $user->lang['GIF_ALLOWED'],
 
 		'S_JPG' 					=> ($album_config['jpg_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
 		'S_PNG' 					=> ($album_config['png_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
 		'S_GIF' 					=> ($album_config['gif_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
-
-		'L_UPLOAD_NO_TITLE' 		=> $user->lang['UPLOAD_NO_TITLE'],
-		'L_UPLOAD_NO_FILE' 			=> $user->lang['UPLOAD_NO_FILE'],
-		'L_DESC_TOO_LONG' 			=> $user->lang['DESC_TOO_LONG'],
-
-		// Manual Thumbnail
-		'L_UPLOAD_THUMBNAIL' 			=> $user->lang['UPLOAD_THUMBNAIL'],
-		'L_UPLOAD_THUMBNAIL_EXPLAIN' 	=> $user->lang['UPLOAD_THUMBNAIL_EXPLAIN'],
-		'L_THUMBNAIL_SIZE' 				=> $user->lang['THUMBNAIL_SIZE'],
 		'S_THUMBNAIL_SIZE' 				=> $album_config['thumbnail_size'],
 
-		'L_RESET' 					=> $user->lang['RESET'],
-		'L_SUBMIT' 					=> $user->lang['SUBMIT'],
-
 		'S_ALBUM_ACTION' 			=> append_sid("upload.$phpEx?album_id=$cat_id"),
-		)
-	);
+	));
 
-	if ($album_config['gd_version'] == 0)
+	if (!$album_config['gd_version'])
 	{
 		$template->assign_block_vars('switch_manual_thumbnail', array());
 	}
@@ -269,24 +234,19 @@ if(!isset($_POST['pic_title']))
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'	=> $user->lang['GALLERY'],
 		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
-		)
-	);
+	));
 	
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'	=> $thiscat['cat_title'],
 		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']),
-		)
-	);
+	));
 
 	// Output page
 	$page_title = $user->lang['UPLOAD_IMAGE'];
-	
 	page_header($page_title);
-	
 	$template->set_filenames(array(
-		'body' => 'gallery_upload_body.html')
-	);
-	
+		'body' => 'gallery_upload_body.html',
+	));
 	page_footer();
 
 }
@@ -310,7 +270,7 @@ else
 		trigger_error($user->lang['MISSING_IMAGE_TITLE'], E_USER_WARNING);
 	}
 
-	if( !isset($_FILES['pic_file']) )
+	if (!isset($_FILES['pic_file']))
 	{
 		trigger_error('Bad Upload', E_USER_WARNING);
 	}
@@ -342,7 +302,7 @@ else
 	$filesize 	= $_FILES['pic_file']['size'];
 	$filetmp 	= $_FILES['pic_file']['tmp_name'];
 
-	if ($album_config['gd_version'] == 0)
+	if (!$album_config['gd_version'])
 	{
 		$thumbtype 	= $_FILES['pic_thumbnail']['type'];
 		$thumbsize 	= $_FILES['pic_thumbnail']['size'];
@@ -363,14 +323,14 @@ else
 	// Check file size
 	// --------------------------------
 
-	if (($filesize == 0) || ($filesize > $album_config['max_file_size']))
+	if ((!$filesize) || ($filesize > $album_config['max_file_size']))
 	{
 		trigger_error($user->lang['BAD_UPLOAD_FILE_SIZE'], E_USER_WARNING);
 	}
 
-	if ($album_config['gd_version'] == 0)
+	if (!$album_config['gd_version'])
 	{
-		if (($thumbsize == 0) || ($thumbsize > $album_config['max_file_size']))
+		if (!$thumbsize || ($thumbsize > $album_config['max_file_size']))
 		{
 			trigger_error($user->lang['BAD_UPLOAD_FILE_SIZE'], E_USER_WARNING);
 		}
@@ -386,7 +346,7 @@ else
 		case 'image/jpeg':
 		case 'image/jpg':
 		case 'image/pjpeg':
-			if ($album_config['jpg_allowed'] == 0)
+			if (!$album_config['jpg_allowed'])
 			{
 				trigger_error($user->lang['NOT_ALLOWED_FILE_TYPE'], E_USER_WARNING);
 			}
@@ -395,7 +355,7 @@ else
 
 		case 'image/png':
 		case 'image/x-png':
-			if ($album_config['png_allowed'] == 0)
+			if (!$album_config['png_allowed'])
 			{
 				trigger_error($user->lang['NOT_ALLOWED_FILE_TYPE'], E_USER_WARNING);
 			}
@@ -403,7 +363,7 @@ else
 		break;
 
 		case 'image/gif':
-			if ($album_config['gif_allowed'] == 0)
+			if (!$album_config['gif_allowed'])
 			{
 				trigger_error($user->lang['NOT_ALLOWED_FILE_TYPE'], E_USER_WARNING);
 			}
@@ -414,7 +374,7 @@ else
 			trigger_error($user->lang['NOT_ALLOWED_FILE_TYPE'], E_USER_WARNING);
 	}
 
-	if ($album_config['gd_version'] == 0)
+	if (!$album_config['gd_version'])
 	{
 		if ($filetype <> $thumbtype)
 		{
@@ -427,7 +387,7 @@ else
 	// Generate filename
 	// --------------------------------
 
-	srand((double)microtime()*1000000);	// for older than version 4.2.0 of PHP
+	srand((double)microtime()*1000000);// for older than version 4.2.0 of PHP
 
 	do
 	{
@@ -435,25 +395,24 @@ else
 	}
 	while( file_exists(ALBUM_UPLOAD_PATH . $pic_filename) );
 
-	if ($album_config['gd_version'] == 0)
+	if (!$album_config['gd_version'])
 	{
 		$pic_thumbnail = $pic_filename;
 	}
 
 
-	// --------------------------------
+	// ----------------------------------
 	// Move this file to upload directory
-	// --------------------------------
+	// ----------------------------------
 
 	$ini_val = ( @phpversion() >= '4.0.0' ) ? 'ini_get' : 'get_cfg_var';
 
-	if ( @$ini_val('open_basedir') <> '' )
+	if (@$ini_val('open_basedir') <> '')
 	{
-		if ( @phpversion() < '4.0.3' )
+		if (@phpversion() < '4.0.3')
 		{
 			trigger_error('open_basedir is set and your PHP version does not allow move_uploaded_file<br /><br />Please contact your server admin', E_USER_WARNING);
 		}
-
 		$move_file = 'move_uploaded_file';
 	}
 	else
@@ -462,13 +421,11 @@ else
 	}
 
 	$move_file($filetmp, ALBUM_UPLOAD_PATH . $pic_filename);
-
 	@chmod(ALBUM_UPLOAD_PATH . $pic_filename, 0777);
 
-	if ($album_config['gd_version'] == 0)
+	if (!$album_config['gd_version'])
 	{
 		$move_file($thumbtmp, ALBUM_CACHE_PATH . $pic_thumbnail);
-
 		@chmod(ALBUM_CACHE_PATH . $pic_thumbnail, 0777);
 	}
 
@@ -486,14 +443,14 @@ else
 	{
 		@unlink(ALBUM_UPLOAD_PATH . $pic_filename);
 
-		if ($album_config['gd_version'] == 0)
+		if (!$album_config['gd_version'])
 		{
 			@unlink(ALBUM_CACHE_PATH . $pic_thumbnail);
 		}
 		trigger_error($user->lang['UPLOAD_IMAGE_SIZE_TOO_BIG'], E_USER_WARNING);
 	}
 
-	if ($album_config['gd_version'] == 0)
+	if (!$album_config['gd_version'])
 	{
 		$thumb_size = getimagesize(ALBUM_CACHE_PATH . $pic_thumbnail);
 
@@ -515,20 +472,19 @@ else
 	// This image is okay, we can cache its thumbnail now
 	// --------------------------------
 
-	if (($album_config['thumbnail_cache'] == 1) && ($album_config['gd_version'] > 0)) 
+	if (($album_config['thumbnail_cache']) && ($album_config['gd_version'] > 0)) 
 	{
 		$gd_errored = FALSE; 
-
 		switch ($pic_filetype) 
 		{
 			case '.jpg': 
 				$read_function = 'imagecreatefromjpeg'; 
 			break; 
-			
+
 			case '.png': 
 				$read_function = 'imagecreatefrompng'; 
 			break; 
-			
+
 			case '.gif': 
 				$read_function = 'imagecreatefromgif'; 
 			break;
@@ -556,10 +512,8 @@ else
 			}
 
 			// Create thumbnail + 16 Pixel extra for imagesize text 
-			$thumbnail = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height + 16) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height + 16); 
-
-			$resize_function = ($album_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
-
+			$thumbnail = ($album_config['gd_version']) ? @imagecreate($thumbnail_width, $thumbnail_height + 16) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height + 16); 
+			$resize_function = ($album_config['gd_version']) ? 'imagecopyresized' : 'imagecopyresampled';
 			@$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $pic_width, $pic_height);
 			
 			// Create image details
@@ -588,11 +542,11 @@ else
 				case '.jpg':
 					@imagejpeg($thumbnail, ALBUM_CACHE_PATH . $pic_thumbnail, $album_config['thumbnail_quality']);
 				break;
-				
+
 				case '.png':
 					@imagepng($thumbnail, ALBUM_CACHE_PATH . $pic_thumbnail);
 				break;
-				
+
 				case '.gif':
 					@imagegif($thumbnail, ALBUM_CACHE_PATH . $pic_thumbnail);
 				break;
@@ -612,7 +566,7 @@ else
 	// Check Pic Approval
 	// --------------------------------
 
-	$pic_approval = ($thiscat['cat_approval'] == 0) ? 1 : 0;
+	$pic_approval = (!$thiscat['cat_approval']) ? 1 : 0;
 
 
 	// --------------------------------
@@ -639,8 +593,8 @@ else
 		'pic_time'			=> $pic_time,
 		'pic_cat_id'		=> $cat_id,
 		'pic_approval'		=> $pic_approval,
-		);
-		
+	);
+
 	$db->sql_query('INSERT INTO ' . ALBUM_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 
 
@@ -648,7 +602,7 @@ else
 	// Complete... now send a message to user
 	// --------------------------------
 
-	if ($thiscat['cat_approval'] == 0)
+	if (!$thiscat['cat_approval'])
 	{
 		$message = $user->lang['ALBUM_UPLOAD_SUCCESSFUL'];
 	}
@@ -659,36 +613,27 @@ else
 
 	if ($cat_id <> PERSONAL_GALLERY)
 	{
-		if ($thiscat['cat_approval'] == 0)
+		if (!$thiscat['cat_approval'])
 		{
 			$template->assign_vars(array(
-				'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("album.$phpEx?id=$cat_id") . '">')
-			);
+				'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("album.$phpEx?id=$cat_id") . '">',
+			));
 		}
-
 		$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$cat_id") . "\">", "</a>");
 	}
 	else
 	{
-		if ($thiscat['cat_approval'] == 0)
+		if (!$thiscat['cat_approval'])
 		{
 			$template->assign_vars(array(
 				'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("album_personal.$phpEx") . '">')
 			);
 		}
-
 		$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_PERSONAL_ALBUM'], "<a href=\"" . append_sid("album_personal.$phpEx") . "\">", "</a>");
 	}
 
 
 	$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
-
 	trigger_error($message, E_USER_WARNING);
 }
-
-
-// +------------------------------------------------------+
-// |  Powered by Photo Album 2.x.x (c) 2002-2003 Smartor  |
-// +------------------------------------------------------+
-
 ?>

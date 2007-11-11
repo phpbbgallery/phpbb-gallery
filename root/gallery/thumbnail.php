@@ -31,8 +31,8 @@ include($album_root_path . 'includes/common.'.$phpEx);
 // ------------------------------------
 // Check the request
 // ------------------------------------
-
-if (!$pic_id = request_var('pic_id', 0))
+$pic_id = request_var('pic_id', 0);
+if (!$pic_id)
 {
 	die($user->lang['NO_IMAGE_SPECIFIED']);
 }
@@ -43,8 +43,9 @@ if (!$pic_id = request_var('pic_id', 0))
 // ------------------------------------
 
 $sql = 'SELECT *
-		FROM ' . ALBUM_TABLE . '
-		WHERE pic_id = ' . $pic_id;
+	FROM ' . ALBUM_TABLE . '
+	WHERE pic_id = ' . $pic_id . '
+	LIMIT 1';
 $result = $db->sql_query($sql);
 
 $thispic = $db->sql_fetchrow($result);
@@ -56,7 +57,7 @@ $pic_filetype = substr($thispic['pic_filename'], strlen($thispic['pic_filename']
 $pic_filename = $thispic['pic_filename'];
 $pic_thumbnail = $thispic['pic_thumbnail'];
 
-if( empty($thispic) or !file_exists(ALBUM_UPLOAD_PATH . $pic_filename) )
+if (empty($thispic) or !file_exists(ALBUM_UPLOAD_PATH . $pic_filename))
 {
 	die($user->lang['IMAGE_NOT_EXIST']);
 }
@@ -69,10 +70,9 @@ if( empty($thispic) or !file_exists(ALBUM_UPLOAD_PATH . $pic_filename) )
 if ($cat_id <> PERSONAL_GALLERY)
 {
 	$sql = 'SELECT *
-			FROM ' . ALBUM_CAT_TABLE . '
-			WHERE cat_id = ' . $cat_id;
+		FROM ' . ALBUM_CAT_TABLE . '
+		WHERE cat_id = ' . $cat_id;
 	$result = $db->sql_query($sql);
-
 	$thiscat = $db->sql_fetchrow($result);
 }
 else
@@ -90,9 +90,9 @@ if (empty($thiscat))
 // Check the permissions
 // ------------------------------------
 
-$album_user_access = album_user_access($cat_id, $thiscat, 1, 0, 0, 0, 0, 0); // VIEW
+$album_user_access = album_user_access($cat_id, $thiscat, 1, 0, 0, 0, 0, 0);// VIEW
 
-if ($album_user_access['view'] == 0)
+if (!$album_user_access['view'])
 {
 	die($user->lang['NOT_AUTHORISED']);
 }
@@ -106,7 +106,7 @@ if ($user->data['user_type'] <> USER_FOUNDER)
 {
 	if (($thiscat['cat_approval'] == ADMIN) || (($thiscat['cat_approval'] == MOD) && !$album_user_access['moderator']))
 	{
-		if ($thispic['pic_approval'] <> 1)
+		if (!$thispic['pic_approval'])
 		{
 			die($user->lang['NOT_AUTHORISED']);
 		}
@@ -118,11 +118,10 @@ if ($user->data['user_type'] <> USER_FOUNDER)
 // Check hotlink
 // ------------------------------------
 
-if (($album_config['hotlink_prevent'] == 1) && (isset($HTTP_SERVER_VARS['HTTP_REFERER'])))
+if ($album_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER']))
 {
 	$check_referer = explode('?', $HTTP_SERVER_VARS['HTTP_REFERER']);
 	$check_referer = trim($check_referer[0]);
-
 	$good_referers = array();
 
 	if ($album_config['hotlink_allowed'] <> '')
@@ -131,13 +130,11 @@ if (($album_config['hotlink_prevent'] == 1) && (isset($HTTP_SERVER_VARS['HTTP_RE
 	}
 
 	$good_referers[] = $config['server_name'] . $config['script_path'];
-
 	$errored = TRUE;
 
 	for ($i = 0; $i < count($good_referers); $i++)
 	{
 		$good_referers[$i] = trim($good_referers[$i]);
-
 		if ((strstr($check_referer, $good_referers[$i])) && ($good_referers[$i] <> ''))
 		{
 			$errored = FALSE;
@@ -162,27 +159,11 @@ if (($album_config['hotlink_prevent'] == 1) && (isset($HTTP_SERVER_VARS['HTTP_RE
 // Send Thumbnail to browser
 // ------------------------------------
 
-/************************************
-* Alter Code - Da wir keine anderen File Typen benutzen als jpg, png und gif könnte dieser Codeteil wegfallen. 
-*
-if (($pic_filetype <> '.jpg') && ($pic_filetype <> '.png') && ($pic_filetype <> '.gif'))
-{
-	// --------------------------------
-	// GD does not support GIF so we must SEND a premade No-thumbnail pic then EXIT
-	// --------------------------------
-
-	header('Content-type: image/jpeg');
-	readfile($images['no_thumbnail']);
-	exit;
-}
-else
-{
-*/
 	// --------------------------------
 	// Check thumbnail cache. If cache is available we will SEND & EXIT
 	// --------------------------------
 
-	if (($album_config['thumbnail_cache'] == 1) && ($pic_thumbnail <> '') && file_exists(ALBUM_CACHE_PATH . $pic_thumbnail))
+	if (($album_config['thumbnail_cache']) && ($pic_thumbnail <> '') && file_exists(ALBUM_CACHE_PATH . $pic_thumbnail))
 	{
 		switch ($pic_filetype)
 		{
@@ -216,11 +197,11 @@ else
 			$read_function = 'imagecreatefromgif';
 			$pic_filetype = '.jpg';
 		break;
-		
+
 		case '.jpg':
 			$read_function = 'imagecreatefromjpeg';
 		break;
-		
+
 		case '.png':
 			$read_function = 'imagecreatefrompng';
 		break;
@@ -228,108 +209,96 @@ else
 
 	$src = @$read_function(ALBUM_UPLOAD_PATH  . $pic_filename);
 
-	if (!$src)
+if (!$src)
+{
+	$gd_errored = TRUE;
+	$pic_thumbnail = '';
+}
+else if (($pic_width > $album_config['thumbnail_size']) or ($pic_height > $album_config['thumbnail_size']))
+{
+	// ----------------------------
+	// Resize it
+	// ----------------------------
+
+	if ($pic_width > $pic_height)
 	{
-		$gd_errored = TRUE;
-		$pic_thumbnail = '';
-	}
-	else if( ($pic_width > $album_config['thumbnail_size']) or ($pic_height > $album_config['thumbnail_size']) )
-	{
-		// ----------------------------
-		// Resize it
-		// ----------------------------
-
-		if ($pic_width > $pic_height)
-		{
-			$thumbnail_width = $album_config['thumbnail_size'];
-			$thumbnail_height = $album_config['thumbnail_size'] * ($pic_height/$pic_width);
-		}
-		else
-		{
-			$thumbnail_height = $album_config['thumbnail_size'];
-			$thumbnail_width = $album_config['thumbnail_size'] * ($pic_width/$pic_height);
-		}
-
-		// Create thumbnail + 16 Pixel extra for imagesize text 
-		$thumbnail = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height + 16) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height + 16); 
-
-
-		$resize_function = ($album_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
-
-		@$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $pic_width, $pic_height);
-		
-		$dimension_font = 1; 
-		$dimension_filesize = filesize(ALBUM_UPLOAD_PATH . $pic_filename); 
-		$dimension_string = intval($pic_width) . "x" . intval($pic_height) . "(" . intval($dimension_filesize/1024) . "KB)"; 
-		$dimension_colour = ImageColorAllocate($thumbnail,255,255,255); 
-		$dimension_height = imagefontheight($dimension_font); 
-		$dimension_width = imagefontwidth($dimension_font) * strlen($dimension_string); 
-		$dimension_x = ($thumbnail_width - $dimension_width) / 2; 
-		$dimension_y = $thumbnail_height + ((16 - $dimension_height) / 2); 
-		imagestring($thumbnail, 1, $dimension_x, $dimension_y, $dimension_string, $dimension_colour);
+		$thumbnail_width = $album_config['thumbnail_size'];
+		$thumbnail_height = $album_config['thumbnail_size'] * ($pic_height/$pic_width);
 	}
 	else
 	{
-		$thumbnail = $src;
+		$thumbnail_height = $album_config['thumbnail_size'];
+		$thumbnail_width = $album_config['thumbnail_size'] * ($pic_width/$pic_height);
 	}
 
-	if (!$gd_errored)
+	// Create thumbnail + 16 Pixel extra for imagesize text 
+	$thumbnail = ($album_config['gd_version']) ? @imagecreate($thumbnail_width, $thumbnail_height + 16) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height + 16); 
+
+
+	$resize_function = ($album_config['gd_version']) ? 'imagecopyresized' : 'imagecopyresampled';
+
+	@$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $pic_width, $pic_height);
+	$dimension_font = 1; 
+	$dimension_filesize = filesize(ALBUM_UPLOAD_PATH . $pic_filename); 
+	$dimension_string = intval($pic_width) . "x" . intval($pic_height) . "(" . intval($dimension_filesize/1024) . "KB)"; 
+	$dimension_colour = ImageColorAllocate($thumbnail,255,255,255); 
+	$dimension_height = imagefontheight($dimension_font); 
+	$dimension_width = imagefontwidth($dimension_font) * strlen($dimension_string); 
+	$dimension_x = ($thumbnail_width - $dimension_width) / 2; 
+	$dimension_y = $thumbnail_height + ((16 - $dimension_height) / 2); 
+	imagestring($thumbnail, 1, $dimension_x, $dimension_y, $dimension_string, $dimension_colour);
+}
+else
+{
+	$thumbnail = $src;
+}
+
+if (!$gd_errored)
+{
+	if ($album_config['thumbnail_cache'])
 	{
-		if ($album_config['thumbnail_cache'] == 1)
-		{
-			// ------------------------
-			// Re-generate successfully. Write it to disk!
-			// ------------------------
+		// ------------------------
+		// Re-generate successfully. Write it to disk!
+		// ------------------------
 
-			$pic_thumbnail = $pic_filename;
-
-			switch ($pic_filetype)
-			{
-				case '.jpg':
-					@imagejpeg($thumbnail, ALBUM_CACHE_PATH . $pic_thumbnail, $album_config['thumbnail_quality']);
-					break;
-				case '.png':
-					@imagepng($thumbnail, ALBUM_CACHE_PATH . $pic_thumbnail);
-					break;
-			}
-
-			@chmod(ALBUM_CACHE_PATH . $pic_thumbnail, 0777);
-		}
-
-
-		// ----------------------------
-		// After write to disk, donot forget to send to browser also
-		// ----------------------------
+		$pic_thumbnail = $pic_filename;
 
 		switch ($pic_filetype)
 		{
 			case '.jpg':
-				@imagejpeg($thumbnail, '', $album_config['thumbnail_quality']);
+				@imagejpeg($thumbnail, ALBUM_CACHE_PATH . $pic_thumbnail, $album_config['thumbnail_quality']);
 				break;
 			case '.png':
-				@imagepng($thumbnail);
-				break;
+				@imagepng($thumbnail, ALBUM_CACHE_PATH . $pic_thumbnail);
+			break;
 		}
 
-		exit;
+		@chmod(ALBUM_CACHE_PATH . $pic_thumbnail, 0777);
 	}
-	else
+
+
+	// ----------------------------
+	// After write to disk, donot forget to send to browser also
+	// ----------------------------
+
+	switch ($pic_filetype)
 	{
-		// ----------------------------
-		// It seems you have not GD installed :(
-		// ----------------------------
-
-		header('Content-type: image/jpeg');
-		readfile('images/nothumbnail.jpg');
-		exit;
+		case '.jpg':
+			@imagejpeg($thumbnail, '', $album_config['thumbnail_quality']);
+		break;
+		case '.png':
+			@imagepng($thumbnail);
+		break;
 	}
-/* Alter Code - Da wir keine anderen File Typen benutzen als jpg, png und gif könnte dieser Codeteil wegfallen.
-/*
+	exit;
 }
-*/
-
-// +------------------------------------------------------+
-// |  Powered by Photo Album 2.x.x (c) 2002-2003 Smartor  |
-// +------------------------------------------------------+
-
+else
+{
+	// ----------------------------
+	// It seems you have not GD installed :(
+	// ----------------------------
+	header('Content-type: image/jpeg');
+	readfile('images/nothumbnail.jpg');
+	exit;
+}
 ?>

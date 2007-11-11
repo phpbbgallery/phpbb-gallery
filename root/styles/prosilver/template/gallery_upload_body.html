@@ -35,7 +35,7 @@ function checkAlbumForm() {
 <div class="panel" id="postingbox">
 	<div class="inner">
 		<span class="corners-top"><span></span></span>
-		<h3>{L_UPLOAD_PIC}</h3>
+		<h3>{L_UPLOAD_IMAGE}</h3>
 		<fieldset>
 			<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT -->
 			<dl>
@@ -44,11 +44,11 @@ function checkAlbumForm() {
 			</dl>
 			<!-- ENDIF -->
 			<dl>
-				<dt><label for="title">{L_PIC_TITLE}:</label></dt>
+				<dt><label for="title">{L_IMAGE_TITLE}:</label></dt>
 				<dd><input class="inputbox autowidth" type="text" name="pic_title" size="60" /></dd>
 			</dl>
 			<dl>
-				<dt><label for="file">{L_UPLOAD_PIC_FROM_MACHINE}:</label></dt>
+				<dt><label for="file">{L_FILE}:</label></dt>
 				<dd><input class="inputbox autowidth" type="file" name="pic_file" size="52" /></dd>
 			</dl>
 			<!-- BEGIN switch_manual_thumbnail -->
@@ -58,15 +58,15 @@ function checkAlbumForm() {
 			</dl>
 			<!-- END switch_manual_thumbnail -->
 			<dl>
-				<dt><label for="description">{L_PIC_DESC}:</label><br />{L_PLAIN_TEXT_ONLY}<br />{L_MAX_LENGTH}: <b>{S_PIC_DESC_MAX_LENGTH}</b></dt>
+				<dt><label for="description">{L_IMAGE_DESC}:</label><br />{L_PLAIN_TEXT_ONLY}<br />{L_MAX_LENGTH}: <b>{S_PIC_DESC_MAX_LENGTH}</b></dt>
 				<dd><textarea class="inputbox" cols="60" rows="4" name="pic_desc" size="60"></textarea></dd>
 			</dl>
 			<dl>
-				<dt><label for="album">{L_UPLOAD_TO_CATEGORY}:</label></dt>
+				<dt><label for="album">{L_UPLOAD_TO_ALBUM}:</label></dt>
 				<dd>{SELECT_CAT}</dd>
 			</dl>
 			<dl>
-				<dt><label for="max_filesize">{L_MAX_FILESIZE}:</label></dt>
+				<dt><label for="max_filesize">{L_MAX_FILE_SIZE}:</label></dt>
 				<dd>{S_MAX_FILESIZE}</dd>
 			</dl>
 			<dl>
@@ -78,15 +78,15 @@ function checkAlbumForm() {
 				<dd>{S_MAX_HEIGHT}</dd>
 			</dl>
 			<dl>
-				<dt><label for="allowed_jpg">{L_ALLOWED_JPG}:</label></dt>
+				<dt><label for="allowed_jpg">{L_JPG_ALLOWED}:</label></dt>
 				<dd>{S_JPG}</dd>
 			</dl>
 			<dl>
-				<dt><label for="allowed_png">{L_ALLOWED_PNG}:</label></dt>
+				<dt><label for="allowed_png">{L_PNG_ALLOWED}:</label></dt>
 				<dd>{S_PNG}</dd>
 			</dl>
 			<dl>
-				<dt><label for="allowed_gif">{L_ALLOWED_GIF}:</label></dt>
+				<dt><label for="allowed_gif">{L_GIF_ALLOWED}:</label></dt>
 				<dd>{S_GIF}</dd>
 			</dl>
 		</fieldset>

@@ -34,7 +34,7 @@ include($album_root_path . 'includes/common.'.$phpEx);
 
 $pic_id = request_var('id', 0);
 
-if ( $pic_id == 0 )
+if (!$pic_id)
 {
 	trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
 }
@@ -50,47 +50,43 @@ add_form_key('image_page');
 // PREVIOUS & NEXT
 // ------------------------------------
 
-if( isset($_GET['mode']) )
+if (isset($_GET['mode']))
 {
-	if( ($_GET['mode'] == 'next') || ($_GET['mode'] == 'previous') )
+	if(($_GET['mode'] == 'next') || ($_GET['mode'] == 'previous'))
 	{
 		$sql = 'SELECT pic_id, pic_cat_id, pic_user_id
-				FROM ' . ALBUM_TABLE . '
-				WHERE pic_id = '. $pic_id;
+			FROM ' . ALBUM_TABLE . '
+			WHERE pic_id = '. $pic_id . '
+			LIMIT 1';
 
 		$result = $db->sql_query($sql);
-
 		$row = $db->sql_fetchrow($result);
-
-		if( empty($row) )
+		if (empty($row))
 		{
 			trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_WARNING);
 		}
 
 		$sql = 'SELECT new.pic_id, new.pic_time
-				FROM ' . ALBUM_TABLE . ' AS new, ' . ALBUM_TABLE . ' AS cur
-				WHERE cur.pic_id = ' . $pic_id . '
-					AND new.pic_id <> cur.pic_id
-					AND new.pic_cat_id = cur.pic_cat_id';
+			FROM ' . ALBUM_TABLE . ' AS new, ' . ALBUM_TABLE . ' AS cur
+			WHERE cur.pic_id = ' . $pic_id . '
+				AND new.pic_id <> cur.pic_id
+				AND new.pic_cat_id = cur.pic_cat_id';
 
 		$sql .= ($_GET['mode'] == 'next') ? ' AND new.pic_time >= cur.pic_time' : ' AND new.pic_time <= cur.pic_time';
-
 		$sql .= ($row['pic_cat_id'] == PERSONAL_GALLERY) ? ' AND new.pic_user_id = cur.pic_user_id' : '';
-
 		$sql .= ($_GET['mode'] == 'next') ? ' ORDER BY pic_time ASC LIMIT 1' : ' ORDER BY pic_time DESC LIMIT 1';
 
 		$result = $db->sql_query($sql);
-
 		$row = $db->sql_fetchrow($result);
 
-		if( empty($row) )
+		if (empty($row))
 		{
 			trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_WARNING);
 		}
 
-		$pic_id = $row['pic_id']; // NEW pic_id
+		$pic_id = $row['pic_id'];
 	}
-} 
+}
 
 
 // ------------------------------------
@@ -98,12 +94,12 @@ if( isset($_GET['mode']) )
 // ------------------------------------
 
 $sql = 'SELECT p.*, u.user_id, u.username, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments
-		FROM ' . ALBUM_TABLE . ' AS p
-			LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
-			LEFT JOIN ' . ALBUM_RATE_TABLE . ' AS r ON p.pic_id = r.rate_pic_id
-			LEFT JOIN ' . ALBUM_COMMENT_TABLE . ' AS c ON p.pic_id = c.comment_pic_id
-		WHERE pic_id = ' . $pic_id . '
-		GROUP BY p.pic_id';
+	FROM ' . ALBUM_TABLE . ' AS p
+	LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
+	LEFT JOIN ' . ALBUM_RATE_TABLE . ' AS r ON p.pic_id = r.rate_pic_id
+	LEFT JOIN ' . ALBUM_COMMENT_TABLE . ' AS c ON p.pic_id = c.comment_pic_id
+	WHERE pic_id = ' . $pic_id . '
+	GROUP BY p.pic_id';
 $result = $db->sql_query($sql);
 
 $thispic = $db->sql_fetchrow($result);
@@ -123,10 +119,10 @@ if (empty($thispic) || !file_exists(ALBUM_UPLOAD_PATH . $thispic['pic_filename']
 if ($cat_id <> PERSONAL_GALLERY)
 {
 	$sql = 'SELECT *
-			FROM ' . ALBUM_CAT_TABLE . '
-			WHERE cat_id = ' . $cat_id;
+		FROM ' . ALBUM_CAT_TABLE . '
+		WHERE cat_id = ' . $cat_id . '
+		LIMIT 1';
 	$result = $db->sql_query($sql);
-
 	$thiscat = $db->sql_fetchrow($result);
 }
 else
@@ -146,18 +142,18 @@ if (empty($thiscat))
 
 $album_user_access = album_user_access($cat_id, $thiscat, 1, 0, 1, 1, 1, 1); // VIEW
 
-if ($album_user_access['view'] == 0)
+if (!$album_user_access['view'])
 {
 	if (!$user->data['is_registered'])
+	{
+		login_box("gallery/image_page.$phpEx?id=$pic_id", $user->lang['LOGIN_INFO']);
+	}
+	else
 	{
 		if ($user->data['is_bot'])
 		{
 			redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
 		}
-		login_box("gallery/image_page.$phpEx?id=$pic_id", $user->lang['LOGIN_INFO']);
-	}
-	else
-	{
 		trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 	}
 }
@@ -168,13 +164,13 @@ if ($album_user_access['view'] == 0)
 
 $already_rated = false;
 
-if( $album_config['rate'] <> 0 && $user->data['is_registered'] )
+if ($album_config['rate'] && $user->data['is_registered'])
 {
 	$sql = 'SELECT *
-			FROM ' . ALBUM_RATE_TABLE . '
-			WHERE rate_pic_id = ' . $pic_id . '
-				AND rate_user_id = ' . $user->data['user_id'] . '
-			LIMIT 1';
+		FROM ' . ALBUM_RATE_TABLE . '
+		WHERE rate_pic_id = ' . $pic_id . '
+			AND rate_user_id = ' . $user->data['user_id'] . '
+		LIMIT 1';
 
 	$result = $db->sql_query($sql);
 
@@ -192,7 +188,7 @@ if ($user->data['user_type'] <> USER_FOUNDER)
 {
 	if (($thiscat['cat_approval'] == ADMIN) || (($thiscat['cat_approval'] == MOD) || !$album_user_access['moderator']))
 	{
-		if ($thispic['pic_approval'] <> 1)
+		if (!$thispic['pic_approval'])
 		{
 			trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 		}
@@ -210,83 +206,69 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 	{
 		trigger_error('FORM_INVALID');
 	}
-	
 	include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
-	
+
 	if (isset($_POST['comment']))
 	{
-		if ($album_config['comment'] == 0 || $album_user_access['comment'] == 0)
+		if (!$album_config['comment'] || !$album_user_access['comment'])
 		{
 			trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 		}
-		
 		$comment_text = substr(request_var('comment', '', true), 0, $album_config['desc_length']);
-	
 		$comment_username = (!$user->data['is_registered']) ? substr(request_var('comment_username', '', true), 0, 32) : str_replace("'", "''", htmlspecialchars(trim($user->data['username'])));
-	
-		if( empty($comment_text) )
+
+		if (empty($comment_text))
 		{
 			trigger_error($user->lang['COMMENT_NO_TEXT'], E_USER_WARNING);
 		}
-	
-	
+
 		// --------------------------------
 		// Check Pic Locked
 		// --------------------------------
-	
-		if (($thispic['pic_lock'] == 1) && (!$auth_data['moderator']))
+
+		if (($thispic['pic_lock']) && (!$auth_data['moderator']))
 		{
 			trigger_error($user->lang['IMAGE_LOCKED'], E_USER_WARNING);
 		}
-	
-	
 		// --------------------------------
 		// Check username for guest posting
 		// --------------------------------
-	
+
 		if (!$user->data['is_registered'])
 		{
 			if ($comment_username <> '')
 			{
 				$result = validate_username($comment_username);
-				
 				if ( $result['error'] )
 				{
 					trigger_error($result['error_msg'], E_USER_WARNING);
 				}
 			}
 		}
-	
-	
+
 		// --------------------------------
 		// Prepare variables
 		// --------------------------------
-	
-		$comment_time 		= time();
-		$comment_user_id 	= $user->data['user_id'];
-		$comment_user_ip 	= $user->ip;
-	
-	
+		$comment_time		= time();
+		$comment_user_id	= $user->data['user_id'];
+		$comment_user_ip	= $user->ip;
+
 		// --------------------------------
 		// Get $comment_id
 		// --------------------------------
 		$sql = 'SELECT MAX(comment_id) AS max
-				FROM ' . ALBUM_COMMENT_TABLE;
-	
+			FROM ' . ALBUM_COMMENT_TABLE;
 		$result = $db->sql_query($sql);
-	
 		$row = $db->sql_fetchrow($result);
-	
 		$comment_id = $row['max'] + 1;
-	
-	
+
 		// --------------------------------
 		// Insert into DB
 		// --------------------------------
-		
+
 		include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
-		$message_parser 			= new parse_message();
-		$message_parser->message 	= utf8_normalize_nfc($comment_text);
+		$message_parser				= new parse_message();
+		$message_parser->message	= utf8_normalize_nfc($comment_text);
 		if($message_parser->message)
 		{
 			$message_parser->parse(true, true, true, true, false, true, true, true);
@@ -301,27 +283,23 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 			'comment_text'					=> $message_parser->message,
 			'comment_text_bbcode_uid'		=> $message_parser->bbcode_uid,
 			'comment_text_bbcode_bitfield'	=> $message_parser->bbcode_bitfield,
-			);
-		
+		);
 		$db->sql_query('INSERT INTO ' . ALBUM_COMMENT_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 
-		
+
 		// --------------------------------
 		// Complete... now send a message to user
 		// --------------------------------
-	
 		$template->assign_vars(array(
-			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("image_page.$phpEx?id=$pic_id&comment_set=1") . '#comments">')
-		);
-	
+			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("image_page.$phpEx?id=$pic_id&comment_set=1") . '#comments">',
+		));
 		$message = $user->lang['COMMENT_STORED'] . "<br /><br />" . sprintf($user->lang['CLICK_VIEW_COMMENT'], "<a href=\"" . append_sid("image_page.$phpEx?id=$pic_id&stored=1") . "#$comment_id\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("album.$phpEx") . "\">", "</a>");
-	
 		trigger_error($message, E_USER_WARNING);
 	}
-	
+
 	if (isset($_POST['rate']))
 	{
-		if ($album_config['rate'] == 0 || $album_user_access['rate'] == 0)
+		if (!$album_config['rate'] || !$album_user_access['rate'])
 		{
 			trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 		}
@@ -329,56 +307,49 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 		{
 			trigger_error($user->lang['ALREADY_RATED'], E_USER_WARNING);
 		}
-		
 		$rate_point = request_var('rate', 0);
-	
-		if( ($rate_point <= 0) || ($rate_point > $album_config['rate_scale']) )
+
+		if (($rate_point <= 0) || ($rate_point > $album_config['rate_scale']))
 		{
 			trigger_error('Bad submitted value', E_USER_WARNING);
 		}
-	
 		$rate_user_id = $user->data['user_id'];
 		$rate_user_ip = $user->ip;
-		
+
 		// --------------------------------
 		// Insert into the DB
 		// --------------------------------
-	
+
 		$sql_ary = array(
 			'rate_pic_id'	=> $pic_id,
 			'rate_user_id'	=> $rate_user_id,
 			'rate_user_ip'	=> $rate_user_ip,
 			'rate_point'	=> $rate_point,
-			);
-		
+		);
 		$db->sql_query('INSERT INTO ' . ALBUM_RATE_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 
-	
 		// --------------------------------
 		// Complete... now send a message to user
 		// --------------------------------
-	
+
 		$message = $user->lang['RATING_SUCCESSFUL'];
-	
+
 		if ($cat_id <> PERSONAL_GALLERY)
 		{
 			$template->assign_vars(array(
-				'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("image_page.$phpEx?id=$pic_id&rate_set=1#rating") . '">')
-			);
-	
+				'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("image_page.$phpEx?id=$pic_id&rate_set=1#rating") . '">',
+			));
 			$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$cat_id") . "\">", "</a>");
 		}
 		else
 		{
 			$template->assign_vars(array(
-				'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("album_personal.$phpEx?user_id=$user_id") . '">')
-			);
-	
+				'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("album_personal.$phpEx?user_id=$user_id") . '">',
+			));
 			$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_PERSONAL_ALBUM'], "<a href=\"" . append_sid("album_personal.$phpEx?user_id=$user_id") . "\">", "</a>");
 		}
-	
+
 		$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
-	
 		trigger_error($message, E_USER_WARNING);
 	}
 }
@@ -425,7 +396,7 @@ $result = $db->sql_query($sql);
 
 $row = $db->sql_fetchrow($result);
 
-if( empty($row) )
+if (empty($row))
 {
 	$u_prev = '';
 	$l_prev = '';
@@ -459,50 +430,32 @@ $template->assign_vars(array(
 	'U_VIEW_CAT' 	=> ($cat_id <> PERSONAL_GALLERY) ? append_sid("album.$phpEx?id=$cat_id") : append_sid("album_personal.$phpEx?user_id=$user_id"),
 
 	'U_PIC' 		=> append_sid("image.$phpEx?pic_id=$pic_id"),
-
 	'PIC_TITLE' 	=> $thispic['pic_title'],
 	'PIC_DESC' 		=> generate_text_for_display($thispic['pic_desc'], $thispic['pic_desc_bbcode_uid'], $thispic['pic_desc_bbcode_bitfield'], 7),
-
 	'POSTER' 		=> $poster,
-
 	'PIC_TIME' 		=> $user->format_date($thispic['pic_time']),
-
 	'PIC_VIEW' 		=> $thispic['pic_view_count'],
-
 	'U_NEXT' 		=> $u_next,
 	'U_PREVIOUS' 	=> $u_prev,
 
-	'L_NEXT' 		=> $l_next,
-	'L_PREVIOUS' 	=> $l_prev,
-	
-	'L_DETAILS' 	=> $user->lang['DETAILS'],
-	'L_PIC_TITLE' 	=> $user->lang['IMAGE_TITLE'],
-	'L_PIC_DESC' 	=> $user->lang['IMAGE_DESC'],
-	'L_POSTER' 		=> $user->lang['POSTER'],
-	'L_POSTED' 		=> $user->lang['POSTED'],
-	'L_VIEW' 		=> $user->lang['VIEWS'],
-	
-	'S_ALBUM_ACTION' => append_sid("image_page.$phpEx?id=$pic_id"))
-);
+	'NEXT' 		=> $l_next,
+	'PREVIOUS' 	=> $l_prev,
+
+	'S_ALBUM_ACTION' => append_sid("image_page.$phpEx?id=$pic_id"),
+));
 
 if ($album_config['rate'])
 {
 	$template->assign_vars(array(
-		'L_RATING' 		=> $user->lang['RATING'],
-		'PIC_RATING' 	=> ($thispic['rating'] <> 0) ? round($thispic['rating'], 2) : $user->lang['NOT_RATED']
-		)
-	);
-	
+		'PIC_RATING' 	=> ($thispic['rating']) ? round($thispic['rating'], 2) : $user->lang['NOT_RATED']
+	));
+
 	if ($thiscat['cat_rate_level'] < 1 || $album_user_access['rate'])
 	{
-		$template->assign_vars(array(
-				'L_YOUR_RATING' => $user->lang['YOUR_RATING'],
-			)
-		);
 		$ratebox = false;
 		if ($user->data['user_id'] == ANONYMOUS || $user->data['is_bot'])
 		{
-			if ($thiscat['cat_rate_level'] == 0)
+			if (!$thiscat['cat_rate_level'])
 			{
 				$ratebox = '<a href="' . append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login') . '">' . $user->lang['LOGIN_TO_RATE'] . '</a>';
 			}
@@ -525,41 +478,36 @@ if ($album_config['rate'])
 			}
 		}
 		$template->assign_vars(array(
-				'S_RATEBOX' => $ratebox
-			)
-		);
+			'S_RATEBOX' => $ratebox,
+		));
 	}
 }
 
 if ($album_config['comment'])
 {
 	$template->assign_vars(array(
-		'L_COMMENTS' 	=> $user->lang['COMMENTS'],
 		'PIC_COMMENTS' 	=> $thispic['comments']
-		)
-	);
+	));
 	//'PIC_COMMENTS' => $thispic['comments']
-	
+
 	if ($thiscat['cat_comment_level'] < 1 || $album_user_access['comment'])
 	{
 		$template->assign_vars(array(
-				'L_POST_COMMENT' => $user->lang['POST_COMMENT'],
-				'L_YOUR_COMMENT' => $user->lang['YOUR_COMMENT']
-			)
-		);
+			'L_POST_COMMENT' => $user->lang['POST_COMMENT'],
+			'L_YOUR_COMMENT' => $user->lang['YOUR_COMMENT']
+		));
 		$commentbox = false;
 		if ($user->data['user_id'] == ANONYMOUS || $user->data['is_bot'])
 		{
-			if ($thiscat['cat_comment_level'] == 0)
+			if (!$thiscat['cat_comment_level'])
 			{
 				$commentbox = '<a href="' . append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login') . '">' . $user->lang['LOGIN_TO_COMMENT'] . '</a>';
 			}
 			else
 			{
 				$template->assign_vars(array(
-						'S_CAN_COMMENT' => true
-					)
-				);
+					'S_CAN_COMMENT' => true,
+				));
 			}
 		}
 		if (!$commentbox)
@@ -568,45 +516,34 @@ if ($album_config['comment'])
 			$commentbox .= '<textarea name="comment" class="inputbox" cols="60" rows="4" size="60"></textarea><br /><br /><input type="submit" name="submit" value="' . $user->lang['SUBMIT'] . '" class="button1" />';
 		}
 		$template->assign_vars(array(
-				'S_COMMENTBOX' 			=> $commentbox,
-				'L_ASC' 				=> $user->lang['SORT_ASCENDING'],
-				'L_DESC' 				=> $user->lang['SORT_DESCENDING'],
-				'L_COMMENT_NO_TEXT' 	=> $user->lang['COMMENT_NO_TEXT'],
-				'L_COMMENT_TOO_LONG' 	=> $user->lang['COMMENT_TOO_LONG'],
-				'S_MAX_LENGTH' 			=> $album_config['desc_length']
-			)
-		);
+			'S_COMMENTBOX' 			=> $commentbox,
+			'S_MAX_LENGTH' 			=> $album_config['desc_length'],
+		));
 	}
-	
+
 	$total_comments = $thispic['comments'];
 	$comments_per_page = 10;
-	
+
 	$start = request_var('start', 0);
-	
 	$sort_order = request_var('sort_order', 'ASC');
-	
 	if ($total_comments > 0)
 	{
-		$limit_sql = ($start == 0) ? $comments_per_page : $start .','. $comments_per_page;
+		$limit_sql = (!$start) ? $comments_per_page : $start .','. $comments_per_page;
 
 		$sql = 'SELECT c.*, u.user_id, u.username
-				FROM ' . ALBUM_COMMENT_TABLE . ' AS c
-					LEFT JOIN ' . USERS_TABLE . ' AS u ON c.comment_user_id = u.user_id
-				WHERE c.comment_pic_id = ' . $pic_id . '
-				ORDER BY c.comment_id ' . $sort_order . '
-				LIMIT ' . $limit_sql;
+			FROM ' . ALBUM_COMMENT_TABLE . ' AS c
+			LEFT JOIN ' . USERS_TABLE . ' AS u ON c.comment_user_id = u.user_id
+			WHERE c.comment_pic_id = ' . $pic_id . '
+			ORDER BY c.comment_id ' . $sort_order . '
+			LIMIT ' . $limit_sql;
 
 		$result = $db->sql_query($sql);
-
 		$commentrow = array();
-
 		while( $row = $db->sql_fetchrow($result) )
 		{
 			$commentrow[] = $row;
 		}
-		
 		$even = 0;
-		
 		for ($i = 0; $i < count($commentrow); $i++)
 		{
 			if (($commentrow[$i]['user_id'] == ALBUM_GUEST) || ($commentrow[$i]['username'] == ''))
@@ -621,17 +558,13 @@ if ($album_config['comment'])
 			if ($commentrow[$i]['comment_edit_count'] > 0)
 			{
 				$sql = 'SELECT c.comment_id, c.comment_edit_user_id, u.user_id, u.username
-						FROM ' . ALBUM_COMMENT_TABLE . ' AS c
-							LEFT JOIN ' . USERS_TABLE . ' AS u ON c.comment_edit_user_id = u.user_id
-						WHERE c.comment_id = ' . $commentrow[$i]['comment_id']. '
-						LIMIT 1';
-
+					FROM ' . ALBUM_COMMENT_TABLE . ' AS c
+					LEFT JOIN ' . USERS_TABLE . ' AS u ON c.comment_edit_user_id = u.user_id
+					WHERE c.comment_id = ' . $commentrow[$i]['comment_id']. '
+					LIMIT 1';
 				$result = $db->sql_query($sql);
-
 				$lastedit_row = $db->sql_fetchrow($result);
-
 				$edit_info = ($commentrow[$i]['comment_edit_count'] == 1) ? $user->lang['EDITED_TIME_TOTAL'] : $user->lang['EDITED_TIMES_TOTAL'];
-
 				$edit_info = '<br /><br />&raquo;&nbsp;'. sprintf($edit_info, $lastedit_row['username'], $user->format_date($commentrow[$i]['comment_edit_time']), $commentrow[$i]['comment_edit_count']) .'<br />';
 			}
 			else
@@ -640,7 +573,7 @@ if ($album_config['comment'])
 			}
 			//$commentrow[$i]['comment_text'] = smilies_pass($commentrow[$i]['comment_text']);
 			
-			if ($even == 0)
+			if (!$even)
 			{
 				$row_style = 'bg2';
 				$even++;
@@ -650,36 +583,24 @@ if ($album_config['comment'])
 				$row_style = 'bg1';
 				$even = 0;
 			}
-				
 			$template->assign_block_vars('commentrow', array(
 				'ID' 			=> $commentrow[$i]['comment_id'],
 				'POSTER' 		=> $poster,
 				'TIME' 			=> $user->format_date($commentrow[$i]['comment_time']),
 				'IP' 			=> ($user->data['user_type'] == USER_FOUNDER) ? '-----------------------------------<br />' . $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $commentrow[$i]['comment_user_ip'] . '" target="_blank">' . $commentrow[$i]['comment_user_ip'] .'</a><br />' : '',
-				
 				'S_ROW_STYLE' 	=> $row_style,
 
 				'TEXT' 			=> generate_text_for_display($commentrow[$i]['comment_text'], $commentrow[$i]['comment_text_bbcode_uid'], $commentrow[$i]['comment_text_bbcode_bitfield'], 7),
 				'EDIT_INFO' 	=> $edit_info,
-
 				'EDIT' 			=> '',//missing feature ( ( $auth_data['edit'] && ($commentrow[$i]['comment_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($thiscat['cat_edit_level'] != ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="'. append_sid("edit.$phpEx?comment_id=". $commentrow[$i]['comment_id']) .'">'. $user->lang['EDIT_IMAGE'] .'</a>' : '',
-
 				'DELETE' 		=> '',//missing feature ( ( $auth_data['delete'] && ($commentrow[$i]['comment_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($thiscat['cat_delete_level'] != ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="'. append_sid("edit.$phpEx?comment_id=". $commentrow[$i]['comment_id']) .'">'. $user->lang['DELETE_IMAGE'] .'</a>' : ''
-				)
-			);
+			));
 		}
 
 		$template->assign_vars(array(
 			'PAGINATION' 	=> generate_pagination(append_sid("image_page.$phpEx?id=$pic_id&amp;sort_order=$sort_order"), $total_comments, $comments_per_page, $start),
 			'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $comments_per_page ) + 1 ), ceil( $total_comments / $comments_per_page ))
-			)
-		);
-	}
-	else
-	{
-		$template->assign_vars(array(
-			'L_NO_COMMENTS' => $user->lang['NO_COMMENTS'])
-		);
+		));
 	}
 }
 
@@ -687,26 +608,26 @@ if ($album_config['comment'])
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'		=> $user->lang['GALLERY'],
 	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
-		));
+));
 
 if ($cat_id <> PERSONAL_GALLERY)
 {
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME' 	=> $thiscat['cat_title'],
 		'U_VIEW_FORUM' 	=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']),
-		));
+	));
 }
 else
 {
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME' 	=> $user->lang['PERSONAL_ALBUMS'],
 		'U_VIEW_FORUM' 	=> append_sid("{$album_root_path}album_personal_index.$phpEx"),
-		));
+	));
 
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME' 	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $thispic['username']),
 		'U_VIEW_FORUM' 	=> append_sid("{$album_root_path}album_personal.$phpEx", 'user_id=' . $user_id),
-		));
+	));
 }
 
 // Output page

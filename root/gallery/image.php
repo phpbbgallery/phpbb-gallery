@@ -31,10 +31,8 @@ include($album_root_path . 'includes/common.'.$phpEx);
 // ------------------------------------
 // Check the request
 // ------------------------------------
-
 $pic_id = request_var('pic_id', 0);
-
-if ( $pic_id == 0 )
+if (!$pic_id)
 {
 	die($user->lang['NO_IMAGE_SPECIFIED']);
 }
@@ -45,8 +43,9 @@ if ( $pic_id == 0 )
 // ------------------------------------
 
 $sql = 'SELECT *
-		FROM ' . ALBUM_TABLE . '
-		WHERE pic_id = ' . $pic_id;
+	FROM ' . ALBUM_TABLE . '
+	WHERE pic_id = ' . $pic_id . '
+	LIMIT 1';
 $result = $db->sql_query($sql);
 
 $thispic = $db->sql_fetchrow($result);
@@ -54,7 +53,7 @@ $thispic = $db->sql_fetchrow($result);
 $cat_id = $thispic['pic_cat_id'];
 $user_id = $thispic['pic_user_id'];
 
-$pic_filetype = substr($thispic['pic_filename'], strlen($thispic['pic_filename']) - 4, 4);
+$pic_filetype = utf8_substr($thispic['pic_filename'], strlen($thispic['pic_filename']) - 4, 4);
 $pic_filename = $thispic['pic_filename'];
 $pic_thumbnail = $thispic['pic_thumbnail'];
 
@@ -71,10 +70,10 @@ if (empty($thispic) || !file_exists(ALBUM_UPLOAD_PATH . $pic_filename) )
 if ($cat_id <> PERSONAL_GALLERY)
 {
 	$sql = 'SELECT *
-			FROM ' . ALBUM_CAT_TABLE . '
-			WHERE cat_id = ' . $cat_id;
+		FROM ' . ALBUM_CAT_TABLE . '
+		WHERE cat_id = ' . $cat_id . '
+		LIMIT 1';
 	$result = $db->sql_query($sql);
-
 	$thiscat = $db->sql_fetchrow($result);
 }
 else
@@ -93,7 +92,7 @@ if (empty($thiscat))
 // ------------------------------------
 
 $album_user_access = album_user_access($cat_id, $thiscat, 1, 0, 0, 0, 0, 0); // VIEW
-if ($album_user_access['view'] == 0)
+if (!$album_user_access['view'])
 {
 	die($user->lang['NOT_AUTHORISED']);
 }
@@ -107,7 +106,7 @@ if ($user->data['user_type'] <> USER_FOUNDER)
 {
 	if (($thiscat['cat_approval'] == ADMIN) || (($thiscat['cat_approval'] == MOD) && !$album_user_access['moderator']))
 	{
-		if ($thispic['pic_approval'] <> 1)
+		if (!$thispic['pic_approval'])
 		{
 			die($user->lang['NOT_AUTHORISED']);
 		}
@@ -119,7 +118,7 @@ if ($user->data['user_type'] <> USER_FOUNDER)
 // Check hotlink
 // ------------------------------------
 
-if (($album_config['hotlink_prevent'] == 1) && (isset($HTTP_SERVER_VARS['HTTP_REFERER'])))
+if ($album_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER']))
 {
 	$check_referer = explode('?', $HTTP_SERVER_VARS['HTTP_REFERER']);
 	$check_referer = trim($check_referer[0]);
@@ -132,14 +131,12 @@ if (($album_config['hotlink_prevent'] == 1) && (isset($HTTP_SERVER_VARS['HTTP_RE
 	}
 
 	$good_referers[] = $config['server_name'] . $config['script_path'];
-
 	$errored = TRUE;
 
 	for ($i = 0; $i < count($good_referers); $i++)
 	{
 		$good_referers[$i] = trim($good_referers[$i]);
-
-		if( (strstr($check_referer, $good_referers[$i])) && ($good_referers[$i] <> '') )
+		if((strstr($check_referer, $good_referers[$i])) && ($good_referers[$i] <> ''))
 		{
 			$errored = FALSE;
 		}
@@ -164,8 +161,9 @@ if (($album_config['hotlink_prevent'] == 1) && (isset($HTTP_SERVER_VARS['HTTP_RE
 // ------------------------------------
 
 $sql = 'UPDATE ' . ALBUM_TABLE . '
-		SET pic_view_count = pic_view_count + 1
-		WHERE pic_id = ' . $pic_id;
+	SET pic_view_count = pic_view_count + 1
+	WHERE pic_id = ' . $pic_id . '
+	LIMIT 1';
 $result = $db->sql_query($sql);
 
 
@@ -174,7 +172,7 @@ $result = $db->sql_query($sql);
 // ------------------------------------
 $watermark_ok = false;
 
-if ($album_config['watermark_images'] == 1)
+if ($album_config['watermark_images'])
 {
 	$marktype = substr($album_config['watermark_source'], strlen($album_config['watermark_source']) - 4, 4);
 	switch ( $marktype )
@@ -182,45 +180,45 @@ if ($album_config['watermark_images'] == 1)
 		case '.png':
 			$nm = imagecreatefrompng($phpbb_root_path . $album_config['watermark_source']);
 		break;
-		
+
 		case '.gif':
 			$nm = imagecreatefromgif($phpbb_root_path . $album_config['watermark_source']);
 		break;
-		
+
 		case '.jpg':
 		case 'jpeg':
 			$nm = imagecreatefromjpeg($phpbb_root_path .$album_config['watermark_source']);
 		break;
-		
+
 		default:
 			$nm = false;
 	}
 
-	if ( $nm )
+	if ($nm)
 	{
 		$sx = imagesx($nm);
 		$sy = imagesy($nm);
 
-		switch ( $pic_filetype )
+		switch ($pic_filetype)
 		{
 			case '.png':
 				$im = imagecreatefrompng(ALBUM_UPLOAD_PATH  . $thispic['pic_filename']);
 			break;
-			
+
 			case '.gif':
 				$im = imagecreatefromgif(ALBUM_UPLOAD_PATH  . $thispic['pic_filename']);
 			break;
-			
+
 			case '.jpg':
 			case 'jpeg':
 				$im = imagecreatefromjpeg(ALBUM_UPLOAD_PATH  . $thispic['pic_filename']);
 			break;
-			
+
 			default:
 				$im = false;
 		}
 
-		if ( $im )
+		if ($im)
 		{
 			$sx2 = imagesx($im);
 			$sy2 = imagesy($im);
@@ -233,47 +231,42 @@ if ($album_config['watermark_images'] == 1)
 
 if ($watermark_ok)
 {
-	switch ( $pic_filetype )
+	switch ($pic_filetype)
 	{
-			case '.png':
-			case '.gif':
-				header('Content-type: image/png');
-				imagepng($im);
-			break;
-			
-			default:
-				header('Content-type: image/jpeg');
-				imagejpeg($im);
-			break;
+		case '.png':
+		case '.gif':
+			header('Content-type: image/png');
+			imagepng($im);
+		break;
+
+		default:
+			header('Content-type: image/jpeg');
+			imagejpeg($im);
+		break;
 	}
 }
 else
 {
-	switch ( $pic_filetype )
+	switch ($pic_filetype)
 	{
 		case '.png':
 			header('Content-type: image/png');
 		break;
-		
+
 		case '.gif':
 			header('Content-type: image/gif');
 		break;
-		
+
 		case '.jpg':
 			header('Content-type: image/jpeg');
 		break;
-		
+
 		default:
 			die('The filename data in the DB was corrupted');
+		break;
 	}
 
 	readfile(ALBUM_UPLOAD_PATH  . $thispic['pic_filename']);
 }
 exit;
-
-
-// +------------------------------------------------------+
-// |  Powered by Photo Album 2.x.x (c) 2002-2003 Smartor  |
-// +------------------------------------------------------+
-
 ?>

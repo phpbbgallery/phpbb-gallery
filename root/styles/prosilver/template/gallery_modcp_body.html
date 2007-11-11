@@ -16,7 +16,7 @@
 		<ul class="topiclist">
 			<li class="header">
 				<dl class="icon">
-					<dt>{L_PIC_TITLE}</dt>
+					<dt>{L_IMAGE_TITLE}</dt>
 					<dd class="posts">{L_RATING}</dd>
 					<dd class="posts">{L_COMMENTS}</dd>
 					<dd class="posts">{L_STATUS}</dd>
@@ -29,7 +29,7 @@
 		<ul class="topiclist forums">
 			<li class="row">
 				<dl>
-					<dd>{L_NO_PICS}</dd>
+					<dd>{L_NO_IMAGES}</dd>
 				</dl>
 			</li>
 		</ul>
@@ -38,7 +38,7 @@
 		<ul class="topiclist forums">
 			<li class="row">
 				<dl class="icon" style="background-image: url({forumrow.FORUM_FOLDER_IMG_SRC}); background-repeat: no-repeat;">
-					<dt>{L_PIC_TITLE}: {picrow.PIC_TITLE}<br />{L_POSTER}: {picrow.POSTER}<br />{L_TIME}: {picrow.TIME}</dt>
+					<dt>{L_IMAGE_TITLE}: {picrow.PIC_TITLE}<br />{L_POSTER}: {picrow.POSTER}<br />{L_TIME}: {picrow.TIME}</dt>
 					<dd class="posts">{picrow.RATING}</dd>
 					<dd class="posts">{picrow.COMMENTS}</dd>
 					<dd class="posts">{picrow.LOCK}</dd>
@@ -85,9 +85,9 @@
 	<label>{L_SELECT_SORT_METHOD}: 
 		<select name="sort_method">
 			<option {SORT_TIME} value='pic_time'>{L_TIME}</option>
-			<option {SORT_PIC_TITLE} value='pic_title'>{L_PIC_TITLE}</option>
-			<option {SORT_USERNAME} value='username'>{L_USERNAME}</option>
-			<option {SORT_VIEW} value='pic_view_count'>{L_VIEW}</option>
+			<option {SORT_PIC_TITLE} value='pic_title'>{L_IMAGE_TITLE}</option>
+			<option {SORT_USERNAME} value='username'>{L_SORT_USERNAME}</option>
+			<option {SORT_VIEW} value='pic_view_count'>{L_VIEWS}</option>
 			{SORT_RATING_OPTION}
 			{SORT_COMMENTS_OPTION}
 			{SORT_NEW_COMMENT_OPTION}
@@ -95,8 +95,8 @@
 	</label>
 	<label>{L_ORDER}: 
 		<select name="sort_order">
-			<option {SORT_ASC} value='ASC'>{L_ASC}</option>
-			<option {SORT_DESC} value='DESC'>{L_DESC}</option>
+			<option {SORT_ASC} value='ASC'>{L_SORT_ASCENDING}</option>
+			<option {SORT_DESC} value='DESC'>{L_SORT_DESCENDING}</option>
 		</select> <input type="submit" name="sort" value="{L_SORT}" class="button2" />
 	</label>
 </fieldset>
