@@ -34,7 +34,7 @@ include($album_root_path . 'includes/common.'.$phpEx);
 
 $pic_id = request_var('id', 0);
 
-if( $pic_id == 0)
+if(!$pic_id)
 {
 	trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
 }
@@ -49,8 +49,9 @@ add_form_key('image_delete');
 // ------------------------------------
 
 $sql = 'SELECT *
-		FROM ' . ALBUM_TABLE . '
-		WHERE pic_id = ' . $pic_id;
+	FROM ' . ALBUM_TABLE . '
+	WHERE pic_id = ' . $pic_id . '
+	LIMIT 1';
 $result = $db->sql_query($sql);
 
 $thispic = $db->sql_fetchrow($result);
@@ -61,7 +62,7 @@ $user_id = $thispic['pic_user_id'];
 $pic_filename = $thispic['pic_filename'];
 $pic_thumbnail = $thispic['pic_thumbnail'];
 
-if(empty($thispic))
+if (empty($thispic))
 {
 	trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_WARNING);
 }
@@ -74,8 +75,9 @@ if(empty($thispic))
 if ($cat_id <> PERSONAL_GALLERY)
 {
 	$sql = 'SELECT *
-			FROM ' . ALBUM_CAT_TABLE . '
-			WHERE cat_id = ' . $cat_id;
+		FROM ' . ALBUM_CAT_TABLE . '
+		WHERE cat_id = ' . $cat_id . '
+		LIMIT 1';
 	$result = $db->sql_query($sql);
 
 	$thiscat = $db->sql_fetchrow($result);
@@ -95,20 +97,20 @@ if (empty($thiscat))
 // Check the permissions
 // ------------------------------------
 
-$album_user_access = album_user_access($cat_id, $thiscat, 0, 0, 0, 0, 0, 1); // DELETE
+$album_user_access = album_user_access($cat_id, $thiscat, 0, 0, 0, 0, 0, 1);// DELETE
 
-if ($album_user_access['delete'] == 0)
+if (!$album_user_access['delete'])
 {
 	if (!$user->data['is_registered'])
+	{
+		login_box("gallery/image_delete.$phpEx?id=$pic_id", $user->lang['LOGIN_INFO']);
+	}
+	else
 	{
 		if ($user->data['is_bot'])
 		{
 			redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
 		}
-		login_box("gallery/image_delete.$phpEx?id=$pic_id", $user->lang['LOGIN_INFO']);
-	}
-	else
-	{
 		trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 	}
 }
@@ -127,38 +129,33 @@ else
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> $user->lang['GALLERY'],
 	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
-	)
-);
+));
 
 if ($cat_id == PERSONAL_GALLERY)
 {
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],
 		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal_index.$phpEx"),
-		)
-	);
-	
+	));
+
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $thispic['pic_username']),
 		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal.$phpEx", 'user_id=' . $user_id),
-		)
-	);
+	));
 }
 else
 {
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'	=> $thiscat['cat_title'],
 		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']),
-		)
-	);
+	));
 
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'	=> $user->lang['MODCP'],
 		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'cat_id=' . $thiscat['cat_id']),
-		)
-	);
+	));
 }
-		
+
 /*
 +----------------------------------------------------------
 | Main work here...
@@ -173,39 +170,29 @@ if(!isset($_POST['confirm']))
 	if(isset($_POST['cancel']))
 	{
 		if ($cat_id)
-		{ 
-        		redirect(append_sid("album.$phpEx?id=$cat_id")); 
+		{
+			redirect(append_sid("album.$phpEx?id=$cat_id")); 
 		} 
 		else
-		{ 
+		{
 			redirect(append_sid("album_personal.$phpEx?user_id=$user_id")); 
-		} 
+		}
 		exit;
 	}
 	
 	$template->assign_vars(array(
-		'MESSAGE_TITLE' 	=> $user->lang['CONFIRM'],
+		'MESSAGE_TITLE'		=> $user->lang['CONFIRM'],
+		'MESSAGE_TEXT'		=> $user->lang['ALBUM_DELETE_CONFIRM'],
+		'S_CONFIRM_ACTION'	=> append_sid("image_delete.$phpEx?id=$pic_id"),
+	));
 
-		'MESSAGE_TEXT' 		=> $user->lang['ALBUM_DELETE_CONFIRM'],
-
-		'L_NO' 				=> $user->lang['NO'],
-		'L_YES' 			=> $user->lang['YES'],
-
-		'S_CONFIRM_ACTION' 	=> append_sid("image_delete.$phpEx?id=$pic_id"),
-		)
-	);
-	
 	// Output page
 	$page_title = $user->lang['GALLERY'];
-	
 	page_header($page_title);
-	
 	$template->set_filenames(array(
-		'body' => 'confirm_body.html')
-	);
-	
+		'body' => 'confirm_body.html',
+	));
 	page_footer();
-	
 }
 else
 {
@@ -214,12 +201,12 @@ else
 	{
 		trigger_error('FORM_INVALID');
 	}
-	
+
 	// --------------------------------
 	// It's confirmed. First delete all comments
 	// --------------------------------
 	$sql = 'DELETE FROM ' . ALBUM_COMMENT_TABLE . '
-			WHERE comment_pic_id = ' . $pic_id;
+		WHERE comment_pic_id = ' . $pic_id;
 	$result = $db->sql_query($sql);
 
 
@@ -227,7 +214,7 @@ else
 	// Delete all ratings
 	// --------------------------------
 	$sql = 'DELETE FROM ' . ALBUM_RATE_TABLE . '
-			WHERE rate_pic_id = ' . $pic_id;
+		WHERE rate_pic_id = ' . $pic_id;
 	$result = $db->sql_query($sql);
 
 
@@ -250,7 +237,7 @@ else
 	// Delete DB entry
 	// --------------------------------
 	$sql = 'DELETE FROM ' . ALBUM_TABLE . '
-			WHERE pic_id = ' . $pic_id;
+		WHERE pic_id = ' . $pic_id;
 	$result = $db->sql_query($sql);
 
 
@@ -262,28 +249,19 @@ else
 	if ($cat_id <> PERSONAL_GALLERY)
 	{
 		$template->assign_vars(array(
-			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("album.$phpEx?id=$cat_id") . '">')
-		);
-
+			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("album.$phpEx?id=$cat_id") . '">',
+		));
 		$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$cat_id") . "\">", "</a>");
 	}
 	else
 	{
 		$template->assign_vars(array(
-			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("album_personal.$phpEx?user_id=$user_id") . '">')
-		);
-
+			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("album_personal.$phpEx?user_id=$user_id") . '">',
+		));
 		$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_PERSONAL_ALBUM'], "<a href=\"" . append_sid("album_personal.$phpEx?user_id=$user_id") . "\">", "</a>");
 	}
-	
+
 	$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
-	
 	trigger_error($message, E_USER_WARNING);
 }
-
-
-// +------------------------------------------------------+
-// |  Powered by Photo Album 2.x.x (c) 2002-2003 Smartor  |
-// +------------------------------------------------------+
-
 ?>

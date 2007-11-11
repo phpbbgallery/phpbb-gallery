@@ -34,19 +34,15 @@ include($album_root_path . 'includes/common.'.$phpEx);
 
 $pic_id = request_var('pic_id', 0);
 
-if( $pic_id == 0 )
+if(!$pic_id)
 {
 	trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
 }
 
-
-// ------------------------------------
-// Get this pic info
-// ------------------------------------
-
 $sql = 'SELECT *
 		FROM ' . ALBUM_TABLE . '
-		WHERE pic_id = ' . $pic_id;
+		WHERE pic_id = ' . $pic_id . '
+		LIMIT 1';
 $result = $db->sql_query($sql);
 
 $thispic = $db->sql_fetchrow($result);
@@ -70,8 +66,9 @@ if( empty($thispic) )
 if ($cat_id <> PERSONAL_GALLERY)
 {
 	$sql = 'SELECT *
-			FROM ' . ALBUM_CAT_TABLE . '
-			WHERE cat_id = ' . $cat_id;
+		FROM ' . ALBUM_CAT_TABLE . '
+		WHERE cat_id = ' . $cat_id . '
+		LIMIT 1';
 	$result = $db->sql_query($sql);
 
 	$thiscat = $db->sql_fetchrow($result);
@@ -91,7 +88,7 @@ if ( empty($thiscat) )
 // Check the permissions
 // ------------------------------------
 
-$album_user_access = album_user_access($cat_id, $thiscat, 0, 0, 0, 0, 1, 0); // EDIT
+$album_user_access = album_user_access($cat_id, $thiscat, 0, 0, 0, 0, 1, 0);// EDIT
 
 if ( $album_user_access['edit'] == 0 )
 {
@@ -110,7 +107,7 @@ if ( $album_user_access['edit'] == 0 )
 	}
 }
 else
-{	
+{
 	if ((!$album_user_access['moderator']) && ($user->data['user_type'] <> USER_FOUNDER))
 	{
 		if ($thispic['pic_user_id'] <> $user->data['user_id'])
@@ -123,36 +120,31 @@ else
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> $user->lang['GALLERY'],
 	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
-	)
-);
+));
 
 if ($cat_id == PERSONAL_GALLERY)
 {
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],
 		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal_index.$phpEx"),
-		)
-	);
-	
+	));
+
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $thispic['pic_username']),
 		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal.$phpEx", 'user_id=' . $user_id),
-		)
-	);
+	));
 }
 else
 {
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'	=> $thiscat['cat_title'],
 		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']),
-		)
-	);
+	));
 
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'	=> $user->lang['MODCP'],
 		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'cat_id=' . $thiscat['cat_id']),
-		)
-	);
+	));
 }
 /*
 +----------------------------------------------------------
@@ -167,43 +159,37 @@ add_form_key('edit_gallery');
 if(!isset($_POST['pic_title']))
 {
 	$template->assign_vars(array(
-		'L_EDIT_PIC_INFO' 		=> $user->lang['EDIT_IMAGE_INFO'],
+		'CAT_TITLE'				=> $thiscat['cat_title'],
+		'U_VIEW_CAT'			=> ($cat_id <> PERSONAL_GALLERY) ? append_sid("album.$phpEx?id=$cat_id") : append_sid("album_personal.$phpEx?user_id=$user_id"),
 
-		'CAT_TITLE' 			=> $thiscat['cat_title'],
-		'U_VIEW_CAT' 			=> ($cat_id <> PERSONAL_GALLERY) ? append_sid("album.$phpEx?id=$cat_id") : append_sid("album_personal.$phpEx?user_id=$user_id"),
-
-		'L_PIC_TITLE' 			=> $user->lang['IMAGE_TITLE'],
-		'PIC_TITLE' 			=> $thispic['pic_title'],
-		'PIC_DESC' 				=> $thispic['pic_desc'],
-
-		'L_PIC_DESC' 			=> $user->lang['IMAGE_DESC'],
+		'PIC_TITLE'				=> $thispic['pic_title'],
+		'PIC_DESC'				=> $thispic['pic_desc'],
 		'S_PIC_DESC_MAX_LENGTH'	=> $album_config['desc_length'],
 
-		'S_ALBUM_ACTION' 		=> append_sid("edit.$phpEx?pic_id=$pic_id"),
+		'S_ALBUM_ACTION'		=> append_sid("edit.$phpEx?pic_id=$pic_id"),
 		)
 	);
 
-/*	
+/*
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'			=> $user->lang['GALLERY'],
-		'U_VIEW_FORUM'			=> append_sid("{$album_root_path}index.$phpEx"))
-	);
-	
+		'U_VIEW_FORUM'			=> append_sid("{$album_root_path}index.$phpEx"),
+	));
+
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'			=> $thiscat['cat_title'],
-		'U_VIEW_FORUM'			=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']))
-	);
+		'U_VIEW_FORUM'			=> append_sid("{$album_root_path}album.$phpEx", 'id=' . $thiscat['cat_id']),
+	));
 */
 
 	// Output page
 	$page_title = $user->lang['GALLERY'];
-	
 	page_header($page_title);
-	
+
 	$template->set_filenames(array(
-		'body' => 'gallery_edit_body.html')
-	);
-	
+		'body' => 'gallery_edit_body.html',
+	));
+
 	page_footer();
 }
 else
@@ -219,10 +205,9 @@ else
 	// --------------------------------
 
 	$pic_title = request_var('pic_title', '', true);
-
 	$pic_desc = utf8_substr(request_var('pic_desc', '', true), 0, $album_config['desc_length']);
 
-	if(	empty($pic_title) )
+	if(empty($pic_title))
 	{
 		trigger_error($user->lang['MISSING_IMAGE_TITLE'], E_USER_WARNING);
 	}
@@ -231,16 +216,14 @@ else
 	// --------------------------------
 	// Update the DB
 	// --------------------------------
-	
 	$sql_ary = array(
 		'pic_title'		=> $pic_title,
 		'pic_desc'		=> $pic_desc,
-		);
-		
+	);
+
 	$sql = 'UPDATE ' . ALBUM_TABLE . ' 
 		SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 		WHERE pic_id = ' . (int) $pic_id;
-	
 	$db->sql_query($sql);
 
 	// --------------------------------
@@ -252,28 +235,18 @@ else
 	if ($cat_id <> PERSONAL_GALLERY)
 	{
 		$template->assign_vars(array(
-			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("album.$phpEx?id=$cat_id") . '">')
-		);
-
+			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("album.$phpEx?id=$cat_id") . '">',
+		));
 		$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$cat_id") . "\">", "</a>");
 	}
 	else
 	{
 		$template->assign_vars(array(
-			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("album_personal.$phpEx?user_id=$user_id") . '">')
-		);
-
+			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("album_personal.$phpEx?user_id=$user_id") . '">',
+		));
 		$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_PERSONAL_ALBUM'], "<a href=\"" . append_sid("album_personal.$phpEx?user_id=$user_id") . "\">", "</a>");
 	}
-
 	$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("album.$phpEx") . "\">", "</a>");
-
 	trigger_error($message, E_USER_WARNING);
 }
-
-
-// +------------------------------------------------------+
-// |  Powered by Photo Album 2.x.x (c) 2002-2003 Smartor  |
-// +------------------------------------------------------+
-
 ?>
