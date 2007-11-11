@@ -28,8 +28,8 @@ $user->setup('mods/gallery');
 include($album_root_path . 'includes/common.'.$phpEx);
 
 $config['topics_per_page'] = 15;
-$start 		= request_var('start', 0);
-$mode 		= request_var('mode', 'joined');
+$start		= request_var('start', 0);
+$mode		= request_var('mode', 'joined');
 $sort_order = request_var('order', 'ASC');
 
 //
@@ -58,18 +58,10 @@ else
 $select_sort_order .= '</select>';
 
 $template->assign_vars(array(
-	'L_SELECT_SORT_METHOD' 			=> $user->lang['SELECT_SORT_METHOD'],
-	'L_ORDER' 						=> $user->lang['ORDER'],
-	'L_SORT' 						=> $user->lang['SORT'],
-  	'L_LAST_PIC_DATE' 				=> $user->lang['LAST_IMAGE'],	
-	'L_JOINED' 						=> $user->lang['JOINED'],
-	'L_PICS' 						=> $user->lang['IMAGES'],
-	'L_USERS_PERSONAL_GALLERIES' 	=> $user->lang['USERS_PERSONAL_ALBUMS'],
-	'S_MODE_SELECT' 				=> $select_sort_mode,
-	'S_ORDER_SELECT' 				=> $select_sort_order,
-	'S_MODE_ACTION' 				=> append_sid("album_personal_index.$phpEx")
-	)
-);
+	'S_MODE_SELECT'					=> $select_sort_mode,
+	'S_ORDER_SELECT'				=> $select_sort_order,
+	'S_MODE_ACTION'					=> append_sid("album_personal_index.$phpEx")
+));
 
 
 switch( $mode )
@@ -77,7 +69,7 @@ switch( $mode )
 	case 'joined':
 		$order_by = "user_regdate ASC LIMIT $start, " . $config['topics_per_page'];
 	break;
-	
+
 	case 'username':
 		$order_by = "username $sort_order LIMIT $start, " . $config['topics_per_page'];
 	break;
@@ -94,36 +86,34 @@ switch( $mode )
 		$order_by = "user_regdate $sort_order LIMIT $start, " . $config['topics_per_page'];
 }
 
-$sql = 'SELECT u.username, u.user_id, u.user_regdate, MAX(p.pic_id) as pic_id, p.pic_title, p.pic_user_id, COUNT(p.pic_id) AS pics, MAX(p.pic_time) as pic_time 
-		FROM ' . USERS_TABLE . ' AS u, ' . ALBUM_TABLE . ' as p 
-		WHERE u.user_id <> ' . ANONYMOUS . ' 
-		AND u.user_id = p.pic_user_id 
-		AND p.pic_cat_id = ' . PERSONAL_GALLERY . ' 
-		GROUP BY user_id 
-		ORDER BY ' . $order_by; 
+$sql = 'SELECT u.username, u.user_id, u.user_regdate, MAX(p.pic_id) as pic_id, p.pic_title, p.pic_user_id, COUNT(p.pic_id) AS pics, MAX(p.pic_time) as pic_time
+	FROM ' . USERS_TABLE . ' AS u, ' . ALBUM_TABLE . ' as p
+	WHERE u.user_id <> ' . ANONYMOUS . '
+		AND u.user_id = p.pic_user_id
+		AND p.pic_cat_id = ' . PERSONAL_GALLERY . '
+	GROUP BY user_id
+	ORDER BY ' . $order_by;
 
 $result = $db->sql_query($sql);
 
 $memberrow = array(); 
 
 while( $row = $db->sql_fetchrow($result) ) 
-{ 
+{
 	$memberrow[] = $row; 
-} 
+}
 
 
 for ($i = 0; $i < count($memberrow); $i++) 
 { 
 	$pic_number = $memberrow[$i]['pics'];
-	
 	$pic_id = $memberrow[$i]['pic_id'];
-	$sql = 'SELECT * 
-		FROM ' . ALBUM_TABLE . ' 
-		WHERE pic_id = ' . $pic_id; 
+	$sql = 'SELECT *
+		FROM ' . ALBUM_TABLE . '
+		WHERE pic_id = ' . $pic_id;
 	$result = $db->sql_query($sql);
-	
+
 	$thispic = $db->sql_fetchrow($result); 
-	
 	$pic_title = $thispic['pic_title']; 
 
 /*
@@ -175,20 +165,20 @@ for ($i = 0; $i < count($memberrow); $i++)
 	$last_pic_info .= $pic_title . '</a><br />' . $user->lang['POSTED_ON_DATE'] . ' ' . $user->format_date($memberrow[$i]['pic_time']);
 
 	$template->assign_block_vars('memberrow', array(
-		'ROW_CLASS' 		=> ( !($i % 2) ) ? 'bg1' : 'bg2',
-		'USERNAME' 			=> $memberrow[$i]['username'],
-		'U_VIEWGALLERY' 	=> append_sid("album_personal.$phpEx?user_id=" . $memberrow[$i]['user_id']),
-		'JOINED' 			=> $user->format_date($memberrow[$i]['user_regdate']),
-		'LAST_PIC' 			=> $last_pic_info,
-		'PICS' 				=> $pic_number,
+		'ROW_CLASS'			=> ( !($i % 2) ) ? 'bg1' : 'bg2',
+		'USERNAME'			=> $memberrow[$i]['username'],
+		'U_VIEWGALLERY'		=> append_sid("album_personal.$phpEx?user_id=" . $memberrow[$i]['user_id']),
+		'JOINED'			=> $user->format_date($memberrow[$i]['user_regdate']),
+		'LAST_PIC'			=> $last_pic_info,
+		'PICS'				=> $pic_number,
 	));
 }
 
 $sql = 'SELECT COUNT(DISTINCT u.user_id) AS total
-		FROM ' . USERS_TABLE . ' AS u, '. ALBUM_TABLE . ' AS p
-		WHERE u.user_id <> ' . ANONYMOUS . '
-			AND u.user_id = p.pic_user_id
-			AND p.pic_cat_id = ' . PERSONAL_GALLERY;
+	FROM ' . USERS_TABLE . ' AS u, '. ALBUM_TABLE . ' AS p
+	WHERE u.user_id <> ' . ANONYMOUS . '
+		AND u.user_id = p.pic_user_id
+		AND p.pic_cat_id = ' . PERSONAL_GALLERY;
 
 $result = $db->sql_query($sql);
 
@@ -202,20 +192,17 @@ if ($total = $db->sql_fetchrow($result))
 $template->assign_vars(array(
 	'PAGINATION' 	=> $pagination,
 	'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $config['topics_per_page'] ) + 1 ), ceil( $total_galleries / $config['topics_per_page'] )),
-	)
-);
+));
 
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> $user->lang['GALLERY'],
 	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
-	)
-);
+));
 
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],
 	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal_index.$phpEx"),
-	)
-);
+));
 
 // Output page
 $page_title = $user->lang['GALLERY'];
