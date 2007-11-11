@@ -13,10 +13,10 @@
 
 <div class="topic-actions">
 	<div class="buttons">
-		<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span>{L_UPLOAD_PIC}</span></a></div>
+		<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span>{L_UPLOAD_IMAGE}</span></a></div>
 		<!-- This is for the next RC or Gold Candidate ;-) 
 		They change the colours.css a little bit......  to show a textlink if the image is not found.
-		<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span></span>{L_UPLOAD_PIC}</a></div>
+		<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span></span>{L_UPLOAD_IMAGE}</a></div>
 		-->
 	</div>
 	<div class="pagination">
@@ -30,16 +30,16 @@
 		<ul class="topiclist">
 			<li class="header">
 				<dl class="icon">
-					<dt>{L_CATEGORY} - {CAT_TITLE}</dt>
+					<dt>{L_ALBUM} - {CAT_TITLE}</dt>
 				</dl>
 			</li>
 		</ul>
 		<ul class="topiclist topics">
-			<li class="bg2">			
+			<li class="bg2">
 				<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline">
 					<!-- BEGIN no_pics -->
 					<tr>
-						<td class="bg1" align="center" height="50"><span class="gen">{L_NO_PICS}</span></td>
+						<td class="bg1" align="center" height="50"><span class="gen">{L_NO_IMAGES}</span></td>
 					</tr>
 					<!-- END no_pics -->
 					<!-- BEGIN picrow -->
@@ -55,10 +55,10 @@
 						<!-- BEGIN pic_detail -->
 						<td class="bg2">
 							<span class="gensmall">
-								{L_PIC_TITLE}: {picrow.pic_detail.TITLE}<br />
+								{L_IMAGE_TITLE}: {picrow.pic_detail.TITLE}<br />
 								{L_POSTER}: {picrow.pic_detail.POSTER}<br />
 								{L_POSTED}: {picrow.pic_detail.TIME}<br />
-								{L_VIEW}: {picrow.pic_detail.VIEW}<br />
+								{L_VIEWS}: {picrow.pic_detail.VIEW}<br />
 								{picrow.pic_detail.RATING}
 								{picrow.pic_detail.COMMENTS}
 								{picrow.pic_detail.IP}
@@ -84,8 +84,8 @@
 		<select name="sort_method">
 			<option {SORT_TIME} value='pic_time'>{L_TIME}</option>
 			<option {SORT_PIC_TITLE} value='pic_title'>{L_PIC_TITLE}</option>
-			<option {SORT_USERNAME} value='username'>{L_USERNAME}</option>
-			<option {SORT_VIEW} value='pic_view_count'>{L_VIEW}</option>
+			<option {SORT_USERNAME} value='username'>{L_SORT_USERNAME}</option>
+			<option {SORT_VIEW} value='pic_view_count'>{L_VIEWS}</option>
 			{SORT_RATING_OPTION}
 			{SORT_COMMENTS_OPTION}
 			{SORT_NEW_COMMENT_OPTION}
@@ -93,8 +93,8 @@
 	</label>
 	<label>{L_ORDER}: 
 		<select name="sort_order">
-			<option {SORT_ASC} value='ASC'>{L_ASC}</option>
-			<option {SORT_DESC} value='DESC'>{L_DESC}</option>
+			<option {SORT_ASC} value='ASC'>{L_SORT_ASCENDING}</option>
+			<option {SORT_DESC} value='DESC'>{L_SORT_DESCENDING}</option>
 		</select> <input type="submit" name="sort" value="{L_SORT}" class="button2" />
 	</label>
 </fieldset>
@@ -102,7 +102,7 @@
 <hr />
 <div class="topic-actions">
 	<div class="buttons">
-		<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span>{L_UPLOAD_PIC}</span></a></div>
+		<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span>{L_UPLOAD_IMAGE}</span></a></div>
 		<!-- This is for the next RC or Gold Candidate ;-) 
 		They change the colours.css a little bit......  to show a textlink if the image is not found.
 		<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span></span>{L_UPLOAD_PIC}</a></div>
