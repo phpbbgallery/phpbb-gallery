@@ -53,7 +53,7 @@ while( $row = $db->sql_fetchrow($result) )
 	}
 }
 
-$allowed_cat = ''; // For Recent Public Pics below
+$allowed_cat = '';
 
 //
 // $catrows now stores all categories which this user can view. Dump them out!
@@ -127,11 +127,11 @@ for ($i = 0; $i < count($catrows); $i++)
 
 		if (($catrows[$i]['cat_approval'] == ALBUM_ADMIN) || ($catrows[$i]['cat_approval'] == ALBUM_MOD))
 		{
-			$pic_approval_sql = 'AND p.pic_approval = 1'; // Pic Approval ON
+			$pic_approval_sql = 'AND p.pic_approval = 1';
 		}
 		else
 		{
-			$pic_approval_sql = ''; // Pic Approval OFF
+			$pic_approval_sql = '';
 		}
 
 
@@ -147,11 +147,11 @@ for ($i = 0; $i < count($catrows); $i++)
 					LIMIT 1';
 		$result = $db->sql_query($sql);
 		$lastrow = $db->sql_fetchrow($result);
-		
+
 		$last_pic_info = '';
 
 		$last_pic_info .= '<dfn>' . $user->lang['LAST_IMAGE'] . '</dfn> ';
-		
+
 		if( !isset($album_config['last_pic_title_length']) )
 		{
 			$album_config['last_pic_title_length'] = 25;
@@ -165,9 +165,9 @@ for ($i = 0; $i < count($catrows); $i++)
 		$last_pic_info .= '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $lastrow['pic_id']) . '">';
 		$last_pic_info .= $lastrow['pic_title'] . '</a> ' . $user->lang['POST_BY_AUTHOR'] . ' ';
 
-		// ----------------------------
+		// -----------------------------
 		// Write username of last poster
-		// ----------------------------
+		// -----------------------------
 
 		if (($lastrow['user_id'] == ALBUM_GUEST) || ($lastrow['username'] == ''))
 		{
@@ -268,35 +268,24 @@ if ($allowed_cat <> '')
 				}
 
 				$template->assign_block_vars('recent_pics.recent_detail', array(
-					'TITLE' 	=> $recentrow[$j]['pic_title'],
-					'POSTER' 	=> $recent_poster,
-					'TIME' 		=> $user->format_date($recentrow[$j]['pic_time']),
-
-					'VIEW' 		=> $recentrow[$j]['pic_view_count'],
-
-					'RATING' 	=> ($album_config['rate'] == 1) ? ( '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $recentrow[$j]['pic_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $recentrow[$j]['rating'] . '<br />') : '',
-
-					'COMMENTS' 	=> ($album_config['comment'] == 1) ? ( '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $recentrow[$j]['pic_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $recentrow[$j]['comments'] . '<br />') : '',
-
-					'IP' 		=> ($user->data['user_type'] == USER_FOUNDER) ? $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $recentrow[$j]['pic_user_ip'] . '" target="_blank">' . $recentrow[$j]['pic_user_ip'] . '</a><br />' : ''
-					)
-				);
+					'TITLE'			=> $recentrow[$j]['pic_title'],
+					'POSTER_FULL'	=> $recent_poster,
+					'TIME'			=> $user->format_date($recentrow[$j]['pic_time']),
+					'VIEW'			=> $recentrow[$j]['pic_view_count'],
+					'RATING'		=> ($album_config['rate'] == 1) ? ( '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $recentrow[$j]['pic_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $recentrow[$j]['rating'] . '<br />') : '',
+					'COMMENTS'		=> ($album_config['comment'] == 1) ? ( '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $recentrow[$j]['pic_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $recentrow[$j]['comments'] . '<br />') : '',
+					'IP'			=> ($user->data['user_type'] == USER_FOUNDER) ? $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $recentrow[$j]['pic_user_ip'] . '" target="_blank">' . $recentrow[$j]['pic_user_ip'] . '</a><br />' : ''
+				));
 			}
 		}
 	}
 	else
 	{
-		//
-		// No Pics Found
-		//
 		$template->assign_block_vars('no_pics', array());
 	}
 }
 else
 {
-	//
-	// No Cats Found
-	//
 	$template->assign_block_vars('no_pics', array());
 }
 
@@ -308,27 +297,14 @@ else
 */
 
 $template->assign_vars(array(
-	'L_CATEGORY' 					=> $user->lang['ALBUM'],
-	'L_PICS' 						=> $user->lang['IMAGES'],
-	'L_LAST_PIC' 					=> $user->lang['LAST_IMAGE'],
-
 	'U_YOUR_PERSONAL_GALLERY' 		=> append_sid("{$album_root_path}album_personal.$phpEx?user_id=" . $user->data['user_id']),
-	'L_YOUR_PERSONAL_GALLERY' 		=> $user->lang['YOUR_PERSONAL_ALBUM'],
-
 	'U_USERS_PERSONAL_GALLERIES' 	=> append_sid("{$album_root_path}album_personal_index.$phpEx"),
-	'L_USERS_PERSONAL_GALLERIES' 	=> $user->lang['USERS_PERSONAL_ALBUMS'],
 
 	'S_LOGIN_ACTION'				=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login'),
 	'S_COLS' 						=> $album_config['cols_per_page'],
 	'S_COL_WIDTH' 					=> (100/$album_config['cols_per_page']) . '%',
 	'TARGET_BLANK' 					=> ($album_config['fullpic_popup']) ? 'target="_blank"' : '',
-	'L_RECENT_PUBLIC_PICS' 			=> $user->lang['RECENT_PUBLIC_IMAGES'],
-	'L_NO_PICS' 					=> $user->lang['NO_IMAGES'],
-	'L_PIC_TITLE' 					=> $user->lang['IMAGE_TITLE'],
-	'L_VIEW' 						=> $user->lang['VIEWS'],
-	'L_POSTER' 						=> $user->lang['POSTER'],
-	'L_POSTED' 						=> $user->lang['POSTED'])
-);
+));
 
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> $user->lang['GALLERY'],
@@ -346,11 +322,4 @@ $template->set_filenames(array(
 );
 
 page_footer();
-
-
-
-// +------------------------------------------------------+
-// |  Powered by Photo Album 2.x.x (c) 2002-2003 Smartor  |
-// +------------------------------------------------------+
-
 ?>
