@@ -34,6 +34,7 @@ while( $row = $db->sql_fetchrow($result) )
 $template->assign_vars(array(
 	'ALBUM_VERSION' => '2' . $album_config['album_version'],
 ));
+$user->add_lang('mods/info_acp_gallery');
 include($album_root_path . 'includes/functions.' . $phpEx);
 
 ?>

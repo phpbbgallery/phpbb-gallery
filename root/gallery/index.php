@@ -309,8 +309,7 @@ $template->assign_vars(array(
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> $user->lang['GALLERY'],
 	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
-	)
-);
+));
 
 // Output page
 $page_title = $user->lang['GALLERY'];
@@ -318,8 +317,8 @@ $page_title = $user->lang['GALLERY'];
 page_header($page_title);
 
 $template->set_filenames(array(
-	'body' => 'gallery_index_body.html')
-);
+	'body' => 'gallery_index_body.html',
+));
 
 page_footer();
 ?>
