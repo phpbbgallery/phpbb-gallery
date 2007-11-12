@@ -31,6 +31,8 @@ if (empty($lang) || !is_array($lang))
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
 $lang = array_merge($lang, array(
+	'GALLERY'									=> 'Gallery',
+	'GALLERY_EXPLAIN'							=> 'Picture Gallery',
 	'PHPBB_GALLERY'								=> 'phpBB Gallery',
 	'ACP_GALLERY_OVERVIEW'						=> 'Overview',
 	'ACP_GALLERY_MANAGE_ALBUMS'					=> 'Manage Albums',

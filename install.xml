@@ -48,7 +48,7 @@ Details: http://phpbbgallery.ph.funpic.de/viewtopic.php?f=2&t=18]]></description
     </installation>
     <history>
       <entry>
-        <date>2007-11-10</date>
+        <date>2007-11-12</date>
         <rev-version>
           <major>0</major>
           <minor>1</minor>
@@ -88,10 +88,12 @@ Details: http://phpbbgallery.ph.funpic.de/viewtopic.php?f=2&t=18]]></description
     </open>
     <open src="includes/functions.php">
       <edit>
-        <find><![CDATA['L_ONLINE_EXPLAIN'	=> $l_online_time,;]]></find>
-        <action type="after-add"><![CDATA[		'L_GALLERY' => $user->lang['GALLERY'],
-		'L_GALLERY_EXPLAIN' => $user->lang['GALLERY_EXPLAIN'],
-		'U_GALLERY' => append_sid("{$phpbb_root_path}gallery/"),]]></action>
+        <find><![CDATA[// The following assigns all _common_ variables that may be used at any point in a template.]]></find>
+        <action type="after-add"><![CDATA[	$user->add_lang('mods/info_acp_gallery');]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA['L_ONLINE_EXPLAIN'	=> $l_online_time,]]></find>
+        <action type="before-add"><![CDATA[		'U_GALLERY' => append_sid("{$phpbb_root_path}gallery/"),]]></action>
       </edit>
     </open>
     <open src="includes/acp/acp_styles.php">
@@ -101,19 +103,6 @@ Details: http://phpbbgallery.ph.funpic.de/viewtopic.php?f=2&t=18]]></description
             <inline-find><![CDATA['button_topic_reply',]]></inline-find>
             <inline-action type="after-add"><![CDATA[ 'button_upload_image',]]></inline-action>
         </inline-edit>
-      </edit>
-    </open>
-    <open src="language/en/common.php">
-      <edit>
-        <find><![CDATA['AIM'							=> 'AIM',]]></find>
-        <action type="after-add"><![CDATA[	'GALLERY'						=> 'Gallery',
-	'GALLERY_EXPLAIN'					=> 'Picture Gallery',]]></action>
-      </edit>
-    </open>
-    <open src="language/en/acp/styles.php">
-      <edit>
-        <find><![CDATA['IMG_BUTTON_TOPIC_REPLY'	=> 'Reply topic',]]></find>
-        <action type="after-add"><![CDATA['IMG_BUTTON_UPLOAD_IMAGE'	=> 'Upload image',]]></action>
       </edit>
     </open>
     <open src="styles/prosilver/imageset/en/imageset.cfg">
@@ -135,8 +124,6 @@ Details: http://phpbbgallery.ph.funpic.de/viewtopic.php?f=2&t=18]]></description
             <inline-find><![CDATA[, .icon-search]]></inline-find>
             <inline-action type="after-add"><![CDATA[, .icon-gallery]]></inline-action>
         </inline-edit>
-      </edit>
-      <edit>
         <find><![CDATA[.buttons div.forwardpm-icon	{ width: {IMG_BUTTON_PM_FORWARD_WIDTH}px; height: {IMG_BUTTON_PM_FORWARD_HEIGHT}px; }]]></find>
         <action type="after-add"><![CDATA[.buttons div.upload-icon	{ width: {IMG_BUTTON_UPLOAD_IMAGE_WIDTH}px; height: {IMG_BUTTON_UPLOAD_IMAGE_HEIGHT}px; }]]></action>
       </edit>
@@ -145,8 +132,6 @@ Details: http://phpbbgallery.ph.funpic.de/viewtopic.php?f=2&t=18]]></description
       <edit>
         <find><![CDATA[.icon-search					{ background-image: url("{T_THEME_PATH}/images/icon_search.gif"); }]]></find>
         <action type="after-add"><![CDATA[.icon-gallery					{ background-image: url("{T_THEME_PATH}/images/icon_gallery.gif"); }]]></action>
-      </edit>
-      <edit>
         <find><![CDATA[.forwardpm-icon, .forwardpm-icon a 	{ background-image: url("{IMG_BUTTON_PM_FORWARD_SRC}") ;}]]></find>
         <action type="after-add"><![CDATA[.upload-icon, .upload-icon a 	{ background-image: url("{IMG_BUTTON_UPLOAD_IMAGE_SRC}") ;}]]></action>
       </edit>
