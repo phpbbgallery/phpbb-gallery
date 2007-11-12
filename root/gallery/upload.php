@@ -226,7 +226,7 @@ if(!isset($_POST['pic_title']))
 		'S_ALBUM_ACTION' 			=> append_sid("upload.$phpEx?album_id=$cat_id"),
 	));
 
-	if (!$album_config['gd_version'])
+	if ($album_config['gd_version'] == 0)
 	{
 		$template->assign_block_vars('switch_manual_thumbnail', array());
 	}
@@ -302,7 +302,7 @@ else
 	$filesize 	= $_FILES['pic_file']['size'];
 	$filetmp 	= $_FILES['pic_file']['tmp_name'];
 
-	if (!$album_config['gd_version'])
+	if ($album_config['gd_version'] == 0)
 	{
 		$thumbtype 	= $_FILES['pic_thumbnail']['type'];
 		$thumbsize 	= $_FILES['pic_thumbnail']['size'];
@@ -328,7 +328,7 @@ else
 		trigger_error($user->lang['BAD_UPLOAD_FILE_SIZE'], E_USER_WARNING);
 	}
 
-	if (!$album_config['gd_version'])
+	if ($album_config['gd_version'] == 0)
 	{
 		if (!$thumbsize || ($thumbsize > $album_config['max_file_size']))
 		{
@@ -374,7 +374,7 @@ else
 			trigger_error($user->lang['NOT_ALLOWED_FILE_TYPE'], E_USER_WARNING);
 	}
 
-	if (!$album_config['gd_version'])
+	if ($album_config['gd_version'] == 0)
 	{
 		if ($filetype <> $thumbtype)
 		{
@@ -395,7 +395,7 @@ else
 	}
 	while( file_exists(ALBUM_UPLOAD_PATH . $pic_filename) );
 
-	if (!$album_config['gd_version'])
+	if ($album_config['gd_version'] == 0)
 	{
 		$pic_thumbnail = $pic_filename;
 	}
@@ -512,8 +512,8 @@ else
 			}
 
 			// Create thumbnail + 16 Pixel extra for imagesize text 
-			$thumbnail = ($album_config['gd_version']) ? @imagecreate($thumbnail_width, $thumbnail_height + 16) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height + 16); 
-			$resize_function = ($album_config['gd_version']) ? 'imagecopyresized' : 'imagecopyresampled';
+			$thumbnail = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height + 16) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height + 16); 
+			$resize_function = ($album_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
 			@$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $pic_width, $pic_height);
 			
 			// Create image details

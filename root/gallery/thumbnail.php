@@ -232,10 +232,10 @@ else if (($pic_width > $album_config['thumbnail_size']) or ($pic_height > $album
 	}
 
 	// Create thumbnail + 16 Pixel extra for imagesize text 
-	$thumbnail = ($album_config['gd_version']) ? @imagecreate($thumbnail_width, $thumbnail_height + 16) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height + 16); 
+	$thumbnail = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height + 16) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height + 16); 
 
 
-	$resize_function = ($album_config['gd_version']) ? 'imagecopyresized' : 'imagecopyresampled';
+	$resize_function = ($album_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
 
 	@$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $pic_width, $pic_height);
 	$dimension_font = 1; 
