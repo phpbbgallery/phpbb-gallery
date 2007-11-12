@@ -410,7 +410,7 @@ else if ($submit == 'update')
 	add_log('admin', 'phpBB Gallery v' . $old_gallery_version . ' updated to v' . $new_gallery_version);
 	add_log('admin', 'LOG_PURGE_CACHE');
 
-	$message = $user->lang['GALLERY_INSTALL_NOTE2'];
+	$message = $user->lang['GALLERY_INSTALL_NOTE4'];
 	trigger_error($message);
 } 
 else 
