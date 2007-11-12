@@ -9,7 +9,7 @@
 *
 */
 
-if ( !defined('IN_PHPBB') )
+if (!defined('IN_PHPBB'))
 {
 	die('Hacking attempt');
 }
@@ -41,15 +41,14 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	// Here the array which this function would return. Now we initiate it!
 	// --------------------------------
 	$album_user_access = array(
-		'view' 		=> 0,
-		'upload' 	=> 0,
-		'rate' 		=> 0,
-		'comment' 	=> 0,
-		'edit' 		=> 0,
-		'delete' 	=> 0,
-		'moderator' => 0,
+		'view'		=> 0,
+		'upload'	=> 0,
+		'rate'		=> 0,
+		'comment'	=> 0,
+		'edit'		=> 0,
+		'delete'	=> 0,
+		'moderator'	=> 0,
 	);
-	
 	$album_user_access_keys = array_keys($album_user_access);
 	//
 	// END initiation $album_user_access
@@ -70,12 +69,12 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 
 		if ($personal_gallery_access['upload'])
 		{
-			$album_user_access['upload'] 	= 1;
-			$album_user_access['rate'] 		= 1;
-			$album_user_access['comment'] 	= 1;
+			$album_user_access['upload']	= 1;
+			$album_user_access['rate']		= 1;
+			$album_user_access['comment']	= 1;
 
-			$album_user_access['edit'] 		= 1;
-			$album_user_access['delete'] 	= 1;
+			$album_user_access['edit']		= 1;
+			$album_user_access['delete']	= 1;
 
 			if ($auth->acl_get('a_board') && $user->data['is_registered'] && !$user->data['is_bot'])
 			{
@@ -101,12 +100,8 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	{
 		for ($i = 0; $i < count($album_user_access); $i++)
 		{
-			$album_user_access[$album_user_access_keys[$i]] = 1; // Authorised All
+			$album_user_access[$album_user_access_keys[$i]] = 1;
 		}
-
-		//
-		// Function EXIT here
-		//
 		return $album_user_access;
 	}
 	//
@@ -131,11 +126,11 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	// --------------------------------
 	// check if RATE or COMMENT are turned off by Album Config, so we can ignore them
 	// --------------------------------
-	if ($album_config['rate'] == 0)
+	if (!$album_config['rate'])
 	{
 		$rate_check = 0;
 	}
-	if ($album_config['comment'] == 0)
+	if (!$album_config['comment'])
 	{
 		$comment_check = 0;
 	}
@@ -153,27 +148,22 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	{
 		$access_type[] = 'view';
 	}
-
 	if ($upload_check <> 0)
 	{
 		$access_type[] = 'upload';
 	}
-
 	if ($rate_check <> 0)
 	{
 		$access_type[] = 'rate';
 	}
-
 	if ($comment_check <> 0)
 	{
 		$access_type[] = 'comment';
 	}
-
 	if ($edit_check <> 0)
 	{
 		$access_type[] = 'edit';
 	}
-
 	if ($delete_check <> 0)
 	{
 		$access_type[] = 'delete';
@@ -186,7 +176,7 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	// --------------------------------
 	// If everything is empty
 	// --------------------------------
-	if( empty($access_type) and (!$moderator_check) )
+	if (empty($access_type) && (!$moderator_check))
 	{
 		//
 		// Function EXIT here
@@ -224,19 +214,15 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	// --------------------------------
 	// Query the $sql then Fetchrow if $passed_auth == 0
 	// --------------------------------
-	if( !is_array($passed_auth) )
+	if (!is_array($passed_auth))
 	{
 		$result = $db->sql_query($sql);
-
 		$thiscat = $db->sql_fetchrow($result);
 	}
 	else
 	{
 		$thiscat = $passed_auth;
 	}
-	//
-	// END Query and Fetchrow
-	//
 
 
 	// --------------------------------
@@ -278,6 +264,7 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 
 			default:
 				$album_user_access[$access_type[$i]] = 0;
+			break;
 		}
 	}
 	//
@@ -288,7 +275,7 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	// --------------------------------
 	// We can return now if $groups_access is empty AND $moderator_check == 0
 	// --------------------------------
-	if( ($moderator_check == 1) and ($thiscat['cat_moderator_groups'] <> '') )
+	if ($moderator_check and ($thiscat['cat_moderator_groups'] <> ''))
 	{
 		// We can merge them now
 		$groups_access[] = 'moderator';
@@ -333,7 +320,7 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	// If $moderator_check was called and this user is a MODERATOR he
 	// will be authorised for all accesses which were not set to ADMIN
 	// --------------------------------
-	if( ($album_user_access['moderator'] == 1) and ($moderator_check == 1) )
+	if ($album_user_access['moderator'] && $moderator_check)
 	{
 		for ($i = 0; $i < count($album_user_access); $i++)
 		{
@@ -343,25 +330,9 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 			}
 		}
 	}
-	//
-	// END Moderator
-	//
-
-
-	// --------------------------------
-	// Return result...
-	// --------------------------------
 	return $album_user_access;
 }
-//
-// END function album_user_access()
-// ----------------------------------------------------------------------------
 
-
-
-// ----------------------------------------------------------------------------
-// This function will check the access (VIEW, UPLOAD) of current user on
-// any personal galleries
 function personal_gallery_access($check_view, $check_upload)
 {
 	global $db, $user, $album_config;
@@ -387,17 +358,17 @@ function personal_gallery_access($check_view, $check_upload)
 			break;
 
 			case ALBUM_PRIVATE:
-				if( ($user->data['is_registered']) && ($user->data['user_type'] == 3) )
+				if ($user->data['is_registered'] && ($user->data['user_type'] == USER_FOUNDER))
 				{
 					$personal_gallery_access['upload'] = 1;
 				}
 				else if(!empty($album_config['personal_gallery_private']) && $user->data['is_registered'] && !$user->data['is_bot'])
 				{
 					$sql = 'SELECT group_id, user_id
-							FROM ' . USER_GROUP_TABLE . '
-							WHERE user_id = ' . $user->data['user_id'] . ' 
-								AND user_pending = 0
-								AND group_id IN (' . $album_config['personal_gallery_private'] . ')';
+						FROM ' . USER_GROUP_TABLE . '
+						WHERE user_id = ' . $user->data['user_id'] . ' 
+							AND user_pending = 0
+							AND group_id IN (' . $album_config['personal_gallery_private'] . ')';
 					$result = $db->sql_query($sql);
 
 					if( $db->sql_affectedrows($result) > 0 )
@@ -408,7 +379,7 @@ function personal_gallery_access($check_view, $check_upload)
 			break;
 
 			case ALBUM_ADMIN:
-				if($user->data['is_registered'] && $user->data['user_type'] == 3)
+				if ($user->data['is_registered'] && ($user->data['user_type'] == USER_FOUNDER))
 				{
 					$personal_gallery_access['upload'] = 1;
 				}
@@ -435,7 +406,7 @@ function personal_gallery_access($check_view, $check_upload)
 			break;
 
 			case ALBUM_PRIVATE:
-				if( ($user->data['is_registered']) && ($user->data['user_type'] == 3) )
+				if( ($user->data['is_registered']) && ($user->data['user_type'] == USER_FOUNDER) )
 				{
 					$personal_gallery_access['view'] = 1;
 				}
@@ -468,30 +439,27 @@ function init_personal_gallery_cat($user_id = 0)
 {
 	global $user, $db, $lang, $album_config;
 
-	if ($user_id == 0)
+	if (!$user_id)
 	{
 		$user_id = $user->data['user_id'];
 	}
 
 	$sql = 'SELECT COUNT(pic_id) AS count
-			FROM ' . ALBUM_TABLE . '
-			WHERE pic_cat_id = ' . PERSONAL_GALLERY . '
-				AND pic_user_id = ' . $user_id;
+		FROM ' . ALBUM_TABLE . '
+		WHERE pic_cat_id = ' . PERSONAL_GALLERY . '
+			AND pic_user_id = ' . $user_id;
 
 	$result = $db->sql_query($sql);
-
 	$row = $db->sql_fetchrow($result);
-
 	$count = $row['count'];
 
 	if ($user_id <> $user->data['user_id'])
 	{
 		$sql = 'SELECT user_id, username
-				FROM ' . USERS_TABLE . '
-				WHERE user_id = ' . $user_id;
+			FROM ' . USERS_TABLE . '
+			WHERE user_id = ' . $user_id;
 
 		$result = $db->sql_query($sql);
-
 		$user_row = $db->sql_fetchrow($result);
 		$username = $user_row['username'];
 	}
@@ -501,53 +469,27 @@ function init_personal_gallery_cat($user_id = 0)
 	}
 
 	$thiscat = array(
-		'cat_id' 				=> 0,
-		'cat_title' 			=> sprintf($lang['Personal_Gallery_Of_User'], $username),
-		'cat_desc' 				=> '',
-		'cat_order' 			=> 0,
-		'count' 				=> $count,
-		'cat_view_level' 		=> $album_config['personal_gallery_view'],
-		'cat_upload_level' 		=> $album_config['personal_gallery'],
-		'cat_rate_level' 		=> $album_config['personal_gallery_view'],
-		'cat_comment_level' 	=> $album_config['personal_gallery_view'],
-		'cat_edit_level' 		=> $album_config['personal_gallery'],
-		'cat_delete_level' 		=> $album_config['personal_gallery'],
-		'cat_view_groups' 		=> $album_config['personal_gallery_private'],
-		'cat_upload_groups' 	=> $album_config['personal_gallery_private'],
-		'cat_rate_groups' 		=> $album_config['personal_gallery_private'],
-		'cat_comment_groups' 	=> $album_config['personal_gallery_private'],
-		'cat_edit_groups' 		=> $album_config['personal_gallery_private'],
-		'cat_delete_groups' 	=> $album_config['personal_gallery_private'],
-		'cat_delete_groups' 	=> $album_config['personal_gallery_private'],
-		'cat_moderator_groups' 	=> '',
-		'cat_approval' 			=> 0,
+		'cat_id'				=> 0,
+		'cat_title'				=> sprintf($lang['Personal_Gallery_Of_User'], $username),
+		'cat_desc'				=> '',
+		'cat_order'				=> 0,
+		'count'					=> $count,
+		'cat_view_level'		=> $album_config['personal_gallery_view'],
+		'cat_upload_level'		=> $album_config['personal_gallery'],
+		'cat_rate_level'		=> $album_config['personal_gallery_view'],
+		'cat_comment_level'		=> $album_config['personal_gallery_view'],
+		'cat_edit_level'		=> $album_config['personal_gallery'],
+		'cat_delete_level'		=> $album_config['personal_gallery'],
+		'cat_view_groups'		=> $album_config['personal_gallery_private'],
+		'cat_upload_groups'		=> $album_config['personal_gallery_private'],
+		'cat_rate_groups'		=> $album_config['personal_gallery_private'],
+		'cat_comment_groups'	=> $album_config['personal_gallery_private'],
+		'cat_edit_groups'		=> $album_config['personal_gallery_private'],
+		'cat_delete_groups'		=> $album_config['personal_gallery_private'],
+		'cat_delete_groups'		=> $album_config['personal_gallery_private'],
+		'cat_moderator_groups'	=> '',
+		'cat_approval'			=> 0,
 	);
-
 	return $thiscat;
 }
-//
-// END function init_personal_gallery_cat()
-// ----------------------------------------------------------------------------
-
-
-// ----------------------------------------------------------------------------
-// You must keep my copyright notice with its original content visible
-// Do NOT modify anything!!!
-function album_end()
-{
-	global $album_config;
-
-	echo '<div align="center" style="font-family: Verdana; font-size: 10px; letter-spacing: -1px">Powered by Photo Album Addon 2' . $album_config['album_version'] . ' &copy; 2002, 2003 <a href="http://smartor.is-root.com" target="_blank">Smartor</a></div>';
-}
-//
-// OR you can pay me for the copyright notice removal. Contact me!
-// ----------------------------------------------------------------------------
-
-
-
-// +------------------------------------------------------+
-// |  Powered by Photo Album 2.x.x (c) 2002-2003 Smartor  |
-// +------------------------------------------------------+
-
-
 ?>

@@ -18,7 +18,7 @@ if ( !defined('IN_PHPBB') )
 // Get Album Config
 //
 $sql = 'SELECT *
-		FROM ' . ALBUM_CONFIG_TABLE;
+	FROM ' . ALBUM_CONFIG_TABLE;
 $result = $db->sql_query($sql);
 
 while( $row = $db->sql_fetchrow($result) )
@@ -32,10 +32,8 @@ while( $row = $db->sql_fetchrow($result) )
 // Set ALBUM Version
 //
 $template->assign_vars(array(
-	'ALBUM_VERSION' => '2' . $album_config['album_version']
-	)
-);
-
+	'ALBUM_VERSION' => '2' . $album_config['album_version'],
+));
 include($album_root_path . 'includes/functions.' . $phpEx);
 
 ?>

@@ -14,9 +14,9 @@ if ( !defined('IN_PHPBB') )
 	die('Hacking attempt');
 }
 
-define('PAGE_ALBUM', -19);	// for Session Handling
+define('PAGE_ALBUM', -19);// for Session Handling
 
-define('PERSONAL_GALLERY', 0); // pic_cat_id <- do NOT change this value
+define('PERSONAL_GALLERY', 0);// pic_cat_id <- do NOT change this value
 
 
 // User Levels for Album system <- do NOT change these values
