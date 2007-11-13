@@ -821,7 +821,11 @@ function get_schema_struct()
 			'pic_approval'			=> array('BOOL', 0),
 		),
 		'PRIMARY_KEY'	=> 'pic_id',
-		//'KEYS'	=> 'pic_cat_id', 'pic_user_id', 'pic_time'
+		'KEYS'		=> array(
+			'pic_cat_id'		=> array('INDEX', 'pic_cat_id'),
+			'pic_user_id'		=> array('INDEX', 'pic_user_id'),
+			'pic_time'			=> array('INDEX', 'pic_time'),
+		),
 	);
 
 	$schema_data['phpbb_album_cat'] = array(
@@ -848,7 +852,9 @@ function get_schema_struct()
 			'cat_approval'			=> array('BOOL', 0),
 		),
 		'PRIMARY_KEY'	=> 'cat_id',
-		//'KEYS'	=> 'cat_order'
+		'KEYS'		=> array(
+			'cat_order'				=> array('INDEX', 'cat_order'),
+		),
 	);
 
 	$schema_data['phpbb_album_comment'] = array(
@@ -867,7 +873,12 @@ function get_schema_struct()
 			'comment_edit_user_id'		=> array('UINT', 0),
 		),
 		'PRIMARY_KEY'	=> 'comment_id',
-		//'KEYS'	=> 'comment_pic_id', 'comment_user_id', 'comment_user_ip', 'comment_time'
+		'KEYS'		=> array(
+			'comment_pic_id'		=> array('INDEX', 'comment_pic_id'),
+			'comment_user_id'		=> array('INDEX', 'comment_user_id'),
+			'comment_user_ip'		=> array('INDEX', 'comment_user_ip'),
+			'comment_time'			=> array('INDEX', 'comment_time'),
+		),
 	);
 
 	$schema_data['phpbb_album_config'] = array(
@@ -886,7 +897,11 @@ function get_schema_struct()
 			'rate_point'		=> array('BOOL', 0),
 		),
 		'PRIMARY_KEY'	=> 'rate_pic_id',
-		//'KEYS'	=> 'rate_user_id', 'rate_user_ip', 'rate_point'
+		'KEYS'		=> array(
+			'rate_user_id'		=> array('INDEX', 'rate_user_id'),
+			'rate_user_ip'		=> array('INDEX', 'rate_user_ip'),
+			'rate_point'		=> array('INDEX', 'rate_point'),
+		),
 	);
 
 	return $schema_data;

@@ -24,6 +24,9 @@ CREATE TABLE phpbb_album (
 
 ALTER TABLE phpbb_album ADD PRIMARY KEY (pic_id);;
 
+CREATE INDEX phpbb_album_pic_cat_id ON phpbb_album(pic_cat_id);;
+CREATE INDEX phpbb_album_pic_user_id ON phpbb_album(pic_user_id);;
+CREATE INDEX phpbb_album_pic_time ON phpbb_album(pic_time);;
 
 CREATE GENERATOR phpbb_album_gen;;
 SET GENERATOR phpbb_album_gen TO 0;;
@@ -62,6 +65,7 @@ CREATE TABLE phpbb_album_cat (
 
 ALTER TABLE phpbb_album_cat ADD PRIMARY KEY (cat_id);;
 
+CREATE INDEX phpbb_album_cat_cat_order ON phpbb_album_cat(cat_order);;
 
 CREATE GENERATOR phpbb_album_cat_gen;;
 SET GENERATOR phpbb_album_cat_gen TO 0;;
@@ -92,6 +96,10 @@ CREATE TABLE phpbb_album_comment (
 
 ALTER TABLE phpbb_album_comment ADD PRIMARY KEY (comment_id);;
 
+CREATE INDEX phpbb_album_comment_comment_pic_id ON phpbb_album_comment(comment_pic_id);;
+CREATE INDEX phpbb_album_comment_comment_user_id ON phpbb_album_comment(comment_user_id);;
+CREATE INDEX phpbb_album_comment_comment_user_ip ON phpbb_album_comment(comment_user_ip);;
+CREATE INDEX phpbb_album_comment_comment_time ON phpbb_album_comment(comment_time);;
 
 CREATE GENERATOR phpbb_album_comment_gen;;
 SET GENERATOR phpbb_album_comment_gen TO 0;;
@@ -123,6 +131,9 @@ CREATE TABLE phpbb_album_rate (
 
 ALTER TABLE phpbb_album_rate ADD PRIMARY KEY (rate_pic_id);;
 
+CREATE INDEX phpbb_album_rate_rate_user_id ON phpbb_album_rate(rate_user_id);;
+CREATE INDEX phpbb_album_rate_rate_user_ip ON phpbb_album_rate(rate_user_ip);;
+CREATE INDEX phpbb_album_rate_rate_point ON phpbb_album_rate(rate_point);;
 
 CREATE GENERATOR phpbb_album_rate_gen;;
 SET GENERATOR phpbb_album_rate_gen TO 0;;

@@ -64,6 +64,12 @@ CREATE TABLE phpbb_album (
 )
 /
 
+CREATE INDEX phpbb_album_pic_cat_id ON phpbb_album (pic_cat_id)
+/
+CREATE INDEX phpbb_album_pic_user_id ON phpbb_album (pic_user_id)
+/
+CREATE INDEX phpbb_album_pic_time ON phpbb_album (pic_time)
+/
 
 CREATE SEQUENCE phpbb_album_seq
 /
@@ -109,6 +115,8 @@ CREATE TABLE phpbb_album_cat (
 )
 /
 
+CREATE INDEX phpbb_album_cat_cat_order ON phpbb_album_cat (cat_order)
+/
 
 CREATE SEQUENCE phpbb_album_cat_seq
 /
@@ -146,6 +154,14 @@ CREATE TABLE phpbb_album_comment (
 )
 /
 
+CREATE INDEX phpbb_album_comment_comment_pic_id ON phpbb_album_comment (comment_pic_id)
+/
+CREATE INDEX phpbb_album_comment_comment_user_id ON phpbb_album_comment (comment_user_id)
+/
+CREATE INDEX phpbb_album_comment_comment_user_ip ON phpbb_album_comment (comment_user_ip)
+/
+CREATE INDEX phpbb_album_comment_comment_time ON phpbb_album_comment (comment_time)
+/
 
 CREATE SEQUENCE phpbb_album_comment_seq
 /
@@ -186,6 +202,12 @@ CREATE TABLE phpbb_album_rate (
 )
 /
 
+CREATE INDEX phpbb_album_rate_rate_user_id ON phpbb_album_rate (rate_user_id)
+/
+CREATE INDEX phpbb_album_rate_rate_user_ip ON phpbb_album_rate (rate_user_ip)
+/
+CREATE INDEX phpbb_album_rate_rate_point ON phpbb_album_rate (rate_point)
+/
 
 CREATE SEQUENCE phpbb_album_rate_seq
 /

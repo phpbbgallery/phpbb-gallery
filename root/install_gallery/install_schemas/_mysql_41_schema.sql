@@ -19,7 +19,10 @@ CREATE TABLE phpbb_album (
 	pic_view_count int(11) UNSIGNED DEFAULT '0' NOT NULL,
 	pic_lock tinyint(1) UNSIGNED DEFAULT '0' NOT NULL,
 	pic_approval tinyint(1) UNSIGNED DEFAULT '0' NOT NULL,
-	PRIMARY KEY (pic_id)
+	PRIMARY KEY (pic_id),
+	KEY pic_cat_id (pic_cat_id),
+	KEY pic_user_id (pic_user_id),
+	KEY pic_time (pic_time)
 ) CHARACTER SET `utf8` COLLATE `utf8_bin`;
 
 
@@ -45,7 +48,8 @@ CREATE TABLE phpbb_album_cat (
 	cat_delete_groups varchar(255) DEFAULT '' NOT NULL,
 	cat_moderator_groups varchar(255) DEFAULT '' NOT NULL,
 	cat_approval tinyint(1) UNSIGNED DEFAULT '0' NOT NULL,
-	PRIMARY KEY (cat_id)
+	PRIMARY KEY (cat_id),
+	KEY cat_order (cat_order)
 ) CHARACTER SET `utf8` COLLATE `utf8_bin`;
 
 
@@ -63,7 +67,11 @@ CREATE TABLE phpbb_album_comment (
 	comment_edit_time int(11) UNSIGNED DEFAULT '0' NOT NULL,
 	comment_edit_count smallint(4) UNSIGNED DEFAULT '0' NOT NULL,
 	comment_edit_user_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
-	PRIMARY KEY (comment_id)
+	PRIMARY KEY (comment_id),
+	KEY comment_pic_id (comment_pic_id),
+	KEY comment_user_id (comment_user_id),
+	KEY comment_user_ip (comment_user_ip),
+	KEY comment_time (comment_time)
 ) CHARACTER SET `utf8` COLLATE `utf8_bin`;
 
 
@@ -81,7 +89,10 @@ CREATE TABLE phpbb_album_rate (
 	rate_user_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	rate_user_ip varchar(40) DEFAULT '' NOT NULL,
 	rate_point tinyint(1) UNSIGNED DEFAULT '0' NOT NULL,
-	PRIMARY KEY (rate_pic_id)
+	PRIMARY KEY (rate_pic_id),
+	KEY rate_user_id (rate_user_id),
+	KEY rate_user_ip (rate_user_ip),
+	KEY rate_point (rate_point)
 ) CHARACTER SET `utf8` COLLATE `utf8_bin`;
 
 

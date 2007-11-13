@@ -36,6 +36,15 @@ ALTER TABLE [phpbb_album] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
+CREATE  INDEX [pic_cat_id] ON [phpbb_album]([pic_cat_id]) ON [PRIMARY]
+GO
+
+CREATE  INDEX [pic_user_id] ON [phpbb_album]([pic_user_id]) ON [PRIMARY]
+GO
+
+CREATE  INDEX [pic_time] ON [phpbb_album]([pic_time]) ON [PRIMARY]
+GO
+
 
 /*
 	Table: 'phpbb_album_cat'
@@ -71,6 +80,9 @@ ALTER TABLE [phpbb_album_cat] WITH NOCHECK ADD
 	)  ON [PRIMARY] 
 GO
 
+CREATE  INDEX [cat_order] ON [phpbb_album_cat]([cat_order]) ON [PRIMARY]
+GO
+
 
 /*
 	Table: 'phpbb_album_comment'
@@ -96,6 +108,18 @@ ALTER TABLE [phpbb_album_comment] WITH NOCHECK ADD
 	(
 		[comment_id]
 	)  ON [PRIMARY] 
+GO
+
+CREATE  INDEX [comment_pic_id] ON [phpbb_album_comment]([comment_pic_id]) ON [PRIMARY]
+GO
+
+CREATE  INDEX [comment_user_id] ON [phpbb_album_comment]([comment_user_id]) ON [PRIMARY]
+GO
+
+CREATE  INDEX [comment_user_ip] ON [phpbb_album_comment]([comment_user_ip]) ON [PRIMARY]
+GO
+
+CREATE  INDEX [comment_time] ON [phpbb_album_comment]([comment_time]) ON [PRIMARY]
 GO
 
 
@@ -132,6 +156,15 @@ ALTER TABLE [phpbb_album_rate] WITH NOCHECK ADD
 	(
 		[rate_pic_id]
 	)  ON [PRIMARY] 
+GO
+
+CREATE  INDEX [rate_user_id] ON [phpbb_album_rate]([rate_user_id]) ON [PRIMARY]
+GO
+
+CREATE  INDEX [rate_user_ip] ON [phpbb_album_rate]([rate_user_ip]) ON [PRIMARY]
+GO
+
+CREATE  INDEX [rate_point] ON [phpbb_album_rate]([rate_point]) ON [PRIMARY]
 GO
 
 
