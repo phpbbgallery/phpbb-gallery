@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
+<?xml-stylesheet type="text/xsl" href="../modx.prosilver.en.xsl"?>
 <!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
 <mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.0.xsd">
   <header>
@@ -18,17 +18,17 @@ Details: http://phpbbgallery.ph.funpic.de/viewtopic.php?f=2&t=18]]></description
     <author-notes lang="de">Ich hoffe ihr kommt mit dem MOD klar. Wenn nicht, könnt ihr auf phpbb.de oder phpbb.com eure Fragen stellen.</author-notes>
     <author-group>
       <author>
+        <realname>(N/A) / nick: clusedo</realname>
+        <email>nickvergessen@gmx.de</email>
+        <username>nickvergessen</username>
+        <homepage>http://mods.flying-bits.org</homepage>
+        <contributions />
+      </author>
+      <author>
         <realname>(N/A)</realname>
         <email></email>
         <username>tsr</username>
         <homepage>http://phpbbgallery.ph.funpic.de</homepage>
-        <contributions />
-      </author>
-      <author>
-        <realname>(N/A) / nick: clusedo</realname>
-        <email>nickvergessen@gmx.de</email>
-        <username>nickvergessen</username>
-        <homepage>http://www.clusedo.de.vu</homepage>
         <contributions />
       </author>
     </author-group>
@@ -39,7 +39,7 @@ Details: http://phpbbgallery.ph.funpic.de/viewtopic.php?f=2&t=18]]></description
     </mod-version>
     <installation>
       <level>easy</level>
-      <time>240</time>
+      <time>300</time>
       <target-version>
         <target-primary>3.0.RC7</target-primary>
         <target-major allow="exact">3</target-major>
@@ -68,11 +68,13 @@ Details: http://phpbbgallery.ph.funpic.de/viewtopic.php?f=2&t=18]]></description
     <copy>
       <file from="root/adm/style/acp_gallery.html" to="adm/style/acp_gallery.html" />
       <file from="root/gallery/*.*" to="gallery/*.*" />
+      <file from="root/gallery/includes/*.*" to="gallery/includes/*.*" />
+      <file from="root/gallery/upload/*.*" to="gallery/upload/*.*" />
       <file from="root/includes/acp/acp_gallery.php" to="includes/acp/acp_gallery.php" />
       <file from="root/includes/acp/info/acp_gallery.php" to="includes/acp/info/acp_gallery.php" />
-      <file from="root/install/gallery_install.php" to="install/gallery_install.php" />
-      <file from="root/install/gallery_update.php" to="install/gallery_update.php" />
-      <file from="root/install/index.htm" to="install/index.htm" />
+      <file from="root/install_gallery/*.*" to="install_gallery/*.*" />
+      <file from="root/install_gallery/install_schemas/*.*" to="install_gallery/install_schemas/*.*" />
+      <file from="root/install_gallery/update_schemas/*.*" to="install_gallery/update_schemas/*.*" />
       <file from="root/language/en/mods/info_acp_gallery.php" to="language/en/mods/info_acp_gallery.php" />
       <file from="root/language/en/mods/gallery.php" to="language/en/mods/gallery.php" />
       <file from="root/language/en/mods/gallery_acp.php" to="language/en/mods/gallery_acp.php" />
@@ -80,63 +82,30 @@ Details: http://phpbbgallery.ph.funpic.de/viewtopic.php?f=2&t=18]]></description
       <file from="root/styles/prosilver/template/*.*" to="styles/prosilver/template/*.*" />
       <file from="root/styles/prosilver/theme/images/icon_gallery.gif" to="styles/prosilver/theme/images/icon_gallery.gif" />
     </copy>
-    <open src="includes/constants.php">
-      <edit>
-        <find><![CDATA[// Additional tables]]></find>
-        <action type="after-add"><![CDATA[include($phpbb_root_path . 'gallery/includes/constants.' . $phpEx);]]></action>
-      </edit>
-    </open>
+    <sql>UPDATE phpbb_album SET 'pic_user_id' = '2' WHERE 'pic_user_id' = 1</sql>
     <open src="includes/functions.php">
       <edit>
         <find><![CDATA[// The following assigns all _common_ variables that may be used at any point in a template.]]></find>
         <action type="after-add"><![CDATA[	$user->add_lang('mods/info_acp_gallery');]]></action>
       </edit>
       <edit>
-        <find><![CDATA['L_ONLINE_EXPLAIN'	=> $l_online_time,]]></find>
-        <action type="before-add"><![CDATA[		'U_GALLERY' => append_sid("{$phpbb_root_path}gallery/"),]]></action>
+        <find><![CDATA[		'L_GALLERY' => $user->lang['GALLERY'],
+		'L_GALLERY_EXPLAIN' => $user->lang['GALLERY_EXPLAIN'],
+
+		'U_GALLERY' => append_sid("{$phpbb_root_path}gallery/"),]]></find>
+        <action type="replace-with"><![CDATA[		'U_GALLERY' => append_sid("{$phpbb_root_path}gallery/"),]]></action>
       </edit>
     </open>
-    <open src="includes/acp/acp_styles.php">
+    <open src="language/en/common.php">
       <edit>
-        <find><![CDATA['icon_back_top', 'icon_contact_aim', 'icon_contact_email', 'icon_contact_icq', 'icon_contact_jabber', 'icon_contact_msnm', 'icon_contact_pm', 'icon_contact_yahoo', 'icon_contact_www', 'icon_post_delete', 'icon_post_edit', 'icon_post_info', 'icon_post_quote', 'icon_post_report', 'icon_user_online', 'icon_user_offline', 'icon_user_profile', 'icon_user_search', 'icon_user_warn', 'button_pm_forward', 'button_pm_new', 'button_pm_reply', 'button_topic_locked', 'button_topic_new', 'button_topic_reply',]]></find>
-        <inline-edit>
-            <inline-find><![CDATA['button_topic_reply',]]></inline-find>
-            <inline-action type="after-add"><![CDATA[ 'button_upload_image',]]></inline-action>
-        </inline-edit>
+        <find><![CDATA[	'AIM'							=> 'AIM',
+
+	'GALLERY'						=> 'Gallery',
+	'GALLERY_EXPLAIN'					=> 'Picture Gallery',]]></find>
+        <action type="replace-with"><![CDATA[	'AIM'							=> 'AIM',]]></action>
       </edit>
     </open>
-    <open src="styles/prosilver/imageset/en/imageset.cfg">
-      <edit>
-        <find><![CDATA[img_button_topic_reply = button_topic_reply.gif*25*96]]></find>
-        <action type="after-add"><![CDATA[img_button_upload_image = button_upload_image.gif*25*119]]></action>
-      </edit>
-    </open>
-    <open src="styles/prosilver/template/overall_header.html">
-      <edit>
-        <find><![CDATA[<li class="icon-faq"><a href="{U_FAQ}" title="{L_FAQ_EXPLAIN}">{L_FAQ}</a></li>]]></find>
-        <action type="after-add"><![CDATA[<li class="icon-gallery"><a href="{U_GALLERY}" title="{L_GALLERY_EXPLAIN}">{L_GALLERY}</a></li>]]></action>
-      </edit>
-    </open>
-    <open src="styles/prosilver/theme/buttons.css">
-      <edit>
-        <find><![CDATA[.icon-bookmark, .icon-bump, .icon-subscribe, .icon-unsubscribe, .icon-pages, .icon-search]]></find>
-        <inline-edit>
-            <inline-find><![CDATA[, .icon-search]]></inline-find>
-            <inline-action type="after-add"><![CDATA[, .icon-gallery]]></inline-action>
-        </inline-edit>
-        <find><![CDATA[.buttons div.forwardpm-icon	{ width: {IMG_BUTTON_PM_FORWARD_WIDTH}px; height: {IMG_BUTTON_PM_FORWARD_HEIGHT}px; }]]></find>
-        <action type="after-add"><![CDATA[.buttons div.upload-icon	{ width: {IMG_BUTTON_UPLOAD_IMAGE_WIDTH}px; height: {IMG_BUTTON_UPLOAD_IMAGE_HEIGHT}px; }]]></action>
-      </edit>
-    </open>
-    <open src="styles/prosilver/theme/colours.css">
-      <edit>
-        <find><![CDATA[.icon-search					{ background-image: url("{T_THEME_PATH}/images/icon_search.gif"); }]]></find>
-        <action type="after-add"><![CDATA[.icon-gallery					{ background-image: url("{T_THEME_PATH}/images/icon_gallery.gif"); }]]></action>
-        <find><![CDATA[.forwardpm-icon, .forwardpm-icon a 	{ background-image: url("{IMG_BUTTON_PM_FORWARD_SRC}") ;}]]></find>
-        <action type="after-add"><![CDATA[.upload-icon, .upload-icon a 	{ background-image: url("{IMG_BUTTON_UPLOAD_IMAGE_SRC}") ;}]]></action>
-      </edit>
-    </open>
-    <diy-instructions lang="en-gb">browse to install_gallery/install.php and run the installer</diy-instructions>
-    <diy-instructions lang="de">browse to install_gallery/install.php and run the installer</diy-instructions>
+    <diy-instructions lang="en-gb">browse to install_gallery/install.php and run the updater</diy-instructions>
+    <diy-instructions lang="de">browse to install_gallery/install.php and run the updater</diy-instructions>
   </action-group>
 </mod>
