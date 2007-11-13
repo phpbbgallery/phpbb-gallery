@@ -140,7 +140,7 @@ for ($i = 0; $i < count($catrows); $i++)
 		// OK, we may do a query now...
 		// ----------------------------
 
-		$sql = 'SELECT p.pic_id, p.pic_title, p.pic_user_id, p.pic_username, p.pic_time, p.pic_cat_id, u.user_id, u.username
+		$sql = 'SELECT p.pic_id, p.pic_title, p.pic_user_id, p.pic_username, p.pic_time, p.pic_cat_id, u.user_id, u.username, u.user_colour
 				FROM ' . ALBUM_TABLE . ' AS p
 					LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
 				WHERE p.pic_cat_id = ' . $catrows[$i]['cat_id'] . ' ' . $pic_approval_sql . ' 
@@ -150,34 +150,18 @@ for ($i = 0; $i < count($catrows); $i++)
 		$lastrow = $db->sql_fetchrow($result);
 
 		$last_pic_info = '';
-
 		$last_pic_info .= '<dfn>' . $user->lang['LAST_IMAGE'] . '</dfn> ';
-
 		if( !isset($album_config['last_pic_title_length']) )
 		{
 			$album_config['last_pic_title_length'] = 25;
 		}
-
 		if (strlen($lastrow['pic_title']) > $album_config['last_pic_title_length'])
 		{
 			$lastrow['pic_title'] = substr($lastrow['pic_title'], 0, $album_config['last_pic_title_length']) . '...';
 		}
-
-		$last_pic_info .= '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $lastrow['pic_id']) . '">';
-		$last_pic_info .= $lastrow['pic_title'] . '</a> ' . $user->lang['POST_BY_AUTHOR'] . ' ';
-
-		// -----------------------------
-		// Write username of last poster
-		// -----------------------------
-
-		if (($lastrow['user_id'] == ALBUM_GUEST) || ($lastrow['username'] == ''))
-		{
-			$last_pic_info .= ($lastrow['pic_username'] == '') ? $user->lang['GUEST'] : $lastrow['pic_username'];
-		}
-		else
-		{
-			$last_pic_info .= '<a href="' . append_sid("{$phpbb_root_path}memberlist.$phpEx?mode=viewprofile&amp;u=" . $lastrow['user_id']) . '" class="username-coloured">' . $lastrow['username'] . '</a> ';
-		}
+		$last_pic_info .= '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $lastrow['pic_id']) . '" style="font-weight: bold;">';
+		$last_pic_info .= $lastrow['pic_title'] . '</a><br />' . $user->lang['POST_BY_AUTHOR'] . ' ';
+		$last_pic_info .= get_username_string('full', $lastrow['user_id'], ($lastrow['user_id'] <> ANONYMOUS) ? $lastrow['username'] : $user->lang['GUEST'], $lastrow['user_colour']);
 //		$last_pic_info .= '<a href="' . append_sid("../memberlist.$phpEx?mode=viewprofile&amp;u=". $lastrow['user_id']) .'" style="color: #' . $user->data['user_colour'] . ';" class="username-coloured">'. $lastrow['username'] .'</a> ';
 		$last_pic_info .= '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $lastrow['pic_id']) . '"><img src="' . $phpbb_root_path . 'styles/prosilver/imageset/icon_topic_latest.gif" width="11" height="9" alt="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" title="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" /></a><br />';
 		$last_pic_info .= $user->lang['POSTED_ON_DATE'] . ' ' . $user->format_date($lastrow['pic_time']);
@@ -209,7 +193,7 @@ for ($i = 0; $i < count($catrows); $i++)
 
 if ($allowed_cat <> '')
 {
-	$sql = 'SELECT p.pic_id, p.pic_title, p.pic_desc, p.pic_user_id, p.pic_user_ip, p.pic_username, p.pic_time, p.pic_cat_id, p.pic_view_count, u.user_id, u.username, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments
+	$sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments
 			FROM ' . ALBUM_TABLE . ' AS p
 				LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
 				LEFT JOIN ' . ALBUM_CAT_TABLE . ' AS ct ON p.pic_cat_id = ct.cat_id
@@ -261,18 +245,14 @@ if ($allowed_cat <> '')
 					)
 				);
 
-				if (($recentrow[$j]['user_id'] == ALBUM_GUEST) || ($recentrow[$j]['username'] == ''))
+				if ($recentrow[$j]['user_id'] == ALBUM_GUEST)
 				{
 					$recent_poster = ($recentrow[$j]['pic_username'] == '') ? $user->lang['GUEST'] : $recentrow[$j]['pic_username'];
-				}
-				else
-				{
-					$recent_poster = '<a href="' . append_sid("{$phpbb_root_path}memberlist.$phpEx?mode=viewprofile&amp;u=" . $recentrow[$j]['user_id']) . '">' . $recentrow[$j]['username'] . '</a>';
 				}
 
 				$template->assign_block_vars('recent_pics.recent_detail', array(
 					'TITLE'			=> $recentrow[$j]['pic_title'],
-					'POSTER_FULL'	=> $recent_poster,
+					'POSTER_FULL'	=> get_username_string('full', $recentrow[$j]['user_id'], ($recentrow[$j]['user_id'] <> ANONYMOUS) ? $recentrow[$j]['username'] : $user->lang['GUEST'], $recentrow[$j]['user_colour']),
 					'TIME'			=> $user->format_date($recentrow[$j]['pic_time']),
 					'VIEW'			=> $recentrow[$j]['pic_view_count'],
 					'RATING'		=> ($album_config['rate'] == 1) ? ( '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $recentrow[$j]['pic_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $recentrow[$j]['rating'] . '<br />') : '',
