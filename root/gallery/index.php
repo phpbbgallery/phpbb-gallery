@@ -15,6 +15,7 @@ $album_root_path = $phpbb_root_path . 'gallery/';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
 // Start session management
 $user->session_begin();
@@ -250,11 +251,13 @@ if ($allowed_cat <> '')
 				{
 					$recentrow[$j]['rating'] = round($recentrow[$j]['rating'], 2);
 				}
-
+				$message_parser				= new parse_message();
+				$message_parser->message	= $recentrow[$j]['pic_desc'];
+				$message_parser->decode_message($recentrow[$j]['pic_desc_bbcode_uid']);
 				$template->assign_block_vars('recent_pics.recent_col', array(
 					'U_PIC' 		=> ($album_config['fullpic_popup']) ? append_sid("{$album_root_path}image.$phpEx?pic_id=". $recentrow[$j]['pic_id']) : append_sid("{$album_root_path}image_page.$phpEx?id=". $recentrow[$j]['pic_id']),
 					'THUMBNAIL' 	=> append_sid("{$album_root_path}thumbnail.$phpEx?pic_id=". $recentrow[$j]['pic_id']),
-					'DESC' 			=> $recentrow[$j]['pic_desc']
+					'DESC' 			=> $message_parser->message,
 					)
 				);
 
@@ -309,7 +312,8 @@ $template->assign_vars(array(
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> $user->lang['GALLERY'],
 	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
-));
+	)
+);
 
 // Output page
 $page_title = $user->lang['GALLERY'];
@@ -317,8 +321,8 @@ $page_title = $user->lang['GALLERY'];
 page_header($page_title);
 
 $template->set_filenames(array(
-	'body' => 'gallery_index_body.html',
-));
+	'body' => 'gallery_index_body.html')
+);
 
 page_footer();
 ?>

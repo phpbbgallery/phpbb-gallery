@@ -15,6 +15,7 @@ $album_root_path = $phpbb_root_path . 'gallery/';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
 // Start session management
 $user->session_begin();
@@ -164,11 +165,14 @@ if ($total_pics > 0)
 			{
 				$picrow[$j]['rating'] = round($picrow[$j]['rating'], 2);
 			}
+			$message_parser				= new parse_message();
+			$message_parser->message	= $picrow[$j]['pic_desc'];
+			$message_parser->decode_message($picrow[$j]['pic_desc_bbcode_uid']);
 
 			$template->assign_block_vars('picrow.piccol', array(
 				'U_PIC'			=> ($album_config['fullpic_popup']) ? append_sid("image.$phpEx?pic_id=" . $picrow[$j]['pic_id']) : append_sid("image_page.$phpEx?id=" . $picrow[$j]['pic_id']),
 				'THUMBNAIL'		=> append_sid("thumbnail.$phpEx?pic_id=" . $picrow[$j]['pic_id']),
-				'DESC'			=> $picrow[$j]['pic_desc'],
+				'DESC'			=> $message_parser->message,
 				)
 			);
 
