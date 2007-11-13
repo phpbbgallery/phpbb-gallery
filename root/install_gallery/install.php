@@ -497,7 +497,6 @@ else if (($submit == 'update_smartor') && ($smartor_prefix != ''))
 	$sql = 'RENAME TABLE `' . $smartor_prefix . 'album_rate` TO `' . $table_prefix . 'album_rate`;';
 	$db->sql_query($sql);
 	$sql_query = file_get_contents('update_smartor_schemas/_schema_data.sql');
-	RENAME TABLE `dev_inko`.`phpbb_bots`  TO `dev_inko`.`phpbb_bots2` ;
 
 	switch ($db->sql_layer)
 	{
