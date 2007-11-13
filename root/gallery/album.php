@@ -15,6 +15,7 @@ $album_root_path = $phpbb_root_path . 'gallery/';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
 // Start session management
 $user->session_begin();
@@ -225,7 +226,7 @@ if ($total_pics > 0)
 		if ($picrow[$i]['pic_approval'] == 0 ) $tot_unapproved++ ;
 	}
 
-	$sql = 'SELECT p.pic_id, p.pic_title, p.pic_desc, p.pic_user_id, p.pic_user_ip, p.pic_username, p.pic_time, p.pic_cat_id, p.pic_view_count, p.pic_lock, p.pic_approval, u.user_id, u.username, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
+	$sql = 'SELECT p.*, u.user_id, u.username, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
 		FROM ' . ALBUM_TABLE . ' AS p
 			LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
 			LEFT JOIN ' . ALBUM_RATE_TABLE . ' AS r ON p.pic_id = r.rate_pic_id
@@ -278,13 +279,15 @@ if ($total_pics > 0)
 				}
 			}
 
+			$message_parser				= new parse_message();
+			$message_parser->message	= $picrow[$j]['pic_desc'];
+			$message_parser->decode_message($picrow[$j]['pic_desc_bbcode_uid']);
 			$template->assign_block_vars('picrow.piccol', array(
-				'U_PIC' 		=> ($album_config['fullpic_popup']) ? append_sid("image.$phpEx?pic_id=" . $picrow[$j]['pic_id']) : append_sid("image_page.$phpEx?id=" . $picrow[$j]['pic_id']),
-				'THUMBNAIL' 	=> append_sid("thumbnail.$phpEx?pic_id=" . $picrow[$j]['pic_id']),
-				'DESC' 			=> $picrow[$j]['pic_desc'],
-				'APPROVAL' 		=> $approval_link,
-				)
-			);
+				'U_PIC'			=> ($album_config['fullpic_popup']) ? append_sid("image.$phpEx?pic_id=" . $picrow[$j]['pic_id']) : append_sid("image_page.$phpEx?id=" . $picrow[$j]['pic_id']),
+				'THUMBNAIL'		=> append_sid("thumbnail.$phpEx?pic_id=" . $picrow[$j]['pic_id']),
+				'DESC'			=> $message_parser->message,
+				'APPROVAL'		=> $approval_link,
+			));
 
 			if( ($picrow[$j]['user_id'] == ALBUM_GUEST) || ($picrow[$j]['username'] == '') )
 			{
