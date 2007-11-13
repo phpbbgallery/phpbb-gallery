@@ -106,6 +106,15 @@ $lang = array_merge($lang, array(
 	'FILE'									=> 'Datei',
 	'FILETYPE_AND_THUMBNAIL_DO_NOT_MATCH'	=> 'Das Bild und Vorschaubild müssen vom gleichen Typ sein',
 
+	'GALLERY_INSTALLATION'			=> 'v%s installieren',
+	'GALLERY_UPDATE'				=> 'v%s zu v%s aktualisieren',
+	'GALLERY_UPDATE_SMARTOR'		=> 'Smartor-Album zu v%s aktualisieren',
+	'GALLERY_UPDATE_SMARTOR2'		=> 'Bitte öffne install_gallery/install.php<br />finde folgende Zeile: $smartor_prefix = \'\';//ENTER YOUR PREFIX HERE example $smartor_prefix = \'phpbb2_\';<br />und passe sie an.<br /><br />Danach musst du das Script nocheinmal ausführen.',
+	'GALLERY_INSTALL_NOTE1'		=> 'Script für die automatische Gallery-Datenbank-Erstellung.<br /><br /><span style="color:red; font-weight: bold;">Diese Script wird alle Einstellungen, Kategorien, Bilder und Kommentare von vorherigen Installationen löschen!</span><br /><span style="color:green; font-weight: bold;">Ein Update löscht diese Daten nicht.</span><br />Bist Du Dir absolut sicher?!',
+	'GALLERY_INSTALL_NOTE2'		=> '<span style="color:green; font-weight: bold; font-size: 1.5em;">Gallery-Datenbank erfolgreich erstellt.<br />Bitte lösche nun den install_gallery/ Ordner</span>',
+	'GALLERY_INSTALL_NOTE3'		=> 'Du musst Gründer Rechte besitzen um dieses Script ausführen zu können.',
+	'GALLERY_INSTALL_NOTE4'		=> '<span style="color:green; font-weight: bold; font-size: 1.5em;">Gallery-Datenbank erfolgreich aktualisiert.<br />Bitte lösche nun den install_gallery/ Ordner</span>',
+
 	'IMAGE_DESC'							=> 'Bildbeschreibung',
 	'IMAGE_LOCKED'							=> 'Entschuldigung, aber dieses Bild wurde gesperrt. Du kannst für dieses Bild keine Kommentare mehr abgeben.',
 	'IMAGE_NOT_EXIST'						=> 'Dieses Bild existiert nicht',

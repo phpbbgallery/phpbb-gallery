@@ -9,6 +9,8 @@
 *
 */
 
+$smartor_prefix = '';//ENTER YOUR PREFIX HERE example $smartor_prefix = 'phpbb2_';
+
 /**
 * @ignore
 */
@@ -34,6 +36,7 @@ if ($user->data['user_type'] != USER_FOUNDER)
 }
 
 $submit = request_var('mode', '');
+$smartor_prefix = request_var('smartor_prefix', '');
 
 /**
 * split_sql_file will split an uploaded sql file into single sql statements.
@@ -283,7 +286,7 @@ if ($submit == 'install')
 
 	$message = $user->lang['GALLERY_INSTALL_NOTE2'];
 	trigger_error($message);
-} 
+}
 else if ($submit == 'update') 
 {
 /* the mod was just available for mysql, so we don't need this yet.
@@ -394,6 +397,74 @@ else if ($submit == 'update')
 		}
 	}
 	unset($sql_query);
+
+	$modules = new acp_modules();
+	$acp_gallery = array(
+		'module_basename'	=> '',
+		'module_enabled'	=> 1,
+		'module_display'	=> 1,
+		'parent_id'			=> 31,
+		'module_class'		=> 'acp',
+		'module_langname'	=> 'PHPBB_GALLERY',
+		'module_mode'		=> '',
+		'module_auth'		=> ''
+	);
+	$modules->update_module_data($acp_gallery);
+	$acp_gallery_overview = array(
+		'module_basename'	=> 'gallery',
+		'module_enabled'	=> 1,
+		'module_display'	=> 1,
+		'parent_id'			=> $acp_gallery['module_id'],
+		'module_class'		=> 'acp',
+		'module_langname'	=> 'ACP_GALLERY_OVERVIEW',
+		'module_mode'		=> 'overview',
+		'module_auth'		=> ''
+	);
+	$modules->update_module_data($acp_gallery_overview);
+	$acp_gallery_manage_albums = array(
+		'module_basename'	=> 'gallery',
+		'module_enabled'	=> 1,
+		'module_display'	=> 1,
+		'parent_id'			=> $acp_gallery['module_id'],
+		'module_class'		=> 'acp',
+		'module_langname'	=> 'ACP_GALLERY_MANAGE_ALBUMS',
+		'module_mode'		=> 'manage_albums',
+		'module_auth'		=> ''
+	);
+	$modules->update_module_data($acp_gallery_manage_albums);
+	$acp_gallery_manage_cache = array(
+		'module_basename'	=> 'gallery',
+		'module_enabled'	=> 1,
+		'module_display'	=> 1,
+		'parent_id'			=> $acp_gallery['module_id'],
+		'module_class'		=> 'acp',
+		'module_langname'	=> 'ACP_GALLERY_MANAGE_CACHE',
+		'module_mode'		=> 'manage_cache',
+		'module_auth'		=> ''
+	);
+	$modules->update_module_data($acp_gallery_manage_cache);
+	$acp_configure_gallery = array(
+		'module_basename'	=> 'gallery',
+		'module_enabled'	=> 1,
+		'module_display'	=> 1,
+		'parent_id'			=> $acp_gallery['module_id'],
+		'module_class'		=> 'acp',
+		'module_langname'	=> 'ACP_GALLERY_CONFIGURE_GALLERY',
+		'module_mode'		=> 'configure_gallery',
+		'module_auth'		=> ''
+	);
+	$modules->update_module_data($acp_configure_gallery);
+	$album_permissions = array(
+		'module_basename'	=> 'gallery',
+		'module_enabled'	=> 1,
+		'module_display'	=> 1,
+		'parent_id'			=> $acp_gallery['module_id'],
+		'module_class'		=> 'acp',
+		'module_langname'	=> 'ACP_GALLERY_ALBUM_PERMISSIONS',
+		'module_mode'		=> 'album_permissions',
+		'module_auth'		=> ''
+	);
+	$modules->update_module_data($album_permissions);
 	$sql = 'ALTER TABLE `phpbb_album` ADD `pic_desc_bbcode_bitfield` varchar(255) AFTER pic_desc;';
 	$db->sql_query($sql);
 	$sql = 'ALTER TABLE `phpbb_album` ADD `pic_desc_bbcode_uid` varchar(8) AFTER pic_desc;';
@@ -412,12 +483,85 @@ else if ($submit == 'update')
 
 	$message = $user->lang['GALLERY_INSTALL_NOTE4'];
 	trigger_error($message);
-} 
-else 
+}
+else if (($submit == 'update_smartor') && ($smartor_prefix != ''))
+{
+	$sql = 'RENAME TABLE `' . $smartor_prefix . 'album` TO `' . $table_prefix . 'album`;';
+	$db->sql_query($sql);
+	$sql = 'RENAME TABLE `' . $smartor_prefix . 'album_cat` TO `' . $table_prefix . 'album_cat`;';
+	$db->sql_query($sql);
+	$sql = 'RENAME TABLE `' . $smartor_prefix . 'album_comment` TO `' . $table_prefix . 'album_comment`;';
+	$db->sql_query($sql);
+	$sql = 'RENAME TABLE `' . $smartor_prefix . 'album_config` TO `' . $table_prefix . 'album_config`;';
+	$db->sql_query($sql);
+	$sql = 'RENAME TABLE `' . $smartor_prefix . 'album_rate` TO `' . $table_prefix . 'album_rate`;';
+	$db->sql_query($sql);
+	$sql_query = file_get_contents('update_smartor_schemas/_schema_data.sql');
+	RENAME TABLE `dev_inko`.`phpbb_bots`  TO `dev_inko`.`phpbb_bots2` ;
+
+	switch ($db->sql_layer)
+	{
+		case 'mssql':
+		case 'mssql_odbc':
+			$sql_query = preg_replace('#\# MSSQL IDENTITY (phpbb_[a-z_]+) (ON|OFF) \##s', 'SET IDENTITY_INSERT \1 \2;', $sql_query);
+		break;
+
+		case 'postgres':
+			$sql_query = preg_replace('#\# POSTGRES (BEGIN|COMMIT) \##s', '\1; ', $sql_query);
+		break;
+	}
+
+	$sql_query = preg_replace('#phpbb_#i', $table_prefix, $sql_query);
+
+	$sql_query = preg_replace('/\n{2,}/', "\n", preg_replace('/^#.*$/m', "\n", $sql_query));
+
+	$sql_query = split_sql_file($sql_query, ';');
+
+	foreach ($sql_query as $sql)
+	{
+		if (!$db->sql_query($sql))
+		{
+			$error = $db->sql_error();
+			$this->p_master->db_error($error['message'], $sql, __LINE__, __FILE__);
+		}
+	}
+	unset($sql_query);
+	$sql = 'ALTER TABLE `phpbb_album` CHANGE `pic_user_ip` `pic_user_ip` VARCHAR(40) NOT NULL';
+	$db->sql_query($sql);
+	$sql = 'ALTER TABLE `phpbb_album_comment` CHANGE `comment_user_ip` `comment_user_ip` VARCHAR(40) NOT NULL';
+	$db->sql_query($sql);
+	$sql = 'ALTER TABLE `phpbb_album_ratet` CHANGE `rate_user_ip` `rate_user_ip` VARCHAR(40) NOT NULL';
+	$db->sql_query($sql);
+	$sql = 'ALTER TABLE `phpbb_album` ADD `pic_desc_bbcode_bitfield` varchar(255) AFTER pic_desc;';
+	$db->sql_query($sql);
+	$sql = 'ALTER TABLE `phpbb_album` ADD `pic_desc_bbcode_uid` varchar(8) AFTER pic_desc;';
+	$db->sql_query($sql);
+	$sql = 'ALTER TABLE `phpbb_album_cat` ADD `cat_desc_bbcode_bitfield` varchar(255) AFTER catc_desc;';
+	$db->sql_query($sql);
+	$sql = 'ALTER TABLE `phpbb_album_cat` ADD `cat_desc_bbcode_uid` varchar(8) AFTER cat_desc;';
+	$db->sql_query($sql);
+	$sql = 'ALTER TABLE `phpbb_album_comment` ADD `comment_text_bbcode_bitfield` varchar(255) AFTER comment_text;';
+	$db->sql_query($sql);
+	$sql = 'ALTER TABLE `phpbb_album_comment` ADD `comment_text_bbcode_uid` varchar(8) AFTER comment_text;';
+	$db->sql_query($sql);
+	$cache->purge();
+	add_log('admin', 'Smartor-Album updated to v' . $new_gallery_version);
+	add_log('admin', 'LOG_PURGE_CACHE');
+
+	$message = $user->lang['GALLERY_INSTALL_NOTE4'];
+	trigger_error($message);
+}
+else if ($submit == 'update_smartor')
+{
+	$message = $user->lang['GALLERY_UPDATE_SMARTOR2'];
+	trigger_error($message);
+}
+else
 {
 	$message = $user->lang['GALLERY_INSTALL_NOTE1'] . '<br />';
 	$message .= '<br />&raquo; <a href="'.append_sid("install.$phpEx?mode=install").'" class="gen">' . sprintf($user->lang['GALLERY_INSTALLATION'], $new_gallery_version) . '</a>';
 	$message .= '<br />&raquo; <a href="'.append_sid("install.$phpEx?mode=update").'" class="gen">' . sprintf($user->lang['GALLERY_UPDATE'], $old_gallery_version, $new_gallery_version) . '</a>';
+	$message .= '<br />&raquo; <a href="'.append_sid("install.$phpEx?mode=update_smartor").'" class="gen">' . sprintf($user->lang['GALLERY_UPDATE_SMARTOR'], $new_gallery_version) . '</a>';
 	$message .= '<br />&raquo; <a href="'.append_sid( $phpbb_root_path . "index.$phpEx").'" class="gen">' . $user->lang['CANCEL'] . '</a>';
 	trigger_error( $message);
 }

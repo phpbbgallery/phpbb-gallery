@@ -90,6 +90,15 @@ $lang = array_merge($lang, array(
 	'FILE'									=> 'File',
 	'FILETYPE_AND_THUMBNAIL_DO_NOT_MATCH'	=> 'Your image and your thumbnail must be the same type',
 
+	'GALLERY_INSTALLATION'			=> 'Install v%s',
+	'GALLERY_UPDATE'				=> 'Update v%s to v%s',
+	'GALLERY_UPDATE_SMARTOR'		=> 'Update from Smartor-Album to v%s',
+	'GALLERY_UPDATE_SMARTOR2'		=> 'please open the install_gallery/install.php<br />find this line: $smartor_prefix = \'\';//ENTER YOUR PREFIX HERE example $smartor_prefix = \'phpbb2_\';<br />and edit it.<br /><br />Afterwards, run this file again.',
+	'GALLERY_INSTALL_NOTE1'		=> 'Script for automated Gallery-Database setup<br /><br /><span style="color:red; font-weight: bold;">Installing the MOD will erase all settings, categories, pictures and comments of any previous installation</span><br /><span style="color:green; font-weight: bold;">Updating the MOD won\'t erase all this.</span><br />Are you sure you want to continue?',
+	'GALLERY_INSTALL_NOTE2'		=> '<span style="color:green; font-weight: bold; font-size: 1.5em;">Gallery-Database successfully installed.<br />Please delete the install_gallery/ folder</span>',
+	'GALLERY_INSTALL_NOTE3'		=> 'You must be logged in as a founder to run this script.',
+	'GALLERY_INSTALL_NOTE4'		=> '<span style="color:green; font-weight: bold; font-size: 1.5em;">Gallery-Database successfully updated.<br />Please delete the install_gallery/ folder</span>',
+
 	'IMAGE_DESC'					=> 'Image Description',
 	'IMAGE_LOCKED'					=> 'Sorry, this image is locked. You cannot post comments for this image anymore.',
 	'IMAGE_NOT_EXIST'				=> 'This image does not exist',
@@ -173,7 +182,7 @@ $lang = array_merge($lang, array(
 
 	'YOUR_COMMENT'					=> 'Your comment',
 	'YOUR_PERSONAL_ALBUM'			=> 'Your Personal Album',
-	'YOUR_RATING'					=> 'Your rating'
+	'YOUR_RATING'					=> 'Your rating',
 ));
 
 ?>
