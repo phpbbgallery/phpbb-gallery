@@ -15,18 +15,13 @@ $album_root_path = $phpbb_root_path . 'gallery/';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+include($album_root_path . 'includes/common.'.$phpEx);
+include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
 // Start session management
 $user->session_begin();
 $auth->acl($user->data);
 $user->setup('mods/gallery');
-
-
-//
-// Get general album information
-//
-include($album_root_path . 'includes/common.'.$phpEx);
-
 
 // ------------------------------------
 // Check the request
@@ -40,9 +35,9 @@ if(!$pic_id)
 }
 
 $sql = 'SELECT *
-		FROM ' . ALBUM_TABLE . '
-		WHERE pic_id = ' . $pic_id . '
-		LIMIT 1';
+	FROM ' . ALBUM_TABLE . '
+	WHERE pic_id = ' . $pic_id . '
+	LIMIT 1';
 $result = $db->sql_query($sql);
 
 $thispic = $db->sql_fetchrow($result);
@@ -90,19 +85,19 @@ if ( empty($thiscat) )
 
 $album_user_access = album_user_access($cat_id, $thiscat, 0, 0, 0, 0, 1, 0);// EDIT
 
-if ( $album_user_access['edit'] == 0 )
+if (!$album_user_access['edit'])
 {
 	// Only registered users can go beyond this point
 	if (!$user->data['is_registered'])
+	{
+		login_box("gallery/edit.$phpEx?pic_id=$pic_id", $user->lang['LOGIN_INFO']);
+	}
+	else
 	{
 		if ($user->data['is_bot'])
 		{
 			redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
 		}
-		login_box("gallery/edit.$phpEx?pic_id=$pic_id", $user->lang['LOGIN_INFO']);
-	}
-	else
-	{
 		trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 	}
 }
@@ -158,17 +153,21 @@ add_form_key('edit_gallery');
 
 if(!isset($_POST['pic_title']))
 {
+
+	$message_parser				= new parse_message();
+	$message_parser->message	= $thispic['pic_desc'];
+	$message_parser->decode_message($thispic['pic_desc_bbcode_uid']);
+
 	$template->assign_vars(array(
 		'CAT_TITLE'				=> $thiscat['cat_title'],
 		'U_VIEW_CAT'			=> ($cat_id <> PERSONAL_GALLERY) ? append_sid("album.$phpEx?id=$cat_id") : append_sid("album_personal.$phpEx?user_id=$user_id"),
 
 		'PIC_TITLE'				=> $thispic['pic_title'],
-		'PIC_DESC'				=> $thispic['pic_desc'],
+		'PIC_DESC'				=> $message_parser->message,
 		'S_PIC_DESC_MAX_LENGTH'	=> $album_config['desc_length'],
 
 		'S_ALBUM_ACTION'		=> append_sid("edit.$phpEx?pic_id=$pic_id"),
-		)
-	);
+	));
 
 /*
 	$template->assign_block_vars('navlinks', array(
@@ -211,6 +210,12 @@ else
 	{
 		trigger_error($user->lang['MISSING_IMAGE_TITLE'], E_USER_WARNING);
 	}
+			$message_parser 			= new parse_message();
+			$message_parser->message 	= utf8_normalize_nfc($pic_desc);
+			if($message_parser->message)
+			{
+				$message_parser->parse(true, true, true, true, false, true, true, true);
+			}
 
 
 	// --------------------------------
@@ -218,7 +223,9 @@ else
 	// --------------------------------
 	$sql_ary = array(
 		'pic_title'		=> $pic_title,
-		'pic_desc'		=> $pic_desc,
+		'pic_desc'						=> $message_parser->message,
+		'pic_desc_bbcode_uid'			=> $message_parser->bbcode_uid,
+		'pic_desc_bbcode_bitfield'		=> $message_parser->bbcode_bitfield,
 	);
 
 	$sql = 'UPDATE ' . ALBUM_TABLE . ' 
