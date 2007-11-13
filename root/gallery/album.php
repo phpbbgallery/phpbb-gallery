@@ -203,7 +203,7 @@ if ($total_pics > 0)
 		}
 	}
 
-	$sql = 'SELECT p.pic_id, p.pic_title, p.pic_desc, p.pic_user_id, p.pic_user_ip, p.pic_username, p.pic_time, p.pic_cat_id, p.pic_view_count, p.pic_lock, p.pic_approval, u.user_id , u.username, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
+	$sql = 'SELECT p.*, u.user_id , u.username, u.user_colour, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
 		FROM ' . ALBUM_TABLE . ' AS p
 			LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
 			LEFT JOIN ' . ALBUM_RATE_TABLE . ' AS r ON p.pic_id = r.rate_pic_id
@@ -226,7 +226,7 @@ if ($total_pics > 0)
 		if ($picrow[$i]['pic_approval'] == 0 ) $tot_unapproved++ ;
 	}
 
-	$sql = 'SELECT p.*, u.user_id, u.username, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
+	$sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
 		FROM ' . ALBUM_TABLE . ' AS p
 			LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
 			LEFT JOIN ' . ALBUM_RATE_TABLE . ' AS r ON p.pic_id = r.rate_pic_id
@@ -289,18 +289,9 @@ if ($total_pics > 0)
 				'APPROVAL'		=> $approval_link,
 			));
 
-			if( ($picrow[$j]['user_id'] == ALBUM_GUEST) || ($picrow[$j]['username'] == '') )
-			{
-				$pic_poster = ($picrow[$j]['pic_username'] == '') ? $user->lang['GUEST'] : $picrow[$j]['pic_username'];
-			}
-			else
-			{
-				$pic_poster = '<a href="'. append_sid("../memberlist.$phpEx?mode=viewprofile&amp;u=" . $picrow[$j]['user_id']) . '">' . $picrow[$j]['username'] . '</a>';
-			}
-
 			$template->assign_block_vars('picrow.pic_detail', array(
 				'TITLE'		=> $picrow[$j]['pic_title'],
-				'POSTER'	=> $pic_poster,
+				'POSTER'	=> get_username_string('full', $picrow[$j]['user_id'], ($picrow[$j]['user_id'] <> ANONYMOUS) ? $picrow[$j]['username'] : $user->lang['GUEST'], $picrow[$j]['user_colour']),
 				'TIME'		=> $user->format_date($picrow[$j]['pic_time']),
 				'VIEW'		=> $picrow[$j]['pic_view_count'],
 				'RATING'	=> ($album_config['rate'] == 1) ? ( '<a href="' . append_sid("image_page.$phpEx?id=" . $picrow[$j]['pic_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $picrow[$j]['rating'] . '<br />') : '',

@@ -91,7 +91,7 @@ if( isset($_GET['mode']) )
 // Get this pic info
 // ------------------------------------
 
-$sql = 'SELECT p.*, u.user_id, u.username, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments
+$sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments
 		FROM ' . ALBUM_TABLE . ' AS p
 		LEFT JOIN ' . USERS_TABLE . ' AS u
 			ON p.pic_user_id = u.user_id
@@ -407,16 +407,6 @@ else
 +----------------------------------------------------------
 */
 
-if (($thispic['pic_user_id'] == ALBUM_GUEST) || ($thispic['username'] == ''))
-{
-	$poster = ($thispic['pic_username'] == '') ? $user->lang['GUEST'] : $thispic['pic_username'];
-}
-else
-{
-	$poster = '<a href="'. append_sid("{$phpbb_root_path}memberlist.$phpEx?mode=viewprofile&amp;u=" . $thispic['user_id']) . '">' . $thispic['username'] . '</a>';
-}
-
-
 $template->assign_vars(array(
 	'CAT_TITLE'		=> $thiscat['cat_title'],
 	'U_VIEW_CAT'	=> ($cat_id <> PERSONAL_GALLERY) ? append_sid("album.$phpEx?id=$cat_id") : append_sid("album_personal.$phpEx?user_id=$user_id"),
@@ -424,7 +414,7 @@ $template->assign_vars(array(
 	'U_PIC'			=> append_sid("image.$phpEx?pic_id=$pic_id"),
 	'PIC_TITLE'		=> $thispic['pic_title'],
 	'PIC_DESC'		=> generate_text_for_display($thispic['pic_desc'], $thispic['pic_desc_bbcode_uid'], $thispic['pic_desc_bbcode_bitfield'], 7),
-	'POSTER'		=> $poster,
+	'POSTER'		=> get_username_string('full', $thispic['user_id'], ($thispic['user_id'] <> ANONYMOUS) ? $thispic['username'] : $user->lang['GUEST'], $thispic['user_colour']),
 	'PIC_TIME'		=> $user->format_date($thispic['pic_time']),
 	'PIC_VIEW'		=> $thispic['pic_view_count'],
 
@@ -529,7 +519,7 @@ if ($album_config['comment'])
 	{
 		$limit_sql = ($start == 0) ? $comments_per_page : $start .','. $comments_per_page;
 
-		$sql = 'SELECT c.*, u.user_id, u.username
+		$sql = 'SELECT c.*, u.user_id, u.username, u.user_colour
 			FROM ' . ALBUM_COMMENT_TABLE . ' AS c
 			LEFT JOIN ' . USERS_TABLE . ' AS u
 				ON c.comment_user_id = u.user_id
@@ -561,7 +551,7 @@ if ($album_config['comment'])
 
 			if ($commentrow[$i]['comment_edit_count'] > 0)
 			{
-				$sql = 'SELECT c.comment_id, c.comment_edit_user_id, u.user_id, u.username
+				$sql = 'SELECT c.comment_id, c.comment_edit_user_id, u.user_id, u.username, u.user_colour
 					FROM ' . ALBUM_COMMENT_TABLE . ' AS c
 					LEFT JOIN ' . USERS_TABLE . ' AS u
 						ON c.comment_edit_user_id = u.user_id
@@ -595,7 +585,7 @@ if ($album_config['comment'])
 				
 			$template->assign_block_vars('commentrow', array(
 				'ID' 			=> $commentrow[$i]['comment_id'],
-				'POSTER' 		=> $poster,
+				'POSTER' 		=> get_username_string('full', $commentrow[$i]['user_id'], ($commentrow[$i]['user_id'] <> ANONYMOUS) ? $commentrow[$i]['username'] : $user->lang['GUEST'], $commentrow[$i]['user_colour']),
 				'TIME' 			=> $user->format_date($commentrow[$i]['comment_time']),
 				'IP' 			=> ($user->data['user_type'] == USER_FOUNDER) ? '-----------------------------------<br />' . $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $commentrow[$i]['comment_user_ip'] . '" target="_blank">' . $commentrow[$i]['comment_user_ip'] .'</a><br />' : '',
 				'S_ROW_STYLE' 	=> $row_style,
