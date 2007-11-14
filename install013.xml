@@ -72,6 +72,7 @@ Details: http://phpbbgallery.ph.funpic.de/viewtopic.php?f=2&t=18]]></description
       <file from="root/gallery/upload/*.*" to="gallery/upload/*.*" />
       <file from="root/includes/acp/acp_gallery.php" to="includes/acp/acp_gallery.php" />
       <file from="root/includes/acp/info/acp_gallery.php" to="includes/acp/info/acp_gallery.php" />
+      <file from="root/includes/hooks/hook_gallery.php" to="includes/hooks/hook_gallery.php" />
       <file from="root/install_gallery/*.*" to="install_gallery/*.*" />
       <file from="root/install_gallery/install_schemas/*.*" to="install_gallery/install_schemas/*.*" />
       <file from="root/install_gallery/update_schemas/*.*" to="install_gallery/update_schemas/*.*" />
@@ -82,17 +83,7 @@ Details: http://phpbbgallery.ph.funpic.de/viewtopic.php?f=2&t=18]]></description
       <file from="root/styles/prosilver/template/*.*" to="styles/prosilver/template/*.*" />
       <file from="root/styles/prosilver/theme/images/icon_gallery.gif" to="styles/prosilver/theme/images/icon_gallery.gif" />
     </copy>
-    <open src="includes/constants.php">
-      <edit>
-        <find><![CDATA[// Additional tables]]></find>
-        <action type="after-add"><![CDATA[include($phpbb_root_path . 'gallery/includes/constants.' . $phpEx);]]></action>
-      </edit>
-    </open>
     <open src="includes/functions.php">
-      <edit>
-        <find><![CDATA[// The following assigns all _common_ variables that may be used at any point in a template.]]></find>
-        <action type="after-add"><![CDATA[	$user->add_lang('mods/info_acp_gallery');]]></action>
-      </edit>
       <edit>
         <find><![CDATA['L_ONLINE_EXPLAIN'	=> $l_online_time,]]></find>
         <action type="before-add"><![CDATA[		'U_GALLERY' => append_sid("{$phpbb_root_path}gallery/"),]]></action>
