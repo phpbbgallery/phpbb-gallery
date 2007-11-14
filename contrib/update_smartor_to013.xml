@@ -72,6 +72,7 @@ Details: http://phpbbgallery.ph.funpic.de/viewtopic.php?f=2&t=18]]></description
       <file from="root/gallery/upload/*.*" to="gallery/upload/*.*" />
       <file from="root/includes/acp/acp_gallery.php" to="includes/acp/acp_gallery.php" />
       <file from="root/includes/acp/info/acp_gallery.php" to="includes/acp/info/acp_gallery.php" />
+      <file from="root/includes/hooks/hook_gallery.php" to="includes/hooks/hook_gallery.php" />
       <file from="root/install_gallery/*.*" to="install_gallery/*.*" />
       <file from="root/install_gallery/install_schemas/*.*" to="install_gallery/install_schemas/*.*" />
       <file from="root/install_gallery/update_schemas/*.*" to="install_gallery/update_schemas/*.*" />
@@ -85,24 +86,48 @@ Details: http://phpbbgallery.ph.funpic.de/viewtopic.php?f=2&t=18]]></description
     <sql>UPDATE phpbb_album SET 'pic_user_id' = '2' WHERE 'pic_user_id' = 1</sql>
     <open src="includes/functions.php">
       <edit>
-        <find><![CDATA[// The following assigns all _common_ variables that may be used at any point in a template.]]></find>
-        <action type="after-add"><![CDATA[	$user->add_lang('mods/info_acp_gallery');]]></action>
-      </edit>
-      <edit>
-        <find><![CDATA[		'L_GALLERY' => $user->lang['GALLERY'],
-		'L_GALLERY_EXPLAIN' => $user->lang['GALLERY_EXPLAIN'],
-
-		'U_GALLERY' => append_sid("{$phpbb_root_path}gallery/"),]]></find>
-        <action type="replace-with"><![CDATA[		'U_GALLERY' => append_sid("{$phpbb_root_path}gallery/"),]]></action>
+        <find><![CDATA['L_ONLINE_EXPLAIN'	=> $l_online_time,]]></find>
+        <action type="before-add"><![CDATA[		'U_GALLERY' => append_sid("{$phpbb_root_path}gallery/"),]]></action>
       </edit>
     </open>
-    <open src="language/en/common.php">
+    <open src="includes/acp/acp_styles.php">
       <edit>
-        <find><![CDATA[	'AIM'							=> 'AIM',
-
-	'GALLERY'						=> 'Gallery',
-	'GALLERY_EXPLAIN'					=> 'Picture Gallery',]]></find>
-        <action type="replace-with"><![CDATA[	'AIM'							=> 'AIM',]]></action>
+        <find><![CDATA['icon_back_top', 'icon_contact_aim', 'icon_contact_email', 'icon_contact_icq', 'icon_contact_jabber', 'icon_contact_msnm', 'icon_contact_pm', 'icon_contact_yahoo', 'icon_contact_www', 'icon_post_delete', 'icon_post_edit', 'icon_post_info', 'icon_post_quote', 'icon_post_report', 'icon_user_online', 'icon_user_offline', 'icon_user_profile', 'icon_user_search', 'icon_user_warn', 'button_pm_forward', 'button_pm_new', 'button_pm_reply', 'button_topic_locked', 'button_topic_new', 'button_topic_reply',]]></find>
+        <inline-edit>
+            <inline-find><![CDATA['button_topic_reply',]]></inline-find>
+            <inline-action type="after-add"><![CDATA[ 'button_upload_image',]]></inline-action>
+        </inline-edit>
+      </edit>
+    </open>
+    <open src="styles/prosilver/imageset/en/imageset.cfg">
+      <edit>
+        <find><![CDATA[img_button_topic_reply = button_topic_reply.gif*25*96]]></find>
+        <action type="after-add"><![CDATA[img_button_upload_image = button_upload_image.gif*25*119]]></action>
+      </edit>
+    </open>
+    <open src="styles/prosilver/template/overall_header.html">
+      <edit>
+        <find><![CDATA[<li class="icon-faq"><a href="{U_FAQ}" title="{L_FAQ_EXPLAIN}">{L_FAQ}</a></li>]]></find>
+        <action type="after-add"><![CDATA[<li class="icon-gallery"><a href="{U_GALLERY}" title="{L_GALLERY_EXPLAIN}">{L_GALLERY}</a></li>]]></action>
+      </edit>
+    </open>
+    <open src="styles/prosilver/theme/buttons.css">
+      <edit>
+        <find><![CDATA[.icon-bookmark, .icon-bump, .icon-subscribe, .icon-unsubscribe, .icon-pages, .icon-search]]></find>
+        <inline-edit>
+            <inline-find><![CDATA[, .icon-search]]></inline-find>
+            <inline-action type="after-add"><![CDATA[, .icon-gallery]]></inline-action>
+        </inline-edit>
+        <find><![CDATA[.buttons div.forwardpm-icon	{ width: {IMG_BUTTON_PM_FORWARD_WIDTH}px; height: {IMG_BUTTON_PM_FORWARD_HEIGHT}px; }]]></find>
+        <action type="after-add"><![CDATA[.buttons div.upload-icon	{ width: {IMG_BUTTON_UPLOAD_IMAGE_WIDTH}px; height: {IMG_BUTTON_UPLOAD_IMAGE_HEIGHT}px; }]]></action>
+      </edit>
+    </open>
+    <open src="styles/prosilver/theme/colours.css">
+      <edit>
+        <find><![CDATA[.icon-search					{ background-image: url("{T_THEME_PATH}/images/icon_search.gif"); }]]></find>
+        <action type="after-add"><![CDATA[.icon-gallery					{ background-image: url("{T_THEME_PATH}/images/icon_gallery.gif"); }]]></action>
+        <find><![CDATA[.forwardpm-icon, .forwardpm-icon a 	{ background-image: url("{IMG_BUTTON_PM_FORWARD_SRC}") ;}]]></find>
+        <action type="after-add"><![CDATA[.upload-icon, .upload-icon a 	{ background-image: url("{IMG_BUTTON_UPLOAD_IMAGE_SRC}") ;}]]></action>
       </edit>
     </open>
     <diy-instructions lang="en-gb">browse to install_gallery/install.php and run the updater</diy-instructions>
