@@ -429,7 +429,7 @@ class acp_gallery
 	{
 		global $db, $user, $auth, $template, $cache;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
-		$catrow = 0;
+		$catrow = array();
 		$template->assign_vars(array(
 			'S_MANAGE_ALBUMS'				=> true,
 			'S_ALBUM_ACTION'				=> $this->u_action . '&amp;action=create',
