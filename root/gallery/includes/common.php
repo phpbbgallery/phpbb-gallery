@@ -36,5 +36,6 @@ $template->assign_vars(array(
 ));
 $user->add_lang('mods/info_acp_gallery');
 include($album_root_path . 'includes/functions.' . $phpEx);
+include($album_root_path . 'includes/constants.' . $phpEx);
 
 ?>
