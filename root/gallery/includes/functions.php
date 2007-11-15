@@ -176,7 +176,7 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	// --------------------------------
 	// If everything is empty
 	// --------------------------------
-	if (empty($access_type) && (!$moderator_check))
+	if (empty($access_type) && ($moderator_check == 0))
 	{
 		//
 		// Function EXIT here
@@ -198,7 +198,7 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 		$sql .= ', cat_'. $access_type[$i] .'_level, cat_'. $access_type[$i] .'_groups';
 	}
 
-	if ($moderator_check)
+	if ($moderator_check == 1)
 	{
 		$sql .= ', cat_moderator_groups';
 	}
@@ -275,7 +275,7 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	// --------------------------------
 	// We can return now if $groups_access is empty AND $moderator_check == 0
 	// --------------------------------
-	if ($moderator_check and ($thiscat['cat_moderator_groups'] <> ''))
+	if (($moderator_check == 1) and ($thiscat['cat_moderator_groups'] <> ''))
 	{
 		// We can merge them now
 		$groups_access[] = 'moderator';
@@ -320,7 +320,7 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	// If $moderator_check was called and this user is a MODERATOR he
 	// will be authorised for all accesses which were not set to ADMIN
 	// --------------------------------
-	if ($album_user_access['moderator'] && $moderator_check)
+	if ($album_user_access['moderator'] && ($moderator_check == 1))
 	{
 		for ($i = 0; $i < count($album_user_access); $i++)
 		{
