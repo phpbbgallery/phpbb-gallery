@@ -14,7 +14,7 @@ class acp_gallery
 	var $u_action;
 	function main($id, $mode)
 	{
-		global $user;
+		global $db, $user, $phpbb_root_path, $phpEx;
 
 		$user->add_lang('mods/gallery_acp');
 		$user->add_lang('mods/gallery');
