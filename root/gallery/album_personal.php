@@ -124,7 +124,7 @@ if ($total_pics > 0)
 {
 	$limit_sql = ($start == 0) ? $pics_per_page : $start .','. $pics_per_page;
 
-	$sql = 'SELECT p.pic_id, p.pic_title, p.pic_desc, p.pic_user_id, p.pic_user_ip, p.pic_time, p.pic_view_count, p.pic_lock, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
+	$sql = 'SELECT p.pic_id, p.pic_title, p.pic_desc, p.pic_desc_bbcode_uid, p.pic_user_id, p.pic_user_ip, p.pic_time, p.pic_view_count, p.pic_lock, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
 		FROM ' . ALBUM_TABLE . ' AS p
 			LEFT JOIN ' . ALBUM_RATE_TABLE . ' AS r ON p.pic_id = r.rate_pic_id
 			LEFT JOIN ' . ALBUM_COMMENT_TABLE . ' AS c ON p.pic_id = c.comment_pic_id
