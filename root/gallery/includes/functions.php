@@ -27,7 +27,7 @@ if (!defined('IN_PHPBB'))
 // ... but $passed_auth will make it worked very much faster (because this function is often
 // called in a loop)
 //
-function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check, $rate_check, $comment_check, $edit_check, $delete_check)
+function album_user_access($album_id, $passed_auth = 0, $view_check, $upload_check, $rate_check, $comment_check, $edit_check, $delete_check)
 {
 	global $db, $album_config, $user, $auth;
 
@@ -58,7 +58,7 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	// --------------------------------
 	// Check $cat_id
 	// --------------------------------
-	if ($cat_id == PERSONAL_GALLERY)
+	if ($album_id == PERSONAL_GALLERY)
 	{
 		$personal_gallery_access = personal_gallery_access(1,1);
 
@@ -84,12 +84,12 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 
 		return $album_user_access;
 	}
-	else if ($cat_id < 0)
+	else if ($album_id < 0)
 	{
-		trigger_error('Bad cat_id arguments for function album_user_access()', E_USER_WARNING);
+		trigger_error('Bad album_id arguments for function album_user_access()', E_USER_WARNING);
 	}
 	//
-	// END check $cat_id
+	// END check $album_id
 	//
 
 
@@ -205,7 +205,7 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 
 	$sql .= '
 			FROM ' . GALLERY_ALBUMS_TABLE . '
-			WHERE album_id = ' . $cat_id;
+			WHERE album_id = ' . $album_id;
 	//
 	// END SQL query generating
 	//
@@ -275,7 +275,7 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	// --------------------------------
 	// We can return now if $groups_access is empty AND $moderator_check == 0
 	// --------------------------------
-	if (($moderator_check == 1) and ($thiscat['cat_moderator_groups'] <> ''))
+	if (($moderator_check == 1) and ($thiscat['album_moderator_groups'] <> ''))
 	{
 		// We can merge them now
 		$groups_access[] = 'moderator';
@@ -303,7 +303,7 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 				FROM ' . USER_GROUP_TABLE . '
 				WHERE user_id = ' . $user->data['user_id'] . ' 
 					AND user_pending = 0
-					AND group_id IN (' . $thiscat['cat_' . $groups_access[$i] . '_groups'] . ')';
+					AND group_id IN (' . $thiscat['album_' . $groups_access[$i] . '_groups'] . ')';
 		$result = $db->sql_query($sql);
 
 		if( $db->sql_affectedrows($result) > 0 )
@@ -324,7 +324,7 @@ function album_user_access($cat_id, $passed_auth = 0, $view_check, $upload_check
 	{
 		for ($i = 0; $i < count($album_user_access); $i++)
 		{
-			if( $thiscat['cat_' . $album_user_access_keys[$i] . '_level'] <> ALBUM_ADMIN )
+			if( $thiscat['album_' . $album_user_access_keys[$i] . '_level'] <> ALBUM_ADMIN )
 			{
 				$album_user_access[$album_user_access_keys[$i]] = 1;
 			}
@@ -467,12 +467,18 @@ function init_personal_gallery_cat($user_id = 0)
 		$username = $user->data['username'];
 	}
 
-	$thiscat = array(/*update to the new version here!!!*/
+	$thiscat = array(
 		'album_id'					=> 0,
+		'parent_id'					=> 0,
+		'left_id'					=> 0,
+		'right_id'					=> 0,
+		'album_parents'				=> '',
+		'album_type'				=> 2,
 		'album_name'				=> sprintf($lang['Personal_Gallery_Of_User'], $username),
 		'album_desc'				=> '',
 		'album_desc_uid'			=> '',
 		'album_desc_bitfield'		=> '',
+		'album_desc_options'		=> '',
 		'album_order'				=> 0,
 		'count'						=> $count,
 		'album_view_level'			=> $album_config['personal_gallery_view'],
