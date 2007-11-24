@@ -46,10 +46,4 @@ define('GALLERY_CONFIG_TABLE', $table_prefix.'album_config');//gallery_config');
 define('GALLERY_IMAGES_TABLE', $table_prefix.'album');//gallery_images');
 define('GALLERY_RATES_TABLE', $table_prefix.'album_rate');//gallery_rates');
 
-define('ALBUM_TABLE', $table_prefix.'album');
-define('ALBUM_CAT_TABLE', $table_prefix.'album_cat');
-define('ALBUM_CONFIG_TABLE', $table_prefix.'album_config');
-define('ALBUM_COMMENT_TABLE', $table_prefix.'album_comment');
-define('ALBUM_RATE_TABLE', $table_prefix.'album_rate');
-
 ?>

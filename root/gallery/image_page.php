@@ -87,7 +87,7 @@ $sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_pic_id, AVG(r.r
 		FROM ' . GALLERY_IMAGES_TABLE . ' AS p
 		LEFT JOIN ' . USERS_TABLE . ' AS u
 			ON p.pic_user_id = u.user_id
-		LEFT JOIN ' . ALBUM_RATE_TABLE . ' AS r
+		LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
 			ON p.pic_id = r.rate_pic_id
 		LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
 			ON p.pic_id = c.comment_pic_id
@@ -158,7 +158,7 @@ $already_rated = false;
 if (($album_config['rate'] <> 0) && $user->data['is_registered'])
 {
 	$sql = 'SELECT *
-		FROM ' . ALBUM_RATE_TABLE . '
+		FROM ' . GALLERY_RATES_TABLE . '
 		WHERE rate_pic_id = ' . $pic_id . '
 			AND rate_user_id = ' . $user->data['user_id'] . '
 		LIMIT 1';
@@ -312,7 +312,7 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 			'rate_user_ip'	=> $rate_user_ip,
 			'rate_point'	=> $rate_point,
 		);
-		$db->sql_query('INSERT INTO ' . ALBUM_RATE_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+		$db->sql_query('INSERT INTO ' . GALLERY_RATES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 
 		// --------------------------------
 		// Complete... now send a message to user

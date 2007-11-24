@@ -218,7 +218,7 @@ if ($allowed_cat <> '')
 			FROM ' . GALLERY_IMAGES_TABLE . ' AS p
 				LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
 				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' AS ct ON p.pic_cat_id = ct.album_id
-				LEFT JOIN ' . ALBUM_RATE_TABLE . ' AS r ON p.pic_id = r.rate_pic_id
+				LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r ON p.pic_id = r.rate_pic_id
 				LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c ON p.pic_id = c.comment_pic_id
 			WHERE p.pic_cat_id IN (' . $allowed_cat . ') 
 				AND ( p.pic_approval = 1 OR ct.album_approval = 0 )

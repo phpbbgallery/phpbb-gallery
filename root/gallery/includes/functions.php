@@ -23,7 +23,7 @@ if (!defined('IN_PHPBB'))
 //
 // All $*_check must be "1" or "0"
 //
-// $passed_auth must be a full row from ALBUM_CAT_TABLE. This function still works without
+// $passed_auth must be a full row from GALLERY_ALBUMS_TABLE. This function still works without
 // ... but $passed_auth will make it worked very much faster (because this function is often
 // called in a loop)
 //
