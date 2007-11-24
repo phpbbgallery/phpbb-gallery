@@ -37,7 +37,7 @@ include($album_root_path . 'includes/common.'.$phpEx);
 
 $sql = 'SELECT a.*, COUNT(p.pic_id) AS count
 		FROM ' . GALLERY_ALBUMS_TABLE . ' AS a
-			LEFT JOIN ' . ALBUM_TABLE . ' AS p ON a.album_id = p.pic_cat_id
+			LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' AS p ON a.album_id = p.pic_cat_id
 		WHERE a.album_id <> 0
 			AND a.parent_id = 0
 		GROUP BY a.album_id
@@ -142,7 +142,7 @@ for ($i = 0; $i < count($album); $i++)
 		// ----------------------------
 
 		$sql = 'SELECT p.pic_id, p.pic_title, p.pic_user_id, p.pic_username, p.pic_time, p.pic_cat_id, u.user_id, u.username, u.user_colour
-				FROM ' . ALBUM_TABLE . ' AS p
+				FROM ' . GALLERY_IMAGES_TABLE . ' AS p
 					LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
 				WHERE p.pic_cat_id = ' . $album[$i]['album_id'] . ' ' . $pic_approval_sql . ' 
 					ORDER BY p.pic_time DESC
@@ -215,7 +215,7 @@ for ($i = 0; $i < count($album); $i++)
 if ($allowed_cat <> '')
 {
 	$sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments
-			FROM ' . ALBUM_TABLE . ' AS p
+			FROM ' . GALLERY_IMAGES_TABLE . ' AS p
 				LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
 				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' AS ct ON p.pic_cat_id = ct.album_id
 				LEFT JOIN ' . ALBUM_RATE_TABLE . ' AS r ON p.pic_id = r.rate_pic_id

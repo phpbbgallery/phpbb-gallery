@@ -840,7 +840,7 @@ class acp_gallery
 				if ($handle_images < 0)
 				{
 					$sql = 'SELECT pic_id, pic_filename, pic_thumbnail, pic_cat_id
-							FROM ' . ALBUM_TABLE . "
+							FROM ' . GALLERY_IMAGES_TABLE . "
 							WHERE pic_cat_id = '$album_id'";
 					$result = $db->sql_query($sql);
 					
@@ -869,14 +869,14 @@ class acp_gallery
 							WHERE comment_pic_id IN ' . $pic_id_sql;
 						$result = $db->sql_query($sql);
 						// Delete pic entries in db
-						$sql = 'DELETE FROM ' . ALBUM_TABLE . "
+						$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . "
 							WHERE pic_cat_id = '$album_id'";
 						$result = $db->sql_query($sql);
 					}
 				}
 				else
 				{
-					$sql = 'UPDATE ' . ALBUM_TABLE . '
+					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 						SET pic_cat_id = ' . $handle_images . '
 						WHERE pic_cat_id = ' . $album_id;
 					$db->sql_query($sql);

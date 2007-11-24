@@ -444,7 +444,7 @@ function init_personal_gallery_cat($user_id = 0)
 	}
 
 	$sql = 'SELECT COUNT(pic_id) AS count
-		FROM ' . ALBUM_TABLE . '
+		FROM ' . GALLERY_IMAGES_TABLE . '
 		WHERE pic_cat_id = ' . PERSONAL_GALLERY . '
 			AND pic_user_id = ' . $user_id;
 

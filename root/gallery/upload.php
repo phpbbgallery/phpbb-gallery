@@ -459,7 +459,7 @@ else
 		'pic_approval'		=> $pic_approval,
 	);
 
-	$db->sql_query('INSERT INTO ' . ALBUM_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+	$db->sql_query('INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 
 
 	/**

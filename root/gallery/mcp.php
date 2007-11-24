@@ -721,7 +721,7 @@ else
 		}
 
 		// update the DB
-		$sql = 'UPDATE '. ALBUM_TABLE . '
+		$sql = 'UPDATE '. GALLERY_IMAGES_TABLE . '
 			SET pic_approval = 1
 			WHERE pic_id IN (' . $pic_id_sql . ')';
 		$result = $db->sql_query($sql);

@@ -57,7 +57,7 @@ if ($mode == 'albums')
 {//we have this twice, we could build a function to keep the bytes down (see gallery/index.php)
 	$sql = 'SELECT ga.*, COUNT(p.pic_id) AS count
 			FROM ' . GALLERY_ALBUMS_TABLE . ' AS ga
-				LEFT JOIN ' . ALBUM_TABLE . ' AS p ON ga.album_id = p.pic_cat_id
+				LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' AS p ON ga.album_id = p.pic_cat_id
 			WHERE ga.album_id <> 0
 				AND ga.parent_id = ' . $album_data['album_id'] . '
 			GROUP BY ga.album_id
@@ -162,7 +162,7 @@ if ($mode == 'albums')
 			// ----------------------------
 
 			$sql = 'SELECT p.pic_id, p.pic_title, p.pic_user_id, p.pic_username, p.pic_time, p.pic_cat_id, u.user_id, u.username, u.user_colour
-					FROM ' . ALBUM_TABLE . ' AS p
+					FROM ' . GALLERY_IMAGES_TABLE . ' AS p
 						LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
 					WHERE p.pic_cat_id = ' . $album[$i]['album_id'] . ' ' . $pic_approval_sql . ' 
 						ORDER BY p.pic_time DESC
