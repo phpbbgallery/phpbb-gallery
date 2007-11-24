@@ -138,7 +138,7 @@ class acp_gallery
 				$sql_ary = array(
 					'config_value'		=> $new[$config_name],
 				);
-				$sql = 'UPDATE ' . ALBUM_CONFIG_TABLE . '
+				$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . '
 					SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
 					WHERE config_name = '$config_name'" ;
 				$db->sql_query($sql);
@@ -147,7 +147,7 @@ class acp_gallery
 
 		if (isset($_POST['submit']))
 		{
-			$cache->destroy('sql', ALBUM_CONFIG_TABLE);//GALLERY_CONFIG_TABLE);
+			$cache->destroy('sql', GALLERY_CONFIG_TABLE);
 			trigger_error($user->lang['GALLERY_CONFIG_UPDATED'] . adm_back_link($this->u_action));
 		}
 
@@ -365,7 +365,7 @@ class acp_gallery
 
 			// Get the current album settings for non created personal galleries
 			$sql = 'SELECT *
-					FROM ' . ALBUM_CONFIG_TABLE . "
+					FROM ' . GALLERY_CONFIG_TABLE . "
 					WHERE config_name = 'personal_gallery_private'";
 			$result = $db->sql_query($sql);
 
@@ -403,7 +403,7 @@ class acp_gallery
 				'config_value'		=> $create_groups,
 			);
 
-			$sql = 'UPDATE ' . ALBUM_CONFIG_TABLE . '
+			$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . '
 				SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
 				WHERE config_name = 'personal_gallery_private'";
 			$db->sql_query($sql);
