@@ -417,7 +417,7 @@ else if ($mode == 'images')
 			FROM ' . GALLERY_IMAGES_TABLE . ' AS p
 				LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
 				LEFT JOIN ' . ALBUM_RATE_TABLE . ' AS r ON p.pic_id = r.rate_pic_id
-				LEFT JOIN ' . ALBUM_COMMENT_TABLE . ' AS c ON p.pic_id = c.comment_pic_id 
+				LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c ON p.pic_id = c.comment_pic_id 
 			WHERE p.pic_cat_id = ' . $album_id . ' 
 			GROUP BY p.pic_id
 			ORDER BY ' . $sort_method . ' ' . $sort_order . ' 
@@ -440,7 +440,7 @@ else if ($mode == 'images')
 			FROM ' . GALLERY_IMAGES_TABLE . ' AS p
 				LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
 				LEFT JOIN ' . ALBUM_RATE_TABLE . ' AS r ON p.pic_id = r.rate_pic_id
-				LEFT JOIN ' . ALBUM_COMMENT_TABLE . ' AS c ON p.pic_id = c.comment_pic_id
+				LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c ON p.pic_id = c.comment_pic_id
 				WHERE p.pic_cat_id = ' . $album_id . ' ' . $pic_approval_sql . ' 
 				GROUP BY p.pic_id
 				ORDER BY ' . $sort_method . ' ' . $sort_order . ' 

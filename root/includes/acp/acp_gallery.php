@@ -865,7 +865,7 @@ class acp_gallery
 							WHERE rate_pic_id IN ' . $pic_id_sql;
 						$result = $db->sql_query($sql);
 						// Delete all related comments
-						$sql = 'DELETE FROM ' . ALBUM_COMMENT_TABLE . '
+						$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . '
 							WHERE comment_pic_id IN ' . $pic_id_sql;
 						$result = $db->sql_query($sql);
 						// Delete pic entries in db

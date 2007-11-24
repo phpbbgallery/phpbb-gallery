@@ -89,7 +89,7 @@ $sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_pic_id, AVG(r.r
 			ON p.pic_user_id = u.user_id
 		LEFT JOIN ' . ALBUM_RATE_TABLE . ' AS r
 			ON p.pic_id = r.rate_pic_id
-		LEFT JOIN ' . ALBUM_COMMENT_TABLE . ' AS c
+		LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
 			ON p.pic_id = c.comment_pic_id
 		WHERE pic_id = ' . $pic_id . '
 		GROUP BY p.pic_id';
@@ -247,7 +247,7 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 		// Get $comment_id
 		// --------------------------------
 		$sql = 'SELECT MAX(comment_id) AS max
-			FROM ' . ALBUM_COMMENT_TABLE;
+			FROM ' . GALLERY_COMMENTS_TABLE;
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
 		$comment_id = $row['max'] + 1;
@@ -273,7 +273,7 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 			'comment_text_bbcode_bitfield'	=> $message_parser->bbcode_bitfield,
 			);
 		
-		$db->sql_query('INSERT INTO ' . ALBUM_COMMENT_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+		$db->sql_query('INSERT INTO ' . GALLERY_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 
 		// --------------------------------
 		// Complete... now send a message to user
@@ -511,7 +511,7 @@ if ($album_config['comment'])
 		$limit_sql = ($start == 0) ? $comments_per_page : $start .','. $comments_per_page;
 
 		$sql = 'SELECT c.*, u.user_id, u.username, u.user_colour
-			FROM ' . ALBUM_COMMENT_TABLE . ' AS c
+			FROM ' . GALLERY_COMMENTS_TABLE . ' AS c
 			LEFT JOIN ' . USERS_TABLE . ' AS u
 				ON c.comment_user_id = u.user_id
 			WHERE c.comment_pic_id = ' . $pic_id . '
@@ -543,7 +543,7 @@ if ($album_config['comment'])
 			if ($commentrow[$i]['comment_edit_count'] > 0)
 			{
 				$sql = 'SELECT c.comment_id, c.comment_edit_user_id, u.user_id, u.username, u.user_colour
-					FROM ' . ALBUM_COMMENT_TABLE . ' AS c
+					FROM ' . GALLERY_COMMENTS_TABLE . ' AS c
 					LEFT JOIN ' . USERS_TABLE . ' AS u
 						ON c.comment_edit_user_id = u.user_id
 					WHERE c.comment_id = ' . $commentrow[$i]['comment_id']. '
