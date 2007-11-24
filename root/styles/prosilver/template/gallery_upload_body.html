@@ -1,0 +1,109 @@
+<!-- INCLUDE overall_header.html -->
+
+<script language="JavaScript" type="text/javascript">
+<!--
+function checkAlbumForm() {
+	formErrors = false;
+
+	if (document.upload.pic_title.value.length < 2)
+	{
+		formErrors = "{L_UPLOAD_NO_TITLE}";
+	}
+	else if (document.upload.pic_file.value.length < 2)
+	{
+		formErrors = "{L_UPLOAD_NO_FILE}";
+	}
+	else if (document.upload.pic_desc.value.length > {S_PIC_DESC_MAX_LENGTH})
+	{
+		formErrors = "{L_DESC_TOO_LONG}";
+	}
+
+	if (formErrors) {
+		alert(formErrors);
+		return false;
+	} else {
+		return true;
+	}
+}
+// -->
+</script>
+
+<h2><a href="{U_VIEW_CAT}">{CAT_TITLE}</a></h2>
+
+<form name="upload" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data" onSubmit="return checkAlbumForm()">
+
+<div class="panel" id="postingbox">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<h3>{L_UPLOAD_IMAGE}</h3>
+		<fieldset>
+			<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT -->
+			<dl>
+				<dt><label for="username">{L_USERNAME}:</label></dt>
+				<dd><input class="inputbox autowidth" type="text" name="pic_username" size="60" maxlength="32" /></dd>
+			</dl>
+			<!-- ENDIF -->
+			<dl>
+				<dt><label for="title">{L_IMAGE_TITLE}:</label></dt>
+				<dd><input class="inputbox autowidth" type="text" name="pic_title" size="60" /></dd>
+			</dl>
+			<dl>
+				<dt><label for="file">{L_FILE}:</label></dt>
+				<dd><input class="inputbox autowidth" type="file" name="pic_file" size="52" /></dd>
+			</dl>
+			<!-- BEGIN switch_manual_thumbnail -->
+			<dl>
+				<dt><label for="file">{L_UPLOAD_THUMBNAIL}:</label>{L_UPLOAD_THUMBNAIL_EXPLAIN}<br />{L_THUMBNAIL_SIZE}: <strong>{S_THUMBNAIL_SIZE}</strong></dt>
+				<dd><input class="inputbox autowidth" type="file" name="pic_thumbnail" size="52" /></dd>
+			</dl>
+			<!-- END switch_manual_thumbnail -->
+			<dl>
+				<dt><label for="description">{L_IMAGE_DESC}:</label><br />{L_PLAIN_TEXT_ONLY}<br />{L_MAX_LENGTH}: <b>{S_PIC_DESC_MAX_LENGTH}</b></dt>
+				<dd><textarea class="inputbox" cols="60" rows="4" name="pic_desc" size="60"></textarea></dd>
+			</dl>
+			<dl>
+				<dt><label for="max_filesize">{L_MAX_FILE_SIZE}:</label></dt>
+				<dd>{S_MAX_FILESIZE}</dd>
+			</dl>
+			<dl>
+				<dt><label for="max_width">{L_MAX_WIDTH}:</label></dt>
+				<dd>{S_MAX_WIDTH}</dd>
+			</dl>
+			<dl>
+				<dt><label for="max_height">{L_MAX_HEIGHT}:</label></dt>
+				<dd>{S_MAX_HEIGHT}</dd>
+			</dl>
+			<dl>
+				<dt><label for="allowed_jpg">{L_JPG_ALLOWED}:</label></dt>
+				<dd>{S_JPG}</dd>
+			</dl>
+			<dl>
+				<dt><label for="allowed_png">{L_PNG_ALLOWED}:</label></dt>
+				<dd>{S_PNG}</dd>
+			</dl>
+			<dl>
+				<dt><label for="allowed_gif">{L_GIF_ALLOWED}:</label></dt>
+				<dd>{S_GIF}</dd>
+			</dl>
+		</fieldset>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+
+<div class="panel bg2">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<fieldset class="submit-buttons">
+			<input type="reset" accesskey="r" tabindex="8" value="{L_RESET}" class="button2" />&nbsp;
+			<input type="submit" accesskey="s" tabindex="6" name="submit" value="{L_SUBMIT}" class="button1" />&nbsp;
+		</fieldset>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+{S_FORM_TOKEN}
+</form>
+
+<!-- Please keep this little notice visible -->
+<div class="copyright">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a></div>
+
+<!-- INCLUDE overall_footer.html -->

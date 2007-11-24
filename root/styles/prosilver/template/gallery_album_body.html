@@ -1,0 +1,190 @@
+<!-- INCLUDE overall_header.html -->
+<!-- IF S_MODE == 1 -->
+<p class="{S_CONTENT_FLOW_END}<!-- IF S_USER_LOGGED_IN --> rightside<!-- ENDIF -->"><!-- IF S_USER_LOGGED_IN -->{LAST_VISIT_DATE}<!-- ELSE -->{CURRENT_TIME}<!-- ENDIF --></p>
+<!-- IF U_MCP --><p>{CURRENT_TIME} <br />[&nbsp;<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</p><!-- ELSEIF S_USER_LOGGED_IN --><p>{CURRENT_TIME}</p><!-- ENDIF -->
+
+<div class="forabg">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="icon">
+					<dt>{L_ALBUM}</dt>
+					<dd class="posts">{L_IMAGES}</dd>
+					<dd class="lastpost"><span>{L_LAST_IMAGE}</span></dd>
+				</dl>
+			</li>
+		</ul>
+		<!-- BEGIN albumrow -->
+		<ul class="topiclist forums">
+			<li class="row">
+				<dl class="icon" style="background-image: url({albumrow.ALBUM_FOLDER_IMG_SRC}); background-repeat: no-repeat;">
+					<dt>
+						<!-- IF albumrow.ALBUM_IMAGE --><span class="forum-image">{albumrow.ALBUM_IMAGE}</span><!-- ENDIF -->
+						<a href="{albumrow.U_VIEW_CAT}" class="forumtitle">{albumrow.CAT_TITLE}</a><br />
+						{albumrow.CAT_DESC}
+						<!-- IF albumrow.MODERATORS -->
+						<br /><strong>{albumrow.L_MODERATORS}:</strong> {albumrow.MODERATORS}
+						<!-- ENDIF -->
+						<!-- IF albumrow.SUBALBUMS -->
+						<br /><strong>{albumrow.L_SUBALBUMS}:</strong> {albumrow.SUBALBUMS}
+						<!-- ENDIF -->
+					</dt>
+					<dd class="posts">{albumrow.PICS} <dfn>{L_IMAGES}</dfn></dd>
+					<dd class="lastpost"><span>
+					<!-- IF albumrow.LAST_PIC_INFO -->{albumrow.LAST_PIC_INFO}<!-- ELSE -->{L_NO_IMAGES}<!-- ENDIF -->
+					</span></dd>
+				</dl>
+			</li>
+		</ul>
+		<!-- END albumrow -->
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+<!-- ELSE IF S_MODE == 2 -->
+<!-- IF U_MCP --><p>[&nbsp;<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</p><!-- ENDIF -->
+<h2><a href="{U_VIEW_CAT}">{CAT_TITLE}</a></h2>
+
+<!-- IF FORUM_DESC or MODERATORS or U_MCP -->
+<p>
+	<!-- NOTE: remove the style="display: none" when you want to have the forum description on the forum body -->
+	<!-- IF FORUM_DESC --><span style="display: none">{FORUM_DESC}<br /></span><!-- ENDIF -->
+	<!-- IF MODERATORS --><strong><!-- IF S_SINGLE_MODERATOR -->{L_MODERATOR}<!-- ELSE -->{L_MODERATORS}<!-- ENDIF -->:</strong> {MODERATORS}<!-- ENDIF -->
+</p>
+<!-- ENDIF -->
+
+<div class="topic-actions">
+	<div class="buttons">
+		<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span>{L_UPLOAD_IMAGE}</span></a></div>
+		<!-- This is for the next RC or Gold Candidate ;-) 
+		They change the colours.css a little bit......  to show a textlink if the image is not found.
+		<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span></span>{L_UPLOAD_IMAGE}</a></div>
+		-->
+	</div>
+	<div class="pagination">
+		{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+	</div>
+</div>
+
+<div class="forumbg">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="icon">
+					<dt>{L_ALBUM} - {CAT_TITLE}</dt>
+				</dl>
+			</li>
+		</ul>
+		<ul class="topiclist topics">
+			<li class="bg2">
+				<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline">
+					<!-- BEGIN no_pics -->
+					<tr>
+						<td class="bg1" align="center" height="50"><span class="gen">{L_NO_IMAGES}</span></td>
+					</tr>
+					<!-- END no_pics -->
+					<!-- BEGIN picrow -->
+					<tr>
+						<!-- BEGIN piccol -->
+						<td align="center" width="{S_COL_WIDTH}" class="bg1"><span class="genmed"><a href="{picrow.piccol.U_PIC}" {TARGET_BLANK}><img src="{picrow.piccol.THUMBNAIL}" border="0" alt="{picrow.piccol.DESC}" title="{picrow.piccol.DESC}" vspace="10" /></a><br />{picrow.piccol.APPROVAL}</span></td>
+						<!-- END piccol -->
+						<!-- BEGIN nopiccol --> 
+						<td align="center" width="{S_COL_WIDTH}" class="bg1"><span></span></td> 
+						<!-- END nopiccol -->
+					</tr>
+					<tr>
+						<!-- BEGIN pic_detail -->
+						<td class="bg2">
+							<span class="gensmall">
+								{L_IMAGE_TITLE}: {picrow.pic_detail.TITLE}<br />
+								{L_POSTER}: {picrow.pic_detail.POSTER}<br />
+								{L_POSTED}: {picrow.pic_detail.TIME}<br />
+								{L_VIEWS}: {picrow.pic_detail.VIEW}<br />
+								{picrow.pic_detail.RATING}
+								{picrow.pic_detail.COMMENTS}
+								{picrow.pic_detail.IP}
+								{picrow.pic_detail.EDIT}  {picrow.pic_detail.DELETE}  {picrow.pic_detail.LOCK}  {picrow.pic_detail.MOVE}
+							</span>
+						</td>
+						<!-- END pic_detail -->
+						<!-- BEGIN picnodetail --> 
+						<td class="bg2"><span></span></td> 
+						<!-- END picnodetail -->
+					</tr>
+					<!-- END picrow -->
+				</table>
+			</li>
+		</ul>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+
+<form action="{S_ALBUM_ACTION}" method="post">
+<fieldset class="display-options">
+	<label>{L_SELECT_SORT_METHOD}: 
+		<select name="sort_method">
+			<option {SORT_TIME} value='pic_time'>{L_TIME}</option>
+			<option {SORT_PIC_TITLE} value='pic_title'>{L_PIC_TITLE}</option>
+			<option {SORT_USERNAME} value='username'>{L_SORT_USERNAME}</option>
+			<option {SORT_VIEW} value='pic_view_count'>{L_VIEWS}</option>
+			{SORT_RATING_OPTION}
+			{SORT_COMMENTS_OPTION}
+			{SORT_NEW_COMMENT_OPTION}
+		</select>
+	</label>
+	<label>{L_ORDER}: 
+		<select name="sort_order">
+			<option {SORT_ASC} value='ASC'>{L_SORT_ASCENDING}</option>
+			<option {SORT_DESC} value='DESC'>{L_SORT_DESCENDING}</option>
+		</select> <input type="submit" name="sort" value="{L_SORT}" class="button2" />
+	</label>
+</fieldset>
+</form>
+<hr />
+<div class="topic-actions">
+	<div class="buttons">
+		<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span>{L_UPLOAD_IMAGE}</span></a></div>
+		<!-- This is for the next RC or Gold Candidate ;-) 
+		They change the colours.css a little bit......  to show a textlink if the image is not found.
+		<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span></span>{L_UPLOAD_PIC}</a></div>
+		-->
+	</div>
+	<div class="pagination">
+		{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+	</div>
+</div>
+<br />
+	
+<p><a href="{U_RETURN_LINK}" class="left-box {S_CONTENT_FLOW_BEGIN}" accesskey="r">{L_RETURN_TO} {S_RETURN_LINK}</a></p>
+{ALBUM_JUMPBOX}
+
+<!-- IF S_DISPLAY_ONLINE_LIST -->
+	<h3><a href="{U_VIEWONLINE}">{L_WHO_IS_ONLINE}</a></h3>
+	<p>{LOGGED_IN_USER_LIST}</p>
+<!-- ENDIF -->
+
+<h3>{L_ALBUM_PERMISSIONS}</h3>
+<p>{S_AUTH_LIST}</p>
+
+
+<!--table width="100%" cellspacing="2" cellpadding="2" border="0">
+  <tr>
+	<td valign="bottom" width="100%"><a class="maintitle" href="{U_VIEW_CAT}">{CAT_TITLE}</a><br />
+		<span class="gensmall"><b>{L_MODERATORS}: {MODERATORS}</b></span></td>
+	<td align="right" valign="bottom" nowrap="nowrap"><span class="gensmall"><b>{PAGINATION}</b></span></td>
+  </tr>
+</table>
+
+<table width="100%" cellspacing="2" cellpadding="2" border="0">
+  <tr>
+	<td><a href="{U_UPLOAD_PIC}"><img src="{UPLOAD_PIC_IMG}" border="0" alt="{L_UPLOAD_PIC}" title="{L_UPLOAD_PIC}" /></a></td>
+	<td class="nav" width="100%"><span class="nav">&nbsp;&nbsp;&nbsp;<a href="{U_INDEX}" class="nav">{L_INDEX}</a> -> <a class="nav" href="{U_ALBUM}">{L_ALBUM}</a> -> <a class="nav" href="{U_VIEW_CAT}">{CAT_TITLE}</a></span></td>
+	<td align="right" valign="bottom" nowrap="nowrap"><span class="mainmenu" style="color: red;"><b>{WAITING}</b></span></td>
+  </tr>
+</table-->
+
+<!-- Please keep this little notice visible -->
+<div class="copyright">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a></div>
+<!-- ENDIF -->
+<!-- INCLUDE overall_footer.html -->
