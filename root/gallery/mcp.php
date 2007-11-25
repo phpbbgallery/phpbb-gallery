@@ -196,12 +196,12 @@ if ($mode == '')
 			$pic_approval_sql = ' AND p.pic_approval = 1';
 		}
 
-		$sql = 'SELECT p.pic_id, p.pic_title, p.pic_user_id, p.pic_user_ip, p.pic_username, p.pic_time, p.pic_cat_id, p.pic_view_count, p.pic_lock, p.pic_approval, u.user_id, u.username, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(c.comment_id) AS comments, MAX(c.comment_id) AS new_comment
+		$sql = 'SELECT p.pic_id, p.pic_title, p.pic_user_id, p.pic_user_ip, p.pic_username, p.pic_time, p.pic_cat_id, p.pic_view_count, p.pic_lock, p.pic_approval, u.user_id, u.username, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(c.comment_id) AS comments, MAX(c.comment_id) AS new_comment
 			FROM ' . GALLERY_IMAGES_TABLE . ' AS p
 			LEFT JOIN ' . USERS_TABLE . ' AS u
 				ON p.pic_user_id = u.user_id
 			LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
-				ON p.pic_id = r.rate_pic_id
+				ON p.pic_id = r.rate_image_id
 			LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
 				ON p.pic_id = c.comment_image_id
 			WHERE p.pic_cat_id = ' . $album_id . ' ' . $pic_approval_sql . '
@@ -921,7 +921,7 @@ else
 
 			// Delete all ratings
 			$sql = 'DELETE FROM ' .GALLERY_RATES_TABLE . '
-				WHERE rate_pic_id IN (' . $pic_id_sql . ')';
+				WHERE rate_image_id IN (' . $pic_id_sql . ')';
 			$result = $db->sql_query($sql);
 
 			// Delete Physical Files

@@ -83,12 +83,12 @@ if( isset($_GET['mode']) )
 // Get this pic info
 // ------------------------------------
 
-$sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments
+$sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments
 		FROM ' . GALLERY_IMAGES_TABLE . ' AS p
 		LEFT JOIN ' . USERS_TABLE . ' AS u
 			ON p.pic_user_id = u.user_id
 		LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
-			ON p.pic_id = r.rate_pic_id
+			ON p.pic_id = r.rate_image_id
 		LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
 			ON p.pic_id = c.comment_image_id
 		WHERE pic_id = ' . $pic_id . '
@@ -159,7 +159,7 @@ if (($album_config['rate'] <> 0) && $user->data['is_registered'])
 {
 	$sql = 'SELECT *
 		FROM ' . GALLERY_RATES_TABLE . '
-		WHERE rate_pic_id = ' . $pic_id . '
+		WHERE rate_image_id = ' . $pic_id . '
 			AND rate_user_id = ' . $user->data['user_id'] . '
 		LIMIT 1';
 
@@ -307,7 +307,7 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 		// Insert into the DB
 		// --------------------------------
 		$sql_ary = array(
-			'rate_pic_id'	=> $pic_id,
+			'rate_image_id'	=> $pic_id,
 			'rate_user_id'	=> $rate_user_id,
 			'rate_user_ip'	=> $rate_user_ip,
 			'rate_point'	=> $rate_point,

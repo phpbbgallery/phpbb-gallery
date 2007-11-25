@@ -413,10 +413,10 @@ else if ($mode == 'images')
 			}
 		}
 
-		$sql = 'SELECT p.*, u.user_id , u.username, u.user_colour, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
+		$sql = 'SELECT p.*, u.user_id , u.username, u.user_colour, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
 			FROM ' . GALLERY_IMAGES_TABLE . ' AS p
 				LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
-				LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r ON p.pic_id = r.rate_pic_id
+				LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r ON p.pic_id = r.rate_image_id
 				LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c ON p.pic_id = c.comment_image_id 
 			WHERE p.pic_cat_id = ' . $album_id . ' 
 			GROUP BY p.pic_id
@@ -436,10 +436,10 @@ else if ($mode == 'images')
 			if ($picrow[$i]['pic_approval'] == 0 ) $tot_unapproved++ ;
 		}
 
-		$sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
+		$sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
 			FROM ' . GALLERY_IMAGES_TABLE . ' AS p
 				LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
-				LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r ON p.pic_id = r.rate_pic_id
+				LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r ON p.pic_id = r.rate_image_id
 				LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c ON p.pic_id = c.comment_image_id
 				WHERE p.pic_cat_id = ' . $album_id . ' ' . $pic_approval_sql . ' 
 				GROUP BY p.pic_id

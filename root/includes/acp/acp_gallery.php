@@ -862,7 +862,7 @@ class acp_gallery
 						$pic_id_sql = '(' . implode(',', $pic_id_row) . ')';
 						// Delete all related ratings
 						$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . '
-							WHERE rate_pic_id IN ' . $pic_id_sql;
+							WHERE rate_image_id IN ' . $pic_id_sql;
 						$result = $db->sql_query($sql);
 						// Delete all related comments
 						$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . '

@@ -206,7 +206,7 @@ else
 	// Delete all ratings
 	// --------------------------------
 	$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . '
-		WHERE rate_pic_id = ' . $pic_id;
+		WHERE rate_image_id = ' . $pic_id;
 	$result = $db->sql_query($sql);
 
 

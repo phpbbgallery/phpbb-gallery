@@ -214,11 +214,11 @@ for ($i = 0; $i < count($album); $i++)
 
 if ($allowed_cat <> '')
 {
-	$sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_pic_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments
+	$sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments
 			FROM ' . GALLERY_IMAGES_TABLE . ' AS p
 				LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
 				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' AS ct ON p.pic_cat_id = ct.album_id
-				LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r ON p.pic_id = r.rate_pic_id
+				LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r ON p.pic_id = r.rate_image_id
 				LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c ON p.pic_id = c.comment_image_id
 			WHERE p.pic_cat_id IN (' . $allowed_cat . ') 
 				AND ( p.pic_approval = 1 OR ct.album_approval = 0 )
