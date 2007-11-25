@@ -445,7 +445,7 @@ function init_personal_gallery_cat($user_id = 0)
 
 	$sql = 'SELECT COUNT(pic_id) AS count
 		FROM ' . GALLERY_IMAGES_TABLE . '
-		WHERE pic_cat_id = ' . PERSONAL_GALLERY . '
+		WHERE image_album_id = ' . PERSONAL_GALLERY . '
 			AND pic_user_id = ' . $user_id;
 
 	$result = $db->sql_query($sql);
@@ -534,7 +534,7 @@ function get_album_info($album_id)
 	$sql = 'SELECT ga.*, COUNT(gi.pic_id) AS count
 		FROM ' . GALLERY_ALBUMS_TABLE . ' AS ga
 		LEFT JOIN ' . GALLERY_IMAGES_TABLE . " AS gi
-			ON ga.album_id = gi.pic_cat_id
+			ON ga.album_id = gi.image_album_id
 		WHERE ga.album_id = $album_id
 		GROUP BY ga.album_id";
 	$result = $db->sql_query($sql);

@@ -90,7 +90,7 @@ $sql = 'SELECT u.username, u.user_id, u.user_regdate, MAX(p.pic_id) as pic_id, p
 	FROM ' . USERS_TABLE . ' AS u, ' . GALLERY_IMAGES_TABLE . ' as p
 	WHERE u.user_id <> ' . ANONYMOUS . '
 		AND u.user_id = p.pic_user_id
-		AND p.pic_cat_id = ' . PERSONAL_GALLERY . '
+		AND p.image_album_id = ' . PERSONAL_GALLERY . '
 	GROUP BY user_id
 	ORDER BY ' . $order_by;
 
@@ -178,7 +178,7 @@ $sql = 'SELECT COUNT(DISTINCT u.user_id) AS total
 	FROM ' . USERS_TABLE . ' AS u, '. GALLERY_IMAGES_TABLE . ' AS p
 	WHERE u.user_id <> ' . ANONYMOUS . '
 		AND u.user_id = p.pic_user_id
-		AND p.pic_cat_id = ' . PERSONAL_GALLERY;
+		AND p.image_album_id = ' . PERSONAL_GALLERY;
 
 $result = $db->sql_query($sql);
 

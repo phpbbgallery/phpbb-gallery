@@ -96,7 +96,7 @@ if ($album_id <> PERSONAL_GALLERY)
 		$sql = 'SELECT COUNT(pic_id) AS count
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE pic_user_id = ' . $user->data['user_id'] . '
-				AND pic_cat_id = ' . $album_id;
+				AND image_album_id = ' . $album_id;
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
 		$own_pics = $row['count'];
@@ -455,7 +455,7 @@ else
 		'pic_user_ip'		=> $pic_user_ip,
 		'pic_username'		=> $pic_username,
 		'pic_time'			=> $pic_time,
-		'pic_cat_id'		=> $album_id,
+		'image_album_id'		=> $album_id,
 		'pic_approval'		=> $pic_approval,
 	);
 

@@ -839,9 +839,9 @@ class acp_gallery
 				$handle_images = request_var('handle_images', -1);
 				if ($handle_images < 0)
 				{
-					$sql = 'SELECT pic_id, pic_filename, pic_thumbnail, pic_cat_id
+					$sql = 'SELECT pic_id, pic_filename, pic_thumbnail, image_album_id
 							FROM ' . GALLERY_IMAGES_TABLE . "
-							WHERE pic_cat_id = '$album_id'";
+							WHERE image_album_id = '$album_id'";
 					$result = $db->sql_query($sql);
 					
 					$picrow = array();
@@ -870,15 +870,15 @@ class acp_gallery
 						$result = $db->sql_query($sql);
 						// Delete pic entries in db
 						$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . "
-							WHERE pic_cat_id = '$album_id'";
+							WHERE image_album_id = '$album_id'";
 						$result = $db->sql_query($sql);
 					}
 				}
 				else
 				{
 					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-						SET pic_cat_id = ' . $handle_images . '
-						WHERE pic_cat_id = ' . $album_id;
+						SET image_album_id = ' . $handle_images . '
+						WHERE image_album_id = ' . $album_id;
 					$db->sql_query($sql);
 				}
 			}

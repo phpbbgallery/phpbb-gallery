@@ -108,7 +108,7 @@ $pics_per_page = $album_config['rows_per_page'] * $album_config['cols_per_page']
 
 $sql = 'SELECT COUNT(pic_id) AS count
 		FROM ' . GALLERY_IMAGES_TABLE . '
-		WHERE pic_cat_id = ' . PERSONAL_GALLERY . '
+		WHERE image_album_id = ' . PERSONAL_GALLERY . '
 			AND pic_user_id = ' . $user_id . '
 		LIMIT 1';
 $result = $db->sql_query($sql);
@@ -128,7 +128,7 @@ if ($total_pics > 0)
 		FROM ' . GALLERY_IMAGES_TABLE . ' AS p
 			LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r ON p.pic_id = r.rate_image_id
 			LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c ON p.pic_id = c.comment_image_id
-		WHERE p.pic_cat_id = ' . PERSONAL_GALLERY . '
+		WHERE p.image_album_id = ' . PERSONAL_GALLERY . '
 			AND p.pic_user_id = ' . $user_id . '
 		GROUP BY p.pic_id
 		ORDER BY ' . $sort_method . ' ' . $sort_order . ' 

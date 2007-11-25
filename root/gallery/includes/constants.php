@@ -16,7 +16,7 @@ if ( !defined('IN_PHPBB') )
 
 define('PAGE_ALBUM', -19);// for Session Handling
 
-define('PERSONAL_GALLERY', 0);// pic_cat_id <- do NOT change this value
+define('PERSONAL_GALLERY', 0);// image_album_id <- do NOT change this value
 
 
 // User Levels for Album system <- do NOT change these values
@@ -40,11 +40,11 @@ define('ALBUM_DIR_NAME', 'gallery/');
 
 
 // Table names
-define('GALLERY_ALBUMS_TABLE', $table_prefix.'gallery_albums');
-define('GALLERY_COMMENTS_TABLE', $table_prefix.'album_comment');//gallery_comments');
-define('GALLERY_CONFIG_TABLE', $table_prefix.'album_config');//gallery_config');
-define('GALLERY_IMAGES_TABLE', $table_prefix.'album');//gallery_images');
-define('GALLERY_RATES_TABLE', $table_prefix.'album_rate');//gallery_rates');
+define('GALLERY_ALBUMS_TABLE', $table_prefix . 'gallery_albums');
+define('GALLERY_COMMENTS_TABLE', $table_prefix . 'gallery_comments');
+define('GALLERY_CONFIG_TABLE', $table_prefix . 'gallery_config');
+define('GALLERY_IMAGES_TABLE', $table_prefix . 'gallery_images');
+define('GALLERY_RATES_TABLE', $table_prefix . 'gallery_rates');
 
 //we still need them for the updater
 define('ALBUM_TABLE', $table_prefix.'album');

@@ -46,7 +46,7 @@ if( isset($_GET['mode']) )
 {
 	if( ($_GET['mode'] == 'next') || ($_GET['mode'] == 'previous') )
 	{
-		$sql = 'SELECT pic_id, pic_cat_id, pic_user_id
+		$sql = 'SELECT pic_id, image_album_id, pic_user_id
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE pic_id = '. $pic_id;
 
@@ -62,10 +62,10 @@ if( isset($_GET['mode']) )
 			FROM ' . GALLERY_IMAGES_TABLE . ' AS new, ' . GALLERY_IMAGES_TABLE . ' AS cur
 			WHERE cur.pic_id = ' . $pic_id . '
 				AND new.pic_id <> cur.pic_id
-				AND new.pic_cat_id = cur.pic_cat_id';
+				AND new.image_album_id = cur.image_album_id';
 
 		$sql .= ($_GET['mode'] == 'next') ? ' AND new.pic_time >= cur.pic_time' : ' AND new.pic_time <= cur.pic_time';
-		$sql .= ($row['pic_cat_id'] == PERSONAL_GALLERY) ? ' AND new.pic_user_id = cur.pic_user_id' : '';
+		$sql .= ($row['image_album_id'] == PERSONAL_GALLERY) ? ' AND new.pic_user_id = cur.pic_user_id' : '';
 		$sql .= ($_GET['mode'] == 'next') ? ' ORDER BY pic_time ASC LIMIT 1' : ' ORDER BY pic_time DESC LIMIT 1';
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
@@ -96,7 +96,7 @@ $sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_image_id, AVG(r
 $result = $db->sql_query($sql);
 $thispic = $db->sql_fetchrow($result);
 
-$album_id = $thispic['pic_cat_id'];
+$album_id = $thispic['image_album_id'];
 $user_id = $thispic['pic_user_id'];
 
 if (empty($thispic) || !file_exists(ALBUM_UPLOAD_PATH . $thispic['pic_filename']))
@@ -343,10 +343,10 @@ $sql = 'SELECT new.pic_id, new.pic_time
 	FROM ' . GALLERY_IMAGES_TABLE . ' AS new, ' . GALLERY_IMAGES_TABLE . ' AS cur
 	WHERE cur.pic_id = ' . $pic_id . '
 		AND new.pic_id <> cur.pic_id
-		AND new.pic_cat_id = cur.pic_cat_id
+		AND new.image_album_id = cur.image_album_id
 		AND new.pic_time >= cur.pic_time';
 
-$sql .= ($thispic['pic_cat_id'] == PERSONAL_GALLERY) ? ' AND new.pic_user_id = cur.pic_user_id' : '';
+$sql .= ($thispic['image_album_id'] == PERSONAL_GALLERY) ? ' AND new.pic_user_id = cur.pic_user_id' : '';
 $sql .= ' ORDER BY pic_time ASC LIMIT 1';
 
 $result = $db->sql_query($sql);
@@ -370,10 +370,10 @@ $sql = 'SELECT new.pic_id, new.pic_time
 	FROM ' . GALLERY_IMAGES_TABLE . ' AS new, ' . GALLERY_IMAGES_TABLE . ' AS cur
 	WHERE cur.pic_id = ' . $pic_id . '
 		AND new.pic_id <> cur.pic_id
-		AND new.pic_cat_id = cur.pic_cat_id
+		AND new.image_album_id = cur.image_album_id
 		AND new.pic_time <= cur.pic_time';
 
-$sql .= ($thispic['pic_cat_id'] == PERSONAL_GALLERY) ? ' AND new.pic_user_id = cur.pic_user_id' : '';
+$sql .= ($thispic['image_album_id'] == PERSONAL_GALLERY) ? ' AND new.pic_user_id = cur.pic_user_id' : '';
 $sql .= ' ORDER BY pic_time DESC LIMIT 1';
 
 $result = $db->sql_query($sql);

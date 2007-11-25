@@ -99,7 +99,7 @@ if($pic_id)
 		trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_WARNING);
 	}
 
-	$album_id = $thispic['pic_cat_id'];
+	$album_id = $thispic['image_album_id'];
 	$user_id = $thispic['pic_user_id'];
 }
 
@@ -176,7 +176,7 @@ if ($mode == '')
 	// Count Pics
 	$sql = 'SELECT COUNT(pic_id) AS count
 		FROM ' . GALLERY_IMAGES_TABLE . '
-		WHERE pic_cat_id = ' . $album_id;
+		WHERE image_album_id = ' . $album_id;
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
 
@@ -196,7 +196,7 @@ if ($mode == '')
 			$pic_approval_sql = ' AND p.pic_approval = 1';
 		}
 
-		$sql = 'SELECT p.pic_id, p.pic_title, p.pic_user_id, p.pic_user_ip, p.pic_username, p.pic_time, p.pic_cat_id, p.pic_view_count, p.pic_lock, p.pic_approval, u.user_id, u.username, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(c.comment_id) AS comments, MAX(c.comment_id) AS new_comment
+		$sql = 'SELECT p.pic_id, p.pic_title, p.pic_user_id, p.pic_user_ip, p.pic_username, p.pic_time, p.image_album_id, p.pic_view_count, p.pic_lock, p.pic_approval, u.user_id, u.username, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(c.comment_id) AS comments, MAX(c.comment_id) AS new_comment
 			FROM ' . GALLERY_IMAGES_TABLE . ' AS p
 			LEFT JOIN ' . USERS_TABLE . ' AS u
 				ON p.pic_user_id = u.user_id
@@ -204,7 +204,7 @@ if ($mode == '')
 				ON p.pic_id = r.rate_image_id
 			LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
 				ON p.pic_id = c.comment_image_id
-			WHERE p.pic_cat_id = ' . $album_id . ' ' . $pic_approval_sql . '
+			WHERE p.image_album_id = ' . $album_id . ' ' . $pic_approval_sql . '
 			GROUP BY p.pic_id
 			ORDER BY ' . $sort_method . ' ' . $sort_order . '
 			LIMIT ' . $limit_sql;
@@ -467,7 +467,7 @@ else
 			$sql = 'SELECT pic_id
 				FROM ' . GALLERY_IMAGES_TABLE . '
 				WHERE pic_id IN (' . $pic_id_sql . ') 
-					AND pic_cat_id <> ' . $album_id;
+					AND image_album_id <> ' . $album_id;
 			$result = $db->sql_query($sql);
 
 			if( $db->sql_affectedrows($result) > 0 )
@@ -477,7 +477,7 @@ else
 
 			// Update the DB
 			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-				SET pic_cat_id = ' . intval($target) . '
+				SET image_album_id = ' . intval($target) . '
 				WHERE pic_id IN (' . $pic_id_sql . ')';
 			$result = $db->sql_query($sql);
 			$message = $user->lang['IMAGES_MOVED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
@@ -547,7 +547,7 @@ else
 		$sql = 'SELECT pic_id
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE pic_id IN (' . $pic_id_sql . ') 
-				AND pic_cat_id <> ' . $cat_id;
+				AND image_album_id <> ' . $cat_id;
 		$result = $db->sql_query($sql);
 		if ($db->sql_affectedrows($result) > 0)
 		{
@@ -637,7 +637,7 @@ else
 		$sql = 'SELECT pic_id
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE pic_id IN (' . $pic_id_sql . ') 
-				AND pic_cat_id <> ' . $cat_id;
+				AND image_album_id <> ' . $cat_id;
 		$result = $db->sql_query($sql);
 		if( $db->sql_affectedrows($result) > 0 )
 		{
@@ -713,7 +713,7 @@ else
 		$sql = 'SELECT pic_id
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE pic_id IN (' . $pic_id_sql . ') 
-				AND pic_cat_id <> ' . $cat_id;
+				AND image_album_id <> ' . $cat_id;
 		$result = $db->sql_query($sql);
 		if( $db->sql_affectedrows($result) > 0 )
 		{
@@ -778,7 +778,7 @@ else
 		$sql = 'SELECT pic_id
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE pic_id IN (' . $pic_id_sql . ') 
-				AND pic_cat_id <> ' . $cat_id;
+				AND image_album_id <> ' . $cat_id;
 		$result = $db->sql_query($sql);
 
 		if ($db->sql_affectedrows($result) > 0)
@@ -907,7 +907,7 @@ else
 			$sql = 'SELECT pic_id
 				FROM ' . GALLERY_IMAGES_TABLE . '
 				WHERE pic_id IN (' . $pic_id_sql . ') 
-					AND pic_cat_id <> ' . $cat_id;
+					AND image_album_id <> ' . $cat_id;
 			$result = $db->sql_query($sql);
 			if ($db->sql_affectedrows($result) > 0)
 			{

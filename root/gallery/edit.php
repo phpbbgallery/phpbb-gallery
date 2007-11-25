@@ -42,7 +42,7 @@ $result = $db->sql_query($sql);
 
 $thispic = $db->sql_fetchrow($result);
 
-$album_id = $thispic['pic_cat_id'];
+$album_id = $thispic['image_album_id'];
 $user_id = $thispic['pic_user_id'];
 
 $pic_filename = $thispic['pic_filename'];

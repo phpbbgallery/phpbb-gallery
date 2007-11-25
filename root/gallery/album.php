@@ -57,7 +57,7 @@ if ($mode == 'albums')
 {//we have this twice, we could build a function to keep the bytes down (see gallery/index.php)
 	$sql = 'SELECT ga.*, COUNT(p.pic_id) AS count
 			FROM ' . GALLERY_ALBUMS_TABLE . ' AS ga
-				LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' AS p ON ga.album_id = p.pic_cat_id
+				LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' AS p ON ga.album_id = p.image_album_id
 			WHERE ga.album_id <> 0
 				AND ga.parent_id = ' . $album_data['album_id'] . '
 			GROUP BY ga.album_id
@@ -161,10 +161,10 @@ if ($mode == 'albums')
 			// OK, we may do a query now...
 			// ----------------------------
 
-			$sql = 'SELECT p.pic_id, p.pic_title, p.pic_user_id, p.pic_username, p.pic_time, p.pic_cat_id, u.user_id, u.username, u.user_colour
+			$sql = 'SELECT p.pic_id, p.pic_title, p.pic_user_id, p.pic_username, p.pic_time, p.image_album_id, u.user_id, u.username, u.user_colour
 					FROM ' . GALLERY_IMAGES_TABLE . ' AS p
 						LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
-					WHERE p.pic_cat_id = ' . $album[$i]['album_id'] . ' ' . $pic_approval_sql . ' 
+					WHERE p.image_album_id = ' . $album[$i]['album_id'] . ' ' . $pic_approval_sql . ' 
 						ORDER BY p.pic_time DESC
 						LIMIT 1';
 			$result = $db->sql_query($sql);
@@ -257,7 +257,7 @@ else if ($mode == 'images')
 	// Get this cat info
 	// ------------------------------------
 	$sql = 'SELECT ga.*, COUNT(p.pic_id) AS count
-			FROM ' . GALLERY_ALBUMS_TABLE . ' AS ga LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' AS p ON ga.album_id = p.pic_cat_id
+			FROM ' . GALLERY_ALBUMS_TABLE . ' AS ga LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' AS p ON ga.album_id = p.image_album_id
 			WHERE ga.album_id <> 0
 				GROUP BY ga.album_id
 				ORDER BY ga.left_id';
@@ -418,7 +418,7 @@ else if ($mode == 'images')
 				LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
 				LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r ON p.pic_id = r.rate_image_id
 				LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c ON p.pic_id = c.comment_image_id 
-			WHERE p.pic_cat_id = ' . $album_id . ' 
+			WHERE p.image_album_id = ' . $album_id . ' 
 			GROUP BY p.pic_id
 			ORDER BY ' . $sort_method . ' ' . $sort_order . ' 
 			LIMIT ' . $limit_sql;
@@ -441,7 +441,7 @@ else if ($mode == 'images')
 				LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
 				LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r ON p.pic_id = r.rate_image_id
 				LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c ON p.pic_id = c.comment_image_id
-				WHERE p.pic_cat_id = ' . $album_id . ' ' . $pic_approval_sql . ' 
+				WHERE p.image_album_id = ' . $album_id . ' ' . $pic_approval_sql . ' 
 				GROUP BY p.pic_id
 				ORDER BY ' . $sort_method . ' ' . $sort_order . ' 
 				LIMIT ' . $limit_sql;
