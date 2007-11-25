@@ -203,7 +203,7 @@ if ($mode == '')
 			LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
 				ON p.pic_id = r.rate_pic_id
 			LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
-				ON p.pic_id = c.comment_pic_id
+				ON p.pic_id = c.comment_image_id
 			WHERE p.pic_cat_id = ' . $album_id . ' ' . $pic_approval_sql . '
 			GROUP BY p.pic_id
 			ORDER BY ' . $sort_method . ' ' . $sort_order . '
@@ -916,7 +916,7 @@ else
 
 			// Delete all comments
 			$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . '
-				WHERE comment_pic_id IN (' . $pic_id_sql . ')';
+				WHERE comment_image_id IN (' . $pic_id_sql . ')';
 			$result = $db->sql_query($sql);
 
 			// Delete all ratings

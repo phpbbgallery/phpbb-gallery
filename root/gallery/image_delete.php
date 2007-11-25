@@ -198,7 +198,7 @@ else
 	// It's confirmed. First delete all comments
 	// --------------------------------
 	$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . '
-		WHERE comment_pic_id = ' . $pic_id;
+		WHERE comment_image_id = ' . $pic_id;
 	$result = $db->sql_query($sql);
 
 

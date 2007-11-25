@@ -90,7 +90,7 @@ $sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_pic_id, AVG(r.r
 		LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
 			ON p.pic_id = r.rate_pic_id
 		LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
-			ON p.pic_id = c.comment_pic_id
+			ON p.pic_id = c.comment_image_id
 		WHERE pic_id = ' . $pic_id . '
 		GROUP BY p.pic_id';
 $result = $db->sql_query($sql);
@@ -263,7 +263,7 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 		}
 		$sql_ary = array(
 			'comment_id'		=> $comment_id,
-			'comment_pic_id'	=> $pic_id,
+			'comment_image_id'	=> $pic_id,
 			'comment_user_id'	=> $comment_user_id,
 			'comment_username'	=> $comment_username,
 			'comment_user_ip'	=> $comment_user_ip,
@@ -514,7 +514,7 @@ if ($album_config['comment'])
 			FROM ' . GALLERY_COMMENTS_TABLE . ' AS c
 			LEFT JOIN ' . USERS_TABLE . ' AS u
 				ON c.comment_user_id = u.user_id
-			WHERE c.comment_pic_id = ' . $pic_id . '
+			WHERE c.comment_image_id = ' . $pic_id . '
 			ORDER BY c.comment_id ' . $sort_order . '
 			LIMIT ' . $limit_sql;
 
