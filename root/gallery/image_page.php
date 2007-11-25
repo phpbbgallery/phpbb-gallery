@@ -268,9 +268,9 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 			'comment_username'	=> $comment_username,
 			'comment_user_ip'	=> $comment_user_ip,
 			'comment_time'		=> $comment_time,
-			'comment_text'					=> $message_parser->message,
-			'comment_text_bbcode_uid'		=> $message_parser->bbcode_uid,
-			'comment_text_bbcode_bitfield'	=> $message_parser->bbcode_bitfield,
+			'comment'					=> $message_parser->message,
+			'comment_uid'		=> $message_parser->bbcode_uid,
+			'comment_bitfield'	=> $message_parser->bbcode_bitfield,
 			);
 		
 		$db->sql_query('INSERT INTO ' . GALLERY_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
@@ -561,7 +561,7 @@ if ($album_config['comment'])
 			{
 				$edit_info = '';
 			}
-			//$commentrow[$i]['comment_text'] = smilies_pass($commentrow[$i]['comment_text']);
+			//$commentrow[$i]['comment'] = smilies_pass($commentrow[$i]['comment']);
 			
 			if ($even == 0)
 			{
@@ -580,7 +580,7 @@ if ($album_config['comment'])
 				'TIME' 			=> $user->format_date($commentrow[$i]['comment_time']),
 				'IP' 			=> ($user->data['user_type'] == USER_FOUNDER) ? '-----------------------------------<br />' . $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $commentrow[$i]['comment_user_ip'] . '" target="_blank">' . $commentrow[$i]['comment_user_ip'] .'</a><br />' : '',
 				'S_ROW_STYLE' 	=> $row_style,
-				'TEXT' 			=> generate_text_for_display($commentrow[$i]['comment_text'], $commentrow[$i]['comment_text_bbcode_uid'], $commentrow[$i]['comment_text_bbcode_bitfield'], 7),
+				'TEXT' 			=> generate_text_for_display($commentrow[$i]['comment'], $commentrow[$i]['comment_uid'], $commentrow[$i]['comment_bitfield'], 7),
 				'EDIT_INFO' 	=> $edit_info,
 				'EDIT' 			=> '',//missing feature ( ( $auth_data['edit'] && ($commentrow[$i]['comment_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($thiscat['album_edit_level'] != ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="'. append_sid("edit.$phpEx?comment_id=". $commentrow[$i]['comment_id']) .'">'. $user->lang['EDIT_IMAGE'] .'</a>' : '',
 				'DELETE' 		=> '',//missing feature ( ( $auth_data['delete'] && ($commentrow[$i]['comment_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($thiscat['album_delete_level'] != ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="'. append_sid("edit.$phpEx?comment_id=". $commentrow[$i]['comment_id']) .'">'. $user->lang['DELETE_IMAGE'] .'</a>' : ''
