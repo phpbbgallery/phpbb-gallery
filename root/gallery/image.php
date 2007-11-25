@@ -44,18 +44,18 @@ if (!$pic_id)
 
 $sql = 'SELECT *
 	FROM ' . GALLERY_IMAGES_TABLE . '
-	WHERE pic_id = ' . $pic_id . '
+	WHERE image_id = ' . $pic_id . '
 	LIMIT 1';
 $result = $db->sql_query($sql);
 
 $thispic = $db->sql_fetchrow($result);
 
 $album_id = $thispic['image_album_id'];
-$user_id = $thispic['pic_user_id'];
+$user_id = $thispic['image_user_id'];
 
-$pic_filetype = utf8_substr($thispic['pic_filename'], strlen($thispic['pic_filename']) - 4, 4);
-$pic_filename = $thispic['pic_filename'];
-$pic_thumbnail = $thispic['pic_thumbnail'];
+$pic_filetype = utf8_substr($thispic['image_filename'], strlen($thispic['image_filename']) - 4, 4);
+$pic_filename = $thispic['image_filename'];
+$pic_thumbnail = $thispic['image_thumbnail'];
 
 if (empty($thispic) || !file_exists(ALBUM_UPLOAD_PATH . $pic_filename) )
 {
@@ -106,7 +106,7 @@ if ($user->data['user_type'] <> USER_FOUNDER)
 {
 	if (($thiscat['album_approval'] == ADMIN) || (($thiscat['album_approval'] == MOD) && !$album_user_access['moderator']))
 	{
-		if (!$thispic['pic_approval'])
+		if (!$thispic['image_approval'])
 		{
 			die($user->lang['NOT_AUTHORISED']);
 		}
@@ -161,8 +161,8 @@ if ($album_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER'])
 // ------------------------------------
 
 $sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-	SET pic_view_count = pic_view_count + 1
-	WHERE pic_id = ' . $pic_id . '
+	SET image_view_count = image_view_count + 1
+	WHERE image_id = ' . $pic_id . '
 	LIMIT 1';
 $result = $db->sql_query($sql);
 
@@ -202,16 +202,16 @@ if ($album_config['watermark_images'])
 		switch ($pic_filetype)
 		{
 			case '.png':
-				$im = imagecreatefrompng(ALBUM_UPLOAD_PATH  . $thispic['pic_filename']);
+				$im = imagecreatefrompng(ALBUM_UPLOAD_PATH  . $thispic['image_filename']);
 			break;
 
 			case '.gif':
-				$im = imagecreatefromgif(ALBUM_UPLOAD_PATH  . $thispic['pic_filename']);
+				$im = imagecreatefromgif(ALBUM_UPLOAD_PATH  . $thispic['image_filename']);
 			break;
 
 			case '.jpg':
 			case 'jpeg':
-				$im = imagecreatefromjpeg(ALBUM_UPLOAD_PATH  . $thispic['pic_filename']);
+				$im = imagecreatefromjpeg(ALBUM_UPLOAD_PATH  . $thispic['image_filename']);
 			break;
 
 			default:
@@ -266,7 +266,7 @@ else
 		break;
 	}
 
-	readfile(ALBUM_UPLOAD_PATH  . $thispic['pic_filename']);
+	readfile(ALBUM_UPLOAD_PATH  . $thispic['image_filename']);
 }
 exit;
 ?>

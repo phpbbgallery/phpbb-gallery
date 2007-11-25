@@ -86,10 +86,10 @@ switch( $mode )
 		$order_by = "user_regdate $sort_order LIMIT $start, " . $config['topics_per_page'];
 }
 
-$sql = 'SELECT u.username, u.user_id, u.user_regdate, MAX(p.pic_id) as pic_id, p.pic_title, p.pic_user_id, COUNT(p.pic_id) AS pics, MAX(p.pic_time) as pic_time
+$sql = 'SELECT u.username, u.user_id, u.user_regdate, MAX(p.image_id) as image_id, p.image_name, p.image_user_id, COUNT(p.image_id) AS pics, MAX(p.image_time) as image_time
 	FROM ' . USERS_TABLE . ' AS u, ' . GALLERY_IMAGES_TABLE . ' as p
 	WHERE u.user_id <> ' . ANONYMOUS . '
-		AND u.user_id = p.pic_user_id
+		AND u.user_id = p.image_user_id
 		AND p.image_album_id = ' . PERSONAL_GALLERY . '
 	GROUP BY user_id
 	ORDER BY ' . $order_by;
@@ -107,14 +107,14 @@ while( $row = $db->sql_fetchrow($result) )
 for ($i = 0; $i < count($memberrow); $i++) 
 { 
 	$pic_number = $memberrow[$i]['pics'];
-	$pic_id = $memberrow[$i]['pic_id'];
+	$pic_id = $memberrow[$i]['image_id'];
 	$sql = 'SELECT *
 		FROM ' . GALLERY_IMAGES_TABLE . '
-		WHERE pic_id = ' . $pic_id;
+		WHERE image_id = ' . $pic_id;
 	$result = $db->sql_query($sql);
 
 	$thispic = $db->sql_fetchrow($result); 
-	$pic_title = $thispic['pic_title']; 
+	$pic_title = $thispic['image_name']; 
 
 /*
 	$last_pic_info = '';
@@ -126,13 +126,13 @@ for ($i = 0; $i < count($memberrow); $i++)
 			$album_config['last_pic_title_length'] = 25;
 		}
 
-		if (strlen($lastrow['pic_title']) > $album_config['last_pic_title_length'])
+		if (strlen($lastrow['image_name']) > $album_config['last_pic_title_length'])
 		{
-			$lastrow['pic_title'] = substr($lastrow['pic_title'], 0, $album_config['last_pic_title_length']) . '...';
+			$lastrow['image_name'] = substr($lastrow['image_name'], 0, $album_config['last_pic_title_length']) . '...';
 		}
 
-		$last_pic_info .= '<a href="' . append_sid("./image_page.$phpEx?id=". $lastrow['pic_id']) .'">';
-		$last_pic_info .= $lastrow['pic_title'] .'</a> ' . $user->lang['POST_BY_AUTHOR'] . ' ';
+		$last_pic_info .= '<a href="' . append_sid("./image_page.$phpEx?id=". $lastrow['image_id']) .'">';
+		$last_pic_info .= $lastrow['image_name'] .'</a> ' . $user->lang['POST_BY_AUTHOR'] . ' ';
 
 		// ----------------------------
 		// Write username of last poster
@@ -140,15 +140,15 @@ for ($i = 0; $i < count($memberrow); $i++)
 
 		if( ($lastrow['user_id'] == ALBUM_GUEST) or ($lastrow['username'] == '') )
 		{
-			$last_pic_info .= ($lastrow['pic_username'] == '') ? $user->lang['GUEST'] : $lastrow['pic_username'];
+			$last_pic_info .= ($lastrow['image_username'] == '') ? $user->lang['GUEST'] : $lastrow['image_username'];
 		}
 		else
 		{
 			$last_pic_info .= '<a href="'. append_sid("../memberlist.$phpEx?mode=viewprofile&amp;u=" . $lastrow['user_id']) .'" class="username-coloured">'. $lastrow['username'] .'</a> ';
 		}
 //		$last_pic_info .= '<a href="'. append_sid("../memberlist.$phpEx?mode=viewprofile&amp;u=". $lastrow['user_id']) .'" style="color: #' . $user->data['user_colour'] . ';" class="username-coloured">'. $lastrow['username'] .'</a> ';
-		$last_pic_info .= '<a href="' . append_sid("./image_page.$phpEx?id=". $lastrow['pic_id']) .'"><img src="../styles/prosilver/imageset/icon_topic_latest.gif" width="11" height="9" alt="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" title="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" /></a><br />';
-		$last_pic_info .= $user->lang['POSTED_ON_DATE'] . ' ' . $user->format_date($lastrow['pic_time']);
+		$last_pic_info .= '<a href="' . append_sid("./image_page.$phpEx?id=". $lastrow['image_id']) .'"><img src="../styles/prosilver/imageset/icon_topic_latest.gif" width="11" height="9" alt="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" title="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" /></a><br />';
+		$last_pic_info .= $user->lang['POSTED_ON_DATE'] . ' ' . $user->format_date($lastrow['image_time']);
 */
 
 	if(!isset($album_config['last_pic_title_length'])) 
@@ -162,7 +162,7 @@ for ($i = 0; $i < count($memberrow); $i++)
 	}
 	$last_pic_info  = $user->lang['IMAGE_TITLE'] . ': <a href="'; 
 	$last_pic_info .= ($album_config['fullpic_popup']) ? append_sid("image_page.$phpEx?pic_id=" . $pic_id) . '" title="' . $pic_title_full . '">' : append_sid("image_page.$phpEx?pic_id=" . $pic_id) . '" title="' . $pic_title_full . '">'; 
-	$last_pic_info .= $pic_title . '</a><br />' . $user->lang['POSTED_ON_DATE'] . ' ' . $user->format_date($memberrow[$i]['pic_time']);
+	$last_pic_info .= $pic_title . '</a><br />' . $user->lang['POSTED_ON_DATE'] . ' ' . $user->format_date($memberrow[$i]['image_time']);
 
 	$template->assign_block_vars('memberrow', array(
 		'ROW_CLASS'			=> ( !($i % 2) ) ? 'bg1' : 'bg2',
@@ -177,7 +177,7 @@ for ($i = 0; $i < count($memberrow); $i++)
 $sql = 'SELECT COUNT(DISTINCT u.user_id) AS total
 	FROM ' . USERS_TABLE . ' AS u, '. GALLERY_IMAGES_TABLE . ' AS p
 	WHERE u.user_id <> ' . ANONYMOUS . '
-		AND u.user_id = p.pic_user_id
+		AND u.user_id = p.image_user_id
 		AND p.image_album_id = ' . PERSONAL_GALLERY;
 
 $result = $db->sql_query($sql);

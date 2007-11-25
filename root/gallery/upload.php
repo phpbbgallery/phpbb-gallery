@@ -93,9 +93,9 @@ if ($album_id <> PERSONAL_GALLERY)
 	}
 	if ($check_user_limit)
 	{
-		$sql = 'SELECT COUNT(pic_id) AS count
+		$sql = 'SELECT COUNT(image_id) AS count
 			FROM ' . GALLERY_IMAGES_TABLE . '
-			WHERE pic_user_id = ' . $user->data['user_id'] . '
+			WHERE image_user_id = ' . $user->data['user_id'] . '
 				AND image_album_id = ' . $album_id;
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
@@ -445,18 +445,18 @@ else
 	}
 
 	$sql_ary = array(
-		'pic_filename' 		=> $pic_filename,
-		'pic_thumbnail'		=> $pic_thumbnail,
-		'pic_title'			=> $pic_title,
-		'pic_desc'					=> $message_parser->message,
-		'pic_desc_bbcode_uid'		=> $message_parser->bbcode_uid,
-		'pic_desc_bbcode_bitfield'	=> $message_parser->bbcode_bitfield,
-		'pic_user_id'		=> $pic_user_id,
-		'pic_user_ip'		=> $pic_user_ip,
-		'pic_username'		=> $pic_username,
-		'pic_time'			=> $pic_time,
+		'image_filename' 		=> $pic_filename,
+		'image_thumbnail'		=> $pic_thumbnail,
+		'image_name'			=> $pic_title,
+		'image_desc'					=> $message_parser->message,
+		'image_desc_uid'		=> $message_parser->bbcode_uid,
+		'image_desc_bitfield'	=> $message_parser->bbcode_bitfield,
+		'image_user_id'		=> $pic_user_id,
+		'image_user_ip'		=> $pic_user_ip,
+		'image_username'		=> $pic_username,
+		'image_time'			=> $pic_time,
 		'image_album_id'		=> $album_id,
-		'pic_approval'		=> $pic_approval,
+		'image_approval'		=> $pic_approval,
 	);
 
 	$db->sql_query('INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));

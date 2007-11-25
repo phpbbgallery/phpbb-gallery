@@ -55,7 +55,7 @@ else if ($album_data['album_type'] == 2)
 }
 if ($mode == 'albums')
 {//we have this twice, we could build a function to keep the bytes down (see gallery/index.php)
-	$sql = 'SELECT ga.*, COUNT(p.pic_id) AS count
+	$sql = 'SELECT ga.*, COUNT(p.image_id) AS count
 			FROM ' . GALLERY_ALBUMS_TABLE . ' AS ga
 				LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' AS p ON ga.album_id = p.image_album_id
 			WHERE ga.album_id <> 0
@@ -149,7 +149,7 @@ if ($mode == 'albums')
 
 			if (($album[$i]['album_approval'] == ALBUM_ADMIN) || ($album[$i]['album_approval'] == ALBUM_MOD))
 			{
-				$pic_approval_sql = 'AND p.pic_approval = 1';
+				$pic_approval_sql = 'AND p.image_approval = 1';
 			}
 			else
 			{
@@ -161,11 +161,11 @@ if ($mode == 'albums')
 			// OK, we may do a query now...
 			// ----------------------------
 
-			$sql = 'SELECT p.pic_id, p.pic_title, p.pic_user_id, p.pic_username, p.pic_time, p.image_album_id, u.user_id, u.username, u.user_colour
+			$sql = 'SELECT p.image_id, p.image_name, p.image_user_id, p.image_username, p.image_time, p.image_album_id, u.user_id, u.username, u.user_colour
 					FROM ' . GALLERY_IMAGES_TABLE . ' AS p
-						LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
+						LEFT JOIN ' . USERS_TABLE . ' AS u ON p.image_user_id = u.user_id
 					WHERE p.image_album_id = ' . $album[$i]['album_id'] . ' ' . $pic_approval_sql . ' 
-						ORDER BY p.pic_time DESC
+						ORDER BY p.image_time DESC
 						LIMIT 1';
 			$result = $db->sql_query($sql);
 			$lastrow = $db->sql_fetchrow($result);
@@ -176,16 +176,16 @@ if ($mode == 'albums')
 			{
 				$album_config['last_pic_title_length'] = 25;
 			}
-			if (strlen($lastrow['pic_title']) > $album_config['last_pic_title_length'])
+			if (strlen($lastrow['image_name']) > $album_config['last_pic_title_length'])
 			{
-				$lastrow['pic_title'] = substr($lastrow['pic_title'], 0, $album_config['last_pic_title_length']) . '...';
+				$lastrow['image_name'] = substr($lastrow['image_name'], 0, $album_config['last_pic_title_length']) . '...';
 			}
-			$last_pic_info .= '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $lastrow['pic_id']) . '" style="font-weight: bold;">';
-			$last_pic_info .= $lastrow['pic_title'] . '</a><br />' . $user->lang['POST_BY_AUTHOR'] . ' ';
+			$last_pic_info .= '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $lastrow['image_id']) . '" style="font-weight: bold;">';
+			$last_pic_info .= $lastrow['image_name'] . '</a><br />' . $user->lang['POST_BY_AUTHOR'] . ' ';
 			$last_pic_info .= get_username_string('full', $lastrow['user_id'], ($lastrow['user_id'] <> ANONYMOUS) ? $lastrow['username'] : $user->lang['GUEST'], $lastrow['user_colour']);
 	//		$last_pic_info .= '<a href="' . append_sid("../memberlist.$phpEx?mode=viewprofile&amp;u=". $lastrow['user_id']) .'" style="color: #' . $user->data['user_colour'] . ';" class="username-coloured">'. $lastrow['username'] .'</a> ';
-			$last_pic_info .= '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $lastrow['pic_id']) . '"><img src="' . $phpbb_root_path . 'styles/prosilver/imageset/icon_topic_latest.gif" width="11" height="9" alt="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" title="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" /></a><br />';
-			$last_pic_info .= $user->lang['POSTED_ON_DATE'] . ' ' . $user->format_date($lastrow['pic_time']);
+			$last_pic_info .= '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $lastrow['image_id']) . '"><img src="' . $phpbb_root_path . 'styles/prosilver/imageset/icon_topic_latest.gif" width="11" height="9" alt="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" title="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" /></a><br />';
+			$last_pic_info .= $user->lang['POSTED_ON_DATE'] . ' ' . $user->format_date($lastrow['image_time']);
 		}
 		if ($album[$i]['left_id'] + 1 != $album[$i]['right_id'])
 		{
@@ -256,7 +256,7 @@ else if ($mode == 'images')
 	// ------------------------------------
 	// Get this cat info
 	// ------------------------------------
-	$sql = 'SELECT ga.*, COUNT(p.pic_id) AS count
+	$sql = 'SELECT ga.*, COUNT(p.image_id) AS count
 			FROM ' . GALLERY_ALBUMS_TABLE . ' AS ga LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' AS p ON ga.album_id = p.image_album_id
 			WHERE ga.album_id <> 0
 				GROUP BY ga.album_id
@@ -404,7 +404,7 @@ else if ($mode == 'images')
 	if ($total_pics > 0)
 	{
 		$limit_sql = ($start == 0) ? $pics_per_page : $start .','. $pics_per_page;
-		$pic_approval_sql = 'AND p.pic_approval = 1';
+		$pic_approval_sql = 'AND p.image_approval = 1';
 		if ($thiscat['album_approval'] <> ALBUM_USER)
 		{
 			if (($user->data['user_type'] == USER_FOUNDER) || (($auth_data['moderator'] == 1) && ($thiscat['album_approval'] == ALBUM_MOD)))
@@ -415,11 +415,11 @@ else if ($mode == 'images')
 
 		$sql = 'SELECT p.*, u.user_id , u.username, u.user_colour, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
 			FROM ' . GALLERY_IMAGES_TABLE . ' AS p
-				LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
-				LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r ON p.pic_id = r.rate_image_id
-				LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c ON p.pic_id = c.comment_image_id 
+				LEFT JOIN ' . USERS_TABLE . ' AS u ON p.image_user_id = u.user_id
+				LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r ON p.image_id = r.rate_image_id
+				LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c ON p.image_id = c.comment_image_id 
 			WHERE p.image_album_id = ' . $album_id . ' 
-			GROUP BY p.pic_id
+			GROUP BY p.image_id
 			ORDER BY ' . $sort_method . ' ' . $sort_order . ' 
 			LIMIT ' . $limit_sql;
 		$result = $db->sql_query($sql);
@@ -433,16 +433,16 @@ else if ($mode == 'images')
 
 		for ($i = 0 ; $i < count($picrow); $i++ )
 		{
-			if ($picrow[$i]['pic_approval'] == 0 ) $tot_unapproved++ ;
+			if ($picrow[$i]['image_approval'] == 0 ) $tot_unapproved++ ;
 		}
 
 		$sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
 			FROM ' . GALLERY_IMAGES_TABLE . ' AS p
-				LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
-				LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r ON p.pic_id = r.rate_image_id
-				LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c ON p.pic_id = c.comment_image_id
+				LEFT JOIN ' . USERS_TABLE . ' AS u ON p.image_user_id = u.user_id
+				LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r ON p.image_id = r.rate_image_id
+				LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c ON p.image_id = c.comment_image_id
 				WHERE p.image_album_id = ' . $album_id . ' ' . $pic_approval_sql . ' 
-				GROUP BY p.pic_id
+				GROUP BY p.image_id
 				ORDER BY ' . $sort_method . ' ' . $sort_order . ' 
 				LIMIT ' . $limit_sql;
 		$result = $db->sql_query($sql);
@@ -482,35 +482,35 @@ else if ($mode == 'images')
 				{
 					if (($user->data['user_type'] == USER_FOUNDER) || (($auth_data['moderator'] == 1) && ($thiscat['album_approval'] == ALBUM_MOD)))
 					{
-						$approval_mode = ($picrow[$j]['pic_approval'] == 0) ? 'approval' : 'unapproval';
-						$approval_link = '<a href="'. append_sid("mcp.$phpEx?mode=$approval_mode&amp;pic_id=" . $picrow[$j]['pic_id']) . '">';
-						$approval_link .= ($picrow[$j]['pic_approval'] == 0) ? '<b>' . $user->lang['APPROVE'] . '</b>' : $user->lang['UNAPPROVE'];
+						$approval_mode = ($picrow[$j]['image_approval'] == 0) ? 'approval' : 'unapproval';
+						$approval_link = '<a href="'. append_sid("mcp.$phpEx?mode=$approval_mode&amp;pic_id=" . $picrow[$j]['image_id']) . '">';
+						$approval_link .= ($picrow[$j]['image_approval'] == 0) ? '<b>' . $user->lang['APPROVE'] . '</b>' : $user->lang['UNAPPROVE'];
 						$approval_link .= '</a>';
 					}
 				}
 
 				$message_parser				= new parse_message();
-				$message_parser->message	= $picrow[$j]['pic_desc'];
-				$message_parser->decode_message($picrow[$j]['pic_desc_bbcode_uid']);
+				$message_parser->message	= $picrow[$j]['image_desc'];
+				$message_parser->decode_message($picrow[$j]['image_desc_uid']);
 				$template->assign_block_vars('picrow.piccol', array(
-					'U_PIC'			=> ($album_config['fullpic_popup']) ? append_sid("image.$phpEx?pic_id=" . $picrow[$j]['pic_id']) : append_sid("image_page.$phpEx?id=" . $picrow[$j]['pic_id']),
-					'THUMBNAIL'		=> append_sid("thumbnail.$phpEx?pic_id=" . $picrow[$j]['pic_id']),
+					'U_PIC'			=> ($album_config['fullpic_popup']) ? append_sid("image.$phpEx?pic_id=" . $picrow[$j]['image_id']) : append_sid("image_page.$phpEx?id=" . $picrow[$j]['image_id']),
+					'THUMBNAIL'		=> append_sid("thumbnail.$phpEx?pic_id=" . $picrow[$j]['image_id']),
 					'DESC'			=> $message_parser->message,
 					'APPROVAL'		=> $approval_link,
 				));
 
 				$template->assign_block_vars('picrow.pic_detail', array(
-					'TITLE'		=> $picrow[$j]['pic_title'],
+					'TITLE'		=> $picrow[$j]['image_name'],
 					'POSTER'	=> get_username_string('full', $picrow[$j]['user_id'], ($picrow[$j]['user_id'] <> ANONYMOUS) ? $picrow[$j]['username'] : $user->lang['GUEST'], $picrow[$j]['user_colour']),
-					'TIME'		=> $user->format_date($picrow[$j]['pic_time']),
-					'VIEW'		=> $picrow[$j]['pic_view_count'],
-					'RATING'	=> ($album_config['rate'] == 1) ? ( '<a href="' . append_sid("image_page.$phpEx?id=" . $picrow[$j]['pic_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $picrow[$j]['rating'] . '<br />') : '',
-					'COMMENTS'	=> ($album_config['comment'] == 1) ? ( '<a href="' . append_sid("image_page.$phpEx?id=" . $picrow[$j]['pic_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $picrow[$j]['comments'] . '<br />') : '',
-					'EDIT'		=> ( ( $auth_data['edit'] && ($picrow[$j]['pic_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($thiscat['album_edit_level'] <> ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="' . append_sid("edit.$phpEx?pic_id=" . $picrow[$j]['pic_id']) . '">' . $user->lang['EDIT_IMAGE'] . '</a>' : '',
-					'DELETE'	=> ( ( $auth_data['delete'] && ($picrow[$j]['pic_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($thiscat['album_delete_level'] <> ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="' . append_sid("image_delete.$phpEx?id=" . $picrow[$j]['pic_id']) . '">' . $user->lang['DELETE_IMAGE'] . '</a>' : '',
-					'MOVE'		=> ($auth_data['moderator']) ? '<a href="' . append_sid("mcp.$phpEx?mode=move&amp;pic_id=" . $picrow[$j]['pic_id']) . '">' . $user->lang['MOVE'] . '</a>' : '',
-					'LOCK'		=> ($auth_data['moderator']) ? '<a href="' . append_sid("mcp.$phpEx?mode=" . (($picrow[$j]['pic_lock'] == 0) ? 'lock' : 'unlock') . "&amp;pic_id=" . $picrow[$j]['pic_id']) . '">' . (($picrow[$j]['pic_lock'] == 0) ? $user->lang['LOCK'] : $user->lang['UNLOCK']) . '</a>' : '',
-					'IP'		=> ($user->data['user_type'] == USER_FOUNDER) ? $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $picrow[$j]['pic_user_ip'] . '" target="_blank">' . $picrow[$j]['pic_user_ip'] . '</a><br />' : ''
+					'TIME'		=> $user->format_date($picrow[$j]['image_time']),
+					'VIEW'		=> $picrow[$j]['image_view_count'],
+					'RATING'	=> ($album_config['rate'] == 1) ? ( '<a href="' . append_sid("image_page.$phpEx?id=" . $picrow[$j]['image_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $picrow[$j]['rating'] . '<br />') : '',
+					'COMMENTS'	=> ($album_config['comment'] == 1) ? ( '<a href="' . append_sid("image_page.$phpEx?id=" . $picrow[$j]['image_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $picrow[$j]['comments'] . '<br />') : '',
+					'EDIT'		=> ( ( $auth_data['edit'] && ($picrow[$j]['image_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($thiscat['album_edit_level'] <> ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="' . append_sid("edit.$phpEx?pic_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['EDIT_IMAGE'] . '</a>' : '',
+					'DELETE'	=> ( ( $auth_data['delete'] && ($picrow[$j]['image_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($thiscat['album_delete_level'] <> ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="' . append_sid("image_delete.$phpEx?id=" . $picrow[$j]['image_id']) . '">' . $user->lang['DELETE_IMAGE'] . '</a>' : '',
+					'MOVE'		=> ($auth_data['moderator']) ? '<a href="' . append_sid("mcp.$phpEx?mode=move&amp;pic_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['MOVE'] . '</a>' : '',
+					'LOCK'		=> ($auth_data['moderator']) ? '<a href="' . append_sid("mcp.$phpEx?mode=" . (($picrow[$j]['image_lock'] == 0) ? 'lock' : 'unlock') . "&amp;pic_id=" . $picrow[$j]['image_id']) . '">' . (($picrow[$j]['image_lock'] == 0) ? $user->lang['LOCK'] : $user->lang['UNLOCK']) . '</a>' : '',
+					'IP'		=> ($user->data['user_type'] == USER_FOUNDER) ? $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $picrow[$j]['image_user_ip'] . '" target="_blank">' . $picrow[$j]['image_user_ip'] . '</a><br />' : ''
 					)
 				);
 			}
@@ -588,10 +588,10 @@ else if ($mode == 'images')
 		'S_ALBUM_ACTION' 			=> append_sid("album.$phpEx?id=$album_id"),
 		'TARGET_BLANK' 				=> ($album_config['fullpic_popup']) ? 'target="_blank"' : '',
 
-		'SORT_TIME' 				=> ($sort_method == 'pic_time') ? 'selected="selected"' : '',
-		'SORT_PIC_TITLE' 			=> ($sort_method == 'pic_title') ? 'selected="selected"' : '',
+		'SORT_TIME' 				=> ($sort_method == 'image_time') ? 'selected="selected"' : '',
+		'SORT_PIC_TITLE' 			=> ($sort_method == 'image_name') ? 'selected="selected"' : '',
 		'SORT_USERNAME' 			=> ($sort_method == 'username') ? 'selected="selected"' : '',
-		'SORT_VIEW' 				=> ($sort_method == 'pic_view_count') ? 'selected="selected"' : '',
+		'SORT_VIEW' 				=> ($sort_method == 'image_view_count') ? 'selected="selected"' : '',
 
 		'SORT_RATING_OPTION' 		=> $sort_rating_option,
 		'SORT_COMMENTS_OPTION' 		=> $sort_comments_option,

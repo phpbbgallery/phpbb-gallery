@@ -46,9 +46,9 @@ if( isset($_GET['mode']) )
 {
 	if( ($_GET['mode'] == 'next') || ($_GET['mode'] == 'previous') )
 	{
-		$sql = 'SELECT pic_id, image_album_id, pic_user_id
+		$sql = 'SELECT image_id, image_album_id, image_user_id
 			FROM ' . GALLERY_IMAGES_TABLE . '
-			WHERE pic_id = '. $pic_id;
+			WHERE image_id = '. $pic_id;
 
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
@@ -58,15 +58,15 @@ if( isset($_GET['mode']) )
 			trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_WARNING);
 		}
 
-		$sql = 'SELECT new.pic_id, new.pic_time
+		$sql = 'SELECT new.image_id, new.image_time
 			FROM ' . GALLERY_IMAGES_TABLE . ' AS new, ' . GALLERY_IMAGES_TABLE . ' AS cur
-			WHERE cur.pic_id = ' . $pic_id . '
-				AND new.pic_id <> cur.pic_id
+			WHERE cur.image_id = ' . $pic_id . '
+				AND new.image_id <> cur.image_id
 				AND new.image_album_id = cur.image_album_id';
 
-		$sql .= ($_GET['mode'] == 'next') ? ' AND new.pic_time >= cur.pic_time' : ' AND new.pic_time <= cur.pic_time';
-		$sql .= ($row['image_album_id'] == PERSONAL_GALLERY) ? ' AND new.pic_user_id = cur.pic_user_id' : '';
-		$sql .= ($_GET['mode'] == 'next') ? ' ORDER BY pic_time ASC LIMIT 1' : ' ORDER BY pic_time DESC LIMIT 1';
+		$sql .= ($_GET['mode'] == 'next') ? ' AND new.image_time >= cur.image_time' : ' AND new.image_time <= cur.image_time';
+		$sql .= ($row['image_album_id'] == PERSONAL_GALLERY) ? ' AND new.image_user_id = cur.image_user_id' : '';
+		$sql .= ($_GET['mode'] == 'next') ? ' ORDER BY image_time ASC LIMIT 1' : ' ORDER BY image_time DESC LIMIT 1';
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
 		if (empty($row))
@@ -74,7 +74,7 @@ if( isset($_GET['mode']) )
 			trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_WARNING);
 		}
 
-		$pic_id = $row['pic_id'];
+		$pic_id = $row['image_id'];
 	}
 } 
 
@@ -86,20 +86,20 @@ if( isset($_GET['mode']) )
 $sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments
 		FROM ' . GALLERY_IMAGES_TABLE . ' AS p
 		LEFT JOIN ' . USERS_TABLE . ' AS u
-			ON p.pic_user_id = u.user_id
+			ON p.image_user_id = u.user_id
 		LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
-			ON p.pic_id = r.rate_image_id
+			ON p.image_id = r.rate_image_id
 		LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
-			ON p.pic_id = c.comment_image_id
-		WHERE pic_id = ' . $pic_id . '
-		GROUP BY p.pic_id';
+			ON p.image_id = c.comment_image_id
+		WHERE image_id = ' . $pic_id . '
+		GROUP BY p.image_id';
 $result = $db->sql_query($sql);
 $thispic = $db->sql_fetchrow($result);
 
 $album_id = $thispic['image_album_id'];
-$user_id = $thispic['pic_user_id'];
+$user_id = $thispic['image_user_id'];
 
-if (empty($thispic) || !file_exists(ALBUM_UPLOAD_PATH . $thispic['pic_filename']))
+if (empty($thispic) || !file_exists(ALBUM_UPLOAD_PATH . $thispic['image_filename']))
 {
 	trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_WARNING);
 }
@@ -179,7 +179,7 @@ if ($user->data['user_type'] <> USER_FOUNDER)
 {
 	if (($thiscat['album_approval'] == ADMIN) || (($thiscat['album_approval'] == MOD) || !$album_user_access['moderator']))
 	{
-		if (!$thispic['pic_approval'])
+		if (!$thispic['image_approval'])
 		{
 			trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 		}
@@ -215,7 +215,7 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 		// --------------------------------
 		// Check Pic Locked
 		// --------------------------------
-		if (($thispic['pic_lock']) && (!$auth_data['moderator']))
+		if (($thispic['image_lock']) && (!$auth_data['moderator']))
 		{
 			trigger_error($user->lang['IMAGE_LOCKED'], E_USER_WARNING);
 		}
@@ -339,15 +339,15 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 }
 
 // Next
-$sql = 'SELECT new.pic_id, new.pic_time
+$sql = 'SELECT new.image_id, new.image_time
 	FROM ' . GALLERY_IMAGES_TABLE . ' AS new, ' . GALLERY_IMAGES_TABLE . ' AS cur
-	WHERE cur.pic_id = ' . $pic_id . '
-		AND new.pic_id <> cur.pic_id
+	WHERE cur.image_id = ' . $pic_id . '
+		AND new.image_id <> cur.image_id
 		AND new.image_album_id = cur.image_album_id
-		AND new.pic_time >= cur.pic_time';
+		AND new.image_time >= cur.image_time';
 
-$sql .= ($thispic['image_album_id'] == PERSONAL_GALLERY) ? ' AND new.pic_user_id = cur.pic_user_id' : '';
-$sql .= ' ORDER BY pic_time ASC LIMIT 1';
+$sql .= ($thispic['image_album_id'] == PERSONAL_GALLERY) ? ' AND new.image_user_id = cur.image_user_id' : '';
+$sql .= ' ORDER BY image_time ASC LIMIT 1';
 
 $result = $db->sql_query($sql);
 
@@ -360,21 +360,21 @@ if (empty($row))
 }
 else
 {
-	$new_pic_id = $row['pic_id'];
+	$new_pic_id = $row['image_id'];
 	$u_next = append_sid("image_page.$phpEx?id=$new_pic_id");
 	$l_next = $user->lang['NEXT'] . "&nbsp;&raquo;";
 }
 
 // Prev
-$sql = 'SELECT new.pic_id, new.pic_time
+$sql = 'SELECT new.image_id, new.image_time
 	FROM ' . GALLERY_IMAGES_TABLE . ' AS new, ' . GALLERY_IMAGES_TABLE . ' AS cur
-	WHERE cur.pic_id = ' . $pic_id . '
-		AND new.pic_id <> cur.pic_id
+	WHERE cur.image_id = ' . $pic_id . '
+		AND new.image_id <> cur.image_id
 		AND new.image_album_id = cur.image_album_id
-		AND new.pic_time <= cur.pic_time';
+		AND new.image_time <= cur.image_time';
 
-$sql .= ($thispic['image_album_id'] == PERSONAL_GALLERY) ? ' AND new.pic_user_id = cur.pic_user_id' : '';
-$sql .= ' ORDER BY pic_time DESC LIMIT 1';
+$sql .= ($thispic['image_album_id'] == PERSONAL_GALLERY) ? ' AND new.image_user_id = cur.image_user_id' : '';
+$sql .= ' ORDER BY image_time DESC LIMIT 1';
 
 $result = $db->sql_query($sql);
 
@@ -387,7 +387,7 @@ if( empty($row) )
 }
 else
 {
-	$new_pic_id = $row['pic_id'];
+	$new_pic_id = $row['image_id'];
 	$u_prev = append_sid("image_page.$phpEx?id=$new_pic_id");
 	$l_prev = "&laquo;&nbsp;" . $user->lang['PREVIOUS'];
 }
@@ -403,11 +403,11 @@ $template->assign_vars(array(
 	'U_VIEW_CAT'	=> ($album_id <> PERSONAL_GALLERY) ? append_sid("album.$phpEx?id=$album_id") : append_sid("album_personal.$phpEx?user_id=$user_id"),
 
 	'U_PIC'			=> append_sid("image.$phpEx?pic_id=$pic_id"),
-	'PIC_TITLE'		=> $thispic['pic_title'],
-	'PIC_DESC'		=> generate_text_for_display($thispic['pic_desc'], $thispic['pic_desc_bbcode_uid'], $thispic['pic_desc_bbcode_bitfield'], 7),
+	'PIC_TITLE'		=> $thispic['image_name'],
+	'PIC_DESC'		=> generate_text_for_display($thispic['image_desc'], $thispic['image_desc_uid'], $thispic['image_desc_bitfield'], 7),
 	'POSTER'		=> get_username_string('full', $thispic['user_id'], ($thispic['user_id'] <> ANONYMOUS) ? $thispic['username'] : $user->lang['GUEST'], $thispic['user_colour']),
-	'PIC_TIME'		=> $user->format_date($thispic['pic_time']),
-	'PIC_VIEW'		=> $thispic['pic_view_count'],
+	'PIC_TIME'		=> $user->format_date($thispic['image_time']),
+	'PIC_VIEW'		=> $thispic['image_view_count'],
 
 	'U_NEXT'		=> $u_next,
 	'U_PREVIOUS'	=> $u_prev,

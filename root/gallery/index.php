@@ -35,7 +35,7 @@ include($album_root_path . 'includes/common.'.$phpEx);
 +----------------------------------------------------------
 */
 
-$sql = 'SELECT a.*, COUNT(p.pic_id) AS count
+$sql = 'SELECT a.*, COUNT(p.image_id) AS count
 		FROM ' . GALLERY_ALBUMS_TABLE . ' AS a
 			LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' AS p ON a.album_id = p.image_album_id
 		WHERE a.album_id <> 0
@@ -129,7 +129,7 @@ for ($i = 0; $i < count($album); $i++)
 
 		if (($album[$i]['album_approval'] == ALBUM_ADMIN) || ($album[$i]['album_approval'] == ALBUM_MOD))
 		{
-			$pic_approval_sql = 'AND p.pic_approval = 1';
+			$pic_approval_sql = 'AND p.image_approval = 1';
 		}
 		else
 		{
@@ -141,11 +141,11 @@ for ($i = 0; $i < count($album); $i++)
 		// OK, we may do a query now...
 		// ----------------------------
 
-		$sql = 'SELECT p.pic_id, p.pic_title, p.pic_user_id, p.pic_username, p.pic_time, p.image_album_id, u.user_id, u.username, u.user_colour
+		$sql = 'SELECT p.image_id, p.image_name, p.image_user_id, p.image_username, p.image_time, p.image_album_id, u.user_id, u.username, u.user_colour
 				FROM ' . GALLERY_IMAGES_TABLE . ' AS p
-					LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
+					LEFT JOIN ' . USERS_TABLE . ' AS u ON p.image_user_id = u.user_id
 				WHERE p.image_album_id = ' . $album[$i]['album_id'] . ' ' . $pic_approval_sql . ' 
-					ORDER BY p.pic_time DESC
+					ORDER BY p.image_time DESC
 					LIMIT 1';
 		$result = $db->sql_query($sql);
 		$lastrow = $db->sql_fetchrow($result);
@@ -156,16 +156,16 @@ for ($i = 0; $i < count($album); $i++)
 		{
 			$album_config['last_pic_title_length'] = 25;
 		}
-		if (strlen($lastrow['pic_title']) > $album_config['last_pic_title_length'])
+		if (strlen($lastrow['image_name']) > $album_config['last_pic_title_length'])
 		{
-			$lastrow['pic_title'] = substr($lastrow['pic_title'], 0, $album_config['last_pic_title_length']) . '...';
+			$lastrow['image_name'] = substr($lastrow['image_name'], 0, $album_config['last_pic_title_length']) . '...';
 		}
-		$last_pic_info .= '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $lastrow['pic_id']) . '" style="font-weight: bold;">';
-		$last_pic_info .= $lastrow['pic_title'] . '</a><br />' . $user->lang['POST_BY_AUTHOR'] . ' ';
+		$last_pic_info .= '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $lastrow['image_id']) . '" style="font-weight: bold;">';
+		$last_pic_info .= $lastrow['image_name'] . '</a><br />' . $user->lang['POST_BY_AUTHOR'] . ' ';
 		$last_pic_info .= get_username_string('full', $lastrow['user_id'], ($lastrow['user_id'] <> ANONYMOUS) ? $lastrow['username'] : $user->lang['GUEST'], $lastrow['user_colour']);
 //		$last_pic_info .= '<a href="' . append_sid("../memberlist.$phpEx?mode=viewprofile&amp;u=". $lastrow['user_id']) .'" style="color: #' . $user->data['user_colour'] . ';" class="username-coloured">'. $lastrow['username'] .'</a> ';
-		$last_pic_info .= '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $lastrow['pic_id']) . '"><img src="' . $phpbb_root_path . 'styles/prosilver/imageset/icon_topic_latest.gif" width="11" height="9" alt="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" title="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" /></a><br />';
-		$last_pic_info .= $user->lang['POSTED_ON_DATE'] . ' ' . $user->format_date($lastrow['pic_time']);
+		$last_pic_info .= '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $lastrow['image_id']) . '"><img src="' . $phpbb_root_path . 'styles/prosilver/imageset/icon_topic_latest.gif" width="11" height="9" alt="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" title="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" /></a><br />';
+		$last_pic_info .= $user->lang['POSTED_ON_DATE'] . ' ' . $user->format_date($lastrow['image_time']);
 	}
 	if ($album[$i]['left_id'] + 1 != $album[$i]['right_id'])
 	{
@@ -216,14 +216,14 @@ if ($allowed_cat <> '')
 {
 	$sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments
 			FROM ' . GALLERY_IMAGES_TABLE . ' AS p
-				LEFT JOIN ' . USERS_TABLE . ' AS u ON p.pic_user_id = u.user_id
+				LEFT JOIN ' . USERS_TABLE . ' AS u ON p.image_user_id = u.user_id
 				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' AS ct ON p.image_album_id = ct.album_id
-				LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r ON p.pic_id = r.rate_image_id
-				LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c ON p.pic_id = c.comment_image_id
+				LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r ON p.image_id = r.rate_image_id
+				LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c ON p.image_id = c.comment_image_id
 			WHERE p.image_album_id IN (' . $allowed_cat . ') 
-				AND ( p.pic_approval = 1 OR ct.album_approval = 0 )
-			GROUP BY p.pic_id
-			ORDER BY p.pic_time DESC
+				AND ( p.image_approval = 1 OR ct.album_approval = 0 )
+			GROUP BY p.image_id
+			ORDER BY p.image_time DESC
 			LIMIT ' . $album_config['cols_per_page'];
 	$result = $db->sql_query($sql);
 
@@ -257,28 +257,28 @@ if ($allowed_cat <> '')
 					$recentrow[$j]['rating'] = round($recentrow[$j]['rating'], 2);
 				}
 				$message_parser				= new parse_message();
-				$message_parser->message	= $recentrow[$j]['pic_desc'];
-				$message_parser->decode_message($recentrow[$j]['pic_desc_bbcode_uid']);
+				$message_parser->message	= $recentrow[$j]['image_desc'];
+				$message_parser->decode_message($recentrow[$j]['image_desc_uid']);
 				$template->assign_block_vars('recent_pics.recent_col', array(
-					'U_PIC' 		=> ($album_config['fullpic_popup']) ? append_sid("{$album_root_path}image.$phpEx?pic_id=". $recentrow[$j]['pic_id']) : append_sid("{$album_root_path}image_page.$phpEx?id=". $recentrow[$j]['pic_id']),
-					'THUMBNAIL' 	=> append_sid("{$album_root_path}thumbnail.$phpEx?pic_id=". $recentrow[$j]['pic_id']),
+					'U_PIC' 		=> ($album_config['fullpic_popup']) ? append_sid("{$album_root_path}image.$phpEx?pic_id=". $recentrow[$j]['image_id']) : append_sid("{$album_root_path}image_page.$phpEx?id=". $recentrow[$j]['image_id']),
+					'THUMBNAIL' 	=> append_sid("{$album_root_path}thumbnail.$phpEx?pic_id=". $recentrow[$j]['image_id']),
 					'DESC' 			=> $message_parser->message,
 					)
 				);
 
 				if ($recentrow[$j]['user_id'] == ALBUM_GUEST)
 				{
-					$recent_poster = ($recentrow[$j]['pic_username'] == '') ? $user->lang['GUEST'] : $recentrow[$j]['pic_username'];
+					$recent_poster = ($recentrow[$j]['image_username'] == '') ? $user->lang['GUEST'] : $recentrow[$j]['image_username'];
 				}
 
 				$template->assign_block_vars('recent_pics.recent_detail', array(
-					'TITLE'			=> $recentrow[$j]['pic_title'],
+					'TITLE'			=> $recentrow[$j]['image_name'],
 					'POSTER_FULL'	=> get_username_string('full', $recentrow[$j]['user_id'], ($recentrow[$j]['user_id'] <> ANONYMOUS) ? $recentrow[$j]['username'] : $user->lang['GUEST'], $recentrow[$j]['user_colour']),
-					'TIME'			=> $user->format_date($recentrow[$j]['pic_time']),
-					'VIEW'			=> $recentrow[$j]['pic_view_count'],
-					'RATING'		=> ($album_config['rate'] == 1) ? ( '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $recentrow[$j]['pic_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $recentrow[$j]['rating'] . '<br />') : '',
-					'COMMENTS'		=> ($album_config['comment'] == 1) ? ( '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $recentrow[$j]['pic_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $recentrow[$j]['comments'] . '<br />') : '',
-					'IP'			=> ($user->data['user_type'] == USER_FOUNDER) ? $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $recentrow[$j]['pic_user_ip'] . '" target="_blank">' . $recentrow[$j]['pic_user_ip'] . '</a><br />' : ''
+					'TIME'			=> $user->format_date($recentrow[$j]['image_time']),
+					'VIEW'			=> $recentrow[$j]['image_view_count'],
+					'RATING'		=> ($album_config['rate'] == 1) ? ( '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $recentrow[$j]['image_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $recentrow[$j]['rating'] . '<br />') : '',
+					'COMMENTS'		=> ($album_config['comment'] == 1) ? ( '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $recentrow[$j]['image_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $recentrow[$j]['comments'] . '<br />') : '',
+					'IP'			=> ($user->data['user_type'] == USER_FOUNDER) ? $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $recentrow[$j]['image_user_ip'] . '" target="_blank">' . $recentrow[$j]['image_user_ip'] . '</a><br />' : ''
 				));
 			}
 		}

@@ -82,14 +82,14 @@ else
 // We will check $pic_id[] in POST method later (in $mode carry out)
 // ------------------------------------
 
-$pic_id = request_var('pic_id', 0);
+$pic_id = request_var('image_id', 0);
 $album_id = request_var('album_id', 0);
 
 if($pic_id)
 {
 	$sql = 'SELECT *
 			FROM ' . GALLERY_IMAGES_TABLE . '
-			WHERE pic_id = ' . $pic_id;
+			WHERE image_id = ' . $pic_id;
 	$result = $db->sql_query($sql);
 
 	$thispic = $db->sql_fetchrow($result);
@@ -100,7 +100,7 @@ if($pic_id)
 	}
 
 	$album_id = $thispic['image_album_id'];
-	$user_id = $thispic['pic_user_id'];
+	$user_id = $thispic['image_user_id'];
 }
 
 
@@ -174,7 +174,7 @@ if ($mode == '')
 	$sort_order = request_var('sort_order', 'DESC');
 
 	// Count Pics
-	$sql = 'SELECT COUNT(pic_id) AS count
+	$sql = 'SELECT COUNT(image_id) AS count
 		FROM ' . GALLERY_IMAGES_TABLE . '
 		WHERE image_album_id = ' . $album_id;
 	$result = $db->sql_query($sql);
@@ -193,19 +193,19 @@ if ($mode == '')
 		if (($user->data['user_type'] <> USER_FOUNDER) && ($thiscat['cat_approval'] == ALBUM_ADMIN))
 		{
 			// because he went through my Permission Checking above so he must be at least a Moderator
-			$pic_approval_sql = ' AND p.pic_approval = 1';
+			$pic_approval_sql = ' AND p.image_approval = 1';
 		}
 
-		$sql = 'SELECT p.pic_id, p.pic_title, p.pic_user_id, p.pic_user_ip, p.pic_username, p.pic_time, p.image_album_id, p.pic_view_count, p.pic_lock, p.pic_approval, u.user_id, u.username, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(c.comment_id) AS comments, MAX(c.comment_id) AS new_comment
+		$sql = 'SELECT p.image_id, p.image_name, p.image_user_id, p.image_user_ip, p.image_username, p.image_time, p.image_album_id, p.image_view_count, p.image_lock, p.image_approval, u.user_id, u.username, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(c.comment_id) AS comments, MAX(c.comment_id) AS new_comment
 			FROM ' . GALLERY_IMAGES_TABLE . ' AS p
 			LEFT JOIN ' . USERS_TABLE . ' AS u
-				ON p.pic_user_id = u.user_id
+				ON p.image_user_id = u.user_id
 			LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
-				ON p.pic_id = r.rate_image_id
+				ON p.image_id = r.rate_image_id
 			LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
-				ON p.pic_id = c.comment_image_id
+				ON p.image_id = c.comment_image_id
 			WHERE p.image_album_id = ' . $album_id . ' ' . $pic_approval_sql . '
-			GROUP BY p.pic_id
+			GROUP BY p.image_id
 			ORDER BY ' . $sort_method . ' ' . $sort_order . '
 			LIMIT ' . $limit_sql;
 		$result = $db->sql_query($sql);
@@ -221,7 +221,7 @@ if ($mode == '')
 		{
 			if (($picrow[$i]['user_id'] == ALBUM_GUEST) || ($picrow[$i]['username'] == ''))
 			{
-				$pic_poster = ($picrow[$i]['pic_username'] == '') ? $user->lang['GUEST'] : $picrow[$i]['pic_username'];
+				$pic_poster = ($picrow[$i]['image_username'] == '') ? $user->lang['GUEST'] : $picrow[$i]['image_username'];
 			}
 			else
 			{
@@ -229,14 +229,14 @@ if ($mode == '')
 			}
 
 			$template->assign_block_vars('picrow', array(
-				'PIC_ID' 		=> $picrow[$i]['pic_id'],
-				'PIC_TITLE' 	=> '<a href="'. append_sid("image.$phpEx?pic_id=". $picrow[$i]['pic_id']) .'" target="_blank">'. $picrow[$i]['pic_title'] .'</a>',
+				'PIC_ID' 		=> $picrow[$i]['image_id'],
+				'PIC_TITLE' 	=> '<a href="'. append_sid("image.$phpEx?pic_id=". $picrow[$i]['image_id']) .'" target="_blank">'. $picrow[$i]['image_name'] .'</a>',
 				'POSTER' 		=> $pic_poster,
-				'TIME' 			=> $user->format_date($picrow[$i]['pic_time']),
+				'TIME' 			=> $user->format_date($picrow[$i]['image_time']),
 				'RATING' 		=> ($picrow[$i]['rating'] == 0) ? $user->lang['NOT_RATED'] : round($picrow[$i]['rating'], 2),
 				'COMMENTS' 		=> $picrow[$i]['comments'],
-				'LOCK' 			=> ($picrow[$i]['pic_lock'] == 0) ? '' : $user->lang['LOCKED'],
-				'APPROVAL' 		=> ($picrow[$i]['pic_approval'] == 0) ? $user->lang['NOT_APPROVED'] : $user->lang['APPROVED'],
+				'LOCK' 			=> ($picrow[$i]['image_lock'] == 0) ? '' : $user->lang['LOCKED'],
+				'APPROVAL' 		=> ($picrow[$i]['image_approval'] == 0) ? $user->lang['NOT_APPROVED'] : $user->lang['APPROVED'],
 			));
 		}
 
@@ -279,10 +279,10 @@ if ($mode == '')
 		'APPROVAL_BUTTON' 		=> (($user->data['user_type'] <> USER_FOUNDER) && ($thiscat['cat_approval'] == ALBUM_ADMIN)) ? '' : '<input type="submit" class="liteoption" name="approval" value="' . $user->lang['APPROVE'] . '" />',
 		'UNAPPROVAL_BUTTON' 	=> (($user->data['user_type'] <> USER_FOUNDER) && ($thiscat['cat_approval'] == ALBUM_ADMIN)) ? '' : '<input type="submit" class="liteoption" name="unapproval" value="' . $user->lang['UNAPPROVE'] . '" />',
 
-		'SORT_TIME' 			=> ($sort_method == 'pic_time') ? 'selected="selected"' : '',
-		'SORT_PIC_TITLE' 		=> ($sort_method == 'pic_title') ? 'selected="selected"' : '',
-		'SORT_USERNAME' 		=> ($sort_method == 'pic_user_id') ? 'selected="selected"' : '',
-		'SORT_VIEW' 			=> ($sort_method == 'pic_view_count') ? 'selected="selected"' : '',
+		'SORT_TIME' 			=> ($sort_method == 'image_time') ? 'selected="selected"' : '',
+		'SORT_PIC_TITLE' 		=> ($sort_method == 'image_name') ? 'selected="selected"' : '',
+		'SORT_USERNAME' 		=> ($sort_method == 'image_user_id') ? 'selected="selected"' : '',
+		'SORT_VIEW' 			=> ($sort_method == 'image_view_count') ? 'selected="selected"' : '',
 
 		'SORT_RATING_OPTION' 		=> $sort_rating_option,
 		'SORT_COMMENTS_OPTION' 		=> $sort_comments_option,
@@ -341,9 +341,9 @@ else
 			else
 			{
 				// Check $pic_id[] on POST Method now
-				if (isset($_POST['pic_id']))
+				if (isset($_POST['image_id']))
 				{
-					$pic_id_array = $_POST['pic_id'];
+					$pic_id_array = $_POST['image_id'];
 					if (!is_array($pic_id_array))
 					{
 						trigger_error('Invalid request', E_USER_WARNING);
@@ -445,9 +445,9 @@ else
 			// Do the MOVE action
 			//
 			// Now we only get $pic_id[] via POST (after the select target screen)
-			if (isset($_POST['pic_id']))
+			if (isset($_POST['image_id']))
 			{
-				$pic_id = $_POST['pic_id'];
+				$pic_id = $_POST['image_id'];
 				if( is_array($pic_id) )
 				{
 					$pic_id_sql = implode(',', $pic_id);
@@ -464,9 +464,9 @@ else
 
 			// well, we got the array of pic_id but we must do a check to make sure all these
 			// pics are in this category (prevent some naughty moderators to access un-authorised pics)
-			$sql = 'SELECT pic_id
+			$sql = 'SELECT image_id
 				FROM ' . GALLERY_IMAGES_TABLE . '
-				WHERE pic_id IN (' . $pic_id_sql . ') 
+				WHERE image_id IN (' . $pic_id_sql . ') 
 					AND image_album_id <> ' . $album_id;
 			$result = $db->sql_query($sql);
 
@@ -478,7 +478,7 @@ else
 			// Update the DB
 			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 				SET image_album_id = ' . intval($target) . '
-				WHERE pic_id IN (' . $pic_id_sql . ')';
+				WHERE image_id IN (' . $pic_id_sql . ')';
 			$result = $db->sql_query($sql);
 			$message = $user->lang['IMAGES_MOVED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
 			trigger_error($message, E_USER_WARNING);
@@ -502,7 +502,7 @@ else
 			));
 
 			$template->assign_block_vars('navlinks', array(
-				'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $thispic['pic_username']),
+				'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $thispic['image_username']),
 				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal.$phpEx", 'user_id=' . $user_id),
 			));
 		}
@@ -524,9 +524,9 @@ else
 		else
 		{
 			// Check $pic_id[] on POST Method now
-			if (isset($_POST['pic_id']))
+			if (isset($_POST['image_id']))
 			{
-				$pic_id = $_POST['pic_id'];
+				$pic_id = $_POST['image_id'];
 				if( is_array($pic_id) )
 				{
 					$pic_id_sql = implode(',', $pic_id);
@@ -542,11 +542,11 @@ else
 			}
 		}
 
-		// well, we got the array of pic_id but we must do a check to make sure all these
+		// well, we got the array of image_id but we must do a check to make sure all these
 		// pics are in this category (prevent some naughty moderators to access un-authorised pics)
-		$sql = 'SELECT pic_id
+		$sql = 'SELECT image_id
 			FROM ' . GALLERY_IMAGES_TABLE . '
-			WHERE pic_id IN (' . $pic_id_sql . ') 
+			WHERE image_id IN (' . $pic_id_sql . ') 
 				AND image_album_id <> ' . $cat_id;
 		$result = $db->sql_query($sql);
 		if ($db->sql_affectedrows($result) > 0)
@@ -556,8 +556,8 @@ else
 
 		// update the DB
 		$sql = 'UPDATE '. GALLERY_IMAGES_TABLE . '
-			SET pic_lock = 1
-			WHERE pic_id IN (' . $pic_id_sql . ')';
+			SET image_lock = 1
+			WHERE image_id IN (' . $pic_id_sql . ')';
 		$result = $db->sql_query($sql);
 
 		$message = $user->lang['IMAGES_LOCKED_SUCCESSFULLY'] .'<br /><br />';
@@ -592,7 +592,7 @@ else
 			));
 
 			$template->assign_block_vars('navlinks', array(
-				'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $thispic['pic_username']),
+				'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $thispic['image_username']),
 				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal.$phpEx", 'user_id=' . $user_id),
 			));
 		}
@@ -614,9 +614,9 @@ else
 		else
 		{
 			// Check $pic_id[] on POST Method now
-			if( isset($_POST['pic_id']) )
+			if( isset($_POST['image_id']) )
 			{
-				$pic_id = $_POST['pic_id'];
+				$pic_id = $_POST['image_id'];
 				if( is_array($pic_id) )
 				{
 					$pic_id_sql = implode(',', $pic_id);
@@ -632,11 +632,11 @@ else
 			}
 		}
 
-		// well, we got the array of pic_id but we must do a check to make sure all these
+		// well, we got the array of image_id but we must do a check to make sure all these
 		// pics are in this category (prevent some naughty moderators to access un-authorised pics)
-		$sql = 'SELECT pic_id
+		$sql = 'SELECT image_id
 			FROM ' . GALLERY_IMAGES_TABLE . '
-			WHERE pic_id IN (' . $pic_id_sql . ') 
+			WHERE image_id IN (' . $pic_id_sql . ') 
 				AND image_album_id <> ' . $cat_id;
 		$result = $db->sql_query($sql);
 		if( $db->sql_affectedrows($result) > 0 )
@@ -646,8 +646,8 @@ else
 		
 		// update the DB
 		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-			SET pic_lock = 0
-			WHERE pic_id IN (' . $pic_id_sql . ')';
+			SET image_lock = 0
+			WHERE image_id IN (' . $pic_id_sql . ')';
 		$result = $db->sql_query($sql);
 
 		$message = $user->lang['IMAGES_UNLOCKED_SUCCESSFULLY'] . '<br /><br />';
@@ -690,9 +690,9 @@ else
 		else
 		{
 			// Check $pic_id[] on POST Method now
-			if( isset($_POST['pic_id']) )
+			if( isset($_POST['image_id']) )
 			{
-				$pic_id = $_POST['pic_id'];
+				$pic_id = $_POST['image_id'];
 				if( is_array($pic_id) )
 				{
 					$pic_id_sql = implode(',', $pic_id);
@@ -710,9 +710,9 @@ else
 
 		// well, we got the array of pic_id but we must do a check to make sure all these
 		// pics are in this category (prevent some naughty moderators to access un-authorised pics)
-		$sql = 'SELECT pic_id
+		$sql = 'SELECT image_id
 			FROM ' . GALLERY_IMAGES_TABLE . '
-			WHERE pic_id IN (' . $pic_id_sql . ') 
+			WHERE image_id IN (' . $pic_id_sql . ') 
 				AND image_album_id <> ' . $cat_id;
 		$result = $db->sql_query($sql);
 		if( $db->sql_affectedrows($result) > 0 )
@@ -722,8 +722,8 @@ else
 
 		// update the DB
 		$sql = 'UPDATE '. GALLERY_IMAGES_TABLE . '
-			SET pic_approval = 1
-			WHERE pic_id IN (' . $pic_id_sql . ')';
+			SET image_approval = 1
+			WHERE image_id IN (' . $pic_id_sql . ')';
 		$result = $db->sql_query($sql);
 
 		$message = $user->lang['IMAGES_APPROVED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$cat_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?cat_id=$cat_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
@@ -755,9 +755,9 @@ else
 		else
 		{
 			// Check $pic_id[] on POST Method now
-			if( isset($_POST['pic_id']) )
+			if( isset($_POST['image_id']) )
 			{
-				$pic_id = $_POST['pic_id'];
+				$pic_id = $_POST['image_id'];
 				if( is_array($pic_id) )
 				{
 					$pic_id_sql = implode(',', $pic_id);
@@ -775,9 +775,9 @@ else
 
 		// well, we got the array of pic_id but we must do a check to make sure all these
 		// pics are in this category (prevent some naughty moderators to access un-authorised pics)
-		$sql = 'SELECT pic_id
+		$sql = 'SELECT image_id
 			FROM ' . GALLERY_IMAGES_TABLE . '
-			WHERE pic_id IN (' . $pic_id_sql . ') 
+			WHERE image_id IN (' . $pic_id_sql . ') 
 				AND image_album_id <> ' . $cat_id;
 		$result = $db->sql_query($sql);
 
@@ -788,8 +788,8 @@ else
 
 		// update the DB
 		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-			SET pic_approval = 0
-			WHERE pic_id IN (' . $pic_id_sql . ')';
+			SET image_approval = 0
+			WHERE image_id IN (' . $pic_id_sql . ')';
 		$result = $db->sql_query($sql);
 
 		$message = $user->lang['IMAGES_UNAPPROVED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
@@ -830,9 +830,9 @@ else
 			else
 			{
 				// Check $pic_id[] on POST Method now
-				if (isset($_POST['pic_id']))
+				if (isset($_POST['image_id']))
 				{
-					$pic_id_array = $_POST['pic_id'];
+					$pic_id_array = $_POST['image_id'];
 					if( !is_array($pic_id_array) )
 					{
 						trigger_error('Invalid request', E_USER_WARNING);
@@ -885,9 +885,9 @@ else
 			//
 			// Do the delete here...
 			//
-			if (isset($_POST['pic_id']))
+			if (isset($_POST['image_id']))
 			{
-				$pic_id = $_POST['pic_id'];
+				$pic_id = $_POST['image_id'];
 				if( is_array($pic_id) )
 				{
 					$pic_id_sql = implode(',', $pic_id);
@@ -904,9 +904,9 @@ else
 
 			// well, we got the array of pic_id but we must do a check to make sure all these
 			// pics are in this category (prevent some naughty moderators to access un-authorised pics)
-			$sql = 'SELECT pic_id
+			$sql = 'SELECT image_id
 				FROM ' . GALLERY_IMAGES_TABLE . '
-				WHERE pic_id IN (' . $pic_id_sql . ') 
+				WHERE image_id IN (' . $pic_id_sql . ') 
 					AND image_album_id <> ' . $cat_id;
 			$result = $db->sql_query($sql);
 			if ($db->sql_affectedrows($result) > 0)
@@ -926,9 +926,9 @@ else
 
 			// Delete Physical Files
 			// first we need filenames
-			$sql = 'SELECT pic_filename, pic_thumbnail
+			$sql = 'SELECT image_filename, image_thumbnail
 				FROM ' . GALLERY_IMAGES_TABLE . '
-				WHERE pic_id IN (' . $pic_id_sql . ')';
+				WHERE image_id IN (' . $pic_id_sql . ')';
 			$result = $db->sql_query($sql);
 
 			$filerow = array();
@@ -938,16 +938,16 @@ else
 			}
 			for ($i = 0; $i < count($filerow); $i++)
 			{
-				if( ($filerow[$i]['pic_thumbnail'] <> '') && (@file_exists(ALBUM_CACHE_PATH . $filerow[$i]['pic_thumbnail'])) )
+				if( ($filerow[$i]['image_thumbnail'] <> '') && (@file_exists(ALBUM_CACHE_PATH . $filerow[$i]['image_thumbnail'])) )
 				{
-					@unlink(ALBUM_CACHE_PATH . $filerow[$i]['pic_thumbnail']);
+					@unlink(ALBUM_CACHE_PATH . $filerow[$i]['image_thumbnail']);
 				}
-				@unlink(ALBUM_UPLOAD_PATH . $filerow[$i]['pic_filename']);
+				@unlink(ALBUM_UPLOAD_PATH . $filerow[$i]['image_filename']);
 			}
 
 			// Delete DB entry
 			$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE pic_id IN (' . $pic_id_sql . ')';
+					WHERE image_id IN (' . $pic_id_sql . ')';
 			$result = $db->sql_query($sql);
 
 			$message = $user->lang['IMAGES_DELETED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");

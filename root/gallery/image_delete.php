@@ -50,17 +50,17 @@ add_form_key('image_delete');
 
 $sql = 'SELECT *
 	FROM ' . GALLERY_IMAGES_TABLE . '
-	WHERE pic_id = ' . $pic_id . '
+	WHERE image_id = ' . $pic_id . '
 	LIMIT 1';
 $result = $db->sql_query($sql);
 
 $thispic = $db->sql_fetchrow($result);
 
 $album_id = $thispic['image_album_id'];
-$user_id = $thispic['pic_user_id'];
+$user_id = $thispic['image_user_id'];
 
-$pic_filename = $thispic['pic_filename'];
-$pic_thumbnail = $thispic['pic_thumbnail'];
+$pic_filename = $thispic['image_filename'];
+$pic_thumbnail = $thispic['image_thumbnail'];
 
 if (empty($thispic))
 {
@@ -118,7 +118,7 @@ else
 {
 	if ((!$album_user_access['moderator']) && ($user->data['user_type'] <> USER_FOUNDER))
 	{
-		if ($thispic['pic_user_id'] <> $user->data['user_id'])
+		if ($thispic['image_user_id'] <> $user->data['user_id'])
 		{
 			trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 		}
@@ -139,7 +139,7 @@ if ($album_id == PERSONAL_GALLERY)
 	));
 
 	$template->assign_block_vars('navlinks', array(
-		'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $thispic['pic_username']),
+		'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $thispic['image_username']),
 		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal.$phpEx", 'user_id=' . $user_id),
 	));
 }
@@ -213,23 +213,23 @@ else
 	// --------------------------------
 	// Delete cached thumbnail
 	// --------------------------------
-	if (($thispic['pic_thumbnail'] <> '') && @file_exists(ALBUM_CACHE_PATH . $thispic['pic_thumbnail']))
+	if (($thispic['image_thumbnail'] <> '') && @file_exists(ALBUM_CACHE_PATH . $thispic['image_thumbnail']))
 	{
-		@unlink(ALBUM_CACHE_PATH . $thispic['pic_thumbnail']);
+		@unlink(ALBUM_CACHE_PATH . $thispic['image_thumbnail']);
 	}
 
 
 	// --------------------------------
 	// Delete File
 	// --------------------------------
-	@unlink(ALBUM_UPLOAD_PATH . $thispic['pic_filename']);
+	@unlink(ALBUM_UPLOAD_PATH . $thispic['image_filename']);
 
 
 	// --------------------------------
 	// Delete DB entry
 	// --------------------------------
 	$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . '
-		WHERE pic_id = ' . $pic_id;
+		WHERE image_id = ' . $pic_id;
 	$result = $db->sql_query($sql);
 
 

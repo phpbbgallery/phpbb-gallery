@@ -43,7 +43,7 @@
 					<dd class="posts">{picrow.COMMENTS}</dd>
 					<dd class="posts">{picrow.LOCK}</dd>
 					<dd class="posts">{picrow.APPROVAL}</dd>
-					<dd class="posts"><input type="checkbox" name="pic_id[]" value="{picrow.PIC_ID}" /></dd>
+					<dd class="posts"><input type="checkbox" name="image_id[]" value="{picrow.PIC_ID}" /></dd>
 				</dl>
 			</li>
 		</ul>
@@ -84,10 +84,10 @@
 <fieldset class="display-options">
 	<label>{L_SELECT_SORT_METHOD}: 
 		<select name="sort_method">
-			<option {SORT_TIME} value='pic_time'>{L_TIME}</option>
-			<option {SORT_PIC_TITLE} value='pic_title'>{L_IMAGE_TITLE}</option>
+			<option {SORT_TIME} value='image_time'>{L_TIME}</option>
+			<option {SORT_PIC_TITLE} value='image_title'>{L_IMAGE_TITLE}</option>
 			<option {SORT_USERNAME} value='username'>{L_SORT_USERNAME}</option>
-			<option {SORT_VIEW} value='pic_view_count'>{L_VIEWS}</option>
+			<option {SORT_VIEW} value='image_view_count'>{L_VIEWS}</option>
 			{SORT_RATING_OPTION}
 			{SORT_COMMENTS_OPTION}
 			{SORT_NEW_COMMENT_OPTION}

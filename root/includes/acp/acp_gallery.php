@@ -209,10 +209,10 @@ class acp_gallery
 			'GD_V1' 							=> ($new['gd_version'] == 1) ? 'checked="checked"' : '',
 			'GD_V2' 							=> ($new['gd_version'] == 2) ? 'checked="checked"' : '',
 
-			'SORT_TIME' 						=> ($new['sort_method'] == 'pic_time') ? 'selected="selected"' : '',
-			'SORT_PIC_TITLE' 					=> ($new['sort_method'] == 'pic_title') ? 'selected="selected"' : '',
-			'SORT_USERNAME' 					=> ($new['sort_method'] == 'pic_user_id') ? 'selected="selected"' : '',
-			'SORT_VIEW' 						=> ($new['sort_method'] == 'pic_view_count') ? 'selected="selected"' : '',
+			'SORT_TIME' 						=> ($new['sort_method'] == 'image_time') ? 'selected="selected"' : '',
+			'SORT_PIC_TITLE' 					=> ($new['sort_method'] == 'image_name') ? 'selected="selected"' : '',
+			'SORT_USERNAME' 					=> ($new['sort_method'] == 'image_user_id') ? 'selected="selected"' : '',
+			'SORT_VIEW' 						=> ($new['sort_method'] == 'image_view_count') ? 'selected="selected"' : '',
 			'SORT_RATING' 						=> ($new['sort_method'] == 'rating') ? 'selected="selected"' : '',
 			'SORT_COMMENTS' 					=> ($new['sort_method'] == 'comments') ? 'selected="selected"' : '',
 			'SORT_NEW_COMMENT' 					=> ($new['sort_method'] == 'new_comment') ? 'selected="selected"' : '',
@@ -839,7 +839,7 @@ class acp_gallery
 				$handle_images = request_var('handle_images', -1);
 				if ($handle_images < 0)
 				{
-					$sql = 'SELECT pic_id, pic_filename, pic_thumbnail, image_album_id
+					$sql = 'SELECT image_id, image_filename, image_thumbnail, image_album_id
 							FROM ' . GALLERY_IMAGES_TABLE . "
 							WHERE image_album_id = '$album_id'";
 					$result = $db->sql_query($sql);
@@ -848,15 +848,15 @@ class acp_gallery
 					while ($row = $db ->sql_fetchrow($result))
 					{
 						$picrow[] = $row;
-						$pic_id_row[] = $row['pic_id'];
+						$pic_id_row[] = $row['image_id'];
 					}
 					if(count($picrow) > 0)
 					{
 						// Delete all physical pic & cached thumbnail files
 						for ($i = 0; $i < count($picrow); $i++)
 						{
-							@unlink('../' . ALBUM_CACHE_PATH . $picrow[$i]['pic_thumbnail']);
-							@unlink('../' . ALBUM_UPLOAD_PATH . $picrow[$i]['pic_filename']);
+							@unlink('../' . ALBUM_CACHE_PATH . $picrow[$i]['image_thumbnail']);
+							@unlink('../' . ALBUM_UPLOAD_PATH . $picrow[$i]['image_filename']);
 						}
 
 						$pic_id_sql = '(' . implode(',', $pic_id_row) . ')';

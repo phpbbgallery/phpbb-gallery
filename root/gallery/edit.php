@@ -36,17 +36,17 @@ if(!$pic_id)
 
 $sql = 'SELECT *
 	FROM ' . GALLERY_IMAGES_TABLE . '
-	WHERE pic_id = ' . $pic_id . '
+	WHERE image_id = ' . $pic_id . '
 	LIMIT 1';
 $result = $db->sql_query($sql);
 
 $thispic = $db->sql_fetchrow($result);
 
 $album_id = $thispic['image_album_id'];
-$user_id = $thispic['pic_user_id'];
+$user_id = $thispic['image_user_id'];
 
-$pic_filename = $thispic['pic_filename'];
-$pic_thumbnail = $thispic['pic_thumbnail'];
+$pic_filename = $thispic['image_filename'];
+$pic_thumbnail = $thispic['image_thumbnail'];
 
 if( empty($thispic) )
 {
@@ -105,7 +105,7 @@ else
 {
 	if ((!$album_user_access['moderator']) && ($user->data['user_type'] <> USER_FOUNDER))
 	{
-		if ($thispic['pic_user_id'] <> $user->data['user_id'])
+		if ($thispic['image_user_id'] <> $user->data['user_id'])
 		{
 			trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 		}
@@ -125,7 +125,7 @@ if ($album_id == PERSONAL_GALLERY)
 	));
 
 	$template->assign_block_vars('navlinks', array(
-		'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $thispic['pic_username']),
+		'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $thispic['image_username']),
 		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal.$phpEx", 'user_id=' . $user_id),
 	));
 }
@@ -145,15 +145,15 @@ if(!isset($_POST['pic_title']))
 {
 
 	$message_parser				= new parse_message();
-	$message_parser->message	= $thispic['pic_desc'];
-	$message_parser->decode_message($thispic['pic_desc_bbcode_uid']);
+	$message_parser->message	= $thispic['image_desc'];
+	$message_parser->decode_message($thispic['image_desc_uid']);
 
 	$template->assign_vars(array(
 		'U_PIC'			=> append_sid("image.$phpEx?pic_id=$pic_id"),
 		'CAT_TITLE'				=> $thiscat['album_name'],
 		'U_VIEW_CAT'			=> ($album_id <> PERSONAL_GALLERY) ? append_sid("album.$phpEx?id=$album_id") : append_sid("album_personal.$phpEx?user_id=$user_id"),
 
-		'PIC_TITLE'				=> $thispic['pic_title'],
+		'PIC_TITLE'				=> $thispic['image_name'],
 		'PIC_DESC'				=> $message_parser->message,
 		'S_PIC_DESC_MAX_LENGTH'	=> $album_config['desc_length'],
 
@@ -201,15 +201,15 @@ else
 	// Update the DB
 	// --------------------------------
 	$sql_ary = array(
-		'pic_title'		=> $pic_title,
-		'pic_desc'						=> $message_parser->message,
-		'pic_desc_bbcode_uid'			=> $message_parser->bbcode_uid,
-		'pic_desc_bbcode_bitfield'		=> $message_parser->bbcode_bitfield,
+		'image_name'		=> $pic_title,
+		'image_desc'						=> $message_parser->message,
+		'image_desc_uid'			=> $message_parser->bbcode_uid,
+		'image_desc_bitfield'		=> $message_parser->bbcode_bitfield,
 	);
 
 	$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
 		SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-		WHERE pic_id = ' . (int) $pic_id;
+		WHERE image_id = ' . (int) $pic_id;
 	$db->sql_query($sql);
 
 	// --------------------------------
