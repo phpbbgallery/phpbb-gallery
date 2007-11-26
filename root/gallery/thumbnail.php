@@ -98,7 +98,7 @@ if (!$album_user_access['view'])
 
 if ($user->data['user_type'] <> USER_FOUNDER)
 {
-	if (($thiscat['cat_approval'] == ADMIN) || (($thiscat['cat_approval'] == MOD) && !$album_user_access['moderator']))
+	if (($thiscat['album_approval'] == ADMIN) || (($thiscat['album_approval'] == MOD) && !$album_user_access['moderator']))
 	{
 		if (!$thispic['image_approval'])
 		{
