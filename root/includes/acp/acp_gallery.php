@@ -614,6 +614,7 @@ class acp_gallery
 
 				'ALBUM_NAME' 				=> $album_data['album_name'],
 				'ALBUM_DESC'				=> $album_desc_data['text'],
+				'ALBUM_TYPE'				=> $album_data['album_type'],
 				'S_DESC_BBCODE_CHECKED'		=> ($album_desc_data['allow_bbcode']) ? true : false,
 				'S_DESC_SMILIES_CHECKED'	=> ($album_desc_data['allow_smilies']) ? true : false,
 				'S_DESC_URLS_CHECKED'		=> ($album_desc_data['allow_urls']) ? true : false,
