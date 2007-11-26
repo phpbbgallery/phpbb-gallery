@@ -333,7 +333,7 @@ class acp_gallery
 					'album_edit_groups'		=> $edit_groups,
 					'album_delete_groups'		=> $delete_groups,
 					'album_moderator_groups'	=> $moderator_groups,
-					);
+				);
 
 				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' 
 					SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '

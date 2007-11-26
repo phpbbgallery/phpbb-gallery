@@ -35,12 +35,39 @@ if (empty($lang) || !is_array($lang))
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
 $lang = array_merge($lang, array(
-	'INTRO'					=> 'Intro',
-	'INSTALL'				=> 'Install',
-	'UPDATE'				=> 'Update',
-	'SMARTOR'				=> 'Convert Smartor',
-	'INSTALL_MOD'			=> 'Installation of %1$s %2$s',
-	'MOD_NAME'				=> 'phpBB Gallery',
+	'INSTALLER_CONVERT'					=> 'Convert',
+	'INSTALLER_CONVERT_MENU'			=> 'Convertmenu',
+	'INSTALLER_CONVERT_NOTE'			=> 'Convert MOD to v%s',
+	'INSTALLER_CONVERT_PREFIX'			=> 'Prefix of phpBB2-installation',
+	'INSTALLER_CONVERT_SUCCESSFUL'		=> 'Convert of the MOD to v%s was successful.',
+	'INSTALLER_CONVERT_UNSUCCESSFUL'	=> 'Convert of the MOD to v%s was <strong>not</strong> successful.',
+	'INSTALLER_CONVERT_UNSUCCESSFUL2'	=> 'You didn\'t insert a prefix of your phpBB2-installation.',
+	'INSTALLER_CONVERT_WELCOME'			=> 'Welcome to the Convertmenu',
+	'INSTALLER_CONVERT_WELCOME_NOTE'	=> 'When you choose to convert the MOD, we try to copy the data of your older phpBB2 Installation.',
+
+	'INSTALLER_INTRO'					=> 'Intro',
+	'INSTALLER_INTRO_WELCOME'			=> 'Welcome to the MOD Installation',
+	'INSTALLER_INTRO_WELCOME_NOTE'		=> 'Please choose what you want to do.',
+
+	'INSTALLER_INSTALL'					=> 'Install',
+	'INSTALLER_INSTALL_MENU'			=> 'Installmenu',
+	'INSTALLER_INSTALL_SUCCESSFUL'		=> 'Installation of the MOD v%s was successful.',
+	'INSTALLER_INSTALL_UNSUCCESSFUL'	=> 'Installation of the MOD v%s was <strong>not</strong> successful.',
+	'INSTALLER_INSTALL_VERSION'			=> 'Install MOD v%s',
+	'INSTALLER_INSTALL_WELCOME'			=> 'Welcome to the Installationmenu',
+	'INSTALLER_INSTALL_WELCOME_NOTE'	=> 'When you choose to install the MOD, any database of previous versions will be dropped.',
+
+	'INSTALLER_NEEDS_FOUNDER'			=> 'You must be logged in as a founder.',
+
+	'INSTALLER_UPDATE'					=> 'Update',
+	'INSTALLER_UPDATE_MENU'				=> 'Updatemenu',
+	'INSTALLER_UPDATE_NOTE'				=> 'Update MOD from v%s to v%s',
+	'INSTALLER_UPDATE_SUCCESSFUL'		=> 'Update of the MOD from v%s to v%s was successful.',
+	'INSTALLER_UPDATE_UNSUCCESSFUL'		=> 'Update of the MOD from v%s to v%s was <strong>not</strong> successful.',
+	'INSTALLER_UPDATE_VERSION'			=> 'Update MOD from v',
+	'INSTALLER_UPDATE_WELCOME'			=> 'Welcome to the Updatemenu',
+
+	'WARNING'							=> 'Warning',
 ));
 
 ?>
