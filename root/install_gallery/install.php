@@ -420,11 +420,13 @@ switch ($mode)
 					'comment'				=> $row['comment_text'],
 					'comment_uid'			=> '',
 					'comment_bitfield'		=> '',
+					'comment_options'		=> 7,
 					'comment_edit_time'		=> $row['comment_edit_time'],
 					'comment_edit_count'	=> $row['comment_edit_count'],
 					'comment_edit_user_id'	=> $row['comment_edit_user_id'],
 				);
-				generate_text_for_storage($comment_data['comment'], $comment_data['comment_uid'], $comment_data['comment_bitfield'], 7, true, true, true);
+				generate_text_for_storage($comment_data['comment'], $comment_data['comment_uid'], $comment_data['comment_bitfield'], $comment_data['comment_options'], true, true, true);
+				unset($comment_data['comment_options']);
 				$db->sql_query('INSERT INTO ' . GALLERY_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $comment_data));
 			}
 			$db->sql_freeresult($result);
@@ -470,6 +472,7 @@ switch ($mode)
 					'image_desc'			=> $row['pic_desc'],
 					'image_desc_uid'		=> '',
 					'image_desc_bitfield'	=> '',
+					'image_desc_options'	=> 7,
 					'image_user_id'			=> $row['pic_user_id'],
 					'image_username'		=> $row['pic_username'],
 					'image_user_ip'			=> $row['pic_user_ip'],
@@ -479,7 +482,8 @@ switch ($mode)
 					'image_lock'			=> $row['pic_lock'],
 					'image_approval'		=> $row['pic_approval'],
 				);
-				generate_text_for_storage($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], 7, true, true, true);
+				generate_text_for_storage($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], $image_data['image_desc_options'], true, true, true);
+				unset($image_data['image_desc_options']);
 				$db->sql_query('INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $image_data));
 			}
 			$db->sql_freeresult($result);
@@ -697,11 +701,13 @@ switch ($mode)
 					'comment'				=> $row['comment_text'],
 					'comment_uid'			=> $row['comment_text_bbcode_uid'],
 					'comment_bitfield'		=> $row['comment_text_bbcode_bitfield'],
+					'comment_options'		=> 7,
 					'comment_edit_time'		=> $row['comment_edit_time'],
 					'comment_edit_count'	=> $row['comment_edit_count'],
 					'comment_edit_user_id'	=> $row['comment_edit_user_id'],
 				);
-				generate_text_for_storage($comment_data['comment'], $comment_data['comment_uid'], $comment_data['comment_bitfield'], 7, true, true, true);
+				generate_text_for_storage($comment_data['comment'], $comment_data['comment_uid'], $comment_data['comment_bitfield'], $comment_data['comment_options'], true, true, true);
+				unset($comment_data['comment_options']);
 				$db->sql_query('INSERT INTO ' . GALLERY_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $comment_data));
 			}
 			$db->sql_freeresult($result);
@@ -747,6 +753,7 @@ switch ($mode)
 					'image_desc'			=> $row['pic_desc'],
 					'image_desc_uid'		=> $row['pic_desc_bbcode_uid'],
 					'image_desc_bitfield'	=> $row['pic_desc_bbcode_bitfield'],
+					'image_desc_options'	=> 7,
 					'image_user_id'			=> $row['pic_user_id'],
 					'image_username'		=> $row['pic_username'],
 					'image_user_ip'			=> $row['pic_user_ip'],
@@ -756,7 +763,8 @@ switch ($mode)
 					'image_lock'			=> $row['pic_lock'],
 					'image_approval'		=> $row['pic_approval'],
 				);
-				generate_text_for_storage($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], 7, true, true, true);
+				generate_text_for_storage($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], $image_data['image_desc_options'], true, true, true);
+				unset($image_data['image_desc_options']);
 				$db->sql_query('INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $image_data));
 			}
 			$db->sql_freeresult($result);
