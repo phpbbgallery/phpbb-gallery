@@ -421,9 +421,9 @@ switch ($mode)
 					'comment_uid'			=> '',
 					'comment_bitfield'		=> '',
 					'comment_options'		=> 7,
-					'comment_edit_time'		=> $row['comment_edit_time'],
-					'comment_edit_count'	=> $row['comment_edit_count'],
-					'comment_edit_user_id'	=> $row['comment_edit_user_id'],
+					'comment_edit_time'		=> (isset($row['comment_edit_time']) ? $row['comment_edit_time'] : 0),
+					'comment_edit_count'	=> (isset($row['comment_edit_count']) ? $row['comment_edit_count'] : 0),
+					'comment_edit_user_id'	=> (isset($row['comment_edit_user_id']) ? $row['comment_edit_user_id'] : 0),
 				);
 				generate_text_for_storage($comment_data['comment'], $comment_data['comment_uid'], $comment_data['comment_bitfield'], $comment_data['comment_options'], true, true, true);
 				unset($comment_data['comment_options']);
@@ -702,9 +702,9 @@ switch ($mode)
 					'comment_uid'			=> $row['comment_text_bbcode_uid'],
 					'comment_bitfield'		=> $row['comment_text_bbcode_bitfield'],
 					'comment_options'		=> 7,
-					'comment_edit_time'		=> $row['comment_edit_time'],
-					'comment_edit_count'	=> $row['comment_edit_count'],
-					'comment_edit_user_id'	=> $row['comment_edit_user_id'],
+					'comment_edit_time'		=> (isset($row['comment_edit_time']) ? $row['comment_edit_time'] : 0),
+					'comment_edit_count'	=> (isset($row['comment_edit_count']) ? $row['comment_edit_count'] : 0),
+					'comment_edit_user_id'	=> (isset($row['comment_edit_user_id']) ? $row['comment_edit_user_id'] : 0),
 				);
 				generate_text_for_storage($comment_data['comment'], $comment_data['comment_uid'], $comment_data['comment_bitfield'], $comment_data['comment_options'], true, true, true);
 				unset($comment_data['comment_options']);
