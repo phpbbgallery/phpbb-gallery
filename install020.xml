@@ -6,7 +6,11 @@
   <header>
     <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
     <title lang="en-gb">phpBB Gallery</title>
-    <description lang="en-gb"><![CDATA[missing]]></description>
+    <description lang="en-gb"><![CDATA[This is a gallery for yopur phpBB3.
+It's based on the album MOD of smartor.
+The basement was developed by tsr.
+But since 0.1.2 I'm the only developer.
+For Features see the forum topic.]]></description>
     <author-notes lang="en-gb">i hope you get it installed, otherwise you can ask for help on phpbb.de and phpbb.com</author-notes>
     <author-group>
       <author>
