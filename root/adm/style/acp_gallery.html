@@ -1,0 +1,413 @@
+<!-- INCLUDE overall_header.html -->
+
+<a name="maincontent"></a>
+
+<h1>{ACP_GALLERY_TITLE}</h1>
+<p>{ACP_GALLERY_TITLE_EXPLAIN}</p>
+
+<!-- IF S_MANAGE_ALBUMS -->
+	<p><strong>{NAVIGATION}<!-- IF S_ALBUM --> [<a href="{U_EDIT}">{L_EDIT}</a> | <a href="{U_DELETE}">{L_DELETE}</a>]<!-- ENDIF --></strong></p>
+		<table cellspacing="1">
+			<col class="row1" /><col class="row1" /><col class="row2" />
+		<tbody>
+		<!-- BEGIN catrow -->
+			<tr>
+				<td style="width: 5%; text-align: center;">{catrow.FOLDER_IMAGE}</td>
+				<td>
+					<!-- IF catrow.FORUM_IMAGE --><div style="float: {S_CONTENT_FLOW_BEGIN}; margin-right: 5px;">{catrow.FORUM_IMAGE}</div><!-- ENDIF -->
+					<strong><a href="{catrow.U_ALBUM}">{catrow.ALBUM_NAME}</a></strong>
+					<!-- IF catrow.ALBUM_DESCRIPTION --><br /><span>{catrow.ALBUM_DESCRIPTION}</span><!-- ENDIF -->
+					<!-- IF catrow.S_FORUM_POST --><br /><br /><span>{L_TOPICS}: <strong>{catrow.FORUM_TOPICS}</strong> / {L_POSTS}: <b>{catrow.FORUM_POSTS}</b></span><!-- ENDIF -->
+				</td>
+				<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
+					<!-- IF catrow.S_FIRST_ROW && not catrow.S_LAST_ROW -->
+						{ICON_MOVE_UP_DISABLED}
+						<a href="{catrow.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+					<!-- ELSEIF not catrow.S_FIRST_ROW && not catrow.S_LAST_ROW-->
+						<a href="{catrow.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+						<a href="{catrow.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+					<!-- ELSEIF catrow.S_LAST_ROW && not catrow.S_FIRST_ROW -->
+						<a href="{catrow.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+						{ICON_MOVE_DOWN_DISABLED}
+					<!-- ELSE -->
+						{ICON_MOVE_UP_DISABLED}
+						{ICON_MOVE_DOWN_DISABLED}
+					<!-- ENDIF -->
+					<a href="{catrow.U_EDIT}">{ICON_EDIT}</a>
+					{ICON_SYNC_DISABLED}
+					<a href="{catrow.U_DELETE}">{ICON_DELETE}</a>
+				</td>
+			</tr>
+		<!-- BEGINELSE -->
+			<tr>
+				<td style="width: 5%;"></td>
+				<td style="text-align: center;">
+					{L_NO_SUBALBUMS}
+				</td>
+				<td style="width: 100px;"></td>
+			</tr>
+		<!-- END catrow -->
+		</tbody>
+		</table>
+<form id="albums" method="post" action="{S_ALBUM_ACTION}">
+
+<fieldset class="quick">
+	<!--input type="hidden" name="action" value="add" /-->
+	<input class="button2" name="addforum" type="submit" value="{L_CREATE_ALBUM}" />
+</fieldset>
+	{S_FORM_TOKEN}
+</form>
+
+<!-- ELSEIF S_CREATE_ALBUM || S_EDIT_ALBUM -->
+<form id="acp_gallery" method="post" action="{U_ACTION}">
+	<fieldset>
+		<legend>{L_ALBUM_SETTINGS}</legend>
+		<dl>
+			<dt><label for="album_type">{L_ALBUM_TYPE}:</label></dt>
+			<dd><select id="album_type" name="album_type"><option value="1"<!-- IF ALBUM_TYPE == 1 --> selected="selected"<!-- ENDIF -->>{L_ALBUM_CATEGORY}</option><option value="2"<!-- IF ALBUM_TYPE == 2 --> selected="selected"<!-- ENDIF -->>{L_ALBUM_NO_CATEGORY}</option></select></dd>
+		</dl>
+		<dl>
+			<dt><label for="parent_id">{L_ALBUM_PARENT}:</label></dt>
+			<dd><select id="parent_id" name="parent_id"><option value="0"<!-- IF not S_ALBUM_PARENT_ID --> selected="selected"<!-- ENDIF -->>{L_NO_PARENT}</option>{S_PARENT_OPTIONS}</select></dd>
+		</dl>
+		<dl>
+			<dt><label for="album_name">{L_ALBUM_NAME}:</label></dt>
+			<dd><input class="text medium" type="text" id="album_name" name="album_name" value="{ALBUM_NAME}" maxlength="255" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="album_desc">{L_ALBUM_DESC}:</label></dt>
+			<dd><textarea id="album_desc" name="album_desc" rows="5" cols="45">{ALBUM_DESC}</textarea></dd>
+		<dd><label><input type="checkbox" class="radio" name="desc_parse_bbcode"<!-- IF S_DESC_BBCODE_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_BBCODE}</label>
+			<label><input type="checkbox" class="radio" name="desc_parse_smilies"<!-- IF S_DESC_SMILIES_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_SMILIES}</label>
+			<label><input type="checkbox" class="radio" name="desc_parse_urls"<!-- IF S_DESC_URLS_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_URLS}</label></dd>
+		</dl>
+	</fieldset>
+	<fieldset>
+		<legend>{L_ALBUM_PERMISSIONS}</legend>
+		<dl>
+			<dt><label for="album_view_level">{L_VIEW_LEVEL}:</label></dt>
+			<dd>{VIEW_LEVEL}</dd>
+		</dl>
+		<dl>
+			<dt><label for="album_upload_level">{L_UPLOAD_LEVEL}:</label></dt>
+			<dd>{UPLOAD_LEVEL}</dd>
+		</dl>
+		<dl>
+			<dt><label for="album_rate_level">{L_RATE_LEVEL}:</label></dt>
+			<dd>{RATE_LEVEL}</dd>
+		</dl>
+		<dl>
+			<dt><label for="album_comment_level">{L_COMMENT_LEVEL}:</label></dt>
+			<dd>{COMMENT_LEVEL}</dd>
+		</dl>
+		<dl>
+			<dt><label for="album_edit_level">{L_EDIT_LEVEL}:</label></dt>
+			<dd>{EDIT_LEVEL}</dd>
+		</dl>
+		<dl>
+			<dt><label for="album_delete_level">{L_DELETE_LEVEL}:</label></dt>
+			<dd>{DELETE_LEVEL}</dd>
+		</dl>
+		<dl>
+			<dt><label for="album_approval">{L_IMAGE_APPROVAL}:</label></dt>
+			<dd>{IMAGE_APPROVAL}</dd>
+		</dl>
+	</fieldset>
+	<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</p>
+	</fieldset>
+	{S_FORM_TOKEN}
+</form>
+
+<!-- ELSEIF S_DELETE_ALBUM -->
+<form id="acp_gallery" method="post" action="{U_ACTION}">
+	<fieldset>
+		<legend>{ALBUM_DELETE}</legend>
+		<dl>
+			<dt><label for="album_type">{L_ALBUM_TYPE}:</label></dt>
+			<dd><!-- IF ALBUM_TYPE == 1 -->{L_ALBUM_CATEGORY}<!-- ELSEIF ALBUM_TYPE == 2 -->{L_ALBUM_NO_CATEGORY}<!-- ENDIF --></dd>
+		</dl>
+		<dl>
+			<dt><label for="parent_id">{L_ALBUM_PARENT}:</label></dt>
+			<dd><select id="parent_id" name="parent_id"><option value="0"<!-- IF not S_ALBUM_PARENT_ID --> selected="selected"<!-- ENDIF -->>{L_NO_PARENT}</option>{S_PARENT_OPTIONS}</select></dd>
+		</dl>
+		<dl>
+			<dt><label for="album_name">{L_ALBUM_NAME}:</label></dt>
+			<dd>{ALBUM_NAME}</dd>
+		</dl>
+		<!-- IF ALBUM_DESC -->
+			<dl>
+				<dt><label for="album_desc">{L_ALBUM_DESC}:</label></dt>
+				<dd>{ALBUM_DESC}</dd>
+			</dl>
+		<!-- ENDIF -->
+		<!-- IF ALBUM_TYPE == 1 -->
+		<dl>
+			<dt><label for="handle_subs">{L_HANDLE_SUBS}:</label></dt>
+			<dd><select id="handle_subs" name="handle_subs"><option value="-1" selected="selected">{L_DELETE_SUBS}</option><option value="0">{L_NO_PARENT}</option>{S_MOVE_ALBUM_OPTIONS}</select></dd>
+		</dl>
+		<!-- ELSEIF ALBUM_TYPE == 2 -->
+		<dl>
+			<dt><label for="handle_images">{L_HANDLE_IMAGES}:</label></dt>
+			<dd><select id="handle_images" name="handle_images"><option value="-1" selected="selected">{L_DELETE_IMAGES}</option>{S_MOVE_IMAGE_OPTIONS}</select></dd>
+		</dl>
+		<!-- ENDIF -->
+	</fieldset>
+	<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
+		</p>
+	</fieldset>
+	{S_FORM_TOKEN}
+</form>
+
+<!-- ELSEIF S_CONFIGURE_GALLERY -->
+<form action="{S_ALBUM_CONFIG_ACTION}" method="post">
+<table width="100%" cellpadding="4" cellspacing="1" border="0" class="forumline">
+	<tr>
+		<th class="thHead" colspan="2">{L_GALLERY_CONFIG}</th>
+	</tr>
+	<tr>
+		<td class="row1" width="45%"><span class="genmed">{L_MAX_IMAGES}</span></td>
+		<td class="row2"><input class="post" type="text" maxlength="9" size="9" name="max_pics" value="{MAX_PICS}" /></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_USER_IMAGES_LIMIT}</span></td>
+		<td class="row2"><input class="post" type="text" maxlength="12" size="5" name="user_pics_limit" value="{USER_PICS_LIMIT}" /></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_MODERATOR_IMAGES_LIMIT}</span></td>
+		<td class="row2"><input class="post" type="text" maxlength="12" size="5" name="mod_pics_limit" value="{MOD_PICS_LIMIT}" /></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_MAX_FILE_SIZE}</span></td>
+		<td class="row2"><input class="post" type="text" maxlength="12" size="12" name="max_file_size" value="{MAX_FILE_SIZE}" /></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_MAX_WIDTH}</span></td>
+		<td class="row2"><input class="post" type="text" maxlength="9" size="9" name="max_width" value="{MAX_WIDTH}" /></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_MAX_HEIGHT}</span></td>
+		<td class="row2"><input class="post" type="text" maxlength="9" size="9" name="max_height" value="{MAX_HEIGHT}" /></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_IMAGE_DESC_MAX_LENGTH}</span></td>
+		<td class="row2"><input class="post" type="text" size="6" name="desc_length" value="{PIC_DESC_MAX_LENGTH}" /></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_GD_VERSION}</span></td>
+		<td class="row2"><span class="genmed"><input type="radio" {NO_GD} name="gd_version" value="0" />{L_MANUAL_THUMBNAIL}&nbsp;&nbsp;<input type="radio" {GD_V1} name="gd_version" value="1" />GD1&nbsp;&nbsp;<input type="radio" {GD_V2} name="gd_version" value="2" />GD2</span></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_WATERMARK_IMAGES}</span></td>
+		<td class="row2"><span class="genmed"><input type="radio" {WATERMARK_ENABLED} name="watermark_images" value="1" />{L_YES}&nbsp;&nbsp;			 <input type="radio" {WATERMARK_DISABLED} name="watermark_images" value="0" />{L_NO}</span></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_WATERMARK_SOURCE}</span></td>
+		<td class="row2"><input class="post" type="text" size="40" name="watermark_source" value="{WATERMARK_SOURCE}" /></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_JPG_ALLOWED}</span></td>
+		<td class="row2"><span class="genmed"><input type="radio" {JPG_ENABLED} name="jpg_allowed" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {JPG_DISABLED} name="jpg_allowed" value="0" />{L_NO}</span></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_PNG_ALLOWED}</span></td>
+		<td class="row2"><span class="genmed"><input type="radio" {PNG_ENABLED} name="png_allowed" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {PNG_DISABLED} name="png_allowed" value="0" />{L_NO}</span></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_GIF_ALLOWED}</span></td>
+		<td class="row2"><span class="genmed"><input type="radio" {GIF_ENABLED} name="gif_allowed" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {GIF_DISABLED} name="gif_allowed" value="0" />{L_NO}</span></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_HOTLINK_PREVENT}</span></td>
+		<td class="row2"><span class="genmed"><input type="radio" {HOTLINK_PREVENT_ENABLED} name="hotlink_prevent" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {HOTLINK_PREVENT_DISABLED} name="hotlink_prevent" value="0" />{L_NO}</span></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_HOTLINK_ALLOWED}</span></td>
+		<td class="row2"><input class="post" type="text" size="40" name="hotlink_allowed" value="{HOTLINK_ALLOWED}" /></td>
+	</tr>
+	<tr>
+		<th class="thHead" colspan="2">{L_THUMBNAIL_SETTINGS}</th>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_THUMBNAIL_CACHE}</span></td>
+		<td class="row2"><span class="genmed"><input type="radio" {THUMBNAIL_CACHE_ENABLED} name="thumbnail_cache" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {THUMBNAIL_CACHE_DISABLED} name="thumbnail_cache" value="0" />{L_NO}</span></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_THUMBNAIL_SIZE}</span></td>
+		<td class="row2"><input class="post" type="text" maxlength="4" size="4" name="thumbnail_size" value="{THUMBNAIL_SIZE}" /></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_THUMBNAIL_QUALITY}</span></td>
+		<td class="row2"><input class="post" type="text" maxlength="3" size="3" name="thumbnail_quality" value="{THUMBNAIL_QUALITY}" /></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_ROWS_PER_PAGE}</span></td>
+		<td class="row2"><input class="post" type="text" maxlength="2" size="2" name="rows_per_page" value="{ROWS_PER_PAGE}" /></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_COLS_PER_PAGE}</span></td>
+		<td class="row2"><input class="post" type="text" maxlength="2" size="2" name="cols_per_page" value="{COLS_PER_PAGE}" /></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_DEFAULT_SORT_METHOD}</span></td>
+		<td class="row2">
+			<select name="sort_method">
+				<option {SORT_TIME} value='image_time'>{L_TIME}</option>
+				<option {SORT_PIC_TITLE} value='image_title'>{L_IMAGE_TITLE}</option>
+				<option {SORT_USERNAME} value='username'>{L_USERNAME}</option>
+				<option {SORT_VIEW} value='image_view_count'>{L_VIEWS}</option>
+				<option {SORT_RATING} value='rating'>{L_RATING}</option>
+				<option {SORT_COMMENTS} value='comments'>{L_COMMENTS}</option>
+				<option {SORT_NEW_COMMENT} value='new_comment'>{L_NEW_COMMENT}</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_DEFAULT_SORT_ORDER}</span></td>
+		<td class="row2">
+			<select name="sort_order">
+				<option {SORT_ASC} value='ASC'>{L_SORT_ASCENDING}</option>
+				<option {SORT_DESC} value='DESC'>{L_SORT_DESCENDING}</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_FULL_IMAGE_POPUP}</span></td>
+		<td class="row2"><span class="genmed"><input type="radio" {FULLPIC_POPUP_ENABLED} name="fullpic_popup" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {FULLPIC_POPUP_DISABLED} name="fullpic_popup" value="0" />{L_NO}</span></td>
+	</tr>
+	<tr>
+		<th class="thHead" colspan="2">{L_EXTRA_SETTINGS}</th>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_PERSONAL_GALLERY}</span></td>
+		<td class="row2"><span class="genmed"><input type="radio" {PERSONAL_GALLERY_USER} name="personal_gallery" value="{S_USER}" />{L_GALLERY_REG}&nbsp;&nbsp;<input type="radio" {PERSONAL_GALLERY_PRIVATE} name="personal_gallery" value="{S_PRIVATE}" />{L_GALLERY_PRIVATE}&nbsp;&nbsp;<input type="radio" {PERSONAL_GALLERY_ADMIN} name="personal_gallery" value="{S_ADMIN}" />{L_GALLERY_ADMIN}</span></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_PERSONAL_GALLERY_LIMIT}</span></td>
+		<td class="row2"><input class="post" type="text" maxlength="5" size="5" name="personal_gallery_limit" value="{PERSONAL_GALLERY_LIMIT}" /></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_PERSONAL_GALLERY_VIEW}</span></td>
+		<td class="row2"><span class="genmed"><input type="radio" {PERSONAL_GALLERY_VIEW_ALL} name="personal_gallery_view" value="{S_GUEST}" />{L_GALLERY_ALL}&nbsp;&nbsp;<input type="radio" {PERSONAL_GALLERY_VIEW_REG} name="personal_gallery_view" value="{S_USER}" />{L_GALLERY_REG}&nbsp;&nbsp;<input type="radio" {PERSONAL_GALLERY_VIEW_PRIVATE} name="personal_gallery_view" value="{S_PRIVATE}" />{L_GALLERY_PRIVATE}</span></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_RATE_SYSTEM}</span></td>
+		<td class="row2"><span class="genmed"><input type="radio" {RATE_ENABLED} name="rate" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {RATE_DISABLED} name="rate" value="0" />{L_NO}</span></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_RATE_SCALE}</span></td>
+		<td class="row2"><input class="post" type="text" name="rate_scale" value="{RATE_SCALE}" size="3" /></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_COMMENT_SYSTEM}</span></td>
+		<td class="row2"><span class="genmed"><input type="radio" {COMMENT_ENABLED} name="comment" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {COMMENT_DISABLED} name="comment" value="0" />{L_NO}</span></td>
+	</tr>
+</table>
+<br />
+<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+</fieldset>
+{S_FORM_TOKEN}
+</form>
+
+<!-- ELSEIF S_ALBUM_PERMISSIONS_SELECT_ALBUM -->
+<form action="{S_ALBUM_ACTION}" method="post">
+<table width="50%" align="center" cellpadding="3" cellspacing="1" border="0" class="forumline">
+	<tr>
+		<th class="thHead" colspan="2" height="28">{L_SELECT_A_ALBUM}</th>
+	</tr>
+	<tr>
+		<td class="row1" height="25"><select id="album_id" name="album_id">{ALBUM_LIST}</select></td>
+		<td class="row1" width="100%" align="center"><input name="submit" type="submit" value="{L_LOOK_UP_ALBUM}" class="liteoption" /></td>
+	</tr>
+</table>
+</form>
+
+<!-- ELSEIF S_ALBUM_PERMISSIONS_SELECT_GROUPS -->
+<form action="{S_ALBUM_ACTION}" method="post">
+<table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline">
+	<tr>
+		<th class="thCornerL" height="25" nowrap="nowrap">{L_USERGROUPS}</th>
+		<th class="thTop" nowrap="nowrap">{L_CAN_VIEW}</th>
+		<th class="thTop" nowrap="nowrap">{L_CAN_UPLOAD}</th>
+		<th class="thTop" nowrap="nowrap">{L_CAN_RATE}</th>
+		<th class="thTop" nowrap="nowrap">{L_CAN_COMMENT}</th>
+		<th class="thTop" nowrap="nowrap">{L_CAN_EDIT}</th>
+		<th class="thTop" nowrap="nowrap">{L_CAN_DELETE}</th>
+		<th class="thCornerR" nowrap="nowrap">{L_IS_MODERATOR}</th>
+	</tr>
+	<!-- BEGIN grouprow -->
+	<tr>
+		<td class="row1" align="center" height="28"><span class="gen">{grouprow.GROUP_NAME}</span></td>
+		<td class="row2" align="center">
+			<input name="view[]" type="checkbox" {grouprow.VIEW_CHECKED} value="{grouprow.GROUP_ID}" />
+		</td>
+		<td class="row2" align="center">
+			<input name="upload[]" type="checkbox" {grouprow.UPLOAD_CHECKED} value="{grouprow.GROUP_ID}" />
+		</td>
+		<td class="row2" align="center">
+			<input name="rate[]" type="checkbox" {grouprow.RATE_CHECKED} value="{grouprow.GROUP_ID}" />
+		</td>
+		<td class="row2" align="center">
+			<input name="comment[]" type="checkbox" {grouprow.COMMENT_CHECKED} value="{grouprow.GROUP_ID}" />
+		</td>
+		<td class="row2" align="center">
+			<input name="edit[]" type="checkbox" {grouprow.EDIT_CHECKED} value="{grouprow.GROUP_ID}" />
+		</td>
+		<td class="row2" align="center">
+			<input name="delete[]" type="checkbox" {grouprow.DELETE_CHECKED} value="{grouprow.GROUP_ID}" />
+		</td>
+		<td class="row2" align="center">
+			<input name="moderator[]" type="checkbox" {grouprow.MODERATOR_CHECKED} value="{grouprow.GROUP_ID}" />
+		</td>
+	</tr>
+	<!-- END grouprow -->
+</table>
+<br />
+<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+</fieldset>
+{S_FORM_TOKEN}
+</form>
+
+<!-- ELSEIF S_PERSONAL_ALBUM_PERMISSIONS_SELECT_GROUPS -->
+<form action="{S_ALBUM_ACTION}" method="post">
+<table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline">
+	<tr>
+		<th class="thCornerL" height="25" nowrap="nowrap">{L_USERGROUPS}</th>
+		<th class="thTop" nowrap="nowrap">{L_CAN_CREATE}</th>
+	</tr>
+	<!-- BEGIN creation_grouprow -->
+	<tr>
+		<td class="row1" align="center" height="28"><span class="gen">{creation_grouprow.GROUP_NAME}</span></td>
+		<td class="row2" align="center">
+			<input name="create[]" type="checkbox" {creation_grouprow.PRIVATE_CHECKED} value="{creation_grouprow.GROUP_ID}" />
+		</td>
+
+	</tr>
+	<!-- END creation_grouprow -->
+</table>
+<br />
+<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+</fieldset>
+{S_FORM_TOKEN}
+</form>
+
+<!-- ENDIF -->
+
+
+<!-- INCLUDE overall_footer.html -->
