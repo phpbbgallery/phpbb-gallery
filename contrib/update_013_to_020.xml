@@ -93,25 +93,6 @@
     </open>
     <open src="styles/prosilver/theme/buttons.css">
       <edit>
-        <find><![CDATA[.icon-bookmark, .icon-bump, .icon-subscribe, .icon-unsubscribe, .icon-pages, .icon-search]]></find>
-        <inline-edit>
-            <inline-find><![CDATA[, .icon-search]]></inline-find>
-            <inline-action type="after-add"><![CDATA[, .icon-gallery]]></inline-action>
-        </inline-edit>
-        <find><![CDATA[.buttons div.forwardpm-icon	{ width: {IMG_BUTTON_PM_FORWARD_WIDTH}px; height: {IMG_BUTTON_PM_FORWARD_HEIGHT}px; }]]></find>
-        <action type="after-add"><![CDATA[.buttons div.upload-icon	{ width: 119px; height: 25px; }]]></action>
-      </edit>
-    </open>
-    <open src="styles/prosilver/theme/colours.css">
-      <edit>
-        <find><![CDATA[.icon-search					{ background-image: url("{T_THEME_PATH}/images/icon_search.gif"); }]]></find>
-        <action type="after-add"><![CDATA[.icon-gallery					{ background-image: url("{T_THEME_PATH}/images/icon_gallery.gif"); }]]></action>
-        <find><![CDATA[.forwardpm-icon, .forwardpm-icon a 	{ background-image: url("{IMG_BUTTON_PM_FORWARD_SRC}") ;}]]></find>
-        <action type="after-add"><![CDATA[.upload-icon, .upload-icon a			{ background-image: url("{T_IMAGESET_LANG_PATH}/button_upload_image.gif"); }]]></action>
-      </edit>
-    </open>
-    <open src="styles/prosilver/theme/buttons.css">
-      <edit>
         <find><![CDATA[.buttons div.upload-icon	{ width: {IMG_BUTTON_UPLOAD_IMAGE_WIDTH}px; height: {IMG_BUTTON_UPLOAD_IMAGE_HEIGHT}px; }]]></find>
         <action type="replace-with"><![CDATA[.buttons div.upload-icon	{ width: 119px; height: 25px; }]]></action>
       </edit>
