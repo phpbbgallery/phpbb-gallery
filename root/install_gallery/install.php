@@ -1057,48 +1057,7 @@ switch ($mode)
 			}
 			$db->sql_freeresult($result);
 
-			// Drop the old tables
-			if ($db->sql_layer != 'mssql')
-			{
-				$sql = 'DROP TABLE IF EXISTS ' . $convert_prefix . 'album';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'DROP TABLE IF EXISTS ' . $convert_prefix . 'album_rate';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'DROP TABLE IF EXISTS ' . $convert_prefix . 'album_comment';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'DROP TABLE IF EXISTS ' . $convert_prefix . 'album_cat';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'DROP TABLE IF EXISTS ' . $convert_prefix . 'album_config';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-			}
-			else
-			{
-				$sql = 'if exists (select * from sysobjects where name = ' . $convert_prefix . 'album)
-				drop table ' . $convert_prefix . 'album';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'if exists (select * from sysobjects where name = ' . $convert_prefix . 'album_rate)
-				drop table ' . $convert_prefix . 'album_rate';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'if exists (select * from sysobjects where name = ' . $convert_prefix . 'album_comment)
-				drop table ' . $convert_prefix . 'album_comment';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'if exists (select * from sysobjects where name = ' . $convert_prefix . 'album_cat)
-				drop table ' . $convert_prefix . 'album_cat';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'if exists (select * from sysobjects where name = ' . $convert_prefix . 'album_config)
-				drop table ' . $convert_prefix . 'album_config';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-			}
+			// we don't drop these tables for security!
 
 			// create the acp modules
 			$modules = new acp_modules();
