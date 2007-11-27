@@ -839,6 +839,11 @@ switch ($mode)
 		$converted = false;
 		if ($convert == 1)
 		{
+			function decode_ip($int_ip)
+			{
+				$hexipbang = explode('.', chunk_split($int_ip, 2, '.'));
+				return hexdec($hexipbang[0]). '.' . hexdec($hexipbang[1]) . '.' . hexdec($hexipbang[2]) . '.' . hexdec($hexipbang[3]);
+			}
 			// Drop thes tables if existing
 			if ($db->sql_layer != 'mssql')
 			{
@@ -960,7 +965,7 @@ switch ($mode)
 				$rate_data = array(
 					'rate_image_id'					=> $row['rate_pic_id'],
 					'rate_user_id'					=> $row['rate_user_id'],
-					'rate_user_ip'					=> $row['rate_user_ip'],
+					'rate_user_ip'					=> decode_ip($row['rate_user_ip']),
 					'rate_point'					=> $row['rate_point'],
 				);
 				$db->sql_query('INSERT INTO ' . GALLERY_RATES_TABLE . ' ' . $db->sql_build_array('INSERT', $rate_data));
@@ -979,7 +984,7 @@ switch ($mode)
 					'comment_image_id'		=> $row['comment_pic_id'],
 					'comment_user_id'		=> $row['comment_user_id'],
 					'comment_username'		=> $row['comment_username'],
-					'comment_user_ip'		=> $row['comment_user_ip'],
+					'comment_user_ip'		=> decode_ip($row['comment_user_ip']),
 					'comment_time'			=> $row['comment_time'],
 					'comment'				=> $row['comment_text'],
 					'comment_uid'			=> '',
@@ -1039,7 +1044,7 @@ switch ($mode)
 					'image_desc_options'	=> 7,
 					'image_user_id'			=> $row['pic_user_id'],
 					'image_username'		=> $row['pic_username'],
-					'image_user_ip'			=> $row['pic_user_ip'],
+					'image_user_ip'			=> decode_ip($row['pic_user_ip']),
 					'image_time'			=> $row['pic_time'],
 					'image_album_id'		=> (in_array($row['pic_cat_id'], $personal_album) ? 0 : $row['pic_cat_id']),
 					'image_view_count'		=> $row['pic_view_count'],
