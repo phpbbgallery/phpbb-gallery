@@ -483,7 +483,7 @@ else if ($mode == 'images')
 					if (($user->data['user_type'] == USER_FOUNDER) || (($auth_data['moderator'] == 1) && ($thiscat['album_approval'] == ALBUM_MOD)))
 					{
 						$approval_mode = ($picrow[$j]['image_approval'] == 0) ? 'approval' : 'unapproval';
-						$approval_link = '<a href="'. append_sid("mcp.$phpEx?mode=$approval_mode&amp;pic_id=" . $picrow[$j]['image_id']) . '">';
+						$approval_link = '<a href="'. append_sid("mcp.$phpEx?mode=$approval_mode&amp;image_id=" . $picrow[$j]['image_id']) . '">';
 						$approval_link .= ($picrow[$j]['image_approval'] == 0) ? '<b>' . $user->lang['APPROVE'] . '</b>' : $user->lang['UNAPPROVE'];
 						$approval_link .= '</a>';
 					}
@@ -508,8 +508,8 @@ else if ($mode == 'images')
 					'COMMENTS'	=> ($album_config['comment'] == 1) ? ( '<a href="' . append_sid("image_page.$phpEx?id=" . $picrow[$j]['image_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $picrow[$j]['comments'] . '<br />') : '',
 					'EDIT'		=> ( ( $auth_data['edit'] && ($picrow[$j]['image_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($thiscat['album_edit_level'] <> ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="' . append_sid("edit.$phpEx?pic_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['EDIT_IMAGE'] . '</a>' : '',
 					'DELETE'	=> ( ( $auth_data['delete'] && ($picrow[$j]['image_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($thiscat['album_delete_level'] <> ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="' . append_sid("image_delete.$phpEx?id=" . $picrow[$j]['image_id']) . '">' . $user->lang['DELETE_IMAGE'] . '</a>' : '',
-					'MOVE'		=> ($auth_data['moderator']) ? '<a href="' . append_sid("mcp.$phpEx?mode=move&amp;pic_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['MOVE'] . '</a>' : '',
-					'LOCK'		=> ($auth_data['moderator']) ? '<a href="' . append_sid("mcp.$phpEx?mode=" . (($picrow[$j]['image_lock'] == 0) ? 'lock' : 'unlock') . "&amp;pic_id=" . $picrow[$j]['image_id']) . '">' . (($picrow[$j]['image_lock'] == 0) ? $user->lang['LOCK'] : $user->lang['UNLOCK']) . '</a>' : '',
+					'MOVE'		=> ($auth_data['moderator']) ? '<a href="' . append_sid("mcp.$phpEx?mode=move&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['MOVE'] . '</a>' : '',
+					'LOCK'		=> ($auth_data['moderator']) ? '<a href="' . append_sid("mcp.$phpEx?mode=" . (($picrow[$j]['image_lock'] == 0) ? 'lock' : 'unlock') . "&amp;image_id=" . $picrow[$j]['image_id']) . '">' . (($picrow[$j]['image_lock'] == 0) ? $user->lang['LOCK'] : $user->lang['UNLOCK']) . '</a>' : '',
 					'IP'		=> ($user->data['user_type'] == USER_FOUNDER) ? $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $picrow[$j]['image_user_ip'] . '" target="_blank">' . $picrow[$j]['image_user_ip'] . '</a><br />' : ''
 					)
 				);

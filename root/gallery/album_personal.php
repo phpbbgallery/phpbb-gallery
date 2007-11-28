@@ -184,7 +184,7 @@ if ($total_pics > 0)
 				'COMMENTS'	=> ($album_config['comment'] == 1) ? ( '<a href="' . append_sid("image_page.$phpEx?id=" . $picrow[$j]['image_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $picrow[$j]['comments'] . '<br />') : '',
 				'EDIT'		=> ( ($user->data['user_type'] == USER_FOUNDER) || ($user->data['user_id'] == $picrow[$j]['image_user_id']) ) ? '<a href="' . append_sid("edit.$phpEx?pic_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['EDIT_IMAGE'] . '</a>' : '',
 				'DELETE'	=> ( ($user->data['user_type'] == USER_FOUNDER) || ($user->data['user_id'] == $picrow[$j]['image_user_id']) ) ? '<a href="' . append_sid("image_delete.$phpEx?id=" . $picrow[$j]['image_id']) . '">' . $user->lang['DELETE_IMAGE'] . '</a>' : '',
-				'LOCK'		=> ($user->data['user_type'] == USER_FOUNDER) ? '<a href="' . append_sid("mcp.$phpEx?mode=" . (($picrow[$j]['image_lock'] == 0) ? 'lock' : 'unlock') . "&amp;pic_id=" . $picrow[$j]['image_id']) . '">'. (($picrow[$j]['image_lock'] == 0) ? $user->lang['LOCK'] : $user->lang['UNLOCK']) . '</a>' : '',
+				'LOCK'		=> ($user->data['user_type'] == USER_FOUNDER) ? '<a href="' . append_sid("mcp.$phpEx?mode=" . (($picrow[$j]['image_lock'] == 0) ? 'lock' : 'unlock') . "&amp;image_id=" . $picrow[$j]['image_id']) . '">'. (($picrow[$j]['image_lock'] == 0) ? $user->lang['LOCK'] : $user->lang['UNLOCK']) . '</a>' : '',
 				'IP'		=> ($user->data['user_type'] == USER_FOUNDER) ? $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $picrow[$j]['image_user_ip'] . '">' . $picrow[$j]['image_user_ip'] . '</a><br />' : '',
 				)
 			);
