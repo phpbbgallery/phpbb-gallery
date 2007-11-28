@@ -116,6 +116,7 @@ $lang = array_merge($lang, array(
 	'LOCK'							=> 'Lock',
 	'LOCKED'						=> 'Locked',
 	'LOGIN_EXPLAIN_PERSONAL_GALLERY'		=> 'You must registered and logged in to view the personal gallery.',
+	'LOGIN_EXPLAIN_UPLOAD'			=> 'You must registered and logged in to upload images into this gallery.',
 	'LOGIN_TO_COMMENT'				=> 'Login to post a comment',
 	'LOGIN_TO_RATE'					=> 'Login to rate this image',
 

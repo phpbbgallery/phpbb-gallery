@@ -131,6 +131,7 @@ $lang = array_merge($lang, array(
 	'LOCK'									=> 'Sperren',
 	'LOCKED'								=> 'Gesperrt',
 	'LOGIN_EXPLAIN_PERSONAL_GALLERY'		=> 'Du musst registriert und angemeldet sein, um Persönliche Alben anzuschauen.',
+	'LOGIN_EXPLAIN_UPLOAD'					=> 'Du musst registriert und angemeldet sein, um Bilder hochladen zu können.',
 	'LOGIN_TO_COMMENT'						=> 'Melde Dich an, um ein Kommentar abzugeben',
 	'LOGIN_TO_RATE'							=> 'Melde Dich an, um dieses Bild zu bewerten',
 
