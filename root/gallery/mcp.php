@@ -170,7 +170,7 @@ if ($mode == '')
 
 	// Set Variables
 	$start = request_var('start', 0);
-	$sort_method = request_var('sort_method', 'pic_time');
+	$sort_method = request_var('sort_method', 'image_time');
 	$sort_order = request_var('sort_order', 'DESC');
 
 	// Count Pics
