@@ -382,7 +382,7 @@ else
 				}
 			}
 
-			if (count($catrows))
+			if (count($catrows) == 0)
 			{
 				trigger_error('There is no more categories which you have permisson to move images to', E_USER_WARNING);
 			}
