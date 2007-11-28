@@ -147,7 +147,7 @@ if (!$auth_data['moderator'])
 	}
 	if (!$user->data['is_registered'])
 	{
-		login_box("gallery/mcp.$phpEx?cat_id=$cat_id", $user->lang['LOGIN_INFO']);
+		login_box("gallery/mcp.$phpEx?album_id=$album_id", $user->lang['LOGIN_INFO']);
 	}
 	else
 	{
@@ -399,7 +399,7 @@ else
 			// end write
 
 			$template->assign_vars(array(
-				'S_ALBUM_ACTION' 		=> append_sid("mcp.$phpEx?mode=move&amp;cat_id=$cat_id"),
+				'S_ALBUM_ACTION' 		=> append_sid("mcp.$phpEx?mode=move&amp;album_id=$album_id"),
 				'S_CATEGORY_SELECT' 	=> $category_select)
 			);
 			
@@ -547,7 +547,7 @@ else
 		$sql = 'SELECT image_id
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE image_id IN (' . $pic_id_sql . ') 
-				AND image_album_id <> ' . $cat_id;
+				AND image_album_id <> ' . $album_id;
 		$result = $db->sql_query($sql);
 		if ($db->sql_affectedrows($result) > 0)
 		{
@@ -637,7 +637,7 @@ else
 		$sql = 'SELECT image_id
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE image_id IN (' . $pic_id_sql . ') 
-				AND image_album_id <> ' . $cat_id;
+				AND image_album_id <> ' . $album_id;
 		$result = $db->sql_query($sql);
 		if( $db->sql_affectedrows($result) > 0 )
 		{
@@ -713,7 +713,7 @@ else
 		$sql = 'SELECT image_id
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE image_id IN (' . $pic_id_sql . ') 
-				AND image_album_id <> ' . $cat_id;
+				AND image_album_id <> ' . $album_id;
 		$result = $db->sql_query($sql);
 		if( $db->sql_affectedrows($result) > 0 )
 		{
@@ -726,7 +726,7 @@ else
 			WHERE image_id IN (' . $pic_id_sql . ')';
 		$result = $db->sql_query($sql);
 
-		$message = $user->lang['IMAGES_APPROVED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$cat_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?cat_id=$cat_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
+		$message = $user->lang['IMAGES_APPROVED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
 		trigger_error($message, E_USER_WARNING);
 	}
 	else if ($mode == 'unapproval')
@@ -778,7 +778,7 @@ else
 		$sql = 'SELECT image_id
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE image_id IN (' . $pic_id_sql . ') 
-				AND image_album_id <> ' . $cat_id;
+				AND image_album_id <> ' . $album_id;
 		$result = $db->sql_query($sql);
 
 		if ($db->sql_affectedrows($result) > 0)
@@ -907,7 +907,7 @@ else
 			$sql = 'SELECT image_id
 				FROM ' . GALLERY_IMAGES_TABLE . '
 				WHERE image_id IN (' . $pic_id_sql . ') 
-					AND image_album_id <> ' . $cat_id;
+					AND image_album_id <> ' . $album_id;
 			$result = $db->sql_query($sql);
 			if ($db->sql_affectedrows($result) > 0)
 			{
