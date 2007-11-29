@@ -326,13 +326,13 @@ class acp_gallery
 				$moderator_groups 	= @implode(',', $_POST['moderator']);
 
 				$sql_ary = array(
-					'album_view_groups'		=> $view_groups,
-					'album_upload_groups'		=> $upload_groups,
-					'album_rate_groups'		=> $rate_groups,
-					'album_comment_groups'	=> $comment_groups,
-					'album_edit_groups'		=> $edit_groups,
-					'album_delete_groups'		=> $delete_groups,
-					'album_moderator_groups'	=> $moderator_groups,
+					'album_view_groups'			=> (isset($view_groups)) ? $view_groups : 0,
+					'album_upload_groups'		=> (isset($upload_groups)) ? $upload_groups : 0,
+					'album_rate_groups'			=> (isset($rate_groups)) ? $rate_groups : 0,
+					'album_comment_groups'		=> (isset($comment_groups)) ? $comment_groups : 0,
+					'album_edit_groups'			=> (isset($edit_groups)) ? $edit_groups : 0,
+					'album_delete_groups'		=> (isset($delete_groups)) ? $delete_groups : 0,
+					'album_moderator_groups'	=> (isset($moderator_groups)) ? $moderator_groups : 0,
 				);
 
 				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' 
