@@ -55,9 +55,14 @@ else if ($album_data['album_type'] == 2)
 }
 if ($mode == 'albums')
 {//we have this twice, we could build a function to keep the bytes down (see gallery/index.php)
-	$sql = 'SELECT ga.*, COUNT(p.image_id) AS count
+	$sql = 'SELECT ga.*, COUNT(p.image_id) AS count, MAX(p.image_id) as last_image
 			FROM ' . GALLERY_ALBUMS_TABLE . ' AS ga
-				LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' AS p ON ga.album_id = p.image_album_id
+			LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' AS sa
+				ON ( sa.left_id < ga.right_id
+					AND sa.left_id > ga.left_id )
+			LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' AS p
+				ON ( p.image_album_id = sa.album_id
+					OR p.image_album_id = ga.album_id )
 			WHERE ga.album_id <> 0
 				AND ga.parent_id = ' . $album_data['album_id'] . '
 			GROUP BY ga.album_id
@@ -163,10 +168,10 @@ if ($mode == 'albums')
 
 			$sql = 'SELECT p.image_id, p.image_name, p.image_user_id, p.image_username, p.image_time, p.image_album_id, u.user_id, u.username, u.user_colour
 					FROM ' . GALLERY_IMAGES_TABLE . ' AS p
-						LEFT JOIN ' . USERS_TABLE . ' AS u ON p.image_user_id = u.user_id
-					WHERE p.image_album_id = ' . $album[$i]['album_id'] . ' ' . $pic_approval_sql . ' 
-						ORDER BY p.image_time DESC
-						LIMIT 1';
+					LEFT JOIN ' . USERS_TABLE . ' AS u
+						ON p.image_user_id = u.user_id
+					WHERE p.image_id = ' . $album[$i]['last_image'] . ' ' . $pic_approval_sql . ' 
+					ORDER BY p.image_time DESC';
 			$result = $db->sql_query($sql);
 			$lastrow = $db->sql_fetchrow($result);
 

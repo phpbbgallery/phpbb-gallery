@@ -35,9 +35,14 @@ include($album_root_path . 'includes/common.'.$phpEx);
 +----------------------------------------------------------
 */
 
-$sql = 'SELECT a.*, COUNT(p.image_id) AS count
+$sql = 'SELECT a.*, COUNT(p.image_id) AS count, MAX(p.image_id) as last_image
 		FROM ' . GALLERY_ALBUMS_TABLE . ' AS a
-			LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' AS p ON a.album_id = p.image_album_id
+		LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' AS sa
+			ON ( sa.left_id < a.right_id
+				AND sa.left_id > a.left_id )
+		LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' AS p
+			ON ( p.image_album_id = sa.album_id
+				OR p.image_album_id = a.album_id )
 		WHERE a.album_id <> 0
 			AND a.parent_id = 0
 		GROUP BY a.album_id
@@ -143,10 +148,10 @@ for ($i = 0; $i < count($album); $i++)
 
 		$sql = 'SELECT p.image_id, p.image_name, p.image_user_id, p.image_username, p.image_time, p.image_album_id, u.user_id, u.username, u.user_colour
 				FROM ' . GALLERY_IMAGES_TABLE . ' AS p
-					LEFT JOIN ' . USERS_TABLE . ' AS u ON p.image_user_id = u.user_id
-				WHERE p.image_album_id = ' . $album[$i]['album_id'] . ' ' . $pic_approval_sql . ' 
-					ORDER BY p.image_time DESC
-					LIMIT 1';
+				LEFT JOIN ' . USERS_TABLE . ' AS u
+					ON p.image_user_id = u.user_id
+				WHERE p.image_id = ' . $album[$i]['last_image'] . ' ' . $pic_approval_sql . ' 
+				ORDER BY p.image_time DESC';
 		$result = $db->sql_query($sql);
 		$lastrow = $db->sql_fetchrow($result);
 
