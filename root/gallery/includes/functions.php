@@ -625,4 +625,79 @@ function get_album_parents(&$album_data)
 
 	return $album_parents;
 }
+/**
+* make the jump box, parent_album box, etc
+*/
+function make_album_jumpbox($select_id = false, $ignore_id = false, $album = false, $ignore_acl = false, $ignore_nonpost = false, $ignore_emptycat = true, $only_acl_post = false, $return_array = false)
+{
+	global $db, $user, $auth;
+
+	// no permissions yet
+	$acl = ($ignore_acl) ? '' : (($only_acl_post) ? 'f_post' : array('f_list', 'a_forum', 'a_forumadd', 'a_forumdel'));
+
+	// This query is identical to the jumpbox one
+	$sql = 'SELECT album_id, album_name, parent_id, left_id, right_id, album_type
+		FROM ' . GALLERY_ALBUMS_TABLE . '
+		ORDER BY left_id ASC';
+	$result = $db->sql_query($sql, 600);
+
+	$right = 0;
+	$padding_store = array('0' => '');
+	$padding = '';
+	$forum_list = ($return_array) ? array() : '';
+
+	// Sometimes it could happen that forums will be displayed here not be displayed within the index page
+	// This is the result of forums not displayed at index, having list permissions and a parent of a forum with no permissions.
+	// If this happens, the padding could be "broken"
+
+	while ($row = $db->sql_fetchrow($result))
+	{
+		if ($row['left_id'] < $right)
+		{
+			$padding .= '&nbsp; &nbsp;';
+			$padding_store[$row['parent_id']] = $padding;
+		}
+		else if ($row['left_id'] > $right + 1)
+		{
+			$padding = (isset($padding_store[$row['parent_id']])) ? $padding_store[$row['parent_id']] : '';
+		}
+
+		$right = $row['right_id'];
+		$disabled = false;
+
+		if ($acl && !$auth->acl_gets($acl, $row['album_id']))
+		{
+			// List permission?
+			if ($auth->acl_get('f_list', $row['album_id']))
+			{
+				$disabled = true;
+			}
+			else
+			{
+				continue;
+			}
+		}
+
+		if (((is_array($ignore_id) && in_array($row['album_id'], $ignore_id)) || $row['album_id'] == $ignore_id) || ($album && ($row['album_type'] != 2)))
+		{
+			$disabled = true;
+		}
+
+		if ($return_array)
+		{
+			// Include some more information...
+			$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? true : false) : (($row['album_id'] == $select_id) ? true : false);
+			$forum_list[$row['album_id']] = array_merge(array('padding' => $padding, 'selected' => ($selected && !$disabled), 'disabled' => $disabled), $row);
+		}
+		else
+		{
+			$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? ' selected="selected"' : '') : (($row['album_id'] == $select_id) ? ' selected="selected"' : '');
+			$forum_list .= '<option value="' . $row['album_id'] . '"' . (($disabled) ? ' disabled="disabled" class="disabled-option"' : $selected) . '>' . $padding . $row['album_name'] . '</option>';
+		}
+	}
+	$db->sql_freeresult($result);
+	unset($padding_store);
+
+	return $forum_list;
+}
 ?>
