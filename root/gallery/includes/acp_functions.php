@@ -175,15 +175,15 @@ function permission_drop_down_box($type, $permission)
 	$permission_drop_down_box = "<select name='". $type . "'>";
 	if ($type == 'album_approval')
 	{
-		$permission_drop_down_box .= '<option' . (($permission == ALBUM_ANONYMOUS) ? ' selected="selected"' : '') . ' value="1">' . $user->lang['DISABLED'] . '</option>';
+		$permission_drop_down_box .= '<option' . (($permission == ALBUM_USER) ? ' selected="selected"' : '') . ' value="0">' . $user->lang['DISABLED'] . '</option>';
 	}
 	if (($type == 'album_view_level') || ($type == 'album_upload_level') || ($type == 'album_rate_level') || ($type == 'album_comment_level'))
 	{
 		$permission_drop_down_box .= '<option' . (($permission == ALBUM_ANONYMOUS) ? ' selected="selected"' : '') . ' value="1">' . $user->lang['GALLERY_ALL'] . '</option>';
 	}
-	$permission_drop_down_box .= '<option' . (($permission == ALBUM_USER) ? ' selected="selected"' : '') . ' value="0">' . $user->lang['GALLERY_REG'] . '</option>';
 	if ($type != 'album_approval')
 	{
+		$permission_drop_down_box .= '<option' . (($permission == ALBUM_USER) ? ' selected="selected"' : '') . ' value="0">' . $user->lang['GALLERY_REG'] . '</option>';
 		$permission_drop_down_box .= '<option' . (($permission == ALBUM_PRIVATE) ? ' selected="selected"' : '') . ' value="2">' . $user->lang['GALLERY_PRIVATE'] . '</option>';
 	}
 	$permission_drop_down_box .= '<option' . (($permission == ALBUM_MOD) ? ' selected="selected"' : '') . ' value="3">' . $user->lang['GALLERY_MOD'] . '</option>';
