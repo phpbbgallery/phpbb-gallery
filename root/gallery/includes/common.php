@@ -39,7 +39,7 @@ include($phpbb_root_path . 'gallery/includes/functions.' . $phpEx);
 //include($album_root_path . 'includes/constants.' . $phpEx);
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> $user->lang['GALLERY'],
-	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
+	'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}gallery/index.$phpEx"),
 ));
 
 ?>
