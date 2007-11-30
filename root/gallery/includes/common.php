@@ -35,7 +35,11 @@ $template->assign_vars(array(
 	'ALBUM_VERSION' => '2' . $album_config['album_version'],
 ));
 $user->add_lang('mods/info_acp_gallery');
-include($album_root_path . 'includes/functions.' . $phpEx);
+include($phpbb_root_path . 'gallery/includes/functions.' . $phpEx);
 //include($album_root_path . 'includes/constants.' . $phpEx);
+$template->assign_block_vars('navlinks', array(
+	'FORUM_NAME'	=> $user->lang['GALLERY'],
+	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
+));
 
 ?>
