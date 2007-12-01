@@ -161,11 +161,12 @@ for ($i = 0; $i < count($album); $i++)
 		{
 			$lastrow['image_name'] = substr($lastrow['image_name'], 0, $album_config['last_pic_title_length']) . '...';
 		}
-		$last_pic_info .= '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $lastrow['image_id']) . '" style="font-weight: bold;">';
+		$last_pic_info .= '<a href="' . append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?id=" . $lastrow['image_id']) . '" style="font-weight: bold;">';
 		$last_pic_info .= $lastrow['image_name'] . '</a><br />' . $user->lang['POST_BY_AUTHOR'] . ' ';
 		$last_pic_info .= get_username_string('full', $lastrow['user_id'], ($lastrow['user_id'] <> ANONYMOUS) ? $lastrow['username'] : $user->lang['GUEST'], $lastrow['user_colour']);
-//		$last_pic_info .= '<a href="' . append_sid("../memberlist.$phpEx?mode=viewprofile&amp;u=". $lastrow['user_id']) .'" style="color: #' . $user->data['user_colour'] . ';" class="username-coloured">'. $lastrow['username'] .'</a> ';
-		$last_pic_info .= '<a href="' . append_sid("{$album_root_path}image_page.$phpEx?id=" . $lastrow['image_id']) . '"><img src="' . $phpbb_root_path . 'styles/prosilver/imageset/icon_topic_latest.gif" width="11" height="9" alt="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" title="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" /></a><br />';
+//		$last_pic_info .= '<a href="' . append_sid("{$phpbb_root_path}/memberlist.$phpEx?mode=viewprofile&amp;u=". $lastrow['user_id']) .'" style="color: #' . $user->data['user_colour'] . ';" class="username-coloured">'. $lastrow['username'] .'</a> ';
+		$last_pic_info .= '<a href="' . append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?id=" . $lastrow['image_id']) . '"><img src="' . $phpbb_root_path . 'styles/prosilver/imageset/icon_topic_latest.gif" width="11" height="9" alt="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" title="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" /></a><br />';
+		/*uh, hardcoded image*/
 		$last_pic_info .= $user->lang['POSTED_ON_DATE'] . ' ' . $user->format_date($lastrow['image_time']);
 	}
 	if ($album[$i]['left_id'] + 1 != $album[$i]['right_id'])
@@ -192,7 +193,7 @@ for ($i = 0; $i < count($album); $i++)
 	// ------------------------------------------
 
 	$template->assign_block_vars('albumrow', array(
-		'U_VIEW_CAT' 		=> append_sid("album.$phpEx?id=" . $album[$i]['album_id']),
+		'U_VIEW_CAT' 		=> append_sid($phpbb_root_path . 'gallery/album.$phpEx?id=' . $album[$i]['album_id']),
 		'CAT_TITLE' 		=> $album[$i]['album_name'],
 		'ALBUM_FOLDER_IMG_SRC'		=> $user->img($folder_image, $folder_alt, false, '', 'src'),
 		'SUBALBUMS'			=> get_album_children($album[$i]['album_id']),
