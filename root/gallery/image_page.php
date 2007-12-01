@@ -11,11 +11,10 @@
 
 define('IN_PHPBB', true);
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
-$album_root_path = $phpbb_root_path . 'gallery/';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
-include($album_root_path . 'includes/common.'.$phpEx);
+include($phpbb_root_path . 'gallery/includes/common.'.$phpEx);
 
 // Start session management
 $user->session_begin();
@@ -110,11 +109,7 @@ if (empty($thispic) || !file_exists(ALBUM_UPLOAD_PATH . $thispic['image_filename
 
 if ($album_id <> PERSONAL_GALLERY)
 {
-	$sql = 'SELECT *
-		FROM ' . GALLERY_ALBUMS_TABLE . '
-		WHERE album_id = ' . $album_id;
-	$result = $db->sql_query($sql);
-	$thiscat = $db->sql_fetchrow($result);
+	$thiscat = get_album_info($album_id);
 }
 else
 {
@@ -555,7 +550,7 @@ if ($album_config['comment'])
 
 				$edit_info = ($commentrow[$i]['comment_edit_count'] == 1) ? $user->lang['EDITED_TIME_TOTAL'] : $user->lang['EDITED_TIMES_TOTAL'];
 
-				$edit_info = '<br /><br />&raquo;&nbsp;'. sprintf($edit_info, $lastedit_row['username'], $user->format_date($commentrow[$i]['comment_edit_time']), $commentrow[$i]['comment_edit_count']) .'<br />';
+				$edit_info = '<br /><br />&raquo;&nbsp;'. sprintf($edit_info, get_username_string('full', $lastedit_row['user_id'], $lastedit_row['username'], $lastedit_row['user_colour']), $user->format_date($commentrow[$i]['comment_edit_time']), $commentrow[$i]['comment_edit_count']) .'<br />';
 			}
 			else
 			{
@@ -605,7 +600,7 @@ if ($album_config['comment'])
 // Build the navigation
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'		=> $user->lang['GALLERY'],
-	'U_VIEW_FORUM'		=> append_sid("{$album_root_path}index.$phpEx"),
+	'U_VIEW_FORUM'		=> append_sid("{$phpbb_root_path}gallery/index.$phpEx"),
 ));
 
 if ($album_id <> PERSONAL_GALLERY)
@@ -616,12 +611,12 @@ else
 {
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],
-		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal_index.$phpEx"),
+		'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}gallery/album_personal_index.$phpEx"),
 	));
 
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $thispic['username']),
-		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal.$phpEx", 'user_id=' . $user_id),
+		'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}gallery/album_personal.$phpEx", 'user_id=' . $user_id),
 	));
 }
 
