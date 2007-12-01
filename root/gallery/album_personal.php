@@ -170,7 +170,7 @@ if ($total_pics > 0)
 			$message_parser->decode_message($picrow[$j]['image_desc_uid']);
 
 			$template->assign_block_vars('picrow.piccol', array(
-				'U_PIC'			=> ($album_config['fullpic_popup']) ? append_sid("image.$phpEx?pic_id=" . $picrow[$j]['image_id']) : append_sid("image_page.$phpEx?id=" . $picrow[$j]['image_id']),
+				'U_PIC'			=> ($album_config['fullpic_popup']) ? append_sid("image.$phpEx?pic_id=" . $picrow[$j]['image_id']) : append_sid("image_page.$phpEx?image_id=" . $picrow[$j]['image_id']),
 				'THUMBNAIL'		=> append_sid("thumbnail.$phpEx?pic_id=" . $picrow[$j]['image_id']),
 				'DESC'			=> $message_parser->message,
 				)
@@ -180,8 +180,8 @@ if ($total_pics > 0)
 				'TITLE'		=> $picrow[$j]['image_name'],
 				'TIME'		=> $user->format_date($picrow[$j]['image_time']),
 				'VIEW'		=> $picrow[$j]['image_view_count'],
-				'RATING'	=> ($album_config['rate'] == 1) ? ( '<a href="' . append_sid("image_page.$phpEx?id=" . $picrow[$j]['image_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $picrow[$j]['rating'] . '<br />') : '',
-				'COMMENTS'	=> ($album_config['comment'] == 1) ? ( '<a href="' . append_sid("image_page.$phpEx?id=" . $picrow[$j]['image_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $picrow[$j]['comments'] . '<br />') : '',
+				'RATING'	=> ($album_config['rate'] == 1) ? ( '<a href="' . append_sid("image_page.$phpEx?image_id=" . $picrow[$j]['image_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $picrow[$j]['rating'] . '<br />') : '',
+				'COMMENTS'	=> ($album_config['comment'] == 1) ? ( '<a href="' . append_sid("image_page.$phpEx?image_id=" . $picrow[$j]['image_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $picrow[$j]['comments'] . '<br />') : '',
 				'EDIT'		=> ( ($user->data['user_type'] == USER_FOUNDER) || ($user->data['user_id'] == $picrow[$j]['image_user_id']) ) ? '<a href="' . append_sid("edit.$phpEx?pic_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['EDIT_IMAGE'] . '</a>' : '',
 				'DELETE'	=> ( ($user->data['user_type'] == USER_FOUNDER) || ($user->data['user_id'] == $picrow[$j]['image_user_id']) ) ? '<a href="' . append_sid("image_delete.$phpEx?id=" . $picrow[$j]['image_id']) . '">' . $user->lang['DELETE_IMAGE'] . '</a>' : '',
 				'LOCK'		=> ($user->data['user_type'] == USER_FOUNDER) ? '<a href="' . append_sid("mcp.$phpEx?mode=" . (($picrow[$j]['image_lock'] == 0) ? 'lock' : 'unlock') . "&amp;image_id=" . $picrow[$j]['image_id']) . '">'. (($picrow[$j]['image_lock'] == 0) ? $user->lang['LOCK'] : $user->lang['UNLOCK']) . '</a>' : '',
@@ -269,11 +269,6 @@ $template->assign_vars(array(
 | Start output the page
 +----------------------------------------------------------
 */
-
-$template->assign_block_vars('navlinks', array(
-	'FORUM_NAME'	=> $user->lang['GALLERY'],
-	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
-));
 
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],

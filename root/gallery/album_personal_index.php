@@ -131,7 +131,7 @@ for ($i = 0; $i < count($memberrow); $i++)
 			$lastrow['image_name'] = substr($lastrow['image_name'], 0, $album_config['last_pic_title_length']) . '...';
 		}
 
-		$last_pic_info .= '<a href="' . append_sid("./image_page.$phpEx?id=". $lastrow['image_id']) .'">';
+		$last_pic_info .= '<a href="' . append_sid("./image_page.$phpEx?image_id=". $lastrow['image_id']) .'">';
 		$last_pic_info .= $lastrow['image_name'] .'</a> ' . $user->lang['POST_BY_AUTHOR'] . ' ';
 
 		// ----------------------------
@@ -161,7 +161,7 @@ for ($i = 0; $i < count($memberrow); $i++)
 		$pic_title = substr($pic_title, 0, $album_config['last_pic_title_length']) . '...'; 
 	}
 	$last_pic_info  = $user->lang['IMAGE_TITLE'] . ': <a href="'; 
-	$last_pic_info .= ($album_config['fullpic_popup']) ? append_sid("image_page.$phpEx?pic_id=" . $pic_id) . '" title="' . $pic_title_full . '">' : append_sid("image_page.$phpEx?pic_id=" . $pic_id) . '" title="' . $pic_title_full . '">'; 
+	$last_pic_info .= ($album_config['fullpic_popup']) ? append_sid("image_page.$phpEx?image_id=" . $pic_id) . '" title="' . $pic_title_full . '">' : append_sid("image_page.$phpEx?image_id=" . $pic_id) . '" title="' . $pic_title_full . '">'; 
 	$last_pic_info .= $pic_title . '</a><br />' . $user->lang['POSTED_ON_DATE'] . ' ' . $user->format_date($memberrow[$i]['image_time']);
 
 	$template->assign_block_vars('memberrow', array(
@@ -192,11 +192,6 @@ if ($total = $db->sql_fetchrow($result))
 $template->assign_vars(array(
 	'PAGINATION' 	=> $pagination,
 	'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $config['topics_per_page'] ) + 1 ), ceil( $total_galleries / $config['topics_per_page'] )),
-));
-
-$template->assign_block_vars('navlinks', array(
-	'FORUM_NAME'	=> $user->lang['GALLERY'],
-	'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
 ));
 
 $template->assign_block_vars('navlinks', array(

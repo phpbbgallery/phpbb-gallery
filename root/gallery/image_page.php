@@ -24,7 +24,7 @@ $user->setup('mods/gallery');
 /**
 * Check the request
 */
-$pic_id = request_var('id', 0);
+$pic_id = request_var('image_id', request_var('id', 0));
 if (!$pic_id)
 {
 	trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
@@ -573,12 +573,12 @@ if ($album_config['comment'])
 				'ID' 			=> $commentrow[$i]['comment_id'],
 				'POSTER' 		=> get_username_string('full', $commentrow[$i]['user_id'], ($commentrow[$i]['user_id'] <> ANONYMOUS) ? $commentrow[$i]['username'] : $user->lang['GUEST'], $commentrow[$i]['user_colour']),
 				'TIME' 			=> $user->format_date($commentrow[$i]['comment_time']),
-				'IP' 			=> ($user->data['user_type'] == USER_FOUNDER) ? '-----------------------------------<br />' . $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $commentrow[$i]['comment_user_ip'] . '" target="_blank">' . $commentrow[$i]['comment_user_ip'] .'</a><br />' : '',
+				'IP' 			=> ($user->data['user_type'] == USER_FOUNDER) ? '<br />' . $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $commentrow[$i]['comment_user_ip'] . '">' . $commentrow[$i]['comment_user_ip'] .'</a><br />' : '',
 				'S_ROW_STYLE' 	=> $row_style,
 				'TEXT' 			=> generate_text_for_display($commentrow[$i]['comment'], $commentrow[$i]['comment_uid'], $commentrow[$i]['comment_bitfield'], 7),
 				'EDIT_INFO' 	=> $edit_info,
-				'EDIT' 			=> '',//missing feature ( ( $auth_data['edit'] && ($commentrow[$i]['comment_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($thiscat['album_edit_level'] != ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="'. append_sid("edit.$phpEx?comment_id=". $commentrow[$i]['comment_id']) .'">'. $user->lang['EDIT_IMAGE'] .'</a>' : '',
-				'DELETE' 		=> '',//missing feature ( ( $auth_data['delete'] && ($commentrow[$i]['comment_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($thiscat['album_delete_level'] != ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="'. append_sid("edit.$phpEx?comment_id=". $commentrow[$i]['comment_id']) .'">'. $user->lang['DELETE_IMAGE'] .'</a>' : ''
+				'EDIT' 			=> '',//( ( $auth_data['edit'] && ($commentrow[$i]['comment_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($thiscat['album_edit_level'] != ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="'. append_sid("edit.$phpEx?comment_id=". $commentrow[$i]['comment_id']) .'">'. $user->lang['EDIT_IMAGE'] .'</a>' : '',
+				'DELETE' 		=> '',//( ( $auth_data['delete'] && ($commentrow[$i]['comment_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($thiscat['album_delete_level'] != ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="'. append_sid("edit.$phpEx?comment_id=". $commentrow[$i]['comment_id']) .'">'. $user->lang['DELETE_IMAGE'] .'</a>' : ''
 				)
 			);
 		}
@@ -598,11 +598,6 @@ if ($album_config['comment'])
 }
 
 // Build the navigation
-$template->assign_block_vars('navlinks', array(
-	'FORUM_NAME'		=> $user->lang['GALLERY'],
-	'U_VIEW_FORUM'		=> append_sid("{$phpbb_root_path}gallery/index.$phpEx"),
-));
-
 if ($album_id <> PERSONAL_GALLERY)
 {
 	generate_album_nav($thiscat);
@@ -621,7 +616,7 @@ else
 }
 
 // Output page
-$page_title = $user->lang['VIEW_IMAGE'];// . ' - ' . $thiscat['album_name']; ### add image title later
+$page_title = $user->lang['VIEW_IMAGE'];// . ' &bull; ' . $thiscat['album_name']; ### add image title later
 
 page_header($page_title);
 

@@ -217,7 +217,7 @@ if ($album_data['album_type'] == 2)
 				$message_parser->message	= $picrow[$j]['image_desc'];
 				$message_parser->decode_message($picrow[$j]['image_desc_uid']);
 				$template->assign_block_vars('picrow.piccol', array(
-					'U_PIC'			=> ($album_config['fullpic_popup']) ? append_sid($phpbb_root_path . "gallery/image.$phpEx?pic_id=" . $picrow[$j]['image_id']) : append_sid($phpbb_root_path . "gallery/image_page.$phpEx?id=" . $picrow[$j]['image_id']),
+					'U_PIC'			=> ($album_config['fullpic_popup']) ? append_sid($phpbb_root_path . "gallery/image.$phpEx?pic_id=" . $picrow[$j]['image_id']) : append_sid($phpbb_root_path . "gallery/image_page.$phpEx?image_id=" . $picrow[$j]['image_id']),
 					'THUMBNAIL'		=> append_sid("thumbnail.$phpEx?pic_id=" . $picrow[$j]['image_id']),
 					'DESC'			=> $message_parser->message,
 					'APPROVAL'		=> $approval_link,
@@ -228,8 +228,8 @@ if ($album_data['album_type'] == 2)
 					'POSTER'	=> get_username_string('full', $picrow[$j]['user_id'], ($picrow[$j]['user_id'] <> ANONYMOUS) ? $picrow[$j]['username'] : $user->lang['GUEST'], $picrow[$j]['user_colour']),
 					'TIME'		=> $user->format_date($picrow[$j]['image_time']),
 					'VIEW'		=> $picrow[$j]['image_view_count'],
-					'RATING'	=> ($album_config['rate'] == 1) ? ( '<a href="' . append_sid($phpbb_root_path . "gallery/image_page.$phpEx?id=" . $picrow[$j]['image_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $picrow[$j]['rating'] . '<br />') : '',
-					'COMMENTS'	=> ($album_config['comment'] == 1) ? ( '<a href="' . append_sid($phpbb_root_path . "gallery/image_page.$phpEx?id=" . $picrow[$j]['image_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $picrow[$j]['comments'] . '<br />') : '',
+					'RATING'	=> ($album_config['rate'] == 1) ? ( '<a href="' . append_sid($phpbb_root_path . "gallery/image_page.$phpEx?image_id=" . $picrow[$j]['image_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $picrow[$j]['rating'] . '<br />') : '',
+					'COMMENTS'	=> ($album_config['comment'] == 1) ? ( '<a href="' . append_sid($phpbb_root_path . "gallery/image_page.$phpEx?image_id=" . $picrow[$j]['image_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $picrow[$j]['comments'] . '<br />') : '',
 					'EDIT'		=> ( ( $auth_data['edit'] && ($picrow[$j]['image_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($album_data['album_edit_level'] <> ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="' . append_sid($phpbb_root_path . "gallery/edit.$phpEx?pic_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['EDIT_IMAGE'] . '</a>' : '',
 					'DELETE'	=> ( ( $auth_data['delete'] && ($picrow[$j]['image_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($album_data['album_delete_level'] <> ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="' . append_sid($phpbb_root_path . "gallery/image_delete.$phpEx?id=" . $picrow[$j]['image_id']) . '">' . $user->lang['DELETE_IMAGE'] . '</a>' : '',
 					'MOVE'		=> ($auth_data['moderator']) ? '<a href="' . append_sid($phpbb_root_path . "gallery/mcp.$phpEx?mode=move&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['MOVE'] . '</a>' : '',
