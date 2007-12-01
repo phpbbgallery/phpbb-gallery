@@ -193,7 +193,7 @@ for ($i = 0; $i < count($album); $i++)
 	// ------------------------------------------
 
 	$template->assign_block_vars('albumrow', array(
-		'U_VIEW_CAT' 		=> append_sid($phpbb_root_path . 'gallery/album.$phpEx?id=' . $album[$i]['album_id']),
+		'U_VIEW_CAT' 		=> append_sid($phpbb_root_path . "gallery/album.$phpEx?id=" . $album[$i]['album_id']),
 		'CAT_TITLE' 		=> $album[$i]['album_name'],
 		'ALBUM_FOLDER_IMG_SRC'		=> $user->img($folder_image, $folder_alt, false, '', 'src'),
 		'SUBALBUMS'			=> get_album_children($album[$i]['album_id']),
