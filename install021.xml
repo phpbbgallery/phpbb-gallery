@@ -143,7 +143,7 @@ For Features see the forum topic.]]></description>
         <find><![CDATA[.icon-search					{ background-image: url("{T_THEME_PATH}/images/icon_search.gif"); }]]></find>
         <action type="after-add"><![CDATA[.icon-gallery					{ background-image: url("{T_THEME_PATH}/images/icon_gallery.gif"); }]]></action>
         <find><![CDATA[.forwardpm-icon, .forwardpm-icon a 	{ background-image: url("{IMG_BUTTON_PM_FORWARD_SRC}") ;}]]></find>
-        <action type="after-add"><![CDATA[.upload-icon, .upload-icon a			{ background-image: url("{T_IMAGESET_LANG_PATH}/button_upload_image.gif"); }]]></action>
+        <action type="after-add"><![CDATA[.upload-icon span					{ background-image: url("{T_IMAGESET_LANG_PATH}/button_upload_image.gif"); }]]></action>
       </edit>
     </open>
     <diy-instructions lang="en-gb">browse to install_gallery/install.php and run the installer</diy-instructions>
