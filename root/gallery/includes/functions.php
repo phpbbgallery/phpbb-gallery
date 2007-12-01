@@ -700,4 +700,36 @@ function make_album_jumpbox($select_id = false, $ignore_id = false, $album = fal
 
 	return $forum_list;
 }
+/**
+* get image info
+*/
+function get_image_info($image_id)
+{
+	global $db, $user;
+
+	$sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, r2.rate_point AS your_rate
+		FROM ' . GALLERY_IMAGES_TABLE . ' AS p
+		LEFT JOIN ' . USERS_TABLE . ' AS u
+			ON p.image_user_id = u.user_id
+		LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
+			ON p.image_id = r.rate_image_id
+		LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r2
+			ON (p.image_id = r2.rate_image_id
+				AND r2.rate_user_id = ' . $user->data['user_id'] . ')
+		LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
+			ON p.image_id = c.comment_image_id
+		WHERE image_id = ' . $image_id . '
+		GROUP BY p.image_id';
+	$result = $db->sql_query($sql);
+	$row = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+
+	if (!$row)
+	{
+		trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_ERROR);
+	}
+
+	return $row;
+}
+
 ?>

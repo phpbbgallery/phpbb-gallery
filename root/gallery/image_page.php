@@ -24,122 +24,54 @@ $user->setup('mods/gallery');
 /**
 * Check the request
 */
-$pic_id = request_var('image_id', request_var('id', 0));
-if (!$pic_id)
+$image_id = request_var('image_id', request_var('id', 0));
+if (!$image_id)
 {
 	trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
 }
-
-
 // ------------------------------------
 // Salting the form...yumyum ...
 // ------------------------------------
 add_form_key('image_page');
 
-
-// ------------------------------------
-// PREVIOUS & NEXT
-// ------------------------------------
-
-if( isset($_GET['mode']) )
-{
-	if( ($_GET['mode'] == 'next') || ($_GET['mode'] == 'previous') )
-	{
-		$sql = 'SELECT image_id, image_album_id, image_user_id
-			FROM ' . GALLERY_IMAGES_TABLE . '
-			WHERE image_id = '. $pic_id;
-
-		$result = $db->sql_query($sql);
-		$row = $db->sql_fetchrow($result);
-
-		if (empty($row))
-		{
-			trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_WARNING);
-		}
-
-		$sql = 'SELECT new.image_id, new.image_time
-			FROM ' . GALLERY_IMAGES_TABLE . ' AS new, ' . GALLERY_IMAGES_TABLE . ' AS cur
-			WHERE cur.image_id = ' . $pic_id . '
-				AND new.image_id <> cur.image_id
-				AND new.image_album_id = cur.image_album_id';
-
-		$sql .= ($_GET['mode'] == 'next') ? ' AND new.image_time >= cur.image_time' : ' AND new.image_time <= cur.image_time';
-		$sql .= ($row['image_album_id'] == PERSONAL_GALLERY) ? ' AND new.image_user_id = cur.image_user_id' : '';
-		$sql .= ($_GET['mode'] == 'next') ? ' ORDER BY image_time ASC LIMIT 1' : ' ORDER BY image_time DESC LIMIT 1';
-		$result = $db->sql_query($sql);
-		$row = $db->sql_fetchrow($result);
-		if (empty($row))
-		{
-			trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_WARNING);
-		}
-
-		$pic_id = $row['image_id'];
-	}
-} 
-
-
-// ------------------------------------
-// Get this pic info
-// ------------------------------------
-
-$sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments
-		FROM ' . GALLERY_IMAGES_TABLE . ' AS p
-		LEFT JOIN ' . USERS_TABLE . ' AS u
-			ON p.image_user_id = u.user_id
-		LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
-			ON p.image_id = r.rate_image_id
-		LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
-			ON p.image_id = c.comment_image_id
-		WHERE image_id = ' . $pic_id . '
-		GROUP BY p.image_id';
-$result = $db->sql_query($sql);
-$thispic = $db->sql_fetchrow($result);
-
-$album_id = $thispic['image_album_id'];
-$user_id = $thispic['image_user_id'];
-
-if (empty($thispic) || !file_exists(ALBUM_UPLOAD_PATH . $thispic['image_filename']))
+/**
+* Get the image info
+*/
+$image_data = get_image_info($image_id);
+$album_id = $image_data['image_album_id'];
+$user_id = $image_data['image_user_id'];
+if (empty($image_data) || !file_exists(ALBUM_UPLOAD_PATH . $image_data['image_filename']))
 {
 	trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_WARNING);
 }
-
-// ------------------------------------
-// Get the current Category Info
-// ------------------------------------
-
+/**
+* Get the album info of the images album
+*/
 if ($album_id <> PERSONAL_GALLERY)
 {
-	$thiscat = get_album_info($album_id);
+	$album_data = get_album_info($album_id);
 }
 else
 {
-	$thiscat = init_personal_gallery_cat($user_id);
+	$album_data = init_personal_gallery_cat($user_id);
 }
-
-if (empty($thiscat))
+if (empty($album_data))
 {
 	trigger_error($user->lang['ALBUM_NOT_EXIST'], E_USER_WARNING);
 }
 
-
-// ------------------------------------
-// Check the permissions
-// ------------------------------------
-
-$album_user_access = album_user_access($album_id, $thiscat, 1, 0, 1, 1, 1, 1);
-
+/**
+* Check the permissions
+*/
+$album_user_access = album_user_access($album_id, $album_data, 1, 0, 1, 1, 1, 1);
 if (!$album_user_access['view'])
 {
 	if (!$user->data['is_registered'])
 	{
-		login_box("gallery/image_page.$phpEx?id=$pic_id", $user->lang['LOGIN_INFO']);
+		login_box("gallery/image_page.$phpEx?image_id=$image_id", $user->lang['LOGIN_INFO']);
 	}
 	else
 	{
-		if ($user->data['is_bot'])
-		{
-			redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
-		}
 		trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 	}
 }
@@ -154,7 +86,7 @@ if (($album_config['rate'] <> 0) && $user->data['is_registered'])
 {
 	$sql = 'SELECT *
 		FROM ' . GALLERY_RATES_TABLE . '
-		WHERE rate_image_id = ' . $pic_id . '
+		WHERE rate_image_id = ' . $image_id . '
 			AND rate_user_id = ' . $user->data['user_id'] . '
 		LIMIT 1';
 
@@ -172,9 +104,9 @@ if (($album_config['rate'] <> 0) && $user->data['is_registered'])
 
 if ($user->data['user_type'] <> USER_FOUNDER)
 {
-	if (($thiscat['album_approval'] == ADMIN) || (($thiscat['album_approval'] == MOD) || !$album_user_access['moderator']))
+	if (($album_data['album_approval'] == ADMIN) || (($album_data['album_approval'] == MOD) || !$album_user_access['moderator']))
 	{
-		if (!$thispic['image_approval'])
+		if (!$image_data['image_approval'])
 		{
 			trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 		}
@@ -210,7 +142,7 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 		// --------------------------------
 		// Check Pic Locked
 		// --------------------------------
-		if (($thispic['image_lock']) && (!$auth_data['moderator']))
+		if (($image_data['image_lock']) && (!$auth_data['moderator']))
 		{
 			trigger_error($user->lang['IMAGE_LOCKED'], E_USER_WARNING);
 		}
@@ -258,7 +190,7 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 		}
 		$sql_ary = array(
 			'comment_id'		=> $comment_id,
-			'comment_image_id'	=> $pic_id,
+			'comment_image_id'	=> $image_id,
 			'comment_user_id'	=> $comment_user_id,
 			'comment_username'	=> $comment_username,
 			'comment_user_ip'	=> $comment_user_ip,
@@ -274,10 +206,10 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 		// Complete... now send a message to user
 		// --------------------------------
 		$template->assign_vars(array(
-			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("image_page.$phpEx?id=$pic_id&comment_set=1") . '#comments">',
+			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=$image_id&comment_set=1") . '#comments">',
 		));
 
-		$message = $user->lang['COMMENT_STORED'] . "<br /><br />" . sprintf($user->lang['CLICK_VIEW_COMMENT'], "<a href=\"" . append_sid("image_page.$phpEx?id=$pic_id&stored=1") . "#$comment_id\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("album.$phpEx") . "\">", "</a>");
+		$message = $user->lang['COMMENT_STORED'] . "<br /><br />" . sprintf($user->lang['CLICK_VIEW_COMMENT'], "<a href=\"" . append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=$image_id&stored=1") . "#$comment_id\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("album.$phpEx") . "\">", "</a>");
 		trigger_error($message, E_USER_WARNING);
 	}
 
@@ -302,7 +234,7 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 		// Insert into the DB
 		// --------------------------------
 		$sql_ary = array(
-			'rate_image_id'	=> $pic_id,
+			'rate_image_id'	=> $image_id,
 			'rate_user_id'	=> $rate_user_id,
 			'rate_user_ip'	=> $rate_user_ip,
 			'rate_point'	=> $rate_point,
@@ -316,7 +248,7 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 		if ($album_id <> PERSONAL_GALLERY)
 		{
 			$template->assign_vars(array(
-				'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("image_page.$phpEx?id=$pic_id&rate_set=1#rating") . '">',
+				'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=$image_id&rate_set=1#rating") . '">',
 			));
 			$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$album_id") . "\">", "</a>");
 		}
@@ -333,61 +265,6 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 	}
 }
 
-// Next
-$sql = 'SELECT new.image_id, new.image_time
-	FROM ' . GALLERY_IMAGES_TABLE . ' AS new, ' . GALLERY_IMAGES_TABLE . ' AS cur
-	WHERE cur.image_id = ' . $pic_id . '
-		AND new.image_id <> cur.image_id
-		AND new.image_album_id = cur.image_album_id
-		AND new.image_time >= cur.image_time';
-
-$sql .= ($thispic['image_album_id'] == PERSONAL_GALLERY) ? ' AND new.image_user_id = cur.image_user_id' : '';
-$sql .= ' ORDER BY image_time ASC LIMIT 1';
-
-$result = $db->sql_query($sql);
-
-$row = $db->sql_fetchrow($result);
-
-if (empty($row))
-{
-	$u_next = '';
-	$l_next = '';
-}
-else
-{
-	$new_pic_id = $row['image_id'];
-	$u_next = append_sid("image_page.$phpEx?id=$new_pic_id");
-	$l_next = $user->lang['NEXT'] . "&nbsp;&raquo;";
-}
-
-// Prev
-$sql = 'SELECT new.image_id, new.image_time
-	FROM ' . GALLERY_IMAGES_TABLE . ' AS new, ' . GALLERY_IMAGES_TABLE . ' AS cur
-	WHERE cur.image_id = ' . $pic_id . '
-		AND new.image_id <> cur.image_id
-		AND new.image_album_id = cur.image_album_id
-		AND new.image_time <= cur.image_time';
-
-$sql .= ($thispic['image_album_id'] == PERSONAL_GALLERY) ? ' AND new.image_user_id = cur.image_user_id' : '';
-$sql .= ' ORDER BY image_time DESC LIMIT 1';
-
-$result = $db->sql_query($sql);
-
-$row = $db->sql_fetchrow($result);
-
-if( empty($row) )
-{
-	$u_prev = '';
-	$l_prev = '';
-}
-else
-{
-	$new_pic_id = $row['image_id'];
-	$u_prev = append_sid("image_page.$phpEx?id=$new_pic_id");
-	$l_prev = "&laquo;&nbsp;" . $user->lang['PREVIOUS'];
-}
-// end 
-
 /*
 +----------------------------------------------------------
 | Main work here...
@@ -397,36 +274,29 @@ else
 $template->assign_vars(array(
 	'U_VIEW_CAT'	=> ($album_id <> PERSONAL_GALLERY) ? append_sid("album.$phpEx?id=$album_id") : append_sid("album_personal.$phpEx?user_id=$user_id"),
 
-	'U_PIC'			=> append_sid("image.$phpEx?pic_id=$pic_id"),
-	'PIC_TITLE'		=> $thispic['image_name'],
-	'PIC_DESC'		=> generate_text_for_display($thispic['image_desc'], $thispic['image_desc_uid'], $thispic['image_desc_bitfield'], 7),
-	'POSTER'		=> get_username_string('full', $thispic['user_id'], ($thispic['user_id'] <> ANONYMOUS) ? $thispic['username'] : $user->lang['GUEST'], $thispic['user_colour']),
-	'PIC_TIME'		=> $user->format_date($thispic['image_time']),
-	'PIC_VIEW'		=> $thispic['image_view_count'],
+	'U_PIC'			=> append_sid("image.$phpEx?pic_id=$image_id"),
+	'PIC_TITLE'		=> $image_data['image_name'],
+	'PIC_DESC'		=> generate_text_for_display($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], 7),
+	'POSTER'		=> get_username_string('full', $image_data['user_id'], ($image_data['user_id'] <> ANONYMOUS) ? $image_data['username'] : $user->lang['GUEST'], $image_data['user_colour']),
+	'PIC_TIME'		=> $user->format_date($image_data['image_time']),
+	'PIC_VIEW'		=> $image_data['image_view_count'],
 
-	'U_NEXT'		=> $u_next,
-	'U_PREVIOUS'	=> $u_prev,
-	'NEXT'				=> $l_next,
-	'PREVIOUS'			=> $l_prev,
-	'S_ALBUM_ACTION'	=> append_sid("image_page.$phpEx?id=$pic_id"))
+	'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=$image_id"))
 );
 
 if ($album_config['rate'])
 {
 	$template->assign_vars(array(
 		'RATING'		=> $user->lang['RATING'],
-		'PIC_RATING'	=> ($thispic['rating'] <> 0) ? round($thispic['rating'], 2) : $user->lang['NOT_RATED'],
+		'PIC_RATING'	=> ($image_data['rating'] <> 0) ? round($image_data['rating'], 2) : $user->lang['NOT_RATED'],
 	));
 	
-	if ($thiscat['album_rate_level'] < 1 || $album_user_access['rate'])
+	if ($album_data['album_rate_level'] < 1 || $album_user_access['rate'])
 	{
-		$template->assign_vars(array(
-			'YOUR_RATING'	=> true,
-		));
 		$ratebox = false;
 		if ($user->data['user_id'] == ANONYMOUS || $user->data['is_bot'])
 		{
-			if ($thiscat['album_rate_level'] == 0)
+			if ($album_data['album_rate_level'] == 0)
 			{
 				$ratebox = '<a href="' . append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login') . '">' . $user->lang['LOGIN_TO_RATE'] . '</a>';
 			}
@@ -449,6 +319,7 @@ if ($album_config['rate'])
 			}
 		}
 		$template->assign_vars(array(
+			'YOUR_RATING'	=> true,
 			'S_RATEBOX'	=> $ratebox,
 		));
 	}
@@ -458,11 +329,11 @@ if ($album_config['comment'])
 {
 	$template->assign_vars(array(
 		'COMMENTS'		=> true,
-		'PIC_COMMENTS'	=> $thispic['comments'],
+		'PIC_COMMENTS'	=> $image_data['comments'],
 	));
-	//'PIC_COMMENTS' => $thispic['comments']
+	//'PIC_COMMENTS' => $image_data['comments']
 	
-	if ($thiscat['album_comment_level'] < 1 || $album_user_access['comment'])
+	if ($album_data['album_comment_level'] < 1 || $album_user_access['comment'])
 	{
 		$template->assign_vars(array(
 			'POST_COMMENT'	=> true,
@@ -471,7 +342,7 @@ if ($album_config['comment'])
 		$commentbox = false;
 		if ($user->data['user_id'] == ANONYMOUS || $user->data['is_bot'])
 		{
-			if ($thiscat['album_comment_level'] == 0)
+			if ($album_data['album_comment_level'] == 0)
 			{
 				$commentbox = '<a href="' . append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login') . '">' . $user->lang['LOGIN_TO_COMMENT'] . '</a>';
 			}
@@ -494,7 +365,7 @@ if ($album_config['comment'])
 		));
 	}
 	
-	$total_comments = $thispic['comments'];
+	$total_comments = $image_data['comments'];
 	$comments_per_page = 10;
 	
 	$start = request_var('start', 0);
@@ -509,7 +380,7 @@ if ($album_config['comment'])
 			FROM ' . GALLERY_COMMENTS_TABLE . ' AS c
 			LEFT JOIN ' . USERS_TABLE . ' AS u
 				ON c.comment_user_id = u.user_id
-			WHERE c.comment_image_id = ' . $pic_id . '
+			WHERE c.comment_image_id = ' . $image_id . '
 			ORDER BY c.comment_id ' . $sort_order . '
 			LIMIT ' . $limit_sql;
 
@@ -577,14 +448,14 @@ if ($album_config['comment'])
 				'S_ROW_STYLE' 	=> $row_style,
 				'TEXT' 			=> generate_text_for_display($commentrow[$i]['comment'], $commentrow[$i]['comment_uid'], $commentrow[$i]['comment_bitfield'], 7),
 				'EDIT_INFO' 	=> $edit_info,
-				'EDIT' 			=> '',//( ( $auth_data['edit'] && ($commentrow[$i]['comment_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($thiscat['album_edit_level'] != ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="'. append_sid("edit.$phpEx?comment_id=". $commentrow[$i]['comment_id']) .'">'. $user->lang['EDIT_IMAGE'] .'</a>' : '',
-				'DELETE' 		=> '',//( ( $auth_data['delete'] && ($commentrow[$i]['comment_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($thiscat['album_delete_level'] != ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="'. append_sid("edit.$phpEx?comment_id=". $commentrow[$i]['comment_id']) .'">'. $user->lang['DELETE_IMAGE'] .'</a>' : ''
+				'EDIT' 			=> '',//( ( $auth_data['edit'] && ($commentrow[$i]['comment_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($album_data['album_edit_level'] != ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="'. append_sid("edit.$phpEx?comment_id=". $commentrow[$i]['comment_id']) .'">'. $user->lang['EDIT_IMAGE'] .'</a>' : '',
+				'DELETE' 		=> '',//( ( $auth_data['delete'] && ($commentrow[$i]['comment_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($album_data['album_delete_level'] != ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="'. append_sid("edit.$phpEx?comment_id=". $commentrow[$i]['comment_id']) .'">'. $user->lang['DELETE_IMAGE'] .'</a>' : ''
 				)
 			);
 		}
 
 		$template->assign_vars(array(
-			'PAGINATION' 	=> generate_pagination(append_sid("image_page.$phpEx?id=$pic_id&amp;sort_order=$sort_order"), $total_comments, $comments_per_page, $start),
+			'PAGINATION' 	=> generate_pagination(append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=$image_id&amp;sort_order=$sort_order"), $total_comments, $comments_per_page, $start),
 			'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $comments_per_page ) + 1 ), ceil( $total_comments / $comments_per_page ))
 			)
 		);
@@ -600,7 +471,7 @@ if ($album_config['comment'])
 // Build the navigation
 if ($album_id <> PERSONAL_GALLERY)
 {
-	generate_album_nav($thiscat);
+	generate_album_nav($album_data);
 }
 else
 {
@@ -610,13 +481,13 @@ else
 	));
 
 	$template->assign_block_vars('navlinks', array(
-		'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $thispic['username']),
+		'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $image_data['username']),
 		'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}gallery/album_personal.$phpEx", 'user_id=' . $user_id),
 	));
 }
 
 // Output page
-$page_title = $user->lang['VIEW_IMAGE'];// . ' &bull; ' . $thiscat['album_name']; ### add image title later
+$page_title = $user->lang['VIEW_IMAGE'];// . ' &bull; ' . $album_data['album_name']; ### add image title later
 
 page_header($page_title);
 
