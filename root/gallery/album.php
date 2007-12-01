@@ -38,7 +38,7 @@ if(!$album_id = request_var('album_id', request_var('id', 0)))
 
 if ($album_id == PERSONAL_GALLERY)
 {
-	redirect(append_sid($phpbb_root_path . 'gallery/album_personal.$phpEx'));
+	redirect(append_sid($phpbb_root_path . "gallery/album_personal.$phpEx"));
 }
 $moderators_list = '';
 $total_pics = 0;
