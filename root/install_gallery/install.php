@@ -353,6 +353,9 @@ switch ($mode)
 			$result = $db->sql_query($sql);
 			while( $row = $db->sql_fetchrow($result) )
 			{
+				$row['album_desc_uid'] = $row['album_desc_options'] = $row['album_desc_bitfield'] = '';
+				$row['album_desc'] = $row['cat_desc'];
+				$album_desc_data = generate_text_for_edit($row['album_desc'], $row['album_desc_uid'], $row['album_desc_options']);
 				$album_data = array(
 					'album_id'						=> $row['cat_id'],
 					'album_name'					=> $row['cat_title'],
@@ -361,7 +364,7 @@ switch ($mode)
 					'right_id'						=> $left_id + 1,
 					'album_parents'					=> '',
 					'album_type'					=> 2,
-					'album_desc'					=> $row['cat_desc'],
+					'album_desc'					=> $album_desc_data['text'],
 					'album_desc_uid'				=> '',
 					'album_desc_bitfield'			=> '',
 					'album_desc_options'			=> 7,
@@ -371,16 +374,15 @@ switch ($mode)
 					'album_comment_level'			=> $row['cat_comment_level'],
 					'album_edit_level'				=> $row['cat_edit_level'],
 					'album_delete_level'			=> $row['cat_delete_level'],
-					'album_view_groups'				=> (isset($row['cat_view_groups']) ? $row['cat_view_groups'] : 0),
-					'album_upload_groups'			=> (isset($row['cat_upload_groups']) ? $row['cat_upload_groups'] : 0),
-					'album_rate_groups'				=> (isset($row['cat_rate_groups']) ? $row['cat_rate_groups'] : 0),
-					'album_comment_groups'			=> (isset($row['cat_comment_groups']) ? $row['cat_comment_groups'] : 0),
-					'album_edit_groups'				=> (isset($row['cat_edit_groups']) ? $row['cat_edit_groups'] : 0),
-					'album_delete_groups'			=> (isset($row['cat_delete_groups']) ? $row['cat_delete_groups'] : 0),
-					'album_moderator_groups'		=> (isset($row['cat_moderator_groups']) ? $row['cat_moderator_groups'] : 0),
+					'album_view_groups'				=> $row['cat_view_groups'],
+					'album_upload_groups'			=> $row['cat_upload_groups'],
+					'album_rate_groups'				=> $row['cat_rate_groups'],
+					'album_comment_groups'			=> $row['cat_comment_groups'],
+					'album_edit_groups'				=> $row['cat_edit_groups'],
+					'album_delete_groups'			=> $row['cat_delete_groups'],
+					'album_moderator_groups'		=> $row['cat_moderator_groups'],
 					'album_approval'				=> $row['cat_approval'],
 				);
-				$album_data['album_desc'] = generate_text_for_edit($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_options']);
 				generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], true, true, true);
 				$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
 				$left_id = $left_id + 2;
@@ -411,6 +413,9 @@ switch ($mode)
 			$result = $db->sql_query($sql);
 			while( $row = $db->sql_fetchrow($result) )
 			{
+				$row['comment_uid'] = $row['comment_options'] = $row['comment_bitfield'] = '';
+				$row['comment'] = $row['comment_text'];
+				$comment_text_data = generate_text_for_edit($row['comment'], $row['comment_uid'], $row['comment_options']);
 				$comment_data = array(
 					'comment_id'			=> $row['comment_id'],
 					'comment_image_id'		=> $row['comment_pic_id'],
@@ -418,15 +423,14 @@ switch ($mode)
 					'comment_username'		=> $row['comment_username'],
 					'comment_user_ip'		=> $row['comment_user_ip'],
 					'comment_time'			=> $row['comment_time'],
-					'comment'				=> $row['comment_text'],
+					'comment'				=> $comment_text_data['text'],
 					'comment_uid'			=> '',
 					'comment_bitfield'		=> '',
 					'comment_options'		=> 7,
-					'comment_edit_time'		=> (isset($row['comment_edit_time']) ? $row['comment_edit_time'] : 0),
-					'comment_edit_count'	=> (isset($row['comment_edit_count']) ? $row['comment_edit_count'] : 0),
-					'comment_edit_user_id'	=> (isset($row['comment_edit_user_id']) ? $row['comment_edit_user_id'] : 0),
+					'comment_edit_time'		=> $row['comment_edit_time'],
+					'comment_edit_count'	=> $row['comment_edit_count'],
+					'comment_edit_user_id'	=> $row['comment_edit_user_id'],
 				);
-				$comment_data['comment'] = generate_text_for_edit($comment_data['comment'], $comment_data['comment_uid'], $comment_data['comment_options']);
 				generate_text_for_storage($comment_data['comment'], $comment_data['comment_uid'], $comment_data['comment_bitfield'], $comment_data['comment_options'], true, true, true);
 				unset($comment_data['comment_options']);
 				$db->sql_query('INSERT INTO ' . GALLERY_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $comment_data));
@@ -466,12 +470,15 @@ switch ($mode)
 			$result = $db->sql_query($sql);
 			while( $row = $db->sql_fetchrow($result) )
 			{
+				$row['image_desc_uid'] = $row['image_desc_options'] = $row['image_desc_bitfield'] = '';
+				$row['image_desc'] = $row['pic_desc'];
+				$image_desc_data = generate_text_for_edit($row['image_desc'], $row['image_desc_uid'], $row['image_desc_options']);
 				$image_data = array(
 					'image_id'				=> $row['pic_id'],
 					'image_filename'		=> $row['pic_filename'],
 					'image_thumbnail'		=> $row['pic_thumbnail'],
 					'image_name'			=> $row['pic_title'],
-					'image_desc'			=> $row['pic_desc'],
+					'image_desc'			=> $image_desc_data['text'],
 					'image_desc_uid'		=> '',
 					'image_desc_bitfield'	=> '',
 					'image_desc_options'	=> 7,
@@ -484,7 +491,6 @@ switch ($mode)
 					'image_lock'			=> $row['pic_lock'],
 					'image_approval'		=> $row['pic_approval'],
 				);
-				$image_data['image_desc'] = generate_text_for_edit($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], $image_data['image_desc_options']);
 				generate_text_for_storage($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], $image_data['image_desc_options'], true, true, true);
 				unset($image_data['image_desc_options']);
 				$db->sql_query('INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $image_data));
@@ -637,6 +643,11 @@ switch ($mode)
 			$result = $db->sql_query($sql);
 			while( $row = $db->sql_fetchrow($result) )
 			{
+				$row['album_desc_uid'] = $row['cat_desc_bbcode_uid'];
+				$row['album_desc_options'] = '';
+				$row['album_desc_bitfield'] = $row['cat_desc_bbcode_bitfield'];
+				$row['album_desc'] = $row['cat_desc'];
+				$album_desc_data = generate_text_for_edit($row['album_desc'], $row['album_desc_uid'], $row['album_desc_options']);
 				$album_data = array(
 					'album_id'						=> $row['cat_id'],
 					'album_name'					=> $row['cat_title'],
@@ -645,9 +656,9 @@ switch ($mode)
 					'right_id'						=> $left_id + 1,
 					'album_parents'					=> '',
 					'album_type'					=> 2,
-					'album_desc'					=> $row['cat_desc'],
-					'album_desc_uid'				=> $row['cat_desc_bbcode_uid'],
-					'album_desc_bitfield'			=> $row['cat_desc_bbcode_bitfield'],
+					'album_desc'					=> $album_desc_data['text'],
+					'album_desc_uid'				=> '',
+					'album_desc_bitfield'			=> '',
 					'album_desc_options'			=> 7,
 					'album_view_level'				=> $row['cat_view_level'],
 					'album_upload_level'			=> $row['cat_upload_level'],
@@ -655,16 +666,15 @@ switch ($mode)
 					'album_comment_level'			=> $row['cat_comment_level'],
 					'album_edit_level'				=> $row['cat_edit_level'],
 					'album_delete_level'			=> $row['cat_delete_level'],
-					'album_view_groups'				=> (isset($row['cat_view_groups']) ? $row['cat_view_groups'] : 0),
-					'album_upload_groups'			=> (isset($row['cat_upload_groups']) ? $row['cat_upload_groups'] : 0),
-					'album_rate_groups'				=> (isset($row['cat_rate_groups']) ? $row['cat_rate_groups'] : 0),
-					'album_comment_groups'			=> (isset($row['cat_comment_groups']) ? $row['cat_comment_groups'] : 0),
-					'album_edit_groups'				=> (isset($row['cat_edit_groups']) ? $row['cat_edit_groups'] : 0),
-					'album_delete_groups'			=> (isset($row['cat_delete_groups']) ? $row['cat_delete_groups'] : 0),
-					'album_moderator_groups'		=> (isset($row['cat_moderator_groups']) ? $row['cat_moderator_groups'] : 0),
+					'album_view_groups'				=> $row['cat_view_groups'],
+					'album_upload_groups'			=> $row['cat_upload_groups'],
+					'album_rate_groups'				=> $row['cat_rate_groups'],
+					'album_comment_groups'			=> $row['cat_comment_groups'],
+					'album_edit_groups'				=> $row['cat_edit_groups'],
+					'album_delete_groups'			=> $row['cat_delete_groups'],
+					'album_moderator_groups'		=> $row['cat_moderator_groups'],
 					'album_approval'				=> $row['cat_approval'],
 				);
-				$album_data['album_desc'] = generate_text_for_edit($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_options']);
 				generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], true, true, true);
 				$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
 				$left_id = $left_id + 2;
@@ -695,6 +705,9 @@ switch ($mode)
 			$result = $db->sql_query($sql);
 			while( $row = $db->sql_fetchrow($result) )
 			{
+				$row['comment_uid'] = $row['comment_options'] = $row['comment_bitfield'] = '';
+				$row['comment'] = $row['comment_text'];
+				$comment_text_data = generate_text_for_edit($row['comment'], $row['comment_uid'], $row['comment_options']);
 				$comment_data = array(
 					'comment_id'			=> $row['comment_id'],
 					'comment_image_id'		=> $row['comment_pic_id'],
@@ -702,15 +715,14 @@ switch ($mode)
 					'comment_username'		=> $row['comment_username'],
 					'comment_user_ip'		=> $row['comment_user_ip'],
 					'comment_time'			=> $row['comment_time'],
-					'comment'				=> $row['comment_text'],
-					'comment_uid'			=> $row['comment_text_bbcode_uid'],
-					'comment_bitfield'		=> $row['comment_text_bbcode_bitfield'],
+					'comment'				=> $comment_text_data['text'],
+					'comment_uid'			=> '',
+					'comment_bitfield'		=> '',
 					'comment_options'		=> 7,
-					'comment_edit_time'		=> (isset($row['comment_edit_time']) ? $row['comment_edit_time'] : 0),
-					'comment_edit_count'	=> (isset($row['comment_edit_count']) ? $row['comment_edit_count'] : 0),
-					'comment_edit_user_id'	=> (isset($row['comment_edit_user_id']) ? $row['comment_edit_user_id'] : 0),
+					'comment_edit_time'		=> $row['comment_edit_time'],
+					'comment_edit_count'	=> $row['comment_edit_count'],
+					'comment_edit_user_id'	=> $row['comment_edit_user_id'],
 				);
-				$comment_data['comment'] = generate_text_for_edit($comment_data['comment'], $comment_data['comment_uid'], $comment_data['comment_options']);
 				generate_text_for_storage($comment_data['comment'], $comment_data['comment_uid'], $comment_data['comment_bitfield'], $comment_data['comment_options'], true, true, true);
 				unset($comment_data['comment_options']);
 				$db->sql_query('INSERT INTO ' . GALLERY_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $comment_data));
@@ -750,14 +762,17 @@ switch ($mode)
 			$result = $db->sql_query($sql);
 			while( $row = $db->sql_fetchrow($result) )
 			{
+				$row['image_desc_uid'] = $row['image_desc_options'] = $row['image_desc_bitfield'] = '';
+				$row['image_desc'] = $row['pic_desc'];
+				$image_desc_data = generate_text_for_edit($row['image_desc'], $row['image_desc_uid'], $row['image_desc_options']);
 				$image_data = array(
 					'image_id'				=> $row['pic_id'],
 					'image_filename'		=> $row['pic_filename'],
 					'image_thumbnail'		=> $row['pic_thumbnail'],
 					'image_name'			=> $row['pic_title'],
-					'image_desc'			=> $row['pic_desc'],
-					'image_desc_uid'		=> $row['pic_desc_bbcode_uid'],
-					'image_desc_bitfield'	=> $row['pic_desc_bbcode_bitfield'],
+					'image_desc'			=> $image_desc_data['text'],
+					'image_desc_uid'		=> '',
+					'image_desc_bitfield'	=> '',
 					'image_desc_options'	=> 7,
 					'image_user_id'			=> $row['pic_user_id'],
 					'image_username'		=> $row['pic_username'],
@@ -768,7 +783,6 @@ switch ($mode)
 					'image_lock'			=> $row['pic_lock'],
 					'image_approval'		=> $row['pic_approval'],
 				);
-				$image_data['image_desc'] = generate_text_for_edit($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], $image_data['image_desc_options']);
 				generate_text_for_storage($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], $image_data['image_desc_options'], true, true, true);
 				unset($image_data['image_desc_options']);
 				$db->sql_query('INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $image_data));
@@ -953,6 +967,9 @@ switch ($mode)
 				}
 				else
 				{
+					$row['album_desc_uid'] = $row['album_desc_options'] = $row['album_desc_bitfield'] = '';
+					$row['album_desc'] = $row['cat_desc'];
+					$album_desc_data = generate_text_for_edit($row['album_desc'], $row['album_desc_uid'], $row['album_desc_options']);
 					$album_data = array(
 						'album_id'						=> $row['cat_id'],
 						'album_name'					=> $row['cat_title'],
@@ -961,7 +978,7 @@ switch ($mode)
 						'right_id'						=> $left_id + 1,
 						'album_parents'					=> '',
 						'album_type'					=> 2,
-						'album_desc'					=> $row['cat_desc'],
+						'album_desc'					=> $album_desc_data['text'],
 						'album_desc_uid'				=> '',
 						'album_desc_bitfield'			=> '',
 						'album_desc_options'			=> 7,
@@ -980,7 +997,6 @@ switch ($mode)
 						'album_moderator_groups'		=> (isset($row['cat_moderator_groups']) ? $row['cat_moderator_groups'] : 0),
 						'album_approval'				=> $row['cat_approval'],
 					);
-					$album_data['album_desc'] = generate_text_for_edit($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_options']);
 					generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], true, true, true);
 					$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
 					$left_id = $left_id + 2;
@@ -1012,6 +1028,9 @@ switch ($mode)
 			$result = $db->sql_query($sql);
 			while( $row = $db->sql_fetchrow($result) )
 			{
+				$row['comment_uid'] = $row['comment_options'] = $row['comment_bitfield'] = '';
+				$row['comment'] = $row['comment_text'];
+				$comment_text_data = generate_text_for_edit($row['comment'], $row['comment_uid'], $row['comment_options']);
 				$comment_data = array(
 					'comment_id'			=> $row['comment_id'],
 					'comment_image_id'		=> $row['comment_pic_id'],
@@ -1019,7 +1038,7 @@ switch ($mode)
 					'comment_username'		=> $row['comment_username'],
 					'comment_user_ip'		=> decode_ip($row['comment_user_ip']),
 					'comment_time'			=> $row['comment_time'],
-					'comment'				=> $row['comment_text'],
+					'comment'				=> $comment_text_data['text'],
 					'comment_uid'			=> '',
 					'comment_bitfield'		=> '',
 					'comment_options'		=> 7,
@@ -1027,7 +1046,6 @@ switch ($mode)
 					'comment_edit_count'	=> (isset($row['comment_edit_count']) ? $row['comment_edit_count'] : 0),
 					'comment_edit_user_id'	=> (isset($row['comment_edit_user_id']) ? $row['comment_edit_user_id'] : 0),
 				);
-				$comment_data['comment'] = generate_text_for_edit($comment_data['comment'], $comment_data['comment_uid'], $comment_data['comment_options']);
 				generate_text_for_storage($comment_data['comment'], $comment_data['comment_uid'], $comment_data['comment_bitfield'], $comment_data['comment_options'], 1, 1, 1);
 				unset($comment_data['comment_options']);
 				$db->sql_query('INSERT INTO ' . GALLERY_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $comment_data));
@@ -1067,12 +1085,15 @@ switch ($mode)
 			$result = $db->sql_query($sql);
 			while( $row = $db->sql_fetchrow($result) )
 			{
+				$row['image_desc_uid'] = $row['image_desc_options'] = $row['image_desc_bitfield'] = '';
+				$row['image_desc'] = $row['pic_desc'];
+				$image_desc_data = generate_text_for_edit($row['image_desc'], $row['image_desc_uid'], $row['image_desc_options']);
 				$image_data = array(
 					'image_id'				=> $row['pic_id'],
 					'image_filename'		=> $row['pic_filename'],
 					'image_thumbnail'		=> $row['pic_thumbnail'],
 					'image_name'			=> $row['pic_title'],
-					'image_desc'			=> $row['pic_desc'],
+					'image_desc'			=> $image_desc_data['text'],
 					'image_desc_uid'		=> '',
 					'image_desc_bitfield'	=> '',
 					'image_desc_options'	=> 7,
@@ -1085,7 +1106,6 @@ switch ($mode)
 					'image_lock'			=> $row['pic_lock'],
 					'image_approval'		=> $row['pic_approval'],
 				);
-				$image_data['image_desc'] = generate_text_for_edit($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], $image_data['image_desc_options']);
 				generate_text_for_storage($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], $image_data['image_desc_options'], true, true, true);
 				unset($image_data['image_desc_options']);
 				$db->sql_query('INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $image_data));
