@@ -190,7 +190,7 @@ if ($mode == '')
 		$limit_sql = (!$start) ? $pics_per_page : $start . ', ' . $pics_per_page;
 
 		$pic_approval_sql = '';
-		if (($user->data['user_type'] <> USER_FOUNDER) && ($thiscat['cat_approval'] == ALBUM_ADMIN))
+		if (($user->data['user_type'] <> USER_FOUNDER) && ($thiscat['album_approval'] == ALBUM_ADMIN))
 		{
 			// because he went through my Permission Checking above so he must be at least a Moderator
 			$pic_approval_sql = ' AND p.image_approval = 1';
