@@ -40,11 +40,6 @@ if(!$pic_id)
 }
 
 // ------------------------------------
-// Salting the form...yumyum ...
-// ------------------------------------
-add_form_key('image_delete');
-
-// ------------------------------------
 // Get this pic info
 // ------------------------------------
 
@@ -182,11 +177,8 @@ if(!isset($_POST['confirm']))
 }
 else
 {
-	// Check the salt... yumyum
-	if (!check_form_key('image_delete'))
-	{
-		trigger_error('FORM_INVALID');
-	}
+	// no more salt, they kicked it of the style
+	//reason: http://www.phpbb.com/bugs/phpbb3/ticket.php?ticket_id=15038
 
 	// --------------------------------
 	// It's confirmed. First delete all comments
