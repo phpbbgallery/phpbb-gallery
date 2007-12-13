@@ -271,6 +271,15 @@ if ($album_data['album_type'] == 2)
 		$sort_new_comment_option .= '>' . $user->lang['NEW_COMMENT'] . '</option>';
 	}
 }
+else
+{
+	$tot_unapproved = 0;
+	$sort_method = $album_config['sort_method'];
+	$sort_order = $album_config['sort_order'];
+	$sort_rating_option = '';
+	$sort_comments_option = '';
+	$sort_new_comment_option = '';
+}
 /**
 * Build Jumpbox
 */
