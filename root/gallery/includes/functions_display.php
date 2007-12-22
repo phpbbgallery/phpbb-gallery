@@ -157,9 +157,9 @@ for ($i = 0; $i < count($album); $i++)
 		{
 			$album_config['last_pic_title_length'] = 25;
 		}
-		if (strlen($lastrow['image_name']) > $album_config['last_pic_title_length'])
+		if (utf8_strlen($lastrow['image_name']) > $album_config['last_pic_title_length'])
 		{
-			$lastrow['image_name'] = substr($lastrow['image_name'], 0, $album_config['last_pic_title_length']) . '...';
+			$lastrow['image_name'] = utf8_substr($lastrow['image_name'], 0, $album_config['last_pic_title_length']) . '...';
 		}
 		$last_pic_info .= '<a href="' . append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=" . $lastrow['image_id']) . '" style="font-weight: bold;">';
 		$last_pic_info .= $lastrow['image_name'] . '</a><br />' . $user->lang['POST_BY_AUTHOR'] . ' ';
