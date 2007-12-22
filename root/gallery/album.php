@@ -252,8 +252,7 @@ if ($album_data['album_type'] == 2)
 	/**
 	* additional sorting options
 	*/
-	$sort_rating_option = '';
-	$sort_comments_option = '';
+	$sort_rating_option = $sort_new_comment_option = sort_comments_option = '';
 	if ($album_config['rate'] == 1)
 	{
 		$sort_rating_option = '<option value="rating" ';
