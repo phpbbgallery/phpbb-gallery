@@ -174,7 +174,7 @@ $lang = array_merge($lang, array(
 	'IMPORT_MISSING_ALBUM'			=> 'Wähle bitte ein Album aus, in das die Bilder importiert werden sollen.',
 	'NO_DESC'						=> 'Keine Beschreibung',
 	'IMPORT_DEBUG'					=> 'Debug Import Status',
-	'IMPORT_DEBUG_MES'				=> '%1$s Bilder importiert. Es sind noch %2$s Bilder zu importiert. Wiederhole den Vorgang zum Import der restlichen Bilder.',
+	'IMPORT_DEBUG_MES'				=> '%1$s Bilder importiert. Es sind noch %2$s Bilder zu importieren. Wiederhole den Vorgang zum Import der restlichen Bilder.',
 	'IMPORT_DIR'				=> 'Vollständiger Pfad zu Deinen Bildern:',
 	'IMPORT_DIR_EXP'			=> 'Windows: C:/www/meineSeite/phpBB3/gallery/import<br />Linux: /home/user/www/phpBB3/gallery/import',
 	'IMPORT_DIR_DEL'			=> 'Bitte beachte, dass die Bilder aus dem Verzeichnis <span style="color: red;">gelöscht</span> werden.<br />Lege also vorher eine Kopie an.',
