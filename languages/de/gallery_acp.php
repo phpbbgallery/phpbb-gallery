@@ -166,6 +166,20 @@ $lang = array_merge($lang, array(
 	'DELETE_ALBUM_SUBS'				=> 'Bitte erst die angehängten Alben löschen',
 	'NO_SUBALBUMS'					=> 'Keine Alben angehängt',
 	'GALLERY_INDEX'					=> 'Gallery-Index',
+
+//new one's
+	'ACP_IMPORT_ALBUMS'					=> 'Neue Bilder importieren',
+	'ACP_IMPORT_ALBUMS_EXPLAIN'			=> 'Hier kannst Du die Anzahl von Bilder eingeben, die importiert werden sollen. Bevor Du die Bilder importierst, ändere die Größe von Hand mit einer Bildbearbeitungssoftware.',
+	'IMPORT_MISSING_DIR'			=> 'Gebe bitte das Verzeichnis an, wo sich Deine Bilder befinden.',
+	'IMPORT_MISSING_ALBUM'			=> 'Wähle bitte ein Album aus, in das die Bilder importiert werden sollen.',
+	'NO_DESC'						=> 'Keine Beschreibung',
+	'IMPORT_DEBUG'					=> 'Debug Import Status',
+	'IMPORT_DEBUG_MES'				=> '%1$s Bilder importiert. Es sind noch %2$s Bilder zu importiert. Wiederhole den Vorgang zum Import der restlichen Bilder.',
+	'IMPORT_DIR'				=> 'Vollständiger Pfad zu Deinen Bildern:',
+	'IMPORT_DIR_EXP'			=> 'Windows: C:/www/meineSeite/phpBB3/gallery/import<br />Linux: /home/user/www/phpBB3/gallery/import',
+	'IMPORT_DIR_DEL'			=> 'Bitte beachte, dass die Bilder aus dem Verzeichnis <span style="color: red;">gelöscht</span> werden.<br />Lege also vorher eine Kopie an.',
+	'IMPORT_ALBUM'				=> 'Zielalbum:',
+	'IMPORT_CIRCLE'				=> 'Bilder die in einem Durchgang geladen werden sollen:',
 ));
 
 ?>

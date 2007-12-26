@@ -172,8 +172,8 @@ $lang = array_merge($lang, array(
 	'IMPORT_DEBUG_MES'				=> '%1$s images imported. There are still %2$s images remaining. Repeat the process.',
 	'IMPORT_DIR'				=> 'Full path to your images:',
 	'IMPORT_DIR_EXP'			=> 'Windows: C:/www/mysite/phpBB3/gallery/import<br />Linux: /home/user/www/phpBB3/gallery/import',
-	'IMPORT_DIR_DEL'			=> 'Please not, that the images are <span style="color: red;">deleted</span> form the root.<br />So you better copy them to an other folder.',
-	'IMPORT_ALBUM'				=> 'Gallery to import images to:',
+	'IMPORT_DIR_DEL'			=> 'Please note, that the images are <span style="color: red;">deleted</span> form the root.<br />So you better copy them to an other folder.',
+	'IMPORT_ALBUM'				=> 'Album to import images to:',
 	'IMPORT_CIRCLE'				=> 'Images to import per cycle:',
 ));
 
