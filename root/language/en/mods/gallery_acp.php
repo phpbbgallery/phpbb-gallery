@@ -161,6 +161,20 @@ $lang = array_merge($lang, array(
 	'DELETE_ALBUM_SUBS'				=> 'Please remove the subalbums first',
 	'NO_SUBALBUMS'					=> 'No Albums attached',
 	'GALLERY_INDEX'					=> 'Gallery-Index',
+
+//new one's
+	'ACP_IMPORT_ALBUMS'					=> 'Import Images',
+	'ACP_IMPORT_ALBUMS_EXPLAIN'			=> 'Here you can bulk import images from the file system. Before importing images, please be sure to resize them by hand.',
+	'IMPORT_MISSING_DIR'			=> 'Please provide the directory where the images reside.',
+	'IMPORT_MISSING_ALBUM'			=> 'Please select an album to import the images into.',
+	'NO_DESC'						=> 'no description',
+	'IMPORT_DEBUG'					=> 'Debug Import Status',
+	'IMPORT_DEBUG_MES'				=> '%1$s images imported. There are still %2$s images remaining. Repeat the process.',
+	'IMPORT_DIR'				=> 'Full path to your images:',
+	'IMPORT_DIR_EXP'			=> 'Windows: C:/www/mysite/phpBB3/gallery/import<br />Linux: /home/user/www/phpBB3/gallery/import',
+	'IMPORT_DIR_DEL'			=> 'Please not, that the images are <span style="color: red;">deleted</span> form the root.<br />So you better copy them to an other folder.',
+	'IMPORT_ALBUM'				=> 'Gallery to import images to:',
+	'IMPORT_CIRCLE'				=> 'Images to import per cycle:',
 ));
 
 ?>

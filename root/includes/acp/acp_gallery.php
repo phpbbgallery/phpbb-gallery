@@ -93,13 +93,272 @@ class acp_gallery
 
 				$this->album_personal_permissions();
 			break;
-			
+
+			case 'import_images':
+				$title = 'ACP_IMPORT_ALBUMS';
+				$this->page_title = $user->lang[$title];
+
+				$this->import();
+			break;
+
 			default:
 				$title = 'ACP_GALLERY_OVERVIEW';
 				$this->page_title = $user->lang[$title];
 
 				$this->overview();
 			break;
+		}
+	}
+
+	function import()
+	{
+		global $db, $template, $user, $phpbb_root_path;
+
+		$submit = (isset($_POST['submit'])) ? true : false;
+		if(!$submit)
+		{
+			$template->assign_vars(array(
+				'S_IMPORT_IMAGES'				=> true,
+				'ACP_GALLERY_TITLE'				=> $user->lang['ACP_IMPORT_ALBUMS'],
+				'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_IMPORT_ALBUMS_EXPLAIN'],
+				'S_ALBUM_IMPORT_ACTION'			=> $this->u_action,
+				'S_SELECT_IMPORT' 			=> make_album_select(0, false, false, false, false),
+			));
+		}
+		else
+		{// Is it salty ?
+			if (!check_form_key('acp_gallery'))
+			{
+				trigger_error('FORM_INVALID');
+			}
+
+			$sql = 'SELECT *
+				FROM ' . GALLERY_CONFIG_TABLE;
+			$result = $db->sql_query($sql);
+			while( $row = $db->sql_fetchrow($result) )
+			{
+				$album_config_name = $row['config_name'];
+				$album_config_value = $row['config_value'];
+				$album_config[$album_config_name] = $album_config_value;
+			}
+
+			// There was no directory specified
+			if(!$directory = request_var('img_dir', ''))
+			{
+				trigger_error($user->lang['IMPORT_MISSING_DIR'], E_USER_WARNING);
+			}
+			// There was no album selected
+			if(!$album_id = request_var('target', 0))
+			{
+				trigger_error($user->lang['IMPORT_MISSING_ALBUM'], E_USER_WARNING);
+			}
+
+			$img_per_cycle = request_var('img_per_cycle', 15);
+
+			// Take a look at the directory supplied
+			$results = array();
+			$handle = opendir($directory);
+
+			while ($file = readdir($handle))
+			{
+				if (!is_dir("$directory/$file") && $file != '.' && $file != '..' && $file != 'Thumbs.db')
+				{
+					$results[] = $file;
+				}
+			}
+			closedir($handle);
+
+			// Do the work now
+			$image_user_id 	= $user->data['user_id'];
+			$image_user_ip 	= $user->ip;
+			$image_username	= $user->data['username'];
+
+			$image_count = count($results);
+			$counter = 0;
+			
+			foreach ($results as $image)
+			{
+				if($counter >= $img_per_cycle)
+				{
+					break;
+				}
+				$image_path = $directory . '/' . $image;
+				//$imp_debug .= $image_path . '<br />-  ';
+
+				// Determine the file type
+				$filetype = getimagesize($image_path);
+
+				$image_width = $filetype[0];
+				$image_height = $filetype[1];
+
+				switch ($filetype['mime'])
+				{
+					case 'image/jpeg':
+					case 'image/jpg':
+					case 'image/pjpeg':
+						$image_filetype = '.jpg';
+						break;
+
+					case 'image/png':
+					case 'image/x-png':
+						$image_filetype = '.png';
+						break;
+
+					case 'image/gif':
+						$image_filetype = '.gif';
+						break;
+
+					default:
+						break;
+				}
+
+				// Prep the image to be moved to the store
+
+				// Generate filename
+				srand((double)microtime()*1000000);// for older than version 4.2.0 of PHP
+				$image_filename = md5(uniqid(rand())) . $image_filetype;
+				$image_time 		= time();
+
+
+				$ini_val = ( @phpversion() >= '4.0.0' ) ? 'ini_get' : 'get_cfg_var';
+
+				if (@$ini_val('open_basedir') <> '')
+				{
+					if (@phpversion() < '4.0.3')
+					{
+						trigger_error('open_basedir is set and your PHP version does not allow move_uploaded_file<br /><br />Please contact your server admin', E_USER_WARNING);
+					}
+					$move_file = 'move_uploaded_file';
+				}
+				else
+				{
+					$move_file = 'copy';
+				}
+				
+				$move_file($image_path, $phpbb_root_path . '/gallery/' . ALBUM_UPLOAD_PATH . $image_filename);
+				@chmod($phpbb_root_path . '/gallery/' . ALBUM_UPLOAD_PATH . $image_filename, 0777);
+
+				if (!$album_config['gd_version'])
+				{
+					$move_file($thumbtmp, $phpbb_root_path . '/gallery/'.ALBUM_CACHE_PATH . $image_thumbnail);
+					@chmod(ALBUM_CACHE_PATH . $image_thumbnail, 0777);
+				}
+
+
+				if (($album_config['thumbnail_cache']) && ($album_config['gd_version'] > 0))
+				{
+					$gd_errored = FALSE;
+					switch ($image_filetype)
+					{
+						case '.jpg':
+							$read_function = 'imagecreatefromjpeg';
+							break;
+
+						case '.png':
+							$read_function = 'imagecreatefrompng';
+							break;
+
+						case '.gif':
+							$read_function = 'imagecreatefromgif';
+							break;
+					}
+					//cheat the server for uploading bigger files
+					ini_set('memory_limit', '128M');
+					$src = $read_function($phpbb_root_path . '/gallery/' . ALBUM_UPLOAD_PATH  . $image_filename);
+
+					if (!$src)
+					{
+						$gd_errored = TRUE;
+						$image_thumbnail = '';
+					}
+					else if (($image_width > $album_config['thumbnail_size']) || ($image_height > $album_config['thumbnail_size']))
+					{
+						// Resize it
+						if ($image_width > $image_height)
+						{
+							$thumbnail_width 	= $album_config['thumbnail_size'];
+							$thumbnail_height 	= $album_config['thumbnail_size'] * ($image_height/$image_width);
+						}
+						else
+						{
+							$thumbnail_height 	= $album_config['thumbnail_size'];
+							$thumbnail_width 	= $album_config['thumbnail_size'] * ($image_width/$image_height);
+						}
+
+						// Create thumbnail + 16 Pixel extra for imagesize text
+						$thumbnail = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height + 16) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height + 16);
+						$resize_function = ($album_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
+						@$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $image_width, $image_height);
+
+						// Create image details
+						$dimension_font = 1;
+						$dimension_filesize = filesize($phpbb_root_path . '/gallery/' . ALBUM_UPLOAD_PATH . $image_filename);
+						$dimension_string = $image_width . "x" . $image_height . "(" . intval($dimension_filesize/1024) . "KB)";
+						$dimension_colour = ImageColorAllocate($thumbnail,255,255,255);
+						$dimension_height = imagefontheight($dimension_font);
+						$dimension_width = imagefontwidth($dimension_font) * strlen($dimension_string);
+						$dimension_x = ($thumbnail_width - $dimension_width) / 2;
+						$dimension_y = $thumbnail_height + ((16 - $dimension_height) / 2);
+						imagestring($thumbnail, 1, $dimension_x, $dimension_y, $dimension_string, $dimension_colour);
+					}
+					else
+					{
+						$thumbnail = $src;
+					}
+
+					if (!$gd_errored)
+					{
+						$image_thumbnail = $image_filename;
+
+						// Write to disk
+						switch ($image_filetype)
+						{
+							case '.jpg':
+								@imagejpeg($thumbnail, $phpbb_root_path . '/gallery/' . ALBUM_CACHE_PATH . $image_thumbnail, $album_config['thumbnail_quality']);
+							break;
+
+							case '.png':
+								@imagepng($thumbnail, $phpbb_root_path . '/gallery/' . ALBUM_CACHE_PATH . $image_thumbnail);
+							break;
+
+							case '.gif':
+								@imagegif($thumbnail, $phpbb_root_path . '/gallery/' . ALBUM_CACHE_PATH . $image_thumbnail);
+							break;
+						}
+						@chmod(ALBUM_CACHE_PATH . $image_thumbnail, 0777);
+					} // End IF $gd_errored
+				} // End Thumbnail Cache
+				else if ($album_config['gd_version'] > 0)
+				{
+					$image_thumbnail = '';
+				}
+
+				// The source image is imported and thumbnailed, delete it
+				#unlink($image_path);
+
+				$sql_ary = array(
+					'image_filename' 		=> $image_filename,
+					'image_thumbnail'		=> $image_thumbnail,
+					'image_name'			=> $image,
+					'image_desc'			=> $user->lang['NO_DESC'],
+					'image_desc_uid'		=> '',
+					'image_desc_bitfield'	=> '',
+					'image_user_id'			=> $image_user_id,
+					'image_username'		=> $image_username,
+					'image_user_ip'			=> $image_user_ip,
+					'image_time'			=> $image_time,
+					'image_album_id'		=> $album_id,
+					'image_approval'		=> 1,
+				);
+
+				$db->sql_query('INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+				$counter++;
+			}
+			$left = $image_count - $counter;
+			$template->assign_vars(array(
+				'ACP_GALLERY_TITLE'				=> $user->lang['IMPORT_DEBUG'],
+				'ACP_GALLERY_TITLE_EXPLAIN'		=> sprintf($user->lang['IMPORT_DEBUG_MES'], $counter, $left),
+			));
 		}
 	}
 

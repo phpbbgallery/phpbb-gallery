@@ -58,6 +58,35 @@
 	{S_FORM_TOKEN}
 </form>
 
+<!-- ELSEIF S_IMPORT_IMAGES -->
+<form id="acp_gallery" method="post" action="{U_ACTION}">
+	<fieldset>
+		<legend>{L_ALBUM_SETTINGS}</legend>
+		<dl>
+			<dt><label for="img_dir">{L_IMPORT_DIR}</label>
+				<br /><span>{L_IMPORT_DIR_EXP}</span></dt>
+			<dd><input class="text medium" type="text" id="img_dir" name="img_dir" value="" />
+				<br /><span>{L_IMPORT_DIR_DEL}</span></dd>
+		</dl>
+		<dl>
+			<dt><label for="target">{L_IMPORT_ALBUM}</label></dt>
+			<dd><select id="target" name="target"><option value="0"<!-- IF not S_ALBUM_PARENT_ID --> selected="selected"<!-- ENDIF -->>{L_NO_PARENT}</option>{S_SELECT_IMPORT}</select></dd>
+		</dl>
+		<dl>
+			<dt><label for="img_per_cycle">{L_IMPORT_CIRCLE}</label></dt>
+			<dd><input class="post" type="text" maxlength="9" size="9" name="img_per_cycle" value="15" /></dd>
+		</dl>
+	</fieldset>
+	<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</p>
+	</fieldset>
+	{S_FORM_TOKEN}
+</form>
+
 <!-- ELSEIF S_CREATE_ALBUM || S_EDIT_ALBUM -->
 <form id="acp_gallery" method="post" action="{U_ACTION}">
 	<fieldset>
