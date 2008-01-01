@@ -36,7 +36,7 @@ $sort_order = request_var('order', 'ASC');
 // Memberlist sorting
 //
 $mode_types_text 	= array($user->lang['SORT_JOINED'], $user->lang['SORT_USERNAME'], $user->lang['IMAGES'], $user->lang['LAST_IMAGE']);
-$mode_types 		= array('joindate', 'username', 'pics', 'last_pic');
+$mode_types 		= array('joindate', 'username', 'images', 'last_image');
 
 $select_sort_mode = '<select name="mode">';
 for($i = 0; $i < count($mode_types_text); $i++)
