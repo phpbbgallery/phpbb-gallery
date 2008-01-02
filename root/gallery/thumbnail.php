@@ -196,6 +196,7 @@ if ($album_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER'])
 			$read_function = 'imagecreatefrompng';
 		break;
 	}
+	$src = @$read_function(ALBUM_UPLOAD_PATH  . $pic_filename);
 
 if (!$src)
 {
