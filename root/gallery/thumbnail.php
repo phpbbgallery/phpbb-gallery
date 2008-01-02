@@ -46,10 +46,10 @@ $thispic = $db->sql_fetchrow($result);
 
 $album_id = $thispic['image_album_id'];
 $user_id = $thispic['image_user_id'];
-
 $pic_filetype = substr($thispic['image_filename'], strlen($thispic['image_filename']) - 4, 4);
 $pic_filename = $thispic['image_filename'];
 $pic_thumbnail = $thispic['image_thumbnail'];
+
 
 if (empty($thispic) or !file_exists(ALBUM_UPLOAD_PATH . $pic_filename))
 {
@@ -172,16 +172,19 @@ if ($album_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER'])
 		readfile(ALBUM_CACHE_PATH . $pic_thumbnail);
 		exit;
 	}
-
+	else
+	{
+		readfile('../images/nothumbnail.jpg');
+		exit;
+	}
 
 	// --------------------------------
 	// Hmm, cache is empty. Try to re-generate!
 	// --------------------------------
 
-	$pic_size = @getimagesize(ALBUM_UPLOAD_PATH . $pic_filename);
+	$pic_size = getimagesize(ALBUM_UPLOAD_PATH . $pic_filename);
 	$pic_width = $pic_size[0];
 	$pic_height = $pic_size[1];
-
 	$gd_errored = FALSE;
 	switch ($pic_filetype)
 	{
@@ -198,8 +201,6 @@ if ($album_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER'])
 			$read_function = 'imagecreatefrompng';
 		break;
 	}
-
-	$src = @$read_function(ALBUM_UPLOAD_PATH  . $pic_filename);
 
 if (!$src)
 {
@@ -229,7 +230,7 @@ else if (($pic_width > $album_config['thumbnail_size']) or ($pic_height > $album
 
 	$resize_function = ($album_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
 
-	@$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $pic_width, $pic_height);
+	$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $pic_width, $pic_height);
 	$dimension_font = 1; 
 	$dimension_filesize = filesize(ALBUM_UPLOAD_PATH . $pic_filename); 
 	$dimension_string = intval($pic_width) . "x" . intval($pic_height) . "(" . intval($dimension_filesize/1024) . "KB)"; 
@@ -267,7 +268,7 @@ if (!$gd_errored)
 
 
 	/*
-	* After write to disk, donot forget to send to browser also
+	* After write to disk, don't forget to send to browser also
 	*/
 
 	switch ($pic_filetype)

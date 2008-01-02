@@ -1,8 +1,8 @@
 <!-- INCLUDE overall_header.html -->
-<!-- IF S_MODE == 1 -->
 <p class="{S_CONTENT_FLOW_END}<!-- IF S_USER_LOGGED_IN --> rightside<!-- ENDIF -->"><!-- IF S_USER_LOGGED_IN -->{LAST_VISIT_DATE}<!-- ELSE -->{CURRENT_TIME}<!-- ENDIF --></p>
 <!-- IF U_MCP --><p>{CURRENT_TIME} <br />[&nbsp;<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</p><!-- ELSEIF S_USER_LOGGED_IN --><p>{CURRENT_TIME}</p><!-- ENDIF -->
 
+<!-- IF .albumrow -->
 <div class="forabg">
 	<div class="inner">
 		<span class="corners-top"><span></span></span>
@@ -21,8 +21,8 @@
 				<dl class="icon" style="background-image: url({albumrow.ALBUM_FOLDER_IMG_SRC}); background-repeat: no-repeat;">
 					<dt>
 						<!-- IF albumrow.ALBUM_IMAGE --><span class="forum-image">{albumrow.ALBUM_IMAGE}</span><!-- ENDIF -->
-						<a href="{albumrow.U_VIEW_CAT}" class="forumtitle">{albumrow.CAT_TITLE}</a><br />
-						{albumrow.CAT_DESC}
+						<a href="{albumrow.U_VIEW_ALBUM}" class="forumtitle">{albumrow.ALBUM_NAME}</a><br />
+						{albumrow.ALBUM_DESC}
 						<!-- IF albumrow.MODERATORS -->
 						<br /><strong>{albumrow.L_MODERATORS}:</strong> {albumrow.MODERATORS}
 						<!-- ENDIF -->
@@ -30,7 +30,7 @@
 						<br /><strong>{albumrow.L_SUBALBUMS}:</strong> {albumrow.SUBALBUMS}
 						<!-- ENDIF -->
 					</dt>
-					<dd class="posts">{albumrow.PICS} <dfn>{L_IMAGES}</dfn></dd>
+					<dd class="posts">{albumrow.IMAGES} <dfn>{L_IMAGES}</dfn></dd>
 					<dd class="lastpost"><span>
 					<!-- IF albumrow.LAST_PIC_INFO -->{albumrow.LAST_PIC_INFO}<!-- ELSE -->{L_NO_IMAGES}<!-- ENDIF -->
 					</span></dd>
@@ -41,9 +41,9 @@
 		<span class="corners-bottom"><span></span></span>
 	</div>
 </div>
-<!-- ELSE IF S_MODE == 2 -->
 <!-- IF U_MCP --><p>[&nbsp;<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</p><!-- ENDIF -->
-<h2><a href="{U_VIEW_CAT}">{CAT_TITLE}</a></h2>
+<!-- ENDIF -->
+<h2><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>
 
 <!-- IF FORUM_DESC or MODERATORS or U_MCP -->
 <p>
@@ -53,37 +53,35 @@
 </p>
 <!-- ENDIF -->
 
+<!-- IF S_MODE == 2 -->
 <div class="topic-actions">
 	<div class="buttons">
-		<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span></span>{L_UPLOAD_IMAGE}</a></div>
+		<div class="upload-icon"><a href="{U_UPLOAD_IMAGE}"><span></span>{L_UPLOAD_IMAGE}</a></div>
 	</div>
+<!-- ENDIF -->
 	<div class="pagination">
 		{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
 	</div>
-</div>
+<!-- IF S_MODE == 2 --></div><!-- ENDIF -->
 
+<!-- IF .picrow -->
 <div class="forumbg">
 	<div class="inner">
 		<span class="corners-top"><span></span></span>
 		<ul class="topiclist">
 			<li class="header">
 				<dl class="icon">
-					<dt>{L_ALBUM} - {CAT_TITLE}</dt>
+					<dt>{L_ALBUM} - {ALBUM_NAME}</dt>
 				</dl>
 			</li>
 		</ul>
 		<ul class="topiclist topics">
 			<li class="bg2">
 				<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline">
-					<!-- BEGIN no_pics -->
-					<tr>
-						<td class="bg1" align="center" height="50"><span class="gen">{L_NO_IMAGES}</span></td>
-					</tr>
-					<!-- END no_pics -->
 					<!-- BEGIN picrow -->
 					<tr>
 						<!-- BEGIN piccol -->
-						<td align="center" width="{S_COL_WIDTH}" class="bg1"><span class="genmed"><a href="{picrow.piccol.U_PIC}" {TARGET_BLANK}><img src="{picrow.piccol.THUMBNAIL}" border="0" alt="{picrow.piccol.DESC}" title="{picrow.piccol.DESC}" vspace="10" /></a><br />{picrow.piccol.APPROVAL}</span></td>
+						<td align="center" width="{S_COL_WIDTH}" class="bg1"><span class="genmed"><a href="{picrow.piccol.U_IMAGE}" {TARGET_BLANK}><img src="{picrow.piccol.THUMBNAIL}" border="0" alt="{picrow.piccol.DESC}" title="{picrow.piccol.DESC}" vspace="10" /></a><br />{picrow.piccol.APPROVAL}</span></td>
 						<!-- END piccol -->
 						<!-- BEGIN nopiccol --> 
 						<td align="center" width="{S_COL_WIDTH}" class="bg1"><span></span></td> 
@@ -138,18 +136,29 @@
 </fieldset>
 </form>
 <hr />
+<!-- ELSE -->
+<div class="panel">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+			{L_NO_IMAGES}
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+<!-- ENDIF -->
+<!-- IF S_MODE == 2 -->
 <div class="topic-actions">
 	<div class="buttons">
-		<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span></span>{L_UPLOAD_PIC}</a></div>
+		<div class="upload-icon"><a href="{U_UPLOAD_IMAGE}"><span></span>{L_UPLOAD_IMAGE}</a></div>
 	</div>
+<!-- ENDIF -->
 	<div class="pagination">
 		{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
 	</div>
-</div>
+<!-- IF S_MODE == 2 --></div><!-- ENDIF -->
 <br />
-	
+
 <p><a href="{U_RETURN_LINK}" class="left-box {S_CONTENT_FLOW_BEGIN}" accesskey="r">{L_RETURN_TO} {S_RETURN_LINK}</a></p>
-{ALBUM_JUMPBOX}
+<fieldset class="jumpbox">{ALBUM_JUMPBOX}</fieldset>
 
 <!-- IF S_DISPLAY_ONLINE_LIST -->
 	<h3><a href="{U_VIEWONLINE}">{L_WHO_IS_ONLINE}</a></h3>
@@ -160,23 +169,7 @@
 <p>{S_AUTH_LIST}</p>
 
 
-<!--table width="100%" cellspacing="2" cellpadding="2" border="0">
-  <tr>
-	<td valign="bottom" width="100%"><a class="maintitle" href="{U_VIEW_CAT}">{CAT_TITLE}</a><br />
-		<span class="gensmall"><b>{L_MODERATORS}: {MODERATORS}</b></span></td>
-	<td align="right" valign="bottom" nowrap="nowrap"><span class="gensmall"><b>{PAGINATION}</b></span></td>
-  </tr>
-</table>
-
-<table width="100%" cellspacing="2" cellpadding="2" border="0">
-  <tr>
-	<td><a href="{U_UPLOAD_PIC}"><img src="{UPLOAD_PIC_IMG}" border="0" alt="{L_UPLOAD_PIC}" title="{L_UPLOAD_PIC}" /></a></td>
-	<td class="nav" width="100%"><span class="nav">&nbsp;&nbsp;&nbsp;<a href="{U_INDEX}" class="nav">{L_INDEX}</a> -> <a class="nav" href="{U_ALBUM}">{L_ALBUM}</a> -> <a class="nav" href="{U_VIEW_CAT}">{CAT_TITLE}</a></span></td>
-	<td align="right" valign="bottom" nowrap="nowrap"><span class="mainmenu" style="color: red;"><b>{WAITING}</b></span></td>
-  </tr>
-</table-->
 
 <!-- Please keep this little notice visible -->
-<div class="copyright">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a> & <a href="http://mods.flying-bits.org/">nickvergessen</a></div>
-<!-- ENDIF -->
+<div class="copyright">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a> &amp; <a href="http://mods.flying-bits.org/">nickvergessen</a></div>
 <!-- INCLUDE overall_footer.html -->

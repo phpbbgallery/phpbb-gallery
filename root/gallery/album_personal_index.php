@@ -126,9 +126,9 @@ for ($i = 0; $i < count($memberrow); $i++)
 			$album_config['last_pic_title_length'] = 25;
 		}
 
-		if (utf8_strlen($lastrow['image_name']) > $album_config['last_pic_title_length'])
+		if (strlen($lastrow['image_name']) > $album_config['last_pic_title_length'])
 		{
-			$lastrow['image_name'] = utf8_substr($lastrow['image_name'], 0, $album_config['last_pic_title_length']) . '...';
+			$lastrow['image_name'] = substr($lastrow['image_name'], 0, $album_config['last_pic_title_length']) . '...';
 		}
 
 		$last_pic_info .= '<a href="' . append_sid("./image_page.$phpEx?image_id=". $lastrow['image_id']) .'">';
@@ -156,9 +156,9 @@ for ($i = 0; $i < count($memberrow); $i++)
 		$album_config['last_pic_title_length'] = 25; 
 	}
 	$pic_title_full = $pic_title; 
-	if (utf8_strlen($pic_title) > $album_config['last_pic_title_length']) 
+	if (strlen($pic_title) > $album_config['last_pic_title_length']) 
 	{
-		$pic_title = utf8_substr($pic_title, 0, $album_config['last_pic_title_length']) . '...'; 
+		$pic_title = substr($pic_title, 0, $album_config['last_pic_title_length']) . '...'; 
 	}
 	$last_pic_info  = $user->lang['IMAGE_TITLE'] . ': <a href="'; 
 	$last_pic_info .= ($album_config['fullpic_popup']) ? append_sid("image_page.$phpEx?image_id=" . $pic_id) . '" title="' . $pic_title_full . '">' : append_sid("image_page.$phpEx?image_id=" . $pic_id) . '" title="' . $pic_title_full . '">'; 
@@ -169,8 +169,8 @@ for ($i = 0; $i < count($memberrow); $i++)
 		'USERNAME'			=> $memberrow[$i]['username'],
 		'U_VIEWGALLERY'		=> append_sid("album_personal.$phpEx?user_id=" . $memberrow[$i]['user_id']),
 		'JOINED'			=> $user->format_date($memberrow[$i]['user_regdate']),
-		'LAST_PIC'			=> $last_pic_info,
-		'PICS'				=> $pic_number,
+		'LAST_IMAGE'			=> $last_pic_info,
+		'IMAGES'				=> $pic_number,
 	));
 }
 

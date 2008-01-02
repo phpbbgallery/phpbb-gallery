@@ -98,8 +98,8 @@ if ($album_id <> 0)
 {
 	generate_album_nav($album_data);
 }
-if ($album_data['album_type'] == 2)
-{/* we just do this, when we have images */
+/*if ($album_data['album_type'] == 2)
+{ we just do this, when we have images */
 	if (($user->data['user_type'] == USER_FOUNDER) || ($auth_data['moderator'] == 1))
 	{
 		$template->assign_vars(array(
@@ -157,16 +157,16 @@ if ($album_data['album_type'] == 2)
 
 		$sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
 			FROM ' . GALLERY_IMAGES_TABLE . ' AS p
-				LEFT JOIN ' . USERS_TABLE . ' AS u
-					ON p.image_user_id = u.user_id
-				LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
-					ON p.image_id = r.rate_image_id
-				LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
-					ON p.image_id = c.comment_image_id
-				WHERE p.image_album_id = ' . $album_id . $pic_approval_sql . ' 
-				GROUP BY p.image_id
-				ORDER BY ' . $sort_method . ' ' . $sort_order . ' 
-				LIMIT ' . $limit_sql;
+			LEFT JOIN ' . USERS_TABLE . ' AS u
+				ON p.image_user_id = u.user_id
+			LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
+				ON p.image_id = r.rate_image_id
+			LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
+				ON p.image_id = c.comment_image_id
+			WHERE p.image_album_id = ' . $album_id . $pic_approval_sql . ' 
+			GROUP BY p.image_id
+			ORDER BY ' . $sort_method . ' ' . $sort_order . ' 
+			LIMIT ' . $limit_sql;
 		$result = $db->sql_query($sql);
 
 		$picrow = array();
@@ -217,7 +217,7 @@ if ($album_data['album_type'] == 2)
 				$message_parser->message	= $picrow[$j]['image_desc'];
 				$message_parser->decode_message($picrow[$j]['image_desc_uid']);
 				$template->assign_block_vars('picrow.piccol', array(
-					'U_PIC'			=> ($album_config['fullpic_popup']) ? append_sid($phpbb_root_path . "gallery/image.$phpEx?pic_id=" . $picrow[$j]['image_id']) : append_sid($phpbb_root_path . "gallery/image_page.$phpEx?image_id=" . $picrow[$j]['image_id']),
+					'U_IMAGE'			=> ($album_config['fullpic_popup']) ? append_sid($phpbb_root_path . "gallery/image.$phpEx?pic_id=" . $picrow[$j]['image_id']) : append_sid($phpbb_root_path . "gallery/image_page.$phpEx?image_id=" . $picrow[$j]['image_id']),
 					'THUMBNAIL'		=> append_sid("thumbnail.$phpEx?pic_id=" . $picrow[$j]['image_id']),
 					'DESC'			=> $message_parser->message,
 					'APPROVAL'		=> $approval_link,
@@ -269,33 +269,22 @@ if ($album_data['album_type'] == 2)
 		$sort_new_comment_option .= ($sort_method == 'new_comment') ? 'selected="selected"' : '';
 		$sort_new_comment_option .= '>' . $user->lang['NEW_COMMENT'] . '</option>';
 	}
-}
-else
-{
-	$tot_unapproved = 0;
-	$sort_method = $album_config['sort_method'];
-	$sort_order = $album_config['sort_order'];
-	$sort_rating_option = '';
-	$sort_comments_option = '';
-	$sort_new_comment_option = '';
-}
+/*}*/
 /**
 * Build Jumpbox
 */
-$album_jumpbox  = '<form name="jumpbox" action="' . append_sid($phpbb_root_path . "gallery/album.$phpEx") . '" method="get"><fieldset class="jumpbox">';
+$album_jumpbox  = '<form name="jumpbox" action="' . append_sid($phpbb_root_path . "gallery/album.$phpEx") . '" method="get">';
 $album_jumpbox .= '<label>' . $user->lang['JUMP_TO'] . ':</label><select name="id" onChange="forms[\'jumpbox\'].submit()">';
 $album_jumpbox .= make_album_jumpbox($album_id);
 $album_jumpbox .= '</select>';
 $album_jumpbox .= '&nbsp;<input type="submit" class="button2" value="' . $user->lang['GO'] . '" />';
 $album_jumpbox .= '<input type="hidden" name="sid" value="' . $user->data['session_id'] . '" />';
-$album_jumpbox .= '</fieldset></form>';
+$album_jumpbox .= '</form>';
 
 $template->assign_vars(array(
 	'S_MODE'					=> $album_data['album_type'],
-	'U_VIEW_CAT' 				=> append_sid($phpbb_root_path . "gallery/album.$phpEx?id=$album_id"),
-	'CAT_TITLE' 				=> $album_data['album_name'],
 	'MODERATORS' 				=> $moderators_list,
-	'U_UPLOAD_PIC' 				=> append_sid($phpbb_root_path . "gallery/upload.$phpEx?album_id=$album_id"),
+	'U_UPLOAD_IMAGE' 			=> append_sid($phpbb_root_path . "gallery/upload.$phpEx?album_id=$album_id"),
 	'WAITING' 					=> ($tot_unapproved == 0) ? '' : $tot_unapproved . $user->lang['WAITING_FOR_APPROVAL'],
 
 	'S_COLS' 					=> $album_config['cols_per_page'],

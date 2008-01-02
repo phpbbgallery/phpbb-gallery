@@ -229,8 +229,8 @@ if ($mode == '')
 			}
 
 			$template->assign_block_vars('picrow', array(
-				'PIC_ID' 		=> $picrow[$i]['image_id'],
-				'PIC_TITLE' 	=> '<a href="'. append_sid("image.$phpEx?pic_id=". $picrow[$i]['image_id']) .'" target="_blank">'. $picrow[$i]['image_name'] .'</a>',
+				'IMAGE_ID' 		=> $picrow[$i]['image_id'],
+				'IMAGE_NAME' 	=> '<a href="'. append_sid("image.$phpEx?pic_id=". $picrow[$i]['image_id']) .'" target="_blank">'. $picrow[$i]['image_name'] .'</a>',
 				'POSTER' 		=> $pic_poster,
 				'TIME' 			=> $user->format_date($picrow[$i]['image_time']),
 				'RATING' 		=> ($picrow[$i]['rating'] == 0) ? $user->lang['NOT_RATED'] : round($picrow[$i]['rating'], 2),
@@ -280,7 +280,7 @@ if ($mode == '')
 		'UNAPPROVAL_BUTTON' 	=> (($user->data['user_type'] <> USER_FOUNDER) && ($thiscat['cat_approval'] == ALBUM_ADMIN)) ? '' : '<input type="submit" class="liteoption" name="unapproval" value="' . $user->lang['UNAPPROVE'] . '" />',
 
 		'SORT_TIME' 			=> ($sort_method == 'image_time') ? 'selected="selected"' : '',
-		'SORT_PIC_TITLE' 		=> ($sort_method == 'image_name') ? 'selected="selected"' : '',
+		'SORT_IMAGE_NAME' 		=> ($sort_method == 'image_name') ? 'selected="selected"' : '',
 		'SORT_USERNAME' 		=> ($sort_method == 'image_user_id') ? 'selected="selected"' : '',
 		'SORT_VIEW' 			=> ($sort_method == 'image_view_count') ? 'selected="selected"' : '',
 
@@ -390,19 +390,16 @@ else
 			// write categories out
 			$category_select = '<select name="target">';
 
-			for ($i = 0; $i < count($catrows); $i++)
-			{
-				$category_select .= '<option value="'. $catrows[$i]['album_id'] .'">'. $catrows[$i]['album_name'] .'</option>';
-			}
+			$category_select .= make_album_jumpbox($album_id);
 
 			$category_select .= '</select>';
 			// end write
 
 			$template->assign_vars(array(
-				'S_ALBUM_ACTION' 		=> append_sid("mcp.$phpEx?mode=move&amp;album_id=$album_id"),
-				'S_CATEGORY_SELECT' 	=> $category_select)
-			);
-			
+				'S_ALBUM_ACTION'		=> append_sid("mcp.$phpEx?mode=move&amp;album_id=$album_id"),
+				'S_ALBUM_SELECT'		=> $category_select,
+			));
+
 			$template->assign_block_vars('navlinks', array(
 				'FORUM_NAME'	=> $user->lang['GALLERY'],
 				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),

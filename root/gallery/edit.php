@@ -144,13 +144,10 @@ if(!isset($_POST['pic_title']))
 	$message_parser->decode_message($thispic['image_desc_uid']);
 
 	$template->assign_vars(array(
-		'U_PIC'			=> append_sid("image.$phpEx?pic_id=$pic_id"),
-		'CAT_TITLE'				=> $thiscat['album_name'],
-		'U_VIEW_CAT'			=> ($album_id <> PERSONAL_GALLERY) ? append_sid("album.$phpEx?id=$album_id") : append_sid("album_personal.$phpEx?user_id=$user_id"),
-
-		'PIC_TITLE'				=> $thispic['image_name'],
-		'PIC_DESC'				=> $message_parser->message,
-		'S_PIC_DESC_MAX_LENGTH'	=> $album_config['desc_length'],
+		'U_IMAGE'			=> append_sid("image.$phpEx?pic_id=$pic_id"),
+		'IMAGE_NAME'				=> $thispic['image_name'],
+		'IMAGE_DESC'				=> $message_parser->message,
+		'S_IMAGE_DESC_MAX_LENGTH'	=> $album_config['desc_length'],
 
 		'S_ALBUM_ACTION'		=> append_sid("edit.$phpEx?pic_id=$pic_id"),
 	));

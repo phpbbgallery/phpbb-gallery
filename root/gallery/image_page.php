@@ -270,16 +270,41 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 | Main work here...
 +----------------------------------------------------------
 */
-
+$previous_id = $next_id = 0;
+$do_next = false;
+$sort_method = request_var('sort_method', $album_config['sort_method']);
+$sort_order = request_var('sort_order', $album_config['sort_order']);
+$sql = 'SELECT p.image_id
+	FROM ' . GALLERY_IMAGES_TABLE . ' AS p
+	WHERE p.image_album_id = ' . $album_id . $pic_approval_sql . '
+	ORDER BY ' . $sort_method . ' ' . $sort_order;
+$result = $db->sql_query($sql);
+while ($row = $db->sql_fetchrow($result))
+{
+	if ($do_next)
+	{
+		$next_id = $row['image_id'];
+	}
+	$do_next = false;
+	if ($row['image_id'] == $image_data['image_id'])
+	{
+		$previous_id = $last_id;
+		$do_next = true;
+	}
+	$last_id = $row['image_id'];
+}
 $template->assign_vars(array(
-	'U_VIEW_CAT'	=> ($album_id <> PERSONAL_GALLERY) ? append_sid("album.$phpEx?id=$album_id") : append_sid("album_personal.$phpEx?user_id=$user_id"),
+	'U_VIEW_ALBUM'	=> ($album_id <> PERSONAL_GALLERY) ? append_sid("album.$phpEx?id=$album_id") : append_sid("album_personal.$phpEx?user_id=$user_id"),
 
-	'U_PIC'			=> append_sid("image.$phpEx?pic_id=$image_id"),
-	'PIC_TITLE'		=> $image_data['image_name'],
-	'PIC_DESC'		=> generate_text_for_display($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], 7),
-	'POSTER'		=> get_username_string('full', $image_data['user_id'], ($image_data['user_id'] <> ANONYMOUS) ? $image_data['username'] : $user->lang['GUEST'], $image_data['user_colour']),
-	'PIC_TIME'		=> $user->format_date($image_data['image_time']),
-	'PIC_VIEW'		=> $image_data['image_view_count'],
+	'U_IMAGE'			=> append_sid("{$phpbb_root_path}gallery/image.$phpEx?pic_id=$image_id"),
+	'U_PREVIOUS'		=> ($previous_id) ? append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=$previous_id") : '',
+	'U_NEXT'			=> ($next_id && ($next_id != $previous_id)) ? append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=$next_id") : '',
+
+	'IMAGE_NAME'		=> $image_data['image_name'],
+	'IMAGE_DESC'		=> generate_text_for_display($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], 7),
+	'POSTER'			=> get_username_string('full', $image_data['user_id'], ($image_data['user_id'] <> ANONYMOUS) ? $image_data['username'] : $user->lang['GUEST'], $image_data['user_colour']),
+	'IMAGE_TIME'		=> $user->format_date($image_data['image_time']),
+	'IMAGE_VIEW'		=> $image_data['image_view_count'],
 
 	'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=$image_id"))
 );
@@ -288,7 +313,7 @@ if ($album_config['rate'])
 {
 	$template->assign_vars(array(
 		'RATING'		=> $user->lang['RATING'],
-		'PIC_RATING'	=> ($image_data['rating'] <> 0) ? round($image_data['rating'], 2) : $user->lang['NOT_RATED'],
+		'IMAGE_RATING'	=> ($image_data['rating'] <> 0) ? round($image_data['rating'], 2) : $user->lang['NOT_RATED'],
 	));
 	
 	if ($album_data['album_rate_level'] < 1 || $album_user_access['rate'])
@@ -329,7 +354,7 @@ if ($album_config['comment'])
 {
 	$template->assign_vars(array(
 		'COMMENTS'		=> true,
-		'PIC_COMMENTS'	=> $image_data['comments'],
+		'IMAGE_COMMENTS'	=> $image_data['comments'],
 	));
 	//'PIC_COMMENTS' => $image_data['comments']
 	
