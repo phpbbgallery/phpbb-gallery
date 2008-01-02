@@ -172,11 +172,6 @@ if ($album_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER'])
 		readfile(ALBUM_CACHE_PATH . $pic_thumbnail);
 		exit;
 	}
-	else
-	{
-		readfile('../images/nothumbnail.jpg');
-		exit;
-	}
 
 	// --------------------------------
 	// Hmm, cache is empty. Try to re-generate!
