@@ -184,9 +184,9 @@ function permission_drop_down_box($type, $permission)
 	if ($type != 'album_approval')
 	{
 		$permission_drop_down_box .= '<option' . (($permission == ALBUM_USER) ? ' selected="selected"' : '') . ' value="0">' . $user->lang['GALLERY_REG'] . '</option>';
-		$permission_drop_down_box .= '<option' . (($permission == ALBUM_PRIVATE) ? ' selected="selected"' : '') . ' value="2">' . $user->lang['GALLERY_PRIVATE'] . '</option>';
+		$permission_drop_down_box .= '<option' . (($permission == ALBUM_PRIVATE) ? ' selected="selected"' : '') . ' value="3">' . $user->lang['GALLERY_PRIVATE'] . '</option>';
 	}
-	$permission_drop_down_box .= '<option' . (($permission == ALBUM_MOD) ? ' selected="selected"' : '') . ' value="3">' . $user->lang['GALLERY_MOD'] . '</option>';
+	$permission_drop_down_box .= '<option' . (($permission == ALBUM_MOD) ? ' selected="selected"' : '') . ' value="2">' . $user->lang['GALLERY_MOD'] . '</option>';
 	$permission_drop_down_box .= '<option' . (($permission == ALBUM_ADMIN) ? ' selected="selected"' : '') . ' value="4">' . $user->lang['GALLERY_ADMIN'] . '</option>';
 	$permission_drop_down_box .= '</select>';
 	return $permission_drop_down_box;
