@@ -193,16 +193,16 @@ for ($i = 0; $i < count($album); $i++)
 	// ------------------------------------------
 
 	$template->assign_block_vars('albumrow', array(
-		'U_VIEW_CAT' 		=> append_sid($phpbb_root_path . "gallery/album.$phpEx?id=" . $album[$i]['album_id']),
-		'CAT_TITLE' 		=> $album[$i]['album_name'],
-		'ALBUM_FOLDER_IMG_SRC'		=> $user->img($folder_image, $folder_alt, false, '', 'src'),
-		'SUBALBUMS'			=> get_album_children($album[$i]['album_id']),
-		'CAT_DESC' 			=> generate_text_for_display($album[$i]['album_desc'], $album[$i]['album_desc_uid'], $album[$i]['album_desc_bitfield'], $album[$i]['album_desc_options']),
-		'L_MODERATORS' 		=> $l_moderators,
-		'L_SUBALBUMS' 		=> $l_subalbums,
-		'MODERATORS' 		=> $moderators_list,
-		'PICS' 				=> $album[$i]['count'],
-		'LAST_PIC_INFO' 	=> $last_pic_info)
+		'U_VIEW_ALBUM' 			=> append_sid($phpbb_root_path . "gallery/album.$phpEx?id=" . $album[$i]['album_id']),
+		'ALBUM_NAME' 			=> $album[$i]['album_name'],
+		'ALBUM_FOLDER_IMG_SRC'	=> $user->img($folder_image, $folder_alt, false, '', 'src'),
+		'SUBALBUMS'				=> get_album_children($album[$i]['album_id']),
+		'ALBUM_DESC' 			=> generate_text_for_display($album[$i]['album_desc'], $album[$i]['album_desc_uid'], $album[$i]['album_desc_bitfield'], $album[$i]['album_desc_options']),
+		'L_MODERATORS' 			=> $l_moderators,
+		'L_SUBALBUMS' 			=> $l_subalbums,
+		'MODERATORS' 			=> $moderators_list,
+		'PICS' 					=> $album[$i]['count'],
+		'LAST_PIC_INFO' 		=> $last_pic_info)
 	);
 }
 
