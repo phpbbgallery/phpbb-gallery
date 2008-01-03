@@ -270,7 +270,7 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 | Main work here...
 +----------------------------------------------------------
 */
-$previous_id = $next_id = 0;
+$previous_id = $next_id = $last_id = 0;
 $do_next = false;
 $sort_method = request_var('sort_method', $album_config['sort_method']);
 $sort_order = request_var('sort_order', $album_config['sort_order']);
