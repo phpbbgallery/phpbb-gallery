@@ -274,9 +274,14 @@ $previous_id = $next_id = $last_id = 0;
 $do_next = false;
 $sort_method = request_var('sort_method', $album_config['sort_method']);
 $sort_order = request_var('sort_order', $album_config['sort_order']);
+$image_approval_sql = ' AND p.image_approval = 1';
+if (($album_data['album_approval'] <> ALBUM_USER) && (($user->data['user_type'] == USER_FOUNDER) || (($auth_data['moderator'] == 1) && ($album_data['album_approval'] == ALBUM_MOD))))
+{
+	$image_approval_sql = '';
+}
 $sql = 'SELECT p.image_id
 	FROM ' . GALLERY_IMAGES_TABLE . ' AS p
-	WHERE p.image_album_id = ' . $album_id . $pic_approval_sql . '
+	WHERE p.image_album_id = ' . $album_id . $image_approval_sql . '
 	ORDER BY ' . $sort_method . ' ' . $sort_order;
 $result = $db->sql_query($sql);
 while ($row = $db->sql_fetchrow($result))
