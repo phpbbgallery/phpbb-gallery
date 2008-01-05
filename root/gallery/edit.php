@@ -120,7 +120,7 @@ if ($album_id == PERSONAL_GALLERY)
 	));
 
 	$template->assign_block_vars('navlinks', array(
-		'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $thispic['image_username']),
+		'FORUM_NAME'	=> $thiscat['album_name'],
 		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal.$phpEx", 'user_id=' . $user_id),
 	));
 }

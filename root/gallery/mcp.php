@@ -292,11 +292,6 @@ if ($mode == '')
 		'SORT_DESC' 			=> ($sort_order == 'DESC') ? 'selected="selected"' : '',
 	));
 
-	$template->assign_block_vars('navlinks', array(
-		'FORUM_NAME'	=> $user->lang['GALLERY'],
-		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
-	));
-
 	generate_album_nav($thiscat);
 
 	$template->assign_block_vars('navlinks', array(
@@ -400,11 +395,6 @@ else
 				'S_ALBUM_SELECT'		=> $category_select,
 			));
 
-			$template->assign_block_vars('navlinks', array(
-				'FORUM_NAME'	=> $user->lang['GALLERY'],
-				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
-			));
-
 			generate_album_nav($thiscat);
 
 			$template->assign_block_vars('navlinks', array(
@@ -422,11 +412,6 @@ else
 		}
 		else
 		{
-			$template->assign_block_vars('navlinks', array(
-				'FORUM_NAME'	=> $user->lang['GALLERY'],
-				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
-			));
-
 			generate_album_nav($thiscat);
 
 			$template->assign_block_vars('navlinks', array(
@@ -486,10 +471,6 @@ else
 		//-----------------------------
 		// LOCK
 		//-----------------------------
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['GALLERY'],
-			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
-		));
 
 		if ($album_id == PERSONAL_GALLERY)
 		{
@@ -499,7 +480,7 @@ else
 			));
 
 			$template->assign_block_vars('navlinks', array(
-				'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $thispic['image_username']),
+				'FORUM_NAME'	=> $thiscat['album_name'],
 				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal.$phpEx", 'user_id=' . $user_id),
 			));
 		}
@@ -576,11 +557,6 @@ else
 		// UNLOCK
 		//-----------------------------
 
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['GALLERY'],
-			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
-		));
-
 		if ($album_id == PERSONAL_GALLERY)
 		{
 			$template->assign_block_vars('navlinks', array(
@@ -589,7 +565,7 @@ else
 			));
 
 			$template->assign_block_vars('navlinks', array(
-				'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $thispic['image_username']),
+				'FORUM_NAME'	=> $thiscat['album_name'],
 				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal.$phpEx", 'user_id=' . $user_id),
 			));
 		}
@@ -667,11 +643,6 @@ else
 		// APPROVAL
 		//-----------------------------
 
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['GALLERY'],
-			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
-		));
-
 		generate_album_nav($thiscat);
 
 		$template->assign_block_vars('navlinks', array(
@@ -731,11 +702,6 @@ else
 		//-----------------------------
 		// UNAPPROVAL
 		//-----------------------------
-
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['GALLERY'],
-			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
-		));
 
 		generate_album_nav($thiscat);
 
@@ -954,11 +920,6 @@ else
 	}
 	else
 	{
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['GALLERY'],
-			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
-		));
-
 		generate_album_nav($thiscat);
 
 		$template->assign_block_vars('navlinks', array(
