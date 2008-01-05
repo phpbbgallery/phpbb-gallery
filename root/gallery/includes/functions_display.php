@@ -201,8 +201,8 @@ for ($i = 0; $i < count($album); $i++)
 		'L_MODERATORS' 			=> $l_moderators,
 		'L_SUBALBUMS' 			=> $l_subalbums,
 		'MODERATORS' 			=> $moderators_list,
-		'PICS' 					=> $album[$i]['count'],
-		'LAST_PIC_INFO' 		=> $last_pic_info)
+		'IMAGES' 					=> $album[$i]['count'],
+		'LAST_IMAGE_INFO' 		=> $last_pic_info)
 	);
 }
 
