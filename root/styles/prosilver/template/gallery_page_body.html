@@ -163,10 +163,14 @@ function checkCommentForm() {
 		<div class="inner">
 			<span class="corners-top"><span></span></span>
 			<div class="postbody">
-				<p class="author"><a href="#"><img src="../styles/prosilver/imageset/icon_post_target.gif" width="11" height="9" alt="{L_COMMENT}" title="{L_COMMENT}" /></a>{L_POST_BY_AUTHOR} <strong>{commentrow.POSTER}</strong> {L_POSTED_ON_DATE} {commentrow.TIME} </p>
+				<ul class="profile-icons">
+					<!-- IF commentrow.EDIT --><li class="edit-icon"><a href="{commentrow.EDIT}" title="{L_EDIT_POST}"><span>{L_EDIT_POST}</span></a></li><!-- ENDIF -->
+					<!-- IF commentrow.DELETE --><li class="delete-icon"><a href="{commentrow.DELETE}" title="{L_DELETE_POST}"><span>{L_DELETE_POST}</span></a></li><!-- ENDIF -->
+				</ul>
+				<p class="author"><a href="#"><img src="{T_IMAGESET_PATH}/icon_post_target.gif" width="11" height="9" alt="{L_COMMENT}" title="{L_COMMENT}" /></a>{L_POST_BY_AUTHOR} <strong>{commentrow.POSTER}</strong> {L_POSTED_ON_DATE} {commentrow.TIME} </p>
 				<div class="content">{commentrow.TEXT}</div>
 				{commentrow.EDIT_INFO}
-				<!--span class="genmed">{commentrow.IP}<br /><b>{commentrow.EDIT}&nbsp;{commentrow.DELETE}</b></span-->
+				<span class="genmed">{commentrow.IP}</span>
 			</div>
 			<span class="corners-bottom"><span></span></span>
 		</div>
