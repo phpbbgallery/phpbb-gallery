@@ -137,6 +137,23 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 		$comment_username = (!$user->data['is_registered']) ? substr(request_var('comment_username', '', true), 0, 32) : $user->data['username'];
 		if( empty($comment_text) )
 		{
+			// Build the navigation
+			if ($album_id <> PERSONAL_GALLERY)
+			{
+				generate_album_nav($album_data);
+			}
+			else
+			{
+				$template->assign_block_vars('navlinks', array(
+					'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],
+					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}gallery/album_personal_index.$phpEx"),
+				));
+
+				$template->assign_block_vars('navlinks', array(
+					'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $image_data['username']),
+					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}gallery/album_personal.$phpEx", 'user_id=' . $user_id),
+				));
+			}
 			trigger_error($user->lang['COMMENT_NO_TEXT'], E_USER_WARNING);
 		}
 		// --------------------------------
