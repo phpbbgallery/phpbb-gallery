@@ -96,6 +96,7 @@
       <file from="languages/de/gallery_install.php" to="language/de/mods/gallery_install.php" />
       <file from="languages/de/info_acp_gallery.php" to="language/de/mods/info_acp_gallery.php" />
       <file from="languages/de/button_upload_image.gif" to="styles/prosilver/imageset/de/button_upload_image.gif" />
+      <file from="languages/de/subsilver2/button_upload_image.gif" to="styles/subsilver2/imageset/de/button_upload_image.gif" />
     </copy>
     <diy-instructions lang="en-gb">see normal install-file</diy-instructions>
   </action-group>
