@@ -1,4 +1,18 @@
 <?php
+
+/**
+*
+* @package phpBB3 - phpBB Gallery database updater
+* @version $Id$
+* @copyright (c) 2007 phpBB Gallery
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+*/
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
 $activemenu = ' id="activemenu"';
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">';
 echo '<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" xml:lang="en-gb" lang="en-gb"><head>';
@@ -64,11 +78,11 @@ if ($mode == 'install')
 		echo '		<legend>' . $user->lang['INSTALLER_INSTALL'] . '</legend>';
 		echo '		<dl>';
 		echo '			<dt><label for="install">v' . $new_mod_version . ':</label></dt>';
-		echo '			<dd><label><input name="install" value="1" class="radio" type="radio">' . $user->lang['YES'] . '</label><label><input name="install" value="0" checked="checked" class="radio" type="radio">' . $user->lang['NO'] . '</label></dd>';
+		echo '			<dd><label><input name="install" value="1" class="radio" type="radio" />' . $user->lang['YES'] . '</label><label><input name="install" value="0" checked="checked" class="radio" type="radio" />' . $user->lang['NO'] . '</label></dd>';
 		echo '		</dl>';
 		echo '		<p class="submit-buttons">';
-		echo '			<input class="button1" id="submit" name="submit" value="Submit" type="submit">&nbsp;';
-		echo '			<input class="button2" id="reset" name="reset" value="Reset" type="reset">';
+		echo '			<input class="button1" id="submit" name="submit" value="Submit" type="submit" />&nbsp;';
+		echo '			<input class="button2" id="reset" name="reset" value="Reset" type="reset" />';
 		echo '		</p>';
 		echo '	</fieldset>';
 		echo '</form>';
@@ -101,11 +115,11 @@ else if (($mode == 'update012') || ($mode == 'update013') || ($mode == 'update02
 		echo '		<legend>' . $user->lang['INSTALLER_UPDATE'] . '</legend>';
 		echo '		<dl>';
 		echo '			<dt><label for="update">' . sprintf($user->lang['INSTALLER_UPDATE_NOTE'], $version, $new_mod_version) . ':</label></dt>';
-		echo '			<dd><label><input name="update" value="1" class="radio" type="radio">' . $user->lang['YES'] . '</label><label><input name="update" value="0" checked="checked" class="radio" type="radio">' . $user->lang['NO'] . '</label></dd>';
+		echo '			<dd><label><input name="update" value="1" class="radio" type="radio" />' . $user->lang['YES'] . '</label><label><input name="update" value="0" checked="checked" class="radio" type="radio" />' . $user->lang['NO'] . '</label></dd>';
 		echo '		</dl>';
 		echo '		<p class="submit-buttons">';
-		echo '			<input class="button1" id="submit" name="submit" value="Submit" type="submit">&nbsp;';
-		echo '			<input class="button2" id="reset" name="reset" value="Reset" type="reset">';
+		echo '			<input class="button1" id="submit" name="submit" value="Submit" type="submit" />&nbsp;';
+		echo '			<input class="button2" id="reset" name="reset" value="Reset" type="reset" />';
 		echo '		</p>';
 		echo '	</fieldset>';
 		echo '</form>';
@@ -146,15 +160,15 @@ else if ($mode == 'convert')
 		echo '		<legend>' . $user->lang['INSTALLER_CONVERT'] . '</legend>';
 		echo '		<dl>';
 		echo '			<dt><label for="convert_prefix">' . $user->lang['INSTALLER_CONVERT_PREFIX'] . ':</label></dt>';
-		echo '			<dd><input id="convert_prefix" size="40" maxlength="255" name="convert_prefix" value="" type="text"></dd>';
+		echo '			<dd><input id="convert_prefix" size="40" maxlength="255" name="convert_prefix" value="" type="text" /></dd>';
 		echo '		</dl>';
 		echo '		<dl>';
 		echo '			<dt><label for="convert">' . sprintf($user->lang['INSTALLER_CONVERT_NOTE'], $new_mod_version) . ':</label></dt>';
-		echo '			<dd><label><input name="convert" value="1" class="radio" type="radio">' . $user->lang['YES'] . '</label><label><input name="convert" value="0" checked="checked" class="radio" type="radio">' . $user->lang['NO'] . '</label></dd>';
+		echo '			<dd><label><input name="convert" value="1" class="radio" type="radio" />' . $user->lang['YES'] . '</label><label><input name="convert" value="0" checked="checked" class="radio" type="radio" />' . $user->lang['NO'] . '</label></dd>';
 		echo '		</dl>';
 		echo '		<p class="submit-buttons">';
-		echo '			<input class="button1" id="submit" name="submit" value="Submit" type="submit">&nbsp;';
-		echo '			<input class="button2" id="reset" name="reset" value="Reset" type="reset">';
+		echo '			<input class="button1" id="submit" name="submit" value="Submit" type="submit" />&nbsp;';
+		echo '			<input class="button2" id="reset" name="reset" value="Reset" type="reset" />';
 		echo '		</p>';
 		echo '	</fieldset>';
 		echo '</form>';
