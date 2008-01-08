@@ -40,17 +40,17 @@ define('ALBUM_DIR_NAME', 'gallery/');
 
 
 // Table names
-define('GALLERY_ALBUMS_TABLE', $table_prefix . 'gallery_albums');
-define('GALLERY_COMMENTS_TABLE', $table_prefix . 'gallery_comments');
-define('GALLERY_CONFIG_TABLE', $table_prefix . 'gallery_config');
-define('GALLERY_IMAGES_TABLE', $table_prefix . 'gallery_images');
-define('GALLERY_RATES_TABLE', $table_prefix . 'gallery_rates');
+define('GALLERY_ALBUMS_TABLE',			$table_prefix . 'gallery_albums');
+define('GALLERY_COMMENTS_TABLE',		$table_prefix . 'gallery_comments');
+define('GALLERY_CONFIG_TABLE',			$table_prefix . 'gallery_config');
+define('GALLERY_IMAGES_TABLE',			$table_prefix . 'gallery_images');
+define('GALLERY_RATES_TABLE',			$table_prefix . 'gallery_rates');
 
 //we still need them for the updater
-define('ALBUM_TABLE', $table_prefix.'album');
-define('ALBUM_CAT_TABLE', $table_prefix.'album_cat');
-define('ALBUM_CONFIG_TABLE', $table_prefix.'album_config');
-define('ALBUM_COMMENT_TABLE', $table_prefix.'album_comment');
-define('ALBUM_RATE_TABLE', $table_prefix.'album_rate');
+define('ALBUM_TABLE',					$table_prefix.'album');
+define('ALBUM_CAT_TABLE',				$table_prefix.'album_cat');
+define('ALBUM_CONFIG_TABLE',			$table_prefix.'album_config');
+define('ALBUM_COMMENT_TABLE',			$table_prefix.'album_comment');
+define('ALBUM_RATE_TABLE',				$table_prefix.'album_rate');
 
 ?>
