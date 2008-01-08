@@ -263,7 +263,7 @@ class acp_gallery
 							break;
 					}
 					//cheat the server for uploading bigger files
-					ini_set('memory_limit', '128M');
+					#no cheating: ini_set('memory_limit', '128M');
 					$src = $read_function($phpbb_root_path . '/gallery/' . ALBUM_UPLOAD_PATH  . $image_filename);
 
 					if (!$src)
