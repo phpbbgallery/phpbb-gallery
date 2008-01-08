@@ -1,0 +1,80 @@
+<!-- INCLUDE overall_header.html -->
+
+<!-- IF U_MCP --><div style="float: right;">[<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</div><br clear="all" /><!-- ENDIF -->
+
+<table class="tablebg" cellspacing="1" width="100%">
+	<tr>
+		<th colspan="2" height="20">{L_ALBUM}</th>
+		<th style="width: 60px;">{L_IMAGES}</th>
+		<th style="width: 300px;">{L_LAST_IMAGE}</th>
+	</tr>
+	<!-- BEGIN albumrow -->
+	<tr>
+		<td class="row1" style="align: center; width: 50px;"><img src="{albumrow.ALBUM_FOLDER_IMG_SRC}" alt="{albumrow.ALBUM_NAME}" /></td>
+		<td height="28" class="row1"><span class="gen">
+			<!-- IF albumrow.ALBUM_IMAGE -->
+			<span class="forum-image">{albumrow.ALBUM_IMAGE}</span>
+			<!-- ENDIF -->
+			<strong><a href="{albumrow.U_VIEW_ALBUM}" class="forumtitle">{albumrow.ALBUM_NAME}</a></strong><br />
+			<span class="gensmall">{albumrow.ALBUM_DESC}</span>
+			<!-- IF albumrow.MODERATORS -->
+			<p class="forumdesc"><strong>{albumrow.L_MODERATORS}:</strong> {albumrow.MODERATORS}</p>
+			<!-- ENDIF -->
+			<!-- IF albumrow.SUBALBUMS -->
+			<p class="forumdesc"><strong>{albumrow.L_SUBALBUMS}:</strong> {albumrow.SUBALBUMS}</p>
+			<!-- ENDIF -->
+		</td>
+		<td class="row1" style="align: center;">{albumrow.IMAGES}</span></td>
+		<td class="row1"><!-- IF albumrow.LAST_IMAGE_INFO -->{albumrow.LAST_IMAGE_INFO}<!-- ELSE -->{L_NO_IMAGES}<!-- ENDIF --></td>
+	</tr>
+	<!-- END albumrow -->
+	<tr>
+		<td class="cat" colspan="{S_COLS}" height="1"><img src="images/spacer.gif" alt="" width="1" height="1" /></td>
+	</tr>
+</table>
+<br />
+
+<table class="tablebg" cellspacing="1" width="100%">
+	<tr>
+	 <td class="row1">
+		 	<p class="breadcrumbs"><a href="{U_USERS_PERSONAL_GALLERIES}" class="cattitle">{L_USERS_PERSONAL_ALBUMS}</a> &#8250; <a href="{U_YOUR_PERSONAL_GALLERY}" class="cattitle">{L_YOUR_PERSONAL_ALBUM}</a></p></td>
+	</tr>
+</table>
+<br />
+
+<table class="tablebg" cellspacing="1" width="100%">
+	<tr>
+		<th colspan="{S_COLS}" nowrap="nowrap">{L_RECENT_PUBLIC_IMAGES}</th>
+	</tr>
+	<!-- BEGIN no_pics -->
+	<tr>
+		<td class="row1" align="center" colspan="{S_COLS}" height="50"><span class="gen">{L_NO_IMAGES}</span></td>
+	</tr>
+	<!-- END no_pics -->
+	<!-- BEGIN recent_pics -->
+	<tr>
+		<!-- BEGIN recent_col -->
+		<td class="row1" width="{S_COL_WIDTH}" align="center"><a href="{recent_pics.recent_col.U_PIC}" rel="lightbox" {TARGET_BLANK}><img src="{recent_pics.recent_col.THUMBNAIL}" border="0" alt="{recent_pics.recent_col.DESC}" title="{recent_pics.recent_col.DESC}" vspace="10" /></a></td>
+		<!-- END recent_col -->
+	</tr>
+	<tr>
+		<!-- BEGIN recent_detail -->
+		<td class="row2"><span class="gensmall">{L_IMAGE_TITLE}: {recent_pics.recent_detail.TITLE}<br />
+			{L_POSTER}: {recent_pics.recent_detail.POSTER}<br />
+			{L_POSTED}: {recent_pics.recent_detail.TIME}<br />
+			{L_VIEWS}: {recent_pics.recent_detail.VIEW}<br />
+			{recent_pics.recent_detail.RATING}{recent_pics.recent_detail.COMMENTS}{recent_pics.recent_detail.IP}</span></td>
+		<!-- END recent_detail -->
+	</tr>
+	<!-- END recent_pics -->
+	<tr>
+		<td class="cat" colspan="{S_COLS}" height="1"><img src="images/spacer.gif" alt="" width="1" height="1" /></td>
+	</tr>
+</table>
+<br />
+
+<!-- Please keep this little notice visible -->
+<div class="copyright" align="center">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a> &amp; <a href="http://mods.flying-bits.org/">nickvergessen</a></div>
+<br clear="all" />
+
+<!-- INCLUDE overall_footer.html -->

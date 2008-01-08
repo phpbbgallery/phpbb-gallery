@@ -1,0 +1,58 @@
+<!-- INCLUDE overall_header.html -->
+
+<div class="topic-actions">
+	<div class="pagination">
+		{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+	</div>
+</div>
+<div class="forumbg forumbg-table">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<table class="table1" cellspacing="1" id="memberlist">
+			<thead>
+			<tr>
+				<th class="name">{L_USERS_PERSONAL_ALBUMS}</th>
+				<th class="joined">{L_JOINED}</th>
+				<th class="posts">{L_IMAGES}</th>
+				<th class="joined">{L_LAST_IMAGE}</th>
+			</tr>
+			</thead>
+			<tbody>
+				<!-- BEGIN memberrow -->
+				<tr class="{memberrow.ROW_CLASS}">
+					<td class="name">&nbsp;<a href="{memberrow.U_VIEWGALLERY}">{memberrow.USERNAME}</a></td>
+					<td class="joined">&nbsp;{memberrow.JOINED}&nbsp;</td>
+					<td class="posts">{memberrow.IMAGES}</td>
+					<td class="joined">&nbsp;{memberrow.LAST_IMAGE}&nbsp;</td>
+				</tr>
+				<!-- END memberrow -->
+			</tbody>
+		</table>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+
+<form method="post" action="{S_MODE_ACTION}">
+<fieldset class="display-options">
+	<label>{L_SELECT_SORT_METHOD}: 
+		{S_MODE_SELECT}
+	</label>
+	<label>{L_ORDER}: 
+		{S_ORDER_SELECT}
+		<input type="submit" name="sort" value="{L_SORT}" class="button2" />
+	</label>
+</fieldset>
+</form>
+
+<hr />
+
+<div class="topic-actions">
+	<div class="pagination">
+		{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+	</div>
+</div>
+
+<!-- Please keep this little notice visible -->
+<div class="copyright">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a> & <a href="http://mods.flying-bits.org/">nickvergessen</a></div>
+
+<!-- INCLUDE overall_footer.html -->

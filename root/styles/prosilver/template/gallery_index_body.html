@@ -1,0 +1,108 @@
+<!-- INCLUDE overall_header.html -->
+<p class="{S_CONTENT_FLOW_END}<!-- IF S_USER_LOGGED_IN --> rightside<!-- ENDIF -->"><!-- IF S_USER_LOGGED_IN -->{LAST_VISIT_DATE}<!-- ELSE -->{CURRENT_TIME}<!-- ENDIF --></p>
+<!-- IF U_MCP --><p>{CURRENT_TIME} <br />[&nbsp;<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</p><!-- ELSEIF S_USER_LOGGED_IN --><p>{CURRENT_TIME}</p><!-- ENDIF -->
+
+<div class="forabg">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="icon">
+					<dt>{L_ALBUM}</dt>
+					<dd class="posts">{L_IMAGES}</dd>
+					<dd class="lastpost"><span>{L_LAST_IMAGE}</span></dd>
+				</dl>
+			</li>
+		</ul>
+		<!-- BEGIN albumrow -->
+		<ul class="topiclist forums">
+			<li class="row">
+				<dl class="icon" style="background-image: url({albumrow.ALBUM_FOLDER_IMG_SRC}); background-repeat: no-repeat;">
+					<dt>
+						<!-- IF albumrow.ALBUM_IMAGE --><span class="forum-image">{albumrow.ALBUM_IMAGE}</span><!-- ENDIF -->
+						<a href="{albumrow.U_VIEW_ALBUM}" class="forumtitle">{albumrow.ALBUM_NAME}</a><br />
+						{albumrow.ALBUM_DESC}
+						<!-- IF albumrow.MODERATORS -->
+						<br /><strong>{albumrow.L_MODERATORS}:</strong> {albumrow.MODERATORS}
+						<!-- ENDIF -->
+						<!-- IF albumrow.SUBALBUMS -->
+						<br /><strong>{albumrow.L_SUBALBUMS}:</strong> {albumrow.SUBALBUMS}
+						<!-- ENDIF -->
+					</dt>
+					<dd class="posts">{albumrow.IMAGES} <dfn>{L_IMAGES}</dfn></dd>
+					<dd class="lastpost"><span>
+					<!-- IF albumrow.LAST_IMAGE_INFO -->{albumrow.LAST_IMAGE_INFO}<!-- ELSE -->{L_NO_IMAGES}<!-- ENDIF -->
+					</span></dd>
+				</dl>
+			</li>
+		</ul>
+		<!-- END albumrow -->
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+
+<a href="{U_USERS_PERSONAL_GALLERIES}" class="cattitle">{L_USERS_PERSONAL_ALBUMS}</a>&nbsp;&raquo;&nbsp;<a href="{U_YOUR_PERSONAL_GALLERY}" class="cattitle">{L_YOUR_PERSONAL_ALBUM}</a>
+<br />
+<br />
+
+<div class="forumbg">
+	<div class="inner"><span class="corners-top"><span></span></span>
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="icon">
+					<dt>{L_RECENT_PUBLIC_IMAGES}</dt>
+				</dl>
+			</li>
+		</ul>
+		<ul class="topiclist topics">
+			<li class="bg2">
+				<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline">
+					<!-- BEGIN no_pics -->
+					<tr>
+						<td class="bg1" align="center" colspan="{S_COLS}" height="50"><span class="gen">{L_NO_IMAGES}</span></td>
+					</tr>
+					<!-- END no_pics -->
+					<!-- BEGIN recent_pics -->
+					<tr>
+						<!-- BEGIN recent_col -->
+						<td class="bg1" width="{S_COL_WIDTH}" align="center"><a href="{recent_pics.recent_col.U_PIC}" {TARGET_BLANK}><img src="{recent_pics.recent_col.THUMBNAIL}" border="0" alt="{recent_pics.recent_col.DESC}" title="{recent_pics.recent_col.DESC}" vspace="10" /></a></td>
+						<!-- END recent_col -->
+					</tr>
+					<tr>
+						<!-- BEGIN recent_detail -->
+						<td class="bg2">
+							<span class="gensmall">{L_IMAGE_TITLE}: {recent_pics.recent_detail.TITLE}<br />
+							{L_POSTER}: {recent_pics.recent_detail.POSTER_FULL}<br />{L_POSTED}: {recent_pics.recent_detail.TIME}<br />
+							{L_VIEWS}: {recent_pics.recent_detail.VIEW}<br />{recent_pics.recent_detail.RATING}{recent_pics.recent_detail.COMMENTS}{recent_pics.recent_detail.IP}</span>
+						</td>
+						<!-- END recent_detail -->
+					</tr>
+					<!-- END recent_pics -->
+				</table>
+			</li>
+		</ul>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+
+
+<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT -->
+	<form method="post" action="{S_LOGIN_ACTION}" class="headerspace">
+		<h3><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a>&nbsp; &bull; &nbsp;<a href="{U_REGISTER}">{L_REGISTER}</a></h3>
+		<fieldset class="quick-login">
+			<label for="username">{L_USERNAME}:</label>&nbsp;<input type="text" name="username" id="username" size="10" class="inputbox" title="{L_USERNAME}" />  
+			<label for="password">{L_PASSWORD}:</label>&nbsp;<input type="password" name="password" id="password" size="10" class="inputbox" title="{L_PASSWORD}" />
+			<!-- IF S_AUTOLOGIN_ENABLED -->
+				| <label for="autologin">{L_LOG_ME_IN} <input type="checkbox" name="autologin" id="autologin" /></label>
+			<!-- ENDIF -->
+			<input type="submit" name="login" value="{L_LOGIN}" class="button2" />
+		</fieldset>
+	</form>
+<!-- ENDIF -->
+<br />
+<br />
+
+<!-- Please keep this little notice visible -->
+<div class="copyright">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a> &amp; <a href="http://mods.flying-bits.org/">nickvergessen</a></div>
+
+<!-- INCLUDE overall_footer.html -->

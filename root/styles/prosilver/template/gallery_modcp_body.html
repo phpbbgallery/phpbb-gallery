@@ -1,0 +1,119 @@
+<!-- INCLUDE overall_header.html -->
+
+<form name="modcp" action="{S_ALBUM_ACTION}" method="post">
+
+<h2><a href="{U_VIEW_CAT}">{L_MODCP} - {CAT_TITLE}</a></h2>
+
+<div class="topic-actions">
+	<div class="pagination">
+		{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+	</div>
+</div>
+
+<div class="forabg">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="icon">
+					<dt>{L_IMAGE_TITLE}</dt>
+					<dd class="posts">{L_RATING}</dd>
+					<dd class="posts">{L_COMMENTS}</dd>
+					<dd class="posts">{L_STATUS}</dd>
+					<dd class="posts">{L_APPROVAL}</dd>
+					<dd class="posts"><span>{L_SELECT}</span></dd>
+				</dl>
+			</li>
+		</ul>
+		<!-- BEGIN no_pics -->
+		<ul class="topiclist forums">
+			<li class="row">
+				<dl>
+					<dd>{L_NO_IMAGES}</dd>
+				</dl>
+			</li>
+		</ul>
+		<!-- END no_pics -->
+		<!-- BEGIN picrow -->
+		<ul class="topiclist forums">
+			<li class="row">
+				<dl class="icon" style="background-image: url({forumrow.FORUM_FOLDER_IMG_SRC}); background-repeat: no-repeat;">
+					<dt>{L_IMAGE_TITLE}: {picrow.IMAGE_NAME}<br />{L_POSTER}: {picrow.POSTER}<br />{L_TIME}: {picrow.TIME}</dt>
+					<dd class="posts">{picrow.RATING}</dd>
+					<dd class="posts">{picrow.COMMENTS}</dd>
+					<dd class="posts">{picrow.LOCK}</dd>
+					<dd class="posts">{picrow.APPROVAL}</dd>
+					<dd class="posts"><input type="checkbox" name="image_id[]" value="{picrow.IMAGE_ID}" /></dd>
+				</dl>
+			</li>
+		</ul>
+		<!-- END picrow -->
+		<!--ul class="topiclist forums">
+			<li class="row">
+				<dl>
+					<dd>
+						<input type="hidden" name="mode" value="modcp" class="button2" />
+						<input type="submit" class="liteoption" name="move" value="{L_MOVE}" class="button2" />
+						<input type="submit" class="liteoption" name="lock" value="{L_LOCK}" class="button2" />
+						<input type="submit" class="liteoption" name="unlock" value="{L_UNLOCK}" class="button2" />
+						{DELETE_BUTTON}
+						{APPROVAL_BUTTON}
+						{UNAPPROVAL_BUTTON}
+					</dd>
+				</dl>
+			</li>
+		</ul-->
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+
+<table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline">
+  <tr>
+	<td class="catbottom" colspan="6" align="right" height="28">
+		<input type="hidden" name="mode" value="modcp" />
+		<input type="submit" class="liteoption" name="move" value="{L_MOVE}" />
+		<input type="submit" class="liteoption" name="lock" value="{L_LOCK}" />
+		<input type="submit" class="liteoption" name="unlock" value="{L_UNLOCK}" />
+		{DELETE_BUTTON}
+		{APPROVAL_BUTTON}
+		{UNAPPROVAL_BUTTON}
+	</td>
+  </tr>
+</table>
+
+<fieldset class="display-options">
+	<label>{L_SELECT_SORT_METHOD}: 
+		<select name="sort_method">
+			<option {SORT_TIME} value='image_time'>{L_TIME}</option>
+			<option {SORT_IMAGE_NAME} value='image_title'>{L_IMAGE_TITLE}</option>
+			<option {SORT_USERNAME} value='username'>{L_SORT_USERNAME}</option>
+			<option {SORT_VIEW} value='image_view_count'>{L_VIEWS}</option>
+			{SORT_RATING_OPTION}
+			{SORT_COMMENTS_OPTION}
+			{SORT_NEW_COMMENT_OPTION}
+		</select>
+	</label>
+	<label>{L_ORDER}: 
+		<select name="sort_order">
+			<option {SORT_ASC} value='ASC'>{L_SORT_ASCENDING}</option>
+			<option {SORT_DESC} value='DESC'>{L_SORT_DESCENDING}</option>
+		</select> <input type="submit" name="sort" value="{L_SORT}" class="button2" />
+	</label>
+</fieldset>
+
+<hr />
+
+<div class="topic-actions">
+	<div class="pagination">
+		{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+	</div>
+</div>
+{S_FORM_TOKEN}
+</form>
+
+<br />
+
+<!-- Please keep this little notice visible -->
+<div class="copyright">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a> &amp; <a href="http://mods.flying-bits.org/">nickvergessen</a></div>
+
+<!-- INCLUDE overall_footer.html -->

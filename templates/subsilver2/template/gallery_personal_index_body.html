@@ -1,0 +1,44 @@
+<!-- INCLUDE overall_header.html -->
+
+<table cellspacing="0" width="100%">
+	<tr>
+	<td><span class="nav">{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF --></span></td>
+	</tr>
+</table>
+
+<table class="tablebg" cellspacing="1" width="100%">
+	<tr>
+		<th width="40%" height="20" nowrap="nowrap">{L_USERS_PERSONAL_ALBUMS}</th>
+		<th nowrap="nowrap">{L_JOINED}</th>
+		<th nowrap="nowrap">{L_IMAGES}</th>
+		<th nowrap="nowrap">{L_LAST_IMAGE}</th>
+	</tr>
+	<!-- BEGIN memberrow -->
+	<tr class="row1">
+		<td align="left"><a href="{memberrow.U_VIEWGALLERY}">{memberrow.USERNAME}</a></td>
+		<td align="center">{memberrow.JOINED}</td>
+		<td align="center">{memberrow.IMAGES}</td>
+		<td align="left">{memberrow.LAST_IMAGE}</td>
+	</tr>
+	<!-- END memberrow -->
+	<tr>
+	<td class="cat" colspan="4" align="center">
+	<form method="post" action="{S_MODE_ACTION}">
+		<span class="gensmall">{L_SELECT_SORT_METHOD}:&nbsp;{S_MODE_SELECT}&nbsp;&nbsp;{L_ORDER}:&nbsp;{S_ORDER_SELECT}&nbsp;&nbsp;
+			<input type="submit" name="sort" value="{L_SORT}" class="button2" />
+		</span></form>
+	</td>
+	</tr>
+	</table>
+
+<table cellspacing="0" width="100%">
+	<tr>
+	<td><span class="nav">{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF --></span></td>
+	</tr>
+</table>
+
+<!-- Please keep this little notice visible -->
+<div class="copyright" align="center">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a></div>
+<br clear="all" />
+
+<!-- INCLUDE overall_footer.html -->

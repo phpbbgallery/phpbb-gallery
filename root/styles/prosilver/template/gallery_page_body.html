@@ -1,0 +1,203 @@
+<!-- INCLUDE overall_header.html -->
+
+<script type="text/javascript">
+<!--
+function checkRateForm() {
+	if (document.rateform.rate.value == -1)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+function checkCommentForm() {
+	formErrors = false;
+
+	if (document.commentform.comment.value.length < 2)
+	{
+		formErrors = "{L_COMMENT_NO_TEXT}";
+	}
+	else if (document.commentform.comment.value.length > {S_MAX_LENGTH})
+	{
+		formErrors = "{L_COMMENT_TOO_LONG}";
+	}
+
+	if (formErrors) {
+		alert(formErrors);
+		return false;
+	} else {
+		return true;
+	}
+}
+// -->
+</script>
+
+<h2><a href="#">{IMAGE_NAME}</a></h2>
+
+<p class="{S_CONTENT_FLOW_END} rightside"><!-- IF U_NEXT --><a href="{U_NEXT}">{L_NEXT}</a><!-- ENDIF --></p>
+<p><!-- IF U_PREVIOUS --><a href="{U_PREVIOUS}">{L_PREVIOUS}</a><!-- ENDIF -->&nbsp;</p>
+<div class="post bg2">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<div style="text-align: center; padding: 20px;"><img src="{U_IMAGE}" border="0" vspace="10" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" /></div>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+
+<h3>{L_DETAILS}</h3>
+<br />
+<div class="post bg2">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<fieldset class="fields1">
+			<dl>
+				<dt><label>{L_POSTER}:</label></dt>
+				<dd>{POSTER}</dd>
+			</dl>
+			<dl>
+				<dt><label>{L_IMAGE_TITLE}:</label></dt>
+				<dd>{IMAGE_NAME}</dd>
+			</dl>
+			<dl>
+				<dt><label>{L_IMAGE_DESC}:</label></dt>
+				<dd>{IMAGE_DESC}</dd>
+			</dl>
+			<dl>
+				<dt><label>{L_POSTED}:</label></dt>
+				<dd>{IMAGE_TIME}</dd>
+			</dl>
+			<dl>
+				<dt><label>{L_VIEWS}:</label></dt>
+				<dd>{IMAGE_VIEW}</dd>
+			</dl>
+		</fieldset>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+
+<!-- IF RATING -->
+<a name="rating"></a>
+<h3>{L_RATING}</h3>
+<br />
+<form name="rateform" action="{S_ALBUM_ACTION}" method="post" onsubmit="return checkRateForm();">
+<div class="post bg2">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<fieldset class="fields1">
+			<dl>
+				<dt><label>{L_RATING}:</label></dt>
+				<dd>{IMAGE_RATING}</dd>
+			</dl>
+			<!-- IF YOUR_RATING -->
+			<dl>
+				<dt><label>{L_YOUR_RATING}:</label></dt>
+				<dd>{S_RATEBOX}{S_FORM_TOKEN}</dd>
+			</dl>
+			<!-- ENDIF -->
+		</fieldset>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+{S_FORM_TOKEN}
+</form>
+<!-- ENDIF -->
+
+<!-- IF COMMENTS -->
+	<!-- IF POST_COMMENT -->
+	<a name="rating"></a>
+	<h3>{L_POST_COMMENT}</h3>
+	<br />
+	<form name="commentform" action="{S_ALBUM_ACTION}" method="post" onsubmit="return checkCommentForm;">
+	<div class="post bg2">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<fieldset class="fields1">
+				<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT and S_CAN_COMMENT -->
+				<dl>
+					<dt><label>{L_USERNAME}:</label></dt>
+					<dd><input class="inputbox autowidth" type="text" name="comment_username" size="60" maxlength="32" /></dd>
+				</dl>
+				<!-- ENDIF -->
+				<dl>
+					<dt><label>{L_YOUR_COMMENT}:</label></dt>
+					<dd>{S_COMMENTBOX}</dd>
+				</dl>
+			</fieldset>
+			<span class="corners-bottom"><span></span></span>
+		</div>
+	</div>
+	{S_FORM_TOKEN}
+	</form>
+	<!-- ENDIF -->
+
+	<a name="comments"></a>
+	<h3>{L_COMMENTS}</h3>
+	<!-- IF NO_COMMENTS -->
+	<div class="post bg2">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<fieldset class="fields1">
+				<dl>
+					<dt><label>{L_COMMENTS}:</label></dt>
+					<dd>{L_NO_COMMENTS}</dd>
+				</dl>
+			</fieldset>
+			<span class="corners-bottom"><span></span></span>
+		</div>
+	</div>
+	<!-- ELSE -->
+	<div class="topic-actions">
+		<!--div class="buttons">
+			<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span>{L_UPLOAD_PIC}</span></a></div>
+		</div-->
+		<div class="pagination">
+			{IMAGE_COMMENTS} {L_COMMENTS} &bull; {PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+		</div>
+	</div>
+	<!-- BEGIN commentrow -->
+	<a name="{commentrow.ID}"></a>
+	<div class="post {commentrow.S_ROW_STYLE}">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<div class="postbody">
+				<ul class="profile-icons">
+					<!-- IF commentrow.EDIT --><li class="edit-icon"><a href="{commentrow.EDIT}" title="{L_EDIT_POST}"><span>{L_EDIT_POST}</span></a></li><!-- ENDIF -->
+					<!-- IF commentrow.DELETE --><li class="delete-icon"><a href="{commentrow.DELETE}" title="{L_DELETE_POST}"><span>{L_DELETE_POST}</span></a></li><!-- ENDIF -->
+				</ul>
+				<p class="author"><a href="#"><img src="{T_IMAGESET_PATH}/icon_post_target.gif" width="11" height="9" alt="{L_COMMENT}" title="{L_COMMENT}" /></a>{L_POST_BY_AUTHOR} <strong>{commentrow.POSTER}</strong> {L_POSTED_ON_DATE} {commentrow.TIME} </p>
+				<div class="content">{commentrow.TEXT}</div>
+				{commentrow.EDIT_INFO}
+				<span class="genmed">{commentrow.IP}</span>
+			</div>
+			<span class="corners-bottom"><span></span></span>
+		</div>
+	</div>
+	<!-- END commentrow -->
+
+	<form action="{S_ALBUM_ACTION}" method="post">
+	<fieldset class="display-options" style="margin-top: 0; ">
+		<label>{L_ORDER}: <select name="sort_order"><option {SORT_ASC} value='ASC'>{L_SORT_ASCENDING}</option><option {SORT_DESC} value='DESC'>{L_SORT_DESCENDING}</option></select>&nbsp;<input type="submit" name="submit" value="{L_GO}" class="button2" /></label>
+	</fieldset>
+	</form>
+	<hr />
+
+	<div class="topic-actions">
+		<!--div class="buttons">
+			<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span>{L_UPLOAD_PIC}</span></a></div>
+		</div-->
+		<div class="pagination">
+			{IMAGE_COMMENTS} {L_COMMENTS} &bull; {PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+		</div>
+	</div>
+	<!-- ENDIF -->
+<!-- ENDIF -->
+
+<!--a href="{U_PREVIOUS}" class="cattitle">{PREVIOUS}</a>&nbsp;&nbsp;<a href="{U_NEXT}" class="cattitle">{NEXT}</a-->
+
+<!-- Please keep this little notice visible -->
+<div class="copyright">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a> &amp; <a href="http://mods.flying-bits.org/">nickvergessen</a></div>
+
+<!-- INCLUDE overall_footer.html -->
