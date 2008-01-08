@@ -6,7 +6,7 @@
   <header>
     <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
     <title lang="en-gb">phpBB Gallery</title>
-    <description lang="en-gb"><![CDATA[see normal install-file]]></description>
+    <description lang="en-gb">see normal install-file</description>
     <author-notes lang="en-gb">i hope you get it installed, otherwise you can ask for help on phpbb.de and phpbb.com</author-notes>
     <author-group>
       <author>
@@ -98,12 +98,28 @@
   </header>
   <action-group>
     <copy>
-      <file from="languages/de/gallery.php" to="language/de/mods/gallery.php" />
-      <file from="languages/de/gallery_acp.php" to="language/de/mods/gallery_acp.php" />
-      <file from="languages/de/gallery_install.php" to="language/de/mods/gallery_install.php" />
-      <file from="languages/de/info_acp_gallery.php" to="language/de/mods/info_acp_gallery.php" />
-      <file from="languages/de/button_upload_image.gif" to="styles/prosilver/imageset/de/button_upload_image.gif" />
+      <file from="root/adm/style/acp_gallery.html" to="adm/style/acp_gallery.html" />
+      <file from="root/gallery/*.*" to="gallery/*.*" />
+      <file from="root/gallery/includes/*.*" to="gallery/includes/*.*" />
+      <file from="root/gallery/upload/*.*" to="gallery/upload/*.*" />
+      <file from="root/gallery/upload/cache/*.*" to="gallery/upload/cache/*.*" />
+      <file from="root/includes/acp/acp_gallery.php" to="includes/acp/acp_gallery.php" />
+      <file from="root/includes/acp/info/acp_gallery.php" to="includes/acp/info/acp_gallery.php" />
+      <file from="root/install_gallery/*.*" to="install_gallery/*.*" />
+      <file from="root/install_gallery/schemas/*.*" to="install_gallery/schemas/*.*" />
+      <file from="root/language/en/mods/*.*" to="language/en/mods/*.*" />
+      <file from="root/styles/prosilver/imageset/en/button_upload_image.gif" to="styles/prosilver/imageset/en/button_upload_image.gif" />
+      <file from="root/styles/prosilver/template/*.*" to="styles/prosilver/template/*.*" />
+      <file from="root/styles/prosilver/theme/images/icon_gallery.gif" to="styles/prosilver/theme/images/icon_gallery.gif" />
     </copy>
+    <open src="styles/prosilver/theme/colours.css">
+      <edit>
+        <comment lang="en-gb"><![CDATA[Report #82: Upload Button is not showing correct in RC8
+You don't need to do this, when you fixed the bug on your self.]]></comment>
+        <find><![CDATA[.upload-icon, .upload-icon a			{ background-image: url("{T_IMAGESET_LANG_PATH}/button_upload_image.gif"); }}]]></find>
+        <action type="replace-with"><![CDATA[.upload-icon span	{ background-image: url("{T_IMAGESET_LANG_PATH}/button_upload_image.gif"); }]]></action>
+      </edit>
+    </open>
     <diy-instructions lang="en-gb">see normal install-file</diy-instructions>
   </action-group>
 </mod>
