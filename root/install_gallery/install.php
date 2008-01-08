@@ -23,14 +23,10 @@ $user->session_begin();
 $auth->acl($user->data);
 $user->setup();
 $user->add_lang('mods/gallery_install');
-$new_mod_version = '0.2.1';
+$new_mod_version = '0.2.2';
 $page_title = 'phpBB Gallery v' . $new_mod_version;
 
 $mode = request_var('mode', 'else', true);
-if ($user->data['user_type'] != USER_FOUNDER)
-{
-	$mode  = '';
-}
 function split_sql_file($sql, $delimiter)
 {
 	$sql = str_replace("\r" , '', $sql);
@@ -862,6 +858,7 @@ switch ($mode)
 		}
 	break;
 	case 'update020':
+	case 'update021':
 		$update = request_var('update', 0);
 		$version = request_var('v', '0', true);
 		$updated = false;
