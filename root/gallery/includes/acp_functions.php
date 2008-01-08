@@ -130,19 +130,6 @@ function make_album_select($select_id = false, $ignore_id = false, $album = fals
 		$right = $row['right_id'];
 		$disabled = false;
 
-		if ($acl && !$auth->acl_gets($acl, $row['album_id']))
-		{
-			// List permission?
-			if ($auth->acl_get('f_list', $row['album_id']))
-			{
-				$disabled = true;
-			}
-			else
-			{
-				continue;
-			}
-		}
-
 		if (((is_array($ignore_id) && in_array($row['album_id'], $ignore_id)) || $row['album_id'] == $ignore_id) || ($album && ($row['album_type'] != 2)))
 		{
 			$disabled = true;
