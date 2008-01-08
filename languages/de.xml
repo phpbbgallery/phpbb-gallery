@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="../modx.prosilver.en.xsl"?>
+<!-- $Id$ -->
+<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.0.xsd">
+  <header>
+    <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+    <title lang="en-gb">phpBB Gallery</title>
+    <description lang="en-gb"><![CDATA[see normal install-file]]></description>
+    <author-notes lang="en-gb">i hope you get it installed, otherwise you can ask for help on phpbb.de and phpbb.com</author-notes>
+    <author-group>
+      <author>
+        <realname>nickvergessen</realname>
+        <email>nickvergessen@gmx.de</email>
+        <username>nickvergessen</username>
+        <homepage>http://mods.flying-bits.org</homepage>
+        <contributions />
+      </author>
+    </author-group>
+    <mod-version>
+      <major>0</major>
+      <minor>2</minor>
+      <revision>2</revision>
+    </mod-version>
+    <installation>
+      <level>easy</level>
+      <time>240</time>
+      <target-version>
+        <target-primary>3.0.0</target-primary>
+        <target-major allow="exact">3</target-major>
+        <target-minor allow="exact">0</target-minor>
+      </target-version>
+    </installation>
+    <history>
+      <entry>
+        <date>2008-01-08</date>
+        <rev-version>
+          <major>0</major>
+          <minor>2</minor>
+          <revision>2</revision>
+        </rev-version>
+        <changelog lang="en-GB">
+          <change><![CDATA[Report #63: Column 'comment_edit_time' cannot be null]]></change>
+          <change><![CDATA[Report #65: Zip Upload]]></change>
+          <change><![CDATA[Report #66: Unknown column 'pic_time' in 'order clause' [1054]]]></change>
+          <change><![CDATA[Report #67: Album permissions not saved]]></change>
+          <change><![CDATA[Report #68: Subalbums not visible]]></change>
+          <change><![CDATA[Report #69: Images in subalbums not counted]]></change>
+          <change><![CDATA[Report #70: modcp - old var "cat_id"]]></change>
+          <change><![CDATA[Report #71: lock / move links to modcp are using not image_id]]></change>
+          <change><![CDATA[Report #72: modcp : moving images not possible]]></change>
+          <change><![CDATA[Report #73: lang var error : MOVE_TO_CATEGORY not exists]]></change>
+          <change><![CDATA[Report #74: lang var missing: LOGIN_EXPLAIN_UPLOAD]]></change>
+          <change><![CDATA[Report #75: Update: Column 'comment_edit_time' cannot be null]]></change>
+          <change><![CDATA[Report #76: PIC_TITLE not defined]]></change>
+          <change><![CDATA[Report #77: No recent images]]></change>
+          <change><![CDATA[Report #78: Column was set to data type implicit default;]]></change>
+          <change><![CDATA[Report #79: Gäste Berechtigung wird nicht gespeichert]]></change>
+          <change><![CDATA[Report #80: value "array()" on bbcode-texts]]></change>
+          <change><![CDATA[Report #81: last edit username is not coloured]]></change>
+          <change><![CDATA[Report #82: Upload Button is not showing correct in RC8]]></change>
+          <change><![CDATA[Report #83: Remove personal gallery link when logged out]]></change>
+          <change><![CDATA[Report #84: There is no more categories which you have permisson to move images to]]></change>
+          <change><![CDATA[Report #85: Error message when deleting a image]]></change>
+          <change><![CDATA[Report #86: Album Permissions 0.2.1]]></change>
+          <change><![CDATA[Report #91: Undefined variable: tot_unapproved on album.php]]></change>
+          <change><![CDATA[Report #94: Incorrect cuting symbols in album_personal_index.php]]></change>
+          <change><![CDATA[Report #96: $sort_new_comment_option = ''; missing]]></change>
+          <change><![CDATA[Report #99: Mass-upload in ACP]]></change>
+          <change><![CDATA[Report #101: subsilver2]]></change>
+          <change><![CDATA[Report #103: album.php missing $]]></change>
+          <change><![CDATA[Report #105: last_pic in personal_album on sort]]></change>
+          <change><![CDATA[Report #106: Errormessage when trying to approve Pictures]]></change>
+          <change><![CDATA[Report #107: next and previous image]]></change>
+          <change><![CDATA[Report #108: thumbnails error if cache is deleted]]></change>
+          <change><![CDATA[Report #109: Links to Albums on Gallery Index are not shown.]]></change>
+          <change><![CDATA[Report #110: Image_page.php throws out some php notices...]]></change>
+          <change><![CDATA[Report #111: CVS: Open the latest picture of a album: php notice error.]]></change>
+          <change><![CDATA[Report #112: image_page.php : next/previous error with disapproved pics]]></change>
+          <change><![CDATA[Report #113: Undefined variable: auth_data]]></change>
+          <change><![CDATA[Report #114: Images are not counted on gallery index and sub-album index]]></change>
+          <change><![CDATA[Report #115: MCP - double breadcrumps, wrong usernames of pers. galleries]]></change>
+          <change><![CDATA[Report #116: Subalbums not included in recent pictures?]]></change>
+          <change><![CDATA[Report #117: Upload-Button shows no info text]]></change>
+          <change><![CDATA[Report #118: missing breadcrumbs on empty comment]]></change>
+          <change><![CDATA[Report #119: if ($auth->acl_get('f_list', $row['album_id']))]]></change>
+        </changelog>
+      </entry>
+    </history>
+    <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
+  </header>
+  <action-group>
+    <copy>
+      <file from="languages/de/gallery.php" to="language/de/mods/gallery.php" />
+      <file from="languages/de/gallery_acp.php" to="language/de/mods/gallery_acp.php" />
+      <file from="languages/de/gallery_install.php" to="language/de/mods/gallery_install.php" />
+      <file from="languages/de/info_acp_gallery.php" to="language/de/mods/info_acp_gallery.php" />
+      <file from="languages/de/button_upload_image.gif" to="styles/prosilver/imageset/de/button_upload_image.gif" />
+      <file from="languages/de/subsilver2/button_upload_image.gif" to="styles/subsilver2/imageset/de/button_upload_image.gif" />
+    </copy>
+    <diy-instructions lang="en-gb">see normal install-file</diy-instructions>
+  </action-group>
+</mod>
