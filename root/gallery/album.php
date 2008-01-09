@@ -295,7 +295,7 @@ $template->assign_vars(array(
 
 	'SORT_TIME' 				=> ($sort_method == 'image_time') ? 'selected="selected"' : '',
 	'SORT_IMAGE_TITLE' 			=> ($sort_method == 'image_name') ? 'selected="selected"' : '',
-	'SORT_USERNAME' 			=> ($sort_method == 'image_user_id') ? 'selected="selected"' : '',
+	'SORT_USERNAME' 			=> ($sort_method == 'username') ? 'selected="selected"' : '',
 	'SORT_VIEW' 				=> ($sort_method == 'image_view_count') ? 'selected="selected"' : '',
 
 	'SORT_RATING_OPTION' 		=> $sort_rating_option,

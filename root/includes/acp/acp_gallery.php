@@ -417,7 +417,7 @@ class acp_gallery
 			'ACP_GALLERY_TITLE'					=> $user->lang['GALLERY_CONFIG'],
 			'ACP_GALLERY_TITLE_EXPLAIN'			=> $user->lang['GALLERY_CONFIG_EXPLAIN'],
 
-			'MAX_PICS' 							=> $new['max_pics'],
+			'MAX_IMAGES' 						=> $new['max_pics'],
 			'MAX_FILE_SIZE' 					=> $new['max_file_size'],
 			'MAX_WIDTH' 						=> $new['max_width'],
 			'MAX_HEIGHT' 						=> $new['max_height'],
@@ -428,8 +428,8 @@ class acp_gallery
 			'THUMBNAIL_SIZE' 					=> $new['thumbnail_size'],
 			'PERSONAL_GALLERY_LIMIT' 			=> $new['personal_gallery_limit'],
 
-			'USER_PICS_LIMIT' 					=> $new['user_pics_limit'],
-			'MOD_PICS_LIMIT' 					=> $new['mod_pics_limit'],
+			'USER_IMAGES_LIMIT' 					=> $new['user_pics_limit'],
+			'MOD_IMAGES_LIMIT' 					=> $new['mod_pics_limit'],
 
 			'THUMBNAIL_CACHE_ENABLED' 			=> ($new['thumbnail_cache'] == 1) ? 'checked="checked"' : '',
 			'THUMBNAIL_CACHE_DISABLED' 			=> ($new['thumbnail_cache'] == 0) ? 'checked="checked"' : '',
@@ -441,7 +441,7 @@ class acp_gallery
 			'GIF_ENABLED' 						=> ($new['gif_allowed'] == 1) ? 'checked="checked"' : '',
 			'GIF_DISABLED' 						=> ($new['gif_allowed'] == 0) ? 'checked="checked"' : '',
 
-			'PIC_DESC_MAX_LENGTH' 				=> $new['desc_length'],
+			'IMAGE_DESC_MAX_LENGTH' 				=> $new['desc_length'],
 
 			'WATERMARK_ENABLED' 				=> ($new['watermark_images'] == 1) ? 'checked="checked"' : '',
 			'WATERMARK_DISABLED' 				=> ($new['watermark_images'] == 0) ? 'checked="checked"' : '',
@@ -469,7 +469,7 @@ class acp_gallery
 			'GD_V2' 							=> ($new['gd_version'] == 2) ? 'checked="checked"' : '',
 
 			'SORT_TIME' 						=> ($new['sort_method'] == 'image_time') ? 'selected="selected"' : '',
-			'SORT_PIC_TITLE' 					=> ($new['sort_method'] == 'image_name') ? 'selected="selected"' : '',
+			'SORT_IMAGE_TITLE' 					=> ($new['sort_method'] == 'image_name') ? 'selected="selected"' : '',
 			'SORT_USERNAME' 					=> ($new['sort_method'] == 'image_user_id') ? 'selected="selected"' : '',
 			'SORT_VIEW' 						=> ($new['sort_method'] == 'image_view_count') ? 'selected="selected"' : '',
 			'SORT_RATING' 						=> ($new['sort_method'] == 'rating') ? 'selected="selected"' : '',
