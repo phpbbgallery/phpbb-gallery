@@ -149,22 +149,22 @@ if ($album_id <> 0)
 	if ($total_pics > 0)
 	{
 		$limit_sql = ($start == 0) ? $pics_per_page : $start .','. $pics_per_page;
-		$pic_approval_sql = ' AND p.image_approval = 1';
+		$pic_approval_sql = ' AND i.image_approval = 1';
 		if (($album_data['album_approval'] <> ALBUM_USER) && (($user->data['user_type'] == USER_FOUNDER) || (($auth_data['moderator'] == 1) && ($album_data['album_approval'] == ALBUM_MOD))))
 		{
 				$pic_approval_sql = '';
 		}
 
-		$sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
-			FROM ' . GALLERY_IMAGES_TABLE . ' AS p
+		$sql = 'SELECT i.*, u.user_id, u.username, u.user_colour, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
+			FROM ' . GALLERY_IMAGES_TABLE . ' AS i
 			LEFT JOIN ' . USERS_TABLE . ' AS u
-				ON p.image_user_id = u.user_id
+				ON i.image_user_id = u.user_id
 			LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
-				ON p.image_id = r.rate_image_id
+				ON i.image_id = r.rate_image_id
 			LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
-				ON p.image_id = c.comment_image_id
-			WHERE p.image_album_id = ' . $album_id . $pic_approval_sql . ' 
-			GROUP BY p.image_id
+				ON i.image_id = c.comment_image_id
+			WHERE i.image_album_id = ' . $album_id . $pic_approval_sql . ' 
+			GROUP BY i.image_id
 			ORDER BY ' . $sort_method . ' ' . $sort_order . ' 
 			LIMIT ' . $limit_sql;
 		$result = $db->sql_query($sql);
