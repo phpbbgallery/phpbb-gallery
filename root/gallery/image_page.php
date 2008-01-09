@@ -296,9 +296,15 @@ if (($album_data['album_approval'] <> ALBUM_USER) && (($user->data['user_type'] 
 {
 	$image_approval_sql = '';
 }
-$sql = 'SELECT image_id
-	FROM ' . GALLERY_IMAGES_TABLE . '
-	WHERE image_album_id = ' . $album_id . $image_approval_sql . '
+$sql = 'SELECT p.image_id
+	FROM ' . GALLERY_IMAGES_TABLE . ' AS p
+	LEFT JOIN ' . USERS_TABLE . ' AS u
+		ON p.image_user_id = u.user_id
+	LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
+		ON p.image_id = r.rate_image_id
+	LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
+		ON p.image_id = c.comment_image_id
+	WHERE p.image_album_id = ' . $album_id . $image_approval_sql . '
 	ORDER BY ' . $sort_method . ' ' . $sort_order;
 $result = $db->sql_query($sql);
 while ($row = $db->sql_fetchrow($result))
