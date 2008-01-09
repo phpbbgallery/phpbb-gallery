@@ -470,7 +470,7 @@ class acp_gallery
 
 			'SORT_TIME' 						=> ($new['sort_method'] == 'image_time') ? 'selected="selected"' : '',
 			'SORT_IMAGE_TITLE' 					=> ($new['sort_method'] == 'image_name') ? 'selected="selected"' : '',
-			'SORT_USERNAME' 					=> ($new['sort_method'] == 'image_user_id') ? 'selected="selected"' : '',
+			'SORT_USERNAME' 					=> ($new['sort_method'] == 'username') ? 'selected="selected"' : '',
 			'SORT_VIEW' 						=> ($new['sort_method'] == 'image_view_count') ? 'selected="selected"' : '',
 			'SORT_RATING' 						=> ($new['sort_method'] == 'rating') ? 'selected="selected"' : '',
 			'SORT_COMMENTS' 					=> ($new['sort_method'] == 'comments') ? 'selected="selected"' : '',
