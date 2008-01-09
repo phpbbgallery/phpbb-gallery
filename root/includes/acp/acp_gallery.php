@@ -428,7 +428,7 @@ class acp_gallery
 			'THUMBNAIL_SIZE' 					=> $new['thumbnail_size'],
 			'PERSONAL_GALLERY_LIMIT' 			=> $new['personal_gallery_limit'],
 
-			'USER_IMAGES_LIMIT' 					=> $new['user_pics_limit'],
+			'USER_IMAGES_LIMIT' 				=> $new['user_pics_limit'],
 			'MOD_IMAGES_LIMIT' 					=> $new['mod_pics_limit'],
 
 			'THUMBNAIL_CACHE_ENABLED' 			=> ($new['thumbnail_cache'] == 1) ? 'checked="checked"' : '',
