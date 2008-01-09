@@ -165,6 +165,7 @@ if(!isset($_POST['confirm']))
 		'MESSAGE_TITLE'		=> $user->lang['CONFIRM'],
 		'MESSAGE_TEXT'		=> $user->lang['ALBUM_DELETE_CONFIRM'],
 		'S_CONFIRM_ACTION'	=> append_sid("image_delete.$phpEx?id=$pic_id"),
+		'YES_VALUE'			=> $user->lang['YES'],
 	));
 
 	// Output page
