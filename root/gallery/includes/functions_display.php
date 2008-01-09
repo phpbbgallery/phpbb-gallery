@@ -13,30 +13,7 @@ if (!defined('IN_PHPBB'))
 {
 	die('Hacking attempt');
 }
-if (1 > 2)
-{
-		if (($album[$i]['album_approval'] == ALBUM_ADMIN) || ($album[$i]['album_approval'] == ALBUM_MOD))
-		{
-			$pic_approval_sql = 'AND p.image_approval = 1';
-		}
-		else
-		{
-			$pic_approval_sql = '';
-		}
-
-
-		// ----------------------------
-		// OK, we may do a query now...
-		// ----------------------------
-
-		$sql = 'SELECT p.image_id, p.image_name, p.image_user_id, p.image_username, p.image_time, p.image_album_id, u.user_id, u.username, u.user_colour
-				FROM ' . GALLERY_IMAGES_TABLE . ' AS p
-				LEFT JOIN ' . USERS_TABLE . ' AS u
-					ON p.image_user_id = u.user_id
-				WHERE p.image_id = ' . $album[$i]['last_image'] . ' ' . $pic_approval_sql . ' 
-				ORDER BY p.image_time DESC';
-		$result = $db->sql_query($sql);
-}
+//new start here
 $sql = 'SELECT a.*, COUNT(pc.image_id) AS count, MAX(pc.image_id) as last_image
 	FROM ' . GALLERY_ALBUMS_TABLE . ' AS a
 	LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' AS sa
