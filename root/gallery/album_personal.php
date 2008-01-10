@@ -124,13 +124,17 @@ if ($total_pics > 0)
 {
 	$limit_sql = ($start == 0) ? $pics_per_page : $start .','. $pics_per_page;
 
-	$sql = 'SELECT p.*, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
-		FROM ' . GALLERY_IMAGES_TABLE . ' AS p
-			LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r ON p.image_id = r.rate_image_id
-			LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c ON p.image_id = c.comment_image_id
-		WHERE p.image_album_id = ' . PERSONAL_GALLERY . '
-			AND p.image_user_id = ' . $user_id . '
-		GROUP BY p.image_id
+	$sql = 'SELECT i.*, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
+		FROM ' . GALLERY_IMAGES_TABLE . ' AS i
+		LEFT JOIN ' . USERS_TABLE . ' AS u
+			ON i.image_user_id = u.user_id
+		LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
+			ON i.image_id = r.rate_image_id
+		LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
+			ON i.image_id = c.comment_image_id
+		WHERE i.image_album_id = ' . PERSONAL_GALLERY . '
+			AND i.image_user_id = ' . $user_id . '
+		GROUP BY i.image_id
 		ORDER BY ' . $sort_method . ' ' . $sort_order . ' 
 		LIMIT ' . $limit_sql;
 	$result = $db->sql_query($sql);
