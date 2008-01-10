@@ -32,6 +32,16 @@ $start		= request_var('start', 0);
 $mode		= request_var('mode', 'joined');
 $sort_order = request_var('order', 'ASC');
 
+$personal_gallery_access = personal_gallery_access(1,1);
+
+if (!$personal_gallery_access['view'])
+{
+	if(!$user->data['is_registered'])
+	{
+		login_box("gallery/album_personal.$phpEx", $user->lang['LOGIN_EXPLAIN_PERSONAL_GALLERY']);
+	}
+	trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
+}
 //
 // Memberlist sorting
 //

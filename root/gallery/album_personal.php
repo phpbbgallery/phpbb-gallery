@@ -33,13 +33,9 @@ $user_id = request_var('user_id', $user->data['user_id']);
 // Check $user_id
 // ------------------------------------
 
-if(!$user->data['is_registered'])
+if ($user->data['is_bot'])
 {
-	if ($user->data['is_bot'])
-	{
-		redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
-	}
-	login_box("gallery/album_personal.$phpEx", $user->lang['LOGIN_EXPLAIN_PERSONAL_GALLERY']);
+	redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
 }
 
 
@@ -68,6 +64,10 @@ $personal_gallery_access = personal_gallery_access(1,1);
 
 if (!$personal_gallery_access['view'])
 {
+	if(!$user->data['is_registered'])
+	{
+		login_box("gallery/album_personal.$phpEx", $user->lang['LOGIN_EXPLAIN_PERSONAL_GALLERY']);
+	}
 	trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 }
 //
