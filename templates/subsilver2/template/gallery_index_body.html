@@ -18,14 +18,15 @@
 			<strong><a href="{albumrow.U_VIEW_ALBUM}" class="forumtitle">{albumrow.ALBUM_NAME}</a></strong><br />
 			<span class="gensmall">{albumrow.ALBUM_DESC}</span>
 			<!-- IF albumrow.MODERATORS -->
-			<p class="forumdesc"><strong>{albumrow.L_MODERATORS}:</strong> {albumrow.MODERATORS}</p>
+			<span class="forumdesc"><strong>{albumrow.L_MODERATORS}:</strong> {albumrow.MODERATORS}</span>
 			<!-- ENDIF -->
 			<!-- IF albumrow.SUBALBUMS -->
-			<p class="forumdesc"><strong>{albumrow.L_SUBALBUMS}:</strong> {albumrow.SUBALBUMS}</p>
+			<span class="forumdesc"><strong>{albumrow.L_SUBALBUMS}:</strong> {albumrow.SUBALBUMS}</span>
 			<!-- ENDIF -->
+			</span>
 		</td>
-		<td class="row1" style="align: center;">{albumrow.IMAGES}</span></td>
-		<td class="row1"><!-- IF albumrow.LAST_IMAGE_INFO -->{albumrow.LAST_IMAGE_INFO}<!-- ELSE -->{L_NO_IMAGES}<!-- ENDIF --></td>
+		<td class="row1" style="align: center;"><span class="gen">{albumrow.IMAGES}</span></td>
+		<td class="row1"><span class="gen"><!-- IF albumrow.LAST_IMAGE_INFO -->{albumrow.LAST_IMAGE_INFO}<!-- ELSE -->{L_NO_IMAGES}<!-- ENDIF --></span></td>
 	</tr>
 	<!-- END albumrow -->
 	<tr>
@@ -34,7 +35,7 @@
 </table>
 <br />
 
-<table class="tablebg" cellspacing="1" width="100%">
+<table class="tablebg" cellspacing="1" style="width: 100%">
 	<tr>
 	 <td class="row1">
 		 	<p class="breadcrumbs"><a href="{U_USERS_PERSONAL_GALLERIES}" class="cattitle">{L_USERS_PERSONAL_ALBUMS}</a> &#8250; <a href="{U_YOUR_PERSONAL_GALLERY}" class="cattitle">{L_YOUR_PERSONAL_ALBUM}</a></p></td>
@@ -42,7 +43,7 @@
 </table>
 <br />
 
-<table class="tablebg" cellspacing="1" width="100%">
+<table class="tablebg" cellspacing="1" style="width: 100%">
 	<tr>
 		<th colspan="{S_COLS}" nowrap="nowrap">{L_RECENT_PUBLIC_IMAGES}</th>
 	</tr>
@@ -54,7 +55,7 @@
 	<!-- BEGIN recent_pics -->
 	<tr>
 		<!-- BEGIN recent_col -->
-		<td class="row1" width="{S_COL_WIDTH}" align="center"><a href="{recent_pics.recent_col.U_PIC}" rel="lightbox" {TARGET_BLANK}><img src="{recent_pics.recent_col.THUMBNAIL}" border="0" alt="{recent_pics.recent_col.DESC}" title="{recent_pics.recent_col.DESC}" vspace="10" /></a></td>
+		<td class="row1" style="width: {S_COL_WIDTH}" align="center"><a href="{recent_pics.recent_col.U_PIC}" rel="lightbox" {TARGET_BLANK}><img src="{recent_pics.recent_col.THUMBNAIL}" border="0" alt="{recent_pics.recent_col.DESC}" title="{recent_pics.recent_col.DESC}" vspace="10" /></a></td>
 		<!-- END recent_col -->
 	</tr>
 	<tr>
