@@ -5,31 +5,43 @@
 	<td><span class="nav">{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF --></span></td>
 	</tr>
 </table>
-
+<!-- IF .memberrow -->
 <table class="tablebg" cellspacing="1" width="100%">
 	<tr>
-		<th width="40%" height="20" nowrap="nowrap">{L_USERS_PERSONAL_ALBUMS}</th>
-		<th nowrap="nowrap">{L_JOINED}</th>
-		<th nowrap="nowrap">{L_IMAGES}</th>
-		<th nowrap="nowrap">{L_LAST_IMAGE}</th>
+		<th colspan="2" height="20">{L_USERS_PERSONAL_ALBUMS}</th>
+		<th style="width: 60px;">{L_IMAGES}</th>
+		<th style="width: 300px;">{L_LAST_IMAGE}</th>
 	</tr>
 	<!-- BEGIN memberrow -->
-	<tr class="row1">
-		<td align="left"><a href="{memberrow.U_VIEWGALLERY}">{memberrow.USERNAME}</a></td>
-		<td align="center">{memberrow.JOINED}</td>
-		<td align="center">{memberrow.IMAGES}</td>
-		<td align="left">{memberrow.LAST_IMAGE}</td>
+	<tr>
+		<td class="row1" style="align: center; width: 50px;"><img src="memberrow.ALBUM_FOLDER_IMG_SRC}" alt="" /></td>
+		<td height="28" class="row1"><span class="gen">
+			<!-- IF memberrow.ALBUM_IMAGE -->
+			<span class="forum-image">{memberrow.ALBUM_IMAGE}</span>
+			<!-- ENDIF -->
+			<strong><a href="{memberrow.U_VIEWGALLERY}" class="forumtitle">{memberrow.USERNAME}</a></strong><br />
+			<!-- IF memberrow.ALBUM_DESC --><span class="gensmall">{memberrow.ALBUM_DESC}</span><!-- ELSE -->{L_JOINED} {memberrow.JOINED}<!-- ENDIF -->
+		</td>
+		<td class="row1" style="text-align: center;"><span class="gen">{memberrow.IMAGES}</span></td>
+		<td class="row1">
+			<span class="gen">
+				<!-- IF memberrow.U_LAST_IMAGE -->
+					<a href="{memberrow.U_LAST_IMAGE}" style="font-weight: bold;">{memberrow.LAST_IMAGE_NAME}</a> <a href="{memberrow.U_LAST_IMAGE}">{LAST_POST_IMG}</a><br />
+					{L_POSTED_ON_DATE} {memberrow.LAST_IMAGE_TIME}
+				<!-- ELSE -->{L_NO_IMAGES}<!-- ENDIF -->
+			</span>
+		</td>
 	</tr>
 	<!-- END memberrow -->
-	<tr>
 	<td class="cat" colspan="4" align="center">
 	<form method="post" action="{S_MODE_ACTION}">
 		<span class="gensmall">{L_SELECT_SORT_METHOD}:&nbsp;{S_MODE_SELECT}&nbsp;&nbsp;{L_ORDER}:&nbsp;{S_ORDER_SELECT}&nbsp;&nbsp;
 			<input type="submit" name="sort" value="{L_SORT}" class="button2" />
 		</span></form>
 	</td>
-	</tr>
-	</table>
+</table>
+<br />
+<!-- ENDIF -->
 
 <table cellspacing="0" width="100%">
 	<tr>

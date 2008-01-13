@@ -122,64 +122,16 @@ for ($i = 0; $i < count($memberrow); $i++)
 		FROM ' . GALLERY_IMAGES_TABLE . '
 		WHERE image_id = ' . $pic_id;
 	$result = $db->sql_query($sql);
-
 	$thispic = $db->sql_fetchrow($result); 
-	$pic_title = $thispic['image_name']; 
-
-/*
-	$last_pic_info = '';
-
-		$last_pic_info .= '<dfn>' . $user->lang['LAST_IMAGE'] . '</dfn> ';
-		
-		if( !isset($album_config['last_pic_title_length']) )
-		{
-			$album_config['last_pic_title_length'] = 25;
-		}
-
-		if (strlen($lastrow['image_name']) > $album_config['last_pic_title_length'])
-		{
-			$lastrow['image_name'] = substr($lastrow['image_name'], 0, $album_config['last_pic_title_length']) . '...';
-		}
-
-		$last_pic_info .= '<a href="' . append_sid("./image_page.$phpEx?image_id=". $lastrow['image_id']) .'">';
-		$last_pic_info .= $lastrow['image_name'] .'</a> ' . $user->lang['POST_BY_AUTHOR'] . ' ';
-
-		// ----------------------------
-		// Write username of last poster
-		// ----------------------------
-
-		if( ($lastrow['user_id'] == ALBUM_GUEST) or ($lastrow['username'] == '') )
-		{
-			$last_pic_info .= ($lastrow['image_username'] == '') ? $user->lang['GUEST'] : $lastrow['image_username'];
-		}
-		else
-		{
-			$last_pic_info .= '<a href="'. append_sid("../memberlist.$phpEx?mode=viewprofile&amp;u=" . $lastrow['user_id']) .'" class="username-coloured">'. $lastrow['username'] .'</a> ';
-		}
-//		$last_pic_info .= '<a href="'. append_sid("../memberlist.$phpEx?mode=viewprofile&amp;u=". $lastrow['user_id']) .'" style="color: #' . $user->data['user_colour'] . ';" class="username-coloured">'. $lastrow['username'] .'</a> ';
-		$last_pic_info .= '<a href="' . append_sid("./image_page.$phpEx?id=". $lastrow['image_id']) .'"><img src="../styles/prosilver/imageset/icon_topic_latest.gif" width="11" height="9" alt="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" title="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" /></a><br />';
-		$last_pic_info .= $user->lang['POSTED_ON_DATE'] . ' ' . $user->format_date($lastrow['image_time']);
-*/
-
-	if(!isset($album_config['last_pic_title_length'])) 
-	{
-		$album_config['last_pic_title_length'] = 25; 
-	}
-	$pic_title_full = $pic_title; 
-	if (utf8_strlen($pic_title) > $album_config['last_pic_title_length']) 
-	{
-		$pic_title = utf8_substr($pic_title, 0, $album_config['last_pic_title_length']) . '...'; 
-	}
-	$last_pic_info  = $user->lang['IMAGE_TITLE'] . ': <a href="'; 
-	$last_pic_info .= ($album_config['fullpic_popup']) ? append_sid("image_page.$phpEx?image_id=" . $pic_id) . '" title="' . $pic_title_full . '">' : append_sid("image_page.$phpEx?image_id=" . $pic_id) . '" title="' . $pic_title_full . '">'; 
-	$last_pic_info .= $pic_title . '</a><br />' . $user->lang['POSTED_ON_DATE'] . ' ' . $user->format_date($memberrow[$i]['image_time']);
 
 	$template->assign_block_vars('memberrow', array(
 		'ROW_CLASS'			=> ( !($i % 2) ) ? 'bg1' : 'bg2',
 		'USERNAME'			=> $memberrow[$i]['username'],
 		'U_VIEWGALLERY'		=> append_sid("album_personal.$phpEx?user_id=" . $memberrow[$i]['user_id']),
 		'JOINED'			=> $user->format_date($memberrow[$i]['user_regdate']),
-		'LAST_IMAGE'			=> $last_pic_info,
+		'U_LAST_IMAGE'			=> append_sid("{$phpbb_root_path}gallery/image_page.$phpEx" , 'image_id=' . $thispic['image_id']),
+		'LAST_IMAGE_NAME'		=> $thispic['image_name'],
+		'LAST_IMAGE_TIME'		=> $user->format_date($thispic['image_time']),
 		'IMAGES'				=> $pic_number,
 	));
 }
@@ -200,8 +152,9 @@ if ($total = $db->sql_fetchrow($result))
 }
 
 $template->assign_vars(array(
-	'PAGINATION' 	=> $pagination,
-	'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $config['topics_per_page'] ) + 1 ), ceil( $total_galleries / $config['topics_per_page'] )),
+	'LAST_POST_IMG'			=> $user->img('icon_topic_latest', 'VIEW_LATEST_POST'),
+	'PAGINATION'			=> $pagination,
+	'PAGE_NUMBER'			=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $config['topics_per_page'] ) + 1 ), ceil( $total_galleries / $config['topics_per_page'] )),
 ));
 
 $template->assign_block_vars('navlinks', array(

@@ -5,33 +5,43 @@
 		{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
 	</div>
 </div>
-<div class="forumbg forumbg-table">
+<!-- IF .memberrow -->
+<div class="forabg">
 	<div class="inner">
 		<span class="corners-top"><span></span></span>
-		<table class="table1" cellspacing="1" id="memberlist">
-			<thead>
-			<tr>
-				<th class="name">{L_USERS_PERSONAL_ALBUMS}</th>
-				<th class="joined">{L_JOINED}</th>
-				<th class="posts">{L_IMAGES}</th>
-				<th class="joined">{L_LAST_IMAGE}</th>
-			</tr>
-			</thead>
-			<tbody>
-				<!-- BEGIN memberrow -->
-				<tr class="{memberrow.ROW_CLASS}">
-					<td class="name">&nbsp;<a href="{memberrow.U_VIEWGALLERY}">{memberrow.USERNAME}</a></td>
-					<td class="joined">&nbsp;{memberrow.JOINED}&nbsp;</td>
-					<td class="posts">{memberrow.IMAGES}</td>
-					<td class="joined">&nbsp;{memberrow.LAST_IMAGE}&nbsp;</td>
-				</tr>
-				<!-- END memberrow -->
-			</tbody>
-		</table>
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="icon">
+					<dt>{L_USERS_PERSONAL_ALBUMS}</dt>
+					<dd class="posts">{L_IMAGES}</dd>
+					<dd class="lastpost"><span>{L_LAST_IMAGE}</span></dd>
+				</dl>
+			</li>
+		</ul>
+		<!-- BEGIN memberrow -->
+		<ul class="topiclist forums">
+			<li class="row">
+				<dl class="icon" style="background-image: url({memberrow.ALBUM_FOLDER_IMG_SRC}); background-repeat: no-repeat;">
+					<dt>
+						<!-- IF memberrow.ALBUM_IMAGE --><span class="forum-image">{memberrow.ALBUM_IMAGE}</span><!-- ENDIF -->
+						<a href="{memberrow.U_VIEWGALLERY}" class="forumtitle">{memberrow.USERNAME}</a><br />
+						<!-- IF memberrow.ALBUM_DESC -->{memberrow.ALBUM_DESC}<!-- ELSE -->{L_JOINED} {memberrow.JOINED}<!-- ENDIF -->
+					</dt>
+					<dd class="posts">{memberrow.IMAGES} <dfn>{L_IMAGES}</dfn></dd>
+					<dd class="lastpost"><span>
+						<!-- IF memberrow.U_LAST_IMAGE -->
+							<a href="{memberrow.U_LAST_IMAGE}" style="font-weight: bold;">{memberrow.LAST_IMAGE_NAME}</a> <a href="{memberrow.U_LAST_IMAGE}">{LAST_POST_IMG}</a><br />
+							{L_POSTED_ON_DATE} {memberrow.LAST_IMAGE_TIME}
+						<!-- ELSE -->{L_NO_IMAGES}<!-- ENDIF -->
+					</span></dd>
+				</dl>
+			</li>
+		</ul>
+		<!-- END memberrow -->
 		<span class="corners-bottom"><span></span></span>
 	</div>
 </div>
-
+<!-- ENDIF -->
 <form method="post" action="{S_MODE_ACTION}">
 <fieldset class="display-options">
 	<label>{L_SELECT_SORT_METHOD}: 

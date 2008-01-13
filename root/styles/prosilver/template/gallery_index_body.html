@@ -31,7 +31,11 @@
 					</dt>
 					<dd class="posts">{albumrow.IMAGES} <dfn>{L_IMAGES}</dfn></dd>
 					<dd class="lastpost"><span>
-					<!-- IF albumrow.LAST_IMAGE_INFO -->{albumrow.LAST_IMAGE_INFO}<!-- ELSE -->{L_NO_IMAGES}<!-- ENDIF -->
+						<!-- IF albumrow.U_LAST_IMAGE -->
+							<a href="{albumrow.U_LAST_IMAGE}" style="font-weight: bold;">{albumrow.LAST_IMAGE_NAME}</a><br />
+							{L_POST_BY_AUTHOR} {albumrow.LAST_IMAGE_AUTHOR} <a href="{albumrow.U_LAST_IMAGE}">{LAST_POST_IMG}</a><br />
+							{L_POSTED_ON_DATE} {albumrow.LAST_IMAGE_TIME}
+						<!-- ELSE -->{L_NO_IMAGES}<!-- ENDIF -->
 					</span></dd>
 				</dl>
 			</li>

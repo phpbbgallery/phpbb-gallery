@@ -90,21 +90,11 @@ for ($i = 0; $i < count($album); $i++)
 	// Get Last Pic of this Category
 	// ------------------------------------------
 
-	if ($album[$i]['count'] == 0)
-	{
-		//
-		// Oh, this category is empty
-		//
-		$last_pic_info = $user->lang['NO_IMAGES'];
-		$u_last_pic = '';
-		$last_pic_title = '';
-	}
-	else
+	if ($album[$i]['count'] != 0)
 	{
 		// ----------------------------
 		// Check Pic Approval
 		// ----------------------------
-
 		if (($album[$i]['album_approval'] == ALBUM_ADMIN) || ($album[$i]['album_approval'] == ALBUM_MOD))
 		{
 			$pic_approval_sql = 'AND p.image_approval = 1';
@@ -113,12 +103,9 @@ for ($i = 0; $i < count($album); $i++)
 		{
 			$pic_approval_sql = '';
 		}
-
-
 		// ----------------------------
 		// OK, we may do a query now...
 		// ----------------------------
-
 		$sql = 'SELECT p.image_id, p.image_name, p.image_user_id, p.image_username, p.image_time, p.image_album_id, u.user_id, u.username, u.user_colour
 				FROM ' . GALLERY_IMAGES_TABLE . ' AS p
 				LEFT JOIN ' . USERS_TABLE . ' AS u
@@ -127,24 +114,6 @@ for ($i = 0; $i < count($album); $i++)
 				ORDER BY p.image_time DESC';
 		$result = $db->sql_query($sql);
 		$lastrow = $db->sql_fetchrow($result);
-
-		$last_pic_info = '';
-		$last_pic_info .= '<dfn>' . $user->lang['LAST_IMAGE'] . '</dfn> ';
-		if( !isset($album_config['last_pic_title_length']) )
-		{
-			$album_config['last_pic_title_length'] = 25;
-		}
-		if (utf8_strlen($lastrow['image_name']) > $album_config['last_pic_title_length'])
-		{
-			$lastrow['image_name'] = utf8_substr($lastrow['image_name'], 0, $album_config['last_pic_title_length']) . '...';
-		}
-		$last_pic_info .= '<a href="' . append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=" . $lastrow['image_id']) . '" style="font-weight: bold;">';
-		$last_pic_info .= $lastrow['image_name'] . '</a><br />' . $user->lang['POST_BY_AUTHOR'] . ' ';
-		$last_pic_info .= get_username_string('full', $lastrow['user_id'], ($lastrow['user_id'] <> ANONYMOUS) ? $lastrow['username'] : $user->lang['GUEST'], $lastrow['user_colour']);
-//		$last_pic_info .= '<a href="' . append_sid("{$phpbb_root_path}/memberlist.$phpEx?mode=viewprofile&amp;u=". $lastrow['user_id']) .'" style="color: #' . $user->data['user_colour'] . ';" class="username-coloured">'. $lastrow['username'] .'</a> ';
-		$last_pic_info .= '<a href="' . append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=" . $lastrow['image_id']) . '"><img src="' . $phpbb_root_path . 'styles/prosilver/imageset/icon_topic_latest.gif" width="11" height="9" alt="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" title="' . $user->lang['VIEW_THE_LATEST_IMAGE'] . '" /></a><br />';
-		/*uh, hardcoded image*/
-		$last_pic_info .= $user->lang['POSTED_ON_DATE'] . ' ' . $user->format_date($lastrow['image_time']);
 	}
 	if ($album[$i]['left_id'] + 1 != $album[$i]['right_id'])
 	{
@@ -170,17 +139,22 @@ for ($i = 0; $i < count($album); $i++)
 	// ------------------------------------------
 
 	$template->assign_block_vars('albumrow', array(
-		'U_VIEW_ALBUM' 			=> append_sid($phpbb_root_path . "gallery/album.$phpEx?id=" . $album[$i]['album_id']),
-		'ALBUM_NAME' 			=> $album[$i]['album_name'],
+		'U_VIEW_ALBUM'			=> append_sid($phpbb_root_path . "gallery/album.$phpEx?id=" . $album[$i]['album_id']),
+		'ALBUM_NAME'			=> $album[$i]['album_name'],
 		'ALBUM_FOLDER_IMG_SRC'	=> $user->img($folder_image, $folder_alt, false, '', 'src'),
 		'SUBALBUMS'				=> get_album_children($album[$i]['album_id']),
-		'ALBUM_DESC' 			=> generate_text_for_display($album[$i]['album_desc'], $album[$i]['album_desc_uid'], $album[$i]['album_desc_bitfield'], $album[$i]['album_desc_options']),
-		'L_MODERATORS' 			=> $l_moderators,
-		'L_SUBALBUMS' 			=> $l_subalbums,
-		'MODERATORS' 			=> $moderators_list,
-		'IMAGES' 					=> $album[$i]['count'],
-		'LAST_IMAGE_INFO' 		=> $last_pic_info)
-	);
+		'ALBUM_DESC'			=> generate_text_for_display($album[$i]['album_desc'], $album[$i]['album_desc_uid'], $album[$i]['album_desc_bitfield'], $album[$i]['album_desc_options']),
+		'L_MODERATORS'			=> $l_moderators,
+		'L_SUBALBUMS'			=> $l_subalbums,
+		'MODERATORS'			=> $moderators_list,
+		'IMAGES'				=> $album[$i]['count'],
+		'U_LAST_IMAGE'			=> ($album[$i]['count'] != 0) ? append_sid("{$phpbb_root_path}gallery/image_page.$phpEx" , 'image_id=' . $lastrow['image_id']) : '',
+		'LAST_IMAGE_NAME'		=> ($album[$i]['count'] != 0) ? $lastrow['image_name'] : '',
+		'LAST_IMAGE_AUTHOR'		=> ($album[$i]['count'] != 0) ? get_username_string('full', $lastrow['user_id'], ($lastrow['user_id'] <> ANONYMOUS) ? $lastrow['username'] : $user->lang['GUEST'], $lastrow['user_colour']) : '',
+		'LAST_IMAGE_TIME'		=> ($album[$i]['count'] != 0) ? $user->format_date($lastrow['image_time']) : '',
+	));
 }
-
+$template->assign_vars(array(
+	'LAST_POST_IMG'				=> $user->img('icon_topic_latest', 'VIEW_LATEST_POST'),
+));
 ?>

@@ -25,8 +25,16 @@
 			<!-- ENDIF -->
 			</span>
 		</td>
-		<td class="row1" style="align: center;"><span class="gen">{albumrow.IMAGES}</span></td>
-		<td class="row1"><span class="gen"><!-- IF albumrow.LAST_IMAGE_INFO -->{albumrow.LAST_IMAGE_INFO}<!-- ELSE -->{L_NO_IMAGES}<!-- ENDIF --></span></td>
+		<td class="row1" style="text-align: center;"><span class="gen">{albumrow.IMAGES}</span></td>
+		<td class="row1">
+			<span class="gen">
+				<!-- IF albumrow.U_LAST_IMAGE -->
+					<a href="{albumrow.U_LAST_IMAGE}" style="font-weight: bold;">{albumrow.LAST_IMAGE_NAME}</a><br />
+					{L_POST_BY_AUTHOR} {albumrow.LAST_IMAGE_AUTHOR} <a href="{albumrow.U_LAST_IMAGE}">{LAST_POST_IMG}</a><br />
+					{L_POSTED_ON_DATE} {albumrow.LAST_IMAGE_TIME}
+				<!-- ELSE -->{L_NO_IMAGES}<!-- ENDIF -->
+			</span>
+		</td>
 	</tr>
 	<!-- END albumrow -->
 	<tr>
