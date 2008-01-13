@@ -145,11 +145,6 @@ if(!isset($_POST['pic_title']))
 	{
 		$template->assign_block_vars('switch_manual_thumbnail', array());
 	}
-	
-	$template->assign_block_vars('navlinks', array(
-		'FORUM_NAME'	=> $user->lang['GALLERY'],
-		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
-	));
 
 	if ($album_id == PERSONAL_GALLERY)
 	{
