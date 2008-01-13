@@ -40,6 +40,7 @@ $lang = array_merge($lang, array(
 	'ACP_GALLERY_CONFIGURE_GALLERY'				=> 'Configure Gallery',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'				=> 'Album Permissions',
 	'ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS'	=> 'Personal Album Permissions',
+	'ACP_IMPORT_ALBUMS'							=> 'Import Images',
 ));
 
 ?>
