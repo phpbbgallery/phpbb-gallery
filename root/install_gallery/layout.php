@@ -41,9 +41,7 @@ echo '							<li class="header">' . $user->lang['INSTALLER_INSTALL_MENU'] . '</l
 echo '							<li' . (($mode == 'install') ? $activemenu : '') . '><a href="install.php?mode=install"><span>' . sprintf($user->lang['INSTALLER_INSTALL_VERSION'], $new_mod_version) . '</span></a></li>';
 echo '							<li class="header">' . $user->lang['INSTALLER_UPDATE_MENU'] . '</li>';
 echo '							<li' . (($mode == 'update012') ? $activemenu : '') . '><a href="install.php?mode=update012&amp;v=0.1.2"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.1.2</span></a></li>';
-echo '							<li' . (($mode == 'update013') ? $activemenu : '') . '><a href="install.php?mode=update013&amp;v=0.1.3"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.1.3</span></a></li>';
-echo '							<li' . (($mode == 'update020') ? $activemenu : '') . '><a href="install.php?mode=update020&amp;v=0.2.0"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.2.0</span></a></li>';
-echo '							<li' . (($mode == 'update021') ? $activemenu : '') . '><a href="install.php?mode=update021&amp;v=0.2.1"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.2.1</span></a></li>';
+echo '							<li' . (($mode == 'update022') ? $activemenu : '') . '><a href="install.php?mode=update022&amp;v=0.2.2"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.2.2</span></a></li>';
 echo '							<li class="header">' . $user->lang['INSTALLER_CONVERT_MENU'] . '</li>';
 echo '							<li' . (($mode == 'convert') ? $activemenu : '') . '><a href="install.php?mode=convert"><span>' . sprintf($user->lang['INSTALLER_CONVERT_NOTE'], $new_mod_version) . '</span></a></li>';
 echo '						</ul>';
@@ -88,7 +86,7 @@ if ($mode == 'install')
 		echo '</form>';
 	}
 }
-else if (($mode == 'update012') || ($mode == 'update013') || ($mode == 'update020') || ($mode == 'update021'))
+else if (($mode == 'update012') || ($mode == 'update022'))
 {
 	if ($update == 1)
 	{
@@ -174,17 +172,10 @@ else if ($mode == 'convert')
 		echo '</form>';
 	}
 }
-else if ($mode == 'else')
+else
 {
 	echo '<h1>' . $user->lang['INSTALLER_INTRO_WELCOME'] . '</h1>';
 	echo '<p>' . $user->lang['INSTALLER_INTRO_WELCOME_NOTE'] . '</p>';
-}
-else
-{
-	echo '<div class="errorbox">';
-	echo '	<h3>ERROR</h3>';
-	echo '	<p>' . $user->lang['INSTALLER_NEEDS_FOUNDER'] . '</p>';
-	echo '</div>';
 }
 echo '						</div>';
 echo '					</div>';

@@ -11,7 +11,6 @@
 
 define('IN_PHPBB', true);
 $phpbb_root_path = '../';
-$album_root_path = $phpbb_root_path . 'gallery/';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.'.$phpEx);
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
@@ -23,10 +22,10 @@ $user->session_begin();
 $auth->acl($user->data);
 $user->setup();
 $user->add_lang('mods/gallery_install');
-$new_mod_version = '0.2.2';
+$new_mod_version = '0.2.3';
 $page_title = 'phpBB Gallery v' . $new_mod_version;
 
-$mode = request_var('mode', 'else', true);
+$mode = request_var('mode', '', true);
 function split_sql_file($sql, $delimiter)
 {
 	$sql = str_replace("\r" , '', $sql);
@@ -268,6 +267,17 @@ switch ($mode)
 				'module_auth'		=> ''
 			);
 			$modules->update_module_data($album_personal_permissions);
+			$import_images = array(
+				'module_basename'	=> 'gallery',
+				'module_enabled'	=> 1,
+				'module_display'	=> 1,
+				'parent_id'			=> $acp_gallery['module_id'],
+				'module_class'		=> 'acp',
+				'module_langname'	=> 'ACP_IMPORT_ALBUMS',
+				'module_mode'		=> 'import_images',
+				'module_auth'		=> ''
+			);
+			$modules->update_module_data($import_images);
 			// clear cache and log what we did
 			$cache->purge();
 			add_log('admin', 'phpBB Gallery v' . $new_mod_version . ' installed');
@@ -275,6 +285,7 @@ switch ($mode)
 			$installed = true;
 		}
 	break;
+	//no more update from this old versions, maybe we should leave 0.1.2 still in it? so old tsr can stil be udated? what do you think doc?
 	case 'update012':
 		$update = request_var('update', 0);
 		$version = request_var('v', '0', true);
@@ -556,6 +567,17 @@ switch ($mode)
 				'module_auth'		=> ''
 			);
 			$modules->update_module_data($album_personal_permissions);
+			$import_images = array(
+				'module_basename'	=> 'gallery',
+				'module_enabled'	=> 1,
+				'module_display'	=> 1,
+				'parent_id'			=> $acp_gallery['module_id'],
+				'module_class'		=> 'acp',
+				'module_langname'	=> 'ACP_IMPORT_ALBUMS',
+				'module_mode'		=> 'import_images',
+				'module_auth'		=> ''
+			);
+			$modules->update_module_data($import_images);
 			$db->sql_freeresult($result);
 
 			// clear cache and log what we did
@@ -565,6 +587,7 @@ switch ($mode)
 			$updated = true;
 		}
 	break;
+	/*
 	case 'update013':
 		$update = request_var('update', 0);
 		$version = request_var('v', '0', true);
@@ -830,24 +853,32 @@ switch ($mode)
 
 			// create the acp modules
 			$modules = new acp_modules();
-			$parent_id = 0;
-			$sql = 'SELECT module_id FROM ' . $table_prefix . "modules WHERE module_langname = 'PHPBB_GALLERY' LIMIT 1";
+			//missing $acp_gallery['module_id']
+			$sql = 'SELECT module_id FROM ' . MODULES_TABLE . " WHERE module_langname = 'PHPBB_GALLERY' LIMIT 1";
 			$result = $db->sql_query($sql);
-			while ($row = $db->sql_fetchrow($result))
-			{
-				$parent_id = $row['module_id'];
-			}
+			$acp_gallery = $db->sql_fetchrow($result);
 			$album_personal_permissions = array(
 				'module_basename'	=> 'gallery',
 				'module_enabled'	=> 1,
 				'module_display'	=> 1,
-				'parent_id'			=> $parent_id,
+				'parent_id'			=> $acp_gallery['module_id'],
 				'module_class'		=> 'acp',
 				'module_langname'	=> 'ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS',
 				'module_mode'		=> 'album_personal_permissions',
 				'module_auth'		=> ''
 			);
 			$modules->update_module_data($album_personal_permissions);
+			$import_images = array(
+				'module_basename'	=> 'gallery',
+				'module_enabled'	=> 1,
+				'module_display'	=> 1,
+				'parent_id'			=> $acp_gallery['module_id'],
+				'module_class'		=> 'acp',
+				'module_langname'	=> 'ACP_IMPORT_ALBUMS',
+				'module_mode'		=> 'import_images',
+				'module_auth'		=> ''
+			);
+			$modules->update_module_data($import_images);
 			$db->sql_freeresult($result);
 
 			// clear cache and log what we did
@@ -864,6 +895,58 @@ switch ($mode)
 		$updated = false;
 		if ($update == 1)
 		{
+			// create the acp modules
+			$modules = new acp_modules();
+			//missing $acp_gallery['module_id']
+			$sql = 'SELECT module_id FROM ' . MODULES_TABLE . " WHERE module_langname = 'PHPBB_GALLERY' LIMIT 1";
+			$result = $db->sql_query($sql);
+			$acp_gallery = $db->sql_fetchrow($result);
+			$import_images = array(
+				'module_basename'	=> 'gallery',
+				'module_enabled'	=> 1,
+				'module_display'	=> 1,
+				'parent_id'			=> $acp_gallery['module_id'],
+				'module_class'		=> 'acp',
+				'module_langname'	=> 'ACP_IMPORT_ALBUMS',
+				'module_mode'		=> 'import_images',
+				'module_auth'		=> ''
+			);
+			$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . "
+				SET config_value = '" . $new_mod_version . "'
+				WHERE config_name = 'album_version'";
+			$db->sql_query($sql);
+
+			// clear cache and log what we did
+			$cache->purge();
+			add_log('admin', 'phpBB Gallery updated to v' . $new_mod_version);
+			add_log('admin', 'LOG_PURGE_CACHE');
+			$updated = true;
+		}
+	break;
+	*/
+	case 'update022':
+		$update = request_var('update', 0);
+		$version = request_var('v', '0', true);
+		$updated = false;
+		if ($update == 1)
+		{
+			// create the acp modules
+			$modules = new acp_modules();
+			//missing $acp_gallery['module_id']
+			$sql = 'SELECT module_id FROM ' . MODULES_TABLE . " WHERE module_langname = 'PHPBB_GALLERY' LIMIT 1";
+			$result = $db->sql_query($sql);
+			$acp_gallery = $db->sql_fetchrow($result);
+			$import_images = array(
+				'module_basename'	=> 'gallery',
+				'module_enabled'	=> 1,
+				'module_display'	=> 1,
+				'parent_id'			=> $acp_gallery['module_id'],
+				'module_class'		=> 'acp',
+				'module_langname'	=> 'ACP_IMPORT_ALBUMS',
+				'module_mode'		=> 'import_images',
+				'module_auth'		=> ''
+			);
+			$modules->update_module_data($import_images);
 			$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . "
 				SET config_value = '" . $new_mod_version . "'
 				WHERE config_name = 'album_version'";
@@ -1231,6 +1314,17 @@ switch ($mode)
 				'module_auth'		=> ''
 			);
 			$modules->update_module_data($album_personal_permissions);
+			$import_images = array(
+				'module_basename'	=> 'gallery',
+				'module_enabled'	=> 1,
+				'module_display'	=> 1,
+				'parent_id'			=> $acp_gallery['module_id'],
+				'module_class'		=> 'acp',
+				'module_langname'	=> 'ACP_IMPORT_ALBUMS',
+				'module_mode'		=> 'import_images',
+				'module_auth'		=> ''
+			);
+			$modules->update_module_data($import_images);
 
 			// clear cache and log what we did
 			$cache->purge();
