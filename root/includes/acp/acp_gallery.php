@@ -757,6 +757,7 @@ class acp_gallery
 				'S_DESC_BBCODE_CHECKED'		=> true,
 				'S_DESC_SMILIES_CHECKED'	=> true,
 				'S_DESC_URLS_CHECKED'		=> true,
+				'ALBUM_TYPE'				=> 2,
 				'VIEW_LEVEL'				=> permission_drop_down_box('album_view_level', 1),
 				'UPLOAD_LEVEL'				=> permission_drop_down_box('album_upload_level', 0),
 				'RATE_LEVEL'				=> permission_drop_down_box('album_rate_level', 0),
