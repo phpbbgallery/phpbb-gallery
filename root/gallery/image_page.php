@@ -305,6 +305,7 @@ $sql = 'SELECT i.image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment
 	LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
 		ON i.image_id = c.comment_image_id
 	WHERE i.image_album_id = ' . $album_id . $image_approval_sql . '
+	GROUP BY i.image_id
 	ORDER BY ' . $sort_method . ' ' . $sort_order;
 $result = $db->sql_query($sql);
 while ($row = $db->sql_fetchrow($result))
