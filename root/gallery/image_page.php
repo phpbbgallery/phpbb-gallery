@@ -296,7 +296,7 @@ if (($album_data['album_approval'] <> ALBUM_USER) && (($user->data['user_type'] 
 {
 	$image_approval_sql = '';
 }
-$sql = 'SELECT i.image_id
+$sql = 'SELECT i.image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
 	FROM ' . GALLERY_IMAGES_TABLE . ' AS i
 	LEFT JOIN ' . USERS_TABLE . ' AS u
 		ON i.image_user_id = u.user_id
