@@ -87,6 +87,7 @@ function checkCommentForm() {
 
 <!-- IF RATING -->
 <a name="rating"></a>
+<form name="rateform" action="{S_ALBUM_ACTION}" method="post" onsubmit="return checkRateForm();">
 <table class="tablebg" cellspacing="1" width="100%">
 	<tr>
 		<th colspan="2" style="align: center;">{L_RATING}</th>
@@ -102,6 +103,8 @@ function checkCommentForm() {
 	</tr>
 	<!-- ENDIF -->
 </table>
+{S_FORM_TOKEN}
+</form>
 <br clear="all" />
 <!-- ENDIF -->
 
