@@ -24,7 +24,7 @@ For Features see the forum topic.]]></description>
     <mod-version>
       <major>0</major>
       <minor>2</minor>
-      <revision>2</revision>
+      <revision>3</revision>
     </mod-version>
     <installation>
       <level>easy</level>
@@ -36,6 +36,42 @@ For Features see the forum topic.]]></description>
       </target-version>
     </installation>
     <history>
+      <entry>
+        <date>2008-01-24</date>
+        <rev-version>
+          <major>0</major>
+          <minor>2</minor>
+          <revision>3</revision>
+        </rev-version>
+        <changelog lang="en-GB">
+          <change><![CDATA[Report #62: Watermark: Call to undefined function: imagecreatefromjpeg()]]></change>
+          <change><![CDATA[Report #90: Add gd_info function check into the installer]]></change>
+          <change><![CDATA[Report #100: bbcode]]></change>
+          <change><![CDATA[Report #102: Browsing Gallery while [ Test out user’s permissions ]]]></change>
+          <change><![CDATA[Report #120: styles/prosilver/imageset/icon_topic_latest.gif]]></change>
+          <change><![CDATA[Report #121: missing upload-line in subsilver2]]></change>
+          <change><![CDATA[Report #122: missing mass-upload modul]]></change>
+          <change><![CDATA[Report #124: Better remove thumbs.db]]></change>
+          <change><![CDATA[Report #125: pers. album: default sort gives error messages]]></change>
+          <change><![CDATA[Report #127: missing {S_FORM_TOKEN} in subsilver2]]></change>
+          <change><![CDATA[Report #130: missing "yes" in subsilver2 on delete-confirm]]></change>
+          <change><![CDATA[Report #131: UTF is absent]]></change>
+          <change><![CDATA[Report #132: Wrong premission to Anonymus]]></change>
+          <change><![CDATA[Report #135: Unknown column 'username' in album_personal.php]]></change>
+          <change><![CDATA[Report #137: Gallery is open when board is disabled]]></change>
+          <change><![CDATA[Report #139: not valid]]></change>
+          <change><![CDATA[Report #140: double entry for gallery index in navlinks on upload page]]></change>
+          <change><![CDATA[Report #141: language attribute in <script> tags]]></change>
+          <change><![CDATA[Report #145: confusing default: category]]></change>
+          <change><![CDATA[Report #148: Unknown column 'rating' in 'order clause' [1054]]]></change>
+          <change><![CDATA[Report #153: Missing form around rating in subsilver2]]></change>
+          <change><![CDATA[Report #157: Last image sorting not working]]></change>
+          <change><![CDATA[Report #158: colour username on personal gallery empty]]></change>
+          <change><![CDATA[Report #159: english typo: Thias file type is not allowed]]></change>
+          <change><![CDATA[Report #160: dead link on image comment]]></change>
+          <change><![CDATA[Report #161: empty error message on gallery/album.php]]></change>
+        </changelog>
+      </entry>
       <entry>
         <date>2008-01-08</date>
         <rev-version>
