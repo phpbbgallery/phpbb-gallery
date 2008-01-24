@@ -218,7 +218,7 @@ if ($album_id <> 0)
 				$message_parser->decode_message($picrow[$j]['image_desc_uid']);
 				$template->assign_block_vars('picrow.piccol', array(
 					'U_IMAGE'			=> ($album_config['fullpic_popup']) ? append_sid($phpbb_root_path . "gallery/image.$phpEx?pic_id=" . $picrow[$j]['image_id']) : append_sid($phpbb_root_path . "gallery/image_page.$phpEx?image_id=" . $picrow[$j]['image_id']),
-					'THUMBNAIL'		=> append_sid("thumbnail.$phpEx?pic_id=" . $picrow[$j]['image_id']),
+					'THUMBNAIL'		=> append_sid("{$phpbb_root_path}gallery/thumbnail.$phpEx?pic_id=" . $picrow[$j]['image_id']),
 					'DESC'			=> $message_parser->message,
 					'APPROVAL'		=> $approval_link,
 				));
