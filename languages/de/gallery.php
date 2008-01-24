@@ -164,6 +164,7 @@ $lang = array_merge($lang, array(
 	'POSTER'								=> 'Autor',
 
 	'RATING'								=> 'Bewertung',
+	'RECENT_IMAGES'							=> 'Neuesten Bilder',
 	'RECENT_PUBLIC_IMAGES'					=> 'Neuesten öffentliche Bilder',
 	'RATING_SUCCESSFUL'						=> 'Das Bild wurde erfolgreich bewertet.',
 

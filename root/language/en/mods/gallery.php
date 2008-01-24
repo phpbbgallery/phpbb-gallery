@@ -149,6 +149,7 @@ $lang = array_merge($lang, array(
 	'POSTER'							=> 'Poster',
 
 	'RATING'						=> 'Rating',
+	'RECENT_IMAGES'			=> 'Recent Images',
 	'RECENT_PUBLIC_IMAGES'			=> 'Recent Public Images',
 	'RATING_SUCCESSFUL'				=> 'Your image has been rated successfully.',
 
