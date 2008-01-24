@@ -278,6 +278,14 @@ switch ($mode)
 				'module_auth'		=> ''
 			);
 			$modules->update_module_data($import_images);
+			$gd_check = function_exists('gd_info') ? gd_info() : array();;
+			$gd_success = isset($gd_check['GD Version']);
+			if (!$gd_success && ($album_config['gd_version'] > 0))
+			{
+				$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . "SET config_value = 0 WHERE config_name = 'gd_version'";
+				$result = $db->sql_query($sql);
+				$album_config['gd_version'] = 0;
+			}
 			// clear cache and log what we did
 			$cache->purge();
 			add_log('admin', 'phpBB Gallery v' . $new_mod_version . ' installed');
@@ -585,6 +593,14 @@ switch ($mode)
 			);
 			$modules->update_module_data($import_images);
 			$db->sql_freeresult($result);
+			$gd_check = function_exists('gd_info') ? gd_info() : array();;
+			$gd_success = isset($gd_check['GD Version']);
+			if (!$gd_success && ($album_config['gd_version'] > 0))
+			{
+				$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . "SET config_value = 0 WHERE config_name = 'gd_version'";
+				$result = $db->sql_query($sql);
+				$album_config['gd_version'] = 0;
+			}
 
 			// clear cache and log what we did
 			$cache->purge();
@@ -620,6 +636,14 @@ switch ($mode)
 				SET config_value = '" . $new_mod_version . "'
 				WHERE config_name = 'album_version'";
 			$db->sql_query($sql);
+			$gd_check = function_exists('gd_info') ? gd_info() : array();;
+			$gd_success = isset($gd_check['GD Version']);
+			if (!$gd_success && ($album_config['gd_version'] > 0))
+			{
+				$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . "SET config_value = 0 WHERE config_name = 'gd_version'";
+				$result = $db->sql_query($sql);
+				$album_config['gd_version'] = 0;
+			}
 
 			// clear cache and log what we did
 			$cache->purge();
@@ -994,6 +1018,15 @@ switch ($mode)
 				'module_auth'		=> ''
 			);
 			$modules->update_module_data($import_images);
+
+			$gd_check = function_exists('gd_info') ? gd_info() : array();;
+			$gd_success = isset($gd_check['GD Version']);
+			if (!$gd_success && ($album_config['gd_version'] > 0))
+			{
+				$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . "SET config_value = 0 WHERE config_name = 'gd_version'";
+				$result = $db->sql_query($sql);
+				$album_config['gd_version'] = 0;
+			}
 
 			// clear cache and log what we did
 			$cache->purge();
