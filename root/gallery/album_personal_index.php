@@ -84,23 +84,23 @@ switch( $mode )
 		$order_by = "username $sort_order LIMIT $start, " . $config['topics_per_page'];
 	break;
 
-	case 'pics':
-		$order_by = "pics $sort_order LIMIT $start, " . $config['topics_per_page'];
+	case 'images':
+		$order_by = "images $sort_order LIMIT $start, " . $config['topics_per_page'];
 	break;
 
-	case 'last_pic':
-		$order_by = "last_pic $sort_order LIMIT $start, " . $config['topics_per_page'];
+	case 'last_image':
+		$order_by = "image_time $sort_order LIMIT $start, " . $config['topics_per_page'];
 	break;
 
 	default:
 		$order_by = "user_regdate $sort_order LIMIT $start, " . $config['topics_per_page'];
 }
 
-$sql = 'SELECT u.username, u.user_id, u.user_regdate, MAX(p.image_id) as image_id, p.image_name, p.image_user_id, COUNT(p.image_id) AS pics, MAX(p.image_time) as image_time
-	FROM ' . USERS_TABLE . ' AS u, ' . GALLERY_IMAGES_TABLE . ' as p
+$sql = 'SELECT u.username, u.user_id, u.user_regdate, MAX(i.image_id) as image_id, i.image_name, i.image_user_id, COUNT(i.image_id) AS images, MAX(i.image_time) as image_time
+	FROM ' . USERS_TABLE . ' AS u, ' . GALLERY_IMAGES_TABLE . ' as i
 	WHERE u.user_id <> ' . ANONYMOUS . '
-		AND u.user_id = p.image_user_id
-		AND p.image_album_id = ' . PERSONAL_GALLERY . '
+		AND u.user_id = i.image_user_id
+		AND i.image_album_id = ' . PERSONAL_GALLERY . '
 	GROUP BY user_id
 	ORDER BY ' . $order_by;
 
