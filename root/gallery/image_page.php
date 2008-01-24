@@ -226,7 +226,7 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=$image_id&comment_set=1") . '#comments">',
 		));
 
-		$message = $user->lang['COMMENT_STORED'] . "<br /><br />" . sprintf($user->lang['CLICK_VIEW_COMMENT'], "<a href=\"" . append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=$image_id&stored=1") . "#$comment_id\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("album.$phpEx") . "\">", "</a>");
+		$message = $user->lang['COMMENT_STORED'] . "<br /><br />" . sprintf($user->lang['CLICK_VIEW_COMMENT'], "<a href=\"" . append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=$image_id&stored=1") . "#$comment_id\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}gallery/index.$phpEx") . "\">", "</a>");
 		trigger_error($message, E_USER_WARNING);
 	}
 
