@@ -324,7 +324,7 @@ function album_user_access($album_id, $passed_auth = 0, $view_check, $upload_che
 	{
 		for ($i = 0; $i < count($album_user_access); $i++)
 		{
-			if( $thiscat['album_' . $album_user_access_keys[$i] . '_level'] <> ALBUM_ADMIN )
+			if(isset($thiscat['album_' . $album_user_access_keys[$i] . '_level']) && ($thiscat['album_' . $album_user_access_keys[$i] . '_level'] <> ALBUM_ADMIN))
 			{
 				$album_user_access[$album_user_access_keys[$i]] = 1;
 			}
