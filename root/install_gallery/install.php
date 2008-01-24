@@ -15,6 +15,7 @@ $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.'.$phpEx);
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 include($phpbb_root_path . 'includes/acp/acp_modules.' . $phpEx);
+include($phpbb_root_path . 'includes/acp/acp_bbcodes.' . $phpEx);
 include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
 // Start session management
@@ -285,6 +286,51 @@ switch ($mode)
 				$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . "SET config_value = 0 WHERE config_name = 'gd_version'";
 				$result = $db->sql_query($sql);
 				$album_config['gd_version'] = 0;
+			}
+			//add the bbcode
+			$sql = 'SELECT * FROM ' . BBCODES_TABLE . " WHERE bbcode_tag = 'album'";
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+
+			if (!$row)
+			{
+				$album_bbcode = 'album';
+				$sql_ary = array(
+					'bbcode_tag'				=> $album_bbcode,
+					'bbcode_match'				=> '[' . $album_bbcode . ']{NUMBER}[/' . $album_bbcode . ']',
+					'bbcode_tpl'				=> '<a href="gallery/image_page.php?id={NUMBER}"><img src="gallery/thumbnail.php?pic_id={NUMBER}" /></a>',
+					'display_on_posting'		=> true,
+					'bbcode_helpline'			=> '',
+					'first_pass_match'			=> '!\[' . $album_bbcode . '\]([0-9]+)\[/' . $album_bbcode . '\]!i',
+					'first_pass_replace'		=> '[' . $album_bbcode . ':$uid]${1}[/' . $album_bbcode . ':$uid]',
+					'second_pass_match'			=> '!\[' . $album_bbcode . ':$uid\]([0-9]+)\[/' . $album_bbcode . ':$uid\]!s',
+					'second_pass_replace'		=> '<a href="gallery/image_page.php?id=${1}"><img src="gallery/thumbnail.php?pic_id=${1}" /></a>',
+				);
+
+				$sql = 'SELECT MAX(bbcode_id) as max_bbcode_id
+					FROM ' . BBCODES_TABLE;
+				$result = $db->sql_query($sql);
+				$row = $db->sql_fetchrow($result);
+				$db->sql_freeresult($result);
+
+				if ($row)
+				{
+					$bbcode_id = $row['max_bbcode_id'] + 1;
+
+					// Make sure it is greater than the core bbcode ids...
+					if ($bbcode_id <= NUM_CORE_BBCODES)
+					{
+						$bbcode_id = NUM_CORE_BBCODES + 1;
+					}
+				}
+				else
+				{
+					$bbcode_id = NUM_CORE_BBCODES + 1;
+				}
+				$sql_ary['bbcode_id'] = (int) $bbcode_id;
+
+				$db->sql_query('INSERT INTO ' . BBCODES_TABLE . $db->sql_build_array('INSERT', $sql_ary));
 			}
 			// clear cache and log what we did
 			$cache->purge();
@@ -601,6 +647,51 @@ switch ($mode)
 				$result = $db->sql_query($sql);
 				$album_config['gd_version'] = 0;
 			}
+			//add the bbcode
+			$sql = 'SELECT * FROM ' . BBCODES_TABLE . " WHERE bbcode_tag = 'album'";
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+
+			if (!$row)
+			{
+				$album_bbcode = 'album';
+				$sql_ary = array(
+					'bbcode_tag'				=> $album_bbcode,
+					'bbcode_match'				=> '[' . $album_bbcode . ']{NUMBER}[/' . $album_bbcode . ']',
+					'bbcode_tpl'				=> '<a href="gallery/image_page.php?id={NUMBER}"><img src="gallery/thumbnail.php?pic_id={NUMBER}" /></a>',
+					'display_on_posting'		=> true,
+					'bbcode_helpline'			=> '',
+					'first_pass_match'			=> '!\[' . $album_bbcode . '\]([0-9]+)\[/' . $album_bbcode . '\]!i',
+					'first_pass_replace'		=> '[' . $album_bbcode . ':$uid]${1}[/' . $album_bbcode . ':$uid]',
+					'second_pass_match'			=> '!\[' . $album_bbcode . ':$uid\]([0-9]+)\[/' . $album_bbcode . ':$uid\]!s',
+					'second_pass_replace'		=> '<a href="gallery/image_page.php?id=${1}"><img src="gallery/thumbnail.php?pic_id=${1}" /></a>',
+				);
+
+				$sql = 'SELECT MAX(bbcode_id) as max_bbcode_id
+					FROM ' . BBCODES_TABLE;
+				$result = $db->sql_query($sql);
+				$row = $db->sql_fetchrow($result);
+				$db->sql_freeresult($result);
+
+				if ($row)
+				{
+					$bbcode_id = $row['max_bbcode_id'] + 1;
+
+					// Make sure it is greater than the core bbcode ids...
+					if ($bbcode_id <= NUM_CORE_BBCODES)
+					{
+						$bbcode_id = NUM_CORE_BBCODES + 1;
+					}
+				}
+				else
+				{
+					$bbcode_id = NUM_CORE_BBCODES + 1;
+				}
+				$sql_ary['bbcode_id'] = (int) $bbcode_id;
+
+				$db->sql_query('INSERT INTO ' . BBCODES_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+			}
 
 			// clear cache and log what we did
 			$cache->purge();
@@ -643,6 +734,51 @@ switch ($mode)
 				$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . "SET config_value = 0 WHERE config_name = 'gd_version'";
 				$result = $db->sql_query($sql);
 				$album_config['gd_version'] = 0;
+			}
+			//add the bbcode
+			$sql = 'SELECT * FROM ' . BBCODES_TABLE . " WHERE bbcode_tag = 'album'";
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+
+			if (!$row)
+			{
+				$album_bbcode = 'album';
+				$sql_ary = array(
+					'bbcode_tag'				=> $album_bbcode,
+					'bbcode_match'				=> '[' . $album_bbcode . ']{NUMBER}[/' . $album_bbcode . ']',
+					'bbcode_tpl'				=> '<a href="gallery/image_page.php?id={NUMBER}"><img src="gallery/thumbnail.php?pic_id={NUMBER}" /></a>',
+					'display_on_posting'		=> true,
+					'bbcode_helpline'			=> '',
+					'first_pass_match'			=> '!\[' . $album_bbcode . '\]([0-9]+)\[/' . $album_bbcode . '\]!i',
+					'first_pass_replace'		=> '[' . $album_bbcode . ':$uid]${1}[/' . $album_bbcode . ':$uid]',
+					'second_pass_match'			=> '!\[' . $album_bbcode . ':$uid\]([0-9]+)\[/' . $album_bbcode . ':$uid\]!s',
+					'second_pass_replace'		=> '<a href="gallery/image_page.php?id=${1}"><img src="gallery/thumbnail.php?pic_id=${1}" /></a>',
+				);
+
+				$sql = 'SELECT MAX(bbcode_id) as max_bbcode_id
+					FROM ' . BBCODES_TABLE;
+				$result = $db->sql_query($sql);
+				$row = $db->sql_fetchrow($result);
+				$db->sql_freeresult($result);
+
+				if ($row)
+				{
+					$bbcode_id = $row['max_bbcode_id'] + 1;
+
+					// Make sure it is greater than the core bbcode ids...
+					if ($bbcode_id <= NUM_CORE_BBCODES)
+					{
+						$bbcode_id = NUM_CORE_BBCODES + 1;
+					}
+				}
+				else
+				{
+					$bbcode_id = NUM_CORE_BBCODES + 1;
+				}
+				$sql_ary['bbcode_id'] = (int) $bbcode_id;
+
+				$db->sql_query('INSERT INTO ' . BBCODES_TABLE . $db->sql_build_array('INSERT', $sql_ary));
 			}
 
 			// clear cache and log what we did
@@ -1026,6 +1162,51 @@ switch ($mode)
 				$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . "SET config_value = 0 WHERE config_name = 'gd_version'";
 				$result = $db->sql_query($sql);
 				$album_config['gd_version'] = 0;
+			}
+			//add the bbcode
+			$sql = 'SELECT * FROM ' . BBCODES_TABLE . " WHERE bbcode_tag = 'album'";
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+
+			if (!$row)
+			{
+				$album_bbcode = 'album';
+				$sql_ary = array(
+					'bbcode_tag'				=> $album_bbcode,
+					'bbcode_match'				=> '[' . $album_bbcode . ']{NUMBER}[/' . $album_bbcode . ']',
+					'bbcode_tpl'				=> '<a href="gallery/image_page.php?id={NUMBER}"><img src="gallery/thumbnail.php?pic_id={NUMBER}" /></a>',
+					'display_on_posting'		=> true,
+					'bbcode_helpline'			=> '',
+					'first_pass_match'			=> '!\[' . $album_bbcode . '\]([0-9]+)\[/' . $album_bbcode . '\]!i',
+					'first_pass_replace'		=> '[' . $album_bbcode . ':$uid]${1}[/' . $album_bbcode . ':$uid]',
+					'second_pass_match'			=> '!\[' . $album_bbcode . ':$uid\]([0-9]+)\[/' . $album_bbcode . ':$uid\]!s',
+					'second_pass_replace'		=> '<a href="gallery/image_page.php?id=${1}"><img src="gallery/thumbnail.php?pic_id=${1}" /></a>',
+				);
+
+				$sql = 'SELECT MAX(bbcode_id) as max_bbcode_id
+					FROM ' . BBCODES_TABLE;
+				$result = $db->sql_query($sql);
+				$row = $db->sql_fetchrow($result);
+				$db->sql_freeresult($result);
+
+				if ($row)
+				{
+					$bbcode_id = $row['max_bbcode_id'] + 1;
+
+					// Make sure it is greater than the core bbcode ids...
+					if ($bbcode_id <= NUM_CORE_BBCODES)
+					{
+						$bbcode_id = NUM_CORE_BBCODES + 1;
+					}
+				}
+				else
+				{
+					$bbcode_id = NUM_CORE_BBCODES + 1;
+				}
+				$sql_ary['bbcode_id'] = (int) $bbcode_id;
+
+				$db->sql_query('INSERT INTO ' . BBCODES_TABLE . $db->sql_build_array('INSERT', $sql_ary));
 			}
 
 			// clear cache and log what we did

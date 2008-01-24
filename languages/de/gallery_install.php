@@ -1,18 +1,13 @@
 <?php
-/**
-*
-* install [English]
-*
-* @package language
-* @version $Id$
-* @copyright (c) 2005 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-*/
 
 /**
-* DO NOT CHANGE
-*/
+*
+* @package phpBB3 - gallery
+* @version $Id$
+* @copyright (c) 2007 nickvergessen
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+**/
 if (!defined('IN_PHPBB'))
 {
 	exit;

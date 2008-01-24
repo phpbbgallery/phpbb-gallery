@@ -1,39 +1,21 @@
 <?php
+
 /**
 *
-**************************************************************************
-*     German Language v 0.1.2 - by Cerkes - http://Tuerkei-Digital.de
- *                              -------------------
- *     begin                : Sunday, February 02, 2003
- *     copyright            : (C) 2003 Smartor
- *     email                : smartor_xp@hotmail.com
- *
- *     $Id$
- *
- ****************************************************************************/
-
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
- ***************************************************************************/
-
-/**
-* DO NOT CHANGE
-*/
+* @package phpBB3 - gallery
+* @version $Id$
+* @copyright (c) 2007 nickvergessen
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+**/
 if (!defined('IN_PHPBB')) 
 { 
 	exit; 
-} 
-
+}
 if (empty($lang) || !is_array($lang))
 {
-    $lang = array();
+	$lang = array();
 }
-
 
 // DEVELOPERS PLEASE NOTE
 //
@@ -114,6 +96,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_INSTALL_NOTE3'		=> 'Du musst Gründer Rechte besitzen um dieses Script ausführen zu können.',
 	'GALLERY_INSTALL_NOTE4'		=> '<span style="color:green; font-weight: bold; font-size: 1.5em;">Gallery-Datenbank erfolgreich aktualisiert.</span>',
 
+	'IMAGE_BBCODE'							=> 'BB-Code',
 	'IMAGE_DESC'							=> 'Bildbeschreibung',
 	'IMAGE_LOCKED'							=> 'Entschuldigung, aber dieses Bild wurde gesperrt. Du kannst für dieses Bild keine Kommentare mehr abgeben.',
 	'IMAGE_NOT_EXIST'						=> 'Dieses Bild existiert nicht',

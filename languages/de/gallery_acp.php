@@ -1,23 +1,17 @@
 <?php
-/** 
-*
-* viewforum [* German language v 0.1.2 - by Cerkes - http://Tuerkei-Digital.de]
-*
-* @package language
-* @version $Id$
-* @copyright (c) 2005 phpBB Group 
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License 
-*
-*/
 
 /**
-* DO NOT CHANGE
-*/
+*
+* @package phpBB3 - gallery
+* @version $Id$
+* @copyright (c) 2007 nickvergessen
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+**/
 if (!defined('IN_PHPBB')) 
 { 
 	exit; 
-} 
-
+}
 if (empty($lang) || !is_array($lang))
 {
 	$lang = array();
