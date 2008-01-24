@@ -11,11 +11,10 @@
 
 define('IN_PHPBB', true);
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
-$album_root_path = $phpbb_root_path . 'gallery/';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
-include($album_root_path . 'includes/common.'.$phpEx);
+include($phpbb_root_path . 'gallery/includes/common.'.$phpEx);
 
 // Start session management
 $user->session_begin();
@@ -25,7 +24,7 @@ $user->setup('mods/gallery');
 /**
 * Check the request
 */
-$pic_id = request_var('pic_id', 0);
+$pic_id = request_var('image_id', request_var('pic_id', 0));
 if (!$pic_id)
 {
 	die($user->lang['NO_IMAGE_SPECIFIED']);
