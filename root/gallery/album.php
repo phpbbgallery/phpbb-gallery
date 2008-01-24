@@ -273,8 +273,8 @@ if ($album_id <> 0)
 /**
 * Build Jumpbox
 */
-$album_jumpbox .= $user->lang['JUMP_TO'] . ': ';
-$album_jumpbox  = '<form id="jumpbox" action="' . append_sid($phpbb_root_path . "gallery/album.$phpEx") . '" method="get">';
+$album_jumpbox = $user->lang['JUMP_TO'] . ': ';
+$album_jumpbox .= '<form id="jumpbox" action="' . append_sid($phpbb_root_path . "gallery/album.$phpEx") . '" method="get">';
 $album_jumpbox .= '<p><select name="id" onchange="forms[\'jumpbox\'].submit()">';
 $album_jumpbox .= make_album_jumpbox($album_id);
 $album_jumpbox .= '</select>';
