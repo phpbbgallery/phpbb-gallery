@@ -1,6 +1,6 @@
 <!-- INCLUDE overall_header.html -->
 
-<form name="modcp" action="{S_ALBUM_ACTION}" method="post">
+<form id="modcp" action="{S_ALBUM_ACTION}" method="post">
 
 <h2><a href="{U_VIEW_CAT}">{L_MODCP} - {CAT_TITLE}</a></h2>
 
@@ -69,7 +69,7 @@
 
 <table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline">
   <tr>
-	<td class="catbottom" colspan="6" align="right" height="28">
+	<td class="catbottom" colspan="6" align="right">
 		<input type="hidden" name="mode" value="modcp" />
 		<input type="submit" class="liteoption" name="move" value="{L_MOVE}" />
 		<input type="submit" class="liteoption" name="lock" value="{L_LOCK}" />
@@ -98,6 +98,7 @@
 			<option {SORT_ASC} value='ASC'>{L_SORT_ASCENDING}</option>
 			<option {SORT_DESC} value='DESC'>{L_SORT_DESCENDING}</option>
 		</select> <input type="submit" name="sort" value="{L_SORT}" class="button2" />
+		{S_FORM_TOKEN}
 	</label>
 </fieldset>
 
@@ -108,7 +109,6 @@
 		{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
 	</div>
 </div>
-{S_FORM_TOKEN}
 </form>
 
 <br />

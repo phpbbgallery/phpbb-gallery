@@ -116,7 +116,7 @@ while( $row = $db->sql_fetchrow($result) )
 
 for ($i = 0; $i < count($memberrow); $i++) 
 { 
-	$pic_number = $memberrow[$i]['pics'];
+	$pic_number = $memberrow[$i]['images'];
 	$pic_id = $memberrow[$i]['image_id'];
 	$sql = 'SELECT *
 		FROM ' . GALLERY_IMAGES_TABLE . '

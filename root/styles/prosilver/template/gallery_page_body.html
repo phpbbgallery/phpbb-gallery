@@ -42,7 +42,7 @@ function checkCommentForm() {
 <div class="post bg2">
 	<div class="inner">
 		<span class="corners-top"><span></span></span>
-		<div style="text-align: center; padding: 20px;"><img src="{U_IMAGE}" border="0" vspace="10" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" /></div>
+		<div style="text-align: center; padding: 20px;"><img src="{U_IMAGE}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" /></div>
 		<span class="corners-bottom"><span></span></span>
 	</div>
 </div>
@@ -82,7 +82,7 @@ function checkCommentForm() {
 <a name="rating"></a>
 <h3>{L_RATING}</h3>
 <br />
-<form name="rateform" action="{S_ALBUM_ACTION}" method="post" onsubmit="return checkRateForm();">
+<form id="rateform" action="{S_ALBUM_ACTION}" method="post" onsubmit="return checkRateForm();">
 <div class="post bg2">
 	<div class="inner">
 		<span class="corners-top"><span></span></span>
@@ -94,14 +94,14 @@ function checkCommentForm() {
 			<!-- IF YOUR_RATING -->
 			<dl>
 				<dt><label>{L_YOUR_RATING}:</label></dt>
-				<dd>{S_RATEBOX}{S_FORM_TOKEN}</dd>
+				<dd>{S_RATEBOX}</dd>
 			</dl>
 			<!-- ENDIF -->
 		</fieldset>
+		{S_FORM_TOKEN}
 		<span class="corners-bottom"><span></span></span>
 	</div>
 </div>
-{S_FORM_TOKEN}
 </form>
 <!-- ENDIF -->
 
@@ -110,7 +110,7 @@ function checkCommentForm() {
 	<a name="rating"></a>
 	<h3>{L_POST_COMMENT}</h3>
 	<br />
-	<form name="commentform" action="{S_ALBUM_ACTION}" method="post" onsubmit="return checkCommentForm;">
+	<form id="commentform" action="{S_ALBUM_ACTION}" method="post" onsubmit="return checkCommentForm;">
 	<div class="post bg2">
 		<div class="inner">
 			<span class="corners-top"><span></span></span>
@@ -118,7 +118,7 @@ function checkCommentForm() {
 				<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT and S_CAN_COMMENT -->
 				<dl>
 					<dt><label>{L_USERNAME}:</label></dt>
-					<dd><input class="inputbox autowidth" type="text" name="comment_username" size="60" maxlength="32" /></dd>
+					<dd><input class="inputbox autowidth" type="text" name="comment_username" maxlength="32" /></dd>
 				</dl>
 				<!-- ENDIF -->
 				<dl>
@@ -126,10 +126,10 @@ function checkCommentForm() {
 					<dd>{S_COMMENTBOX}</dd>
 				</dl>
 			</fieldset>
+			{S_FORM_TOKEN}
 			<span class="corners-bottom"><span></span></span>
 		</div>
 	</div>
-	{S_FORM_TOKEN}
 	</form>
 	<!-- ENDIF -->
 
@@ -150,9 +150,6 @@ function checkCommentForm() {
 	</div>
 	<!-- ELSE -->
 	<div class="topic-actions">
-		<!--div class="buttons">
-			<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span>{L_UPLOAD_PIC}</span></a></div>
-		</div-->
 		<div class="pagination">
 			{IMAGE_COMMENTS} {L_COMMENTS} &bull; {PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
 		</div>
@@ -163,10 +160,12 @@ function checkCommentForm() {
 		<div class="inner">
 			<span class="corners-top"><span></span></span>
 			<div class="postbody">
-				<ul class="profile-icons">
-					<!-- IF commentrow.EDIT --><li class="edit-icon"><a href="{commentrow.EDIT}" title="{L_EDIT_POST}"><span>{L_EDIT_POST}</span></a></li><!-- ENDIF -->
-					<!-- IF commentrow.DELETE --><li class="delete-icon"><a href="{commentrow.DELETE}" title="{L_DELETE_POST}"><span>{L_DELETE_POST}</span></a></li><!-- ENDIF -->
-				</ul>
+				<!-- IF commentrow.EDIT or  commentrow.DELETE -->
+					<ul class="profile-icons">
+						<!-- IF commentrow.EDIT --><li class="edit-icon"><a href="{commentrow.EDIT}" title="{L_EDIT_POST}"><span>{L_EDIT_POST}</span></a></li><!-- ENDIF -->
+						<!-- IF commentrow.DELETE --><li class="delete-icon"><a href="{commentrow.DELETE}" title="{L_DELETE_POST}"><span>{L_DELETE_POST}</span></a></li><!-- ENDIF -->
+					</ul>
+				<!-- ENDIF -->
 				<p class="author"><a href="#"><img src="{T_IMAGESET_PATH}/icon_post_target.gif" width="11" height="9" alt="{L_COMMENT}" title="{L_COMMENT}" /></a>{L_POST_BY_AUTHOR} <strong>{commentrow.POSTER}</strong> {L_POSTED_ON_DATE} {commentrow.TIME} </p>
 				<div class="content">{commentrow.TEXT}</div>
 				{commentrow.EDIT_INFO}

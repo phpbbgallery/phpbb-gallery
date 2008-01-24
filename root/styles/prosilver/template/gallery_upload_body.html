@@ -30,7 +30,7 @@ function checkAlbumForm() {
 
 <h2><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>
 
-<form name="upload" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data" onSubmit="return checkAlbumForm()">
+<form id="upload" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data" onsubmit="return checkAlbumForm()">
 
 <div class="panel" id="postingbox">
 	<div class="inner">
@@ -40,50 +40,50 @@ function checkAlbumForm() {
 			<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT -->
 			<dl>
 				<dt><label for="username">{L_USERNAME}:</label></dt>
-				<dd><input class="inputbox autowidth" type="text" name="pic_username" size="60" maxlength="32" /></dd>
+				<dd id="username"><input class="inputbox autowidth" type="text" name="pic_username" size="60" maxlength="32" /></dd>
 			</dl>
 			<!-- ENDIF -->
 			<dl>
 				<dt><label for="title">{L_IMAGE_TITLE}:</label></dt>
-				<dd><input class="inputbox autowidth" type="text" name="pic_title" size="60" /></dd>
+				<dd id="title"><input class="inputbox autowidth" type="text" name="pic_title" size="60" /></dd>
 			</dl>
 			<dl>
 				<dt><label for="file">{L_FILE}:</label></dt>
-				<dd><input class="inputbox autowidth" type="file" name="pic_file" size="52" /></dd>
+				<dd id="file"><input class="inputbox autowidth" type="file" name="pic_file" size="52" /></dd>
 			</dl>
 			<!-- BEGIN switch_manual_thumbnail -->
 			<dl>
 				<dt><label for="file">{L_UPLOAD_THUMBNAIL}:</label>{L_UPLOAD_THUMBNAIL_EXPLAIN}<br />{L_THUMBNAIL_SIZE}: <strong>{S_THUMBNAIL_SIZE}</strong></dt>
-				<dd><input class="inputbox autowidth" type="file" name="pic_thumbnail" size="52" /></dd>
+				<dd id="file"><input class="inputbox autowidth" type="file" name="pic_thumbnail" size="52" /></dd>
 			</dl>
 			<!-- END switch_manual_thumbnail -->
 			<dl>
 				<dt><label for="description">{L_IMAGE_DESC}:</label><br />{L_PLAIN_TEXT_ONLY}<br />{L_MAX_LENGTH}: <b>{S_PIC_DESC_MAX_LENGTH}</b></dt>
-				<dd><textarea class="inputbox" cols="60" rows="4" name="pic_desc" size="60"></textarea></dd>
+				<dd id="description"><textarea class="inputbox" cols="60" rows="4" name="pic_desc"></textarea></dd>
 			</dl>
 			<dl>
 				<dt><label for="max_filesize">{L_MAX_FILE_SIZE}:</label></dt>
-				<dd>{S_MAX_FILESIZE}</dd>
+				<dd id="max_filesize">{S_MAX_FILESIZE}</dd>
 			</dl>
 			<dl>
 				<dt><label for="max_width">{L_MAX_WIDTH}:</label></dt>
-				<dd>{S_MAX_WIDTH}</dd>
+				<dd id="max_width">{S_MAX_WIDTH}</dd>
 			</dl>
 			<dl>
 				<dt><label for="max_height">{L_MAX_HEIGHT}:</label></dt>
-				<dd>{S_MAX_HEIGHT}</dd>
+				<dd id="max_height">{S_MAX_HEIGHT}</dd>
 			</dl>
 			<dl>
 				<dt><label for="allowed_jpg">{L_JPG_ALLOWED}:</label></dt>
-				<dd>{S_JPG}</dd>
+				<dd id="allowed_jpg">{S_JPG}</dd>
 			</dl>
 			<dl>
 				<dt><label for="allowed_png">{L_PNG_ALLOWED}:</label></dt>
-				<dd>{S_PNG}</dd>
+				<dd id="allowed_png">{S_PNG}</dd>
 			</dl>
 			<dl>
 				<dt><label for="allowed_gif">{L_GIF_ALLOWED}:</label></dt>
-				<dd>{S_GIF}</dd>
+				<dd id="allowed_gif">{S_GIF}</dd>
 			</dl>
 		</fieldset>
 		<span class="corners-bottom"><span></span></span>
@@ -97,10 +97,10 @@ function checkAlbumForm() {
 			<input type="reset" accesskey="r" tabindex="8" value="{L_RESET}" class="button2" />&nbsp;
 			<input type="submit" accesskey="s" tabindex="6" name="submit" value="{L_SUBMIT}" class="button1" />&nbsp;
 		</fieldset>
+		{S_FORM_TOKEN}
 		<span class="corners-bottom"><span></span></span>
 	</div>
 </div>
-{S_FORM_TOKEN}
 </form>
 
 <!-- Please keep this little notice visible -->

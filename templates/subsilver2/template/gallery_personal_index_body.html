@@ -19,8 +19,8 @@
 			<!-- IF memberrow.ALBUM_IMAGE -->
 			<span class="forum-image">{memberrow.ALBUM_IMAGE}</span>
 			<!-- ENDIF -->
-			<strong><a href="{memberrow.U_VIEWGALLERY}" class="forumtitle">{memberrow.USERNAME}</a></strong><br />
-			<!-- IF memberrow.ALBUM_DESC --><span class="gensmall">{memberrow.ALBUM_DESC}</span><!-- ELSE -->{L_JOINED} {memberrow.JOINED}<!-- ENDIF -->
+			<strong><a href="{memberrow.U_VIEWGALLERY}" class="forumtitle">{memberrow.USERNAME}</a></strong></span><br />
+			<span class="gensmall"><!-- IF memberrow.ALBUM_DESC -->{memberrow.ALBUM_DESC}<!-- ELSE -->{L_JOINED} {memberrow.JOINED}<!-- ENDIF --></span>
 		</td>
 		<td class="row1" style="text-align: center;"><span class="gen">{memberrow.IMAGES}</span></td>
 		<td class="row1">
@@ -33,12 +33,14 @@
 		</td>
 	</tr>
 	<!-- END memberrow -->
-	<td class="cat" colspan="4" align="center">
-	<form method="post" action="{S_MODE_ACTION}">
-		<span class="gensmall">{L_SELECT_SORT_METHOD}:&nbsp;{S_MODE_SELECT}&nbsp;&nbsp;{L_ORDER}:&nbsp;{S_ORDER_SELECT}&nbsp;&nbsp;
-			<input type="submit" name="sort" value="{L_SORT}" class="button2" />
-		</span></form>
-	</td>
+	<tr>
+		<td class="cat" colspan="4" align="center">
+		<form method="post" action="{S_MODE_ACTION}">
+			<span class="gensmall">{L_SELECT_SORT_METHOD}:&nbsp;{S_MODE_SELECT}&nbsp;&nbsp;{L_ORDER}:&nbsp;{S_ORDER_SELECT}&nbsp;&nbsp;
+				<input type="submit" name="sort" value="{L_SORT}" class="button2" />
+			</span></form>
+		</td>
+	</tr>
 </table>
 <br />
 <!-- ENDIF -->

@@ -411,7 +411,7 @@ if ($album_config['comment'])
 		if (!$commentbox)
 		{
 			$commentbox  = '';
-			$commentbox .= '<textarea name="comment" class="inputbox" cols="60" rows="4" size="60"></textarea><br /><br /><input type="submit" name="submit" value="' . $user->lang['SUBMIT'] . '" class="button1" />';
+			$commentbox .= '<textarea name="comment" class="inputbox" cols="60" rows="4"></textarea><br /><br /><input type="submit" name="submit" value="' . $user->lang['SUBMIT'] . '" class="button1" />';
 		}
 		$template->assign_vars(array(
 			'S_COMMENTBOX' 			=> $commentbox,

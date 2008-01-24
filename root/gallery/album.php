@@ -234,7 +234,7 @@ if ($album_id <> 0)
 					'DELETE'	=> ( ( $auth_data['delete'] && ($picrow[$j]['image_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($album_data['album_delete_level'] <> ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="' . append_sid($phpbb_root_path . "gallery/image_delete.$phpEx?id=" . $picrow[$j]['image_id']) . '">' . $user->lang['DELETE_IMAGE'] . '</a>' : '',
 					'MOVE'		=> ($auth_data['moderator']) ? '<a href="' . append_sid($phpbb_root_path . "gallery/mcp.$phpEx?mode=move&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['MOVE'] . '</a>' : '',
 					'LOCK'		=> ($auth_data['moderator']) ? '<a href="' . append_sid($phpbb_root_path . "gallery/mcp.$phpEx?mode=" . (($picrow[$j]['image_lock'] == 0) ? 'lock' : 'unlock') . "&amp;image_id=" . $picrow[$j]['image_id']) . '">' . (($picrow[$j]['image_lock'] == 0) ? $user->lang['LOCK'] : $user->lang['UNLOCK']) . '</a>' : '',
-					'IP'		=> ($user->data['user_type'] == USER_FOUNDER) ? $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $picrow[$j]['image_user_ip'] . '" target="_blank">' . $picrow[$j]['image_user_ip'] . '</a><br />' : ''
+					'IP'		=> ($user->data['user_type'] == USER_FOUNDER) ? $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $picrow[$j]['image_user_ip'] . '">' . $picrow[$j]['image_user_ip'] . '</a><br />' : ''
 				));
 			}
 		}
@@ -273,12 +273,12 @@ if ($album_id <> 0)
 /**
 * Build Jumpbox
 */
-$album_jumpbox  = '<form name="jumpbox" action="' . append_sid($phpbb_root_path . "gallery/album.$phpEx") . '" method="get">';
-$album_jumpbox .= '<label>' . $user->lang['JUMP_TO'] . ':</label><select name="id" onChange="forms[\'jumpbox\'].submit()">';
+$album_jumpbox .= $user->lang['JUMP_TO'] . ': ';
+$album_jumpbox  = '<form id="jumpbox" action="' . append_sid($phpbb_root_path . "gallery/album.$phpEx") . '" method="get">';
+$album_jumpbox .= '<p><select name="id" onchange="forms[\'jumpbox\'].submit()">';
 $album_jumpbox .= make_album_jumpbox($album_id);
 $album_jumpbox .= '</select>';
-$album_jumpbox .= '&nbsp;<input type="submit" class="button2" value="' . $user->lang['GO'] . '" />';
-$album_jumpbox .= '<input type="hidden" name="sid" value="' . $user->data['session_id'] . '" />';
+$album_jumpbox .= '<input type="hidden" name="sid" value="' . $user->data['session_id'] . '" /></p>';
 $album_jumpbox .= '</form>';
 
 $template->assign_vars(array(

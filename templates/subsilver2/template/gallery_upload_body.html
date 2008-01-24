@@ -29,7 +29,7 @@ function checkAlbumForm() {
 
 <h2><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>
 
-<form name="upload" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data" onSubmit="return checkAlbumForm()">
+<form name="upload" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data" onsubmit="return checkAlbumForm()">
 	<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
 		<tr>
 			<th colspan="2">{L_UPLOAD_IMAGE}</th>
@@ -59,7 +59,7 @@ function checkAlbumForm() {
 			<td class="row1" height="28"><span class="gen">{L_IMAGE_DESC}:<br />
 				{L_PLAIN_TEXT_ONLY}<br />
 				{L_MAX_LENGTH}: <strong>{S_PIC_DESC_MAX_LENGTH}</strong></span></td>
-			<td class="row2"><textarea class="inputbox" cols="60" rows="4" name="pic_desc" size="60"></textarea></td>
+			<td class="row2"><textarea class="inputbox" cols="60" rows="4" name="pic_desc"></textarea></td>
 		</tr>
 		<tr>
 			<td class="row1" height="28"><span class="gen">{L_MAX_FILE_SIZE}:</span></td>

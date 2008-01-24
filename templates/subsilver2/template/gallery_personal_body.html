@@ -25,7 +25,7 @@
 		<td align="center" width="{S_COL_WIDTH}" class="row1"><span class="genmed"><a href="{picrow.piccol.U_PIC}" rel="lightbox" {TARGET_BLANK}><img src="{picrow.piccol.THUMBNAIL}" border="0" alt="{picrow.piccol.DESC}" title="{picrow.piccol.DESC}" vspace="10" /></a></span></td>
 		<!-- END piccol -->
 		<!-- BEGIN nopiccol -->
-		<td align="center" width="{S_COL_WIDTH}" class="row1">&nbsp;</span></td>
+		<td align="center" width="{S_COL_WIDTH}" class="row1">&nbsp;</td>
 		<!-- END nopiccol -->
 	</tr>
 	<tr>
@@ -46,7 +46,7 @@
 	<tr>
 		<td class="cat" colspan="{S_COLS}" align="center" height="28">
 			<form action="{U_PERSONAL_GALLERY}" method="post">
-				<span class="gensmall">{L_SELECT_SORT_METHOD}:
+				<span class="gensmall">{L_SELECT_SORT_METHOD}:</span>
 				<select name="sort_method">
 					<option {SORT_TIME} value='image_time'>{L_TIME}</option>
 					<option {SORT_IMAGE_TITLE} value='image_name'>{L_IMAGE_TITLE}</option>
@@ -55,8 +55,8 @@
 				{SORT_RATING_OPTION}
 				{SORT_COMMENTS_OPTION}
 				{SORT_NEW_COMMENT_OPTION}
-				 </select>
-				{L_ORDER}:
+				</select>
+				<span class="gensmall">{L_ORDER}:</span>
 				<select name="sort_order">
 					<option {SORT_ASC} value='ASC'>{L_ASCENDING}</option>
 					<option {SORT_DESC} value='DESC'>{L_DESCENDING}</option>

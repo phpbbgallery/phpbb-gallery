@@ -1,28 +1,19 @@
 <!-- INCLUDE overall_header.html -->
 
 <form action="{S_ALBUM_ACTION}" method="post">
-<table width="100%" cellspacing="2" cellpadding="2" border="0">
-  <tr>
-	<td class="nav"><span class="nav"><a href="{U_INDEX}" class="nav">{L_INDEX}</a> -> <a class="nav" href="{U_ALBUM}">{L_ALBUM}</a></span></td>
-  </tr>
-</table>
-<table width="100%" cellpadding="4" cellspacing="1" border="0" class="forumline">
-	<tr>
-	  <th height="25" class="thHead">{L_MOVE}</th>
-	</tr>
-	<tr>
-	  <td class="bg1" align="center"><br /><span class="gen">{L_MOVE_TO_ALBUM}</span> &nbsp; {S_ALBUM_SELECT} &nbsp; <input class="mainoption" type="submit" name="move" value="{L_MOVE}" /><br />&nbsp;</td>
-	</tr>
-</table>
-<!-- BEGIN pic_id_array -->
-<input type="hidden" name="image_id[]" value="{pic_id_array.VALUE}" />
-<!-- END pic_id_array -->
-{S_FORM_TOKEN}
+<div class="panel" id="message">
+	<div class="inner"><span class="corners-top"><span></span></span>
+	<h2>{L_MOVE}</h2>
+	<p><span class="gen">{L_MOVE_TO_ALBUM}</span> &nbsp; {S_ALBUM_SELECT} &nbsp; <input class="mainoption" type="submit" name="move" value="{L_MOVE}" /></p>
+	<!-- IF SCRIPT_NAME == "search" and not S_BOARD_DISABLED and not S_NO_SEARCH --><p><a href="{U_SEARCH}" class="{S_CONTENT_FLOW_BEGIN}">{L_RETURN_TO_SEARCH_ADV}</a></p><!-- ENDIF -->
+	<span class="corners-bottom"><span></span></span></div>
+	{S_FORM_TOKEN}
+</div>
 </form>
 
 <br />
 
 <!-- Please keep this little notice visible -->
-<div class="copyright">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a> & <a href="http://mods.flying-bits.org/">nickvergessen</a></div>
+<div class="copyright">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a> &amp; <a href="http://mods.flying-bits.org/">nickvergessen</a></div>
 
 <!-- INCLUDE overall_footer.html -->
