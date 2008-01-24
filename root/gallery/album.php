@@ -33,7 +33,7 @@ include($phpbb_root_path . 'gallery/includes/common.'.$phpEx);
 // ------------------------------------
 if(!$album_id = request_var('album_id', request_var('id', 0)))
 {
-	trigger_error($user->lang['NO_ALBUM_SPECIFIED'], E_USER_WARNING);
+	trigger_error($user->lang['ALBUM_NOT_EXIST'], E_USER_WARNING);
 }
 
 if ($album_id == PERSONAL_GALLERY)
