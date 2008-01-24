@@ -172,7 +172,7 @@ $result = $db->sql_query($sql);
 // ------------------------------------
 $watermark_ok = false;
 
-if ($album_config['watermark_images'])
+if ($album_config['watermark_images'] && $gd_success)
 {
 	$marktype = substr($album_config['watermark_source'], strlen($album_config['watermark_source']) - 4, 4);
 	switch ( $marktype )
