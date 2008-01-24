@@ -15,6 +15,7 @@ class acp_gallery
 	function main($id, $mode)
 	{
 		global $user, $phpbb_root_path, $phpEx;
+		include($phpbb_root_path . 'gallery/includes/constants.' . $phpEx);
 		include($phpbb_root_path . 'gallery/includes/acp_functions.' . $phpEx);
 
 		$user->add_lang('mods/gallery_acp');

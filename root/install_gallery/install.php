@@ -352,6 +352,12 @@ switch ($mode)
 			}
 			unset($sql_query);
 
+			define('ALBUM_TABLE',					$table_prefix.'album');
+			define('ALBUM_CAT_TABLE',				$table_prefix.'album_cat');
+			define('ALBUM_CONFIG_TABLE',			$table_prefix.'album_config');
+			define('ALBUM_COMMENT_TABLE',			$table_prefix.'album_comment');
+			define('ALBUM_RATE_TABLE',				$table_prefix.'album_rate');
+
 			// first lets make the albums...
 			$left_id = 1;
 			$sql = 'SELECT *

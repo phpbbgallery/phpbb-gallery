@@ -200,7 +200,11 @@ For Features see the forum topic.]]></description>
     <open src="includes/constants.php">
       <edit>
         <find><![CDATA[// Additional tables]]></find>
-        <action type="after-add"><![CDATA[include($phpbb_root_path . 'gallery/includes/constants.' . $phpEx);]]></action>
+        <action type="after-add"><![CDATA[define('GALLERY_ALBUMS_TABLE',			$table_prefix . 'gallery_albums');
+define('GALLERY_COMMENTS_TABLE',		$table_prefix . 'gallery_comments');
+define('GALLERY_CONFIG_TABLE',			$table_prefix . 'gallery_config');
+define('GALLERY_IMAGES_TABLE',			$table_prefix . 'gallery_images');
+define('GALLERY_RATES_TABLE',			$table_prefix . 'gallery_rates');]]></action>
       </edit>
     </open>
     <open src="includes/functions.php">

@@ -22,6 +22,7 @@ if ($config['board_disable'] && !defined('IN_LOGIN') && !$auth->acl_gets('a_', '
 	$message = (!empty($config['board_disable_msg'])) ? $config['board_disable_msg'] : 'BOARD_DISABLE';
 	trigger_error($message);
 }
+include($phpbb_root_path . 'gallery/includes/constants.' . $phpEx);
 
 //
 // Get Album Config
