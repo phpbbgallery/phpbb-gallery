@@ -43,13 +43,15 @@ if ($user->data['is_bot'])
 // Get the username of this gallery's owner
 // ------------------------------------
 
-$sql = 'SELECT username
+$sql = 'SELECT username, user_colour, user_id
 		FROM ' . USERS_TABLE . '
 		WHERE user_id = ' . $user_id . '
 		LIMIT 1';
 $result = $db->sql_query($sql);
 $row = $db->sql_fetchrow($result);
 $username = $row['username'];
+$user_colour = $row['user_colour'];
+$user_id = $row['user_id'];
 
 if( empty($username) )
 {
@@ -248,7 +250,7 @@ if( $user_id == $user->data['user_id'] )
 
 $template->assign_vars(array(
 	'U_UPLOAD_PIC'					=> append_sid("upload.$phpEx?album_id=" . PERSONAL_GALLERY),
-	'PERSONAL_ALBUM_NOT_CREATED'	=> sprintf($user->lang['PERSONAL_ALBUM_NOT_CREATED'], $username),
+	'PERSONAL_ALBUM_NOT_CREATED'	=> sprintf($user->lang['PERSONAL_ALBUM_NOT_CREATED'], get_username_string('full', $user_id, $username, $user_colour)),
 	'TARGET_BLANK'					=> ($album_config['fullpic_popup']) ? 'target="_blank"' : '',
 
 	'S_COLS'						=> $album_config['cols_per_page'],
