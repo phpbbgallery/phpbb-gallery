@@ -54,6 +54,7 @@ $lang = array_merge($lang, array(
 	'ALBUM_VIEW_CAN'					=> 'You <strong>can</strong> view images in this album',
 	'ALBUM_VIEW_CANNOT'					=> 'You <strong>cannot</strong> view images in this album',
 
+	'ALBUM_IS_CATEGORY'				=> 'The album you cheated to, is a category-album.<br />You can\'t upload to categories.',
 	'ALREADY_RATED'					=> 'You have already rated this image',
 	'APPROVAL'						=> 'Approval',
 	'APPROVE'						=> 'Approve',
@@ -99,6 +100,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_INSTALL_NOTE3'		=> 'You must be logged in as a founder to run this script.',
 	'GALLERY_INSTALL_NOTE4'		=> '<span style="color:green; font-weight: bold; font-size: 1.5em;">Gallery-Database successfully updated.<br />Please delete the install_gallery/ folder</span>',
 
+	'IMAGE_BBCODE'					=> 'Image BBCode',
 	'IMAGE_DESC'					=> 'Image Description',
 	'IMAGE_LOCKED'					=> 'Sorry, this image is locked. You cannot post comments for this image anymore.',
 	'IMAGE_NOT_EXIST'				=> 'This image does not exist',
@@ -158,6 +160,8 @@ $lang = array_merge($lang, array(
 	'SORT_ASCENDING'			=> 'Ascending',
 	'SORT_DESCENDING'			=> 'Descending',
 	'STATUS'					=> 'Status',
+	'SUBALBUMS'						=> 'subalbums',
+	'SUBALBUM'						=> 'subalbum',
 
 	'THUMBNAIL_SIZE'			=> 'Thumbnail size (pixels)',
 
@@ -185,11 +189,6 @@ $lang = array_merge($lang, array(
 	'YOUR_COMMENT'					=> 'Your comment',
 	'YOUR_PERSONAL_ALBUM'			=> 'Your Personal Album',
 	'YOUR_RATING'					=> 'Your rating',
-	
-//new
-	'SUBALBUMS'						=> 'subalbums',
-	'SUBALBUM'						=> 'subalbum',
-	'ALBUM_IS_CATEGORY'				=> 'The album you cheated to, is a category-album.<br />You can\'t upload to categories.',
 ));
 
 ?>
