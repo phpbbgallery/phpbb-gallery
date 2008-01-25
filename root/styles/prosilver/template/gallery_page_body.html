@@ -34,7 +34,21 @@ function checkCommentForm() {
 }
 // -->
 </script>
-
+<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery_lytebox.js"></script>
+<script type="text/javascript" >
+	if (window.addEventListener) {
+		window.addEventListener("load",initLytebox,false);
+	} else if (window.attachEvent) {
+		window.attachEvent("onload",initLytebox);
+	} else {
+		window.onload = function() {initLytebox();}
+	}
+	function initLytebox() {
+		var imgMaxWidth = {IMAGE_RSZ_WIDTH};
+		var imgWarning = '';
+		myLytebox = new LyteBox(imgMaxWidth, imgWarning);
+	}
+</script>
 <h2><a href="#">{IMAGE_NAME}</a></h2>
 
 <p class="{S_CONTENT_FLOW_END} rightside"><!-- IF U_NEXT --><a href="{U_NEXT}">{L_NEXT}</a><!-- ENDIF --></p>
@@ -42,7 +56,8 @@ function checkCommentForm() {
 <div class="post bg2">
 	<div class="inner">
 		<span class="corners-top"><span></span></span>
-		<div style="text-align: center; padding: 20px;"><img src="{U_IMAGE}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" /></div>
+		<div style="text-align: center; padding: 20px;">
+			<a href="{U_IMAGE}" rel="lytebox" title="{IMAGE_NAME}" class="image-resize"><img src="{U_IMAGE}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-height: {IMAGE_RSZ_HEIGHT}px; max-width: {IMAGE_RSZ_WIDTH}px;" /></a></div>
 		<span class="corners-bottom"><span></span></span>
 	</div>
 </div>
@@ -201,6 +216,6 @@ function checkCommentForm() {
 <!--a href="{U_PREVIOUS}" class="cattitle">{PREVIOUS}</a>&nbsp;&nbsp;<a href="{U_NEXT}" class="cattitle">{NEXT}</a-->
 
 <!-- Please keep this little notice visible -->
-<div class="copyright">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a> &amp; <a href="http://www.flying-bits.org/">nickvergessen</a></div>
+<div class="copyright">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a> &amp; <a href="http://mods.flying-bits.org/">nickvergessen</a></div>
 
 <!-- INCLUDE overall_footer.html -->

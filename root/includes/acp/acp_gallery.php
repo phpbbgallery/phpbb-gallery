@@ -422,6 +422,8 @@ class acp_gallery
 			'MAX_FILE_SIZE' 					=> $new['max_file_size'],
 			'MAX_WIDTH' 						=> $new['max_width'],
 			'MAX_HEIGHT' 						=> $new['max_height'],
+			'RSZ_WIDTH' 						=> $new['preview_rsz_width'],
+			'RSZ_HEIGHT' 						=> $new['preview_rsz_height'],
 			'ROWS_PER_PAGE' 					=> $new['rows_per_page'],
 			'COLS_PER_PAGE' 					=> $new['cols_per_page'],
 			'WATERMARK_SOURCE' 					=> $new['watermark_source'],

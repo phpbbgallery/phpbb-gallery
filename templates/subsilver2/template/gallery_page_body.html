@@ -34,6 +34,21 @@ function checkCommentForm() {
 }
 // -->
 </script>
+<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery_lytebox.js"></script>
+<script type="text/javascript" >
+	if (window.addEventListener) {
+		window.addEventListener("load",initLytebox,false);
+	} else if (window.attachEvent) {
+		window.attachEvent("onload",initLytebox);
+	} else {
+		window.onload = function() {initLytebox();}
+	}
+	function initLytebox() {
+		var imgMaxWidth = {IMAGE_RSZ_WIDTH};
+		var imgWarning = '';
+		myLytebox = new LyteBox(imgMaxWidth, imgWarning);
+	}
+</script>
 
 <h2><a href="#">{IMAGE_NAME}</a></h2>
 
@@ -53,7 +68,8 @@ function checkCommentForm() {
 	</tr>
 	<tr>
 		<td class="row1" style="align: center;"><div style="text-align: center; padding: 20px;">
-		<img style="border: 1px solid; border-color: #A0A0A4; padding: 5px 5px 5px 5px; background-color: #FFFBF0;" src="{U_IMAGE}" border="0" vspace="10" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" /></div></td>
+			<a href="{U_IMAGE}" rel="lytebox" title="{IMAGE_NAME}" class="image-resize"><img src="{U_IMAGE}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-height: {IMAGE_RSZ_HEIGHT}px; max-width: {IMAGE_RSZ_WIDTH}px;" /></a>
+		</div></td>
 	</tr>
 	<tr>
 		<td class="row2">
@@ -73,10 +89,6 @@ function checkCommentForm() {
 	<tr class="row1">
 		<td width="25%" align="right"><span class="genmed">{L_IMAGE_DESC}:</span></td>
 		<td><span class="genmed">{IMAGE_DESC}</span></td>
-	</tr>
-	<tr class="row1">
-		<td width="25%" align="right"><span class="genmed">{L_IMAGE_BBCODE}:</span></td>
-		<td><span class="genmed">{IMAGE_BBCODE}</span></td>
 	</tr>
 	<tr class="row1">
 		<td width="25%" align="right"><span class="genmed">{L_POSTED}:</span></td>

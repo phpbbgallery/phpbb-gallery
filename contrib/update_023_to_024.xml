@@ -6,7 +6,7 @@
   <header>
     <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
     <title lang="en-gb">phpBB Gallery</title>
-    <description lang="en-gb"><![CDATA[see normal install-file]]></description>
+    <description lang="en-gb">see normal install-file</description>
     <author-notes lang="en-gb">i hope you get it installed, otherwise you can ask for help on phpbb.de and phpbb.com</author-notes>
     <author-group>
       <author>
@@ -48,27 +48,25 @@
   </header>
   <action-group>
     <copy>
-      <file from="templates/subsilver2/button_upload_image.gif" to="styles/subsilver2/imageset/en/button_upload_image.gif" />
-      <file from="templates/subsilver2/template/*.*" to="styles/subsilver2/template/*.*" />
-      <file from="templates/subsilver2/theme/gallery_lytebox.css" to="styles/subsilver2/theme/gallery_lytebox.css" />
-      <file from="templates/subsilver2/theme/images/gallery_lytebox/*.*" to="styles/subsilver2/theme/images/gallery_lytebox/*.*" />
-      <file from="templates/subsilver2/icon_gallery.gif" to="styles/subsilver2/theme/images/icon_gallery.gif" />
+      <file from="root/adm/style/acp_gallery.html" to="adm/style/acp_gallery.html" />
+      <file from="root/gallery/*.*" to="gallery/*.*" />
+      <file from="root/gallery/includes/*.*" to="gallery/includes/*.*" />
+      <file from="root/gallery/upload/*.*" to="gallery/upload/*.*" />
+      <file from="root/gallery/upload/cache/*.*" to="gallery/upload/cache/*.*" />
+      <file from="root/includes/acp/acp_gallery.php" to="includes/acp/acp_gallery.php" />
+      <file from="root/includes/acp/info/acp_gallery.php" to="includes/acp/info/acp_gallery.php" />
+      <file from="root/install_gallery/*.*" to="install_gallery/*.*" />
+      <file from="root/install_gallery/schemas/*.*" to="install_gallery/schemas/*.*" />
+      <file from="root/language/en/mods/*.*" to="language/en/mods/*.*" />
+      <file from="root/styles/prosilver/imageset/en/button_upload_image.gif" to="styles/prosilver/imageset/en/button_upload_image.gif" />
+      <file from="root/styles/prosilver/template/*.*" to="styles/prosilver/template/*.*" />
+      <file from="root/styles/prosilver/theme/gallery_lytebox.css" to="styles/prosilver/theme/gallery_lytebox.css" />
+      <file from="root/styles/prosilver/theme/images/gallery_lytebox/*.*" to="styles/prosilver/theme/images/gallery_lytebox/*.*" />
+      <file from="root/styles/prosilver/theme/images/icon_gallery.gif" to="styles/prosilver/theme/images/icon_gallery.gif" />
     </copy>
-    <open src="styles/subsilver2/template/overall_header.html">
+    <open src="styles/prosilver/theme/stylesheet.css">
       <edit>
-        <find><![CDATA[<link rel="stylesheet" href="{T_STYLESHEET_LINK}" type="text/css" />]]></find>
-        <action type="after-add"><![CDATA[<link rel="stylesheet" href="{T_THEME_PATH}/gallery_lytebox.css" type="text/css" />]]></action>
-      </edit>
-      <edit>
-        <find><![CDATA[<a href="{U_FAQ}"><img src="{T_THEME_PATH}/images/icon_mini_faq.gif" width="12" height="13" alt="*" /> {L_FAQ}</a>]]></find>
-        <action type="before-add"><![CDATA[<a href="{U_GALLERY_MOD}" title="{L_GALLERY_EXPLAIN}"><img src="{T_THEME_PATH}/images/icon_mini_gallery.gif" width="12" height="13" alt="*" /> {L_GALLERY}</a>&nbsp; &nbsp;]]></action>
-      </edit>
-    </open>
-    <open src="styles/subsilver2/theme/stylesheet.css">
-      <edit>
-        <find><![CDATA[.username-coloured {
-	font-weight: bold;
-}]]></find>
+        <find><![CDATA[@import url("colours.css");]]></find>
         <action type="after-add"><![CDATA[@import url("gallery_lytebox.css");]]></action>
       </edit>
     </open>

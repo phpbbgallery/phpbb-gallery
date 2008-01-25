@@ -127,6 +127,8 @@ $lang = array_merge($lang, array(
 	'RATE_SCALE'						=> 'Bewertungsskala',
 	'RATE_SYSTEM'						=> 'Bewertungssystem aktivieren',
 	'ROWS_PER_PAGE'						=> 'Anzahl der Zeilen auf Bildvorschau-Seite',
+	'RSZ_HEIGHT'						=> 'Maximuale Höhe beim anzeigen eines Bildes',
+	'RSZ_WIDTH'							=> 'Maximuale Breite beim anzeigen eines Bildes',
 	
 	'SELECT_A_ALBUM'					=> 'Wähle ein Album',
 	

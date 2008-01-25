@@ -328,6 +328,8 @@ $template->assign_vars(array(
 	'U_IMAGE'			=> append_sid("{$phpbb_root_path}gallery/image.$phpEx?pic_id=$image_id"),
 	'U_PREVIOUS'		=> ($previous_id) ? append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=$previous_id") : '',
 	'U_NEXT'			=> ($next_id && ($next_id != $previous_id)) ? append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=$next_id") : '',
+	'IMAGE_RSZ_WIDTH'	=> $album_config['preview_rsz_width'],
+	'IMAGE_RSZ_HEIGHT'	=> $album_config['preview_rsz_height'],
 
 	'IMAGE_NAME'		=> $image_data['image_name'],
 	'IMAGE_DESC'		=> generate_text_for_display($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], 7),

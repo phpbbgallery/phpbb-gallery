@@ -23,7 +23,7 @@ $user->session_begin();
 $auth->acl($user->data);
 $user->setup();
 $user->add_lang('mods/gallery_install');
-$new_mod_version = '0.2.3';
+$new_mod_version = '0.2.4';
 $page_title = 'phpBB Gallery v' . $new_mod_version;
 
 $mode = request_var('mode', '', true);
@@ -779,6 +779,45 @@ switch ($mode)
 				$sql_ary['bbcode_id'] = (int) $bbcode_id;
 
 				$db->sql_query('INSERT INTO ' . BBCODES_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+			}
+
+			// clear cache and log what we did
+			$cache->purge();
+			add_log('admin', 'phpBB Gallery updated to v' . $new_mod_version);
+			add_log('admin', 'LOG_PURGE_CACHE');
+			$updated = true;
+		}
+	break;
+	case 'update023':
+		$update = request_var('update', 0);
+		$version = request_var('v', '0', true);
+		$updated = false;
+		if ($update == 1)
+		{
+			$sql = 'SELECT * FROM ' . GALLERY_CONFIG_TABLE . " WHERE config_name = 'preview_rsz_width'";
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+			if (!$row)
+			{
+				$sql_ary = array(
+					'config_name'				=> 'preview_rsz_width',
+					'config_value'				=> 800,
+				);
+				$db->sql_query('INSERT INTO ' . GALLERY_CONFIG_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+			}
+
+			$sql = 'SELECT * FROM ' . GALLERY_CONFIG_TABLE . " WHERE config_name = 'preview_rsz_height'";
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+			if (!$row)
+			{
+				$sql_ary = array(
+					'config_name'				=> 'preview_rsz_height',
+					'config_value'				=> 600,
+				);
+				$db->sql_query('INSERT INTO ' . GALLERY_CONFIG_TABLE . $db->sql_build_array('INSERT', $sql_ary));
 			}
 
 			// clear cache and log what we did

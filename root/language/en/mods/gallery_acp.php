@@ -128,6 +128,8 @@ $lang = array_merge($lang, array(
 	'RATE_SCALE'					=> 'Rating Scale',
 	'RATE_SYSTEM'					=> 'Enable rating system',
 	'ROWS_PER_PAGE'					=> 'Number of rows on thumbnail page',
+	'RSZ_HEIGHT'					=> 'Maximum-height on viewing image',
+	'RSZ_WIDTH'						=> 'Maximum-width on viewing image',
 	
 	'SELECT_A_ALBUM'					=> 'Select a album',
 	
