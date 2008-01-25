@@ -362,45 +362,64 @@
 </form>
 
 <!-- ELSEIF S_ALBUM_PERMISSIONS_SELECT_GROUPS -->
+
+
 <form action="{S_ALBUM_ACTION}" method="post">
-<table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline">
-	<tr>
-		<th class="thCornerL" height="25" nowrap="nowrap">{L_USERGROUPS}</th>
-		<th class="thTop" nowrap="nowrap">{L_CAN_VIEW}</th>
-		<th class="thTop" nowrap="nowrap">{L_CAN_UPLOAD}</th>
-		<th class="thTop" nowrap="nowrap">{L_CAN_RATE}</th>
-		<th class="thTop" nowrap="nowrap">{L_CAN_COMMENT}</th>
-		<th class="thTop" nowrap="nowrap">{L_CAN_EDIT}</th>
-		<th class="thTop" nowrap="nowrap">{L_CAN_DELETE}</th>
-		<th class="thCornerR" nowrap="nowrap">{L_IS_MODERATOR}</th>
-	</tr>
+<div class="clearfix"></div>
 	<!-- BEGIN grouprow -->
-	<tr>
-		<td class="row1" align="center" height="28"><span class="gen">{grouprow.GROUP_NAME}</span></td>
-		<td class="row2" align="center">
-			<input name="view[]" type="checkbox" {grouprow.VIEW_CHECKED} value="{grouprow.GROUP_ID}" />
-		</td>
-		<td class="row2" align="center">
-			<input name="upload[]" type="checkbox" {grouprow.UPLOAD_CHECKED} value="{grouprow.GROUP_ID}" />
-		</td>
-		<td class="row2" align="center">
-			<input name="rate[]" type="checkbox" {grouprow.RATE_CHECKED} value="{grouprow.GROUP_ID}" />
-		</td>
-		<td class="row2" align="center">
-			<input name="comment[]" type="checkbox" {grouprow.COMMENT_CHECKED} value="{grouprow.GROUP_ID}" />
-		</td>
-		<td class="row2" align="center">
-			<input name="edit[]" type="checkbox" {grouprow.EDIT_CHECKED} value="{grouprow.GROUP_ID}" />
-		</td>
-		<td class="row2" align="center">
-			<input name="delete[]" type="checkbox" {grouprow.DELETE_CHECKED} value="{grouprow.GROUP_ID}" />
-		</td>
-		<td class="row2" align="center">
-			<input name="moderator[]" type="checkbox" {grouprow.MODERATOR_CHECKED} value="{grouprow.GROUP_ID}" />
-		</td>
-	</tr>
+<fieldset class="permissions" id="perm">
+	<div class="permissions-advanced" id="advanced">
+		<div class="permissions-category">
+			<ul>
+				<li class="permissions-preset-custom activetab"><a href="#"><span class="tabbg">{grouprow.GROUP_NAME}</span></a></li>
+			</ul>
+		</div>
+		<div class="permissions-panel" id="options{p_mask.S_ROW_COUNT}">
+			<span class="corners-top"><span></span></span>
+			<div class="tablewrap">
+				<table id="table{p_mask.S_ROW_COUNT}{p_mask.f_mask.S_ROW_COUNT}{p_mask.f_mask.category.S_ROW_COUNT}" cellspacing="1">
+				<colgroup>
+					<col class="permissions-name" />
+					<col class="permissions-yes" />
+				</colgroup>
+				<tbody>
+					<!-- IF p_mask.f_mask.category.mask.S_ROW_COUNT is even --><tr class="row4"><!-- ELSE --><tr class="row3"><!-- ENDIF -->
+						<th class="permissions-name<!-- IF p_mask.f_mask.category.mask.S_ROW_COUNT is even --> row4<!-- ELSE --> row3<!-- ENDIF -->">{L_CAN_VIEW}</th>
+							<td class="<!-- IF grouprow.VIEW_CHECKED -->yes<!-- ELSE -->never<!-- ENDIF -->"><input name="view[]" type="checkbox" {grouprow.VIEW_CHECKED} value="{grouprow.GROUP_ID}" /></td>
+					</tr>
+					<!-- IF p_mask.f_mask.category.mask.S_ROW_COUNT is even --><tr class="row4"><!-- ELSE --><tr class="row3"><!-- ENDIF -->
+						<th class="permissions-name<!-- IF p_mask.f_mask.category.mask.S_ROW_COUNT is even --> row4<!-- ELSE --> row3<!-- ENDIF -->">{L_CAN_UPLOAD}</th>
+							<td class="<!-- IF grouprow.UPLOAD_CHECKED -->yes<!-- ELSE -->never<!-- ENDIF -->"><input name="upload[]" type="checkbox" {grouprow.UPLOAD_CHECKED} value="{grouprow.GROUP_ID}" /></td>
+					</tr>
+					<!-- IF p_mask.f_mask.category.mask.S_ROW_COUNT is even --><tr class="row4"><!-- ELSE --><tr class="row3"><!-- ENDIF -->
+						<th class="permissions-name<!-- IF p_mask.f_mask.category.mask.S_ROW_COUNT is even --> row4<!-- ELSE --> row3<!-- ENDIF -->">{L_CAN_RATE}</th>
+							<td class="<!-- IF grouprow.RATE_CHECKED -->yes<!-- ELSE -->never<!-- ENDIF -->"><input name="rate[]" type="checkbox" {grouprow.RATE_CHECKED} value="{grouprow.GROUP_ID}" /></td>
+					</tr>
+					<!-- IF p_mask.f_mask.category.mask.S_ROW_COUNT is even --><tr class="row4"><!-- ELSE --><tr class="row3"><!-- ENDIF -->
+						<th class="permissions-name<!-- IF p_mask.f_mask.category.mask.S_ROW_COUNT is even --> row4<!-- ELSE --> row3<!-- ENDIF -->">{L_CAN_COMMENT}</th>
+							<td class="<!-- IF grouprow.COMMENT_CHECKED -->yes<!-- ELSE -->never<!-- ENDIF -->"><input name="comment[]" type="checkbox" {grouprow.COMMENT_CHECKED} value="{grouprow.GROUP_ID}" /></td>
+					</tr>
+					<!-- IF p_mask.f_mask.category.mask.S_ROW_COUNT is even --><tr class="row4"><!-- ELSE --><tr class="row3"><!-- ENDIF -->
+						<th class="permissions-name<!-- IF p_mask.f_mask.category.mask.S_ROW_COUNT is even --> row4<!-- ELSE --> row3<!-- ENDIF -->">{L_CAN_EDIT}</th>
+							<td class="<!-- IF grouprow.EDIT_CHECKED -->yes<!-- ELSE -->never<!-- ENDIF -->"><input name="edit[]" type="checkbox" {grouprow.EDIT_CHECKED} value="{grouprow.GROUP_ID}" /></td>
+					</tr>
+					<!-- IF p_mask.f_mask.category.mask.S_ROW_COUNT is even --><tr class="row4"><!-- ELSE --><tr class="row3"><!-- ENDIF -->
+						<th class="permissions-name<!-- IF p_mask.f_mask.category.mask.S_ROW_COUNT is even --> row4<!-- ELSE --> row3<!-- ENDIF -->">{L_CAN_DELETE}</th>
+							<td class="<!-- IF grouprow.DELETE_CHECKED -->yes<!-- ELSE -->never<!-- ENDIF -->"><input name="delete[]" type="checkbox" {grouprow.DELETE_CHECKED} value="{grouprow.GROUP_ID}" /></td>
+					</tr>
+					<!-- IF p_mask.f_mask.category.mask.S_ROW_COUNT is even --><tr class="row4"><!-- ELSE --><tr class="row3"><!-- ENDIF -->
+						<th class="permissions-name<!-- IF p_mask.f_mask.category.mask.S_ROW_COUNT is even --> row4<!-- ELSE --> row3<!-- ENDIF -->">{L_IS_MODERATOR}</th>
+							<td class="<!-- IF grouprow.MODERATOR_CHECKED -->yes<!-- ELSE -->never<!-- ENDIF -->"><input name="moderator[]" type="checkbox" {grouprow.MODERATOR_CHECKED} value="{grouprow.GROUP_ID}" /></td>
+					</tr>
+				</tbody>
+				</table>
+			</div>
+			<span class="corners-bottom"><span></span></span>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+</fieldset>
 	<!-- END grouprow -->
-</table>
 <br />
 <fieldset class="submit-buttons">
 		<legend>{L_SUBMIT}</legend>
