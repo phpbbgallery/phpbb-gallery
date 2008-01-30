@@ -91,10 +91,10 @@ $lang = array_merge($lang, array(
 	'GALLERY_INSTALLATION'			=> 'v%s installieren',
 	'GALLERY_UPDATE'				=> 'v%s zu v%s aktualisieren',
 	'GALLERY_UPDATE_SMARTOR'		=> 'Smartor-Album zu v%s aktualisieren',
-	'GALLERY_INSTALL_NOTE1'		=> 'Script für die automatische Gallery-Datenbank-Erstellung.<br /><br /><span style="color:red; font-weight: bold;">Diese Script wird alle Einstellungen, Kategorien, Bilder und Kommentare von vorherigen Installationen löschen!</span><br /><span style="color:green; font-weight: bold;">Ein Update löscht diese Daten nicht.</span><br />Bist Du Dir absolut sicher?!',
-	'GALLERY_INSTALL_NOTE2'		=> '<span style="color:green; font-weight: bold; font-size: 1.5em;">Gallery-Datenbank erfolgreich erstellt.</span>',
+	'GALLERY_INSTALL_NOTE1'		=> 'Script für die automatische Galerie-Datenbank-Erstellung.<br /><br /><span style="color:red; font-weight: bold;">Diese Script wird alle Einstellungen, Kategorien, Bilder und Kommentare von vorherigen Installationen löschen!</span><br /><span style="color:green; font-weight: bold;">Ein Update löscht diese Daten nicht.</span><br />Bist Du Dir absolut sicher?!',
+	'GALLERY_INSTALL_NOTE2'		=> '<span style="color:green; font-weight: bold; font-size: 1.5em;">Galerie-Datenbank erfolgreich erstellt.</span>',
 	'GALLERY_INSTALL_NOTE3'		=> 'Du musst Gründer Rechte besitzen um dieses Script ausführen zu können.',
-	'GALLERY_INSTALL_NOTE4'		=> '<span style="color:green; font-weight: bold; font-size: 1.5em;">Gallery-Datenbank erfolgreich aktualisiert.</span>',
+	'GALLERY_INSTALL_NOTE4'		=> '<span style="color:green; font-weight: bold; font-size: 1.5em;">Galerie-Datenbank erfolgreich aktualisiert.</span>',
 
 	'IMAGE_BBCODE'							=> 'BB-Code',
 	'IMAGE_DESC'							=> 'Bildbeschreibung',

@@ -34,9 +34,9 @@ $lang = array_merge($lang, array(
 	'ACP_CREATE_ALBUM_EXPLAIN'			=> 'Neues Album erstellen und konfigurieren.',
 	'ACP_EDIT_ALBUM_TITLE'				=> 'Album bearbeiten',
 	'ACP_EDIT_ALBUM_EXPLAIN'			=> 'Ein vorhandenes Album bearbeiten.',
-	'ACP_GALLERY_OVERVIEW'				=> 'phpBB Gallery Übersicht',
-	'ACP_GALLERY_OVERVIEW_EXPLAIN'		=> 'Gallery Admin Übersicht. Hier werden sich in der nächsten Version einige Statistiken etc. befinden.',
-	'ACP_MANAGE_ALBUMS'					=> 'phpBB Gallery Album administration',
+	'ACP_GALLERY_OVERVIEW'				=> 'phpBB Galerie Übersicht',
+	'ACP_GALLERY_OVERVIEW_EXPLAIN'		=> 'Galerie Admin Übersicht. Hier werden sich in der nächsten Version einige Statistiken etc. befinden.',
+	'ACP_MANAGE_ALBUMS'					=> 'phpBB Galerie Album administration',
 	'ACP_MANAGE_ALBUMS_EXPLAIN'			=> 'Hier kannst du Deine Alben verwalten (Ehemalige Kategorien).',
 	
 	'ALBUM_AUTH_EXPLAIN'				=> 'Hier kannst Du auswählen, welche Benutzergruppen Alben moderieren dürfen oder nur privaten Zugang erhalten',
@@ -88,12 +88,12 @@ $lang = array_merge($lang, array(
 	'GALLERY_CATEGORIES_EXPLAIN'		=> 'Hier kannst du deine Alben verwalten: erstellen, ändern, löschen, sortieren, usw.',
 	'GALLERY_CLEAR_CACHE_CONFIRM'		=> 'Wenn du den Cache Feature für das Vorschaubild benutzt, musst du nach einer Änderungen in der Album Konfiguratioin den Cache Deiner Vorschaubild-Seite leeren um sie neu generieren zu lassen. <br /> <br /> Willst du ihn jetzt leeren?',
 	'GALLERY_CONFIG'					=> 'Galerie Konfiguration',
-	'GALLERY_CONFIG_EXPLAIN'			=> 'Hier kannst du die Allgemeinen Einstellungen von phpBB Gallery durchführen.',
-	'GALLERY_CONFIG_UPDATED'			=> 'Gallery Konfiguration wurde erfolgreich aktualisiert',
+	'GALLERY_CONFIG_EXPLAIN'			=> 'Hier kannst du die Allgemeinen Einstellungen von phpBB Galerie durchführen.',
+	'GALLERY_CONFIG_UPDATED'			=> 'Galerie Konfiguration wurde erfolgreich aktualisiert',
 	
 	'GALLERY_ALL'						=> 'Alle',
 	'GALLERY_REG'						=> 'Registrierte',
-	'GALLERY_PRIVATE'					=> 'Private',
+	'GALLERY_PRIVATE'					=> 'Privat',
 	'GALLERY_MOD'						=> 'Moderator',
 	'GALLERY_ADMIN'						=> 'Administrator',
 	
@@ -161,7 +161,7 @@ $lang = array_merge($lang, array(
 	'HANDLE_IMAGES'					=> 'Was soll mit Bildern passieren',
 	'DELETE_ALBUM_SUBS'				=> 'Bitte erst die angehängten Alben löschen',
 	'NO_SUBALBUMS'					=> 'Keine Alben angehängt',
-	'GALLERY_INDEX'					=> 'Gallery-Index',
+	'GALLERY_INDEX'					=> 'Galerie-Index',
 
 //new one's
 	'ACP_IMPORT_ALBUMS'					=> 'Neue Bilder importieren',
