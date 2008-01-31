@@ -155,6 +155,6 @@ for ($i = 0; $i < count($album); $i++)
 	));
 }
 $template->assign_vars(array(
-	'LAST_POST_IMG'				=> $user->img('icon_topic_latest', 'VIEW_LATEST_POST'),
+	'LAST_POST_IMG'				=> $user->img('icon_topic_latest', 'VIEW_THE_LATEST_IMAGE'),
 ));
 ?>
