@@ -52,6 +52,11 @@ while( $row = $db->sql_fetchrow($result) )
 		$allowed_cat .= ($allowed_cat == '') ? $row['album_id'] : ', ' . $row['album_id'];
 	}
 }
+$personal_gallery_access = personal_gallery_access(1,1);
+if ($personal_gallery_access['view'])
+{
+	$allowed_cat .= ($allowed_cat == '') ? PERSONAL_GALLERY : ', ' . PERSONAL_GALLERY;
+}
 if ($allowed_cat <> '')
 {
 	$sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments

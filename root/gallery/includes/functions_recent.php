@@ -38,6 +38,11 @@ while( $row = $db->sql_fetchrow($result) )
 		$mod_cat .= ($mod_cat == '') ? $row['album_id'] : ', ' . $row['album_id'];
 	}
 }
+$personal_gallery_access = personal_gallery_access(1,1);
+if ($personal_gallery_access['view'])
+{
+	$allowed_cat .= ($allowed_cat == '') ? PERSONAL_GALLERY : ', ' . PERSONAL_GALLERY;
+}
 //album_moderator_groups
 		$limit_sql = $rows * $columns;
 if ($allowed_cat <> '')
@@ -58,6 +63,7 @@ if ($allowed_cat <> '')
 			ORDER BY i.image_time DESC
 			LIMIT ' . $limit_sql;
 		$result = $db->sql_query($sql);
+		echo $sql;
 
 		$picrow = array();
 
