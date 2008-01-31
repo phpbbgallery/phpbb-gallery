@@ -13,6 +13,7 @@ CREATE TABLE phpbb_gallery_images (
 	image_desc_bitfield varchar(255) DEFAULT '' NOT NULL,
 	image_user_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	image_username varchar(32) DEFAULT '' NOT NULL,
+	image_user_colour varchar(6) DEFAULT '' NOT NULL,
 	image_user_ip varchar(40) DEFAULT '' NOT NULL,
 	image_time int(11) UNSIGNED DEFAULT '0' NOT NULL,
 	image_album_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,

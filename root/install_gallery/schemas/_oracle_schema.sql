@@ -54,6 +54,7 @@ CREATE TABLE phpbb_gallery_images (
 	image_desc_bitfield varchar2(255) DEFAULT '' ,
 	image_user_id number(8) DEFAULT '0' NOT NULL,
 	image_username varchar2(32) DEFAULT '' ,
+	image_user_colour varchar2(6) DEFAULT '' ,
 	image_user_ip varchar2(40) DEFAULT '' ,
 	image_time number(11) DEFAULT '0' NOT NULL,
 	image_album_id number(8) DEFAULT '0' NOT NULL,
