@@ -40,7 +40,18 @@
           <revision>4</revision>
         </rev-version>
         <changelog lang="en-GB">
-          <change><![CDATA[empty]]></change>
+          <change><![CDATA[[Add] Report #138: Resize image in image view page]]></change>
+          <change><![CDATA[[Add] Report #195: Reduce SQL phpbb_users left join]]></change>
+          <change><![CDATA[[Change] Report #173: [ACP] missing radio and checkbox classes...cosmetic.]]></change>
+          <change><![CDATA[[Change] Report #163: Deutsche Sprache: Gallery/Galerie]]></change>
+          <change><![CDATA[[Change] Report #188: MCP link 2 times]]></change>
+          <change><![CDATA[[Fix] Report #167: Missing Lang: IMAGE_BBCODE]]></change>
+          <change><![CDATA[[Fix] Report #172: Undefined variable: sort_new_comment_option]]></change>
+          <change><![CDATA[[Fix] Report #175: SVN: Move images are not working anymore]]></change>
+          <change><![CDATA[[Fix] Report #176: Album categorie - don't show "no pictures"]]></change>
+          <change><![CDATA[[Fix] Report #182: View the last MESSAGE?]]></change>
+          <change><![CDATA[[Fix] Report #190: Commment]]></change>
+          <change><![CDATA[[Fix] Report #194: no personal images in recent images]]></change>
         </changelog>
       </entry>
     </history>
@@ -64,6 +75,20 @@
       <file from="root/styles/prosilver/theme/images/gallery_lytebox/*.*" to="styles/prosilver/theme/images/gallery_lytebox/*.*" />
       <file from="root/styles/prosilver/theme/images/icon_gallery.gif" to="styles/prosilver/theme/images/icon_gallery.gif" />
     </copy>
+    <open src="includes/functions_user.php">
+      <edit>
+        <find><![CDATA[TOPICS_TABLE			=> array('topic_first_poster_name', 'topic_last_poster_name'),]]></find>
+        <action type="after-add"><![CDATA[GALLERY_IMAGES_TABLE	=> array('image_username'),]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[		$sql = 'UPDATE ' . TOPICS_TABLE . " SET topic_last_poster_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('topic_last_poster_id', $user_id_ary);
+		$db->sql_query($sql);]]></find>
+        <action type="after-add"><![CDATA[		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " SET image_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('image_user_id', $user_id_ary);
+		$db->sql_query($sql);]]></action>
+      </edit>
+    </open>
     <open src="styles/prosilver/theme/stylesheet.css">
       <edit>
         <find><![CDATA[@import url("colours.css");]]></find>

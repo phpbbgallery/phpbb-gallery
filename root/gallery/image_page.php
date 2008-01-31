@@ -212,7 +212,7 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 			'comment_username'	=> $comment_username,
 			'comment_user_ip'	=> $comment_user_ip,
 			'comment_time'		=> $comment_time,
-			'comment'					=> $message_parser->message,
+			'comment'			=> $message_parser->message,
 			'comment_uid'		=> $message_parser->bbcode_uid,
 			'comment_bitfield'	=> $message_parser->bbcode_bitfield,
 			);
@@ -298,8 +298,6 @@ if (($album_data['album_approval'] <> ALBUM_USER) && (($user->data['user_type'] 
 }
 $sql = 'SELECT i.image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
 	FROM ' . GALLERY_IMAGES_TABLE . ' AS i
-	LEFT JOIN ' . USERS_TABLE . ' AS u
-		ON i.image_user_id = u.user_id
 	LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
 		ON i.image_id = r.rate_image_id
 	LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
@@ -334,7 +332,7 @@ $template->assign_vars(array(
 	'IMAGE_NAME'		=> $image_data['image_name'],
 	'IMAGE_DESC'		=> generate_text_for_display($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], 7),
 	'IMAGE_BBCODE'		=> '[album]' . $image_data['image_id'] . '[/album]',
-	'POSTER'			=> get_username_string('full', $image_data['user_id'], ($image_data['user_id'] <> ANONYMOUS) ? $image_data['username'] : $user->lang['GUEST'], $image_data['user_colour']),
+	'POSTER'			=> get_username_string('full', $image_data['image_user_id'], ($image_data['image_user_id'] <> ANONYMOUS) ? $image_data['image_username'] : $user->lang['GUEST'], $image_data['image_user_colour']),
 	'IMAGE_TIME'		=> $user->format_date($image_data['image_time']),
 	'IMAGE_VIEW'		=> $image_data['image_view_count'],
 

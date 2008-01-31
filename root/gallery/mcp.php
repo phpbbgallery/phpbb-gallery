@@ -196,16 +196,14 @@ if ($mode == '')
 			$pic_approval_sql = ' AND p.image_approval = 1';
 		}
 
-		$sql = 'SELECT p.image_id, p.image_name, p.image_user_id, p.image_user_ip, p.image_username, p.image_time, p.image_album_id, p.image_view_count, p.image_lock, p.image_approval, u.user_id, u.username, u.user_colour, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(c.comment_id) AS comments, MAX(c.comment_id) AS new_comment
-			FROM ' . GALLERY_IMAGES_TABLE . ' AS p
-			LEFT JOIN ' . USERS_TABLE . ' AS u
-				ON p.image_user_id = u.user_id
+		$sql = 'SELECT i.*, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(c.comment_id) AS comments, MAX(c.comment_id) AS new_comment
+			FROM ' . GALLERY_IMAGES_TABLE . ' AS i
 			LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
-				ON p.image_id = r.rate_image_id
+				ON i.image_id = r.rate_image_id
 			LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
-				ON p.image_id = c.comment_image_id
-			WHERE p.image_album_id = ' . $album_id . ' ' . $pic_approval_sql . '
-			GROUP BY p.image_id
+				ON i.image_id = c.comment_image_id
+			WHERE i.image_album_id = ' . $album_id . ' ' . $pic_approval_sql . '
+			GROUP BY i.image_id
 			ORDER BY ' . $sort_method . ' ' . $sort_order . '
 			LIMIT ' . $limit_sql;
 		$result = $db->sql_query($sql);
@@ -222,7 +220,7 @@ if ($mode == '')
 			$template->assign_block_vars('picrow', array(
 				'IMAGE_ID' 		=> $picrow[$i]['image_id'],
 				'IMAGE_NAME' 	=> '<a href="'. append_sid("image.$phpEx?pic_id=". $picrow[$i]['image_id']) .'">'. $picrow[$i]['image_name'] .'</a>',
-				'POSTER' 		=> get_username_string('full', $picrow[$i]['user_id'], ($picrow[$i]['user_id'] <> ANONYMOUS) ? $picrow[$i]['username'] : $user->lang['GUEST'], $picrow[$i]['user_colour']),
+				'POSTER' 		=> get_username_string('full', $picrow[$i]['image_user_id'], ($picrow[$i]['image_user_id'] <> ANONYMOUS) ? $picrow[$i]['image_username'] : $user->lang['GUEST'], $picrow[$i]['image_user_colour']),
 				'TIME' 			=> $user->format_date($picrow[$i]['image_time']),
 				'RATING' 		=> ($picrow[$i]['rating'] == 0) ? $user->lang['NOT_RATED'] : round($picrow[$i]['rating'], 2),
 				'COMMENTS' 		=> $picrow[$i]['comments'],

@@ -106,12 +106,10 @@ for ($i = 0; $i < count($album); $i++)
 		// ----------------------------
 		// OK, we may do a query now...
 		// ----------------------------
-		$sql = 'SELECT p.image_id, p.image_name, p.image_user_id, p.image_username, p.image_time, p.image_album_id, u.user_id, u.username, u.user_colour
-				FROM ' . GALLERY_IMAGES_TABLE . ' AS p
-				LEFT JOIN ' . USERS_TABLE . ' AS u
-					ON p.image_user_id = u.user_id
-				WHERE p.image_id = ' . $album[$i]['last_image'] . ' ' . $pic_approval_sql . ' 
-				ORDER BY p.image_time DESC';
+		$sql = 'SELECT i.image_id, i.image_name, i.image_user_id, i.image_username, i.image_user_colour, i.image_time, i.image_album_id
+				FROM ' . GALLERY_IMAGES_TABLE . ' AS i
+				WHERE i.image_id = ' . $album[$i]['last_image'] . ' ' . $pic_approval_sql . ' 
+				ORDER BY i.image_time DESC';
 		$result = $db->sql_query($sql);
 		$lastrow = $db->sql_fetchrow($result);
 	}
@@ -150,7 +148,7 @@ for ($i = 0; $i < count($album); $i++)
 		'IMAGES'				=> $album[$i]['count'],
 		'U_LAST_IMAGE'			=> ($album[$i]['count'] != 0) ? append_sid("{$phpbb_root_path}gallery/image_page.$phpEx" , 'image_id=' . $lastrow['image_id']) : '',
 		'LAST_IMAGE_NAME'		=> ($album[$i]['count'] != 0) ? $lastrow['image_name'] : '',
-		'LAST_IMAGE_AUTHOR'		=> ($album[$i]['count'] != 0) ? get_username_string('full', $lastrow['user_id'], ($lastrow['user_id'] <> ANONYMOUS) ? $lastrow['username'] : $user->lang['GUEST'], $lastrow['user_colour']) : '',
+		'LAST_IMAGE_AUTHOR'		=> ($album[$i]['count'] != 0) ? get_username_string('full', $lastrow['image_user_id'], ($lastrow['image_user_id'] <> ANONYMOUS) ? $lastrow['image_username'] : $user->lang['GUEST'], $lastrow['image_user_colour']) : '',
 		'LAST_IMAGE_TIME'		=> ($album[$i]['count'] != 0) ? $user->format_date($lastrow['image_time']) : '',
 	));
 }

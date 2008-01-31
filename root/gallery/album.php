@@ -155,10 +155,8 @@ if ($album_id <> 0)
 				$pic_approval_sql = '';
 		}
 
-		$sql = 'SELECT i.*, u.user_id, u.username, u.user_colour, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
+		$sql = 'SELECT i.*, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
 			FROM ' . GALLERY_IMAGES_TABLE . ' AS i
-			LEFT JOIN ' . USERS_TABLE . ' AS u
-				ON i.image_user_id = u.user_id
 			LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
 				ON i.image_id = r.rate_image_id
 			LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
@@ -225,7 +223,7 @@ if ($album_id <> 0)
 
 				$template->assign_block_vars('picrow.pic_detail', array(
 					'TITLE'		=> $picrow[$j]['image_name'],
-					'POSTER'	=> get_username_string('full', $picrow[$j]['user_id'], ($picrow[$j]['user_id'] <> ANONYMOUS) ? $picrow[$j]['username'] : $user->lang['GUEST'], $picrow[$j]['user_colour']),
+					'POSTER'	=> get_username_string('full', $picrow[$j]['image_user_id'], ($picrow[$j]['image_user_id'] <> ANONYMOUS) ? $picrow[$j]['image_username'] : $user->lang['GUEST'], $picrow[$j]['image_user_colour']),
 					'TIME'		=> $user->format_date($picrow[$j]['image_time']),
 					'VIEW'		=> $picrow[$j]['image_view_count'],
 					'RATING'	=> ($album_config['rate'] == 1) ? ( '<a href="' . append_sid($phpbb_root_path . "gallery/image_page.$phpEx?image_id=" . $picrow[$j]['image_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $picrow[$j]['rating'] . '<br />') : '',

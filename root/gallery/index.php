@@ -59,20 +59,18 @@ if ($personal_gallery_access['view'])
 }
 if ($allowed_cat <> '')
 {
-	$sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments
-		FROM ' . GALLERY_IMAGES_TABLE . ' AS p
-		LEFT JOIN ' . USERS_TABLE . ' AS u
-			ON p.image_user_id = u.user_id
+	$sql = 'SELECT i.*, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments
+		FROM ' . GALLERY_IMAGES_TABLE . ' AS i
 		LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' AS ct
-			ON p.image_album_id = ct.album_id
+			ON i.image_album_id = ct.album_id
 		LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
-			ON p.image_id = r.rate_image_id
+			ON i.image_id = r.rate_image_id
 		LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
-			ON p.image_id = c.comment_image_id
-		WHERE p.image_album_id IN (' . $allowed_cat . ') 
-			AND ( p.image_approval = 1 OR ct.album_approval = 0 )
-		GROUP BY p.image_id
-		ORDER BY p.image_time DESC
+			ON i.image_id = c.comment_image_id
+		WHERE i.image_album_id IN (' . $allowed_cat . ') 
+			AND ( i.image_approval = 1 OR ct.album_approval = 0 )
+		GROUP BY i.image_id
+		ORDER BY i.image_time DESC
 		LIMIT ' . $album_config['cols_per_page'];
 	$result = $db->sql_query($sql);
 
@@ -115,14 +113,9 @@ if ($allowed_cat <> '')
 					)
 				);
 
-				if ($recentrow[$j]['user_id'] == ALBUM_GUEST)
-				{
-					$recent_poster = ($recentrow[$j]['image_username'] == '') ? $user->lang['GUEST'] : $recentrow[$j]['image_username'];
-				}
-
 				$template->assign_block_vars('recent_pics.recent_detail', array(
 					'TITLE'			=> $recentrow[$j]['image_name'],
-					'POSTER_FULL'	=> get_username_string('full', $recentrow[$j]['user_id'], ($recentrow[$j]['user_id'] <> ANONYMOUS) ? $recentrow[$j]['username'] : $user->lang['GUEST'], $recentrow[$j]['user_colour']),
+					'POSTER_FULL'	=> get_username_string('full', $recentrow[$j]['image_user_id'], ($recentrow[$j]['image_user_id'] <> ANONYMOUS) ? $recentrow[$j]['image_username'] : $user->lang['GUEST'], $recentrow[$j]['image_user_colour']),
 					'TIME'			=> $user->format_date($recentrow[$j]['image_time']),
 					'VIEW'			=> $recentrow[$j]['image_view_count'],
 					'RATING'		=> ($album_config['rate'] == 1) ? ( '<a href="' . append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=" . $recentrow[$j]['image_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $recentrow[$j]['rating'] . '<br />') : '',

@@ -18,7 +18,7 @@ $gd_check = function_exists('gd_info') ? gd_info() : array();;
 $gd_success = isset($gd_check['GD Version']);
 if (!$gd_success && ($album_config['gd_version'] > 0))
 {
-	$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . "SET config_value = 0 WHERE config_name = 'gd_version'";
+	$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . " SET config_value = 0 WHERE config_name = 'gd_version'";
 	$result = $db->sql_query($sql);
 	$album_config['gd_version'] = 0;
 }
@@ -700,10 +700,8 @@ function get_image_info($image_id)
 {
 	global $db, $user;
 
-	$sql = 'SELECT p.*, u.user_id, u.username, u.user_colour, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, r2.rate_point AS your_rate
+	$sql = 'SELECT p.*, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, r2.rate_point AS your_rate
 		FROM ' . GALLERY_IMAGES_TABLE . ' AS p
-		LEFT JOIN ' . USERS_TABLE . ' AS u
-			ON p.image_user_id = u.user_id
 		LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
 			ON p.image_id = r.rate_image_id
 		LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r2

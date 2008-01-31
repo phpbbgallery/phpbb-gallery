@@ -48,14 +48,8 @@ if ($personal_gallery_access['view'])
 if ($allowed_cat <> '')
 {
 		$limit_sql = $rows * $columns;
-		$sql = 'SELECT i.*, u.user_id, u.username, u.user_colour, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
+		$sql = 'SELECT i.*
 			FROM ' . GALLERY_IMAGES_TABLE . ' AS i
-			LEFT JOIN ' . USERS_TABLE . ' AS u
-				ON i.image_user_id = u.user_id
-			LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
-				ON i.image_id = r.rate_image_id
-			LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
-				ON i.image_id = c.comment_image_id
 			WHERE (i.image_album_id IN (' . $allowed_cat . ') 
 					OR i.image_album_id = ' . PERSONAL_GALLERY . ')
 				AND i.image_approval = 1
@@ -83,15 +77,6 @@ if ($allowed_cat <> '')
 					continue;
 				}
 
-				if(!$picrow[$j]['rating'])
-				{
-					$picrow[$j]['rating'] = $user->lang['NOT_RATED'];
-				}
-				else
-				{
-					$picrow[$j]['rating'] = round($picrow[$j]['rating'], 2);
-				}
-
 				$message_parser				= new parse_message();
 				$message_parser->message	= $picrow[$j]['image_desc'];
 				$message_parser->decode_message($picrow[$j]['image_desc_uid']);
@@ -103,7 +88,7 @@ if ($allowed_cat <> '')
 
 				$template->assign_block_vars('picrow.pic_detail', array(
 					'TITLE'		=> $picrow[$j]['image_name'],
-					'POSTER'	=> get_username_string('full', $picrow[$j]['user_id'], ($picrow[$j]['user_id'] <> ANONYMOUS) ? $picrow[$j]['username'] : $user->lang['GUEST'], $picrow[$j]['user_colour']),
+					'POSTER'	=> get_username_string('full', $picrow[$j]['image_user_id'], (($picrow[$j]['image_user_id'] <> ANONYMOUS) ? $picrow[$j]['image_username'] : $user->lang['GUEST']), $picrow[$j]['image_user_colour']),
 					'TIME'		=> $user->format_date($picrow[$j]['image_time']),
 				));
 			}

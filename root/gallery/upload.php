@@ -250,7 +250,6 @@ else
 	$pic_desc		= utf8_substr(request_var('pic_desc', '', true), 0, $album_config['desc_length']);
 	$pic_username	= request_var('pic_username', '');
 	$pic_time		= time();
-	$pic_user_id	= $user->data['user_id'];
 	$pic_user_ip	= $user->ip;
 	$pic_approval	= (!$album_data['album_approval']) ? 1 : 0;
 
@@ -438,17 +437,19 @@ else
 	{
 		$message_parser->parse(true, true, true, true, false, true, true, true);
 	}
+	$store_name = $user->data['username'];
 
 	$sql_ary = array(
 		'image_filename' 		=> $pic_filename,
 		'image_thumbnail'		=> $pic_thumbnail,
 		'image_name'			=> $pic_title,
-		'image_desc'					=> $message_parser->message,
+		'image_desc'			=> $message_parser->message,
 		'image_desc_uid'		=> $message_parser->bbcode_uid,
 		'image_desc_bitfield'	=> $message_parser->bbcode_bitfield,
-		'image_user_id'		=> $pic_user_id,
-		'image_user_ip'		=> $pic_user_ip,
-		'image_username'		=> $pic_username,
+		'image_user_id'			=> $user->data['user_id'],
+		'image_user_colour'		=> $user->data['user_colour'],
+		'image_username'		=> $user->data['username'],
+		'image_user_ip'			=> $pic_user_ip,
 		'image_time'			=> $pic_time,
 		'image_album_id'		=> $album_id,
 		'image_approval'		=> $pic_approval,
