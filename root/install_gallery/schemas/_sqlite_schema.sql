@@ -14,7 +14,7 @@ CREATE TABLE phpbb_gallery_images (
 	image_desc_uid varchar(8) NOT NULL DEFAULT '',
 	image_desc_bitfield varchar(255) NOT NULL DEFAULT '',
 	image_user_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
-	image_username varchar(32) NOT NULL DEFAULT '',
+	image_username varchar(255) NOT NULL DEFAULT '',
 	image_user_colour varchar(6) NOT NULL DEFAULT '',
 	image_user_ip varchar(40) NOT NULL DEFAULT '',
 	image_time INTEGER UNSIGNED NOT NULL DEFAULT '0',
