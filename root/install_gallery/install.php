@@ -373,9 +373,9 @@ switch ($mode)
 			}
 
 			$column_add = new phpbb_db_tools($db);
-			$column_add->sql_column_add(GALLERY_IMAGES_TABLE, 'image_user_colour', array(vchar(6), ''));
+			$column_add->sql_column_add(GALLERY_IMAGES_TABLE, 'image_user_colour', array('VCHAR:6', ''));
 			$column_change = new phpbb_db_tools($db);
-			$column_change->sql_column_change(GALLERY_IMAGES_TABLE, 'image_username', array(vchar(255), ''));
+			$column_change->sql_column_change(GALLERY_IMAGES_TABLE, 'image_username', array('VCHAR:255', ''));
 
 			// clear cache and log what we did
 			$cache->purge();
