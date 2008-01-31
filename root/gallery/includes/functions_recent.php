@@ -63,7 +63,6 @@ if ($allowed_cat <> '')
 			ORDER BY i.image_time DESC
 			LIMIT ' . $limit_sql;
 		$result = $db->sql_query($sql);
-		echo $sql;
 
 		$picrow = array();
 
