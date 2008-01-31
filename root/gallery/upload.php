@@ -437,7 +437,6 @@ else
 	{
 		$message_parser->parse(true, true, true, true, false, true, true, true);
 	}
-	$store_name = $user->data['username'];
 
 	$sql_ary = array(
 		'image_filename' 		=> $pic_filename,
@@ -448,7 +447,7 @@ else
 		'image_desc_bitfield'	=> $message_parser->bbcode_bitfield,
 		'image_user_id'			=> $user->data['user_id'],
 		'image_user_colour'		=> $user->data['user_colour'],
-		'image_username'		=> $user->data['username'],
+		'image_username'		=> ($pic_username) ? $pic_username : $user->data['username'],
 		'image_user_ip'			=> $pic_user_ip,
 		'image_time'			=> $pic_time,
 		'image_album_id'		=> $album_id,
