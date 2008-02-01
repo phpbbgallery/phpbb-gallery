@@ -806,7 +806,7 @@ else
 			$hidden_field = '';
 			for ($i = 0; $i < count($pic_id_array); $i++)
 			{
-				$hidden_field .= '<input name="pic_id[]" type="hidden" value="'. $pic_id_array[$i] .'" />' . "\n";
+				$hidden_field .= '<input name="image_id[]" type="hidden" value="'. $pic_id_array[$i] .'" />' . "\n";
 			}
 
 			$template->assign_vars(array(
@@ -828,15 +828,7 @@ else
 		}
 		else
 		{
-			// Check the salt... yumyum
-			if (!check_form_key('mcp'))
-			{
-				trigger_error('FORM_INVALID');
-			}
-
-			//
 			// Do the delete here...
-			//
 			if (isset($_POST['image_id']))
 			{
 				$pic_id = $_POST['image_id'];
