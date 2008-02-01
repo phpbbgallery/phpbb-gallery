@@ -377,6 +377,28 @@ switch ($mode)
 			$column_change = new phpbb_db_tools($db);
 			$column_change->sql_column_change(GALLERY_IMAGES_TABLE, 'image_username', array('VCHAR:255', ''));
 
+			$sql = 'SELECT i.image_user_id, i.image_id, u.username, u.user_colour
+				FROM ' . GALLERY_IMAGES_TABLE . ' AS i
+				LEFT JOIN ' . USERS_TABLE . " AS u
+					ON i.image_user_id = u.user_id
+				ORDER BY i.image_id DESC";
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$image_id = $row['image_id'];
+				if ($row['image_user_id'] != 1)
+				{
+					$sql_ary = array(
+						'image_username'		=> $row['username'],
+						'image_user_colour'		=> $row['user_colour'],
+					);
+					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+						WHERE ' . $db->sql_in_set('image_id', $image_id);
+					$db->sql_query($sql);
+				}
+			}
+			$db->sql_freeresult($result);
+
 			// clear cache and log what we did
 			$cache->purge();
 			add_log('admin', 'phpBB Gallery updated to v' . $new_mod_version);
@@ -531,7 +553,7 @@ switch ($mode)
 				FROM ' . $convert_prefix . 'album_comment
 				ORDER BY comment_id';
 			$result = $db->sql_query($sql);
-			while( $row = $db->sql_fetchrow($result) )
+			while ($row = $db->sql_fetchrow($result))
 			{
 				$row['comment_uid'] = $row['comment_options'] = $row['comment_bitfield'] = '';
 				$row['comment'] = $row['comment_text'];
