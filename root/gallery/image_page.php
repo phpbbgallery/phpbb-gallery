@@ -150,7 +150,7 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 				));
 
 				$template->assign_block_vars('navlinks', array(
-					'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $image_data['username']),
+					'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $image_data['image_username']),
 					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}gallery/album_personal.$phpEx", 'user_id=' . $user_id),
 				));
 			}
@@ -536,7 +536,7 @@ else
 	));
 
 	$template->assign_block_vars('navlinks', array(
-		'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $image_data['username']),
+		'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $image_data['image_username']),
 		'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}gallery/album_personal.$phpEx", 'user_id=' . $user_id),
 	));
 }
