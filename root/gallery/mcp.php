@@ -270,7 +270,7 @@ if ($mode == '')
 
 		'SORT_TIME' 			=> ($sort_method == 'image_time') ? 'selected="selected"' : '',
 		'SORT_IMAGE_NAME' 		=> ($sort_method == 'image_name') ? 'selected="selected"' : '',
-		'SORT_USERNAME' 		=> ($sort_method == 'image_user_id') ? 'selected="selected"' : '',
+		'SORT_USERNAME' 		=> ($sort_method == 'image_username') ? 'selected="selected"' : '',
 		'SORT_VIEW' 			=> ($sort_method == 'image_view_count') ? 'selected="selected"' : '',
 
 		'SORT_RATING_OPTION' 		=> $sort_rating_option,
