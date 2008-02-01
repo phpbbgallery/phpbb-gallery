@@ -639,6 +639,28 @@ switch ($mode)
 			}
 			$db->sql_freeresult($result);
 
+			$sql = 'SELECT i.image_user_id, i.image_id, u.username, u.user_colour
+				FROM ' . GALLERY_IMAGES_TABLE . ' AS i
+				LEFT JOIN ' . USERS_TABLE . " AS u
+					ON i.image_user_id = u.user_id
+				ORDER BY i.image_id DESC";
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$image_id = $row['image_id'];
+				if ($row['image_user_id'] != 1)
+				{
+					$sql_ary = array(
+						'image_username'		=> $row['username'],
+						'image_user_colour'		=> $row['user_colour'],
+					);
+					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+						WHERE ' . $db->sql_in_set('image_id', $image_id);
+					$db->sql_query($sql);
+				}
+			}
+			$db->sql_freeresult($result);
+
 			// Drop the old tables
 			if ($db->sql_layer != 'mssql')
 			{
