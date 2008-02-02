@@ -97,7 +97,7 @@ for ($i = 0; $i < count($album); $i++)
 		// ----------------------------
 		if (($album[$i]['album_approval'] == ALBUM_ADMIN) || ($album[$i]['album_approval'] == ALBUM_MOD))
 		{
-			$pic_approval_sql = 'AND p.image_approval = 1';
+			$pic_approval_sql = 'AND i.image_approval = 1';
 		}
 		else
 		{
