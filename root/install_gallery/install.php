@@ -610,7 +610,7 @@ switch ($mode)
 				FROM ' . $convert_prefix . 'album AS i
 				LEFT JOIN ' . USERS_TABLE . ' AS u
 					ON i.pic_user_id = u.user_id
-				ORDER BY pic_id';
+				ORDER BY i.pic_id';
 			$result = $db->sql_query($sql);
 			while( $row = $db->sql_fetchrow($result) )
 			{
