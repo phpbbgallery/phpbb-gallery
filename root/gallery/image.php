@@ -222,7 +222,7 @@ if ($album_config['watermark_images'] && $gd_success)
 		{
 			$sx2 = imagesx($im);
 			$sy2 = imagesy($im);
-			imagecopymerge($im,$nm,(($sx2 * 0.5) - ($sx * 0.5)), ($sy2 - $sy - 5), 0,0,$sx,$sy,85);
+			imagecopymerge($im,$nm,(($sx2 * 0.5) - ($sx * 0.5)), ($sy2 - $sy - 5), 0,0,$sx,$sy,100);
 
 			$watermark_ok = true;
 		}
