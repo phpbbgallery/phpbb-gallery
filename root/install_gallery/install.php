@@ -280,7 +280,7 @@ switch ($mode)
 				'module_auth'		=> ''
 			);
 			$modules->update_module_data($import_images);
-			$gd_check = function_exists('gd_info') ? gd_info() : array();;
+			$gd_check = function_exists('gd_info') ? gd_info() : array();
 			$gd_success = isset($gd_check['GD Version']);
 			if (!$gd_success && ($album_config['gd_version'] > 0))
 			{
@@ -606,8 +606,10 @@ switch ($mode)
 			unset($sql_query);
 
 			// last and least the images...
-			$sql = 'SELECT *
-				FROM ' . $convert_prefix . 'album
+			$sql = 'SELECT i.*, u.user_colour
+				FROM ' . $convert_prefix . 'album AS i
+				LEFT JOIN ' . USERS_TABLE . ' AS u
+					ON i.pic_user_id = u.user_id
 				ORDER BY pic_id';
 			$result = $db->sql_query($sql);
 			while( $row = $db->sql_fetchrow($result) )
@@ -626,6 +628,7 @@ switch ($mode)
 					'image_desc_options'	=> 7,
 					'image_user_id'			=> $row['pic_user_id'],
 					'image_username'		=> $row['pic_username'],
+					'image_user_colour'		=> $row['user_colour'],
 					'image_user_ip'			=> decode_ip($row['pic_user_ip']),
 					'image_time'			=> $row['pic_time'],
 					'image_album_id'		=> (in_array($row['pic_cat_id'], $personal_album) ? 0 : $row['pic_cat_id']),
@@ -636,28 +639,6 @@ switch ($mode)
 				generate_text_for_storage($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], $image_data['image_desc_options'], true, true, true);
 				unset($image_data['image_desc_options']);
 				$db->sql_query('INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $image_data));
-			}
-			$db->sql_freeresult($result);
-
-			$sql = 'SELECT i.image_user_id, i.image_id, u.username, u.user_colour
-				FROM ' . GALLERY_IMAGES_TABLE . ' AS i
-				LEFT JOIN ' . USERS_TABLE . " AS u
-					ON i.image_user_id = u.user_id
-				ORDER BY i.image_id DESC";
-			$result = $db->sql_query($sql);
-			while ($row = $db->sql_fetchrow($result))
-			{
-				$image_id = $row['image_id'];
-				if ($row['image_user_id'] != 1)
-				{
-					$sql_ary = array(
-						'image_username'		=> $row['username'],
-						'image_user_colour'		=> $row['user_colour'],
-					);
-					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-						WHERE ' . $db->sql_in_set('image_id', $image_id);
-					$db->sql_query($sql);
-				}
 			}
 			$db->sql_freeresult($result);
 
@@ -795,7 +776,7 @@ switch ($mode)
 			);
 			$modules->update_module_data($import_images);
 
-			$gd_check = function_exists('gd_info') ? gd_info() : array();;
+			$gd_check = function_exists('gd_info') ? gd_info() : array();
 			$gd_success = isset($gd_check['GD Version']);
 			if (!$gd_success && ($album_config['gd_version'] > 0))
 			{
