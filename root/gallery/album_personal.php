@@ -55,7 +55,7 @@ $user_id = $row['user_id'];
 
 if( empty($username) )
 {
-	trigger_error('Sorry, this user does not exist', E_USER_WARNING);
+	trigger_error('NO_USER', E_USER_WARNING);
 }
 
 

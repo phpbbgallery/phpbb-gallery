@@ -243,7 +243,7 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 		$rate_point = request_var('rate', 0);
 		if( ($rate_point <= 0) || ($rate_point > $album_config['rate_scale']) )
 		{
-			trigger_error('Bad submitted value', E_USER_WARNING);
+			trigger_error($user->lang['OUT_OF_RANGE_VALUE'], E_USER_WARNING);
 		}
 		$rate_user_id = $user->data['user_id'];
 		$rate_user_ip = $user->ip;

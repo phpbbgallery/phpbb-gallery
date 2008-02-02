@@ -100,6 +100,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_INSTALL_NOTE3'		=> 'You must be logged in as a founder to run this script.',
 	'GALLERY_INSTALL_NOTE4'		=> '<span style="color:green; font-weight: bold; font-size: 1.5em;">Gallery-Database successfully updated.<br />Please delete the install_gallery/ folder</span>',
 
+	'INVALID_REQUEST'				=> 'Invalid request',
 	'IMAGE_BBCODE'					=> 'Image BBCode',
 	'IMAGE_DESC'					=> 'Image Description',
 	'IMAGE_LOCKED'					=> 'Sorry, this image is locked. You cannot post comments for this image anymore.',
@@ -134,6 +135,7 @@ $lang = array_merge($lang, array(
 	'NO_COMMENTS'					=> 'No comments yet',
 	'NO_IMAGE_SPECIFIED'			=> 'No image specified',
 	'NO_IMAGES'						=> 'No images',
+	'NO_MOVE_LEFT'					=> 'There is no more categories which you have permisson to move images to',
 	'NONE'							=> 'None',
 	'NOT_ALLOWED_FILE_TYPE'					=> 'This file type is not allowed',
 	'NOT_ALLOWED_TO_CREATE_PERSONAL_ALBUM'	=> 'Sorry, the administrators of this board do not allow you to create a personal album.',
@@ -141,6 +143,7 @@ $lang = array_merge($lang, array(
 	'NOT_RATED'						=> 'not rated',
 
 	'ORDER'							=> 'Order',
+	'OUT_OF_RANGE_VALUE'			=> 'Value is out of range',				
 
 	'PERSONAL_ALBUM_EXPLAIN'			=> 'You can view the personal albums of other users by clicking on the link in their profiles.',
 	'PERSONAL_ALBUM_NOT_CREATED'		=> 'The personal gallery of %s is empty or has not been created.',

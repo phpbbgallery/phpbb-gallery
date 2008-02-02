@@ -96,6 +96,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_INSTALL_NOTE3'		=> 'Du musst Gründer Rechte besitzen um dieses Script ausführen zu können.',
 	'GALLERY_INSTALL_NOTE4'		=> '<span style="color:green; font-weight: bold; font-size: 1.5em;">Galerie-Datenbank erfolgreich aktualisiert.</span>',
 
+	'INVALID_REQUEST'						=> 'Ungültiger Script Aufruf.',
 	'IMAGE_BBCODE'							=> 'BB-Code',
 	'IMAGE_DESC'							=> 'Bildbeschreibung',
 	'IMAGE_LOCKED'							=> 'Entschuldigung, aber dieses Bild wurde gesperrt. Du kannst für dieses Bild keine Kommentare mehr abgeben.',
@@ -130,6 +131,7 @@ $lang = array_merge($lang, array(
 	'NO_COMMENTS'							=> 'Noch keine Kommentare',
 	'NO_IMAGE_SPECIFIED'					=> 'Kein Bild angegeben',
 	'NO_IMAGES'								=> 'Keine Bilder',
+	'NO_MOVE_LEFT'							=> 'Es gibt keine weiteren von Dir berechtigten Kategorieren mehr in die Du die Bilder verschieben darfst.',
 	'NONE'									=> 'Keiner',
 	'NOT_ALLOWED_FILE_TYPE'					=> 'Dieser Datei Typ ist nicht erlaubt',
 	'NOT_ALLOWED_TO_CREATE_PERSONAL_ALBUM'	=> 'Es tut uns leid, die Administratoren von diesem Board erlauben Dir nicht, ein persönliches Album anzulegen.',
@@ -137,6 +139,7 @@ $lang = array_merge($lang, array(
 	'NOT_RATED'								=> 'Nicht bewertet',
 
 	'ORDER'									=> 'Reihenfolge',
+	'OUT_OF_RANGE_VALUE'					=> 'Wert ist ausserhalb des Bereichs',	
 
 	'PERSONAL_ALBUM_EXPLAIN'				=> 'Du kannst die persönlichen Alben anderer Mitglieder mit einem Klick auf den Link in ihrem Profil ansehen.',
 	'PERSONAL_ALBUM_NOT_CREATED'			=> 'Die persönliche Galerie von %s ist leer oder wurde noch nicht erstellt.',

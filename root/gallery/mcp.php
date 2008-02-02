@@ -330,12 +330,12 @@ else
 					$pic_id_array = $_POST['image_id'];
 					if (!is_array($pic_id_array))
 					{
-						trigger_error('Invalid request', E_USER_WARNING);
+						trigger_error($user->lang['INVALID_REQUEST'], E_USER_WARNING);
 					}
 				}
 				else
 				{
-					trigger_error('No pics specified', E_USER_WARNING);
+					trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
 				}
 			}
 
@@ -368,7 +368,7 @@ else
 
 			if (count($catrows) == 0)
 			{
-				trigger_error('There is no more categories which you have permisson to move images to', E_USER_WARNING);
+				trigger_error($user->lang['NO_MOVE_LEFT'], E_USER_WARNING);
 			}
 
 			// write categories out
@@ -425,12 +425,12 @@ else
 				}
 				else
 				{
-					trigger_error('Invalid request', E_USER_WARNING);
+					trigger_error($user->lang['INVALID_REQUEST'], E_USER_WARNING);
 				}
 			}
 			else
 			{
-				trigger_error('No pics specified', E_USER_WARNING);
+				trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
 			}
 
 			// well, we got the array of pic_id but we must do a check to make sure all these
@@ -500,12 +500,12 @@ else
 				}
 				else
 				{
-					trigger_error('Invalid request', E_USER_WARNING);
+					trigger_error($user->lang['INVALID_REQUEST'], E_USER_WARNING);
 				}
 			}
 			else
 			{
-				trigger_error('No pics specified', E_USER_WARNING);
+				trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
 			}
 		}
 
@@ -585,12 +585,12 @@ else
 				}
 				else
 				{
-					trigger_error('Invalid request', E_USER_WARNING);
+					trigger_error($user->lang['INVALID_REQUEST'], E_USER_WARNING);
 				}
 			}
 			else
 			{
-				trigger_error('No pics specified', E_USER_WARNING);
+				trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
 			}
 		}
 
@@ -656,12 +656,12 @@ else
 				}
 				else
 				{
-					trigger_error('Invalid request', E_USER_WARNING);
+					trigger_error($user->lang['INVALID_REQUEST'], E_USER_WARNING);
 				}
 			}
 			else
 			{
-				trigger_error('No pics specified', E_USER_WARNING);
+				trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
 			}
 		}
 
@@ -716,12 +716,12 @@ else
 				}
 				else
 				{
-					trigger_error('Invalid request', E_USER_WARNING);
+					trigger_error($user->lang['INVALID_REQUEST'], E_USER_WARNING);
 				}
 			}
 			else
 			{
-				trigger_error('No pics specified', E_USER_WARNING);
+				trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
 			}
 		}
 
@@ -787,12 +787,12 @@ else
 					$pic_id_array = $_POST['image_id'];
 					if( !is_array($pic_id_array) )
 					{
-						trigger_error('Invalid request', E_USER_WARNING);
+						trigger_error($user->lang['INVALID_REQUEST'], E_USER_WARNING);
 					}
 				}
 				else
 				{
-					trigger_error('No pics specified', E_USER_WARNING);
+					trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
 				}
 			}
 			
@@ -838,12 +838,12 @@ else
 				}
 				else
 				{
-					trigger_error('Invalid request', E_USER_WARNING);
+					trigger_error($user->lang['INVALID_REQUEST'], E_USER_WARNING);
 				}
 			}
 			else
 			{
-				trigger_error('No pics specified', E_USER_WARNING);
+				trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
 			}
 
 			// well, we got the array of pic_id but we must do a check to make sure all these
