@@ -36,6 +36,7 @@ $lang = array_merge($lang, array(
 	'ALBUM'								=> 'Album',
 	'ALBUM_DELETE_CONFIRM'				=> 'Are you sure you want to delete these images?',
 	'ALBUM_NOT_EXIST'					=> 'This album does not exist',
+	'ALBUM_ID_NOT_EXIST'				=> 'Album %s does not exist',
 	'ALBUM_PERMISSIONS'					=> 'Album Permissions',
 	'ALBUM_REACHED_QUOTA'				=> 'This album has reached the quota of images. You cannot upload any more. Please contact the administrator for more information.',
 	'ALBUM_UPLOAD_NEED_APPROVAL'		=> 'Your image has been uploaded successfully.<br /><br />But the feature Image Approval has been enabled so your image must be approved by a administrator or a moderator before posting',

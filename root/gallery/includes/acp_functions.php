@@ -184,7 +184,7 @@ function permission_drop_down_box($type, $permission)
 */
 function get_album_info($album_id)
 {
-	global $db;
+	global $db, $user;
 
 	$sql = 'SELECT *
 		FROM ' . GALLERY_ALBUMS_TABLE . "
@@ -195,7 +195,7 @@ function get_album_info($album_id)
 
 	if (!$row)
 	{
-		trigger_error("Album #$album_id does not exist", E_USER_ERROR);
+		trigger_error(sprintf($user->lang['ALBUM_ID_NOT_EXIST'],$album_id), E_USER_ERROR);
 	}
 
 	return $row;

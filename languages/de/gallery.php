@@ -34,6 +34,7 @@ $lang = array_merge($lang, array(
 	'ALBUM'									=> 'Album',
 	'ALBUM_DELETE_CONFIRM'					=> 'Bist du sicher das du dieses Bild löschen möchtest?',
 	'ALBUM_NOT_EXIST'						=> 'Dieses Album existiert nicht',
+	'ALBUM_ID_NOT_EXIST'					=> 'Album ID %s existiert nicht',
 	'ALBUM_PERMISSIONS'						=> 'Album Berechtigungen',
 	'ALBUM_REACHED_QUOTA'					=> 'Dieses Album hat das Kontingent zum hochladen von Bildern erreicht. Es können keine weiteren Bilder mehr hochgeladen werden. Für weitere Information wende dich bitte an einen Administrator',
 	'ALBUM_UPLOAD_NEED_APPROVAL'			=> 'Dein Bild wurde erfolgreich hochgeladen.<br /><br />Aber die Funktion der Genehmigung von Bildern vor der Veröffentlichung ist aktiv. Somit muss dein Bild vor der Veröffentlichung von einem Administrator oder einem Moderator genehmigt werden.',

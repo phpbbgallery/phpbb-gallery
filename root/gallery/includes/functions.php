@@ -535,7 +535,7 @@ function get_album_children($album_id)
 */
 function get_album_info($album_id)
 {
-	global $db;
+	global $db, $user;
 
 	$sql = 'SELECT ga.*, COUNT(gi.image_id) AS count
 		FROM ' . GALLERY_ALBUMS_TABLE . ' AS ga
@@ -549,7 +549,7 @@ function get_album_info($album_id)
 
 	if (!$row)
 	{
-		trigger_error("Album #$album_id does not exist", E_USER_ERROR);
+		trigger_error(sprintf($user->lang['ALBUM_ID_NOT_EXIST'],$album_id), E_USER_ERROR);
 	}
 
 	return $row;
