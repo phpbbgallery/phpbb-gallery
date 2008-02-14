@@ -39,6 +39,10 @@ if ($mode == 'personal')
 		'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],
 		'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}gallery/index.$phpEx", 'mode=personal'))
 	);
+
+	$template->assign_vars(array(
+		'S_PERSONAL_GALLERY' 		=> true,
+	));
 }
 display_albums(0, $mode);
 
