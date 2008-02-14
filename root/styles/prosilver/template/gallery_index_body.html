@@ -20,7 +20,7 @@
 				<dl class="icon" style="background-image: url({albumrow.ALBUM_FOLDER_IMG_SRC}); background-repeat: no-repeat;">
 					<dt>
 						<!-- IF albumrow.ALBUM_IMAGE --><span class="forum-image">{albumrow.ALBUM_IMAGE}</span><!-- ENDIF -->
-						<a href="{albumrow.U_VIEW_ALBUM}" class="forumtitle">{albumrow.ALBUM_NAME}</a><br />
+						<a href="{albumrow.U_VIEW_ALBUM}" class="forumtitle"<!-- IF S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR --> style="color: {albumrow.ALBUM_COLOUR};"<!-- ENDIF -->>{albumrow.ALBUM_NAME}</a><br />
 						{albumrow.ALBUM_DESC}
 						<!-- IF albumrow.MODERATORS -->
 						<br /><strong>{albumrow.L_MODERATORS}:</strong> {albumrow.MODERATORS}
@@ -44,12 +44,13 @@
 		<span class="corners-bottom"><span></span></span>
 	</div>
 </div>
-
+<!-- IF PAGINATION -->
 <div class="topic-actions">
 	<div class="pagination">
-		{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+		<span>{PAGINATION}</span>
 	</div>
 </div>
+<!-- ENDIF -->
 
 <a href="{U_USERS_PERSONAL_GALLERIES}" class="cattitle">{L_USERS_PERSONAL_ALBUMS}</a>&nbsp;&raquo;&nbsp;<a href="{U_YOUR_PERSONAL_GALLERY}" class="cattitle">{L_YOUR_PERSONAL_ALBUM}</a>
 <br />

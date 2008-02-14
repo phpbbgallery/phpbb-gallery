@@ -15,7 +15,7 @@
 			<!-- IF albumrow.ALBUM_IMAGE -->
 			<span class="forum-image">{albumrow.ALBUM_IMAGE}</span>
 			<!-- ENDIF -->
-			<strong><a href="{albumrow.U_VIEW_ALBUM}" class="forumtitle">{albumrow.ALBUM_NAME}</a></strong><br />
+			<strong><a href="{albumrow.U_VIEW_ALBUM}" class="forumtitle"<!-- IF S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR --> style="color: {albumrow.ALBUM_COLOUR};"<!-- ENDIF -->>{albumrow.ALBUM_NAME}</a></strong><br />
 			<span class="gensmall">{albumrow.ALBUM_DESC}</span>
 			<!-- IF albumrow.MODERATORS -->
 			<span class="forumdesc"><strong>{albumrow.L_MODERATORS}:</strong> {albumrow.MODERATORS}</span>

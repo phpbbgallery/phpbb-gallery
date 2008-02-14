@@ -186,6 +186,7 @@ function display_albums($album_id, $mode = 'album')
 			'IMAGES'				=> $album[$i]['count'],
 			'U_LAST_IMAGE'			=> ($album[$i]['count'] != 0) ? append_sid("{$phpbb_root_path}gallery/image_page.$phpEx" , 'image_id=' . $lastrow['image_id']) : '',
 			'LAST_IMAGE_NAME'		=> ($album[$i]['count'] != 0) ? $lastrow['image_name'] : '',
+			'ALBUM_COLOUR'			=> ($album[$i]['count'] != 0) ? get_username_string('colour', $lastrow['image_user_id'], $lastrow['image_username'], $lastrow['image_user_colour']) : '',
 			'LAST_IMAGE_AUTHOR'		=> ($album[$i]['count'] != 0) ? get_username_string('full', $lastrow['image_user_id'], ($lastrow['image_user_id'] <> ANONYMOUS) ? $lastrow['image_username'] : $user->lang['GUEST'], $lastrow['image_user_colour']) : '',
 			'LAST_IMAGE_TIME'		=> ($album[$i]['count'] != 0) ? $user->format_date($lastrow['image_time']) : '',
 		));
