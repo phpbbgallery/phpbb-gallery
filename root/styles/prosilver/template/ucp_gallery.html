@@ -1,0 +1,111 @@
+<!-- INCLUDE ucp_header.html -->
+<!-- IF S_INFO_CREATE -->
+<h2>{L_TITLE}</h2>
+<div class="panel">
+	<div class="inner"><span class="corners-top"><span></span></span>
+	<p>{L_TITLE_EXPLAIN}</p>
+	<form id="ucp" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+		<fieldset class="submit-buttons">
+			{S_HIDDEN_FIELDS}
+			<input type="submit" name="submit" value="{L_CREATE_PERSONAL_ALBUM}" class="button1" />
+			{S_FORM_TOKEN}
+		</fieldset>
+	</form>
+	<span class="corners-bottom"><span></span></span></div>
+</div>
+<!-- ENDIF -->
+
+<!-- IF S_CREATE_SUBALBUM || S_EDIT_SUBALBUM -->
+<h2>{L_TITLE}</h2>
+<div class="panel">
+	<div class="inner"><span class="corners-top"><span></span></span>
+	<p>{L_TITLE_EXPLAIN}</p>
+<form id="acp_gallery" method="post" action="{U_ACTION}">
+	<fieldset>
+		<!-- IF not S_PERSONAL_ALBUM -->
+		<dl>
+			<dt><label for="parent_id">{L_ALBUM_PARENT}:</label></dt>
+			<dd><select id="parent_id" name="parent_id"><option value="0"<!-- IF not S_ALBUM_PARENT_ID --> selected="selected"<!-- ENDIF -->>{L_NO_PARENT}</option>{S_PARENT_OPTIONS}</select></dd>
+		</dl>
+		<dl>
+			<dt><label for="album_name">{L_ALBUM_NAME}:</label></dt>
+			<dd><input class="text medium" type="text" id="album_name" name="album_name" value="{ALBUM_NAME}" maxlength="255" /></dd>
+		</dl>
+		<!-- ENDIF -->
+		<dl>
+			<dt><label for="album_desc">{L_ALBUM_DESC}:</label></dt>
+			<dd><textarea id="album_desc" name="album_desc" rows="5" cols="45">{ALBUM_DESC}</textarea></dd>
+		<dd><label><input type="checkbox" class="radio" name="desc_parse_bbcode"<!-- IF S_DESC_BBCODE_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_BBCODE}</label>
+			<label><input type="checkbox" class="radio" name="desc_parse_smilies"<!-- IF S_DESC_SMILIES_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_SMILIES}</label>
+			<label><input type="checkbox" class="radio" name="desc_parse_urls"<!-- IF S_DESC_URLS_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_URLS}</label></dd>
+		</dl>
+	</fieldset>
+	<fieldset class="submit-buttons">
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</p>
+	</fieldset>
+	{S_FORM_TOKEN}
+</form>
+	<span class="corners-bottom"><span></span></span></div>
+</div>
+<!-- ENDIF -->
+
+<!-- IF S_MANAGE_SUBALBUMS -->
+<h2>{L_TITLE}</h2>
+<div class="panel">
+	<div class="inner"><span class="corners-top"><span></span></span>
+	<p><strong>{NAVIGATION}<!-- IF S_ALBUM --> [<a href="{U_EDIT}">{L_EDIT}</a> | <a href="{U_DELETE}">{L_DELETE}</a> | <a href="{U_GOTO}">{L_GOTO}</a>]<!-- ENDIF --></strong></p>
+	<ul class="topiclist">
+		<li class="header">
+			<dl class="icon">
+				<dt><!-- IF .catrow -->{L_ATTACHED_SUBALBUMS}<!-- ELSE -->{L_NO_SUBALBUMS}<!-- ENDIF --></dt>
+			</dl>
+		</li>
+	</ul>
+	<!-- IF .catrow -->
+	<ul class="topiclist cplist">
+		<!-- BEGIN catrow -->
+		<li class="row<!-- IF topicrow.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF -->">
+			<dl class="icon" style="background-image: url({catrow.FOLDER_IMAGE}); background-repeat: no-repeat;">
+				<dt title="{catrow.ALBUM_NAME}">
+					<!-- IF catrow.FORUM_IMAGE --><div style="float: {S_CONTENT_FLOW_BEGIN}; margin-right: 5px;">{catrow.FORUM_IMAGE}</div><!-- ENDIF -->
+					<a href="{catrow.U_ALBUM}" class="topictitle">{catrow.ALBUM_NAME}</a>
+					<!-- IF catrow.ALBUM_DESCRIPTION --><br />{catrow.ALBUM_DESCRIPTION}<!-- ENDIF -->
+				</dt>
+				<dd class="mark" style="width: 120px;">
+					<!-- IF catrow.S_FIRST_ROW && not catrow.S_LAST_ROW -->
+						{ICON_MOVE_UP_DISABLED}
+						<a href="{catrow.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+					<!-- ELSEIF not catrow.S_FIRST_ROW && not catrow.S_LAST_ROW-->
+						<a href="{catrow.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+						<a href="{catrow.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+					<!-- ELSEIF catrow.S_LAST_ROW && not catrow.S_FIRST_ROW -->
+						<a href="{catrow.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+						{ICON_MOVE_DOWN_DISABLED}
+					<!-- ELSE -->
+						{ICON_MOVE_UP_DISABLED}
+						{ICON_MOVE_DOWN_DISABLED}
+					<!-- ENDIF -->
+					<a href="{catrow.U_EDIT}">{ICON_EDIT}</a>
+					<a href="{catrow.U_DELETE}">{ICON_DELETE}</a>
+				</dd>
+			</dl>
+		</li>
+		<!-- END catrow -->
+	</ul>
+	<!-- ENDIF -->
+<form id="albums" method="post" action="{U_CREATE_SUBALBUM}">
+
+<fieldset class="quick">
+	<!--input type="hidden" name="action" value="add" /-->
+	<input class="button2" name="addforum" type="submit" value="{L_CREATE_SUBALBUM}" />
+</fieldset>
+	{S_FORM_TOKEN}
+</form>
+	<span class="corners-bottom"><span></span></span></div>
+</div>
+<!-- ENDIF -->
+<div class="copyright">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a> &amp; <a href="http://www.flying-bits.org/">nickvergessen</a></div>
+<!-- INCLUDE ucp_footer.html -->

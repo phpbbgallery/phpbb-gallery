@@ -493,7 +493,7 @@ class acp_gallery
 	}
 
 	function album_permissions()
-	{/*album*/
+	{
 		global $db, $template, $user;
 
 		if( !isset($_POST['submit']) )
@@ -609,7 +609,7 @@ class acp_gallery
 	}
 	
 	function album_personal_permissions()
-	{/*album*/
+	{
 		global $db, $template, $user;
 
 		if( !isset($_POST['submit']) )
@@ -675,10 +675,10 @@ class acp_gallery
 	}
 	
 	function manage_albums()
-	{/*album*/
+	{
 		global $db, $user, $auth, $template, $cache;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
-		$catrow = array();
+
 		$template->assign_vars(array(
 			'S_MANAGE_ALBUMS'				=> true,
 			'S_ALBUM_ACTION'				=> $this->u_action . '&amp;action=create',
@@ -712,6 +712,7 @@ class acp_gallery
 		$sql = 'SELECT *
 			FROM ' . GALLERY_ALBUMS_TABLE . '
 			WHERE parent_id = ' . $parent_id . '
+				AND album_user_id = 0
 			ORDER BY left_id ASC';
 		$result = $db->sql_query($sql);
 
@@ -743,7 +744,7 @@ class acp_gallery
 	}
 
 	function create_album()
-	{/*album*/
+	{
 		global $db, $user, $auth, $template, $cache;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 		include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
@@ -785,6 +786,7 @@ class acp_gallery
 				'album_type'					=> request_var('album_type', 0),
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc(request_var('album_desc', '', true)),
+				'album_user_id'					=> 0,
 				'album_view_level'				=> request_var('album_view_level', 0),
 				'album_upload_level'			=> request_var('album_upload_level', 0),
 				'album_rate_level'				=> request_var('album_rate_level', 0),
@@ -812,12 +814,14 @@ class acp_gallery
 
 				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
 					SET left_id = left_id + 2, right_id = right_id + 2
-					WHERE left_id > ' . $row['right_id'];
+					WHERE left_id > ' . $row['right_id'] . '
+						AND album_user_id = ' . $album_data['album_user_id'];
 				$db->sql_query($sql);
 
 				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
 					SET right_id = right_id + 2
-					WHERE ' . $row['left_id'] . ' BETWEEN left_id AND right_id';
+					WHERE ' . $row['left_id'] . ' BETWEEN left_id AND right_id
+						AND album_user_id = ' . $album_data['album_user_id'];
 				$db->sql_query($sql);
 
 				$album_data['left_id'] = $row['right_id'];
@@ -826,7 +830,8 @@ class acp_gallery
 			else
 			{
 				$sql = 'SELECT MAX(right_id) AS right_id
-					FROM ' . GALLERY_ALBUMS_TABLE;
+					FROM ' . GALLERY_ALBUMS_TABLE . '
+					WHERE album_user_id = ' . $album_data['album_user_id'];
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
@@ -842,7 +847,7 @@ class acp_gallery
 	}
 
 	function edit_album()
-	{/*album*/
+	{
 		global $db, $user, $auth, $template, $cache;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 		include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
@@ -923,7 +928,8 @@ class acp_gallery
 				//how many do we have to move and how far
 				$moving_ids = ($row['right_id'] - $row['left_id']) + 1;
 				$sql = 'SELECT MAX(right_id) AS right_id
-					FROM ' . GALLERY_ALBUMS_TABLE;
+					FROM ' . GALLERY_ALBUMS_TABLE . '
+					WHERE album_user_id = ' . $row['album_user_id'];
 				$result = $db->sql_query($sql);
 				$highest = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
@@ -936,7 +942,8 @@ class acp_gallery
 				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
 					SET right_id = right_id + ' . $moving_distance . ',
 						left_id = left_id + ' . $moving_distance . '
-					WHERE left_id >= ' . $row['left_id'] . '
+					WHERE album_user_id = ' . $row['album_user_id'] . ' AND
+						left_id >= ' . $row['left_id'] . '
 						AND right_id <= ' . $row['right_id'];
 				$db->sql_query($sql);
 				$new['left_id'] = $row['left_id'] + $moving_distance;
@@ -948,12 +955,14 @@ class acp_gallery
 					//left_id
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
 						SET left_id = left_id - ' . $moving_ids . '
-						WHERE left_id >= ' . $row['left_id'];
+						WHERE album_user_id = ' . $row['album_user_id'] . ' AND
+							left_id >= ' . $row['left_id'];
 					$db->sql_query($sql);
 					//right_id
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
 						SET right_id = right_id - ' . $moving_ids . '
-						WHERE right_id >= ' . $row['left_id'];
+						WHERE album_user_id = ' . $row['album_user_id'] . ' AND
+							right_id >= ' . $row['left_id'];
 					$db->sql_query($sql);
 				}
 				else
@@ -962,13 +971,15 @@ class acp_gallery
 					//left_id
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
 						SET left_id = left_id - ' . $moving_ids . '
-						WHERE left_id >= ' . $row['left_id'] . '
+						WHERE album_user_id = ' . $row['album_user_id'] . ' AND
+							left_id >= ' . $row['left_id'] . '
 							AND right_id <= ' . $stop_updating;
 					$db->sql_query($sql);
 					//right_id
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
 						SET right_id = right_id - ' . $moving_ids . '
-						WHERE right_id >= ' . $row['left_id'] . '
+						WHERE album_user_id = ' . $row['album_user_id'] . ' AND
+							right_id >= ' . $row['left_id'] . '
 							AND right_id <= ' . $stop_updating;
 					$db->sql_query($sql);
 
@@ -978,13 +989,15 @@ class acp_gallery
 					//left_id
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
 						SET left_id = left_id + ' . $moving_ids . '
-						WHERE left_id >= ' . $parent['right_id'] . '
+						WHERE album_user_id = ' . $row['album_user_id'] . ' AND
+							left_id >= ' . $parent['right_id'] . '
 							AND right_id <= ' . $stop_updating;
 					$db->sql_query($sql);
 					//right_id
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
 						SET right_id = right_id + ' . $moving_ids . '
-						WHERE right_id >= ' . $parent['right_id'] . '
+						WHERE album_user_id = ' . $row['album_user_id'] . ' AND
+							right_id >= ' . $parent['right_id'] . '
 							AND right_id <= ' . $stop_updating;
 					$db->sql_query($sql);
 
@@ -995,7 +1008,8 @@ class acp_gallery
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
 						SET left_id = left_id - ' . $move_back . ',
 							right_id = right_id - ' . $move_back . '
-						WHERE left_id >= ' . $stop_updating;
+						WHERE album_user_id = ' . $row['album_user_id'] . ' AND
+							left_id >= ' . $stop_updating;
 					$db->sql_query($sql);
 				}
 			}
@@ -1017,7 +1031,7 @@ class acp_gallery
 	}
 
 	function delete_album()
-	{/*album*/
+	{
 		global $db, $template, $user, $cache;
 
 		if (!$album_id = request_var('album_id', 0))
@@ -1038,7 +1052,7 @@ class acp_gallery
 
 		$submit = (isset($_POST['submit'])) ? true : false;
 		if(!$submit)
-		{/*album*/
+		{
 			$sql = 'SELECT *
 					FROM ' . GALLERY_ALBUMS_TABLE . '
 					WHERE album_id = ' . $album_id;
@@ -1148,14 +1162,16 @@ class acp_gallery
 			}
 			//reorder the other albums
 			//left_id
-			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
+			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 				SET left_id = left_id - 2
-				WHERE left_id > ' . $album['left_id'];
+				WHERE album_user_id = {$album['album_user_id']} AND
+				left_id > " . $album['left_id'];
 			$db->sql_query($sql);
 			//right_id
-			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
+			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 				SET right_id = right_id - 2
-				WHERE right_id > ' . $album['left_id'];
+				WHERE album_user_id = {$album['album_user_id']} AND
+				right_id > " . $album['left_id'];
 			$db->sql_query($sql);
 			$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . "
 				WHERE album_id = '$album_id'";
@@ -1166,7 +1182,7 @@ class acp_gallery
 	}
 
 	function move_album()
-	{/*album*/
+	{
 		global $db, $user, $cache;
 
 		if (!$album_id = request_var('album_id', 0))
@@ -1190,6 +1206,7 @@ class acp_gallery
 		$sql = 'SELECT album_id, left_id, right_id
 			FROM ' . GALLERY_ALBUMS_TABLE . "
 			WHERE parent_id = {$moving['parent_id']}
+				AND album_user_id = {$moving['album_user_id']}
 				AND " . (($move == 'move_up') ? "right_id < {$moving['right_id']} ORDER BY right_id DESC" : "left_id > {$moving['left_id']} ORDER BY left_id ASC");
 		$result = $db->sql_query_limit($sql, 1);
 
@@ -1242,7 +1259,8 @@ class acp_gallery
 			album_parents = ''
 			WHERE
 				left_id BETWEEN {$left_id} AND {$right_id}
-				AND right_id BETWEEN {$left_id} AND {$right_id}";
+				AND right_id BETWEEN {$left_id} AND {$right_id}
+				AND album_user_id = {$moving['album_user_id']}";
 		$db->sql_query($sql);
 		$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 		trigger_error($user->lang['ALBUM_CHANGED_ORDER'] . adm_back_link($this->u_action));

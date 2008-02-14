@@ -47,7 +47,7 @@
 
 <table width="100%" cellspacing="1">
 	<tr>
-		<td align="{S_CONTENT_FLOW_BEGIN}" valign="middle" nowrap="nowrap"><!-- IF S_MODE == 2 --><a href="{U_UPLOAD_IMAGE}" title="{L_UPLOAD_IMAGE}"><img src="{T_IMAGESET_LANG_PATH}/button_upload_image.gif" alt="{L_UPLOAD_IMAGE}" />{UPLOAD_IMG}</a><!-- ENDIF --></td>
+		<td align="{S_CONTENT_FLOW_BEGIN}" valign="middle" nowrap="nowrap"><!-- IF S_MODE == 2 && U_UPLOAD_IMAGE --><a href="{U_UPLOAD_IMAGE}" title="{L_UPLOAD_IMAGE}"><img src="{T_IMAGESET_LANG_PATH}/button_upload_image.gif" alt="{L_UPLOAD_IMAGE}" />{UPLOAD_IMG}</a><!-- ENDIF --></td>
 		<td class="gensmall" width="100%" align="{S_CONTENT_FLOW_END}" nowrap="nowrap">{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF --></td>
 	</tr>
 </table>
@@ -132,7 +132,7 @@
 
 <table width="100%" cellspacing="1">
 	<tr>
-		<td align="{S_CONTENT_FLOW_BEGIN}" valign="middle" nowrap="nowrap"><!-- IF S_MODE == 2 --><a href="{U_UPLOAD_IMAGE}" title="{L_UPLOAD_IMAGE}"><img src="{T_IMAGESET_LANG_PATH}/button_upload_image.gif" alt="{L_UPLOAD_IMAGE}" />{UPLOAD_IMG}</a><!-- ENDIF --></td>
+		<td align="{S_CONTENT_FLOW_BEGIN}" valign="middle" nowrap="nowrap"><!-- IF S_MODE == 2 && U_UPLOAD_IMAGE --><a href="{U_UPLOAD_IMAGE}" title="{L_UPLOAD_IMAGE}"><img src="{T_IMAGESET_LANG_PATH}/button_upload_image.gif" alt="{L_UPLOAD_IMAGE}" />{UPLOAD_IMG}</a><!-- ENDIF --></td>
 		<td class="gensmall" width="100%" align="{S_CONTENT_FLOW_END}" nowrap="nowrap">{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF --></td>
 	</tr>
 </table>

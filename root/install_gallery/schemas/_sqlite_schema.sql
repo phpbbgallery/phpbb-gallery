@@ -41,6 +41,7 @@ CREATE TABLE phpbb_gallery_albums (
 	album_desc_options INTEGER UNSIGNED NOT NULL DEFAULT '7',
 	album_desc_uid varchar(8) NOT NULL DEFAULT '',
 	album_desc_bitfield varchar(255) NOT NULL DEFAULT '',
+	album_user_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	album_order INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	album_view_level INTEGER UNSIGNED NOT NULL DEFAULT '1',
 	album_upload_level INTEGER UNSIGNED NOT NULL DEFAULT '0',

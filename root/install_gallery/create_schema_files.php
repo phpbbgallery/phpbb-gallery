@@ -843,6 +843,7 @@ function get_schema_struct()
 			'album_desc_options'	=> array('UINT:3', 7),
 			'album_desc_uid'		=> array('VCHAR:8', ''),
 			'album_desc_bitfield'	=> array('VCHAR:255', ''),
+			'album_user_id'			=> array('UINT', 0),
 
 			'album_order'			=> array('UINT', 0),
 			'album_view_level'		=> array('UINT:3', 1),

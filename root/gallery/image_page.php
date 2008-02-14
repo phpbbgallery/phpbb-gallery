@@ -310,12 +310,12 @@ while ($row = $db->sql_fetchrow($result))
 {
 	if ($do_next)
 	{
-		$next_id = $row['image_id'];
+		$previous_id = $row['image_id'];
 	}
 	$do_next = false;
 	if ($row['image_id'] == $image_data['image_id'])
 	{
-		$previous_id = $last_id;
+		$next_id = $last_id;
 		$do_next = true;
 	}
 	$last_id = $row['image_id'];

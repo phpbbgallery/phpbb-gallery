@@ -25,17 +25,10 @@ $user->setup('mods/gallery');
 * Get the current Category Info
 */
 $album_id = request_var('album_id', 0);
-if ($album_id <> PERSONAL_GALLERY)
-{
-	$album_data = get_album_info($album_id);
-	if ($album_data['album_type'] != 2)
-	{//Go Home Cheaters
-		trigger_error($user->lang['ALBUM_IS_CATEGORY'], E_USER_WARNING);
-	}
-}
-else
-{
-	$album_data = init_personal_gallery_cat($user->data['user_id']);
+$album_data = get_album_info($album_id);
+if ($album_data['album_type'] != 2)
+{//Go Home Cheaters
+	trigger_error($user->lang['ALBUM_IS_CATEGORY'], E_USER_WARNING);
 }
 if (empty($album_data))
 {
@@ -44,7 +37,15 @@ if (empty($album_data))
 /**
 * Check the permissions
 */
-$album_user_access = album_user_access($album_id, $album_data, 0, 1, 0, 0, 0, 0);// UPLOAD
+if (!$album_data['album_user_id'])
+{
+	$album_user_access = album_user_access($album_id, $album_data, 0, 1, 0, 0, 0, 0);// UPLOAD
+}
+else
+{
+	$album_user_access['upload'] = ($album_data['album_user_id'] == $user->data['user_id']) ? true : false;
+	$album_user_access['moderator'] = false;
+}
 if (!$album_user_access['upload'])
 {
 	if ($user->data['is_bot'])

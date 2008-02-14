@@ -1,5 +1,7 @@
 <?php
 
+//useless file, just kept for information
+
 /**
 *
 * @package phpBB3

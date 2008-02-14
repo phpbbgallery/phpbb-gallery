@@ -103,6 +103,7 @@ CREATE TABLE phpbb_gallery_albums (
 	album_desc_options number(3) DEFAULT '7' NOT NULL,
 	album_desc_uid varchar2(8) DEFAULT '' ,
 	album_desc_bitfield varchar2(255) DEFAULT '' ,
+	album_user_id number(8) DEFAULT '0' NOT NULL,
 	album_order number(8) DEFAULT '0' NOT NULL,
 	album_view_level number(3) DEFAULT '1' NOT NULL,
 	album_upload_level number(3) DEFAULT '0' NOT NULL,

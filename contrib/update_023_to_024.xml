@@ -88,6 +88,15 @@
 			WHERE " . $db->sql_in_set('image_user_id', $user_id_ary);
 		$db->sql_query($sql);]]></action>
       </edit>
+      <edit>
+        <find><![CDATA[	if ($config['newest_username'] == $old_name)]]></find>
+        <action type="before-add"><![CDATA[	$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
+		SET album_name = '" . $db->sql_escape($new_name) . "'
+		WHERE album_name = '" . $db->sql_escape($old_name) . "'
+			AND album_user_id != 0
+			AND parent_id = 0";
+	$db->sql_query($sql);]]></action>
+      </edit>
     </open>
     <open src="styles/prosilver/theme/stylesheet.css">
       <edit>

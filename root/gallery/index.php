@@ -31,8 +31,17 @@ include($phpbb_root_path . 'gallery/includes/common.'.$phpEx);
 /**
 * Build Album-Index
 */
-$album_id = 0;
+$mode = request_var('mode', 'index', true);
 include($phpbb_root_path . 'gallery/includes/functions_display.' . $phpEx);
+if ($mode == 'personal')
+{
+	$template->assign_block_vars('navlinks', array(
+		'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],
+		'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}gallery/index.$phpEx", 'mode=personal'))
+	);
+}
+display_albums(0, $mode);
+
 
 
 /**
@@ -141,8 +150,8 @@ else
 */
 
 $template->assign_vars(array(
-	'U_YOUR_PERSONAL_GALLERY' 		=> append_sid("{$phpbb_root_path}gallery/album_personal.$phpEx?user_id=" . $user->data['user_id']),
-	'U_USERS_PERSONAL_GALLERIES' 	=> append_sid("{$phpbb_root_path}gallery/album_personal_index.$phpEx"),
+	'U_YOUR_PERSONAL_GALLERY' 		=> append_sid("{$phpbb_root_path}gallery/album.$phpEx", 'user_id=' . $user->data['user_id']),
+	'U_USERS_PERSONAL_GALLERIES' 	=> append_sid("{$phpbb_root_path}gallery/index.$phpEx", 'mode=personal'),
 
 	'S_LOGIN_ACTION'				=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login'),
 	'S_COLS' 						=> $album_config['cols_per_page'],

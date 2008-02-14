@@ -103,6 +103,7 @@ function make_album_select($select_id = false, $ignore_id = false, $album = fals
 	// This query is identical to the jumpbox one
 	$sql = 'SELECT album_id, album_name, parent_id, left_id, right_id, album_type
 		FROM ' . GALLERY_ALBUMS_TABLE . '
+		WHERE album_user_id = 0
 		ORDER BY left_id ASC';
 	$result = $db->sql_query($sql, 600);
 
@@ -178,7 +179,6 @@ function permission_drop_down_box($type, $permission)
 	$permission_drop_down_box .= '</select>';
 	return $permission_drop_down_box;
 }
-
 /**
 * Get album details
 */
@@ -200,7 +200,6 @@ function get_album_info($album_id)
 
 	return $row;
 }
-
 /**
 * Get forum branch
 */
@@ -227,8 +226,9 @@ function get_album_branch($album_id, $type = 'all', $order = 'descending', $incl
 
 	$sql = 'SELECT a2.*
 		FROM ' . GALLERY_ALBUMS_TABLE . ' a1
-		LEFT JOIN ' . GALLERY_ALBUMS_TABLE . " a2 ON ($condition)
+		LEFT JOIN ' . GALLERY_ALBUMS_TABLE . " a2 ON ($condition) AND a2.album_user_id = 0
 		WHERE a1.album_id = $album_id
+			AND a1.album_user_id = 0
 		ORDER BY a2.left_id " . (($order == 'descending') ? 'ASC' : 'DESC');
 	$result = $db->sql_query($sql);
 

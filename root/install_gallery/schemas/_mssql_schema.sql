@@ -62,6 +62,7 @@ CREATE TABLE [phpbb_gallery_albums] (
 	[album_desc_options] [int] DEFAULT (7) NOT NULL ,
 	[album_desc_uid] [varchar] (8) DEFAULT ('') NOT NULL ,
 	[album_desc_bitfield] [varchar] (255) DEFAULT ('') NOT NULL ,
+	[album_user_id] [int] DEFAULT (0) NOT NULL ,
 	[album_order] [int] DEFAULT (0) NOT NULL ,
 	[album_view_level] [int] DEFAULT (1) NOT NULL ,
 	[album_upload_level] [int] DEFAULT (0) NOT NULL ,

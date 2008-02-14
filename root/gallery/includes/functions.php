@@ -549,12 +549,11 @@ function get_album_info($album_id)
 
 	if (!$row)
 	{
-		trigger_error(sprintf($user->lang['ALBUM_ID_NOT_EXIST'],$album_id), E_USER_ERROR);
+		trigger_error(sprintf($user->lang['ALBUM_ID_NOT_EXIST'], $album_id), E_USER_ERROR);
 	}
 
 	return $row;
 }
-
 function generate_album_nav(&$album_data)
 {
 	global $db, $user, $template, $auth;
@@ -562,6 +561,22 @@ function generate_album_nav(&$album_data)
 
 	// Get album parents
 	$album_parents = get_album_parents($album_data);
+	if ($album_data['album_user_id'] > 0 )
+	{
+		$sql = 'SELECT user_id, username, user_colour
+			FROM ' . USERS_TABLE . '
+			WHERE user_id = ' . $album_data['album_user_id'] . '
+			LIMIT 1';
+		$result = $db->sql_query($sql);
+
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],
+				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}gallery/index.$phpEx", 'mode=personal'))
+			);
+		}
+	}
 
 	// Build navigation links
 	if (!empty($album_parents))
@@ -590,7 +605,6 @@ function generate_album_nav(&$album_data)
 	);
 	return;
 }
-
 /**
 * Returns album parents as an array. Get them from album_data if available, or update the database otherwise
 */
@@ -607,6 +621,7 @@ function get_album_parents(&$album_data)
 				FROM ' . GALLERY_ALBUMS_TABLE . '
 				WHERE left_id < ' . $album_data['left_id'] . '
 					AND right_id > ' . $album_data['right_id'] . '
+					AND album_user_id = ' . $album_data['album_user_id'] . '
 				ORDER BY left_id ASC';
 			$result = $db->sql_query($sql);
 
@@ -644,6 +659,7 @@ function make_album_jumpbox($select_id = false, $ignore_id = false, $album = fal
 	// This query is identical to the jumpbox one
 	$sql = 'SELECT album_id, album_name, parent_id, left_id, right_id, album_type
 		FROM ' . GALLERY_ALBUMS_TABLE . '
+		WHERE album_user_id = 0
 		ORDER BY left_id ASC';
 	$result = $db->sql_query($sql, 600);
 
@@ -700,17 +716,17 @@ function get_image_info($image_id)
 {
 	global $db, $user;
 
-	$sql = 'SELECT p.*, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, r2.rate_point AS your_rate
-		FROM ' . GALLERY_IMAGES_TABLE . ' AS p
+	$sql = 'SELECT i.*, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, r2.rate_point AS your_rate
+		FROM ' . GALLERY_IMAGES_TABLE . ' AS i
 		LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
-			ON p.image_id = r.rate_image_id
+			ON i.image_id = r.rate_image_id
 		LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r2
-			ON (p.image_id = r2.rate_image_id
+			ON (i.image_id = r2.rate_image_id
 				AND r2.rate_user_id = ' . $user->data['user_id'] . ')
 		LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
-			ON p.image_id = c.comment_image_id
-		WHERE image_id = ' . $image_id . '
-		GROUP BY p.image_id';
+			ON i.image_id = c.comment_image_id
+		WHERE i.image_id = ' . $image_id . '
+		GROUP BY i.image_id';
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);

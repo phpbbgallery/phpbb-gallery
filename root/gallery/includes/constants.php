@@ -35,6 +35,9 @@ define('MOD', 2);
 // Path (trailing slash required)
 define('ALBUM_UPLOAD_PATH', 'upload/');
 define('ALBUM_CACHE_PATH', 'upload/cache/');
+define('GALLERY_ROOT_PATH', 'gallery/');
+define('GALLERY_UPLOAD_PATH', GALLERY_ROOT_PATH . 'upload/');
+define('GALLERY_CACHE_PATH', GALLERY_ROOT_PATH . 'upload/cache/');
 
 define('ALBUM_DIR_NAME', 'gallery/');
 
