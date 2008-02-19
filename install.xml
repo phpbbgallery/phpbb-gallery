@@ -283,14 +283,6 @@ define('GALLERY_RATES_TABLE',			$table_prefix . 'gallery_rates');]]></action>
         <action type="after-add"><![CDATA[GALLERY_IMAGES_TABLE	=> array('image_username'),]]></action>
       </edit>
       <edit>
-        <find><![CDATA[		$sql = 'UPDATE ' . TOPICS_TABLE . " SET topic_last_poster_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
-			WHERE " . $db->sql_in_set('topic_last_poster_id', $user_id_ary);
-		$db->sql_query($sql);]]></find>
-        <action type="after-add"><![CDATA[		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " SET image_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
-			WHERE " . $db->sql_in_set('image_user_id', $user_id_ary);
-		$db->sql_query($sql);]]></action>
-      </edit>
-      <edit>
         <find><![CDATA[	if ($config['newest_username'] == $old_name)]]></find>
         <action type="before-add"><![CDATA[	$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 		SET album_name = '" . $db->sql_escape($new_name) . "'
@@ -298,6 +290,14 @@ define('GALLERY_RATES_TABLE',			$table_prefix . 'gallery_rates');]]></action>
 			AND album_user_id != 0
 			AND parent_id = 0";
 	$db->sql_query($sql);]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[		$sql = 'UPDATE ' . TOPICS_TABLE . " SET topic_last_poster_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('topic_last_poster_id', $user_id_ary);
+		$db->sql_query($sql);]]></find>
+        <action type="after-add"><![CDATA[		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " SET image_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('image_user_id', $user_id_ary);
+		$db->sql_query($sql);]]></action>
       </edit>
     </open>
     <open src="styles/prosilver/imageset/en/imageset.cfg">
