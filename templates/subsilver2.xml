@@ -56,10 +56,6 @@
     </copy>
     <open src="styles/subsilver2/template/overall_header.html">
       <edit>
-        <find><![CDATA[<link rel="stylesheet" href="{T_STYLESHEET_LINK}" type="text/css" />]]></find>
-        <action type="after-add"><![CDATA[<link rel="stylesheet" href="{T_THEME_PATH}/gallery_lytebox.css" type="text/css" />]]></action>
-      </edit>
-      <edit>
         <find><![CDATA[<a href="{U_FAQ}"><img src="{T_THEME_PATH}/images/icon_mini_faq.gif" width="12" height="13" alt="*" /> {L_FAQ}</a>]]></find>
         <action type="before-add"><![CDATA[<a href="{U_GALLERY_MOD}" title="{L_GALLERY_EXPLAIN}"><img src="{T_THEME_PATH}/images/icon_mini_gallery.gif" width="12" height="13" alt="*" /> {L_GALLERY}</a>&nbsp; &nbsp;]]></action>
       </edit>
