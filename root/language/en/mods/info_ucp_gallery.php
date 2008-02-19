@@ -62,6 +62,9 @@ $lang = array_merge($lang, array(
 	'DELETED_ALBUMS'				=> 'Albums successful deleted',
 	'MOVED_ALBUMS'					=> 'Albums successful moved',
 	'NO_ALBUM_STEALING'				=> 'You are not allowed to manage the Album of other users.',
+	'NO_SUBALBUMS_ALLOWED'			=> 'You don\'t have the permissions to add subalbums to your personal album',
+	'NO_MORE_SUBALBUMS_ALLOWED'		=> 'You added your maximum of subalbums to your personal album',
+	'NO_PERSALBUM_ALLOWED'			=> 'You don\'t have the permissions create your personal album',
 	'GOTO'							=> 'Go To',
 ));
 

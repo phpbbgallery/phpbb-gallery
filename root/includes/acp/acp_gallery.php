@@ -615,32 +615,17 @@ class acp_gallery
 		if( !isset($_POST['submit']) )
 		{
 			// Get the list of phpBB usergroups
-			$sql = 'SELECT group_id, group_name, group_type
+			$sql = 'SELECT group_id, group_name, group_type, allow_personal_albums, personal_subalbums
 					FROM ' . GROUPS_TABLE . '
 					ORDER BY group_name ASC';
 			$result = $db->sql_query($sql);
-
-			while( $row = $db->sql_fetchrow($result) )
-			{
-				$groupdata[] = $row;
-			}
-
-			// Get the current album settings for non created personal galleries
-			$sql = 'SELECT *
-					FROM ' . GALLERY_CONFIG_TABLE . "
-					WHERE config_name = 'personal_gallery_private'";
-			$result = $db->sql_query($sql);
-
-			$row = $db->sql_fetchrow($result);
-
-			$private_groups = explode(',', $row['config_value']);
-
-			for($i = 0; $i < count($groupdata); $i++)
+			while ($groupdata = $db->sql_fetchrow($result))
 			{
 				$template->assign_block_vars('creation_grouprow', array(
-					'GROUP_ID' 			=> $groupdata[$i]['group_id'],
-					'GROUP_NAME' 		=> ($groupdata[$i]['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $groupdata[$i]['group_name']] : $groupdata[$i]['group_name'],
-					'PRIVATE_CHECKED' 	=> (in_array($groupdata[$i]['group_id'], $private_groups)) ? 'checked="checked"' : ''
+					'GROUP_ID'		=> $groupdata['group_id'],
+					'GROUP_NAME'	=> ($groupdata['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $groupdata['group_name']] : $groupdata['group_name'],
+					'ALLOWED'		=> $groupdata['allow_personal_albums'],
+					'SUBALBUMS'		=> $groupdata['personal_subalbums'],
 				));
 			}
 
@@ -659,16 +644,21 @@ class acp_gallery
 			{
 				trigger_error('FORM_INVALID');
 			}
-			$create_groups 		= @implode(',', $_POST['create']);
+			$allow = request_var('allow', array(0));
+			$subalbums = request_var('subalbums', array(0));
+			$group_id = request_var('group_id', array(0));
 
-			$sql_ary = array(
-				'config_value'		=> $create_groups,
-			);
-
-			$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . '
-				SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
-				WHERE config_name = 'personal_gallery_private'";
-			$db->sql_query($sql);
+			for($i = 0; $i < count($group_id); $i++)
+			{
+				$sql_ary = array(
+					'allow_personal_albums'		=> $allow[$i],
+					'personal_subalbums'		=> $subalbums[$i],
+				);
+				$sql = 'UPDATE ' . GROUPS_TABLE . '
+					SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
+					WHERE group_id = '{$group_id[$i]}'";
+				$db->sql_query($sql);
+			}
 
 			trigger_error($user->lang['ALBUM_AUTH_SUCCESSFULLY'] . adm_back_link($this->u_action));
 		}

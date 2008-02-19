@@ -439,28 +439,28 @@
 
 <!-- ELSEIF S_PERSONAL_ALBUM_PERMISSIONS_SELECT_GROUPS -->
 <form action="{S_ALBUM_ACTION}" method="post">
-<table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline">
-	<tr>
-		<th class="thCornerL" height="25" nowrap="nowrap">{L_USERGROUPS}</th>
-		<th class="thTop" nowrap="nowrap">{L_CAN_CREATE}</th>
-	</tr>
-	<!-- BEGIN creation_grouprow -->
-	<tr>
-		<td class="row1" align="center" height="28"><span class="gen">{creation_grouprow.GROUP_NAME}</span></td>
-		<td class="row2" align="center">
-			<input name="create[]" type="checkbox" class="radio" {creation_grouprow.PRIVATE_CHECKED} value="{creation_grouprow.GROUP_ID}" />
-		</td>
-
-	</tr>
-	<!-- END creation_grouprow -->
-</table>
-<br />
-<fieldset class="submit-buttons">
+	<fieldset>
+		<legend>{L_USERGROUPS}</legend>
+		<!-- BEGIN creation_grouprow -->
+			<dl>
+				<dt><label for="target">{creation_grouprow.GROUP_NAME}</label></dt>
+				<dd><select id="target" name="allow[]">
+						<option value="2" <!-- IF creation_grouprow.ALLOWED == 2 --> selected="selected"<!-- ENDIF -->>{L_NEVER}</option>
+						<option value="0" <!-- IF creation_grouprow.ALLOWED == 0 --> selected="selected"<!-- ENDIF -->>{L_NO}</option>
+						<option value="1" <!-- IF creation_grouprow.ALLOWED == 1 --> selected="selected"<!-- ENDIF -->>{L_YES}</option>
+					</select></dd>
+				<dd><br /><input class="post" type="text" maxlength="9" size="9" name="subalbums[]" value="{creation_grouprow.SUBALBUMS}" />
+				<input class="post" type="hidden" maxlength="9" size="9" name="group_id[]" value="{creation_grouprow.GROUP_ID}" /></dd>
+			</dl>
+			<!-- IF not creation_grouprow.S_LAST_ROW --><br /><!-- ENDIF -->
+		<!-- END creation_grouprow -->
+	</fieldset>
+	<fieldset class="submit-buttons">
 		<legend>{L_SUBMIT}</legend>
 		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
 		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
-</fieldset>
-{S_FORM_TOKEN}
+	</fieldset>
+	{S_FORM_TOKEN}
 </form>
 
 <!-- ENDIF -->

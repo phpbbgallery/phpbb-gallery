@@ -100,6 +100,19 @@ class ucp_gallery
 
 		if (!$user->data['album_id'])
 		{
+			//check if the user has already reached his limit
+			$sql = 'SELECT MAX(g.allow_personal_albums) as allow_personal_albums, MAX(g.personal_subalbums) as personal_subalbums
+					FROM ' . GROUPS_TABLE . ' as g
+					LEFT JOIN ' . USER_GROUP_TABLE . " as ug
+						ON ug.group_id = g.group_id
+					WHERE ug.user_id = {$user->data['user_id']}
+						AND ug.user_pending = 0";
+			$result = $db->sql_query($sql);
+			$permission_data = $db->sql_fetchrow($result);
+			if ($permission_data['allow_personal_albums'] != 1)
+			{
+				trigger_error('NO_PERSALBUM_ALLOWED');
+			}
 			$album_data = array(
 				'album_name'					=> $user->data['username'],
 				'parent_id'						=> request_var('parent_id', 0),
@@ -210,6 +223,38 @@ class ucp_gallery
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 
 		include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+
+		//check if the user has already reached his limit
+		$sql = 'SELECT MAX(g.allow_personal_albums) as allow_personal_albums, MAX(g.personal_subalbums) as personal_subalbums
+			FROM ' . GROUPS_TABLE . ' as g
+			LEFT JOIN ' . USER_GROUP_TABLE . " as ug
+				ON ug.group_id = g.group_id
+			WHERE ug.user_id = {$user->data['user_id']}
+				AND ug.user_pending = 0";
+		$result = $db->sql_query($sql);
+		$permission_data = $db->sql_fetchrow($result);
+		if ($permission_data['allow_personal_albums'] != 1)
+		{
+			trigger_error('NO_SUBALBUMS_ALLOWED');
+		}
+		$sql = 'SELECT MAX(g.allow_personal_albums) as allow_personal_albums, MAX(g.personal_subalbums) as personal_subalbums
+			FROM ' . GROUPS_TABLE . ' as g
+			LEFT JOIN ' . USER_GROUP_TABLE . " as ug
+				ON ug.group_id = g.group_id
+			WHERE ug.user_id = {$user->data['user_id']}
+				AND ug.user_pending = 0";
+		$result = $db->sql_query($sql);
+		$permission_data = $db->sql_fetchrow($result);
+		$sql = 'SELECT COUNT(album_id) as albums
+			FROM ' . GALLERY_ALBUMS_TABLE . "
+			WHERE album_user_id = {$user->data['user_id']}";
+		$result = $db->sql_query($sql);
+		$albums = $db->sql_fetchrow($result);
+		if (($albums['albums'] - 1) >= $permission_data['personal_subalbums'])
+		{
+			trigger_error('NO_MORE_SUBALBUMS_ALLOWED');
+		}
+
 		$submit = (isset($_POST['submit'])) ? true : false;
 
 		if(!$submit)
@@ -235,6 +280,7 @@ class ucp_gallery
 			{
 				trigger_error('FORM_INVALID');
 			}
+			//create the subalbum
 			$album_data = array(
 				'album_name'					=> request_var('album_name', '', true),
 				'parent_id'						=> request_var('parent_id', 0),
