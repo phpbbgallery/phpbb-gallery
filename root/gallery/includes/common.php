@@ -47,6 +47,8 @@ $template->assign_vars(array(
 $user->add_lang('mods/info_acp_gallery');
 include($phpbb_root_path . 'gallery/includes/functions.' . $phpEx);
 
+//dont display on recent image feature
+$recent_image_addon = isset($recent_image_addon) ? true : false;
 if (!$recent_image_addon)
 {
 	$template->assign_block_vars('navlinks', array(
