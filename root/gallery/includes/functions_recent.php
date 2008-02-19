@@ -16,8 +16,9 @@ if (!defined('IN_PHPBB'))
 function recent_gallery_images($rows, $columns)
 {
 	global $db, $phpEx, $user, $phpbb_root_path, $config, $template;
-	
+
 	$user->add_lang('mods/gallery');
+	$recent_image_addon = true;
 	include_once($phpbb_root_path . 'gallery/includes/common.'.$phpEx);
 	include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 $allowed_cat = $mod_cat = '';
