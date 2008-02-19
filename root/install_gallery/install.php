@@ -387,10 +387,27 @@ switch ($mode)
 
 			//create some new columns
 			$phpbb_db_tools = new phpbb_db_tools($db);
-			$phpbb_db_tools->sql_column_add(GALLERY_IMAGES_TABLE, 'image_user_colour', array('VCHAR:6', ''));
 			$phpbb_db_tools->sql_column_change(GALLERY_IMAGES_TABLE, 'image_username', array('VCHAR:255', ''));
-			$phpbb_db_tools->sql_column_add(GALLERY_ALBUMS_TABLE, 'album_user_id', array('UINT', 0));
-			$phpbb_db_tools->sql_column_add(USERS_TABLE, 'album_id', array('UINT', 0));
+			if (!$phpbb_db_tools->sql_column_exists(GALLERY_IMAGES_TABLE, 'image_user_colour'))
+			{
+				$phpbb_db_tools->sql_column_add(GALLERY_IMAGES_TABLE, 'image_user_colour', array('VCHAR:6', ''));
+			}
+			if (!$phpbb_db_tools->sql_column_exists(GALLERY_ALBUMS_TABLE, 'album_user_id'))
+			{
+				$phpbb_db_tools->sql_column_add(GALLERY_ALBUMS_TABLE, 'album_user_id', array('UINT', 0));
+			}
+			if (!$phpbb_db_tools->sql_column_exists(USERS_TABLE, 'album_id'))
+			{
+				$phpbb_db_tools->sql_column_add(USERS_TABLE, 'album_id', array('UINT', 0));
+			}
+			if (!$phpbb_db_tools->sql_column_exists(GROUPS_TABLE, 'allow_personal_albums'))
+			{
+				$phpbb_db_tools->sql_column_add(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
+			}
+			if (!$phpbb_db_tools->sql_column_exists(GROUPS_TABLE, 'personal_subalbums'))
+			{
+				$phpbb_db_tools->sql_column_add(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
+			}
 
 			//update the new columns image_username and image_user_colour
 			$sql = 'SELECT i.image_user_id, i.image_id, u.username, u.user_colour
