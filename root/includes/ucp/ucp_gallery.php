@@ -368,7 +368,7 @@ class ucp_gallery
 				'L_TITLE_EXPLAIN'	=> $user->lang['EDIT_SUBALBUM_EXP'],
 
 				'S_ALBUM_ACTION' 			=> $this->u_action . '&amp;action=edit&amp;album_id=' . $album_id,
-				'S_PARENT_OPTIONS'			=> $parents_list,
+				'S_PARENT_OPTIONS'			=> '<option value="' . $user->data['album_id'] . '">' . $user->lang['NO_PARENT'] . '</option>' . $parents_list,
 
 				'ALBUM_NAME' 				=> $album_data['album_name'],
 				'ALBUM_DESC'				=> $album_desc_data['text'],
@@ -508,7 +508,7 @@ class ucp_gallery
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 
 			trigger_error($user->lang['EDITED_SUBALBUM'] . '<br /><br />
-				<a href="' . append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . $album_data['parent_id']) . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
+				<a href="' . append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . (($album_data['parent_id']) ? $album_data['parent_id'] : $user->data['album_id'])) . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
 		}
 	}
 
