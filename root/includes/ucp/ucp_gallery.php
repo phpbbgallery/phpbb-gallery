@@ -391,7 +391,7 @@ class ucp_gallery
 				'parent_id'						=> request_var('parent_id', (($album_id == $user->data['album_id']) ? 0 : $user->data['album_id'])),
 				//left_id and right_id are created some lines later
 				'album_parents'					=> '',
-				'album_type'					=> request_var('album_type', 0),
+				'album_type'					=> 2,
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc(request_var('album_desc', '', true)),
 				'album_view_level'				=> request_var('album_view_level', 0),
