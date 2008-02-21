@@ -13,7 +13,7 @@ if (!defined('IN_PHPBB'))
 	die('Hacking attempt');
 }
 
-function personal_album_select($user_id, $select_id = 0)
+function personal_album_select($user_id, $select_id = 0, $disable_id = 0)
 {
 	global $db, $user, $auth;
 
@@ -25,12 +25,17 @@ function personal_album_select($user_id, $select_id = 0)
 		ORDER BY left_id ASC";
 	$result = $db->sql_query($sql, 600);
 
-	$right = 0;
+	$left_block = $right_block = $right = 0;
 	$padding_store = array('0' => '');
 	$padding = $forum_list = '';
 
 	while ($row = $db->sql_fetchrow($result))
 	{
+		if ($row['album_id'] == $disable_id)
+		{
+			$left_block = $row['left_id'];
+			$right_block = $row['right_id'];
+		}
 		if ($row['left_id'] < $right)
 		{
 			$padding .= '&nbsp; &nbsp;';
@@ -41,9 +46,14 @@ function personal_album_select($user_id, $select_id = 0)
 			$padding = (isset($padding_store[$row['parent_id']])) ? $padding_store[$row['parent_id']] : '';
 		}
 		$right = $row['right_id'];
+		$disabled = false;
+		if ((($left_block <= $row['left_id']) && ($row['right_id'] <= $right_block)))
+		{
+			$disabled = true;
+		}
 
 		$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? ' selected="selected"' : '') : (($row['album_id'] == $select_id) ? ' selected="selected"' : '');
-		$forum_list .= '<option value="' . $row['album_id'] . '"' .$selected . '>' . $padding . $row['album_name'] . '</option>';
+		$forum_list .= '<option value="' . $row['album_id'] . '"' . (($disabled) ? ' disabled="disabled" class="disabled-option"' : $selected) . '>' . $padding . $row['album_name'] . '</option>';
 	}
 	$db->sql_freeresult($result);
 	unset($padding_store);

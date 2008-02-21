@@ -358,7 +358,7 @@ class ucp_gallery
 			}
 			$album_data = $db->sql_fetchrow($result);
 			$album_desc_data = generate_text_for_edit($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_options']);
-			$parents_list = personal_album_select($user->data['user_id'], $album_data['parent_id']);
+			$parents_list = personal_album_select($user->data['user_id'], $album_data['parent_id'], $album_id);
 
 			$template->assign_vars(array(
 				'S_EDIT_SUBALBUM'				=> true,
