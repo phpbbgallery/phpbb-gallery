@@ -394,13 +394,6 @@ class ucp_gallery
 				'album_type'					=> 2,
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc(request_var('album_desc', '', true)),
-				'album_view_level'				=> request_var('album_view_level', 0),
-				'album_upload_level'			=> request_var('album_upload_level', 0),
-				'album_rate_level'				=> request_var('album_rate_level', 0),
-				'album_comment_level'			=> request_var('album_comment_level', 0),
-				'album_edit_level'				=> request_var('album_edit_level', 0),
-				'album_delete_level'			=> request_var('album_delete_level', 0),
-				'album_approval'				=> request_var('album_approval', 0),
 			);
 			generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], request_var('desc_parse_bbcode', false), request_var('desc_parse_urls', false), request_var('desc_parse_smilies', false));
 			$row = get_album_info($album_id);
