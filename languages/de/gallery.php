@@ -12,10 +12,12 @@ if (!defined('IN_PHPBB'))
 { 
 	exit; 
 }
+
 if (empty($lang) || !is_array($lang))
 {
 	$lang = array();
 }
+
 
 // DEVELOPERS PLEASE NOTE
 //
@@ -53,6 +55,7 @@ $lang = array_merge($lang, array(
 	'ALBUM_VIEW_CAN'						=> 'Du <strong>darfst</strong> Bilder in diesem Album ansehen',
 	'ALBUM_VIEW_CANNOT'						=> 'Du <strong>darfst keine</strong> Bilder in diesem Album ansehen',
 
+	'ALBUM_IS_CATEGORY'						=> 'Das Album, in welches du dich gemogelt hast, ist eine Kategorie.<br />In Kategorien können keine Bilder hochgeladen werden.',
 	'ALREADY_RATED'							=> 'Du hast dieses Bild bereits bewertet',
 	'APPROVAL'								=> 'Genehmigung',
 	'APPROVE'								=> 'Genehmigen',
@@ -92,6 +95,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_INSTALLATION'			=> 'v%s installieren',
 	'GALLERY_UPDATE'				=> 'v%s zu v%s aktualisieren',
 	'GALLERY_UPDATE_SMARTOR'		=> 'Smartor-Album zu v%s aktualisieren',
+	'GALLERY_UPDATE_SMARTOR2'		=> 'Öffne bitte die Datei install_gallery/install.php<br />Suche diese Zeile: $smartor_prefix = \'\';//ENTER YOUR PREFIX HERE example $smartor_prefix = \'phpbb2_\';<br />und passe sie auf Deinen Präfix an.<br /><br />Danach rufe diese datei erneut auf.',
 	'GALLERY_INSTALL_NOTE1'		=> 'Script für die automatische Galerie-Datenbank-Erstellung.<br /><br /><span style="color:red; font-weight: bold;">Diese Script wird alle Einstellungen, Kategorien, Bilder und Kommentare von vorherigen Installationen löschen!</span><br /><span style="color:green; font-weight: bold;">Ein Update löscht diese Daten nicht.</span><br />Bist Du Dir absolut sicher?!',
 	'GALLERY_INSTALL_NOTE2'		=> '<span style="color:green; font-weight: bold; font-size: 1.5em;">Galerie-Datenbank erfolgreich erstellt.</span>',
 	'GALLERY_INSTALL_NOTE3'		=> 'Du musst Gründer Rechte besitzen um dieses Script ausführen zu können.',
@@ -160,6 +164,8 @@ $lang = array_merge($lang, array(
 	'SORT_ASCENDING'						=> 'Aufsteigend',
 	'SORT_DESCENDING'						=> 'Absteigend',
 	'STATUS'								=> 'Status',
+	'SUBALBUMS'								=> 'Subalben',
+	'SUBALBUM'								=> 'Subalbum',
 
 	'THUMBNAIL_SIZE'						=> 'Vorschaubildgrösse (Pixel)',
 
@@ -186,12 +192,7 @@ $lang = array_merge($lang, array(
 
 	'YOUR_COMMENT'							=> 'Dein Kommentar',
 	'YOUR_PERSONAL_ALBUM'					=> 'Dein persönliches Album',
-	'YOUR_RATING'							=> 'Deine Bewertung',
-	
-//new
-	'SUBALBUMS'						=> 'Subalben',
-	'SUBALBUM'						=> 'Subalbum',
-	'ALBUM_IS_CATEGORY'				=> 'Das Album in welches du dich gemogelt hast, ist eine Kategorie.<br />In Kategorien können keine Bilder hochgeladen werden.',
+	'YOUR_RATING'							=> 'Deine Bewertung',	
 ));
 
 ?>
