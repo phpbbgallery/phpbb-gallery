@@ -271,7 +271,7 @@ class ucp_gallery
 				'S_DESC_BBCODE_CHECKED'		=> true,
 				'S_DESC_SMILIES_CHECKED'	=> true,
 				'S_DESC_URLS_CHECKED'		=> true,
-				'S_PARENT_OPTIONS'			=> $parents_list,
+				'S_PARENT_OPTIONS'			=> '<option value="' . $user->data['album_id'] . '">' . $user->lang['NO_PARENT'] . '</option>' . $parents_list,
 			));
 		}
 		else
