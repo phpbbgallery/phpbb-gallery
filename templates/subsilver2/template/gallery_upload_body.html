@@ -8,10 +8,6 @@ function checkAlbumForm() {
 	{
 		formErrors = "{L_UPLOAD_NO_TITLE}";
 	}
-	else if (document.upload.pic_file.value.length < 2)
-	{
-		formErrors = "{L_UPLOAD_NO_FILE}";
-	}
 	else if (document.upload.pic_desc.value.length > {S_PIC_DESC_MAX_LENGTH})
 	{
 		formErrors = "{L_DESC_TOO_LONG}";
@@ -34,11 +30,17 @@ function checkAlbumForm() {
 		<tr>
 			<th colspan="2">{L_UPLOAD_IMAGE}</th>
 		</tr>
+
+		<!-- IF ERROR -->
+			<tr>
+				<td class="row2" colspan="2" align="center"><span class="genmed error">{ERROR}</span></td>
+			</tr>
+		<!-- ENDIF -->
 		<!-- BEGIN switch_user_logged_out -->
-		<tr>
-			<td class="row1" width="30%" height="28"><span class="gen">{L_USERNAME}:</span></td>
-			<td class="row2"><input class="inputbox autowidth" type="text" name="pic_username" size="60" maxlength="32" /></td>
-		</tr>
+			<tr>
+				<td class="row1" width="30%" height="28"><span class="gen">{L_USERNAME}:</span></td>
+				<td class="row2"><input class="inputbox autowidth" type="text" name="pic_username" size="60" maxlength="32" /></td>
+			</tr>
 		<!-- END switch_user_logged_out -->
 		<tr>
 			<td class="row1" height="28"><span class="gen">{L_IMAGE_TITLE}:</span></td>
@@ -55,6 +57,11 @@ function checkAlbumForm() {
 			<td class="row2"><input class="post" type="file" name="pic_thumbnail" size="49" /></td>
 		</tr>
 		<!-- END switch_manual_thumbnail -->
+		<tr>
+			<td class="row1" height="28"><span class="gen">{L_MU}:<br />
+				</span><span class="gensmall">{L_MU_EXP}</span></td>
+			<td class="row2"><input class="inputbox autowidth" type="text" name="multiple_upload" size="60" /></td>
+		</tr>
 		<tr>
 			<td class="row1" height="28"><span class="gen">{L_IMAGE_DESC}:<br />
 				{L_PLAIN_TEXT_ONLY}<br />

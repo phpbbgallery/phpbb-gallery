@@ -193,6 +193,10 @@ $lang = array_merge($lang, array(
 	'YOUR_COMMENT'							=> 'Dein Kommentar',
 	'YOUR_PERSONAL_ALBUM'					=> 'Dein persönliches Album',
 	'YOUR_RATING'							=> 'Deine Bewertung',	
+
+	'MU_PENDING'					=> '%1$s von %2$s Bildern hochgeladen',
+	'MU'							=> 'Multi-Upload',
+	'MU_EXP'						=> 'Trage hier den vollen Pfad zu deiner multiple_upload.txt ein',
 ));
 
 ?>
