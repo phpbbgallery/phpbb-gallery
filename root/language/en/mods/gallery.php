@@ -65,7 +65,7 @@ $lang = array_merge($lang, array(
 	'PNG_ALLOWED'					=> 'Allowed to upload PNG files',
 	'GIF_ALLOWED'					=> 'Allowed to upload GIF files',
 
-	'BAD_UPLOAD_FILE_SIZE'				=> 'Your uploaded file is too large or corrupted',
+	'BAD_UPLOAD_FILE_SIZE'				=> 'Your uploaded file is too large',
 
 	'CLICK_RETURN_ALBUM'				=> 'Click %shere%s to return to the album',
 	'CLICK_RETURN_GALLERY_INDEX'		=> 'Click %shere%s to return to the gallery index',
@@ -144,7 +144,7 @@ $lang = array_merge($lang, array(
 	'NOT_RATED'						=> 'not rated',
 
 	'ORDER'							=> 'Order',
-	'OUT_OF_RANGE_VALUE'			=> 'Value is out of range',				
+	'OUT_OF_RANGE_VALUE'			=> 'Value is out of range',
 
 	'PERSONAL_ALBUM_EXPLAIN'			=> 'You can view the personal albums of other users by clicking on the link in their profiles.',
 	'PERSONAL_ALBUM_NOT_CREATED'		=> 'The personal gallery of %s is empty or has not been created.',
@@ -193,6 +193,10 @@ $lang = array_merge($lang, array(
 	'YOUR_COMMENT'					=> 'Your comment',
 	'YOUR_PERSONAL_ALBUM'			=> 'Your Personal Album',
 	'YOUR_RATING'					=> 'Your rating',
+
+	'MU_PENDING'					=> 'Uploaded %1$s of %2$s images',
+	'MU'							=> 'Multiple Upload',
+	'MU_EXP'						=> 'Post your way to the multiple_upload.txt',
 ));
 
 ?>
