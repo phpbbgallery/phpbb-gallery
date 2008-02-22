@@ -301,6 +301,7 @@ elseif ($submit)
 			'image_width'			=> $filetype[0],
 			'image_name'			=> request_var('pic_title', '', true),
 			'image_desc'			=> utf8_substr(request_var('pic_desc', '', true), 0, $album_config['desc_length']),
+			'image_time'			=> time(),
 		);
 		upload_images($image_data, $loop);
 		trigger_error('ALBUM_UPLOAD_SUCCESSFUL');
