@@ -194,9 +194,8 @@ $lang = array_merge($lang, array(
 	'YOUR_PERSONAL_ALBUM'			=> 'Your Personal Album',
 	'YOUR_RATING'					=> 'Your rating',
 
-	'MU_PENDING'					=> 'Uploaded %1$s of %2$s images',
-	'MU'							=> 'Multiple Upload',
-	'MU_EXP'						=> 'Post your way to the multiple_upload.txt',
+	'LOOP_EXP'						=> 'If you upload more than one file, you may include <span style="font-weight: bold;">{NUM}</span> into the imagename and description.<br />
+										It counts through the images, starting on the value you entered.',
 ));
 
 ?>

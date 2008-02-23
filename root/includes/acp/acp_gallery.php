@@ -419,6 +419,7 @@ class acp_gallery
 			'ACP_GALLERY_TITLE_EXPLAIN'			=> $user->lang['GALLERY_CONFIG_EXPLAIN'],
 
 			'MAX_IMAGES' 						=> $new['max_pics'],
+			'UPLOAD_IMAGES' 					=> $new['upload_images'],
 			'MAX_FILE_SIZE' 					=> $new['max_file_size'],
 			'MAX_WIDTH' 						=> $new['max_width'],
 			'MAX_HEIGHT' 						=> $new['max_height'],

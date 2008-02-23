@@ -384,6 +384,18 @@ switch ($mode)
 				);
 				$db->sql_query('INSERT INTO ' . GALLERY_CONFIG_TABLE . $db->sql_build_array('INSERT', $sql_ary));
 			}
+			$sql = 'SELECT * FROM ' . GALLERY_CONFIG_TABLE . " WHERE config_name = 'upload_images'";
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+			if (!$row)
+			{
+				$sql_ary = array(
+					'config_name'				=> 'upload_images',
+					'config_value'				=> 10,
+				);
+				$db->sql_query('INSERT INTO ' . GALLERY_CONFIG_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+			}
 
 			//create some new columns
 			$phpbb_db_tools = new phpbb_db_tools($db);

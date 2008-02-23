@@ -1,29 +1,4 @@
 <!-- INCLUDE overall_header.html -->
-
-<script type="text/javascript">
-<!--
-function checkAlbumForm() {
-	formErrors = false;
-
-	if (document.upload.pic_title.value.length < 2)
-	{
-		formErrors = "{L_UPLOAD_NO_TITLE}";
-	}
-	else if (document.upload.pic_desc.value.length > {S_PIC_DESC_MAX_LENGTH})
-	{
-		formErrors = "{L_DESC_TOO_LONG}";
-	}
-
-	if (formErrors) {
-		alert(formErrors);
-		return false;
-	} else {
-		return true;
-	}
-}
-// -->
-</script>
-
 <h2><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>
 
 <form id="upload" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data" onsubmit="return checkAlbumForm()">
@@ -37,30 +12,29 @@ function checkAlbumForm() {
 			<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT -->
 			<dl>
 				<dt><label for="username">{L_USERNAME}:</label></dt>
-				<dd id="username"><input class="inputbox autowidth" type="text" name="pic_username" size="60" maxlength="32" /></dd>
+				<dd id="username"><input class="inputbox autowidth" type="text" name="username" size="60" maxlength="32" /></dd>
 			</dl>
 			<!-- ENDIF -->
 			<dl>
 				<dt><label for="title">{L_IMAGE_TITLE}:</label></dt>
-				<dd id="title"><input class="inputbox autowidth" type="text" name="pic_title" size="60" /></dd>
+				<dd id="title"><input class="inputbox autowidth" type="text" name="image_name" size="60" /></dd>
+				<!-- IF S_MULTI_IMAGES --><dd id="title"><input class="inputbox autowidth" type="text" name="image_num" size="5" value="1" /> {L_LOOP_EXP}</dd><!-- ENDIF -->
 			</dl>
-			<dl>
-				<dt><label for="file">{L_FILE}:</label></dt>
-				<dd id="file"><input class="inputbox autowidth" type="file" name="pic_file" size="52" /></dd>
-			</dl>
-			<!-- BEGIN switch_manual_thumbnail -->
-			<dl>
-				<dt><label for="file">{L_UPLOAD_THUMBNAIL}:</label>{L_UPLOAD_THUMBNAIL_EXPLAIN}<br />{L_THUMBNAIL_SIZE}: <strong>{S_THUMBNAIL_SIZE}</strong></dt>
-				<dd id="file"><input class="inputbox autowidth" type="file" name="pic_thumbnail" size="52" /></dd>
-			</dl>
-			<!-- END switch_manual_thumbnail -->
-			<dl>
-				<dt><label for="file">{L_MU}:</label><br />{L_MU_EXP}</dt>
-				<dd id="file"><input class="inputbox autowidth" type="text" name="multiple_upload" size="52" /></dd>
-			</dl>
+			<!-- BEGIN upload_image -->
+				<dl>
+					<dt><label for="file">{L_FILE}:</label></dt>
+					<dd id="file"><input class="inputbox autowidth" type="file" name="image[]" size="52" /></dd>
+				</dl>
+				<!-- IF not S_THUMBNAIL -->
+				<dl>
+					<dt><label for="file">{L_UPLOAD_THUMBNAIL}:</label>{L_UPLOAD_THUMBNAIL_EXPLAIN}<br />{L_THUMBNAIL_SIZE}: <strong>{S_THUMBNAIL_SIZE}</strong></dt>
+					<dd id="file"><input class="inputbox autowidth" type="file" name="thumbnail[]" size="52" /></dd>
+				</dl>
+				<!-- ENDIF -->
+			<!-- END upload_image -->
 			<dl>
 				<dt><label for="description">{L_IMAGE_DESC}:</label><br />{L_PLAIN_TEXT_ONLY}<br />{L_MAX_LENGTH}: <b>{S_PIC_DESC_MAX_LENGTH}</b></dt>
-				<dd id="description"><textarea class="inputbox" cols="60" rows="4" name="pic_desc"></textarea></dd>
+				<dd id="description"><textarea class="inputbox" cols="60" rows="4" name="image_desc"></textarea></dd>
 			</dl>
 			<dl>
 				<dt><label for="max_filesize">{L_MAX_FILE_SIZE}:</label></dt>

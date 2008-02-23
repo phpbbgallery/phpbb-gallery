@@ -176,6 +176,7 @@ $lang = array_merge($lang, array(
 	'IMPORT_DIR_DEL'			=> 'Bitte beachte, dass die Bilder aus dem Verzeichnis <span style="color: red;">gelöscht</span> werden.<br />Lege also vorher eine Kopie an.',
 	'IMPORT_ALBUM'				=> 'Zielalbum:',
 	'IMPORT_CIRCLE'				=> 'Bilder die in einem Durchgang geladen werden sollen:',
+	'UPLOAD_IMAGES'				=> 'Mehrere Bilder auf einmal hochladen',
 ));
 
 ?>

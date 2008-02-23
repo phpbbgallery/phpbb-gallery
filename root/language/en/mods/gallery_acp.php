@@ -177,6 +177,7 @@ $lang = array_merge($lang, array(
 	'IMPORT_DIR_DEL'			=> 'Please note, that the images are <span style="color: red;">deleted</span> form the root.<br />So you better copy them to an other folder.',
 	'IMPORT_ALBUM'				=> 'Album to import images to:',
 	'IMPORT_CIRCLE'				=> 'Images to import per cycle:',
+	'UPLOAD_IMAGES'				=> 'Upload Multiple Images',
 ));
 
 ?>
