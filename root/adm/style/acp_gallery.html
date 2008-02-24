@@ -448,13 +448,18 @@
 		<!-- BEGIN creation_grouprow -->
 			<dl>
 				<dt><label for="target">{creation_grouprow.GROUP_NAME}</label></dt>
-				<dd><select id="target" name="allow[]">
+				<dd>{L_VIEW_PERSONALS}: <select id="target" name="view[]">
+						<option value="2" <!-- IF creation_grouprow.VIEW == 2 --> selected="selected"<!-- ENDIF -->>{L_NEVER}</option>
+						<option value="0" <!-- IF creation_grouprow.VIEW == 0 --> selected="selected"<!-- ENDIF -->>{L_NO}</option>
+						<option value="1" <!-- IF creation_grouprow.VIEW == 1 --> selected="selected"<!-- ENDIF -->>{L_YES}</option>
+					</select></dd>
+				<dd><br />{L_CREATE_PERSONALS}: <select id="target" name="allow[]">
 						<option value="2" <!-- IF creation_grouprow.ALLOWED == 2 --> selected="selected"<!-- ENDIF -->>{L_NEVER}</option>
 						<option value="0" <!-- IF creation_grouprow.ALLOWED == 0 --> selected="selected"<!-- ENDIF -->>{L_NO}</option>
 						<option value="1" <!-- IF creation_grouprow.ALLOWED == 1 --> selected="selected"<!-- ENDIF -->>{L_YES}</option>
 					</select></dd>
-				<dd><br /><input class="post" type="text" maxlength="9" size="9" name="subalbums[]" value="{creation_grouprow.SUBALBUMS}" />
-				<input class="post" type="hidden" maxlength="9" size="9" name="group_id[]" value="{creation_grouprow.GROUP_ID}" /></dd>
+				<dd><br /><input class="post" type="text" maxlength="9" size="3" name="subalbums[]" value="{creation_grouprow.SUBALBUMS}" /> {L_ALLOWED_SUBS}
+					<input class="post" type="hidden" name="group_id[]" value="{creation_grouprow.GROUP_ID}" /></dd>
 			</dl>
 			<!-- IF not creation_grouprow.S_LAST_ROW --><br /><!-- ENDIF -->
 		<!-- END creation_grouprow -->

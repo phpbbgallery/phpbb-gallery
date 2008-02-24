@@ -59,21 +59,13 @@ if (empty($thispic) or !file_exists(ALBUM_UPLOAD_PATH . $pic_filename))
 // ------------------------------------
 // Get the current Category Info
 // ------------------------------------
+$sql = 'SELECT *
+	FROM ' . GALLERY_ALBUMS_TABLE . '
+	WHERE album_id = ' . $album_id;
+$result = $db->sql_query($sql);
+$album_data = $db->sql_fetchrow($result);
 
-if ($album_id <> PERSONAL_GALLERY)
-{
-	$sql = 'SELECT *
-		FROM ' . GALLERY_ALBUMS_TABLE . '
-		WHERE album_id = ' . $album_id;
-	$result = $db->sql_query($sql);
-	$thiscat = $db->sql_fetchrow($result);
-}
-else
-{
-	$thiscat = init_personal_gallery_cat($user_id);
-}
-
-if (empty($thiscat))
+if (empty($album_data))
 {
 	die($user->lang['ALBUM_NOT_EXIST']);
 }
@@ -82,9 +74,7 @@ if (empty($thiscat))
 // ------------------------------------
 // Check the permissions
 // ------------------------------------
-
-$album_user_access = album_user_access($album_id, $thiscat, 1, 0, 0, 0, 0, 0);// VIEW
-
+$album_user_access = (!$album_data['album_user_id']) ? album_user_access($album_id, $album_data, 1, 0, 0, 0, 0, 0) : personal_album_access($album_data['album_user_id']);// VIEW
 if (!$album_user_access['view'])
 {
 	die($user->lang['NOT_AUTHORISED']);
@@ -97,7 +87,7 @@ if (!$album_user_access['view'])
 
 if ($user->data['user_type'] <> USER_FOUNDER)
 {
-	if (($thiscat['album_approval'] == ADMIN) || (($thiscat['album_approval'] == MOD) && !$album_user_access['moderator']))
+	if (($album_data['album_approval'] == ADMIN) || (($album_data['album_approval'] == MOD) && !$album_user_access['moderator']))
 	{
 		if (!$thispic['image_approval'])
 		{
@@ -210,31 +200,32 @@ else if (($pic_width > $album_config['thumbnail_size']) or ($pic_height > $album
 
 	if ($pic_width > $pic_height)
 	{
-		$thumbnail_width = $album_config['thumbnail_size'];
-		$thumbnail_height = $album_config['thumbnail_size'] * ($pic_height/$pic_width);
+		$thumbnail_width = 6 * $album_config['thumbnail_size'];
+		$thumbnail_height = 6 * $album_config['thumbnail_size'] * ($pic_height/$pic_width);
 	}
 	else
 	{
-		$thumbnail_height = $album_config['thumbnail_size'];
-		$thumbnail_width = $album_config['thumbnail_size'] * ($pic_width/$pic_height);
+		$thumbnail_height = 6 * $album_config['thumbnail_size'];
+		$thumbnail_width = 6 * $album_config['thumbnail_size'] * ($pic_width/$pic_height);
 	}
 
 	// Create thumbnail + 16 Pixel extra for imagesize text 
-	$thumbnail = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height + 16) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height + 16); 
+	//$thumbnail = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height + 16) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height + 16); 
+	$thumbnail = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height); 
 
 
 	$resize_function = ($album_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
 
 	$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $pic_width, $pic_height);
-	$dimension_font = 1; 
-	$dimension_filesize = filesize(ALBUM_UPLOAD_PATH . $pic_filename); 
-	$dimension_string = intval($pic_width) . "x" . intval($pic_height) . "(" . intval($dimension_filesize/1024) . "KB)"; 
-	$dimension_colour = ImageColorAllocate($thumbnail,255,255,255); 
-	$dimension_height = imagefontheight($dimension_font); 
-	$dimension_width = imagefontwidth($dimension_font) * strlen($dimension_string); 
-	$dimension_x = ($thumbnail_width - $dimension_width) / 2; 
-	$dimension_y = $thumbnail_height + ((16 - $dimension_height) / 2); 
-	imagestring($thumbnail, 1, $dimension_x, $dimension_y, $dimension_string, $dimension_colour);
+	#$dimension_font = 1; 
+	#$dimension_filesize = filesize(ALBUM_UPLOAD_PATH . $pic_filename); 
+	#$dimension_string = intval($pic_width) . "x" . intval($pic_height) . "(" . intval($dimension_filesize/1024) . "KB)"; 
+	#$dimension_colour = ImageColorAllocate($thumbnail,255,255,255); 
+	#$dimension_height = imagefontheight($dimension_font); 
+	#$dimension_width = imagefontwidth($dimension_font) * strlen($dimension_string); 
+	#$dimension_x = ($thumbnail_width - $dimension_width) / 2; 
+	#$dimension_y = $thumbnail_height + ((16 - $dimension_height) / 2); 
+	#imagestring($thumbnail, 1, $dimension_x, $dimension_y, $dimension_string, $dimension_colour);
 }
 else
 {

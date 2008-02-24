@@ -385,6 +385,7 @@ switch ($mode)
 			add_bbcode('album');
 			gallery_column(USERS_TABLE, 'album_id', array('UINT', 0));
 			gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
+			gallery_column(GROUPS_TABLE, 'view_personal_albums', array('UINT', 1));
 			gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
 
 			// clear cache and log what we did
@@ -413,6 +414,7 @@ switch ($mode)
 			gallery_column(GALLERY_ALBUMS_TABLE, 'album_user_id', array('UINT', 0));
 			gallery_column(USERS_TABLE, 'album_id', array('UINT', 0));
 			gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
+			gallery_column(GROUPS_TABLE, 'view_personal_albums', array('UINT', 1));
 			gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
 
 			//update the new columns image_username and image_user_colour
@@ -692,6 +694,7 @@ switch ($mode)
 
 			gallery_column(USERS_TABLE, 'album_id', array('UINT', 0));
 			gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
+			gallery_column(GROUPS_TABLE, 'view_personal_albums', array('UINT', 1));
 			gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
 
 			//now create the new personal albums

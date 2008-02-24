@@ -66,22 +66,15 @@ if (empty($thispic) || !file_exists(ALBUM_UPLOAD_PATH . $pic_filename) )
 // ------------------------------------
 // Get the current Category Info
 // ------------------------------------
+$sql = 'SELECT *
+	FROM ' . GALLERY_ALBUMS_TABLE . '
+	WHERE album_id = ' . $album_id . '
+	LIMIT 1';
+$result = $db->sql_query($sql);
+$album_data = $db->sql_fetchrow($result);
 
-if ($album_id <> PERSONAL_GALLERY)
-{
-	$sql = 'SELECT *
-		FROM ' . GALLERY_ALBUMS_TABLE . '
-		WHERE album_id = ' . $album_id . '
-		LIMIT 1';
-	$result = $db->sql_query($sql);
-	$thiscat = $db->sql_fetchrow($result);
-}
-else
-{
-	$thiscat = init_personal_gallery_cat($user_id);
-}
 
-if (empty($thiscat))
+if (empty($album_data))
 {
 	die($user->lang['ALBUM_NOT_EXIST']);
 }
@@ -91,7 +84,7 @@ if (empty($thiscat))
 // Check the permissions
 // ------------------------------------
 
-$album_user_access = album_user_access($album_id, $thiscat, 1, 0, 0, 0, 0, 0); // VIEW
+$album_user_access = (!$album_data['album_user_id']) ? album_user_access($album_id, $album_data, 1, 0, 0, 0, 0, 0) : personal_album_access($album_data['album_user_id']); // VIEW
 if (!$album_user_access['view'])
 {
 	die($user->lang['NOT_AUTHORISED']);
@@ -104,7 +97,7 @@ if (!$album_user_access['view'])
 
 if ($user->data['user_type'] <> USER_FOUNDER)
 {
-	if (($thiscat['album_approval'] == ADMIN) || (($thiscat['album_approval'] == MOD) && !$album_user_access['moderator']))
+	if (($album_data['album_approval'] == ADMIN) || (($album_data['album_approval'] == MOD) && !$album_user_access['moderator']))
 	{
 		if (!$thispic['image_approval'])
 		{

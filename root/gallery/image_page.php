@@ -47,14 +47,7 @@ if (empty($image_data) || !file_exists(ALBUM_UPLOAD_PATH . $image_data['image_fi
 /**
 * Get the album info of the images album
 */
-if ($album_id <> PERSONAL_GALLERY)
-{
-	$album_data = get_album_info($album_id);
-}
-else
-{
-	$album_data = init_personal_gallery_cat($user_id);
-}
+$album_data = get_album_info($album_id);
 if (empty($album_data))
 {
 	trigger_error($user->lang['ALBUM_NOT_EXIST'], E_USER_WARNING);
@@ -63,7 +56,7 @@ if (empty($album_data))
 /**
 * Check the permissions
 */
-$album_user_access = album_user_access($album_id, $album_data, 1, 0, 1, 1, 1, 1);
+$album_user_access = (!$album_data['album_user_id']) ? album_user_access($album_id, $album_data, 1, 0, 1, 1, 1, 1) : personal_album_access($album_data['album_user_id']);
 if (!$album_user_access['view'])
 {
 	if (!$user->data['is_registered'])

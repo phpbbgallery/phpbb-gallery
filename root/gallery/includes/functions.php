@@ -339,6 +339,58 @@ function album_user_access($album_id, $passed_auth = 0, $view_check, $upload_che
 	return $album_user_access;
 }
 
+function personal_album_access($user_id)
+{
+	global $db, $user, $album_config;
+
+	$sql = 'SELECT MAX(g.view_personal_albums) as view_personal_albums, MAX(g.allow_personal_albums) as allow_personal_albums, MAX(g.personal_subalbums) as personal_subalbums
+		FROM ' . GROUPS_TABLE . ' as g
+		LEFT JOIN ' . USER_GROUP_TABLE . " as ug
+			ON ug.group_id = g.group_id
+		WHERE ug.user_id = {$user->data['user_id']}
+			AND ug.user_pending = 0";
+	$result = $db->sql_query($sql);
+	$permission_data = $db->sql_fetchrow($result);
+	$allowed = array(
+		'view'		=> false,
+		'upload'	=> false,
+		'rate'		=> false,
+		'comment'	=> false,
+		'edit'		=> false,
+		'delete'	=> false,
+		'moderator'	=> false,
+	);
+	if ($album_config['rate'])
+	{
+		$allowed['rate'] = true;
+	}
+	if ($album_config['comment'])
+	{
+		$allowed['comment'] = true;
+	}
+
+	if ($permission_data['allow_personal_albums'] == 1)
+	{
+		$allowed['view'] = true;
+		$allowed['upload'] = true;
+	}
+
+	if (($permission_data['view_personal_albums'] == 1) && !$allowed['view'])
+	{
+		$allowed['view'] = true;
+	}
+
+	if (($user_id = $user->data['user_id']) || ($user->data['user_type'] == USER_FOUNDER))
+	{
+		$allowed['edit'] = true;
+		$allowed['delete'] = true;
+		$allowed['moderator'] = true;
+	}
+
+	return $allowed;
+}
+
+//we may delete this one:
 function personal_gallery_access($check_view, $check_upload)
 {
 	global $db, $user, $album_config;
@@ -549,7 +601,7 @@ function get_album_info($album_id)
 
 	if (!$row)
 	{
-		trigger_error(sprintf($user->lang['ALBUM_ID_NOT_EXIST'], $album_id), E_USER_ERROR);
+		trigger_error(sprintf($user->lang['ALBUM_ID_NOT_EXIST'], $album_id));
 	}
 
 	return $row;

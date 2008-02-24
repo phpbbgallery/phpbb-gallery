@@ -50,7 +50,7 @@ $auth_data = $album_data = $catrows = array();
 * Get this cat info
 */
 $album_data = get_album_info($album_id);
-$album_user_access = album_user_access($album_data['album_id'], $album_data, 1, 0, 0, 0, 0, 0);
+$album_user_access = (!$album_data['album_user_id']) ? album_user_access($album_data['album_id'], $album_data, 1, 0, 0, 0, 0, 0) : personal_album_access($album_data['album_user_id']);
 if ($album_user_access['view'] == 1)
 {
 	$auth_data = album_user_access($album_id, $row, 1, 1, 1, 1, 1, 1);

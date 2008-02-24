@@ -616,7 +616,7 @@ class acp_gallery
 		if( !isset($_POST['submit']) )
 		{
 			// Get the list of phpBB usergroups
-			$sql = 'SELECT group_id, group_name, group_type, allow_personal_albums, personal_subalbums
+			$sql = 'SELECT group_id, group_name, group_type, allow_personal_albums, view_personal_albums, personal_subalbums
 					FROM ' . GROUPS_TABLE . '
 					ORDER BY group_name ASC';
 			$result = $db->sql_query($sql);
@@ -626,6 +626,7 @@ class acp_gallery
 					'GROUP_ID'		=> $groupdata['group_id'],
 					'GROUP_NAME'	=> ($groupdata['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $groupdata['group_name']] : $groupdata['group_name'],
 					'ALLOWED'		=> $groupdata['allow_personal_albums'],
+					'VIEW'			=> $groupdata['view_personal_albums'],
 					'SUBALBUMS'		=> $groupdata['personal_subalbums'],
 				));
 			}
@@ -646,6 +647,7 @@ class acp_gallery
 				trigger_error('FORM_INVALID');
 			}
 			$allow = request_var('allow', array(0));
+			$view = request_var('view', array(0));
 			$subalbums = request_var('subalbums', array(0));
 			$group_id = request_var('group_id', array(0));
 
@@ -653,6 +655,7 @@ class acp_gallery
 			{
 				$sql_ary = array(
 					'allow_personal_albums'		=> $allow[$i],
+					'view_personal_albums'		=> $view[$i],
 					'personal_subalbums'		=> $subalbums[$i],
 				);
 				$sql = 'UPDATE ' . GROUPS_TABLE . '

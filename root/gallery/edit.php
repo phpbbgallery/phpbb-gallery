@@ -57,23 +57,15 @@ if( empty($thispic) )
 // ------------------------------------
 // Get the current Category Info
 // ------------------------------------
+$sql = 'SELECT *
+	FROM ' . GALLERY_ALBUMS_TABLE . '
+	WHERE album_id = ' . $album_id . '
+	LIMIT 1';
+$result = $db->sql_query($sql);
 
-if ($album_id <> PERSONAL_GALLERY)
-{
-	$sql = 'SELECT *
-		FROM ' . GALLERY_ALBUMS_TABLE . '
-		WHERE album_id = ' . $album_id . '
-		LIMIT 1';
-	$result = $db->sql_query($sql);
+$album_data = $db->sql_fetchrow($result);
 
-	$thiscat = $db->sql_fetchrow($result);
-}
-else
-{
-	$thiscat = init_personal_gallery_cat($user_id);
-}
-
-if ( empty($thiscat) )
+if (empty($album_data))
 {
 	trigger_error($user->lang['ALBUM_NOT_EXIST'], E_USER_WARNING);
 }
@@ -83,7 +75,7 @@ if ( empty($thiscat) )
 // Check the permissions
 // ------------------------------------
 
-$album_user_access = album_user_access($album_id, $thiscat, 0, 0, 0, 0, 1, 0);// EDIT
+$album_user_access = (!$album_data['album_user_id']) ? album_user_access($album_id, $album_data, 0, 0, 0, 0, 1, 0) : personal_album_access($album_data['album_user_id']);// EDIT
 
 if (!$album_user_access['edit'])
 {
@@ -120,13 +112,13 @@ if ($album_id == PERSONAL_GALLERY)
 	));
 
 	$template->assign_block_vars('navlinks', array(
-		'FORUM_NAME'	=> $thiscat['album_name'],
+		'FORUM_NAME'	=> $album_data['album_name'],
 		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal.$phpEx", 'user_id=' . $user_id),
 	));
 }
 else
 {
-	generate_album_nav($thiscat);
+	generate_album_nav($album_data);
 }
 /**
 * Main work here...

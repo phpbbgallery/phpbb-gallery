@@ -177,6 +177,10 @@ $lang = array_merge($lang, array(
 	'IMPORT_ALBUM'				=> 'Zielalbum:',
 	'IMPORT_CIRCLE'				=> 'Bilder die in einem Durchgang geladen werden sollen:',
 	'UPLOAD_IMAGES'				=> 'Mehrere Bilder auf einmal hochladen',
+
+	'VIEW_PERSONALS'			=> 'Darf persönliche Alben ansehen',
+	'CREATE_PERSONALS'			=> 'Darf persönliche Alben erstellen',
+	'ALLOWED_SUBS'				=> 'Anzahl der Subalben',
 ));
 
 ?>

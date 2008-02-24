@@ -178,6 +178,10 @@ $lang = array_merge($lang, array(
 	'IMPORT_ALBUM'				=> 'Album to import images to:',
 	'IMPORT_CIRCLE'				=> 'Images to import per cycle:',
 	'UPLOAD_IMAGES'				=> 'Upload Multiple Images',
+
+	'VIEW_PERSONALS'			=> 'Allow to view personal Albums',
+	'CREATE_PERSONALS'			=> 'Allow to create personal Albums',
+	'ALLOWED_SUBS'				=> 'Number of Subalbums (attached to the users one)',
 ));
 
 ?>
