@@ -130,7 +130,7 @@ $submit = (isset($_POST['submit'])) ? true : false;
 if(!$submit)
 {
 	$template->assign_vars(array(
-		'U_VIEW_CAT'				=> ($album_id != PERSONAL_GALLERY) ? append_sid("album.$phpEx?id=$album_id") : append_sid("album_personal.$phpEx"),
+		'U_VIEW_ALBUM'				=> append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "album.$phpEx", "id=$album_id"),
 		'CAT_TITLE'					=> $album_data['album_name'],
 		'S_PIC_DESC_MAX_LENGTH'		=> $album_config['desc_length'],
 		'S_MAX_FILESIZE'			=> $album_config['max_file_size'],
