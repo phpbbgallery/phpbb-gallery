@@ -33,8 +33,11 @@ INSERT INTO phpbb_gallery_config VALUES ('rate', '1');
 INSERT INTO phpbb_gallery_config VALUES ('rate_scale', '10');
 INSERT INTO phpbb_gallery_config VALUES ('comment', '1');
 INSERT INTO phpbb_gallery_config VALUES ('gd_version', '2');
-INSERT INTO phpbb_gallery_config VALUES ('album_version', '0.2.1');
+INSERT INTO phpbb_gallery_config VALUES ('album_version', '0.2.4');
 INSERT INTO phpbb_gallery_config VALUES ('watermark_images', 1);
 INSERT INTO phpbb_gallery_config VALUES ('watermark_source', 'gallery/mark.png');
+INSERT INTO phpbb_gallery_config VALUES ('preview_rsz_height', 600);
+INSERT INTO phpbb_gallery_config VALUES ('preview_rsz_width', 800);
+INSERT INTO phpbb_gallery_config VALUES ('upload_images', 10);
 
 # POSTGRES COMMIT #
