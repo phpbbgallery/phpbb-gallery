@@ -15,8 +15,8 @@ class acp_gallery
 	function main($id, $mode)
 	{
 		global $user, $phpbb_root_path, $phpEx;
-		include($phpbb_root_path . 'gallery/includes/constants.' . $phpEx);
-		include($phpbb_root_path . 'gallery/includes/acp_functions.' . $phpEx);
+		include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/constants.' . $phpEx);
+		include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/acp_functions.' . $phpEx);
 
 		$user->add_lang('mods/gallery_acp');
 		$user->add_lang('mods/gallery');
@@ -236,12 +236,12 @@ class acp_gallery
 					$move_file = 'copy';
 				}
 				
-				$move_file($image_path, $phpbb_root_path . '/gallery/' . ALBUM_UPLOAD_PATH . $image_filename);
-				@chmod($phpbb_root_path . '/gallery/' . ALBUM_UPLOAD_PATH . $image_filename, 0777);
+				$move_file($image_path, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
+				@chmod($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename, 0777);
 
 				if (!$album_config['gd_version'])
 				{
-					$move_file($thumbtmp, $phpbb_root_path . '/gallery/'.ALBUM_CACHE_PATH . $image_thumbnail);
+					$move_file($thumbtmp, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_thumbnail);
 					@chmod(ALBUM_CACHE_PATH . $image_thumbnail, 0777);
 				}
 
@@ -265,7 +265,7 @@ class acp_gallery
 					}
 					//cheat the server for uploading bigger files
 					#no cheating: ini_set('memory_limit', '128M');
-					$src = $read_function($phpbb_root_path . '/gallery/' . ALBUM_UPLOAD_PATH  . $image_filename);
+					$src = $read_function($phpbb_root_path . GALLERY_UPLOAD_PATH  . $image_filename);
 
 					if (!$src)
 					{
@@ -293,7 +293,7 @@ class acp_gallery
 
 						// Create image details
 						$dimension_font = 1;
-						$dimension_filesize = filesize($phpbb_root_path . '/gallery/' . ALBUM_UPLOAD_PATH . $image_filename);
+						$dimension_filesize = filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
 						$dimension_string = $image_width . "x" . $image_height . "(" . intval($dimension_filesize/1024) . "KB)";
 						$dimension_colour = ImageColorAllocate($thumbnail,255,255,255);
 						$dimension_height = imagefontheight($dimension_font);
@@ -315,15 +315,15 @@ class acp_gallery
 						switch ($image_filetype)
 						{
 							case '.jpg':
-								@imagejpeg($thumbnail, $phpbb_root_path . '/gallery/' . ALBUM_CACHE_PATH . $image_thumbnail, $album_config['thumbnail_quality']);
+								@imagejpeg($thumbnail, $phpbb_root_path . GALLERY_CACHE_PATH . $image_thumbnail, $album_config['thumbnail_quality']);
 							break;
 
 							case '.png':
-								@imagepng($thumbnail, $phpbb_root_path . '/gallery/' . ALBUM_CACHE_PATH . $image_thumbnail);
+								@imagepng($thumbnail, $phpbb_root_path . GALLERY_CACHE_PATH . $image_thumbnail);
 							break;
 
 							case '.gif':
-								@imagegif($thumbnail, $phpbb_root_path . '/gallery/' . ALBUM_CACHE_PATH . $image_thumbnail);
+								@imagegif($thumbnail, $phpbb_root_path . GALLERY_CACHE_PATH . $image_thumbnail);
 							break;
 						}
 						@chmod(ALBUM_CACHE_PATH . $image_thumbnail, 0777);
