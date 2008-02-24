@@ -24,7 +24,7 @@ $user->session_begin();
 $auth->acl($user->data);
 $user->setup();
 $user->add_lang('mods/gallery_install');
-$new_mod_version = '0.2.4';
+$new_mod_version = '0.3.0';
 $page_title = 'phpBB Gallery v' . $new_mod_version;
 
 $mode = request_var('mode', '', true);
@@ -44,6 +44,81 @@ function split_sql_file($sql, $delimiter)
 	}
 
 	return $data;
+}
+function gallery_column($table, $column, $values)
+{
+	global $db;
+
+	$phpbb_db_tools = new phpbb_db_tools($db);
+	if (!$phpbb_db_tools->sql_column_exists($table, $column))
+	{
+		$phpbb_db_tools->sql_column_add($table, $column, $values);
+	}
+}
+function gallery_config_value($column, $value)
+{
+	global $db;
+
+	$sql = 'SELECT * FROM ' . GALLERY_CONFIG_TABLE . " WHERE config_name = '$column'";
+	$result = $db->sql_query($sql);
+	$row = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+	if (!$row)
+	{
+		$sql_ary = array(
+			'config_name'				=> $column,
+			'config_value'				=> $value,
+		);
+		$db->sql_query('INSERT INTO ' . GALLERY_CONFIG_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+	}
+}
+function add_bbcode($album_bbcode)
+{
+	global $db;
+
+	$sql = 'SELECT * FROM ' . BBCODES_TABLE . " WHERE bbcode_tag = '$album_bbcode'";
+	$result = $db->sql_query($sql);
+	$row = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+
+	if (!$row)
+	{
+		$sql_ary = array(
+			'bbcode_tag'				=> $album_bbcode,
+			'bbcode_match'				=> '[' . $album_bbcode . ']{NUMBER}[/' . $album_bbcode . ']',
+			'bbcode_tpl'				=> '<a href="gallery/image_page.php?id={NUMBER}"><img src="gallery/thumbnail.php?pic_id={NUMBER}" /></a>',
+			'display_on_posting'		=> true,
+			'bbcode_helpline'			=> '',
+			'first_pass_match'			=> '!\[' . $album_bbcode . '\]([0-9]+)\[/' . $album_bbcode . '\]!i',
+			'first_pass_replace'		=> '[' . $album_bbcode . ':$uid]${1}[/' . $album_bbcode . ':$uid]',
+			'second_pass_match'			=> '!\[' . $album_bbcode . ':$uid\]([0-9]+)\[/' . $album_bbcode . ':$uid\]!s',
+			'second_pass_replace'		=> '<a href="gallery/image_page.php?id=${1}"><img src="gallery/thumbnail.php?pic_id=${1}" /></a>',
+		);
+
+		$sql = 'SELECT MAX(bbcode_id) as max_bbcode_id
+			FROM ' . BBCODES_TABLE;
+		$result = $db->sql_query($sql);
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		if ($row)
+		{
+			$bbcode_id = $row['max_bbcode_id'] + 1;
+
+			// Make sure it is greater than the core bbcode ids...
+			if ($bbcode_id <= NUM_CORE_BBCODES)
+			{
+				$bbcode_id = NUM_CORE_BBCODES + 1;
+			}
+		}
+		else
+		{
+			$bbcode_id = NUM_CORE_BBCODES + 1;
+		}
+		$sql_ary['bbcode_id'] = (int) $bbcode_id;
+
+		$db->sql_query('INSERT INTO ' . BBCODES_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+	}
 }
 // What sql_layer should we use?
 switch ($db->sql_layer)
@@ -71,6 +146,7 @@ switch ($db->sql_layer)
 	break;
 
 	case 'mssql':
+	case 'mssql_odbc':
 		$db_schema = 'mssql';
 		$delimiter = 'GO';
 	break;
@@ -99,6 +175,52 @@ switch ($db->sql_layer)
 		trigger_error('Sorry, unsupportet Databases found.');
 	break;
 }
+function drop_dbs()
+{
+	global $db, $table_prefix;
+
+	if ($db->sql_layer != 'mssql')
+	{
+		$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . 'gallery_albums';
+		$result = $db->sql_query($sql);
+		$db->sql_freeresult($result);
+		$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . 'gallery_comments';
+		$result = $db->sql_query($sql);
+		$db->sql_freeresult($result);
+		$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . 'gallery_config';
+		$result = $db->sql_query($sql);
+		$db->sql_freeresult($result);
+		$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . 'gallery_images';
+		$result = $db->sql_query($sql);
+		$db->sql_freeresult($result);
+		$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . 'gallery_rates';
+		$result = $db->sql_query($sql);
+		$db->sql_freeresult($result);
+	}
+	else
+	{
+		$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . 'gallery_albums)
+		drop table ' . $table_prefix . 'gallery_albums';
+		$result = $db->sql_query($sql);
+		$db->sql_freeresult($result);
+		$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . 'gallery_comments)
+		drop table ' . $table_prefix . 'gallery_comments';
+		$result = $db->sql_query($sql);
+		$db->sql_freeresult($result);
+		$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . 'gallery_config)
+		drop table ' . $table_prefix . 'gallery_config';
+		$result = $db->sql_query($sql);
+		$db->sql_freeresult($result);
+		$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . 'gallery_images)
+		drop table ' . $table_prefix . 'gallery_images';
+		$result = $db->sql_query($sql);
+		$db->sql_freeresult($result);
+		$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . 'gallery_rates)
+		drop table ' . $table_prefix . 'gallery_rates';
+		$result = $db->sql_query($sql);
+		$db->sql_freeresult($result);
+	}
+}
 switch ($mode)
 {
 	case 'install':
@@ -106,48 +228,8 @@ switch ($mode)
 		$installed = false;
 		if ($install == 1)
 		{
-			// Drop thes tables if existing
-			if ($db->sql_layer != 'mssql')
-			{
-				$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . 'gallery_albums';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . 'gallery_comments';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . 'gallery_config';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . 'gallery_images';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . 'gallery_rates';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-			}
-			else
-			{
-				$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . 'gallery_albums)
-				drop table ' . $table_prefix . 'gallery_albums';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . 'gallery_comments)
-				drop table ' . $table_prefix . 'gallery_comments';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . 'gallery_config)
-				drop table ' . $table_prefix . 'gallery_config';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . 'gallery_images)
-				drop table ' . $table_prefix . 'gallery_images';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . 'gallery_rates)
-				drop table ' . $table_prefix . 'gallery_rates';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-			}
+			drop_dbs();
+
 			// locate the schema files
 			$dbms_schema = 'schemas/_' . $db_schema . '_schema.sql';
 			$sql_query = @file_get_contents($dbms_schema);
@@ -299,53 +381,12 @@ switch ($mode)
 				$result = $db->sql_query($sql);
 				$album_config['gd_version'] = 0;
 			}
-			//add the bbcode
-			$sql = 'SELECT * FROM ' . BBCODES_TABLE . " WHERE bbcode_tag = 'album'";
-			$result = $db->sql_query($sql);
-			$row = $db->sql_fetchrow($result);
-			$db->sql_freeresult($result);
 
-			if (!$row)
-			{
-				$album_bbcode = 'album';
-				$sql_ary = array(
-					'bbcode_tag'				=> $album_bbcode,
-					'bbcode_match'				=> '[' . $album_bbcode . ']{NUMBER}[/' . $album_bbcode . ']',
-					'bbcode_tpl'				=> '<a href="gallery/image_page.php?id={NUMBER}"><img src="gallery/thumbnail.php?pic_id={NUMBER}" /></a>',
-					'display_on_posting'		=> true,
-					'bbcode_helpline'			=> '',
-					'first_pass_match'			=> '!\[' . $album_bbcode . '\]([0-9]+)\[/' . $album_bbcode . '\]!i',
-					'first_pass_replace'		=> '[' . $album_bbcode . ':$uid]${1}[/' . $album_bbcode . ':$uid]',
-					'second_pass_match'			=> '!\[' . $album_bbcode . ':$uid\]([0-9]+)\[/' . $album_bbcode . ':$uid\]!s',
-					'second_pass_replace'		=> '<a href="gallery/image_page.php?id=${1}"><img src="gallery/thumbnail.php?pic_id=${1}" /></a>',
-				);
+			add_bbcode('album');
+			gallery_column(USERS_TABLE, 'album_id', array('UINT', 0));
+			gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
+			gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
 
-				$sql = 'SELECT MAX(bbcode_id) as max_bbcode_id
-					FROM ' . BBCODES_TABLE;
-				$result = $db->sql_query($sql);
-				$row = $db->sql_fetchrow($result);
-				$db->sql_freeresult($result);
-
-				if ($row)
-				{
-					$bbcode_id = $row['max_bbcode_id'] + 1;
-
-					// Make sure it is greater than the core bbcode ids...
-					if ($bbcode_id <= NUM_CORE_BBCODES)
-					{
-						$bbcode_id = NUM_CORE_BBCODES + 1;
-					}
-				}
-				else
-				{
-					$bbcode_id = NUM_CORE_BBCODES + 1;
-				}
-				$sql_ary['bbcode_id'] = (int) $bbcode_id;
-
-				$db->sql_query('INSERT INTO ' . BBCODES_TABLE . $db->sql_build_array('INSERT', $sql_ary));
-			}
-			$phpbb_db_tools = new phpbb_db_tools($db);
-			$phpbb_db_tools->sql_column_add(USERS_TABLE, 'album_id', array('UINT', 0));
 			// clear cache and log what we did
 			$cache->purge();
 			add_log('admin', 'phpBB Gallery v' . $new_mod_version . ' installed');
@@ -359,67 +400,20 @@ switch ($mode)
 		$updated = false;
 		if ($update == 1)
 		{
-			//add 2 new config-values
-			$sql = 'SELECT * FROM ' . GALLERY_CONFIG_TABLE . " WHERE config_name = 'preview_rsz_width'";
-			$result = $db->sql_query($sql);
-			$row = $db->sql_fetchrow($result);
-			$db->sql_freeresult($result);
-			if (!$row)
-			{
-				$sql_ary = array(
-					'config_name'				=> 'preview_rsz_width',
-					'config_value'				=> 800,
-				);
-				$db->sql_query('INSERT INTO ' . GALLERY_CONFIG_TABLE . $db->sql_build_array('INSERT', $sql_ary));
-			}
-			$sql = 'SELECT * FROM ' . GALLERY_CONFIG_TABLE . " WHERE config_name = 'preview_rsz_height'";
-			$result = $db->sql_query($sql);
-			$row = $db->sql_fetchrow($result);
-			$db->sql_freeresult($result);
-			if (!$row)
-			{
-				$sql_ary = array(
-					'config_name'				=> 'preview_rsz_height',
-					'config_value'				=> 600,
-				);
-				$db->sql_query('INSERT INTO ' . GALLERY_CONFIG_TABLE . $db->sql_build_array('INSERT', $sql_ary));
-			}
-			$sql = 'SELECT * FROM ' . GALLERY_CONFIG_TABLE . " WHERE config_name = 'upload_images'";
-			$result = $db->sql_query($sql);
-			$row = $db->sql_fetchrow($result);
-			$db->sql_freeresult($result);
-			if (!$row)
-			{
-				$sql_ary = array(
-					'config_name'				=> 'upload_images',
-					'config_value'				=> 10,
-				);
-				$db->sql_query('INSERT INTO ' . GALLERY_CONFIG_TABLE . $db->sql_build_array('INSERT', $sql_ary));
-			}
+			//add new config-values
+			gallery_config_value('preview_rsz_height', 600);
+			gallery_config_value('preview_rsz_width', 800);
+			gallery_config_value('upload_images', 10);
 
 			//create some new columns
 			$phpbb_db_tools = new phpbb_db_tools($db);
 			$phpbb_db_tools->sql_column_change(GALLERY_IMAGES_TABLE, 'image_username', array('VCHAR:255', ''));
-			if (!$phpbb_db_tools->sql_column_exists(GALLERY_IMAGES_TABLE, 'image_user_colour'))
-			{
-				$phpbb_db_tools->sql_column_add(GALLERY_IMAGES_TABLE, 'image_user_colour', array('VCHAR:6', ''));
-			}
-			if (!$phpbb_db_tools->sql_column_exists(GALLERY_ALBUMS_TABLE, 'album_user_id'))
-			{
-				$phpbb_db_tools->sql_column_add(GALLERY_ALBUMS_TABLE, 'album_user_id', array('UINT', 0));
-			}
-			if (!$phpbb_db_tools->sql_column_exists(USERS_TABLE, 'album_id'))
-			{
-				$phpbb_db_tools->sql_column_add(USERS_TABLE, 'album_id', array('UINT', 0));
-			}
-			if (!$phpbb_db_tools->sql_column_exists(GROUPS_TABLE, 'allow_personal_albums'))
-			{
-				$phpbb_db_tools->sql_column_add(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
-			}
-			if (!$phpbb_db_tools->sql_column_exists(GROUPS_TABLE, 'personal_subalbums'))
-			{
-				$phpbb_db_tools->sql_column_add(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
-			}
+
+			gallery_column(GALLERY_IMAGES_TABLE, 'image_user_colour', array('VCHAR:6', ''));
+			gallery_column(GALLERY_ALBUMS_TABLE, 'album_user_id', array('UINT', 0));
+			gallery_column(USERS_TABLE, 'album_id', array('UINT', 0));
+			gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
+			gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
 
 			//update the new columns image_username and image_user_colour
 			$sql = 'SELECT i.image_user_id, i.image_id, u.username, u.user_colour
@@ -512,48 +506,7 @@ switch ($mode)
 				$hexipbang = explode('.', chunk_split($int_ip, 2, '.'));
 				return hexdec($hexipbang[0]). '.' . hexdec($hexipbang[1]) . '.' . hexdec($hexipbang[2]) . '.' . hexdec($hexipbang[3]);
 			}
-			// Drop thes tables if existing
-			if ($db->sql_layer != 'mssql')
-			{
-				$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . 'gallery_albums';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . 'gallery_comments';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . 'gallery_config';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . 'gallery_images';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . 'gallery_rates';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-			}
-			else
-			{
-				$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . 'gallery_albums)
-				drop table ' . $table_prefix . 'gallery_albums';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . 'gallery_comments)
-				drop table ' . $table_prefix . 'gallery_comments';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . 'gallery_config)
-				drop table ' . $table_prefix . 'gallery_config';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . 'gallery_images)
-				drop table ' . $table_prefix . 'gallery_images';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . 'gallery_rates)
-				drop table ' . $table_prefix . 'gallery_rates';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-			}
+			drop_dbs();
 
 			// locate the schema files
 			$dbms_schema = 'schemas/_' . $db_schema . '_schema.sql';
@@ -635,7 +588,7 @@ switch ($mode)
 			{
 				$rate_data = array(
 					'rate_image_id'					=> $row['rate_pic_id'],
-					'rate_user_id'					=> $row['rate_user_id'],
+					'rate_user_id'					=> ($row['rate_user_id'] < 0) ? 1 : $row['rate_user_id'],
 					'rate_user_ip'					=> decode_ip($row['rate_user_ip']),
 					'rate_point'					=> $row['rate_point'],
 				);
@@ -656,7 +609,7 @@ switch ($mode)
 				$comment_data = array(
 					'comment_id'			=> $row['comment_id'],
 					'comment_image_id'		=> $row['comment_pic_id'],
-					'comment_user_id'		=> $row['comment_user_id'],
+					'comment_user_id'		=> ($row['comment_user_id'] < 0) ? 1 : $row['comment_user_id'],
 					'comment_username'		=> $row['comment_username'],
 					'comment_user_ip'		=> decode_ip($row['comment_user_ip']),
 					'comment_time'			=> $row['comment_time'],
@@ -666,7 +619,7 @@ switch ($mode)
 					'comment_options'		=> 7,
 					'comment_edit_time'		=> (isset($row['comment_edit_time']) ? $row['comment_edit_time'] : 0),
 					'comment_edit_count'	=> (isset($row['comment_edit_count']) ? $row['comment_edit_count'] : 0),
-					'comment_edit_user_id'	=> (isset($row['comment_edit_user_id']) ? $row['comment_edit_user_id'] : 0),
+					'comment_edit_user_id'	=> (isset($row['comment_edit_user_id']) ? ($row['comment_edit_user_id'] < 0) ? 1 : $row['comment_edit_user_id'] : 0),
 				);
 				generate_text_for_storage($comment_data['comment'], $comment_data['comment_uid'], $comment_data['comment_bitfield'], $comment_data['comment_options'], 1, 1, 1);
 				unset($comment_data['comment_options']);
@@ -721,7 +674,7 @@ switch ($mode)
 					'image_desc_uid'		=> '',
 					'image_desc_bitfield'	=> '',
 					'image_desc_options'	=> 7,
-					'image_user_id'			=> $row['pic_user_id'],
+					'image_user_id'			=> ($row['pic_user_id'] < 0) ? 1 : $row['pic_user_id'],
 					'image_username'		=> (isset($row['username'])) ? $row['username'] : $row['pic_username'],
 					'image_user_colour'		=> (isset($row['user_colour'])) ? $row['user_colour'] : '',
 					'image_user_ip'			=> decode_ip($row['pic_user_ip']),
@@ -737,8 +690,9 @@ switch ($mode)
 			}
 			$db->sql_freeresult($result);
 
-			$column_add = new phpbb_db_tools($db);
-			$column_add->sql_column_add(USERS_TABLE, 'album_id', array('UINT', 0));
+			gallery_column(USERS_TABLE, 'album_id', array('UINT', 0));
+			gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
+			gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
 
 			//now create the new personal albums
 			$sql = 'SELECT i.image_id, i.image_username, image_user_id
@@ -756,7 +710,7 @@ switch ($mode)
 					'album_desc'					=> '',
 					'album_parents'					=> '',
 					'album_type'					=> 2,
-					'album_user_id'					=> $row['image_user_id'],
+					'album_user_id'					=> ($row['image_user_id'] < 0) ? 1 : $row['image_user_id'],
 				);
 				$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
 
@@ -776,49 +730,6 @@ switch ($mode)
 				$db->sql_query($sql3);
 			}
 			$db->sql_freeresult($result);
-
-			/*/ Drop the old tables
-			if ($db->sql_layer != 'mssql')
-			{
-				$sql = 'DROP TABLE IF EXISTS ' . $convert_prefix . 'album';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'DROP TABLE IF EXISTS ' . $convert_prefix . 'album_rate';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'DROP TABLE IF EXISTS ' . $convert_prefix . 'album_comment';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'DROP TABLE IF EXISTS ' . $convert_prefix . 'album_cat';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'DROP TABLE IF EXISTS ' . $convert_prefix . 'album_config';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-			}
-			else
-			{
-				$sql = 'if exists (select * from sysobjects where name = ' . $convert_prefix . 'album)
-				drop table ' . $convert_prefix . 'album';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'if exists (select * from sysobjects where name = ' . $convert_prefix . 'album_rate)
-				drop table ' . $convert_prefix . 'album_rate';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'if exists (select * from sysobjects where name = ' . $convert_prefix . 'album_comment)
-				drop table ' . $convert_prefix . 'album_comment';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'if exists (select * from sysobjects where name = ' . $convert_prefix . 'album_cat)
-				drop table ' . $convert_prefix . 'album_cat';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-				$sql = 'if exists (select * from sysobjects where name = ' . $convert_prefix . 'album_config)
-				drop table ' . $convert_prefix . 'album_config';
-				$result = $db->sql_query($sql);
-				$db->sql_freeresult($result);
-			}// */
 
 			// create the acp modules
 			$modules = new acp_modules();
@@ -919,51 +830,8 @@ switch ($mode)
 				$result = $db->sql_query($sql);
 				$album_config['gd_version'] = 0;
 			}
-			//add the bbcode
-			$sql = 'SELECT * FROM ' . BBCODES_TABLE . " WHERE bbcode_tag = 'album'";
-			$result = $db->sql_query($sql);
-			$row = $db->sql_fetchrow($result);
-			$db->sql_freeresult($result);
 
-			if (!$row)
-			{
-				$album_bbcode = 'album';
-				$sql_ary = array(
-					'bbcode_tag'				=> $album_bbcode,
-					'bbcode_match'				=> '[' . $album_bbcode . ']{NUMBER}[/' . $album_bbcode . ']',
-					'bbcode_tpl'				=> '<a href="gallery/image_page.php?id={NUMBER}"><img src="gallery/thumbnail.php?pic_id={NUMBER}" /></a>',
-					'display_on_posting'		=> true,
-					'bbcode_helpline'			=> '',
-					'first_pass_match'			=> '!\[' . $album_bbcode . '\]([0-9]+)\[/' . $album_bbcode . '\]!i',
-					'first_pass_replace'		=> '[' . $album_bbcode . ':$uid]${1}[/' . $album_bbcode . ':$uid]',
-					'second_pass_match'			=> '!\[' . $album_bbcode . ':$uid\]([0-9]+)\[/' . $album_bbcode . ':$uid\]!s',
-					'second_pass_replace'		=> '<a href="gallery/image_page.php?id=${1}"><img src="gallery/thumbnail.php?pic_id=${1}" /></a>',
-				);
-
-				$sql = 'SELECT MAX(bbcode_id) as max_bbcode_id
-					FROM ' . BBCODES_TABLE;
-				$result = $db->sql_query($sql);
-				$row = $db->sql_fetchrow($result);
-				$db->sql_freeresult($result);
-
-				if ($row)
-				{
-					$bbcode_id = $row['max_bbcode_id'] + 1;
-
-					// Make sure it is greater than the core bbcode ids...
-					if ($bbcode_id <= NUM_CORE_BBCODES)
-					{
-						$bbcode_id = NUM_CORE_BBCODES + 1;
-					}
-				}
-				else
-				{
-					$bbcode_id = NUM_CORE_BBCODES + 1;
-				}
-				$sql_ary['bbcode_id'] = (int) $bbcode_id;
-
-				$db->sql_query('INSERT INTO ' . BBCODES_TABLE . $db->sql_build_array('INSERT', $sql_ary));
-			}
+			add_bbcode('album');
 
 			// clear cache and log what we did
 			$cache->purge();

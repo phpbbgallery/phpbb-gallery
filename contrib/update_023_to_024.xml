@@ -75,6 +75,12 @@
       <file from="root/styles/prosilver/theme/images/gallery_lytebox/*.*" to="styles/prosilver/theme/images/gallery_lytebox/*.*" />
       <file from="root/styles/prosilver/theme/images/icon_gallery.gif" to="styles/prosilver/theme/images/icon_gallery.gif" />
     </copy>
+    <open src="includes/constants.php">
+      <edit>
+        <find><![CDATA[define('GALLERY_ALBUMS_TABLE',			$table_prefix . 'gallery_albums');]]></find>
+        <action type="before-add"><![CDATA[define('GALLERY_ROOT_PATH', 'gallery/');]]></action>
+      </edit>
+    </open>
     <open src="includes/functions_user.php">
       <edit>
         <find><![CDATA[TOPICS_TABLE			=> array('topic_first_poster_name', 'topic_last_poster_name'),]]></find>
