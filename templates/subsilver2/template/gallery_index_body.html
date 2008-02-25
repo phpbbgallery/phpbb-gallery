@@ -51,35 +51,7 @@
 </table>
 <br />
 
-<table class="tablebg" cellspacing="1" style="width: 100%">
-	<tr>
-		<th colspan="{S_COLS}" nowrap="nowrap">{L_RECENT_PUBLIC_IMAGES}</th>
-	</tr>
-	<!-- BEGIN no_pics -->
-	<tr>
-		<td class="row1" align="center" colspan="{S_COLS}" height="50"><span class="gen">{L_NO_IMAGES}</span></td>
-	</tr>
-	<!-- END no_pics -->
-	<!-- BEGIN recent_pics -->
-	<tr>
-		<!-- BEGIN recent_col -->
-		<td class="row1" style="width: {S_COL_WIDTH}" align="center"><a href="{recent_pics.recent_col.U_PIC}" rel="lightbox" {TARGET_BLANK}><img src="{recent_pics.recent_col.THUMBNAIL}" border="0" alt="{recent_pics.recent_col.DESC}" title="{recent_pics.recent_col.DESC}" vspace="10" /></a></td>
-		<!-- END recent_col -->
-	</tr>
-	<tr>
-		<!-- BEGIN recent_detail -->
-		<td class="row2"><span class="gensmall">{L_IMAGE_TITLE}: {recent_pics.recent_detail.TITLE}<br />
-			{L_POSTER}: {recent_pics.recent_detail.POSTER}<br />
-			{L_POSTED}: {recent_pics.recent_detail.TIME}<br />
-			{L_VIEWS}: {recent_pics.recent_detail.VIEW}<br />
-			{recent_pics.recent_detail.RATING}{recent_pics.recent_detail.COMMENTS}{recent_pics.recent_detail.IP}</span></td>
-		<!-- END recent_detail -->
-	</tr>
-	<!-- END recent_pics -->
-	<tr>
-		<td class="cat" colspan="{S_COLS}" height="1"><img src="images/spacer.gif" alt="" width="1" height="1" /></td>
-	</tr>
-</table>
+<!-- INCLUDE gallery_recent_body.html -->
 <br />
 
 <!-- Please keep this little notice visible -->

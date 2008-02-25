@@ -51,80 +51,10 @@ display_albums(0, $mode);
 /**
 * Recent Public Pics
 */
-$allowed_cat = '';
-$sql = 'SELECT *
-	FROM ' . GALLERY_ALBUMS_TABLE . '
-	ORDER BY left_id ASC';
-$result = $db->sql_query($sql);
-
-while( $row = $db->sql_fetchrow($result) )
-{
-	$album_user_access = album_user_access($row['album_id'], $row, 1, 0, 0, 0, 0, 0);
-	if ($album_user_access['view'] == 1)
-	{
-		$allowed_cat .= ($allowed_cat == '') ? $row['album_id'] : ', ' . $row['album_id'];
-	}
-}
-$personal_gallery_access = personal_gallery_access(1,1);
-if ($personal_gallery_access['view'])
-{
-	$allowed_cat .= ($allowed_cat == '') ? PERSONAL_GALLERY : ', ' . PERSONAL_GALLERY;
-}
-if ($allowed_cat <> '')
-{
-	$sql = 'SELECT i.*, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments
-		FROM ' . GALLERY_IMAGES_TABLE . ' AS i
-		LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' AS ct
-			ON i.image_album_id = ct.album_id
-		LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
-			ON i.image_id = r.rate_image_id
-		LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
-			ON i.image_id = c.comment_image_id
-		WHERE i.image_album_id IN (' . $allowed_cat . ') 
-			AND ( i.image_approval = 1 OR ct.album_approval = 0 )
-		GROUP BY i.image_id
-		ORDER BY i.image_time DESC
-		LIMIT ' . $album_config['cols_per_page'];
-	$result = $db->sql_query($sql);
-
-	$recentrow = array();
-
-	while( $row = $db->sql_fetchrow($result) )
-	{
-		$recentrow[] = $row;
-	}
-
-
-	if (count($recentrow) > 0)
-	{
-		for ($i = 0; $i < count($recentrow); $i += $album_config['cols_per_page'])
-		{
-			$template->assign_block_vars('recent_pics', array());
-
-			for ($j = $i; $j < ($i + $album_config['cols_per_page']); $j++)
-			{
-				if( $j >= count($recentrow) )
-				{
-					break;
-				}
-
-				if(!$recentrow[$j]['rating'])
-				{
-					$recentrow[$j]['rating'] = $user->lang['NOT_RATED'];
-				}
-				else
-				{
-					$recentrow[$j]['rating'] = round($recentrow[$j]['rating'], 2);
-				}
-				$message_parser				= new parse_message();
-				$message_parser->message	= $recentrow[$j]['image_desc'];
-				$message_parser->decode_message($recentrow[$j]['image_desc_uid']);
-				$template->assign_block_vars('recent_pics.recent_col', array(
-					'U_PIC' 		=> ($album_config['fullpic_popup']) ? append_sid("{$phpbb_root_path}gallery/image.$phpEx?pic_id=". $recentrow[$j]['image_id']) : append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=". $recentrow[$j]['image_id']),
-					'THUMBNAIL' 	=> append_sid("{$phpbb_root_path}gallery/thumbnail.$phpEx?pic_id=". $recentrow[$j]['image_id']),
-					'DESC' 			=> $message_parser->message,
-					)
-				);
+include($phpbb_root_path . 'gallery/includes/functions_recent.' . $phpEx);
+//(rows, columns)
+recent_gallery_images(1, 4);
+/*
 
 				$template->assign_block_vars('recent_pics.recent_detail', array(
 					'TITLE'			=> $recentrow[$j]['image_name'],
@@ -135,18 +65,7 @@ if ($allowed_cat <> '')
 					'COMMENTS'		=> ($album_config['comment'] == 1) ? ( '<a href="' . append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=" . $recentrow[$j]['image_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $recentrow[$j]['comments'] . '<br />') : '',
 					'IP'			=> ($user->data['user_type'] == USER_FOUNDER) ? $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $recentrow[$j]['image_user_ip'] . '">' . $recentrow[$j]['image_user_ip'] . '</a><br />' : ''
 				));
-			}
-		}
-	}
-	else
-	{
-		$template->assign_block_vars('no_pics', array());
-	}
-}
-else
-{
-	$template->assign_block_vars('no_pics', array());
-}
+*/
 
 
 /**

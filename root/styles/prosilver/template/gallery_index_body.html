@@ -56,46 +56,7 @@
 <br />
 <br />
 
-<div class="forumbg">
-	<div class="inner"><span class="corners-top"><span></span></span>
-		<ul class="topiclist">
-			<li class="header">
-				<dl class="icon">
-					<dt>{L_RECENT_PUBLIC_IMAGES}</dt>
-				</dl>
-			</li>
-		</ul>
-		<ul class="topiclist topics">
-			<li class="bg2">
-				<table style="width: 100%" cellpadding="2" cellspacing="10" border="0" class="forumline">
-					<!-- BEGIN no_pics -->
-					<tr>
-						<td class="bg1" align="center" colspan="{S_COLS}" height="50"><span class="gen">{L_NO_IMAGES}</span></td>
-					</tr>
-					<!-- END no_pics -->
-					<!-- BEGIN recent_pics -->
-					<tr>
-						<!-- BEGIN recent_col -->
-						<td class="bg1" style="width: {S_COL_WIDTH};" align="center"><a href="{recent_pics.recent_col.U_PIC}"><img src="{recent_pics.recent_col.THUMBNAIL}" alt="{recent_pics.recent_col.DESC}" title="{recent_pics.recent_col.DESC}" /></a></td>
-						<!-- END recent_col -->
-					</tr>
-					<tr>
-						<!-- BEGIN recent_detail -->
-						<td class="bg2">
-							<span class="gensmall">{L_IMAGE_TITLE}: {recent_pics.recent_detail.TITLE}<br />
-							{L_POSTER}: {recent_pics.recent_detail.POSTER_FULL}<br />{L_POSTED}: {recent_pics.recent_detail.TIME}<br />
-							{L_VIEWS}: {recent_pics.recent_detail.VIEW}<br />{recent_pics.recent_detail.RATING}{recent_pics.recent_detail.COMMENTS}{recent_pics.recent_detail.IP}</span>
-						</td>
-						<!-- END recent_detail -->
-					</tr>
-					<!-- END recent_pics -->
-				</table>
-			</li>
-		</ul>
-		<span class="corners-bottom"><span></span></span>
-	</div>
-</div>
-
+<!-- INCLUDE gallery_recent_body.html -->
 
 <!-- IF not S_USER_LOGGED_IN and not S_IS_BOT -->
 	<form method="post" action="{S_LOGIN_ACTION}" class="headerspace">

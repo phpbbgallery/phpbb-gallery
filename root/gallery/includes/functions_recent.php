@@ -29,7 +29,7 @@ $result = $db->sql_query($sql);
 
 while( $row = $db->sql_fetchrow($result) )
 {
-	$album_user_access = album_user_access($row['album_id'], $row, 1, 0, 0, 0, 0, 0);
+	$album_user_access = (!$row['album_user_id']) ? album_user_access($row['album_id'], $row, 1, 0, 0, 0, 0, 0) : personal_album_access($row['album_user_id']);
 	if ($album_user_access['view'] == 1)
 	{
 		$allowed_cat .= ($allowed_cat == '') ? $row['album_id'] : ', ' . $row['album_id'];
