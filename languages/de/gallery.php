@@ -114,7 +114,7 @@ $lang = array_merge($lang, array(
 	'IMAGES_MOVED_SUCCESSFULLY'				=> 'Dein(e) Bild(er) wurde(n) erfolgreich verschoben',
 	'IMAGES_UNAPPROVED_SUCCESSFULLY'		=> 'Dein(e) Bild(er) wurde(n) erfolgreich auf ungeprüft gesetzt',
 	'IMAGES_UNLOCKED_SUCCESSFULLY'			=> 'Dein(e) Bild(er) wurde(n) erfolgreich entsperrt',
-	'IMAGES_UPDATED_SUCCESSFULLY'			=> 'Deine Bilderinformationen wurden erfolgreich aktuallisiert',
+	'IMAGES_UPDATED_SUCCESSFULLY'			=> 'Deine Bilderinformationen wurden erfolgreich aktualisiert',
 
 	'LAST_IMAGE'							=> 'Letztes Bild',
 	'LOCK'									=> 'Sperren',
