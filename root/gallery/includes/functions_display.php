@@ -151,6 +151,16 @@ function display_albums($album_id, $mode = 'album')
 			$result = $db->sql_query($sql);
 			$lastrow = $db->sql_fetchrow($result);
 		}
+		else
+		{
+			$sql = 'SELECT u.user_id, u.username, u.user_colour
+					FROM ' . GALLERY_ALBUMS_TABLE . ' AS a
+					LEFT JOIN ' . USERS_TABLE . ' AS u
+						ON a.album_user_id = u.user_id
+					WHERE a.album_id = ' . $album[$i]['album_id'];
+			$result = $db->sql_query($sql);
+			$lastrow = $db->sql_fetchrow($result);
+		}
 		if ($album[$i]['left_id'] + 1 != $album[$i]['right_id'])
 		{
 			$folder_image = 'forum_read_subforum';
@@ -186,7 +196,7 @@ function display_albums($album_id, $mode = 'album')
 			'IMAGES'				=> $album[$i]['count'],
 			'U_LAST_IMAGE'			=> ($album[$i]['count'] != 0) ? append_sid("{$phpbb_root_path}gallery/image_page.$phpEx" , 'image_id=' . $lastrow['image_id']) : '',
 			'LAST_IMAGE_NAME'		=> ($album[$i]['count'] != 0) ? $lastrow['image_name'] : '',
-			'ALBUM_COLOUR'			=> ($album[$i]['count'] != 0) ? get_username_string('colour', $lastrow['image_user_id'], $lastrow['image_username'], $lastrow['image_user_colour']) : '',
+			'ALBUM_COLOUR'			=> ($album[$i]['count'] != 0) ? get_username_string('colour', $lastrow['image_user_id'], $lastrow['image_username'], $lastrow['image_user_colour']) : get_username_string('colour', $lastrow['user_id'], $lastrow['username'], $lastrow['user_colour']),
 			'LAST_IMAGE_AUTHOR'		=> ($album[$i]['count'] != 0) ? get_username_string('full', $lastrow['image_user_id'], ($lastrow['image_user_id'] <> ANONYMOUS) ? $lastrow['image_username'] : $user->lang['GUEST'], $lastrow['image_user_colour']) : '',
 			'LAST_IMAGE_TIME'		=> ($album[$i]['count'] != 0) ? $user->format_date($lastrow['image_time']) : '',
 		));
