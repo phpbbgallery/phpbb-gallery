@@ -58,6 +58,7 @@ function display_albums($album_id, $mode = 'album')
 		LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' AS sa
 			ON ( sa.left_id < a.right_id
 				AND sa.left_id > a.left_id )
+				AND a.album_user_id = sa.album_user_id
 		LEFT JOIN ' . GALLERY_IMAGES_TABLE . " AS pc
 			ON ( pc.image_album_id = sa.album_id
 				OR pc.image_album_id = a.album_id )
