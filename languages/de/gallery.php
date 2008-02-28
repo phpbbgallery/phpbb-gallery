@@ -69,6 +69,7 @@ $lang = array_merge($lang, array(
 
 	'CLICK_RETURN_ALBUM'					=> 'Klicke %shier%s um zum Album zurückzukehren',
 	'CLICK_RETURN_GALLERY_INDEX'			=> 'Klicke %shier%s um zur Startseite der Galerie zu gelangen',
+	'CLICK_RETURN_IMAGE'					=> 'Klicke %shier%s um zum Bild zurückzukehren',
 	'CLICK_RETURN_MODCP'					=> 'Klicke %shier%s um zum Moderatons-Bereich zurückzukehren',
 	'CLICK_RETURN_PERSONAL_ALBUM'			=> 'Klicke %shier%s um zu den persönlichen Alben zurückzukehren',
 	'CLICK_VIEW_COMMENT'					=> 'Klicke %shier%s um Deine Kommentare anzusehen',
@@ -194,8 +195,19 @@ $lang = array_merge($lang, array(
 	'YOUR_PERSONAL_ALBUM'					=> 'Dein persönliches Album',
 	'YOUR_RATING'							=> 'Deine Bewertung',
 
-	'LOOP_EXP'						=> 'Wenn du mehrere Bilder auf einmal hochlädst, kannst du sie mit <span style="font-weight: bold;">{NUM}</span> in der Beschreibung und im Namen durchnummerieren.<br />
-										Der Zähler beginnt mit der Zahl, die du hier eingibst.',
+	'LOOP_EXP'								=> 'Wenn du mehrere Bilder auf einmal hochlädst, kannst du sie mit <span style="font-weight: bold;">{NUM}</span> in der Beschreibung und im Namen durchnummerieren.<br />
+												Der Zähler beginnt mit der Zahl, die du hier eingibst.',
+	'MISSING_MODE'							=> 'Kein Mudus ausgewählt',
+	'MISSING_SUBMODE'						=> 'Kein Sub-Modus ausgewählt',
+	'MISSING_USERNAME'						=> 'Kein Benutzernamen angegeben',
+	'MISSING_COMMENT'						=> 'Keinen Text eingegeben',
+	'DELETED_COMMENT'						=> 'Kommentar gelöscht',
+	'DELETE_COMMENT'						=> 'Kommentar löschen?',
+	'DELETE_COMMENT_CONFIRM'				=> 'Bist Du Dir sicher das Du den Kommentar löschen möchtest?',
+	'DELETED_IMAGE'							=> 'Bild wurde gelöscht',
+	'DELETE_IMAGE2'							=> 'Das Bild löschen?',
+	'DELETE_IMAGE2_CONFIRM'					=> 'Bist Du Dir sicher das Du das Bild löschen möchtest?',
+	'INVALID_USERNAME'						=> 'Der Benutzername ist ungültig',
 ));
 
 ?>
