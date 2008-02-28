@@ -683,7 +683,15 @@ switch ($mode)
 				}
 				else
 				{
-					confirm_box(false, 'DELETE_IMAGE2', $s_hidden_fields);
+					if (isset($_POST['cancel']))
+					{
+						$message = $user->lang['DELETED_IMAGE_NOT'] . '<br />';
+						$submit = true;
+					}
+					else
+					{
+						confirm_box(false, 'DELETE_IMAGE2', $s_hidden_fields);
+					}
 				}
 			}
 			break;
@@ -848,7 +856,15 @@ switch ($mode)
 				}
 				else
 				{
-					confirm_box(false, 'DELETE_COMMENT', $s_hidden_fields);
+					if (isset($_POST['cancel']))
+					{
+						$message = $user->lang['DELETED_COMMENT_NOT'] . '<br />';
+						$submit = true;
+					}
+					else
+					{
+						confirm_box(false, 'DELETE_COMMENT', $s_hidden_fields);
+					}
 				}
 
 			break;
