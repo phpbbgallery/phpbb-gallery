@@ -837,12 +837,12 @@ switch ($mode)
 					'mode'			=> 'comment',
 					'submode'		=> 'delete',
 				));
+				$comment = $comment_username = $comment_username_req = '';
 				if (confirm_box(true))
 				{
 					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . " WHERE comment_id = $comment_id;";
 					$db->sql_query($sql);
 					$submit = true;
-					$comment = $comment_username = '';
 					$message = $user->lang['DELETED_COMMENT'] . '<br />';
 				}
 				else
