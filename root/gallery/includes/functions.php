@@ -13,6 +13,7 @@ if (!defined('IN_PHPBB'))
 {
 	die('Hacking attempt');
 }
+$gallery_root_path = GALLERY_ROOT_PATH;
 
 $gd_check = function_exists('gd_info') ? gd_info() : array();;
 $gd_success = isset($gd_check['GD Version']);
@@ -587,7 +588,7 @@ function get_album_children($album_id)
 */
 function get_album_info($album_id)
 {
-	global $db, $user;
+	global $db, $user, $gallery_root_path, $phpbb_root_path, $phpEx;
 
 	$sql = 'SELECT ga.*, COUNT(gi.image_id) AS count
 		FROM ' . GALLERY_ALBUMS_TABLE . ' AS ga
@@ -601,6 +602,7 @@ function get_album_info($album_id)
 
 	if (!$row)
 	{
+		meta_refresh(3, append_sid($phpbb_root_path . $gallery_root_path . "index.$phpEx"));
 		trigger_error(sprintf($user->lang['ALBUM_ID_NOT_EXIST'], $album_id));
 	}
 
@@ -785,7 +787,7 @@ function get_image_info($image_id)
 
 	if (!$row)
 	{
-		trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_ERROR);
+		trigger_error('IMAGE_NOT_EXIST');
 	}
 
 	return $row;

@@ -69,6 +69,7 @@ $lang = array_merge($lang, array(
 
 	'CLICK_RETURN_ALBUM'				=> 'Click %shere%s to return to the album',
 	'CLICK_RETURN_GALLERY_INDEX'		=> 'Click %shere%s to return to the gallery index',
+	'CLICK_RETURN_IMAGE'				=> 'Click %shere%s to return to the image',
 	'CLICK_RETURN_MODCP'				=> 'Click %shere%s to return to the moderator control panel',
 	'CLICK_RETURN_PERSONAL_ALBUM'		=> 'Click %shere%s to return to the personal album',
 	'CLICK_VIEW_COMMENT'				=> 'Click %shere%s to view your comment',
@@ -196,6 +197,17 @@ $lang = array_merge($lang, array(
 
 	'LOOP_EXP'						=> 'If you upload more than one file, you may include <span style="font-weight: bold;">{NUM}</span> into the imagename and description.<br />
 										It counts through the images, starting on the value you entered.',
+	'MISSING_MODE'					=> 'No mode selected',
+	'MISSING_SUBMODE'				=> 'No submode selected',
+	'MISSING_USERNAME'				=> 'No Username entered',
+	'MISSING_COMMENT'				=> 'No Message entered',
+	'DELETED_COMMENT'				=> 'Comment deleted',
+	'DELETE_COMMENT'				=> 'Delete comment?',
+	'DELETE_COMMENT_CONFIRM'		=> 'Are you sure you want to delete the comment?',
+	'DELETED_IMAGE'					=> 'Image deleted',
+	'DELETE_IMAGE2'					=> 'Delete image?',
+	'DELETE_IMAGE2_CONFIRM'			=> 'Are you sure you want to delete the image?',
+	'INVALID_USERNAME'				=> 'Your Username is invalid',
 ));
 
 ?>

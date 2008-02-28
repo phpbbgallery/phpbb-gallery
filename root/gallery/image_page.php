@@ -13,8 +13,9 @@ define('IN_PHPBB', true);
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
+$gallery_root_path = GALLERY_ROOT_PATH;
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
-include($phpbb_root_path . 'gallery/includes/common.'.$phpEx);
+include($phpbb_root_path . $gallery_root_path . 'includes/common.'.$phpEx);
 
 // Start session management
 $user->session_begin();
@@ -32,7 +33,7 @@ if (!$image_id)
 // ------------------------------------
 // Salting the form...yumyum ...
 // ------------------------------------
-add_form_key('image_page');
+add_form_key('gallery');
 
 /**
 * Get the image info
@@ -61,7 +62,7 @@ if (!$album_user_access['view'])
 {
 	if (!$user->data['is_registered'])
 	{
-		login_box("gallery/image_page.$phpEx?image_id=$image_id", $user->lang['LOGIN_INFO']);
+		login_box("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?image_id=$image_id", $user->lang['LOGIN_INFO']);
 	}
 	else
 	{
@@ -110,118 +111,15 @@ if ($user->data['user_type'] <> USER_FOUNDER)
 // Posting Comments & Rating
 // ------------------------------------
 
-if (isset($_POST['comment']) || isset($_POST['rate']))
+if (isset($_POST['rate']))
 {
 	// Check the salt... yumyum
-	if (!check_form_key('image_page'))
+	if (!check_form_key('gallery'))
 	{
 		trigger_error('FORM_INVALID');
 	}
 
 	include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
-
-	if (isset($_POST['comment']))
-	{
-		if (!$album_config['comment'] || !$album_user_access['comment'])
-		{
-			trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
-		}
-		$comment_text = substr(request_var('comment', '', true), 0, $album_config['desc_length']);
-		$comment_username = (!$user->data['is_registered']) ? substr(request_var('comment_username', '', true), 0, 32) : $user->data['username'];
-		if( empty($comment_text) )
-		{
-			// Build the navigation
-			if ($album_id <> PERSONAL_GALLERY)
-			{
-				generate_album_nav($album_data);
-			}
-			else
-			{
-				$template->assign_block_vars('navlinks', array(
-					'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],
-					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}gallery/album_personal_index.$phpEx"),
-				));
-
-				$template->assign_block_vars('navlinks', array(
-					'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $image_data['image_username']),
-					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}gallery/album_personal.$phpEx", 'user_id=' . $user_id),
-				));
-			}
-			trigger_error($user->lang['COMMENT_NO_TEXT'], E_USER_WARNING);
-		}
-		// --------------------------------
-		// Check Pic Locked
-		// --------------------------------
-		if (($image_data['image_lock']) && (!$auth_data['moderator']))
-		{
-			trigger_error($user->lang['IMAGE_LOCKED'], E_USER_WARNING);
-		}
-		// --------------------------------
-		// Check username for guest posting
-		// --------------------------------
-
-		if (!$user->data['is_registered'])
-		{
-			if ($comment_username <> '')
-			{
-				$result = validate_username($comment_username);
-				if ( $result['error'] )
-				{
-					trigger_error($result['error_msg'], E_USER_WARNING);
-				}
-			}
-		}
-
-
-		// --------------------------------
-		// Prepare variables
-		// --------------------------------
-
-		$comment_time		= time();
-		$comment_user_id	= $user->data['user_id'];
-		$comment_user_ip	= $user->ip;
-		// --------------------------------
-		// Get $comment_id
-		// --------------------------------
-		$sql = 'SELECT MAX(comment_id) AS max
-			FROM ' . GALLERY_COMMENTS_TABLE;
-		$result = $db->sql_query($sql);
-		$row = $db->sql_fetchrow($result);
-		$comment_id = $row['max'] + 1;
-		// --------------------------------
-		// Insert into DB
-		// --------------------------------
-		include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
-		$message_parser 			= new parse_message();
-		$message_parser->message 	= utf8_normalize_nfc($comment_text);
-		if($message_parser->message)
-		{
-			$message_parser->parse(true, true, true, true, false, true, true, true);
-		}
-		$sql_ary = array(
-			'comment_id'		=> $comment_id,
-			'comment_image_id'	=> $image_id,
-			'comment_user_id'	=> $comment_user_id,
-			'comment_username'	=> $comment_username,
-			'comment_user_ip'	=> $comment_user_ip,
-			'comment_time'		=> $comment_time,
-			'comment'			=> $message_parser->message,
-			'comment_uid'		=> $message_parser->bbcode_uid,
-			'comment_bitfield'	=> $message_parser->bbcode_bitfield,
-			);
-		
-		$db->sql_query('INSERT INTO ' . GALLERY_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
-
-		// --------------------------------
-		// Complete... now send a message to user
-		// --------------------------------
-		$template->assign_vars(array(
-			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=$image_id&comment_set=1") . '#comments">',
-		));
-
-		$message = $user->lang['COMMENT_STORED'] . "<br /><br />" . sprintf($user->lang['CLICK_VIEW_COMMENT'], "<a href=\"" . append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=$image_id&stored=1") . "#$comment_id\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}gallery/index.$phpEx") . "\">", "</a>");
-		trigger_error($message, E_USER_WARNING);
-	}
 
 	if (isset($_POST['rate']))
 	{
@@ -255,22 +153,13 @@ if (isset($_POST['comment']) || isset($_POST['rate']))
 		// Complete... now send a message to user
 		// --------------------------------
 		$message = $user->lang['RATING_SUCCESSFUL'];
-		if ($album_id <> PERSONAL_GALLERY)
-		{
-			$template->assign_vars(array(
-				'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=$image_id&rate_set=1#rating") . '">',
-			));
-			$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$album_id") . "\">", "</a>");
-		}
-		else
-		{
-			$template->assign_vars(array(
-				'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("album_personal.$phpEx?user_id=$user_id") . '">',
-			));
-			$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_PERSONAL_ALBUM'], "<a href=\"" . append_sid("album_personal.$phpEx?user_id=$user_id") . "\">", "</a>");
-		}
 
-		$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
+		$template->assign_vars(array(
+			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?image_id=$image_id&rate_set=1#rating") . '">',
+		));
+		$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?id=$album_id") . "\">", "</a>");
+
+		$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
 		trigger_error($message, E_USER_WARNING);
 	}
 }
@@ -314,11 +203,11 @@ while ($row = $db->sql_fetchrow($result))
 	$last_id = $row['image_id'];
 }
 $template->assign_vars(array(
-	'U_VIEW_ALBUM'	=> ($album_id <> PERSONAL_GALLERY) ? append_sid("album.$phpEx?id=$album_id") : append_sid("album_personal.$phpEx?user_id=$user_id"),
+	'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?id=$album_id"),
 
-	'U_IMAGE'			=> append_sid("{$phpbb_root_path}gallery/image.$phpEx?pic_id=$image_id"),
-	'U_PREVIOUS'		=> ($previous_id) ? append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=$previous_id") : '',
-	'U_NEXT'			=> ($next_id && ($next_id != $previous_id)) ? append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=$next_id") : '',
+	'U_IMAGE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx?pic_id=$image_id"),
+	'U_PREVIOUS'		=> ($previous_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?image_id=$previous_id") : '',
+	'U_NEXT'			=> ($next_id && ($next_id != $previous_id)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?image_id=$next_id") : '',
 	'IMAGE_RSZ_WIDTH'	=> $album_config['preview_rsz_width'],
 	'IMAGE_RSZ_HEIGHT'	=> $album_config['preview_rsz_height'],
 
@@ -329,7 +218,7 @@ $template->assign_vars(array(
 	'IMAGE_TIME'		=> $user->format_date($image_data['image_time']),
 	'IMAGE_VIEW'		=> $image_data['image_view_count'],
 
-	'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=$image_id"))
+	'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?image_id=$image_id"))
 );
 
 if ($album_config['rate'])
@@ -375,11 +264,11 @@ if ($album_config['rate'])
 
 if ($album_config['comment'])
 {
+	$user->add_lang('posting');
 	$template->assign_vars(array(
 		'COMMENTS'		=> true,
 		'IMAGE_COMMENTS'	=> $image_data['comments'],
 	));
-	//'PIC_COMMENTS' => $image_data['comments']
 	
 	if ($album_data['album_comment_level'] < 1 || $album_user_access['comment'])
 	{
@@ -398,18 +287,19 @@ if ($album_config['comment'])
 			{
 				$template->assign_vars(array(
 						'S_CAN_COMMENT' => true
-					)
-				);
+				));
 			}
 		}
 		if (!$commentbox)
 		{
 			$commentbox  = '';
-			$commentbox .= '<textarea name="comment" class="inputbox" cols="60" rows="4"></textarea><br /><br /><input type="submit" name="submit" value="' . $user->lang['SUBMIT'] . '" class="button1" />';
+			$commentbox .= '<textarea name="message" class="inputbox" cols="60" rows="4"></textarea><br /><br /><input type="submit" name="submit" value="' . $user->lang['SUBMIT'] . '" class="button1" />';
 		}
 		$template->assign_vars(array(
-			'S_COMMENTBOX' 			=> $commentbox,
+			'S_COMMENTBOX' 			=> true,
+			'S_BBCODE_ALLOWED' 		=> true,
 			'S_MAX_LENGTH' 			=> $album_config['desc_length'],
+			'S_COMMENT_ACTION' 		=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=add"),
 		));
 	}
 	
@@ -447,7 +337,7 @@ if ($album_config['comment'])
 		{
 			if (($commentrow[$i]['user_id'] == ALBUM_GUEST) || ($commentrow[$i]['username'] == ''))
 			{
-				$poster = ($commentrow[$i]['comment_username'] == '') ? $user->lang['GUEST'] : $commentrow[$i]['comment_username'];
+				$poster = ($commentrow[$i]['comment_username'] != '') ? $user->lang['GUEST'] . 'fg' : $commentrow[$i]['comment_username'];
 			}
 			else
 			{
@@ -489,21 +379,20 @@ if ($album_config['comment'])
 			}
 				
 			$template->assign_block_vars('commentrow', array(
-				'ID' 			=> $commentrow[$i]['comment_id'],
-				'POSTER' 		=> get_username_string('full', $commentrow[$i]['user_id'], ($commentrow[$i]['user_id'] <> ANONYMOUS) ? $commentrow[$i]['username'] : $user->lang['GUEST'], $commentrow[$i]['user_colour']),
-				'TIME' 			=> $user->format_date($commentrow[$i]['comment_time']),
-				'IP' 			=> ($user->data['user_type'] == USER_FOUNDER) ? '<br />' . $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $commentrow[$i]['comment_user_ip'] . '">' . $commentrow[$i]['comment_user_ip'] .'</a><br />' : '',
-				'S_ROW_STYLE' 	=> $row_style,
-				'TEXT' 			=> generate_text_for_display($commentrow[$i]['comment'], $commentrow[$i]['comment_uid'], $commentrow[$i]['comment_bitfield'], 7),
-				'EDIT_INFO' 	=> $edit_info,
-				'EDIT' 			=> '',//( ( $auth_data['edit'] && ($commentrow[$i]['comment_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($album_data['album_edit_level'] != ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="'. append_sid("edit.$phpEx?comment_id=". $commentrow[$i]['comment_id']) .'">'. $user->lang['EDIT_IMAGE'] .'</a>' : '',
-				'DELETE' 		=> '',//( ( $auth_data['delete'] && ($commentrow[$i]['comment_user_id'] == $user->data['user_id']) ) || ($auth_data['moderator'] && ($album_data['album_delete_level'] != ALBUM_ADMIN) ) || ($user->data['user_type'] == USER_FOUNDER) ) ? '<a href="'. append_sid("edit.$phpEx?comment_id=". $commentrow[$i]['comment_id']) .'">'. $user->lang['DELETE_IMAGE'] .'</a>' : ''
-				)
-			);
+				'ID'			=> $commentrow[$i]['comment_id'],
+				'POSTER'		=> get_username_string('full', $commentrow[$i]['user_id'], ($commentrow[$i]['user_id'] <> ANONYMOUS) ? $commentrow[$i]['username'] : ($user->lang['GUEST'] . ': ' . $commentrow[$i]['comment_username']), $commentrow[$i]['user_colour']),
+				'TIME'			=> $user->format_date($commentrow[$i]['comment_time']),
+				'IP'			=> ($user->data['user_type'] == USER_FOUNDER) ? '<br />' . $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $commentrow[$i]['comment_user_ip'] . '">' . $commentrow[$i]['comment_user_ip'] .'</a><br />' : '',
+				'S_ROW_STYLE'	=> $row_style,
+				'TEXT'			=> generate_text_for_display($commentrow[$i]['comment'], $commentrow[$i]['comment_uid'], $commentrow[$i]['comment_bitfield'], 7),
+				'EDIT_INFO'		=> $edit_info,
+				'EDIT'			=> (!$album_user_access['edit'] || (($commentrow[$i]['comment_user_id'] != $user->data['user_id']) && ($user->data['user_type'] != USER_FOUNDER)) || !$user->data['is_registered']) ? '' : append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=edit&amp;comment_id=" . $commentrow[$i]['comment_id']),
+				'DELETE'		=> (!$album_user_access['delete'] || (($commentrow[$i]['comment_user_id'] != $user->data['user_id']) && ($user->data['user_type'] != USER_FOUNDER)) || !$user->data['is_registered']) ? '' : append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=delete&amp;comment_id=" . $commentrow[$i]['comment_id']),
+			));
 		}
 
 		$template->assign_vars(array(
-			'PAGINATION' 	=> generate_pagination(append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=$image_id&amp;sort_order=$sort_order"), $total_comments, $comments_per_page, $start),
+			'PAGINATION' 	=> generate_pagination(append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?image_id=$image_id&amp;sort_order=$sort_order"), $total_comments, $comments_per_page, $start),
 			'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $comments_per_page ) + 1 ), ceil( $total_comments / $comments_per_page ))
 			)
 		);
@@ -517,22 +406,7 @@ if ($album_config['comment'])
 }
 
 // Build the navigation
-if ($album_id <> PERSONAL_GALLERY)
-{
-	generate_album_nav($album_data);
-}
-else
-{
-	$template->assign_block_vars('navlinks', array(
-		'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],
-		'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}gallery/album_personal_index.$phpEx"),
-	));
-
-	$template->assign_block_vars('navlinks', array(
-		'FORUM_NAME'	=> sprintf($user->lang['PERSONAL_ALBUM_OF_USER'], $image_data['image_username']),
-		'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}gallery/album_personal.$phpEx", 'user_id=' . $user_id),
-	));
-}
+generate_album_nav($album_data);
 
 // Output page
 $page_title = $user->lang['VIEW_IMAGE'];// . ' &bull; ' . $album_data['album_name']; ### add image title later

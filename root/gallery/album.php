@@ -13,6 +13,7 @@ define('IN_PHPBB', true);
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
+$gallery_root_path = GALLERY_ROOT_PATH;
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
@@ -25,7 +26,7 @@ $user->setup('mods/gallery');
 //
 // Get general album information
 //
-include($phpbb_root_path . 'gallery/includes/common.'.$phpEx);
+include($phpbb_root_path . $gallery_root_path . 'includes/common.'.$phpEx);
 
 
 // ------------------------------------
@@ -77,7 +78,7 @@ if(!$album_user_access['view'])
 {
 	if ($user->data['is_bot'])
 	{
-		redirect(append_sid("{$phpbb_root_path}gallery/index.$phpEx"));
+		redirect(append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"));
 	}
 	if (!$user->data['is_registered'])
 	{
@@ -96,7 +97,7 @@ if (empty($album_data))
 /**
 * Build Album-Index
 */
-include($phpbb_root_path . 'gallery/includes/functions_display.' . $phpEx);
+include($phpbb_root_path . $gallery_root_path . 'includes/functions_display.' . $phpEx);
 display_albums($album_id);
 if ($album_id <> 0)
 {
@@ -107,7 +108,7 @@ if ($album_id <> 0)
 	if (($user->data['user_type'] == USER_FOUNDER) || ($auth_data['moderator'] == 1))
 	{
 		$template->assign_vars(array(
-			'U_MCP'	=> append_sid($phpbb_root_path . "gallery/mcp.$phpEx?album_id=$album_id"),
+			'U_MCP'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id"),
 		));
 	}
 	$grouprows = array();
@@ -209,7 +210,7 @@ if ($album_id <> 0)
 					if (($user->data['user_type'] == USER_FOUNDER) || (($auth_data['moderator'] == 1) && ($album_data['album_approval'] == ALBUM_MOD)))
 					{
 						$approval_mode = ($picrow[$j]['image_approval'] == 0) ? 'approval' : 'unapproval';
-						$approval_link = '<a href="'. append_sid($phpbb_root_path . "gallery/mcp.$phpEx?mode=$approval_mode&amp;image_id=" . $picrow[$j]['image_id']) . '">';
+						$approval_link = '<a href="'. append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?mode=$approval_mode&amp;image_id=" . $picrow[$j]['image_id']) . '">';
 						$approval_link .= ($picrow[$j]['image_approval'] == 0) ? '<b>' . $user->lang['APPROVE'] . '</b>' : $user->lang['UNAPPROVE'];
 						$approval_link .= '</a>';
 					}
@@ -219,8 +220,8 @@ if ($album_id <> 0)
 				$message_parser->message	= $picrow[$j]['image_desc'];
 				$message_parser->decode_message($picrow[$j]['image_desc_uid']);
 				$template->assign_block_vars('picrow.piccol', array(
-					'U_IMAGE'			=> ($album_config['fullpic_popup']) ? append_sid($phpbb_root_path . "gallery/image.$phpEx?pic_id=" . $picrow[$j]['image_id']) : append_sid($phpbb_root_path . "gallery/image_page.$phpEx?image_id=" . $picrow[$j]['image_id']),
-					'THUMBNAIL'		=> append_sid("{$phpbb_root_path}gallery/thumbnail.$phpEx?pic_id=" . $picrow[$j]['image_id']),
+					'U_IMAGE'			=> ($album_config['fullpic_popup']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx?pic_id=" . $picrow[$j]['image_id']) : append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?image_id=" . $picrow[$j]['image_id']),
+					'THUMBNAIL'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}thumbnail.$phpEx?pic_id=" . $picrow[$j]['image_id']),
 					'DESC'			=> $message_parser->message,
 					'APPROVAL'		=> $approval_link,
 				));
@@ -246,13 +247,13 @@ if ($album_id <> 0)
 					'POSTER'	=> get_username_string('full', $picrow[$j]['image_user_id'], ($picrow[$j]['image_user_id'] <> ANONYMOUS) ? $picrow[$j]['image_username'] : $user->lang['GUEST'], $picrow[$j]['image_user_colour']),
 					'TIME'		=> $user->format_date($picrow[$j]['image_time']),
 					'VIEW'		=> $picrow[$j]['image_view_count'],
-					'RATING'	=> ($album_config['rate'] == 1) ? ( '<a href="' . append_sid($phpbb_root_path . "gallery/image_page.$phpEx?image_id=" . $picrow[$j]['image_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $picrow[$j]['rating'] . '<br />') : '',
-					'COMMENTS'	=> ($album_config['comment'] == 1) ? ( '<a href="' . append_sid($phpbb_root_path . "gallery/image_page.$phpEx?image_id=" . $picrow[$j]['image_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $picrow[$j]['comments'] . '<br />') : '',
+					'RATING'	=> ($album_config['rate'] == 1) ? ( '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?image_id=" . $picrow[$j]['image_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $picrow[$j]['rating'] . '<br />') : '',
+					'COMMENTS'	=> ($album_config['comment'] == 1) ? ( '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?image_id=" . $picrow[$j]['image_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $picrow[$j]['comments'] . '<br />') : '',
 
-					'EDIT'		=> $allow_edit ? '<a href="' . append_sid($phpbb_root_path . "gallery/edit.$phpEx?pic_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['EDIT_IMAGE'] . '</a>' : '',
-					'DELETE'	=> $allow_delete ? '<a href="' . append_sid($phpbb_root_path . "gallery/image_delete.$phpEx?id=" . $picrow[$j]['image_id']) . '">' . $user->lang['DELETE_IMAGE'] . '</a>' : '',
-					'MOVE'		=> ($auth_data['moderator']) ? '<a href="' . append_sid($phpbb_root_path . "gallery/mcp.$phpEx?mode=move&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['MOVE'] . '</a>' : '',
-					'LOCK'		=> ($auth_data['moderator']) ? '<a href="' . append_sid($phpbb_root_path . "gallery/mcp.$phpEx?mode=" . (($picrow[$j]['image_lock'] == 0) ? 'lock' : 'unlock') . "&amp;image_id=" . $picrow[$j]['image_id']) . '">' . (($picrow[$j]['image_lock'] == 0) ? $user->lang['LOCK'] : $user->lang['UNLOCK']) . '</a>' : '',
+					'EDIT'		=> $allow_edit ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['EDIT_IMAGE'] . '</a>' : '',
+					'DELETE'	=> $allow_delete ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=delete&amp;album_id=$album_id&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['DELETE_IMAGE'] . '</a>' : '',
+					'MOVE'		=> ($auth_data['moderator']) ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?mode=move&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['MOVE'] . '</a>' : '',
+					'LOCK'		=> ($auth_data['moderator']) ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?mode=" . (($picrow[$j]['image_lock'] == 0) ? 'lock' : 'unlock') . "&amp;image_id=" . $picrow[$j]['image_id']) . '">' . (($picrow[$j]['image_lock'] == 0) ? $user->lang['LOCK'] : $user->lang['UNLOCK']) . '</a>' : '',
 					'IP'		=> ($user->data['user_type'] == USER_FOUNDER) ? $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $picrow[$j]['image_user_ip'] . '">' . $picrow[$j]['image_user_ip'] . '</a><br />' : ''
 
 					));
@@ -260,7 +261,7 @@ if ($album_id <> 0)
 		}
 
 		$template->assign_vars(array(
-			'PAGINATION'	=> generate_pagination(append_sid($phpbb_root_path . "gallery/album.$phpEx?id=$album_id&amp;sort_method=$sort_method&amp;sort_order=$sort_order"), $total_pics, $pics_per_page, $start),
+			'PAGINATION'	=> generate_pagination(append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?id=$album_id&amp;sort_method=$sort_method&amp;sort_order=$sort_order"), $total_pics, $pics_per_page, $start),
 			'PAGE_NUMBER'	=> on_page($total_pics, $pics_per_page, $start),
 		));
 	}
@@ -294,7 +295,7 @@ if ($album_id <> 0)
 * Build Jumpbox
 */
 $album_jumpbox = $user->lang['JUMP_TO'] . ': ';
-$album_jumpbox .= '<form id="jumpbox" action="' . append_sid($phpbb_root_path . "gallery/album.$phpEx") . '" method="get">';
+$album_jumpbox .= '<form id="jumpbox" action="' . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx") . '" method="get">';
 $album_jumpbox .= '<p><select name="id" onchange="forms[\'jumpbox\'].submit()">';
 $album_jumpbox .= make_album_jumpbox($album_id);
 $album_jumpbox .= '</select>';
@@ -304,13 +305,14 @@ $album_jumpbox .= '</form>';
 $template->assign_vars(array(
 	'S_MODE'					=> $album_data['album_type'],
 	'MODERATORS' 				=> $moderators_list,
-	'U_UPLOAD_IMAGE' 			=> (!$album_data['album_user_id'] || ($album_data['album_user_id'] == $user->data['user_id'])) ? append_sid($phpbb_root_path . "gallery/upload.$phpEx?album_id=$album_id") : '',
+	'U_UPLOAD_IMAGE' 			=> (!$album_data['album_user_id'] || ($album_data['album_user_id'] == $user->data['user_id'])) ?
+										append_sid($phpbb_root_path . $gallery_root_path . "posting.$phpEx", "mode=image&amp;submode=upload&amp;album_id=$album_id") : '',
 	'WAITING' 					=> ($tot_unapproved == 0) ? '' : $tot_unapproved . $user->lang['WAITING_FOR_APPROVAL'],
 
 	'S_COLS' 					=> $album_config['cols_per_page'],
 	'S_COL_WIDTH' 				=> (100/$album_config['cols_per_page']) . '%',
 	'ALBUM_JUMPBOX' 			=> $album_jumpbox,
-	'S_ALBUM_ACTION' 			=> append_sid($phpbb_root_path . "gallery/album.$phpEx?id=$album_id"),
+	'S_ALBUM_ACTION' 			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?id=$album_id"),
 	'TARGET_BLANK' 				=> ($album_config['fullpic_popup']) ? 'target="_blank"' : '',
 
 	'SORT_TIME' 				=> ($sort_method == 'image_time') ? 'selected="selected"' : '',
@@ -325,7 +327,7 @@ $template->assign_vars(array(
 	'SORT_DESC' 				=> ($sort_order == 'DESC') ? 'selected="selected"' : '',
 	'S_AUTH_LIST' 				=> $auth_list,
 
-	'U_RETURN_LINK' 			=> append_sid($phpbb_root_path . "gallery/index.$phpEx"),
+	'U_RETURN_LINK' 			=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"),
 	'S_RETURN_LINK' 			=> $user->lang['GALLERY'],
 ));
 

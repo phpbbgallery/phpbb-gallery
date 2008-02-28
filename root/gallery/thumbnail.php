@@ -17,7 +17,7 @@ include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 include($phpbb_root_path . 'gallery/includes/common.'.$phpEx);
 
 // Start session management
-$user->session_begin();
+$user->session_begin(false);
 $auth->acl($user->data);
 $user->setup('mods/gallery');
 

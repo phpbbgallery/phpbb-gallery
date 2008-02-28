@@ -1,5 +1,7 @@
 <?php
 
+//ignored file
+
 /**
 *
 * @package phpBB3

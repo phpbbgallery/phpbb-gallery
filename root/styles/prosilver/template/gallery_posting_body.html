@@ -1,0 +1,133 @@
+<!-- INCLUDE overall_header.html -->
+<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery_lytebox.js"></script>
+<script type="text/javascript" >
+	if (window.addEventListener) {
+		window.addEventListener("load",initLytebox,false);
+	} else if (window.attachEvent) {
+		window.attachEvent("onload",initLytebox);
+	} else {
+		window.onload = function() {initLytebox();}
+	}
+	function initLytebox() {
+		var imgMaxWidth = {IMAGE_RSZ_WIDTH};
+		var imgWarning = '';
+		myLytebox = new LyteBox(imgMaxWidth, imgWarning);
+	}
+</script>
+<h2><!-- IF U_VIEW_IMAGE --><a href="{U_VIEW_IMAGE}">{IMAGE_NAME}</a><!-- ELSE --><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a><!-- ENDIF --></h2>
+
+<!-- IF U_IMAGE -->
+<div class="post bg2">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<div style="text-align: center; padding: 20px;">
+			<a href="{U_IMAGE}" rel="lytebox" title="{IMAGE_NAME}" class="image-resize"><img src="{U_IMAGE}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-height: {IMAGE_RSZ_HEIGHT}px; max-width: {IMAGE_RSZ_WIDTH}px;" /></a></div>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+<!-- ENDIF -->
+
+<form id="postform" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data" onsubmit="return checkAlbumForm()">
+
+<div class="panel" id="postingbox">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<h3><!-- IF S_COMMENT -->{L_POST_COMMENT}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF --></h3>
+	<fieldset class="fields1">
+	<!-- IF ERROR --><p class="error">{ERROR}</p><!-- ENDIF -->
+
+			<!-- IF REQ_USERNAME -->
+			<dl>
+				<dt><label for="username">{L_USERNAME}:</label></dt>
+				<dd id="username"><input class="inputbox autowidth" type="text" name="username" value="{USERNAME}" size="60" maxlength="32" /></dd>
+			</dl>
+			<!-- ENDIF -->
+			<!-- IF S_IMAGE -->
+				<dl>
+					<dt><label for="title">{L_IMAGE_TITLE}:</label></dt>
+					<dd id="title"><input class="inputbox autowidth" type="text" name="image_name" value="{IMAGE_NAME}" size="60" /></dd>
+					<!-- IF S_MULTI_IMAGES --><dd id="title"><input class="inputbox autowidth" type="text" name="image_num" size="5" value="1" /> {L_LOOP_EXP}</dd><!-- ENDIF -->
+				</dl>
+			<!-- ENDIF -->
+			<dl>
+				<dt><label for="description"><!-- IF S_COMMENT -->{L_YOUR_COMMENT}<!-- ELSE -->{L_IMAGE_DESC}<!-- ENDIF -->:</label>
+				<br />{L_MAX_LENGTH}: <b>{S_PIC_DESC_MAX_LENGTH}</b></dt>
+			</dl>
+			<!-- INCLUDE posting_buttons.html -->
+			<div id="smiley-box">
+				<!-- IF S_SMILIES_ALLOWED and .smiley -->
+					<strong>{L_SMILIES}</strong><br />
+					<!-- BEGIN smiley -->
+						<a href="#" onclick="insert_text('{smiley.A_SMILEY_CODE}', true); return false;"><img src="{smiley.SMILEY_IMG}" width="{smiley.SMILEY_WIDTH}" height="{smiley.SMILEY_HEIGHT}" alt="{smiley.SMILEY_CODE}" title="{smiley.SMILEY_DESC}" /></a>
+					<!-- END smiley -->
+				<!-- ENDIF -->
+				<!-- IF S_SHOW_SMILEY_LINK and S_SMILIES_ALLOWED-->
+					<br /><a href="{U_MORE_SMILIES}" onclick="popup(this.href, 300, 350, '_phpbbsmilies'); return false;">{L_MORE_SMILIES}</a>
+				<!-- ENDIF -->
+			</div>
+			<div id="message-box">
+				<textarea name="message" id="message" rows="15" cols="76" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" class="inputbox">{MESSAGE}</textarea>
+			</div>
+			<!-- IF S_UPLOAD -->
+				<hr />
+				<!-- BEGIN upload_image -->
+					<dl>
+						<dt><label for="file">{L_FILE}:</label></dt>
+						<dd id="file"><input class="inputbox autowidth" type="file" name="image[]" size="52" /></dd>
+					</dl>
+					<!-- IF not S_THUMBNAIL -->
+					<dl>
+						<dt><label for="file">{L_UPLOAD_THUMBNAIL}:</label>{L_UPLOAD_THUMBNAIL_EXPLAIN}<br />{L_THUMBNAIL_SIZE}: <strong>{S_THUMBNAIL_SIZE}</strong></dt>
+						<dd id="file"><input class="inputbox autowidth" type="file" name="thumbnail[]" size="52" /></dd>
+					</dl>
+					<!-- ENDIF -->
+				<!-- END upload_image -->
+				<!-- IF S_MULTI_IMAGES --><hr /><!-- ENDIF -->
+				<dl>
+					<dt><label for="max_filesize">{L_MAX_FILE_SIZE}:</label></dt>
+					<dd id="max_filesize">{S_MAX_FILESIZE}</dd>
+				</dl>
+				<dl>
+					<dt><label for="max_width">{L_MAX_WIDTH}:</label></dt>
+					<dd id="max_width">{S_MAX_WIDTH}</dd>
+				</dl>
+				<dl>
+					<dt><label for="max_height">{L_MAX_HEIGHT}:</label></dt>
+					<dd id="max_height">{S_MAX_HEIGHT}</dd>
+				</dl>
+				<dl>
+					<dt><label for="allowed_jpg">{L_JPG_ALLOWED}:</label></dt>
+					<dd id="allowed_jpg">{S_JPG}</dd>
+				</dl>
+				<dl>
+					<dt><label for="allowed_png">{L_PNG_ALLOWED}:</label></dt>
+					<dd id="allowed_png">{S_PNG}</dd>
+				</dl>
+				<dl>
+					<dt><label for="allowed_gif">{L_GIF_ALLOWED}:</label></dt>
+					<dd id="allowed_gif">{S_GIF}</dd>
+				</dl>
+			<!-- ENDIF -->
+		</fieldset>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+
+<div class="panel bg2">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<fieldset class="submit-buttons">
+			{S_HIDDEN_FIELDS}
+			<input type="reset" accesskey="r" tabindex="8" value="{L_RESET}" class="button2" />&nbsp;
+			<input type="submit" accesskey="s" tabindex="6" name="submit" value="{L_SUBMIT}" class="button1" />&nbsp;
+		</fieldset>
+		{S_FORM_TOKEN}
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+</form>
+
+<!-- Please keep this little notice visible -->
+<div class="copyright">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a> &amp; <a href="http://www.flying-bits.org/">nickvergessen</a></div>
+
+<!-- INCLUDE overall_footer.html -->

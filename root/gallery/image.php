@@ -17,7 +17,7 @@ include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 
 // Start session management
-$user->session_begin();
+$user->session_begin(false);
 $auth->acl($user->data);
 $user->setup('mods/gallery');
 
@@ -31,7 +31,7 @@ include($album_root_path . 'includes/common.'.$phpEx);
 // ------------------------------------
 // Check the request
 // ------------------------------------
-$pic_id = request_var('pic_id', 0);
+$pic_id = request_var('image_id', request_var('pic_id', 0));
 if (!$pic_id)
 {
 	die($user->lang['NO_IMAGE_SPECIFIED']);

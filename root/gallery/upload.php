@@ -1,5 +1,7 @@
 <?php
 
+//ignored file
+
 /**
 *
 * @package phpBB3
@@ -11,11 +13,11 @@
 
 define('IN_PHPBB', true);
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
-$album_root_path = $phpbb_root_path . 'gallery/';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
-include($album_root_path . 'includes/common.'.$phpEx);
+$gallery_root_path = GALLERY_ROOT_PATH;
+include($phpbb_root_path . $gallery_root_path . 'includes/common.'.$phpEx);
 include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 include_once($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 
