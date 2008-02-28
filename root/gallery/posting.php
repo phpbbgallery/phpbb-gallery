@@ -574,7 +574,7 @@ switch ($mode)
 					{
 						if (!$album_data['album_approval'])
 						{
-							$message = $user->lang['ALBUM_UPLOAD_SUCCESSFUL'] . 'fd';
+							$message = $user->lang['ALBUM_UPLOAD_SUCCESSFUL'];
 						}
 						else
 						{
