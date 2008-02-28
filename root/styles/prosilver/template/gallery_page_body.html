@@ -12,26 +12,6 @@ function checkRateForm() {
 		return true;
 	}
 }
-
-function checkCommentForm() {
-	formErrors = false;
-
-	if (document.commentform.comment.value.length < 2)
-	{
-		formErrors = "{L_COMMENT_NO_TEXT}";
-	}
-	else if (document.commentform.comment.value.length > {S_MAX_LENGTH})
-	{
-		formErrors = "{L_COMMENT_TOO_LONG}";
-	}
-
-	if (formErrors) {
-		alert(formErrors);
-		return false;
-	} else {
-		return true;
-	}
-}
 // -->
 </script>
 <script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery_lytebox.js"></script>
@@ -125,24 +105,26 @@ function checkCommentForm() {
 <!-- ENDIF -->
 
 <!-- IF COMMENTS -->
-	<!-- IF POST_COMMENT -->
+	<!-- IF POST_COMMENT and not S_IS_BOT -->
 	<a name="rating"></a>
 	<h3>{L_POST_COMMENT}</h3>
 	<br />
-	<form id="commentform" action="{S_ALBUM_ACTION}" method="post" onsubmit="return checkCommentForm;">
+	<form id="postform" action="{S_COMMENT_ACTION}" method="post" onsubmit="return checkCommentForm;">
 	<div class="post bg2">
 		<div class="inner">
 			<span class="corners-top"><span></span></span>
 			<fieldset class="fields1">
-				<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT and S_CAN_COMMENT -->
+				<!-- IF not S_USER_LOGGED_IN -->
 				<dl>
 					<dt><label>{L_USERNAME}:</label></dt>
-					<dd><input class="inputbox autowidth" type="text" name="comment_username" maxlength="32" /></dd>
+					<dd><input class="inputbox autowidth" type="text" name="username" maxlength="32" /></dd>
 				</dl>
 				<!-- ENDIF -->
 				<dl>
 					<dt><label>{L_YOUR_COMMENT}:</label></dt>
-					<dd>{S_COMMENTBOX}</dd>
+					<dd><!-- INCLUDE posting_buttons.html --></dd>
+					<dd><textarea name="message" class="inputbox" cols="60" rows="4"></textarea></dd>
+					<dd><input type="submit" name="submit" value="{L_SUBMIT}" class="button1" /></dd>
 				</dl>
 			</fieldset>
 			{S_FORM_TOKEN}
