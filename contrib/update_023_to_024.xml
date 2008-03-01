@@ -70,6 +70,7 @@
       <file from="root/install_gallery/schemas/*.*" to="install_gallery/schemas/*.*" />
       <file from="root/language/en/mods/*.*" to="language/en/mods/*.*" />
       <file from="root/styles/prosilver/imageset/en/button_upload_image.gif" to="styles/prosilver/imageset/en/button_upload_image.gif" />
+      <file from="root/styles/prosilver/imageset/icon_contact_gallery.gif" to="styles/prosilver/imageset/icon_contact_gallery.gif" />
       <file from="root/styles/prosilver/template/*.*" to="styles/prosilver/template/*.*" />
       <file from="root/styles/prosilver/theme/gallery_lytebox.css" to="styles/prosilver/theme/gallery_lytebox.css" />
       <file from="root/styles/prosilver/theme/images/gallery_lytebox/*.*" to="styles/prosilver/theme/images/gallery_lytebox/*.*" />
@@ -102,6 +103,12 @@
 			AND album_user_id != 0
 			AND parent_id = 0";
 	$db->sql_query($sql);]]></action>
+      </edit>
+    </open>
+    <open src="styles/prosilver/template/viewtopic_body.html">
+      <edit>
+        <find><![CDATA[<!-- IF postrow.U_JABBER --><li class="jabber-icon"><a href="{postrow.U_JABBER}" onclick="popup(this.href, 550, 320); return false;" title="{L_JABBER}"><span>{L_JABBER}</span></a></li><!-- ENDIF -->]]></find>
+        <action type="after-add"><![CDATA[<!-- IF postrow.U_GALLERY --><li class="gallery-icon"><a href="{postrow.U_GALLERY}" title="{L_PERSONAL_ALBUM}"><span>{L_PERSONAL_ALBUM}h</span></a></li><!-- ENDIF -->]]></action>
       </edit>
     </open>
     <open src="styles/prosilver/theme/stylesheet.css">

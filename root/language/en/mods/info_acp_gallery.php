@@ -32,6 +32,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'GALLERY'									=> 'Gallery',
+	'PERSONAL_ALBUM'							=> 'Personal album',
 	'GALLERY_EXPLAIN'							=> 'Picture Gallery',
 	'PHPBB_GALLERY'								=> 'phpBB Gallery',
 	'ACP_GALLERY_OVERVIEW'						=> 'Overview',
