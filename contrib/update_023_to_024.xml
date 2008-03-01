@@ -76,6 +76,24 @@
       <file from="root/styles/prosilver/theme/images/gallery_lytebox/*.*" to="styles/prosilver/theme/images/gallery_lytebox/*.*" />
       <file from="root/styles/prosilver/theme/images/icon_gallery.gif" to="styles/prosilver/theme/images/icon_gallery.gif" />
     </copy>
+    <open src="viewtopic.php">
+      <edit>
+        <find><![CDATA['REPORT_IMG'		=> $user->img('icon_post_report', 'REPORT_POST'),]]></find>
+        <action type="before-add"><![CDATA['GALLERY_IMG'		=> $user->img('icon_contact_gallery', 'PERSONAL_ALBUM'),]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA['jabber'			=> '',]]></find>
+        <action type="after-add"><![CDATA['personal_album'	=> '',]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA['jabber'		=> ($row['user_jabber'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=jabber&amp;u=$poster_id") : '',]]></find>
+        <action type="after-add"><![CDATA['personal_album'	=> ($row['album_id']) ? append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "album.$phpEx", "album_id=" . $row['album_id']) : '',]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA['U_JABBER'		=> $user_cache[$poster_id]['jabber'],]]></find>
+        <action type="after-add"><![CDATA['U_GALLERY'		=> $user_cache[$poster_id]['personal_album'],]]></action>
+      </edit>
+    </open>
     <open src="includes/constants.php">
       <edit>
         <find><![CDATA[define('GALLERY_ALBUMS_TABLE',			$table_prefix . 'gallery_albums');]]></find>
