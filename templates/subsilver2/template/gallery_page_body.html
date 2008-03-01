@@ -12,43 +12,9 @@ function checkRateForm() {
 		return true;
 	}
 }
-
-function checkCommentForm() {
-	formErrors = false;
-
-	if (document.commentform.comment.value.length < 2)
-	{
-		formErrors = "{L_COMMENT_NO_TEXT}";
-	}
-	else if (document.commentform.comment.value.length > {S_MAX_LENGTH})
-	{
-		formErrors = "{L_COMMENT_TOO_LONG}";
-	}
-
-	if (formErrors) {
-		alert(formErrors);
-		return false;
-	} else {
-		return true;
-	}
-}
 // -->
 </script>
 <script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery_lytebox.js"></script>
-<script type="text/javascript" >
-	if (window.addEventListener) {
-		window.addEventListener("load",initLytebox,false);
-	} else if (window.attachEvent) {
-		window.attachEvent("onload",initLytebox);
-	} else {
-		window.onload = function() {initLytebox();}
-	}
-	function initLytebox() {
-		var imgMaxWidth = {IMAGE_RSZ_WIDTH};
-		var imgWarning = '';
-		myLytebox = new LyteBox(imgMaxWidth, imgWarning);
-	}
-</script>
 
 <h2><a href="#">{IMAGE_NAME}</a></h2>
 
@@ -125,24 +91,27 @@ function checkCommentForm() {
 <!-- ENDIF -->
 
 <!-- IF COMMENTS -->
-	<!-- IF POST_COMMENT -->
+	<!-- IF POST_COMMENT and not S_IS_BOT -->
 		<a name="rating"></a>
-		<form name="commentform" action="{S_ALBUM_ACTION}" method="post" onsubmit="return checkCommentForm;">
+		<form name="postform" action="{S_COMMENT_ACTION}"" method="post" onsubmit="return checkCommentForm;">
 			<table class="tablebg" cellspacing="1" width="100%">
 				<tr>
 					<th colspan="2" style="align: center;">{L_POST_COMMENT}</th>
 				</tr>
-				<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT and S_CAN_COMMENT -->
+				<!-- IF not S_USER_LOGGED_IN -->
 				<tr class="row1">
 					<td width="25%" align="right"><span class="genmed">{L_USERNAME}:</span></td>
 					<td><span class="genmed">
-						<input class="inputbox autowidth" type="text" name="comment_username" maxlength="32" />
+						<input class="inputbox autowidth" type="text" name="username" maxlength="32" />
 						</span></td>
 				</tr>
 				<!-- ENDIF -->
 				<tr class="row1">
 					<td width="25%" align="right"><span class="genmed">{L_YOUR_COMMENT}:</span></td>
-					<td><span class="genmed">{S_COMMENTBOX}</span></td>
+					<td><span class="genmed"><textarea name="message" class="inputbox" cols="60" rows="4"></textarea></span></td>
+				</tr>
+				<tr class="cat">
+					<td colspan="2"><input type="submit" name="submit" value="{L_SUBMIT}" class="button1" /></td>
 				</tr>
 			</table>
 			{S_FORM_TOKEN}
