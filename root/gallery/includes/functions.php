@@ -381,7 +381,7 @@ function personal_album_access($user_id)
 		$allowed['view'] = true;
 	}
 
-	if (($user_id = $user->data['user_id']) || ($user->data['user_type'] == USER_FOUNDER))
+	if (($user_id == $user->data['user_id']) || ($user->data['user_type'] == USER_FOUNDER))
 	{
 		$allowed['edit'] = true;
 		$allowed['delete'] = true;
