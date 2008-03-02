@@ -108,18 +108,11 @@ if($pic_id)
 // ------------------------------------
 // Get the cat info
 // ------------------------------------
-if (($album_id == PERSONAL_GALLERY) && (($mode == 'lock') || ($mode == 'unlock')))
-{
-	$thiscat = init_personal_gallery_cat($user_id);
-}
-else
-{
-	$sql = 'SELECT *
-		FROM ' . GALLERY_ALBUMS_TABLE . '
-		WHERE album_id = ' . $album_id;
-	$result = $db->sql_query($sql);
-	$thiscat = $db->sql_fetchrow($result);
-}
+$sql = 'SELECT *
+	FROM ' . GALLERY_ALBUMS_TABLE . '
+	WHERE album_id = ' . $album_id;
+$result = $db->sql_query($sql);
+$thiscat = $db->sql_fetchrow($result);
 
 if (empty($thiscat))
 {
