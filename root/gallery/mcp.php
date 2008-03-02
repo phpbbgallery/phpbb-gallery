@@ -31,6 +31,7 @@ include($album_root_path . 'includes/common.'.$phpEx);
 // set $mode (select action)
 // ------------------------------------
 $mode = request_var('mode', '');
+$target = request_var('target', 0);
 
 if (isset($_POST['mode']))
 {
@@ -125,7 +126,7 @@ if (empty($thiscat))
 	trigger_error($user->lang['ALBUM_NOT_EXIST'], E_USER_WARNING);
 }
 
-$auth_data = album_user_access($album_id, $thiscat, 0, 0, 0, 0, 0, 0); // MODERATOR only
+$auth_data = (!$thiscat['album_user_id']) ? album_user_access($album_id, $thiscat, 0, 0, 0, 0, 0, 0) : personal_album_access($thiscat['album_user_id']); // MODERATOR only
 //
 // END category info
 //
@@ -374,7 +375,7 @@ else
 			// write categories out
 			$category_select = '<select name="target">';
 
-			$category_select .= make_album_jumpbox($album_id);
+			$category_select .= make_move_jumpbox($album_id);
 
 			$category_select .= '</select>';
 			// end write
@@ -451,8 +452,12 @@ else
 				SET image_album_id = ' . intval($target) . '
 				WHERE image_id IN (' . $pic_id_sql . ')';
 			$result = $db->sql_query($sql);
-			$message = $user->lang['IMAGES_MOVED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
-			trigger_error($message, E_USER_WARNING);
+			$message = $user->lang['IMAGES_MOVED_SUCCESSFULLY'] .'<br /><br />'
+				. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$album_id") . "\">", "</a>")
+				. '<br />' . sprintf($user->lang['CLICK_RETURN_ALBUM_TARGET'], "<a href=\"" . append_sid("album.$phpEx?id=$target") . "\">", "</a>")
+				. '<br />' . sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?album_id=$album_id") . "\">", "</a>")
+				. '<br />' . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
+			trigger_error($message);
 		}
 	}
 	else if ($mode == 'lock')

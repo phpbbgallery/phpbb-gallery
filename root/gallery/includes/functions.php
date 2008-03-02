@@ -763,6 +763,134 @@ function make_album_jumpbox($select_id = false, $ignore_id = false, $album = fal
 
 	return $forum_list;
 }
+function make_personal_jumpbox($album_user_id, $select_id = false, $ignore_id = false, $album = false, $ignore_acl = false, $ignore_nonpost = false, $ignore_emptycat = true, $only_acl_post = false, $return_array = false)
+{
+	global $db, $user, $auth;
+
+	// This query is identical to the jumpbox one
+	$sql = 'SELECT album_id, album_name, parent_id, left_id, right_id, album_type
+		FROM ' . GALLERY_ALBUMS_TABLE . "
+		WHERE album_user_id = $album_user_id
+		ORDER BY left_id ASC";
+	$result = $db->sql_query($sql, 600);
+
+	$right = 0;
+	$padding_store = array('0' => '');
+	$padding = '';
+	$forum_list = ($return_array) ? array() : '';
+
+	// Sometimes it could happen that forums will be displayed here not be displayed within the index page
+	// This is the result of forums not displayed at index, having list permissions and a parent of a forum with no permissions.
+	// If this happens, the padding could be "broken"
+
+	while ($row = $db->sql_fetchrow($result))
+	{
+		if ($row['left_id'] < $right)
+		{
+			$padding .= '&nbsp; &nbsp;';
+			$padding_store[$row['parent_id']] = $padding;
+		}
+		else if ($row['left_id'] > $right + 1)
+		{
+			$padding = (isset($padding_store[$row['parent_id']])) ? $padding_store[$row['parent_id']] : '';
+		}
+
+		$right = $row['right_id'];
+		$disabled = false;
+
+		if (((is_array($ignore_id) && in_array($row['album_id'], $ignore_id)) || $row['album_id'] == $ignore_id) || ($album && ($row['album_type'] != 2)))
+		{
+			$disabled = true;
+		}
+
+		if ($return_array)
+		{
+			// Include some more information...
+			$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? true : false) : (($row['album_id'] == $select_id) ? true : false);
+			$forum_list[$row['album_id']] = array_merge(array('padding' => $padding, 'selected' => ($selected && !$disabled), 'disabled' => $disabled), $row);
+		}
+		else
+		{
+			$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? ' selected="selected"' : '') : (($row['album_id'] == $select_id) ? ' selected="selected"' : '');
+			$forum_list .= '<option value="' . $row['album_id'] . '"' . (($disabled) ? ' disabled="disabled" class="disabled-option"' : $selected) . '>' . $padding . $row['album_name'] . '</option>';
+		}
+	}
+	$db->sql_freeresult($result);
+	unset($padding_store);
+
+	return $forum_list;
+}
+function make_move_jumpbox($select_id = false, $ignore_id = false, $album = false, $ignore_acl = false, $ignore_nonpost = false, $ignore_emptycat = true, $only_acl_post = false, $return_array = false)
+{
+	global $db, $user, $auth;
+
+	// This query is identical to the jumpbox one
+	$sql = 'SELECT album_id, album_name, parent_id, left_id, right_id, album_type, album_user_id
+		FROM ' . GALLERY_ALBUMS_TABLE . "
+		ORDER BY album_user_id, left_id ASC";
+	$result = $db->sql_query($sql);
+
+	$album_user_id = $right = 0;
+	$padding_store = array('0' => '');
+	$padding = '';
+	$forum_list = ($return_array) ? array() : '';
+	$personal_info = false;
+
+	// Sometimes it could happen that forums will be displayed here not be displayed within the index page
+	// This is the result of forums not displayed at index, having list permissions and a parent of a forum with no permissions.
+	// If this happens, the padding could be "broken"
+
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$album_user_access = (!$row['album_user_id']) ? album_user_access($row['album_id'], $row, 1, 1, 1, 1, 1, 1) : personal_album_access($row['album_user_id']);
+
+		if (($row['album_user_id'] > 0) && !$personal_info)
+		{
+			$personal_info = true;
+			$forum_list .= '<option disabled="disabled" class="disabled-option">' . $user->lang['PERSONAL_ALBUMS'] . '</option>';
+		}
+		if ($album_user_access['view'])
+		{
+			if ($album_user_id == $row['album_user_id'])
+			{
+				if ($row['left_id'] < $right)
+				{
+					$padding .= '&nbsp; &nbsp;';
+					$padding_store[$row['parent_id']] = $padding;
+				}
+				else if ($row['left_id'] > $right + 1)
+				{
+					$padding = (isset($padding_store[$row['parent_id']])) ? $padding_store[$row['parent_id']] : '';
+				}
+			}
+
+			$right = $row['right_id'];
+			$album_user_id = $row['album_user_id'];
+			$disabled = false;
+
+			if (!$album_user_access['upload'])
+			{
+				$disabled = true;
+			}
+
+			if ($return_array)
+			{
+				// Include some more information...
+				$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? true : false) : (($row['album_id'] == $select_id) ? true : false);
+				$forum_list[$row['album_id']] = array_merge(array('padding' => $padding, 'selected' => ($selected && !$disabled), 'disabled' => $disabled), $row);
+			}
+			else
+			{
+				$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? ' selected="selected"' : '') : (($row['album_id'] == $select_id) ? ' selected="selected"' : '');
+				$forum_list .= '<option value="' . $row['album_id'] . '"' . (($disabled) ? ' disabled="disabled" class="disabled-option"' : $selected) . '>' . $padding . $row['album_name'] . '</option>';
+			}
+		}
+	}
+	$db->sql_freeresult($result);
+	unset($padding_store);
+
+	return $forum_list;
+}
 /**
 * get image info
 */

@@ -68,6 +68,7 @@ $lang = array_merge($lang, array(
 	'BAD_UPLOAD_FILE_SIZE'				=> 'Your uploaded file is too large',
 
 	'CLICK_RETURN_ALBUM'				=> 'Click %shere%s to return to the album',
+	'CLICK_RETURN_ALBUM_TARGET'			=> 'Click %shere%s to return to the new album',
 	'CLICK_RETURN_GALLERY_INDEX'		=> 'Click %shere%s to return to the gallery index',
 	'CLICK_RETURN_IMAGE'				=> 'Click %shere%s to return to the image',
 	'CLICK_RETURN_MODCP'				=> 'Click %shere%s to return to the moderator control panel',

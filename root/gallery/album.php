@@ -297,7 +297,14 @@ if ($album_id <> 0)
 $album_jumpbox = $user->lang['JUMP_TO'] . ': ';
 $album_jumpbox .= '<form id="jumpbox" action="' . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx") . '" method="get">';
 $album_jumpbox .= '<p><select name="id" onchange="forms[\'jumpbox\'].submit()">';
-$album_jumpbox .= make_album_jumpbox($album_id);
+if (!$album_data['album_user_id'])
+{
+	$album_jumpbox .= make_album_jumpbox($album_id);
+}
+else
+{
+	$album_jumpbox .= make_personal_jumpbox($album_data['album_user_id'], $album_id);
+}
 $album_jumpbox .= '</select>';
 $album_jumpbox .= '<input type="hidden" name="sid" value="' . $user->data['session_id'] . '" /></p>';
 $album_jumpbox .= '</form>';
