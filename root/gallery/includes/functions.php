@@ -863,6 +863,10 @@ function make_move_jumpbox($select_id = false, $ignore_id = false, $album = fals
 					$padding = (isset($padding_store[$row['parent_id']])) ? $padding_store[$row['parent_id']] : '';
 				}
 			}
+			else
+			{
+				$padding = '';
+			}
 
 			$right = $row['right_id'];
 			$album_user_id = $row['album_user_id'];
