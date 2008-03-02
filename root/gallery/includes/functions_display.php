@@ -53,15 +53,16 @@ function display_albums($album_id, $mode = 'album')
 			$order_by = 'a.left_id ASC';
 			break;
 	}
-	$sql = 'SELECT a.*, COUNT(pc.image_id) AS count, MAX(pc.image_id) as last_image
+	$sql = 'SELECT a.*, COUNT(i.image_id) AS count, MAX(i.image_id) as last_image
 		FROM ' . GALLERY_ALBUMS_TABLE . ' AS a
 		LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' AS sa
 			ON ( sa.left_id < a.right_id
 				AND sa.left_id > a.left_id )
 				AND a.album_user_id = sa.album_user_id
-		LEFT JOIN ' . GALLERY_IMAGES_TABLE . " AS pc
-			ON ( pc.image_album_id = sa.album_id
-				OR pc.image_album_id = a.album_id )
+		LEFT JOIN ' . GALLERY_IMAGES_TABLE . " AS i
+			ON ( i.image_album_id = sa.album_id
+				OR i.image_album_id = a.album_id )
+				AND i.image_approval = 1
 		WHERE $where
 		GROUP BY a.album_id
 		ORDER BY $order_by";
@@ -131,23 +132,9 @@ function display_albums($album_id, $mode = 'album')
 
 		if ($album[$i]['count'] != 0)
 		{
-			// ----------------------------
-			// Check Pic Approval
-			// ----------------------------
-			if (($album[$i]['album_approval'] == ALBUM_ADMIN) || ($album[$i]['album_approval'] == ALBUM_MOD))
-			{
-				$pic_approval_sql = 'AND i.image_approval = 1';
-			}
-			else
-			{
-				$pic_approval_sql = '';
-			}
-			// ----------------------------
-			// OK, we may do a query now...
-			// ----------------------------
-			$sql = 'SELECT i.image_id, i.image_name, i.image_user_id, i.image_username, i.image_user_colour, i.image_time, i.image_album_id
+			$sql = 'SELECT i.image_id, i.image_name, i.image_user_id, i.image_username, i.image_user_colour, i.image_time, i.image_album_id, i.image_approval
 					FROM ' . GALLERY_IMAGES_TABLE . ' AS i
-					WHERE i.image_id = ' . $album[$i]['last_image'] . ' ' . $pic_approval_sql . ' 
+					WHERE i.image_id = ' . $album[$i]['last_image'] . ' 
 					ORDER BY i.image_time DESC';
 			$result = $db->sql_query($sql);
 			$lastrow = $db->sql_fetchrow($result);
@@ -178,7 +165,6 @@ function display_albums($album_id, $mode = 'album')
 			$l_subalbums = '';
 			$folder_alt = 'no';
 		}
-		//$folder_image = ($album[$i]['left_id'] + 1 != $album[$i]['right_id']) ? '<img src="images/icon_subfolder.gif" alt="' . $user->lang['SUBFORUM'] . '" />' : '<img src="images/icon_folder.gif" alt="' . $user->lang['FOLDER'] . '" />';
 		// END of Last Pic
 
 		// ------------------------------------------
