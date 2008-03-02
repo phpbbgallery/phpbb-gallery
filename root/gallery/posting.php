@@ -579,6 +579,7 @@ switch ($mode)
 						else
 						{
 							$message = $user->lang['ALBUM_UPLOAD_NEED_APPROVAL'];
+							$image_id = false;
 						}
 					}
 					else
@@ -702,10 +703,11 @@ switch ($mode)
 	case 'comment':
 	if ($mode == 'comment')
 	{
+		$comment = $comment_username = '';
+		$comment_username_req = false;
 		switch ($submode)
 		{
 			case 'add':
-				$comment_username_req = false;
 				if ($submit)
 				{
 					if (!check_form_key('gallery'))
@@ -772,7 +774,6 @@ switch ($mode)
 			break;
 
 			case 'edit':
-				$comment_username_req = false;
 				if ($submit)
 				{
 					if (!check_form_key('gallery'))
