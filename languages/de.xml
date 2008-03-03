@@ -19,8 +19,8 @@
     </author-group>
     <mod-version>
       <major>0</major>
-      <minor>2</minor>
-      <revision>3</revision>
+      <minor>3</minor>
+      <revision>0</revision>
     </mod-version>
     <installation>
       <level>easy</level>
@@ -33,39 +33,59 @@
     </installation>
     <history>
       <entry>
-        <date>2008-01-24</date>
+        <date>2008-03-06</date>
         <rev-version>
           <major>0</major>
-          <minor>2</minor>
-          <revision>3</revision>
+          <minor>3</minor>
+          <revision>0</revision>
         </rev-version>
         <changelog lang="en-GB">
-          <change><![CDATA[Report #62: Watermark: Call to undefined function: imagecreatefromjpeg()]]></change>
-          <change><![CDATA[Report #90: Add gd_info function check into the installer]]></change>
-          <change><![CDATA[Report #100: bbcode]]></change>
-          <change><![CDATA[Report #102: Browsing Gallery while [ Test out user’s permissions ]]]></change>
-          <change><![CDATA[Report #120: styles/prosilver/imageset/icon_topic_latest.gif]]></change>
-          <change><![CDATA[Report #121: missing upload-line in subsilver2]]></change>
-          <change><![CDATA[Report #122: missing mass-upload modul]]></change>
-          <change><![CDATA[Report #124: Better remove thumbs.db]]></change>
-          <change><![CDATA[Report #125: pers. album: default sort gives error messages]]></change>
-          <change><![CDATA[Report #127: missing {S_FORM_TOKEN} in subsilver2]]></change>
-          <change><![CDATA[Report #130: missing "yes" in subsilver2 on delete-confirm]]></change>
-          <change><![CDATA[Report #131: UTF is absent]]></change>
-          <change><![CDATA[Report #132: Wrong premission to Anonymus]]></change>
-          <change><![CDATA[Report #135: Unknown column 'username' in album_personal.php]]></change>
-          <change><![CDATA[Report #137: Gallery is open when board is disabled]]></change>
-          <change><![CDATA[Report #139: not valid]]></change>
-          <change><![CDATA[Report #140: double entry for gallery index in navlinks on upload page]]></change>
-          <change><![CDATA[Report #141: language attribute in <script> tags]]></change>
-          <change><![CDATA[Report #145: confusing default: category]]></change>
-          <change><![CDATA[Report #148: Unknown column 'rating' in 'order clause' [1054]]]></change>
-          <change><![CDATA[Report #153: Missing form around rating in subsilver2]]></change>
-          <change><![CDATA[Report #157: Last image sorting not working]]></change>
-          <change><![CDATA[Report #158: colour username on personal gallery empty]]></change>
-          <change><![CDATA[Report #159: english typo: Thias file type is not allowed]]></change>
-          <change><![CDATA[Report #160: dead link on image comment]]></change>
-          <change><![CDATA[Report #161: empty error message on gallery/album.php]]></change>
+          <change><![CDATA[[Add] Report #138: Resize image in image view page]]></change>
+          <change><![CDATA[[Add] Report #195: Reduce SQL phpbb_users left join]]></change>
+          <change><![CDATA[[Add] Report #197: Personal Gallery Index - User colour are not showing...]]></change>
+          <change><![CDATA[[Add] Report #149: members should have the ability to create an album]]></change>
+          <change><![CDATA[[Add] Report #208: permissions for creating subalbums]]></change>
+          <change><![CDATA[[Add] Report #212: Multiple Upload]]></change>
+          <change><![CDATA[[Add] Report #15: edit and delete comments]]></change>
+          <change><![CDATA[[Add] Report #168: Persönliche Galerie verlinken]]></change>
+          <change><![CDATA[[Add] Report #213: SVN: move pic from private subalbum not possible]]></change>
+          <change><![CDATA[[Add] Report #211: Seitenauflistung in der "Wer ist online?"-Liste]]></change>
+          <change><![CDATA[[Add] Report #126: Optional black info line at bottom.]]></change>
+
+          <change><![CDATA[[Change] Report #173: [ACP] missing radio and checkbox classes...cosmetic.]]></change>
+          <change><![CDATA[[Change] Report #163: Deutsche Sprache: Gallery/Galerie]]></change>
+          <change><![CDATA[[Change] Report #188: MCP link 2 times]]></change>
+          <change><![CDATA[[Change] Report #143: Also show new personal images on index page]]></change>
+          <change><![CDATA[[Change] Report #215: Should not update session page on thumbnail view]]></change>
+          <change><![CDATA[[Change] Report #216: Album BBcode - mark in one click]]></change>
+
+          <change><![CDATA[[Fix] Report #167: Missing Lang: IMAGE_BBCODE]]></change>
+          <change><![CDATA[[Fix] Report #172: Undefined variable: sort_new_comment_option]]></change>
+          <change><![CDATA[[Fix] Report #175: SVN: Move images are not working anymore]]></change>
+          <change><![CDATA[[Fix] Report #182: View the last MESSAGE?]]></change>
+          <change><![CDATA[[Fix] Report #176: Album categorie - don't show "no pictures"]]></change>
+          <change><![CDATA[[Fix] Report #190: Commment]]></change>
+          <change><![CDATA[[Fix] Report #194: no personal images in recent images]]></change>
+          <change><![CDATA[[Fix] Report #196: MCP - Delete images are not working anymore...]]></change>
+          <change><![CDATA[[Fix] Report #198: personal gallery of xxxx - PHP Notice error]]></change>
+          <change><![CDATA[[Fix] Report #199: SVN: gallery/index.php - SQL Error]]></change>
+          <change><![CDATA[[Fix] Report #202: install.xml - Description typo]]></change>
+          <change><![CDATA[[Fix] Report #186: No more albums to move]]></change>
+          <change><![CDATA[[Fix] Report #169: {memberrow.ALBUM_FOLDER_IMG_SRC}]]></change>
+          <change><![CDATA[[Fix] Report #174: Personal Albums - Next / Previous Links]]></change>
+          <change><![CDATA[[Fix] Report #207: display nav-link when using recent_image addon]]></change>
+          <change><![CDATA[[Fix] Report #210: personal albums - ucp - move subulbums error]]></change>
+          <change><![CDATA[[Fix] Report #178: imagecreatefromjpeg(./..//gallery/upload/.jpg)]]></change>
+          <change><![CDATA[[Fix] Report #205: SQL Error on convert (guest comments)]]></change>
+          <change><![CDATA[[Fix] Report #201: wrong album link]]></change>
+          <change><![CDATA[[Fix] Report #164: Deutscher Sprachbutton (UPLOADIMAGE)]]></change>
+          <change><![CDATA[[Fix] Report #200: Truecolor+alpha channel watermark]]></change>
+          <change><![CDATA[[Fix] Report #203: root/gallery/index.htm loaded instead of index.php]]></change>
+          <change><![CDATA[[Fix] Report #209: Personal album permissions are messed up.]]></change>
+          <change><![CDATA[[Fix] Report #206: Small typo in german language]]></change>
+          <change><![CDATA[[Fix] Report #214: personal gallery: empty gallery problem.]]></change>
+          <change><![CDATA[[Fix] Report #192: upload error lang]]></change>
+          <change><![CDATA[[Fix] Report #177: categorie - last image are not shown if disapproved]]></change>
         </changelog>
       </entry>
     </history>
@@ -73,12 +93,9 @@
   </header>
   <action-group>
     <copy>
-      <file from="languages/de/gallery.php" to="language/de/mods/gallery.php" />
-      <file from="languages/de/gallery_acp.php" to="language/de/mods/gallery_acp.php" />
-      <file from="languages/de/gallery_install.php" to="language/de/mods/gallery_install.php" />
-      <file from="languages/de/info_acp_gallery.php" to="language/de/mods/info_acp_gallery.php" />
-      <file from="languages/de/button_upload_image.gif" to="styles/prosilver/imageset/de/button_upload_image.gif" />
-      <file from="languages/de/subsilver2/button_upload_image.gif" to="styles/subsilver2/imageset/de/button_upload_image.gif" />
+      <file from="languages/de/language/de/mods/*.*" to="language/de/mods/*.*" />
+      <file from="languages/de/styles/prosilver/imageset/de/button_upload_image.gif" to="styles/prosilver/imageset/de/button_upload_image.gif" />
+      <file from="languages/de/styles/subsilver2/imageset/de/*." to="styles/subsilver2/imageset/de/*.*" />
     </copy>
     <open src="styles/prosilver/imageset/de/imageset.cfg">
       <edit>

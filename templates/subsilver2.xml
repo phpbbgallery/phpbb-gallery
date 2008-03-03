@@ -19,8 +19,8 @@
     </author-group>
     <mod-version>
       <major>0</major>
-      <minor>2</minor>
-      <revision>4</revision>
+      <minor>3</minor>
+      <revision>0</revision>
     </mod-version>
     <installation>
       <level>easy</level>
@@ -33,14 +33,59 @@
     </installation>
     <history>
       <entry>
-        <date>2008-XY-ZZ</date>
+        <date>2008-03-06</date>
         <rev-version>
           <major>0</major>
-          <minor>2</minor>
-          <revision>4</revision>
+          <minor>3</minor>
+          <revision>0</revision>
         </rev-version>
         <changelog lang="en-GB">
-          <change><![CDATA[empty]]></change>
+          <change><![CDATA[[Add] Report #138: Resize image in image view page]]></change>
+          <change><![CDATA[[Add] Report #195: Reduce SQL phpbb_users left join]]></change>
+          <change><![CDATA[[Add] Report #197: Personal Gallery Index - User colour are not showing...]]></change>
+          <change><![CDATA[[Add] Report #149: members should have the ability to create an album]]></change>
+          <change><![CDATA[[Add] Report #208: permissions for creating subalbums]]></change>
+          <change><![CDATA[[Add] Report #212: Multiple Upload]]></change>
+          <change><![CDATA[[Add] Report #15: edit and delete comments]]></change>
+          <change><![CDATA[[Add] Report #168: Persönliche Galerie verlinken]]></change>
+          <change><![CDATA[[Add] Report #213: SVN: move pic from private subalbum not possible]]></change>
+          <change><![CDATA[[Add] Report #211: Seitenauflistung in der "Wer ist online?"-Liste]]></change>
+          <change><![CDATA[[Add] Report #126: Optional black info line at bottom.]]></change>
+
+          <change><![CDATA[[Change] Report #173: [ACP] missing radio and checkbox classes...cosmetic.]]></change>
+          <change><![CDATA[[Change] Report #163: Deutsche Sprache: Gallery/Galerie]]></change>
+          <change><![CDATA[[Change] Report #188: MCP link 2 times]]></change>
+          <change><![CDATA[[Change] Report #143: Also show new personal images on index page]]></change>
+          <change><![CDATA[[Change] Report #215: Should not update session page on thumbnail view]]></change>
+          <change><![CDATA[[Change] Report #216: Album BBcode - mark in one click]]></change>
+
+          <change><![CDATA[[Fix] Report #167: Missing Lang: IMAGE_BBCODE]]></change>
+          <change><![CDATA[[Fix] Report #172: Undefined variable: sort_new_comment_option]]></change>
+          <change><![CDATA[[Fix] Report #175: SVN: Move images are not working anymore]]></change>
+          <change><![CDATA[[Fix] Report #182: View the last MESSAGE?]]></change>
+          <change><![CDATA[[Fix] Report #176: Album categorie - don't show "no pictures"]]></change>
+          <change><![CDATA[[Fix] Report #190: Commment]]></change>
+          <change><![CDATA[[Fix] Report #194: no personal images in recent images]]></change>
+          <change><![CDATA[[Fix] Report #196: MCP - Delete images are not working anymore...]]></change>
+          <change><![CDATA[[Fix] Report #198: personal gallery of xxxx - PHP Notice error]]></change>
+          <change><![CDATA[[Fix] Report #199: SVN: gallery/index.php - SQL Error]]></change>
+          <change><![CDATA[[Fix] Report #202: install.xml - Description typo]]></change>
+          <change><![CDATA[[Fix] Report #186: No more albums to move]]></change>
+          <change><![CDATA[[Fix] Report #169: {memberrow.ALBUM_FOLDER_IMG_SRC}]]></change>
+          <change><![CDATA[[Fix] Report #174: Personal Albums - Next / Previous Links]]></change>
+          <change><![CDATA[[Fix] Report #207: display nav-link when using recent_image addon]]></change>
+          <change><![CDATA[[Fix] Report #210: personal albums - ucp - move subulbums error]]></change>
+          <change><![CDATA[[Fix] Report #178: imagecreatefromjpeg(./..//gallery/upload/.jpg)]]></change>
+          <change><![CDATA[[Fix] Report #205: SQL Error on convert (guest comments)]]></change>
+          <change><![CDATA[[Fix] Report #201: wrong album link]]></change>
+          <change><![CDATA[[Fix] Report #164: Deutscher Sprachbutton (UPLOADIMAGE)]]></change>
+          <change><![CDATA[[Fix] Report #200: Truecolor+alpha channel watermark]]></change>
+          <change><![CDATA[[Fix] Report #203: root/gallery/index.htm loaded instead of index.php]]></change>
+          <change><![CDATA[[Fix] Report #209: Personal album permissions are messed up.]]></change>
+          <change><![CDATA[[Fix] Report #206: Small typo in german language]]></change>
+          <change><![CDATA[[Fix] Report #214: personal gallery: empty gallery problem.]]></change>
+          <change><![CDATA[[Fix] Report #192: upload error lang]]></change>
+          <change><![CDATA[[Fix] Report #177: categorie - last image are not shown if disapproved]]></change>
         </changelog>
       </entry>
     </history>
@@ -48,12 +93,12 @@
   </header>
   <action-group>
     <copy>
-      <file from="templates/subsilver2/button_upload_image.gif" to="styles/subsilver2/imageset/en/button_upload_image.gif" />
-      <file from="templates/subsilver2/icon_contact_gallery.gif" to="styles/subsilver2/imageset/en/icon_contact_gallery.gif" />
-      <file from="templates/subsilver2/template/*.*" to="styles/subsilver2/template/*.*" />
-      <file from="templates/subsilver2/theme/gallery_lytebox.css" to="styles/subsilver2/theme/gallery_lytebox.css" />
-      <file from="templates/subsilver2/theme/images/gallery_lytebox/*.*" to="styles/subsilver2/theme/images/gallery_lytebox/*.*" />
-      <file from="templates/subsilver2/icon_gallery.gif" to="styles/subsilver2/theme/images/icon_gallery.gif" />
+      <file from="templates/subsilver2/styles/subsilver2/imageset/en/button_upload_image.gif" to="styles/subsilver2/imageset/en/button_upload_image.gif" />
+      <file from="templates/subsilver2/styles/subsilver2/imageset/en/icon_contact_gallery.gif" to="styles/subsilver2/imageset/en/icon_contact_gallery.gif" />
+      <file from="templates/subsilver2/styles/subsilver2/template/*.*" to="styles/subsilver2/template/*.*" />
+      <file from="templates/subsilver2/styles/subsilver2/theme/gallery_lytebox.css" to="styles/subsilver2/theme/gallery_lytebox.css" />
+      <file from="templates/subsilver2/styles/subsilver2/theme/images/gallery_lytebox/*.*" to="styles/subsilver2/theme/images/gallery_lytebox/*.*" />
+      <file from="templates/subsilver2/styles/subsilver2/theme/images/icon_gallery.gif" to="styles/subsilver2/theme/images/icon_gallery.gif" />
     </copy>
     <open src="styles/subsilver2/template/overall_header.html">
       <edit>
