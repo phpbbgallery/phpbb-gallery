@@ -268,6 +268,7 @@ $user->add_lang('mods/gallery');]]></action>
     </open>
     <open src="includes/acp/acp_styles.php">
       <edit>
+        <comment lang="en-gb">You don't need to do this, if you installed >0.1.3, it was in the install and we took it out, but didn't put it in the update.xml</comment>
         <find><![CDATA['icon_back_top', 'icon_contact_aim', 'icon_contact_email', 'icon_contact_icq', 'icon_contact_jabber', 'icon_contact_msnm', 'icon_contact_pm', 'icon_contact_yahoo', 'icon_contact_www', 'icon_post_delete', 'icon_post_edit', 'icon_post_info', 'icon_post_quote', 'icon_post_report', 'icon_user_online', 'icon_user_offline', 'icon_user_profile', 'icon_user_search', 'icon_user_warn', 'button_pm_forward', 'button_pm_new', 'button_pm_reply', 'button_topic_locked', 'button_topic_new', 'button_topic_reply',]]></find>
         <inline-edit>
             <inline-find><![CDATA[ 'button_topic_reply',]]></inline-find>
@@ -277,7 +278,6 @@ $user->add_lang('mods/gallery');]]></action>
     </open>
     <open src="styles/prosilver/imageset/en/imageset.cfg">
       <edit>
-        <comment lang="en-gb">You don't need to do this, if you installed >0.1.3, it was in the install and we took it out, but didn't put it in the update.xml</comment>
         <find><![CDATA[img_button_topic_reply = button_topic_reply.gif*25*96]]></find>
         <action type="after-add"><![CDATA[img_button_upload_image = button_upload_image.gif*25*119]]></action>
       </edit>
