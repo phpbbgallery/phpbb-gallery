@@ -15,11 +15,12 @@ if (!defined('IN_PHPBB'))
 }
 function recent_gallery_images($rows, $columns)
 {
-	global $db, $phpEx, $user, $phpbb_root_path, $config, $template;
+	global $db, $phpEx, $user, $phpbb_root_path, $album_config, $config, $template;
 
 	$user->add_lang('mods/gallery');
 	$recent_image_addon = true;
-	include_once($phpbb_root_path . 'gallery/includes/common.'.$phpEx);
+	$gallery_root_path = GALLERY_ROOT_PATH;
+	include_once("{$phpbb_root_path}{$gallery_root_path}includes/common.$phpEx");
 	include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 $allowed_cat = $mod_cat = '';
 $sql = 'SELECT *
@@ -82,8 +83,8 @@ if ($allowed_cat <> '')
 				$message_parser->message	= $picrow[$j]['image_desc'];
 				$message_parser->decode_message($picrow[$j]['image_desc_uid']);
 				$template->assign_block_vars('picrow.piccol', array(
-					'U_IMAGE'		=> append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=" . $picrow[$j]['image_id']),
-					'THUMBNAIL'		=> append_sid("{$phpbb_root_path}gallery/thumbnail.$phpEx?image_id=" . $picrow[$j]['image_id']),
+					'U_IMAGE'		=> ($album_config['fullpic_popup']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . '&amp;image_id=' . $picrow[$j]['image_id']) : append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . '&amp;image_id=' . $picrow[$j]['image_id']),
+					'THUMBNAIL'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}thumbnail.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . '&amp;image_id=' . $picrow[$j]['image_id']),
 					'DESC'			=> $message_parser->message,
 				));
 

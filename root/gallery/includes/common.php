@@ -22,7 +22,8 @@ if ($config['board_disable'] && !defined('IN_LOGIN') && !$auth->acl_gets('a_', '
 	$message = (!empty($config['board_disable_msg'])) ? $config['board_disable_msg'] : 'BOARD_DISABLE';
 	trigger_error($message);
 }
-include($phpbb_root_path . 'gallery/includes/constants.' . $phpEx);
+$gallery_root_path = GALLERY_ROOT_PATH;
+include("{$phpbb_root_path}{$gallery_root_path}includes/constants.$phpEx");
 
 //
 // Get Album Config
@@ -45,7 +46,7 @@ $template->assign_vars(array(
 	'ALBUM_VERSION' => '2' . $album_config['album_version'],
 ));
 $user->add_lang('mods/info_acp_gallery');
-include($phpbb_root_path . 'gallery/includes/functions.' . $phpEx);
+include("{$phpbb_root_path}{$gallery_root_path}includes/functions.$phpEx");
 
 //dont display on recent image feature
 $recent_image_addon = isset($recent_image_addon) ? true : false;
@@ -53,7 +54,7 @@ if (!$recent_image_addon)
 {
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'	=> $user->lang['GALLERY'],
-		'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}gallery/index.$phpEx"),
+		'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"),
 	));
 }
 

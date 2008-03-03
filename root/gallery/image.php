@@ -11,9 +11,9 @@
 
 define('IN_PHPBB', true);
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
-$album_root_path = $phpbb_root_path . 'gallery/';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
+$gallery_root_path = GALLERY_ROOT_PATH;
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 
 // Start session management
@@ -25,7 +25,7 @@ $user->setup('mods/gallery');
 //
 // Get general album information
 //
-include($album_root_path . 'includes/common.'.$phpEx);
+include($phpbb_root_path . $gallery_root_path . 'includes/common.'.$phpEx);
 
 
 // ------------------------------------
@@ -195,16 +195,16 @@ if ($album_config['watermark_images'] && $gd_success)
 		switch ($pic_filetype)
 		{
 			case '.png':
-				$im = imagecreatefrompng(ALBUM_UPLOAD_PATH  . $thispic['image_filename']);
+				$im = imagecreatefrompng($phpbb_root_path . GALLERY_UPLOAD_PATH  . $thispic['image_filename']);
 			break;
 
 			case '.gif':
-				$im = imagecreatefromgif(ALBUM_UPLOAD_PATH  . $thispic['image_filename']);
+				$im = imagecreatefromgif($phpbb_root_path . GALLERY_UPLOAD_PATH  . $thispic['image_filename']);
 			break;
 
 			case '.jpg':
 			case 'jpeg':
-				$im = imagecreatefromjpeg(ALBUM_UPLOAD_PATH  . $thispic['image_filename']);
+				$im = imagecreatefromjpeg($phpbb_root_path . GALLERY_UPLOAD_PATH  . $thispic['image_filename']);
 			break;
 
 			default:
@@ -259,7 +259,7 @@ else
 		break;
 	}
 
-	readfile(ALBUM_UPLOAD_PATH  . $thispic['image_filename']);
+	readfile($phpbb_root_path . GALLERY_UPLOAD_PATH  . $thispic['image_filename']);
 }
 exit;
 ?>

@@ -13,6 +13,7 @@ define('IN_PHPBB', true);
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
+$gallery_root_path = GALLERY_ROOT_PATH;
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
@@ -25,19 +26,19 @@ $user->setup('mods/gallery');
 //
 // Get general album information
 //
-include($phpbb_root_path . 'gallery/includes/common.'.$phpEx);
+include($phpbb_root_path . $gallery_root_path . 'includes/common.'.$phpEx);
 
 
 /**
 * Build Album-Index
 */
 $mode = request_var('mode', 'index', true);
-include($phpbb_root_path . 'gallery/includes/functions_display.' . $phpEx);
+include($phpbb_root_path . $gallery_root_path . 'includes/functions_display.' . $phpEx);
 if ($mode == 'personal')
 {
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],
-		'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}gallery/index.$phpEx", 'mode=personal'))
+		'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal'))
 	);
 
 	$template->assign_vars(array(
@@ -51,7 +52,7 @@ display_albums(0, $mode);
 /**
 * Recent Public Pics
 */
-include($phpbb_root_path . 'gallery/includes/functions_recent.' . $phpEx);
+include($phpbb_root_path . $gallery_root_path . 'includes/functions_recent.' . $phpEx);
 //(rows, columns)
 recent_gallery_images(1, 4);
 /*
@@ -73,8 +74,8 @@ recent_gallery_images(1, 4);
 */
 
 $template->assign_vars(array(
-	'U_YOUR_PERSONAL_GALLERY' 		=> append_sid("{$phpbb_root_path}gallery/album.$phpEx", 'user_id=' . $user->data['user_id']),
-	'U_USERS_PERSONAL_GALLERIES' 	=> append_sid("{$phpbb_root_path}gallery/index.$phpEx", 'mode=personal'),
+	'U_YOUR_PERSONAL_GALLERY' 		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'user_id=' . $user->data['user_id']),
+	'U_USERS_PERSONAL_GALLERIES' 	=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal'),
 
 	'S_LOGIN_ACTION'				=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login'),
 	'S_COLS' 						=> $album_config['cols_per_page'],

@@ -15,7 +15,7 @@ if (!defined('IN_PHPBB'))
 }
 function display_albums($album_id, $mode = 'album')
 {
-	global $db, $template, $phpEx, $phpbb_root_path, $user, $config;
+	global $db, $template, $phpEx, $phpbb_root_path, $gallery_root_path, $user, $config;
 
 	$start = request_var('start', 0);
 	//new start here
@@ -41,10 +41,10 @@ function display_albums($album_id, $mode = 'album')
 			if ($row = $db->sql_fetchrow($result))
 			{
 				$total_galleries = $row['albums'];
-				$pagination = generate_pagination("{$phpbb_root_path}gallery/index.$phpEx", 'mode=$mode', $row['albums'], $limit, $start);
+				$pagination = generate_pagination("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=$mode', $row['albums'], $limit, $start);
 			}
 			$template->assign_vars(array(
-				'PAGINATION'			=> generate_pagination("{$phpbb_root_path}gallery/index.$phpEx?mode=$mode", $row['albums'], $limit, $start),
+				'PAGINATION'			=> generate_pagination("{$phpbb_root_path}{$gallery_root_path}index.$phpEx?mode=$mode", $row['albums'], $limit, $start),
 			));
 			break;
 		default:
@@ -172,7 +172,7 @@ function display_albums($album_id, $mode = 'album')
 		// ------------------------------------------
 
 		$template->assign_block_vars('albumrow', array(
-			'U_VIEW_ALBUM'			=> append_sid($phpbb_root_path . "gallery/album.$phpEx?id=" . $album[$i]['album_id']),
+			'U_VIEW_ALBUM'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album[$i]['album_id']),
 			'ALBUM_NAME'			=> $album[$i]['album_name'],
 			'ALBUM_FOLDER_IMG_SRC'	=> $user->img($folder_image, $folder_alt, false, '', 'src'),
 			'SUBALBUMS'				=> get_album_children($album[$i]['album_id']),
@@ -181,7 +181,7 @@ function display_albums($album_id, $mode = 'album')
 			'L_SUBALBUMS'			=> $l_subalbums,
 			'MODERATORS'			=> $moderators_list,
 			'IMAGES'				=> $album[$i]['count'],
-			'U_LAST_IMAGE'			=> ($album[$i]['count'] != 0) ? append_sid("{$phpbb_root_path}gallery/image_page.$phpEx" , 'image_id=' . $lastrow['image_id']) : '',
+			'U_LAST_IMAGE'			=> ($album[$i]['count'] != 0) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx" , 'album_id=' . $album[$i]['album_id'] . '&amp;image_id=' . $lastrow['image_id']) : '',
 			'LAST_IMAGE_NAME'		=> ($album[$i]['count'] != 0) ? $lastrow['image_name'] : '',
 			'ALBUM_COLOUR'			=> ($album[$i]['count'] != 0) ? get_username_string('colour', $lastrow['image_user_id'], $lastrow['image_username'], $lastrow['image_user_colour']) : get_username_string('colour', $lastrow['user_id'], $lastrow['username'], $lastrow['user_colour']),
 			'LAST_IMAGE_AUTHOR'		=> ($album[$i]['count'] != 0) ? get_username_string('full', $lastrow['image_user_id'], ($lastrow['image_user_id'] <> ANONYMOUS) ? $lastrow['image_username'] : $user->lang['GUEST'], $lastrow['image_user_colour']) : '',

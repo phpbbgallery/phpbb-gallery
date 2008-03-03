@@ -15,8 +15,9 @@ class ucp_gallery
 	function main($id, $mode)
 	{
 		global $user, $phpbb_root_path, $phpEx;
-		include($phpbb_root_path . 'gallery/includes/constants.' . $phpEx);
-		include($phpbb_root_path . 'gallery/includes/ucp_functions.' . $phpEx);
+		$gallery_root_path = GALLERY_ROOT_PATH;
+		include($phpbb_root_path . $gallery_root_path . 'includes/constants.' . $phpEx);
+		include($phpbb_root_path . $gallery_root_path . 'includes/ucp_functions.' . $phpEx);
 
 		$user->add_lang('mods/gallery');
 		$this->tpl_name = 'ucp_gallery';
@@ -74,7 +75,7 @@ class ucp_gallery
 
 	function info()
 	{
-		global $user, $template, $phpbb_root_path, $phpEx;
+		global $user, $template, $phpbb_root_path, $gallery_root_path, $phpEx;
 
 		if (!$user->data['album_id'])
 		{
@@ -205,7 +206,7 @@ class ucp_gallery
 		$template->assign_vars(array(
 			'NAVIGATION'		=> $navigation,
 			'S_ALBUM'			=> $parent_id,
-			'U_GOTO'			=> append_sid($phpbb_root_path . GALLERY_ROOT_PATH . "album.$phpEx", 'album_id=' . $parent_id),
+			'U_GOTO'			=> append_sid($phpbb_root_path . $gallery_root_path . "album.$phpEx", 'album_id=' . $parent_id),
 			'U_EDIT'			=> $this->u_action . '&amp;action=edit&amp;album_id=' . $parent_id,
 			'U_DELETE'			=> $this->u_action . '&amp;action=delete&amp;album_id=' . $parent_id,
 			'ICON_MOVE_DOWN'			=> '<img src="' . $phpbb_root_path . '/adm/images/icon_down.gif" alt="" />',
@@ -340,7 +341,7 @@ class ucp_gallery
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 
 		include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
-		include_once($phpbb_root_path . 'gallery/includes/functions.' . $phpEx);
+		include_once($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
 
 		$album_id = request_var('album_id', 0);
 		album_hacking($album_id);

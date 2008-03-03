@@ -62,7 +62,7 @@ if (!$album_user_access['view'])
 {
 	if (!$user->data['is_registered'])
 	{
-		login_box("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?image_id=$image_id", $user->lang['LOGIN_INFO']);
+		login_box("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?album_id=$album_id&amp;image_id=$image_id", $user->lang['LOGIN_INFO']);
 	}
 	else
 	{
@@ -155,9 +155,9 @@ if (isset($_POST['rate']))
 		$message = $user->lang['RATING_SUCCESSFUL'];
 
 		$template->assign_vars(array(
-			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?image_id=$image_id&rate_set=1#rating") . '">',
+			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?album_id=$album_id&amp;image_id=$image_id&rate_set=1#rating") . '">',
 		));
-		$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?id=$album_id") . "\">", "</a>");
+		$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>");
 
 		$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
 		trigger_error($message, E_USER_WARNING);
@@ -203,11 +203,11 @@ while ($row = $db->sql_fetchrow($result))
 	$last_id = $row['image_id'];
 }
 $template->assign_vars(array(
-	'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?id=$album_id"),
+	'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id"),
 
-	'U_IMAGE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx?pic_id=$image_id"),
-	'U_PREVIOUS'		=> ($previous_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?image_id=$previous_id") : '',
-	'U_NEXT'			=> ($next_id && ($next_id != $previous_id)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?image_id=$next_id") : '',
+	'U_IMAGE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx?album_id=$album_id&amp;image_id=$image_id"),
+	'U_PREVIOUS'		=> ($previous_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?album_id=$album_id&amp;image_id=$previous_id") : '',
+	'U_NEXT'			=> ($next_id && ($next_id != $previous_id)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?album_id=$album_id&amp;image_id=$next_id") : '',
 	'IMAGE_RSZ_WIDTH'	=> $album_config['preview_rsz_width'],
 	'IMAGE_RSZ_HEIGHT'	=> $album_config['preview_rsz_height'],
 
@@ -218,7 +218,7 @@ $template->assign_vars(array(
 	'IMAGE_TIME'		=> $user->format_date($image_data['image_time']),
 	'IMAGE_VIEW'		=> $image_data['image_view_count'],
 
-	'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?image_id=$image_id"))
+	'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?album_id=$album_id&amp;image_id=$image_id"))
 );
 
 if ($album_config['rate'])
@@ -392,7 +392,7 @@ if ($album_config['comment'])
 		}
 
 		$template->assign_vars(array(
-			'PAGINATION' 	=> generate_pagination(append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?image_id=$image_id&amp;sort_order=$sort_order"), $total_comments, $comments_per_page, $start),
+			'PAGINATION' 	=> generate_pagination(append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?album_id=$album_id&amp;image_id=$image_id&amp;sort_order=$sort_order"), $total_comments, $comments_per_page, $start),
 			'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $comments_per_page ) + 1 ), ceil( $total_comments / $comments_per_page ))
 			)
 		);

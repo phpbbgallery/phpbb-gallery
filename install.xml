@@ -258,6 +258,105 @@ For Features see the forum topic.]]></description>
       <file from="root/styles/prosilver/theme/images/gallery_lytebox/*.*" to="styles/prosilver/theme/images/gallery_lytebox/*.*" />
       <file from="root/styles/prosilver/theme/images/icon_gallery.gif" to="styles/prosilver/theme/images/icon_gallery.gif" />
     </copy>
+    <open src="viewonline.php">
+      <edit>
+        <find><![CDATA[$forum_data = array();
+while ($row = $db->sql_fetchrow($result))
+{
+	$forum_data[$row['forum_id']] = $row;
+}
+$db->sql_freeresult($result);]]></find>
+        <action type="after-add"><![CDATA[// Album info
+$sql = 'SELECT album_id, album_name, parent_id, left_id, right_id, album_user_id
+	FROM ' . GALLERY_ALBUMS_TABLE . '
+	ORDER BY left_id ASC';
+$result = $db->sql_query($sql, 600);
+
+$album_data = array();
+while ($row = $db->sql_fetchrow($result))
+{
+	$album_data[$row['album_id']] = $row;
+}
+$db->sql_freeresult($result);
+include("$phpbb_root_path" . GALLERY_ROOT_PATH . "includes/common.$phpEx");
+$user->add_lang('mods/gallery');]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[	preg_match('#^([a-z/]+)#i', $row['session_page'], $on_page);
+	if (!sizeof($on_page))
+	{
+		$on_page[1] = '';
+	}]]></find>
+        <action type="after-add"><![CDATA[	//check for the gallery
+	if ((utf8_substr($on_page[1], 0, utf8_strlen($gallery_root_path))) == $gallery_root_path)
+	{
+		$on_page_fake[1] = $on_page[1];
+		$on_page[1] = utf8_substr($on_page[1], 0, utf8_strlen($gallery_root_path));
+	}]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[		case 'report':
+			$location = $user->lang['REPORTING_POST'];
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;]]></find>
+        <action type="after-add"><![CDATA[		case $gallery_root_path:
+			preg_match('#_album_id_=([0-9]+)x#i', $row['session_page'], $album_id);
+			$album_id = (sizeof($album_id)) ? (int) $album_id[1] : 0;
+			$album_user_access = ($album_id) ? ((!$album_data[$album_id]['album_user_id']) ? album_user_access($album_id, $album_data[$album_id], 1, 0, 0, 0, 0, 0) : personal_album_access($album_data[$album_id]['album_user_id'])) : array();
+
+			preg_match('#^([a-z/]+)#i', $row['session_page'], $gallery_page);
+			if ($album_id && $album_user_access['view'])
+			{
+				switch ($gallery_page[1])
+				{
+					case $gallery_root_path . 'album':
+						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_id);
+						$location = sprintf($user->lang['VIEWING_ALBUM'], $album_data[$album_id]['album_name']);
+					break;
+					case $gallery_root_path . 'image_page':
+					case $gallery_root_path . 'image':
+						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_id);
+						$location = sprintf($user->lang['VIEWING_IMAGE'], $album_data[$album_id]['album_name']);
+					break;
+					case $gallery_root_path . 'posting':
+						preg_match('#mode=([a-z]+)#', $row['session_page'], $on_page);
+
+						switch ($on_page[1])
+						{
+							case 'comment':
+								$location = sprintf($user->lang['COMMENT_IMAGE'], $album_data[$album_id]['album_name']);
+							break;
+
+							default:
+								$location = sprintf($user->lang['VIEWING_ALBUM'], $album_data[$album_id]['album_name']);
+
+							break;
+						}
+						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_id);
+					break;
+					default:
+						$location = $user->lang['GALLERY'];
+						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx");
+					break;
+				}
+			}
+			else
+			{
+				preg_match('#mode=([a-z]+)#', $row['session_page'], $on_page);
+				switch ($on_page[1])
+				{
+					case 'personal':
+						$location = $user->lang['PERSONAL_ALBUMS'];
+					break;
+					default:
+						$location = $user->lang['GALLERY'];
+					break;
+				}
+				$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx");
+			}
+		break;]]></action>
+      </edit>
+    </open>
     <open src="viewtopic.php">
       <edit>
         <find><![CDATA['REPORT_IMG'		=> $user->img('icon_post_report', 'REPORT_POST'),]]></find>
@@ -319,6 +418,12 @@ define('GALLERY_RATES_TABLE',			$table_prefix . 'gallery_rates');]]></action>
         <action type="after-add"><![CDATA[		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " SET image_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
 			WHERE " . $db->sql_in_set('image_user_id', $user_id_ary);
 		$db->sql_query($sql);]]></action>
+      </edit>
+    </open>
+    <open src="includes/session.php">
+      <edit>
+        <find><![CDATA[$this->page['page'] .= (isset($_REQUEST['f'])) ? ((strpos($this->page['page'], '?') !== false) ? '&' : '?') . '_f_=' . (int) $_REQUEST['f'] . 'x' : '';]]></find>
+        <action type="after-add"><![CDATA[$this->page['page'] .= (isset($_REQUEST['album_id'])) ? ((strpos($this->page['page'], '?') !== false) ? '&' : '?') . '_album_id_=' . (int) $_REQUEST['album_id'] . 'x' : '';]]></action>
       </edit>
     </open>
     <open src="styles/prosilver/imageset/en/imageset.cfg">

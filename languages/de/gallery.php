@@ -211,6 +211,10 @@ $lang = array_merge($lang, array(
 	'DELETE_IMAGE2'							=> 'Das Bild löschen?',
 	'DELETE_IMAGE2_CONFIRM'					=> 'Bist Du Dir sicher das Du das Bild löschen möchtest?',
 	'INVALID_USERNAME'						=> 'Der Benutzername ist ungültig',
+
+	'VIEWING_ALBUM'					=> 'Betrachtet Album %s',
+	'VIEWING_IMAGE'					=> 'Betrachtet ein Bild im Album %s',
+	'COMMENT_IMAGE'					=> 'Schreibt einen Kommentar über ein Bild im Album %s',
 ));
 
 ?>

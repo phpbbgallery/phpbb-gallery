@@ -47,13 +47,13 @@ generate_album_nav($album_data);
 $album_user_access = (!$album_data['album_user_id']) ? album_user_access($album_id, $album_data, 1, 1, 1, 1, 1, 1) : personal_album_access($album_data['album_user_id']);
 if ($image_id)
 {
-	$image_backlink = append_sid($phpbb_root_path . $gallery_root_path . "image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id");
+	$image_backlink = append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id");
 }
 if ($album_id)
 {
-	$album_backlink = append_sid($phpbb_root_path . $gallery_root_path . "album.$phpEx", "album_id=$album_id");
+	$album_backlink = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id");
 }
-$index_backlink = append_sid($phpbb_root_path . $gallery_root_path . "index.$phpEx");
+$index_backlink = append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx");
 
 //send some cheaters back
 if ($user->data['is_bot'])
@@ -536,7 +536,7 @@ switch ($mode)
 				}//submit
 					$template->assign_vars(array(
 						'ERROR'						=> $error,
-						'U_VIEW_ALBUM'				=> append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "album.$phpEx", "id=$album_id"),
+						'U_VIEW_ALBUM'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"),
 						'CAT_TITLE'					=> $album_data['album_name'],
 						'S_PIC_DESC_MAX_LENGTH'		=> $album_config['desc_length'],
 						'S_MAX_FILESIZE'			=> $album_config['max_file_size'],
@@ -549,7 +549,7 @@ switch ($mode)
 						'S_THUMBNAIL_SIZE'		=> $album_config['thumbnail_size'],
 						'S_THUMBNAIL'			=> ($album_config['gd_version']) ? true : false,
 						'S_MULTI_IMAGES'		=> ($album_config['upload_images'] > 1) ? true : false,
-						'S_ALBUM_ACTION'		=> append_sid($phpbb_root_path . $gallery_root_path . "posting.$phpEx", "mode=image&amp;submode=upload&amp;album_id=$album_id"),
+						'S_ALBUM_ACTION'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=upload&amp;album_id=$album_id"),
 
 						'REQ_USERNAME'			=> (!$user->data['is_registered']) ? true : false,
 						'USERNAME'				=> request_var('username', '', true),
@@ -637,13 +637,13 @@ switch ($mode)
 					'IMAGE_NAME'		=> $image_data['image_name'],
 					'MESSAGE'			=> $message_parser->message,
 
-					'U_IMAGE'			=> ($image_id) ? append_sid($phpbb_root_path . $gallery_root_path . "image.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
-					'U_VIEW_IMAGE'		=> ($image_id) ? append_sid($phpbb_root_path . $gallery_root_path . "image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
+					'U_IMAGE'			=> ($image_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
+					'U_VIEW_IMAGE'		=> ($image_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
 					'IMAGE_RSZ_WIDTH'	=> $album_config['preview_rsz_width'],
 					'IMAGE_RSZ_HEIGHT'	=> $album_config['preview_rsz_height'],
 
 					'S_IMAGE'			=> true,
-					'S_ALBUM_ACTION'	=> append_sid($phpbb_root_path . $gallery_root_path . "posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id"),
+					'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id"),
 				));
 				$message = $user->lang['IMAGES_UPDATED_SUCCESSFULLY'] . '<br />';
 			}
@@ -878,8 +878,8 @@ switch ($mode)
 
 			'IMAGE_RSZ_WIDTH'	=> $album_config['preview_rsz_width'],
 			'IMAGE_RSZ_HEIGHT'	=> $album_config['preview_rsz_height'],
-			'U_IMAGE'			=> ($image_id) ? append_sid($phpbb_root_path . $gallery_root_path . "image.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
-			'U_VIEW_IMAGE'			=> ($image_id) ? append_sid($phpbb_root_path . $gallery_root_path . "image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
+			'U_IMAGE'			=> ($image_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
+			'U_VIEW_IMAGE'			=> ($image_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
 			'IMAGE_NAME'			=> ($image_id) ? $image_data['image_name'] : '',
 
 			'S_COMMENT'				=> true,
@@ -895,12 +895,12 @@ if($submit)
 {
 	if ($image_id)
 	{
-		$image_backlink = append_sid($phpbb_root_path . $gallery_root_path . "image_page.$phpEx", (($album_id) ? "album_id=$album_id&amp;" : '') . "image_id=$image_id");
+		$image_backlink = append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", (($album_id) ? "album_id=$album_id&amp;" : '') . "image_id=$image_id");
 		$message .= '<br />' . sprintf($user->lang['CLICK_RETURN_IMAGE'], '<a href="' . $image_backlink . '">', '</a>');
 	}
 	if ($album_id)
 	{
-		$album_backlink = append_sid($phpbb_root_path . $gallery_root_path . "album.$phpEx", "album_id=$album_id");
+		$album_backlink = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id");
 		$message .= '<br />' . sprintf($user->lang['CLICK_RETURN_ALBUM'], '<a href="' . $album_backlink . '">', '</a>');
 	}
 	meta_refresh(3, ($image_id) ? $image_backlink : $album_backlink);

@@ -11,6 +11,7 @@
 
 define('IN_PHPBB', true);
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
+$gallery_root_path = GALLERY_ROOT_PATH;
 $album_root_path = $phpbb_root_path . 'gallery/';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
@@ -25,7 +26,7 @@ $user->setup('mods/gallery');
 //
 // Get general album information
 //
-include($album_root_path . 'includes/common.'.$phpEx);
+include($phpbb_root_path . $gallery_root_path . 'includes/common.'.$phpEx);
 
 // ------------------------------------
 // set $mode (select action)
@@ -141,7 +142,7 @@ if (!$auth_data['moderator'])
 	}
 	if (!$user->data['is_registered'])
 	{
-		login_box("gallery/mcp.$phpEx?album_id=$album_id", $user->lang['LOGIN_INFO']);
+		login_box("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id", $user->lang['LOGIN_INFO']);
 	}
 	else
 	{
@@ -213,7 +214,7 @@ if ($mode == '')
 		{
 			$template->assign_block_vars('picrow', array(
 				'IMAGE_ID' 		=> $picrow[$i]['image_id'],
-				'IMAGE_NAME' 	=> '<a href="'. append_sid("image.$phpEx?pic_id=". $picrow[$i]['image_id']) .'">'. $picrow[$i]['image_name'] .'</a>',
+				'IMAGE_NAME' 	=> '<a href="'. append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx?album_id=" . $picrow[$i]['image_album_id'] . "&amp;image_id=". $picrow[$i]['image_id']) .'">'. $picrow[$i]['image_name'] .'</a>',
 				'POSTER' 		=> get_username_string('full', $picrow[$i]['image_user_id'], ($picrow[$i]['image_user_id'] <> ANONYMOUS) ? $picrow[$i]['image_username'] : $user->lang['GUEST'], $picrow[$i]['image_user_colour']),
 				'TIME' 			=> $user->format_date($picrow[$i]['image_time']),
 				'RATING' 		=> ($picrow[$i]['rating'] == 0) ? $user->lang['NOT_RATED'] : round($picrow[$i]['rating'], 2),
@@ -224,7 +225,7 @@ if ($mode == '')
 		}
 
 		$template->assign_vars(array(
-			'PAGINATION' 	=> generate_pagination(append_sid("mcp.$phpEx?album_id=$album_id&amp;sort_method=$sort_method&amp;sort_order=$sort_order"), $total_pics, $pics_per_page, $start),
+			'PAGINATION' 	=> generate_pagination(append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id&amp;sort_method=$sort_method&amp;sort_order=$sort_order"), $total_pics, $pics_per_page, $start),
 			'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $pics_per_page ) + 1 ), ceil( $total_pics / $pics_per_page )),
 		));
 	}
@@ -255,9 +256,9 @@ if ($mode == '')
 	}
 
 	$template->assign_vars(array(
-		'U_VIEW_CAT' 			=> append_sid("mcp.$phpEx?album_id=$album_id"),
+		'U_VIEW_CAT' 			=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id"),
 		'CAT_TITLE' 			=> $thiscat['album_name'],
-		'S_ALBUM_ACTION' 		=> append_sid("mcp.$phpEx?album_id=$album_id"),
+		'S_ALBUM_ACTION' 		=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id"),
 		'DELETE_BUTTON' 		=> ($auth_data['delete']) ? '<input type="submit" class="liteoption" name="delete" value="' . $user->lang['DELETE'] . '" />' : '',
 		'APPROVAL_BUTTON' 		=> (($user->data['user_type'] <> USER_FOUNDER) && ($thiscat['cat_approval'] == ALBUM_ADMIN)) ? '' : '<input type="submit" class="liteoption" name="approval" value="' . $user->lang['APPROVE'] . '" />',
 		'UNAPPROVAL_BUTTON' 	=> (($user->data['user_type'] <> USER_FOUNDER) && ($thiscat['cat_approval'] == ALBUM_ADMIN)) ? '' : '<input type="submit" class="liteoption" name="unapproval" value="' . $user->lang['UNAPPROVE'] . '" />',
@@ -374,7 +375,7 @@ else
 			// end write
 
 			$template->assign_vars(array(
-				'S_ALBUM_ACTION'		=> append_sid("mcp.$phpEx?mode=move&amp;album_id=$album_id"),
+				'S_ALBUM_ACTION'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?mode=move&amp;album_id=$album_id"),
 				'S_ALBUM_SELECT'		=> $category_select,
 			));
 
@@ -382,7 +383,7 @@ else
 
 			$template->assign_block_vars('navlinks', array(
 				'FORUM_NAME'	=> $user->lang['MODCP'],
-				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
+				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
 			));
 
 			// Output page
@@ -399,7 +400,7 @@ else
 
 			$template->assign_block_vars('navlinks', array(
 				'FORUM_NAME'	=> $user->lang['MODCP'],
-				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
+				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
 			));
 
 			// Check the salt... yumyum
@@ -446,10 +447,10 @@ else
 				WHERE image_id IN (' . $pic_id_sql . ')';
 			$result = $db->sql_query($sql);
 			$message = $user->lang['IMAGES_MOVED_SUCCESSFULLY'] .'<br /><br />'
-				. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$album_id") . "\">", "</a>")
-				. '<br />' . sprintf($user->lang['CLICK_RETURN_ALBUM_TARGET'], "<a href=\"" . append_sid("album.$phpEx?id=$target") . "\">", "</a>")
-				. '<br />' . sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?album_id=$album_id") . "\">", "</a>")
-				. '<br />' . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
+				. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>")
+				. '<br />' . sprintf($user->lang['CLICK_RETURN_ALBUM_TARGET'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$target") . "\">", "</a>")
+				. '<br />' . sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>")
+				. '<br />' . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
 			trigger_error($message);
 		}
 	}
@@ -459,28 +460,13 @@ else
 		// LOCK
 		//-----------------------------
 
-		if ($album_id == PERSONAL_GALLERY)
-		{
-			$template->assign_block_vars('navlinks', array(
-				'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],
-				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal_index.$phpEx"),
-			));
+		generate_album_nav($thiscat);
 
-			$template->assign_block_vars('navlinks', array(
-				'FORUM_NAME'	=> $thiscat['album_name'],
-				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal.$phpEx", 'user_id=' . $user_id),
-			));
-		}
-		else
-		{
-			generate_album_nav($thiscat);
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['MODCP'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
+		));
 
-			$template->assign_block_vars('navlinks', array(
-				'FORUM_NAME'	=> $user->lang['MODCP'],
-				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
-			));
-		}
-		
 		// we must check POST method now
 		if ($pic_id <> FALSE) // from GET
 		{
@@ -526,16 +512,9 @@ else
 		$result = $db->sql_query($sql);
 
 		$message = $user->lang['IMAGES_LOCKED_SUCCESSFULLY'] .'<br /><br />';
-		if ($album_id <> PERSONAL_GALLERY)
-		{
-			$message .= sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />";
-		}
-		else
-		{
-			$message .= sprintf($user->lang['CLICK_RETURN_PERSONAL_ALBUM'], "<a href=\"" . append_sid("album_personal.$phpEx?user_id=$user_id") . "\">", "</a>");
-		}
+		$message .= sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />";
 
-		$message .= '<br /><br />' . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
+		$message .= '<br /><br />' . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
 		trigger_error($message, E_USER_WARNING);
 	}
 	else if ($mode == 'unlock')
@@ -544,27 +523,12 @@ else
 		// UNLOCK
 		//-----------------------------
 
-		if ($album_id == PERSONAL_GALLERY)
-		{
-			$template->assign_block_vars('navlinks', array(
-				'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],
-				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal_index.$phpEx"),
-			));
+		generate_album_nav($thiscat);
 
-			$template->assign_block_vars('navlinks', array(
-				'FORUM_NAME'	=> $thiscat['album_name'],
-				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}album_personal.$phpEx", 'user_id=' . $user_id),
-			));
-		}
-		else
-		{
-			generate_album_nav($thiscat);
-
-			$template->assign_block_vars('navlinks', array(
-				'FORUM_NAME'	=> $user->lang['MODCP'],
-				'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
-			));
-		}
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['MODCP'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
+		));
 
 		// we must check POST method now
 		if ($pic_id <> FALSE) // from GET
@@ -612,16 +576,9 @@ else
 
 		$message = $user->lang['IMAGES_UNLOCKED_SUCCESSFULLY'] . '<br /><br />';
 
-		if ($album_id <> PERSONAL_GALLERY)
-		{
-			$message .= sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />";
-		}
-		else
-		{
-			$message .= sprintf($user->lang['CLICK_RETURN_PERSONAL_ALBUM'], "<a href=\"" . append_sid("album_personal.$phpEx?user_id=$user_id") . "\">", "</a>");
-		}
+		$message .= sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />";
 
-		$message .= '<br /><br />' . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
+		$message .= '<br /><br />' . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
 		trigger_error($message, E_USER_WARNING);
 	}
 	else if ($mode == 'approval')
@@ -634,7 +591,7 @@ else
 
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['MODCP'],
-			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
 		));
 
 		// we must check POST method now
@@ -681,7 +638,7 @@ else
 			WHERE image_id IN (' . $pic_id_sql . ')';
 		$result = $db->sql_query($sql);
 
-		$message = $user->lang['IMAGES_APPROVED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
+		$message = $user->lang['IMAGES_APPROVED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
 		trigger_error($message, E_USER_WARNING);
 	}
 	else if ($mode == 'unapproval')
@@ -694,7 +651,7 @@ else
 
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['MODCP'],
-			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
 		));
 
 		// we must check POST method now
@@ -742,7 +699,7 @@ else
 			WHERE image_id IN (' . $pic_id_sql . ')';
 		$result = $db->sql_query($sql);
 
-		$message = $user->lang['IMAGES_UNAPPROVED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
+		$message = $user->lang['IMAGES_UNAPPROVED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
 		trigger_error($message, E_USER_WARNING);
 	}
 	else if ($mode == 'delete')
@@ -753,14 +710,14 @@ else
 
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['GALLERY'],
-			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}index.$phpEx"),
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"),
 		));
 
 		generate_album_nav($thiscat);
 
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['MODCP'],
-			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
 		));
 
 
@@ -796,7 +753,7 @@ else
 			
 			if (isset($_POST['cancel']))
 			{
-				$redirect = "mcp.$phpEx?album_id=$album_id";
+				$redirect = "{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id";
 				redirect(append_sid($redirect, true));
 			}
 
@@ -811,7 +768,7 @@ else
 				'MESSAGE_TITLE' 	=> $user->lang['CONFIRM'],
 				'MESSAGE_TEXT' 		=> $user->lang['ALBUM_DELETE_CONFIRM'],
 				'S_HIDDEN_FIELDS' 	=> $hidden_field,
-				'S_CONFIRM_ACTION' 	=> append_sid("mcp.$phpEx?mode=delete&amp;album_id=$album_id"),
+				'S_CONFIRM_ACTION' 	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?mode=delete&amp;album_id=$album_id"),
 			));
 
 			// Output page
@@ -892,7 +849,7 @@ else
 					WHERE image_id IN (' . $pic_id_sql . ')';
 			$result = $db->sql_query($sql);
 
-			$message = $user->lang['IMAGES_DELETED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("album.$phpEx?id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
+			$message = $user->lang['IMAGES_DELETED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
 
 			trigger_error($message, E_USER_WARNING);
 		}
@@ -903,7 +860,7 @@ else
 
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['MODCP'],
-			'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
 		));
 
 		trigger_error('Invalid_mode', E_USER_WARNING);

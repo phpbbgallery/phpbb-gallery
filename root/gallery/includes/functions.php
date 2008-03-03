@@ -563,7 +563,7 @@ function init_personal_gallery_cat($user_id = 0)
 */
 function get_album_children($album_id)
 {
-	global $db, $phpEx;
+	global $db, $phpEx, $phpbb_root_path, $gallery_root_path;
 
 	$rows = array();
 
@@ -577,7 +577,7 @@ function get_album_children($album_id)
 	while ($row = $db->sql_fetchrow($result))
 	{
 		$rows[] = $row;
-		$navigation .= (($navigation) ? ', ' : '') . '<a href="' . append_sid("album.$phpEx?id=" . $row['album_id']) . '">' . $row['album_name'] . '</a>';
+		$navigation .= (($navigation) ? ', ' : '') . '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $row['album_id']) . '">' . $row['album_name'] . '</a>';
 	}
 	$db->sql_freeresult($result);
 
@@ -602,7 +602,7 @@ function get_album_info($album_id)
 
 	if (!$row)
 	{
-		meta_refresh(3, append_sid($phpbb_root_path . $gallery_root_path . "index.$phpEx"));
+		meta_refresh(3, append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"));
 		trigger_error(sprintf($user->lang['ALBUM_ID_NOT_EXIST'], $album_id));
 	}
 
@@ -611,7 +611,7 @@ function get_album_info($album_id)
 function generate_album_nav(&$album_data)
 {
 	global $db, $user, $template, $auth;
-	global $phpEx, $phpbb_root_path;
+	global $phpEx, $phpbb_root_path, $gallery_root_path;
 
 	// Get album parents
 	$album_parents = get_album_parents($album_data);
@@ -627,7 +627,7 @@ function generate_album_nav(&$album_data)
 		{
 			$template->assign_block_vars('navlinks', array(
 				'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],
-				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}gallery/index.$phpEx", 'mode=personal'))
+				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal'))
 			);
 		}
 	}
@@ -642,7 +642,7 @@ function generate_album_nav(&$album_data)
 			$template->assign_block_vars('navlinks', array(
 				'FORUM_NAME'	=> $parent_name,
 				'FORUM_ID'		=> $parent_album_id,
-				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}gallery/album.$phpEx", 'id=' . $parent_album_id))
+				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $parent_album_id))
 			);
 		}
 	}
@@ -650,7 +650,7 @@ function generate_album_nav(&$album_data)
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'	=> $album_data['album_name'],
 		'FORUM_ID'		=> $album_data['album_id'],
-		'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}gallery/album.$phpEx", 'id=' . $album_data['album_id']))
+		'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_data['album_id']))
 	);
 	$template->assign_vars(array(
 		'ALBUM_ID' 		=> $album_data['album_id'],
