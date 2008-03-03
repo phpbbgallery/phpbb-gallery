@@ -104,6 +104,7 @@ $lang = array_merge($lang, array(
 	'HOTLINK_PREVENT'					=> 'Hotlink Prevention',
 	
 	'IMAGE_APPROVAL'					=> 'Image Approval',
+	'IMAGE_SETTINGS'					=> 'Image Settings',
 	'IMAGE_DESC_MAX_LENGTH'				=> 'Image Description/Comment Max Length (bytes)',
 	'IS_MODERATOR'					=> 'Is Moderator',
 	

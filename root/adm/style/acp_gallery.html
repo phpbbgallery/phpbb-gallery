@@ -197,167 +197,160 @@
 
 <!-- ELSEIF S_CONFIGURE_GALLERY -->
 <form action="{S_ALBUM_CONFIG_ACTION}" method="post">
-<table width="100%" cellpadding="4" cellspacing="1" border="0" class="forumline">
-	<tr>
-		<th class="thHead" colspan="2">{L_GALLERY_CONFIG}</th>
-	</tr>
-	<tr>
-		<td class="row1" width="45%"><span class="genmed">{L_MAX_IMAGES}</span></td>
-		<td class="row2"><input class="post" type="text" maxlength="9" size="9" name="max_pics" value="{MAX_IMAGES}" /></td>
-	</tr>
-	<tr>
-		<td class="row1" width="45%"><span class="genmed">{L_UPLOAD_IMAGES}</span></td>
-		<td class="row2"><input class="post" type="text" maxlength="9" size="9" name="upload_images" value="{UPLOAD_IMAGES}" /></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_USER_IMAGES_LIMIT}</span></td>
-		<td class="row2"><input class="post" type="text" maxlength="12" size="5" name="user_pics_limit" value="{USER_IMAGES_LIMIT}" /></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_MODERATOR_IMAGES_LIMIT}</span></td>
-		<td class="row2"><input class="post" type="text" maxlength="12" size="5" name="mod_pics_limit" value="{MOD_IMAGES_LIMIT}" /></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_MAX_FILE_SIZE}</span></td>
-		<td class="row2"><input class="post" type="text" maxlength="12" size="12" name="max_file_size" value="{MAX_FILE_SIZE}" /></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_MAX_WIDTH}</span></td>
-		<td class="row2"><input class="post" type="text" maxlength="9" size="9" name="max_width" value="{MAX_WIDTH}" /></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_MAX_HEIGHT}</span></td>
-		<td class="row2"><input class="post" type="text" maxlength="9" size="9" name="max_height" value="{MAX_HEIGHT}" /></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_RSZ_WIDTH}</span></td>
-		<td class="row2"><input class="post" type="text" maxlength="9" size="9" name="preview_rsz_width" value="{RSZ_WIDTH}" /></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_RSZ_HEIGHT}</span></td>
-		<td class="row2"><input class="post" type="text" maxlength="9" size="9" name="preview_rsz_height" value="{RSZ_HEIGHT}" /></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_IMAGE_DESC_MAX_LENGTH}</span></td>
-		<td class="row2"><input class="post" type="text" size="6" name="desc_length" value="{IMAGE_DESC_MAX_LENGTH}" /></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_GD_VERSION}</span></td>
-		<td class="row2"><span class="genmed"><input type="radio" class="radio" {NO_GD} name="gd_version" value="0" />{L_MANUAL_THUMBNAIL}&nbsp;&nbsp;<input type="radio" class="radio" {GD_V1} name="gd_version" value="1" />GD1&nbsp;&nbsp;<input type="radio" class="radio" {GD_V2} name="gd_version" value="2" />GD2</span></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_WATERMARK_IMAGES}</span></td>
-		<td class="row2"><span class="genmed"><input type="radio" class="radio" {WATERMARK_ENABLED} name="watermark_images" value="1" />{L_YES}&nbsp;&nbsp;			 <input type="radio" class="radio" {WATERMARK_DISABLED} name="watermark_images" value="0" />{L_NO}</span></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_WATERMARK_SOURCE}</span></td>
-		<td class="row2"><input class="post" type="text" size="40" name="watermark_source" value="{WATERMARK_SOURCE}" /></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_JPG_ALLOWED}</span></td>
-		<td class="row2"><span class="genmed"><input type="radio" class="radio" {JPG_ENABLED} name="jpg_allowed" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {JPG_DISABLED} name="jpg_allowed" value="0" />{L_NO}</span></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_PNG_ALLOWED}</span></td>
-		<td class="row2"><span class="genmed"><input type="radio" class="radio" {PNG_ENABLED} name="png_allowed" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {PNG_DISABLED} name="png_allowed" value="0" />{L_NO}</span></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_GIF_ALLOWED}</span></td>
-		<td class="row2"><span class="genmed"><input type="radio" class="radio" {GIF_ENABLED} name="gif_allowed" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {GIF_DISABLED} name="gif_allowed" value="0" />{L_NO}</span></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_HOTLINK_PREVENT}</span></td>
-		<td class="row2"><span class="genmed"><input type="radio" class="radio" {HOTLINK_PREVENT_ENABLED} name="hotlink_prevent" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {HOTLINK_PREVENT_DISABLED} name="hotlink_prevent" value="0" />{L_NO}</span></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_HOTLINK_ALLOWED}</span></td>
-		<td class="row2"><input class="post" type="text" size="40" name="hotlink_allowed" value="{HOTLINK_ALLOWED}" /></td>
-	</tr>
-	<tr>
-		<th class="thHead" colspan="2">{L_THUMBNAIL_SETTINGS}</th>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_THUMBNAIL_CACHE}</span></td>
-		<td class="row2"><span class="genmed"><input type="radio" class="radio" {THUMBNAIL_CACHE_ENABLED} name="thumbnail_cache" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {THUMBNAIL_CACHE_DISABLED} name="thumbnail_cache" value="0" />{L_NO}</span></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_THUMBNAIL_SIZE}</span></td>
-		<td class="row2"><input class="post" type="text" maxlength="4" size="4" name="thumbnail_size" value="{THUMBNAIL_SIZE}" /></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_THUMBNAIL_QUALITY}</span></td>
-		<td class="row2"><input class="post" type="text" maxlength="3" size="3" name="thumbnail_quality" value="{THUMBNAIL_QUALITY}" /></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_ROWS_PER_PAGE}</span></td>
-		<td class="row2"><input class="post" type="text" maxlength="2" size="2" name="rows_per_page" value="{ROWS_PER_PAGE}" /></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_COLS_PER_PAGE}</span></td>
-		<td class="row2"><input class="post" type="text" maxlength="2" size="2" name="cols_per_page" value="{COLS_PER_PAGE}" /></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_DEFAULT_SORT_METHOD}</span></td>
-		<td class="row2">
-			<select name="sort_method">
-				<option {SORT_TIME} value='image_time'>{L_TIME}</option>
-				<option {SORT_IMAGE_TITLE} value='image_name'>{L_IMAGE_TITLE}</option>
-				<option {SORT_USERNAME} value='username'>{L_USERNAME}</option>
-				<option {SORT_VIEW} value='image_view_count'>{L_VIEWS}</option>
-				<option {SORT_RATING} value='rating'>{L_RATING}</option>
-				<option {SORT_COMMENTS} value='comments'>{L_COMMENTS}</option>
-				<option {SORT_NEW_COMMENT} value='new_comment'>{L_NEW_COMMENT}</option>
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_DEFAULT_SORT_ORDER}</span></td>
-		<td class="row2">
-			<select name="sort_order">
-				<option {SORT_ASC} value='ASC'>{L_SORT_ASCENDING}</option>
-				<option {SORT_DESC} value='DESC'>{L_SORT_DESCENDING}</option>
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_FULL_IMAGE_POPUP}</span></td>
-		<td class="row2"><span class="genmed"><input type="radio" class="radio" {FULLPIC_POPUP_ENABLED} name="fullpic_popup" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {FULLPIC_POPUP_DISABLED} name="fullpic_popup" value="0" />{L_NO}</span></td>
-	</tr>
-	<tr>
-		<th class="thHead" colspan="2">{L_EXTRA_SETTINGS}</th>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_PERSONAL_GALLERY}</span></td>
-		<td class="row2"><span class="genmed"><input type="radio" class="radio" {PERSONAL_GALLERY_USER} name="personal_gallery" value="{S_USER}" />{L_GALLERY_REG}&nbsp;&nbsp;<input type="radio" class="radio" {PERSONAL_GALLERY_PRIVATE} name="personal_gallery" value="{S_PRIVATE}" />{L_GALLERY_PRIVATE}&nbsp;&nbsp;<input type="radio" class="radio" {PERSONAL_GALLERY_ADMIN} name="personal_gallery" value="{S_ADMIN}" />{L_GALLERY_ADMIN}</span></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_PERSONAL_GALLERY_LIMIT}</span></td>
-		<td class="row2"><input class="post" type="text" maxlength="5" size="5" name="personal_gallery_limit" value="{PERSONAL_GALLERY_LIMIT}" /></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_PERSONAL_GALLERY_VIEW}</span></td>
-		<td class="row2"><span class="genmed"><input type="radio" class="radio" {PERSONAL_GALLERY_VIEW_ALL} name="personal_gallery_view" value="{S_GUEST}" />{L_GALLERY_ALL}&nbsp;&nbsp;<input type="radio" class="radio" {PERSONAL_GALLERY_VIEW_REG} name="personal_gallery_view" value="{S_USER}" />{L_GALLERY_REG}&nbsp;&nbsp;<input type="radio" class="radio" {PERSONAL_GALLERY_VIEW_PRIVATE} name="personal_gallery_view" value="{S_PRIVATE}" />{L_GALLERY_PRIVATE}</span></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_RATE_SYSTEM}</span></td>
-		<td class="row2"><span class="genmed"><input type="radio" class="radio" {RATE_ENABLED} name="rate" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {RATE_DISABLED} name="rate" value="0" />{L_NO}</span></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_RATE_SCALE}</span></td>
-		<td class="row2"><input class="post" type="text" name="rate_scale" value="{RATE_SCALE}" size="3" /></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_COMMENT_SYSTEM}</span></td>
-		<td class="row2"><span class="genmed"><input type="radio" class="radio" {COMMENT_ENABLED} name="comment" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {COMMENT_DISABLED} name="comment" value="0" />{L_NO}</span></td>
-	</tr>
-</table>
-<br />
-<fieldset class="submit-buttons">
+	<fieldset>
+		<legend>{L_ALBUM_SETTINGS}</legend>
+		<dl>
+			<dt><label for="rows_per_page">{L_ROWS_PER_PAGE}</label></dt>
+			<dd><span><input class="post" type="text" maxlength="2" size="2" name="rows_per_page" value="{ROWS_PER_PAGE}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="thumbnail_size">{L_COLS_PER_PAGE}</label></dt>
+			<dd><input class="post" type="text" maxlength="2" size="2" name="cols_per_page" value="{COLS_PER_PAGE}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="sort_method">{L_DEFAULT_SORT_METHOD}</label></dt>
+			<dd>
+				<select name="sort_method">
+					<option {SORT_TIME} value='image_time'>{L_TIME}</option>
+					<option {SORT_IMAGE_TITLE} value='image_name'>{L_IMAGE_TITLE}</option>
+					<option {SORT_USERNAME} value='username'>{L_USERNAME}</option>
+					<option {SORT_VIEW} value='image_view_count'>{L_VIEWS}</option>
+					<option {SORT_RATING} value='rating'>{L_RATING}</option>
+					<option {SORT_COMMENTS} value='comments'>{L_COMMENTS}</option>
+					<option {SORT_NEW_COMMENT} value='new_comment'>{L_NEW_COMMENT}</option>
+				</select>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="sort_order">{L_DEFAULT_SORT_ORDER}</label></dt>
+			<dd>
+				<select name="sort_order">
+					<option {SORT_ASC} value='ASC'>{L_SORT_ASCENDING}</option>
+					<option {SORT_DESC} value='DESC'>{L_SORT_DESCENDING}</option>
+				</select>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="sort_order">{L_FULL_IMAGE_POPUP}</label></dt>
+			<dd><input type="radio" class="radio" {FULLPIC_POPUP_ENABLED} name="fullpic_popup" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {FULLPIC_POPUP_DISABLED} name="fullpic_popup" value="0" />{L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="max_pics">{L_MAX_IMAGES}</label></dt>
+			<dd><input class="post" type="text" maxlength="9" size="9" name="max_pics" value="{MAX_IMAGES}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="user_pics_limit">{L_USER_IMAGES_LIMIT}</label></dt>
+			<dd><input class="post" type="text" maxlength="12" size="5" name="user_pics_limit" value="{USER_IMAGES_LIMIT}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="mod_pics_limit">{L_MODERATOR_IMAGES_LIMIT}</label></dt>
+			<dd><input class="post" type="text" maxlength="12" size="5" name="mod_pics_limit" value="{MOD_IMAGES_LIMIT}" /></dd>
+		</dl>
+	</fieldset>
+	<fieldset>
+		<legend>{L_IMAGE_SETTINGS}</legend>
+		<dl>
+			<dt><label for="upload_images">{L_UPLOAD_IMAGES}</label></dt>
+			<dd><input class="post" type="text" maxlength="9" size="9" name="upload_images" value="{UPLOAD_IMAGES}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="max_file_size">{L_MAX_FILE_SIZE}</label></dt>
+			<dd><input class="post" type="text" maxlength="12" size="12" name="max_file_size" value="{MAX_FILE_SIZE}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="max_width">{L_MAX_WIDTH}</label></dt>
+			<dd><input class="post" type="text" maxlength="9" size="9" name="max_width" value="{MAX_WIDTH}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="max_height">{L_MAX_HEIGHT}</label></dt>
+			<dd><input class="post" type="text" maxlength="9" size="9" name="max_height" value="{MAX_HEIGHT}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="preview_rsz_width">{L_RSZ_WIDTH}</label></dt>
+			<dd><input class="post" type="text" maxlength="9" size="9" name="preview_rsz_width" value="{RSZ_WIDTH}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="preview_rsz_height">{L_RSZ_HEIGHT}</label></dt>
+			<dd><input class="post" type="text" maxlength="9" size="9" name="preview_rsz_height" value="{RSZ_HEIGHT}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="max_height">{L_JPG_ALLOWED}</label></dt>
+			<dd><input type="radio" class="radio" {JPG_ENABLED} name="jpg_allowed" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {JPG_DISABLED} name="jpg_allowed" value="0" />{L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="max_height">{L_PNG_ALLOWED}</label></dt>
+			<dd><input type="radio" class="radio" {PNG_ENABLED} name="png_allowed" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {PNG_DISABLED} name="png_allowed" value="0" />{L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="max_height">{L_GIF_ALLOWED}</label></dt>
+			<dd><input type="radio" class="radio" {GIF_ENABLED} name="gif_allowed" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {GIF_DISABLED} name="gif_allowed" value="0" />{L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="desc_length">{L_IMAGE_DESC_MAX_LENGTH}</label></dt>
+			<dd><input class="post" type="text" size="6" name="desc_length" value="{IMAGE_DESC_MAX_LENGTH}" /></dd>
+		</dl>
+	</fieldset>
+	<fieldset>
+		<legend>{L_THUMBNAIL_SETTINGS}</legend>
+		<dl>
+			<dt><label for="thumbnail_cache">{L_THUMBNAIL_CACHE}</label></dt>
+			<dd><span><input type="radio" class="radio" {THUMBNAIL_CACHE_ENABLED} name="thumbnail_cache" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {THUMBNAIL_CACHE_DISABLED} name="thumbnail_cache" value="0" />{L_NO}</span></dd>
+		</dl>
+		<dl>
+			<dt><label for="gd_version">{L_GD_VERSION}</label></dt>
+			<dd><span><input type="radio" class="radio" {NO_GD} name="gd_version" value="0" />{L_MANUAL_THUMBNAIL}&nbsp;&nbsp;<input type="radio" class="radio" {GD_V1} name="gd_version" value="1" />GD1&nbsp;&nbsp;<input type="radio" class="radio" {GD_V2} name="gd_version" value="2" />GD2</span></dd>
+		</dl>
+		<dl>
+			<dt><label for="thumbnail_size">{L_THUMBNAIL_SIZE}</label></dt>
+			<dd><input class="post" type="text" maxlength="4" size="4" name="thumbnail_size" value="{THUMBNAIL_SIZE}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="thumbnail_quality">{L_THUMBNAIL_QUALITY}</label></dt>
+			<dd><input class="post" type="text" maxlength="3" size="3" name="thumbnail_quality" value="{THUMBNAIL_QUALITY}" /></dd>
+		</dl>
+	</fieldset>
+
+
+	<fieldset>
+		<legend>{L_GALLERY_CONFIG}</legend>
+		<dl>
+			<dt><label for="rate">{L_RATE_SYSTEM}</label></dt>
+			<dd><input type="radio" class="radio" {RATE_ENABLED} name="rate" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {RATE_DISABLED} name="rate" value="0" />{L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="rate_scale">{L_RATE_SCALE}</label></dt>
+			<dd><input class="post" type="text" name="rate_scale" value="{RATE_SCALE}" size="3" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="comment">{L_COMMENT_SYSTEM}</label></dt>
+			<dd><input type="radio" class="radio" {COMMENT_ENABLED} name="comment" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {COMMENT_DISABLED} name="comment" value="0" />{L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="hotlink_prevent">{L_HOTLINK_PREVENT}</label></dt>
+			<dd><input type="radio" class="radio" {HOTLINK_PREVENT_ENABLED} name="hotlink_prevent" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {HOTLINK_PREVENT_DISABLED} name="hotlink_prevent" value="0" />{L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="hotlink_allowed">{L_HOTLINK_ALLOWED}</label></dt>
+			<dd><input class="post" type="text" size="40" name="hotlink_allowed" value="{HOTLINK_ALLOWED}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="watermark_images">{L_WATERMARK_IMAGES}</label></dt>
+			<dd><input type="radio" class="radio" {WATERMARK_ENABLED} name="watermark_images" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {WATERMARK_DISABLED} name="watermark_images" value="0" />{L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="watermark_source">{L_WATERMARK_SOURCE}</label></dt>
+			<dd><input class="post" type="text" size="40" name="watermark_source" value="{WATERMARK_SOURCE}" /></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset class="submit-buttons">
 		<legend>{L_SUBMIT}</legend>
-		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
-		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
-</fieldset>
-{S_FORM_TOKEN}
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</p>
+	</fieldset>
+	{S_FORM_TOKEN}
 </form>
 
 <!-- ELSEIF S_ALBUM_PERMISSIONS_SELECT_ALBUM -->
