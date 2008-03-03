@@ -1,0 +1,117 @@
+<!-- INCLUDE overall_header.html -->
+
+<h2><a href="{U_VIEW_ALBUM}">{L_MODCP} - {ALBUM_NAME}</a></h2>
+
+<form name="modcp" action="{S_ALBUM_ACTION}" method="post">
+<table cellspacing="1" width="100%">
+	<tr>
+	<td align="right" nowrap="nowrap">
+		<span class="gensmall">{L_SELECT_SORT_METHOD}:
+		<select name="sort_method">
+			<option {SORT_TIME} value='image_time'>{L_TIME}</option>
+			<option {SORT_IMAGE_NAME} value='image_name'>{L_IMAGE_TITLE}</option>
+			<option {SORT_USERNAME} value='image_username'>{L_USERNAME}</option>
+			<option {SORT_VIEW} value='image_view_count'>{L_VIEWS}</option>
+			{SORT_RATING_OPTION}
+			{SORT_COMMENTS_OPTION}
+			{SORT_NEW_COMMENT_OPTION}
+		</select>
+		&nbsp;{L_ORDER}:
+		<select name="sort_order">
+			<option {SORT_ASC} value='ASC'>{L_ASCENDING}</option>
+			<option {SORT_DESC} value='DESC'>{L_DESCENDING}</option>
+		</select> <input type="submit" name="sort" value="{L_SORT}" class="button2" />
+				</span>
+	</td>
+	</tr>
+</table>
+
+<table cellspacing="1" width="100%">
+	<tr>
+		<td><div class="pagination"> {PAGE_NUMBER}
+				<!-- IF PAGINATION -->
+				&bull; <span>{PAGINATION}</span>
+				<!-- ENDIF -->
+			</div></td>
+	</tr>
+</table>
+
+<table class="tablebg" cellspacing="1" width="100%">
+	<tr>
+	<th nowrap="nowrap">&nbsp;{L_IMAGE_TITLE}&nbsp;</th>
+	<th width="10%" nowrap="nowrap">&nbsp;{L_RATING}&nbsp;</th>
+	<th width="10%" nowrap="nowrap">&nbsp;{L_COMMENTS}&nbsp;</th>
+	<th width="10%" nowrap="nowrap">&nbsp;{L_STATUS}&nbsp;</th>
+	<th width="10%" nowrap="nowrap">&nbsp;{L_APPROVAL}&nbsp;</th>
+	<th width="5%"	nowrap="nowrap">&nbsp;{L_SELECT}&nbsp;</th>
+	</tr>
+	<!-- BEGIN no_pics -->
+	<tr>
+	<td class="row1" align="center" colspan="6" height="50"><span class="gen">{L_NO_IMAGES}</span></td>
+	</tr>
+	<!-- END no_pics -->
+	<!-- BEGIN picrow -->
+	<tr>
+	<td class="row1" height="25"><span class="genmed">{L_IMAGE_TITLE}: {picrow.IMAGE_NAME}<br />{L_POSTER}: {picrow.POSTER}<br />{L_TIME}: {picrow.TIME}</span></td>
+	<td align="center" class="row2"><span class="genmed">{picrow.RATING}</span></td>
+	<td align="center" class="row2"><span class="genmed">{picrow.COMMENTS}</span></td>
+	<td align="center" class="row2"><span class="genmed">{picrow.LOCK}</span></td>
+	<td align="center" class="row2"><span class="genmed">{picrow.APPROVAL}</span></td>
+	<td align="center" class="row3"><span class="genmed"><input type="checkbox" name="image_id[]" value="{picrow.IMAGE_ID}" /></span></td>
+	</tr>
+	<!-- END picrow -->
+	<tr>
+	<td class="cat" colspan="6" align="right" height="28">
+		<input type="hidden" name="mode" value="modcp" />
+		<input type="submit" class="liteoption" name="move" value="{L_MOVE}" />
+		<input type="submit" class="liteoption" name="lock" value="{L_LOCK}" />
+		<input type="submit" class="liteoption" name="unlock" value="{L_UNLOCK}" />
+		{DELETE_BUTTON}
+		{APPROVAL_BUTTON}
+		{UNAPPROVAL_BUTTON}
+	</td>
+	</tr>
+</table>
+
+<table cellspacing="1" width="100%">
+	<tr>
+		<td><div class="pagination"> {PAGE_NUMBER}
+				<!-- IF PAGINATION -->
+				&bull; <span>{PAGINATION}</span>
+				<!-- ENDIF -->
+			</div></td>
+	</tr>
+</table>
+
+<table cellspacing="1" width="100%">
+	<tr>
+	<td align="right" nowrap="nowrap">
+		<span class="gensmall">{L_SELECT_SORT_METHOD}:
+		<select name="sort_method">
+			<option {SORT_TIME} value='image_time'>{L_TIME}</option>
+			<option {SORT_IMAGE_NAME} value='image_name'>{L_IMAGE_TITLE}</option>
+			<option {SORT_USERNAME} value='image_username'>{L_USERNAME}</option>
+			<option {SORT_VIEW} value='image_view_count'>{L_VIEWS}</option>
+			{SORT_RATING_OPTION}
+			{SORT_COMMENTS_OPTION}
+			{SORT_NEW_COMMENT_OPTION}
+		</select>
+		&nbsp;{L_ORDER}:
+		<select name="sort_order">
+			<option {SORT_ASC} value='ASC'>{L_ASCENDING}</option>
+			<option {SORT_DESC} value='DESC'>{L_DESCENDING}</option>
+		</select> <input type="submit" name="sort" value="{L_SORT}" class="button2" />
+				</span>
+	</td>
+	</tr>
+</table>
+{S_FORM_TOKEN}
+</form>
+
+<br clear="all" />
+
+<!-- Please keep this little notice visible -->
+<div class="copyright" align="center">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a> &amp; <a href="http://www.flying-bits.org/">nickvergessen</a></div>
+<br clear="all" />
+
+<!-- INCLUDE overall_footer.html -->

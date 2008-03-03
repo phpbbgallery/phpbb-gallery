@@ -1,0 +1,60 @@
+<!-- INCLUDE overall_header.html -->
+
+<!-- useless file, just kept for information -->
+
+<table cellspacing="0" width="100%">
+	<tr>
+	<td><span class="nav">{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF --></span></td>
+	</tr>
+</table>
+<!-- IF .memberrow -->
+<table class="tablebg" cellspacing="1" width="100%">
+	<tr>
+		<th colspan="2" height="20">{L_USERS_PERSONAL_ALBUMS}</th>
+		<th style="width: 60px;">{L_IMAGES}</th>
+		<th style="width: 300px;">{L_LAST_IMAGE}</th>
+	</tr>
+	<!-- BEGIN memberrow -->
+	<tr>
+		<td class="row1" style="align: center; width: 50px;"><img src="memberrow.ALBUM_FOLDER_IMG_SRC}" alt="" /></td>
+		<td height="28" class="row1"><span class="gen">
+			<!-- IF memberrow.ALBUM_IMAGE -->
+			<span class="forum-image">{memberrow.ALBUM_IMAGE}</span>
+			<!-- ENDIF -->
+			<strong><a href="{memberrow.U_VIEWGALLERY}" class="forumtitle">{memberrow.USERNAME}</a></strong></span><br />
+			<span class="gensmall"><!-- IF memberrow.ALBUM_DESC -->{memberrow.ALBUM_DESC}<!-- ELSE -->{L_JOINED} {memberrow.JOINED}<!-- ENDIF --></span>
+		</td>
+		<td class="row1" style="text-align: center;"><span class="gen">{memberrow.IMAGES}</span></td>
+		<td class="row1">
+			<span class="gen">
+				<!-- IF memberrow.U_LAST_IMAGE -->
+					<a href="{memberrow.U_LAST_IMAGE}" style="font-weight: bold;">{memberrow.LAST_IMAGE_NAME}</a> <a href="{memberrow.U_LAST_IMAGE}">{LAST_POST_IMG}</a><br />
+					{L_POSTED_ON_DATE} {memberrow.LAST_IMAGE_TIME}
+				<!-- ELSE -->{L_NO_IMAGES}<!-- ENDIF -->
+			</span>
+		</td>
+	</tr>
+	<!-- END memberrow -->
+	<tr>
+		<td class="cat" colspan="4" align="center">
+		<form method="post" action="{S_MODE_ACTION}">
+			<span class="gensmall">{L_SELECT_SORT_METHOD}:&nbsp;{S_MODE_SELECT}&nbsp;&nbsp;{L_ORDER}:&nbsp;{S_ORDER_SELECT}&nbsp;&nbsp;
+				<input type="submit" name="sort" value="{L_SORT}" class="button2" />
+			</span></form>
+		</td>
+	</tr>
+</table>
+<br />
+<!-- ENDIF -->
+
+<table cellspacing="0" width="100%">
+	<tr>
+	<td><span class="nav">{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF --></span></td>
+	</tr>
+</table>
+
+<!-- Please keep this little notice visible -->
+<div class="copyright" align="center">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a> &amp; <a href="http://www.flying-bits.org/">nickvergessen</a></div>
+<br clear="all" />
+
+<!-- INCLUDE overall_footer.html -->

@@ -1,0 +1,69 @@
+<!-- INCLUDE overall_header.html -->
+<script type="text/javascript">
+<!--
+function checkAlbumForm() {
+	formErrors = false;
+
+	if (document.editform.pic_title.value.length < 2)
+	{
+		formErrors = "{L_UPLOAD_NO_TITLE}";
+	}
+	else if (document.editform.pic_desc.value.length > {S_PIC_DESC_MAX_LENGTH})
+	{
+		formErrors = "{L_DESC_TOO_LONG}";
+	}
+
+	if (formErrors)
+	{
+		alert(formErrors);
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+// -->
+</script>
+
+	<table class="tablebg" cellspacing="1" width="100%">
+		<tr>
+			<th>{IMAGE_NAME}</th>
+		</tr>
+		<tr>
+			<td class="row1" width="30%" height="28"><div style="text-align: center; padding: 20px;"><img src="{U_IMAGE}" border="0" vspace="10" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" /></div></td>
+		</tr>
+	</table>
+<br clear="all" />
+
+<form name="editform" action="{S_ALBUM_ACTION}" method="post" onsubmit="return checkAlbumForm()">
+	<table class="tablebg" cellspacing="1" width="100%">
+		<tr>
+			<th colspan="2">{L_EDIT_IMAGE_INFO}</th>
+		</tr>
+		<tr>
+			<td class="row1" width="30%" height="28"><span class="gen">{L_IMAGE_TITLE}</span></td>
+			<td class="row2"><input class="inputbox autowidth" type="text" name="pic_title" size="60" value="{IMAGE_NAME}" /></td>
+		</tr>
+		<tr>
+			<td class="row1" valign="top" width="30%" height="28"><span class="gen">{L_IMAGE_DESC}<br />
+				</span><span class="genmed">{L_PLAIN_TEXT_ONLY}<br />
+				{L_MAX_LENGTH}: <b>{S_IMAGE_DESC_MAX_LENGTH}</b></span></td>
+			<td class="row2"><textarea class="inputbox" cols="60" rows="4" name="pic_desc">{IMAGE_DESC}</textarea></td>
+		</tr>
+		<tr>
+			<td class="cat" align="center" height="28" colspan="2">
+				<input type="reset" accesskey="r" tabindex="8" value="{L_RESET}" class="button2" />
+				&nbsp;<input type="submit" accesskey="s" tabindex="6" name="submit" value="{L_SUBMIT}" class="button1" />
+			</td>
+		</tr>
+	</table>
+{S_FORM_TOKEN}
+</form>
+<br clear="all" />
+
+<!-- Please keep this little notice visible -->
+<div class="copyright" align="center">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a> &amp; <a href="http://www.flying-bits.org/">nickvergessen</a></div>
+<br clear="all" />
+
+<!-- INCLUDE overall_footer.html -->
