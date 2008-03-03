@@ -444,25 +444,6 @@ define('GALLERY_RATES_TABLE',			$table_prefix . 'gallery_rates');]]></action>
         <action type="after-add"><![CDATA[<!-- IF postrow.U_GALLERY --><li class="gallery-icon"><a href="{postrow.U_GALLERY}" title="{L_PERSONAL_ALBUM}"><span>{L_PERSONAL_ALBUM}h</span></a></li><!-- ENDIF -->]]></action>
       </edit>
     </open>
-    <open src="styles/prosilver/theme/buttons.css">
-      <edit>
-        <find><![CDATA[.buttons div.forwardpm-icon	{ width: {IMG_BUTTON_PM_FORWARD_WIDTH}px; height: {IMG_BUTTON_PM_FORWARD_HEIGHT}px; }]]></find>
-        <action type="after-add"><![CDATA[.buttons div.upload-icon	{ width: 119px; height: 25px; }]]></action>
-        <find><![CDATA[.icon-bookmark, .icon-bump, .icon-subscribe, .icon-unsubscribe, .icon-pages, .icon-search]]></find>
-        <inline-edit>
-            <inline-find><![CDATA[, .icon-search]]></inline-find>
-            <inline-action type="after-add"><![CDATA[, .icon-gallery]]></inline-action>
-        </inline-edit>
-      </edit>
-    </open>
-    <open src="styles/prosilver/theme/colours.css">
-      <edit>
-        <find><![CDATA[.forwardpm-icon span	{ background-image: url("{IMG_BUTTON_PM_FORWARD_SRC}") ;}]]></find>
-        <action type="after-add"><![CDATA[.upload-icon span	{ background-image: url("{T_IMAGESET_LANG_PATH}/button_upload_image.gif"); }]]></action>
-        <find><![CDATA[.icon-search					{ background-image: url("{T_THEME_PATH}/images/icon_search.gif"); }]]></find>
-        <action type="after-add"><![CDATA[.icon-gallery					{ background-image: url("{T_THEME_PATH}/images/icon_gallery.gif"); }]]></action>
-      </edit>
-    </open>
     <open src="styles/prosilver/theme/stylesheet.css">
       <edit>
         <find><![CDATA[@import url("colours.css");]]></find>

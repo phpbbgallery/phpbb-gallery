@@ -228,6 +228,12 @@ $user->add_lang('mods/gallery');]]></action>
         <action type="after-add"><![CDATA[$this->page['page'] .= (isset($_REQUEST['album_id'])) ? ((strpos($this->page['page'], '?') !== false) ? '&' : '?') . '_album_id_=' . (int) $_REQUEST['album_id'] . 'x' : '';]]></action>
       </edit>
     </open>
+    <open src="styles/prosilver/imageset/en/imageset.cfg">
+      <edit>
+        <find><![CDATA[img_button_topic_reply = button_topic_reply.gif*25*96]]></find>
+        <action type="after-add"><![CDATA[img_button_upload_image = button_upload_image.gif*25*119]]></action>
+      </edit>
+    </open>
     <open src="styles/prosilver/template/viewtopic_body.html">
       <edit>
         <find><![CDATA[<!-- IF postrow.U_JABBER --><li class="jabber-icon"><a href="{postrow.U_JABBER}" onclick="popup(this.href, 550, 320); return false;" title="{L_JABBER}"><span>{L_JABBER}</span></a></li><!-- ENDIF -->]]></find>
@@ -238,6 +244,27 @@ $user->add_lang('mods/gallery');]]></action>
       <edit>
         <find><![CDATA[@import url("colours.css");]]></find>
         <action type="after-add"><![CDATA[@import url("gallery_lytebox.css");]]></action>
+      </edit>
+    </open>
+    <open src="styles/prosilver/theme/buttons.css">
+      <edit>
+        <find><![CDATA[.buttons div.upload-icon	{ width: 119px; height: 25px; }]]></find>
+        <action type="replace-with"><![CDATA[]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[.icon-bookmark, .icon-bump, .icon-subscribe, .icon-unsubscribe, .icon-pages, .icon-search, .icon-gallery {]]></find>
+        <inline-edit>
+            <inline-find><![CDATA[, .icon-gallery]]></inline-find>
+            <inline-action type="replace-with"><![CDATA[]]></inline-action>
+        </inline-edit>
+      </edit>
+    </open>
+    <open src="styles/prosilver/theme/colours.css">
+      <edit>
+        <find><![CDATA[.upload-icon span	{ background-image: url("{T_IMAGESET_LANG_PATH}/button_upload_image.gif"); }]]></find>
+        <action type="replace-with"><![CDATA[]]></action>
+        <find><![CDATA[.icon-gallery					{ background-image: url("{T_THEME_PATH}/images/icon_gallery.gif"); }]]></find>
+        <action type="replace-with"><![CDATA[]]></action>
       </edit>
     </open>
     <diy-instructions lang="en-gb">see normal install-file</diy-instructions>
