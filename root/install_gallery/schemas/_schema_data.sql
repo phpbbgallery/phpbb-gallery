@@ -39,5 +39,6 @@ INSERT INTO phpbb_gallery_config VALUES ('watermark_source', 'gallery/mark.png')
 INSERT INTO phpbb_gallery_config VALUES ('preview_rsz_height', 600);
 INSERT INTO phpbb_gallery_config VALUES ('preview_rsz_width', 800);
 INSERT INTO phpbb_gallery_config VALUES ('upload_images', 10);
+INSERT INTO phpbb_gallery_config VALUES ('thumbnail_info_line', 1);
 
 # POSTGRES COMMIT #
