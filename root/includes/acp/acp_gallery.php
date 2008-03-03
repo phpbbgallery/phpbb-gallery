@@ -435,8 +435,11 @@ class acp_gallery
 			'USER_IMAGES_LIMIT' 				=> $new['user_pics_limit'],
 			'MOD_IMAGES_LIMIT' 					=> $new['mod_pics_limit'],
 
-			'THUMBNAIL_CACHE_ENABLED' 			=> ($new['thumbnail_cache'] == 1) ? 'checked="checked"' : '',
-			'THUMBNAIL_CACHE_DISABLED' 			=> ($new['thumbnail_cache'] == 0) ? 'checked="checked"' : '',
+			'THUMBNAIL_CACHE_ENABLED'			=> ($new['thumbnail_cache'] == 1) ? 'checked="checked"' : '',
+			'THUMBNAIL_CACHE_DISABLED'			=> ($new['thumbnail_cache'] == 0) ? 'checked="checked"' : '',
+
+			'INFO_LINE_ENABLED'					=> ($new['thumbnail_info_line'] == 1) ? 'checked="checked"' : '',
+			'INFO_LINE_DISABLED'				=> ($new['thumbnail_info_line'] == 0) ? 'checked="checked"' : '',
 
 			'JPG_ENABLED' 						=> ($new['jpg_allowed'] == 1) ? 'checked="checked"' : '',
 			'JPG_DISABLED' 						=> ($new['jpg_allowed'] == 0) ? 'checked="checked"' : '',

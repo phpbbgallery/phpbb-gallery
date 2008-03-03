@@ -210,22 +210,29 @@ else if (($pic_width > $album_config['thumbnail_size']) or ($pic_height > $album
 	}
 
 	// Create thumbnail + 16 Pixel extra for imagesize text 
-	//$thumbnail = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height + 16) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height + 16); 
-	$thumbnail = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height); 
-
-
+	if ($album_config['thumbnail_info_line'])
+	{// Create image details credits to Dr.Death
+		$thumbnail = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height + 16) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height + 16); 
+	}
+	else
+	{
+		$thumbnail = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
+	}
 	$resize_function = ($album_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
+	@$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $image_data['width'], $image_data['height']);
 
-	$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $pic_width, $pic_height);
-	#$dimension_font = 1; 
-	#$dimension_filesize = filesize(ALBUM_UPLOAD_PATH . $pic_filename); 
-	#$dimension_string = intval($pic_width) . "x" . intval($pic_height) . "(" . intval($dimension_filesize/1024) . "KB)"; 
-	#$dimension_colour = ImageColorAllocate($thumbnail,255,255,255); 
-	#$dimension_height = imagefontheight($dimension_font); 
-	#$dimension_width = imagefontwidth($dimension_font) * strlen($dimension_string); 
-	#$dimension_x = ($thumbnail_width - $dimension_width) / 2; 
-	#$dimension_y = $thumbnail_height + ((16 - $dimension_height) / 2); 
-	#imagestring($thumbnail, 1, $dimension_x, $dimension_y, $dimension_string, $dimension_colour);
+	if ($album_config['thumbnail_info_line'])
+	{// Create image details credits to Dr.Death
+		$dimension_font = 1;
+		$dimension_filesize = filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
+		$dimension_string = $image_data['width'] . "x" . $image_data['height'] . "(" . intval($dimension_filesize/1024) . "KB)";
+		$dimension_colour = ImageColorAllocate($thumbnail,255,255,255);
+		$dimension_height = imagefontheight($dimension_font);
+		$dimension_width = imagefontwidth($dimension_font) * strlen($dimension_string);
+		$dimension_x = ($thumbnail_width - $dimension_width) / 2;
+		$dimension_y = $thumbnail_height + ((16 - $dimension_height) / 2);
+		imagestring($thumbnail, 1, $dimension_x, $dimension_y, $dimension_string, $dimension_colour);
+	}
 }
 else
 {

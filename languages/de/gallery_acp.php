@@ -105,6 +105,7 @@ $lang = array_merge($lang, array(
 	'IMAGE_APPROVAL'					=> 'Genehmigung der Bilder',
 	'IMAGE_SETTINGS'					=> 'Bilder Einstellungen',
 	'IMAGE_DESC_MAX_LENGTH'				=> 'Bild Beschreibung / Kommentar Max Länge (Bytes)',
+	'INFO_LINE'							=> 'Dateigröße auf dem Thumbnail anzeigen',
 	'IS_MODERATOR'						=> 'Ist Moderator',
 	
 	'LOOK_UP_ALBUM'						=> 'Album wählen',
