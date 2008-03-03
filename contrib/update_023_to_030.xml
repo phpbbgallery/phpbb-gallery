@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="../modx.prosilver.en.xsl"?>
+<!-- $Id$ -->
+<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.0.xsd">
+  <header>
+    <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+    <title lang="en-gb">phpBB Gallery</title>
+    <description lang="en-gb">see normal install-file</description>
+    <author-notes lang="en-gb">i hope you get it installed, otherwise you can ask for help on phpbb.de and phpbb.com</author-notes>
+    <author-group>
+      <author>
+        <realname>nickvergessen</realname>
+        <email>nickvergessen@gmx.de</email>
+        <username>nickvergessen</username>
+        <homepage>http://www.flying-bits.org</homepage>
+        <contributions />
+      </author>
+    </author-group>
+    <mod-version>
+      <major>0</major>
+      <minor>3</minor>
+      <revision>0</revision>
+    </mod-version>
+    <installation>
+      <level>easy</level>
+      <time>240</time>
+      <target-version>
+        <target-primary>3.0.0</target-primary>
+        <target-major allow="exact">3</target-major>
+        <target-minor allow="exact">0</target-minor>
+      </target-version>
+    </installation>
+    <history>
+      <entry>
+        <date>2008-03-06</date>
+        <rev-version>
+          <major>0</major>
+          <minor>3</minor>
+          <revision>0</revision>
+        </rev-version>
+        <changelog lang="en-GB">
+          <change><![CDATA[[Add] Report #138: Resize image in image view page]]></change>
+          <change><![CDATA[[Add] Report #195: Reduce SQL phpbb_users left join]]></change>
+          <change><![CDATA[[Add] Report #197: Personal Gallery Index - User colour are not showing...]]></change>
+          <change><![CDATA[[Add] Report #149: members should have the ability to create an album]]></change>
+          <change><![CDATA[[Add] Report #208: permissions for creating subalbums]]></change>
+          <change><![CDATA[[Add] Report #212: Multiple Upload]]></change>
+          <change><![CDATA[[Add] Report #15: edit and delete comments]]></change>
+          <change><![CDATA[[Add] Report #168: Persönliche Galerie verlinken]]></change>
+          <change><![CDATA[[Add] Report #213: SVN: move pic from private subalbum not possible]]></change>
+          <change><![CDATA[[Add] Report #211: Seitenauflistung in der "Wer ist online?"-Liste]]></change>
+          <change><![CDATA[[Add] Report #126: Optional black info line at bottom.]]></change>
+
+          <change><![CDATA[[Change] Report #173: [ACP] missing radio and checkbox classes...cosmetic.]]></change>
+          <change><![CDATA[[Change] Report #163: Deutsche Sprache: Gallery/Galerie]]></change>
+          <change><![CDATA[[Change] Report #188: MCP link 2 times]]></change>
+          <change><![CDATA[[Change] Report #143: Also show new personal images on index page]]></change>
+          <change><![CDATA[[Change] Report #215: Should not update session page on thumbnail view]]></change>
+          <change><![CDATA[[Change] Report #216: Album BBcode - mark in one click]]></change>
+
+          <change><![CDATA[[Fix] Report #167: Missing Lang: IMAGE_BBCODE]]></change>
+          <change><![CDATA[[Fix] Report #172: Undefined variable: sort_new_comment_option]]></change>
+          <change><![CDATA[[Fix] Report #175: SVN: Move images are not working anymore]]></change>
+          <change><![CDATA[[Fix] Report #182: View the last MESSAGE?]]></change>
+          <change><![CDATA[[Fix] Report #176: Album categorie - don't show "no pictures"]]></change>
+          <change><![CDATA[[Fix] Report #190: Commment]]></change>
+          <change><![CDATA[[Fix] Report #194: no personal images in recent images]]></change>
+          <change><![CDATA[[Fix] Report #196: MCP - Delete images are not working anymore...]]></change>
+          <change><![CDATA[[Fix] Report #198: personal gallery of xxxx - PHP Notice error]]></change>
+          <change><![CDATA[[Fix] Report #199: SVN: gallery/index.php - SQL Error]]></change>
+          <change><![CDATA[[Fix] Report #202: install.xml - Description typo]]></change>
+          <change><![CDATA[[Fix] Report #186: No more albums to move]]></change>
+          <change><![CDATA[[Fix] Report #169: {memberrow.ALBUM_FOLDER_IMG_SRC}]]></change>
+          <change><![CDATA[[Fix] Report #174: Personal Albums - Next / Previous Links]]></change>
+          <change><![CDATA[[Fix] Report #207: display nav-link when using recent_image addon]]></change>
+          <change><![CDATA[[Fix] Report #210: personal albums - ucp - move subulbums error]]></change>
+          <change><![CDATA[[Fix] Report #178: imagecreatefromjpeg(./..//gallery/upload/.jpg)]]></change>
+          <change><![CDATA[[Fix] Report #205: SQL Error on convert (guest comments)]]></change>
+          <change><![CDATA[[Fix] Report #201: wrong album link]]></change>
+          <change><![CDATA[[Fix] Report #164: Deutscher Sprachbutton (UPLOADIMAGE)]]></change>
+          <change><![CDATA[[Fix] Report #200: Truecolor+alpha channel watermark]]></change>
+          <change><![CDATA[[Fix] Report #203: root/gallery/index.htm loaded instead of index.php]]></change>
+          <change><![CDATA[[Fix] Report #209: Personal album permissions are messed up.]]></change>
+          <change><![CDATA[[Fix] Report #206: Small typo in german language]]></change>
+          <change><![CDATA[[Fix] Report #214: personal gallery: empty gallery problem.]]></change>
+          <change><![CDATA[[Fix] Report #192: upload error lang]]></change>
+          <change><![CDATA[[Fix] Report #177: categorie - last image are not shown if disapproved]]></change>
+        </changelog>
+      </entry>
+    </history>
+    <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
+  </header>
+  <action-group>
+    <copy>
+      <file from="root/adm/style/acp_gallery.html" to="adm/style/acp_gallery.html" />
+      <file from="root/gallery/*.*" to="gallery/*.*" />
+      <file from="root/gallery/includes/*.*" to="gallery/includes/*.*" />
+      <file from="root/gallery/upload/*.*" to="gallery/upload/*.*" />
+      <file from="root/gallery/upload/cache/*.*" to="gallery/upload/cache/*.*" />
+      <file from="root/includes/acp/acp_gallery.php" to="includes/acp/acp_gallery.php" />
+      <file from="root/includes/acp/info/acp_gallery.php" to="includes/acp/info/acp_gallery.php" />
+      <file from="root/install_gallery/*.*" to="install_gallery/*.*" />
+      <file from="root/install_gallery/schemas/*.*" to="install_gallery/schemas/*.*" />
+      <file from="root/language/en/mods/*.*" to="language/en/mods/*.*" />
+      <file from="root/styles/prosilver/imageset/en/button_upload_image.gif" to="styles/prosilver/imageset/en/button_upload_image.gif" />
+      <file from="root/styles/prosilver/imageset/icon_contact_gallery.gif" to="styles/prosilver/imageset/icon_contact_gallery.gif" />
+      <file from="root/styles/prosilver/template/*.*" to="styles/prosilver/template/*.*" />
+      <file from="root/styles/prosilver/theme/gallery_lytebox.css" to="styles/prosilver/theme/gallery_lytebox.css" />
+      <file from="root/styles/prosilver/theme/images/gallery_lytebox/*.*" to="styles/prosilver/theme/images/gallery_lytebox/*.*" />
+      <file from="root/styles/prosilver/theme/images/icon_gallery.gif" to="styles/prosilver/theme/images/icon_gallery.gif" />
+    </copy>
+    <open src="viewonline.php">
+      <edit>
+        <find><![CDATA[$forum_data = array();
+while ($row = $db->sql_fetchrow($result))
+{
+	$forum_data[$row['forum_id']] = $row;
+}
+$db->sql_freeresult($result);]]></find>
+        <action type="after-add"><![CDATA[// Album info
+$sql = 'SELECT *
+	FROM ' . GALLERY_ALBUMS_TABLE . '
+	ORDER BY left_id ASC';
+$result = $db->sql_query($sql, 600);
+
+$album_data = array();
+while ($row = $db->sql_fetchrow($result))
+{
+	$album_data[$row['album_id']] = $row;
+}
+$db->sql_freeresult($result);
+include("$phpbb_root_path" . GALLERY_ROOT_PATH . "includes/common.$phpEx");
+$user->add_lang('mods/gallery');]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[	preg_match('#^([a-z/]+)#i', $row['session_page'], $on_page);
+	if (!sizeof($on_page))
+	{
+		$on_page[1] = '';
+	}]]></find>
+        <action type="after-add"><![CDATA[	//check for the gallery
+	if ((utf8_substr($on_page[1], 0, utf8_strlen($gallery_root_path))) == $gallery_root_path)
+	{
+		$on_page_fake[1] = $on_page[1];
+		$on_page[1] = utf8_substr($on_page[1], 0, utf8_strlen($gallery_root_path));
+	}]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[		case 'report':
+			$location = $user->lang['REPORTING_POST'];
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;]]></find>
+        <action type="after-add"><![CDATA[		case $gallery_root_path:
+			@$album_data[0]['album_name'];
+			preg_match('#_album_id_=([0-9]+)x#i', $row['session_page'], $album_id);
+			$album_id = (sizeof($album_id)) ? (int) $album_id[1] : 0;
+			$album_user_access = ($album_id) ? ((!$album_data[$album_id]['album_user_id']) ? album_user_access($album_id, $album_data[$album_id], 1, 0, 0, 0, 0, 0) : personal_album_access($album_data[$album_id]['album_user_id'])) : array();
+
+			preg_match('#^([a-z/]+)#i', $row['session_page'], $gallery_page);
+			if ($album_id && $album_user_access['view'])
+			{
+				switch ($gallery_page[1])
+				{
+					case $gallery_root_path . 'album':
+						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_id);
+						$location = sprintf($user->lang['VIEWING_ALBUM'], $album_data[$album_id]['album_name']);
+					break;
+					case $gallery_root_path . 'image_page':
+					case $gallery_root_path . 'image':
+						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_id);
+						$location = sprintf($user->lang['VIEWING_IMAGE'], $album_data[$album_id]['album_name']);
+					break;
+					case $gallery_root_path . 'posting':
+						preg_match('#mode=([a-z]+)#', $row['session_page'], $on_page);
+						$on_page = (sizeof($on_page)) ? $on_page[1] : '';
+
+						switch ($on_page)
+						{
+							case 'comment':
+								$location = sprintf($user->lang['COMMENT_IMAGE'], $album_data[$album_id]['album_name']);
+							break;
+
+							default:
+								$location = sprintf($user->lang['VIEWING_ALBUM'], $album_data[$album_id]['album_name']);
+
+							break;
+						}
+						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_id);
+					break;
+					default:
+						$location = $user->lang['GALLERY'];
+						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx");
+					break;
+				}
+			}
+			else
+			{
+				preg_match('#mode=([a-z]+)#', $row['session_page'], $on_page);
+				$on_page = (sizeof($on_page)) ? $on_page[1] : '';
+				switch ($on_page)
+				{
+					case 'personal':
+						$location = $user->lang['PERSONAL_ALBUMS'];
+						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal');
+					break;
+					default:
+						$location = $user->lang['GALLERY'];
+						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx");
+					break;
+				}
+			}
+		break;]]></action>
+      </edit>
+    </open>
+    <open src="viewtopic.php">
+      <edit>
+        <find><![CDATA['REPORT_IMG'		=> $user->img('icon_post_report', 'REPORT_POST'),]]></find>
+        <action type="before-add"><![CDATA['GALLERY_IMG'		=> $user->img('icon_contact_gallery', 'PERSONAL_ALBUM'),]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA['jabber'			=> '',]]></find>
+        <action type="after-add"><![CDATA['personal_album'	=> '',]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA['jabber'		=> ($row['user_jabber'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=jabber&amp;u=$poster_id") : '',]]></find>
+        <action type="after-add"><![CDATA['personal_album'	=> ($row['album_id']) ? append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "album.$phpEx", "album_id=" . $row['album_id']) : '',]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA['U_JABBER'		=> $user_cache[$poster_id]['jabber'],]]></find>
+        <action type="after-add"><![CDATA['U_GALLERY'		=> $user_cache[$poster_id]['personal_album'],]]></action>
+      </edit>
+    </open>
+    <open src="includes/constants.php">
+      <edit>
+        <find><![CDATA[define('GALLERY_ALBUMS_TABLE',			$table_prefix . 'gallery_albums');]]></find>
+        <action type="before-add"><![CDATA[define('GALLERY_ROOT_PATH', 'gallery/');]]></action>
+      </edit>
+    </open>
+    <open src="includes/functions_user.php">
+      <edit>
+        <find><![CDATA[TOPICS_TABLE			=> array('topic_first_poster_name', 'topic_last_poster_name'),]]></find>
+        <action type="after-add"><![CDATA[GALLERY_IMAGES_TABLE	=> array('image_username'),]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[		$sql = 'UPDATE ' . TOPICS_TABLE . " SET topic_last_poster_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('topic_last_poster_id', $user_id_ary);
+		$db->sql_query($sql);]]></find>
+        <action type="after-add"><![CDATA[		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " SET image_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('image_user_id', $user_id_ary);
+		$db->sql_query($sql);]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[	if ($config['newest_username'] == $old_name)]]></find>
+        <action type="before-add"><![CDATA[	$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
+		SET album_name = '" . $db->sql_escape($new_name) . "'
+		WHERE album_name = '" . $db->sql_escape($old_name) . "'
+			AND album_user_id != 0
+			AND parent_id = 0";
+	$db->sql_query($sql);]]></action>
+      </edit>
+    </open>
+    <open src="includes/session.php">
+      <edit>
+        <find><![CDATA[$this->page['page'] .= (isset($_REQUEST['f'])) ? ((strpos($this->page['page'], '?') !== false) ? '&' : '?') . '_f_=' . (int) $_REQUEST['f'] . 'x' : '';]]></find>
+        <action type="after-add"><![CDATA[$this->page['page'] .= (isset($_REQUEST['album_id'])) ? ((strpos($this->page['page'], '?') !== false) ? '&' : '?') . '_album_id_=' . (int) $_REQUEST['album_id'] . 'x' : '';]]></action>
+      </edit>
+    </open>
+    <open src="includes/acp/acp_styles.php">
+      <edit>
+        <find><![CDATA['icon_back_top', 'icon_contact_aim', 'icon_contact_email', 'icon_contact_icq', 'icon_contact_jabber', 'icon_contact_msnm', 'icon_contact_pm', 'icon_contact_yahoo', 'icon_contact_www', 'icon_post_delete', 'icon_post_edit', 'icon_post_info', 'icon_post_quote', 'icon_post_report', 'icon_user_online', 'icon_user_offline', 'icon_user_profile', 'icon_user_search', 'icon_user_warn', 'button_pm_forward', 'button_pm_new', 'button_pm_reply', 'button_topic_locked', 'button_topic_new', 'button_topic_reply',]]></find>
+        <inline-edit>
+            <inline-find><![CDATA[ 'button_topic_reply',]]></inline-find>
+            <inline-action type="after-add"><![CDATA[ 'button_upload_image',]]></inline-action>
+        </inline-edit>
+      </edit>
+    </open>
+    <open src="styles/prosilver/imageset/en/imageset.cfg">
+      <edit>
+        <comment lang="en-gb">You don't need to do this, if you installed >0.1.3, it was in the install and we took it out, but didn't put it in the update.xml</comment>
+        <find><![CDATA[img_button_topic_reply = button_topic_reply.gif*25*96]]></find>
+        <action type="after-add"><![CDATA[img_button_upload_image = button_upload_image.gif*25*119]]></action>
+      </edit>
+    </open>
+    <open src="styles/prosilver/template/viewtopic_body.html">
+      <edit>
+        <find><![CDATA[<!-- IF postrow.U_JABBER --><li class="jabber-icon"><a href="{postrow.U_JABBER}" onclick="popup(this.href, 550, 320); return false;" title="{L_JABBER}"><span>{L_JABBER}</span></a></li><!-- ENDIF -->]]></find>
+        <action type="after-add"><![CDATA[<!-- IF postrow.U_GALLERY --><li class="gallery-icon"><a href="{postrow.U_GALLERY}" title="{L_PERSONAL_ALBUM}"><span>{L_PERSONAL_ALBUM}h</span></a></li><!-- ENDIF -->]]></action>
+      </edit>
+    </open>
+    <open src="styles/prosilver/theme/stylesheet.css">
+      <edit>
+        <find><![CDATA[@import url("colours.css");]]></find>
+        <action type="after-add"><![CDATA[@import url("gallery_lytebox.css");]]></action>
+      </edit>
+    </open>
+    <open src="styles/prosilver/theme/buttons.css">
+      <edit>
+        <find><![CDATA[.buttons div.upload-icon	{ width: 119px; height: 25px; }]]></find>
+        <action type="replace-with"><![CDATA[]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[.icon-bookmark, .icon-bump, .icon-subscribe, .icon-unsubscribe, .icon-pages, .icon-search, .icon-gallery {]]></find>
+        <inline-edit>
+            <inline-find><![CDATA[, .icon-gallery]]></inline-find>
+            <inline-action type="replace-with"><![CDATA[]]></inline-action>
+        </inline-edit>
+      </edit>
+    </open>
+    <open src="styles/prosilver/theme/colours.css">
+      <edit>
+        <find><![CDATA[.upload-icon span	{ background-image: url("{T_IMAGESET_LANG_PATH}/button_upload_image.gif"); }]]></find>
+        <action type="replace-with"><![CDATA[]]></action>
+        <find><![CDATA[.icon-gallery					{ background-image: url("{T_THEME_PATH}/images/icon_gallery.gif"); }]]></find>
+        <action type="replace-with"><![CDATA[]]></action>
+      </edit>
+    </open>
+    <diy-instructions lang="en-gb">see normal install-file</diy-instructions>
+  </action-group>
+</mod>
