@@ -341,6 +341,8 @@ class ucp_gallery
 		global $db, $user, $auth, $template, $cache;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 
+		$gallery_root_path = GALLERY_ROOT_PATH;
+		
 		include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 		include_once($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
 
