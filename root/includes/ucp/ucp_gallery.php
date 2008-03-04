@@ -142,7 +142,8 @@ class ucp_gallery
 	function manage_albums()
 	{
 		global $db, $user, $auth, $template, $cache;
-		global $config, $phpbb_admin_path, $phpbb_root_path, $gallery_root_path, $phpEx;
+		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
+		$gallery_root_path = GALLERY_ROOT_PATH;
 
 		$parent_id = request_var('parent_id', $user->data['album_id']);
 		album_hacking($parent_id);
