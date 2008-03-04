@@ -539,7 +539,7 @@ switch ($mode)
 					{
 						$error .= (($error) ? '<br />' : '') . $user->lang['UPLOAD_NO_FILE'];
 					}
-					if (request_var('image_name', '', true) == '')
+					if ((request_var('image_name', '', true) == '') && (request_var('filename', '') != 'filename'))
 					{
 						$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_IMAGE_TITLE'];
 					}
@@ -561,6 +561,8 @@ switch ($mode)
 						'S_MULTI_IMAGES'		=> ($album_config['upload_images'] > 1) ? true : false,
 						'S_ALBUM_ACTION'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=upload&amp;album_id=$album_id"),
 
+						'IMAGE_RSZ_WIDTH'		=> $album_config['preview_rsz_width'],
+						'IMAGE_RSZ_HEIGHT'		=> $album_config['preview_rsz_height'],
 						'REQ_USERNAME'			=> (!$user->data['is_registered']) ? true : false,
 						'USERNAME'				=> request_var('username', '', true),
 						'IMAGE_NAME'			=> request_var('image_name', '', true),
