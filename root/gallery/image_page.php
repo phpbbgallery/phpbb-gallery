@@ -238,6 +238,13 @@ if ($album_config['rate'])
 				$ratebox = '<a href="' . append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login') . '">' . $user->lang['LOGIN_TO_RATE'] . '</a>';
 			}
 		}
+		else if ($user->data['user_id'] == $image_data['image_user_id'])
+		{
+			if ($album_data['album_rate_level'] == 0)
+			{
+				$ratebox = $user->lang['NO_RATE_ON_OWN_IMAGES'];
+			}
+		}
 		if (!$ratebox)
 		{
 			if (!$already_rated)

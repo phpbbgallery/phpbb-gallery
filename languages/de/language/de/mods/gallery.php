@@ -217,6 +217,7 @@ $lang = array_merge($lang, array(
 	'COMMENT_IMAGE'					=> 'Schreibt einen Kommentar über ein Bild im Album %s',
 
 	'ORIG_FILENAME'					=> 'Dateinamen als Bildname verwenden (das Eingabefeld ist unnütz)',
+	'NO_RATE_ON_OWN_IMAGES'			=> 'Du darfst deine eigenen Bilder nicht bewerten.',
 ));
 
 ?>

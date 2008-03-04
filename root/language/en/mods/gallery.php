@@ -217,6 +217,7 @@ $lang = array_merge($lang, array(
 	'COMMENT_IMAGE'					=> 'Posting a comment on an image in album %s',
 
 	'ORIG_FILENAME'					=> 'Take filename as Image-name (the insert-field is useless)',
+	'NO_RATE_ON_OWN_IMAGES'			=> 'You are not allowed to rate your own images.',
 ));
 
 ?>
