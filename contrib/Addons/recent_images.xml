@@ -10,7 +10,7 @@
     <mod-version>
       <major>1</major>
       <minor>0</minor>
-      <revision>0</revision>
+      <revision>1</revision>
     </mod-version>
     <installation>
       <level>easy</level>
@@ -36,6 +36,7 @@ $display = array(
 	'views'		=> true,
 	'ratings'	=> false,
 	'comments'	=> false,
+	'album'		=> true,
 );
 recent_gallery_images(1, 4, $display);]]></action>
       </edit>

@@ -75,11 +75,23 @@ function recent_gallery_images($rows, $columns, &$display)
 			$comment_sql1 = '';
 			$comment_sql2 = '';
 		}
+		if ($display['album'])
+		{
+			$album_sql1 = ', a.album_name, a.album_id';
+			$album_sql2 = '			LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' AS a
+				ON i.image_album_id = a.album_id';
+		}
+		else
+		{
+			$album_sql1 = '';
+			$album_sql2 = '';
+		}
 
-		$sql = "SELECT i.* $rate_sql1 $comment_sql1
+		$sql = "SELECT i.* $rate_sql1 $comment_sql1 $album_sql1
 			FROM " . GALLERY_IMAGES_TABLE . " AS i
 			$rate_sql2
 			$comment_sql2
+			$album_sql2
 			WHERE (i.image_album_id IN ($allowed_cat) 
 					OR i.image_album_id = " . PERSONAL_GALLERY . ")
 				AND i.image_approval = 1
@@ -133,6 +145,8 @@ function recent_gallery_images($rows, $columns, &$display)
 					'RATINGS'	=> ($display['ratings']) ? (($album_config['rate'] == 1) ? $picrow[$j]['rating'] : 0) : '',
 					'L_COMMENT'	=> ($display['comments']) ? (($picrow[$j]['comment'] == 1) ? $user->lang['COMMENT'] : $user->lang['COMMENTS']) : '',
 					'COMMENTS'	=> ($display['comments']) ? (($album_config['comment'] == 1) ? $picrow[$j]['comment'] : 0) : '',
+					'ALBUM'		=> ($display['album']) ? $picrow[$j]['album_name'] : '',
+					'U_ALBUM'	=> ($display['album']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $picrow[$j]['album_id']) : '',
 				));
 			}
 		}
