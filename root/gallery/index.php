@@ -54,7 +54,16 @@ display_albums(0, $mode);
 */
 include($phpbb_root_path . $gallery_root_path . 'includes/functions_recent.' . $phpEx);
 //(rows, columns)
-recent_gallery_images(1, 4);
+$display = array(
+	'name'		=> true,
+	'poster'	=> true,
+	'time'		=> true,
+	'views'		=> true,
+	'ratings'	=> false,
+	'comments'	=> false,
+	'album'		=> true,
+);
+recent_gallery_images(1, 4, $display);
 /*
 
 				$template->assign_block_vars('recent_pics.recent_detail', array(
