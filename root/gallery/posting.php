@@ -291,9 +291,10 @@ switch ($mode)
 					{
 						$image_data = array();
 
-						$image_data['image_type']	= $_FILES['image']['type'][$i];
-						$image_data['image_size']	= $_FILES['image']['size'][$i];
-						$image_data['image_tmp']	= $_FILES['image']['tmp_name'][$i];
+						$image_data['image_type']		= $_FILES['image']['type'][$i];
+						$image_data['image_size']		= $_FILES['image']['size'][$i];
+						$image_data['image_tmp']		= $_FILES['image']['tmp_name'][$i];
+						$image_data['image_tmp_name']	= $_FILES['image']['name'][$i];
 						if ($image_data['image_size'])
 						{
 							$loop = $loop + 1;
@@ -353,7 +354,7 @@ switch ($mode)
 								'image_album_name'	=> $album_data['album_name'],
 								'image_approval'	=> (!$album_data['album_approval']) ? 1 : 0,
 								'image_desc'		=> str_replace('{NUM}', $loop, request_var('message', '', true)),
-								'image_name'		=> str_replace('{NUM}', $loop, request_var('image_name', '', true)),
+								'image_name'		=> (request_var('filename', '') == 'filename') ? $image_data['image_tmp_name'] : str_replace('{NUM}', $loop, request_var('image_name', '', true)),
 								'image_time'		=> time() + $loop,
 								'thumbnail'			=> '',
 								'username'			=> request_var('username', $user->data['username']),

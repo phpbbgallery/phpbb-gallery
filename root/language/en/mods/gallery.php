@@ -211,6 +211,12 @@ $lang = array_merge($lang, array(
 	'DELETE_IMAGE2'					=> 'Delete image?',
 	'DELETE_IMAGE2_CONFIRM'			=> 'Are you sure you want to delete the image?',
 	'INVALID_USERNAME'				=> 'Your Username is invalid',
+
+	'VIEWING_ALBUM'					=> 'Viewing album %s',
+	'VIEWING_IMAGE'					=> 'Viewing image in album %s',
+	'COMMENT_IMAGE'					=> 'Posting a comment on an image in album %s',
+
+	'ORIG_FILENAME'					=> 'Take filename as Image-name (the insert-field is useless)',
 ));
 
 ?>

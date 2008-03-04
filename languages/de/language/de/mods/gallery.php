@@ -215,6 +215,8 @@ $lang = array_merge($lang, array(
 	'VIEWING_ALBUM'					=> 'Betrachtet Album %s',
 	'VIEWING_IMAGE'					=> 'Betrachtet ein Bild im Album %s',
 	'COMMENT_IMAGE'					=> 'Schreibt einen Kommentar über ein Bild im Album %s',
+
+	'ORIG_FILENAME'					=> 'Dateinamen als Bildname verwenden (das Eingabefeld ist unnütz)',
 ));
 
 ?>
