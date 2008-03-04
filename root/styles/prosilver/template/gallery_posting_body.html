@@ -32,7 +32,7 @@
 <div class="panel" id="postingbox">
 	<div class="inner">
 		<span class="corners-top"><span></span></span>
-		<h3><!-- IF S_COMMENT -->{L_POST_COMMENT}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF --></h3>
+		<h3><!-- IF S_COMMENT -->{L_POST_COMMENT}<!-- ELSEIF S_UPLOAD -->{L_UPLOAD_IMAGE}<!-- ELSE -->{L_EDIT_IMAGE}<!-- ENDIF --></h3>
 	<fieldset class="fields1">
 	<!-- IF ERROR --><p class="error">{ERROR}</p><!-- ENDIF -->
 
@@ -47,7 +47,7 @@
 					<dt><label for="title">{L_IMAGE_TITLE}:</label></dt>
 					<dd id="title"><input class="inputbox autowidth" type="text" name="image_name" value="{IMAGE_NAME}" size="60" /></dd>
 					<!-- IF S_MULTI_IMAGES --><dd id="title"><input class="inputbox autowidth" type="text" name="image_num" size="5" value="1" /> {L_LOOP_EXP}</dd><!-- ENDIF -->
-					<dd id="filename"><input type="checkbox" class="checkbox" name="filename" value="filename" /> {L_ORIG_FILENAME}</dd>
+					<!-- IF S_UPLOAD --><dd id="filename"><input type="checkbox" class="checkbox" name="filename" value="filename" /> {L_ORIG_FILENAME}</dd><!-- ENDIF -->
 				</dl>
 			<!-- ENDIF -->
 			<dl>

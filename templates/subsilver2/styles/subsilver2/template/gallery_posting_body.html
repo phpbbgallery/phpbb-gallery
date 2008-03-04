@@ -19,7 +19,7 @@
 <form name="upload" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data" onsubmit="return checkAlbumForm()">
 	<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
 		<tr>
-			<th colspan="2">{L_UPLOAD_IMAGE}</th>
+			<th colspan="2"><!-- IF S_COMMENT -->{L_POST_COMMENT}<!-- ELSEIF S_UPLOAD -->{L_UPLOAD_IMAGE}<!-- ELSE -->{L_EDIT_IMAGE}<!-- ENDIF --></th>
 		</tr>
 
 		<!-- IF ERROR -->
@@ -36,8 +36,11 @@
 		<!-- IF S_IMAGE -->
 			<tr>
 				<td class="row1" height="28"><span class="gen">{L_IMAGE_TITLE}:</span></td>
-				<td class="row2"><input class="inputbox autowidth" type="text" name="image_name" size="60" /><br /><br />
-					<!-- IF S_MULTI_IMAGES --><input class="inputbox autowidth" type="text" name="image_num" size="5" value="1" /> {L_LOOP_EXP}<!-- ENDIF --></td>
+				<td class="row2">
+					<input class="inputbox autowidth" type="text" name="image_name" size="60" /><br /><br />
+					<!-- IF S_MULTI_IMAGES --><input class="inputbox autowidth" type="text" name="image_num" size="5" value="1" /> {L_LOOP_EXP}<br /><br /><!-- ENDIF -->
+					<!-- IF S_UPLOAD --><input type="checkbox" class="checkbox" name="filename" value="filename" /> {L_ORIG_FILENAME}<!-- ENDIF -->
+				</td>
 			</tr>
 		<!-- ENDIF -->
 		<tr>
