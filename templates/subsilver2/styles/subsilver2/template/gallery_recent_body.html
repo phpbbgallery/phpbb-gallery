@@ -20,9 +20,14 @@
 	</tr>
 	<tr>
 		<!-- BEGIN pic_detail -->
-		<td class="row2"><span class="gensmall">{L_IMAGE_TITLE}: {picrow.pic_detail.TITLE}<br />
-			{L_POSTER}: {picrow.pic_detail.POSTER}<br />
-			{L_POSTED}: {picrow.pic_detail.TIME}</span></td>
+		<td class="row2"><span class="gensmall">
+			<!-- IF picrow.pic_detail.TITLE -->{L_IMAGE_TITLE}: {picrow.pic_detail.TITLE}<br /><!-- ENDIF -->
+			<!-- IF picrow.pic_detail.POSTER -->{L_POSTER}: {picrow.pic_detail.POSTER}<br /><!-- ENDIF -->
+			<!-- IF picrow.pic_detail.TIME -->{L_POSTED}: {picrow.pic_detail.TIME}<br /><!-- ENDIF -->
+			<!-- IF picrow.pic_detail.VIEWS -->{L_VIEWS}: {picrow.pic_detail.VIEWS}<br /><!-- ENDIF -->
+			<!-- IF picrow.pic_detail.RATINGS -->{L_RATING}: {picrow.pic_detail.RATINGS}<br /><!-- ENDIF -->
+			<!-- IF picrow.pic_detail.COMMENTS -->{picrow.pic_detail.L_COMMENT}: {picrow.pic_detail.COMMENTS}<br /><!-- ENDIF -->
+		</span></td>
 		<!-- END pic_detail -->
 		<!-- BEGIN picnodetail -->
 		<td class="row2"><span></span></td>

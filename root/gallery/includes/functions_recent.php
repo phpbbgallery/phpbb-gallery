@@ -13,7 +13,7 @@ if (!defined('IN_PHPBB'))
 {
 	die('Hacking attempt');
 }
-function recent_gallery_images($rows, $columns)
+function recent_gallery_images($rows, $columns, &$display)
 {
 	global $db, $phpEx, $user, $phpbb_root_path, $album_config, $config, $template;
 
@@ -22,42 +22,70 @@ function recent_gallery_images($rows, $columns)
 	$gallery_root_path = GALLERY_ROOT_PATH;
 	include_once("{$phpbb_root_path}{$gallery_root_path}includes/common.$phpEx");
 	include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
-$allowed_cat = $mod_cat = '';
-$sql = 'SELECT *
-	FROM ' . GALLERY_ALBUMS_TABLE . '
-	ORDER BY left_id ASC';
-$result = $db->sql_query($sql);
 
-while( $row = $db->sql_fetchrow($result) )
-{
-	$album_user_access = (!$row['album_user_id']) ? album_user_access($row['album_id'], $row, 1, 0, 0, 0, 0, 0) : personal_album_access($row['album_user_id']);
-	if ($album_user_access['view'] == 1)
+	$allowed_cat = $mod_cat = '';
+	$sql = 'SELECT *
+		FROM ' . GALLERY_ALBUMS_TABLE . '
+		ORDER BY left_id ASC';
+	$result = $db->sql_query($sql);
+
+	while( $row = $db->sql_fetchrow($result) )
 	{
-		$allowed_cat .= ($allowed_cat == '') ? $row['album_id'] : ', ' . $row['album_id'];
+		$album_user_access = (!$row['album_user_id']) ? album_user_access($row['album_id'], $row, 1, 0, 0, 0, 0, 0) : personal_album_access($row['album_user_id']);
+		if ($album_user_access['view'] == 1)
+		{
+			$allowed_cat .= ($allowed_cat == '') ? $row['album_id'] : ', ' . $row['album_id'];
+		}
+		if ($album_user_access['moderator'] == 1)
+		{
+			$mod_cat .= ($mod_cat == '') ? $row['album_id'] : ', ' . $row['album_id'];
+		}
 	}
-	if ($album_user_access['moderator'] == 1)
+	$personal_gallery_access = personal_gallery_access(1,1);
+	if ($personal_gallery_access['view'])
 	{
-		$mod_cat .= ($mod_cat == '') ? $row['album_id'] : ', ' . $row['album_id'];
+		$allowed_cat .= ($allowed_cat == '') ? PERSONAL_GALLERY : ', ' . PERSONAL_GALLERY;
 	}
-}
-$personal_gallery_access = personal_gallery_access(1,1);
-if ($personal_gallery_access['view'])
-{
-	$allowed_cat .= ($allowed_cat == '') ? PERSONAL_GALLERY : ', ' . PERSONAL_GALLERY;
-}
-//album_moderator_groups
+	//album_moderator_groups
+	$limit_sql = $rows * $columns;
+
+	if ($allowed_cat <> '')
+	{
 		$limit_sql = $rows * $columns;
-if ($allowed_cat <> '')
-{
-		$limit_sql = $rows * $columns;
-		$sql = 'SELECT i.*
-			FROM ' . GALLERY_IMAGES_TABLE . ' AS i
-			WHERE (i.image_album_id IN (' . $allowed_cat . ') 
-					OR i.image_album_id = ' . PERSONAL_GALLERY . ')
+
+		if ($display['ratings'])
+		{
+			$rate_sql1 = ', AVG(r.rate_point) AS rating';
+			$rate_sql2 = '			LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
+				ON i.image_id = r.rate_image_id';
+		}
+		else
+		{
+			$rate_sql1 = '';
+			$rate_sql2 = '';
+		}
+		if ($display['comments'])
+		{
+			$comment_sql1 = ', COUNT(DISTINCT c.comment_id) AS comment';
+			$comment_sql2 = '			LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
+				ON i.image_id = c.comment_image_id';
+		}
+		else
+		{
+			$comment_sql1 = '';
+			$comment_sql2 = '';
+		}
+
+		$sql = "SELECT i.* $rate_sql1 $comment_sql1
+			FROM " . GALLERY_IMAGES_TABLE . " AS i
+			$rate_sql2
+			$comment_sql2
+			WHERE (i.image_album_id IN ($allowed_cat) 
+					OR i.image_album_id = " . PERSONAL_GALLERY . ")
 				AND i.image_approval = 1
 			GROUP BY i.image_id
 			ORDER BY i.image_time DESC
-			LIMIT ' . $limit_sql;
+			LIMIT $limit_sql";
 		$result = $db->sql_query($sql);
 
 		$picrow = array();
@@ -88,22 +116,35 @@ if ($allowed_cat <> '')
 					'DESC'			=> $message_parser->message,
 				));
 
+				if ($display['ratings'] && !$picrow[$j]['rating'])
+				{
+					$picrow[$j]['rating'] = $user->lang['NOT_RATED'];
+				}
+				else if ($display['ratings'])
+				{
+					$picrow[$j]['rating'] = round($picrow[$j]['rating'], 2);
+				}
+
 				$template->assign_block_vars('picrow.pic_detail', array(
-					'TITLE'		=> $picrow[$j]['image_name'],
-					'POSTER'	=> get_username_string('full', $picrow[$j]['image_user_id'], (($picrow[$j]['image_user_id'] <> ANONYMOUS) ? $picrow[$j]['image_username'] : $user->lang['GUEST']), $picrow[$j]['image_user_colour']),
-					'TIME'		=> $user->format_date($picrow[$j]['image_time']),
+					'TITLE'		=> ($display['name']) ? ($picrow[$j]['image_name']) : '',
+					'POSTER'	=> ($display['poster']) ? (get_username_string('full', $picrow[$j]['image_user_id'], (($picrow[$j]['image_user_id'] <> ANONYMOUS) ? $picrow[$j]['image_username'] : $user->lang['GUEST']), $picrow[$j]['image_user_colour'])) : '',
+					'TIME'		=> ($display['time']) ? ($user->format_date($picrow[$j]['image_time'])) : '',
+					'VIEWS'		=> ($display['views']) ? $picrow[$j]['image_view_count'] : '',
+					'RATINGS'	=> ($display['ratings']) ? (($album_config['rate'] == 1) ? $picrow[$j]['rating'] : 0) : '',
+					'L_COMMENT'	=> ($display['comments']) ? (($picrow[$j]['comment'] == 1) ? $user->lang['COMMENT'] : $user->lang['COMMENTS']) : '',
+					'COMMENTS'	=> ($display['comments']) ? (($album_config['comment'] == 1) ? $picrow[$j]['comment'] : 0) : '',
 				));
 			}
 		}
-}
-else
-{
-	$template->assign_block_vars('no_pics', array());
-}
+	}
+	else
+	{
+		$template->assign_block_vars('no_pics', array());
+	}
 
-$template->assign_vars(array(
-	'S_COLS'				=> $columns,
-));
+	$template->assign_vars(array(
+		'S_COLS'				=> $columns,
+	));
 }
 
 ?>

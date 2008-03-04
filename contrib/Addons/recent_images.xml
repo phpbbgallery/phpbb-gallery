@@ -29,7 +29,15 @@
         <find><![CDATA[$user->setup('viewforum');]]></find>
         <action type="after-add"><![CDATA[include($phpbb_root_path . 'gallery/includes/functions_recent.' . $phpEx);
 //(rows, columns)
-recent_gallery_images(1, 4);]]></action>
+$display = array(
+	'name'		=> true,
+	'poster'	=> true,
+	'time'		=> true,
+	'views'		=> true,
+	'ratings'	=> false,
+	'comments'	=> false,
+);
+recent_gallery_images(1, 4, $display);]]></action>
       </edit>
     </open>
     <open src="styles/prosilver/template/index_body.html">
