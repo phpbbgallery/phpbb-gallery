@@ -74,7 +74,7 @@ function gallery_config_value($column, $value)
 }
 function add_bbcode($album_bbcode)
 {
-	global $db;
+	global $db, $config;
 
 	$sql = 'SELECT * FROM ' . BBCODES_TABLE . " WHERE bbcode_tag = '$album_bbcode'";
 	$result = $db->sql_query($sql);
@@ -86,13 +86,13 @@ function add_bbcode($album_bbcode)
 		$sql_ary = array(
 			'bbcode_tag'				=> $album_bbcode,
 			'bbcode_match'				=> '[' . $album_bbcode . ']{NUMBER}[/' . $album_bbcode . ']',
-			'bbcode_tpl'				=> '<a href="gallery/image_page.php?id={NUMBER}"><img src="gallery/thumbnail.php?pic_id={NUMBER}" /></a>',
+			'bbcode_tpl'				=> '<a href="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/image_page.php?image_id={NUMBER}"><img src="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/thumbnail.php?image_id={NUMBER}" /></a>',
 			'display_on_posting'		=> true,
 			'bbcode_helpline'			=> '',
 			'first_pass_match'			=> '!\[' . $album_bbcode . '\]([0-9]+)\[/' . $album_bbcode . '\]!i',
 			'first_pass_replace'		=> '[' . $album_bbcode . ':$uid]${1}[/' . $album_bbcode . ':$uid]',
 			'second_pass_match'			=> '!\[' . $album_bbcode . ':$uid\]([0-9]+)\[/' . $album_bbcode . ':$uid\]!s',
-			'second_pass_replace'		=> '<a href="gallery/image_page.php?id=${1}"><img src="gallery/thumbnail.php?pic_id=${1}" /></a>',
+			'second_pass_replace'		=> '<a href="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/image_page.php?image_id=${1}"><img src="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/thumbnail.php?image_id=${1}" /></a>',
 		);
 
 		$sql = 'SELECT MAX(bbcode_id) as max_bbcode_id
@@ -118,6 +118,14 @@ function add_bbcode($album_bbcode)
 		$sql_ary['bbcode_id'] = (int) $bbcode_id;
 
 		$db->sql_query('INSERT INTO ' . BBCODES_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+	}
+	else
+	{
+		$sql_ary = array(
+			'bbcode_tpl'				=> '<a href="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/image_page.php?image_id={NUMBER}"><img src="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/thumbnail.php?image_id={NUMBER}" /></a>',
+			'second_pass_replace'		=> '<a href="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/image_page.php?image_id=${1}"><img src="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/thumbnail.php?image_id=${1}" /></a>',
+		);
+		$db->sql_query('UPDATE ' . BBCODES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . ' WHERE bbcode_id = ' . (int) $row['bbcode_id']);
 	}
 }
 // What sql_layer should we use?
@@ -402,9 +410,11 @@ switch ($mode)
 		if ($update == 1)
 		{
 			//add new config-values
+			add_bbcode('album');
 			gallery_config_value('preview_rsz_height', 600);
 			gallery_config_value('preview_rsz_width', 800);
 			gallery_config_value('upload_images', 10);
+			gallery_config_value('thumbnail_info_line', 1);
 
 			//create some new columns
 			$phpbb_db_tools = new phpbb_db_tools($db);
