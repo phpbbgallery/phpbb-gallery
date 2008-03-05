@@ -353,9 +353,9 @@ $template->assign_vars(array(
 	'U_UPLOAD_IMAGE'			=> (!$album_data['album_user_id'] || ($album_data['album_user_id'] == $user->data['user_id'])) ?
 										append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=upload&amp;album_id=$album_id") : '',
 	'U_CREATE_ALBUM'			=> (($album_data['album_user_id'] == $user->data['user_id']) && $allowed_create) ?
-										append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=manage_albums&amp;action=create&amp;&parent_id=$album_id&amp;redirect=album") : '',
+										append_sid("{$phpbb_root_path}ucp.$phpEx", "i=gallery&amp;mode=manage_albums&amp;action=create&amp;&parent_id=$album_id&amp;redirect=album") : '',
 	'U_EDIT_ALBUM'				=> ($album_data['album_user_id'] == $user->data['user_id']) ?
-										append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=manage_albums&amp;action=edit&amp;&album_id=$album_id&amp;redirect=album") : '',
+										append_sid("{$phpbb_root_path}ucp.$phpEx", "i=gallery&amp;mode=manage_albums&amp;action=edit&amp;&album_id=$album_id&amp;redirect=album") : '',
 	'WAITING'					=> ($tot_unapproved == 0) ? '' : $tot_unapproved . $user->lang['WAITING_FOR_APPROVAL'],
 
 	'S_COLS'					=> $album_config['cols_per_page'],
