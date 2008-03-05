@@ -48,10 +48,12 @@ $album_user_access = (!$album_data['album_user_id']) ? album_user_access($album_
 if ($image_id)
 {
 	$image_backlink = append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id");
+	$image_loginlink = append_sid("{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id");
 }
 if ($album_id)
 {
 	$album_backlink = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id");
+	$album_loginlink = append_sid("{$gallery_root_path}album.$phpEx", "album_id=$album_id");
 }
 $index_backlink = append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx");
 
@@ -75,7 +77,7 @@ switch ($mode)
 				{
 					if (!$user->data['is_registered'])
 					{
-						login_box($album_backlink , $user->lang['LOGIN_EXPLAIN_UPLOAD']);
+						login_box($album_loginlink, $user->lang['LOGIN_EXPLAIN_UPLOAD']);
 					}
 					else
 					{
@@ -89,7 +91,7 @@ switch ($mode)
 				{
 					if (!$user->data['is_registered'])
 					{
-						login_box($image_backlink , $user->lang['LOGIN_INFO']);
+						login_box($image_loginlink , $user->lang['LOGIN_INFO']);
 					}
 					else
 					{
@@ -105,7 +107,7 @@ switch ($mode)
 				{
 					if (!$user->data['is_registered'])
 					{
-						login_box($image_backlink , $user->lang['LOGIN_INFO']);
+						login_box($image_loginlink , $user->lang['LOGIN_INFO']);
 					}
 					else
 					{
@@ -119,7 +121,7 @@ switch ($mode)
 				{
 					if (!$user->data['is_registered'])
 					{
-						login_box($image_backlink , $user->lang['LOGIN_INFO']);
+						login_box($image_loginlink , $user->lang['LOGIN_INFO']);
 					}
 					else
 					{
@@ -135,7 +137,7 @@ switch ($mode)
 				{
 					if (!$user->data['is_registered'])
 					{
-						login_box($image_backlink , $user->lang['LOGIN_INFO']);
+						login_box($image_loginlink , $user->lang['LOGIN_INFO']);
 					}
 					else
 					{
@@ -159,7 +161,7 @@ switch ($mode)
 		{
 			if (!$user->data['is_registered'])
 			{
-				login_box($image_backlink , $user->lang['LOGIN_EXPLAIN_UPLOAD']);
+				login_box($image_loginlink , $user->lang['LOGIN_EXPLAIN_UPLOAD']);
 			}
 			else
 			{
@@ -199,10 +201,6 @@ switch ($mode)
 			break;
 		}
 	break;
-//
-/*
-*/
-//
 	default:
 		trigger_error('MISSING_MODE');
 	break;
@@ -217,10 +215,6 @@ $template->assign_vars(array(
 
 switch ($mode)
 {
-//
-/*
-*/
-//
 	case 'image':
 	if ($mode == 'image')
 	{
@@ -898,10 +892,6 @@ switch ($mode)
 		));
 	}
 	break;
-//
-/*
-*/
-//
 }
 if($submit)
 {
