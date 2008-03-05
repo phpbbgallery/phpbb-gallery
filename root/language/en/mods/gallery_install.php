@@ -45,6 +45,14 @@ $lang = array_merge($lang, array(
 	'INSTALLER_CONVERT_WELCOME'			=> 'Welcome to the Convertmenu',
 	'INSTALLER_CONVERT_WELCOME_NOTE'	=> 'When you choose to convert the MOD, we try to copy the data of your older phpBB2 Installation.',
 
+	'INSTALLER_DELETE'					=> 'Delete',
+	'INSTALLER_DELETE_MENU'				=> 'Deletemenu',
+	'INSTALLER_DELETE_NOTE'				=> 'Delete',
+	'INSTALLER_DELETE_SUCCESSFUL'		=> 'Deleted the MOD successfully.<br />Now delete all files.',
+	'INSTALLER_DELETE_UNSUCCESSFUL'		=> 'Could <strong>not</strong> delete the MOD.',
+	'INSTALLER_DELETE_WELCOME'			=> 'Welcome to the Deletemenu',
+	'INSTALLER_DELETE_WELCOME_NOTE'		=> 'When you choose to delete the MOD, we remove all sql-data insert by the installation.',
+
 	'INSTALLER_INTRO'					=> 'Intro',
 	'INSTALLER_INTRO_WELCOME'			=> 'Welcome to the MOD Installation',
 	'INSTALLER_INTRO_WELCOME_NOTE'		=> 'Please choose what you want to do.',

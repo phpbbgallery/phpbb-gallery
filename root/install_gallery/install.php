@@ -55,6 +55,16 @@ function gallery_column($table, $column, $values)
 		$phpbb_db_tools->sql_column_add($table, $column, $values);
 	}
 }
+function delete_gallery_column($table, $column)
+{
+	global $db;
+
+	$phpbb_db_tools = new phpbb_db_tools($db);
+	if ($phpbb_db_tools->sql_column_exists($table, $column))
+	{
+		$phpbb_db_tools->sql_column_remove($table, $column);
+	}
+}
 function gallery_config_value($column, $value)
 {
 	global $db;
@@ -851,6 +861,37 @@ switch ($mode)
 			add_log('admin', 'phpBB Gallery converted to v' . $new_mod_version);
 			add_log('admin', 'LOG_PURGE_CACHE');
 			$converted = true;
+		}
+	break;
+	case 'delete':
+		$delete = request_var('delete', 0);
+		$deleted = false;
+		if ($delete == 1)
+		{
+			drop_dbs();
+			$bbcode_link1 = '<a href="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/image_page.php?image_id=${1}"><img src="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/thumbnail.php?image_id=${1}" /></a>';
+			$bbcode_link2 = '<a href="gallery/image_page.php?id=${1}"><img src="gallery/thumbnail.php?pic_id=${1}" /></a>';
+			$sql = 'DELETE FROM ' . BBCODES_TABLE . " WHERE second_pass_replace = '$bbcode_link1' or second_pass_replace = '$bbcode_link2';";
+			$db->sql_query($sql);
+			$acp_gallery_module = '';
+			$sql = 'SELECT *
+				FROM ' . MODULES_TABLE . "
+				WHERE module_basename = 'gallery'
+					AND module_class = 'acp'";
+			$result = $db->sql_query($sql);
+			while( $row = $db->sql_fetchrow($result) )
+			{
+				$acp_gallery_module .= (($acp_gallery_module) ? ', ' : '') . $row['parent_id'];
+			}
+			$sql = 'DELETE FROM ' . MODULES_TABLE . " WHERE module_basename = 'gallery' or module_id IN ($acp_gallery_module);";
+			$db->sql_query($sql);
+
+			delete_gallery_column(USERS_TABLE, 'album_id');
+			delete_gallery_column(GROUPS_TABLE, 'allow_personal_albums');
+			delete_gallery_column(GROUPS_TABLE, 'view_personal_albums');
+			delete_gallery_column(GROUPS_TABLE, 'personal_subalbums');
+			$cache->purge();
+			$deleted = true;
 		}
 	break;
 	default:
