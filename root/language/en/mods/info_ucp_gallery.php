@@ -66,6 +66,8 @@ $lang = array_merge($lang, array(
 	'NO_MORE_SUBALBUMS_ALLOWED'		=> 'You added your maximum of subalbums to your personal album',
 	'NO_PERSALBUM_ALLOWED'			=> 'You don\'t have the permissions create your personal album',
 	'GOTO'							=> 'Go To',
+
+	'EDIT_ALBUM'					=> 'edit this album',
 ));
 
 ?>

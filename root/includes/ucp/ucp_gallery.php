@@ -224,6 +224,8 @@ class ucp_gallery
 		global $db, $user, $auth, $template, $cache;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 
+		$gallery_root_path = GALLERY_ROOT_PATH;
+
 		include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
 		//check if the user has already reached his limit
@@ -258,6 +260,7 @@ class ucp_gallery
 		}
 
 		$submit = (isset($_POST['submit'])) ? true : false;
+		$redirect = request_var('redirect', '');
 
 		if(!$submit)
 		{
@@ -266,7 +269,7 @@ class ucp_gallery
 			$parents_list = personal_album_select($user->data['user_id'], $parent_id);
 			$template->assign_vars(array(
 				'S_CREATE_SUBALBUM'		=> true,
-				'S_UCP_ACTION'			=> $this->u_action . '&amp;action=create',
+				'S_UCP_ACTION'			=> $this->u_action . '&amp;action=create' . (($redirect != '') ? '&amp;redirect=album' : ''),
 				'L_TITLE'				=> $user->lang['CREATE_SUBALBUM'],
 				'L_TITLE_EXPLAIN'		=> $user->lang['CREATE_SUBALBUM_EXP'],
 
@@ -330,9 +333,10 @@ class ucp_gallery
 				$album_data['right_id'] = $row['right_id'] + 1;
 			}
 			$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
+			$redirect_album_id = $db->sql_nextid();
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 
-			trigger_error($user->lang['CREATED_SUBALBUM'] . '<br /><br /><a href="' . $this->u_action . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
+			trigger_error($user->lang['CREATED_SUBALBUM'] . '<br /><br /><a href="' . (($redirect) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$redirect_album_id") : $this->u_action) . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
 		}
 	}
 
@@ -350,6 +354,7 @@ class ucp_gallery
 		album_hacking($album_id);
 
 		$submit = (isset($_POST['submit'])) ? true : false;
+		$redirect = request_var('redirect', '');
 		if(!$submit)
 		{
 			$sql = 'SELECT *
@@ -371,7 +376,7 @@ class ucp_gallery
 				'L_TITLE'			=> $user->lang['EDIT_SUBALBUM'],
 				'L_TITLE_EXPLAIN'	=> $user->lang['EDIT_SUBALBUM_EXP'],
 
-				'S_ALBUM_ACTION' 			=> $this->u_action . '&amp;action=edit&amp;album_id=' . $album_id,
+				'S_ALBUM_ACTION' 			=> $this->u_action . '&amp;action=edit&amp;album_id=' . $album_id . (($redirect != '') ? '&amp;redirect=album' : ''),
 				'S_PARENT_OPTIONS'			=> '<option value="' . $user->data['album_id'] . '">' . $user->lang['NO_PARENT'] . '</option>' . $parents_list,
 
 				'ALBUM_NAME' 				=> $album_data['album_name'],
@@ -505,7 +510,7 @@ class ucp_gallery
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 
 			trigger_error($user->lang['EDITED_SUBALBUM'] . '<br /><br />
-				<a href="' . append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . (($album_data['parent_id']) ? $album_data['parent_id'] : $user->data['album_id'])) . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
+				<a href="' . (($redirect) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id") : append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . (($album_data['parent_id']) ? $album_data['parent_id'] : $user->data['album_id']))) . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
 		}
 	}
 

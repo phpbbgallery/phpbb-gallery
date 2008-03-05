@@ -21,6 +21,7 @@ include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 $user->session_begin();
 $auth->acl($user->data);
 $user->setup('mods/gallery');
+$user->setup('mods/info_ucp_gallery');
 
 
 //
@@ -309,33 +310,74 @@ $album_jumpbox .= '</select>';
 $album_jumpbox .= '<input type="hidden" name="sid" value="' . $user->data['session_id'] . '" /></p>';
 $album_jumpbox .= '</form>';
 
+$allowed_create = false;
+if ($album_data['album_user_id'] == $user->data['user_id'])
+{
+	$allowed_create = true;
+	$sql = 'SELECT MAX(g.allow_personal_albums) as allow_personal_albums, MAX(g.personal_subalbums) as personal_subalbums
+		FROM ' . GROUPS_TABLE . ' as g
+		LEFT JOIN ' . USER_GROUP_TABLE . " as ug
+			ON ug.group_id = g.group_id
+		WHERE ug.user_id = {$user->data['user_id']}
+			AND ug.user_pending = 0";
+	$result = $db->sql_query($sql);
+	$permission_data = $db->sql_fetchrow($result);
+	if ($permission_data['allow_personal_albums'] != 1)
+	{
+		$allowed_create = false;
+	}
+	else
+	{
+		$sql = 'SELECT MAX(g.allow_personal_albums) as allow_personal_albums, MAX(g.personal_subalbums) as personal_subalbums
+			FROM ' . GROUPS_TABLE . ' as g
+			LEFT JOIN ' . USER_GROUP_TABLE . " as ug
+				ON ug.group_id = g.group_id
+			WHERE ug.user_id = {$user->data['user_id']}
+				AND ug.user_pending = 0";
+		$result = $db->sql_query($sql);
+		$permission_data = $db->sql_fetchrow($result);
+		$sql = 'SELECT COUNT(album_id) as albums
+			FROM ' . GALLERY_ALBUMS_TABLE . "
+			WHERE album_user_id = {$user->data['user_id']}";
+		$result = $db->sql_query($sql);
+		$albums = $db->sql_fetchrow($result);
+		if (($albums['albums'] - 1) >= $permission_data['personal_subalbums'])
+		{
+			$allowed_create = false;
+		}
+	}
+}
 $template->assign_vars(array(
 	'S_MODE'					=> $album_data['album_type'],
-	'MODERATORS' 				=> $moderators_list,
-	'U_UPLOAD_IMAGE' 			=> (!$album_data['album_user_id'] || ($album_data['album_user_id'] == $user->data['user_id'])) ?
+	'MODERATORS'				=> $moderators_list,
+	'U_UPLOAD_IMAGE'			=> (!$album_data['album_user_id'] || ($album_data['album_user_id'] == $user->data['user_id'])) ?
 										append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=upload&amp;album_id=$album_id") : '',
-	'WAITING' 					=> ($tot_unapproved == 0) ? '' : $tot_unapproved . $user->lang['WAITING_FOR_APPROVAL'],
+	'U_CREATE_ALBUM'			=> (($album_data['album_user_id'] == $user->data['user_id']) && $allowed_create) ?
+										append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=manage_albums&amp;action=create&amp;&parent_id=$album_id&amp;redirect=album") : '',
+	'U_EDIT_ALBUM'				=> ($album_data['album_user_id'] == $user->data['user_id']) ?
+										append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=manage_albums&amp;action=edit&amp;&album_id=$album_id&amp;redirect=album") : '',
+	'WAITING'					=> ($tot_unapproved == 0) ? '' : $tot_unapproved . $user->lang['WAITING_FOR_APPROVAL'],
 
-	'S_COLS' 					=> $album_config['cols_per_page'],
-	'S_COL_WIDTH' 				=> (100/$album_config['cols_per_page']) . '%',
-	'ALBUM_JUMPBOX' 			=> $album_jumpbox,
-	'S_ALBUM_ACTION' 			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"),
+	'S_COLS'					=> $album_config['cols_per_page'],
+	'S_COL_WIDTH'				=> (100/$album_config['cols_per_page']) . '%',
+	'ALBUM_JUMPBOX'				=> $album_jumpbox,
+	'S_ALBUM_ACTION'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"),
 	'TARGET_BLANK' 				=> ($album_config['fullpic_popup']) ? 'target="_blank"' : '',
 
-	'SORT_TIME' 				=> ($sort_method == 'image_time') ? 'selected="selected"' : '',
-	'SORT_IMAGE_TITLE' 			=> ($sort_method == 'image_name') ? 'selected="selected"' : '',
+	'SORT_TIME'					=> ($sort_method == 'image_time') ? 'selected="selected"' : '',
+	'SORT_IMAGE_TITLE'			=> ($sort_method == 'image_name') ? 'selected="selected"' : '',
 	'SORT_USERNAME' 			=> ($sort_method == 'image_username') ? 'selected="selected"' : '',
-	'SORT_VIEW' 				=> ($sort_method == 'image_view_count') ? 'selected="selected"' : '',
+	'SORT_VIEW'					=> ($sort_method == 'image_view_count') ? 'selected="selected"' : '',
 
-	'SORT_RATING_OPTION' 		=> $sort_rating_option,
-	'SORT_COMMENTS_OPTION' 		=> $sort_comments_option,
-	'SORT_NEW_COMMENT_OPTION' 	=> $sort_new_comment_option,
-	'SORT_ASC' 					=> ($sort_order == 'ASC') ? 'selected="selected"' : '',
-	'SORT_DESC' 				=> ($sort_order == 'DESC') ? 'selected="selected"' : '',
-	'S_AUTH_LIST' 				=> $auth_list,
+	'SORT_RATING_OPTION'		=> $sort_rating_option,
+	'SORT_COMMENTS_OPTION'		=> $sort_comments_option,
+	'SORT_NEW_COMMENT_OPTION'	=> $sort_new_comment_option,
+	'SORT_ASC'					=> ($sort_order == 'ASC') ? 'selected="selected"' : '',
+	'SORT_DESC'					=> ($sort_order == 'DESC') ? 'selected="selected"' : '',
+	'S_AUTH_LIST'				=> $auth_list,
 
-	'U_RETURN_LINK' 			=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"),
-	'S_RETURN_LINK' 			=> $user->lang['GALLERY'],
+	'U_RETURN_LINK'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"),
+	'S_RETURN_LINK'				=> $user->lang['GALLERY'],
 ));
 
 // Output page

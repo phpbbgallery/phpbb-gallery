@@ -44,7 +44,8 @@
 
 <!-- IF U_MCP --><div style="float: right;">[<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</div><br clear="all" /><!-- ENDIF -->
 <h2><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>
-
+	<!-- IF U_EDIT_ALBUM --><br /><br /><strong><a href="{U_EDIT_ALBUM}">{L_EDIT_ALBUM}</a></strong><br /><!-- IF not U_CREATE_ALBUM --><br /><!-- ENDIF --><!-- ENDIF -->
+	<!-- IF U_CREATE_ALBUM --><strong><a href="{U_CREATE_ALBUM}">{L_CREATE_SUBALBUM}</a></strong><br /><br /><!-- ENDIF -->
 <table width="100%" cellspacing="1">
 	<tr>
 		<td align="{S_CONTENT_FLOW_BEGIN}" valign="middle" nowrap="nowrap"><!-- IF S_MODE == 2 && U_UPLOAD_IMAGE --><a href="{U_UPLOAD_IMAGE}" title="{L_UPLOAD_IMAGE}"><img src="{T_IMAGESET_LANG_PATH}/button_upload_image.gif" alt="{L_UPLOAD_IMAGE}" />{UPLOAD_IMG}</a><!-- ENDIF --></td>
