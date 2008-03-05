@@ -196,8 +196,8 @@ $lang = array_merge($lang, array(
 	'YOUR_PERSONAL_ALBUM'					=> 'Dein persönliches Album',
 	'YOUR_RATING'							=> 'Deine Bewertung',
 
-	'LOOP_EXP'								=> 'Wenn du mehrere Bilder auf einmal hochlädst, kannst du sie mit <span style="font-weight: bold;">{NUM}</span> in der Beschreibung und im Namen durchnummerieren.<br />
-												Der Zähler beginnt mit der Zahl, die du hier eingibst.',
+	'LOOP_EXP'								=> 'Wenn du mehrere Bilder auf einmal hochlädst, kannst du sie mit <span style="font-weight: bold;">{NUM}</span> in der Bildbeschreibung und im Bild-Titel durchnummerieren.<br />
+												Der Zähler beginnt mit der Zahl, die du hier eingibst. Beispiel: "Bild {NUM}" ergibt: "Bild 1", "Bild 2", usw.',
 	'MISSING_MODE'							=> 'Kein Mudus ausgewählt',
 	'MISSING_SUBMODE'						=> 'Kein Sub-Modus ausgewählt',
 	'MISSING_USERNAME'						=> 'Kein Benutzernamen angegeben',

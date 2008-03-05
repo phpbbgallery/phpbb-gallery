@@ -196,8 +196,8 @@ $lang = array_merge($lang, array(
 	'YOUR_PERSONAL_ALBUM'			=> 'Your Personal Album',
 	'YOUR_RATING'					=> 'Your rating',
 
-	'LOOP_EXP'						=> 'If you upload more than one file, you may include <span style="font-weight: bold;">{NUM}</span> into the imagename and description.<br />
-										It counts through the images, starting on the value you entered.',
+	'LOOP_EXP'						=> 'If you upload more than one file, you may include <span style="font-weight: bold;">{NUM}</span> into the Image Title and Image Description.<br />
+										It counts through the images, starting on the value you entered. Example: "Image {NUM}" addes up to "Image 1", "Image 2", etc.',
 	'MISSING_MODE'					=> 'No mode selected',
 	'MISSING_SUBMODE'				=> 'No submode selected',
 	'MISSING_USERNAME'				=> 'No Username entered',
