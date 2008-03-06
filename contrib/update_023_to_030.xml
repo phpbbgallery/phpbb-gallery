@@ -315,6 +315,17 @@ $user->add_lang('mods/gallery');]]></action>
         <action type="replace-with"><![CDATA[]]></action>
       </edit>
     </open>
-    <diy-instructions lang="en-gb">see normal install-file</diy-instructions>
+    <diy-instructions lang="en-gb">see normal install-file
+Please delete the following files, before copy the new root to your forum:
+gallery/album_personal.php
+gallery/album_personal_index.php
+gallery/edit.php
+gallery/image_delete.php
+gallery/upload.php
+styles/prosilver/template/gallery_edit_body.html
+styles/prosilver/template/gallery_upload_body.html
+styles/prosilver/template/gallery_personal_index_body.html
+styles/prosilver/template/gallery_personal_body.html
+    </diy-instructions>
   </action-group>
 </mod>
