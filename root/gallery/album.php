@@ -47,29 +47,25 @@ if(!$album_id)
 }
 $moderators_list = '';
 $total_pics = 0;
-$auth_data = $album_data = $catrows = array();
+$album_user_access = $album_data = $catrows = array();
 /**
 * Get this cat info
 */
 $album_data = get_album_info($album_id);
-$album_user_access = (!$album_data['album_user_id']) ? album_user_access($album_data['album_id'], $album_data, 1, 0, 0, 0, 0, 0) : personal_album_access($album_data['album_user_id']);
-if ($album_user_access['view'] == 1)
-{
-	$auth_data = album_user_access($album_id, $row, 1, 1, 1, 1, 1, 1);
-	$total_pics = $album_data['count'];
-}
+$album_user_access = (!$album_data['album_user_id']) ? album_user_access($album_data['album_id'], $album_data, 1, 1, 1, 1, 1, 1, 1) : personal_album_access($album_data['album_user_id']);
+$total_pics = $album_data['count'];
 /**
 * Build Auth List
 */
-$auth_key = array_keys($auth_data);
+$auth_key = array_keys($album_user_access);
 $auth_list = '';
-for ($i = 0; $i < (count($auth_data) - 1); $i++)// ignore MODERATOR in this loop
+for ($i = 0; $i < (count($album_user_access) - 1); $i++)// ignore MODERATOR in this loop
 {// we should skip a loop if RATE and COMMENT is disabled
 	if((($album_config['rate'] == 0) && ($auth_key[$i] == 'rate')) || (($album_config['comment'] == 0) && ($auth_key[$i] == 'comment')))
 	{
 		continue;
 	}
-	$auth_list .= ($auth_data[$auth_key[$i]] == 1) ? $user->lang['ALBUM_'. strtoupper($auth_key[$i]) .'_CAN'] : $user->lang['ALBUM_'. strtoupper($auth_key[$i]) .'_CANNOT'];
+	$auth_list .= ($album_user_access[$auth_key[$i]] == 1) ? $user->lang['ALBUM_'. strtoupper($auth_key[$i]) .'_CAN'] : $user->lang['ALBUM_'. strtoupper($auth_key[$i]) .'_CANNOT'];
 	$auth_list .= '<br />';
 }
 /**
@@ -106,7 +102,7 @@ if ($album_id <> 0)
 }
 /*if ($album_data['album_type'] == 2)
 { we just do this, when we have images */
-	if (($user->data['user_type'] == USER_FOUNDER) || ($auth_data['moderator'] == 1))
+	if (($user->data['user_type'] == USER_FOUNDER) || ($album_user_access['moderator'] == 1))
 	{
 		$template->assign_vars(array(
 			'U_MCP'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id"),
@@ -156,7 +152,7 @@ if ($album_id <> 0)
 	{
 		$limit_sql = ($start == 0) ? $pics_per_page : $start .','. $pics_per_page;
 		$pic_approval_sql = ' AND i.image_approval = 1';
-		if (($album_data['album_approval'] <> ALBUM_USER) && (($user->data['user_type'] == USER_FOUNDER) || (($auth_data['moderator'] == 1) && ($album_data['album_approval'] == ALBUM_MOD))))
+		if (($album_data['album_approval'] <> ALBUM_USER) && (($user->data['user_type'] == USER_FOUNDER) || (($album_user_access['moderator'] == 1) && ($album_data['album_approval'] == ALBUM_MOD))))
 		{
 				$pic_approval_sql = '';
 		}
@@ -208,7 +204,7 @@ if ($album_id <> 0)
 				$approval_link = false;
 				if ($album_data['album_approval'] <> ALBUM_USER)
 				{
-					if (($user->data['user_type'] == USER_FOUNDER) || (($auth_data['moderator'] == 1) && ($album_data['album_approval'] == ALBUM_MOD)))
+					if (($user->data['user_type'] == USER_FOUNDER) || (($album_user_access['moderator'] == 1) && ($album_data['album_approval'] == ALBUM_MOD)))
 					{
 						$approval_mode = ($picrow[$j]['image_approval'] == 0) ? 'approval' : 'unapproval';
 						$approval_link = '<a href="'. append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?mode=$approval_mode&amp;image_id=" . $picrow[$j]['image_id']) . '">';
@@ -228,7 +224,7 @@ if ($album_id <> 0)
 				));
 
 				$allow_edit = (
-					((!$album_data['album_user_id']) && (($auth_data['edit'] && ($picrow[$j]['image_user_id'] == $user->data['user_id'])) || ($auth_data['moderator'] && ($album_data['album_edit_level'] <> ALBUM_ADMIN))))
+					((!$album_data['album_user_id']) && (($album_user_access['edit'] && ($picrow[$j]['image_user_id'] == $user->data['user_id'])) || ($album_user_access['moderator'] && ($album_data['album_edit_level'] <> ALBUM_ADMIN))))
 					||
 					($album_data['album_user_id'] == $user->data['user_id'])
 					||
@@ -236,7 +232,7 @@ if ($album_id <> 0)
 				) ? true : false;
 
 				$allow_delete = (
-					((!$album_data['album_user_id']) && (($auth_data['delete'] && ($picrow[$j]['image_user_id'] == $user->data['user_id'])) || ($auth_data['moderator'] && ($album_data['album_delete_level'] <> ALBUM_ADMIN))))
+					((!$album_data['album_user_id']) && (($album_user_access['delete'] && ($picrow[$j]['image_user_id'] == $user->data['user_id'])) || ($album_user_access['moderator'] && ($album_data['album_delete_level'] <> ALBUM_ADMIN))))
 					||
 					($album_data['album_user_id'] == $user->data['user_id'])
 					||
@@ -253,8 +249,8 @@ if ($album_id <> 0)
 
 					'EDIT'		=> $allow_edit ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['EDIT_IMAGE'] . '</a>' : '',
 					'DELETE'	=> $allow_delete ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=delete&amp;album_id=$album_id&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['DELETE_IMAGE'] . '</a>' : '',
-					'MOVE'		=> ($auth_data['moderator']) ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?mode=move&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['MOVE'] . '</a>' : '',
-					'LOCK'		=> ($auth_data['moderator']) ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?mode=" . (($picrow[$j]['image_lock'] == 0) ? 'lock' : 'unlock') . "&amp;image_id=" . $picrow[$j]['image_id']) . '">' . (($picrow[$j]['image_lock'] == 0) ? $user->lang['LOCK'] : $user->lang['UNLOCK']) . '</a>' : '',
+					'MOVE'		=> ($album_user_access['moderator']) ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?mode=move&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['MOVE'] . '</a>' : '',
+					'LOCK'		=> ($album_user_access['moderator']) ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?mode=" . (($picrow[$j]['image_lock'] == 0) ? 'lock' : 'unlock') . "&amp;image_id=" . $picrow[$j]['image_id']) . '">' . (($picrow[$j]['image_lock'] == 0) ? $user->lang['LOCK'] : $user->lang['UNLOCK']) . '</a>' : '',
 					'IP'		=> ($user->data['user_type'] == USER_FOUNDER) ? $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $picrow[$j]['image_user_ip'] . '">' . $picrow[$j]['image_user_ip'] . '</a><br />' : ''
 
 					));
