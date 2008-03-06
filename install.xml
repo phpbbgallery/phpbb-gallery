@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
+<!-- $Id$ -->
+<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.0.xsd">
+  <header>
+    <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+    <title lang="en-gb">phpBB Gallery</title>
+    <description lang="en-gb"><![CDATA[This is a gallery for your phpBB3.
+It's based on the album MOD of smartor.
+The basement was developed by tsr.
+But since 0.1.2 I'm the only developer.
+For Features see the forum topic.]]></description>
+    <author-notes lang="en-gb">i hope you get it installed, otherwise you can ask for help on phpbb.de and phpbb.com</author-notes>
+    <author-group>
+      <author>
+        <realname>nickvergessen</realname>
+        <email>nickvergessen@gmx.de</email>
+        <username>nickvergessen</username>
+        <homepage>http://www.flying-bits.org</homepage>
+        <contributions />
+      </author>
+    </author-group>
+    <mod-version>
+      <major>0</major>
+      <minor>3</minor>
+      <revision>0</revision>
+    </mod-version>
+    <installation>
+      <level>easy</level>
+      <time>240</time>
+      <target-version>
+        <target-primary>3.0.0</target-primary>
+        <target-major allow="exact">3</target-major>
+        <target-minor allow="exact">0</target-minor>
+      </target-version>
+    </installation>
+    <history>
+      <entry>
+        <date>2008-03-06</date>
+        <rev-version>
+          <major>0</major>
+          <minor>3</minor>
+          <revision>0</revision>
+        </rev-version>
+        <changelog lang="en-GB">
+          <change><![CDATA[[Add] Report #138: Resize image in image view page]]></change>
+          <change><![CDATA[[Add] Report #195: Reduce SQL phpbb_users left join]]></change>
+          <change><![CDATA[[Add] Report #197: Personal Gallery Index - User colour are not showing...]]></change>
+          <change><![CDATA[[Add] Report #149: members should have the ability to create an album]]></change>
+          <change><![CDATA[[Add] Report #208: permissions for creating subalbums]]></change>
+          <change><![CDATA[[Add] Report #212: Multiple Upload]]></change>
+          <change><![CDATA[[Add] Report #15: edit and delete comments]]></change>
+          <change><![CDATA[[Add] Report #168: Persönliche Galerie verlinken]]></change>
+          <change><![CDATA[[Add] Report #213: SVN: move pic from private subalbum not possible]]></change>
+          <change><![CDATA[[Add] Report #211: Seitenauflistung in der "Wer ist online?"-Liste]]></change>
+          <change><![CDATA[[Add] Report #126: Optional black info line at bottom.]]></change>
+
+          <change><![CDATA[[Change] Report #173: [ACP] missing radio and checkbox classes...cosmetic.]]></change>
+          <change><![CDATA[[Change] Report #163: Deutsche Sprache: Gallery/Galerie]]></change>
+          <change><![CDATA[[Change] Report #188: MCP link 2 times]]></change>
+          <change><![CDATA[[Change] Report #143: Also show new personal images on index page]]></change>
+          <change><![CDATA[[Change] Report #215: Should not update session page on thumbnail view]]></change>
+          <change><![CDATA[[Change] Report #216: Album BBcode - mark in one click]]></change>
+
+          <change><![CDATA[[Fix] Report #167: Missing Lang: IMAGE_BBCODE]]></change>
+          <change><![CDATA[[Fix] Report #172: Undefined variable: sort_new_comment_option]]></change>
+          <change><![CDATA[[Fix] Report #175: SVN: Move images are not working anymore]]></change>
+          <change><![CDATA[[Fix] Report #182: View the last MESSAGE?]]></change>
+          <change><![CDATA[[Fix] Report #176: Album categorie - don't show "no pictures"]]></change>
+          <change><![CDATA[[Fix] Report #190: Commment]]></change>
+          <change><![CDATA[[Fix] Report #194: no personal images in recent images]]></change>
+          <change><![CDATA[[Fix] Report #196: MCP - Delete images are not working anymore...]]></change>
+          <change><![CDATA[[Fix] Report #198: personal gallery of xxxx - PHP Notice error]]></change>
+          <change><![CDATA[[Fix] Report #199: SVN: gallery/index.php - SQL Error]]></change>
+          <change><![CDATA[[Fix] Report #202: install.xml - Description typo]]></change>
+          <change><![CDATA[[Fix] Report #186: No more albums to move]]></change>
+          <change><![CDATA[[Fix] Report #169: {memberrow.ALBUM_FOLDER_IMG_SRC}]]></change>
+          <change><![CDATA[[Fix] Report #174: Personal Albums - Next / Previous Links]]></change>
+          <change><![CDATA[[Fix] Report #207: display nav-link when using recent_image addon]]></change>
+          <change><![CDATA[[Fix] Report #210: personal albums - ucp - move subulbums error]]></change>
+          <change><![CDATA[[Fix] Report #178: imagecreatefromjpeg(./..//gallery/upload/.jpg)]]></change>
+          <change><![CDATA[[Fix] Report #205: SQL Error on convert (guest comments)]]></change>
+          <change><![CDATA[[Fix] Report #201: wrong album link]]></change>
+          <change><![CDATA[[Fix] Report #164: Deutscher Sprachbutton (UPLOADIMAGE)]]></change>
+          <change><![CDATA[[Fix] Report #200: Truecolor+alpha channel watermark]]></change>
+          <change><![CDATA[[Fix] Report #203: root/gallery/index.htm loaded instead of index.php]]></change>
+          <change><![CDATA[[Fix] Report #209: Personal album permissions are messed up.]]></change>
+          <change><![CDATA[[Fix] Report #206: Small typo in german language]]></change>
+          <change><![CDATA[[Fix] Report #214: personal gallery: empty gallery problem.]]></change>
+          <change><![CDATA[[Fix] Report #192: upload error lang]]></change>
+          <change><![CDATA[[Fix] Report #177: categorie - last image are not shown if disapproved]]></change>
+        </changelog>
+      </entry>
+      <entry>
+        <date>2008-01-24</date>
+        <rev-version>
+          <major>0</major>
+          <minor>2</minor>
+          <revision>3</revision>
+        </rev-version>
+        <changelog lang="en-GB">
+          <change><![CDATA[Report #62: Watermark: Call to undefined function: imagecreatefromjpeg()]]></change>
+          <change><![CDATA[Report #90: Add gd_info function check into the installer]]></change>
+          <change><![CDATA[Report #100: bbcode]]></change>
+          <change><![CDATA[Report #102: Browsing Gallery while [ Test out user’s permissions ]]]></change>
+          <change><![CDATA[Report #120: styles/prosilver/imageset/icon_topic_latest.gif]]></change>
+          <change><![CDATA[Report #121: missing upload-line in subsilver2]]></change>
+          <change><![CDATA[Report #122: missing mass-upload modul]]></change>
+          <change><![CDATA[Report #124: Better remove thumbs.db]]></change>
+          <change><![CDATA[Report #125: pers. album: default sort gives error messages]]></change>
+          <change><![CDATA[Report #127: missing {S_FORM_TOKEN} in subsilver2]]></change>
+          <change><![CDATA[Report #130: missing "yes" in subsilver2 on delete-confirm]]></change>
+          <change><![CDATA[Report #131: UTF is absent]]></change>
+          <change><![CDATA[Report #132: Wrong premission to Anonymus]]></change>
+          <change><![CDATA[Report #135: Unknown column 'username' in album_personal.php]]></change>
+          <change><![CDATA[Report #137: Gallery is open when board is disabled]]></change>
+          <change><![CDATA[Report #139: not valid]]></change>
+          <change><![CDATA[Report #140: double entry for gallery index in navlinks on upload page]]></change>
+          <change><![CDATA[Report #141: language attribute in <script> tags]]></change>
+          <change><![CDATA[Report #145: confusing default: category]]></change>
+          <change><![CDATA[Report #148: Unknown column 'rating' in 'order clause' [1054]]]></change>
+          <change><![CDATA[Report #153: Missing form around rating in subsilver2]]></change>
+          <change><![CDATA[Report #157: Last image sorting not working]]></change>
+          <change><![CDATA[Report #158: colour username on personal gallery empty]]></change>
+          <change><![CDATA[Report #159: english typo: Thias file type is not allowed]]></change>
+          <change><![CDATA[Report #160: dead link on image comment]]></change>
+          <change><![CDATA[Report #161: empty error message on gallery/album.php]]></change>
+        </changelog>
+      </entry>
+      <entry>
+        <date>2008-01-08</date>
+        <rev-version>
+          <major>0</major>
+          <minor>2</minor>
+          <revision>2</revision>
+        </rev-version>
+        <changelog lang="en-GB">
+          <change><![CDATA[Report #63: Column 'comment_edit_time' cannot be null]]></change>
+          <change><![CDATA[Report #65: Zip Upload]]></change>
+          <change><![CDATA[Report #66: Unknown column 'pic_time' in 'order clause' [1054]]]></change>
+          <change><![CDATA[Report #67: Album permissions not saved]]></change>
+          <change><![CDATA[Report #68: Subalbums not visible]]></change>
+          <change><![CDATA[Report #69: Images in subalbums not counted]]></change>
+          <change><![CDATA[Report #70: modcp - old var "cat_id"]]></change>
+          <change><![CDATA[Report #71: lock / move links to modcp are using not image_id]]></change>
+          <change><![CDATA[Report #72: modcp : moving images not possible]]></change>
+          <change><![CDATA[Report #73: lang var error : MOVE_TO_CATEGORY not exists]]></change>
+          <change><![CDATA[Report #74: lang var missing: LOGIN_EXPLAIN_UPLOAD]]></change>
+          <change><![CDATA[Report #75: Update: Column 'comment_edit_time' cannot be null]]></change>
+          <change><![CDATA[Report #76: PIC_TITLE not defined]]></change>
+          <change><![CDATA[Report #77: No recent images]]></change>
+          <change><![CDATA[Report #78: Column was set to data type implicit default;]]></change>
+          <change><![CDATA[Report #79: Gäste Berechtigung wird nicht gespeichert]]></change>
+          <change><![CDATA[Report #80: value "array()" on bbcode-texts]]></change>
+          <change><![CDATA[Report #81: last edit username is not coloured]]></change>
+          <change><![CDATA[Report #82: Upload Button is not showing correct in RC8]]></change>
+          <change><![CDATA[Report #83: Remove personal gallery link when logged out]]></change>
+          <change><![CDATA[Report #84: There is no more categories which you have permisson to move images to]]></change>
+          <change><![CDATA[Report #85: Error message when deleting a image]]></change>
+          <change><![CDATA[Report #86: Album Permissions 0.2.1]]></change>
+          <change><![CDATA[Report #91: Undefined variable: tot_unapproved on album.php]]></change>
+          <change><![CDATA[Report #94: Incorrect cuting symbols in album_personal_index.php]]></change>
+          <change><![CDATA[Report #96: $sort_new_comment_option = ''; missing]]></change>
+          <change><![CDATA[Report #99: Mass-upload in ACP]]></change>
+          <change><![CDATA[Report #101: subsilver2]]></change>
+          <change><![CDATA[Report #103: album.php missing $]]></change>
+          <change><![CDATA[Report #105: last_pic in personal_album on sort]]></change>
+          <change><![CDATA[Report #106: Errormessage when trying to approve Pictures]]></change>
+          <change><![CDATA[Report #107: next and previous image]]></change>
+          <change><![CDATA[Report #108: thumbnails error if cache is deleted]]></change>
+          <change><![CDATA[Report #109: Links to Albums on Gallery Index are not shown.]]></change>
+          <change><![CDATA[Report #110: Image_page.php throws out some php notices...]]></change>
+          <change><![CDATA[Report #111: CVS: Open the latest picture of a album: php notice error.]]></change>
+          <change><![CDATA[Report #112: image_page.php : next/previous error with disapproved pics]]></change>
+          <change><![CDATA[Report #113: Undefined variable: auth_data]]></change>
+          <change><![CDATA[Report #114: Images are not counted on gallery index and sub-album index]]></change>
+          <change><![CDATA[Report #115: MCP - double breadcrumps, wrong usernames of pers. galleries]]></change>
+          <change><![CDATA[Report #116: Subalbums not included in recent pictures?]]></change>
+          <change><![CDATA[Report #117: Upload-Button shows no info text]]></change>
+          <change><![CDATA[Report #118: missing breadcrumbs on empty comment]]></change>
+          <change><![CDATA[Report #119: if ($auth->acl_get('f_list', $row['album_id']))]]></change>
+        </changelog>
+      </entry>
+      <entry>
+        <date>2007-11-27</date>
+        <rev-version>
+          <major>0</major>
+          <minor>2</minor>
+          <revision>1</revision>
+        </rev-version>
+        <changelog lang="en-GB">
+          <change><![CDATA[Report #64: wrong parse of bbcode on install.php]]></change>
+        </changelog>
+      </entry>
+      <entry>
+        <date>2007-11-26</date>
+        <rev-version>
+          <major>0</major>
+          <minor>2</minor>
+          <revision>0</revision>
+        </rev-version>
+        <changelog lang="en-GB">
+          <change><![CDATA[Report #47: which word to use]]></change>
+          <change><![CDATA[Report #48: missing constants in acp]]></change>
+          <change><![CDATA[Report #49: Cannot use a scalar value as an array]]></change>
+          <change><![CDATA[Report #50: missing german button]]></change>
+          <change><![CDATA[Report #51: Sub-Albums]]></change>
+          <change><![CDATA[Report #52: IP false on smartor]]></change>
+          <change><![CDATA[Report #54: Error from deleting L_ - Helmut]]></change>
+          <change><![CDATA[Report #55: installer wrong column_name]]></change>
+          <change><![CDATA[Report #56: includes/acp/acp_gallery.php: Cannot use a scalar value as an array]]></change>
+          <change><![CDATA[Report #57: Deleting last album error]]></change>
+          <change><![CDATA[Report #58: Personal Album - Undefined index: pic_desc_bbcode_uid]]></change>
+          <change><![CDATA[Report #59: Installer forgot to activate the new modul "personal album permission"]]></change>
+          <change><![CDATA[Report #60: MySQL-Fehler wenn man im ACP Alben managen will.]]></change>
+          <change><![CDATA[Report #61: [HARD] 'U_GALLERY']]></change>
+        </changelog>
+      </entry>
+      <entry>
+        <date>2007-11-12</date>
+        <rev-version>
+          <major>0</major>
+          <minor>1</minor>
+          <revision>3</revision>
+        </rev-version>
+        <changelog lang="en-GB">
+          <change><![CDATA[Report #1: [Security] $album_root_path]]></change>
+          <change><![CDATA[Report #3: [np] image_delete.php]]></change>
+          <change><![CDATA[Report #4: $phpbb_root_path = '../';]]></change>
+          <change><![CDATA[Report #5: Dr.Death class="row1" is no more... long live bg]]></change>
+          <change><![CDATA[Report #6: Dr.Death gallery/upload.php store ip]]></change>
+          <change><![CDATA[Report #7: Dr.Death Wenn man im persönlichen Album ist und ein Bild sperren möchte]]></change>
+          <change><![CDATA[Report #8: xhtml strict album_personal.php]]></change>
+          <change><![CDATA[Report #9: Dr.Death Problems with UTF8 --> ae ue oe --> ?? ?? ??]]></change>
+          <change><![CDATA[Report #10: xhtml strict styles\subsilver2\template\gallery_album_body.html]]></change>
+          <change><![CDATA[Report #11: gallery\includes\common.php]]></change>
+          <change><![CDATA[Report #12: BB-Codes für Kategorie-Beschreibung]]></change>
+          <change><![CDATA[Report #13: </from> in ACP]]></change>
+          <change><![CDATA[Report #14: Geisthund: edit the text on a photo]]></change>
+          <change><![CDATA[Report #16: $board_config is no more....]]></change>
+          <change><![CDATA[Report #17: Image details on thumbnails.]]></change>
+          <change><![CDATA[Report #18: wrong redirect to album_cat if image aproval enabled]]></change>
+          <change><![CDATA[Report #19: ACP permissions....]]></change>
+          <change><![CDATA[Report #20: Groupname of Special Groups are "wrong"]]></change>
+          <change><![CDATA[Report #21: UTF8 support in acp_gallery and addslashes...]]></change>
+          <change><![CDATA[Report #22: Better Coding guidelines....]]></change>
+          <change><![CDATA[Report #23: personal album not working if set permission to "privat"]]></change>
+          <change><![CDATA[Report #24: [Security] if (!defined('IN_PHPBB')) missing in languages]]></change>
+          <change><![CDATA[Report #25: Login Box on gallery index not working]]></change>
+          <change><![CDATA[Report #26: Logical error in album_personal.php]]></change>
+          <change><![CDATA[Report #27: ACP - gallery permission bug]]></change>
+          <change><![CDATA[Report #28: acp_gallery.php missing language vars.]]></change>
+          <change><![CDATA[Report #29: its the otherway round with "L_"]]></change>
+          <change><![CDATA[Report #30: Hamster: wrong links on "album_personal_index.php"]]></change>
+          <change><![CDATA[Report #32: watermark]]></change>
+          <change><![CDATA[Report #33: Manage Album - Error on submit]]></change>
+          <change><![CDATA[Report #34: Wrong navigation links in personal albums]]></change>
+          <change><![CDATA[Report #35: MCP - Missing lang vars if no cat was specified....]]></change>
+          <change><![CDATA[Report #36: Missing navigation links in several files]]></change>
+          <change><![CDATA[Report #37: BB-Codes für den Rest]]></change>
+          <change><![CDATA[Report #39: the installer]]></change>
+          <change><![CDATA[Report #40: the updater]]></change>
+          <change><![CDATA[Report #41: Missing the Keys on the Installation]]></change>
+          <change><![CDATA[Report #42: Comments and Rating of Images are not possible!]]></change>
+          <change><![CDATA[Report #43: reparse bbcodes on image edit]]></change>
+          <change><![CDATA[Report #44: smiles in pic description brakes the style on gallery/album.php]]></change>
+          <change><![CDATA[Report #45: same as Report44 but on recent pics and personal album]]></change>
+          <change><![CDATA[Report #46: colour the usernames]]></change>
+          <change><![CDATA[Report #53: UTF-8 compatible?]]></change>
+        </changelog>
+      </entry>
+    </history>
+    <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
+  </header>
+  <action-group>
+    <copy>
+      <file from="root/adm/style/acp_gallery.html" to="adm/style/acp_gallery.html" />
+      <file from="root/gallery/*.*" to="gallery/*.*" />
+      <file from="root/gallery/includes/*.*" to="gallery/includes/*.*" />
+      <file from="root/gallery/upload/*.*" to="gallery/upload/*.*" />
+      <file from="root/gallery/upload/cache/*.*" to="gallery/upload/cache/*.*" />
+      <file from="root/includes/acp/acp_gallery.php" to="includes/acp/acp_gallery.php" />
+      <file from="root/includes/acp/info/acp_gallery.php" to="includes/acp/info/acp_gallery.php" />
+      <file from="root/install_gallery/*.*" to="install_gallery/*.*" />
+      <file from="root/install_gallery/schemas/*.*" to="install_gallery/schemas/*.*" />
+      <file from="root/language/en/mods/*.*" to="language/en/mods/*.*" />
+      <file from="root/styles/prosilver/imageset/en/button_upload_image.gif" to="styles/prosilver/imageset/en/button_upload_image.gif" />
+      <file from="root/styles/prosilver/imageset/icon_contact_gallery.gif" to="styles/prosilver/imageset/icon_contact_gallery.gif" />
+      <file from="root/styles/prosilver/template/*.*" to="styles/prosilver/template/*.*" />
+      <file from="root/styles/prosilver/theme/gallery_lytebox.css" to="styles/prosilver/theme/gallery_lytebox.css" />
+      <file from="root/styles/prosilver/theme/images/gallery_lytebox/*.*" to="styles/prosilver/theme/images/gallery_lytebox/*.*" />
+      <file from="root/styles/prosilver/theme/images/icon_gallery.gif" to="styles/prosilver/theme/images/icon_gallery.gif" />
+    </copy>
+    <open src="viewonline.php">
+      <edit>
+        <find><![CDATA[$forum_data = array();
+while ($row = $db->sql_fetchrow($result))
+{
+	$forum_data[$row['forum_id']] = $row;
+}
+$db->sql_freeresult($result);]]></find>
+        <action type="after-add"><![CDATA[// Album info
+$sql = 'SELECT *
+	FROM ' . GALLERY_ALBUMS_TABLE . '
+	ORDER BY left_id ASC';
+$result = $db->sql_query($sql, 600);
+
+$album_data = array();
+while ($row = $db->sql_fetchrow($result))
+{
+	$album_data[$row['album_id']] = $row;
+}
+$db->sql_freeresult($result);
+include("$phpbb_root_path" . GALLERY_ROOT_PATH . "includes/common.$phpEx");
+$user->add_lang('mods/gallery');]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[	preg_match('#^([a-z/]+)#i', $row['session_page'], $on_page);
+	if (!sizeof($on_page))
+	{
+		$on_page[1] = '';
+	}]]></find>
+        <action type="after-add"><![CDATA[	//check for the gallery
+	if ((utf8_substr($on_page[1], 0, utf8_strlen($gallery_root_path))) == $gallery_root_path)
+	{
+		$on_page_fake[1] = $on_page[1];
+		$on_page[1] = utf8_substr($on_page[1], 0, utf8_strlen($gallery_root_path));
+	}]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[		case 'report':
+			$location = $user->lang['REPORTING_POST'];
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;]]></find>
+        <action type="after-add"><![CDATA[		case $gallery_root_path:
+			@$album_data[0]['album_name'];
+			preg_match('#_album_id_=([0-9]+)x#i', $row['session_page'], $album_id);
+			$album_id = (sizeof($album_id)) ? (int) $album_id[1] : 0;
+			$album_user_access = ($album_id) ? ((!$album_data[$album_id]['album_user_id']) ? album_user_access($album_id, $album_data[$album_id], 1, 0, 0, 0, 0, 0) : personal_album_access($album_data[$album_id]['album_user_id'])) : array();
+
+			preg_match('#^([a-z/]+)#i', $row['session_page'], $gallery_page);
+			if ($album_id && $album_user_access['view'])
+			{
+				switch ($gallery_page[1])
+				{
+					case $gallery_root_path . 'album':
+						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_id);
+						$location = sprintf($user->lang['VIEWING_ALBUM'], $album_data[$album_id]['album_name']);
+					break;
+					case $gallery_root_path . 'image_page':
+					case $gallery_root_path . 'image':
+						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_id);
+						$location = sprintf($user->lang['VIEWING_IMAGE'], $album_data[$album_id]['album_name']);
+					break;
+					case $gallery_root_path . 'posting':
+						preg_match('#mode=([a-z]+)#', $row['session_page'], $on_page);
+						$on_page = (sizeof($on_page)) ? $on_page[1] : '';
+
+						switch ($on_page)
+						{
+							case 'comment':
+								$location = sprintf($user->lang['COMMENT_IMAGE'], $album_data[$album_id]['album_name']);
+							break;
+
+							default:
+								$location = sprintf($user->lang['VIEWING_ALBUM'], $album_data[$album_id]['album_name']);
+
+							break;
+						}
+						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_id);
+					break;
+					default:
+						$location = $user->lang['GALLERY'];
+						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx");
+					break;
+				}
+			}
+			else
+			{
+				preg_match('#mode=([a-z]+)#', $row['session_page'], $on_page);
+				$on_page = (sizeof($on_page)) ? $on_page[1] : '';
+				switch ($on_page)
+				{
+					case 'personal':
+						$location = $user->lang['PERSONAL_ALBUMS'];
+						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal');
+					break;
+					default:
+						$location = $user->lang['GALLERY'];
+						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx");
+					break;
+				}
+			}
+		break;]]></action>
+      </edit>
+    </open>
+    <open src="viewtopic.php">
+      <edit>
+        <find><![CDATA['REPORT_IMG'		=> $user->img('icon_post_report', 'REPORT_POST'),]]></find>
+        <action type="before-add"><![CDATA['GALLERY_IMG'		=> $user->img('icon_contact_gallery', 'PERSONAL_ALBUM'),]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA['jabber'			=> '',]]></find>
+        <action type="after-add"><![CDATA['personal_album'	=> '',]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA['jabber'		=> ($row['user_jabber'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=jabber&amp;u=$poster_id") : '',]]></find>
+        <action type="after-add"><![CDATA['personal_album'	=> ($row['album_id']) ? append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "album.$phpEx", "album_id=" . $row['album_id']) : '',]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA['U_JABBER'		=> $user_cache[$poster_id]['jabber'],]]></find>
+        <action type="after-add"><![CDATA['U_GALLERY'		=> $user_cache[$poster_id]['personal_album'],]]></action>
+      </edit>
+    </open>
+    <open src="includes/constants.php">
+      <edit>
+        <find><![CDATA[// Additional tables]]></find>
+        <action type="after-add"><![CDATA[define('GALLERY_ROOT_PATH', 'gallery/');
+
+define('GALLERY_ALBUMS_TABLE',			$table_prefix . 'gallery_albums');
+define('GALLERY_COMMENTS_TABLE',		$table_prefix . 'gallery_comments');
+define('GALLERY_CONFIG_TABLE',			$table_prefix . 'gallery_config');
+define('GALLERY_IMAGES_TABLE',			$table_prefix . 'gallery_images');
+define('GALLERY_RATES_TABLE',			$table_prefix . 'gallery_rates');]]></action>
+      </edit>
+    </open>
+    <open src="includes/functions.php">
+      <edit>
+        <find><![CDATA[// The following assigns all _common_ variables that may be used at any point in a template.]]></find>
+        <action type="after-add"><![CDATA[	$user->add_lang('mods/info_acp_gallery');]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA['L_ONLINE_EXPLAIN'	=> $l_online_time,]]></find>
+        <action type="before-add"><![CDATA[		'U_GALLERY_MOD'			=> append_sid("{$phpbb_root_path}gallery/index.$phpEx"),]]></action>
+      </edit>
+    </open>
+    <open src="includes/functions_user.php">
+      <edit>
+        <find><![CDATA[TOPICS_TABLE			=> array('topic_first_poster_name', 'topic_last_poster_name'),]]></find>
+        <action type="after-add"><![CDATA[GALLERY_IMAGES_TABLE	=> array('image_username'),]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[	if ($config['newest_username'] == $old_name)]]></find>
+        <action type="before-add"><![CDATA[	$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
+		SET album_name = '" . $db->sql_escape($new_name) . "'
+		WHERE album_name = '" . $db->sql_escape($old_name) . "'
+			AND album_user_id != 0
+			AND parent_id = 0";
+	$db->sql_query($sql);]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[		$sql = 'UPDATE ' . TOPICS_TABLE . " SET topic_last_poster_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('topic_last_poster_id', $user_id_ary);
+		$db->sql_query($sql);]]></find>
+        <action type="after-add"><![CDATA[		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " SET image_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('image_user_id', $user_id_ary);
+		$db->sql_query($sql);]]></action>
+      </edit>
+    </open>
+    <open src="includes/session.php">
+      <edit>
+        <find><![CDATA[$this->page['page'] .= (isset($_REQUEST['f'])) ? ((strpos($this->page['page'], '?') !== false) ? '&' : '?') . '_f_=' . (int) $_REQUEST['f'] . 'x' : '';]]></find>
+        <action type="after-add"><![CDATA[$this->page['page'] .= (isset($_REQUEST['album_id'])) ? ((strpos($this->page['page'], '?') !== false) ? '&' : '?') . '_album_id_=' . (int) $_REQUEST['album_id'] . 'x' : '';]]></action>
+      </edit>
+    </open>
+    <open src="includes/acp/acp_styles.php">
+      <edit>
+        <find><![CDATA['icon_back_top', 'icon_contact_aim', 'icon_contact_email', 'icon_contact_icq', 'icon_contact_jabber', 'icon_contact_msnm', 'icon_contact_pm', 'icon_contact_yahoo', 'icon_contact_www', 'icon_post_delete', 'icon_post_edit', 'icon_post_info', 'icon_post_quote', 'icon_post_report', 'icon_user_online', 'icon_user_offline', 'icon_user_profile', 'icon_user_search', 'icon_user_warn', 'button_pm_forward', 'button_pm_new', 'button_pm_reply', 'button_topic_locked', 'button_topic_new', 'button_topic_reply',]]></find>
+        <inline-edit>
+            <inline-find><![CDATA[ 'button_topic_reply',]]></inline-find>
+            <inline-action type="after-add"><![CDATA[ 'button_upload_image',]]></inline-action>
+        </inline-edit>
+      </edit>
+    </open>
+    <open src="styles/prosilver/imageset/en/imageset.cfg">
+      <edit>
+        <find><![CDATA[img_button_topic_reply = button_topic_reply.gif*25*96]]></find>
+        <action type="after-add"><![CDATA[img_button_upload_image = button_upload_image.gif*25*119]]></action>
+      </edit>
+    </open>
+    <open src="styles/prosilver/template/overall_header.html">
+      <edit>
+        <find><![CDATA[<li class="icon-faq"><a href="{U_FAQ}" title="{L_FAQ_EXPLAIN}">{L_FAQ}</a></li>]]></find>
+        <action type="after-add"><![CDATA[<li class="icon-gallery"><a href="{U_GALLERY_MOD}" title="{L_GALLERY_EXPLAIN}">{L_GALLERY}</a></li>]]></action>
+      </edit>
+    </open>
+    <open src="styles/prosilver/template/viewtopic_body.html">
+      <edit>
+        <find><![CDATA[<!-- IF postrow.U_JABBER --><li class="jabber-icon"><a href="{postrow.U_JABBER}" onclick="popup(this.href, 550, 320); return false;" title="{L_JABBER}"><span>{L_JABBER}</span></a></li><!-- ENDIF -->]]></find>
+        <action type="after-add"><![CDATA[<!-- IF postrow.U_GALLERY --><li class="gallery-icon"><a href="{postrow.U_GALLERY}" title="{L_PERSONAL_ALBUM}"><span>{L_PERSONAL_ALBUM}h</span></a></li><!-- ENDIF -->]]></action>
+      </edit>
+    </open>
+    <open src="styles/prosilver/theme/stylesheet.css">
+      <edit>
+        <find><![CDATA[@import url("colours.css");]]></find>
+        <action type="after-add"><![CDATA[@import url("gallery_lytebox.css");]]></action>
+      </edit>
+    </open>
+    <diy-instructions lang="en-gb">browse to install_gallery/install.php and run the installer</diy-instructions>
+  </action-group>
+</mod>

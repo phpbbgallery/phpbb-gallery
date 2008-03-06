@@ -1,0 +1,180 @@
+<!-- INCLUDE overall_header.html -->
+<p class="{S_CONTENT_FLOW_END}<!-- IF S_USER_LOGGED_IN --> rightside<!-- ENDIF -->"><!-- IF S_USER_LOGGED_IN -->{LAST_VISIT_DATE}<!-- ELSE -->{CURRENT_TIME}<!-- ENDIF --></p>
+<!-- IF U_MCP --><p>{CURRENT_TIME} <br />[&nbsp;<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</p><!-- ELSEIF S_USER_LOGGED_IN --><p>{CURRENT_TIME}</p><!-- ENDIF -->
+
+<!-- IF .albumrow -->
+<div class="forabg">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="icon">
+					<dt>{L_ALBUM}</dt>
+					<dd class="posts">{L_IMAGES}</dd>
+					<dd class="lastpost"><span>{L_LAST_IMAGE}</span></dd>
+				</dl>
+			</li>
+		</ul>
+		<!-- BEGIN albumrow -->
+		<ul class="topiclist forums">
+			<li class="row">
+				<dl class="icon" style="background-image: url({albumrow.ALBUM_FOLDER_IMG_SRC}); background-repeat: no-repeat;">
+					<dt>
+						<!-- IF albumrow.ALBUM_IMAGE --><span class="forum-image">{albumrow.ALBUM_IMAGE}</span><!-- ENDIF -->
+						<a href="{albumrow.U_VIEW_ALBUM}" class="forumtitle">{albumrow.ALBUM_NAME}</a><br />
+						{albumrow.ALBUM_DESC}
+						<!-- IF albumrow.MODERATORS -->
+						<br /><strong>{albumrow.L_MODERATORS}:</strong> {albumrow.MODERATORS}
+						<!-- ENDIF -->
+						<!-- IF albumrow.SUBALBUMS -->
+						<br /><strong>{albumrow.L_SUBALBUMS}:</strong> {albumrow.SUBALBUMS}
+						<!-- ENDIF -->
+					</dt>
+					<dd class="posts">{albumrow.IMAGES} <dfn>{L_IMAGES}</dfn></dd>
+					<dd class="lastpost"><span>
+						<!-- IF albumrow.U_LAST_IMAGE -->
+							<a href="{albumrow.U_LAST_IMAGE}" style="font-weight: bold;">{albumrow.LAST_IMAGE_NAME}</a><br />
+							{L_POST_BY_AUTHOR} {albumrow.LAST_IMAGE_AUTHOR} <a href="{albumrow.U_LAST_IMAGE}">{LAST_POST_IMG}</a><br />
+							{L_POSTED_ON_DATE} {albumrow.LAST_IMAGE_TIME}
+						<!-- ELSE -->{L_NO_IMAGES}<!-- ENDIF -->
+					</span></dd>
+				</dl>
+			</li>
+		</ul>
+		<!-- END albumrow -->
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+<!-- ENDIF -->
+<h2><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>
+
+<!-- IF FORUM_DESC or MODERATORS or U_MCP -->
+<p>
+	<!-- NOTE: remove the style="display: none" when you want to have the forum description on the forum body -->
+	<!-- IF FORUM_DESC --><span style="display: none">{FORUM_DESC}<br /></span><!-- ENDIF -->
+	<!-- IF MODERATORS --><strong><!-- IF S_SINGLE_MODERATOR -->{L_MODERATOR}<!-- ELSE -->{L_MODERATORS}<!-- ENDIF -->:</strong> {MODERATORS}<!-- ENDIF -->
+	<!-- IF U_EDIT_ALBUM --><br /><br /><strong><a href="{U_EDIT_ALBUM}">{L_EDIT_ALBUM}</a></strong><!-- ENDIF -->
+	<!-- IF U_CREATE_ALBUM --><br /><strong><a href="{U_CREATE_ALBUM}">{L_CREATE_SUBALBUM}</a></strong><!-- ENDIF -->
+</p>
+<!-- ENDIF -->
+
+<!-- IF S_MODE == 2 && U_UPLOAD_IMAGE -->
+<div class="topic-actions">
+	<div class="buttons">
+		<div class="upload-icon"><a href="{U_UPLOAD_IMAGE}" title="{L_UPLOAD_IMAGE}"><span></span>{L_UPLOAD_IMAGE}</a></div>
+	</div>
+<!-- ENDIF -->
+	<div class="pagination">
+		{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+	</div>
+<!-- IF S_MODE == 2 && U_UPLOAD_IMAGE --></div><!-- ENDIF -->
+
+<!-- IF .picrow -->
+<div class="forumbg">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="icon">
+					<dt>{L_ALBUM} - {ALBUM_NAME}</dt>
+				</dl>
+			</li>
+		</ul>
+		<ul class="topiclist topics">
+			<li class="bg2">
+				<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline">
+					<!-- BEGIN picrow -->
+					<tr>
+						<!-- BEGIN piccol -->
+						<td align="center" style="width: {S_COL_WIDTH};" class="bg1"><span class="genmed"><a href="{picrow.piccol.U_IMAGE}"><img src="{picrow.piccol.THUMBNAIL}" alt="{picrow.piccol.DESC}" title="{picrow.piccol.DESC}" /></a><br />{picrow.piccol.APPROVAL}</span></td>
+						<!-- END piccol -->
+						<!-- BEGIN nopiccol --> 
+						<td align="center" style="width: {S_COL_WIDTH};" class="bg1"><span></span></td> 
+						<!-- END nopiccol -->
+					</tr>
+					<tr>
+						<!-- BEGIN pic_detail -->
+						<td class="bg2">
+							<span class="gensmall">
+								{L_IMAGE_TITLE}: {picrow.pic_detail.TITLE}<br />
+								{L_POSTER}: {picrow.pic_detail.POSTER}<br />
+								{L_POSTED}: {picrow.pic_detail.TIME}<br />
+								{L_VIEWS}: {picrow.pic_detail.VIEW}<br />
+								{picrow.pic_detail.RATING}
+								{picrow.pic_detail.COMMENTS}
+								{picrow.pic_detail.IP}
+								{picrow.pic_detail.EDIT}  {picrow.pic_detail.DELETE}  {picrow.pic_detail.LOCK}  {picrow.pic_detail.MOVE}
+							</span>
+						</td>
+						<!-- END pic_detail -->
+						<!-- BEGIN picnodetail --> 
+						<td class="bg2"><span></span></td> 
+						<!-- END picnodetail -->
+					</tr>
+					<!-- END picrow -->
+				</table>
+			</li>
+		</ul>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+
+<form action="{S_ALBUM_ACTION}" method="post">
+<fieldset class="display-options">
+	<label>{L_SELECT_SORT_METHOD}: 
+		<select name="sort_method">
+			<option {SORT_TIME} value='image_time'>{L_TIME}</option>
+			<option {SORT_IMAGE_TITLE} value='image_name'>{L_IMAGE_TITLE}</option>
+			<option {SORT_USERNAME} value='image_username'>{L_SORT_USERNAME}</option>
+			<option {SORT_VIEW} value='image_view_count'>{L_VIEWS}</option>
+			{SORT_RATING_OPTION}
+			{SORT_COMMENTS_OPTION}
+			{SORT_NEW_COMMENT_OPTION}
+		</select>
+	</label>
+	<label>{L_ORDER}: 
+		<select name="sort_order">
+			<option {SORT_ASC} value='ASC'>{L_SORT_ASCENDING}</option>
+			<option {SORT_DESC} value='DESC'>{L_SORT_DESCENDING}</option>
+		</select> <input type="submit" name="sort" value="{L_SORT}" class="button2" />
+	</label>
+</fieldset>
+</form>
+<hr />
+<!-- ELSEIF S_MODE == 2 -->
+<div class="panel">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+			{L_NO_IMAGES}
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+<!-- ENDIF -->
+<!-- IF S_MODE == 2 && U_UPLOAD_IMAGE -->
+<div class="topic-actions">
+	<div class="buttons">
+		<div class="upload-icon"><a href="{U_UPLOAD_IMAGE}" title="{L_UPLOAD_IMAGE}"><span></span>{L_UPLOAD_IMAGE}</a></div>
+	</div>
+<!-- ENDIF -->
+	<div class="pagination">
+		{PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+	</div>
+<!-- IF S_MODE == 2 && U_UPLOAD_IMAGE --></div><!-- ENDIF -->
+<br />
+
+<p><a href="{U_RETURN_LINK}" class="left-box {S_CONTENT_FLOW_BEGIN}" accesskey="r">{L_RETURN_TO} {S_RETURN_LINK}</a></p>
+<fieldset class="jumpbox">{ALBUM_JUMPBOX}</fieldset>
+
+<!-- IF S_DISPLAY_ONLINE_LIST -->
+	<h3><a href="{U_VIEWONLINE}">{L_WHO_IS_ONLINE}</a></h3>
+	<p>{LOGGED_IN_USER_LIST}</p>
+<!-- ENDIF -->
+
+<h3>{L_ALBUM_PERMISSIONS}</h3>
+<p>{S_AUTH_LIST}</p>
+
+
+
+<!-- Please keep this little notice visible -->
+<div class="copyright">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a> &amp; <a href="http://www.flying-bits.org/">nickvergessen</a></div>
+<!-- INCLUDE overall_footer.html -->

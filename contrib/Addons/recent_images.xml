@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="../../modx.prosilver.en.xsl"?>
+<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.0.xsd">
+  <header>
+    <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+    <title lang="en-gb">phpBB Gallery - recent images</title>
+    <description lang="en-gb"><![CDATA[Adds some recent images to a chooseable page]]></description>
+    <author-notes lang="en-gb">i hope you get it installed, otherwise you can ask for help on phpbb.de and phpbb.com</author-notes>
+    <mod-version>
+      <major>1</major>
+      <minor>0</minor>
+      <revision>1</revision>
+    </mod-version>
+    <installation>
+      <level>easy</level>
+      <time>300</time>
+      <target-version>
+        <target-primary>3.0.0</target-primary>
+        <target-major allow="exact">3</target-major>
+        <target-minor allow="exact">0</target-minor>
+      </target-version>
+    </installation>
+    <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
+  </header>
+  <action-group>
+    <open src="index.php">
+      <edit>
+        <find><![CDATA[$user->setup('viewforum');]]></find>
+        <action type="after-add"><![CDATA[include($phpbb_root_path . 'gallery/includes/functions_recent.' . $phpEx);
+//(rows, columns)
+$display = array(
+	'name'		=> true,
+	'poster'	=> true,
+	'time'		=> true,
+	'views'		=> true,
+	'ratings'	=> false,
+	'comments'	=> false,
+	'album'		=> true,
+);
+recent_gallery_images(1, 4, $display);]]></action>
+      </edit>
+    </open>
+    <open src="styles/prosilver/template/index_body.html">
+      <edit>
+        <find><![CDATA[<!-- INCLUDE forumlist_body.html -->]]></find>
+        <action type="before-add"><![CDATA[<!-- INCLUDE gallery_recent_body.html -->]]></action>
+      </edit>
+    </open>
+  </action-group>
+</mod>

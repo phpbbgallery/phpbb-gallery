@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="../modx.prosilver.en.xsl"?>
+<!-- $Id$ -->
+<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.0.xsd">
+  <header>
+    <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+    <title lang="en-gb">phpBB Gallery</title>
+    <description lang="en-gb"><![CDATA[see normal install-file]]></description>
+    <author-notes lang="en-gb">i hope you get it installed, otherwise you can ask for help on phpbb.de and phpbb.com</author-notes>
+    <author-group>
+      <author>
+        <realname>nickvergessen</realname>
+        <email>nickvergessen@gmx.de</email>
+        <username>nickvergessen</username>
+        <homepage>http://www.flying-bits.org</homepage>
+        <contributions />
+      </author>
+    </author-group>
+    <mod-version>
+      <major>0</major>
+      <minor>3</minor>
+      <revision>0</revision>
+    </mod-version>
+    <installation>
+      <level>easy</level>
+      <time>240</time>
+      <target-version>
+        <target-primary>3.0.0</target-primary>
+        <target-major allow="exact">3</target-major>
+        <target-minor allow="exact">0</target-minor>
+      </target-version>
+    </installation>
+    <history>
+      <entry>
+        <date>2008-03-06</date>
+        <rev-version>
+          <major>0</major>
+          <minor>3</minor>
+          <revision>0</revision>
+        </rev-version>
+        <changelog lang="en-GB">
+          <change><![CDATA[[Add] Report #138: Resize image in image view page]]></change>
+          <change><![CDATA[[Add] Report #195: Reduce SQL phpbb_users left join]]></change>
+          <change><![CDATA[[Add] Report #197: Personal Gallery Index - User colour are not showing...]]></change>
+          <change><![CDATA[[Add] Report #149: members should have the ability to create an album]]></change>
+          <change><![CDATA[[Add] Report #208: permissions for creating subalbums]]></change>
+          <change><![CDATA[[Add] Report #212: Multiple Upload]]></change>
+          <change><![CDATA[[Add] Report #15: edit and delete comments]]></change>
+          <change><![CDATA[[Add] Report #168: Persönliche Galerie verlinken]]></change>
+          <change><![CDATA[[Add] Report #213: SVN: move pic from private subalbum not possible]]></change>
+          <change><![CDATA[[Add] Report #211: Seitenauflistung in der "Wer ist online?"-Liste]]></change>
+          <change><![CDATA[[Add] Report #126: Optional black info line at bottom.]]></change>
+
+          <change><![CDATA[[Change] Report #173: [ACP] missing radio and checkbox classes...cosmetic.]]></change>
+          <change><![CDATA[[Change] Report #163: Deutsche Sprache: Gallery/Galerie]]></change>
+          <change><![CDATA[[Change] Report #188: MCP link 2 times]]></change>
+          <change><![CDATA[[Change] Report #143: Also show new personal images on index page]]></change>
+          <change><![CDATA[[Change] Report #215: Should not update session page on thumbnail view]]></change>
+          <change><![CDATA[[Change] Report #216: Album BBcode - mark in one click]]></change>
+
+          <change><![CDATA[[Fix] Report #167: Missing Lang: IMAGE_BBCODE]]></change>
+          <change><![CDATA[[Fix] Report #172: Undefined variable: sort_new_comment_option]]></change>
+          <change><![CDATA[[Fix] Report #175: SVN: Move images are not working anymore]]></change>
+          <change><![CDATA[[Fix] Report #182: View the last MESSAGE?]]></change>
+          <change><![CDATA[[Fix] Report #176: Album categorie - don't show "no pictures"]]></change>
+          <change><![CDATA[[Fix] Report #190: Commment]]></change>
+          <change><![CDATA[[Fix] Report #194: no personal images in recent images]]></change>
+          <change><![CDATA[[Fix] Report #196: MCP - Delete images are not working anymore...]]></change>
+          <change><![CDATA[[Fix] Report #198: personal gallery of xxxx - PHP Notice error]]></change>
+          <change><![CDATA[[Fix] Report #199: SVN: gallery/index.php - SQL Error]]></change>
+          <change><![CDATA[[Fix] Report #202: install.xml - Description typo]]></change>
+          <change><![CDATA[[Fix] Report #186: No more albums to move]]></change>
+          <change><![CDATA[[Fix] Report #169: {memberrow.ALBUM_FOLDER_IMG_SRC}]]></change>
+          <change><![CDATA[[Fix] Report #174: Personal Albums - Next / Previous Links]]></change>
+          <change><![CDATA[[Fix] Report #207: display nav-link when using recent_image addon]]></change>
+          <change><![CDATA[[Fix] Report #210: personal albums - ucp - move subulbums error]]></change>
+          <change><![CDATA[[Fix] Report #178: imagecreatefromjpeg(./..//gallery/upload/.jpg)]]></change>
+          <change><![CDATA[[Fix] Report #205: SQL Error on convert (guest comments)]]></change>
+          <change><![CDATA[[Fix] Report #201: wrong album link]]></change>
+          <change><![CDATA[[Fix] Report #164: Deutscher Sprachbutton (UPLOADIMAGE)]]></change>
+          <change><![CDATA[[Fix] Report #200: Truecolor+alpha channel watermark]]></change>
+          <change><![CDATA[[Fix] Report #203: root/gallery/index.htm loaded instead of index.php]]></change>
+          <change><![CDATA[[Fix] Report #209: Personal album permissions are messed up.]]></change>
+          <change><![CDATA[[Fix] Report #206: Small typo in german language]]></change>
+          <change><![CDATA[[Fix] Report #214: personal gallery: empty gallery problem.]]></change>
+          <change><![CDATA[[Fix] Report #192: upload error lang]]></change>
+          <change><![CDATA[[Fix] Report #177: categorie - last image are not shown if disapproved]]></change>
+        </changelog>
+      </entry>
+    </history>
+    <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
+  </header>
+  <action-group>
+    <copy>
+      <file from="languages/de/language/de/mods/*.*" to="language/de/mods/*.*" />
+      <file from="languages/de/styles/prosilver/imageset/de/button_upload_image.gif" to="styles/prosilver/imageset/de/button_upload_image.gif" />
+      <file from="languages/de/styles/subsilver2/imageset/de/*." to="styles/subsilver2/imageset/de/*.*" />
+    </copy>
+    <open src="styles/prosilver/imageset/de/imageset.cfg">
+      <edit>
+        <find><![CDATA[img_button_topic_reply = button_topic_reply.gif*25*102]]></find>
+        <action type="after-add"><![CDATA[img_button_upload_image = button_upload_image.gif*25*96]]></action>
+      </edit>
+    </open>
+    <diy-instructions lang="en-gb">see normal install-file</diy-instructions>
+  </action-group>
+</mod>

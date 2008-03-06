@@ -1,0 +1,60 @@
+<!-- IF .picrow -->
+<div class="forumbg">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="icon">
+					<dt>{L_RECENT_IMAGES}</dt>
+				</dl>
+			</li>
+		</ul>
+		<ul class="topiclist topics">
+			<li class="bg2">
+				<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline">
+					<!-- BEGIN picrow -->
+					<tr>
+						<!-- BEGIN piccol -->
+						<td align="center" style="width: {S_COL_WIDTH};" class="bg1"><span class="genmed"><a href="{picrow.piccol.U_IMAGE}"><img src="{picrow.piccol.THUMBNAIL}" alt="{picrow.piccol.DESC}" title="{picrow.piccol.DESC}" /></a><br />{picrow.piccol.APPROVAL}</span></td>
+						<!-- END piccol -->
+						<!-- BEGIN nopiccol --> 
+						<td align="center" style="width: {S_COL_WIDTH};" class="bg1"><span></span></td> 
+						<!-- END nopiccol -->
+					</tr>
+					<tr>
+						<!-- BEGIN pic_detail -->
+						<td class="bg2">
+							<span class="gensmall">
+								<!-- IF picrow.pic_detail.TITLE -->{L_IMAGE_TITLE}: {picrow.pic_detail.TITLE}<br /><!-- ENDIF -->
+								<!-- IF picrow.pic_detail.POSTER -->{L_POSTER}: {picrow.pic_detail.POSTER}<br /><!-- ENDIF -->
+								<!-- IF picrow.pic_detail.TIME -->{L_POSTED}: {picrow.pic_detail.TIME}<br /><!-- ENDIF -->
+								<!-- IF picrow.pic_detail.VIEWS -->{L_VIEWS}: {picrow.pic_detail.VIEWS}<br /><!-- ENDIF -->
+								<!-- IF picrow.pic_detail.RATINGS -->{L_RATING}: {picrow.pic_detail.RATINGS}<br /><!-- ENDIF -->
+								<!-- IF picrow.pic_detail.COMMENTS -->{picrow.pic_detail.L_COMMENT}: {picrow.pic_detail.COMMENTS}<br /><!-- ENDIF -->
+								<!-- IF picrow.pic_detail.ALBUM -->{L_ALBUM}: <a href="{picrow.pic_detail.U_ALBUM}" style="font-weight: bold;">{picrow.pic_detail.ALBUM}</a><br /><!-- ENDIF -->
+							</span>
+						</td>
+						<!-- END pic_detail -->
+						<!-- BEGIN picnodetail --> 
+						<td class="bg2"><span></span></td> 
+						<!-- END picnodetail -->
+					</tr>
+					<!-- END picrow -->
+				</table>
+			</li>
+		</ul>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+<!-- ELSE -->
+<div class="panel">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+			{L_NO_IMAGES}
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+<!-- ENDIF -->
+<!-- Please keep this little notice visible -->
+<!--div class="copyright">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a> &amp; <a href="http://mods.flying-bits.org/">nickvergessen</a></div-->
+<br />

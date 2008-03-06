@@ -1,0 +1,162 @@
+<!-- INCLUDE overall_header.html -->
+
+<script type="text/javascript">
+<!--
+function checkRateForm() {
+	if (document.rateform.rate.value == -1)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+// -->
+</script>
+<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery_lytebox.js"></script>
+
+<h2><a href="#">{IMAGE_NAME}</a></h2>
+
+<table class="tablebg" cellspacing="1" width="100%">
+	<tr>
+		<td class="cat">
+			<table width="100%" cellspacing="0">
+			<tr>
+				<td class="nav" nowrap="nowrap"><!-- IF U_PREVIOUS --><a href="{U_PREVIOUS}">{L_PREVIOUS}</a><!-- ENDIF --></td>
+				<td class="nav" align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><!-- IF U_NEXT --><a href="{U_NEXT}">{L_NEXT}</a>&nbsp;<!-- ENDIF --></td>
+			</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<th colspan="2">{L_DETAILS}</th>
+	</tr>
+	<tr>
+		<td class="row1" style="align: center;"><div style="text-align: center; padding: 20px;">
+			<a href="{U_IMAGE}" rel="lytebox" title="{IMAGE_NAME}" class="image-resize"><img src="{U_IMAGE}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-height: {IMAGE_RSZ_HEIGHT}px; max-width: {IMAGE_RSZ_WIDTH}px;" /></a>
+		</div></td>
+	</tr>
+	<tr>
+		<td class="row2">
+		
+<table class="tablebg" cellspacing="1" width="100%">
+	<tr>
+		<th colspan="2">{L_DETAILS}</th>
+	</tr>
+	<tr class="row1">
+		<td width="25%" align="right"><span class="genmed">{L_POSTER}:</span></td>
+		<td><span class="genmed">{POSTER}</span></td>
+	</tr>
+	<tr class="row1">
+		<td width="25%" align="right"><span class="genmed">{L_IMAGE_TITLE}:</span></td>
+		<td><span class="genmed">{IMAGE_NAME}</span></td>
+	</tr>
+	<tr class="row1">
+		<td width="25%" align="right"><span class="genmed">{L_IMAGE_DESC}:</span></td>
+		<td><span class="genmed">{IMAGE_DESC}</span></td>
+	</tr>
+	<tr class="row1">
+		<td width="25%" align="right"><span class="genmed">{L_IMAGE_BBCODE}:</span></td>
+		<td><span class="genmed"><input type="text" size="28" value="{IMAGE_BBCODE}" class="inputbox autowidth" onclick="this.focus();this.select();" /></span></td>
+	</tr>
+	<tr class="row1">
+		<td width="25%" align="right"><span class="genmed">{L_POSTED}:</span></td>
+		<td><span class="genmed">{IMAGE_TIME}</span></td>
+	</tr>
+	<tr class="row1">
+		<td width="25%" align="right"><span class="genmed">{L_VIEWS}:</span></td>
+		<td><span class="genmed">{IMAGE_VIEW}</span></td>
+	</tr>
+</table>
+<br clear="all" />
+
+<!-- IF RATING -->
+<a name="rating"></a>
+<form name="rateform" action="{S_ALBUM_ACTION}" method="post" onsubmit="return checkRateForm();">
+<table class="tablebg" cellspacing="1" width="100%">
+	<tr>
+		<th colspan="2" style="align: center;">{L_RATING}</th>
+	</tr>
+	<tr class="row1">
+		<td width="25%" align="right"><span class="genmed">{L_RATING}:</span></td>
+		<td><span class="genmed">{IMAGE_RATING}</span></td>
+	</tr>
+	<!-- IF YOUR_RATING -->
+	<tr class="row1">
+		<td width="25%" align="right"><span class="genmed">{L_YOUR_RATING}:</span></td>
+		<td><span class="genmed">{S_RATEBOX}</span></td>
+	</tr>
+	<!-- ENDIF -->
+</table>
+{S_FORM_TOKEN}
+</form>
+<br clear="all" />
+<!-- ENDIF -->
+
+<!-- IF COMMENTS -->
+	<!-- IF POST_COMMENT and not S_IS_BOT -->
+		<a name="rating"></a>
+		<form name="postform" action="{S_COMMENT_ACTION}"" method="post" onsubmit="return checkCommentForm;">
+			<table class="tablebg" cellspacing="1" width="100%">
+				<tr>
+					<th colspan="2" style="align: center;">{L_POST_COMMENT}</th>
+				</tr>
+				<!-- IF not S_USER_LOGGED_IN -->
+				<tr class="row1">
+					<td width="25%" align="right"><span class="genmed">{L_USERNAME}:</span></td>
+					<td><span class="genmed">
+						<input class="inputbox autowidth" type="text" name="username" maxlength="32" />
+						</span></td>
+				</tr>
+				<!-- ENDIF -->
+				<tr class="row1">
+					<td width="25%" align="right"><span class="genmed">{L_YOUR_COMMENT}:</span></td>
+					<td><span class="genmed"><textarea name="message" class="inputbox" cols="60" rows="4"></textarea></span></td>
+				</tr>
+				<tr class="cat">
+					<td colspan="2"><input type="submit" name="submit" value="{L_SUBMIT}" class="button1" /></td>
+				</tr>
+			</table>
+			{S_FORM_TOKEN}
+		</form>
+		<br clear="all" />
+	<!-- ENDIF -->
+	<a name="comments"></a>
+	<table class="tablebg" cellspacing="1" width="100%">
+		<tr>
+			<th style="align: center;">{L_COMMENTS}</th>
+		</tr>
+		<!-- IF commentrow -->
+			<tr class="cat">
+				<td align="right">{IMAGE_COMMENTS} {L_COMMENTS} &bull; {PAGE_NUMBER}
+					<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF --></td>
+			</tr>
+			<!-- BEGIN commentrow -->
+			<tr class="<!-- IF commentrow.S_ROW_COUNT is odd -->row2<!-- ELSE -->row1<!-- ENDIF -->">
+				<td>
+					{L_POST_BY_AUTHOR} {commentrow.POSTER} {L_POSTED_ON_DATE} {commentrow.TIME}<br />
+					<br />
+						<div>{commentrow.TEXT}</div>
+					<!-- IF commentrow.EDIT_INFO --><br />{commentrow.EDIT_INFO}<!-- ENDIF -->
+				</td>
+			</tr>
+			<!-- END commentrow -->
+		<!-- ELSE -->
+			<tr class="row1">
+				<td><span class="genmed">{L_NO_COMMENTS}</span></td>
+			</tr>
+		<!-- ENDIF -->
+	</table>
+<!-- ENDIF -->
+
+	</td>
+	</tr>
+</table>
+<br clear="all" />
+
+<!-- Please keep this little notice visible -->
+<div class="copyright" style="align: center;">Powered by <a href="http://phpbbgallery.ph.funpic.de">phpBB Gallery</a> &amp; <a href="http://www.flying-bits.org/">nickvergessen</a></div>
+<br clear="all" />
+
+<!-- INCLUDE overall_footer.html -->
