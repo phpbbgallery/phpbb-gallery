@@ -96,13 +96,13 @@ function add_bbcode($album_bbcode)
 		$sql_ary = array(
 			'bbcode_tag'				=> $album_bbcode,
 			'bbcode_match'				=> '[' . $album_bbcode . ']{NUMBER}[/' . $album_bbcode . ']',
-			'bbcode_tpl'				=> '<a href="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/image_page.php?image_id={NUMBER}"><img src="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/thumbnail.php?image_id={NUMBER}" /></a>',
+			'bbcode_tpl'				=> '<a href="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/image_page.php?image_id={NUMBER}"><img src="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/thumbnail.php?image_id={NUMBER}" alt="image_id: {NUMBER}" /></a>',
 			'display_on_posting'		=> true,
 			'bbcode_helpline'			=> '',
 			'first_pass_match'			=> '!\[' . $album_bbcode . '\]([0-9]+)\[/' . $album_bbcode . '\]!i',
 			'first_pass_replace'		=> '[' . $album_bbcode . ':$uid]${1}[/' . $album_bbcode . ':$uid]',
 			'second_pass_match'			=> '!\[' . $album_bbcode . ':$uid\]([0-9]+)\[/' . $album_bbcode . ':$uid\]!s',
-			'second_pass_replace'		=> '<a href="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/image_page.php?image_id=${1}"><img src="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/thumbnail.php?image_id=${1}" /></a>',
+			'second_pass_replace'		=> '<a href="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/image_page.php?image_id=${1}"><img src="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/thumbnail.php?image_id=${1}" alt="image_id: ${1}" /></a>',
 		);
 
 		$sql = 'SELECT MAX(bbcode_id) as max_bbcode_id
@@ -132,8 +132,8 @@ function add_bbcode($album_bbcode)
 	else
 	{
 		$sql_ary = array(
-			'bbcode_tpl'				=> '<a href="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/image_page.php?image_id={NUMBER}"><img src="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/thumbnail.php?image_id={NUMBER}" /></a>',
-			'second_pass_replace'		=> '<a href="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/image_page.php?image_id=${1}"><img src="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/thumbnail.php?image_id=${1}" /></a>',
+			'bbcode_tpl'				=> '<a href="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/image_page.php?image_id={NUMBER}"><img src="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/thumbnail.php?image_id={NUMBER}" alt="image_id: {NUMBER}" /></a>',
+			'second_pass_replace'		=> '<a href="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/image_page.php?image_id=${1}"><img src="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/thumbnail.php?image_id=${1}" alt="image_id: ${1}" /></a>',
 		);
 		$db->sql_query('UPDATE ' . BBCODES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . ' WHERE bbcode_id = ' . (int) $row['bbcode_id']);
 	}
