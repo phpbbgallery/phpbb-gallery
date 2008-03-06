@@ -370,19 +370,14 @@ function personal_album_access($user_id)
 		$allowed['comment'] = true;
 	}
 
-	if ($permission_data['allow_personal_albums'] == 1)
-	{
-		$allowed['view'] = true;
-		$allowed['upload'] = true;
-	}
-
-	if (($permission_data['view_personal_albums'] == 1) && !$allowed['view'])
+	if ($permission_data['allow_personal_albums'] || $permission_data['view_personal_albums'])
 	{
 		$allowed['view'] = true;
 	}
 
 	if (($user_id == $user->data['user_id']) || ($user->data['user_type'] == USER_FOUNDER))
 	{
+		$allowed['upload'] = true;
 		$allowed['edit'] = true;
 		$allowed['delete'] = true;
 		$allowed['moderator'] = true;
@@ -842,6 +837,7 @@ function make_move_jumpbox($select_id = false, $ignore_id = false, $album = fals
 
 	while ($row = $db->sql_fetchrow($result))
 	{
+		$album_user_access = array();
 		$album_user_access = (!$row['album_user_id']) ? album_user_access($row['album_id'], $row, 1, 1, 1, 1, 1, 1) : personal_album_access($row['album_user_id']);
 
 		if (($row['album_user_id'] > 0) && !$personal_info)
