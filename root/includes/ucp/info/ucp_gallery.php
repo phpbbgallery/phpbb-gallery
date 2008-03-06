@@ -18,7 +18,7 @@ class ucp_gallery_info
 		return array(
 			'filename'	=> 'ucp_gallery',
 			'title'		=> 'PHPBB_GALLERY',
-			'version'	=> '0.2.4',
+			'version'	=> '0.3.0',
 			'modes'		=> array(
 				'manage_albums'	=> array('title' => 'UCP_GALLERY_PERSONAL_ALBUMS', 'auth' => '', 'cat' => array('PHPBB_GALLERY')),
 			),
