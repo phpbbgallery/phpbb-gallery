@@ -13,15 +13,6 @@ if ( !defined('IN_PHPBB') )
 {
 	die('Hacking attempt');
 }
-
-// Is board disabled and user not an admin or moderator?
-if ($config['board_disable'] && !defined('IN_LOGIN') && !$auth->acl_gets('a_', 'm_') && !$auth->acl_getf_global('m_'))
-{
-	header('HTTP/1.1 503 Service Unavailable');
-
-	$message = (!empty($config['board_disable_msg'])) ? $config['board_disable_msg'] : 'BOARD_DISABLE';
-	trigger_error($message);
-}
 $gallery_root_path = GALLERY_ROOT_PATH;
 include("{$phpbb_root_path}{$gallery_root_path}includes/constants.$phpEx");
 
