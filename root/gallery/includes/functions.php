@@ -706,7 +706,7 @@ function make_album_jumpbox($select_id = false, $ignore_id = false, $album = fal
 	$acl = ($ignore_acl) ? '' : (($only_acl_post) ? 'f_post' : array('f_list', 'a_forum', 'a_forumadd', 'a_forumdel'));
 
 	// This query is identical to the jumpbox one
-	$sql = 'SELECT album_id, album_name, parent_id, left_id, right_id, album_type
+	$sql = 'SELECT *
 		FROM ' . GALLERY_ALBUMS_TABLE . '
 		WHERE album_user_id = 0
 		ORDER BY left_id ASC';
@@ -723,6 +723,9 @@ function make_album_jumpbox($select_id = false, $ignore_id = false, $album = fal
 
 	while ($row = $db->sql_fetchrow($result))
 	{
+		$album_user_access = array();
+		$album_user_access = (!$row['album_user_id']) ? album_user_access($row['album_id'], $row, 1, 1, 1, 1, 1, 1) : personal_album_access($row['album_user_id']);
+
 		if ($row['left_id'] < $right)
 		{
 			$padding .= '&nbsp; &nbsp;';
@@ -741,16 +744,19 @@ function make_album_jumpbox($select_id = false, $ignore_id = false, $album = fal
 			$disabled = true;
 		}
 
-		if ($return_array)
+		if ($album_user_access['view'])
 		{
-			// Include some more information...
-			$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? true : false) : (($row['album_id'] == $select_id) ? true : false);
-			$forum_list[$row['album_id']] = array_merge(array('padding' => $padding, 'selected' => ($selected && !$disabled), 'disabled' => $disabled), $row);
-		}
-		else
-		{
-			$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? ' selected="selected"' : '') : (($row['album_id'] == $select_id) ? ' selected="selected"' : '');
-			$forum_list .= '<option value="' . $row['album_id'] . '"' . (($disabled) ? ' disabled="disabled" class="disabled-option"' : $selected) . '>' . $padding . $row['album_name'] . '</option>';
+			if ($return_array)
+			{
+				// Include some more information...
+				$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? true : false) : (($row['album_id'] == $select_id) ? true : false);
+				$forum_list[$row['album_id']] = array_merge(array('padding' => $padding, 'selected' => ($selected && !$disabled), 'disabled' => $disabled), $row);
+			}
+			else
+			{
+				$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? ' selected="selected"' : '') : (($row['album_id'] == $select_id) ? ' selected="selected"' : '');
+				$forum_list .= '<option value="' . $row['album_id'] . '"' . (($disabled) ? ' disabled="disabled" class="disabled-option"' : $selected) . '>' . $padding . $row['album_name'] . '</option>';
+			}
 		}
 	}
 	$db->sql_freeresult($result);
@@ -763,7 +769,7 @@ function make_personal_jumpbox($album_user_id, $select_id = false, $ignore_id = 
 	global $db, $user, $auth;
 
 	// This query is identical to the jumpbox one
-	$sql = 'SELECT album_id, album_name, parent_id, left_id, right_id, album_type
+	$sql = 'SELECT *
 		FROM ' . GALLERY_ALBUMS_TABLE . "
 		WHERE album_user_id = $album_user_id
 		ORDER BY left_id ASC";
@@ -780,6 +786,9 @@ function make_personal_jumpbox($album_user_id, $select_id = false, $ignore_id = 
 
 	while ($row = $db->sql_fetchrow($result))
 	{
+		$album_user_access = array();
+		$album_user_access = (!$row['album_user_id']) ? album_user_access($row['album_id'], $row, 1, 1, 1, 1, 1, 1) : personal_album_access($row['album_user_id']);
+
 		if ($row['left_id'] < $right)
 		{
 			$padding .= '&nbsp; &nbsp;';
@@ -798,16 +807,19 @@ function make_personal_jumpbox($album_user_id, $select_id = false, $ignore_id = 
 			$disabled = true;
 		}
 
-		if ($return_array)
+		if ($album_user_access['view'])
 		{
-			// Include some more information...
-			$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? true : false) : (($row['album_id'] == $select_id) ? true : false);
-			$forum_list[$row['album_id']] = array_merge(array('padding' => $padding, 'selected' => ($selected && !$disabled), 'disabled' => $disabled), $row);
-		}
-		else
-		{
-			$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? ' selected="selected"' : '') : (($row['album_id'] == $select_id) ? ' selected="selected"' : '');
-			$forum_list .= '<option value="' . $row['album_id'] . '"' . (($disabled) ? ' disabled="disabled" class="disabled-option"' : $selected) . '>' . $padding . $row['album_name'] . '</option>';
+			if ($return_array)
+			{
+				// Include some more information...
+				$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? true : false) : (($row['album_id'] == $select_id) ? true : false);
+				$forum_list[$row['album_id']] = array_merge(array('padding' => $padding, 'selected' => ($selected && !$disabled), 'disabled' => $disabled), $row);
+			}
+			else
+			{
+				$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? ' selected="selected"' : '') : (($row['album_id'] == $select_id) ? ' selected="selected"' : '');
+				$forum_list .= '<option value="' . $row['album_id'] . '"' . (($disabled) ? ' disabled="disabled" class="disabled-option"' : $selected) . '>' . $padding . $row['album_name'] . '</option>';
+			}
 		}
 	}
 	$db->sql_freeresult($result);
@@ -820,7 +832,7 @@ function make_move_jumpbox($select_id = false, $ignore_id = false, $album = fals
 	global $db, $user, $auth;
 
 	// This query is identical to the jumpbox one
-	$sql = 'SELECT album_id, album_name, parent_id, left_id, right_id, album_type, album_user_id
+	$sql = 'SELECT *
 		FROM ' . GALLERY_ALBUMS_TABLE . "
 		ORDER BY album_user_id, left_id ASC";
 	$result = $db->sql_query($sql);
