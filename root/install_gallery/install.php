@@ -65,7 +65,7 @@ function delete_gallery_column($table, $column)
 		$phpbb_db_tools->sql_column_remove($table, $column);
 	}
 }
-function gallery_config_value($column, $value)
+function gallery_config_value($column, $value, $update = false)
 {
 	global $db;
 
@@ -80,6 +80,14 @@ function gallery_config_value($column, $value)
 			'config_value'				=> $value,
 		);
 		$db->sql_query('INSERT INTO ' . GALLERY_CONFIG_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+	}
+	else if ($update)
+	{
+		$sql_ary = array(
+			'config_name'				=> $column,
+			'config_value'				=> $value,
+		);
+		$db->sql_query('UPDATE ' . GALLERY_CONFIG_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . " WHERE config_name = '$column'");
 	}
 }
 function add_bbcode($album_bbcode)
@@ -405,6 +413,7 @@ switch ($mode)
 			gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
 			gallery_column(GROUPS_TABLE, 'view_personal_albums', array('UINT', 1));
 			gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
+			gallery_config_value('album_version', $new_mod_version, true);
 
 			// clear cache and log what we did
 			$cache->purge();
@@ -509,6 +518,7 @@ switch ($mode)
 				'module_auth'		=> ''
 			);
 			$modules->update_module_data($ucp_gallery);
+			gallery_config_value('album_version', $new_mod_version, true);
 
 			// clear cache and log what we did
 			$cache->purge();
@@ -855,6 +865,7 @@ switch ($mode)
 			}
 
 			add_bbcode('album');
+			gallery_config_value('album_version', $new_mod_version, true);
 
 			// clear cache and log what we did
 			$cache->purge();
