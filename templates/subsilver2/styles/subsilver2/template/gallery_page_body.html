@@ -139,6 +139,16 @@ function checkRateForm() {
 					<br />
 						<div>{commentrow.TEXT}</div>
 					<!-- IF commentrow.EDIT_INFO --><br />{commentrow.EDIT_INFO}<!-- ENDIF -->
+						<table width="100%" cellspacing="0">
+						<tr valign="middle">
+							<td class="gensmall" align="{S_CONTENT_FLOW_END}">
+							<!-- IF not S_IS_BOT -->
+								<!-- IF commentrow.EDIT --><a href="{commentrow.EDIT}">{EDIT_IMG}</a> <!-- ENDIF -->
+								<!-- IF commentrow.DELETE --><a href="{commentrow.DELETE}">{DELETE_IMG}</a> <!-- ENDIF -->
+							<!-- ENDIF -->
+							</td>
+						</tr>
+						</table>
 				</td>
 			</tr>
 			<!-- END commentrow -->

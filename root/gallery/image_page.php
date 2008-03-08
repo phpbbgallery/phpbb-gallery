@@ -399,10 +399,11 @@ if ($album_config['comment'])
 		}
 
 		$template->assign_vars(array(
+			'EDIT_IMG' 			=> $user->img('icon_post_edit', 'EDIT_POST'),
+			'DELETE_IMG' 		=> $user->img('icon_post_delete', 'DELETE_POST'),
 			'PAGINATION' 	=> generate_pagination(append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?album_id=$album_id&amp;image_id=$image_id&amp;sort_order=$sort_order"), $total_comments, $comments_per_page, $start),
 			'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $comments_per_page ) + 1 ), ceil( $total_comments / $comments_per_page ))
-			)
-		);
+		));
 	}
 	else
 	{
