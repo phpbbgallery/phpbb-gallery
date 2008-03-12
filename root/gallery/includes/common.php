@@ -47,6 +47,9 @@ if (!$recent_image_addon)
 		'FORUM_NAME'	=> $user->lang['GALLERY'],
 		'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"),
 	));
+	$template->assign_vars(array(
+		'S_IN_GALLERY' => true,
+	));
 }
 
 ?>
