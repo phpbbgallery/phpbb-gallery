@@ -229,6 +229,7 @@ if ($mode == '')
 		$template->assign_vars(array(
 			'PAGINATION' 	=> generate_pagination(append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id&amp;sort_method=$sort_method&amp;sort_order=$sort_order"), $total_pics, $pics_per_page, $start),
 			'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $pics_per_page ) + 1 ), ceil( $total_pics / $pics_per_page )),
+			'THUMB_WIDTH'	=> $album_config['thumbnail_size'] + 5,
 		));
 	}
 	else
