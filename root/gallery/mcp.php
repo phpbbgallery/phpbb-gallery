@@ -177,7 +177,7 @@ if ($mode == '')
 
 	$total_pics = $row['count'];
 
-	$pics_per_page = 15; // Text list only ######### CHANGE LATER ################
+	$pics_per_page = ($album_config['rows_per_page'] * $album_config['cols_per_page']);
 
 	// get information from DB
 	if ($total_pics > 0)
@@ -213,14 +213,16 @@ if ($mode == '')
 		for ($i = 0; $i <count($picrow); $i++)
 		{
 			$template->assign_block_vars('picrow', array(
-				'IMAGE_ID' 		=> $picrow[$i]['image_id'],
-				'IMAGE_NAME' 	=> '<a href="'. append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx?album_id=" . $picrow[$i]['image_album_id'] . "&amp;image_id=". $picrow[$i]['image_id']) .'">'. $picrow[$i]['image_name'] .'</a>',
-				'POSTER' 		=> get_username_string('full', $picrow[$i]['image_user_id'], ($picrow[$i]['image_user_id'] <> ANONYMOUS) ? $picrow[$i]['image_username'] : $user->lang['GUEST'], $picrow[$i]['image_user_colour']),
-				'TIME' 			=> $user->format_date($picrow[$i]['image_time']),
-				'RATING' 		=> ($picrow[$i]['rating'] == 0) ? $user->lang['NOT_RATED'] : round($picrow[$i]['rating'], 2),
-				'COMMENTS' 		=> $picrow[$i]['comments'],
-				'LOCK' 			=> ($picrow[$i]['image_lock'] == 0) ? '' : $user->lang['LOCKED'],
-				'APPROVAL' 		=> ($picrow[$i]['image_approval'] == 0) ? $user->lang['NOT_APPROVED'] : $user->lang['APPROVED'],
+				'IMAGE_ID'		=> $picrow[$i]['image_id'],
+				'U_IMAGE_THUMB'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}thumbnail.$phpEx?album_id=" . $picrow[$i]['image_album_id'] . "&amp;image_id=". $picrow[$i]['image_id']),
+				'U_IMAGE'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx?album_id=" . $picrow[$i]['image_album_id'] . "&amp;image_id=". $picrow[$i]['image_id']),
+				'IMAGE_NAME'	=> $picrow[$i]['image_name'],
+				'POSTER'		=> get_username_string('full', $picrow[$i]['image_user_id'], ($picrow[$i]['image_user_id'] <> ANONYMOUS) ? $picrow[$i]['image_username'] : $user->lang['GUEST'], $picrow[$i]['image_user_colour']),
+				'TIME'			=> $user->format_date($picrow[$i]['image_time']),
+				'RATING'		=> ($picrow[$i]['rating'] == 0) ? $user->lang['NOT_RATED'] : round($picrow[$i]['rating'], 2),
+				'COMMENTS'		=> $picrow[$i]['comments'],
+				'LOCK'			=> ($picrow[$i]['image_lock'] == 0) ? '' : $user->lang['LOCKED'],
+				'APPROVAL'		=> ($picrow[$i]['image_approval'] == 0) ? $user->lang['NOT_APPROVED'] : $user->lang['APPROVED'],
 			));
 		}
 
