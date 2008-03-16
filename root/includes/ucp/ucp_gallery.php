@@ -276,7 +276,7 @@ class ucp_gallery
 				'S_DESC_BBCODE_CHECKED'		=> true,
 				'S_DESC_SMILIES_CHECKED'	=> true,
 				'S_DESC_URLS_CHECKED'		=> true,
-				'S_PARENT_OPTIONS'			=> '<option value="' . $user->data['album_id'] . '">' . $user->lang['NO_PARENT'] . '</option>' . $parents_list,
+				'S_PARENT_OPTIONS'			=> '<option value="' . $user->data['album_id'] . '">' . $user->lang['NO_PARENT_ALBUM'] . '</option>' . $parents_list,
 			));
 		}
 		else
@@ -377,7 +377,7 @@ class ucp_gallery
 				'L_TITLE_EXPLAIN'	=> $user->lang['EDIT_SUBALBUM_EXP'],
 
 				'S_ALBUM_ACTION' 			=> $this->u_action . '&amp;action=edit&amp;album_id=' . $album_id . (($redirect != '') ? '&amp;redirect=album' : ''),
-				'S_PARENT_OPTIONS'			=> '<option value="' . $user->data['album_id'] . '">' . $user->lang['NO_PARENT'] . '</option>' . $parents_list,
+				'S_PARENT_OPTIONS'			=> '<option value="' . $user->data['album_id'] . '">' . $user->lang['NO_PARENT_ALBUM'] . '</option>' . $parents_list,
 
 				'ALBUM_NAME' 				=> $album_data['album_name'],
 				'ALBUM_DESC'				=> $album_desc_data['text'],
