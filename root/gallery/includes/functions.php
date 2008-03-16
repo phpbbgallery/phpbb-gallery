@@ -17,11 +17,25 @@ $gallery_root_path = GALLERY_ROOT_PATH;
 
 $gd_check = function_exists('gd_info') ? gd_info() : array();;
 $gd_success = isset($gd_check['GD Version']);
-if (!$gd_success && ($album_config['gd_version'] > 0))
+if (!$gd_success)
 {
-	$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . " SET config_value = 0 WHERE config_name = 'gd_version'";
-	$result = $db->sql_query($sql);
-	$album_config['gd_version'] = 0;
+	if (!isset($album_config['gd_version']))
+	{
+		$sql = 'SELECT * FROM ' . GALLERY_CONFIG_TABLE . " WHERE config_name = 'gd_version'";
+		$result = $db->sql_query($sql);
+		while( $row = $db->sql_fetchrow($result) )
+		{
+			$album_config_name = $row['config_name'];
+			$album_config_value = $row['config_value'];
+			$album_config[$album_config_name] = $album_config_value;
+		}
+	}
+	if ($album_config['gd_version'] > 0)
+	{
+		$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . " SET config_value = 0 WHERE config_name = 'gd_version'";
+		$result = $db->sql_query($sql);
+		$album_config['gd_version'] = 0;
+	}
 }
 
 // ----------------------------------------------------------------------------
