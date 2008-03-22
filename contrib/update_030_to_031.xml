@@ -54,6 +54,8 @@
       <file from="root/gallery/upload/cache/*.*" to="gallery/upload/cache/*.*" />
       <file from="root/includes/acp/acp_gallery.php" to="includes/acp/acp_gallery.php" />
       <file from="root/includes/acp/info/acp_gallery.php" to="includes/acp/info/acp_gallery.php" />
+      <file from="root/includes/ucp/ucp_gallery.php" to="includes/ucp/ucp_gallery.php" />
+      <file from="root/includes/ucp/info/ucp_gallery.php" to="includes/ucp/info/ucp_gallery.php" />
       <file from="root/install_gallery/*.*" to="install_gallery/*.*" />
       <file from="root/install_gallery/schemas/*.*" to="install_gallery/schemas/*.*" />
       <file from="root/language/en/mods/*.*" to="language/en/mods/*.*" />
