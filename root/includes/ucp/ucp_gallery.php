@@ -567,8 +567,8 @@ class ucp_gallery
 			while ($row = $db->sql_fetchrow($result))
 			{
 				//delete the files themselves
-				unlink($phpbb_root_path . GALLERY_CACHE_PATH . $row['image_thumbnail']);
-				unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $row['image_filename']);
+				@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $row['image_thumbnail']);
+				@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $row['image_filename']);
 
 				$deleted_images .= (($deleted_images) ? ', ' : '') . $row['image_id'];
 				$deleted_images_a[] = $row['image_id'];

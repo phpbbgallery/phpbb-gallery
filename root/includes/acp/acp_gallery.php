@@ -335,7 +335,7 @@ class acp_gallery
 				}
 
 				// The source image is imported and thumbnailed, delete it
-				#unlink($image_path);
+				#@unlink($image_path);
 
 				$sql_ary = array(
 					'image_filename' 		=> $image_filename,
@@ -1130,8 +1130,8 @@ class acp_gallery
 						// Delete all physical pic & cached thumbnail files
 						for ($i = 0; $i < count($picrow); $i++)
 						{
-							@unlink('../' . ALBUM_CACHE_PATH . $picrow[$i]['image_thumbnail']);
-							@unlink('../' . ALBUM_UPLOAD_PATH . $picrow[$i]['image_filename']);
+							@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $picrow[$i]['image_thumbnail']);
+							@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $picrow[$i]['image_filename']);
 						}
 
 						$pic_id_sql = '(' . implode(',', $pic_id_row) . ')';
@@ -1282,7 +1282,7 @@ class acp_gallery
 			{
 				if( preg_match('/(\.gif$|\.png$|\.jpg|\.jpeg)$/is', $cache_file) )
 				{
-					@unlink('../' . ALBUM_DIR_NAME . ALBUM_CACHE_PATH . $cache_file);
+					@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $cache_file);
 				}
 			}
 
