@@ -191,7 +191,7 @@ echo '		"phpBB" linked to www.phpbb.com. If you refuse to include even this then
 echo '		forums may be affected.';
 echo '		The phpBB Group : 2006';
 echo '	// -->';
-echo '<div id="page-footer">Powered by phpBB &copy; 2000, 2002, 2005, 2007 <a href="http://www.phpbb.com/">phpBB Group</a><br />Installer by <a href="http://mods.flying-bits.org/">nickvergessen</a></div>';
+echo '<div id="page-footer">Powered by phpBB &copy; 2000, 2002, 2005, 2007 <a href="http://www.phpbb.com/">phpBB Group</a><br />Installer by <a href="http://www.flying-bits.org/">nickvergessen</a></div>';
 echo '</div>';
 echo '</body>';
 echo '</html>';
