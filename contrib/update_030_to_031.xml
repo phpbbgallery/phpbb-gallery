@@ -72,6 +72,22 @@
         <action type="before-add"><![CDATA[$recent_image_addon = false;]]></action>
       </edit>
     </open>
+    <open src="includes/functions_user.php">
+      <edit>
+        <find><![CDATA[	$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
+		SET album_name = '" . $db->sql_escape($new_name) . "'
+		WHERE album_name = '" . $db->sql_escape($old_name) . "'
+			AND album_user_id != 0
+			AND parent_id = 0";
+	$db->sql_query($sql);]]></find>
+        <action type="replace-with"><![CDATA[	$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
+		SET album_name = '" . $db->sql_escape($new_name) . "'
+		WHERE album_name = '" . $db->sql_escape($old_name) . "'
+			AND album_user_id <> 0
+			AND parent_id = 0";
+	$db->sql_query($sql);]]></action>
+      </edit>
+    </open>
     <diy-instructions lang="en-gb">see normal install-file</diy-instructions>
   </action-group>
 </mod>
