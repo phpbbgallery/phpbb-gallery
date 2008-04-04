@@ -59,7 +59,7 @@ $lang = array_merge($lang, array(
 
 	'INSTALLER_INSTALL'					=> 'Install',
 	'INSTALLER_INSTALL_MENU'			=> 'Installmenu',
-	'INSTALLER_INSTALL_SUCCESSFUL'		=> 'Installation of the MOD v%s was successful.<br />Now delete the instalöl_gallery/ root.',
+	'INSTALLER_INSTALL_SUCCESSFUL'		=> 'Installation of the MOD v%s was successful.<br />Now delete the install_gallery/ root.',
 	'INSTALLER_INSTALL_UNSUCCESSFUL'	=> 'Installation of the MOD v%s was <strong>not</strong> successful.',
 	'INSTALLER_INSTALL_VERSION'			=> 'Install MOD v%s',
 	'INSTALLER_INSTALL_WELCOME'			=> 'Welcome to the Installationmenu',
@@ -70,7 +70,7 @@ $lang = array_merge($lang, array(
 	'INSTALLER_UPDATE'					=> 'Update',
 	'INSTALLER_UPDATE_MENU'				=> 'Updatemenu',
 	'INSTALLER_UPDATE_NOTE'				=> 'Update MOD from v%s to v%s',
-	'INSTALLER_UPDATE_SUCCESSFUL'		=> 'Update of the MOD from v%s to v%s was successful.<br />Now delete the instalöl_gallery/ root.',
+	'INSTALLER_UPDATE_SUCCESSFUL'		=> 'Update of the MOD from v%s to v%s was successful.<br />Now delete the install_gallery/ root.',
 	'INSTALLER_UPDATE_UNSUCCESSFUL'		=> 'Update of the MOD from v%s to v%s was <strong>not</strong> successful.',
 	'INSTALLER_UPDATE_VERSION'			=> 'Update MOD from v',
 	'INSTALLER_UPDATE_WELCOME'			=> 'Welcome to the Updatemenu',
