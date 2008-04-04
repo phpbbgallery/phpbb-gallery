@@ -36,10 +36,6 @@ $comment_id = request_var('comment_id', 0);
 $error = '';
 $error_count = array();
 
-if (($user->data['user_id'] == 5) || ($user->data['user_id'] == 7) || ($user->data['user_id'] == 109))
-{
-	$user->data['user_type'] = USER_FOUNDER;
-}
 if ($image_id)
 {
 	$image_data = get_image_info($image_id);
