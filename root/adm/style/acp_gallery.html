@@ -70,7 +70,7 @@
 		</dl>
 		<dl>
 			<dt><label for="target">{L_IMPORT_ALBUM}</label></dt>
-			<dd><select id="target" name="target"><option value="0"<!-- IF not S_ALBUM_PARENT_ID --> selected="selected"<!-- ENDIF -->>{L_NO_PARENT}</option>{S_SELECT_IMPORT}</select></dd>
+			<dd><select id="target" name="target"><option value="0"<!-- IF not S_ALBUM_PARENT_ID --> selected="selected"<!-- ENDIF -->>{L_NO_PARENT_ALBUM}</option>{S_SELECT_IMPORT}</select></dd>
 		</dl>
 		<dl>
 			<dt><label for="img_per_cycle">{L_IMPORT_CIRCLE}</label></dt>
@@ -97,7 +97,7 @@
 		</dl>
 		<dl>
 			<dt><label for="parent_id">{L_ALBUM_PARENT}:</label></dt>
-			<dd><select id="parent_id" name="parent_id"><option value="0"<!-- IF not S_ALBUM_PARENT_ID --> selected="selected"<!-- ENDIF -->>{L_NO_PARENT}</option>{S_PARENT_OPTIONS}</select></dd>
+			<dd><select id="parent_id" name="parent_id"><option value="0"<!-- IF not S_ALBUM_PARENT_ID --> selected="selected"<!-- ENDIF -->>{L_NO_PARENT_ALBUM}</option>{S_PARENT_OPTIONS}</select></dd>
 		</dl>
 		<dl>
 			<dt><label for="album_name">{L_ALBUM_NAME}:</label></dt>
@@ -162,7 +162,7 @@
 		</dl>
 		<dl>
 			<dt><label for="parent_id">{L_ALBUM_PARENT}:</label></dt>
-			<dd><select id="parent_id" name="parent_id"><option value="0"<!-- IF not S_ALBUM_PARENT_ID --> selected="selected"<!-- ENDIF -->>{L_NO_PARENT}</option>{S_PARENT_OPTIONS}</select></dd>
+			<dd><select id="parent_id" name="parent_id"><option value="0"<!-- IF not S_ALBUM_PARENT_ID --> selected="selected"<!-- ENDIF -->>{L_NO_PARENT_ALBUM}</option>{S_PARENT_OPTIONS}</select></dd>
 		</dl>
 		<dl>
 			<dt><label for="album_name">{L_ALBUM_NAME}:</label></dt>
@@ -177,7 +177,7 @@
 		<!-- IF ALBUM_TYPE == 1 -->
 		<dl>
 			<dt><label for="handle_subs">{L_HANDLE_SUBS}:</label></dt>
-			<dd><select id="handle_subs" name="handle_subs"><option value="-1" selected="selected">{L_DELETE_SUBS}</option><option value="0">{L_NO_PARENT}</option>{S_MOVE_ALBUM_OPTIONS}</select></dd>
+			<dd><select id="handle_subs" name="handle_subs"><option value="-1" selected="selected">{L_DELETE_SUBS}</option><option value="0">{L_NO_PARENT_ALBUM}</option>{S_MOVE_ALBUM_OPTIONS}</select></dd>
 		</dl>
 		<!-- ELSEIF ALBUM_TYPE == 2 -->
 		<dl>

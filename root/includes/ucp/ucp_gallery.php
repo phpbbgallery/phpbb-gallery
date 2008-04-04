@@ -20,6 +20,7 @@ class ucp_gallery
 		include($phpbb_root_path . $gallery_root_path . 'includes/ucp_functions.' . $phpEx);
 
 		$user->add_lang('mods/gallery');
+		$user->add_lang('mods/gallery_acp');
 		$this->tpl_name = 'ucp_gallery';
 		add_form_key('ucp_gallery');
 
@@ -612,7 +613,7 @@ class ucp_gallery
 			$cache->destroy('sql', GALLERY_RATES_TABLE);
 			$cache->destroy('sql', GALLERY_COMMENTS_TABLE);
 
-			trigger_error('DELETED_ALBUMS' . (($parent_id) ? '<br /><br />
+			trigger_error($user->lang['DELETED_ALBUMS'] . (($parent_id) ? '<br /><br />
 				<a href="' . append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . $parent_id) . '">' . $user->lang['BACK_TO_PREV'] . '</a>' : ''));
 		}
 		else
