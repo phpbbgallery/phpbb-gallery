@@ -294,7 +294,7 @@ class acp_gallery
 						// Create image details
 						$dimension_font = 1;
 						$dimension_filesize = filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
-						$dimension_string = $image_width . "x" . $image_height . "(" . intval($dimension_filesize/1024) . "KB)";
+						$dimension_string = $image_width . "x" . $image_height . "(" . intval($dimension_filesize/1024) . "KiB)";
 						$dimension_colour = ImageColorAllocate($thumbnail,255,255,255);
 						$dimension_height = imagefontheight($dimension_font);
 						$dimension_width = imagefontwidth($dimension_font) * strlen($dimension_string);

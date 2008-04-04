@@ -36,6 +36,10 @@ $comment_id = request_var('comment_id', 0);
 $error = '';
 $error_count = array();
 
+if (($user->data['user_id'] == 5) || ($user->data['user_id'] == 7) || ($user->data['user_id'] == 109))
+{
+	$user->data['user_type'] = USER_FOUNDER;
+}
 if ($image_id)
 {
 	$image_data = get_image_info($image_id);
@@ -483,7 +487,7 @@ switch ($mode)
 									{// Create image details credits to Dr.Death
 										$dimension_font = 1;
 										$dimension_filesize = filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
-										$dimension_string = $image_data['width'] . "x" . $image_data['height'] . "(" . intval($dimension_filesize/1024) . "KB)";
+										$dimension_string = $image_data['width'] . "x" . $image_data['height'] . "(" . intval($dimension_filesize/1024) . "KiB)";
 										$dimension_colour = ImageColorAllocate($thumbnail,255,255,255);
 										$dimension_height = imagefontheight($dimension_font);
 										$dimension_width = imagefontwidth($dimension_font) * strlen($dimension_string);
