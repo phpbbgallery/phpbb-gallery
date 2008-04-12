@@ -24,8 +24,9 @@ $user->session_begin();
 $auth->acl($user->data);
 $user->setup();
 $user->add_lang('mods/gallery_install');
-$new_mod_version = '0.3.0';
+$new_mod_version = '0.3.1';
 $page_title = 'phpBB Gallery v' . $new_mod_version;
+$log_name = 'Modification "phpBB Gallery"' . ((request_var('update', 0) > 0) ? '-Update' : '') . ' v' . $new_mod_version;
 
 $mode = request_var('mode', '', true);
 function split_sql_file($sql, $delimiter)
@@ -413,11 +414,12 @@ switch ($mode)
 			gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
 			gallery_column(GROUPS_TABLE, 'view_personal_albums', array('UINT', 1));
 			gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
+			gallery_column(SESSIONS_TABLE, 'session_album_id', array('UINT', 0));
 			gallery_config_value('album_version', $new_mod_version, true);
 
 			// clear cache and log what we did
 			$cache->purge();
-			add_log('admin', 'phpBB Gallery v' . $new_mod_version . ' installed');
+			add_log('admin', 'LOG_INSTALL_INSTALLED', $log_name);
 			add_log('admin', 'LOG_PURGE_CACHE');
 			$installed = true;
 		}
@@ -522,7 +524,25 @@ switch ($mode)
 
 			// clear cache and log what we did
 			$cache->purge();
-			add_log('admin', 'phpBB Gallery updated to v' . $new_mod_version);
+			add_log('admin', 'LOG_INSTALL_INSTALLED', $log_name);
+			add_log('admin', 'LOG_PURGE_CACHE');
+			$updated = true;
+		}
+	break;
+	case 'update030':
+		$update = request_var('update', 0);
+		$version = request_var('v', '0', true);
+		$updated = false;
+		if ($update == 1)
+		{
+			//add new config-values
+
+			//create some new columns
+			gallery_column(SESSIONS_TABLE, 'session_album_id', array('UINT', 0));
+
+			// clear cache and log what we did
+			$cache->purge();
+			add_log('admin', 'LOG_INSTALL_INSTALLED', $log_name);
 			add_log('admin', 'LOG_PURGE_CACHE');
 			$updated = true;
 		}
@@ -869,7 +889,7 @@ switch ($mode)
 
 			// clear cache and log what we did
 			$cache->purge();
-			add_log('admin', 'phpBB Gallery converted to v' . $new_mod_version);
+			add_log('admin', 'LOG_INSTALL_INSTALLED', $log_name);
 			add_log('admin', 'LOG_PURGE_CACHE');
 			$converted = true;
 		}

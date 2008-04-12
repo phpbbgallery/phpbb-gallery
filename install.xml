@@ -24,13 +24,13 @@ For Features see the forum topic.]]></description>
     <mod-version>
       <major>0</major>
       <minor>3</minor>
-      <revision>0</revision>
+      <revision>1</revision>
     </mod-version>
     <installation>
       <level>easy</level>
       <time>240</time>
       <target-version>
-        <target-primary>3.0.0</target-primary>
+        <target-primary>3.0.1</target-primary>
         <target-major allow="exact">3</target-major>
         <target-minor allow="exact">0</target-minor>
       </target-version>
@@ -296,6 +296,13 @@ For Features see the forum topic.]]></description>
     </copy>
     <open src="viewonline.php">
       <edit>
+        <find><![CDATA[$sql = 'SELECT u.user_id, u.username, u.username_clean, u.user_type, u.user_colour, s.session_id, s.session_time, s.session_page, s.session_ip, s.session_browser, s.session_viewonline, s.session_forum_id]]></find>
+        <inline-edit>
+            <inline-find><![CDATA[, s.session_forum_id]]></inline-find>
+            <inline-action type="after-add"><![CDATA[, s.session_album_id]]></inline-action>
+        </inline-edit>
+      </edit>
+      <edit>
         <find><![CDATA[$forum_data = array();
 while ($row = $db->sql_fetchrow($result))
 {
@@ -338,8 +345,7 @@ $user->add_lang('mods/gallery');]]></action>
 		break;]]></find>
         <action type="after-add"><![CDATA[		case $gallery_root_path:
 			@$album_data[0]['album_name'];
-			preg_match('#_album_id_=([0-9]+)x#i', $row['session_page'], $album_id);
-			$album_id = (sizeof($album_id)) ? (int) $album_id[1] : 0;
+			$album_id = $row['session_album_id'];
 			$album_user_access = ($album_id) ? ((!$album_data[$album_id]['album_user_id']) ? album_user_access($album_id, $album_data[$album_id], 1, 0, 0, 0, 0, 0) : personal_album_access($album_data[$album_id]['album_user_id'])) : array();
 
 			preg_match('#^([a-z/]+)#i', $row['session_page'], $gallery_page);
@@ -463,8 +469,20 @@ define('GALLERY_RATES_TABLE',			$table_prefix . 'gallery_rates');]]></action>
     </open>
     <open src="includes/session.php">
       <edit>
-        <find><![CDATA[$this->page['page'] .= (isset($_REQUEST['f'])) ? ((strpos($this->page['page'], '?') !== false) ? '&' : '?') . '_f_=' . (int) $_REQUEST['f'] . 'x' : '';]]></find>
-        <action type="after-add"><![CDATA[$this->page['page'] .= (isset($_REQUEST['album_id'])) ? ((strpos($this->page['page'], '?') !== false) ? '&' : '?') . '_album_id_=' . (int) $_REQUEST['album_id'] . 'x' : '';]]></action>
+        <find><![CDATA['forum'				=> (isset($_REQUEST['f']) && $_REQUEST['f'] > 0) ? (int) $_REQUEST['f'] : 0,]]></find>
+        <action type="after-add"><![CDATA['album'				=> (isset($_REQUEST['album_id']) && $_REQUEST['album_id'] > 0) ? (int) $_REQUEST['album_id'] : 0,]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[$sql_ary['session_forum_id'] = $this->page['forum'];]]></find>
+        <action type="after-add"><![CDATA[$sql_ary['session_album_id'] = $this->page['album'];]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[							// If the database is not yet updated, there will be an error due to the session_forum_id
+							// @todo REMOVE for 3.0.2]]></find>
+        <action type="before-add"><![CDATA[							if ($result === false)
+							{
+								unset($sql_ary['session_album_id']);
+							}]]></action>
       </edit>
     </open>
     <open src="includes/acp/acp_styles.php">
@@ -491,7 +509,7 @@ define('GALLERY_RATES_TABLE',			$table_prefix . 'gallery_rates');]]></action>
     <open src="styles/prosilver/template/viewtopic_body.html">
       <edit>
         <find><![CDATA[<!-- IF postrow.U_JABBER --><li class="jabber-icon"><a href="{postrow.U_JABBER}" onclick="popup(this.href, 550, 320); return false;" title="{L_JABBER}"><span>{L_JABBER}</span></a></li><!-- ENDIF -->]]></find>
-        <action type="after-add"><![CDATA[<!-- IF postrow.U_GALLERY --><li class="gallery-icon"><a href="{postrow.U_GALLERY}" title="{L_PERSONAL_ALBUM}"><span>{L_PERSONAL_ALBUM}h</span></a></li><!-- ENDIF -->]]></action>
+        <action type="after-add"><![CDATA[<!-- IF postrow.U_GALLERY --><li class="gallery-icon"><a href="{postrow.U_GALLERY}" title="{L_PERSONAL_ALBUM}"><span>{L_PERSONAL_ALBUM}</span></a></li><!-- ENDIF -->]]></action>
       </edit>
     </open>
     <open src="styles/prosilver/theme/stylesheet.css">

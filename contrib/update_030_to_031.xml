@@ -26,7 +26,7 @@
       <level>easy</level>
       <time>240</time>
       <target-version>
-        <target-primary>3.0.0</target-primary>
+        <target-primary>3.0.1</target-primary>
         <target-major allow="exact">3</target-major>
         <target-minor allow="exact">0</target-minor>
       </target-version>
@@ -68,8 +68,20 @@
     </copy>
     <open src="viewonline.php">
       <edit>
+        <find><![CDATA[$sql = 'SELECT u.user_id, u.username, u.username_clean, u.user_type, u.user_colour, s.session_id, s.session_time, s.session_page, s.session_ip, s.session_browser, s.session_viewonline, s.session_forum_id]]></find>
+        <inline-edit>
+            <inline-find><![CDATA[, s.session_forum_id]]></inline-find>
+            <inline-action type="after-add"><![CDATA[, s.session_album_id]]></inline-action>
+        </inline-edit>
+      </edit>
+      <edit>
         <find><![CDATA[include("$phpbb_root_path" . GALLERY_ROOT_PATH . "includes/common.$phpEx");]]></find>
         <action type="before-add"><![CDATA[$recent_image_addon = false;]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[			preg_match('#_album_id_=([0-9]+)x#i', $row['session_page'], $album_id);
+			$album_id = (sizeof($album_id)) ? (int) $album_id[1] : 0;]]></find>
+        <action type="replace-with"><![CDATA[$album_id = $row['session_album_id'];]]></action>
       </edit>
     </open>
     <open src="includes/functions_user.php">
@@ -86,6 +98,28 @@
 			AND album_user_id <> 0
 			AND parent_id = 0";
 	$db->sql_query($sql);]]></action>
+      </edit>
+    </open>
+    <open src="includes/session.php">
+      <edit>
+        <find><![CDATA[$this->page['page'] .= (isset($_REQUEST['album_id'])) ? ((strpos($this->page['page'], '?') !== false) ? '&' : '?') . '_album_id_=' . (int) $_REQUEST['album_id'] . 'x' : '';]]></find>
+        <action type="replace-with"><![CDATA[]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA['forum'				=> (isset($_REQUEST['f']) && $_REQUEST['f'] > 0) ? (int) $_REQUEST['f'] : 0,]]></find>
+        <action type="after-add"><![CDATA['album'				=> (isset($_REQUEST['album_id']) && $_REQUEST['album_id'] > 0) ? (int) $_REQUEST['album_id'] : 0,]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[$sql_ary['session_forum_id'] = $this->page['forum'];]]></find>
+        <action type="after-add"><![CDATA[$sql_ary['session_album_id'] = $this->page['album'];]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[							// If the database is not yet updated, there will be an error due to the session_forum_id
+							// @todo REMOVE for 3.0.2]]></find>
+        <action type="before-add"><![CDATA[							if ($result === false)
+							{
+								unset($sql_ary['session_album_id']);
+							}]]></action>
       </edit>
     </open>
     <diy-instructions lang="en-gb">see normal install-file</diy-instructions>

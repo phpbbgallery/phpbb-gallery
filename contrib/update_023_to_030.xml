@@ -285,7 +285,7 @@ $user->add_lang('mods/gallery');]]></action>
     <open src="styles/prosilver/template/viewtopic_body.html">
       <edit>
         <find><![CDATA[<!-- IF postrow.U_JABBER --><li class="jabber-icon"><a href="{postrow.U_JABBER}" onclick="popup(this.href, 550, 320); return false;" title="{L_JABBER}"><span>{L_JABBER}</span></a></li><!-- ENDIF -->]]></find>
-        <action type="after-add"><![CDATA[<!-- IF postrow.U_GALLERY --><li class="gallery-icon"><a href="{postrow.U_GALLERY}" title="{L_PERSONAL_ALBUM}"><span>{L_PERSONAL_ALBUM}h</span></a></li><!-- ENDIF -->]]></action>
+        <action type="after-add"><![CDATA[<!-- IF postrow.U_GALLERY --><li class="gallery-icon"><a href="{postrow.U_GALLERY}" title="{L_PERSONAL_ALBUM}"><span>{L_PERSONAL_ALBUM}</span></a></li><!-- ENDIF -->]]></action>
       </edit>
     </open>
     <open src="styles/prosilver/theme/stylesheet.css">
