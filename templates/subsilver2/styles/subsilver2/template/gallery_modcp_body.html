@@ -61,8 +61,7 @@
 	</tr>
 	<!-- END picrow -->
 	<tr>
-	<td class="cat" colspan="6" align="right" height="28">
-		<a href="#" onclick="marklist('modcp', 'image_id', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('modcp', 'image_id', false); return false;">{L_UNMARK_ALL}</a> :: 
+	<td class="cat" colspan="6" align="right" height="28" style="padding-right: 5px;">
 		<input type="hidden" name="mode" value="modcp" />
 		<input type="submit" class="liteoption" name="move" value="{L_MOVE}" />
 		<input type="submit" class="liteoption" name="lock" value="{L_LOCK}" />
@@ -70,6 +69,7 @@
 		{DELETE_BUTTON}
 		{APPROVAL_BUTTON}
 		{UNAPPROVAL_BUTTON}
+		<a href="#" onclick="marklist('modcp', 'image_id', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('modcp', 'image_id', false); return false;">{L_UNMARK_ALL}</a>
 	</td>
 	</tr>
 </table>
