@@ -263,8 +263,8 @@ if ($mode == '')
 		'CAT_TITLE' 			=> $thiscat['album_name'],
 		'S_ALBUM_ACTION' 		=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id"),
 		'DELETE_BUTTON' 		=> ($auth_data['delete']) ? '<input type="submit" class="liteoption" name="delete" value="' . $user->lang['DELETE'] . '" />' : '',
-		'APPROVAL_BUTTON' 		=> (($user->data['user_type'] <> USER_FOUNDER) && ($thiscat['cat_approval'] == ALBUM_ADMIN)) ? '' : '<input type="submit" class="liteoption" name="approval" value="' . $user->lang['APPROVE'] . '" />',
-		'UNAPPROVAL_BUTTON' 	=> (($user->data['user_type'] <> USER_FOUNDER) && ($thiscat['cat_approval'] == ALBUM_ADMIN)) ? '' : '<input type="submit" class="liteoption" name="unapproval" value="' . $user->lang['UNAPPROVE'] . '" />',
+		'APPROVAL_BUTTON' 		=> (($user->data['user_type'] <> USER_FOUNDER) && ($thiscat['album_approval'] == ALBUM_ADMIN)) ? '' : '<input type="submit" class="liteoption" name="approval" value="' . $user->lang['APPROVE'] . '" />',
+		'UNAPPROVAL_BUTTON' 	=> (($user->data['user_type'] <> USER_FOUNDER) && ($thiscat['album_approval'] == ALBUM_ADMIN)) ? '' : '<input type="submit" class="liteoption" name="unapproval" value="' . $user->lang['UNAPPROVE'] . '" />',
 
 		'SORT_TIME' 			=> ($sort_method == 'image_time') ? 'selected="selected"' : '',
 		'SORT_IMAGE_NAME' 		=> ($sort_method == 'image_name') ? 'selected="selected"' : '',
