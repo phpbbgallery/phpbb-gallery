@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <?xml-stylesheet type="text/xsl" href="../modx.prosilver.en.xsl"?>
-<!-- $Id$ -->
 <!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
-<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.0.xsd">
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.0.1.xsd">
   <header>
     <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
     <title lang="en-gb">phpBB Gallery</title>
     <description lang="en-gb"><![CDATA[see normal install-file]]></description>
-    <author-notes lang="en-gb">i hope you get it installed, otherwise you can ask for help on phpbb.de and phpbb.com</author-notes>
+    <author-notes lang="en-gb">i hope you get it installed, otherwise you can ask for help on phpbb.de and phpbb.com
+
+
+
+	NOTE: If you want to be informed, when there should be a new version of this MOD available,
+	Please register on my Site and join the Group "MODs - phpBB Gallery - Newsletter".
+
+	I you want to be informed when i release any new version for one of my MODs join the Group "MODs - Newsletter"</author-notes>
     <author-group>
       <author>
         <realname>nickvergessen</realname>
@@ -20,72 +26,52 @@
     <mod-version>
       <major>0</major>
       <minor>3</minor>
-      <revision>0</revision>
+      <revision>1</revision>
     </mod-version>
     <installation>
       <level>easy</level>
       <time>240</time>
       <target-version>
-        <target-primary>3.0.0</target-primary>
+        <target-primary>3.0.1</target-primary>
         <target-major allow="exact">3</target-major>
         <target-minor allow="exact">0</target-minor>
       </target-version>
     </installation>
     <history>
       <entry>
-        <date>2008-03-06</date>
+        <date>2008-04-14</date>
         <rev-version>
           <major>0</major>
           <minor>3</minor>
-          <revision>0</revision>
+          <revision>1</revision>
         </rev-version>
         <changelog lang="en-GB">
-          <change><![CDATA[[Add] Report #138: Resize image in image view page]]></change>
-          <change><![CDATA[[Add] Report #195: Reduce SQL phpbb_users left join]]></change>
-          <change><![CDATA[[Add] Report #197: Personal Gallery Index - User colour are not showing...]]></change>
-          <change><![CDATA[[Add] Report #149: members should have the ability to create an album]]></change>
-          <change><![CDATA[[Add] Report #208: permissions for creating subalbums]]></change>
-          <change><![CDATA[[Add] Report #212: Multiple Upload]]></change>
-          <change><![CDATA[[Add] Report #15: edit and delete comments]]></change>
-          <change><![CDATA[[Add] Report #168: Persönliche Galerie verlinken]]></change>
-          <change><![CDATA[[Add] Report #213: SVN: move pic from private subalbum not possible]]></change>
-          <change><![CDATA[[Add] Report #211: Seitenauflistung in der "Wer ist online?"-Liste]]></change>
-          <change><![CDATA[[Add] Report #126: Optional black info line at bottom.]]></change>
+          <change><![CDATA[[Add] Report #150: mcp "select all"]]></change>
+          <change><![CDATA[[Add] Report #166: select multiple images for delete]]></change>
 
-          <change><![CDATA[[Change] Report #173: [ACP] missing radio and checkbox classes...cosmetic.]]></change>
-          <change><![CDATA[[Change] Report #163: Deutsche Sprache: Gallery/Galerie]]></change>
-          <change><![CDATA[[Change] Report #188: MCP link 2 times]]></change>
-          <change><![CDATA[[Change] Report #143: Also show new personal images on index page]]></change>
-          <change><![CDATA[[Change] Report #215: Should not update session page on thumbnail view]]></change>
-          <change><![CDATA[[Change] Report #216: Album BBcode - mark in one click]]></change>
+          <change><![CDATA[[Change] Report #257: wrong prev and next images]]></change>
+          <change><![CDATA[[Change] Report #247: KiB not KB]]></change>
 
-          <change><![CDATA[[Fix] Report #167: Missing Lang: IMAGE_BBCODE]]></change>
-          <change><![CDATA[[Fix] Report #172: Undefined variable: sort_new_comment_option]]></change>
-          <change><![CDATA[[Fix] Report #175: SVN: Move images are not working anymore]]></change>
-          <change><![CDATA[[Fix] Report #182: View the last MESSAGE?]]></change>
-          <change><![CDATA[[Fix] Report #176: Album categorie - don't show "no pictures"]]></change>
-          <change><![CDATA[[Fix] Report #190: Commment]]></change>
-          <change><![CDATA[[Fix] Report #194: no personal images in recent images]]></change>
-          <change><![CDATA[[Fix] Report #196: MCP - Delete images are not working anymore...]]></change>
-          <change><![CDATA[[Fix] Report #198: personal gallery of xxxx - PHP Notice error]]></change>
-          <change><![CDATA[[Fix] Report #199: SVN: gallery/index.php - SQL Error]]></change>
-          <change><![CDATA[[Fix] Report #202: install.xml - Description typo]]></change>
-          <change><![CDATA[[Fix] Report #186: No more albums to move]]></change>
-          <change><![CDATA[[Fix] Report #169: {memberrow.ALBUM_FOLDER_IMG_SRC}]]></change>
-          <change><![CDATA[[Fix] Report #174: Personal Albums - Next / Previous Links]]></change>
-          <change><![CDATA[[Fix] Report #207: display nav-link when using recent_image addon]]></change>
-          <change><![CDATA[[Fix] Report #210: personal albums - ucp - move subulbums error]]></change>
-          <change><![CDATA[[Fix] Report #178: imagecreatefromjpeg(./..//gallery/upload/.jpg)]]></change>
-          <change><![CDATA[[Fix] Report #205: SQL Error on convert (guest comments)]]></change>
-          <change><![CDATA[[Fix] Report #201: wrong album link]]></change>
-          <change><![CDATA[[Fix] Report #164: Deutscher Sprachbutton (UPLOADIMAGE)]]></change>
-          <change><![CDATA[[Fix] Report #200: Truecolor+alpha channel watermark]]></change>
-          <change><![CDATA[[Fix] Report #203: root/gallery/index.htm loaded instead of index.php]]></change>
-          <change><![CDATA[[Fix] Report #209: Personal album permissions are messed up.]]></change>
-          <change><![CDATA[[Fix] Report #206: Small typo in german language]]></change>
-          <change><![CDATA[[Fix] Report #214: personal gallery: empty gallery problem.]]></change>
-          <change><![CDATA[[Fix] Report #192: upload error lang]]></change>
-          <change><![CDATA[[Fix] Report #177: categorie - last image are not shown if disapproved]]></change>
+          <change><![CDATA[[Fix] Report #235: rel="lightbox" in subsilver2]]></change>
+          <change><![CDATA[[Fix] Report #251: Undefined variable: sort_new_comment_option]]></change>
+          <change><![CDATA[[Fix] Report #256: Undefined index: cat_approval]]></change>
+          <change><![CDATA[[Fix] Report #253: Sessionhandling of 3.0.1]]></change>
+          <change><![CDATA[[Fix] Report #242: Old Link in Installer Footer]]></change>
+          <change><![CDATA[[Fix] Report #243: non strict sql]]></change>
+          <change><![CDATA[[Fix] Report #244: Misspelled Information after successful Installation]]></change>
+          <change><![CDATA[[Fix] Report #248: image size on massimport when disabled]]></change>
+          <change><![CDATA[[Fix] Report #250: Potential exposure of real path when unlinking files]]></change>
+          <change><![CDATA[[Fix] Report #240: When deleting album in subsilver2, language not shown]]></change>
+          <change><![CDATA[[Fix] Report #249: When editing image 'Title' box isn't populated]]></change>
+          <change><![CDATA[[Fix] Report #237: Option when create a module for UCP]]></change>
+          <change><![CDATA[[Fix] Report #236: Undefined variable: album_config]]></change>
+          <change><![CDATA[[Fix] Report #225: [Sec] upload and move images to personal albums]]></change>
+          <change><![CDATA[[Fix] Report #223: Undefined index: IMG_BUTTON_UPLOAD_IMAGE]]></change>
+          <change><![CDATA[[Fix] Report #226: wrong permissions used on displaying moderating options]]></change>
+          <change><![CDATA[[Fix] Report #227: Gallery link on breadcrumbs in viewonline.php]]></change>
+          <change><![CDATA[[Fix] Report #230: viewing all albums in jumpbox]]></change>
+          <change><![CDATA[[Fix] Report #228: 0.2.3 to 0.3.0 upgrade won't update version]]></change>
+          <change><![CDATA[[Fix] Report #229: Can't edit or delete comment in subsilver2]]></change>
         </changelog>
       </entry>
     </history>

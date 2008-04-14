@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!-- MODX by the phpBB MOD Team XSL file v1.0 copyright 2005-2007 the phpBB MOD Team. 
-	$Id: modx.prosilver.en.xsl,v 1.1.2.3 2007/05/28 10:20:13 paulsohier Exp $ -->
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- MODX by the phpBB MOD Team XSL file v1.0.1 copyright 2005-2007 the phpBB MOD Team. 
+	$Id: modx.prosilver.en.xsl,v 1.2 2007/09/21 23:10:50 highwayoflife Exp $ -->
 <!DOCTYPE xsl:stylesheet[
 	<!ENTITY nbsp "&#160;">
 ]>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" xmlns:mod="http://www.phpbb.com/mods/xml/modx-1.0.xsd">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" xmlns:mod="http://www.phpbb.com/mods/xml/modx-1.0.1.xsd">
 	<xsl:output method="html" omit-xml-declaration="no" indent="yes" />
 <xsl:variable name="title" select="mod:mod/mod:header/mod:title" />
 <xsl:variable name="version">
@@ -13,6 +13,7 @@
 		</xsl:call-template>
 	</xsl:for-each>
 </xsl:variable>
+
 	<xsl:template match="mod:mod">
 		<html xmlns="http://www.w3.org/1999/xhtml">
 			<head>
@@ -448,6 +449,7 @@ div.codebox pre {
 </style>
 
 <script type="text/javascript">
+
 var i = 0;
 var box = new Array();
   
@@ -481,6 +483,7 @@ var documentLanguages = new Array(<xsl:for-each select="mod:title">'<xsl:value-o
 
 var opens = 0;
 var opens_ll = new Array();
+
 <xsl:for-each select="mod:action-group/mod:open">
   opens_ll[opens] = '<xsl:value-of select="generate-id()"/>';
   opens++;
@@ -523,6 +526,7 @@ var comments = 0;
 var comments_ll = new Array();
 <xsl:for-each select="mod:action-group/mod:open/mod:edit">
   <xsl:for-each select="mod:find">
+
     finds_ll[finds] = '<xsl:value-of select="generate-id()"/>';
     finds++;
     <xsl:if test="@type = 'regex'">
@@ -535,6 +539,7 @@ var comments_ll = new Array();
     comments++;
   </xsl:if>
 	<xsl:for-each select="mod:find|mod:action">
+
 		box[codes] = '<xsl:value-of select="generate-id()"/>';
     codes_ll[codes] = '<xsl:value-of select="generate-id()"/>';
     codes++;
@@ -548,6 +553,7 @@ var comments_ll = new Array();
         addbefores_ll[addbefores] = '<xsl:value-of select="generate-id()"/>';
         addbefores++;
       </xsl:if>
+
       <xsl:if test="@type = 'replace-with'">
         replacewiths_ll[replacewiths] = '<xsl:value-of select="generate-id()"/>';
         replacewiths++;
@@ -559,6 +565,7 @@ var comments_ll = new Array();
     </xsl:if>
 
   </xsl:for-each>
+
 	<xsl:for-each select="mod:inline-edit">
     <xsl:for-each select="mod:inline-find">
       ifinds_ll[ifinds] = '<xsl:value-of select="generate-id()"/>';
@@ -574,6 +581,7 @@ var comments_ll = new Array();
       codes++;
 
       <xsl:if test="name() = 'inline-action'">
+
         <xsl:if test="@type = 'after-add'">
           iaddafters_ll[iaddafters] = '<xsl:value-of select="generate-id()"/>';
           iaddafters++;
@@ -586,6 +594,7 @@ var comments_ll = new Array();
           ireplacewiths_ll[ireplacewiths] = '<xsl:value-of select="generate-id()"/>';
           ireplacewiths++;
         </xsl:if>
+
         <xsl:if test="@type = 'operation'">
           iincrements_ll[iincrements] = '<xsl:value-of select="generate-id()"/>';
           iincrements++;
@@ -600,6 +609,7 @@ var comments_ll = new Array();
  <xsl:for-each select="mod:action-group/mod:diy-instructions">
   codes_ll[codes] = '<xsl:value-of select="generate-id()"/>';
   codes++;
+
 </xsl:for-each>
   
 var copies = 0;
@@ -630,7 +640,7 @@ var enStrings = "h1=Installation Instructions for \n" +
 "il=Installation Level:\n" +
 "ile=Easy\n" +
 "ili=Intermediate\n" +
-"ilh=Hard\n" +
+"ila=Advanced\n" +
 "au=Author\n" +
 "aus=Authors\n" +
 "a-un=Username:\n" +
@@ -1015,24 +1025,40 @@ function select_text(id)
 	{
 		return;
 	}
-	var r, s;
-	if( document.selection && !SXBB_IsIEMac() )
+	
+  // Not IE
+	if (window.getSelection)
 	{
-		// Works on: IE5+
-		// To be confirmed: IE4? / IEMac fails?
-		r = document.body.createTextRange();
-		r.moveToElementText(o);
-		r.select();
+		var s = window.getSelection();
+		// Safari
+		if (s.setBaseAndExtent)
+		{
+			s.setBaseAndExtent(o, 0, o, o.innerText.length - 1);
+		}
+		// Firefox and Opera
+		else
+		{
+			var r = document.createRange();
+			r.selectNodeContents(o);
+			s.removeAllRanges();
+			s.addRange(r);
+		}
 	}
-	else if( document.createRange && (document.getSelection || window.getSelection) )
+	// Some older browsers
+	else if (document.getSelection)
 	{
-		// Works on: Netscape/Mozilla/Konqueror/Safari
-		// To be confirmed: Konqueror/Safari use window.getSelection ?
-		r = document.createRange();
+		var s = document.getSelection();
+		var r = document.createRange();
 		r.selectNodeContents(o);
-		s = window.getSelection ? window.getSelection() : document.getSelection();
 		s.removeAllRanges();
 		s.addRange(r);
+	}
+	// IE
+	else if (document.selection)
+	{
+		var r = document.body.createTextRange();
+		r.moveToElementText(o);
+		r.select();
 	}
 
 	find_selected(id);
@@ -1122,6 +1148,7 @@ function mod_doKeyPress(e)
 //-->]]></xsl:text>
 </script>
 				<title>phpBB MOD &#187; <xsl:value-of select="$title" /></title>
+
 			</head>
       <body class="ltr" onload="startup()">
         <div id="debug"></div>
@@ -1129,6 +1156,7 @@ function mod_doKeyPress(e)
           <div id="page-header">
             <h1><span id="lang-h1">Installation Instructions for </span>'<xsl:value-of select="$title" />' <span id="lang-V">Version </span><xsl:value-of select="$version" /></h1>
             <form method="post" action="" id="lang-selector" style="display: none;">
+
               <fieldset class="nobg">
                 <label for="language">
                   <span id="lang-slg">Select Language:</span>
@@ -1137,6 +1165,7 @@ function mod_doKeyPress(e)
                   <option value="en" selected="selected">English</option>
                 </select>
               </fieldset>
+
             </form>
           </div>
           <div id="page-body">
@@ -1146,6 +1175,7 @@ function mod_doKeyPress(e)
                   <span></span>
                 </span>
                 <div id="content">
+
                   <div id="main">
                     <fieldset class="permissions" id="perm00">
             <xsl:for-each select="mod:header">
@@ -1155,6 +1185,7 @@ function mod_doKeyPress(e)
                     <hr />
                     <fieldset class="permissions" id="Fieldset1">
 							<xsl:for-each select="mod:action-group">
+
 								<xsl:call-template name="give-actions"></xsl:call-template>
 							</xsl:for-each>
               <hr />
@@ -1172,6 +1203,7 @@ function mod_doKeyPress(e)
     </div>
   </div>
 </div>
+
 <div id="page-footer">
   <p class="copyright" style="text-align: center; font-size: 10px;" id="lang-foot">MOD UA XSLT File Copyright &#169; 2007 The phpBB Group, this MOD is copyright to the authors listed above.</p>
 </div>
@@ -1181,6 +1213,7 @@ function mod_doKeyPress(e)
 	</xsl:template>
 	<xsl:template name="give-header">
     <h2 id="lang-atm">About this MOD</h2>
+
     <dl>
       <dt id="lang-t">Title:</dt>
       <dd class="mod-about">
@@ -1189,6 +1222,7 @@ function mod_doKeyPress(e)
 				<xsl:if test="count(mod:title) > 1">
 					<dl id="title">
 						<xsl:for-each select="mod:title">
+
 								<dt>
 									<xsl:value-of select="@lang" />
 								</dt>
@@ -1198,6 +1232,7 @@ function mod_doKeyPress(e)
 						</xsl:for-each>
 					</dl>
 				</xsl:if>
+
 				<xsl:if test="count(mod:title) = 1"><p lang="{@lang}" style='white-space:pre;'><xsl:value-of select="mod:title" /></p></xsl:if>
           <span class="corners-bottom"><span></span></span>
         </div>
@@ -1206,15 +1241,17 @@ function mod_doKeyPress(e)
 		    <dd class="mod-about">
 			    <div class="inner">
 				    <span class="corners-top"><span></span></span>
+
 				    <xsl:if test="count(mod:description) > 1">
 					    <dl id="description">
 						    <xsl:for-each select="mod:description">
 								  <dt><xsl:value-of select="@lang" /></dt>
-                  <dd style='white-space:pre;' lang="{@lang}"><p>
+                  <dd lang="{@lang}"><p>
 								   <xsl:call-template name="add-line-breaks">
 								    <xsl:with-param name="string">
 									   <xsl:value-of select="current()" />
 								    </xsl:with-param>
+
 								   </xsl:call-template>
                   </p>
                 </dd>
@@ -1224,6 +1261,7 @@ function mod_doKeyPress(e)
 				    <xsl:if test="count(mod:description) = 1">
               <p lang="{@lang}" style='white-space:pre;'>
                 <xsl:call-template name="add-line-breaks">
+
                   <xsl:with-param name="string">
                     <xsl:value-of select="mod:description" />
                   </xsl:with-param>
@@ -1233,6 +1271,7 @@ function mod_doKeyPress(e)
             <span class="corners-bottom"><span></span></span>
           </div>
         </dd>
+
 			<dt id="lang-aV">Version:</dt>
 			<dd class="mod-about">
 				<div class="inner">
@@ -1241,6 +1280,7 @@ function mod_doKeyPress(e)
             <xsl:for-each select="mod:mod-version">
               <xsl:call-template name="give-version"></xsl:call-template>
             </xsl:for-each>
+
           </p>
           <span class="corners-bottom"><span></span></span>
         </div>
@@ -1250,6 +1290,7 @@ function mod_doKeyPress(e)
 			</xsl:for-each>
 		</dl>
 		<xsl:for-each select="mod:author-group">
+
       <xsl:if test="count(mod:author) > 1"><h3 id="lang-aus">Authors</h3></xsl:if>
       <xsl:if test="count(mod:author) = 1"><h3 id="lang-au">Author</h3></xsl:if>
 			<xsl:call-template name="give-authors"></xsl:call-template>
@@ -1257,6 +1298,7 @@ function mod_doKeyPress(e)
     <h3 id="lang-fte">Files to Edit</h3>
 		<xsl:for-each select="../mod:action-group">
 			<xsl:call-template name="give-files-to-edit"></xsl:call-template>
+
 		</xsl:for-each>
     <h3 id="lang-icf">Included Files</h3>
 		<xsl:if test="count(../mod:action-group/mod:copy/mod:file) = 0">
@@ -1265,6 +1307,7 @@ function mod_doKeyPress(e)
 		<xsl:for-each select="../mod:action-group">
 			<xsl:call-template name="give-files-included"></xsl:call-template>
 		</xsl:for-each>
+
 		<hr />
     <div id="modDisclaimer">
       <h3 id="lang-dcl">Disclaimer</h3>
@@ -1273,12 +1316,14 @@ function mod_doKeyPress(e)
           <span class="corners-top">
             <span></span>
           </span>
+
           <p>
             <span id="lang-dclt">For security purposes, please check: <a href="http://www.phpbb.com/mods/">http://www.phpbb.com/mods/</a> for the latest version of this MOD. Downloading this MOD from other sites could cause malicious code to enter into your phpBB Forum. As such, phpBB will not offer support for MODs not offered in our MODs database, located at: <a href="http://www.phpbb.com/mods/">http://www.phpbb.com/mods/</a></span>
           </p>
           <span class="corners-bottom">
             <span></span>
           </span>
+
         </div>
       </div>
     </div>
@@ -1287,6 +1332,7 @@ function mod_doKeyPress(e)
       <div class="inner">
         <span class="corners-top">
           <span></span>
+
         </span>
 			<xsl:if test="count(mod:author-notes) > 1">
 				<dl id="author-notes">
@@ -1296,6 +1342,7 @@ function mod_doKeyPress(e)
 							</dt>
 							<dd lang="{@lang}">
 								<xsl:call-template name="add-line-breaks">
+
 									<xsl:with-param name="string">
 										<xsl:value-of select="current()" />
 									</xsl:with-param>
@@ -1305,13 +1352,17 @@ function mod_doKeyPress(e)
 				</dl>
 			</xsl:if>
 			<xsl:if test="count(mod:author-notes) = 1">
-				<xsl:call-template name="add-line-breaks">
-					<xsl:with-param name="string">
-						<xsl:value-of select="mod:author-notes" />
-					</xsl:with-param>
-				</xsl:call-template>
+
+				<dl id="author-notes">
+					<xsl:call-template name="add-line-breaks">
+						<xsl:with-param name="string">
+							<xsl:value-of select="mod:author-notes" />
+						</xsl:with-param>
+					</xsl:call-template>
+				</dl>
 			</xsl:if>
         <span class="corners-bottom">
+
           <span></span>
         </span>
       </div>
@@ -1321,6 +1372,7 @@ function mod_doKeyPress(e)
         <xsl:call-template name="give-mod-history"></xsl:call-template>
       </xsl:for-each>
       <h3 id="lang-lic">License</h3>
+
       <div class="mod-about">
         <div class="inner">
           <span class="corners-top"><span></span></span>
@@ -1329,6 +1381,7 @@ function mod_doKeyPress(e)
             <a href="license.txt"><xsl:value-of select="mod:license" /></a>
           </p>
           <span class="corners-bottom"><span></span></span>
+
         </div>
       </div>
       <h3 id="lang-ont">Other Notes</h3>
@@ -1337,17 +1390,22 @@ function mod_doKeyPress(e)
           <span class="corners-top">
             <span></span>
           </span>
+
           <p><span id="lang-ontt1">Before adding this MOD to your forum, you should back up all files related to this MOD</span></p>
           <p>
             <span id="lang-ontt2">This MOD was designed for phpBB</span><xsl:value-of select="mod:installation/mod:target-version/mod:target-primary" /><span id="lang-ontt3"> and may not function as stated on other phpBB versions. MODs for phpBB3.0 will <strong>not</strong> work on phpBB2.0 and vice versa.</span>
           </p>
-          <xsl:if test="./mod:mod-version/mod:minor mod 2 != 0 or ./mod:mod-version/mod:major = 0">
+          <xsl:for-each select="./mod:mod-version">
+
+          <xsl:if test="mod:minor mod 2 != 0 or mod:major = 0 or (@stage != '' and @stage != 'stable')">
             <p>
               <strong class="red">
                 <span id="lang-onttq">This MOD is development quality. It is not recommended that you install it on a live forum.</span>
               </strong>
             </p>
           </xsl:if>
+          </xsl:for-each>
+
           <span class="corners-bottom">
             <span></span>
           </span>
@@ -1357,6 +1415,7 @@ function mod_doKeyPress(e)
         <h4>
           <span id="lang-isp"></span>
         </h4>
+
         <div class="mod-about">
           <div class="inner">
             <span class="corners-top">
@@ -1366,6 +1425,7 @@ function mod_doKeyPress(e)
               <span id="lang-ispt"></span>
             </p>
             <span class="corners-bottom">
+
               <span></span>
             </span>
           </div>
@@ -1375,6 +1435,7 @@ function mod_doKeyPress(e)
 	</xsl:template>
 	<xsl:template name="give-authors">
 		<xsl:for-each select="mod:author">
+
       <div class="mod-about">
         <div class="inner">
           <span class="corners-top"><span></span></span>
@@ -1384,14 +1445,16 @@ function mod_doKeyPress(e)
 	</div>
 		</xsl:for-each>
 	</xsl:template>
+
 	<xsl:template name="give-author">
     <dl class="author-info">
       <dt id="lang-a-un[{generate-id()}]">Username:</dt>
 			<dd>
-				<a href="http://www.phpbb.com/phpBB/profile.php?mode=viewprofile&amp;un={mod:username}">
+				<a href="http://www.phpbb.com/community/memberlist.php?mode=viewprofile&amp;un={mod:username}">
 					<xsl:value-of select="mod:username" />
 				</a>
 			</dd>
+
 			<xsl:if test="mod:email != 'N/A' and mod:email != 'n/a' and mod:email != ''">
         <dt id="lang-a-e[{generate-id()}]">Email:</dt>
 				<dd>
@@ -1400,6 +1463,7 @@ function mod_doKeyPress(e)
 					</a>
 				</dd>
 			</xsl:if>
+
       <dt id="lang-a-n[{generate-id()}]">Name:</dt>
 			<dd>
 				<xsl:value-of select="mod:realname" />
@@ -1408,6 +1472,7 @@ function mod_doKeyPress(e)
         <dt id="lang-a-h[{generate-id()}]">WWW:</dt>
 				<dd>
 					<a href="{mod:homepage}">
+
 						<xsl:value-of select="mod:homepage" />
 					</a>
 				</dd>
@@ -1415,17 +1480,36 @@ function mod_doKeyPress(e)
 		</dl>
 		<br />
 	</xsl:template>
-	<xsl:template name="give-version"><xsl:value-of select="concat(mod:major, '.', mod:minor, '.', mod:revision, mod:release)" /></xsl:template>
+	<xsl:template name="give-version">
+    <xsl:choose>
+
+      <xsl:when test="@stage = 'beta'">
+        <xsl:value-of select="concat(mod:major, '.', mod:minor, ' ', 'Beta ', mod:revision, mod:release)" />
+      </xsl:when>
+      <xsl:when test="@stage = 'alpha'">
+        <xsl:value-of select="concat(mod:major, '.', mod:minor, ' ', 'Alpha ', mod:revision, mod:release)" />
+      </xsl:when>
+      <xsl:when test="@stage = 'release-candidate'">
+        <xsl:value-of select="concat(mod:major, '.', mod:minor, ' ', 'RC', mod:revision, mod:release)" />
+      </xsl:when>
+
+      <xsl:otherwise>
+        <xsl:value-of select="concat(mod:major, '.', mod:minor, '.', mod:revision, mod:release)" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 	<xsl:template name="give-installation">
 		<dt id="lang-il">Installation Level:</dt>
 		<dd class="mod-about">
+
 			<div class="inner">
 				<span class="corners-top"><span></span></span>
 			<xsl:if test="mod:level='easy'"><p id="lang-ile">Easy</p></xsl:if>
 			<xsl:if test="mod:level='intermediate'"><p id="lang-ili">Intermediate</p></xsl:if>
-			<xsl:if test="mod:level='hard'"><p id="lang-ilh">Hard</p></xsl:if>
+			<xsl:if test="mod:level='advanced'"><p id="lang-ila">Advanced</p></xsl:if>
         <span class="corners-bottom"><span></span></span>
       </div>
+
     </dd>
 		<dt id="lang-it">Installation Time:</dt>
 		<dd class="mod-about">
@@ -1433,6 +1517,7 @@ function mod_doKeyPress(e)
 				<span class="corners-top"><span></span></span>
         <p>~<xsl:value-of select="floor(mod:time div 60)" /> <span id="lang-mint">minutes</span></p>
         <span class="corners-bottom">
+
           <span></span>
         </span>
       </div>
@@ -1441,6 +1526,7 @@ function mod_doKeyPress(e)
 	<xsl:template name="give-mod-history">
 		<xsl:if test="count(mod:entry) > 0">
 			<h3 id="lang-mh">MOD History</h3>
+
 			<dl>
 				<xsl:for-each select="mod:entry">
 					<xsl:call-template name="give-history-entry"></xsl:call-template>
@@ -1450,6 +1536,7 @@ function mod_doKeyPress(e)
 	</xsl:template>
 	<xsl:template name="give-history-entry">
     <div class="mod-about">
+
       <div class="inner"><span class="corners-top"><span></span></span>
 		<dt><p><strong><xsl:value-of select="substring(mod:date,1,10)" /><span id="lang-mhe-v[{generate-id()}]"> - Version </span><xsl:for-each select="mod:rev-version"><xsl:call-template name="give-version"></xsl:call-template></xsl:for-each></strong></p></dt>
 		<dd>
@@ -1458,6 +1545,7 @@ function mod_doKeyPress(e)
 				<xsl:for-each select="mod:changelog">
 					<xsl:call-template name="give-history-entry-changelog"></xsl:call-template>
 				</xsl:for-each>
+
         </dl>
 			</xsl:if>
 			<xsl:if test="count(mod:changelog) = 1">
@@ -1467,6 +1555,7 @@ function mod_doKeyPress(e)
 			</xsl:if>
 		</dd>
         <span class="corners-bottom"><span></span></span></div>
+
       </div>
 	</xsl:template>
 	<xsl:template name="give-history-entry-changelog">
@@ -1476,6 +1565,7 @@ function mod_doKeyPress(e)
 					<xsl:for-each select="mod:change">
 						<li><p><xsl:value-of select="current()" /></p></li>
 					</xsl:for-each>
+
 				</ul>
 			</dd>
 	</xsl:template>
@@ -1485,6 +1575,7 @@ function mod_doKeyPress(e)
 				<li><p><xsl:value-of select="current()" /></p></li>
 			</xsl:for-each>
 		</ul>
+
 	</xsl:template>
 	<xsl:template name="give-files-to-edit">
 		<ul>
@@ -1494,6 +1585,7 @@ function mod_doKeyPress(e)
 		</ul>
 	</xsl:template>
 	<xsl:template name="give-files-included">
+
 		<ul>
 			<xsl:for-each select="mod:copy">
 				<xsl:call-template name="give-file-copy"></xsl:call-template>
@@ -1503,6 +1595,7 @@ function mod_doKeyPress(e)
 	<xsl:template name="give-file">
 		<li>
 			<xsl:value-of select="@src" />
+
 			<xsl:if test="position()!=last()">,</xsl:if>
 		</li>
 	</xsl:template>
@@ -1511,6 +1604,7 @@ function mod_doKeyPress(e)
 			<li>
 				<xsl:value-of select="@from" />
 				<xsl:if test="position()!=last()">,</xsl:if>
+
 			</li>
 		</xsl:for-each>
 	</xsl:template>
@@ -1519,6 +1613,7 @@ function mod_doKeyPress(e)
       <h2 id="lang-sql">SQL</h2>
     </xsl:if>
 		<div id="sql" class="mod-about">
+
        <div class="inner">
 				<span class="corners-top"><span></span></span>
 		<xsl:for-each select="mod:sql">			
@@ -1529,6 +1624,7 @@ function mod_doKeyPress(e)
 		</div>
 		<xsl:if test="count(mod:copy) > 0">
       <xsl:for-each select="mod:copy">
+
         <xsl:call-template name="give-filez"></xsl:call-template>
       </xsl:for-each>
     </xsl:if>
@@ -1536,6 +1632,7 @@ function mod_doKeyPress(e)
 		<p>
 			<span class="key">s</span><span class="key">↑</span><span class="key">↓</span></p>
 		<p>
+
 			<span id="lang-edtt">Use your keyboard to navigate the code boxes. You may also hit '<em>s</em>' on your keyboard to go to the first code box.</span>
 		</p>
 		<div class="mod-about" id="edits">
@@ -1543,6 +1640,7 @@ function mod_doKeyPress(e)
 				<span class="corners-top"><span></span></span>
 		<xsl:for-each select="mod:open">
 			<xsl:call-template name="give-fileo"></xsl:call-template>
+
 		</xsl:for-each>
         <span class="corners-bottom"><span></span></span>
 			</div>
@@ -1552,6 +1650,7 @@ function mod_doKeyPress(e)
 	<xsl:template name="give-sql">
 		<div class="content">
 					<div class="codebox">
+
 						<div class="codeHead"><span id="lang-cde-c[{generate-id()}]">Code:</span><a href="#" onclick="selectCode(this); return false;"><span id="lang-cde-sa[{generate-id()}]">Select All</span></a></div>
 						<div class="codePre"><pre id="{generate-id()}"><xsl:value-of select="current()" /></pre></div>
 					</div>
@@ -1560,6 +1659,7 @@ function mod_doKeyPress(e)
 	<xsl:template name="give-manual">
     <xsl:if test="count(mod:diy-instructions) > 0">
     <div class="mod-about">
+
 	<div class="inner">
 		<span class="corners-top"><span></span></span>
 		<h2 id="lang-diy">DIY Instructions</h2>
@@ -1568,6 +1668,7 @@ function mod_doKeyPress(e)
 		<xsl:for-each select="mod:diy-instructions">
       <div lang="{@lang}">
 				<div class="content">
+
 				 <div class="codebox">
 				  <div class="codeHead"><span id="lang-cde-c[{generate-id()}]">Code:</span><a href="#" onclick="selectCode(this); return false;"><span id="lang-cde-sa[{generate-id()}]">Select All</span></a></div>
 				  <div class="codePre"><pre id="{generate-id()}"><xsl:value-of select="current()" /></pre></div>
@@ -1576,6 +1677,7 @@ function mod_doKeyPress(e)
 			</div>
 		</xsl:for-each>
     </div>
+
     <span class="corners-bottom">
       <span></span>
     </span>
@@ -1586,6 +1688,7 @@ function mod_doKeyPress(e)
 	<xsl:template name="give-fileo">
 		<div class="editFile">
       <h3><span id="lang-opn[{generate-id()}]">Open:</span>&nbsp;<xsl:value-of select="@src" /></h3>
+
 			<xsl:for-each select="mod:edit">
         <div class="mod-edit">
           <xsl:if test="count(mod:comment) > 0">
@@ -1594,6 +1697,7 @@ function mod_doKeyPress(e)
             <dl id="mod-comment[{generate-id()}]">
               <xsl:for-each select="mod:comment">
                 <dt>
+
                   <span><xsl:if test="count(../mod:comment) > 1"><xsl:value-of select="@lang" /></xsl:if></span>
                 </dt>
                 <dd lang="{@lang}"><xsl:value-of select="current()" />
@@ -1603,6 +1707,7 @@ function mod_doKeyPress(e)
             </div>
           </xsl:if>
 					<xsl:for-each select="mod:find|mod:action|mod:inline-edit">
+
 						<xsl:if test="name() = 'find'">
               <h4 id="lang-fnd[{generate-id()}]">Find</h4>
               <p><span id="lang-fndt[{generate-id()}]"><strong>Tip:</strong> This may be a partial find and not the whole line.</span>
@@ -1610,6 +1715,7 @@ function mod_doKeyPress(e)
 									<br />
 									<em id="lang-regex[{generate-id()}]">This find contains an advanced feature known as regular expressions, click here to learn more.</em>
 								</xsl:if>
+
 </p>
           <div class="codebox">
 						<div class="codeHead"><span id="lang-cde-c[{generate-id()}]">Code:</span><a href="#" onclick="selectCode(this); return false;"><span id="lang-cde-sa[{generate-id()}]">Select All</span></a></div>
@@ -1618,18 +1724,21 @@ function mod_doKeyPress(e)
 						</xsl:if>
 						<xsl:if test="name() = 'action'">
 							<xsl:if test="@type = 'after-add'">
+
                 <h4 id="lang-aft[{generate-id()}]">Add after</h4>
                 <p><span id="lang-aftt[{generate-id()}]"><strong>Tip:</strong> Add these lines on a new blank line after the preceding line(s) to find.</span></p>
 							</xsl:if>
 							<xsl:if test="@type = 'before-add'">
                 <h4 id="lang-bef[{generate-id()}]">Add before</h4>
                 <p>
+
                   <span id="lang-beft[{generate-id()}]"><strong>Tip:</strong> Add these lines on a new blank line before the preceding line(s) to find.</span>
                 </p>
 							</xsl:if>
 							<xsl:if test="@type = 'replace-with'">
                 <h4 id="lang-rplw[{generate-id()}]">Replace With</h4>
                 <p><span id="lang-rplwt[{generate-id()}]"><strong>Tip:</strong> Replace the preceding line(s) to find with the following lines.</span></p>
+
 							</xsl:if>
 							<xsl:if test="@type = 'operation'">
                 <h4 id="lang-inc[{generate-id()}]">Increment</h4>
@@ -1637,6 +1746,7 @@ function mod_doKeyPress(e)
                   <span id="lang-inct[{generate-id()}]"><strong>Tip:</strong> This allows you to alter integers. For help on what each operator means, click here.</span>
                 </p>
 							</xsl:if>
+
 					<div class="codebox">
 						<div class="codeHead"><span id="lang-cde-c[{generate-id()}]">Code:</span><a href="#" onclick="selectCode(this); return false;"><span id="lang-cde-sa[{generate-id()}]">Select All</span></a></div>
 						<div class="codePre"><pre id="{generate-id()}"><xsl:value-of select="current()" /></pre></div>
@@ -1645,6 +1755,7 @@ function mod_doKeyPress(e)
 						<xsl:if test="name() = 'inline-edit'">
               <div class="mod-inlineedit">
 								<xsl:for-each select="mod:inline-find|mod:inline-action|mod:inline-comment">
+
 									<xsl:if test="name() = 'inline-find'">
                     <h5 id="lang-ifnd[{generate-id()}]">In-line Find</h5>
                     <p>
@@ -1652,6 +1763,7 @@ function mod_doKeyPress(e)
 <xsl:if test="@type = 'regex'">
 												<br />
 												<em id="lang-regex[{generate-id()}]">This find contains an advanced feature known as regular expressions, click here to learn more.</em>
+
 											</xsl:if>
 </p>
 					<div class="codebox">
@@ -1660,6 +1772,7 @@ function mod_doKeyPress(e)
 					</div>
 									</xsl:if>
 									<xsl:if test="name() = 'inline-action'">
+
 										<xsl:if test="@type = 'after-add'">
                       <h5 id="lang-iaft[{generate-id()}]">In-line Add after</h5>
                       <p>
@@ -1668,6 +1781,7 @@ function mod_doKeyPress(e)
 										</xsl:if>
 										<xsl:if test="@type = 'before-add'">
                       <h5 id="lang-ibef[{generate-id()}]">In-line Add before</h5>
+
                       <p>
                         <span id="lang-ibeft[{generate-id()}]"></span>
                       </p>
@@ -1676,6 +1790,7 @@ function mod_doKeyPress(e)
                       <h5 id="lang-irplw[{generate-id()}]">In-line Replace With</h5>
                       <p>
                         <span id="lang-irplwt[{generate-id()}]"></span>
+
                       </p>
 										</xsl:if>
 										<xsl:if test="@type = 'operation'">
@@ -1683,6 +1798,7 @@ function mod_doKeyPress(e)
                       <p>
                         <span id="lang-iinct[{generate-id()}]"><strong>Tip:</strong> This allows you to alter integers. For help on what each operator means, click here.</span>
                       </p>
+
 										</xsl:if>
 					<div class="codebox">
 						<div class="codeHead"><span id="lang-cde-c[{generate-id()}]">Code:</span><a href="#" onclick="selectCode(this); return false;"><span id="lang-cde-sa[{generate-id()}]">Select All</span></a></div>
@@ -1691,6 +1807,7 @@ function mod_doKeyPress(e)
 									</xsl:if>
 									<xsl:if test="name() = 'inline-comment'">
           <dl id="comment[{generate-id()}]">
+
 						<dt><span id="lang-cm-cmt[{generate-id()}]">Comments</span>&nbsp;<span><xsl:value-of select="@lang" /></span></dt>
 						<dd lang="{@lang}"><xsl:value-of select="current()" /></dd>
 					</dl>
@@ -1699,6 +1816,7 @@ function mod_doKeyPress(e)
 							</div>
 						</xsl:if>
 					</xsl:for-each>
+
 				</div>
 			</xsl:for-each>
 		</div>
@@ -1707,6 +1825,7 @@ function mod_doKeyPress(e)
     <h2 id="lang-fca">File Copy</h2>
     <ol id="file-copy">
 			<xsl:for-each select="mod:file">
+
       <li>
 				<dl>
 				<dt><span id="lang-c-copy[{generate-id()}]">Copy:</span>&nbsp;<xsl:value-of select="@from" /></dt>
@@ -1715,6 +1834,7 @@ function mod_doKeyPress(e)
 			</li>
 			</xsl:for-each>
 		</ol>
+
 	</xsl:template>
 	<!-- add-line-breaks borrowed from http://www.stylusstudio.com/xsllist/200103/post40180.html -->
 	<xsl:template name="add-line-breaks">
@@ -1724,6 +1844,7 @@ function mod_doKeyPress(e)
 				<xsl:value-of select="substring-before($string, '&#xA;')" />
 				<br />
 				<xsl:call-template name="add-line-breaks">
+
 					<xsl:with-param name="string" select="substring-after($string, '&#xA;')" />
 				</xsl:call-template>
 			</xsl:when>
