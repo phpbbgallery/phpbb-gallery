@@ -33,13 +33,39 @@
     </installation>
     <history>
       <entry>
-        <date>2008-03-06</date>
+        <date>2008-04-14</date>
         <rev-version>
           <major>0</major>
           <minor>3</minor>
           <revision>1</revision>
         </rev-version>
         <changelog lang="en-GB">
+          <change><![CDATA[[Add] Report #150: mcp "select all"]]></change>
+          <change><![CDATA[[Add] Report #166: select multiple images for delete]]></change>
+
+          <change><![CDATA[[Change] Report #257: wrong prev and next images]]></change>
+          <change><![CDATA[[Change] Report #247: KiB not KB]]></change>
+
+          <change><![CDATA[[Fix] Report #235: rel="lightbox" in subsilver2]]></change>
+          <change><![CDATA[[Fix] Report #251: Undefined variable: sort_new_comment_option]]></change>
+          <change><![CDATA[[Fix] Report #256: Undefined index: cat_approval]]></change>
+          <change><![CDATA[[Fix] Report #253: Sessionhandling of 3.0.1]]></change>
+          <change><![CDATA[[Fix] Report #242: Old Link in Installer Footer]]></change>
+          <change><![CDATA[[Fix] Report #243: non strict sql]]></change>
+          <change><![CDATA[[Fix] Report #244: Misspelled Information after successful Installation]]></change>
+          <change><![CDATA[[Fix] Report #248: image size on massimport when disabled]]></change>
+          <change><![CDATA[[Fix] Report #250: Potential exposure of real path when unlinking files]]></change>
+          <change><![CDATA[[Fix] Report #240: When deleting album in subsilver2, language not shown]]></change>
+          <change><![CDATA[[Fix] Report #249: When editing image 'Title' box isn't populated]]></change>
+          <change><![CDATA[[Fix] Report #237: Option when create a module for UCP]]></change>
+          <change><![CDATA[[Fix] Report #236: Undefined variable: album_config]]></change>
+          <change><![CDATA[[Fix] Report #225: [Sec] upload and move images to personal albums]]></change>
+          <change><![CDATA[[Fix] Report #223: Undefined index: IMG_BUTTON_UPLOAD_IMAGE]]></change>
+          <change><![CDATA[[Fix] Report #226: wrong permissions used on displaying moderating options]]></change>
+          <change><![CDATA[[Fix] Report #227: Gallery link on breadcrumbs in viewonline.php]]></change>
+          <change><![CDATA[[Fix] Report #230: viewing all albums in jumpbox]]></change>
+          <change><![CDATA[[Fix] Report #228: 0.2.3 to 0.3.0 upgrade won't update version]]></change>
+          <change><![CDATA[[Fix] Report #229: Can't edit or delete comment in subsilver2]]></change>
         </changelog>
       </entry>
     </history>
