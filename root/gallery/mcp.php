@@ -238,7 +238,7 @@ if ($mode == '')
 		$template->assign_block_vars('no_pics', array());
 	}
 
-	$sort_rating_option = sort_new_comment_option = $sort_comments_option = '';
+	$sort_rating_option = $sort_new_comment_option = $sort_comments_option = '';
 	
 	if ($album_config['rate'])
 	{
