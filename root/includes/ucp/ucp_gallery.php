@@ -9,6 +9,14 @@
 *
 */
 
+/**
+* @ignore
+*/
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
 class ucp_gallery
 {
 	var $u_action;
