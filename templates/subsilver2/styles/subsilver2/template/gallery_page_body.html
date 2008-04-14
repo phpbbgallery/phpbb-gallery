@@ -15,6 +15,20 @@ function checkRateForm() {
 // -->
 </script>
 <script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery_lytebox.js"></script>
+<script type="text/javascript" >
+	if (window.addEventListener) {
+		window.addEventListener("load",initLytebox,false);
+	} else if (window.attachEvent) {
+		window.attachEvent("onload",initLytebox);
+	} else {
+		window.onload = function() {initLytebox();}
+	}
+	function initLytebox() {
+		var imgMaxWidth = {IMAGE_RSZ_WIDTH};
+		var imgWarning = '';
+		myLytebox = new LyteBox(imgMaxWidth, imgWarning);
+	}
+</script>
 
 <h2><a href="#">{IMAGE_NAME}</a></h2>
 
