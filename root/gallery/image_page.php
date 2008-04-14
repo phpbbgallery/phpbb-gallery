@@ -188,16 +188,18 @@ $sql = 'SELECT i.image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment
 	GROUP BY i.image_id
 	ORDER BY ' . $sort_method . ' ' . $sort_order;
 $result = $db->sql_query($sql);
+//there should also be a way to go with a limit here, but we'll see
+
 while ($row = $db->sql_fetchrow($result))
 {
 	if ($do_next)
 	{
-		$previous_id = $row['image_id'];
+		$next_id = $row['image_id'];
 	}
 	$do_next = false;
 	if ($row['image_id'] == $image_data['image_id'])
 	{
-		$next_id = $last_id;
+		$previous_id = $last_id;
 		$do_next = true;
 	}
 	$last_id = $row['image_id'];
