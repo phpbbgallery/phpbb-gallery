@@ -541,6 +541,7 @@ switch ($mode)
 			gallery_column(SESSIONS_TABLE, 'session_album_id', array('UINT', 0));
 
 			// clear cache and log what we did
+			gallery_config_value('album_version', $new_mod_version, true);
 			$cache->purge();
 			add_log('admin', 'LOG_INSTALL_INSTALLED', $log_name);
 			add_log('admin', 'LOG_PURGE_CACHE');
