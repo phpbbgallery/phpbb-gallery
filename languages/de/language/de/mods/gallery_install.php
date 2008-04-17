@@ -62,6 +62,8 @@ $lang = array_merge($lang, array(
 	'INSTALLER_UPDATE_VERSION'			=> 'Update MOD von v',
 	'INSTALLER_UPDATE_WELCOME'			=> 'Willkommen zum Update',
 
+	'MISSING_PARENT_MODULE'				=> 'Modul #%s fehlt als übergeordnetes Modul für "%s".',
+
 	'WARNING'							=> 'Warnung',
 ));
 
