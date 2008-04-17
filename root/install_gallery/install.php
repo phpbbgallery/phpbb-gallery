@@ -311,7 +311,6 @@ switch ($mode)
 			unset($sql_query);
 
 			// create the acp modules
-			$modules = new acp_modules();
 			$acp_gallery = array(
 				'module_basename'	=> '',
 				'module_enabled'	=> 1,
@@ -520,7 +519,6 @@ switch ($mode)
 			}
 			$db->sql_freeresult($result);
 
-			$modules = new acp_modules();
 			$ucp_gallery = array(
 				'module_basename'	=> 'gallery',
 				'module_enabled'	=> 1,
@@ -799,7 +797,6 @@ switch ($mode)
 			$db->sql_freeresult($result);
 
 			// create the acp modules
-			$modules = new acp_modules();
 			$acp_gallery = array(
 				'module_basename'	=> '',
 				'module_enabled'	=> 1,
@@ -938,26 +935,6 @@ switch ($mode)
 			delete_gallery_column(SESSIONS_TABLE, 'session_album_id');
 			$cache->purge();
 			$deleted = true;
-		}
-	break;
-	case 'check':
-		$check = request_var('check', 0);
-		$checked = false;
-		if ($check == 1)
-		{
-			$acp_gallery = array(
-				'module_basename'	=> '',
-				'module_enabled'	=> 1,
-				'module_display'	=> 1,
-				'parent_id'			=> 31654648,
-				'module_class'		=> 'acp',
-				'module_langname'	=> 'PHPBB_GALLERY',
-				'module_mode'		=> '',
-				'module_auth'		=> ''
-			);
-			add_module($acp_gallery);
-			$cache->purge();
-			$checked = true;
 		}
 	break;
 	default:
