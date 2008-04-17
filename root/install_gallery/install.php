@@ -322,7 +322,7 @@ switch ($mode)
 				'module_mode'		=> '',
 				'module_auth'		=> ''
 			);
-			$modules->update_module_data($acp_gallery);
+			add_module($acp_gallery);
 			$acp_gallery_overview = array(
 				'module_basename'	=> 'gallery',
 				'module_enabled'	=> 1,
@@ -333,7 +333,7 @@ switch ($mode)
 				'module_mode'		=> 'overview',
 				'module_auth'		=> ''
 			);
-			$modules->update_module_data($acp_gallery_overview);
+			add_module($acp_gallery_overview);
 			$acp_gallery_manage_albums = array(
 				'module_basename'	=> 'gallery',
 				'module_enabled'	=> 1,
@@ -344,7 +344,7 @@ switch ($mode)
 				'module_mode'		=> 'manage_albums',
 				'module_auth'		=> ''
 			);
-			$modules->update_module_data($acp_gallery_manage_albums);
+			add_module($acp_gallery_manage_albums);
 			$acp_gallery_manage_cache = array(
 				'module_basename'	=> 'gallery',
 				'module_enabled'	=> 1,
@@ -355,7 +355,7 @@ switch ($mode)
 				'module_mode'		=> 'manage_cache',
 				'module_auth'		=> ''
 			);
-			$modules->update_module_data($acp_gallery_manage_cache);
+			add_module($acp_gallery_manage_cache);
 			$acp_configure_gallery = array(
 				'module_basename'	=> 'gallery',
 				'module_enabled'	=> 1,
@@ -366,7 +366,7 @@ switch ($mode)
 				'module_mode'		=> 'configure_gallery',
 				'module_auth'		=> ''
 			);
-			$modules->update_module_data($acp_configure_gallery);
+			add_module($acp_configure_gallery);
 			$album_permissions = array(
 				'module_basename'	=> 'gallery',
 				'module_enabled'	=> 1,
@@ -377,7 +377,7 @@ switch ($mode)
 				'module_mode'		=> 'album_permissions',
 				'module_auth'		=> ''
 			);
-			$modules->update_module_data($album_permissions);
+			add_module($album_permissions);
 			$album_personal_permissions = array(
 				'module_basename'	=> 'gallery',
 				'module_enabled'	=> 1,
@@ -388,7 +388,7 @@ switch ($mode)
 				'module_mode'		=> 'album_personal_permissions',
 				'module_auth'		=> ''
 			);
-			$modules->update_module_data($album_personal_permissions);
+			add_module($album_personal_permissions);
 			$import_images = array(
 				'module_basename'	=> 'gallery',
 				'module_enabled'	=> 1,
@@ -399,7 +399,7 @@ switch ($mode)
 				'module_mode'		=> 'import_images',
 				'module_auth'		=> ''
 			);
-			$modules->update_module_data($import_images);
+			add_module($import_images);
 			$ucp_gallery = array(
 				'module_basename'	=> 'gallery',
 				'module_enabled'	=> 1,
@@ -410,7 +410,7 @@ switch ($mode)
 				'module_mode'		=> 'manage_albums',
 				'module_auth'		=> ''
 			);
-			$modules->update_module_data($ucp_gallery);
+			add_module($ucp_gallery);
 			$gd_check = function_exists('gd_info') ? gd_info() : array();
 			$gd_success = isset($gd_check['GD Version']);
 			if (!$gd_success && ($album_config['gd_version'] > 0))
@@ -531,7 +531,7 @@ switch ($mode)
 				'module_mode'		=> 'manage_albums',
 				'module_auth'		=> ''
 			);
-			$modules->update_module_data($ucp_gallery);
+			add_module($ucp_gallery);
 			gallery_config_value('album_version', $new_mod_version, true);
 
 			// clear cache and log what we did
@@ -810,7 +810,7 @@ switch ($mode)
 				'module_mode'		=> '',
 				'module_auth'		=> ''
 			);
-			$modules->update_module_data($acp_gallery);
+			add_module($acp_gallery);
 			$acp_gallery_overview = array(
 				'module_basename'	=> 'gallery',
 				'module_enabled'	=> 1,
@@ -821,7 +821,7 @@ switch ($mode)
 				'module_mode'		=> 'overview',
 				'module_auth'		=> ''
 			);
-			$modules->update_module_data($acp_gallery_overview);
+			add_module($acp_gallery_overview);
 			$acp_gallery_manage_albums = array(
 				'module_basename'	=> 'gallery',
 				'module_enabled'	=> 1,
@@ -832,7 +832,7 @@ switch ($mode)
 				'module_mode'		=> 'manage_albums',
 				'module_auth'		=> ''
 			);
-			$modules->update_module_data($acp_gallery_manage_albums);
+			add_module($acp_gallery_manage_albums);
 			$acp_gallery_manage_cache = array(
 				'module_basename'	=> 'gallery',
 				'module_enabled'	=> 1,
@@ -843,7 +843,7 @@ switch ($mode)
 				'module_mode'		=> 'manage_cache',
 				'module_auth'		=> ''
 			);
-			$modules->update_module_data($acp_gallery_manage_cache);
+			add_module($acp_gallery_manage_cache);
 			$acp_configure_gallery = array(
 				'module_basename'	=> 'gallery',
 				'module_enabled'	=> 1,
@@ -854,7 +854,7 @@ switch ($mode)
 				'module_mode'		=> 'configure_gallery',
 				'module_auth'		=> ''
 			);
-			$modules->update_module_data($acp_configure_gallery);
+			add_module($acp_configure_gallery);
 			$album_permissions = array(
 				'module_basename'	=> 'gallery',
 				'module_enabled'	=> 1,
@@ -865,7 +865,7 @@ switch ($mode)
 				'module_mode'		=> 'album_permissions',
 				'module_auth'		=> ''
 			);
-			$modules->update_module_data($album_permissions);
+			add_module($album_permissions);
 			$album_personal_permissions = array(
 				'module_basename'	=> 'gallery',
 				'module_enabled'	=> 1,
@@ -876,7 +876,7 @@ switch ($mode)
 				'module_mode'		=> 'album_personal_permissions',
 				'module_auth'		=> ''
 			);
-			$modules->update_module_data($album_personal_permissions);
+			add_module($album_personal_permissions);
 			$import_images = array(
 				'module_basename'	=> 'gallery',
 				'module_enabled'	=> 1,
@@ -887,7 +887,7 @@ switch ($mode)
 				'module_mode'		=> 'import_images',
 				'module_auth'		=> ''
 			);
-			$modules->update_module_data($import_images);
+			add_module($import_images);
 
 			$gd_check = function_exists('gd_info') ? gd_info() : array();
 			$gd_success = isset($gd_check['GD Version']);
@@ -938,6 +938,26 @@ switch ($mode)
 			delete_gallery_column(SESSIONS_TABLE, 'session_album_id');
 			$cache->purge();
 			$deleted = true;
+		}
+	break;
+	case 'check':
+		$check = request_var('check', 0);
+		$checked = false;
+		if ($check == 1)
+		{
+			$acp_gallery = array(
+				'module_basename'	=> '',
+				'module_enabled'	=> 1,
+				'module_display'	=> 1,
+				'parent_id'			=> 31654648,
+				'module_class'		=> 'acp',
+				'module_langname'	=> 'PHPBB_GALLERY',
+				'module_mode'		=> '',
+				'module_auth'		=> ''
+			);
+			add_module($acp_gallery);
+			$cache->purge();
+			$checked = true;
 		}
 	break;
 	default:
