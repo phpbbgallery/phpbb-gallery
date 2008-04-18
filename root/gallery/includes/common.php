@@ -30,13 +30,13 @@ while( $row = $db->sql_fetchrow($result) )
 	$album_config[$album_config_name] = $album_config_value;
 }
 
+$user->add_lang('mods/info_acp_gallery');
 // Disable gallery if the install_gallery/ directory is still present
 if (file_exists($phpbb_root_path . 'install_gallery'))
 {
 	trigger_error('REMOVE_GALLERY_INSTALL');
 }
 
-$user->add_lang('mods/info_acp_gallery');
 include("{$phpbb_root_path}{$gallery_root_path}includes/functions.$phpEx");
 
 //dont display on recent image feature
