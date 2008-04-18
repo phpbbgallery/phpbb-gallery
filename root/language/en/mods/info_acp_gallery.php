@@ -42,7 +42,8 @@ $lang = array_merge($lang, array(
 	'ACP_GALLERY_ALBUM_PERMISSIONS'				=> 'Album Permissions',
 	'ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS'	=> 'Personal Album Permissions',
 	'ACP_IMPORT_ALBUMS'							=> 'Import Images',
-	'IMG_BUTTON_UPLOAD_IMAGE'   				=> 'Upload image',
+	'IMG_BUTTON_UPLOAD_IMAGE'					=> 'Upload image',
+	'REMOVE_GALLERY_INSTALL'					=> 'Please remove the install_gallery/ folder in order to be save.',
 ));
 
 ?>

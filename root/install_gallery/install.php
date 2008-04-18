@@ -24,6 +24,8 @@ $user->session_begin();
 $auth->acl($user->data);
 $user->setup();
 $user->add_lang('mods/gallery_install');
+$user->add_lang('mods/info_acp_gallery');
+
 $new_mod_version = '0.3.1';
 $page_title = 'phpBB Gallery v' . $new_mod_version;
 $log_name = 'Modification "phpBB Gallery"' . ((request_var('update', 0) > 0) ? '-Update' : '') . ' v' . $new_mod_version;

@@ -30,12 +30,12 @@ while( $row = $db->sql_fetchrow($result) )
 	$album_config[$album_config_name] = $album_config_value;
 }
 
-//
-// Set ALBUM Version
-//
-$template->assign_vars(array(
-	'ALBUM_VERSION' => '2' . $album_config['album_version'],
-));
+// Disable gallery if the install_gallery/ directory is still present
+if (file_exists($phpbb_root_path . 'install_gallery'))
+{
+	trigger_error('REMOVE_GALLERY_INSTALL');
+}
+
 $user->add_lang('mods/info_acp_gallery');
 include("{$phpbb_root_path}{$gallery_root_path}includes/functions.$phpEx");
 

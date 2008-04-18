@@ -30,6 +30,8 @@ if (empty($lang) || !is_array($lang))
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
 $lang = array_merge($lang, array(
+	'AFTER_INSTALL_GOTO'				=> 'Zur %sGalerie%s',
+
 	'INSTALLER_CONVERT'					=> 'Konvertieren',
 	'INSTALLER_CONVERT_MENU'			=> 'Konvertierung',
 	'INSTALLER_CONVERT_NOTE'			=> 'Konvertiere MOD zu v%s',

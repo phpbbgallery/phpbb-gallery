@@ -26,7 +26,7 @@ echo '<body class="ltr">';
 echo '<div id="wrap">';
 echo '	<div id="page-header">';
 echo '		<h1>' . $page_title . '</h1>';
-echo '		<p><a href="' . $phpbb_root_path . '">' . $user->lang['INDEX'] . '</a></p>';
+echo '		<p><a href="' . $phpbb_root_path . '">' . $user->lang['INDEX'] . '</a> &bull; <a href="' . $phpbb_root_path . GALLERY_ROOT_PATH . '">' . $user->lang['GALLERY'] . '</a></p>';
 echo '		<p id="skip"><a href="#acp">Skip to content</a></p>';
 echo '	</div>';
 echo '	<div id="page-body">';
@@ -64,6 +64,7 @@ if ($mode == 'install')
 			echo '<div class="successbox">';
 			echo '	<h3>' . $user->lang['INFORMATION'] . '</h3>';
 			echo '	<p>' . sprintf($user->lang['INSTALLER_INSTALL_SUCCESSFUL'], $new_mod_version) . '</p>';
+			echo '	<p>' . sprintf($user->lang['AFTER_INSTALL_GOTO'], '<a href="' . $phpbb_root_path . GALLERY_ROOT_PATH . '">', '</a>') . '</p>';
 			echo '</div>';
 		}
 		else
@@ -102,6 +103,7 @@ else if ($mode == 'update')
 			echo '<div class="successbox">';
 			echo '	<h3>' . $user->lang['INFORMATION'] . '</h3>';
 			echo '	<p>' . sprintf($user->lang['INSTALLER_UPDATE_SUCCESSFUL'], $version, $new_mod_version) . '</p>';
+			echo '	<p>' . sprintf($user->lang['AFTER_INSTALL_GOTO'], '<a href="' . $phpbb_root_path . GALLERY_ROOT_PATH . '">', '</a>') . '</p>';
 			echo '</div>';
 		}
 		else
@@ -146,6 +148,7 @@ else if ($mode == 'convert')
 			echo '<div class="successbox">';
 			echo '	<h3>' . $user->lang['INFORMATION'] . '</h3>';
 			echo '	<p>' . sprintf($user->lang['INSTALLER_CONVERT_SUCCESSFUL'], $new_mod_version) . '</p>';
+			echo '	<p>' . sprintf($user->lang['AFTER_INSTALL_GOTO'], '<a href="' . $phpbb_root_path . GALLERY_ROOT_PATH . '">', '</a>') . '</p>';
 			echo '</div>';
 		}
 		else
