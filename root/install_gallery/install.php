@@ -215,51 +215,47 @@ switch ($db->sql_layer)
 		trigger_error('Sorry, unsupportet Databases found.');
 	break;
 }
-function drop_dbs()
+function gallery_create_table_slap_db_tools($table, $drop = true)
 {
-	global $db, $table_prefix;
+	global $db, $table_prefix, $db_schema, $delimiter;
 
-	if ($db->sql_layer != 'mssql')
+	$table_name = substr($table . '#', 6, -1);
+
+	if ($drop)
 	{
-		$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . 'gallery_albums';
-		$result = $db->sql_query($sql);
-		$db->sql_freeresult($result);
-		$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . 'gallery_comments';
-		$result = $db->sql_query($sql);
-		$db->sql_freeresult($result);
-		$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . 'gallery_config';
-		$result = $db->sql_query($sql);
-		$db->sql_freeresult($result);
-		$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . 'gallery_images';
-		$result = $db->sql_query($sql);
-		$db->sql_freeresult($result);
-		$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . 'gallery_rates';
-		$result = $db->sql_query($sql);
-		$db->sql_freeresult($result);
+		//Drop if existing
+		if ($db->sql_layer != 'mssql')
+		{
+			$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . $table_name;
+			$result = $db->sql_query($sql);
+			$db->sql_freeresult($result);
+		}
+		else
+		{
+			$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . $table_name . ')
+			drop table ' . $table_prefix . $table_name;
+			$result = $db->sql_query($sql);
+			$db->sql_freeresult($result);
+		}
+		echo $sql;
 	}
-	else
+
+	// locate the schema files
+	$dbms_schema = 'schemas/' . $table . '/_' . $db_schema . '_schema.sql';
+	$sql_query = @file_get_contents($dbms_schema);
+	$sql_query = preg_replace('#phpbb_#i', $table_prefix, $sql_query);
+	$sql_query = preg_replace('/\n{2,}/', "\n", preg_replace('/^#.*$/m', "\n", $sql_query));
+	$sql_query = split_sql_file($sql_query, $delimiter);
+	// make the new one's
+	foreach ($sql_query as $sql)
 	{
-		$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . 'gallery_albums)
-		drop table ' . $table_prefix . 'gallery_albums';
-		$result = $db->sql_query($sql);
-		$db->sql_freeresult($result);
-		$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . 'gallery_comments)
-		drop table ' . $table_prefix . 'gallery_comments';
-		$result = $db->sql_query($sql);
-		$db->sql_freeresult($result);
-		$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . 'gallery_config)
-		drop table ' . $table_prefix . 'gallery_config';
-		$result = $db->sql_query($sql);
-		$db->sql_freeresult($result);
-		$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . 'gallery_images)
-		drop table ' . $table_prefix . 'gallery_images';
-		$result = $db->sql_query($sql);
-		$db->sql_freeresult($result);
-		$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . 'gallery_rates)
-		drop table ' . $table_prefix . 'gallery_rates';
-		$result = $db->sql_query($sql);
-		$db->sql_freeresult($result);
+		if (!$db->sql_query($sql))
+		{
+			$error = $db->sql_error();
+			$this->p_master->db_error($error['message'], $sql, __LINE__, __FILE__);
+		}
 	}
+	unset($sql_query);
 }
 $delete = request_var('delete', 0);
 $install = request_var('install', 0);
@@ -274,24 +270,11 @@ switch ($mode)
 		$installed = false;
 		if ($install == 1)
 		{
-			drop_dbs();
-
-			// locate the schema files
-			$dbms_schema = 'schemas/_' . $db_schema . '_schema.sql';
-			$sql_query = @file_get_contents($dbms_schema);
-			$sql_query = preg_replace('#phpbb_#i', $table_prefix, $sql_query);
-			$sql_query = preg_replace('/\n{2,}/', "\n", preg_replace('/^#.*$/m', "\n", $sql_query));
-			$sql_query = split_sql_file($sql_query, $delimiter);
-			// make the new one's
-			foreach ($sql_query as $sql)
-			{
-				if (!$db->sql_query($sql))
-				{
-					$error = $db->sql_error();
-					$this->p_master->db_error($error['message'], $sql, __LINE__, __FILE__);
-				}
-			}
-			unset($sql_query);
+			gallery_create_table_slap_db_tools('phpbb_gallery_albums', true);
+			gallery_create_table_slap_db_tools('phpbb_gallery_comments', true);
+			gallery_create_table_slap_db_tools('phpbb_gallery_config', true);
+			gallery_create_table_slap_db_tools('phpbb_gallery_images', true);
+			gallery_create_table_slap_db_tools('phpbb_gallery_rates', true);
 
 			//fill the GALLERY_CONFIG_TABLE with some values
 			$sql_query = file_get_contents('schemas/_schema_data.sql');
@@ -378,23 +361,11 @@ switch ($mode)
 				//no break;
 
 				case '0.1.3':
-					drop_dbs();
-					// locate the schema files
-					$dbms_schema = 'schemas/_' . $db_schema . '_schema.sql';
-					$sql_query = @file_get_contents($dbms_schema);
-					$sql_query = preg_replace('#phpbb_#i', $table_prefix, $sql_query);
-					$sql_query = preg_replace('/\n{2,}/', "\n", preg_replace('/^#.*$/m', "\n", $sql_query));
-					$sql_query = split_sql_file($sql_query, $delimiter);
-					// make the new one's
-					foreach ($sql_query as $sql)
-					{
-						if (!$db->sql_query($sql))
-						{
-							$error = $db->sql_error();
-							$this->p_master->db_error($error['message'], $sql, __LINE__, __FILE__);
-						}
-					}
-					unset($sql_query);
+					gallery_create_table_slap_db_tools('phpbb_gallery_albums', true);
+					gallery_create_table_slap_db_tools('phpbb_gallery_comments', true);
+					gallery_create_table_slap_db_tools('phpbb_gallery_config', true);
+					gallery_create_table_slap_db_tools('phpbb_gallery_images', true);
+					gallery_create_table_slap_db_tools('phpbb_gallery_rates', true);
 
 					// first lets make the albums...
 					$left_id = 1;
@@ -656,6 +627,8 @@ switch ($mode)
 				case '0.3.1':
 					//we didn't add this to all updates, so we just do it again. the function saves to be double
 					gallery_column(SESSIONS_TABLE, 'session_album_id', array('UINT', 0));
+					gallery_create_table_slap_db_tools('phpbb_gallery_permissions', true);
+
 				//no break;
 
 				break;
@@ -686,24 +659,11 @@ switch ($mode)
 				$hexipbang = explode('.', chunk_split($int_ip, 2, '.'));
 				return hexdec($hexipbang[0]). '.' . hexdec($hexipbang[1]) . '.' . hexdec($hexipbang[2]) . '.' . hexdec($hexipbang[3]);
 			}
-			drop_dbs();
-
-			// locate the schema files
-			$dbms_schema = 'schemas/_' . $db_schema . '_schema.sql';
-			$sql_query = @file_get_contents($dbms_schema);
-			$sql_query = preg_replace('#phpbb_#i', $table_prefix, $sql_query);
-			$sql_query = preg_replace('/\n{2,}/', "\n", preg_replace('/^#.*$/m', "\n", $sql_query));
-			$sql_query = split_sql_file($sql_query, $delimiter);
-			// make the new one's
-			foreach ($sql_query as $sql)
-			{
-				if (!$db->sql_query($sql))
-				{
-					$error = $db->sql_error();
-					$this->p_master->db_error($error['message'], $sql, __LINE__, __FILE__);
-				}
-			}
-			unset($sql_query);
+			gallery_create_table_slap_db_tools('phpbb_gallery_albums', true);
+			gallery_create_table_slap_db_tools('phpbb_gallery_comments', true);
+			gallery_create_table_slap_db_tools('phpbb_gallery_config', true);
+			gallery_create_table_slap_db_tools('phpbb_gallery_images', true);
+			gallery_create_table_slap_db_tools('phpbb_gallery_rates', true);
 
 			// first lets make the albums...
 			$personal_album = array();

@@ -16,7 +16,7 @@
 
 @set_time_limit(0);
 
-$schema_path = './schemas/';
+$schema_path = './schemas/phpbb_gallery_permissions/';
 
 if (!is_writable($schema_path))
 {
@@ -801,34 +801,7 @@ foreach ($supported_dbms as $dbms)
 function get_schema_struct()
 {
 	$schema_data = array();
-
-	$schema_data['phpbb_gallery_images'] = array(
-		'COLUMNS'		=> array(
-			'image_id'				=> array('UINT', NULL, 'auto_increment'),
-			'image_filename'		=> array('VCHAR:255', ''),
-			'image_thumbnail'		=> array('VCHAR:255', ''),
-			'image_name'			=> array('VCHAR:255', ''),
-			'image_desc'			=> array('MTEXT_UNI', ''),
-			'image_desc_uid'		=> array('VCHAR:8', ''),
-			'image_desc_bitfield'	=> array('VCHAR:255', ''),
-			'image_user_id'			=> array('UINT', 0),
-			'image_username'		=> array('VCHAR:255', ''),
-			'image_user_colour'		=> array('VCHAR:6', ''),
-			'image_user_ip'			=> array('VCHAR:40', ''),
-			'image_time'			=> array('UINT:11', 0),
-			'image_album_id'		=> array('UINT', 0),
-			'image_view_count'		=> array('UINT:11', 0),
-			'image_lock'			=> array('UINT:3', 0),
-			'image_approval'		=> array('UINT:3', 0),
-		),
-		'PRIMARY_KEY'				=> 'image_id',
-		'KEYS'		=> array(
-			'image_album_id'		=> array('INDEX', 'image_album_id'),
-			'image_user_id'			=> array('INDEX', 'image_user_id'),
-			'image_time'			=> array('INDEX', 'image_time'),
-		),
-	);
-
+/*
 	$schema_data['phpbb_gallery_albums'] = array(
 		'COLUMNS'		=> array(
 			'album_id'				=> array('UINT', NULL, 'auto_increment'),
@@ -864,7 +837,8 @@ function get_schema_struct()
 		),
 		'PRIMARY_KEY'	=> 'album_id',
 	);
-
+//*/
+/*
 	$schema_data['phpbb_gallery_comments'] = array(
 		'COLUMNS'		=> array(
 			'comment_id'			=> array('UINT', NULL, 'auto_increment'),
@@ -888,7 +862,8 @@ function get_schema_struct()
 			'comment_time'			=> array('INDEX', 'comment_time'),
 		),
 	);
-
+//*/
+/*
 	$schema_data['phpbb_gallery_config'] = array(
 		'COLUMNS'		=> array(
 			'config_name'		=> array('VCHAR:255', ''),
@@ -896,7 +871,36 @@ function get_schema_struct()
 		),
 		'PRIMARY_KEY'	=> 'config_name',
 	);
-
+//*/
+/*
+	$schema_data['phpbb_gallery_images'] = array(
+		'COLUMNS'		=> array(
+			'image_id'				=> array('UINT', NULL, 'auto_increment'),
+			'image_filename'		=> array('VCHAR:255', ''),
+			'image_thumbnail'		=> array('VCHAR:255', ''),
+			'image_name'			=> array('VCHAR:255', ''),
+			'image_desc'			=> array('MTEXT_UNI', ''),
+			'image_desc_uid'		=> array('VCHAR:8', ''),
+			'image_desc_bitfield'	=> array('VCHAR:255', ''),
+			'image_user_id'			=> array('UINT', 0),
+			'image_username'		=> array('VCHAR:255', ''),
+			'image_user_colour'		=> array('VCHAR:6', ''),
+			'image_user_ip'			=> array('VCHAR:40', ''),
+			'image_time'			=> array('UINT:11', 0),
+			'image_album_id'		=> array('UINT', 0),
+			'image_view_count'		=> array('UINT:11', 0),
+			'image_lock'			=> array('UINT:3', 0),
+			'image_approval'		=> array('UINT:3', 0),
+		),
+		'PRIMARY_KEY'				=> 'image_id',
+		'KEYS'		=> array(
+			'image_album_id'		=> array('INDEX', 'image_album_id'),
+			'image_user_id'			=> array('INDEX', 'image_user_id'),
+			'image_time'			=> array('INDEX', 'image_time'),
+		),
+	);
+//*/
+/*
 	$schema_data['phpbb_gallery_rates'] = array(
 		'COLUMNS'		=> array(
 			'rate_image_id'		=> array('UINT', NULL, 'auto_increment'),
@@ -911,7 +915,7 @@ function get_schema_struct()
 			'rate_point'		=> array('INDEX', 'rate_point'),
 		),
 	);
-
+//*/
 	return $schema_data;
 }
 
