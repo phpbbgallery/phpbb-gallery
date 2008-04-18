@@ -565,84 +565,84 @@ switch ($mode)
 					add_module($import_images);
 				//no break;
 
-				case '0.2.3': //tab in an other svn-up
-			//add new config-values
-			add_bbcode('album');
-			gallery_config_value('preview_rsz_height', 600);
-			gallery_config_value('preview_rsz_width', 800);
-			gallery_config_value('upload_images', 10);
-			gallery_config_value('thumbnail_info_line', 1);
+				case '0.2.3':
+					//add new config-values
+					add_bbcode('album');
+					gallery_config_value('preview_rsz_height', 600);
+					gallery_config_value('preview_rsz_width', 800);
+					gallery_config_value('upload_images', 10);
+					gallery_config_value('thumbnail_info_line', 1);
 
-			//create some new columns
-			$phpbb_db_tools = new phpbb_db_tools($db);
-			$phpbb_db_tools->sql_column_change(GALLERY_IMAGES_TABLE, 'image_username', array('VCHAR:255', ''));
+					//create some new columns
+					$phpbb_db_tools = new phpbb_db_tools($db);
+					$phpbb_db_tools->sql_column_change(GALLERY_IMAGES_TABLE, 'image_username', array('VCHAR:255', ''));
 
-			gallery_column(GALLERY_IMAGES_TABLE, 'image_user_colour', array('VCHAR:6', ''));
-			gallery_column(GALLERY_ALBUMS_TABLE, 'album_user_id', array('UINT', 0));
-			gallery_column(USERS_TABLE, 'album_id', array('UINT', 0));
-			gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
-			gallery_column(GROUPS_TABLE, 'view_personal_albums', array('UINT', 1));
-			gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
+					gallery_column(GALLERY_IMAGES_TABLE, 'image_user_colour', array('VCHAR:6', ''));
+					gallery_column(GALLERY_ALBUMS_TABLE, 'album_user_id', array('UINT', 0));
+					gallery_column(USERS_TABLE, 'album_id', array('UINT', 0));
+					gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
+					gallery_column(GROUPS_TABLE, 'view_personal_albums', array('UINT', 1));
+					gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
 
-			//update the new columns image_username and image_user_colour
-			$sql = 'SELECT i.image_user_id, i.image_id, u.username, u.user_colour
-				FROM ' . GALLERY_IMAGES_TABLE . ' AS i
-				LEFT JOIN ' . USERS_TABLE . " AS u
-					ON i.image_user_id = u.user_id
-				ORDER BY i.image_id DESC";
-			$result = $db->sql_query($sql);
-			while ($row = $db->sql_fetchrow($result))
-			{
-				$image_id = $row['image_id'];
-				if ($row['image_user_id'] != 1)
-				{
-					$sql_ary = array(
-						'image_username'		=> $row['username'],
-						'image_user_colour'		=> $row['user_colour'],
-					);
-					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-						WHERE ' . $db->sql_in_set('image_id', $image_id);
-					$db->sql_query($sql);
-				}
-			}
-			$db->sql_freeresult($result);
+					//update the new columns image_username and image_user_colour
+					$sql = 'SELECT i.image_user_id, i.image_id, u.username, u.user_colour
+						FROM ' . GALLERY_IMAGES_TABLE . ' AS i
+						LEFT JOIN ' . USERS_TABLE . " AS u
+							ON i.image_user_id = u.user_id
+						ORDER BY i.image_id DESC";
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$image_id = $row['image_id'];
+						if ($row['image_user_id'] != 1)
+						{
+							$sql_ary = array(
+								'image_username'		=> $row['username'],
+								'image_user_colour'		=> $row['user_colour'],
+							);
+							$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+								WHERE ' . $db->sql_in_set('image_id', $image_id);
+							$db->sql_query($sql);
+						}
+					}
+					$db->sql_freeresult($result);
 
-			//now create the new personal albums
-			$sql = 'SELECT i.image_id, i.image_username, image_user_id
-				FROM ' . GALLERY_IMAGES_TABLE . " AS i
-				WHERE image_album_id = 0
-				GROUP BY i.image_user_id DESC";
-			$result = $db->sql_query($sql);
-			while ($row = $db->sql_fetchrow($result))
-			{
-				$album_data = array(
-					'album_name'					=> $row['image_username'],
-					'parent_id'						=> 0,
-					//left_id and right_id are created some lines later
-					'album_desc_options'			=> 7,
-					'album_desc'					=> '',
-					'album_parents'					=> '',
-					'album_type'					=> 2,
-					'album_user_id'					=> $row['image_user_id'],
-				);
-				$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
-
-				$sql2 = 'SELECT album_id FROM ' . GALLERY_ALBUMS_TABLE . ' WHERE parent_id = 0 AND album_user_id = ' . $row['image_user_id'] . ' LIMIT 1';
-				$result2 = $db->sql_query($sql2);
-				$row2 = $db->sql_fetchrow($result2);
-
-				$sql3 = 'UPDATE ' . USERS_TABLE . ' 
-						SET album_id = ' . (int) $row2['album_id'] . '
-						WHERE user_id  = ' . (int) $row['image_user_id'];
-				$db->sql_query($sql3);
-
-				$sql3 = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
-						SET image_album_id = ' . (int) $row2['album_id'] . '
+					//now create the new personal albums
+					$sql = 'SELECT i.image_id, i.image_username, image_user_id
+						FROM ' . GALLERY_IMAGES_TABLE . " AS i
 						WHERE image_album_id = 0
-							AND image_user_id  = ' . (int) $row['image_user_id'];
-				$db->sql_query($sql3);
-			}
-			$db->sql_freeresult($result);
+						GROUP BY i.image_user_id DESC";
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$album_data = array(
+							'album_name'					=> $row['image_username'],
+							'parent_id'						=> 0,
+							//left_id and right_id are created some lines later
+							'album_desc_options'			=> 7,
+							'album_desc'					=> '',
+							'album_parents'					=> '',
+							'album_type'					=> 2,
+							'album_user_id'					=> $row['image_user_id'],
+						);
+						$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
+
+						$sql2 = 'SELECT album_id FROM ' . GALLERY_ALBUMS_TABLE . ' WHERE parent_id = 0 AND album_user_id = ' . $row['image_user_id'] . ' LIMIT 1';
+						$result2 = $db->sql_query($sql2);
+						$row2 = $db->sql_fetchrow($result2);
+
+						$sql3 = 'UPDATE ' . USERS_TABLE . ' 
+								SET album_id = ' . (int) $row2['album_id'] . '
+								WHERE user_id  = ' . (int) $row['image_user_id'];
+						$db->sql_query($sql3);
+
+						$sql3 = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
+								SET image_album_id = ' . (int) $row2['album_id'] . '
+								WHERE image_album_id = 0
+									AND image_user_id  = ' . (int) $row['image_user_id'];
+						$db->sql_query($sql3);
+					}
+					$db->sql_freeresult($result);
 
 					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 163,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_PERSONAL_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
 					add_module($ucp_gallery);
