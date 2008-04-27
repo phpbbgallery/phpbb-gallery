@@ -102,6 +102,13 @@ class acp_gallery
 				$this->import();
 			break;
 
+			case 'new_permissions':
+				$title = 'NEW_PERMISSIONS';
+				$this->page_title = $user->lang[$title];
+
+				$this->permissions();
+			break;
+
 			default:
 				$title = 'ACP_GALLERY_OVERVIEW';
 				$this->page_title = $user->lang[$title];
@@ -1270,7 +1277,7 @@ class acp_gallery
 		$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 		trigger_error($user->lang['ALBUM_CHANGED_ORDER'] . adm_back_link($this->u_action));
 	}
-	
+
 	function manage_cache()
 	{
 		global $db, $template, $user;
@@ -1297,6 +1304,305 @@ class acp_gallery
 			@closedir($cache_dir);
 			trigger_error($user->lang['THUMBNAIL_CACHE_CLEARED_SUCCESSFULLY'] . adm_back_link($this->u_action));
 		}
+	}
+
+	function permissions()
+	{
+		global $db, $template, $user, $cache;
+
+		$sql = 'SELECT *
+			FROM ' . GALLERY_CONFIG_TABLE;
+		$result = $db->sql_query($sql);
+		while( $row = $db->sql_fetchrow($result) )
+		{
+			$album_config_name = $row['config_name'];
+			$album_config_value = $row['config_value'];
+			$album_config[$album_config_name] = $album_config_value;
+		}
+
+		$this->tpl_name = 'acp_gallery_permissions';
+
+		$submit = (isset($_POST['submit'])) ? true : false;
+		$delete = (isset($_POST['delete'])) ? true : false;
+		$album_ary = request_var('album_ids', array(''));
+		$album_list = implode(', ', $album_ary);
+		$group_ary = request_var('group_ids', array(''));
+		$group_list = implode(', ', $group_ary);
+		$step = request_var('step', 0);
+		$perm_system = request_var('perm_system', 0);
+		if ($perm_system > 1)
+		{
+			$album_ary = array();
+		}
+		if ($delete)
+		{
+			if (!check_form_key('acp_gallery'))
+			{
+				trigger_error('FORM_INVALID');
+			}
+			//you wished to drop the permissions
+			$drop_perm_ary = request_var('drop_perm', array(''));
+			$drop_perm_string = implode(', ', $drop_perm_ary);
+			if ($drop_perm_string && $album_list)
+			{
+				$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . "
+					WHERE " . $db->sql_in_set('perm_group_id', $drop_perm_ary) . "
+						AND " . $db->sql_in_set('perm_album_id', $album_ary) . "
+						AND perm_system = $perm_system";
+				$db->sql_query($sql);
+			}
+			$step = 1;
+		}
+
+		$album_name_ary = array();
+		//build the array with some kind of order.
+		$permissions = array();
+		if ($perm_system != 2)
+		{
+			$permissions = array_merge($permissions, array('i_view'));
+		}
+		if ($perm_system != 3)
+		{
+			$permissions = array_merge($permissions, array('i_upload', 'i_approve'));
+		}
+		$permissions = array_merge($permissions, array('i_edit', 'i_delete', 'i_lock', 'i_report'));
+		//im not sure, whether whe should add this everytime, so you can make the rights without the users having them already
+		//if ($album_config['rate'])
+		//{
+			$permissions = array_merge($permissions, array('i_rate'));
+		//}
+		//if ($album_config['comment'])
+		//{
+			$permissions = array_merge($permissions, array('c_post', 'c_edit', 'c_delete'));
+		//}
+		$permissions = array_merge($permissions, array('a_moderate'));
+		if ($perm_system != 3)
+		{
+			$permissions = array_merge($permissions, array('i_count'));
+		}
+		if ($perm_system == 2)
+		{
+			$permissions = array_merge($permissions, array('album_count'));
+		}
+
+		$albums = $cache->obtain_album_list();
+
+		if ($step == 0)
+		{
+			foreach ($albums as $album)
+			{
+				if ($album['album_user_id'] == 0)
+				{
+					$template->assign_block_vars('albumrow', array(
+						'ALBUM_ID'				=> $album['album_id'],
+						'ALBUM_NAME'			=> $album['album_name'],
+					));
+				}
+			}
+			$step = 1;
+		}
+		else if ($step == 1)
+		{
+			if (!check_form_key('acp_gallery'))
+			{
+				trigger_error('FORM_INVALID');
+			}
+			if ($perm_system == 0)
+			{
+				foreach ($albums as $album)
+				{
+					if (in_array($album['album_id'], $album_ary))
+					{
+						$template->assign_block_vars('albumrow', array(
+							'ALBUM_ID'				=> $album['album_id'],
+							'ALBUM_NAME'			=> $album['album_name'],
+						));
+					}
+				}
+			}
+
+			$sql = 'SELECT group_id, group_type, group_name, group_colour FROM ' . GROUPS_TABLE;
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$row['group_name'] = ($row['group_type'] == 3) ? $user->lang['G_' . $row['group_name']] : $row['group_name'];
+				$template->assign_block_vars('grouprow', array(
+					'GROUP_ID'				=> $row['group_id'],
+					'GROUP_NAME'			=> $row['group_name'],
+				));
+				$group[$row['group_id']]['group_name'] = $row['group_name'];
+				$group[$row['group_id']]['group_colour'] = $row['group_colour'];
+			}
+			$db->sql_freeresult($result);
+
+			if (!isset($album_ary[1]))
+			{
+				$where = '';
+				if ($perm_system == 0)
+				{
+					$where = 'perm_album_id = ' . $album_ary[0];
+				}
+				else
+				{
+					$where = 'perm_system = ' . $perm_system;
+				}
+				$sql2 = 'SELECT * FROM ' . GALLERY_PERMISSIONS_TABLE . "
+					WHERE $where
+						AND perm_group_id <> 0";
+				$result2 = $db->sql_query($sql2);
+				while ($row = $db->sql_fetchrow($result2))
+				{
+					$template->assign_block_vars('perm_grouprow', array(
+						'GROUP_ID'				=> $row['perm_group_id'],
+						'GROUP_COLOUR'			=> $group[$row['perm_group_id']]['group_colour'],
+						'GROUP_NAME'			=> $group[$row['perm_group_id']]['group_name'],
+					));
+				}
+				$db->sql_freeresult($result2);
+			}
+			$step = 2;
+		}
+		else if ($step == 2)
+		{
+			if (!check_form_key('acp_gallery'))
+			{
+				trigger_error('FORM_INVALID');
+			}
+			//ALbum names
+			foreach ($albums as $album)
+			{
+				if (in_array($album['album_id'], $album_ary))
+				{
+					$template->assign_block_vars('albumrow', array(
+						'ALBUM_ID'				=> $album['album_id'],
+						'ALBUM_NAME'			=> $album['album_name'],
+					));
+				}
+			}
+			//Group names
+			$sql = 'SELECT group_id, group_type, group_name, group_colour FROM ' . GROUPS_TABLE . '
+				WHERE ' . $db->sql_in_set('group_id', $group_list);
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$row['group_name'] = ($row['group_type'] == 3) ? $user->lang['G_' . $row['group_name']] : $row['group_name'];
+				$template->assign_block_vars('grouprow', array(
+					'GROUP_ID'				=> $row['group_id'],
+					'GROUP_NAME'			=> $row['group_name'],
+					'GROUP_COLOUR'			=> $row['group_colour'],
+				));
+			}
+			$db->sql_freeresult($result);
+			if ((!isset($album_ary[1])) && (!isset($group_ary[1])))
+			{
+				$where = '';
+				if ($perm_system == 0)
+				{
+					$where = 'p.perm_album_id = ' . $album_ary[0];
+				}
+				else
+				{
+					$where = 'p.perm_system = ' . $perm_system;
+				}
+				$sql = "SELECT pr.*
+					FROM " . GALLERY_PERMISSIONS_TABLE . " as p
+					LEFT JOIN " .  GALLERY_PERM_ROLES_TABLE .  " as pr
+						ON p.perm_role_id = pr.role_id
+					WHERE p.perm_group_id = {$group_ary[0]}
+						AND $where";
+				$result = $db->sql_query($sql);
+				$perm_ary = $db->sql_fetchrow($result, 1);
+				$db->sql_freeresult($result);
+			}
+
+			//Permissions
+			foreach ($permissions as $permission)
+			{
+				$template->assign_block_vars('permission', array(
+					'PERMISSION'			=> $user->lang['PERMISSION_' . strtoupper($permission)],
+					'S_FIELD_NAME'			=> $permission,
+					'S_NO'					=> ((isset($perm_ary[$permission]) && ($perm_ary[$permission] == 0)) ? true : false),
+					'S_YES'					=> ((isset($perm_ary[$permission]) && ($perm_ary[$permission] == 1)) ? true : false),
+					'S_NEVER'				=> ((isset($perm_ary[$permission]) && ($perm_ary[$permission] == 2)) ? true : false),
+					'S_VALUE'				=> ((isset($perm_ary[$permission])) ? $perm_ary[$permission] : 0),
+					'S_COUNT_FIELD'			=> (substr($permission, -6, 6) == '_count') ? true : false,
+				));
+			}
+			$step = 3;
+		}
+		else if ($step == 3)
+		{
+			if (!check_form_key('acp_gallery'))
+			{
+				trigger_error('FORM_INVALID');
+			}
+			foreach ($permissions as $permission)
+			{
+				$submitted_valued = request_var($permission, 0);//hacked for deny empty submit
+				if (substr($permission, -6, 6) == '_count')
+				{
+					$submitted_valued = $submitted_valued + 1;
+				}
+				else if ($submitted_valued == 0)
+				{
+					trigger_error('PERMISSION_EMPTY', E_USER_WARNING);
+				}
+				$sql_ary[$permission] = $submitted_valued - 1;
+			}
+			//need to set some defaults here
+			if ($perm_system == 2)
+			{//view your own personal albums
+				$sql_ary['i_view'] = 1;
+			}
+
+			$db->sql_query('INSERT INTO ' . GALLERY_PERM_ROLES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+			$insert_role = $db->sql_nextid();
+			foreach ($album_ary as $album)
+			{
+				foreach ($group_ary as $group)
+				{
+					$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . " WHERE perm_album_id = $album AND perm_group_id = $group AND perm_system = $perm_system";
+					$db->sql_query($sql);
+					$sql_ary = array(
+						'perm_role_id'			=> $insert_role,
+						'perm_album_id'			=> $album,
+						'perm_user_id'			=> 0,
+						'perm_group_id'			=> $group,
+						'perm_system'			=> 0,
+					);
+					$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+				}
+			}
+			trigger_error('Permissions were stored successful.');
+		}
+
+
+		if ($perm_system)
+		{
+			$hidden_fields = build_hidden_fields(array(
+				'album_ids'			=> $album_ary,
+				'group_ids'			=> $group_ary,
+				'step'				=> $step,
+				'perm_system'		=> $perm_system,
+			));
+		}
+		else
+		{
+			$hidden_fields = build_hidden_fields(array(
+				'album_ids'			=> $album_ary,
+				'group_ids'			=> $group_ary,
+				'step'				=> $step,
+			));
+		}
+
+		$template->assign_vars(array(
+			'S_HIDDEN_FIELDS'		=> $hidden_fields,
+			'ALBUMS'				=> implode(', ', $album_name_ary),
+			'GROUPS'				=> implode(', ', $group_ary),
+			'STEP'					=> $step,
+			'PERM_SYSTEM'			=> $perm_system,
+			'S_ALBUM_ACTION' 		=> $this->u_action,
+		));
 	}
 
 }

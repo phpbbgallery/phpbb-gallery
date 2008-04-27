@@ -15,7 +15,7 @@ class acp_gallery_info
 		return array(
 			'filename'	=> 'acp_gallery',
 			'title'		=> 'PHPBB_GALLERY',
-			'version'	=> '0.3.0',
+			'version'	=> '0.3.2',
 			'modes'		=> array(
 				'overview'						=> array('title' => 'ACP_GALLERY_OVERVIEW',						'auth' => 'acl_a_board', 'cat' => array('PHPBB_GALLERY')),
 				'manage_albums'					=> array('title' => 'ACP_GALLERY_MANAGE_ALBUMS',				'auth' => 'acl_a_board', 'cat' => array('PHPBB_GALLERY')),
@@ -24,6 +24,7 @@ class acp_gallery_info
 				'album_permissions'				=> array('title' => 'ACP_GALLERY_ALBUM_PERMISSIONS',			'auth' => 'acl_a_board', 'cat' => array('PHPBB_GALLERY')),
 				'album_personal_permissions'	=> array('title' => 'ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS',	'auth' => 'acl_a_board', 'cat' => array('PHPBB_GALLERY')),
 				'import_images'					=> array('title' => 'ACP_IMPORT_ALBUMS',						'auth' => 'acl_a_board', 'cat' => array('PHPBB_GALLERY')),
+				'new_permissions'				=> array('title' => 'NEW_PERMISSIONS',							'auth' => 'acl_a_board', 'cat' => array('PHPBB_GALLERY')),
 				),
 			);
 	}

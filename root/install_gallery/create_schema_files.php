@@ -901,6 +901,19 @@ function get_schema_struct()
 	);
 //*/
 /*
+	$schema_data['phpbb_gallery_permissions'] = array(
+		'COLUMNS'		=> array(
+			'perm_id'			=> array('UINT', NULL, 'auto_increment'),
+			'perm_role_id'		=> array('UINT', 0),
+			'perm_album_id'		=> array('UINT', 0),
+			'perm_user_id'		=> array('UINT', 0),
+			'perm_group_id'		=> array('UINT', 0),
+			'perm_system'		=> array('UINT:3', 0),
+		),
+		'PRIMARY_KEY'			=> 'perm_id',
+	);
+//*/
+/*
 	$schema_data['phpbb_gallery_rates'] = array(
 		'COLUMNS'		=> array(
 			'rate_image_id'		=> array('UINT', NULL, 'auto_increment'),
@@ -914,6 +927,28 @@ function get_schema_struct()
 			'rate_user_ip'		=> array('INDEX', 'rate_user_ip'),
 			'rate_point'		=> array('INDEX', 'rate_point'),
 		),
+	);
+//*/
+/*
+	$schema_data['phpbb_gallery_roles'] = array(
+		'COLUMNS'		=> array(
+			'role_id'		=> array('UINT', NULL, 'auto_increment'),
+			'i_view'		=> array('UINT:3', 0),
+			'i_upload'		=> array('UINT:3', 0),
+			'i_edit'		=> array('UINT:3', 0),
+			'i_delete'		=> array('UINT:3', 0),
+			'i_rate'		=> array('UINT:3', 0),
+			'i_approve'		=> array('UINT:3', 0),
+			'i_lock'		=> array('UINT:3', 0),
+			'i_report'		=> array('UINT:3', 0),
+			'i_count'		=> array('UINT', 0),
+			'c_post'		=> array('UINT:3', 0),
+			'c_edit'		=> array('UINT:3', 0),
+			'c_delete'		=> array('UINT:3', 0),
+			'a_moderate'	=> array('UINT:3', 0),
+			'album_count'	=> array('UINT', 0),
+		),
+		'PRIMARY_KEY'		=> 'role_id',
 	);
 //*/
 	return $schema_data;

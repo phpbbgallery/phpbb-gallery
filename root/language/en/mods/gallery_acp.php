@@ -186,4 +186,39 @@ $lang = array_merge($lang, array(
 	'ALLOWED_SUBS'				=> 'Number of Subalbums (attached to the users one)',
 ));
 
+$lang = array_merge($lang, array(
+	'DELETE_PERMISSIONS'			=> 'Delete permissions',
+
+	'OWN_PERSONAL_ALBUMS'			=> 'Own personal albums',
+
+	'PERMISSION'					=> 'Permission',
+	'PERMISSION_NEVER'				=> 'Never',
+	'PERMISSION_NO'					=> 'No',
+	'PERMISSION_YES'				=> 'Yes',
+
+	'PERMISSION_A_MODERATE'			=> 'Can moderate album',
+	'PERMISSION_ALBUM_COUNT'		=> 'Number of personal subalbums',
+	'PERMISSION_C_DELETE'			=> 'Can delete comment',
+	'PERMISSION_C_EDIT'				=> 'Can edit comment',
+	'PERMISSION_C_POST'				=> 'Can comment on image',
+	'PERMISSION_I_APPROVE'			=> 'Can avoid image-approval',
+	'PERMISSION_I_COUNT'			=> 'Number of uploaded images',
+	'PERMISSION_I_DELETE'			=> 'Can delete images',
+	'PERMISSION_I_EDIT'				=> 'Can edit images',
+	'PERMISSION_I_LOCK'				=> 'Can lock images',
+	'PERMISSION_I_RATE'				=> 'Can moderate album',
+	'PERMISSION_I_REPORT'			=> 'Can report images',
+	'PERMISSION_I_UPLOAD'			=> 'Can upload images',
+	'PERMISSION_I_VIEW'				=> 'Can view images',
+
+	'PERMISSION_EMPTY'				=> 'You didn\'t set all permissions.',
+
+	'SELECT_ALBUMS'					=> 'Select albums',
+	'SELECTED_ALBUMS'				=> 'Selected albums',
+	'SELECT_GROUPS'					=> 'Select groups',
+	'SELECTED_GROUPS'				=> 'Selected groups',
+	'SELECT_PERMISSIONS'			=> 'Select permissions',
+	'SELECTED_PERMISSIONS'			=> 'Selected permissions',
+));
+
 ?>

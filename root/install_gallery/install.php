@@ -31,6 +31,16 @@ $page_title = 'phpBB Gallery v' . $new_mod_version;
 $log_name = 'Modification "phpBB Gallery"' . ((request_var('update', 0) > 0) ? '-Update' : '') . ' v' . $new_mod_version;
 
 $mode = request_var('mode', '', true);
+$sql = 'SELECT *
+	FROM ' . GALLERY_CONFIG_TABLE;
+$result = $db->sql_query($sql);
+
+while( $row = $db->sql_fetchrow($result) )
+{
+	$album_config_name = $row['config_name'];
+	$album_config_value = $row['config_value'];
+	$album_config[$album_config_name] = $album_config_value;
+}
 function split_sql_file($sql, $delimiter)
 {
 	$sql = str_replace("\r" , '', $sql);
@@ -237,7 +247,6 @@ function gallery_create_table_slap_db_tools($table, $drop = true)
 			$result = $db->sql_query($sql);
 			$db->sql_freeresult($result);
 		}
-		echo $sql;
 	}
 
 	// locate the schema files
@@ -627,9 +636,106 @@ switch ($mode)
 				case '0.3.1':
 					//we didn't add this to all updates, so we just do it again. the function saves to be double
 					gallery_column(SESSIONS_TABLE, 'session_album_id', array('UINT', 0));
+
+					gallery_create_table_slap_db_tools('phpbb_gallery_roles', true);
 					gallery_create_table_slap_db_tools('phpbb_gallery_permissions', true);
 
+					//convert the permissions of personal albums to the new system
+					//maybe we already got some permissions
+					$roles_ary = array();
+					$sql = 'SELECT *
+						FROM ' . GALLERY_PERM_ROLES_TABLE;
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$roles_ary[$row['i_view'] . '_' . $row['i_upload'] . '_' . $row['i_edit'] . '_' . $row['i_delete'] . '_' . $row['i_rate'] . '_' . $row['i_approve'] . '_' . $row['i_lock'] . '_' . $row['i_report'] . '_' . $row['i_count'] . '_' . $row['c_post'] . '_' . $row['c_edit'] . '_' . $row['c_delete'] . '_' . $row['a_moderate'] . '_' . $row['album_count']] = $row['role_id'];
+					}
+					$db->sql_freeresult($result);
+
+					//personal gallery permissions
+					gallery_create_table_slap_db_tools('phpbb_gallery_roles', true);
+					gallery_create_table_slap_db_tools('phpbb_gallery_permissions', true);
+					$sql = 'SELECT group_id, personal_subalbums, allow_personal_albums, view_personal_albums
+						FROM ' . GROUPS_TABLE;
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$sql_ary = array();
+						$sql_ary = array(
+							'i_view' => $row['view_personal_albums'],
+							'i_upload' => $row['allow_personal_albums'],
+							'i_edit' => $row['allow_personal_albums'],
+							'i_delete' => $row['allow_personal_albums'],
+							'i_rate' => $album_config['rate'],
+							'i_approve' => 0,
+							'i_lock' => 0,
+							'i_report' => 1,
+							'i_count' => $album_config['user_pics_limit'],
+							'c_post' => $album_config['comment'],
+							'c_edit' => $album_config['comment'],
+							'c_delete' => $album_config['comment'],
+							'a_moderate' => 1,
+							'album_count' => $row['personal_subalbums'],
+						);
+						$sum_string = implode('_', $sql_ary);
+						if (!isset($roles_ary[$sum_string]))
+						{
+								$db->sql_query('INSERT INTO ' . GALLERY_PERM_ROLES_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+								$data['role_id'] = $db->sql_nextid();
+								$roles_ary[$sum_string] = $data['role_id'];
+						}
+						$sql_ary = array();
+						$sql_ary = array(
+							'perm_role_id'			=> $roles_ary[$sum_string],
+							'perm_album_id'			=> 0,
+							'perm_user_id'			=> 0,
+							'perm_group_id'			=> $row['group_id'],
+							'perm_system'			=> 2,
+						);
+						$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+						
+						$sql_ary = array();
+						$sql_ary = array(
+							'i_view' => $row['view_personal_albums'],
+							'i_upload' => 0,
+							'i_edit' => 0,
+							'i_delete' => 0,
+							'i_rate' => $album_config['rate'],
+							'i_approve' => 0,
+							'i_lock' => 0,
+							'i_report' => 1,
+							'i_count' => $album_config['user_pics_limit'],
+							'c_post' => $album_config['comment'],
+							'c_edit' => $album_config['comment'],
+							'c_delete' => $album_config['comment'],
+							'a_moderate' => 0,
+							'album_count' => $row['personal_subalbums'],
+						);
+						$sum_string = implode('_', $sql_ary);
+						if (!isset($roles_ary[$sum_string]))
+						{
+								$db->sql_query('INSERT INTO ' . GALLERY_PERM_ROLES_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+								$data['role_id'] = $db->sql_nextid();
+								$roles_ary[$sum_string] = $data['role_id'];
+						}
+						$sql_ary = array(
+							'perm_role_id'			=> $roles_ary[$sum_string],
+							'perm_album_id'			=> 0,
+							'perm_user_id'			=> 0,
+							'perm_group_id'			=> $row['group_id'],
+							'perm_system'			=> 3,
+						);
+						$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+					}
+					$db->sql_freeresult($result);
+
+					//and drop the old column
+					//delete_gallery_column(GROUPS_TABLE, 'personal_subalbums');
+					//delete_gallery_column(GROUPS_TABLE, 'allow_personal_albums');
+					//delete_gallery_column(GROUPS_TABLE, 'view_personal_albums');
 				//no break;
+
+				case 'svn':
 
 				break;
 			}

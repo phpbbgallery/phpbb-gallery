@@ -1,2 +1,116 @@
 <!-- INCLUDE overall_header.html -->
+<script type="text/javascript">
+// <![CDATA[
+	var active_pmask = '0';
+	var active_fmask = '0';
+	var active_cat = '0';
+
+	var id = '000';
+
+	var role_options = new Array();
+
+	<!-- IF S_ROLE_JS_ARRAY -->
+		{S_ROLE_JS_ARRAY}
+	<!-- ENDIF -->
+// ]]>
+</script>
+<script type="text/javascript" src="style/permissions.js"></script>
+<a name="maincontent"></a>
+
+<h1>{ACP_GALLERY_TITLE}</h1>
+<p>{ACP_GALLERY_TITLE_EXPLAIN}</p>
+
+<form action="{S_ALBUM_ACTION}" method="post">
+<!-- IF STEP == 1 -->
+	<fieldset>
+		<legend>{L_SELECT_ALBUMS}</legend>
+			<dl><dt><input id="perm_system_0" name="perm_system" class="radio" type="radio" checked="checked" value="0" /><label for="perm_system_0">&nbsp;{L_SELECTED_ALBUMS}</label></dt>
+				<dd><select id="target" name="album_ids[]" multiple="multiple">
+				<!-- BEGIN albumrow --><option value="{albumrow.ALBUM_ID}">{albumrow.ALBUM_NAME}</option><!-- END albumrow -->
+				</select></dd>
+			</dl>
+			<dl><dt><input id="perm_system_2" name="perm_system" class="radio" type="radio" value="2" /><label for="perm_system_2">&nbsp;{L_OWN_PERSONAL_ALBUMS}</label></dt></dl>
+			<dl><dt><input id="perm_system_3" name="perm_system" class="radio" type="radio" value="3" /><label for="perm_system_3">&nbsp;{L_PERSONAL_ALBUMS}</label></dt></dl>
+	</fieldset>
+<!-- ELSEIF STEP == 2 -->
+	<fieldset>
+		<legend>{L_SELECTED_ALBUMS}</legend>
+			<dl>
+				<!-- IF PERM_SYSTEM == 2 --><dd style="font-weight: bold;">{L_OWN_PERSONAL_ALBUMS}</dd><!-- ENDIF -->
+				<!-- IF PERM_SYSTEM == 3 --><dd style="font-weight: bold;">{L_PERSONAL_ALBUMS}</dd><!-- ENDIF -->
+				<!-- BEGIN albumrow --><dd style="font-weight: bold;">{albumrow.ALBUM_NAME}</dd><!-- END albumrow -->
+			</dl>
+	</fieldset>
+	<fieldset>
+		<legend>{L_SELECT_GROUPS}</legend>
+			<dl><dt style="font-weight: bold;"><!-- BEGIN perm_grouprow --><input id="drop_perm" name="drop_perm[]" class="radio" type="checkbox" value="{perm_grouprow.GROUP_ID}" /><!-- IF perm_grouprow.GROUP_COLOUR --><span style="color: #{perm_grouprow.GROUP_COLOUR};">{perm_grouprow.GROUP_NAME}</span><!-- ELSE -->{perm_grouprow.GROUP_NAME}<!-- ENDIF --><br /><!-- END perm_grouprow --><!-- IF .perm_grouprow --><br /><input class="button1" type="submit" id="delete" name="delete" value="{L_DELETE_PERMISSIONS}" /><!-- ENDIF --></dt>
+			<dd><select id="target" name="group_ids[]" multiple="multiple">
+				<!-- BEGIN grouprow --><option value="{grouprow.GROUP_ID}">{grouprow.GROUP_NAME}</option><!-- END grouprow -->
+			</select></dd></dl>
+	</fieldset>
+<!-- ELSEIF STEP == 3 -->
+	<fieldset>
+		<legend>{L_SELECTED_ALBUMS}</legend>
+			<dl>
+				<!-- IF PERM_SYSTEM == 2 --><dd style="font-weight: bold;">{L_OWN_PERSONAL_ALBUMS}</dd><!-- ENDIF -->
+				<!-- IF PERM_SYSTEM == 3 --><dd style="font-weight: bold;">{L_PERSONAL_ALBUMS}</dd><!-- ENDIF -->
+				<!-- BEGIN albumrow --><dd style="font-weight: bold;">{albumrow.ALBUM_NAME}</dd><!-- END albumrow -->
+			</dl>
+	</fieldset>
+	<fieldset>
+		<legend>{L_SELECTED_GROUPS}</legend>
+			<dl>
+				<!-- BEGIN grouprow --><dd style="font-weight: bold;"><!-- IF grouprow.GROUP_COLOUR --><span style="color: #{grouprow.GROUP_COLOUR};">{grouprow.GROUP_NAME}</span><!-- ELSE -->{grouprow.GROUP_NAME}<!-- ENDIF --></dd><!-- END grouprow -->
+			</dl>
+	</fieldset>
+	<fieldset>
+		<legend>{L_SELECT_PERMISSIONS}</legend>
+
+		<div class="permissions-panel" id="options{grouprow.S_ROW_COUNT}{p_mask.f_mask.S_ROW_COUNT}{p_mask.f_mask.category.S_ROW_COUNT}">
+			<span class="corners-top"><span></span></span>
+			<div class="tablewrap">
+				<table id="table{p_mask.S_ROW_COUNT}{p_mask.f_mask.S_ROW_COUNT}{p_mask.f_mask.category.S_ROW_COUNT}" cellspacing="1">
+				<colgroup>
+					<col class="permissions-name" />
+					<col class="permissions-yes" />
+					<col class="permissions-no" />
+					<col class="permissions-never" />
+				</colgroup>
+				<thead>
+				<tr>
+					<th class="name" scope="col"><strong>{L_PERMISSION}</strong></th>
+					<th class="value permissions-yes" scope="col">{L_PERMISSION_YES}</th>
+					<th class="value permissions-no" scope="col">{L_PERMISSION_NO}</th>
+					<th class="value permissions-never" scope="col">{L_PERMISSION_NEVER}</th>
+				</tr>
+				</thead>
+				<tbody>
+				<!-- BEGIN permission -->
+					<!-- IF permission.S_ROW_COUNT is even --><tr class="row4"><!-- ELSE --><tr class="row3"><!-- ENDIF -->
+					<th class="permissions-name<!-- IF permission.S_ROW_COUNT is even --> row4<!-- ELSE --> row3<!-- ENDIF -->">{permission.PERMISSION}</th>
+						<!-- IF not permission.S_COUNT_FIELD -->
+							<td class="permissions-yes"><label for="{permission.S_FIELD_NAME}_y"><input id="{permission.S_FIELD_NAME}_y" name="{permission.S_FIELD_NAME}" class="radio" type="radio"<!-- IF permission.S_YES --> checked="checked"<!-- ENDIF --> value="2" /></label></td>
+							<td class="permissions-no"><label for="{permission.S_FIELD_NAME}_u"><input id="{permission.S_FIELD_NAME}_u" name="{permission.S_FIELD_NAME}" class="radio" type="radio"<!-- IF permission.S_NO --> checked="checked"<!-- ENDIF --> value="1" /></label></td>
+							<td class="permissions-never"><label for="{permission.S_FIELD_NAME}_n"><input  id="{permission.S_FIELD_NAME}_n" name="{permission.S_FIELD_NAME}" class="radio" type="radio"<!-- IF permission.S_NEVER --> checked="checked"<!-- ENDIF --> value="3" /></label></td>
+						<!-- ELSE -->
+							<td class="permissions" colspan="3"><input class="text medium" type="text" id="{permission.S_FIELD_NAME}" name="{permission.S_FIELD_NAME}" value="{permission.S_VALUE}" maxlength="3" /></td>
+						<!-- ENDIF -->
+				</tr>
+				<!-- END permission -->
+				</tbody>
+				</table>
+			</div>
+
+			<span class="corners-bottom"><span></span></span>
+		</div>
+			<div class="clearfix"></div>
+	</fieldset>
+<!-- ENDIF -->
+	<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
+		{S_FORM_TOKEN}{S_HIDDEN_FIELDS}
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+	</fieldset>
+</form>
 <!-- INCLUDE overall_footer.html -->
