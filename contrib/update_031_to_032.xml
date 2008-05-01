@@ -73,6 +73,44 @@
       <file from="root/styles/prosilver/theme/images/gallery_lytebox/*.*" to="styles/prosilver/theme/images/gallery_lytebox/*.*" />
       <file from="root/styles/prosilver/theme/images/icon_gallery.gif" to="styles/prosilver/theme/images/icon_gallery.gif" />
     </copy>
+    <open src="includes/cache.php">
+      <edit>
+        <find><![CDATA[		return $hook_files;
+	}]]></find>
+        <action type="after-add"><![CDATA[	/**
+	* Obtain list of albums
+	*/
+	function obtain_album_list()
+	{
+		global $db;
+
+		if (($albums = $this->get('_albums')) === false)
+		{
+			$sql = 'SELECT album_id, album_name, left_id, right_id, album_user_id
+				FROM ' . GALLERY_ALBUMS_TABLE . '
+				ORDER BY album_user_id ASC, left_id ASC';
+			$result = $db->sql_query($sql);
+
+			$albums = array();
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$albums[$row['album_id']] = array(
+					'album_id'		=> $row['album_id'],
+					'album_name'	=> $row['album_name'],
+					'left_id'		=> $row['left_id'],
+					'right_id'		=> $row['right_id'],
+					'album_user_id'	=> $row['album_user_id'],
+				);
+			}
+			$db->sql_freeresult($result);
+
+			$this->put('_albums', $albums);
+		}
+
+		return $albums;
+	}]]></action>
+      </edit>
+    </open>
     <diy-instructions lang="en-gb">see normal install-file</diy-instructions>
   </action-group>
 </mod>
