@@ -185,4 +185,38 @@ $lang = array_merge($lang, array(
 	'ALLOWED_SUBS'				=> 'Anzahl der Subalben',
 ));
 
+$lang = array_merge($lang, array(
+	'DELETE_PERMISSIONS'			=> 'Lösch Berechtigungen',
+
+	'OWN_PERSONAL_ALBUMS'			=> 'Besitzt persönliche Alben',
+
+	'PERMISSION'					=> 'Berechtigung',
+	'PERMISSION_NEVER'				=> 'Nie',
+	'PERMISSION_NO'					=> 'Nein',
+	'PERMISSION_YES'				=> 'Ja',
+
+	'PERMISSION_A_MODERATE'			=> 'Darf Album moderieren',
+	'PERMISSION_ALBUM_COUNT'		=> 'Anzahl der persönlichen Subalben',
+	'PERMISSION_C_DELETE'			=> 'Darf Kommentare löschen',
+	'PERMISSION_C_EDIT'				=> 'Darf Kommentare editieren',
+	'PERMISSION_C_POST'				=> 'Darf ein Bild kommentieren',
+	'PERMISSION_I_APPROVE'			=> 'Can avoid image-approval',
+	'PERMISSION_I_COUNT'			=> 'Anzahl der hochgeladenen Bilder',
+	'PERMISSION_I_DELETE'			=> 'Darf Bilder löschen',
+	'PERMISSION_I_EDIT'				=> 'Darf Bilder editieren',
+	'PERMISSION_I_LOCK'				=> 'Darf Bilder sperren',
+	'PERMISSION_I_RATE'				=> 'Darf Album moderieren',
+	'PERMISSION_I_REPORT'			=> 'Darf Bilder melden',
+	'PERMISSION_I_UPLOAD'			=> 'Darf Bildfer hochladen',
+	'PERMISSION_I_VIEW'				=> 'Darf Bilder sehen',
+
+	'PERMISSION_EMPTY'				=> 'Du hast nicht alle Berechtigungen gesetzt.',
+
+	'SELECT_ALBUMS'					=> 'Wähle Alben',
+	'SELECTED_ALBUMS'				=> 'Ausgewählte Alben',
+	'SELECT_GROUPS'					=> 'Wähle Gruppen',
+	'SELECTED_GROUPS'				=> 'Ausgewählte Gruppen',
+	'SELECT_PERMISSIONS'			=> 'Wähle Berechtigungen',
+	'SELECTED_PERMISSIONS'			=> 'Ausgewählte Berechtigunen',
+));
 ?>
