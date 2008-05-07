@@ -34,7 +34,7 @@ $user->add_lang('mods/info_acp_gallery');
 // Disable gallery if the install_gallery/ directory is still present
 if (file_exists($phpbb_root_path . 'install_gallery'))
 {
-	//H4CK3D by nickvergessen for Development//trigger_error('REMOVE_GALLERY_INSTALL');
+	trigger_error('REMOVE_GALLERY_INSTALL');
 }
 
 include("{$phpbb_root_path}{$gallery_root_path}includes/functions.$phpEx");
