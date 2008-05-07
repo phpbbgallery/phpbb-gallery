@@ -186,9 +186,9 @@ $lang = array_merge($lang, array(
 ));
 
 $lang = array_merge($lang, array(
-	'DELETE_PERMISSIONS'			=> 'Lösch Berechtigungen',
+	'DELETE_PERMISSIONS'			=> 'Berechtigungen löschen',
 
-	'OWN_PERSONAL_ALBUMS'			=> 'Besitzt persönliche Alben',
+	'OWN_PERSONAL_ALBUMS'			=> 'Eigene persönliche Alben',
 
 	'PERMISSION'					=> 'Berechtigung',
 	'PERMISSION_NEVER'				=> 'Nie',
@@ -200,7 +200,7 @@ $lang = array_merge($lang, array(
 	'PERMISSION_C_DELETE'			=> 'Darf Kommentare löschen',
 	'PERMISSION_C_EDIT'				=> 'Darf Kommentare editieren',
 	'PERMISSION_C_POST'				=> 'Darf ein Bild kommentieren',
-	'PERMISSION_I_APPROVE'			=> 'Can avoid image-approval',
+	'PERMISSION_I_APPROVE'			=> 'Kann Bild freigabe umgehen',
 	'PERMISSION_I_COUNT'			=> 'Anzahl der hochgeladenen Bilder',
 	'PERMISSION_I_DELETE'			=> 'Darf Bilder löschen',
 	'PERMISSION_I_EDIT'				=> 'Darf Bilder editieren',

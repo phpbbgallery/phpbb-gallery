@@ -111,6 +111,32 @@
 	}]]></action>
       </edit>
     </open>
+    <open src="includes/session.php">
+      <edit>
+        <find><![CDATA[					$sql_ary = array('session_time' => $this->time_now, 'session_last_visit' => $this->time_now, 'session_admin' => 0);
+
+					if ($this->update_session_page)
+					{
+						$sql_ary['session_page'] = substr($this->page['page'], 0, 199);
+						$sql_ary['session_forum_id'] = $this->page['forum'];]]></find>
+        <action type="after-add"><![CDATA[$sql_ary['session_album_id'] = $this->page['album'];]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[			'session_viewonline'	=> ($viewonline) ? 1 : 0,
+		);
+
+		if ($this->update_session_page)
+		{
+			$sql_ary['session_page'] = (string) substr($this->page['page'], 0, 199);
+			$sql_ary['session_forum_id'] = $this->page['forum'];]]></find>
+        <action type="after-add"><![CDATA[$sql_ary['session_album_id'] = $this->page['album'];]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[		$sql_ary['session_id'] = (string) $this->session_id;
+		$sql_ary['session_page'] = (string) substr($this->page['page'], 0, 199);]]></find>
+        <action type="after-add"><![CDATA[$sql_ary['session_album_id'] = $this->page['album'];]]></action>
+      </edit>
+    </open>
     <diy-instructions lang="en-gb">see normal install-file</diy-instructions>
   </action-group>
 </mod>

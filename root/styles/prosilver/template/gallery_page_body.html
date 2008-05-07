@@ -56,10 +56,12 @@ function checkRateForm() {
 				<dt><label>{L_IMAGE_TITLE}:</label></dt>
 				<dd>{IMAGE_NAME}</dd>
 			</dl>
-			<dl>
-				<dt><label>{L_IMAGE_DESC}:</label></dt>
-				<dd>{IMAGE_DESC}</dd>
-			</dl>
+			<!-- IF IMAGE_DESC -->
+				<dl>
+					<dt><label>{L_IMAGE_DESC}:</label></dt>
+					<dd>{IMAGE_DESC}</dd>
+				</dl>
+			<!-- ENDIF -->
 			<dl>
 				<dt><label>{L_IMAGE_BBCODE}:</label></dt>
 				<dd><input type="text" size="28" value="{IMAGE_BBCODE}" class="inputbox autowidth" onclick="this.focus();this.select();" /></dd>
@@ -157,7 +159,7 @@ function checkRateForm() {
 	</div>
 	<!-- BEGIN commentrow -->
 	<a name="{commentrow.ID}"></a>
-	<div class="post {commentrow.S_ROW_STYLE}">
+	<div class="post <!-- IF commentrow.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
 		<div class="inner">
 			<span class="corners-top"><span></span></span>
 			<div class="postbody">

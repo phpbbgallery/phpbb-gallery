@@ -14,7 +14,6 @@ $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 $gallery_root_path = GALLERY_ROOT_PATH;
-include($phpbb_root_path . $gallery_root_path . 'includes/common.'.$phpEx);
 include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
@@ -25,6 +24,10 @@ $user->session_begin();
 $auth->acl($user->data);
 $user->setup('mods/gallery');
 $user->add_lang('posting');
+
+include_once("{$phpbb_root_path}{$gallery_root_path}includes/common.$phpEx");
+include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
+$album_access_array = get_album_access_array();
 
 add_form_key('gallery');
 $submit = (isset($_POST['submit'])) ? true : false;
@@ -42,9 +45,12 @@ if ($image_id)
 }
 $album_id = (isset($image_data['image_album_id'])) ? $image_data['image_album_id'] : $album_id;
 $album_data = get_album_info($album_id);
+if ($album_data['album_user_id'] > 0)
+{
+	$album_access_array[$album_id] = $album_access_array[-3];
+}
 generate_album_nav($album_data);
 
-$album_user_access = (!$album_data['album_user_id']) ? album_user_access($album_id, $album_data, 1, 1, 1, 1, 1, 1) : personal_album_access($album_data['album_user_id']);
 if ($image_id)
 {
 	$image_backlink = append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id");
@@ -73,7 +79,7 @@ switch ($mode)
 					meta_refresh(3, $album_backlink);
 					trigger_error('ALBUM_IS_CATEGORY');
 				}
-				if (!$album_user_access['upload'])
+				if ($album_access_array[$album_id]['i_upload'] != 1)
 				{
 					if (!$user->data['is_registered'])
 					{
@@ -87,7 +93,7 @@ switch ($mode)
 				}
 			break;
 			case 'edit':
-				if (!$album_user_access['edit'])
+				if ($album_access_array[$album_id]['i_edit'] != 1)
 				{
 					if (!$user->data['is_registered'])
 					{
@@ -102,7 +108,7 @@ switch ($mode)
 				else if (
 					($image_data['image_user_id'] <> $user->data['user_id'])
 				&&
-					((!$album_user_access['moderator']) && ($user->data['user_type'] <> USER_FOUNDER))
+					(($album_access_array[$album_id]['a_moderate'] != 1) && ($user->data['user_type'] <> USER_FOUNDER))
 				)
 				{
 					if (!$user->data['is_registered'])
@@ -117,7 +123,7 @@ switch ($mode)
 				}
 			break;
 			case 'delete':
-				if (!$album_user_access['delete'])
+				if ($album_access_array[$album_id]['i_delete'] != 1)
 				{
 					if (!$user->data['is_registered'])
 					{
@@ -132,7 +138,7 @@ switch ($mode)
 				else if (
 					($image_data['image_user_id'] <> $user->data['user_id'])
 				&&
-					((!$album_user_access['moderator']) && ($user->data['user_type'] <> USER_FOUNDER))
+					(($album_access_array[$album_id]['a_moderate'] != 1) && ($user->data['user_type'] <> USER_FOUNDER))
 				)
 				{
 					if (!$user->data['is_registered'])
@@ -153,21 +159,9 @@ switch ($mode)
 		}
 	break;
 	case 'comment':
-		if (($image_data['image_lock']) && (!$album_user_access['moderator']))
+		if (($image_data['image_lock']) && ($album_access_array[$album_id]['a_moderate']))
 		{
 			trigger_error('IMAGE_LOCKED');
-		}
-		if (!$album_user_access['comment'])
-		{
-			if (!$user->data['is_registered'])
-			{
-				login_box($image_loginlink , $user->lang['LOGIN_EXPLAIN_UPLOAD']);
-			}
-			else
-			{
-				meta_refresh(3, $image_backlink);
-				trigger_error('NOT_AUTHORISED');
-			}
 		}
 		$sql = 'SELECT *
 			FROM ' . GALLERY_COMMENTS_TABLE . "
@@ -178,10 +172,34 @@ switch ($mode)
 		switch ($submode)
 		{
 			case 'add':
+				if ($album_access_array[$album_id]['c_post'] != 1)
+				{
+					if (!$user->data['is_registered'])
+					{
+						login_box($image_loginlink , $user->lang['LOGIN_EXPLAIN_UPLOAD']);
+					}
+					else
+					{
+						meta_refresh(3, $image_backlink);
+						trigger_error('NOT_AUTHORISED');
+					}
+				}
 			break;
 
 			case 'edit':
-				if (!$album_user_access['edit'] || (($comment_data['comment_user_id'] != $user->data['user_id']) && ($user->data['user_type'] != USER_FOUNDER)) || !$user->data['is_registered'])
+				if ($album_access_array[$album_id]['c_edit'] != 1)
+				{
+					if (!$user->data['is_registered'])
+					{
+						login_box($image_loginlink , $user->lang['LOGIN_EXPLAIN_UPLOAD']);
+					}
+					else
+					{
+						meta_refresh(3, $image_backlink);
+						trigger_error('NOT_AUTHORISED');
+					}
+				}
+				if ($album_access_array[$album_id]['c_edit'] || (($comment_data['comment_user_id'] != $user->data['user_id']) && ($user->data['user_type'] != USER_FOUNDER)) || !$user->data['is_registered'])
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
@@ -189,7 +207,19 @@ switch ($mode)
 			break;
 
 			case 'delete':
-				if (!$album_user_access['delete'] || (($comment_data['comment_user_id'] != $user->data['user_id']) && ($user->data['user_type'] != USER_FOUNDER)) || !$user->data['is_registered'])
+				if ($album_access_array[$album_id]['c_delete'] != 1)
+				{
+					if (!$user->data['is_registered'])
+					{
+						login_box($image_loginlink , $user->lang['LOGIN_EXPLAIN_UPLOAD']);
+					}
+					else
+					{
+						meta_refresh(3, $image_backlink);
+						trigger_error('NOT_AUTHORISED');
+					}
+				}
+				if ($album_access_array[$album_id]['c_delete'] != 1 || (($comment_data['comment_user_id'] != $user->data['user_id']) && ($user->data['user_type'] != USER_FOUNDER)) || !$user->data['is_registered'])
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
@@ -224,50 +254,25 @@ switch ($mode)
 			if ($submode == 'upload')
 			{
 				// Upload Quota Check
-				if ($album_id <> PERSONAL_GALLERY)
-				{
-					//Check Album Configuration Quota
-					if ($album_config['max_pics'] >= 0)
-					{//do we have enough images in this album?
-						if ($album_data['count'] >= $album_config['max_pics'])
-						{
-							trigger_error('ALBUM_REACHED_QUOTA');
-						}
-					}
-					// Check User Limit
-					$check_user_limit = false;
-					if (($user->data['user_type'] <> USER_FOUNDER) && $user->data['is_registered'] && !$user->data['is_bot'])
-					{
-						if (($album_user_access['moderator']) && ($album_config['mod_pics_limit'] >= 0))
-						{
-							$check_user_limit = 'mod_pics_limit';
-						}
-						else if ($album_config['user_pics_limit'] >= 0)
-						{
-							$check_user_limit = 'user_pics_limit';
-						}
-					}
-					if ($check_user_limit)
-					{
-						$sql = 'SELECT COUNT(image_id) AS count
-							FROM ' . GALLERY_IMAGES_TABLE . '
-							WHERE image_user_id = ' . $user->data['user_id'] . '
-								AND image_album_id = ' . $album_id;
-						$result = $db->sql_query($sql);
-						$row = $db->sql_fetchrow($result);
-						$own_pics = $row['count'];
-						if ($own_pics >= $album_config[$check_user_limit])
-						{
-							trigger_error('USER_REACHED_QUOTA');
-						}
-					}
-				}
-				else
-				{
-					if (($album_data['count'] >= $album_config['personal_gallery_limit']) && ($album_config['personal_gallery_limit'] >= 0))
+				//Check Album Configuration Quota
+				if ($album_config['max_pics'] >= 0)
+				{//do we have enough images in this album?
+					if ($album_data['count'] >= $album_config['max_pics'])
 					{
 						trigger_error('ALBUM_REACHED_QUOTA');
 					}
+				}
+				// Check User Limit
+				$sql = 'SELECT COUNT(image_id) AS count
+					FROM ' . GALLERY_IMAGES_TABLE . '
+					WHERE image_user_id = ' . $user->data['user_id'] . '
+						AND image_album_id = ' . $album_id;
+				$result = $db->sql_query($sql);
+				$row = $db->sql_fetchrow($result);
+				$own_pics = $row['count'];
+				if ($own_pics >= $album_access_array[$album_id]['i_count'])
+				{
+					trigger_error('USER_REACHED_QUOTA');
 				}
 
 				$images = 0;

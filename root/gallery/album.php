@@ -23,11 +23,10 @@ $auth->acl($user->data);
 $user->setup('mods/gallery');
 $user->setup('mods/info_ucp_gallery');
 
-
-//
 // Get general album information
-//
-include($phpbb_root_path . $gallery_root_path . 'includes/common.'.$phpEx);
+include_once("{$phpbb_root_path}{$gallery_root_path}includes/common.$phpEx");
+include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
+$album_access_array = get_album_access_array();
 
 
 // ------------------------------------
@@ -47,18 +46,23 @@ if(!$album_id)
 }
 $moderators_list = '';
 $total_pics = 0;
-$album_user_access = $album_data = $catrows = array();
-/**
-* Get this cat info
-*/
+$album_data = $catrows = array();
 $album_data = get_album_info($album_id);
-$album_user_access = (!$album_data['album_user_id']) ? album_user_access($album_data['album_id'], $album_data, 1, 1, 1, 1, 1, 1, 1) : personal_album_access($album_data['album_user_id']);
+if (empty($album_data))
+{
+	trigger_error($user->lang['ALBUM_NOT_EXIST'], E_USER_WARNING);
+}
+if ($album_data['album_user_id'] > 0)
+{
+	$album_access_array[$album_id] = $album_access_array[-3];
+}
 $total_pics = $album_data['count'];
 /**
 * Build Auth List
 */
-$auth_key = array_keys($album_user_access);
+$auth_key = array_keys($album_access_array[$album_id]);
 $auth_list = '';
+/*Needs to be fixed
 for ($i = 0; $i < (count($album_user_access) - 1); $i++)// ignore MODERATOR in this loop
 {// we should skip a loop if RATE and COMMENT is disabled
 	if((($album_config['rate'] == 0) && ($auth_key[$i] == 'rate')) || (($album_config['comment'] == 0) && ($auth_key[$i] == 'comment')))
@@ -67,11 +71,11 @@ for ($i = 0; $i < (count($album_user_access) - 1); $i++)// ignore MODERATOR in t
 	}
 	$auth_list .= ($album_user_access[$auth_key[$i]] == 1) ? $user->lang['ALBUM_'. strtoupper($auth_key[$i]) .'_CAN'] : $user->lang['ALBUM_'. strtoupper($auth_key[$i]) .'_CANNOT'];
 	$auth_list .= '<br />';
-}
+}*/
 /**
 * send cheaters home
 */
-if(!$album_user_access['view'])
+if(!$album_access_array[$album_id]['i_view'])
 {
 	if ($user->data['is_bot'])
 	{
@@ -86,15 +90,11 @@ if(!$album_user_access['view'])
 		trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 	}
 }
-if (empty($album_data))
-{
-	trigger_error($user->lang['ALBUM_NOT_EXIST'], E_USER_WARNING);
-}
 
 /**
 * Build Album-Index
 */
-include($phpbb_root_path . $gallery_root_path . 'includes/functions_display.' . $phpEx);
+include("{$phpbb_root_path}{$gallery_root_path}includes/functions_display.$phpEx");
 display_albums($album_id);
 if ($album_id <> 0)
 {
@@ -102,7 +102,7 @@ if ($album_id <> 0)
 }
 /*if ($album_data['album_type'] == 2)
 { we just do this, when we have images */
-	if (($user->data['user_type'] == USER_FOUNDER) || ($album_user_access['moderator'] == 1))
+	if (($user->data['user_type'] == USER_FOUNDER) || ($album_access_array[$album_id]['a_moderate'] == 1))
 	{
 		$template->assign_vars(array(
 			'U_MCP'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id"),
@@ -204,7 +204,7 @@ if ($album_id <> 0)
 				$approval_link = false;
 				if ($album_data['album_approval'] <> ALBUM_USER)
 				{
-					if (($user->data['user_type'] == USER_FOUNDER) || (($album_user_access['moderator'] == 1) && ($album_data['album_approval'] == ALBUM_MOD)))
+					if (($user->data['user_type'] == USER_FOUNDER) || (($album_access_array[$album_id]['a_moderate'] == 1) && ($album_data['album_approval'] == ALBUM_MOD)))
 					{
 						$approval_mode = ($picrow[$j]['image_approval'] == 0) ? 'approval' : 'unapproval';
 						$approval_link = '<a href="'. append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?mode=$approval_mode&amp;image_id=" . $picrow[$j]['image_id']) . '">';
@@ -223,34 +223,21 @@ if ($album_id <> 0)
 					'APPROVAL'		=> $approval_link,
 				));
 
-				$allow_edit = (
-					((!$album_data['album_user_id']) && (($album_user_access['edit'] && ($picrow[$j]['image_user_id'] == $user->data['user_id'])) || ($album_user_access['moderator'] && ($album_data['album_edit_level'] <> ALBUM_ADMIN))))
-					||
-					($album_data['album_user_id'] == $user->data['user_id'])
-					||
-					($user->data['user_type'] == USER_FOUNDER)
-				) ? true : false;
-
-				$allow_delete = (
-					((!$album_data['album_user_id']) && (($album_user_access['delete'] && ($picrow[$j]['image_user_id'] == $user->data['user_id'])) || ($album_user_access['moderator'] && ($album_data['album_delete_level'] <> ALBUM_ADMIN))))
-					||
-					($album_data['album_user_id'] == $user->data['user_id'])
-					||
-					($user->data['user_type'] == USER_FOUNDER)
-				) ? true : false;
+				$allow_edit = ((($album_access_array[$album_id]['i_edit'] == 1) && ($picrow[$j]['image_user_id'] == $user->data['user_id'])) || ($album_access_array[$album_id]['a_moderate'] == 1)) ? true : false;
+				$allow_delete = ((($album_access_array[$album_id]['i_delete'] == 1) && ($picrow[$j]['image_user_id'] == $user->data['user_id'])) || ($album_access_array[$album_id]['a_moderate'] == 1)) ? true : false;
 
 				$template->assign_block_vars('picrow.pic_detail', array(
 					'TITLE'		=> $picrow[$j]['image_name'],
 					'POSTER'	=> get_username_string('full', $picrow[$j]['image_user_id'], ($picrow[$j]['image_user_id'] <> ANONYMOUS) ? $picrow[$j]['image_username'] : $user->lang['GUEST'], $picrow[$j]['image_user_colour']),
 					'TIME'		=> $user->format_date($picrow[$j]['image_time']),
 					'VIEW'		=> $picrow[$j]['image_view_count'],
-					'RATING'	=> ($album_config['rate'] == 1) ? ( '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . "&amp;image_id=" . $picrow[$j]['image_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $picrow[$j]['rating'] . '<br />') : '',
-					'COMMENTS'	=> ($album_config['comment'] == 1) ? ( '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . "&amp;image_id=" . $picrow[$j]['image_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $picrow[$j]['comments'] . '<br />') : '',
+					'RATING'	=> (($album_config['rate'] == 1) && ($album_access_array[$album_id]['i_rate'] == 1)) ? ( '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . "&amp;image_id=" . $picrow[$j]['image_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $picrow[$j]['rating'] . '<br />') : '',
+					'COMMENTS'	=> (($album_config['comment'] == 1) && ($album_access_array[$album_id]['c_post'] == 1)) ? ( '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . "&amp;image_id=" . $picrow[$j]['image_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $picrow[$j]['comments'] . '<br />') : '',
 
 					'EDIT'		=> $allow_edit ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['EDIT_IMAGE'] . '</a>' : '',
 					'DELETE'	=> $allow_delete ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=delete&amp;album_id=$album_id&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['DELETE_IMAGE'] . '</a>' : '',
-					'MOVE'		=> ($album_user_access['moderator']) ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?mode=move&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['MOVE'] . '</a>' : '',
-					'LOCK'		=> ($album_user_access['moderator']) ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?mode=" . (($picrow[$j]['image_lock'] == 0) ? 'lock' : 'unlock') . "&amp;image_id=" . $picrow[$j]['image_id']) . '">' . (($picrow[$j]['image_lock'] == 0) ? $user->lang['LOCK'] : $user->lang['UNLOCK']) . '</a>' : '',
+					'MOVE'		=> ($album_access_array[$album_id]['a_moderate'] == 1) ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?mode=move&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['MOVE'] . '</a>' : '',
+					'LOCK'		=> ($album_access_array[$album_id]['a_moderate'] == 1) ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?mode=" . (($picrow[$j]['image_lock'] == 0) ? 'lock' : 'unlock') . "&amp;image_id=" . $picrow[$j]['image_id']) . '">' . (($picrow[$j]['image_lock'] == 0) ? $user->lang['LOCK'] : $user->lang['UNLOCK']) . '</a>' : '',
 					'IP'		=> ($user->data['user_type'] == USER_FOUNDER) ? $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $picrow[$j]['image_user_ip'] . '">' . $picrow[$j]['image_user_ip'] . '</a><br />' : ''
 
 					));
@@ -309,35 +296,15 @@ $album_jumpbox .= '</form>';
 $allowed_create = false;
 if ($album_data['album_user_id'] == $user->data['user_id'])
 {
-	$allowed_create = true;
-	$sql = 'SELECT MAX(g.allow_personal_albums) as allow_personal_albums, MAX(g.personal_subalbums) as personal_subalbums
-		FROM ' . GROUPS_TABLE . ' as g
-		LEFT JOIN ' . USER_GROUP_TABLE . " as ug
-			ON ug.group_id = g.group_id
-		WHERE ug.user_id = {$user->data['user_id']}
-			AND ug.user_pending = 0";
-	$result = $db->sql_query($sql);
-	$permission_data = $db->sql_fetchrow($result);
-	if ($permission_data['allow_personal_albums'] != 1)
+	$allowed_create = $album_access_array[-2]['i_upload'];
+	if ($allowed_create)
 	{
-		$allowed_create = false;
-	}
-	else
-	{
-		$sql = 'SELECT MAX(g.allow_personal_albums) as allow_personal_albums, MAX(g.personal_subalbums) as personal_subalbums
-			FROM ' . GROUPS_TABLE . ' as g
-			LEFT JOIN ' . USER_GROUP_TABLE . " as ug
-				ON ug.group_id = g.group_id
-			WHERE ug.user_id = {$user->data['user_id']}
-				AND ug.user_pending = 0";
-		$result = $db->sql_query($sql);
-		$permission_data = $db->sql_fetchrow($result);
 		$sql = 'SELECT COUNT(album_id) as albums
 			FROM ' . GALLERY_ALBUMS_TABLE . "
 			WHERE album_user_id = {$user->data['user_id']}";
 		$result = $db->sql_query($sql);
 		$albums = $db->sql_fetchrow($result);
-		if (($albums['albums'] - 1) >= $permission_data['personal_subalbums'])
+		if (($albums['albums'] - 1) >= $album_access_array[-2]['album_count'])
 		{
 			$allowed_create = false;
 		}

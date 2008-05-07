@@ -66,10 +66,12 @@ function checkRateForm() {
 		<td width="25%" align="right"><span class="genmed">{L_IMAGE_TITLE}:</span></td>
 		<td><span class="genmed">{IMAGE_NAME}</span></td>
 	</tr>
-	<tr class="row1">
-		<td width="25%" align="right"><span class="genmed">{L_IMAGE_DESC}:</span></td>
-		<td><span class="genmed">{IMAGE_DESC}</span></td>
-	</tr>
+	<!-- IF IMAGE_DESC -->
+		<tr class="row1">
+			<td width="25%" align="right"><span class="genmed">{L_IMAGE_DESC}:</span></td>
+			<td><span class="genmed">{IMAGE_DESC}</span></td>
+		</tr>
+	<!-- ENDIF -->
 	<tr class="row1">
 		<td width="25%" align="right"><span class="genmed">{L_IMAGE_BBCODE}:</span></td>
 		<td><span class="genmed"><input type="text" size="28" value="{IMAGE_BBCODE}" class="inputbox autowidth" onclick="this.focus();this.select();" /></span></td>

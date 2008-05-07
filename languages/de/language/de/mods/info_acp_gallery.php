@@ -43,6 +43,7 @@ $lang = array_merge($lang, array(
 	'ACP_IMPORT_ALBUMS'							=> 'Bilder importieren',
 	'IMG_BUTTON_UPLOAD_IMAGE'   				=> 'Bild hochladen',
 	'REMOVE_GALLERY_INSTALL'					=> 'Bitte entferne zur Sicherheit den Ordner install_gallery/.',
+	'NEW_PERMISSIONS'							=> 'Neues Berechtigungs System',
 ));
 
 ?>

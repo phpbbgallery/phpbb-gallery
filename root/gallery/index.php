@@ -26,7 +26,9 @@ $user->setup('mods/gallery');
 //
 // Get general album information
 //
-include($phpbb_root_path . $gallery_root_path . 'includes/common.'.$phpEx);
+include_once("{$phpbb_root_path}{$gallery_root_path}includes/common.$phpEx");
+include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
+$album_access_array = get_album_access_array();
 
 
 /**
@@ -53,7 +55,6 @@ display_albums(0, $mode);
 * Recent Public Pics
 */
 include($phpbb_root_path . $gallery_root_path . 'includes/functions_recent.' . $phpEx);
-//(rows, columns)
 $display = array(
 	'name'		=> true,
 	'poster'	=> true,
@@ -63,28 +64,16 @@ $display = array(
 	'comments'	=> false,
 	'album'		=> true,
 );
+//(rows, columns)
 recent_gallery_images(1, 4, $display);
-/*
-
-				$template->assign_block_vars('recent_pics.recent_detail', array(
-					'TITLE'			=> $recentrow[$j]['image_name'],
-					'POSTER_FULL'	=> get_username_string('full', $recentrow[$j]['image_user_id'], ($recentrow[$j]['image_user_id'] <> ANONYMOUS) ? $recentrow[$j]['image_username'] : $user->lang['GUEST'], $recentrow[$j]['image_user_colour']),
-					'TIME'			=> $user->format_date($recentrow[$j]['image_time']),
-					'VIEW'			=> $recentrow[$j]['image_view_count'],
-					'RATING'		=> ($album_config['rate'] == 1) ? ( '<a href="' . append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=" . $recentrow[$j]['image_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $recentrow[$j]['rating'] . '<br />') : '',
-					'COMMENTS'		=> ($album_config['comment'] == 1) ? ( '<a href="' . append_sid("{$phpbb_root_path}gallery/image_page.$phpEx?image_id=" . $recentrow[$j]['image_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $recentrow[$j]['comments'] . '<br />') : '',
-					'IP'			=> ($user->data['user_type'] == USER_FOUNDER) ? $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $recentrow[$j]['image_user_ip'] . '">' . $recentrow[$j]['image_user_ip'] . '</a><br />' : ''
-				));
-*/
-
 
 /**
 * Start output the page
 */
 
 $template->assign_vars(array(
-	'U_YOUR_PERSONAL_GALLERY' 		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'user_id=' . $user->data['user_id']),
-	'U_USERS_PERSONAL_GALLERIES' 	=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal'),
+	'U_YOUR_PERSONAL_GALLERY' 		=> ($album_access_array[-2]['i_upload'] == 1) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'user_id=' . $user->data['user_id']) : '',
+	'U_USERS_PERSONAL_GALLERIES' 	=> ($album_access_array[-3]['i_view'] == 1) ? append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal') : '',
 
 	'S_LOGIN_ACTION'				=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login'),
 	'S_COLS' 						=> $album_config['cols_per_page'],

@@ -85,7 +85,7 @@ class acp_gallery
 				$title = 'ALBUM_AUTH_TITLE';
 				$this->page_title = $user->lang[$title];
 
-				$this->album_permissions();
+				$this->permissions();
 			break;
 			
 			case 'album_personal_permissions':
@@ -853,6 +853,7 @@ class acp_gallery
 			}
 			$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
+			$cache->destroy('_albums');
 
 			trigger_error($user->lang['NEW_ALBUM_CREATED'] . adm_back_link($this->u_action));
 		}
@@ -1037,6 +1038,7 @@ class acp_gallery
 					WHERE album_id  = ' . (int) $album_id;
 			$db->sql_query($sql);
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
+			$cache->destroy('_albums');
 
 			trigger_error($user->lang['ALBUM_UPDATED'] . adm_back_link($this->u_action));
 		}
@@ -1189,6 +1191,7 @@ class acp_gallery
 				WHERE album_id = '$album_id'";
 			$result = $db->sql_query($sql);
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
+			$cache->destroy('_albums');
 			trigger_error($user->lang['ALBUM_DELETED'] . adm_back_link($this->u_action));
 		}
 	}
@@ -1275,12 +1278,13 @@ class acp_gallery
 				AND album_user_id = {$moving['album_user_id']}";
 		$db->sql_query($sql);
 		$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
+		$cache->destroy('_albums');
 		trigger_error($user->lang['ALBUM_CHANGED_ORDER'] . adm_back_link($this->u_action));
 	}
 
 	function manage_cache()
 	{
-		global $db, $template, $user;
+		global $db, $template, $user, $phpbb_root_path, $cache;
 		if( !isset($_POST['confirm']) )
 		{
 			$template->assign_vars(array(
@@ -1291,7 +1295,7 @@ class acp_gallery
 		}
 		else
 		{
-			$cache_dir = @opendir('../' . ALBUM_DIR_NAME . ALBUM_CACHE_PATH);
+			$cache_dir = @opendir($phpbb_root_path . GALLERY_CACHE_PATH);
 
 			while( $cache_file = @readdir($cache_dir) )
 			{
@@ -1302,6 +1306,7 @@ class acp_gallery
 			}
 
 			@closedir($cache_dir);
+			$cache->destroy('_albums');
 			trigger_error($user->lang['THUMBNAIL_CACHE_CLEARED_SUCCESSFULLY'] . adm_back_link($this->u_action));
 		}
 	}
@@ -1440,6 +1445,10 @@ class acp_gallery
 				$where = '';
 				if ($perm_system == 0)
 				{
+					if (!isset($album_ary[0]))
+					{
+						trigger_error('THIS_WILL_BE_REPORTED', E_USER_WARNING);
+					}
 					$where = 'perm_album_id = ' . $album_ary[0];
 				}
 				else
@@ -1557,18 +1566,37 @@ class acp_gallery
 
 			$db->sql_query('INSERT INTO ' . GALLERY_PERM_ROLES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 			$insert_role = $db->sql_nextid();
-			foreach ($album_ary as $album)
+			if ($album_ary != array())
+			{
+				foreach ($album_ary as $album)
+				{
+					foreach ($group_ary as $group)
+					{
+						$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . " WHERE perm_album_id = $album AND perm_group_id = $group AND perm_system = $perm_system";
+						$db->sql_query($sql);
+						$sql_ary = array(
+							'perm_role_id'			=> $insert_role,
+							'perm_album_id'			=> $album,
+							'perm_user_id'			=> 0,
+							'perm_group_id'			=> $group,
+							'perm_system'			=> $perm_system,
+						);
+						$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+					}
+				}
+			}
+			else
 			{
 				foreach ($group_ary as $group)
 				{
-					$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . " WHERE perm_album_id = $album AND perm_group_id = $group AND perm_system = $perm_system";
+					$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . " WHERE perm_group_id = $group AND perm_system = $perm_system";
 					$db->sql_query($sql);
 					$sql_ary = array(
 						'perm_role_id'			=> $insert_role,
-						'perm_album_id'			=> $album,
+						'perm_album_id'			=> 0,
 						'perm_user_id'			=> 0,
 						'perm_group_id'			=> $group,
-						'perm_system'			=> 0,
+						'perm_system'			=> $perm_system,
 					);
 					$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 				}

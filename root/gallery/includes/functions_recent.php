@@ -15,41 +15,34 @@ if (!defined('IN_PHPBB'))
 }
 function recent_gallery_images($rows, $columns, &$display)
 {
-	global $db, $phpEx, $user, $phpbb_root_path, $album_config, $config, $template;
+	global $db, $phpEx, $user, $cache;
+	global $phpbb_root_path, $album_config, $config, $template;
+
+	include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
 	$user->add_lang('mods/gallery');
 	$recent_image_addon = true;
 	$gallery_root_path = GALLERY_ROOT_PATH;
 	include_once("{$phpbb_root_path}{$gallery_root_path}includes/common.$phpEx");
-	include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+	include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
+	$album_access_array = get_album_access_array();
 
-	$allowed_cat = $mod_cat = '';
-	$sql = 'SELECT *
-		FROM ' . GALLERY_ALBUMS_TABLE . '
-		ORDER BY left_id ASC';
-	$result = $db->sql_query($sql);
-
-	while( $row = $db->sql_fetchrow($result) )
+	$albums = $cache->obtain_album_list();
+	$allowed_albums = '';
+	foreach ($albums as $album)
 	{
-		$album_user_access = (!$row['album_user_id']) ? album_user_access($row['album_id'], $row, 1, 0, 0, 0, 0, 0) : personal_album_access($row['album_user_id']);
-		if ($album_user_access['view'] == 1)
+		if (($album['album_user_id'] > 0) && ($album_access_array[-3]['i_view'] == 1))
 		{
-			$allowed_cat .= ($allowed_cat == '') ? $row['album_id'] : ', ' . $row['album_id'];
+			$allowed_albums .= (($allowed_albums) ? ', ' : '') . $album['album_id'];
 		}
-		if ($album_user_access['moderator'] == 1)
+		else if ($album_access_array[$album['album_id']]['i_view'] == 1)
 		{
-			$mod_cat .= ($mod_cat == '') ? $row['album_id'] : ', ' . $row['album_id'];
+			$allowed_albums .= (($allowed_albums) ? ', ' : '') . $album['album_id'];
 		}
 	}
-	$personal_gallery_access = personal_gallery_access(1,1);
-	if ($personal_gallery_access['view'])
-	{
-		$allowed_cat .= ($allowed_cat == '') ? PERSONAL_GALLERY : ', ' . PERSONAL_GALLERY;
-	}
-	//album_moderator_groups
 	$limit_sql = $rows * $columns;
 
-	if ($allowed_cat <> '')
+	if ($allowed_albums != '')
 	{
 		$limit_sql = $rows * $columns;
 
@@ -92,8 +85,7 @@ function recent_gallery_images($rows, $columns, &$display)
 			$rate_sql2
 			$comment_sql2
 			$album_sql2
-			WHERE (i.image_album_id IN ($allowed_cat) 
-					OR i.image_album_id = " . PERSONAL_GALLERY . ")
+			WHERE i.image_album_id IN ($allowed_albums)
 				AND i.image_approval = 1
 			GROUP BY i.image_id
 			ORDER BY i.image_time DESC

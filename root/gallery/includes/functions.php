@@ -48,6 +48,8 @@ if (!$gd_success)
 // ... but $passed_auth will make it worked very much faster (because this function is often
 // called in a loop)
 //
+
+//we may delete this one:
 function album_user_access($album_id, $passed_auth = 0, $view_check, $upload_check, $rate_check, $comment_check, $edit_check, $delete_check)
 {
 	global $db, $album_config, $user, $auth;
@@ -353,7 +355,7 @@ function album_user_access($album_id, $passed_auth = 0, $view_check, $upload_che
 	}
 	return $album_user_access;
 }
-
+//we may delete this one:
 function personal_album_access($user_id)
 {
 	global $db, $user, $album_config;
@@ -499,9 +501,7 @@ function personal_gallery_access($check_view, $check_upload)
 	return $personal_gallery_access;
 }
 
-/**
-* Build up the array similar to $thiscat array
-*/
+//we may delete this one:
 function init_personal_gallery_cat($user_id = 0)
 {
 	global $user, $db, $lang, $album_config;
@@ -567,6 +567,7 @@ function init_personal_gallery_cat($user_id = 0)
 	);
 	return $thiscat;
 }
+
 /**
 * Get album children (for displaying the subalbums
 */
@@ -617,6 +618,7 @@ function get_album_info($album_id)
 
 	return $row;
 }
+
 function generate_album_nav(&$album_data)
 {
 	global $db, $user, $template, $auth;
@@ -668,6 +670,7 @@ function generate_album_nav(&$album_data)
 	);
 	return;
 }
+
 /**
 * Returns album parents as an array. Get them from album_data if available, or update the database otherwise
 */
@@ -709,12 +712,13 @@ function get_album_parents(&$album_data)
 
 	return $album_parents;
 }
+
 /**
 * make the jump box, parent_album box, etc
 */
 function make_album_jumpbox($select_id = false, $ignore_id = false, $album = false, $ignore_acl = false, $ignore_nonpost = false, $ignore_emptycat = true, $only_acl_post = false, $return_array = false)
 {
-	global $db, $user, $auth;
+	global $db, $user, $auth, $album_access_array;
 
 	// no permissions yet
 	$acl = ($ignore_acl) ? '' : (($only_acl_post) ? 'f_post' : array('f_list', 'a_forum', 'a_forumadd', 'a_forumdel'));
@@ -737,9 +741,6 @@ function make_album_jumpbox($select_id = false, $ignore_id = false, $album = fal
 
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$album_user_access = array();
-		$album_user_access = (!$row['album_user_id']) ? album_user_access($row['album_id'], $row, 1, 1, 1, 1, 1, 1) : personal_album_access($row['album_user_id']);
-
 		if ($row['left_id'] < $right)
 		{
 			$padding .= '&nbsp; &nbsp;';
@@ -758,7 +759,7 @@ function make_album_jumpbox($select_id = false, $ignore_id = false, $album = fal
 			$disabled = true;
 		}
 
-		if ($album_user_access['view'])
+		if ($album_access_array[$row['album_id']]['i_view'] == 1)
 		{
 			if ($return_array)
 			{
@@ -778,9 +779,10 @@ function make_album_jumpbox($select_id = false, $ignore_id = false, $album = fal
 
 	return $forum_list;
 }
+
 function make_personal_jumpbox($album_user_id, $select_id = false, $ignore_id = false, $album = false, $ignore_acl = false, $ignore_nonpost = false, $ignore_emptycat = true, $only_acl_post = false, $return_array = false)
 {
-	global $db, $user, $auth;
+	global $db, $user, $auth, $album_access_array;
 
 	// This query is identical to the jumpbox one
 	$sql = 'SELECT *
@@ -800,9 +802,6 @@ function make_personal_jumpbox($album_user_id, $select_id = false, $ignore_id = 
 
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$album_user_access = array();
-		$album_user_access = (!$row['album_user_id']) ? album_user_access($row['album_id'], $row, 1, 1, 1, 1, 1, 1) : personal_album_access($row['album_user_id']);
-
 		if ($row['left_id'] < $right)
 		{
 			$padding .= '&nbsp; &nbsp;';
@@ -821,7 +820,7 @@ function make_personal_jumpbox($album_user_id, $select_id = false, $ignore_id = 
 			$disabled = true;
 		}
 
-		if ($album_user_access['view'])
+		if ($album_access_array[$row['album_id']]['i_view'] == 1)
 		{
 			if ($return_array)
 			{
@@ -841,6 +840,7 @@ function make_personal_jumpbox($album_user_id, $select_id = false, $ignore_id = 
 
 	return $forum_list;
 }
+
 function make_move_jumpbox($select_id = false, $ignore_id = false, $album = false, $ignore_acl = false, $ignore_nonpost = false, $ignore_emptycat = true, $only_acl_post = false, $return_array = false)
 {
 	global $db, $user, $auth;
@@ -863,15 +863,12 @@ function make_move_jumpbox($select_id = false, $ignore_id = false, $album = fals
 
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$album_user_access = array();
-		$album_user_access = (!$row['album_user_id']) ? album_user_access($row['album_id'], $row, 1, 1, 1, 1, 1, 1) : personal_album_access($row['album_user_id']);
-
 		if (($row['album_user_id'] > 0) && !$personal_info)
 		{
 			$personal_info = true;
 			$forum_list .= '<option disabled="disabled" class="disabled-option">' . $user->lang['PERSONAL_ALBUMS'] . '</option>';
 		}
-		if ($album_user_access['view'])
+		if ($album_access_array[$row['album_id']]['i_view'] == 1)
 		{
 			if ($album_user_id == $row['album_user_id'])
 			{
@@ -894,7 +891,7 @@ function make_move_jumpbox($select_id = false, $ignore_id = false, $album = fals
 			$album_user_id = $row['album_user_id'];
 			$disabled = false;
 
-			if (!$album_user_access['upload'])
+			if (($album_access_array[$row['album_id']]['i_upload'] != 1))
 			{
 				$disabled = true;
 			}

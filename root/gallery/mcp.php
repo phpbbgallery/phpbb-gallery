@@ -23,10 +23,9 @@ $auth->acl($user->data);
 $user->setup('mods/gallery');
 
 
-//
-// Get general album information
-//
-include($phpbb_root_path . $gallery_root_path . 'includes/common.'.$phpEx);
+include_once("{$phpbb_root_path}{$gallery_root_path}includes/common.$phpEx");
+include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
+$album_access_array = get_album_access_array();
 
 // ------------------------------------
 // set $mode (select action)
@@ -113,17 +112,16 @@ $sql = 'SELECT *
 	FROM ' . GALLERY_ALBUMS_TABLE . '
 	WHERE album_id = ' . $album_id;
 $result = $db->sql_query($sql);
-$thiscat = $db->sql_fetchrow($result);
+$album_data = $db->sql_fetchrow($result);
 
-if (empty($thiscat))
+if (empty($album_data))
 {
 	trigger_error($user->lang['ALBUM_NOT_EXIST'], E_USER_WARNING);
 }
-
-$auth_data = (!$thiscat['album_user_id']) ? album_user_access($album_id, $thiscat, 0, 0, 0, 0, 0, 0) : personal_album_access($thiscat['album_user_id']); // MODERATOR only
-//
-// END category info
-//
+if ($album_data['album_user_id'] > 0)
+{
+	$album_access_array[$album_id] = $album_access_array[-3];
+}
 
 // ------------------------------------
 // Salting the form...yumyum ...
@@ -134,7 +132,7 @@ add_form_key('mcp');
 // ------------------------------------
 // Check the permissions
 // ------------------------------------
-if (!$auth_data['moderator'])
+if ($album_access_array[$album_id]['a_moderate'] != 1)
 {
 	if ($user->data['is_bot'])
 	{
@@ -185,7 +183,7 @@ if ($mode == '')
 		$limit_sql = (!$start) ? $pics_per_page : $start . ', ' . $pics_per_page;
 
 		$pic_approval_sql = '';
-		if (($user->data['user_type'] <> USER_FOUNDER) && ($thiscat['album_approval'] == ALBUM_ADMIN))
+		if (($user->data['user_type'] <> USER_FOUNDER) && ($album_data['album_approval'] == ALBUM_ADMIN))
 		{
 			// because he went through my Permission Checking above so he must be at least a Moderator
 			$pic_approval_sql = ' AND p.image_approval = 1';
@@ -259,11 +257,11 @@ if ($mode == '')
 
 	$template->assign_vars(array(
 		'U_VIEW_CAT' 			=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id"),
-		'CAT_TITLE' 			=> $thiscat['album_name'],
+		'CAT_TITLE' 			=> $album_data['album_name'],
 		'S_ALBUM_ACTION' 		=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id"),
-		'DELETE_BUTTON' 		=> ($auth_data['delete']) ? '<input type="submit" class="liteoption" name="delete" value="' . $user->lang['DELETE'] . '" />' : '',
-		'APPROVAL_BUTTON' 		=> (($user->data['user_type'] <> USER_FOUNDER) && ($thiscat['album_approval'] == ALBUM_ADMIN)) ? '' : '<input type="submit" class="liteoption" name="approval" value="' . $user->lang['APPROVE'] . '" />',
-		'UNAPPROVAL_BUTTON' 	=> (($user->data['user_type'] <> USER_FOUNDER) && ($thiscat['album_approval'] == ALBUM_ADMIN)) ? '' : '<input type="submit" class="liteoption" name="unapproval" value="' . $user->lang['UNAPPROVE'] . '" />',
+		'DELETE_BUTTON' 		=> ($album_access_array[$album_id]['i_delete'] == 1) ? '<input type="submit" class="liteoption" name="delete" value="' . $user->lang['DELETE'] . '" />' : '',
+		'APPROVAL_BUTTON' 		=> (($user->data['user_type'] <> USER_FOUNDER) && ($album_data['album_approval'] == ALBUM_ADMIN)) ? '' : '<input type="submit" class="liteoption" name="approval" value="' . $user->lang['APPROVE'] . '" />',
+		'UNAPPROVAL_BUTTON' 	=> (($user->data['user_type'] <> USER_FOUNDER) && ($album_data['album_approval'] == ALBUM_ADMIN)) ? '' : '<input type="submit" class="liteoption" name="unapproval" value="' . $user->lang['UNAPPROVE'] . '" />',
 
 		'SORT_TIME' 			=> ($sort_method == 'image_time') ? 'selected="selected"' : '',
 		'SORT_IMAGE_NAME' 		=> ($sort_method == 'image_name') ? 'selected="selected"' : '',
@@ -278,11 +276,11 @@ if ($mode == '')
 		'SORT_DESC' 			=> ($sort_order == 'DESC') ? 'selected="selected"' : '',
 	));
 
-	generate_album_nav($thiscat);
+	generate_album_nav($album_data);
 
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'	=> $user->lang['MODCP'],
-		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
+		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'album_id=' . $album_data['album_id']),
 	));
 
 	// Output page
@@ -356,8 +354,7 @@ else
 
 			while( $row = $db->sql_fetchrow($result) )
 			{
-				$album_user_access = album_user_access($row['album_id'], $row, 0, 1, 0, 0, 0, 0);
-				if ($album_user_access['upload'])
+				if ($album_access_array[$row['album_id']]['i_upload'] == 1)
 				{
 					$catrows[] = $row;
 				}
@@ -381,11 +378,11 @@ else
 				'S_ALBUM_SELECT'		=> $category_select,
 			));
 
-			generate_album_nav($thiscat);
+			generate_album_nav($album_data);
 
 			$template->assign_block_vars('navlinks', array(
 				'FORUM_NAME'	=> $user->lang['MODCP'],
-				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
+				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $album_data['album_id']),
 			));
 
 			// Output page
@@ -398,11 +395,11 @@ else
 		}
 		else
 		{
-			generate_album_nav($thiscat);
+			generate_album_nav($album_data);
 
 			$template->assign_block_vars('navlinks', array(
 				'FORUM_NAME'	=> $user->lang['MODCP'],
-				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
+				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $album_data['album_id']),
 			));
 
 			// Check the salt... yumyum
@@ -462,11 +459,11 @@ else
 		// LOCK
 		//-----------------------------
 
-		generate_album_nav($thiscat);
+		generate_album_nav($album_data);
 
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['MODCP'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $album_data['album_id']),
 		));
 
 		// we must check POST method now
@@ -525,11 +522,11 @@ else
 		// UNLOCK
 		//-----------------------------
 
-		generate_album_nav($thiscat);
+		generate_album_nav($album_data);
 
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['MODCP'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $album_data['album_id']),
 		));
 
 		// we must check POST method now
@@ -589,11 +586,11 @@ else
 		// APPROVAL
 		//-----------------------------
 
-		generate_album_nav($thiscat);
+		generate_album_nav($album_data);
 
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['MODCP'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $album_data['album_id']),
 		));
 
 		// we must check POST method now
@@ -649,11 +646,11 @@ else
 		// UNAPPROVAL
 		//-----------------------------
 
-		generate_album_nav($thiscat);
+		generate_album_nav($album_data);
 
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['MODCP'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $album_data['album_id']),
 		));
 
 		// we must check POST method now
@@ -715,15 +712,15 @@ else
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"),
 		));
 
-		generate_album_nav($thiscat);
+		generate_album_nav($album_data);
 
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['MODCP'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $album_data['album_id']),
 		));
 
 
-		if (!$auth_data['delete'])
+		if ($album_access_array[$album_id]['i_delete'] != 1)
 		{
 			trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 		}
@@ -839,11 +836,11 @@ else
 			}
 			for ($i = 0; $i < count($filerow); $i++)
 			{
-				if( ($filerow[$i]['image_thumbnail'] <> '') && (@file_exists(ALBUM_CACHE_PATH . $filerow[$i]['image_thumbnail'])) )
+				if( ($filerow[$i]['image_thumbnail'] <> '') && (@file_exists($phpbb_root_path . GALLERY_CACHE_PATH . $filerow[$i]['image_thumbnail'])) )
 				{
-					@unlink(ALBUM_CACHE_PATH . $filerow[$i]['image_thumbnail']);
+					@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $filerow[$i]['image_thumbnail']);
 				}
-				@unlink(ALBUM_UPLOAD_PATH . $filerow[$i]['image_filename']);
+				@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $filerow[$i]['image_filename']);
 			}
 
 			// Delete DB entry
@@ -858,11 +855,11 @@ else
 	}
 	else
 	{
-		generate_album_nav($thiscat);
+		generate_album_nav($album_data);
 
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['MODCP'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $thiscat['album_id']),
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $album_data['album_id']),
 		));
 
 		trigger_error('Invalid_mode', E_USER_WARNING);

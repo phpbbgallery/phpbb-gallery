@@ -17,6 +17,9 @@ function display_albums($album_id, $mode = 'album')
 {
 	global $db, $template, $phpEx, $phpbb_root_path, $gallery_root_path, $user, $config;
 
+	include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
+	$album_access_array = get_album_access_array();
+
 	$start = request_var('start', 0);
 	//new start here
 	switch ($mode)
@@ -70,10 +73,13 @@ function display_albums($album_id, $mode = 'album')
 
 	$album = array();
 
-	while( $row = $db->sql_fetchrow($result) )
+	while ($row = $db->sql_fetchrow($result))
 	{
-		$album_user_access = album_user_access($row['album_id'], $row, 1, 0, 0, 0, 0, 0);
-		if ($album_user_access['view'] == 1)
+		if (($row['album_user_id'] > 0) && ($album_access_array[-3]['i_view'] == 1))
+		{
+			$album[] = $row;
+		}
+		else if ($album_access_array[$row['album_id']]['i_view'] == 1)
 		{
 			$album[] = $row;
 		}

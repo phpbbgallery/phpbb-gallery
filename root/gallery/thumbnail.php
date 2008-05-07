@@ -15,20 +15,23 @@ $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 $gallery_root_path = GALLERY_ROOT_PATH;
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
-include($phpbb_root_path . $gallery_root_path . 'includes/common.'.$phpEx);
 
 // Start session management
 $user->session_begin(false);
 $auth->acl($user->data);
 $user->setup('mods/gallery');
 
+include_once("{$phpbb_root_path}{$gallery_root_path}includes/common.$phpEx");
+include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
+$album_access_array = get_album_access_array();
+
 /**
 * Check the request
 */
-$pic_id = request_var('image_id', request_var('pic_id', 0));
-if (!$pic_id)
+$image_id = request_var('image_id', request_var('pic_id', 0));
+if (!$image_id)
 {
-	die($user->lang['NO_IMAGE_SPECIFIED']);
+	trigger_error('NO_IMAGE_SPECIFIED');
 }
 
 
@@ -38,22 +41,19 @@ if (!$pic_id)
 
 $sql = 'SELECT *
 	FROM ' . GALLERY_IMAGES_TABLE . '
-	WHERE image_id = ' . $pic_id . '
+	WHERE image_id = ' . $image_id . '
 	LIMIT 1';
 $result = $db->sql_query($sql);
 
-$thispic = $db->sql_fetchrow($result);
+$image_data = $db->sql_fetchrow($result);
 
-$album_id = $thispic['image_album_id'];
-$user_id = $thispic['image_user_id'];
-$pic_filetype = substr($thispic['image_filename'], strlen($thispic['image_filename']) - 4, 4);
-$pic_filename = $thispic['image_filename'];
-$pic_thumbnail = $thispic['image_thumbnail'];
+$album_id = $image_data['image_album_id'];
+$user_id = $image_data['image_user_id'];
+$image_filetype = substr($image_data['image_filename'], strlen($image_data['image_filename']) - 4, 4);
 
-
-if (empty($thispic) or !file_exists(ALBUM_UPLOAD_PATH . $pic_filename))
+if (empty($image_data) or !file_exists($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']))
 {
-	die($user->lang['IMAGE_NOT_EXIST']);
+	trigger_error('IMAGE_NOT_EXIST');
 }
 
 
@@ -65,20 +65,17 @@ $sql = 'SELECT *
 	WHERE album_id = ' . $album_id;
 $result = $db->sql_query($sql);
 $album_data = $db->sql_fetchrow($result);
-
 if (empty($album_data))
 {
-	die($user->lang['ALBUM_NOT_EXIST']);
+	trigger_error('ALBUM_NOT_EXIST');
 }
-
-
-// ------------------------------------
-// Check the permissions
-// ------------------------------------
-$album_user_access = (!$album_data['album_user_id']) ? album_user_access($album_id, $album_data, 1, 0, 0, 0, 0, 0) : personal_album_access($album_data['album_user_id']);// VIEW
-if (!$album_user_access['view'])
+if ($album_data['album_user_id'] > 0)
 {
-	die($user->lang['NOT_AUTHORISED']);
+	$album_access_array[$album_id] = $album_access_array[-3];
+}
+if ($album_access_array[$album_id]['i_view'] != 1)
+{
+	trigger_error('NOT_AUTHORISED');
 }
 
 
@@ -88,11 +85,11 @@ if (!$album_user_access['view'])
 
 if ($user->data['user_type'] <> USER_FOUNDER)
 {
-	if (($album_data['album_approval'] == ADMIN) || (($album_data['album_approval'] == MOD) && !$album_user_access['moderator']))
+	if (($album_data['album_approval'] == ADMIN) || (($album_data['album_approval'] == MOD) && ($album_access_array[$album_id]['a_moderate'] != 1)))
 	{
-		if (!$thispic['image_approval'])
+		if (!$image_data['image_approval'])
 		{
-			die($user->lang['NOT_AUTHORISED']);
+			trigger_error('NOT_AUTHORISED');
 		}
 	}
 }
@@ -127,7 +124,7 @@ if ($album_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER'])
 
 	if ($errored)
 	{
-		die($user->lang['NOT_AUTHORISED']);
+		trigger_error('NOT_AUTHORISED');
 	}
 }
 
@@ -145,9 +142,9 @@ if ($album_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER'])
 	// Check thumbnail cache. If cache is available we will SEND & EXIT
 	// --------------------------------
 
-	if (($album_config['thumbnail_cache']) && ($pic_thumbnail <> '') && file_exists(ALBUM_CACHE_PATH . $pic_thumbnail))
+	if (($album_config['thumbnail_cache']) && ($image_data['image_thumbnail'] <> '') && file_exists($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_thumbnail']))
 	{
-		switch ($pic_filetype)
+		switch ($image_filetype)
 		{
 			case '.gif':
 			case '.jpg':
@@ -159,7 +156,7 @@ if ($album_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER'])
 			break;
 		}
 
-		readfile(ALBUM_CACHE_PATH . $pic_thumbnail);
+		readfile($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_thumbnail']);
 		exit;
 	}
 
@@ -167,15 +164,15 @@ if ($album_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER'])
 	// Hmm, cache is empty. Try to re-generate!
 	// --------------------------------
 
-	$pic_size = getimagesize(ALBUM_UPLOAD_PATH . $pic_filename);
-	$pic_width = $pic_size[0];
-	$pic_height = $pic_size[1];
+	$image_size = getimagesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
+	$image_width = $image_size[0];
+	$image_height = $image_size[1];
 	$gd_errored = FALSE;
-	switch ($pic_filetype)
+	switch ($image_filetype)
 	{
 		case '.gif':
 			$read_function = 'imagecreatefromgif';
-			$pic_filetype = '.jpg';
+			$image_filetype = '.jpg';
 		break;
 
 		case '.jpg':
@@ -186,28 +183,28 @@ if ($album_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER'])
 			$read_function = 'imagecreatefrompng';
 		break;
 	}
-	$src = @$read_function(ALBUM_UPLOAD_PATH  . $pic_filename);
+	$src = @$read_function($phpbb_root_path . GALLERY_UPLOAD_PATH  . $image_data['image_filename']);
 
 if (!$src)
 {
 	$gd_errored = TRUE;
-	$pic_thumbnail = '';
+	$image_data['image_thumbnail'] = '';
 }
-else if (($pic_width > $album_config['thumbnail_size']) or ($pic_height > $album_config['thumbnail_size']))
+else if (($image_width > $album_config['thumbnail_size']) or ($image_height > $album_config['thumbnail_size']))
 {
 	// ----------------------------
 	// Resize it
 	// ----------------------------
 
-	if ($pic_width > $pic_height)
+	if ($image_width > $image_height)
 	{
 		$thumbnail_width = $album_config['thumbnail_size'];
-		$thumbnail_height = $album_config['thumbnail_size'] * ($pic_height/$pic_width);
+		$thumbnail_height = $album_config['thumbnail_size'] * ($image_height/$image_width);
 	}
 	else
 	{
 		$thumbnail_height = $album_config['thumbnail_size'];
-		$thumbnail_width = $album_config['thumbnail_size'] * ($pic_width/$pic_height);
+		$thumbnail_width = $album_config['thumbnail_size'] * ($image_width/$image_height);
 	}
 
 	// Create thumbnail + 16 Pixel extra for imagesize text 
@@ -220,13 +217,13 @@ else if (($pic_width > $album_config['thumbnail_size']) or ($pic_height > $album
 		$thumbnail = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
 	}
 	$resize_function = ($album_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
-	@$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $pic_width, $pic_height);
+	@$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $image_width, $image_height);
 
 	if ($album_config['thumbnail_info_line'])
 	{// Create image details credits to Dr.Death
 		$dimension_font = 1;
-		$dimension_filesize = filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $thispic['image_filename']);
-		$dimension_string = $pic_width . "x" . $pic_height . "(" . intval($dimension_filesize/1024) . "KB)";
+		$dimension_filesize = filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
+		$dimension_string = $image_width . "x" . $image_height . "(" . intval($dimension_filesize/1024) . "KB)";
 		$dimension_colour = ImageColorAllocate($thumbnail,255,255,255);
 		$dimension_height = imagefontheight($dimension_font);
 		$dimension_width = imagefontwidth($dimension_font) * strlen($dimension_string);
@@ -245,19 +242,19 @@ if (!$gd_errored)
 	if ($album_config['thumbnail_cache'])
 	{// Re-generate successfully. Write it to disk!
 
-		$pic_thumbnail = $pic_filename;
+		$image_data['image_thumbnail'] = $image_data['image_filename'];
 
-		switch ($pic_filetype)
+		switch ($image_filetype)
 		{
 			case '.jpg':
-				@imagejpeg($thumbnail, ALBUM_CACHE_PATH . $pic_thumbnail, $album_config['thumbnail_quality']);
+				@imagejpeg($thumbnail, $phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_thumbnail'], $album_config['thumbnail_quality']);
 				break;
 			case '.png':
-				@imagepng($thumbnail, ALBUM_CACHE_PATH . $pic_thumbnail);
+				@imagepng($thumbnail, $phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_thumbnail']);
 			break;
 		}
 
-		@chmod(ALBUM_CACHE_PATH . $pic_thumbnail, 0777);
+		@chmod($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_thumbnail'], 0777);
 	}
 
 
@@ -265,7 +262,7 @@ if (!$gd_errored)
 	* After write to disk, don't forget to send to browser also
 	*/
 
-	switch ($pic_filetype)
+	switch ($image_filetype)
 	{
 		case '.jpg':
 			@imagejpeg($thumbnail, '', $album_config['thumbnail_quality']);

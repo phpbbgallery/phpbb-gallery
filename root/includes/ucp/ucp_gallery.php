@@ -111,15 +111,9 @@ class ucp_gallery
 		if (!$user->data['album_id'])
 		{
 			//check if the user has already reached his limit
-			$sql = 'SELECT MAX(g.allow_personal_albums) as allow_personal_albums, MAX(g.personal_subalbums) as personal_subalbums
-					FROM ' . GROUPS_TABLE . ' as g
-					LEFT JOIN ' . USER_GROUP_TABLE . " as ug
-						ON ug.group_id = g.group_id
-					WHERE ug.user_id = {$user->data['user_id']}
-						AND ug.user_pending = 0";
-			$result = $db->sql_query($sql);
-			$permission_data = $db->sql_fetchrow($result);
-			if ($permission_data['allow_personal_albums'] != 1)
+			include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
+			$album_access_array = get_album_access_array();
+			if ($album_access_array[-2]['i_upload'] != 1)
 			{
 				trigger_error('NO_PERSALBUM_ALLOWED');
 			}
@@ -143,6 +137,7 @@ class ucp_gallery
 					SET album_id = ' . (int) $row['album_id'] . '
 					WHERE user_id  = ' . (int) $user->data['user_id'];
 			$db->sql_query($sql);
+			$cache->destroy('_albums');
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 		}
 		redirect($this->u_action);
@@ -236,34 +231,20 @@ class ucp_gallery
 		$gallery_root_path = GALLERY_ROOT_PATH;
 
 		include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+		include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
+		$album_access_array = get_album_access_array();
 
 		//check if the user has already reached his limit
-		$sql = 'SELECT MAX(g.allow_personal_albums) as allow_personal_albums, MAX(g.personal_subalbums) as personal_subalbums
-			FROM ' . GROUPS_TABLE . ' as g
-			LEFT JOIN ' . USER_GROUP_TABLE . " as ug
-				ON ug.group_id = g.group_id
-			WHERE ug.user_id = {$user->data['user_id']}
-				AND ug.user_pending = 0";
-		$result = $db->sql_query($sql);
-		$permission_data = $db->sql_fetchrow($result);
-		if ($permission_data['allow_personal_albums'] != 1)
+		if ($album_access_array[-2]['i_upload'] != 1)
 		{
-			trigger_error('NO_SUBALBUMS_ALLOWED');
+			trigger_error('NO_PERSALBUM_ALLOWED');
 		}
-		$sql = 'SELECT MAX(g.allow_personal_albums) as allow_personal_albums, MAX(g.personal_subalbums) as personal_subalbums
-			FROM ' . GROUPS_TABLE . ' as g
-			LEFT JOIN ' . USER_GROUP_TABLE . " as ug
-				ON ug.group_id = g.group_id
-			WHERE ug.user_id = {$user->data['user_id']}
-				AND ug.user_pending = 0";
-		$result = $db->sql_query($sql);
-		$permission_data = $db->sql_fetchrow($result);
 		$sql = 'SELECT COUNT(album_id) as albums
 			FROM ' . GALLERY_ALBUMS_TABLE . "
 			WHERE album_user_id = {$user->data['user_id']}";
 		$result = $db->sql_query($sql);
 		$albums = $db->sql_fetchrow($result);
-		if (($albums['albums'] - 1) >= $permission_data['personal_subalbums'])
+		if (($albums['albums'] - 1) >= $album_access_array[-2]['album_count'])
 		{
 			trigger_error('NO_MORE_SUBALBUMS_ALLOWED');
 		}
@@ -343,6 +324,7 @@ class ucp_gallery
 			}
 			$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
 			$redirect_album_id = $db->sql_nextid();
+			$cache->destroy('_albums');
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 
 			trigger_error($user->lang['CREATED_SUBALBUM'] . '<br /><br /><a href="' . (($redirect) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$redirect_album_id") : $this->u_action) . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
@@ -517,6 +499,7 @@ class ucp_gallery
 					WHERE album_id  = ' . (int) $album_id;
 			$db->sql_query($sql);
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
+			$cache->destroy('_albums');
 
 			trigger_error($user->lang['EDITED_SUBALBUM'] . '<br /><br />
 				<a href="' . (($redirect) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id") : append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . (($album_data['parent_id']) ? $album_data['parent_id'] : $user->data['album_id']))) . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
@@ -620,6 +603,7 @@ class ucp_gallery
 			$cache->destroy('sql', GALLERY_IMAGES_TABLE);
 			$cache->destroy('sql', GALLERY_RATES_TABLE);
 			$cache->destroy('sql', GALLERY_COMMENTS_TABLE);
+			$cache->destroy('_albums');
 
 			trigger_error($user->lang['DELETED_ALBUMS'] . (($parent_id) ? '<br /><br />
 				<a href="' . append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . $parent_id) . '">' . $user->lang['BACK_TO_PREV'] . '</a>' : ''));
@@ -707,6 +691,7 @@ class ucp_gallery
 		$db->sql_query($sql);
 
 		$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
+		$cache->destroy('_albums');
 		redirect(append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . $moving['parent_id']));
 	}
 
