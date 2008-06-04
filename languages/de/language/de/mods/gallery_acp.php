@@ -218,5 +218,6 @@ $lang = array_merge($lang, array(
 	'SELECTED_GROUPS'				=> 'Ausgewählte Gruppen',
 	'SELECT_PERMISSIONS'			=> 'Wähle Berechtigungen',
 	'SELECTED_PERMISSIONS'			=> 'Ausgewählte Berechtigunen',
+	'SET_PERMISSIONS'				=> '<br /><a href="%s">Berechtigungen</a> jetzt vergeben.',
 ));
 ?>

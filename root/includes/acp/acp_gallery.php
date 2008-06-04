@@ -852,10 +852,15 @@ class acp_gallery
 				$album_data['right_id'] = $row['right_id'] + 2;
 			}
 			$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
+			$album_data['album_id'] = $db->sql_nextid();
+			$album_id = $album_data['album_id'];
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 			$cache->destroy('_albums');
 
-			trigger_error($user->lang['NEW_ALBUM_CREATED'] . adm_back_link($this->u_action));
+			trigger_error($user->lang['NEW_ALBUM_CREATED'] . sprintf($user->lang['SET_PERMISSIONS'], 
+				append_sid("{$phpbb_admin_path}index.$phpEx", 
+				array('i' => 'gallery', 'mode' => 'album_permissions', 'step' => 1, 'album_id' => $album_id, 'uncheck' => 'true')
+				)) . adm_back_link($this->u_action));
 		}
 	}
 
@@ -1040,7 +1045,10 @@ class acp_gallery
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 			$cache->destroy('_albums');
 
-			trigger_error($user->lang['ALBUM_UPDATED'] . adm_back_link($this->u_action));
+			trigger_error($user->lang['ALBUM_UPDATED'] . sprintf($user->lang['SET_PERMISSIONS'], 
+				append_sid("{$phpbb_admin_path}index.$phpEx", 
+				array('i' => 'gallery', 'mode' => 'album_permissions', 'step' => 1, 'album_id' => $album_id, 'uncheck' => 'true')
+				)) . adm_back_link($this->u_action));
 		}
 	}
 
@@ -1356,6 +1364,13 @@ class acp_gallery
 						AND perm_system = $perm_system";
 				$db->sql_query($sql);
 			}
+			else if ($drop_perm_string)
+			{
+				$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . "
+					WHERE " . $db->sql_in_set('perm_group_id', $drop_perm_ary) . "
+						AND perm_system = $perm_system";
+				$db->sql_query($sql);
+			}
 			$step = 1;
 		}
 
@@ -1408,9 +1423,16 @@ class acp_gallery
 		}
 		else if ($step == 1)
 		{
-			if (!check_form_key('acp_gallery'))
+			if (request_var('uncheck', '') == '')
 			{
-				trigger_error('FORM_INVALID');
+				if (!check_form_key('acp_gallery'))
+				{
+					trigger_error('FORM_INVALID');
+				}
+			}
+			else
+			{
+				$album_ary = array(request_var('album_id', 0));
 			}
 			if ($perm_system == 0)
 			{
