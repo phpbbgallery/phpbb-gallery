@@ -57,7 +57,7 @@ if (empty($album_data))
 }
 if ($album_data['album_user_id'] > 0)
 {
-	$album_access_array[$album_id] = $album_access_array[-3];
+	$album_access_array[$album_id] = $album_access_array[(($album_data['album_user_id'] == $user->data['user_id']) ? -2 : -3)];
 }
 
 /**

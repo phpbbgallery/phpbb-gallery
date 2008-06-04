@@ -31,7 +31,7 @@ function recent_gallery_images($rows, $columns, &$display)
 	$allowed_albums = '';
 	foreach ($albums as $album)
 	{
-		if (($album['album_user_id'] > 0) && ($album_access_array[-3]['i_view'] == 1))
+		if (($album['album_user_id'] > 0) && ($album_access_array[(($album_data['album_user_id'] == $user->data['user_id']) ? -2 : -3)]['i_view'] == 1))
 		{
 			$allowed_albums .= (($allowed_albums) ? ', ' : '') . $album['album_id'];
 		}

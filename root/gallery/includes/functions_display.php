@@ -75,7 +75,7 @@ function display_albums($album_id, $mode = 'album')
 
 	while ($row = $db->sql_fetchrow($result))
 	{
-		if (($row['album_user_id'] > 0) && ($album_access_array[-3]['i_view'] == 1))
+		if (($row['album_user_id'] > 0) && ($album_access_array[(($album_data['album_user_id'] == $user->data['user_id']) ? -2 : -3)]['i_view'] == 1))
 		{
 			$album[] = $row;
 		}

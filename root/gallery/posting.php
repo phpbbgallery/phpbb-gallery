@@ -47,7 +47,7 @@ $album_id = (isset($image_data['image_album_id'])) ? $image_data['image_album_id
 $album_data = get_album_info($album_id);
 if ($album_data['album_user_id'] > 0)
 {
-	$album_access_array[$album_id] = $album_access_array[-3];
+	$album_access_array[$album_id] = $album_access_array[(($album_data['album_user_id'] == $user->data['user_id']) ? -2 : -3)];
 }
 generate_album_nav($album_data);
 
