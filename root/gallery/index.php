@@ -72,7 +72,7 @@ recent_gallery_images(1, 4, $display);
 */
 
 $template->assign_vars(array(
-	'U_YOUR_PERSONAL_GALLERY' 		=> ($album_access_array[-2]['i_upload'] == 1) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'user_id=' . $user->data['user_id']) : '',
+	'U_YOUR_PERSONAL_GALLERY' 		=> ($album_access_array[-2]['i_upload'] == 1) ? ($user->data['album_id'] > 0) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $user->data['album_id']) : append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums') : '',
 	'U_USERS_PERSONAL_GALLERIES' 	=> ($album_access_array[-3]['i_view'] == 1) ? append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal') : '',
 
 	'S_LOGIN_ACTION'				=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login'),
