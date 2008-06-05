@@ -26,20 +26,27 @@ $user->setup();
 $user->add_lang('mods/gallery_install');
 $user->add_lang('mods/info_acp_gallery');
 
-$new_mod_version = '0.3.1';
+$new_mod_version = '0.3.2';
 $page_title = 'phpBB Gallery v' . $new_mod_version;
 $log_name = 'Modification "phpBB Gallery"' . ((request_var('update', 0) > 0) ? '-Update' : '') . ' v' . $new_mod_version;
 
 $mode = request_var('mode', '', true);
-$sql = 'SELECT *
-	FROM ' . GALLERY_CONFIG_TABLE;
-$result = $db->sql_query($sql);
-
-while( $row = $db->sql_fetchrow($result) )
+function load_album_config()
 {
-	$album_config_name = $row['config_name'];
-	$album_config_value = $row['config_value'];
-	$album_config[$album_config_name] = $album_config_value;
+	global $db;
+
+	$sql = 'SELECT *
+		FROM ' . GALLERY_CONFIG_TABLE;
+	$result = $db->sql_query($sql);
+
+	while( $row = $db->sql_fetchrow($result) )
+	{
+		$album_config_name = $row['config_name'];
+		$album_config_value = $row['config_value'];
+		$album_config[$album_config_name] = $album_config_value;
+	}
+
+	return $album_config;
 }
 function split_sql_file($sql, $delimiter)
 {
@@ -68,6 +75,13 @@ function add_module($array)
 		$user->add_lang('mods/info_acp_gallery');
 		trigger_error(sprintf($user->lang['MISSING_PARENT_MODULE'], $array['parent_id'], $user->lang[$array['module_langname']]));
 	}
+}
+function deactivate_module($module_langname)
+{
+	global $db;
+
+	$sql = 'UPDATE ' . MODULES_TABLE . " SET module_enabled = 0 WHERE module_langname = '$module_langname';";
+	$db->sql_query($sql);
 }
 function gallery_column($table, $column, $values)
 {
@@ -309,10 +323,22 @@ switch ($mode)
 				}
 			}
 			unset($sql_query);
+			$album_config = load_album_config();
 
 			// create the modules
 			$acp_gallery = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 31,	'module_class' => 'acp',	'module_langname'=> 'PHPBB_GALLERY',	'module_mode' => '',	'module_auth' => '');
 			add_module($acp_gallery);
+			$sql = 'SELECT module_id
+				FROM ' . MODULES_TABLE . "
+				WHERE module_langname = 'PHPBB_GALLERY'
+				LIMIT 1";
+			$result = $db->sql_query($sql);
+			while( $row = $db->sql_fetchrow($result) )
+			{
+				$acp_gallery['module_id'] = $row['module_id'];
+			}
+			$db->sql_freeresult($result);
+
 			$acp_gallery_overview = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_OVERVIEW',	'module_mode' => 'overview',	'module_auth' => '');
 			add_module($acp_gallery_overview);
 			$acp_gallery_manage_albums = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_MANAGE_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
@@ -323,8 +349,8 @@ switch ($mode)
 			add_module($acp_configure_gallery);
 			$album_permissions = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS',	'module_mode' => 'album_permissions',	'module_auth' => '');
 			add_module($album_permissions);
-			$album_personal_permissions = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS',	'module_mode' => 'album_personal_permissions',	'module_auth' => '');
-			add_module($album_personal_permissions);
+			//REMOVE WITH 0.3.3//$album_personal_permissions = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS',	'module_mode' => 'album_personal_permissions',	'module_auth' => '');
+			//REMOVE WITH 0.3.3//add_module($album_personal_permissions);
 			$import_images = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_IMPORT_ALBUMS',	'module_mode' => 'import_images',	'module_auth' => '');
 			add_module($import_images);
 			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 163,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_PERSONAL_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
@@ -341,9 +367,9 @@ switch ($mode)
 
 			add_bbcode('album');
 			gallery_column(USERS_TABLE, 'album_id', array('UINT', 0));
-			gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
-			gallery_column(GROUPS_TABLE, 'view_personal_albums', array('UINT', 1));
-			gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
+			//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
+			//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'view_personal_albums', array('UINT', 1));
+			//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
 			gallery_column(SESSIONS_TABLE, 'session_album_id', array('UINT', 0));
 			gallery_config_value('album_version', $new_mod_version, true);
 
@@ -562,9 +588,9 @@ switch ($mode)
 					gallery_column(GALLERY_IMAGES_TABLE, 'image_user_colour', array('VCHAR:6', ''));
 					gallery_column(GALLERY_ALBUMS_TABLE, 'album_user_id', array('UINT', 0));
 					gallery_column(USERS_TABLE, 'album_id', array('UINT', 0));
-					gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
-					gallery_column(GROUPS_TABLE, 'view_personal_albums', array('UINT', 1));
-					gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
+					//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
+					//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'view_personal_albums', array('UINT', 1));
+					//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
 
 					//update the new columns image_username and image_user_colour
 					$sql = 'SELECT i.image_user_id, i.image_id, u.username, u.user_colour
@@ -639,6 +665,8 @@ switch ($mode)
 
 					gallery_create_table_slap_db_tools('phpbb_gallery_roles', true);
 					gallery_create_table_slap_db_tools('phpbb_gallery_permissions', true);
+
+					$album_config = load_album_config();
 
 					//convert the permissions of personal albums to the new system
 					//maybe we already got some permissions
@@ -729,11 +757,16 @@ switch ($mode)
 					}
 					$db->sql_freeresult($result);
 
+					//deactivate this useless module
+					deactivate_module('ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS');
+
+				case '0.3.2':
 					//and drop the old column
-					//delete_gallery_column(GROUPS_TABLE, 'personal_subalbums');
-					//delete_gallery_column(GROUPS_TABLE, 'allow_personal_albums');
-					//delete_gallery_column(GROUPS_TABLE, 'view_personal_albums');
+					delete_gallery_column(GROUPS_TABLE, 'personal_subalbums');
+					delete_gallery_column(GROUPS_TABLE, 'allow_personal_albums');
+					delete_gallery_column(GROUPS_TABLE, 'view_personal_albums');
 				//no break;
+
 
 				case 'svn':
 
@@ -937,9 +970,9 @@ switch ($mode)
 			$db->sql_freeresult($result);
 
 			gallery_column(USERS_TABLE, 'album_id', array('UINT', 0));
-			gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
-			gallery_column(GROUPS_TABLE, 'view_personal_albums', array('UINT', 1));
-			gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
+			//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
+			//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'view_personal_albums', array('UINT', 1));
+			//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
 			gallery_column(SESSIONS_TABLE, 'session_album_id', array('UINT', 0));
 
 			//now create the new personal albums
@@ -982,6 +1015,16 @@ switch ($mode)
 			// create the modules
 			$acp_gallery = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 31,	'module_class' => 'acp',	'module_langname'=> 'PHPBB_GALLERY',	'module_mode' => '',	'module_auth' => '');
 			add_module($acp_gallery);
+			$sql = 'SELECT module_id
+				FROM ' . MODULES_TABLE . "
+				WHERE module_langname = 'PHPBB_GALLERY'
+				LIMIT 1";
+			$result = $db->sql_query($sql);
+			while( $row = $db->sql_fetchrow($result) )
+			{
+				$acp_gallery['module_id'] = $row['module_id'];
+			}
+			$db->sql_freeresult($result);
 			$acp_gallery_overview = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_OVERVIEW',	'module_mode' => 'overview',	'module_auth' => '');
 			add_module($acp_gallery_overview);
 			$acp_gallery_manage_albums = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_MANAGE_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
@@ -992,8 +1035,8 @@ switch ($mode)
 			add_module($acp_configure_gallery);
 			$album_permissions = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS',	'module_mode' => 'album_permissions',	'module_auth' => '');
 			add_module($album_permissions);
-			$album_personal_permissions = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS',	'module_mode' => 'album_personal_permissions',	'module_auth' => '');
-			add_module($album_personal_permissions);
+			//REMOVE WITH 0.3.3//$album_personal_permissions = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS',	'module_mode' => 'album_personal_permissions',	'module_auth' => '');
+			//REMOVE WITH 0.3.3//add_module($album_personal_permissions);
 			$import_images = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_IMPORT_ALBUMS',	'module_mode' => 'import_images',	'module_auth' => '');
 			add_module($import_images);
 			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 163,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_PERSONAL_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
