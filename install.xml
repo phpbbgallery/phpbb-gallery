@@ -21,7 +21,7 @@ For Features see the forum topic.]]></description>
 	I you want to be informed when i release any new version for one of my MODs join the Group "MODs - Newsletter"</author-notes>
     <author-group>
       <author>
-        <realname>nickvergessen</realname>
+        <realname>Joas Schilling</realname>
         <email>nickvergessen@gmx.de</email>
         <username>nickvergessen</username>
         <homepage>http://www.flying-bits.org</homepage>
@@ -31,7 +31,7 @@ For Features see the forum topic.]]></description>
     <mod-version>
       <major>0</major>
       <minor>3</minor>
-      <revision>1</revision>
+      <revision>2</revision>
     </mod-version>
     <installation>
       <level>easy</level>
@@ -43,6 +43,29 @@ For Features see the forum topic.]]></description>
       </target-version>
     </installation>
     <history>
+      <entry>
+        <date>2008-06-05</date>
+        <rev-version>
+          <major>0</major>
+          <minor>3</minor>
+          <revision>2</revision>
+        </rev-version>
+        <changelog lang="en-GB">
+          <change><![CDATA[[Add] Report #261: Installer/Updater for older versions]]></change>
+          <change><![CDATA[[Add] Report #245: Button/Redirect after installation.]]></change>
+          <change><![CDATA[[Add] Report #189: Number of maximum images]]></change>
+          <change><![CDATA[[Add] Report #267: Limit total number of images by group.]]></change>
+
+          <change><![CDATA[[Change] Report #246: Hide "Your Personal Album" link.]]></change>
+
+          <change><![CDATA[[Fix] Report #258: Repeat Bug 228: 0.2.3 to 0.3.0 upgrade won't update version]]></change>
+          <change><![CDATA[[Fix] Report #260: Call to undefined function adm_back_link()]]></change>
+          <change><![CDATA[[Fix] Report #259: viewonline broken]]></change>
+          <change><![CDATA[[Fix] Report #262: bbcode is missing GALLERY_ROOT_PATH]]></change>
+          <change><![CDATA[[Fix] Report #264: posting.php != S_IN_GALLERY]]></change>
+          <change><![CDATA[[Fix] Report #254: Anonymous comments possible at private albums]]></change>
+        </changelog>
+      </entry>
       <entry>
         <date>2008-04-14</date>
         <rev-version>
