@@ -49,6 +49,7 @@ echo '							<li' . (($version == '0.2.2') ? $activemenu : '') . '><a href="inst
 echo '							<li' . (($version == '0.2.3') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.2.3"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.2.3</span></a></li>';
 echo '							<li class="header">' . $user->lang['INSTALLER_UPDATE_MENU'] . '</li>';
 echo '							<li' . (($version == '0.3.0') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.3.0"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.3.0</span></a></li>';
+echo '							<li' . (($version == '0.3.1') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.3.1"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.3.1</span></a></li>';
 echo '							<li class="header">' . $user->lang['INSTALLER_CONVERT_MENU'] . '</li>';
 echo '							<li' . (($mode == 'convert') ? $activemenu : '') . '><a href="install.php?mode=convert"><span>' . sprintf($user->lang['INSTALLER_CONVERT_NOTE'], $new_mod_version) . '</span></a></li>';
 echo '						</ul>';
