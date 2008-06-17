@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<?xml-stylesheet type="text/xsl" href="../modx.prosilver.en.xsl"?>
+<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
 <!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
-<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.0.1.xsd">
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.0.xsd">
   <header>
     <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
     <title lang="en-gb">phpBB Gallery</title>
@@ -37,31 +37,12 @@
         <target-minor allow="exact">0</target-minor>
       </target-version>
     </installation>
-    <history>
-      <entry>
-        <date>2008-06-05</date>
-        <rev-version>
-          <major>0</major>
-          <minor>3</minor>
-          <revision>2</revision>
-        </rev-version>
-        <changelog lang="en-GB">
-          <change><![CDATA[[Add] Report #261: Installer/Updater for older versions]]></change>
-          <change><![CDATA[[Add] Report #245: Button/Redirect after installation.]]></change>
-          <change><![CDATA[[Add] Report #189: Number of maximum images]]></change>
-          <change><![CDATA[[Add] Report #267: Limit total number of images by group.]]></change>
-
-          <change><![CDATA[[Change] Report #246: Hide "Your Personal Album" link.]]></change>
-
-          <change><![CDATA[[Fix] Report #258: Repeat Bug 228: 0.2.3 to 0.3.0 upgrade won't update version]]></change>
-          <change><![CDATA[[Fix] Report #260: Call to undefined function adm_back_link()]]></change>
-          <change><![CDATA[[Fix] Report #259: viewonline broken]]></change>
-          <change><![CDATA[[Fix] Report #262: bbcode is missing GALLERY_ROOT_PATH]]></change>
-          <change><![CDATA[[Fix] Report #264: posting.php != S_IN_GALLERY]]></change>
-          <change><![CDATA[[Fix] Report #254: Anonymous comments possible at private albums]]></change>
-        </changelog>
-      </entry>
-    </history>
+    <link-group>
+      <link type="parent" lang="en-gb" href="contrib/history.xml">History</link>
+      <link type="parent" lang="de" href="contrib/history.xml">Entwicklung</link>
+      <link type="parent" lang="en-gb" href="install.xml">Install</link>
+      <link type="parent" lang="de" href="install.xml">Installations-Anleitung</link>
+    </link-group>
     <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
   </header>
   <action-group>
