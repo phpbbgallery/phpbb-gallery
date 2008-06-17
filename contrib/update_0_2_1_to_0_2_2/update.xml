@@ -16,11 +16,7 @@
         <contributions />
       </author>
     </author-group>
-    <mod-version>
-      <major>0</major>
-      <minor>2</minor>
-      <revision>2</revision>
-    </mod-version>
+    <mod-version>0.2.2</mod-version>
     <installation>
       <level>easy</level>
       <time>240</time>

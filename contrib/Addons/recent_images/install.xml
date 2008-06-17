@@ -7,11 +7,7 @@
     <title lang="en-gb">phpBB Gallery - recent images</title>
     <description lang="en-gb"><![CDATA[Adds some recent images to a chooseable page]]></description>
     <author-notes lang="en-gb">i hope you get it installed, otherwise you can ask for help on phpbb.de and phpbb.com</author-notes>
-    <mod-version>
-      <major>1</major>
-      <minor>0</minor>
-      <revision>1</revision>
-    </mod-version>
+    <mod-version>1.0.1</mod-version>
     <installation>
       <level>easy</level>
       <time>300</time>
