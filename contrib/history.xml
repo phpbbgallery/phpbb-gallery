@@ -59,6 +59,7 @@
           <change><![CDATA[[Add] Report #267: Limit total number of images by group.]]></change>
 
           <change><![CDATA[[Change] Report #246: Hide "Your Personal Album" link.]]></change>
+          <change><![CDATA[[Change] Unreported: MODx v1.2.0]]></change>
 
           <change><![CDATA[[Fix] Report #258: Repeat Bug 228: 0.2.3 to 0.3.0 upgrade won't update version]]></change>
           <change><![CDATA[[Fix] Report #260: Call to undefined function adm_back_link()]]></change>
