@@ -298,6 +298,8 @@ switch ($mode)
 			gallery_create_table_slap_db_tools('phpbb_gallery_config', true);
 			gallery_create_table_slap_db_tools('phpbb_gallery_images', true);
 			gallery_create_table_slap_db_tools('phpbb_gallery_rates', true);
+			gallery_create_table_slap_db_tools('phpbb_gallery_roles', true);
+			gallery_create_table_slap_db_tools('phpbb_gallery_permissions', true);
 
 			//fill the GALLERY_CONFIG_TABLE with some values
 			$sql_query = file_get_contents('schemas/_schema_data.sql');
@@ -807,6 +809,8 @@ switch ($mode)
 			gallery_create_table_slap_db_tools('phpbb_gallery_config', true);
 			gallery_create_table_slap_db_tools('phpbb_gallery_images', true);
 			gallery_create_table_slap_db_tools('phpbb_gallery_rates', true);
+			gallery_create_table_slap_db_tools('phpbb_gallery_roles', true);
+			gallery_create_table_slap_db_tools('phpbb_gallery_permissions', true);
 
 			// first lets make the albums...
 			$personal_album = array();
