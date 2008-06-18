@@ -1623,7 +1623,7 @@ class acp_gallery
 					$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 				}
 			}
-			trigger_error('Permissions were stored successful.');
+			trigger_error('PERMISSIONS_STORED');
 		}
 
 
