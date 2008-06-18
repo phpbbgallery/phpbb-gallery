@@ -298,8 +298,6 @@ switch ($mode)
 			gallery_create_table_slap_db_tools('phpbb_gallery_config', true);
 			gallery_create_table_slap_db_tools('phpbb_gallery_images', true);
 			gallery_create_table_slap_db_tools('phpbb_gallery_rates', true);
-			gallery_create_table_slap_db_tools('phpbb_gallery_roles', true);
-			gallery_create_table_slap_db_tools('phpbb_gallery_permissions', true);
 
 			//fill the GALLERY_CONFIG_TABLE with some values
 			$sql_query = file_get_contents('schemas/_schema_data.sql');
@@ -604,16 +602,20 @@ switch ($mode)
 					while ($row = $db->sql_fetchrow($result))
 					{
 						$image_id = $row['image_id'];
-						if ($row['image_user_id'] != 1)
+
+						if ($row['image_user_id'] == 1 || empty($row['username']))
 						{
-							$sql_ary = array(
-								'image_username'		=> $row['username'],
-								'image_user_colour'		=> $row['user_colour'],
-							);
-							$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-								WHERE ' . $db->sql_in_set('image_id', $image_id);
-							$db->sql_query($sql);
+							continue;
 						}
+
+						$sql_ary = array(
+							'image_username'      => $row['username'],
+							'image_user_colour'      => $row['user_colour'],
+						);
+
+						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+							WHERE ' . $db->sql_in_set('image_id', $image_id);
+						$db->sql_query($sql);
 					}
 					$db->sql_freeresult($result);
 
