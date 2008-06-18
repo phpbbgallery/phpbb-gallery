@@ -211,6 +211,7 @@ $lang = array_merge($lang, array(
 	'PERMISSION_I_VIEW'				=> 'Darf Bilder sehen',
 
 	'PERMISSION_EMPTY'				=> 'Du hast nicht alle Berechtigungen gesetzt.',
+	'PERMISSIONS_STORED'			=> 'Berechtigungen erfolgreich gespeichert.',
 
 	'SELECT_ALBUMS'					=> 'Wähle Alben',
 	'SELECTED_ALBUMS'				=> 'Ausgewählte Alben',
@@ -219,5 +220,7 @@ $lang = array_merge($lang, array(
 	'SELECT_PERMISSIONS'			=> 'Wähle Berechtigungen',
 	'SELECTED_PERMISSIONS'			=> 'Ausgewählte Berechtigunen',
 	'SET_PERMISSIONS'				=> '<br /><a href="%s">Berechtigungen</a> jetzt vergeben.',
+
+	'THIS_WILL_BE_REPORTED'			=> 'Bekannter Fehler, sorry guys!',
 ));
 ?>

@@ -212,6 +212,7 @@ $lang = array_merge($lang, array(
 	'PERMISSION_I_VIEW'				=> 'Can view images',
 
 	'PERMISSION_EMPTY'				=> 'You didn\'t set all permissions.',
+	'PERMISSIONS_STORED'			=> 'Permissions were stored successful.',
 
 	'SELECT_ALBUMS'					=> 'Select albums',
 	'SELECTED_ALBUMS'				=> 'Selected albums',
@@ -220,6 +221,8 @@ $lang = array_merge($lang, array(
 	'SELECT_PERMISSIONS'			=> 'Select permissions',
 	'SELECTED_PERMISSIONS'			=> 'Selected permissions',
 	'SET_PERMISSIONS'				=> '<br />Set <a href="%s">permissions</a> now.',
+
+	'THIS_WILL_BE_REPORTED'			=> 'Known Bug, sorry guys!',
 ));
 
 ?>
