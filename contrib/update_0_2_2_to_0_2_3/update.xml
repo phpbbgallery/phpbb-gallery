@@ -20,11 +20,7 @@
     <installation>
       <level>easy</level>
       <time>240</time>
-      <target-version>
-        <target-primary>3.0.0</target-primary>
-        <target-major allow="exact">3</target-major>
-        <target-minor allow="exact">0</target-minor>
-      </target-version>
+      <target-version>3.0.0</target-version>
     </installation>
     <link-group>
       <link type="parent" lang="en-gb" href="../history.xml">History</link>
@@ -37,11 +33,7 @@
     <history>
       <entry>
         <date>2008-01-24</date>
-        <rev-version>
-          <major>0</major>
-          <minor>2</minor>
-          <revision>3</revision>
-        </rev-version>
+        <rev-version>0.2.3</rev-version>
         <changelog lang="en-GB">
           <change><![CDATA[Report #62: Watermark: Call to undefined function: imagecreatefromjpeg()]]></change>
           <change><![CDATA[Report #90: Add gd_info function check into the installer]]></change>

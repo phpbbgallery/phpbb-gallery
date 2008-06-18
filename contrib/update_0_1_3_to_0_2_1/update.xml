@@ -27,11 +27,7 @@
     <installation>
       <level>easy</level>
       <time>240</time>
-      <target-version>
-        <target-primary>3.0.RC7</target-primary>
-        <target-major allow="exact">3</target-major>
-        <target-minor allow="exact">0</target-minor>
-      </target-version>
+      <target-version>3.0.RC7</target-version>
     </installation>
     <link-group>
       <link type="parent" lang="en-gb" href="../history.xml">History</link>
@@ -44,11 +40,7 @@
     <history>
       <entry>
         <date>2007-11-26</date>
-        <rev-version>
-          <major>0</major>
-          <minor>2</minor>
-          <revision>1</revision>
-        </rev-version>
+        <rev-version>0.2.1</rev-version>
         <changelog lang="en-GB">
           <change>added subalbums</change>
           <change>made the converter even take phpbb2 plus galleries</change>

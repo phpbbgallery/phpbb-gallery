@@ -27,11 +27,7 @@
     <installation>
       <level>easy</level>
       <time>240</time>
-      <target-version>
-        <target-primary>3.0.1</target-primary>
-        <target-major allow="exact">3</target-major>
-        <target-minor allow="exact">0</target-minor>
-      </target-version>
+      <target-version>3.0.1</target-version>
     </installation>
     <link-group>
       <link type="parent" lang="en-gb" href="../history.xml">History</link>
