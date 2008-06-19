@@ -15,7 +15,7 @@ if (!defined('IN_PHPBB'))
 }
 function display_albums($album_id, $mode = 'album')
 {
-	global $db, $template, $phpEx, $phpbb_root_path, $gallery_root_path, $user, $config;
+	global $db, $template, $phpEx, $phpbb_root_path, $gallery_root_path, $user, $config, $album_config;
 
 	include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
 	$album_access_array = get_album_access_array();
@@ -187,6 +187,7 @@ function display_albums($album_id, $mode = 'album')
 			'L_SUBALBUMS'			=> $l_subalbums,
 			'MODERATORS'			=> $moderators_list,
 			'IMAGES'				=> $album[$i]['count'],
+			'U_LAST_THUMB'			=> ($album[$i]['count'] != 0) ? append_sid("{$phpbb_root_path}{$gallery_root_path}thumbnail.$phpEx" , 'album_id=' . $album[$i]['album_id'] . '&amp;image_id=' . $lastrow['image_id']) : '',
 			'U_LAST_IMAGE'			=> ($album[$i]['count'] != 0) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx" , 'album_id=' . $album[$i]['album_id'] . '&amp;image_id=' . $lastrow['image_id']) : '',
 			'LAST_IMAGE_NAME'		=> ($album[$i]['count'] != 0) ? $lastrow['image_name'] : '',
 			'ALBUM_COLOUR'			=> ($album[$i]['count'] != 0) ? get_username_string('colour', $lastrow['image_user_id'], $lastrow['image_username'], $lastrow['image_user_colour']) : get_username_string('colour', $lastrow['user_id'], $lastrow['username'], $lastrow['user_colour']),
@@ -195,6 +196,8 @@ function display_albums($album_id, $mode = 'album')
 		));
 	}
 	$template->assign_vars(array(
+		'DISP_FAKE_THUMB'			=> (empty($album_config['disp_fake_thumb'])) ? 0 : $album_config['disp_fake_thumb'],
+		'FAKE_THUMB_SIZE'			=> (empty($album_config['fake_thumb_size'])) ? 50 : $album_config['fake_thumb_size'],
 		'LAST_POST_IMG'				=> $user->img('icon_topic_latest', 'VIEW_THE_LATEST_IMAGE'),
 	));
 }

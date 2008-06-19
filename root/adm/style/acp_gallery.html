@@ -208,12 +208,13 @@
 			<dd><input class="post" type="text" maxlength="9" size="9" name="max_pics" value="{MAX_IMAGES}" /></dd>
 		</dl>
 		<dl>
-			<dt><label for="user_pics_limit">{L_USER_IMAGES_LIMIT}</label></dt>
-			<dd><input class="post" type="text" maxlength="12" size="5" name="user_pics_limit" value="{USER_IMAGES_LIMIT}" /></dd>
+			<dt><label for="disp_fake_thumb">{L_DISP_FAKE_THUMB}</label></dt>
+			<dd><input type="radio" class="radio" name="disp_fake_thumb" value="1" <!-- IF DISP_FAKE_THUMB --> checked="checked"<!-- ENDIF --> />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" name="disp_fake_thumb" value="0" <!-- IF not DISP_FAKE_THUMB --> checked="checked"<!-- ENDIF --> />{L_NO}</dd>
 		</dl>
 		<dl>
-			<dt><label for="mod_pics_limit">{L_MODERATOR_IMAGES_LIMIT}</label></dt>
-			<dd><input class="post" type="text" maxlength="12" size="5" name="mod_pics_limit" value="{MOD_IMAGES_LIMIT}" /></dd>
+			<dt><label for="fake_thumb_size">{L_FAKE_THUMB_SIZE}</label>
+				<br /><span>{L_FAKE_THUMB_SIZE_EXP}</span></dt>
+			<dd><input class="post" type="text" maxlength="12" size="5" name="fake_thumb_size" value="{FAKE_THUMB_SIZE}" /></dd>
 		</dl>
 	</fieldset>
 	<fieldset>

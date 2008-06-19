@@ -447,8 +447,8 @@ class acp_gallery
 			'THUMBNAIL_SIZE' 					=> $new['thumbnail_size'],
 			'PERSONAL_GALLERY_LIMIT' 			=> $new['personal_gallery_limit'],
 
-			'USER_IMAGES_LIMIT' 				=> $new['user_pics_limit'],
-			'MOD_IMAGES_LIMIT' 					=> $new['mod_pics_limit'],
+			'FAKE_THUMB_SIZE' 					=> $new['fake_thumb_size'],
+			'DISP_FAKE_THUMB' 					=> $new['disp_fake_thumb'],
 
 			'THUMBNAIL_CACHE_ENABLED'			=> ($new['thumbnail_cache'] == 1) ? 'checked="checked"' : '',
 			'THUMBNAIL_CACHE_DISABLED'			=> ($new['thumbnail_cache'] == 0) ? 'checked="checked"' : '',

@@ -188,6 +188,10 @@ $lang = array_merge($lang, array(
 
 $lang = array_merge($lang, array(
 	'DELETE_PERMISSIONS'			=> 'Delete permissions',
+	'DISP_FAKE_THUMB'				=> 'View thumbnail in albumlist',
+
+	'FAKE_THUMB_SIZE'				=> 'Thumbnail-size',
+	'FAKE_THUMB_SIZE_EXP'			=> 'If you want to resize them to the full size, remember 16 pixels for the black-info-line',
 
 	'OWN_PERSONAL_ALBUMS'			=> 'Own personal albums',
 

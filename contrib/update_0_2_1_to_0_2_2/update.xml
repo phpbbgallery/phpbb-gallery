@@ -33,7 +33,7 @@
     <history>
       <entry>
         <date>2008-01-08</date>
-        <rev-version>0.2.2 </rev-version>
+        <rev-version>0.2.2</rev-version>
         <changelog lang="en-GB">
           <change><![CDATA[Report #63: Column 'comment_edit_time' cannot be null]]></change>
           <change><![CDATA[Report #65: Zip Upload]]></change>

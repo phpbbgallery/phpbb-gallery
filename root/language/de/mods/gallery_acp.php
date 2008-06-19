@@ -187,6 +187,10 @@ $lang = array_merge($lang, array(
 
 $lang = array_merge($lang, array(
 	'DELETE_PERMISSIONS'			=> 'Berechtigungen löschen',
+	'DISP_FAKE_THUMB'				=> 'Thumbnail in der Album-Liste anzeigen',
+
+	'FAKE_THUMB_SIZE'				=> 'Thumbnailgröße',
+	'FAKE_THUMB_SIZE_EXP'			=> 'Wenn du die volle Größe wählst, denke an die 16 Pixel für die schwarze Info-Zeile',
 
 	'OWN_PERSONAL_ALBUMS'			=> 'Eigene persönliche Alben',
 

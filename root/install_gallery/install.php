@@ -302,29 +302,43 @@ switch ($mode)
 			gallery_create_table_slap_db_tools('phpbb_gallery_permissions', true);
 
 			//fill the GALLERY_CONFIG_TABLE with some values
-			$sql_query = file_get_contents('schemas/_schema_data.sql');
-			switch ($db->sql_layer)
-			{
-				case 'mssql':
-				case 'mssql_odbc':
-					$sql_query = preg_replace('#\# MSSQL IDENTITY (phpbb_[a-z_]+) (ON|OFF) \##s', 'SET IDENTITY_INSERT \1 \2;', $sql_query);
-				break;
-				case 'postgres':
-					$sql_query = preg_replace('#\# POSTGRES (BEGIN|COMMIT) \##s', '\1; ', $sql_query);
-				break;
-			}
-			$sql_query = preg_replace('#phpbb_#i', $table_prefix, $sql_query);
-			$sql_query = preg_replace('/\n{2,}/', "\n", preg_replace('/^#.*$/m', "\n", $sql_query));
-			$sql_query = split_sql_file($sql_query, ';');
-			foreach ($sql_query as $sql)
-			{
-				if (!$db->sql_query($sql))
-				{
-					$error = $db->sql_error();
-					$this->p_master->db_error($error['message'], $sql, __LINE__, __FILE__);
-				}
-			}
-			unset($sql_query);
+			gallery_config_value('max_pics', '1024');
+			gallery_config_value('user_pics_limit', '50');
+			gallery_config_value('mod_pics_limit', '250');
+			gallery_config_value('max_file_size', '128000');
+			gallery_config_value('max_width', '800');
+			gallery_config_value('max_height', '600');
+			gallery_config_value('rows_per_page', '3');
+			gallery_config_value('cols_per_page', '4');
+			gallery_config_value('fullpic_popup', '0');
+			gallery_config_value('thumbnail_quality', '50');
+			gallery_config_value('thumbnail_size', '125');
+			gallery_config_value('thumbnail_cache', '1');
+			gallery_config_value('sort_method', 'image_time');
+			gallery_config_value('sort_order', 'DESC');
+			gallery_config_value('jpg_allowed', '1');
+			gallery_config_value('png_allowed', '1');
+			gallery_config_value('gif_allowed', '0');
+			gallery_config_value('desc_length', '512');
+			gallery_config_value('hotlink_prevent', '0');
+			gallery_config_value('hotlink_allowed', 'flying-bits.org');
+			gallery_config_value('personal_gallery', '0');
+			gallery_config_value('personal_gallery_private', '0');
+			gallery_config_value('personal_gallery_limit', '10');
+			gallery_config_value('personal_gallery_view', '1');
+			gallery_config_value('rate', '1');
+			gallery_config_value('rate_scale', '10');
+			gallery_config_value('comment', '1');
+			gallery_config_value('gd_version', '2');
+			gallery_config_value('album_version', '0.2.4');
+			gallery_config_value('watermark_images', 1);
+			gallery_config_value('watermark_source', 'gallery/mark.png');
+			gallery_config_value('preview_rsz_height', 600);
+			gallery_config_value('preview_rsz_width', 800);
+			gallery_config_value('upload_images', 10);
+			gallery_config_value('thumbnail_info_line', 1);
+			gallery_config_value('fake_thumb_size', 141);
+			gallery_config_value('disp_fake_thumb', 1);
 			$album_config = load_album_config();
 
 			// create the modules
@@ -765,7 +779,7 @@ switch ($mode)
 
 					//deactivate this useless module
 					deactivate_module('ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS');
-
+					gallery_config_value('fake_thumb_size', 141);
 				case '0.3.2':
 					//and drop the old column
 					delete_gallery_column(GROUPS_TABLE, 'personal_subalbums');
@@ -775,6 +789,8 @@ switch ($mode)
 
 
 				case 'svn':
+					gallery_config_value('disp_fake_thumb', 0);
+
 
 				break;
 			}
@@ -916,29 +932,43 @@ switch ($mode)
 
 			// fourth the configs...
 			// because there might be some problems, we create them new...
-			$sql_query = file_get_contents('schemas/_schema_data.sql');
-			switch ($db->sql_layer)
-			{
-				case 'mssql':
-				case 'mssql_odbc':
-					$sql_query = preg_replace('#\# MSSQL IDENTITY (phpbb_[a-z_]+) (ON|OFF) \##s', 'SET IDENTITY_INSERT \1 \2;', $sql_query);
-				break;
-				case 'postgres':
-					$sql_query = preg_replace('#\# POSTGRES (BEGIN|COMMIT) \##s', '\1; ', $sql_query);
-				break;
-			}
-			$sql_query = preg_replace('#phpbb_#i', $table_prefix, $sql_query);
-			$sql_query = preg_replace('/\n{2,}/', "\n", preg_replace('/^#.*$/m', "\n", $sql_query));
-			$sql_query = split_sql_file($sql_query, ';');
-			foreach ($sql_query as $sql)
-			{
-				if (!$db->sql_query($sql))
-				{
-					$error = $db->sql_error();
-					$this->p_master->db_error($error['message'], $sql, __LINE__, __FILE__);
-				}
-			}
-			unset($sql_query);
+			gallery_config_value('max_pics', '1024');
+			gallery_config_value('user_pics_limit', '50');
+			gallery_config_value('mod_pics_limit', '250');
+			gallery_config_value('max_file_size', '128000');
+			gallery_config_value('max_width', '800');
+			gallery_config_value('max_height', '600');
+			gallery_config_value('rows_per_page', '3');
+			gallery_config_value('cols_per_page', '4');
+			gallery_config_value('fullpic_popup', '0');
+			gallery_config_value('thumbnail_quality', '50');
+			gallery_config_value('thumbnail_size', '125');
+			gallery_config_value('thumbnail_cache', '1');
+			gallery_config_value('sort_method', 'image_time');
+			gallery_config_value('sort_order', 'DESC');
+			gallery_config_value('jpg_allowed', '1');
+			gallery_config_value('png_allowed', '1');
+			gallery_config_value('gif_allowed', '0');
+			gallery_config_value('desc_length', '512');
+			gallery_config_value('hotlink_prevent', '0');
+			gallery_config_value('hotlink_allowed', 'flying-bits.org');
+			gallery_config_value('personal_gallery', '0');
+			gallery_config_value('personal_gallery_private', '0');
+			gallery_config_value('personal_gallery_limit', '10');
+			gallery_config_value('personal_gallery_view', '1');
+			gallery_config_value('rate', '1');
+			gallery_config_value('rate_scale', '10');
+			gallery_config_value('comment', '1');
+			gallery_config_value('gd_version', '2');
+			gallery_config_value('album_version', '0.2.4');
+			gallery_config_value('watermark_images', 1);
+			gallery_config_value('watermark_source', 'gallery/mark.png');
+			gallery_config_value('preview_rsz_height', 600);
+			gallery_config_value('preview_rsz_width', 800);
+			gallery_config_value('upload_images', 10);
+			gallery_config_value('thumbnail_info_line', 1);
+			gallery_config_value('fake_thumb_size', 141);
+			gallery_config_value('disp_fake_thumb', 1);
 
 			// last and least the images...
 			$sql = 'SELECT i.*, u.user_colour, u.username

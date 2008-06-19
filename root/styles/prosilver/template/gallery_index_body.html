@@ -32,6 +32,7 @@
 					<dd class="posts">{albumrow.IMAGES} <dfn>{L_IMAGES}</dfn></dd>
 					<dd class="lastpost"><span>
 						<!-- IF albumrow.U_LAST_IMAGE -->
+							<!-- IF DISP_FAKE_THUMB --><span style="float: left; padding-right: 5px;"><img src="{albumrow.U_LAST_THUMB}" style="max-width: {FAKE_THUMB_SIZE}px; max-height: {FAKE_THUMB_SIZE}px;" /></span><!-- ENDIF -->
 							<a href="{albumrow.U_LAST_IMAGE}" style="font-weight: bold;">{albumrow.LAST_IMAGE_NAME}</a><br />
 							{L_POST_BY_AUTHOR} {albumrow.LAST_IMAGE_AUTHOR} <a href="{albumrow.U_LAST_IMAGE}">{LAST_POST_IMG}</a><br />
 							{L_POSTED_ON_DATE} {albumrow.LAST_IMAGE_TIME}
