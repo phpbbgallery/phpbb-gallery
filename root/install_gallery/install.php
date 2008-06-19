@@ -780,6 +780,8 @@ switch ($mode)
 					//deactivate this useless module
 					deactivate_module('ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS');
 					gallery_config_value('fake_thumb_size', 141);
+					gallery_config_value('disp_fake_thumb', 1);
+
 				case '0.3.2':
 					//and drop the old column
 					delete_gallery_column(GROUPS_TABLE, 'personal_subalbums');
@@ -789,7 +791,6 @@ switch ($mode)
 
 
 				case 'svn':
-					gallery_config_value('disp_fake_thumb', 0);
 
 
 				break;
