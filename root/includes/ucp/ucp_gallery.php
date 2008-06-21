@@ -33,6 +33,11 @@ class ucp_gallery
 		add_form_key('ucp_gallery');
 
 		$action = request_var('action', '');
+		$cancel = (isset($_POST['cancel'])) ? true : false;
+		if ($cancel)
+		{
+			$action = '';
+		}
 		switch ($action)
 		{
 			case 'manage':
