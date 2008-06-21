@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
+<?xml-stylesheet type="text/xsl" href="../../modx.prosilver.en.xsl"?>
 <!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
 <mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.0.xsd">
   <header>
     <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
     <title lang="en-gb">phpBB Gallery</title>
-    <description lang="en-gb"><![CDATA[see normal install-file]]></description>
-    <author-notes lang="en-gb">i hope you get it installed, otherwise you can ask for help on phpbb.de and phpbb.com
-
-
-
-	NOTE: If you want to be informed, when there should be a new version of this MOD available,
-	Please register on my Site and join the Group "MODs - phpBB Gallery - Newsletter".
-
-	I you want to be informed when i release any new version for one of my MODs join the Group "MODs - Newsletter"</author-notes>
+    <description lang="en-gb">see normal install-file</description>
+    <author-notes lang="en-gb">i hope you get it installed, otherwise you can ask for help on phpbb.de and phpbb.com</author-notes>
     <author-group>
       <author>
-        <realname>Joas Schilling</realname>
+        <realname>nickvergessen</realname>
         <email>nickvergessen@gmx.de</email>
         <username>nickvergessen</username>
         <homepage>http://www.flying-bits.org</homepage>
@@ -30,10 +23,10 @@
       <target-version>3.0.1</target-version>
     </installation>
     <link-group>
-      <link type="parent" lang="en-gb" href="contrib/history.xml">History</link>
-      <link type="parent" lang="de" href="contrib/history.xml">Entwicklung</link>
-      <link type="parent" lang="en-gb" href="install.xml">Install</link>
-      <link type="parent" lang="de" href="install.xml">Installations-Anleitung</link>
+      <link type="parent" lang="en-gb" href="../history.xml">History</link>
+      <link type="parent" lang="de" href="../history.xml">Entwicklung</link>
+      <link type="parent" lang="en-gb" href="update.xml">Update from 0.3.1 to 0.3.2</link>
+      <link type="parent" lang="de" href="update.xml">Update von 0.3.1 auf 0.3.2</link>
     </link-group>
     <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
   </header>
@@ -45,27 +38,67 @@
       <file from="templates/subsilver2/styles/subsilver2/theme/images/gallery_lytebox/*.*" to="styles/subsilver2/theme/images/gallery_lytebox/*.*" />
       <file from="templates/subsilver2/styles/subsilver2/theme/images/icon_gallery.gif" to="styles/subsilver2/theme/images/icon_gallery.gif" />
     </copy>
-    <open src="styles/subsilver2/template/overall_header.html">
-      <edit>
-        <find><![CDATA[<a href="{U_FAQ}"><img src="{T_THEME_PATH}/images/icon_mini_faq.gif" width="12" height="13" alt="*" /> {L_FAQ}</a>]]></find>
-        <action type="before-add"><![CDATA[<a href="{U_GALLERY_MOD}" title="{L_GALLERY_EXPLAIN}"><img src="{T_THEME_PATH}/images/icon_mini_gallery.gif" width="12" height="13" alt="*" /> {L_GALLERY}</a>&nbsp; &nbsp;]]></action>
-      </edit>
-    </open>
-    <open src="styles/subsilver2/template/viewtopic_body.html">
-      <edit>
-        <find><![CDATA[<td><div class="gensmall" style="float: {S_CONTENT_FLOW_BEGIN};">&nbsp;<!-- IF postrow.U_PROFILE --><a href="{postrow.U_PROFILE}">{PROFILE_IMG}</a> <!-- ENDIF --> <!-- IF postrow.U_PM --><a href="{postrow.U_PM}">{PM_IMG}</a> <!-- ENDIF --> <!-- IF postrow.U_EMAIL --><a href="{postrow.U_EMAIL}">{EMAIL_IMG}</a> <!-- ENDIF --> <!-- ENDIF -->&nbsp;</div> <div class="gensmall" style="float: {S_CONTENT_FLOW_END};"><!-- IF not S_IS_BOT --><!-- IF postrow.U_EDIT --><a href="{postrow.U_EDIT}">{EDIT_IMG}</a> <!-- ENDIF --> <!-- IF postrow.U_QUOTE --><a href="{postrow.U_QUOTE}">{QUOTE_IMG}</a> <!-- ENDIF --> <!-- ENDIF -->&nbsp;</div></td>]]></find>
-        <inline-edit>
-            <inline-find><![CDATA[<!-- IF postrow.U_EMAIL --><a href="{postrow.U_EMAIL}">{EMAIL_IMG}</a> <!-- ENDIF -->]]></inline-find>
-            <inline-action type="after-add"><![CDATA[ <!-- IF postrow.U_GALLERY --><a href="{postrow.U_GALLERY}"><img src="{T_IMAGESET_LANG_PATH}/icon_contact_gallery.gif" alt="{L_PERSONAL_ALBUM}" /></a> <!-- ENDIF -->]]></inline-action>
-        </inline-edit>
-      </edit>
-    </open>
     <open src="styles/subsilver2/theme/stylesheet.css">
       <edit>
-        <find><![CDATA[.username-coloured {
-	font-weight: bold;
-}]]></find>
-        <action type="after-add"><![CDATA[#lbOverlay { position: absolute; top: 0; left: 0; z-index: 99998; width: 100%; height: 500px; }
+        <find><![CDATA[#lbOverlay { position: absolute; top: 0; left: 0; z-index: 99998; width: 100%; height: 500px; }
+	#lbOverlay.grey { background-color: #000000; }
+
+#lbMain { position: absolute; left: 0; width: 100%; z-index: 99999; text-align: center; line-height: 0; }
+#lbMain a img { border: none; }
+
+#lbOuterContainer { position: relative; background-color: #fff; width: 200px; height: 200px; margin: 0 auto; }
+	#lbOuterContainer.grey { border: 3px solid #888888; }
+
+#lbDetailsContainer {	font: 10px Verdana, Helvetica, sans-serif; background-color: #fff; width: 100%; line-height: 1.4em;	overflow: auto; margin: 0 auto; }
+	#lbDetailsContainer.grey { border: 3px solid #888888; border-top: none; }
+
+#lbImageContainer, #lbIframeContainer { padding: 10px; }
+#lbLoading {
+	position: absolute; top: 45%; left: 0%; height: 32px; width: 100%; text-align: center; line-height: 0; background: url("./images/lytebox/loading.gif") center no-repeat;
+}
+
+#lbHoverNav { position: absolute; top: 0; left: 0; height: 100%; width: 100%; z-index: 10; }
+#lbImageContainer>#lbHoverNav { left: 0; }
+#lbHoverNav a { outline: none; }
+
+#lbPrev { width: 49%; height: 100%; background: transparent url("./images/gallery_lytebox/blank.gif") no-repeat; display: block; left: 0; float: left; }
+	#lbPrev.grey:hover, #lbPrev.grey:visited:hover { background: url("./images/gallery_lytebox/prev_grey.gif") left 15% no-repeat; }
+	
+#lbNext { width: 49%; height: 100%; background: transparent url("./images/gallery_lytebox/blank.gif") no-repeat; display: block; right: 0; float: right; }
+	#lbNext.grey:hover, #lbNext.grey:visited:hover { background: url("./images/gallery_lytebox/next_grey.gif") right 15% no-repeat; }
+
+#lbPrev2, #lbNext2 { text-decoration: none; font-weight: bold; }
+	#lbPrev2.grey, #lbNext2.grey, #lbSpacer.grey { color: #333333; }
+
+#lbPrev2_Off, #lbNext2_Off { font-weight: bold; }
+	#lbPrev2_Off.grey, #lbNext2_Off.grey { color: #CCCCCC; }
+
+#lbDetailsData { padding: 0 10px; }
+	#lbDetailsData.grey { color: #333333; }
+
+#lbDetails { width: 60%; float: left; text-align: left; }
+#lbCaption { display: block; font-weight: bold; }
+#lbNumberDisplay { float: left; display: block; padding-bottom: 1.0em; }
+#lbNavDisplay { float: left; display: block; padding-bottom: 1.0em; }
+
+#lbClose { width: 64px; height: 28px; float: right; margin-bottom: 1px; }
+	#lbClose.grey { background: url("./images/gallery_lytebox/close_grey.png") no-repeat; }
+
+#lbPlay { width: 64px; height: 28px; float: right; margin-bottom: 1px; }
+	#lbPlay.grey { background: url("./images/gallery_lytebox/play_grey.png") no-repeat; }
+
+#lbPause { width: 64px; height: 28px; float: right; margin-bottom: 1px; }
+	#lbPause.grey { background: url("./images/gallery_lytebox/pause_grey.png") no-repeat; }
+
+#image-resize {
+	padding:3px 0px 3px 0px;
+	text-indent:25px;
+	background:#ffffe1 url("./images/img_warn.gif") no-repeat 5px 50%;
+	color:#000;	font-size:0.8em; border-top:#666666;
+}
+
+#image-resize a:hover {color:#000;}]]></find>
+        <action type="replace-with"><![CDATA[#lbOverlay { position: absolute; top: 0; left: 0; z-index: 99998; width: 100%; height: 500px; }
 #lbOverlay.grey { background-color: #000000; }
 
 #lbMain { position: absolute; left: 0; width: 100%; z-index: 99999; text-align: center; line-height: 0; }
