@@ -1463,16 +1463,10 @@ class acp_gallery
 
 		if ($step == 0)
 		{
-			foreach ($albums as $album)
-			{
-				if ($album['album_user_id'] == 0)
-				{
-					$template->assign_block_vars('albumrow', array(
-						'ALBUM_ID'				=> $album['album_id'],
-						'ALBUM_NAME'			=> $album['album_name'],
-					));
-				}
-			}
+			$album_list = make_album_select(0);
+			$template->assign_vars(array(
+				'ALBUM_LIST'		=> $album_list,
+			));
 			$step = 1;
 		}
 		else if ($step == 1)
@@ -1565,8 +1559,8 @@ class acp_gallery
 				}
 			}
 			//Group names
-			$sql = 'SELECT group_id, group_type, group_name, group_colour FROM ' . GROUPS_TABLE . '
-				WHERE ' . $db->sql_in_set('group_id', $group_list);
+			$sql = 'SELECT group_id, group_type, group_name, group_colour FROM ' . GROUPS_TABLE . "
+				WHERE group_id IN ($group_list)";
 			$result = $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result))
 			{

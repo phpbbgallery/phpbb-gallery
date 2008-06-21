@@ -26,7 +26,7 @@
 		<legend>{L_SELECT_ALBUMS}</legend>
 			<dl><dt><input id="perm_system_0" name="perm_system" class="radio" type="radio" checked="checked" value="0" /><label for="perm_system_0">&nbsp;{L_SELECTED_ALBUMS}</label></dt>
 				<dd><select id="target" name="album_ids[]" multiple="multiple">
-				<!-- BEGIN albumrow --><option value="{albumrow.ALBUM_ID}">{albumrow.ALBUM_NAME}</option><!-- END albumrow -->
+				{ALBUM_LIST}
 				</select></dd>
 			</dl>
 			<dl><dt><input id="perm_system_2" name="perm_system" class="radio" type="radio" value="2" /><label for="perm_system_2">&nbsp;{L_OWN_PERSONAL_ALBUMS}</label></dt></dl>
