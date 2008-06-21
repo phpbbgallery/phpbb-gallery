@@ -789,6 +789,7 @@ class acp_gallery
 				'FOLDER_IMAGE'			=> $folder_image,
 				'U_ALBUM'				=> $this->u_action . '&amp;parent_id=' . $album[$i]['album_id'],
 				'ALBUM_NAME'			=> $album[$i]['album_name'],
+				'ALBUM_IMAGE'			=> $album[$i]['album_image'],
 				'ALBUM_DESCRIPTION'		=> generate_text_for_display($album[$i]['album_desc'], $album[$i]['album_desc_uid'], $album[$i]['album_desc_bitfield'], $album[$i]['album_desc_options']),
 				'U_MOVE_UP'				=> $this->u_action . '&amp;action=move&amp;move=move_up&amp;album_id=' . $album[$i]['album_id'],
 				'U_MOVE_DOWN'			=> $this->u_action . '&amp;action=move&amp;move=move_down&amp;album_id=' . $album[$i]['album_id'],
@@ -819,19 +820,13 @@ class acp_gallery
 				'ACP_GALLERY_TITLE'				=> $user->lang['GALLERY_ALBUMS_TITLE'],
 				'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_CREATE_ALBUM_EXPLAIN'],
 				'S_PARENT_OPTIONS'				=> $parents_list,
-				'S_COPY_OPTIONS'			=> $copy_list,
+				'S_COPY_OPTIONS'				=> $copy_list,
 				'S_ALBUM_ACTION'				=> $this->u_action . '&amp;action=create',
 				'S_DESC_BBCODE_CHECKED'		=> true,
 				'S_DESC_SMILIES_CHECKED'	=> true,
 				'S_DESC_URLS_CHECKED'		=> true,
 				'ALBUM_TYPE'				=> 2,
-				'VIEW_LEVEL'				=> permission_drop_down_box('album_view_level', 1),
-				'UPLOAD_LEVEL'				=> permission_drop_down_box('album_upload_level', 0),
-				'RATE_LEVEL'				=> permission_drop_down_box('album_rate_level', 0),
-				'COMMENT_LEVEL'				=> permission_drop_down_box('album_comment_level', 0),
-				'EDIT_LEVEL'				=> permission_drop_down_box('album_edit_level', 0),
-				'DELETE_LEVEL'				=> permission_drop_down_box('album_delete_level', 0),
-				'IMAGE_APPROVAL'			=> permission_drop_down_box('album_approval', 0),
+				'ALBUM_IMAGE'				=> '',
 				));
 		}
 		else
@@ -850,14 +845,8 @@ class acp_gallery
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc(request_var('album_desc', '', true)),
 				'album_user_id'					=> 0,
-				'album_view_level'				=> request_var('album_view_level', 0),
-				'album_upload_level'			=> request_var('album_upload_level', 0),
-				'album_rate_level'				=> request_var('album_rate_level', 0),
-				'album_comment_level'			=> request_var('album_comment_level', 0),
-				'album_edit_level'				=> request_var('album_edit_level', 0),
-				'album_delete_level'			=> request_var('album_delete_level', 0),
-				'album_approval'				=> request_var('album_approval', 0),
 				'album_last_username'			=> '',
+				'album_image'					=> request_var('album_image', ''),
 			);
 			generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], request_var('desc_parse_bbcode', false), request_var('desc_parse_urls', false), request_var('desc_parse_smilies', false));
 
@@ -1000,18 +989,10 @@ class acp_gallery
 				'ALBUM_NAME' 				=> $album_data['album_name'],
 				'ALBUM_DESC'				=> $album_desc_data['text'],
 				'ALBUM_TYPE'				=> $album_data['album_type'],
+				'ALBUM_IMAGE'				=> $album_data['album_image'],
 				'S_DESC_BBCODE_CHECKED'		=> ($album_desc_data['allow_bbcode']) ? true : false,
 				'S_DESC_SMILIES_CHECKED'	=> ($album_desc_data['allow_smilies']) ? true : false,
 				'S_DESC_URLS_CHECKED'		=> ($album_desc_data['allow_urls']) ? true : false,
-
-				'VIEW_LEVEL'				=> permission_drop_down_box('album_view_level', $album_data['album_view_level']),
-				'UPLOAD_LEVEL'				=> permission_drop_down_box('album_upload_level', $album_data['album_upload_level']),
-				'RATE_LEVEL'				=> permission_drop_down_box('album_rate_level', $album_data['album_rate_level']),
-				'COMMENT_LEVEL'				=> permission_drop_down_box('album_comment_level', $album_data['album_comment_level']),
-				'EDIT_LEVEL'				=> permission_drop_down_box('album_edit_level', $album_data['album_edit_level']),
-				'DELETE_LEVEL'				=> permission_drop_down_box('album_delete_level', $album_data['album_delete_level']),
-				'IMAGE_APPROVAL'			=> permission_drop_down_box('album_approval', $album_data['album_approval']),
-
 				'S_MODE' 				=> 'edit',
 			));
 		}
@@ -1030,13 +1011,7 @@ class acp_gallery
 				'album_type'					=> request_var('album_type', 0),
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc(request_var('album_desc', '', true)),
-				'album_view_level'				=> request_var('album_view_level', 0),
-				'album_upload_level'			=> request_var('album_upload_level', 0),
-				'album_rate_level'				=> request_var('album_rate_level', 0),
-				'album_comment_level'			=> request_var('album_comment_level', 0),
-				'album_edit_level'				=> request_var('album_edit_level', 0),
-				'album_delete_level'			=> request_var('album_delete_level', 0),
-				'album_approval'				=> request_var('album_approval', 0),
+				'album_image'					=> request_var('album_image', ''),
 			);
 			generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], request_var('desc_parse_bbcode', false), request_var('desc_parse_urls', false), request_var('desc_parse_smilies', false));
 			$row = get_album_info($album_id);

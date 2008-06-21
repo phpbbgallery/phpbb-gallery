@@ -14,7 +14,7 @@
 			<tr>
 				<td style="width: 5%; text-align: center;">{catrow.FOLDER_IMAGE}</td>
 				<td>
-					<!-- IF catrow.FORUM_IMAGE --><div style="float: {S_CONTENT_FLOW_BEGIN}; margin-right: 5px;">{catrow.FORUM_IMAGE}</div><!-- ENDIF -->
+					<!-- IF catrow.ALBUM_IMAGE --><div style="float: {S_CONTENT_FLOW_BEGIN}; margin-right: 5px;"><img src="{T_IMAGES_PATH}{catrow.ALBUM_IMAGE}" alt="{catrow.ALBUM_NAME}" /></div><!-- ENDIF -->
 					<strong><a href="{catrow.U_ALBUM}">{catrow.ALBUM_NAME}</a></strong>
 					<!-- IF catrow.ALBUM_DESCRIPTION --><br /><span>{catrow.ALBUM_DESCRIPTION}</span><!-- ENDIF -->
 					<!-- IF catrow.S_FORUM_POST --><br /><br /><span>{L_TOPICS}: <strong>{catrow.FORUM_TOPICS}</strong> / {L_POSTS}: <b>{catrow.FORUM_POSTS}</b></span><!-- ENDIF -->
@@ -127,6 +127,10 @@
 		<dd><label><input type="checkbox" class="radio" name="desc_parse_bbcode"<!-- IF S_DESC_BBCODE_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_BBCODE}</label>
 			<label><input type="checkbox" class="radio" name="desc_parse_smilies"<!-- IF S_DESC_SMILIES_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_SMILIES}</label>
 			<label><input type="checkbox" class="radio" name="desc_parse_urls"<!-- IF S_DESC_URLS_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_URLS}</label></dd>
+		</dl>
+		<dl>
+			<dt><label for="album_image">{L_ALBUM_IMAGE}:</label></dt>
+			<dd><input class="text medium" type="text" id="album_image" name="album_image" value="{ALBUM_IMAGE}" maxlength="255" /></dd>
 		</dl>
 	</fieldset>
 	<fieldset class="submit-buttons">

@@ -187,6 +187,8 @@ $lang = array_merge($lang, array(
 ));
 
 $lang = array_merge($lang, array(
+	'ALBUM_IMAGE'					=> 'Album image',
+
 	'COPY_PERMISSIONS'				=> 'Copy Permissions from',
 
 	'DELETE_PERMISSIONS'			=> 'Delete permissions',

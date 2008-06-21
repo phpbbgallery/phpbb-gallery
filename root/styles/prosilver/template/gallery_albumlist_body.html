@@ -26,7 +26,7 @@
 		<li class="row">
 			<dl class="icon" style="background-image: url({albumrow.ALBUM_FOLDER_IMG_SRC}); background-repeat: no-repeat;">
 				<dt title="{albumrow.ALBUM_FOLDER_IMG_ALT}">
-					<!-- IF albumrow.ALBUM_IMAGE --><span class="forum-image">{albumrow.ALBUM_IMAGE}</span><!-- ENDIF -->
+					<!-- IF albumrow.ALBUM_IMAGE --><span class="forum-image"><img src="{T_IMAGES_PATH}{albumrow.ALBUM_IMAGE}" alt="{albumrow.ALBUM_NAME}" /></span><!-- ENDIF -->
 					<a href="{albumrow.U_VIEWALBUM}" class="forumtitle"<!-- IF S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR --> style="color: {albumrow.ALBUM_COLOUR};"<!-- ENDIF -->>{albumrow.ALBUM_NAME}</a><br />
 					{albumrow.ALBUM_DESC}
 					<!-- IF albumrow.MODERATORS -->

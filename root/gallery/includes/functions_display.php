@@ -164,8 +164,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 				'ALBUM_DESC'			=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
 				'ALBUM_FOLDER_IMG'		=> '',
 				'ALBUM_FOLDER_IMG_SRC'	=> '',
-				'ALBUM_IMAGE'			=> ($row['album_image']) ? '<img src="' . $phpbb_root_path . $row['album_image'] . '" alt="' . $user->lang['ALBUM_CAT'] . '" />' : '',
-				'ALBUM_IMAGE_SRC'		=> ($row['album_image']) ? $phpbb_root_path . $row['album_image'] : '',
+				'ALBUM_IMAGE'			=> $row['album_image'],
 				'U_VIEWALBUM'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $row['album_id']))
 			);
 
@@ -258,8 +257,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			'ALBUM_FOLDER_IMG'		=> $user->img($folder_image, $folder_alt),
 			'ALBUM_FOLDER_IMG_SRC'	=> $user->img($folder_image, $folder_alt, false, '', 'src'),
 			'ALBUM_FOLDER_IMG_ALT'	=> isset($user->lang[$folder_alt]) ? $user->lang[$folder_alt] : '',
-			'ALBUM_IMAGE'			=> ($row['album_image']) ? '<img src="' . $phpbb_root_path . $row['album_image'] . '" alt="' . $user->lang[$folder_alt] . '" />' : '',
-			'ALBUM_IMAGE_SRC'		=> ($row['album_image']) ? $phpbb_root_path . $row['album_image'] : '',
+			'ALBUM_IMAGE'			=> $row['album_image'],
 			'U_LAST_THUMB'			=> $last_thumb_url,
 			'U_LAST_IMAGE'			=> $last_image_url,
 			'LAST_IMAGE_NAME'		=> censor_text($last_image_name),
