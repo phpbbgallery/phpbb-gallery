@@ -449,6 +449,7 @@ else
 				. '<br />' . sprintf($user->lang['CLICK_RETURN_ALBUM_TARGET'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$target") . "\">", "</a>")
 				. '<br />' . sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>")
 				. '<br />' . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
+			meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?id=$album_id"));
 			trigger_error($message);
 		}
 	}
@@ -509,10 +510,11 @@ else
 			WHERE image_id IN (' . $pic_id_sql . ')';
 		$result = $db->sql_query($sql);
 
-		$message = $user->lang['IMAGES_LOCKED_SUCCESSFULLY'] .'<br /><br />';
-		$message .= sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />";
+		$message = $user->lang['IMAGES_LOCKED_SUCCESSFULLY'] . '<br /><br />';
+		$message .= sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>") .'<br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br />";
 
-		$message .= '<br /><br />' . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
+		$message .= '<br />' . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
+		meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?id=$album_id"));
 		trigger_error($message, E_USER_WARNING);
 	}
 	else if ($mode == 'unlock')
@@ -574,9 +576,10 @@ else
 
 		$message = $user->lang['IMAGES_UNLOCKED_SUCCESSFULLY'] . '<br /><br />';
 
-		$message .= sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />";
+		$message .= sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?id=$album_id") . "\">", "</a>") .'<br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br />";
 
-		$message .= '<br /><br />' . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
+		$message .= '<br />' . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
+		meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?id=$album_id"));
 		trigger_error($message, E_USER_WARNING);
 	}
 	else if ($mode == 'approval')
@@ -701,7 +704,8 @@ else
 
 		update_lastimage_info($album_id);
 
-		$message = $user->lang['IMAGES_UNAPPROVED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
+		$message = $user->lang['IMAGES_UNAPPROVED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>") .'<br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
+		meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?id=$album_id"));
 		trigger_error($message, E_USER_WARNING);
 	}
 	else if ($mode == 'delete')
@@ -853,8 +857,9 @@ else
 
 			update_lastimage_info($album_id);
 
-			$message = $user->lang['IMAGES_DELETED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
+			$message = $user->lang['IMAGES_DELETED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>") .'<br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
 
+			meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?id=$album_id"));
 			trigger_error($message, E_USER_WARNING);
 		}
 	}
