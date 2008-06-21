@@ -186,8 +186,11 @@ $lang = array_merge($lang, array(
 ));
 
 $lang = array_merge($lang, array(
+	'COPY_PERMISSIONS'				=> 'Kopiere Berechtigungen von',
+
 	'DELETE_PERMISSIONS'			=> 'Berechtigungen löschen',
 	'DISP_FAKE_THUMB'				=> 'Thumbnail in der Album-Liste anzeigen',
+	'DONT_COPY_PERMISSIONS'			=> 'Berechtigungen nicht kopieren',
 
 	'FAKE_THUMB_SIZE'				=> 'Thumbnailgröße',
 	'FAKE_THUMB_SIZE_EXP'			=> 'Wenn du die volle Größe wählst, denke an die 16 Pixel für die schwarze Info-Zeile',

@@ -764,11 +764,13 @@ class acp_gallery
 		if(!$submit)
 		{
 			$parents_list = make_album_select(0, false, false, false, false);
+			$copy_list = make_album_select(0);
 			$template->assign_vars(array(
 				'S_CREATE_ALBUM'				=> true,
 				'ACP_GALLERY_TITLE'				=> $user->lang['GALLERY_ALBUMS_TITLE'],
 				'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_CREATE_ALBUM_EXPLAIN'],
 				'S_PARENT_OPTIONS'				=> $parents_list,
+				'S_COPY_OPTIONS'			=> $copy_list,
 				'S_ALBUM_ACTION'				=> $this->u_action . '&amp;action=create',
 				'S_DESC_BBCODE_CHECKED'		=> true,
 				'S_DESC_SMILIES_CHECKED'	=> true,
@@ -806,6 +808,7 @@ class acp_gallery
 				'album_edit_level'				=> request_var('album_edit_level', 0),
 				'album_delete_level'			=> request_var('album_delete_level', 0),
 				'album_approval'				=> request_var('album_approval', 0),
+				'album_last_username'			=> '',
 			);
 			generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], request_var('desc_parse_bbcode', false), request_var('desc_parse_urls', false), request_var('desc_parse_smilies', false));
 
@@ -854,6 +857,30 @@ class acp_gallery
 			$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
 			$album_data['album_id'] = $db->sql_nextid();
 			$album_id = $album_data['album_id'];
+			$copy_permissions = request_var('copy_permissions', 0);
+			if ($copy_permissions <> 0)
+			{
+				//delete the old permissions and thatn copy the new one's
+				$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . "
+					WHERE perm_album_id = $album_id";
+				$result = $db->sql_query($sql);
+				$sql = 'SELECT *
+						FROM ' . GALLERY_PERMISSIONS_TABLE . '
+						WHERE perm_album_id = ' . $copy_permissions;
+				$result = $db->sql_query($sql);
+				while($row = $db->sql_fetchrow($result))
+				{
+					$perm_data = array(
+						'perm_role_id'					=> $row['perm_role_id'],
+						'perm_album_id'					=> $album_id,
+						'perm_user_id'					=> $row['perm_user_id'],
+						'perm_group_id'					=> $row['perm_group_id'],
+						'perm_system'					=> $row['perm_system'],
+					);
+					$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $perm_data));
+				}
+				$db->sql_freeresult($result);
+			}
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 			$cache->destroy('_albums');
 
@@ -889,6 +916,7 @@ class acp_gallery
 			$album_data = $db->sql_fetchrow($result);
 			$album_desc_data = generate_text_for_edit($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_options']);
 			$parents_list = make_album_select($album_data['parent_id'], $album_id);
+			$copy_list = make_album_select(0, $album_id);
 
 			$template->assign_vars(array(
 				'S_EDIT_ALBUM'				=> true,
@@ -897,6 +925,7 @@ class acp_gallery
 
 				'S_ALBUM_ACTION' 			=> $this->u_action . '&amp;action=edit&amp;album_id=' . $album_id,
 				'S_PARENT_OPTIONS'			=> $parents_list,
+				'S_COPY_OPTIONS'			=> $copy_list,
 
 				'ALBUM_NAME' 				=> $album_data['album_name'],
 				'ALBUM_DESC'				=> $album_desc_data['text'],
@@ -1042,6 +1071,30 @@ class acp_gallery
 					SET ' . $db->sql_build_array('UPDATE', $album_data) . '
 					WHERE album_id  = ' . (int) $album_id;
 			$db->sql_query($sql);
+			$copy_permissions = request_var('copy_permissions', 0);
+			if ($copy_permissions <> 0)
+			{
+				//delete the old permissions and thatn copy the new one's
+				$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . "
+					WHERE perm_album_id = $album_id";
+				$result = $db->sql_query($sql);
+				$sql = 'SELECT *
+						FROM ' . GALLERY_PERMISSIONS_TABLE . '
+						WHERE perm_album_id = ' . $copy_permissions;
+				$result = $db->sql_query($sql);
+				while($row = $db->sql_fetchrow($result))
+				{
+					$perm_data = array(
+						'perm_role_id'					=> $row['perm_role_id'],
+						'perm_album_id'					=> $album_id,
+						'perm_user_id'					=> $row['perm_user_id'],
+						'perm_group_id'					=> $row['perm_group_id'],
+						'perm_system'					=> $row['perm_system'],
+					);
+					$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $perm_data));
+				}
+				$db->sql_freeresult($result);
+			}
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 			$cache->destroy('_albums');
 
@@ -1093,6 +1146,7 @@ class acp_gallery
 					$albumrow[] = $row;
 				}
 			}
+			$db->sql_freeresult($result);
 
 			if(!$album_found)
 			{

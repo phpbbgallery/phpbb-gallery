@@ -135,6 +135,7 @@ $lang = array_merge($lang, array(
 	'MOVE_TO_ALBUM'							=> 'Ins Album verschieben',
 
 	'NEW_COMMENT'							=> 'Neuer Kommentar',
+	'NO_ALBUMS'								=> 'In dieser Galerie gibt es keine Alben',
 	'NO_COMMENTS'							=> 'Noch keine Kommentare',
 	'NO_IMAGE_SPECIFIED'					=> 'Kein Bild angegeben',
 	'NO_IMAGES'								=> 'Keine Bilder',
