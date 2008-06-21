@@ -543,9 +543,9 @@ class acp_gallery
 			'SORT_IMAGE_TITLE' 					=> ($new['sort_method'] == 'image_name') ? 'selected="selected"' : '',
 			'SORT_USERNAME' 					=> ($new['sort_method'] == 'username') ? 'selected="selected"' : '',
 			'SORT_VIEW' 						=> ($new['sort_method'] == 'image_view_count') ? 'selected="selected"' : '',
-			'SORT_RATING' 						=> ($new['sort_method'] == 'rating') ? 'selected="selected"' : '',
-			'SORT_COMMENTS' 					=> ($new['sort_method'] == 'comments') ? 'selected="selected"' : '',
-			'SORT_NEW_COMMENT' 					=> ($new['sort_method'] == 'new_comment') ? 'selected="selected"' : '',
+			'SORT_RATING' 						=> ($new['sort_method'] == 'image_rate_avg') ? 'selected="selected"' : '',
+			'SORT_COMMENTS' 					=> ($new['sort_method'] == 'image_comments') ? 'selected="selected"' : '',
+			'SORT_NEW_COMMENT' 					=> ($new['sort_method'] == 'image_last_comment') ? 'selected="selected"' : '',
 			'SORT_ASC' 							=> ($new['sort_order'] == 'ASC') ? 'selected="selected"' : '',
 			'SORT_DESC' 						=> ($new['sort_order'] == 'DESC') ? 'selected="selected"' : '',
 

@@ -26,7 +26,12 @@ CREATE TABLE [phpbb_gallery_images] (
 	[image_album_id] [int] DEFAULT (0) NOT NULL ,
 	[image_view_count] [int] DEFAULT (0) NOT NULL ,
 	[image_lock] [int] DEFAULT (0) NOT NULL ,
-	[image_approval] [int] DEFAULT (0) NOT NULL 
+	[image_approval] [int] DEFAULT (0) NOT NULL ,
+	[image_rates] [int] DEFAULT (0) NOT NULL ,
+	[image_rate_points] [int] DEFAULT (0) NOT NULL ,
+	[image_rate_avg] [int] DEFAULT (0) NOT NULL ,
+	[image_comments] [int] DEFAULT (0) NOT NULL ,
+	[image_last_comment] [int] DEFAULT (0) NOT NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 

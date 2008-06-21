@@ -186,17 +186,12 @@ if ($mode == '')
 		if (($user->data['user_type'] <> USER_FOUNDER) && ($album_data['album_approval'] == ALBUM_ADMIN))
 		{
 			// because he went through my Permission Checking above so he must be at least a Moderator
-			$pic_approval_sql = ' AND p.image_approval = 1';
+			$pic_approval_sql = ' AND image_approval = 1';
 		}
 
-		$sql = 'SELECT i.*, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(c.comment_id) AS comments, MAX(c.comment_id) AS new_comment
-			FROM ' . GALLERY_IMAGES_TABLE . ' AS i
-			LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
-				ON i.image_id = r.rate_image_id
-			LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
-				ON i.image_id = c.comment_image_id
-			WHERE i.image_album_id = ' . $album_id . ' ' . $pic_approval_sql . '
-			GROUP BY i.image_id
+		$sql = 'SELECT *
+			FROM ' . GALLERY_IMAGES_TABLE . '
+			WHERE image_album_id = ' . $album_id . ' ' . $pic_approval_sql . '
 			ORDER BY ' . $sort_method . ' ' . $sort_order . '
 			LIMIT ' . $limit_sql;
 		$result = $db->sql_query($sql);
@@ -217,8 +212,8 @@ if ($mode == '')
 				'IMAGE_NAME'	=> $picrow[$i]['image_name'],
 				'POSTER'		=> get_username_string('full', $picrow[$i]['image_user_id'], ($picrow[$i]['image_user_id'] <> ANONYMOUS) ? $picrow[$i]['image_username'] : $user->lang['GUEST'], $picrow[$i]['image_user_colour']),
 				'TIME'			=> $user->format_date($picrow[$i]['image_time']),
-				'RATING'		=> ($picrow[$i]['rating'] == 0) ? $user->lang['NOT_RATED'] : round($picrow[$i]['rating'], 2),
-				'COMMENTS'		=> $picrow[$i]['comments'],
+				'RATING'		=> ($picrow[$i]['image_rates'] == 0) ? $user->lang['NOT_RATED'] : $picrow[$i]['image_rate_avg'] / 100,
+				'COMMENTS'		=> $picrow[$i]['image_comments'],
 				'LOCK'			=> ($picrow[$i]['image_lock'] == 0) ? '' : $user->lang['LOCKED'],
 				'APPROVAL'		=> ($picrow[$i]['image_approval'] == 0) ? $user->lang['NOT_APPROVED'] : $user->lang['APPROVED'],
 			));
@@ -240,18 +235,18 @@ if ($mode == '')
 	
 	if ($album_config['rate'])
 	{
-		$sort_rating_option  = '<option value="rating" ';
-		$sort_rating_option .= ($sort_method == 'rating') ? 'selected="selected"' : '';
+		$sort_rating_option  = '<option value="image_rate_avg" ';
+		$sort_rating_option .= ($sort_method == 'image_rate_avg') ? 'selected="selected"' : '';
 		$sort_rating_option .= '>' . $user->lang['RATING'] . '</option>';
 	}
 
 	if ($album_config['comment'])
 	{
-		$sort_comments_option  = '<option value="comments" ';
-		$sort_comments_option .= ($sort_method == 'comments') ? 'selected="selected"' : '';
+		$sort_comments_option  = '<option value="image_comments" ';
+		$sort_comments_option .= ($sort_method == 'image_comments') ? 'selected="selected"' : '';
 		$sort_comments_option .= '>' . $user->lang['COMMENTS'] . '</option>';
-		$sort_new_comment_option  = '<option value="new_comment" ';
-		$sort_new_comment_option .= ($sort_method == 'new_comment') ? 'selected="selected"' : '';
+		$sort_new_comment_option  = '<option value="image_last_comment" ';
+		$sort_new_comment_option .= ($sort_method == 'image_last_comment') ? 'selected="selected"' : '';
 		$sort_new_comment_option .= '>' . $user->lang['NEW_COMMENT'] . '</option>';
 	}
 

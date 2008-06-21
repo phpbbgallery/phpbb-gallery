@@ -153,20 +153,15 @@ if ($album_id <> 0)
 	if ($total_pics > 0)
 	{
 		$limit_sql = ($start == 0) ? $pics_per_page : $start .','. $pics_per_page;
-		$pic_approval_sql = ' AND i.image_approval = 1';
+		$pic_approval_sql = ' AND image_approval = 1';
 		if (($album_data['album_approval'] <> ALBUM_USER) && (($user->data['user_type'] == USER_FOUNDER) || (($album_user_access['moderator'] == 1) && ($album_data['album_approval'] == ALBUM_MOD))))
 		{
 				$pic_approval_sql = '';
 		}
 
-		$sql = 'SELECT i.*, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
-			FROM ' . GALLERY_IMAGES_TABLE . ' AS i
-			LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
-				ON i.image_id = r.rate_image_id
-			LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
-				ON i.image_id = c.comment_image_id
-			WHERE i.image_album_id = ' . $album_id . $pic_approval_sql . ' 
-			GROUP BY i.image_id
+		$sql = 'SELECT *
+			FROM ' . GALLERY_IMAGES_TABLE . '
+			WHERE image_album_id = ' . $album_id . $pic_approval_sql . ' 
 			ORDER BY ' . $sort_method . ' ' . $sort_order . ' 
 			LIMIT ' . $limit_sql;
 		$result = $db->sql_query($sql);
@@ -194,13 +189,13 @@ if ($album_id <> 0)
 					continue;
 				}
 
-				if(!$picrow[$j]['rating'])
+				if(!$picrow[$j]['image_rates'])
 				{
 					$picrow[$j]['rating'] = $user->lang['NOT_RATED'];
 				}
 				else
 				{
-					$picrow[$j]['rating'] = round($picrow[$j]['rating'], 2);
+					$picrow[$j]['rating'] = $picrow[$j]['image_rate_avg'] / 100;
 				}
 
 				$approval_link = false;
@@ -234,7 +229,7 @@ if ($album_id <> 0)
 					'TIME'		=> $user->format_date($picrow[$j]['image_time']),
 					'VIEW'		=> $picrow[$j]['image_view_count'],
 					'RATING'	=> (($album_config['rate'] == 1) && ($album_access_array[$album_id]['i_rate'] == 1)) ? ( '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . "&amp;image_id=" . $picrow[$j]['image_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $picrow[$j]['rating'] . '<br />') : '',
-					'COMMENTS'	=> (($album_config['comment'] == 1) && ($album_access_array[$album_id]['c_post'] == 1)) ? ( '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . "&amp;image_id=" . $picrow[$j]['image_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $picrow[$j]['comments'] . '<br />') : '',
+					'COMMENTS'	=> (($album_config['comment'] == 1) && ($album_access_array[$album_id]['c_post'] == 1)) ? ( '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . "&amp;image_id=" . $picrow[$j]['image_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $picrow[$j]['image_comments'] . '<br />') : '',
 
 					'EDIT'		=> $allow_edit ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['EDIT_IMAGE'] . '</a>' : '',
 					'DELETE'	=> $allow_delete ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=delete&amp;album_id=$album_id&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['DELETE_IMAGE'] . '</a>' : '',
@@ -262,18 +257,18 @@ if ($album_id <> 0)
 	$sort_rating_option = $sort_new_comment_option = $sort_comments_option = '';
 	if ($album_config['rate'] == 1)
 	{
-		$sort_rating_option = '<option value="rating" ';
-		$sort_rating_option .= ($sort_method == 'rating') ? 'selected="selected"' : '';
+		$sort_rating_option = '<option value="image_rate_avg" ';
+		$sort_rating_option .= ($sort_method == 'image_rate_avg') ? 'selected="selected"' : '';
 		$sort_rating_option .= '>' . $user->lang['RATING'] . '</option>';
 	}
 	if ($album_config['comment'] == 1)
 	{
-		$sort_comments_option = '<option value="comments" ';
-		$sort_comments_option .= ($sort_method == 'comments') ? 'selected="selected"' : '';
+		$sort_comments_option = '<option value="image_comments" ';
+		$sort_comments_option .= ($sort_method == 'image_comments') ? 'selected="selected"' : '';
 		$sort_comments_option .= '>' . $user->lang['COMMENTS'] . '</option>';
 
-		$sort_new_comment_option = '<option value="new_comment" ';
-		$sort_new_comment_option .= ($sort_method == 'new_comment') ? 'selected="selected"' : '';
+		$sort_new_comment_option = '<option value="image_last_comment" ';
+		$sort_new_comment_option .= ($sort_method == 'image_last_comment') ? 'selected="selected"' : '';
 		$sort_new_comment_option .= '>' . $user->lang['NEW_COMMENT'] . '</option>';
 	}
 /*}*/

@@ -16,7 +16,7 @@
 
 @set_time_limit(0);
 
-$schema_path = './schemas/phpbb_gallery_albums/';
+$schema_path = './schemas/phpbb_gallery_images/';
 
 if (!is_writable($schema_path))
 {
@@ -801,7 +801,7 @@ foreach ($supported_dbms as $dbms)
 function get_schema_struct()
 {
 	$schema_data = array();
-//*
+/*
 	$schema_data['phpbb_gallery_albums'] = array(
 		'COLUMNS'		=> array(
 			'album_id'				=> array('UINT', NULL, 'auto_increment'),
@@ -885,6 +885,11 @@ function get_schema_struct()
 			'image_view_count'		=> array('UINT:11', 0),
 			'image_lock'			=> array('UINT:3', 0),
 			'image_approval'		=> array('UINT:3', 0),
+			'image_rates'			=> array('UINT', 0),
+			'image_rate_points'		=> array('UINT', 0),
+			'image_rate_avg'		=> array('UINT', 0),
+			'image_comments'		=> array('UINT', 0),
+			'image_last_comment'	=> array('UINT', 0),
 		),
 		'PRIMARY_KEY'				=> 'image_id',
 		'KEYS'		=> array(

@@ -153,6 +153,21 @@ if (isset($_POST['rate']))
 			'rate_point'	=> $rate_point,
 		);
 		$db->sql_query('INSERT INTO ' . GALLERY_RATES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+		$sql = 'SELECT rate_image_id, COUNT(rate_user_ip) image_rates, AVG(rate_point) image_rate_avg, SUM(rate_point) image_rate_points
+			FROM ' . GALLERY_RATES_TABLE . "
+			WHERE rate_image_id = $image_id
+			GROUP BY rate_image_id";
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+				SET image_rates = ' . $row['image_rates'] . ',
+					image_rate_points = ' . $row['image_rate_points'] . ',
+					image_rate_avg = ' . round($row['image_rate_avg'], 2) * 100 . '
+				WHERE image_id = ' . $row['rate_image_id'];
+			$db->sql_query($sql);
+		}
+		$db->sql_freeresult($result);
 
 		// --------------------------------
 		// Complete... now send a message to user
@@ -178,19 +193,14 @@ $previous_id = $next_id = $last_id = 0;
 $do_next = false;
 $sort_method = request_var('sort_method', $album_config['sort_method']);
 $sort_order = request_var('sort_order', $album_config['sort_order']);
-$image_approval_sql = ' AND i.image_approval = 1';
+$image_approval_sql = ' AND image_approval = 1';
 if (($album_data['album_approval'] <> ALBUM_USER) && (($user->data['user_type'] == USER_FOUNDER) || (($album_access_array[$album_id]['a_moderate'] == 1) && ($album_data['album_approval'] == ALBUM_MOD))))
 {
 	$image_approval_sql = '';
 }
-$sql = 'SELECT i.image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, MAX(c.comment_id) as new_comment
-	FROM ' . GALLERY_IMAGES_TABLE . ' AS i
-	LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
-		ON i.image_id = r.rate_image_id
-	LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
-		ON i.image_id = c.comment_image_id
-	WHERE i.image_album_id = ' . $album_id . $image_approval_sql . '
-	GROUP BY i.image_id
+$sql = 'SELECT *
+	FROM ' . GALLERY_IMAGES_TABLE . '
+	WHERE image_album_id = ' . $album_id . $image_approval_sql . '
 	ORDER BY ' . $sort_method . ' ' . $sort_order;
 $result = $db->sql_query($sql);
 //there should also be a way to go with a limit here, but we'll see
@@ -232,7 +242,7 @@ if ($album_config['rate'])
 {
 	$template->assign_vars(array(
 		'RATING'		=> $user->lang['RATING'],
-		'IMAGE_RATING'	=> ($image_data['rating'] <> 0) ? round($image_data['rating'], 2) : $user->lang['NOT_RATED'],
+		'IMAGE_RATING'	=> ($image_data['image_rates'] <> 0) ? $image_data['image_rate_avg'] / 100 : $user->lang['NOT_RATED'],
 	));
 	
 	if ($album_data['album_rate_level'] < 1 || $album_access_array[$album_id]['i_rate'] == 1)
@@ -281,7 +291,7 @@ if ($album_config['comment'])
 	$user->add_lang('posting');
 	$template->assign_vars(array(
 		'COMMENTS'		=> true,
-		'IMAGE_COMMENTS'	=> $image_data['comments'],
+		'IMAGE_COMMENTS'	=> $image_data['image_comments'],
 	));
 	
 	if ($album_data['album_comment_level'] < 1 || $album_access_array[$album_id]['c_post'])
@@ -317,7 +327,7 @@ if ($album_config['comment'])
 		));
 	}
 	
-	$total_comments = $image_data['comments'];
+	$total_comments = $image_data['image_comments'];
 	$comments_per_page = 10;
 	
 	$start = request_var('start', 0);

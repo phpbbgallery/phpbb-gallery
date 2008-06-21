@@ -921,17 +921,9 @@ function get_image_info($image_id)
 {
 	global $db, $user;
 
-	$sql = 'SELECT i.*, r.rate_image_id, AVG(r.rate_point) AS rating, COUNT(DISTINCT c.comment_id) AS comments, r2.rate_point AS your_rate
-		FROM ' . GALLERY_IMAGES_TABLE . ' AS i
-		LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
-			ON i.image_id = r.rate_image_id
-		LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r2
-			ON (i.image_id = r2.rate_image_id
-				AND r2.rate_user_id = ' . $user->data['user_id'] . ')
-		LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
-			ON i.image_id = c.comment_image_id
-		WHERE i.image_id = ' . $image_id . '
-		GROUP BY i.image_id';
+	$sql = 'SELECT *
+		FROM ' . GALLERY_IMAGES_TABLE . '
+		WHERE image_id = ' . $image_id;
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
@@ -952,7 +944,16 @@ function update_lastimage_info($album_id)
 	global $db, $user;
 
 	//update album-information
-	$images_real = $images = 0;
+	$images_real = $images = $album_user_id = 0;
+	$sql = 'SELECT album_user_id
+		FROM ' . GALLERY_ALBUMS_TABLE . "
+		WHERE album_id = $album_id";
+	$result = $db->sql_query($sql);
+	if ($row = $db->sql_fetchrow($result))
+	{
+		$album_user_id = $row['album_user_id'];
+	}
+	$db->sql_freeresult($result);
 	$sql = 'SELECT COUNT(image_id) images
 		FROM ' . GALLERY_IMAGES_TABLE . "
 		WHERE image_album_id = $album_id
@@ -962,6 +963,7 @@ function update_lastimage_info($album_id)
 	{
 		$images = $row['images'];
 	}
+	$db->sql_freeresult($result);
 	$sql = 'SELECT COUNT(image_id) images_real
 		FROM ' . GALLERY_IMAGES_TABLE . "
 		WHERE image_album_id = $album_id";
@@ -970,6 +972,7 @@ function update_lastimage_info($album_id)
 	{
 		$images_real = $row['images_real'];
 	}
+	$db->sql_freeresult($result);
 	$sql = 'SELECT *
 		FROM ' . GALLERY_IMAGES_TABLE . "
 		WHERE image_album_id = $album_id
@@ -1002,7 +1005,7 @@ function update_lastimage_info($album_id)
 			'album_last_user_colour'	=> '',
 			'album_last_user_id'		=> 0,
 		);
-		if ($album_data['album_user_id'])
+		if ($album_user_id)
 		{
 			unset($sql_ary['album_last_user_colour']);
 		}

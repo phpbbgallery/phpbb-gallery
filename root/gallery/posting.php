@@ -786,6 +786,11 @@ switch ($mode)
 					if (!$error)
 					{
 						$db->sql_query('INSERT INTO ' . GALLERY_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+						$newest_comment = $db->sql_nextid();
+						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " SET image_comments = image_comments + 1,
+							image_last_comment = $newest_comment
+							WHERE " . $db->sql_in_set('image_id', $image_id);
+						$db->sql_query($sql);
 						$message = $user->lang['COMMENT_STORED'] . '<br />';
 					}
 				}
@@ -876,6 +881,19 @@ switch ($mode)
 				if (confirm_box(true))
 				{
 					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . " WHERE comment_id = $comment_id;";
+					$db->sql_query($sql);
+					$sql = 'SELECT comment_id
+						FROM ' . GALLERY_COMMENTS_TABLE . "
+						WHERE comment_image_id = $image_id
+						ORDER BY comment_id
+						LIMIT 1";
+					$result = $db->sql_query($sql);
+					$row = $db->sql_fetchrow($result);
+					$last_comment_id = (isset($row['comment_id']))? $row['comment_id'] : 0;
+					$db->sql_freeresult($result);
+					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " SET image_comments = image_comments - 1,
+						image_last_comment = $last_comment_id
+						WHERE " . $db->sql_in_set('image_id', $image_id);
 					$db->sql_query($sql);
 					$submit = true;
 					$message = $user->lang['DELETED_COMMENT'] . '<br />';

@@ -46,28 +46,6 @@ function recent_gallery_images($rows, $columns, &$display)
 	{
 		$limit_sql = $rows * $columns;
 
-		if ($display['ratings'])
-		{
-			$rate_sql1 = ', AVG(r.rate_point) AS rating';
-			$rate_sql2 = '			LEFT JOIN ' . GALLERY_RATES_TABLE . ' AS r
-				ON i.image_id = r.rate_image_id';
-		}
-		else
-		{
-			$rate_sql1 = '';
-			$rate_sql2 = '';
-		}
-		if ($display['comments'])
-		{
-			$comment_sql1 = ', COUNT(DISTINCT c.comment_id) AS comment';
-			$comment_sql2 = '			LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' AS c
-				ON i.image_id = c.comment_image_id';
-		}
-		else
-		{
-			$comment_sql1 = '';
-			$comment_sql2 = '';
-		}
 		if ($display['album'])
 		{
 			$album_sql1 = ', a.album_name, a.album_id';
@@ -80,10 +58,8 @@ function recent_gallery_images($rows, $columns, &$display)
 			$album_sql2 = '';
 		}
 
-		$sql = "SELECT i.* $rate_sql1 $comment_sql1 $album_sql1
+		$sql = "SELECT i.* $album_sql1
 			FROM " . GALLERY_IMAGES_TABLE . " AS i
-			$rate_sql2
-			$comment_sql2
 			$album_sql2
 			WHERE i.image_album_id IN ($allowed_albums)
 				AND i.image_approval = 1
@@ -120,13 +96,13 @@ function recent_gallery_images($rows, $columns, &$display)
 					'DESC'			=> $message_parser->message,
 				));
 
-				if ($display['ratings'] && !$picrow[$j]['rating'])
+				if ($display['ratings'] && !$picrow[$j]['image_rates'])
 				{
 					$picrow[$j]['rating'] = $user->lang['NOT_RATED'];
 				}
 				else if ($display['ratings'])
 				{
-					$picrow[$j]['rating'] = round($picrow[$j]['rating'], 2);
+					$picrow[$j]['rating'] = $picrow[$j]['image_rate_avg'] / 100;
 				}
 
 				$template->assign_block_vars('picrow.pic_detail', array(
@@ -135,8 +111,8 @@ function recent_gallery_images($rows, $columns, &$display)
 					'TIME'		=> ($display['time']) ? ($user->format_date($picrow[$j]['image_time'])) : '',
 					'VIEWS'		=> ($display['views']) ? $picrow[$j]['image_view_count'] : '',
 					'RATINGS'	=> ($display['ratings']) ? (($album_config['rate'] == 1) ? $picrow[$j]['rating'] : 0) : '',
-					'L_COMMENT'	=> ($display['comments']) ? (($picrow[$j]['comment'] == 1) ? $user->lang['COMMENT'] : $user->lang['COMMENTS']) : '',
-					'COMMENTS'	=> ($display['comments']) ? (($album_config['comment'] == 1) ? $picrow[$j]['comment'] : 0) : '',
+					'L_COMMENT'	=> ($display['comments']) ? (($picrow[$j]['image_comments'] == 1) ? $user->lang['COMMENT'] : $user->lang['COMMENTS']) : '',
+					'COMMENTS'	=> ($display['comments']) ? (($album_config['comment'] == 1) ? $picrow[$j]['image_comments'] : 0) : '',
 					'ALBUM'		=> ($display['album']) ? $picrow[$j]['album_name'] : '',
 					'U_ALBUM'	=> ($display['album']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $picrow[$j]['album_id']) : '',
 				));

@@ -876,6 +876,52 @@ switch ($mode)
 					$db->sql_freeresult($result);
 					gallery_config_value('personal_counter', $total_galleries);
 
+					//less sqls update the images_table
+					gallery_column(GALLERY_IMAGES_TABLE, 'image_rates', array('UINT', 0));
+					gallery_column(GALLERY_IMAGES_TABLE, 'image_rate_points', array('UINT', 0));
+					gallery_column(GALLERY_IMAGES_TABLE, 'image_rate_avg', array('UINT', 0));
+					$sql = 'SELECT rate_image_id, COUNT(rate_user_ip) image_rates, AVG(rate_point) image_rate_avg, SUM(rate_point) image_rate_points
+						FROM ' . GALLERY_RATES_TABLE . '
+						GROUP BY rate_image_id';
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+							SET image_rates = ' . $row['image_rates'] . ',
+								image_rate_points = ' . $row['image_rate_points'] . ',
+								image_rate_avg = ' . round($row['image_rate_avg'], 2) * 100 . '
+							WHERE image_id = ' . $row['rate_image_id'];
+						$db->sql_query($sql);
+					}
+					$db->sql_freeresult($result);
+					gallery_column(GALLERY_IMAGES_TABLE, 'image_comments', array('UINT', 0));
+					gallery_column(GALLERY_IMAGES_TABLE, 'image_last_comment', array('UINT', 0));
+					$sql = 'SELECT COUNT(comment_id) comments, MAX(comment_id) image_last_comment, comment_image_id
+						FROM ' . GALLERY_COMMENTS_TABLE . "
+						GROUP BY comment_image_id";
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_comments = ' . $row['comments'] . ',
+							image_last_comment = ' . $row['image_last_comment'] . '
+							WHERE ' . $db->sql_in_set('image_id', $row['comment_image_id']);
+						$db->sql_query($sql);
+					}
+					$db->sql_freeresult($result);
+					//chaneg the sort_method if it is sepcial
+					if ($album_config['sort_method'] == 'rating')
+					{
+						gallery_config_value('sort_method', 'image_rate_avg', true);
+					}
+					else if ($album_config['sort_method'] == 'comments')
+					{
+						gallery_config_value('sort_method', 'image_comments', true);
+					}
+					else if ($album_config['sort_method'] == 'new_comment')
+					{
+						gallery_config_value('sort_method', 'image_last_comment', true);
+					}
+
 				case '0.3.2':
 					//and drop the old column
 					//delete_gallery_column(GROUPS_TABLE, 'personal_subalbums');
@@ -885,6 +931,7 @@ switch ($mode)
 
 
 				case 'svn':
+					$album_config = load_album_config();
 
 				break;
 			}
