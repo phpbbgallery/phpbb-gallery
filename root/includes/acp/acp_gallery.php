@@ -164,7 +164,7 @@ class acp_gallery
 				))
 				{
 					$template->assign_block_vars('imagerow', array(
-						'FILE_NAME'				=> $file,
+						'FILE_NAME'				=> utf8_encode($file),
 					));
 				}
 			}
@@ -198,7 +198,7 @@ class acp_gallery
 
 			// There was no directory specified
 			// There was no album selected
-			$images = request_var('images', array(''));
+			$images = request_var('images', array(''), true);
 			$album_id = request_var('target', 0);
 			$user_id = request_var('user_id', 0);
 			if(!$album_id)
@@ -235,7 +235,7 @@ class acp_gallery
 			
 			foreach ($results as $image)
 			{
-				$image_path = $directory . $image;
+				$image_path = $directory . utf8_decode($image);
 				//$imp_debug .= $image_path . '<br />-  ';
 
 				// Determine the file type
