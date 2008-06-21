@@ -34,20 +34,6 @@ CREATE TABLE [phpbb_gallery_albums] (
 	[album_last_user_id] [int] DEFAULT (0) NOT NULL ,
 	[display_on_index] [int] DEFAULT (1) NOT NULL ,
 	[display_subalbum_list] [int] DEFAULT (1) NOT NULL ,
-	[album_order] [int] DEFAULT (0) NOT NULL ,
-	[album_view_level] [int] DEFAULT (1) NOT NULL ,
-	[album_upload_level] [int] DEFAULT (0) NOT NULL ,
-	[album_rate_level] [int] DEFAULT (0) NOT NULL ,
-	[album_comment_level] [int] DEFAULT (0) NOT NULL ,
-	[album_edit_level] [int] DEFAULT (0) NOT NULL ,
-	[album_delete_level] [int] DEFAULT (2) NOT NULL ,
-	[album_view_groups] [varchar] (255) DEFAULT ('') NOT NULL ,
-	[album_upload_groups] [varchar] (255) DEFAULT ('') NOT NULL ,
-	[album_rate_groups] [varchar] (255) DEFAULT ('') NOT NULL ,
-	[album_comment_groups] [varchar] (255) DEFAULT ('') NOT NULL ,
-	[album_edit_groups] [varchar] (255) DEFAULT ('') NOT NULL ,
-	[album_delete_groups] [varchar] (255) DEFAULT ('') NOT NULL ,
-	[album_moderator_groups] [varchar] (255) DEFAULT ('') NOT NULL ,
 	[album_approval] [int] DEFAULT (0) NOT NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO

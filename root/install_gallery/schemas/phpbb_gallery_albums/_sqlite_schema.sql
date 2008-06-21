@@ -29,20 +29,6 @@ CREATE TABLE phpbb_gallery_albums (
 	album_last_user_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	display_on_index INTEGER UNSIGNED NOT NULL DEFAULT '1',
 	display_subalbum_list INTEGER UNSIGNED NOT NULL DEFAULT '1',
-	album_order INTEGER UNSIGNED NOT NULL DEFAULT '0',
-	album_view_level INTEGER UNSIGNED NOT NULL DEFAULT '1',
-	album_upload_level INTEGER UNSIGNED NOT NULL DEFAULT '0',
-	album_rate_level INTEGER UNSIGNED NOT NULL DEFAULT '0',
-	album_comment_level INTEGER UNSIGNED NOT NULL DEFAULT '0',
-	album_edit_level INTEGER UNSIGNED NOT NULL DEFAULT '0',
-	album_delete_level INTEGER UNSIGNED NOT NULL DEFAULT '2',
-	album_view_groups varchar(255) NOT NULL DEFAULT '',
-	album_upload_groups varchar(255) NOT NULL DEFAULT '',
-	album_rate_groups varchar(255) NOT NULL DEFAULT '',
-	album_comment_groups varchar(255) NOT NULL DEFAULT '',
-	album_edit_groups varchar(255) NOT NULL DEFAULT '',
-	album_delete_groups varchar(255) NOT NULL DEFAULT '',
-	album_moderator_groups varchar(255) NOT NULL DEFAULT '',
 	album_approval INTEGER UNSIGNED NOT NULL DEFAULT '0'
 );
 

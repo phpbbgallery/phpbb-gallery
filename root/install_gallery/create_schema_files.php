@@ -809,7 +809,6 @@ function get_schema_struct()
 			'left_id'				=> array('UINT', 1),
 			'right_id'				=> array('UINT', 2),
 			'album_parents'			=> array('MTEXT_UNI', ''),
-
 			'album_type'			=> array('UINT:3', 1),
 			'album_name'			=> array('VCHAR:255', ''),
 			'album_desc'			=> array('MTEXT_UNI', ''),
@@ -817,7 +816,6 @@ function get_schema_struct()
 			'album_desc_uid'		=> array('VCHAR:8', ''),
 			'album_desc_bitfield'	=> array('VCHAR:255', ''),
 			'album_user_id'			=> array('UINT', 0),
-
 			'album_images'				=> array('UINT', 0),
 			'album_images_real'			=> array('UINT', 0),
 			'album_last_image_id'		=> array('UINT', 0),
@@ -829,22 +827,6 @@ function get_schema_struct()
 			'album_last_user_id'		=> array('UINT', 0),
 			'display_on_index'			=> array('UINT:1', 1),
 			'display_subalbum_list'		=> array('UINT:1', 1),
-
-			'album_order'			=> array('UINT', 0),
-			'album_view_level'		=> array('UINT:3', 1),
-			'album_upload_level'	=> array('UINT:3', 0),
-			'album_rate_level'		=> array('UINT:3', 0),
-			'album_comment_level'	=> array('UINT:3', 0),
-			'album_edit_level'		=> array('UINT:3', 0),
-			'album_delete_level'	=> array('UINT:3', 2),
-
-			'album_view_groups'			=> array('VCHAR:255', ''),
-			'album_upload_groups'		=> array('VCHAR:255', ''),
-			'album_rate_groups'			=> array('VCHAR:255', ''),
-			'album_comment_groups'		=> array('VCHAR:255', ''),
-			'album_edit_groups'			=> array('VCHAR:255', ''),
-			'album_delete_groups'		=> array('VCHAR:255', ''),
-			'album_moderator_groups'	=> array('VCHAR:255', ''),
 			'album_approval'			=> array('UINT:3', 0),
 		),
 		'PRIMARY_KEY'	=> 'album_id',
