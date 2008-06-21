@@ -399,7 +399,7 @@ class acp_gallery
 					'image_filename' 		=> $image_filename,
 					'image_thumbnail'		=> $image_thumbnail,
 					'image_name'			=> (request_var('filename', '') == 'filename') ? $image : str_replace('{NUM}', $counter + 1, request_var('image_name', '', true)),
-					'image_desc'			=> $user->lang['NO_DESC'],
+					'image_desc'			=> '',
 					'image_desc_uid'		=> '',
 					'image_desc_bitfield'	=> '',
 					'image_user_id'			=> $image_user_id,
@@ -410,6 +410,10 @@ class acp_gallery
 					'image_album_id'		=> $album_id,
 					'image_approval'		=> 1,
 				);
+				if ($sql_ary['image_name'] == '')
+				{
+					$sql_ary['image_name'] = $image;
+				}
 
 				$db->sql_query('INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 				$counter++;
