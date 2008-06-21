@@ -199,7 +199,7 @@ switch ($mode)
 						trigger_error('NOT_AUTHORISED');
 					}
 				}
-				if ($album_access_array[$album_id]['c_edit'] || (($comment_data['comment_user_id'] != $user->data['user_id']) && ($user->data['user_type'] != USER_FOUNDER)) || !$user->data['is_registered'])
+				else if ((($comment_data['comment_user_id'] != $user->data['user_id']) && ($user->data['user_type'] != USER_FOUNDER)) || !$user->data['is_registered'])
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
@@ -219,7 +219,7 @@ switch ($mode)
 						trigger_error('NOT_AUTHORISED');
 					}
 				}
-				if ($album_access_array[$album_id]['c_delete'] != 1 || (($comment_data['comment_user_id'] != $user->data['user_id']) && ($user->data['user_type'] != USER_FOUNDER)) || !$user->data['is_registered'])
+				else if ((($comment_data['comment_user_id'] != $user->data['user_id']) && ($user->data['user_type'] != USER_FOUNDER)) || !$user->data['is_registered'])
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
@@ -740,7 +740,7 @@ switch ($mode)
 						trigger_error('FORM_INVALID');
 					}
 					$comment = request_var('message', '', true);
-					$comment_text = substr($comment, 0, $album_config['desc_length']);
+					$comment_text = $comment;
 					$comment_username = request_var('username', '', true);
 					if ($user->data['user_id'] == ANONYMOUS)
 					{
@@ -764,6 +764,11 @@ switch ($mode)
 					{
 						$submit = false;
 						$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_COMMENT'];
+					}
+					if (utf8_strlen($comment_text) > $album_config['desc_length'])
+					{
+						$submit = false;
+						$error .= (($error) ? '<br />' : '') . $user->lang['COMMENT_TOO_LONG'];
 					}
 
 					$message_parser				= new parse_message();
@@ -811,7 +816,7 @@ switch ($mode)
 						trigger_error('FORM_INVALID');
 					}
 					$comment = request_var('message', '', true);
-					$comment_text = substr($comment, 0, $album_config['desc_length']);
+					$comment_text = $comment;
 					$comment_username = request_var('username', '');
 					if ($comment_data['comment_user_id'] == ANONYMOUS)
 					{
@@ -838,6 +843,11 @@ switch ($mode)
 					{
 						$submit = false;
 						$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_COMMENT'];
+					}
+					if (utf8_strlen($comment_text) > $album_config['desc_length'])
+					{
+						$submit = false;
+						$error .= (($error) ? '<br />' : '') . $user->lang['COMMENT_TOO_LONG'];
 					}
 
 					$message_parser				= new parse_message();
