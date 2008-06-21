@@ -445,6 +445,10 @@ else
 				SET image_album_id = ' . intval($target) . '
 				WHERE image_id IN (' . $pic_id_sql . ')';
 			$result = $db->sql_query($sql);
+
+			update_lastimage_info($target);
+			update_lastimage_info($album_id);
+
 			$message = $user->lang['IMAGES_MOVED_SUCCESSFULLY'] .'<br /><br />'
 				. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>")
 				. '<br />' . sprintf($user->lang['CLICK_RETURN_ALBUM_TARGET'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$target") . "\">", "</a>")
@@ -637,6 +641,8 @@ else
 			WHERE image_id IN (' . $pic_id_sql . ')';
 		$result = $db->sql_query($sql);
 
+		update_lastimage_info($album_id);
+
 		$message = $user->lang['IMAGES_APPROVED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
 		trigger_error($message, E_USER_WARNING);
 	}
@@ -697,6 +703,8 @@ else
 			SET image_approval = 0
 			WHERE image_id IN (' . $pic_id_sql . ')';
 		$result = $db->sql_query($sql);
+
+		update_lastimage_info($album_id);
 
 		$message = $user->lang['IMAGES_UNAPPROVED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
 		trigger_error($message, E_USER_WARNING);
