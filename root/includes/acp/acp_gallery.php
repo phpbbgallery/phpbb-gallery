@@ -880,7 +880,24 @@ class acp_gallery
 					$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $perm_data));
 				}
 				$db->sql_freeresult($result);
+				$sql = 'SELECT * FROM ' . GALLERY_MODSCACHE_TABLE . "
+					WHERE album_id = $copy_permissions";
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					$sql_ary = array(
+						'album_id'			=> $album_id,
+						'user_id'			=> $row['user_id'],
+						'username '			=> $row['username'],
+						'group_id'			=> $row['group_id'],
+						'group_name'		=> $row['group_name'],
+						'display_on_index'	=> $row['display_on_index'],
+					);
+					$db->sql_query('INSERT INTO ' . GALLERY_MODSCACHE_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+				}
+				$db->sql_freeresult($result);
 			}
+			$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 			$cache->destroy('_albums');
 
@@ -1094,7 +1111,26 @@ class acp_gallery
 					$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $perm_data));
 				}
 				$db->sql_freeresult($result);
+				$sql = 'DELETE FROM ' . GALLERY_MODSCACHE_TABLE . " WHERE album_id = $album_id";
+				$db->sql_query($sql);
+				$sql = 'SELECT * FROM ' . GALLERY_MODSCACHE_TABLE . "
+					WHERE album_id = $copy_permissions";
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					$sql_ary = array(
+						'album_id'			=> $album_id,
+						'user_id'			=> $row['user_id'],
+						'username '			=> $row['username'],
+						'group_id'			=> $row['group_id'],
+						'group_name'		=> $row['group_name'],
+						'display_on_index'	=> $row['display_on_index'],
+					);
+					$db->sql_query('INSERT INTO ' . GALLERY_MODSCACHE_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+				}
+				$db->sql_freeresult($result);
 			}
+			$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 			$cache->destroy('_albums');
 
