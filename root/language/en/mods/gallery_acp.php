@@ -196,6 +196,11 @@ $lang = array_merge($lang, array(
 	'FAKE_THUMB_SIZE'				=> 'Thumbnail-size',
 	'FAKE_THUMB_SIZE_EXP'			=> 'If you want to resize them to the full size, remember 16 pixels for the black-info-line',
 
+	'IMPORT_DIR_EMPTY'				=> 'The folder %simport/ is empty. You need to upload the images, before you can import them.',
+	'IMPORT_SELECT'					=> 'Choose the images which you want to import. Successful uploaded images are deleted. All other images are still available.',
+	'IMPORT_USER'					=> 'Uploaded by',
+	'IMPORT_USER_EXP'				=> 'You can add the images to another user here.',
+
 	'MISSING_ALBUM_NAME'			=> 'You need to enter a name for the album',
 
 	'OWN_PERSONAL_ALBUMS'			=> 'Own personal albums',

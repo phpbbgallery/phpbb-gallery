@@ -246,4 +246,86 @@ function get_album_branch($album_id, $type = 'all', $order = 'descending', $incl
 	return $rows;
 }
 
+/**
+* Update Album-Information
+*/
+function update_lastimage_info($album_id)
+{
+	global $db, $user;
+
+	//update album-information
+	$images_real = $images = $album_user_id = 0;
+	$sql = 'SELECT album_user_id
+		FROM ' . GALLERY_ALBUMS_TABLE . "
+		WHERE album_id = $album_id";
+	$result = $db->sql_query($sql);
+	if ($row = $db->sql_fetchrow($result))
+	{
+		$album_user_id = $row['album_user_id'];
+	}
+	$db->sql_freeresult($result);
+	$sql = 'SELECT COUNT(image_id) images
+		FROM ' . GALLERY_IMAGES_TABLE . "
+		WHERE image_album_id = $album_id
+			AND image_approval = 1";
+	$result = $db->sql_query($sql);
+	if ($row = $db->sql_fetchrow($result))
+	{
+		$images = $row['images'];
+	}
+	$db->sql_freeresult($result);
+	$sql = 'SELECT COUNT(image_id) images_real
+		FROM ' . GALLERY_IMAGES_TABLE . "
+		WHERE image_album_id = $album_id";
+	$result = $db->sql_query($sql);
+	if ($row = $db->sql_fetchrow($result))
+	{
+		$images_real = $row['images_real'];
+	}
+	$db->sql_freeresult($result);
+	$sql = 'SELECT *
+		FROM ' . GALLERY_IMAGES_TABLE . "
+		WHERE image_album_id = $album_id
+			AND image_approval = 1
+		ORDER BY image_time DESC
+		LIMIT 1";
+	$result = $db->sql_query($sql);
+	if ($row = $db->sql_fetchrow($result))
+	{
+		$sql_ary = array(
+			'album_images_real'			=> $images_real,
+			'album_images'				=> $images,
+			'album_last_image_id'		=> $row['image_id'],
+			'album_last_image_time'		=> $row['image_time'],
+			'album_last_image_name'		=> $row['image_name'],
+			'album_last_username'		=> $row['image_username'],
+			'album_last_user_colour'	=> $row['image_user_colour'],
+			'album_last_user_id'		=> $row['image_user_id'],
+		);
+	}
+	else
+	{
+		$sql_ary = array(
+			'album_images_real'			=> 0,
+			'album_images'				=> 0,
+			'album_last_image_id'		=> 0,
+			'album_last_image_time'		=> 0,
+			'album_last_image_name'		=> '',
+			'album_last_username'		=> '',
+			'album_last_user_colour'	=> '',
+			'album_last_user_id'		=> 0,
+		);
+		if ($album_user_id)
+		{
+			unset($sql_ary['album_last_user_colour']);
+		}
+	}
+	$db->sql_freeresult($result);
+	$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+		WHERE ' . $db->sql_in_set('album_id', $album_id);
+	$db->sql_query($sql);
+
+	return $row;
+}
+
 ?>

@@ -63,18 +63,32 @@
 	<fieldset>
 		<legend>{L_ALBUM_SETTINGS}</legend>
 		<dl>
-			<dt><label for="img_dir">{L_IMPORT_DIR}</label>
-				<br /><span>{L_IMPORT_DIR_EXP}</span></dt>
-			<dd><input class="text medium" type="text" id="img_dir" name="img_dir" value="" />
-				<br /><span>{L_IMPORT_DIR_DEL}</span></dd>
-		</dl>
-		<dl>
 			<dt><label for="target">{L_IMPORT_ALBUM}</label></dt>
 			<dd><select id="target" name="target"><option value="0"<!-- IF not S_ALBUM_PARENT_ID --> selected="selected"<!-- ENDIF -->>{L_NO_PARENT_ALBUM}</option>{S_SELECT_IMPORT}</select></dd>
 		</dl>
 		<dl>
-			<dt><label for="img_per_cycle">{L_IMPORT_CIRCLE}</label></dt>
-			<dd><input class="post" type="text" maxlength="9" size="9" name="img_per_cycle" value="15" /></dd>
+			<dt><label for="images">{L_IMAGES}:</label>
+				<br /><span>{L_IMPORT_SELECT}</span></dt>
+			<dd><!-- IF not .imagerow -->
+				{L_IMPORT_DIR_EMPTY}
+			<!-- ELSE -->
+				<select id="images" name="images[]" multiple="multiple">
+					<!-- BEGIN imagerow --><option value="{imagerow.FILE_NAME}">{imagerow.FILE_NAME}</option><!-- END imagerow -->
+				</select>
+			<!-- ENDIF --></dd>
+		</dl>
+		<dl>
+			<dt><label for="images">{L_IMPORT_USER}:</label>
+				<br /><span>{L_IMPORT_USER_EXP}</span></dt>
+			<dd><select id="images" name="user_id">
+				<!-- BEGIN userrow --><option value="{userrow.USER_ID}" <!-- IF userrow.SELECTED --> selected="selected"<!-- ENDIF -->>{userrow.USERNAME}</option><!-- END userrow -->
+			</select></dd>
+		</dl>
+		<dl>
+			<dt><label for="title">{L_IMAGE_TITLE}:</label></dt>
+			<dd id="title"><input class="inputbox autowidth" type="text" name="image_name" value="{IMAGE_NAME}" size="60" /></dd>
+			<dd id="title"><br /><input class="inputbox autowidth" type="text" name="image_num" size="5" value="1" /> {L_LOOP_EXP}</dd>
+			<dd id="filename"><br /><input class="button2" type="checkbox" class="checkbox" name="filename" value="filename" /> {L_ORIG_FILENAME}</dd>
 		</dl>
 	</fieldset>
 	<fieldset class="submit-buttons">

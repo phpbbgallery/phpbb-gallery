@@ -15,6 +15,7 @@ class acp_gallery
 	function main($id, $mode)
 	{
 		global $user, $phpbb_root_path, $phpEx;
+		$gallery_root_path = GALLERY_ROOT_PATH;
 		include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/constants.' . $phpEx);
 		include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/acp_functions.' . $phpEx);
 
@@ -120,17 +121,61 @@ class acp_gallery
 
 	function import()
 	{
-		global $db, $template, $user, $phpbb_root_path;
+		global $db, $template, $user, $phpbb_root_path, $gallery_root_path;
 
 		$submit = (isset($_POST['submit'])) ? true : false;
+		$directory = $phpbb_root_path . GALLERY_ROOT_PATH . 'import/';
 		if(!$submit)
 		{
+
+			$sql = 'SELECT *
+				FROM ' . GALLERY_CONFIG_TABLE;
+			$result = $db->sql_query($sql);
+			while( $row = $db->sql_fetchrow($result) )
+			{
+				$album_config_name = $row['config_name'];
+				$album_config_value = $row['config_value'];
+				$album_config[$album_config_name] = $album_config_value;
+			}
+			$db->sql_freeresult($result);
+
+			$sql = 'SELECT username, user_id
+				FROM ' . USERS_TABLE . "
+				ORDER BY user_id ASC";
+			$result = $db->sql_query($sql);
+			while( $row = $db->sql_fetchrow($result) )
+			{
+				$template->assign_block_vars('userrow', array(
+					'USER_ID'				=> $row['user_id'],
+					'USERNAME'				=> $row['username'],
+					'SELECTED'				=> ($row['user_id'] == $user->data['user_id']) ? true : false,
+				));
+			}
+			$db->sql_freeresult($result);
+
+			$handle = opendir($directory);
+
+			while ($file = readdir($handle))
+			{
+				if (!is_dir($directory . "$file") && (
+				((substr(strtolower($file), '-4') == '.png') && $album_config['png_allowed']) ||
+				((substr(strtolower($file), '-4') == '.gif') && $album_config['gif_allowed']) ||
+				((substr(strtolower($file), '-4') == '.jpg') && $album_config['jpg_allowed'])
+				))
+				{
+					$template->assign_block_vars('imagerow', array(
+						'FILE_NAME'				=> $file,
+					));
+				}
+			}
+			closedir($handle);
 			$template->assign_vars(array(
 				'S_IMPORT_IMAGES'				=> true,
 				'ACP_GALLERY_TITLE'				=> $user->lang['ACP_IMPORT_ALBUMS'],
 				'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_IMPORT_ALBUMS_EXPLAIN'],
+				'L_IMPORT_DIR_EMPTY'			=> sprintf($user->lang['IMPORT_DIR_EMPTY'], GALLERY_ROOT_PATH),
 				'S_ALBUM_IMPORT_ACTION'			=> $this->u_action,
-				'S_SELECT_IMPORT' 			=> make_album_select(0, false, false, false, false),
+				'S_SELECT_IMPORT' 				=> make_album_select(0, false, false, false, false),
 			));
 		}
 		else
@@ -149,48 +194,48 @@ class acp_gallery
 				$album_config_value = $row['config_value'];
 				$album_config[$album_config_name] = $album_config_value;
 			}
+			$db->sql_freeresult($result);
 
 			// There was no directory specified
-			if(!$directory = request_var('img_dir', ''))
-			{
-				trigger_error($user->lang['IMPORT_MISSING_DIR'], E_USER_WARNING);
-			}
 			// There was no album selected
-			if(!$album_id = request_var('target', 0))
+			$images = request_var('images', array(''));
+			$album_id = request_var('target', 0);
+			$user_id = request_var('user_id', 0);
+			if(!$album_id)
 			{
 				trigger_error($user->lang['IMPORT_MISSING_ALBUM'], E_USER_WARNING);
 			}
-
-			$img_per_cycle = request_var('img_per_cycle', 15);
+			$sql = 'SELECT username, user_colour
+				FROM ' . USERS_TABLE . "
+				WHERE user_id = $user_id";
+			$result = $db->sql_query($sql);
+			while( $row = $db->sql_fetchrow($result) )
+			{
+				$username = $row['username'];
+				$user_colour = $row['user_colour'];
+			}
+			$db->sql_freeresult($result);
 
 			// Take a look at the directory supplied
 			$results = array();
-			$handle = opendir($directory);
 
-			while ($file = readdir($handle))
+			foreach ($images as $image)
 			{
-				if (!is_dir("$directory/$file") && $file != '.' && $file != '..' && $file != 'Thumbs.db')
-				{
-					$results[] = $file;
-				}
+				$results[] = $image;
 			}
-			closedir($handle);
 
 			// Do the work now
-			$image_user_id 	= $user->data['user_id'];
+			$image_user_id 	= $user_id;
 			$image_user_ip 	= $user->ip;
-			$image_username	= $user->data['username'];
+			$image_username	= $username;
+			$image_user_colour	= $user_colour;
 
 			$image_count = count($results);
 			$counter = 0;
 			
 			foreach ($results as $image)
 			{
-				if($counter >= $img_per_cycle)
-				{
-					break;
-				}
-				$image_path = $directory . '/' . $image;
+				$image_path = $directory . $image;
 				//$imp_debug .= $image_path . '<br />-  ';
 
 				// Determine the file type
@@ -225,7 +270,7 @@ class acp_gallery
 				// Generate filename
 				srand((double)microtime()*1000000);// for older than version 4.2.0 of PHP
 				$image_filename = md5(uniqid(rand())) . $image_filetype;
-				$image_time 		= time();
+				$image_time 		= time() + 1;
 
 
 				$ini_val = ( @phpversion() >= '4.0.0' ) ? 'ini_get' : 'get_cfg_var';
@@ -270,8 +315,6 @@ class acp_gallery
 							$read_function = 'imagecreatefromgif';
 							break;
 					}
-					//cheat the server for uploading bigger files
-					#no cheating: ini_set('memory_limit', '128M');
 					$src = $read_function($phpbb_root_path . GALLERY_UPLOAD_PATH  . $image_filename);
 
 					if (!$src)
@@ -350,19 +393,20 @@ class acp_gallery
 				}
 
 				// The source image is imported and thumbnailed, delete it
-				#@unlink($image_path);
+				@unlink($image_path);
 
 				$sql_ary = array(
 					'image_filename' 		=> $image_filename,
 					'image_thumbnail'		=> $image_thumbnail,
-					'image_name'			=> $image,
+					'image_name'			=> (request_var('filename', '') == 'filename') ? $image : str_replace('{NUM}', $counter + 1, request_var('image_name', '', true)),
 					'image_desc'			=> $user->lang['NO_DESC'],
 					'image_desc_uid'		=> '',
 					'image_desc_bitfield'	=> '',
 					'image_user_id'			=> $image_user_id,
 					'image_username'		=> $image_username,
+					'image_user_colour'		=> $image_user_colour,
 					'image_user_ip'			=> $image_user_ip,
-					'image_time'			=> $image_time,
+					'image_time'			=> $image_time + $counter,
 					'image_album_id'		=> $album_id,
 					'image_approval'		=> 1,
 				);
@@ -371,6 +415,7 @@ class acp_gallery
 				$counter++;
 			}
 			$left = $image_count - $counter;
+			update_lastimage_info($album_id);
 			$template->assign_vars(array(
 				'ACP_GALLERY_TITLE'				=> $user->lang['IMPORT_DEBUG'],
 				'ACP_GALLERY_TITLE_EXPLAIN'		=> sprintf($user->lang['IMPORT_DEBUG_MES'], $counter, $left),
@@ -626,7 +671,7 @@ class acp_gallery
 		}
 
 	}
-	
+
 	function album_personal_permissions()
 	{
 		global $db, $template, $user;
@@ -685,7 +730,7 @@ class acp_gallery
 			trigger_error($user->lang['ALBUM_AUTH_SUCCESSFULLY'] . adm_back_link($this->u_action));
 		}
 	}
-	
+
 	function manage_albums()
 	{
 		global $db, $user, $auth, $template, $cache;
