@@ -211,7 +211,7 @@ $lang = array_merge($lang, array(
 	'PERMISSION_I_LOCK'				=> 'Darf Bilder sperren',
 	'PERMISSION_I_RATE'				=> 'Darf Bilder bewerten',
 	'PERMISSION_I_REPORT'			=> 'Darf Bilder melden',
-	'PERMISSION_I_UPLOAD'			=> 'Darf Bildfer hochladen',
+	'PERMISSION_I_UPLOAD'			=> 'Darf Bilder hochladen',
 	'PERMISSION_I_VIEW'				=> 'Darf Bilder sehen',
 
 	'PERMISSION_EMPTY'				=> 'Du hast nicht alle Berechtigungen gesetzt.',

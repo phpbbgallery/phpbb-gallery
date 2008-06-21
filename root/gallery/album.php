@@ -52,10 +52,12 @@ if (empty($album_data))
 {
 	trigger_error($user->lang['ALBUM_NOT_EXIST'], E_USER_WARNING);
 }
+
 if ($album_data['album_user_id'] > 0)
 {
 	$album_access_array[$album_id] = $album_access_array[-3];
 }
+
 $total_pics = $album_data['count'];
 /**
 * Build Auth List
@@ -95,7 +97,7 @@ if(!$album_access_array[$album_id]['i_view'])
 * Build Album-Index
 */
 include("{$phpbb_root_path}{$gallery_root_path}includes/functions_display.$phpEx");
-display_albums($album_id);
+display_albums($album_data);
 if ($album_id <> 0)
 {
 	generate_album_nav($album_data);
@@ -136,7 +138,7 @@ if ($album_id <> 0)
 	}
 	if (empty($moderators_list))
 	{
-		$moderators_list = $user->lang['NONE'];
+		$moderators_list = '';
 	}
 
 	/**

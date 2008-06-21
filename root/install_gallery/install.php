@@ -300,6 +300,7 @@ switch ($mode)
 			gallery_create_table_slap_db_tools('phpbb_gallery_rates', true);
 			gallery_create_table_slap_db_tools('phpbb_gallery_roles', true);
 			gallery_create_table_slap_db_tools('phpbb_gallery_permissions', true);
+			gallery_create_table_slap_db_tools('phpbb_gallery_modscache', true);
 
 			//fill the GALLERY_CONFIG_TABLE with some values
 			gallery_config_value('max_pics', '1024');
@@ -339,6 +340,7 @@ switch ($mode)
 			gallery_config_value('thumbnail_info_line', 1);
 			gallery_config_value('fake_thumb_size', 141);
 			gallery_config_value('disp_fake_thumb', 1);
+			gallery_config_value('personal_counter', 0);
 			$album_config = load_album_config();
 
 			// create the modules
@@ -703,6 +705,7 @@ switch ($mode)
 					//personal gallery permissions
 					gallery_create_table_slap_db_tools('phpbb_gallery_roles', true);
 					gallery_create_table_slap_db_tools('phpbb_gallery_permissions', true);
+					gallery_create_table_slap_db_tools('phpbb_gallery_modscache', true);
 					$sql = 'SELECT group_id, personal_subalbums, allow_personal_albums, view_personal_albums
 						FROM ' . GROUPS_TABLE;
 					$result = $db->sql_query($sql);
@@ -782,16 +785,106 @@ switch ($mode)
 					gallery_config_value('fake_thumb_size', 141);
 					gallery_config_value('disp_fake_thumb', 1);
 
+					gallery_column(GALLERY_ALBUMS_TABLE, 'album_images', array('UINT', 0));
+					gallery_column(GALLERY_ALBUMS_TABLE, 'album_images_real', array('UINT', 0));
+					gallery_column(GALLERY_ALBUMS_TABLE, 'album_last_image_id', array('UINT', 0));
+					gallery_column(GALLERY_ALBUMS_TABLE, 'album_image', array('VCHAR', ''));
+					gallery_column(GALLERY_ALBUMS_TABLE, 'album_last_image_time', array('INT:11', 0));
+					gallery_column(GALLERY_ALBUMS_TABLE, 'album_last_image_name', array('VCHAR', ''));
+					gallery_column(GALLERY_ALBUMS_TABLE, 'album_last_username', array('VCHAR', ''));
+					gallery_column(GALLERY_ALBUMS_TABLE, 'album_last_user_colour', array('VCHAR:6', ''));
+					gallery_column(GALLERY_ALBUMS_TABLE, 'album_last_user_id', array('UINT', 0));
+					gallery_column(GALLERY_ALBUMS_TABLE, 'display_on_index', array('UINT:1', 1));
+					gallery_column(GALLERY_ALBUMS_TABLE, 'display_subalbum_list', array('UINT:1', 1));
+
+					//album_type needs to be "album" for personal albums
+					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET album_type = 2';
+					$db->sql_query($sql);
+					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET album_type = 1 WHERE album_user_id = 0';
+					$db->sql_query($sql);
+
+					//add the information for the last_image to the albums part 1: last_image_id, image_count
+					$sql = 'SELECT COUNT(i.image_id) images, MAX(i.image_id) last_image_id, i.image_album_id
+						FROM ' . GALLERY_IMAGES_TABLE . " i
+						WHERE i.image_approval = 1
+						GROUP BY i.image_album_id";
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$sql_ary = array(
+							'album_images'			=> $row['images'],
+							'album_last_image_id'	=> $row['last_image_id'],
+						);
+						$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+							WHERE ' . $db->sql_in_set('album_id', $row['image_album_id']);
+						$db->sql_query($sql);
+					}
+					$db->sql_freeresult($result);
+
+					//add the information for the last_image to the albums part 2: correct album_type, images_real are all images, even unapproved
+					$sql = 'SELECT COUNT(i.image_id) images, i.image_album_id
+						FROM ' . GALLERY_IMAGES_TABLE . " i
+						GROUP BY i.image_album_id";
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$sql_ary = array(
+							'album_images_real'	=> $row['images'],
+							'album_type'		=> 2,
+						);
+						$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+							WHERE ' . $db->sql_in_set('album_id', $row['image_album_id']);
+						$db->sql_query($sql);
+					}
+					$db->sql_freeresult($result);
+
+					//add the information for the last_image to the albums part 3: user_id, username, user_colour, time, image_name
+					$sql = 'SELECT a.album_id, a.album_last_image_id, i.image_time, i.image_name, i.image_user_id, i.image_username, i.image_user_colour, u.user_colour
+						FROM ' . GALLERY_ALBUMS_TABLE . " a
+						LEFT JOIN " . GALLERY_IMAGES_TABLE . " i
+							ON a.album_last_image_id = i.image_id
+						LEFT JOIN " . USERS_TABLE . " u
+							ON a.album_user_id = u.user_colour
+						WHERE a.album_last_image_id > 0";
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$sql_ary = array(
+							'album_last_image_time'		=> $row['image_time'],
+							'album_last_image_name'		=> $row['image_name'],
+							'album_last_username'		=> $row['image_username'],
+							'album_last_user_colour'	=> $row['user_colour'],
+							'album_last_user_id'		=> $row['image_user_id'],
+						);
+						$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+							WHERE ' . $db->sql_in_set('album_id', $row['album_id']);
+						$db->sql_query($sql);
+					}
+					$db->sql_freeresult($result);
+
+					//count the number of personal_gallerys in the config to reduce sqls
+					$sql = 'SELECT COUNT(album_id) AS albums
+						FROM ' . GALLERY_ALBUMS_TABLE . "
+						WHERE parent_id = 0
+							AND album_user_id <> 0";
+					$result = $db->sql_query($sql);
+					$total_galleries = 0;
+					if ($row = $db->sql_fetchrow($result))
+					{
+						$total_galleries = $row['albums'];
+					}
+					$db->sql_freeresult($result);
+					gallery_config_value('personal_counter', $total_galleries);
+
 				case '0.3.2':
 					//and drop the old column
-					delete_gallery_column(GROUPS_TABLE, 'personal_subalbums');
-					delete_gallery_column(GROUPS_TABLE, 'allow_personal_albums');
-					delete_gallery_column(GROUPS_TABLE, 'view_personal_albums');
+					//delete_gallery_column(GROUPS_TABLE, 'personal_subalbums');
+					//delete_gallery_column(GROUPS_TABLE, 'allow_personal_albums');
+					//delete_gallery_column(GROUPS_TABLE, 'view_personal_albums');
 				//no break;
 
 
 				case 'svn':
-
 
 				break;
 			}
@@ -828,6 +921,7 @@ switch ($mode)
 			gallery_create_table_slap_db_tools('phpbb_gallery_rates', true);
 			gallery_create_table_slap_db_tools('phpbb_gallery_roles', true);
 			gallery_create_table_slap_db_tools('phpbb_gallery_permissions', true);
+			gallery_create_table_slap_db_tools('phpbb_gallery_modscache', true);
 
 			// first lets make the albums...
 			$personal_album = array();
@@ -861,19 +955,6 @@ switch ($mode)
 						'album_desc_uid'				=> '',
 						'album_desc_bitfield'			=> '',
 						'album_desc_options'			=> 7,
-						'album_view_level'				=> (($row['cat_view_level'] < 0 ) ? 1 : $row['cat_view_level']),
-						'album_upload_level'			=> (($row['cat_upload_level'] < 0 ) ? 1 : $row['cat_upload_level']),
-						'album_rate_level'				=> (($row['cat_rate_level'] < 0 ) ? 1 : $row['cat_rate_level']),
-						'album_comment_level'			=> (($row['cat_comment_level'] < 0 ) ? 1 : $row['cat_comment_level']),
-						'album_edit_level'				=> (($row['cat_edit_level'] < 0 ) ? 1 : $row['cat_edit_level']),
-						'album_delete_level'			=> (($row['cat_delete_level'] < 0 ) ? 1 : $row['cat_delete_level']),
-						'album_view_groups'				=> (isset($row['cat_view_groups']) ? $row['cat_view_groups'] : 0),
-						'album_upload_groups'			=> (isset($row['cat_upload_groups']) ? $row['cat_upload_groups'] : 0),
-						'album_rate_groups'				=> (isset($row['cat_rate_groups']) ? $row['cat_rate_groups'] : 0),
-						'album_comment_groups'			=> (isset($row['cat_comment_groups']) ? $row['cat_comment_groups'] : 0),
-						'album_edit_groups'				=> (isset($row['cat_edit_groups']) ? $row['cat_edit_groups'] : 0),
-						'album_delete_groups'			=> (isset($row['cat_delete_groups']) ? $row['cat_delete_groups'] : 0),
-						'album_moderator_groups'		=> (isset($row['cat_moderator_groups']) ? $row['cat_moderator_groups'] : 0),
 						'album_approval'				=> $row['cat_approval'],
 					);
 					generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], true, true, true);
@@ -1080,6 +1161,85 @@ switch ($mode)
 			add_module($import_images);
 			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 163,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_PERSONAL_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
 			add_module($ucp_gallery);
+
+			//album_type needs to be "album" for personal albums
+			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET album_type = 2';
+			$db->sql_query($sql);
+			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET album_type = 1 WHERE album_user_id = 0';
+			$db->sql_query($sql);
+
+			//add the information for the last_image to the albums part 1: last_image_id, image_count
+			$sql = 'SELECT COUNT(i.image_id) images, MAX(i.image_id) last_image_id, i.image_album_id
+				FROM ' . GALLERY_IMAGES_TABLE . " i
+				WHERE i.image_approval = 1
+				GROUP BY i.image_album_id";
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$sql_ary = array(
+					'album_images'			=> $row['images'],
+					'album_last_image_id'	=> $row['last_image_id'],
+				);
+				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+					WHERE ' . $db->sql_in_set('album_id', $row['image_album_id']);
+				$db->sql_query($sql);
+			}
+			$db->sql_freeresult($result);
+
+			//add the information for the last_image to the albums part 2: correct album_type, images_real are all images, even unapproved
+			$sql = 'SELECT COUNT(i.image_id) images, i.image_album_id
+				FROM ' . GALLERY_IMAGES_TABLE . " i
+				GROUP BY i.image_album_id";
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$sql_ary = array(
+					'album_images_real'	=> $row['images'],
+					'album_type'		=> 2,
+				);
+				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+					WHERE ' . $db->sql_in_set('album_id', $row['image_album_id']);
+				$db->sql_query($sql);
+			}
+			$db->sql_freeresult($result);
+
+			//add the information for the last_image to the albums part 3: user_id, username, user_colour, time, image_name
+			$sql = 'SELECT a.album_id, a.album_last_image_id, i.image_time, i.image_name, i.image_user_id, i.image_username, i.image_user_colour, u.user_colour
+				FROM ' . GALLERY_ALBUMS_TABLE . " a
+				LEFT JOIN " . GALLERY_IMAGES_TABLE . " i
+					ON a.album_last_image_id = i.image_id
+				LEFT JOIN " . USERS_TABLE . " u
+					ON a.album_user_id = u.user_colour
+				WHERE a.album_last_image_id > 0";
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$sql_ary = array(
+					'album_last_image_time'		=> $row['image_time'],
+					'album_last_image_name'		=> $row['image_name'],
+					'album_last_username'		=> $row['image_username'],
+					'album_last_user_colour'	=> $row['user_colour'],
+					'album_last_user_id'		=> $row['image_user_id'],
+				);
+				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+					WHERE ' . $db->sql_in_set('album_id', $row['album_id']);
+				$db->sql_query($sql);
+			}
+			$db->sql_freeresult($result);
+
+			//count the number of personal_gallerys in the config to reduce sqls
+			$sql = 'SELECT COUNT(album_id) AS albums
+				FROM ' . GALLERY_ALBUMS_TABLE . "
+				WHERE parent_id = 0
+					AND album_user_id <> 0";
+			$result = $db->sql_query($sql);
+			$total_galleries = 0;
+			if ($row = $db->sql_fetchrow($result))
+			{
+				$total_galleries = $row['albums'];
+			}
+			$db->sql_freeresult($result);
+			gallery_config_value('personal_counter', $total_galleries);
 
 			$gd_check = function_exists('gd_info') ? gd_info() : array();
 			$gd_success = isset($gd_check['GD Version']);

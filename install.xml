@@ -244,6 +244,7 @@ define('GALLERY_ALBUMS_TABLE',			$table_prefix . 'gallery_albums');
 define('GALLERY_COMMENTS_TABLE',		$table_prefix . 'gallery_comments');
 define('GALLERY_CONFIG_TABLE',			$table_prefix . 'gallery_config');
 define('GALLERY_IMAGES_TABLE',			$table_prefix . 'gallery_images');
+define('GALLERY_MODSCACHE_TABLE',		$table_prefix . 'gallery_modscache');
 define('GALLERY_PERMISSIONS_TABLE',		$table_prefix . 'gallery_permissions');
 define('GALLERY_RATES_TABLE',			$table_prefix . 'gallery_rates');
 define('GALLERY_PERM_ROLES_TABLE',		$table_prefix . 'gallery_roles');]]></action>
@@ -262,7 +263,8 @@ define('GALLERY_PERM_ROLES_TABLE',		$table_prefix . 'gallery_roles');]]></action
     <open src="includes/functions_user.php">
       <edit>
         <find><![CDATA[TOPICS_TABLE			=> array('topic_first_poster_name', 'topic_last_poster_name'),]]></find>
-        <action type="after-add"><![CDATA[GALLERY_IMAGES_TABLE	=> array('image_username'),]]></action>
+        <action type="after-add"><![CDATA[		GALLERY_IMAGES_TABLE	=> array('image_username'),
+		GALLERY_ALBUMS_TABLE	=> array('album_last_username'),]]></action>
       </edit>
       <edit>
         <find><![CDATA[	if ($config['newest_username'] == $old_name)]]></find>
@@ -279,6 +281,10 @@ define('GALLERY_PERM_ROLES_TABLE',		$table_prefix . 'gallery_roles');]]></action
 		$db->sql_query($sql);]]></find>
         <action type="after-add"><![CDATA[		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " SET image_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
 			WHERE " . $db->sql_in_set('image_user_id', $user_id_ary);
+		$db->sql_query($sql);
+
+		$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . " SET album_last_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('album_last_user_id', $user_id_ary);
 		$db->sql_query($sql);]]></action>
       </edit>
     </open>

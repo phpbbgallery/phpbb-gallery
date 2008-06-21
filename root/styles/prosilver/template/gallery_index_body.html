@@ -2,49 +2,9 @@
 <p class="{S_CONTENT_FLOW_END}<!-- IF S_USER_LOGGED_IN --> rightside<!-- ENDIF -->"><!-- IF S_USER_LOGGED_IN -->{LAST_VISIT_DATE}<!-- ELSE -->{CURRENT_TIME}<!-- ENDIF --></p>
 <!-- IF U_MCP --><p>{CURRENT_TIME} <br />[&nbsp;<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</p><!-- ELSEIF S_USER_LOGGED_IN --><p>{CURRENT_TIME}</p><!-- ENDIF -->
 
-<div class="forabg">
-	<div class="inner">
-		<span class="corners-top"><span></span></span>
-		<ul class="topiclist">
-			<li class="header">
-				<dl class="icon">
-					<dt>{L_ALBUM}</dt>
-					<dd class="posts">{L_IMAGES}</dd>
-					<dd class="lastpost"><span>{L_LAST_IMAGE}</span></dd>
-				</dl>
-			</li>
-		</ul>
-		<!-- BEGIN albumrow -->
-		<ul class="topiclist forums">
-			<li class="row">
-				<dl class="icon" style="background-image: url({albumrow.ALBUM_FOLDER_IMG_SRC}); background-repeat: no-repeat;">
-					<dt>
-						<!-- IF albumrow.ALBUM_IMAGE --><span class="forum-image">{albumrow.ALBUM_IMAGE}</span><!-- ENDIF -->
-						<a href="{albumrow.U_VIEW_ALBUM}" class="forumtitle"<!-- IF S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR --> style="color: {albumrow.ALBUM_COLOUR};"<!-- ENDIF -->>{albumrow.ALBUM_NAME}</a><br />
-						{albumrow.ALBUM_DESC}
-						<!-- IF albumrow.MODERATORS -->
-						<br /><strong>{albumrow.L_MODERATORS}:</strong> {albumrow.MODERATORS}
-						<!-- ENDIF -->
-						<!-- IF albumrow.SUBALBUMS -->
-						<br /><strong>{albumrow.L_SUBALBUMS}:</strong> {albumrow.SUBALBUMS}
-						<!-- ENDIF -->
-					</dt>
-					<dd class="posts">{albumrow.IMAGES} <dfn>{L_IMAGES}</dfn></dd>
-					<dd class="lastpost"><span>
-						<!-- IF albumrow.U_LAST_IMAGE -->
-							<!-- IF DISP_FAKE_THUMB --><span style="float: left; padding-right: 5px;"><img src="{albumrow.U_LAST_THUMB}" style="max-width: {FAKE_THUMB_SIZE}px; max-height: {FAKE_THUMB_SIZE}px;" /></span><!-- ENDIF -->
-							<a href="{albumrow.U_LAST_IMAGE}" style="font-weight: bold;">{albumrow.LAST_IMAGE_NAME}</a><br />
-							{L_POST_BY_AUTHOR} {albumrow.LAST_IMAGE_AUTHOR} <a href="{albumrow.U_LAST_IMAGE}">{LAST_POST_IMG}</a><br />
-							{L_POSTED_ON_DATE} {albumrow.LAST_IMAGE_TIME}
-						<!-- ELSE -->{L_NO_IMAGES}<!-- ENDIF -->
-					</span></dd>
-				</dl>
-			</li>
-		</ul>
-		<!-- END albumrow -->
-		<span class="corners-bottom"><span></span></span>
-	</div>
-</div>
+
+<!-- INCLUDE gallery_albumlist_body.html -->
+
 <!-- IF PAGINATION -->
 <div class="topic-actions">
 	<div class="pagination">

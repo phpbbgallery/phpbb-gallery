@@ -36,6 +36,7 @@ $album_access_array = get_album_access_array();
 */
 $mode = request_var('mode', 'index', true);
 include($phpbb_root_path . $gallery_root_path . 'includes/functions_display.' . $phpEx);
+display_albums(($mode == 'personal') ? 'personal' : 0);
 if ($mode == 'personal')
 {
 	$template->assign_block_vars('navlinks', array(
@@ -47,7 +48,6 @@ if ($mode == 'personal')
 		'S_PERSONAL_GALLERY' 		=> true,
 	));
 }
-display_albums(0, $mode);
 
 
 

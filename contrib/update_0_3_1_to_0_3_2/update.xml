@@ -99,9 +99,24 @@
     <open src="includes/constants.php">
       <edit>
         <find><![CDATA[define('GALLERY_RATES_TABLE',			$table_prefix . 'gallery_rates');]]></find>
-        <action type="replace-with"><![CDATA[define('GALLERY_PERMISSIONS_TABLE',		$table_prefix . 'gallery_permissions');
+        <action type="replace-with"><![CDATA[define('GALLERY_MODSCACHE_TABLE',		$table_prefix . 'gallery_modscache');
+define('GALLERY_PERMISSIONS_TABLE',		$table_prefix . 'gallery_permissions');
 define('GALLERY_RATES_TABLE',			$table_prefix . 'gallery_rates');
 define('GALLERY_PERM_ROLES_TABLE',		$table_prefix . 'gallery_roles');]]></action>
+      </edit>
+    </open>
+    <open src="includes/functions_user.php">
+      <edit>
+        <find><![CDATA[GALLERY_IMAGES_TABLE	=> array('image_username'),]]></find>
+        <action type="after-add"><![CDATA[GALLERY_ALBUMS_TABLE	=> array('album_last_username'),]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " SET image_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('image_user_id', $user_id_ary);
+		$db->sql_query($sql);]]></find>
+        <action type="after-add"><![CDATA[		$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . " SET album_last_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('album_last_user_id', $user_id_ary);
+		$db->sql_query($sql);]]></action>
       </edit>
     </open>
     <open src="includes/session.php">

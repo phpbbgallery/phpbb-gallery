@@ -108,6 +108,8 @@ class ucp_gallery
 		global $db, $user, $auth, $template, $cache;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 
+		$gallery_root_path = GALLERY_ROOT_PATH;
+
 		if (!$user->data['album_id'])
 		{
 			//check if the user has already reached his limit
@@ -126,6 +128,8 @@ class ucp_gallery
 				'album_parents'					=> '',
 				'album_type'					=> 2,
 				'album_user_id'					=> $user->data['user_id'],
+				'album_last_username'			=> '',
+				'album_last_user_colour'		=> $user->data['user_colour'],
 			);
 			$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
 
@@ -136,6 +140,11 @@ class ucp_gallery
 			$sql = 'UPDATE ' . USERS_TABLE . ' 
 					SET album_id = ' . (int) $row['album_id'] . '
 					WHERE user_id  = ' . (int) $user->data['user_id'];
+			$db->sql_query($sql);
+
+			$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . " 
+					SET config_value = config_value + 1
+					WHERE config_name  = 'personal_counter'";
 			$db->sql_query($sql);
 			$cache->destroy('_albums');
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
@@ -284,6 +293,7 @@ class ucp_gallery
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc(request_var('album_desc', '', true)),
 				'album_user_id'					=> $user->data['user_id'],
+				'album_last_username'			=> '',
 			);
 			if (!$album_data['album_name'])
 			{
@@ -584,6 +594,11 @@ class ucp_gallery
 			{
 				$sql = 'UPDATE ' . USERS_TABLE . " SET album_id = 0 WHERE album_id IN ($deleted_albums)";
 				$db->sql_query($sql);
+
+			$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . " 
+					SET config_value = config_value - 1
+					WHERE config_name  = 'personal_counter'";
+			$db->sql_query($sql);
 			}
 
 			//solve the left_id right_id problem

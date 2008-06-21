@@ -1585,6 +1585,11 @@ class acp_gallery
 			{//view your own personal albums
 				$sql_ary['i_view'] = 1;
 			}
+			$set_moderator = false;
+			if ($sql_ary['a_moderate'] == 1)
+			{
+				$set_moderator = true;
+			}
 
 			$db->sql_query('INSERT INTO ' . GALLERY_PERM_ROLES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 			$insert_role = $db->sql_nextid();
@@ -1604,6 +1609,25 @@ class acp_gallery
 							'perm_system'			=> $perm_system,
 						);
 						$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+						$sql = 'DELETE FROM ' . GALLERY_MODSCACHE_TABLE . " WHERE album_id = $album AND group_id = $group";
+						$db->sql_query($sql);
+						if ($set_moderator)
+						{
+							$sql = 'SELECT group_name FROM ' . GROUPS_TABLE . '
+								WHERE ' . $db->sql_in_set('group_id', $group);
+							$result = $db->sql_query($sql);
+							while ($row = $db->sql_fetchrow($result))
+							{
+								$group_name = $row['group_name'];
+							}
+							$db->sql_freeresult($result);
+							$sql_ary = array(
+								'album_id'			=> $album,
+								'group_id'			=> $group,
+								'group_name'		=> $group_name,
+							);
+							$db->sql_query('INSERT INTO ' . GALLERY_MODSCACHE_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+						}
 					}
 				}
 			}
@@ -1623,6 +1647,7 @@ class acp_gallery
 					$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 				}
 			}
+			$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);
 			trigger_error('PERMISSIONS_STORED');
 		}
 

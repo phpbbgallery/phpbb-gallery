@@ -20,7 +20,7 @@
 <h1>{ACP_GALLERY_TITLE}</h1>
 <p>{ACP_GALLERY_TITLE_EXPLAIN}</p>
 
-<form action="{S_ALBUM_ACTION}" method="post">
+<form action="{S_ALBUM_ACTION}" method="post" id="gallery_acp">
 <!-- IF STEP == 1 -->
 	<fieldset>
 		<legend>{L_SELECT_ALBUMS}</legend>
@@ -43,7 +43,9 @@
 	</fieldset>
 	<fieldset>
 		<legend>{L_SELECT_GROUPS}</legend>
-			<dl><dt style="font-weight: bold;"><!-- BEGIN perm_grouprow --><input id="drop_perm" name="drop_perm[]" class="radio" type="checkbox" value="{perm_grouprow.GROUP_ID}" /><!-- IF perm_grouprow.GROUP_COLOUR --><span style="color: #{perm_grouprow.GROUP_COLOUR};">{perm_grouprow.GROUP_NAME}</span><!-- ELSE -->{perm_grouprow.GROUP_NAME}<!-- ENDIF --><br /><!-- END perm_grouprow --><!-- IF .perm_grouprow --><br /><input class="button1" type="submit" id="delete" name="delete" value="{L_DELETE_PERMISSIONS}" /><!-- ENDIF --></dt>
+			<dl><dt style="font-weight: bold;"><!-- BEGIN perm_grouprow --><input id="drop_perm" name="drop_perm[]" class="radio" type="checkbox" value="{perm_grouprow.GROUP_ID}" /><!-- IF perm_grouprow.GROUP_COLOUR --><span style="color: #{perm_grouprow.GROUP_COLOUR};">{perm_grouprow.GROUP_NAME}</span><!-- ELSE -->{perm_grouprow.GROUP_NAME}<!-- ENDIF --><br /><!-- END perm_grouprow --><!-- IF .perm_grouprow --><br />
+			<a href="#" onclick="marklist('gallery_acp', 'drop_perm', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('gallery_acp', 'drop_perm', false); return false;">{L_UNMARK_ALL}</a><br />
+			<input class="button1" type="submit" id="delete" name="delete" value="{L_DELETE_PERMISSIONS}" /><!-- ENDIF --></dt>
 			<dd><select id="target" name="group_ids[]" multiple="multiple">
 				<!-- BEGIN grouprow --><option value="{grouprow.GROUP_ID}">{grouprow.GROUP_NAME}</option><!-- END grouprow -->
 			</select></dd></dl>

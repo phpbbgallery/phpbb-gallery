@@ -843,7 +843,7 @@ function make_personal_jumpbox($album_user_id, $select_id = false, $ignore_id = 
 
 function make_move_jumpbox($select_id = false, $ignore_id = false, $album = false, $ignore_acl = false, $ignore_nonpost = false, $ignore_emptycat = true, $only_acl_post = false, $return_array = false)
 {
-	global $db, $user, $auth;
+	global $db, $user, $auth, $album_access_array;
 
 	// This query is identical to the jumpbox one
 	$sql = 'SELECT *
@@ -942,6 +942,149 @@ function get_image_info($image_id)
 	}
 
 	return $row;
+}
+
+/**
+* Update Album-Information
+*/
+function update_lastimage_info($album_id)
+{
+	global $db, $user;
+
+	//update album-information
+	$images_real = $images = 0;
+	$sql = 'SELECT COUNT(image_id) images
+		FROM ' . GALLERY_IMAGES_TABLE . "
+		WHERE image_album_id = $album_id
+			AND image_approval = 1";
+	$result = $db->sql_query($sql);
+	if ($row = $db->sql_fetchrow($result))
+	{
+		$images = $row['images'];
+	}
+	$sql = 'SELECT COUNT(image_id) images_real
+		FROM ' . GALLERY_IMAGES_TABLE . "
+		WHERE image_album_id = $album_id";
+	$result = $db->sql_query($sql);
+	if ($row = $db->sql_fetchrow($result))
+	{
+		$images_real = $row['images_real'];
+	}
+	$sql = 'SELECT *
+		FROM ' . GALLERY_IMAGES_TABLE . "
+		WHERE image_album_id = $album_id
+			AND image_approval = 1
+		ORDER BY image_time DESC
+		LIMIT 1";
+	$result = $db->sql_query($sql);
+	if ($row = $db->sql_fetchrow($result))
+	{
+		$sql_ary = array(
+			'album_images_real'			=> $images_real,
+			'album_images'				=> $images,
+			'album_last_image_id'		=> $row['image_id'],
+			'album_last_image_time'		=> $row['image_time'],
+			'album_last_image_name'		=> $row['image_name'],
+			'album_last_username'		=> $row['image_username'],
+			'album_last_user_colour'	=> $row['image_user_colour'],
+			'album_last_user_id'		=> $row['image_user_id'],
+		);
+	}
+	else
+	{
+		$sql_ary = array(
+			'album_images_real'			=> 0,
+			'album_images'				=> 0,
+			'album_last_image_id'		=> 0,
+			'album_last_image_time'		=> 0,
+			'album_last_image_name'		=> '',
+			'album_last_username'		=> '',
+			'album_last_user_colour'	=> '',
+			'album_last_user_id'		=> 0,
+		);
+		if ($album_data['album_user_id'])
+		{
+			unset($sql_ary['album_last_user_colour']);
+		}
+	}
+	$db->sql_freeresult($result);
+	$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+		WHERE ' . $db->sql_in_set('album_id', $album_id);
+	$db->sql_query($sql);
+
+	return $row;
+}
+
+/**
+* Obtain list of moderators of each album
+*/
+function get_album_moderators(&$album_moderators, $album_id = false)
+{
+	global $config, $template, $db, $phpbb_root_path, $phpEx, $user;
+
+	// Have we disabled the display of moderators? If so, then return
+	// from whence we came ...
+	if (!$config['load_moderators'])
+	{
+		return;
+	}
+
+	$album_sql = '';
+
+	if ($album_id !== false)
+	{
+		if (!is_array($album_id))
+		{
+			$album_id = array($album_id);
+		}
+
+		// If we don't have a forum then we can't have a moderator
+		if (!sizeof($album_id))
+		{
+			return;
+		}
+
+		$album_sql = 'AND m.' . $db->sql_in_set('album_id', $album_id);
+	}
+
+	$sql_array = array(
+		'SELECT'	=> 'm.*, u.user_colour, g.group_colour, g.group_type',
+
+		'FROM'		=> array(
+			GALLERY_MODSCACHE_TABLE	=> 'm',
+		),
+
+		'LEFT_JOIN'	=> array(
+			array(
+				'FROM'	=> array(USERS_TABLE => 'u'),
+				'ON'	=> 'm.user_id = u.user_id',
+			),
+			array(
+				'FROM'	=> array(GROUPS_TABLE => 'g'),
+				'ON'	=> 'm.group_id = g.group_id',
+			),
+		),
+
+		'WHERE'		=> "m.display_on_index = 1 $album_sql",
+	);
+
+	$sql = $db->sql_build_query('SELECT', $sql_array);
+	$result = $db->sql_query($sql, 3600);
+
+	while ($row = $db->sql_fetchrow($result))
+	{
+		if (!empty($row['user_id']))
+		{
+			$album_moderators[$row['album_id']][] = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']);
+		}
+		else
+		{
+			$album_moderators[$row['album_id']][] = '<a' . (($row['group_colour']) ? ' style="color:#' . $row['group_colour'] . ';"' : '') . ' href="' . append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=group&amp;g=' . $row['group_id']) . '">' . (($row['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $row['group_name']] : $row['group_name']) . '</a>';
+		}
+	}
+	$db->sql_freeresult($result);
+
+	return;
 }
 
 ?>

@@ -543,62 +543,63 @@ switch ($mode)
 						$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_IMAGE_TITLE'];
 					}
 				}//submit
-					$template->assign_vars(array(
-						'ERROR'						=> $error,
-						'U_VIEW_ALBUM'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"),
-						'CAT_TITLE'					=> $album_data['album_name'],
-						'S_PIC_DESC_MAX_LENGTH'		=> $album_config['desc_length'],
-						'S_MAX_FILESIZE'			=> $album_config['max_file_size'],
-						'S_MAX_WIDTH'				=> $album_config['max_width'],
-						'S_MAX_HEIGHT'				=> $album_config['max_height'],
+				$template->assign_vars(array(
+					'ERROR'						=> $error,
+					'U_VIEW_ALBUM'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"),
+					'CAT_TITLE'					=> $album_data['album_name'],
+					'S_PIC_DESC_MAX_LENGTH'		=> $album_config['desc_length'],
+					'S_MAX_FILESIZE'			=> $album_config['max_file_size'],
+					'S_MAX_WIDTH'				=> $album_config['max_width'],
+					'S_MAX_HEIGHT'				=> $album_config['max_height'],
 
-						'S_JPG'					=> ($album_config['jpg_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
-						'S_PNG'					=> ($album_config['png_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
-						'S_GIF'					=> ($album_config['gif_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
-						'S_THUMBNAIL_SIZE'		=> $album_config['thumbnail_size'],
-						'S_THUMBNAIL'			=> ($album_config['gd_version']) ? true : false,
-						'S_MULTI_IMAGES'		=> ($album_config['upload_images'] > 1) ? true : false,
-						'S_ALBUM_ACTION'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=upload&amp;album_id=$album_id"),
+					'S_JPG'					=> ($album_config['jpg_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
+					'S_PNG'					=> ($album_config['png_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
+					'S_GIF'					=> ($album_config['gif_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
+					'S_THUMBNAIL_SIZE'		=> $album_config['thumbnail_size'],
+					'S_THUMBNAIL'			=> ($album_config['gd_version']) ? true : false,
+					'S_MULTI_IMAGES'		=> ($album_config['upload_images'] > 1) ? true : false,
+					'S_ALBUM_ACTION'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=upload&amp;album_id=$album_id"),
 
-						'IMAGE_RSZ_WIDTH'		=> $album_config['preview_rsz_width'],
-						'IMAGE_RSZ_HEIGHT'		=> $album_config['preview_rsz_height'],
-						'REQ_USERNAME'			=> (!$user->data['is_registered']) ? true : false,
-						'USERNAME'				=> request_var('username', '', true),
-						'IMAGE_NAME'			=> request_var('image_name', '', true),
-						'MESSAGE'				=> request_var('message', '', true),
-						'S_IMAGE'				=> true,
-						'S_UPLOAD'				=> true,
-					));
+					'IMAGE_RSZ_WIDTH'		=> $album_config['preview_rsz_width'],
+					'IMAGE_RSZ_HEIGHT'		=> $album_config['preview_rsz_height'],
+					'REQ_USERNAME'			=> (!$user->data['is_registered']) ? true : false,
+					'USERNAME'				=> request_var('username', '', true),
+					'IMAGE_NAME'			=> request_var('image_name', '', true),
+					'MESSAGE'				=> request_var('message', '', true),
+					'S_IMAGE'				=> true,
+					'S_UPLOAD'				=> true,
+				));
 
-					$count = 0;
-					while($count < $album_config['upload_images'])
+				$count = 0;
+				while($count < $album_config['upload_images'])
+				{
+					$template->assign_block_vars('upload_image', array());
+					$count++;
+				}
+
+				if ($album_config['gd_version'] == 0)
+				{
+					$template->assign_block_vars('switch_manual_thumbnail', array());
+				}
+				if (!$error)
+				{
+					if (!$album_data['album_approval'])
 					{
-						$template->assign_block_vars('upload_image', array());
-						$count++;
-					}
-
-					if ($album_config['gd_version'] == 0)
-					{
-						$template->assign_block_vars('switch_manual_thumbnail', array());
-					}
-					if (!$error)
-					{
-						if (!$album_data['album_approval'])
-						{
-							$message = $user->lang['ALBUM_UPLOAD_SUCCESSFUL'];
-						}
-						else
-						{
-							$message = $user->lang['ALBUM_UPLOAD_NEED_APPROVAL'];
-							$image_id = false;
-						}
+						$message = $user->lang['ALBUM_UPLOAD_SUCCESSFUL'];
 					}
 					else
 					{
-						$submit = false;
-						$message = $user->lang['UPLOAD_NO_FILE'];
+						$message = $user->lang['ALBUM_UPLOAD_NEED_APPROVAL'];
+						$image_id = false;
 					}
-					$message .= '<br />';
+				}
+				else
+				{
+					$submit = false;
+					$message = $user->lang['UPLOAD_NO_FILE'];
+				}
+				$message .= '<br />';
+				update_lastimage_info($album_id);
 			}
 			break;
 			case 'edit':
@@ -639,6 +640,16 @@ switch ($mode)
 						SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
 						WHERE image_id = $image_id";
 					$db->sql_query($sql);
+
+					if ($album_data['album_last_user_id'] == $image_id)
+					{
+						$sql_ary = array(
+							'album_last_image_name'		=> $image_name,
+						);
+						$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+							WHERE ' . $db->sql_in_set('album_id', $image_data['image_album_id']);
+						$db->sql_query($sql);
+					}
 				}
 				$message_parser				= new parse_message();
 				$message_parser->message	= $image_data['image_desc'];
@@ -671,7 +682,7 @@ switch ($mode)
 				if (confirm_box(true))
 				{
 
-					if (($image_data['image_thumbnail'] <> '') && @file_exists(ALBUM_CACHE_PATH . $image_data['image_thumbnail']))
+					if (($image_data['image_thumbnail'] <> '') && @file_exists($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_thumbnail']))
 					{
 						@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_thumbnail']);
 					}
@@ -688,6 +699,9 @@ switch ($mode)
 					$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . "
 						WHERE image_id = $image_id";
 					$result = $db->sql_query($sql);
+
+					//update album-information
+					update_lastimage_info($album_id);
 
 					$submit = true;
 					$message = $user->lang['DELETED_IMAGE'] . '<br />';

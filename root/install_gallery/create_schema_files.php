@@ -16,7 +16,7 @@
 
 @set_time_limit(0);
 
-$schema_path = './schemas/phpbb_gallery_permissions/';
+$schema_path = './schemas/phpbb_gallery_albums/';
 
 if (!is_writable($schema_path))
 {
@@ -801,7 +801,7 @@ foreach ($supported_dbms as $dbms)
 function get_schema_struct()
 {
 	$schema_data = array();
-/*
+//*
 	$schema_data['phpbb_gallery_albums'] = array(
 		'COLUMNS'		=> array(
 			'album_id'				=> array('UINT', NULL, 'auto_increment'),
@@ -817,6 +817,18 @@ function get_schema_struct()
 			'album_desc_uid'		=> array('VCHAR:8', ''),
 			'album_desc_bitfield'	=> array('VCHAR:255', ''),
 			'album_user_id'			=> array('UINT', 0),
+
+			'album_images'				=> array('UINT', 0),
+			'album_images_real'			=> array('UINT', 0),
+			'album_last_image_id'		=> array('UINT', 0),
+			'album_image'				=> array('VCHAR', ''),
+			'album_last_image_time'		=> array('INT:11', 0),
+			'album_last_image_name'		=> array('VCHAR', ''),
+			'album_last_username'		=> array('VCHAR', ''),
+			'album_last_user_colour'	=> array('VCHAR:6', ''),
+			'album_last_user_id'		=> array('UINT', 0),
+			'display_on_index'			=> array('UINT:1', 1),
+			'display_subalbum_list'		=> array('UINT:1', 1),
 
 			'album_order'			=> array('UINT', 0),
 			'album_view_level'		=> array('UINT:3', 1),
@@ -897,6 +909,22 @@ function get_schema_struct()
 			'image_album_id'		=> array('INDEX', 'image_album_id'),
 			'image_user_id'			=> array('INDEX', 'image_user_id'),
 			'image_time'			=> array('INDEX', 'image_time'),
+		),
+	);
+//*/
+/*
+	$schema_data['phpbb_gallery_modscache'] = array(
+		'COLUMNS'		=> array(
+			'album_id'				=> array('UINT', 0),
+			'user_id'				=> array('UINT', 0),
+			'username'				=> array('VCHAR', ''),
+			'group_id'				=> array('UINT', 0),
+			'group_name'			=> array('VCHAR', ''),
+			'display_on_index'		=> array('TINT:1', 1),
+		),
+		'KEYS'		=> array(
+			'disp_idx'		=> array('INDEX', 'display_on_index'),
+			'album_id'		=> array('INDEX', 'album_id'),
 		),
 	);
 //*/
