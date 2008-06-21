@@ -66,12 +66,14 @@ function get_album_access_array ()
 				$album_access_array[$album['album_id']][$permission] = 0;
 			}
 		}
+		//testing user permissions?
+		$user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
 
 		$sql = 'SELECT g.group_id
 			FROM ' . GROUPS_TABLE . ' as g
 			LEFT JOIN ' . USER_GROUP_TABLE . " as ug
 				ON ug.group_id = g.group_id
-			WHERE ug.user_id = {$user->data['user_id']}
+			WHERE ug.user_id = $user_id
 				AND ug.user_pending = 0";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
@@ -84,7 +86,7 @@ function get_album_access_array ()
 			FROM " . GALLERY_PERMISSIONS_TABLE . " as p
 			LEFT JOIN " .  GALLERY_PERM_ROLES_TABLE .  " as pr
 				ON p.perm_role_id = pr.role_id
-			WHERE ( p.perm_user_id = {$user->data['user_id']}
+			WHERE ( p.perm_user_id = $user_id
 				OR p.perm_group_id IN ($user_groups_ary))
 			GROUP BY p.perm_system DESC, p.perm_album_id ASC";
 		$result = $db->sql_query($sql);
