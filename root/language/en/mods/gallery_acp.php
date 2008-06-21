@@ -196,6 +196,8 @@ $lang = array_merge($lang, array(
 	'FAKE_THUMB_SIZE'				=> 'Thumbnail-size',
 	'FAKE_THUMB_SIZE_EXP'			=> 'If you want to resize them to the full size, remember 16 pixels for the black-info-line',
 
+	'MISSING_ALBUM_NAME'			=> 'You need to enter a name for the album',
+
 	'OWN_PERSONAL_ALBUMS'			=> 'Own personal albums',
 
 	'PERMISSION'					=> 'Permission',
@@ -220,6 +222,8 @@ $lang = array_merge($lang, array(
 
 	'PERMISSION_EMPTY'				=> 'You didn\'t set all permissions.',
 	'PERMISSIONS_STORED'			=> 'Permissions were stored successful.',
+
+	'REMOVE_IMAGES_FOR_CAT'			=> 'You need to remove the images of the album, before you can switch the album-type to category.',
 
 	'SELECT_ALBUMS'					=> 'Select albums',
 	'SELECTED_ALBUMS'				=> 'Selected albums',

@@ -812,6 +812,10 @@ class acp_gallery
 			);
 			generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], request_var('desc_parse_bbcode', false), request_var('desc_parse_urls', false), request_var('desc_parse_smilies', false));
 
+			if ($album_data['album_name'] == '')
+			{
+				trigger_error($user->lang['MISSING_ALBUM_NAME'] . adm_back_link(append_sid("{$phpbb_admin_path}index.$phpEx", 'i=gallery&amp;mode=manage_albums&action=create')));
+			}
 			//the following is copied from the forum management. thx to the developers
 			if ($album_data['parent_id'])
 			{
@@ -987,6 +991,14 @@ class acp_gallery
 			);
 			generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], request_var('desc_parse_bbcode', false), request_var('desc_parse_urls', false), request_var('desc_parse_smilies', false));
 			$row = get_album_info($album_id);
+			if (($row['album_images_real'] > 0) && ($album_data['album_type'] == 1))
+			{
+				trigger_error($user->lang['REMOVE_IMAGES_FOR_CAT'] . adm_back_link(append_sid("{$phpbb_admin_path}index.$phpEx", 'i=gallery&amp;mode=manage_albums&amp;action=edit&amp;album_id=' . $album_id)));
+			}
+			if ($album_data['album_name'] == '')
+			{
+				trigger_error($user->lang['MISSING_ALBUM_NAME'] . adm_back_link(append_sid("{$phpbb_admin_path}index.$phpEx", 'i=gallery&amp;mode=manage_albums&amp;action=edit&amp;album_id=' . $album_id)));
+			}
 			if ($row['parent_id'] != $album_data['parent_id'])
 			{//if the parent is different, we'll have to watch out because the left_id and right_id have changed
 				//how many do we have to move and how far

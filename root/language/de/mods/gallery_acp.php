@@ -195,6 +195,8 @@ $lang = array_merge($lang, array(
 	'FAKE_THUMB_SIZE'				=> 'Thumbnailgröße',
 	'FAKE_THUMB_SIZE_EXP'			=> 'Wenn du die volle Größe wählst, denke an die 16 Pixel für die schwarze Info-Zeile',
 
+	'MISSING_ALBUM_NAME'			=> 'Du musst einen Namen für das Album eintragen.',
+
 	'OWN_PERSONAL_ALBUMS'			=> 'Eigene persönliche Alben',
 
 	'PERMISSION'					=> 'Berechtigung',
@@ -219,6 +221,8 @@ $lang = array_merge($lang, array(
 
 	'PERMISSION_EMPTY'				=> 'Du hast nicht alle Berechtigungen gesetzt.',
 	'PERMISSIONS_STORED'			=> 'Berechtigungen erfolgreich gespeichert.',
+
+	'REMOVE_IMAGES_FOR_CAT'			=> 'Du musst erst die Bilder aus dem Album entfernen, bevor du das Album zu einer Kategorie machen kannst.',
 
 	'SELECT_ALBUMS'					=> 'Wähle Alben',
 	'SELECTED_ALBUMS'				=> 'Ausgewählte Alben',
