@@ -252,7 +252,7 @@ if ($album_config['rate'])
 		{
 			if ($album_data['album_rate_level'] == 0)
 			{
-				$ratebox = '<a href="' . append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login') . '">' . $user->lang['LOGIN_TO_RATE'] . '</a>';
+				$ratebox = '<a href="' . append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=login&amp;redirect=" . urlencode("{$gallery_root_path}image_page.$phpEx?album_id=$album_id&image_id=$image_id")) . '">' . $user->lang['LOGIN_TO_RATE'] . '</a>';
 			}
 		}
 		else if ($user->data['user_id'] == $image_data['image_user_id'])
