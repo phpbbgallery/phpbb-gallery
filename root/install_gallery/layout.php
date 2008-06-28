@@ -65,8 +65,6 @@ echo '							<li' . (($version == '0.2.0') ? $activemenu : '') . '><a href="inst
 echo '							<li class="header">' . $user->lang['INSTALLER_UPDATE_MENU'] . ' 0.1.x</li>';
 echo '							<li' . (($version == '0.1.3') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.1.3"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.1.3</span></a></li>';
 echo '							<li' . (($version == '0.1.2') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.1.2"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.1.2 - tsr</span></a></li>';
-echo '							<li class="header">' . $user->lang['INSTALLER_OTHERS'] . '</li>';
-echo '							<li' . (($mode == 'delete') ? $activemenu : '') . '><a href="install.php?mode=delete"><span>' . $user->lang['INSTALLER_UNINSTALL'] . '</span></a></li>';
 echo '						</ul>';
 echo '					</div>';
 echo '					<div id="main">';

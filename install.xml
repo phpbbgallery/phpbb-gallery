@@ -357,7 +357,7 @@ define('GALLERY_PERM_ROLES_TABLE',		$table_prefix . 'gallery_roles');]]></action
         <action type="after-add"><![CDATA[<!-- IF postrow.U_GALLERY --><li class="gallery-icon"><a href="{postrow.U_GALLERY}" title="{L_PERSONAL_ALBUM}"><span>{L_PERSONAL_ALBUM}</span></a></li><!-- ENDIF -->]]></action>
       </edit>
     </open>
-    <open src="styles/prosilver/theme/bidicss">
+    <open src="styles/prosilver/theme/bidi.css">
       <edit>
         <find><![CDATA[.rtl .sitehome, .rtl .icon-faq, .rtl .icon-members, .rtl .icon-home, .rtl .icon-ucp, .rtl .icon-register, .rtl .icon-logout,]]></find>
         <action type="before-add"><![CDATA[.rtl .icon-gallery,]]></action>

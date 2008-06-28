@@ -990,7 +990,7 @@ function upload_image(&$image_data)
 		'image_user_ip'			=> $user->ip,
 		'image_time'			=> $image_data['image_time'],
 		'image_album_id'		=> $image_data['image_album_id'],
-		'image_approval'		=> $image_data['image_approval'],
+		'image_status'			=> 1,
 	);
 
 	$message_parser				= new parse_message();

@@ -147,7 +147,7 @@ define('GALLERY_PERM_ROLES_TABLE',		$table_prefix . 'gallery_roles');]]></action
         <action type="after-add"><![CDATA[$sql_ary['session_album_id'] = $this->page['album'];]]></action>
       </edit>
     </open>
-    <open src="styles/prosilver/theme/bidicss">
+    <open src="styles/prosilver/theme/bidi.css">
       <edit>
         <find><![CDATA[.rtl .sitehome, .rtl .icon-faq, .rtl .icon-members, .rtl .icon-home, .rtl .icon-ucp, .rtl .icon-register, .rtl .icon-logout,]]></find>
         <action type="before-add"><![CDATA[.rtl .icon-gallery,]]></action>

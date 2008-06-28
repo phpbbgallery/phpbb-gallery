@@ -408,7 +408,7 @@ class acp_gallery
 					'image_user_ip'			=> $image_user_ip,
 					'image_time'			=> $image_time + $counter,
 					'image_album_id'		=> $album_id,
-					'image_approval'		=> 1,
+					'image_status'			=> 1,
 				);
 				if ($sql_ary['image_name'] == '')
 				{
