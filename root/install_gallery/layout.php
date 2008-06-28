@@ -50,23 +50,23 @@ echo '			<span class="corners-top"><span></span></span>';
 echo '				<div id="content">';
 echo '					<div id="menu">';
 echo '						<ul>';
-echo '							<li' . (($mode == 'else') ? $activemenu : '') . '><a href="install.php"><span>' . $user->lang['INSTALLER_INTRO'] . '</span></a></li>';
 echo '							<li class="header">' . $user->lang['INSTALLER_INSTALL_MENU'] . '</li>';
 echo '							<li' . (($mode == 'install') ? $activemenu : '') . '><a href="install.php?mode=install"><span>' . sprintf($user->lang['INSTALLER_INSTALL_VERSION'], $new_mod_version) . '</span></a></li>';
-echo '							<li class="header">' . $user->lang['INSTALLER_UPDATE_MENU'] . '</li>';
-echo '							<li' . (($version == '0.1.2') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.1.2"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.1.2 - tsr</span></a></li>';
-echo '							<li' . (($version == '0.1.3') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.1.3"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.1.3</span></a></li>';
-echo '							<li class="header">' . $user->lang['INSTALLER_UPDATE_MENU'] . '</li>';
-echo '							<li' . (($version == '0.2.0') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.2.3"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.2.0</span></a></li>';
-echo '							<li' . (($version == '0.2.1') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.2.3"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.2.1</span></a></li>';
-echo '							<li' . (($version == '0.2.2') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.2.3"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.2.2</span></a></li>';
-echo '							<li' . (($version == '0.2.3') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.2.3"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.2.3</span></a></li>';
-echo '							<li class="header">' . $user->lang['INSTALLER_UPDATE_MENU'] . '</li>';
-echo '							<li' . (($version == '0.3.0') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.3.0"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.3.0</span></a></li>';
-echo '							<li' . (($version == '0.3.1') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.3.1"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.3.1</span></a></li>';
-echo '							<li' . (($version == 'svn') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=svn"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . ' SVN</span></a></li>';
-echo '							<li class="header">' . $user->lang['INSTALLER_CONVERT_MENU'] . '</li>';
 echo '							<li' . (($mode == 'convert') ? $activemenu : '') . '><a href="install.php?mode=convert"><span>' . sprintf($user->lang['INSTALLER_CONVERT_NOTE'], $new_mod_version) . '</span></a></li>';
+echo '							<li class="header">' . $user->lang['INSTALLER_UPDATE_MENU'] . ' 0.3.x</li>';
+echo '							<li' . (($version == 'svn') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=svn"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . ' SVN</span></a></li>';
+echo '							<li' . (($version == '0.3.1') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.3.1"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.3.1</span></a></li>';
+echo '							<li' . (($version == '0.3.0') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.3.0"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.3.0</span></a></li>';
+echo '							<li class="header">' . $user->lang['INSTALLER_UPDATE_MENU'] . ' 0.2.x</li>';
+echo '							<li' . (($version == '0.2.3') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.2.3"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.2.3</span></a></li>';
+echo '							<li' . (($version == '0.2.2') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.2.3"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.2.2</span></a></li>';
+echo '							<li' . (($version == '0.2.1') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.2.3"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.2.1</span></a></li>';
+echo '							<li' . (($version == '0.2.0') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.2.3"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.2.0</span></a></li>';
+echo '							<li class="header">' . $user->lang['INSTALLER_UPDATE_MENU'] . ' 0.1.x</li>';
+echo '							<li' . (($version == '0.1.3') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.1.3"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.1.3</span></a></li>';
+echo '							<li' . (($version == '0.1.2') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.1.2"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.1.2 - tsr</span></a></li>';
+echo '							<li class="header">' . $user->lang['INSTALLER_OTHERS'] . '</li>';
+echo '							<li' . (($mode == 'delete') ? $activemenu : '') . '><a href="install.php?mode=delete"><span>' . $user->lang['INSTALLER_UNINSTALL'] . '</span></a></li>';
 echo '						</ul>';
 echo '					</div>';
 echo '					<div id="main">';
@@ -101,44 +101,6 @@ if ($mode == 'install')
 		echo '		<dl>';
 		echo '			<dt><label for="install">v' . $new_mod_version . ':</label></dt>';
 		echo '			<dd><label><input name="install" value="1" class="radio" type="radio" />' . $user->lang['YES'] . '</label><label><input name="install" value="0" checked="checked" class="radio" type="radio" />' . $user->lang['NO'] . '</label></dd>';
-		echo '		</dl>';
-		echo '		<p class="submit-buttons">';
-		echo '			<input class="button1" id="submit" name="submit" value="Submit" type="submit" />&nbsp;';
-		echo '			<input class="button2" id="reset" name="reset" value="Reset" type="reset" />';
-		echo '		</p>';
-		echo '	</fieldset>';
-		echo '</form>';
-	}
-}
-else if ($mode == 'update')
-{
-	if ($update == 1)
-	{
-		if ($updated)
-		{
-			echo '<div class="successbox">';
-			echo '	<h3>' . $user->lang['INFORMATION'] . '</h3>';
-			echo '	<p>' . sprintf($user->lang['INSTALLER_UPDATE_SUCCESSFUL'], $version, $new_mod_version) . '</p>';
-			echo '	<p>' . sprintf($user->lang['AFTER_INSTALL_GOTO'], '<a href="' . $phpbb_root_path . GALLERY_ROOT_PATH . '">', '</a>') . '</p>';
-			echo '</div>';
-		}
-		else
-		{
-			echo '<div class="errorbox">';
-			echo '	<h3>' . $user->lang['WARNING'] . '</h3>';
-			echo '	<p>' . sprintf($user->lang['INSTALLER_UPDATE_UNSUCCESSFUL'], $version, $new_mod_version) . '</p>';
-			echo '</div>';
-		}
-	}
-	else
-	{
-		echo '<h1>' . $user->lang['INSTALLER_UPDATE_WELCOME'] . '</h1>';
-		echo '<form id="acp_board" method="post" action="install.php?mode=' . $mode . '&amp;v=' . $version . '">';
-		echo '	<fieldset>';
-		echo '		<legend>' . $user->lang['INSTALLER_UPDATE'] . '</legend>';
-		echo '		<dl>';
-		echo '			<dt><label for="update">' . sprintf($user->lang['INSTALLER_UPDATE_NOTE'], $version, $new_mod_version) . ':</label></dt>';
-		echo '			<dd><label><input name="update" value="1" class="radio" type="radio" />' . $user->lang['YES'] . '</label><label><input name="update" value="0" checked="checked" class="radio" type="radio" />' . $user->lang['NO'] . '</label></dd>';
 		echo '		</dl>';
 		echo '		<p class="submit-buttons">';
 		echo '			<input class="button1" id="submit" name="submit" value="Submit" type="submit" />&nbsp;';
@@ -189,6 +151,44 @@ else if ($mode == 'convert')
 		echo '		<dl>';
 		echo '			<dt><label for="convert">' . sprintf($user->lang['INSTALLER_CONVERT_NOTE'], $new_mod_version) . ':</label></dt>';
 		echo '			<dd><label><input name="convert" value="1" class="radio" type="radio" />' . $user->lang['YES'] . '</label><label><input name="convert" value="0" checked="checked" class="radio" type="radio" />' . $user->lang['NO'] . '</label></dd>';
+		echo '		</dl>';
+		echo '		<p class="submit-buttons">';
+		echo '			<input class="button1" id="submit" name="submit" value="Submit" type="submit" />&nbsp;';
+		echo '			<input class="button2" id="reset" name="reset" value="Reset" type="reset" />';
+		echo '		</p>';
+		echo '	</fieldset>';
+		echo '</form>';
+	}
+}
+else if ($mode == 'update')
+{
+	if ($update == 1)
+	{
+		if ($updated)
+		{
+			echo '<div class="successbox">';
+			echo '	<h3>' . $user->lang['INFORMATION'] . '</h3>';
+			echo '	<p>' . sprintf($user->lang['INSTALLER_UPDATE_SUCCESSFUL'], $version, $new_mod_version) . '</p>';
+			echo '	<p>' . sprintf($user->lang['AFTER_INSTALL_GOTO'], '<a href="' . $phpbb_root_path . GALLERY_ROOT_PATH . '">', '</a>') . '</p>';
+			echo '</div>';
+		}
+		else
+		{
+			echo '<div class="errorbox">';
+			echo '	<h3>' . $user->lang['WARNING'] . '</h3>';
+			echo '	<p>' . sprintf($user->lang['INSTALLER_UPDATE_UNSUCCESSFUL'], $version, $new_mod_version) . '</p>';
+			echo '</div>';
+		}
+	}
+	else
+	{
+		echo '<h1>' . $user->lang['INSTALLER_UPDATE_WELCOME'] . '</h1>';
+		echo '<form id="acp_board" method="post" action="install.php?mode=' . $mode . '&amp;v=' . $version . '">';
+		echo '	<fieldset>';
+		echo '		<legend>' . $user->lang['INSTALLER_UPDATE'] . '</legend>';
+		echo '		<dl>';
+		echo '			<dt><label for="update">' . sprintf($user->lang['INSTALLER_UPDATE_NOTE'], $version, $new_mod_version) . ':</label></dt>';
+		echo '			<dd><label><input name="update" value="1" class="radio" type="radio" />' . $user->lang['YES'] . '</label><label><input name="update" value="0" checked="checked" class="radio" type="radio" />' . $user->lang['NO'] . '</label></dd>';
 		echo '		</dl>';
 		echo '		<p class="submit-buttons">';
 		echo '			<input class="button1" id="submit" name="submit" value="Submit" type="submit" />&nbsp;';
