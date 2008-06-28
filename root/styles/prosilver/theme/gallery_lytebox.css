@@ -63,3 +63,15 @@ ul.profile-icons li.gallery-icon	{ width: 20px; height: 20px; }
 	padding: 1px 0 0 17px;
 	background-image: url("{T_THEME_PATH}/images/icon_gallery.gif");
 }
+
+dd.g_rating, dd.g_comments {
+	width: 12%;
+	text-align: center;
+	font-size: 1.1em;
+}
+
+dd.g_status {
+	width: 15%;
+	text-align: center;
+	font-size: 1.1em;
+}
