@@ -866,7 +866,7 @@ function get_schema_struct()
 		'PRIMARY_KEY'	=> 'config_name',
 	);
 //*/
-/*
+//*
 	$schema_data['phpbb_gallery_images'] = array(
 		'COLUMNS'		=> array(
 			'image_id'				=> array('UINT', NULL, 'auto_increment'),
@@ -883,6 +883,7 @@ function get_schema_struct()
 			'image_time'			=> array('UINT:11', 0),
 			'image_album_id'		=> array('UINT', 0),
 			'image_view_count'		=> array('UINT:11', 0),
+			'image_status'			=> array('UINT:3', 0),
 			'image_rates'			=> array('UINT', 0),
 			'image_rate_points'		=> array('UINT', 0),
 			'image_rate_avg'		=> array('UINT', 0),
