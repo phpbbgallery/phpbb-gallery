@@ -59,8 +59,6 @@ CREATE TABLE phpbb_gallery_images (
 	image_time number(11) DEFAULT '0' NOT NULL,
 	image_album_id number(8) DEFAULT '0' NOT NULL,
 	image_view_count number(11) DEFAULT '0' NOT NULL,
-	image_lock number(3) DEFAULT '0' NOT NULL,
-	image_approval number(3) DEFAULT '0' NOT NULL,
 	image_rates number(8) DEFAULT '0' NOT NULL,
 	image_rate_points number(8) DEFAULT '0' NOT NULL,
 	image_rate_avg number(8) DEFAULT '0' NOT NULL,

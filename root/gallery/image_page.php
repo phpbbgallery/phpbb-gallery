@@ -100,16 +100,9 @@ if (($album_config['rate'] <> 0) && $user->data['is_registered'])
 // ------------------------------------
 // Check Pic Approval
 // ------------------------------------
-
-if ($user->data['user_type'] <> USER_FOUNDER)
+if (($album_access_array[$album_id]['a_moderate'] != 1) && (!$image_data['image_status'] != 1))
 {
-	if (($album_data['album_approval'] == ADMIN) || (($album_data['album_approval'] == MOD) || $album_access_array[$album_id]['a_moderate']))
-	{
-		if (!$image_data['image_approval'])
-		{
-			trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
-		}
-	}
+	trigger_error($user->lang['NOT_AUTHORISED']);
 }
 
 // ------------------------------------
@@ -193,8 +186,8 @@ $previous_id = $next_id = $last_id = 0;
 $do_next = false;
 $sort_method = request_var('sort_method', $album_config['sort_method']);
 $sort_order = request_var('sort_order', $album_config['sort_order']);
-$image_approval_sql = ' AND image_approval = 1';
-if (($album_data['album_approval'] <> ALBUM_USER) && (($user->data['user_type'] == USER_FOUNDER) || (($album_access_array[$album_id]['a_moderate'] == 1) && ($album_data['album_approval'] == ALBUM_MOD))))
+$image_approval_sql = ' AND image_status = 1';
+if ($album_access_array[$album_id]['a_moderate'] == 1)
 {
 	$image_approval_sql = '';
 }

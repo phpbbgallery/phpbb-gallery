@@ -153,10 +153,10 @@ if ($album_id <> 0)
 	if ($total_pics > 0)
 	{
 		$limit_sql = ($start == 0) ? $pics_per_page : $start .','. $pics_per_page;
-		$pic_approval_sql = ' AND image_approval = 1';
-		if (($album_data['album_approval'] <> ALBUM_USER) && (($user->data['user_type'] == USER_FOUNDER) || (($album_user_access['moderator'] == 1) && ($album_data['album_approval'] == ALBUM_MOD))))
+		$pic_approval_sql = ' AND image_status = 1';
+		if ($album_access_array[$album_id]['a_moderate'] == 1)
 		{
-				$pic_approval_sql = '';
+			$pic_approval_sql = '';
 		}
 
 		$sql = 'SELECT *
@@ -171,10 +171,6 @@ if ($album_id <> 0)
 		while( $row = $db->sql_fetchrow($result) )
 		{
 			$picrow[] = $row;
-		}
-		for ($i = 0 ; $i < count($picrow); $i++ )
-		{
-			if ($picrow[$i]['image_approval'] == 0 ) $tot_unapproved++ ;
 		}
 		for ($i = 0; $i < count($picrow); $i += $album_config['cols_per_page'])
 		{
@@ -198,17 +194,8 @@ if ($album_id <> 0)
 					$picrow[$j]['rating'] = $picrow[$j]['image_rate_avg'] / 100;
 				}
 
-				$approval_link = false;
-				if ($album_data['album_approval'] <> ALBUM_USER)
-				{
-					if (($user->data['user_type'] == USER_FOUNDER) || (($album_access_array[$album_id]['a_moderate'] == 1) && ($album_data['album_approval'] == ALBUM_MOD)))
-					{
-						$approval_mode = ($picrow[$j]['image_approval'] == 0) ? 'approval' : 'unapproval';
-						$approval_link = '<a href="'. append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?mode=$approval_mode&amp;image_id=" . $picrow[$j]['image_id']) . '">';
-						$approval_link .= ($picrow[$j]['image_approval'] == 0) ? '<b>' . $user->lang['APPROVE'] . '</b>' : $user->lang['UNAPPROVE'];
-						$approval_link .= '</a>';
-					}
-				}
+				$approval_link = (($album_access_array[$album_id]['a_moderate'] == 1) && ($picrow[$j]['image_status'] == 0)) ? '<a href="'. append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "mode=queue_details&amp;album_id=$album_id&amp;option_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['APPROVE'] . '</a>' : '';
+
 
 				$message_parser				= new parse_message();
 				$message_parser->message	= $picrow[$j]['image_desc'];
@@ -233,11 +220,10 @@ if ($album_id <> 0)
 
 					'EDIT'		=> $allow_edit ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['EDIT_IMAGE'] . '</a>' : '',
 					'DELETE'	=> $allow_delete ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=delete&amp;album_id=$album_id&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['DELETE_IMAGE'] . '</a>' : '',
-					'MOVE'		=> ($album_access_array[$album_id]['a_moderate'] == 1) ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?mode=move&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['MOVE'] . '</a>' : '',
-					'LOCK'		=> ($album_access_array[$album_id]['a_moderate'] == 1) ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?mode=" . (($picrow[$j]['image_lock'] == 0) ? 'lock' : 'unlock') . "&amp;image_id=" . $picrow[$j]['image_id']) . '">' . (($picrow[$j]['image_lock'] == 0) ? $user->lang['LOCK'] : $user->lang['UNLOCK']) . '</a>' : '',
+					'MOVE'		=> ($album_access_array[$album_id]['a_moderate'] == 1) ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "action=images_move&amp;album_id=$album_id&amp;image_id=" . $picrow[$j]['image_id']) . '&amp;redirect=redirect">' . $user->lang['MOVE'] . '</a>' : '',
+					'STATUS'	=> ($album_access_array[$album_id]['a_moderate'] == 1) ? '<a href="'. append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "mode=queue_details&amp;album_id=$album_id&amp;option_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['IMAGE_STATUS'] . '</a>' : '',
 					'IP'		=> ($user->data['user_type'] == USER_FOUNDER) ? $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $picrow[$j]['image_user_ip'] . '">' . $picrow[$j]['image_user_ip'] . '</a><br />' : ''
-
-					));
+				));
 			}
 		}
 
@@ -316,7 +302,6 @@ $template->assign_vars(array(
 										append_sid("{$phpbb_root_path}ucp.$phpEx", "i=gallery&amp;mode=manage_albums&amp;action=create&amp;parent_id=$album_id&amp;redirect=album") : '',
 	'U_EDIT_ALBUM'				=> ($album_data['album_user_id'] == $user->data['user_id']) ?
 										append_sid("{$phpbb_root_path}ucp.$phpEx", "i=gallery&amp;mode=manage_albums&amp;action=edit&amp;album_id=$album_id&amp;redirect=album") : '',
-	'WAITING'					=> ($tot_unapproved == 0) ? '' : $tot_unapproved . $user->lang['WAITING_FOR_APPROVAL'],
 
 	'S_COLS'					=> $album_config['cols_per_page'],
 	'S_COL_WIDTH'				=> (100/$album_config['cols_per_page']) . '%',

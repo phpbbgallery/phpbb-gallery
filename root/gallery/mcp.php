@@ -21,858 +21,278 @@ include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 $user->session_begin();
 $auth->acl($user->data);
 $user->setup('mods/gallery');
+$user->add_lang('mods/gallery_mcp');
 
 
 include_once("{$phpbb_root_path}{$gallery_root_path}includes/common.$phpEx");
 include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
 $album_access_array = get_album_access_array();
+include_once("{$phpbb_root_path}{$gallery_root_path}mcp/mcp_functions.$phpEx");
 
-// ------------------------------------
-// set $mode (select action)
-// ------------------------------------
-$mode = request_var('mode', '');
-$target = request_var('target', 0);
-
-if (isset($_POST['mode']))
-{
-	// Oh data from Mod CP
-	if (isset($_POST['move']))
-	{
-		$mode = 'move';
-	}
-	else if (isset($_POST['lock']))
-	{
-		$mode = 'lock';
-	}
-	else if (isset($_POST['unlock']))
-	{
-		$mode = 'unlock';
-	}
-	else if (isset($_POST['delete']))
-	{
-		$mode = 'delete';
-	}
-	else if (isset($_POST['approval']))
-	{
-		$mode = 'approval';
-	}
-	else if (isset($_POST['unapproval']))
-	{
-		$mode = 'unapproval';
-	}
-	else
-	{
-		$mode = '';
-	}
-}
-else if (isset($_GET['mode']))
-{
-	$mode = trim($_GET['mode']);
-}
-else
-{
-	$mode = '';
-}
-//
-// END $mode (select action)
-//
-
-// ------------------------------------
-// Get the $pic_id from GET method then query out the category
-// If $pic_id not found we will assign it to FALSE
-// We will check $pic_id[] in POST method later (in $mode carry out)
-// ------------------------------------
-
-$pic_id = request_var('image_id', 0);
+//Basic-Information && Permissions
+$image_id = request_var('image_id', 0);
 $album_id = request_var('album_id', 0);
-
-if($pic_id)
+if($image_id)
 {
 	$sql = 'SELECT *
 			FROM ' . GALLERY_IMAGES_TABLE . '
-			WHERE image_id = ' . $pic_id;
+			WHERE image_id = ' . $image_id;
 	$result = $db->sql_query($sql);
-
-	$thispic = $db->sql_fetchrow($result);
-
-	if (empty($thispic))
+	$image_data = $db->sql_fetchrow($result);
+	if (empty($image_data))
 	{
-		trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_WARNING);
+		trigger_error('IMAGE_NOT_EXIST');
 	}
-
-	$album_id = $thispic['image_album_id'];
-	$user_id = $thispic['image_user_id'];
+	$user_id = $image_data['image_user_id'];
+	//deny-cheating
+	$album_id = $image_data['image_album_id'];
 }
-
-
-// ------------------------------------
-// Get the cat info
-// ------------------------------------
 $sql = 'SELECT *
 	FROM ' . GALLERY_ALBUMS_TABLE . '
 	WHERE album_id = ' . $album_id;
 $result = $db->sql_query($sql);
 $album_data = $db->sql_fetchrow($result);
-
 if (empty($album_data))
 {
-	trigger_error($user->lang['ALBUM_NOT_EXIST'], E_USER_WARNING);
+	trigger_error('ALBUM_NOT_EXIST');
 }
 if ($album_data['album_user_id'] > 0)
 {
 	$album_access_array[$album_id] = $album_access_array[(($album_data['album_user_id'] == $user->data['user_id']) ? -2 : -3)];
 }
+generate_album_nav($album_data);
+$template->assign_block_vars('navlinks', array(
+	'FORUM_NAME'	=> $user->lang['MCP'],
+	'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $album_data['album_id']),
+));
 
-// ------------------------------------
-// Salting the form...yumyum ...
-// ------------------------------------
-add_form_key('mcp');
+$template->assign_vars(array(
+	'EDIT_IMG'		=> $user->img('icon_post_edit', 'EDIT_IMAGE'),
+	'DELETE_IMG'	=> $user->img('icon_post_delete', 'DELETE_IMAGE'),
+	'ALBUM_NAME'	=> $album_data['album_name'],
+	'ALBUM_IMAGES'	=> $album_data['album_images'] . ' ' . (($album_data['album_images'] == 1) ? $user->lang['IMAGE'] : $user->lang['IMAGES']),
+	'U_VIEW_ALBUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_id),
+	'U_MOD_ALBUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'mode=album&amp;album_id=' . $album_id),
+));
 
+//some other basic-variables
+$mode = request_var('mode', 'album');
+$action = request_var('action', '');
+$option_id = request_var('option_id', 0);
+$submit = (isset($_POST['submit'])) ? true : false;
+$action = request_var('action', '');
+$redirect = request_var('redirect', $mode);
+$moving_target = request_var('moving_target', 0);
+$image_id = request_var('image_id', 0);
+$image_id_ary = ($image_id) ? array($image_id) : request_var('image_id_ary', array(0));
 
-// ------------------------------------
-// Check the permissions
-// ------------------------------------
-if ($album_access_array[$album_id]['a_moderate'] != 1)
+//build navigation
+build_gallery_mcp_navigation($album_id, $mode, $option_id);
+
+if ($action && $image_id_ary)
 {
-	if ($user->data['is_bot'])
-	{
-		redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
-	}
-	if (!$user->data['is_registered'])
-	{
-		login_box("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id", $user->lang['LOGIN_INFO']);
-	}
-	else
-	{
-		trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
-	}
-}
-
-
-/*
-+----------------------------------------------------------
-| Main work here...
-+----------------------------------------------------------
-*/
-
-if ($mode == '')
-{
-	// --------------------------------
-	// Moderator Control Panel
-	// --------------------------------
-
-	// Set Variables
-	$start = request_var('start', 0);
-	$sort_method = request_var('sort_method', 'image_time');
-	$sort_order = request_var('sort_order', 'DESC');
-
-	// Count Pics
-	$sql = 'SELECT COUNT(image_id) AS count
-		FROM ' . GALLERY_IMAGES_TABLE . '
-		WHERE image_album_id = ' . $album_id;
-	$result = $db->sql_query($sql);
-	$row = $db->sql_fetchrow($result);
-
-	$total_pics = $row['count'];
-
-	$pics_per_page = ($album_config['rows_per_page'] * $album_config['cols_per_page']);
-
-	// get information from DB
-	if ($total_pics > 0)
-	{
-		$limit_sql = (!$start) ? $pics_per_page : $start . ', ' . $pics_per_page;
-
-		$pic_approval_sql = '';
-		if (($user->data['user_type'] <> USER_FOUNDER) && ($album_data['album_approval'] == ALBUM_ADMIN))
-		{
-			// because he went through my Permission Checking above so he must be at least a Moderator
-			$pic_approval_sql = ' AND image_approval = 1';
-		}
-
-		$sql = 'SELECT *
-			FROM ' . GALLERY_IMAGES_TABLE . '
-			WHERE image_album_id = ' . $album_id . ' ' . $pic_approval_sql . '
-			ORDER BY ' . $sort_method . ' ' . $sort_order . '
-			LIMIT ' . $limit_sql;
-		$result = $db->sql_query($sql);
-
-		$picrow = array();
-
-		while( $row = $db->sql_fetchrow($result) )
-		{
-			$picrow[] = $row;
-		}
-
-		for ($i = 0; $i <count($picrow); $i++)
-		{
-			$template->assign_block_vars('picrow', array(
-				'IMAGE_ID'		=> $picrow[$i]['image_id'],
-				'U_IMAGE_THUMB'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}thumbnail.$phpEx?album_id=" . $picrow[$i]['image_album_id'] . "&amp;image_id=". $picrow[$i]['image_id']),
-				'U_IMAGE'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx?album_id=" . $picrow[$i]['image_album_id'] . "&amp;image_id=". $picrow[$i]['image_id']),
-				'IMAGE_NAME'	=> $picrow[$i]['image_name'],
-				'POSTER'		=> get_username_string('full', $picrow[$i]['image_user_id'], ($picrow[$i]['image_user_id'] <> ANONYMOUS) ? $picrow[$i]['image_username'] : $user->lang['GUEST'], $picrow[$i]['image_user_colour']),
-				'TIME'			=> $user->format_date($picrow[$i]['image_time']),
-				'RATING'		=> ($picrow[$i]['image_rates'] == 0) ? $user->lang['NOT_RATED'] : $picrow[$i]['image_rate_avg'] / 100,
-				'COMMENTS'		=> $picrow[$i]['image_comments'],
-				'LOCK'			=> ($picrow[$i]['image_lock'] == 0) ? '' : $user->lang['LOCKED'],
-				'APPROVAL'		=> ($picrow[$i]['image_approval'] == 0) ? $user->lang['NOT_APPROVED'] : $user->lang['APPROVED'],
-			));
-		}
-
-		$template->assign_vars(array(
-			'PAGINATION' 	=> generate_pagination(append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id&amp;sort_method=$sort_method&amp;sort_order=$sort_order"), $total_pics, $pics_per_page, $start),
-			'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $pics_per_page ) + 1 ), ceil( $total_pics / $pics_per_page )),
-			'THUMB_WIDTH'	=> $album_config['thumbnail_size'] + 5,
-		));
-	}
-	else
-	{
-		// No Pics
-		$template->assign_block_vars('no_pics', array());
-	}
-
-	$sort_rating_option = $sort_new_comment_option = $sort_comments_option = '';
-	
-	if ($album_config['rate'])
-	{
-		$sort_rating_option  = '<option value="image_rate_avg" ';
-		$sort_rating_option .= ($sort_method == 'image_rate_avg') ? 'selected="selected"' : '';
-		$sort_rating_option .= '>' . $user->lang['RATING'] . '</option>';
-	}
-
-	if ($album_config['comment'])
-	{
-		$sort_comments_option  = '<option value="image_comments" ';
-		$sort_comments_option .= ($sort_method == 'image_comments') ? 'selected="selected"' : '';
-		$sort_comments_option .= '>' . $user->lang['COMMENTS'] . '</option>';
-		$sort_new_comment_option  = '<option value="image_last_comment" ';
-		$sort_new_comment_option .= ($sort_method == 'image_last_comment') ? 'selected="selected"' : '';
-		$sort_new_comment_option .= '>' . $user->lang['NEW_COMMENT'] . '</option>';
-	}
-
-	$template->assign_vars(array(
-		'U_VIEW_CAT' 			=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id"),
-		'CAT_TITLE' 			=> $album_data['album_name'],
-		'S_ALBUM_ACTION' 		=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id"),
-		'DELETE_BUTTON' 		=> ($album_access_array[$album_id]['i_delete'] == 1) ? '<input type="submit" class="liteoption" name="delete" value="' . $user->lang['DELETE'] . '" />' : '',
-		'APPROVAL_BUTTON' 		=> (($user->data['user_type'] <> USER_FOUNDER) && ($album_data['album_approval'] == ALBUM_ADMIN)) ? '' : '<input type="submit" class="liteoption" name="approval" value="' . $user->lang['APPROVE'] . '" />',
-		'UNAPPROVAL_BUTTON' 	=> (($user->data['user_type'] <> USER_FOUNDER) && ($album_data['album_approval'] == ALBUM_ADMIN)) ? '' : '<input type="submit" class="liteoption" name="unapproval" value="' . $user->lang['UNAPPROVE'] . '" />',
-
-		'SORT_TIME' 			=> ($sort_method == 'image_time') ? 'selected="selected"' : '',
-		'SORT_IMAGE_NAME' 		=> ($sort_method == 'image_name') ? 'selected="selected"' : '',
-		'SORT_USERNAME' 		=> ($sort_method == 'image_username') ? 'selected="selected"' : '',
-		'SORT_VIEW' 			=> ($sort_method == 'image_view_count') ? 'selected="selected"' : '',
-
-		'SORT_RATING_OPTION' 		=> $sort_rating_option,
-		'SORT_COMMENTS_OPTION' 		=> $sort_comments_option,
-		'SORT_NEW_COMMENT_OPTION' 	=> $sort_new_comment_option,
-
-		'SORT_ASC' 				=> ($sort_order == 'ASC') ? 'selected="selected"' : '',
-		'SORT_DESC' 			=> ($sort_order == 'DESC') ? 'selected="selected"' : '',
+	$s_hidden_fields = build_hidden_fields(array(
+		'mode'				=> $mode,
+		'album_id'			=> $album_id,
+		'image_id_ary'		=> $image_id_ary,
+		'action'			=> $action,
+		'redirect'			=> $redirect,
 	));
-
-	generate_album_nav($album_data);
-
-	$template->assign_block_vars('navlinks', array(
-		'FORUM_NAME'	=> $user->lang['MODCP'],
-		'U_VIEW_FORUM'	=> append_sid("{$album_root_path}mcp.$phpEx", 'album_id=' . $album_data['album_id']),
-	));
-
-	// Output page
-	$page_title = $user->lang['GALLERY'];
-
-	page_header($page_title);
-
-	$template->set_filenames(array(
-		'body' => 'gallery_modcp_body.html')
-	);
-
-	page_footer();
-
-}
-else
-{
-	//
-	// Switch with $mode
-	//
-	if ($mode == 'move')
+	$multiple = '';
+	if (isset($image_id_ary[1]))
 	{
-		//-----------------------------
-		// MOVE
-		//-----------------------------
-
-		$target = request_var('target', 0);
-		if(!$target)
-		{
-			// if "target" has not been set, we will open the category select form
-			//
-			// we must check POST method now
-			$pic_id_array = array();
-			if ($pic_id <> FALSE) // from GET
+		$multiple = 'S';
+	}
+	switch ($action)
+	{
+		case 'images_move':
+			if ($moving_target)
 			{
-				$pic_id_array[] = $pic_id;
+				$sql_ary = array('image_album_id' => $moving_target,);
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+				$db->sql_query($sql);
+				$sql_ary = array('report_album_id' => $moving_target,);
+				$sql = 'UPDATE ' . GALLERY_REPORTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+					WHERE ' . $db->sql_in_set('report_image_id', $image_id_ary);
+				$db->sql_query($sql);
+				$success = true;
 			}
 			else
 			{
-				// Check $pic_id[] on POST Method now
-				if (isset($_POST['image_id']))
-				{
-					$pic_id_array = $_POST['image_id'];
-					if (!is_array($pic_id_array))
-					{
-						trigger_error($user->lang['INVALID_REQUEST'], E_USER_WARNING);
-					}
-				}
-				else
-				{
-					trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
-				}
-			}
-
-			// We must send out the $pic_id_array to store data between page changing
-			for ($i = 0; $i < count($pic_id_array); $i++)
-			{
-				$template->assign_block_vars('pic_id_array', array(
-					'VALUE' => $pic_id_array[$i],
+				$category_select = '<select name="moving_target">';
+				$category_select .= make_move_jumpbox($album_id);
+				$category_select .= '</select>';
+				$template->assign_vars(array(
+					'S_MOVING_IMAGES'	=> true,
+					'S_ALBUM_SELECT'	=> $category_select,
+					'S_HIDDEN_FIELDS'	=> $s_hidden_fields,
 				));
 			}
 
-			//
-			// Create categories select
-			//
-			$sql = 'SELECT *
-				FROM ' . GALLERY_ALBUMS_TABLE . '
-				WHERE album_id <> ' . $album_id . '
-				ORDER BY left_id ASC';
-			$result = $db->sql_query($sql);
-			$catrows = array();
-
-			while( $row = $db->sql_fetchrow($result) )
+		break;
+		case 'images_unapprove':
+			if (confirm_box(true))
 			{
-				if ($album_access_array[$row['album_id']]['i_upload'] == 1)
-				{
-					$catrows[] = $row;
-				}
-			}
-
-			if (count($catrows) == 0)
-			{
-				trigger_error($user->lang['NO_MOVE_LEFT'], E_USER_WARNING);
-			}
-
-			// write categories out
-			$category_select = '<select name="target">';
-
-			$category_select .= make_move_jumpbox($album_id);
-
-			$category_select .= '</select>';
-			// end write
-
-			$template->assign_vars(array(
-				'S_ALBUM_ACTION'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?mode=move&amp;album_id=$album_id"),
-				'S_ALBUM_SELECT'		=> $category_select,
-			));
-
-			generate_album_nav($album_data);
-
-			$template->assign_block_vars('navlinks', array(
-				'FORUM_NAME'	=> $user->lang['MODCP'],
-				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $album_data['album_id']),
-			));
-
-			// Output page
-			$page_title = $user->lang['GALLERY'];
-			page_header($page_title);
-			$template->set_filenames(array(
-				'body' => 'gallery_move_body.html',
-			));
-			page_footer();
-		}
-		else
-		{
-			generate_album_nav($album_data);
-
-			$template->assign_block_vars('navlinks', array(
-				'FORUM_NAME'	=> $user->lang['MODCP'],
-				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $album_data['album_id']),
-			));
-
-			// Check the salt... yumyum
-			if (!check_form_key('mcp'))
-			{
-				trigger_error('FORM_INVALID');
-			}
-			// Do the MOVE action
-			//
-			// Now we only get $pic_id[] via POST (after the select target screen)
-			if (isset($_POST['image_id']))
-			{
-				$pic_id = $_POST['image_id'];
-				if( is_array($pic_id) )
-				{
-					$pic_id_sql = implode(',', $pic_id);
-				}
-				else
-				{
-					trigger_error($user->lang['INVALID_REQUEST'], E_USER_WARNING);
-				}
+				$sql_ary = array(
+					'image_status'			=> 0,
+				);
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+				$db->sql_query($sql);
+				$success = true;
 			}
 			else
 			{
-				trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
+				confirm_box(false, 'QUEUE' . $multiple . '_A_UNAPPROVE2', $s_hidden_fields);
 			}
-
-			// well, we got the array of pic_id but we must do a check to make sure all these
-			// pics are in this category (prevent some naughty moderators to access un-authorised pics)
-			$sql = 'SELECT image_id
-				FROM ' . GALLERY_IMAGES_TABLE . '
-				WHERE image_id IN (' . $pic_id_sql . ') 
-					AND image_album_id <> ' . $album_id;
-			$result = $db->sql_query($sql);
-
-			if( $db->sql_affectedrows($result) > 0 )
+		break;
+		case 'images_approve':
+			if (confirm_box(true))
 			{
-				trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
+				$sql_ary = array(
+					'image_status'			=> 1,
+				);
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+				$db->sql_query($sql);
+				$success = true;
 			}
-
-			// Update the DB
-			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-				SET image_album_id = ' . intval($target) . '
-				WHERE image_id IN (' . $pic_id_sql . ')';
-			$result = $db->sql_query($sql);
-
-			update_lastimage_info($target);
-			update_lastimage_info($album_id);
-
-			$message = $user->lang['IMAGES_MOVED_SUCCESSFULLY'] .'<br /><br />'
-				. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>")
-				. '<br />' . sprintf($user->lang['CLICK_RETURN_ALBUM_TARGET'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$target") . "\">", "</a>")
-				. '<br />' . sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>")
-				. '<br />' . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
-			meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?id=$album_id"));
-			trigger_error($message);
-		}
+			else
+			{
+				confirm_box(false, 'QUEUE' . $multiple . '_A_APPROVE2', $s_hidden_fields);
+			}
+		break;
+		case 'images_lock':
+			if (confirm_box(true))
+			{
+				$sql_ary = array(
+					'image_status'			=> 2,
+				);
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+				$db->sql_query($sql);
+				$success = true;
+			}
+			else
+			{
+				confirm_box(false, 'QUEUE' . $multiple . '_A_LOCK2', $s_hidden_fields);
+			}
+		break;
+		case 'images_delete':
+			if (confirm_box(true))
+			{
+				$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+				$db->sql_query($sql);
+				$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . ' WHERE ' . $db->sql_in_set('comment_image_id', $image_id_ary);
+				$db->sql_query($sql);
+				$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . ' WHERE ' . $db->sql_in_set('rate_image_id', $image_id_ary);
+				$db->sql_query($sql);
+				$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . ' WHERE ' . $db->sql_in_set('report_image_id', $image_id_ary);
+				$db->sql_query($sql);
+				$success = true;
+			}
+			else
+			{
+				confirm_box(false, 'QUEUE' . $multiple . '_A_DELETE2', $s_hidden_fields);
+			}
+		break;
+		case 'reports_close':
+			if (confirm_box(true))
+			{
+				$sql_ary = array(
+					'report_manager'		=> $user->data['user_id'],
+					'report_status'			=> 2,
+				);
+				$sql = 'UPDATE ' . GALLERY_REPORTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+					WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
+				$db->sql_query($sql);
+				$success = true;
+			}
+			else
+			{
+				confirm_box(false, 'REPORT' . $multiple . '_A_CLOSE2', $s_hidden_fields);
+			}
+		break;
+		case 'reports_open':
+			if (confirm_box(true))
+			{
+				$sql_ary = array(
+					'report_manager'		=> $user->data['user_id'],
+					'report_status'			=> 1,
+				);
+				$sql = 'UPDATE ' . GALLERY_REPORTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+					WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
+				$db->sql_query($sql);
+				$success = true;
+			}
+			else
+			{
+				confirm_box(false, 'REPORT' . $multiple . '_A_OPEN2', $s_hidden_fields);
+			}
+		break;
+		case 'reports_delete':
+			if (confirm_box(true))
+			{
+				$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . ' WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
+				$db->sql_query($sql);
+				$success = true;
+			}
+			else
+			{
+				confirm_box(false, 'REPORT' . $multiple . '_A_DELETE2', $s_hidden_fields);
+			}
+		break;
 	}
-	else if ($mode == 'lock')
+	if (isset($success))
 	{
-		//-----------------------------
-		// LOCK
-		//-----------------------------
-
-		generate_album_nav($album_data);
-
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['MODCP'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $album_data['album_id']),
-		));
-
-		// we must check POST method now
-		if ($pic_id <> FALSE) // from GET
-		{
-			$pic_id_sql = $pic_id;
-		}
-		else
-		{
-			// Check $pic_id[] on POST Method now
-			if (isset($_POST['image_id']))
-			{
-				$pic_id = $_POST['image_id'];
-				if( is_array($pic_id) )
-				{
-					$pic_id_sql = implode(',', $pic_id);
-				}
-				else
-				{
-					trigger_error($user->lang['INVALID_REQUEST'], E_USER_WARNING);
-				}
-			}
-			else
-			{
-				trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
-			}
-		}
-
-		// well, we got the array of image_id but we must do a check to make sure all these
-		// pics are in this category (prevent some naughty moderators to access un-authorised pics)
-		$sql = 'SELECT image_id
-			FROM ' . GALLERY_IMAGES_TABLE . '
-			WHERE image_id IN (' . $pic_id_sql . ') 
-				AND image_album_id <> ' . $album_id;
-		$result = $db->sql_query($sql);
-		if ($db->sql_affectedrows($result) > 0)
-		{
-			trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
-		}
-
-		// update the DB
-		$sql = 'UPDATE '. GALLERY_IMAGES_TABLE . '
-			SET image_lock = 1
-			WHERE image_id IN (' . $pic_id_sql . ')';
-		$result = $db->sql_query($sql);
-
-		$message = $user->lang['IMAGES_LOCKED_SUCCESSFULLY'] . '<br /><br />';
-		$message .= sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>") .'<br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br />";
-
-		$message .= '<br />' . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
-		meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?id=$album_id"));
-		trigger_error($message, E_USER_WARNING);
-	}
-	else if ($mode == 'unlock')
-	{
-		//-----------------------------
-		// UNLOCK
-		//-----------------------------
-
-		generate_album_nav($album_data);
-
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['MODCP'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $album_data['album_id']),
-		));
-
-		// we must check POST method now
-		if ($pic_id <> FALSE) // from GET
-		{
-			$pic_id_sql = $pic_id;
-		}
-		else
-		{
-			// Check $pic_id[] on POST Method now
-			if( isset($_POST['image_id']) )
-			{
-				$pic_id = $_POST['image_id'];
-				if( is_array($pic_id) )
-				{
-					$pic_id_sql = implode(',', $pic_id);
-				}
-				else
-				{
-					trigger_error($user->lang['INVALID_REQUEST'], E_USER_WARNING);
-				}
-			}
-			else
-			{
-				trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
-			}
-		}
-
-		// well, we got the array of image_id but we must do a check to make sure all these
-		// pics are in this category (prevent some naughty moderators to access un-authorised pics)
-		$sql = 'SELECT image_id
-			FROM ' . GALLERY_IMAGES_TABLE . '
-			WHERE image_id IN (' . $pic_id_sql . ') 
-				AND image_album_id <> ' . $album_id;
-		$result = $db->sql_query($sql);
-		if( $db->sql_affectedrows($result) > 0 )
-		{
-			trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
-		}
-		
-		// update the DB
-		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-			SET image_lock = 0
-			WHERE image_id IN (' . $pic_id_sql . ')';
-		$result = $db->sql_query($sql);
-
-		$message = $user->lang['IMAGES_UNLOCKED_SUCCESSFULLY'] . '<br /><br />';
-
-		$message .= sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?id=$album_id") . "\">", "</a>") .'<br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br />";
-
-		$message .= '<br />' . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
-		meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?id=$album_id"));
-		trigger_error($message, E_USER_WARNING);
-	}
-	else if ($mode == 'approval')
-	{
-		//-----------------------------
-		// APPROVAL
-		//-----------------------------
-
-		generate_album_nav($album_data);
-
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['MODCP'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $album_data['album_id']),
-		));
-
-		// we must check POST method now
-		if ($pic_id <> FALSE) // from GET
-		{
-			$pic_id_sql = $pic_id;
-		}
-		else
-		{
-			// Check $pic_id[] on POST Method now
-			if( isset($_POST['image_id']) )
-			{
-				$pic_id = $_POST['image_id'];
-				if( is_array($pic_id) )
-				{
-					$pic_id_sql = implode(',', $pic_id);
-				}
-				else
-				{
-					trigger_error($user->lang['INVALID_REQUEST'], E_USER_WARNING);
-				}
-			}
-			else
-			{
-				trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
-			}
-		}
-
-		// well, we got the array of pic_id but we must do a check to make sure all these
-		// pics are in this category (prevent some naughty moderators to access un-authorised pics)
-		$sql = 'SELECT image_id
-			FROM ' . GALLERY_IMAGES_TABLE . '
-			WHERE image_id IN (' . $pic_id_sql . ') 
-				AND image_album_id <> ' . $album_id;
-		$result = $db->sql_query($sql);
-		if( $db->sql_affectedrows($result) > 0 )
-		{
-			trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
-		}
-
-		// update the DB
-		$sql = 'UPDATE '. GALLERY_IMAGES_TABLE . '
-			SET image_approval = 1
-			WHERE image_id IN (' . $pic_id_sql . ')';
-		$result = $db->sql_query($sql);
-
 		update_lastimage_info($album_id);
-
-		$message = $user->lang['IMAGES_APPROVED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>") .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
-		trigger_error($message, E_USER_WARNING);
+		if ($moving_target)
+		{
+			update_lastimage_info($moving_target);
+		}
+		redirect(($redirect == 'redirect') ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx" , "album_id=$album_id") : append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx" , "mode=$mode&amp;album_id=$album_id"));
 	}
-	else if ($mode == 'unapproval')
-	{
-		//-----------------------------
-		// UNAPPROVAL
-		//-----------------------------
 
-		generate_album_nav($album_data);
-
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['MODCP'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $album_data['album_id']),
-		));
-
-		// we must check POST method now
-		if ($pic_id <> FALSE) // from GET
-		{
-			$pic_id_sql = $pic_id;
-		}
-		else
-		{
-			// Check $pic_id[] on POST Method now
-			if( isset($_POST['image_id']) )
-			{
-				$pic_id = $_POST['image_id'];
-				if( is_array($pic_id) )
-				{
-					$pic_id_sql = implode(',', $pic_id);
-				}
-				else
-				{
-					trigger_error($user->lang['INVALID_REQUEST'], E_USER_WARNING);
-				}
-			}
-			else
-			{
-				trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
-			}
-		}
-
-		// well, we got the array of pic_id but we must do a check to make sure all these
-		// pics are in this category (prevent some naughty moderators to access un-authorised pics)
-		$sql = 'SELECT image_id
-			FROM ' . GALLERY_IMAGES_TABLE . '
-			WHERE image_id IN (' . $pic_id_sql . ') 
-				AND image_album_id <> ' . $album_id;
-		$result = $db->sql_query($sql);
-
-		if ($db->sql_affectedrows($result) > 0)
-		{
-			trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
-		}
-
-		// update the DB
-		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-			SET image_approval = 0
-			WHERE image_id IN (' . $pic_id_sql . ')';
-		$result = $db->sql_query($sql);
-
-		update_lastimage_info($album_id);
-
-		$message = $user->lang['IMAGES_UNAPPROVED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>") .'<br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
-		meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?id=$album_id"));
-		trigger_error($message, E_USER_WARNING);
-	}
-	else if ($mode == 'delete')
-	{
-		//-----------------------------
-		// DELETE
-		//-----------------------------
-
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['GALLERY'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"),
-		));
-
-		generate_album_nav($album_data);
-
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['MODCP'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $album_data['album_id']),
-		));
-
-
-		if ($album_access_array[$album_id]['i_delete'] != 1)
-		{
-			trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
-		}
-
-		if (!isset($_POST['confirm']))
-		{
-			// we must check POST method now
-			$pic_id_array = array();
-			if ($pic_id <> FALSE) // from GET
-			{
-				$pic_id_array[] = $pic_id;
-			}
-			else
-			{
-				// Check $pic_id[] on POST Method now
-				if (isset($_POST['image_id']))
-				{
-					$pic_id_array = $_POST['image_id'];
-					if( !is_array($pic_id_array) )
-					{
-						trigger_error($user->lang['INVALID_REQUEST'], E_USER_WARNING);
-					}
-				}
-				else
-				{
-					trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
-				}
-			}
-			
-			if (isset($_POST['cancel']))
-			{
-				$redirect = "{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id";
-				redirect(append_sid($redirect, true));
-			}
-
-			// We must send out the $pic_id_array to store data between page changing
-			$hidden_field = '';
-			for ($i = 0; $i < count($pic_id_array); $i++)
-			{
-				$hidden_field .= '<input name="image_id[]" type="hidden" value="'. $pic_id_array[$i] .'" />' . "\n";
-			}
-
-			$template->assign_vars(array(
-				'MESSAGE_TITLE' 	=> $user->lang['CONFIRM'],
-				'MESSAGE_TEXT' 		=> $user->lang['ALBUM_DELETE_CONFIRM'],
-				'S_HIDDEN_FIELDS' 	=> $hidden_field,
-				'S_CONFIRM_ACTION' 	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?mode=delete&amp;album_id=$album_id"),
-			));
-
-			// Output page
-			$page_title = $user->lang['GALLERY'];
-
-			page_header($page_title);
-
-			$template->set_filenames(array(
-				'body' => 'confirm_body.html',
-			));
-			page_footer();
-		}
-		else
-		{
-			// Do the delete here...
-			if (isset($_POST['image_id']))
-			{
-				$pic_id = $_POST['image_id'];
-				if( is_array($pic_id) )
-				{
-					$pic_id_sql = implode(',', $pic_id);
-				}
-				else
-				{
-					trigger_error($user->lang['INVALID_REQUEST'], E_USER_WARNING);
-				}
-			}
-			else
-			{
-				trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
-			}
-
-			// well, we got the array of pic_id but we must do a check to make sure all these
-			// pics are in this category (prevent some naughty moderators to access un-authorised pics)
-			$sql = 'SELECT image_id
-				FROM ' . GALLERY_IMAGES_TABLE . '
-				WHERE image_id IN (' . $pic_id_sql . ') 
-					AND image_album_id <> ' . $album_id;
-			$result = $db->sql_query($sql);
-			if ($db->sql_affectedrows($result) > 0)
-			{
-				trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
-			}
-
-			// Delete all comments
-			$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . '
-				WHERE comment_image_id IN (' . $pic_id_sql . ')';
-			$result = $db->sql_query($sql);
-
-			// Delete all ratings
-			$sql = 'DELETE FROM ' .GALLERY_RATES_TABLE . '
-				WHERE rate_image_id IN (' . $pic_id_sql . ')';
-			$result = $db->sql_query($sql);
-
-			// Delete Physical Files
-			// first we need filenames
-			$sql = 'SELECT image_filename, image_thumbnail
-				FROM ' . GALLERY_IMAGES_TABLE . '
-				WHERE image_id IN (' . $pic_id_sql . ')';
-			$result = $db->sql_query($sql);
-
-			$filerow = array();
-			while( $row = $db->sql_fetchrow($result) )
-			{
-				$filerow[] = $row;
-			}
-			for ($i = 0; $i < count($filerow); $i++)
-			{
-				if( ($filerow[$i]['image_thumbnail'] <> '') && (@file_exists($phpbb_root_path . GALLERY_CACHE_PATH . $filerow[$i]['image_thumbnail'])) )
-				{
-					@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $filerow[$i]['image_thumbnail']);
-				}
-				@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $filerow[$i]['image_filename']);
-			}
-
-			// Delete DB entry
-			$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE image_id IN (' . $pic_id_sql . ')';
-			$result = $db->sql_query($sql);
-
-			update_lastimage_info($album_id);
-
-			$message = $user->lang['IMAGES_DELETED_SUCCESSFULLY'] .'<br /><br />'. sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>") .'<br />'. sprintf($user->lang['CLICK_RETURN_MODCP'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id") . "\">", "</a>") . "<br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
-
-			meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?id=$album_id"));
-			trigger_error($message, E_USER_WARNING);
-		}
-	}
-	else
-	{
-		generate_album_nav($album_data);
-
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['MODCP'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $album_data['album_id']),
-		));
-
-		trigger_error('Invalid_mode', E_USER_WARNING);
-	}
+// <- if ($action && $image_id_ary)
 }
+
+
+switch ($mode)
+{
+	case 'album':
+		include("{$phpbb_root_path}{$gallery_root_path}mcp/mcp_album.$phpEx");
+	break;
+
+	case 'report_open':
+	case 'report_closed':
+		include("{$phpbb_root_path}{$gallery_root_path}mcp/mcp_report.$phpEx");
+	break;
+
+	case 'queue_unapproved':
+	case 'queue_approved':
+	case 'queue_locked':
+		include("{$phpbb_root_path}{$gallery_root_path}mcp/mcp_queue.$phpEx");
+	break;
+
+	break;
+
+	case 'report_details':
+	case 'queue_details':
+		include("{$phpbb_root_path}{$gallery_root_path}mcp/mcp_details.$phpEx");
+	break;
+}
+
+
+// Output page
+$page_title = $user->lang['MCP'] . ' &bull; ' .  $user->lang['GALLERY'];
+
+page_header($page_title);
+
+$template->set_filenames(array(
+	'body' => 'gallery_mcp_body.html')
+);
+
+page_footer();
+
 ?>

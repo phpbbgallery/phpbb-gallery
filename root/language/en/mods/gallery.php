@@ -221,4 +221,10 @@ $lang = array_merge($lang, array(
 	'NO_RATE_ON_OWN_IMAGES'			=> 'You are not allowed to rate your own images.',
 ));
 
+$lang = array_merge($lang, array(
+	'IMAGE_STATUS'					=> 'Status',
+
+	'LAST_COMMENT'					=> 'Last Comment',
+));
+
 ?>

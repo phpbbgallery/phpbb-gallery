@@ -108,7 +108,7 @@ switch ($mode)
 				else if (
 					($image_data['image_user_id'] <> $user->data['user_id'])
 				&&
-					(($album_access_array[$album_id]['a_moderate'] != 1) && ($user->data['user_type'] <> USER_FOUNDER))
+					($album_access_array[$album_id]['a_moderate'] != 1)
 				)
 				{
 					if (!$user->data['is_registered'])
@@ -120,6 +120,11 @@ switch ($mode)
 						meta_refresh(3, $image_backlink);
 						trigger_error('NOT_AUTHORISED');
 					}
+				}
+				else if (($album_access_array[$album_id]['a_moderate'] != 1) && (!$image_data['image_status'] != 1))
+				{
+					meta_refresh(3, $image_backlink);
+					trigger_error('NOT_AUTHORISED');
 				}
 			break;
 			case 'delete':
@@ -138,7 +143,7 @@ switch ($mode)
 				else if (
 					($image_data['image_user_id'] <> $user->data['user_id'])
 				&&
-					(($album_access_array[$album_id]['a_moderate'] != 1) && ($user->data['user_type'] <> USER_FOUNDER))
+					($album_access_array[$album_id]['a_moderate'] != 1)
 				)
 				{
 					if (!$user->data['is_registered'])
@@ -151,6 +156,11 @@ switch ($mode)
 						trigger_error('NOT_AUTHORISED');
 					}
 				}
+				else if (($album_access_array[$album_id]['a_moderate'] != 1) && (!$image_data['image_status'] != 1))
+				{
+					meta_refresh(3, $image_backlink);
+					trigger_error('NOT_AUTHORISED');
+				}
 			break;
 
 			default:
@@ -159,7 +169,7 @@ switch ($mode)
 		}
 	break;
 	case 'comment':
-		if (($image_data['image_lock']) && ($album_access_array[$album_id]['a_moderate']))
+		if (($image_data['image_status'] != 1) && ($album_access_array[$album_id]['a_moderate']))
 		{
 			trigger_error('IMAGE_LOCKED');
 		}

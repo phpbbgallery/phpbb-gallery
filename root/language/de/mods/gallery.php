@@ -58,8 +58,8 @@ $lang = array_merge($lang, array(
 	'ALBUM_IS_CATEGORY'						=> 'Das Album, in welches du dich gemogelt hast, ist eine Kategorie.<br />In Kategorien können keine Bilder hochgeladen werden.',
 	'ALREADY_RATED'							=> 'Du hast dieses Bild bereits bewertet',
 	'APPROVAL'								=> 'Genehmigung',
-	'APPROVE'								=> 'Genehmigen',
-	'APPROVED'								=> 'Genehmigt',
+	'APPROVE'								=> 'Freigeben',
+	'APPROVED'								=> 'Freigegeben',
 
 	'JPG_ALLOWED'							=> 'Es ist erlaubt JPG- Dateien hochzuladen',
 	'PNG_ALLOWED'							=> 'Es ist erlaubt PNG- Dateien hochzuladen',
@@ -219,6 +219,12 @@ $lang = array_merge($lang, array(
 
 	'ORIG_FILENAME'					=> 'Dateinamen als Bild-Titel verwenden (das Eingabefeld ist ohne Funktion)',
 	'NO_RATE_ON_OWN_IMAGES'			=> 'Du darfst deine eigenen Bilder nicht bewerten.',
+));
+
+$lang = array_merge($lang, array(
+	'IMAGE_STATUS'					=> 'Status',
+
+	'LAST_COMMENT'					=> 'Letzter Kommentar',
 ));
 
 ?>

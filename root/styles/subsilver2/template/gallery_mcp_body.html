@@ -1,115 +1,250 @@
 <!-- INCLUDE overall_header.html -->
 
-<h2><a href="{U_VIEW_ALBUM}">{L_MODCP} - {ALBUM_NAME}</a></h2>
-
-<form name="modcp" action="{S_ALBUM_ACTION}" method="post">
-<table cellspacing="1" width="100%">
-	<tr>
-	<td align="right" nowrap="nowrap">
-		<span class="gensmall">{L_SELECT_SORT_METHOD}:
-		<select name="sort_method">
-			<option {SORT_TIME} value='image_time'>{L_TIME}</option>
-			<option {SORT_IMAGE_NAME} value='image_name'>{L_IMAGE_TITLE}</option>
-			<option {SORT_USERNAME} value='image_username'>{L_USERNAME}</option>
-			<option {SORT_VIEW} value='image_view_count'>{L_VIEWS}</option>
-			{SORT_RATING_OPTION}
-			{SORT_COMMENTS_OPTION}
-			{SORT_NEW_COMMENT_OPTION}
-		</select>
-		&nbsp;{L_ORDER}:
-		<select name="sort_order">
-			<option {SORT_ASC} value='ASC'>{L_ASCENDING}</option>
-			<option {SORT_DESC} value='DESC'>{L_DESCENDING}</option>
-		</select> <input type="submit" name="sort" value="{L_SORT}" class="button2" />
-				</span>
-	</td>
-	</tr>
-</table>
-
-<table cellspacing="1" width="100%">
-	<tr>
-		<td><div class="pagination"> {PAGE_NUMBER}
-				<!-- IF PAGINATION -->
-				&bull; <span>{PAGINATION}</span>
-				<!-- ENDIF -->
-			</div></td>
-	</tr>
-</table>
-
-<table class="tablebg" cellspacing="1" width="100%">
-	<tr>
-	<th nowrap="nowrap">&nbsp;{L_IMAGE_TITLE}&nbsp;</th>
-	<th width="10%" nowrap="nowrap">&nbsp;{L_RATING}&nbsp;</th>
-	<th width="10%" nowrap="nowrap">&nbsp;{L_COMMENTS}&nbsp;</th>
-	<th width="10%" nowrap="nowrap">&nbsp;{L_STATUS}&nbsp;</th>
-	<th width="10%" nowrap="nowrap">&nbsp;{L_APPROVAL}&nbsp;</th>
-	<th width="5%"	nowrap="nowrap">&nbsp;{L_SELECT}&nbsp;</th>
-	</tr>
-	<!-- BEGIN no_pics -->
-	<tr>
-	<td class="row1" align="center" colspan="6" height="50"><span class="gen">{L_NO_IMAGES}</span></td>
-	</tr>
-	<!-- END no_pics -->
-	<!-- BEGIN picrow -->
-	<tr>
-	<td class="row1" height="25"><span style="float: left; width: {THUMB_WIDTH}px; min-height: 50px;"><img src="{picrow.U_IMAGE_THUMB}" alt="{picrow.IMAGE_NAME}" title="{picrow.IMAGE_NAME}" /></span><span class="genmed">{L_IMAGE_TITLE}: <a href="{picrow.U_IMAGE}">{picrow.IMAGE_NAME}</a><br />{L_POSTER}: {picrow.POSTER}<br />{L_TIME}: {picrow.TIME}</span></td>
-	<td align="center" class="row2"><span class="genmed">{picrow.RATING}</span></td>
-	<td align="center" class="row2"><span class="genmed">{picrow.COMMENTS}</span></td>
-	<td align="center" class="row2"><span class="genmed">{picrow.LOCK}</span></td>
-	<td align="center" class="row2"><span class="genmed">{picrow.APPROVAL}</span></td>
-	<td align="center" class="row3"><span class="genmed"><input type="checkbox" name="image_id[]" value="{picrow.IMAGE_ID}" /></span></td>
-	</tr>
-	<!-- END picrow -->
-	<tr>
-	<td class="cat" colspan="6" align="right" height="28" style="padding-right: 5px;">
-		<input type="hidden" name="mode" value="modcp" />
-		<input type="submit" class="liteoption" name="move" value="{L_MOVE}" />
-		<input type="submit" class="liteoption" name="lock" value="{L_LOCK}" />
-		<input type="submit" class="liteoption" name="unlock" value="{L_UNLOCK}" />
-		{DELETE_BUTTON}
-		{APPROVAL_BUTTON}
-		{UNAPPROVAL_BUTTON}
-		<a href="#" onclick="marklist('modcp', 'image_id', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('modcp', 'image_id', false); return false;">{L_UNMARK_ALL}</a>
-	</td>
-	</tr>
-</table>
-
-<table cellspacing="1" width="100%">
-	<tr>
-		<td><div class="pagination"> {PAGE_NUMBER}
-				<!-- IF PAGINATION -->
-				&bull; <span>{PAGINATION}</span>
-				<!-- ENDIF -->
-			</div></td>
-	</tr>
-</table>
-
-<table cellspacing="1" width="100%">
-	<tr>
-	<td align="right" nowrap="nowrap">
-		<span class="gensmall">{L_SELECT_SORT_METHOD}:
-		<select name="sort_method">
-			<option {SORT_TIME} value='image_time'>{L_TIME}</option>
-			<option {SORT_IMAGE_NAME} value='image_name'>{L_IMAGE_TITLE}</option>
-			<option {SORT_USERNAME} value='image_username'>{L_USERNAME}</option>
-			<option {SORT_VIEW} value='image_view_count'>{L_VIEWS}</option>
-			{SORT_RATING_OPTION}
-			{SORT_COMMENTS_OPTION}
-			{SORT_NEW_COMMENT_OPTION}
-		</select>
-		&nbsp;{L_ORDER}:
-		<select name="sort_order">
-			<option {SORT_ASC} value='ASC'>{L_ASCENDING}</option>
-			<option {SORT_DESC} value='DESC'>{L_DESCENDING}</option>
-		</select> <input type="submit" name="sort" value="{L_SORT}" class="button2" />
-				</span>
-	</td>
-	</tr>
-</table>
-{S_FORM_TOKEN}
-</form>
+<div id="pageheader">
+	<p class="linkmcp">
+		[ <a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a> | <a href="{U_MOD_ALBUM}">{L_MODERATE_ALBUM}</a> ]
+	</p>
+	<h2><a class="titles" href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>
+</div>
 
 <br clear="all" />
+
+<div id="pagecontent">
+
+	<table width="100%" cellspacing="0" cellpadding="0" border="0">
+	<tr>
+		<td width="20%" valign="top">
+
+			<table class="tablebg" width="100%" cellspacing="1">
+			<tr>
+				<th>{L_OPTIONS}</th>
+			</tr>
+			<!-- BEGIN tabs -->
+				<tr>
+				<!-- IF tabs.TAB_ACTIVE -->
+					<td class="row1"><b class="nav">{tabs.TAB_NAME}</b>
+					<ul class="nav" style="margin: 0; padding: 0; list-style-type: none; line-height: 175%;">
+					<!-- BEGIN modes -->
+						<li>&#187; <!-- IF tabs.modes.MODE_ACTIVE --><b>{tabs.modes.MODE_NAME}</b><!-- ELSE --><a href="{tabs.modes.U_MODE}">{tabs.modes.MODE_NAME}</a><!-- ENDIF --></li>
+					<!-- END modes -->
+					</ul>
+				<!-- ELSE -->
+					<td class="row2" nowrap="nowrap" onmouseover="this.className='row1'" onmouseout="this.className='row2'" onclick="location.href=this.firstChild.href;"><a class="nav" href="{tabs.U_TAB}">{tabs.TAB_NAME}</a>
+					<!-- BEGIN modes -->
+						<li>&#187; <!-- IF tabs.modes.MODE_ACTIVE --><b>{tabs.modes.MODE_NAME}</b><!-- ELSE --><a href="{tabs.modes.U_MODE}">{tabs.modes.MODE_NAME}</a><!-- ENDIF --></li>
+					<!-- END modes -->
+				<!-- ENDIF -->
+					</td>
+				</tr>
+			<!-- END tabs -->
+			</table>
+		</td>
+		<td><img src="{T_IMAGES_PATH}spacer.gif" width="4" alt="" /></td>
+		<td width="80%" valign="top">
+		<!-- IF S_GALLERY_MCP_VIEWALBUM or S_QUEUE_LIST or S_REPORT_LIST -->
+
+			<form method="post" id="mcp" action="{S_MCP_ACTION}">
+
+			<table class="tablebg" width="100%" cellspacing="1">
+			<tr>
+				<td class="cat" colspan="6" align="center"><span class="gensmall">
+				<span class="gensmall">{L_SORT_BY}</span>
+					<select name="sk">
+						<option<!-- IF S_SORT_KEY == 'image_time' --> selected="selected"<!-- ENDIF --> value='image_time'>{L_TIME}</option>
+						<option<!-- IF S_SORT_KEY == 'image_name' --> selected="selected"<!-- ENDIF --> value='image_name'>{L_IMAGE_TITLE}</option>
+						<option<!-- IF S_SORT_KEY == 'image_username' --> selected="selected"<!-- ENDIF --> value='image_username'>{L_SORT_USERNAME}</option>
+						<!-- IF not S_REPORT_LIST or S_QUEUE_LIST -->
+							<option<!-- IF S_SORT_KEY == 'image_view_count' --> selected="selected"<!-- ENDIF --> value='image_view_count'>{L_VIEWS}</option>
+						<!-- ENDIF -->
+						<!-- IF S_REPORT_LIST -->
+							<option<!-- IF S_SORT_KEY == 'reporter_name' --> selected="selected"<!-- ENDIF --> value='reporter_name'>{L_REPORTER}</option>
+							<option<!-- IF S_SORT_KEY == 'mod_username' --> selected="selected"<!-- ENDIF --> value='mod_username'>{L_MODERATOR}</option>
+						<!-- ENDIF -->
+						<!-- IF S_RATINGS -->
+							<option<!-- IF S_SORT_KEY == 'image_rate_avg' --> selected="selected"<!-- ENDIF --> value='image_rate_avg'>{L_RATING}</option>
+						<!-- ENDIF -->
+						<!-- IF S_COMMENTS -->
+							<option<!-- IF S_SORT_KEY == 'image_comments' --> selected="selected"<!-- ENDIF --> value='image_comments'>{L_COMMENTS}</option>
+							<option<!-- IF S_SORT_KEY == 'image_last_comment' --> selected="selected"<!-- ENDIF --> value='image_last_comment'>{L_LAST_COMMENT}</option>
+						<!-- ENDIF -->
+					</select>
+					<select name="sd">
+						<option<!-- IF S_SORT_DESC --> selected="selected"<!-- ENDIF --> value='DESC'>{L_SORT_DESCENDING}</option>
+						<option<!-- IF not S_SORT_DESC --> selected="selected"<!-- ENDIF --> value='ASC'>{L_SORT_ASCENDING}</option>
+					</select>
+					<input class="btnlite" type="submit" name="sort" value="{L_GO}" />
+				</td>
+			</tr>
+			<tr>
+				<!-- IF DISP_FAKE_THUMB --><th width="4%" nowrap="nowrap">&nbsp;</th><!-- ENDIF -->
+				<th nowrap="nowrap">{L_IMAGES}</th>
+				<!-- IF S_COMMENTS --><th nowrap="nowrap">&nbsp;{L_COMMENTS}&nbsp;</th><!-- ENDIF -->
+				<!-- IF S_RATINGS --><th width="8%" nowrap="nowrap">&nbsp;{L_RATING}&nbsp;</th><!-- ENDIF -->
+				<!-- IF S_REPORTER --><th width="17%" nowrap="nowrap">&nbsp;{L_REPORTER_AND_ALBUM}&nbsp;</th><!-- ENDIF -->
+				<!-- IF S_STATUS --><th width="17%" nowrap="nowrap">&nbsp;{L_STATUS}&nbsp;</th><!-- ENDIF -->
+				<!-- IF S_MARK --><th width="5%" nowrap="nowrap">&nbsp;{L_MARK}&nbsp;</th><!-- ENDIF -->
+			</tr>
+			<!-- BEGIN image_row -->
+			<tr>
+
+				<!-- IF DISP_FAKE_THUMB and image_row.THUMBNAIL --><td class="row1" width="{FAKE_THUMB_SIZE}" align="center"><span style="float: left; text-align: center; width: {FAKE_THUMB_SIZE}px; padding-right: 5px;"><img src="{image_row.THUMBNAIL}" style="max-width: {FAKE_THUMB_SIZE}px; max-height: {FAKE_THUMB_SIZE}px;" alt="{image_row.IMAGE_NAME}" /></span></td><!-- ENDIF -->
+				<td class="row1">
+					<a href="<!-- IF not S_REPORT -->{image_row.U_IMAGE}<!-- ELSE -->{image_row.U_REPORT}<!-- ENDIF -->" class="topictitle">{image_row.IMAGE_NAME}</a><!-- IF image_row.S_REPORTED --> <a href="{image_row.U_REPORT}">{REPORTED_IMG}</a><!-- ENDIF --><!-- IF image_row.S_UNAPPROVED --> <a href="{image_row.U_QUEUE}">{UNAPPROVED_IMG}</a><!-- ENDIF --><br />
+					<span>{L_UPLOADED_BY} {image_row.UPLOADER}<br />
+					{L_POSTED_ON_DATE} {image_row.IMAGE_TIME}
+					<!-- IF image_row.REPORT_MOD --><br />{L_REPORT_MOD} {image_row.REPORT_MOD}<!-- ENDIF -->
+				</td>
+				<!-- IF S_COMMENTS --><td class="row1" width="50" align="center">&nbsp;{image_row.COMMENTS}&nbsp;</td><!-- ENDIF -->
+				<!-- IF S_RATINGS --><td class="row1" width="50" align="center">&nbsp;{image_row.RATING}&nbsp;</td><!-- ENDIF -->
+				<!-- IF S_REPORTER --><td class="row1" width="150" align="center">&nbsp;
+					{L_REPORT_BY} {image_row.REPORTER}<br />
+					{L_POSTED_ON_DATE} {image_row.REPORT_TIME}<br />
+					{L_ALBUM}: <a href="{U_VIEW_ALBUM}" style="font-weight: bold;">{ALBUM_NAME}</a>
+				&nbsp;</td><!-- ENDIF -->
+				<!-- IF S_STATUS --><td class="row1" width="150" align="center">&nbsp;{image_row.STATUS}<!-- IF image_row.S_REPORTED --><br />{L_IMAGE_REPORTED}<!-- ENDIF -->&nbsp;</td><!-- ENDIF -->
+				<!-- IF S_MARK --><td class="row2" align="center">&nbsp;<input type="checkbox" name="image_id_ary[]" value="<!-- IF not S_REPORT_LIST -->{image_row.IMAGE_ID}<!-- ELSE -->{image_row.REPORT_ID}<!-- ENDIF -->" />&nbsp;</td><!-- ENDIF -->
+			</tr>
+			<!-- END image_row -->
+			<tr>
+				<td class="cat" colspan="6" align="right">
+					<select name="action">
+						<option value="" selected="selected">{L_CHOOSE_ACTION}</option>
+						<!-- IF not S_REPORT_LIST and not S_QUEUE_LIST -->
+							<option value="images_move">{L_QUEUES_A_MOVE}</option>
+						<!-- ENDIF -->
+						<!-- IF not S_REPORT_LIST -->
+							<option value="images_unapprove">{L_QUEUE_A_UNAPPROVE}</option>
+							<option value="images_approve">{L_QUEUE_A_APPROVE}</option>
+							<option value="images_lock">{L_QUEUE_A_LOCK}</option>
+							<option value="images_delete">{L_QUEUE_A_DELETE}</option>
+						<!-- ELSE -->
+							<option value="reports_close">{L_REPORT_A_CLOSE}</option>
+							<option value="reports_open">{L_REPORT_A_OPEN}</option>
+							<option value="reports_delete">{L_REPORT_A_DELETE}</option>
+						<!-- ENDIF -->
+					</select>
+					<input class="btnmain" type="submit" value="{L_SUBMIT}" />
+				</td>
+			</tr>
+			</table>
+			</form>
+
+			<table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
+			<tr>
+				<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', 'image_id_ary', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'image_id_ary', false); return false;">{L_UNMARK_ALL}</a></b></td>
+			</tr>
+			</table>
+		<!-- ENDIF -->
+
+		<!-- IF S_GALLERY_MCP_REPO_DETAIL or S_GALLERY_MCP_QUEUE_DETAIL -->
+			<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery_lytebox.js"></script>
+			<script type="text/javascript" >
+				if (window.addEventListener) {
+					window.addEventListener("load",initLytebox,false);
+				} else if (window.attachEvent) {
+					window.attachEvent("onload",initLytebox);
+				} else {
+					window.onload = function() {initLytebox();}
+				}
+				function initLytebox() {
+					var imgMaxWidth = {IMAGE_RSZ_WIDTH};
+					var imgWarning = '';
+					myLytebox = new LyteBox(imgMaxWidth, imgWarning);
+				}
+			</script>
+			<form method="post" action="{S_MCP_ACTION}">
+			<table class="tablebg" width="100%" cellspacing="1">
+			<tr>
+				<th nowrap="nowrap">{IMAGE_NAME}</th>
+			</tr>
+			<tr>
+				<td class="row1">
+					{L_UPLOADED_BY} {UPLOADER}<br />
+					{L_POSTED_ON_DATE} {IMAGE_TIME}<br />
+					{L_ALBUM}: <a href="{U_VIEW_ALBUM}" style="font-weight: bold;">{ALBUM_NAME}</a><br />
+					{L_STATUS}: <span style="font-weight: bold;">{STATUS}</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="row2">
+
+						<table width="100%" cellspacing="0">
+						<tr valign="middle">
+							<td class="gensmall" align="{S_CONTENT_FLOW_END}">
+								<a href="{U_EDIT_IMAGE}">{EDIT_IMG}</a>
+								<a href="{U_DELETE_IMAGE}">{DELETE_IMG}</a>
+							</td>
+						</tr>
+						</table>
+					<div style="text-align: center; padding: 20px;">
+						<a href="{U_IMAGE}" rel="lytebox" title="{IMAGE_NAME}" class="image-resize"><img src="{U_IMAGE}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-height: {IMAGE_RSZ_HEIGHT}px; max-width: {IMAGE_RSZ_WIDTH}px;" /></a>
+					</div>
+					<!-- IF IMAGE_DESC -->
+						<hr />
+						<span style="font-weight: bold;">{L_IMAGE_DESC}:</span><br />
+						{IMAGE_DESC}
+					<!-- ENDIF -->
+				</td>
+			</tr>
+
+			<!-- IF S_GALLERY_MCP_REPO_DETAIL -->
+				<tr>
+					<td class="row1">
+						<p class="author">{L_REPORT_BY} {REPORTER} {L_POSTED_ON_DATE} {REPORT_TIME}</p><hr />
+						<div class="postbody">{REPORT_NOTE}</div>
+					</td>
+				</tr>
+			<!-- ENDIF -->
+			<tr>
+				<td class="cat" align="right">
+					<select name="action">
+						<option value="" selected="selected">{L_CHOOSE_ACTION}</option>
+						<!-- IF S_GALLERY_MCP_QUEUE_DETAIL -->
+							<!-- IF IMAGE_STATUS == 0 -->
+								<option value="images_approve">{L_QUEUE_A_APPROVE}</option>
+								<option value="images_lock">{L_QUEUE_A_LOCK}</option>
+							<!-- ELSEIF IMAGE_STATUS == 1 -->
+								<option value="images_unapprove">{L_QUEUE_A_UNAPPROVE}</option>
+								<option value="images_lock">{L_QUEUE_A_LOCK}</option>
+							<!-- ELSE -->
+								<option value="images_unapprove">{L_QUEUE_A_UNAPPROVE}</option>
+								<option value="images_approve">{L_QUEUE_A_APPROVE}</option>
+							<!-- ENDIF -->
+							<option value="images_delete">{L_QUEUE_A_DELETE}</option>
+						<!-- ELSE -->
+							<!-- IF REPORT_STATUS -->
+								<option value="reports_close">{L_REPORT_A_CLOSE}</option>
+							<!-- ELSE -->
+								<option value="reports_open">{L_REPORT_A_OPEN}</option>
+							<!-- ENDIF -->
+							<option value="reports_delete">{L_REPORT_A_DELETE}</option>
+						<!-- ENDIF -->
+					</select>
+					<input class="button2" type="submit" value="{L_SUBMIT}" />
+					<input type="hidden" value="{REPORT_ID}" name="image_id_ary[{REPORT_ID}]" />
+				</td>
+			</tr>
+			</table>
+			</form>
+		<!-- ENDIF -->
+
+		</td>
+	</tr>
+	</table>
+	<!-- IF PAGINATION -->
+		<table width="80%" align="{S_CONTENT_FLOW_END}" cellspacing="1">
+		<tr>
+			<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
+			<td class="gensmall" nowrap="nowrap">&nbsp;[ <!-- IF TOTAL_IMAGES -->{TOTAL_IMAGES}<!-- ENDIF --> ]&nbsp;</td>
+			<td class="gensmall" width="100%" align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
+		</tr>
+		</table>
+		<br />
+	<!-- ENDIF -->
+</div>
+
+<br clear="all" />
+
 
 <!-- Please keep this little notice visible -->
 <div class="copyright" style="text-align: center;">Powered by <!-- port started by tsr: http://phpbbgallery.ph.funpic.de --><a href="http://www.flying-bits.org/">nickvergessen</a></div>

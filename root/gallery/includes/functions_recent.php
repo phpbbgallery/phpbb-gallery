@@ -62,7 +62,7 @@ function recent_gallery_images($rows, $columns, &$display)
 			FROM " . GALLERY_IMAGES_TABLE . " AS i
 			$album_sql2
 			WHERE i.image_album_id IN ($allowed_albums)
-				AND i.image_approval = 1
+				AND i.image_status = 1
 			GROUP BY i.image_id
 			ORDER BY i.image_time DESC
 			LIMIT $limit_sql";

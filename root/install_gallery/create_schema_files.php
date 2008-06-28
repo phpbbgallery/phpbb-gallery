@@ -883,8 +883,6 @@ function get_schema_struct()
 			'image_time'			=> array('UINT:11', 0),
 			'image_album_id'		=> array('UINT', 0),
 			'image_view_count'		=> array('UINT:11', 0),
-			'image_lock'			=> array('UINT:3', 0),
-			'image_approval'		=> array('UINT:3', 0),
 			'image_rates'			=> array('UINT', 0),
 			'image_rate_points'		=> array('UINT', 0),
 			'image_rate_avg'		=> array('UINT', 0),
@@ -942,6 +940,21 @@ function get_schema_struct()
 			'rate_user_ip'		=> array('INDEX', 'rate_user_ip'),
 			'rate_point'		=> array('INDEX', 'rate_point'),
 		),
+	);
+//*/
+/*
+	$schema_data['phpbb_gallery_reports'] = array(
+		'COLUMNS'		=> array(
+			'report_id'			=> array('UINT', NULL, 'auto_increment'),
+			'report_album_id'		=> array('UINT', 0),
+			'report_image_id'		=> array('UINT', 0),
+			'reporter_id'			=> array('UINT', 0),
+			'report_manager'		=> array('UINT', 0),
+			'report_note'			=> array('MTEXT_UNI', ''),
+			'report_time'			=> array('UINT:11', 0),
+			'report_status'			=> array('UINT:3', 0),
+		),
+		'PRIMARY_KEY'	=> 'report_id',
 	);
 //*/
 /*

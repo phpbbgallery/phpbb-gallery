@@ -25,8 +25,6 @@ CREATE TABLE [phpbb_gallery_images] (
 	[image_time] [int] DEFAULT (0) NOT NULL ,
 	[image_album_id] [int] DEFAULT (0) NOT NULL ,
 	[image_view_count] [int] DEFAULT (0) NOT NULL ,
-	[image_lock] [int] DEFAULT (0) NOT NULL ,
-	[image_approval] [int] DEFAULT (0) NOT NULL ,
 	[image_rates] [int] DEFAULT (0) NOT NULL ,
 	[image_rate_points] [int] DEFAULT (0) NOT NULL ,
 	[image_rate_avg] [int] DEFAULT (0) NOT NULL ,

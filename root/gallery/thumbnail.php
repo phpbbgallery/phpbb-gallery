@@ -82,18 +82,10 @@ if ($album_access_array[$album_id]['i_view'] != 1)
 // ------------------------------------
 // Check Pic Approval
 // ------------------------------------
-
-if ($user->data['user_type'] <> USER_FOUNDER)
+if (($album_access_array[$album_id]['a_moderate'] != 1) && (!$image_data['image_status'] != 1))
 {
-	if (($album_data['album_approval'] == ADMIN) || (($album_data['album_approval'] == MOD) && ($album_access_array[$album_id]['a_moderate'] != 1)))
-	{
-		if (!$image_data['image_approval'])
-		{
-			trigger_error('NOT_AUTHORISED');
-		}
-	}
+	trigger_error($user->lang['NOT_AUTHORISED']);
 }
-
 
 // ------------------------------------
 // Check hotlink

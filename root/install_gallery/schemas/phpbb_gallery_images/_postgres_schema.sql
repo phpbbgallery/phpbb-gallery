@@ -175,8 +175,6 @@ CREATE TABLE phpbb_gallery_images (
 	image_time INT4 DEFAULT '0' NOT NULL CHECK (image_time >= 0),
 	image_album_id INT4 DEFAULT '0' NOT NULL CHECK (image_album_id >= 0),
 	image_view_count INT4 DEFAULT '0' NOT NULL CHECK (image_view_count >= 0),
-	image_lock INT4 DEFAULT '0' NOT NULL CHECK (image_lock >= 0),
-	image_approval INT4 DEFAULT '0' NOT NULL CHECK (image_approval >= 0),
 	image_rates INT4 DEFAULT '0' NOT NULL CHECK (image_rates >= 0),
 	image_rate_points INT4 DEFAULT '0' NOT NULL CHECK (image_rate_points >= 0),
 	image_rate_avg INT4 DEFAULT '0' NOT NULL CHECK (image_rate_avg >= 0),

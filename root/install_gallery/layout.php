@@ -12,6 +12,20 @@ if (!defined('IN_PHPBB'))
 {
 	exit;
 }
+$mtime = explode(' ', microtime());
+$totaltime = $mtime[0] + $mtime[1] - $starttime;
+$debug_output = sprintf('Time : %.3fs | ' . $db->sql_num_queries() . ' Queries | GZIP : ' . (($config['gzip_compress']) ? 'On' : 'Off') . (($user->load) ? ' | Load : ' . $user->load : ''), $totaltime);
+if (function_exists('memory_get_usage'))
+{
+	if ($memory_usage = memory_get_usage())
+	{
+		global $base_memory_usage;
+		$memory_usage -= $base_memory_usage;
+		$memory_usage = get_formatted_filesize($memory_usage);
+		$debug_output .= ' | Memory Usage: ' . $memory_usage;
+	}
+}
+$debug_output .= ' | <a href="' . build_url() . '&amp;explain=1">Explain</a>';
 
 $activemenu = ' id="activemenu"';
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">';
@@ -50,6 +64,7 @@ echo '							<li' . (($version == '0.2.3') ? $activemenu : '') . '><a href="inst
 echo '							<li class="header">' . $user->lang['INSTALLER_UPDATE_MENU'] . '</li>';
 echo '							<li' . (($version == '0.3.0') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.3.0"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.3.0</span></a></li>';
 echo '							<li' . (($version == '0.3.1') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.3.1"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.3.1</span></a></li>';
+echo '							<li' . (($version == 'svn') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=svn"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . ' SVN</span></a></li>';
 echo '							<li class="header">' . $user->lang['INSTALLER_CONVERT_MENU'] . '</li>';
 echo '							<li' . (($mode == 'convert') ? $activemenu : '') . '><a href="install.php?mode=convert"><span>' . sprintf($user->lang['INSTALLER_CONVERT_NOTE'], $new_mod_version) . '</span></a></li>';
 echo '						</ul>';
@@ -203,7 +218,7 @@ echo '		"phpBB" linked to www.phpbb.com. If you refuse to include even this then
 echo '		forums may be affected.';
 echo '		The phpBB Group : 2006';
 echo '	// -->';
-echo '<div id="page-footer">Powered by phpBB &copy; 2000, 2002, 2005, 2007 <a href="http://www.phpbb.com/">phpBB Group</a><br />Installer by <a href="http://www.flying-bits.org/">nickvergessen</a></div>';
+echo '<div id="page-footer">Powered by phpBB &copy; 2000, 2002, 2005, 2007 <a href="http://www.phpbb.com/">phpBB Group</a><br />Installer by <a href="http://www.flying-bits.org/">nickvergessen</a><br />' . $debug_output . '</div>';
 echo '</div>';
 echo '</body>';
 echo '</html>';
