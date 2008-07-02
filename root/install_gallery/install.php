@@ -12,12 +12,7 @@
 define('IN_PHPBB', true);
 $phpbb_root_path = '../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
-include($phpbb_root_path . 'common.'.$phpEx);
-include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
-include($phpbb_root_path . 'includes/acp/acp_modules.' . $phpEx);
-include($phpbb_root_path . 'includes/acp/acp_bbcodes.' . $phpEx);
-include($phpbb_root_path . 'includes/db/db_tools.' . $phpEx);
-include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+include($phpbb_root_path . 'install_gallery/install_functions.' . $phpEx);
 
 // Start session management
 $user->session_begin();
@@ -31,159 +26,7 @@ $page_title = 'phpBB Gallery v' . $new_mod_version;
 $log_name = 'Modification "phpBB Gallery"' . ((request_var('update', 0) > 0) ? '-Update' : '') . ' v' . $new_mod_version;
 
 $mode = request_var('mode', '', true);
-function load_album_config()
-{
-	global $db;
 
-	$sql = 'SELECT *
-		FROM ' . GALLERY_CONFIG_TABLE;
-	$result = $db->sql_query($sql);
-
-	while( $row = $db->sql_fetchrow($result) )
-	{
-		$album_config_name = $row['config_name'];
-		$album_config_value = $row['config_value'];
-		$album_config[$album_config_name] = $album_config_value;
-	}
-
-	return $album_config;
-}
-function split_sql_file($sql, $delimiter)
-{
-	$sql = str_replace("\r" , '', $sql);
-	$data = preg_split('/' . preg_quote($delimiter, '/') . '$/m', $sql);
-
-	$data = array_map('trim', $data);
-
-	// The empty case
-	$end_data = end($data);
-
-	if (empty($end_data))
-	{
-		unset($data[key($data)]);
-	}
-
-	return $data;
-}
-function add_module($array)
-{
-	global $user;
-	$modules = new acp_modules();
-	$failed = $modules->update_module_data($array, true);
-	if ($failed == 'PARENT_NO_EXIST')
-	{
-		$user->add_lang('mods/info_acp_gallery');
-		trigger_error(sprintf($user->lang['MISSING_PARENT_MODULE'], $array['parent_id'], $user->lang[$array['module_langname']]));
-	}
-}
-function deactivate_module($module_langname)
-{
-	global $db;
-
-	$sql = 'UPDATE ' . MODULES_TABLE . " SET module_enabled = 0 WHERE module_langname = '$module_langname';";
-	$db->sql_query($sql);
-}
-function gallery_column($table, $column, $values)
-{
-	global $db;
-
-	$phpbb_db_tools = new phpbb_db_tools($db);
-	if (!$phpbb_db_tools->sql_column_exists($table, $column))
-	{
-		$phpbb_db_tools->sql_column_add($table, $column, $values);
-	}
-}
-function delete_gallery_column($table, $column)
-{
-	global $db;
-
-	$phpbb_db_tools = new phpbb_db_tools($db);
-	if ($phpbb_db_tools->sql_column_exists($table, $column))
-	{
-		$phpbb_db_tools->sql_column_remove($table, $column);
-	}
-}
-function gallery_config_value($column, $value, $update = false)
-{
-	global $db;
-
-	$sql = 'SELECT * FROM ' . GALLERY_CONFIG_TABLE . " WHERE config_name = '$column'";
-	$result = $db->sql_query($sql);
-	$row = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
-	if (!$row)
-	{
-		$sql_ary = array(
-			'config_name'				=> $column,
-			'config_value'				=> $value,
-		);
-		$db->sql_query('INSERT INTO ' . GALLERY_CONFIG_TABLE . $db->sql_build_array('INSERT', $sql_ary));
-	}
-	else
-	{
-		$sql_ary = array(
-			'config_name'				=> $column,
-			'config_value'				=> $value,
-		);
-		$db->sql_query('UPDATE ' . GALLERY_CONFIG_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . " WHERE config_name = '$column'");
-	}
-}
-function add_bbcode($album_bbcode)
-{
-	global $db, $config;
-
-	$sql = 'SELECT * FROM ' . BBCODES_TABLE . " WHERE bbcode_tag = '$album_bbcode'";
-	$result = $db->sql_query($sql);
-	$row = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
-
-	if (!$row)
-	{
-		$sql_ary = array(
-			'bbcode_tag'				=> $album_bbcode,
-			'bbcode_match'				=> '[' . $album_bbcode . ']{NUMBER}[/' . $album_bbcode . ']',
-			'bbcode_tpl'				=> '<a href="' . generate_board_url() . GALLERY_ROOT_PATH . '/image_page.php?image_id={NUMBER}"><img src="' . generate_board_url() . GALLERY_ROOT_PATH . '/thumbnail.php?image_id={NUMBER}" alt="image_id: {NUMBER}" /></a>',
-			'display_on_posting'		=> true,
-			'bbcode_helpline'			=> '',
-			'first_pass_match'			=> '!\[' . $album_bbcode . '\]([0-9]+)\[/' . $album_bbcode . '\]!i',
-			'first_pass_replace'		=> '[' . $album_bbcode . ':$uid]${1}[/' . $album_bbcode . ':$uid]',
-			'second_pass_match'			=> '!\[' . $album_bbcode . ':$uid\]([0-9]+)\[/' . $album_bbcode . ':$uid\]!s',
-			'second_pass_replace'		=> '<a href="' . generate_board_url() . GALLERY_ROOT_PATH . '/image_page.php?image_id=${1}"><img src="' . generate_board_url() . GALLERY_ROOT_PATH . '/thumbnail.php?image_id=${1}" alt="image_id: ${1}" /></a>',
-		);
-
-		$sql = 'SELECT MAX(bbcode_id) as max_bbcode_id
-			FROM ' . BBCODES_TABLE;
-		$result = $db->sql_query($sql);
-		$row = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-
-		if ($row)
-		{
-			$bbcode_id = $row['max_bbcode_id'] + 1;
-
-			// Make sure it is greater than the core bbcode ids...
-			if ($bbcode_id <= NUM_CORE_BBCODES)
-			{
-				$bbcode_id = NUM_CORE_BBCODES + 1;
-			}
-		}
-		else
-		{
-			$bbcode_id = NUM_CORE_BBCODES + 1;
-		}
-		$sql_ary['bbcode_id'] = (int) $bbcode_id;
-
-		$db->sql_query('INSERT INTO ' . BBCODES_TABLE . $db->sql_build_array('INSERT', $sql_ary));
-	}
-	else
-	{
-		$sql_ary = array(
-			'bbcode_tpl'				=> '<a href="' . generate_board_url() . GALLERY_ROOT_PATH . '/image_page.php?image_id={NUMBER}"><img src="' . generate_board_url() . GALLERY_ROOT_PATH . '/thumbnail.php?image_id={NUMBER}" alt="image_id: {NUMBER}" /></a>',
-			'second_pass_replace'		=> '<a href="' . generate_board_url() . GALLERY_ROOT_PATH . '/image_page.php?image_id=${1}"><img src="' . generate_board_url() . GALLERY_ROOT_PATH . '/thumbnail.php?image_id=${1}" alt="image_id: ${1}" /></a>',
-		);
-		$db->sql_query('UPDATE ' . BBCODES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . ' WHERE bbcode_id = ' . (int) $row['bbcode_id']);
-	}
-}
 // What sql_layer should we use?
 switch ($db->sql_layer)
 {
@@ -239,47 +82,7 @@ switch ($db->sql_layer)
 		trigger_error('Sorry, unsupportet Databases found.');
 	break;
 }
-function gallery_create_table_slap_db_tools($table, $drop = true)
-{
-	global $db, $table_prefix, $db_schema, $delimiter;
 
-	$table_name = substr($table . '#', 6, -1);
-
-	if ($drop)
-	{
-		//Drop if existing
-		if ($db->sql_layer != 'mssql')
-		{
-			$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . $table_name;
-			$result = $db->sql_query($sql);
-			$db->sql_freeresult($result);
-		}
-		else
-		{
-			$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . $table_name . ')
-			drop table ' . $table_prefix . $table_name;
-			$result = $db->sql_query($sql);
-			$db->sql_freeresult($result);
-		}
-	}
-
-	// locate the schema files
-	$dbms_schema = 'schemas/' . $table . '/_' . $db_schema . '_schema.sql';
-	$sql_query = @file_get_contents($dbms_schema);
-	$sql_query = preg_replace('#phpbb_#i', $table_prefix, $sql_query);
-	$sql_query = preg_replace('/\n{2,}/', "\n", preg_replace('/^#.*$/m', "\n", $sql_query));
-	$sql_query = split_sql_file($sql_query, $delimiter);
-	// make the new one's
-	foreach ($sql_query as $sql)
-	{
-		if (!$db->sql_query($sql))
-		{
-			$error = $db->sql_error();
-			$this->p_master->db_error($error['message'], $sql, __LINE__, __FILE__);
-		}
-	}
-	unset($sql_query);
-}
 $delete = request_var('delete', 0);
 $install = request_var('install', 0);
 $update = request_var('update', 0);
@@ -298,6 +101,7 @@ switch ($mode)
 			gallery_create_table_slap_db_tools('phpbb_gallery_config', true);
 			gallery_create_table_slap_db_tools('phpbb_gallery_images', true);
 			gallery_create_table_slap_db_tools('phpbb_gallery_rates', true);
+			gallery_create_table_slap_db_tools('phpbb_gallery_reports', true);
 			gallery_create_table_slap_db_tools('phpbb_gallery_roles', true);
 			gallery_create_table_slap_db_tools('phpbb_gallery_permissions', true);
 			gallery_create_table_slap_db_tools('phpbb_gallery_modscache', true);
@@ -701,8 +505,6 @@ switch ($mode)
 					$db->sql_freeresult($result);
 
 					//personal gallery permissions
-					gallery_create_table_slap_db_tools('phpbb_gallery_roles', true);
-					gallery_create_table_slap_db_tools('phpbb_gallery_permissions', true);
 					gallery_create_table_slap_db_tools('phpbb_gallery_modscache', true);
 					$sql = 'SELECT group_id, personal_subalbums, allow_personal_albums, view_personal_albums
 						FROM ' . GROUPS_TABLE;
@@ -996,6 +798,7 @@ switch ($mode)
 			gallery_create_table_slap_db_tools('phpbb_gallery_config', true);
 			gallery_create_table_slap_db_tools('phpbb_gallery_images', true);
 			gallery_create_table_slap_db_tools('phpbb_gallery_rates', true);
+			gallery_create_table_slap_db_tools('phpbb_gallery_reports', true);
 			gallery_create_table_slap_db_tools('phpbb_gallery_roles', true);
 			gallery_create_table_slap_db_tools('phpbb_gallery_permissions', true);
 			gallery_create_table_slap_db_tools('phpbb_gallery_modscache', true);
@@ -1342,6 +1145,112 @@ switch ($mode)
 			$converted = true;
 		}
 	break;
+	case 'delete':
+		$deleted = false;
+		if ($delete == 1)
+		{
+			$delete_bbcode = request_var('delete_bbcode', 0);
+			if ($delete_bbcode)
+			{
+				$bbcode_id = request_var('bbcode_id', 0);
+				$sql = 'DELETE FROM ' . BBCODES_TABLE . " WHERE bbcode_id = $bbcode_id";
+				$db->sql_query($sql);
+			}
+			/*drop_dbs();
+			$bbcode_link1 = '<a href="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/image_page.php?image_id=${1}"><img src="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/thumbnail.php?image_id=${1}" /></a>';
+			$bbcode_link2 = '<a href="gallery/image_page.php?id=${1}"><img src="gallery/thumbnail.php?pic_id=${1}" /></a>';
+			$sql = 'DELETE FROM ' . BBCODES_TABLE . " WHERE second_pass_replace = '$bbcode_link1' or second_pass_replace = '$bbcode_link2';";
+			$db->sql_query($sql);
+			$acp_gallery_module = '';
+			$sql = 'SELECT *
+				FROM ' . MODULES_TABLE . "
+				WHERE module_basename = 'gallery'
+					AND module_class = 'acp'";
+			$result = $db->sql_query($sql);
+			while( $row = $db->sql_fetchrow($result) )
+			{
+				$acp_gallery_module .= (($acp_gallery_module) ? ', ' : '') . $row['parent_id'];
+			}
+			$sql = 'DELETE FROM ' . MODULES_TABLE . " WHERE module_basename = 'gallery' or module_id IN ($acp_gallery_module);";
+			$db->sql_query($sql);
+
+			delete_gallery_column(USERS_TABLE, 'album_id');
+			delete_gallery_column(GROUPS_TABLE, 'allow_personal_albums');
+			delete_gallery_column(GROUPS_TABLE, 'view_personal_albums');
+			delete_gallery_column(GROUPS_TABLE, 'personal_subalbums');*/
+			//delete_gallery_column(SESSIONS_TABLE, 'session_album_id');
+			$cache->purge();
+			$deleted = true;
+		}
+		else
+		{
+			$select_bbcode = '';
+			$sql = 'SELECT bbcode_id, bbcode_tag
+				FROM ' . BBCODES_TABLE;
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$select_bbcode .= ($select_bbcode == '') ? '<select name="bbcode_id"><option value="0">' . $user->lang['BBCODE_IS_DELETED'] . '</option>' : '';
+				$select_bbcode .= '<option value="' . $row['bbcode_id'] . '">[' . $row['bbcode_tag'] . ']</option>';
+			}
+			$db->sql_freeresult($result);
+			if ($select_bbcode)
+			{
+				$select_bbcode .= '</select>';
+			}
+
+			$dropping_tables = array(
+				array('name' => 'gallery_albums',		'v1' => '0.2.0'),
+				array('name' => 'gallery_config',		'v1' => '0.2.0'),
+				array('name' => 'gallery_comments',		'v1' => '0.2.0'),
+				array('name' => 'gallery_images',		'v1' => '0.2.0'),
+				array('name' => 'gallery_modscache',		'v1' => '0.4.0'),
+				array('name' => 'gallery_permissions',	'v1' => '0.4.0'),
+				array('name' => 'gallery_rates',			'v1' => '0.2.0'),
+				array('name' => 'gallery_reports',		'v1' => '0.4.0'),
+				array('name' => 'gallery_roles',			'v1' => '0.4.0'),
+				//array('name' => 'gallery_roles2',			'v1' => '0.4.0'),
+			);
+			$found_tables = $missed_tables = array();
+
+			foreach ($dropping_tables as $table)
+			{
+				$sql = 'SELECT * FROM ' . $table_prefix . $table['name'] . ' LIMIT 1';
+				if (@$result = $db->sql_query($sql))
+				{
+					$found_tables[] = $table_prefix . $table['name'];
+				}
+				else
+				{
+					$missed_tables[] = $table;
+				}
+			}
+
+			$dropping_columns = array(
+				array('name' => 'album_id',					'v1' => '0.2.0',	'table' => USERS_TABLE),
+				array('name' => 'session_album_id',			'v1' => '0.3.1',	'table' => SESSIONS_TABLE),
+				array('name' => 'allow_personal_albums',	'v1' => '0.2.3',	'table' => GROUPS_TABLE),
+				array('name' => 'view_personal_albums',		'v1' => '0.2.3',	'table' => GROUPS_TABLE),
+				array('name' => 'personal_subalbums',		'v1' => '0.2.3',	'table' => GROUPS_TABLE),
+			);
+			$found_columns = $missed_columns = array();
+
+			foreach ($dropping_columns as $column)
+			{
+				$phpbb_db_tools = new phpbb_db_tools($db);
+				if ($phpbb_db_tools->sql_column_exists($column['table'], $column['name']))
+				{
+					$found_columns[] = $table_prefix . $table['name'];
+				}
+				else
+				{
+					$missed_columns[] = $column;
+				}
+			}
+
+		}
+	break;
+
 	default:
 		//we had a little cheater
 	break;

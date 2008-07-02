@@ -267,7 +267,7 @@ function update_lastimage_info($album_id)
 	$sql = 'SELECT COUNT(image_id) images
 		FROM ' . GALLERY_IMAGES_TABLE . "
 		WHERE image_album_id = $album_id
-			AND image_approval = 1";
+			AND image_status = 1";
 	$result = $db->sql_query($sql);
 	if ($row = $db->sql_fetchrow($result))
 	{
@@ -286,7 +286,7 @@ function update_lastimage_info($album_id)
 	$sql = 'SELECT *
 		FROM ' . GALLERY_IMAGES_TABLE . "
 		WHERE image_album_id = $album_id
-			AND image_approval = 1
+			AND image_status = 1
 		ORDER BY image_time DESC
 		LIMIT 1";
 	$result = $db->sql_query($sql);
