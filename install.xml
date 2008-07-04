@@ -247,7 +247,7 @@ define('GALLERY_IMAGES_TABLE',			$table_prefix . 'gallery_images');
 define('GALLERY_MODSCACHE_TABLE',		$table_prefix . 'gallery_modscache');
 define('GALLERY_PERMISSIONS_TABLE',		$table_prefix . 'gallery_permissions');
 define('GALLERY_RATES_TABLE',			$table_prefix . 'gallery_rates');
-define('GALLERY_REPORTS_TABLE',		$table_prefix . 'gallery_reports');
+define('GALLERY_REPORTS_TABLE',			$table_prefix . 'gallery_reports');
 define('GALLERY_PERM_ROLES_TABLE',		$table_prefix . 'gallery_roles');]]></action>
       </edit>
     </open>
@@ -327,7 +327,8 @@ define('GALLERY_PERM_ROLES_TABLE',		$table_prefix . 'gallery_roles');]]></action
       </edit>
       <edit>
         <find><![CDATA[		$sql_ary['session_id'] = (string) $this->session_id;
-		$sql_ary['session_page'] = (string) substr($this->page['page'], 0, 199);]]></find>
+		$sql_ary['session_page'] = (string) substr($this->page['page'], 0, 199);
+		$sql_ary['session_forum_id'] = $this->page['forum'];]]></find>
         <action type="after-add"><![CDATA[$sql_ary['session_album_id'] = $this->page['album'];]]></action>
       </edit>
     </open>
