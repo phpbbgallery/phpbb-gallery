@@ -49,7 +49,11 @@ function checkRateForm() {
 	<tr>
 		<td class="row1" style="align: center;"><div style="text-align: center; padding: 20px;">
 			<a href="{U_IMAGE}" rel="lytebox" title="{IMAGE_NAME}" class="image-resize"><img src="{U_IMAGE}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-height: {IMAGE_RSZ_HEIGHT}px; max-width: {IMAGE_RSZ_WIDTH}px;" /></a>
-		</div></td>
+		</div>
+			<!-- IF U_REPORT --><a href="{U_REPORT}">{REPORT_IMG}</a> <!-- ENDIF -->
+			<!-- IF U_DELETE --><a href="{U_DELETE}">{DELETE_IMG}</a> <!-- ENDIF -->
+			<!-- IF U_EDIT --><a href="{U_EDIT}">{EDIT_IMG}</a> <!-- ENDIF -->
+		</td>
 	</tr>
 	<tr>
 		<td class="row2">

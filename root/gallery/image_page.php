@@ -221,6 +221,13 @@ $template->assign_vars(array(
 	'IMAGE_RSZ_WIDTH'	=> $album_config['preview_rsz_width'],
 	'IMAGE_RSZ_HEIGHT'	=> $album_config['preview_rsz_height'],
 
+	'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_IMAGE'),
+	'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_IMAGE'),
+	'REPORT_IMG'		=> $user->img('icon_post_report', 'REPORT_IMAGE'),
+	'U_EDIT'			=> ((($album_access_array[$album_id]['i_edit'] == 1) && ($image_data['image_user_id'] == $user->data['user_id'])) || ($album_access_array[$album_id]['a_moderate'] == 1)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=" . $image_data['image_id']) : '',
+	'U_DELETE'			=> ((($album_access_array[$album_id]['i_delete'] == 1) && ($image_data['image_user_id'] == $user->data['user_id'])) || ($album_access_array[$album_id]['a_moderate'] == 1)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=delete&amp;album_id=$album_id&amp;image_id=" . $image_data['image_id']) : '',
+	'U_REPORT'			=> (($album_access_array[$album_id]['i_report'] == 1) && ($image_data['image_user_id'] != $user->data['user_id'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=report&amp;album_id=$album_id&amp;image_id=" . $image_data['image_id']) : '',
+
 	'IMAGE_NAME'		=> $image_data['image_name'],
 	'IMAGE_DESC'		=> generate_text_for_display($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], 7),
 	'IMAGE_BBCODE'		=> '[album]' . $image_data['image_id'] . '[/album]',
@@ -238,22 +245,16 @@ if ($album_config['rate'])
 		'IMAGE_RATING'	=> ($image_data['image_rates'] <> 0) ? $image_data['image_rate_avg'] / 100 : $user->lang['NOT_RATED'],
 	));
 	
-	if ($album_data['album_rate_level'] < 1 || $album_access_array[$album_id]['i_rate'] == 1)
+	if ($album_access_array[$album_id]['i_rate'] == 1)
 	{
 		$ratebox = false;
-		if ($user->data['user_id'] == ANONYMOUS || $user->data['is_bot'])
+		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			if ($album_data['album_rate_level'] == 0)
-			{
 				$ratebox = '<a href="' . append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=login&amp;redirect=" . urlencode("{$gallery_root_path}image_page.$phpEx?album_id=$album_id&image_id=$image_id")) . '">' . $user->lang['LOGIN_TO_RATE'] . '</a>';
-			}
 		}
 		else if ($user->data['user_id'] == $image_data['image_user_id'])
 		{
-			if ($album_data['album_rate_level'] == 0)
-			{
-				$ratebox = $user->lang['NO_RATE_ON_OWN_IMAGES'];
-			}
+			$ratebox = $user->lang['NO_RATE_ON_OWN_IMAGES'];
 		}
 		if (!$ratebox)
 		{
@@ -287,32 +288,11 @@ if ($album_config['comment'])
 		'IMAGE_COMMENTS'	=> $image_data['image_comments'],
 	));
 	
-	if ($album_data['album_comment_level'] < 1 || $album_access_array[$album_id]['c_post'])
+	if ($album_access_array[$album_id]['c_post'] == 1)
 	{
 		$template->assign_vars(array(
-			'POST_COMMENT'	=> true,
-			'YOUR_COMMENT'	=> true,
-		));
-		$commentbox = false;
-		if ($user->data['user_id'] == ANONYMOUS || $user->data['is_bot'])
-		{
-			if ($album_data['album_comment_level'] == 0)
-			{
-				$commentbox = '<a href="' . append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login') . '">' . $user->lang['LOGIN_TO_COMMENT'] . '</a>';
-			}
-			else
-			{
-				$template->assign_vars(array(
-						'S_CAN_COMMENT' => true
-				));
-			}
-		}
-		if (!$commentbox)
-		{
-			$commentbox  = '';
-			$commentbox .= '<textarea name="message" class="inputbox" cols="60" rows="4"></textarea><br /><br /><input type="submit" name="submit" value="' . $user->lang['SUBMIT'] . '" class="button1" />';
-		}
-		$template->assign_vars(array(
+			'POST_COMMENT'			=> true,
+			'YOUR_COMMENT'			=> true,
 			'S_COMMENTBOX' 			=> true,
 			'S_BBCODE_ALLOWED' 		=> true,
 			'S_MAX_LENGTH' 			=> $album_config['desc_length'],
