@@ -80,7 +80,7 @@ if ($album_access_array[$album_id]['i_view'] != 1)
 // ------------------------------------
 // Check Pic Approval
 // ------------------------------------
-if (($album_access_array[$album_id]['a_moderate'] != 1) && (!$image_data['image_status'] != 1))
+if (($album_access_array[$album_id]['a_moderate'] != 1) && ($image_data['image_status'] != 1))
 {
 	trigger_error($user->lang['NOT_AUTHORISED']);
 }

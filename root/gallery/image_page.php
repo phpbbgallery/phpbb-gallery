@@ -100,7 +100,7 @@ if (($album_config['rate'] <> 0) && $user->data['is_registered'])
 // ------------------------------------
 // Check Pic Approval
 // ------------------------------------
-if (($album_access_array[$album_id]['a_moderate'] != 1) && (!$image_data['image_status'] != 1))
+if (($album_access_array[$album_id]['a_moderate'] != 1) && ($image_data['image_status'] != 1))
 {
 	trigger_error($user->lang['NOT_AUTHORISED']);
 }
