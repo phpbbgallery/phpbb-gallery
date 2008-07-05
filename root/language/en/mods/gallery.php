@@ -223,8 +223,13 @@ $lang = array_merge($lang, array(
 
 $lang = array_merge($lang, array(
 	'IMAGE_STATUS'					=> 'Status',
+	'IMAGES_REPORTED_SUCCESSFULLY'	=> 'The image was successful reported',
 
 	'LAST_COMMENT'					=> 'Last Comment',
+
+	'MISSING_REPORT_REASON'			=> 'You need to mention a reason, to report an image.',
+
+	'REPORT_IMAGE'					=> 'Report image',
 ));
 
 ?>

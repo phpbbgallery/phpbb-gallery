@@ -121,7 +121,42 @@ switch ($mode)
 						trigger_error('NOT_AUTHORISED');
 					}
 				}
-				else if (($album_access_array[$album_id]['a_moderate'] != 1) && (!$image_data['image_status'] != 1))
+				else if (($album_access_array[$album_id]['a_moderate'] != 1) && ($image_data['image_status'] != 1))
+				{
+					meta_refresh(3, $image_backlink);
+					trigger_error('NOT_AUTHORISED');
+				}
+			break;
+			case 'report':
+				if ($album_access_array[$album_id]['i_report'] != 1)
+				{
+					if (!$user->data['is_registered'])
+					{
+						login_box($image_loginlink , $user->lang['LOGIN_INFO']);
+					}
+					else
+					{
+						meta_refresh(3, $image_backlink);
+						trigger_error('NOT_AUTHORISED');
+					}
+				}
+				else if (
+					($image_data['image_user_id'] == $user->data['user_id'])
+				&&
+					($album_access_array[$album_id]['a_moderate'] != 1)
+				)
+				{
+					if (!$user->data['is_registered'])
+					{
+						login_box($image_loginlink , $user->lang['LOGIN_INFO']);
+					}
+					else
+					{
+						meta_refresh(3, $image_backlink);
+						trigger_error('NOT_AUTHORISED');
+					}
+				}
+				else if (($album_access_array[$album_id]['a_moderate'] != 1) && ($image_data['image_status'] != 1))
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
@@ -156,7 +191,7 @@ switch ($mode)
 						trigger_error('NOT_AUTHORISED');
 					}
 				}
-				else if (($album_access_array[$album_id]['a_moderate'] != 1) && (!$image_data['image_status'] != 1))
+				else if (($album_access_array[$album_id]['a_moderate'] != 1) && ($image_data['image_status'] != 1))
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
@@ -675,9 +710,57 @@ switch ($mode)
 					'IMAGE_RSZ_HEIGHT'	=> $album_config['preview_rsz_height'],
 
 					'S_IMAGE'			=> true,
+					'S_EDIT'			=> true,
 					'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id"),
 				));
 				$message = $user->lang['IMAGES_UPDATED_SUCCESSFULLY'] . '<br />';
+			}
+			break;
+			case 'report':
+			if ($submode == 'report')
+			{
+				if ($submit)
+				{
+					if (!check_form_key('gallery'))
+					{
+						trigger_error('FORM_INVALID');
+					}
+					$report_message = request_var('message', '', true);
+					$error = '';
+					if ($report_message == '')
+					{
+						$error = $user->lang['MISSING_REPORT_REASON'];
+						$submit = false;
+					}
+					// --------------------------------
+					// Update the DB
+					// --------------------------------
+					$sql_ary = array(
+						'report_album_id'			=> $album_id,
+						'report_image_id'			=> $image_id,
+						'reporter_id'				=> $user->data['user_id'],
+						'report_note'				=> $report_message,
+						'report_time'				=> time(),
+						'report_status'				=> 1,
+					);
+					if (!$error)
+					{
+						$sql = 'INSERT INTO ' . GALLERY_REPORTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+						$db->sql_query($sql);
+					}
+				}
+
+				$template->assign_vars(array(
+					'ERROR'				=> $error,
+					'U_IMAGE'			=> ($image_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
+					'U_VIEW_IMAGE'		=> ($image_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
+					'IMAGE_RSZ_WIDTH'	=> $album_config['preview_rsz_width'],
+					'IMAGE_RSZ_HEIGHT'	=> $album_config['preview_rsz_height'],
+
+					'S_REPORT'			=> true,
+					'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=report&amp;album_id=$album_id&amp;image_id=$image_id"),
+				));
+				$message = $user->lang['IMAGES_REPORTED_SUCCESSFULLY'] . '<br />';
 			}
 			break;
 			case 'delete':
