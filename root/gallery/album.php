@@ -111,34 +111,13 @@ if ($album_id <> 0)
 		));
 	}
 	$grouprows = array();
-	$moderators_list = '';
-	if ($album_data['album_moderator_groups'] <> '')
-	{// Get the namelist of moderator usergroups
-		$sql = 'SELECT group_id, group_name, group_type
-				FROM ' . GROUPS_TABLE . '
-				WHERE group_type <> ' . GROUP_HIDDEN . '
-					AND group_id IN (' . $album_data['album_moderator_groups'] . ')
-				ORDER BY group_name ASC';
-		$result = $db->sql_query($sql);
-
-		while( $row = $db->sql_fetchrow($result) )
-		{
-			$grouprows[] = $row;
-		}
-
-		if (count($grouprows) > 0)
-		{
-			for ($j = 0; $j < count($grouprows); $j++)
-			{
-				$group_name = ($grouprows[$j]['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $grouprows[$j]['group_name']] : $grouprows[$j]['group_name'];
-				$group_link = '<a href="'. append_sid("{$phpbb_root_path}memberlist.$phpEx?mode=group&g=" . $grouprows[$j]['group_id']) . '">' . $group_name . '</a>';
-				$moderators_list .= ($moderators_list == '') ? $group_link : ', ' . $group_link;
-			}
-		}
-	}
-	if (empty($moderators_list))
+	$album_moderators = array();
+	get_album_moderators($album_moderators, $album_id);
+	$l_moderator = $moderators_list = '';
+	if (!empty($album_moderators[$album_id]))
 	{
-		$moderators_list = '';
+		$l_moderator = (sizeof($album_moderators[$album_id]) == 1) ? $user->lang['MODERATOR'] : $user->lang['MODERATORS'];
+		$moderators_list = implode(', ', $album_moderators[$album_id]);
 	}
 
 	/**
@@ -295,6 +274,7 @@ if ($album_data['album_user_id'] == $user->data['user_id'])
 }
 $template->assign_vars(array(
 	'S_MODE'					=> $album_data['album_type'],
+	'L_MODERATORS'				=> $l_moderator,
 	'MODERATORS'				=> $moderators_list,
 	'U_UPLOAD_IMAGE'			=> (!$album_data['album_user_id'] || ($album_data['album_user_id'] == $user->data['user_id'])) ?
 										append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=upload&amp;album_id=$album_id") : '',
