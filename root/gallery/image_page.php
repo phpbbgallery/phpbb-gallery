@@ -239,8 +239,8 @@ $template->assign_vars(array(
 	'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?album_id=$album_id&amp;image_id=$image_id"))
 );
 
-//if ($album_config['exif'] && ($image_data['image_has_exif'] > 0)/* && ($album_access_array[$album_id]['i_exif'] == 1)*/ /* && $image_data['image_display_exif']*/)
-//{
+if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0)/* && ($album_access_array[$album_id]['i_exif'] == 1)*/ /* && $image_data['image_display_exif']*/)
+{
 	$exif = exif_read_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename'], 0, true);
 	if (!empty($exif["EXIF"]))
 	{
@@ -312,7 +312,7 @@ $template->assign_vars(array(
 			WHERE image_id = ' . $image_id;
 		$db->sql_query($sql);
 	}
-//}
+}
 
 if ($album_config['rate'])
 {
