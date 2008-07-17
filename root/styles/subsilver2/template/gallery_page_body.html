@@ -57,7 +57,6 @@ function checkRateForm() {
 	</tr>
 	<tr>
 		<td class="row2">
-		
 <table class="tablebg" cellspacing="1" width="100%">
 	<tr>
 		<th colspan="2">{L_DETAILS}</th>
@@ -90,6 +89,74 @@ function checkRateForm() {
 	</tr>
 </table>
 <br clear="all" />
+
+<!-- IF S_EXIF_DATA -->
+<script type="text/JavaScript">
+function getElement(iElementId)
+{
+	if (document.all) 
+	{
+		return document.all[iElementId];
+	}
+	if (document.getElementById)
+	{
+		return document.getElementById(iElementId);
+	}
+}
+
+function toggleElement(oElement)
+{
+	if (oElement.style.display == "none")
+	{
+		oElement.style.display = "";
+	}
+	else
+	{
+		oElement.style.display = "none";
+	}
+}
+</script>
+<table class="tablebg" cellspacing="1" width="100%">
+	<tr>
+		<th colspan="2">{L_EXIF-DATA} - <a href="javascript: toggleElement( getElement('exif_data_fieldset'));">{L_SHOW_EXIF}</a></th>
+	</tr>
+</table>
+<table class="tablebg" cellspacing="1" width="100%" id="exif_data_fieldset" style="display: none;">
+	<tr class="row1">
+		<td width="25%" align="right"><span class="genmed">{L_EXIF_DATE}:</span></td>
+			<td><span class="genmed">{EXIF_DATE}</span></td>
+	</tr>
+	<tr class="row1">
+		<td width="25%" align="right"><span class="genmed">{L_EXIF_FOCAL}:</span></td>
+			<td><span class="genmed">{EXIF_FOCAL} {L_EXIF_FOCAL_EXP}</span></td>
+	</tr>
+	<tr class="row1">
+		<td width="25%" align="right"><span class="genmed">{L_EXIF_EXPOSURE}:</span></td>
+			<td><span class="genmed">{EXIF_EXPOSURE} {L_EXIF_EXPOSURE_EXP}</span></td>
+	</tr>
+	<tr class="row1">
+		<td width="25%" align="right"><span class="genmed">{L_EXIF_APERTURE}:</span></td>
+			<td><span class="genmed">{EXIF_APERTURE}</span></td>
+	</tr>
+	<tr class="row1">
+		<td width="25%" align="right"><span class="genmed">{L_EXIF_ISO}:</span></td>
+			<td><span class="genmed">{EXIF_ISO}</span></td>
+	</tr>
+	<tr class="row1">
+		<td width="25%" align="right"><span class="genmed">{L_EXIF_FLASH}:</span></td>
+			<td><span class="genmed">{EXIF_FLASH}</span></td>
+	</tr>
+	<tr class="row1">
+		<td width="25%" align="right"><span class="genmed">{L_EXIF_WHITEB}:</span></td>
+			<td><span class="genmed">{WHITEB}</span></td>
+	</tr>
+	<tr class="row1">
+		<td width="25%" align="right"><span class="genmed">{L_EXIF_CAM_MODEL}:</span></td>
+			<td><span class="genmed">{CAM_MODEL}</span></td>
+	</tr>
+</table>
+<br clear="all" />
+<!-- ENDIF -->
 
 <!-- IF RATING -->
 <a name="rating"></a>

@@ -552,6 +552,8 @@ class acp_gallery
 			'FULLPIC_POPUP_ENABLED' 			=> ($new['fullpic_popup'] == 1) ? 'checked="checked"' : '',
 			'FULLPIC_POPUP_DISABLED' 			=> ($new['fullpic_popup'] == 0) ? 'checked="checked"' : '',
 
+			'S_DISPLAY_EXIF_DATA' 				=> $new['exif_data'],
+
 			'S_GUEST' 							=> ALBUM_GUEST,
 			'S_USER' 							=> ALBUM_USER,
 			'S_PRIVATE' 						=> ALBUM_PRIVATE,

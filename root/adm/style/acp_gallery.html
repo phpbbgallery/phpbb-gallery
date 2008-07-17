@@ -281,6 +281,10 @@
 			<dt><label for="desc_length">{L_IMAGE_DESC_MAX_LENGTH}</label></dt>
 			<dd><input class="post" type="text" size="6" name="desc_length" value="{IMAGE_DESC_MAX_LENGTH}" /></dd>
 		</dl>
+		<dl>
+			<dt><label for="exif_data">{L_DISP_EXIF_DATA}</label></dt>
+			<dd><input type="radio" class="radio"<!-- IF S_DISPLAY_EXIF_DATA --> checked="checked"<!-- ENDIF --> name="exif_data" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_DISPLAY_EXIF_DATA --> checked="checked"<!-- ENDIF --> name="exif_data" value="0" />{L_NO}</dd>
+		</dl>
 	</fieldset>
 	<fieldset>
 		<legend>{L_THUMBNAIL_SETTINGS}</legend>

@@ -20,6 +20,7 @@ include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 $user->session_begin();
 $auth->acl($user->data);
 $user->setup('mods/gallery');
+$user->add_lang('mods/exif_data');
 
 include_once("{$phpbb_root_path}{$gallery_root_path}includes/common.$phpEx");
 include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
@@ -237,6 +238,81 @@ $template->assign_vars(array(
 
 	'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?album_id=$album_id&amp;image_id=$image_id"))
 );
+
+//if ($album_config['exif'] && ($image_data['image_has_exif'] > 0)/* && ($album_access_array[$album_id]['i_exif'] == 1)*/ /* && $image_data['image_display_exif']*/)
+//{
+	$exif = exif_read_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename'], 0, true);
+	if (!empty($exif["EXIF"]))
+	{
+		$exif_date = $exif_focal =  $exif_aperture = $exif_exposure = $exif_iso = 
+		$exif_whitebalance = $exif_flash = $exif_make = $exif_model = $user->lang['EXIF_NOT_AVAILABLE'];
+
+		if(isset($exif["EXIF"]["DateTimeOriginal"]))
+		{
+			$timestamp = mktime(substr($exif["EXIF"]["DateTimeOriginal"], 11, 2), substr($exif["EXIF"]["DateTimeOriginal"], 14, 2), substr($exif["EXIF"]["DateTimeOriginal"], 17, 2), substr($exif["EXIF"]["DateTimeOriginal"], 5, 2), substr($exif["EXIF"]["DateTimeOriginal"], 8, 2), substr($exif["EXIF"]["DateTimeOriginal"], 0, 4));
+			$exif_date = $user->format_date($timestamp);
+		}
+		if(isset($exif["EXIF"]["FocalLength"]))
+		{
+			list($num, $den) = explode("/", $exif["EXIF"]["FocalLength"]);
+			$exif_focal  = ($num/$den);
+		}
+		if(isset($exif["EXIF"]["ExposureTime"]))
+		{
+			list($num, $den) = explode("/", $exif["EXIF"]["ExposureTime"]);
+			$exif_exposure = '1/' . $den/$num;
+		}
+		if(isset($exif["EXIF"]["FNumber"]))
+		{
+			list($num,$den) = explode("/",$exif["EXIF"]["FNumber"]);
+			$exif_aperture  = "F/" . ($num/$den);
+		}
+		if(isset($exif["EXIF"]["ISOSpeedRatings"]))
+		{
+			$exif_iso = $exif["EXIF"]["ISOSpeedRatings"];
+		}
+		if (isset($exif["EXIF"]["WhiteBalance"]))
+		{
+			$exif_whitebalance = $user->lang['EXIF_WHITEB_' . (($exif["EXIF"]["WhiteBalance"]) ? 'AUTO' : 'MANU')];
+		}
+		if(isset($exif["EXIF"]["Flash"]))
+		{
+			$exif_flash = $user->lang['EXIF_FLASH_CASE_' . $exif["EXIF"]["Flash"]];
+		}
+		if (isset($exif["IFD0"]["Model"]))
+		{
+			$exif_model = ucwords($exif["IFD0"]["Model"]);
+		}
+
+		$template->assign_vars(array(
+			'EXIF_DATE'			=> $exif_date,
+			'EXIF_FOCAL'		=> $exif_focal,
+			'EXIF_EXPOSURE'		=> $exif_exposure,
+			'EXIF_APERTURE'		=> $exif_aperture,
+			'EXIF_ISO'			=> $exif_iso,
+			'EXIF_FLASH'		=> $exif_flash,
+
+			'WHITEB'		=> $exif_whitebalance,
+			'CAM_MODEL'		=> $exif_model,
+			'S_EXIF_DATA'	=> true,
+		));
+
+		if ($image_data['image_has_exif'] == 2)
+		{
+			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+				SET image_has_exif = 1
+				WHERE image_id = ' . $image_id;
+			$db->sql_query($sql);
+		}
+	}
+	else
+	{
+		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+			SET image_has_exif = 0
+			WHERE image_id = ' . $image_id;
+		$db->sql_query($sql);
+	}
+//}
 
 if ($album_config['rate'])
 {

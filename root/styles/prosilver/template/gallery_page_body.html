@@ -88,6 +88,74 @@ function checkRateForm() {
 	</div>
 </div>
 
+<!-- IF S_EXIF_DATA -->
+<script type="text/JavaScript">
+function getElement(iElementId)
+{
+	if (document.all) 
+	{
+		return document.all[iElementId];
+	}
+	if (document.getElementById)
+	{
+		return document.getElementById(iElementId);
+	}
+}
+
+function toggleElement(oElement)
+{
+	if (oElement.style.display == "none")
+	{
+		oElement.style.display = "";
+	}
+	else
+	{
+		oElement.style.display = "none";
+	}
+}
+</script>
+<div id="postingbox" class="panel">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<h3>{L_EXIF-DATA} - <a href="javascript: toggleElement( getElement('exif_data_fieldset'));">{L_SHOW_EXIF}</a></h3>
+		<fieldset class="fields1" id="exif_data_fieldset" style="display: none;">
+			<dl>
+				<dt><label>{L_EXIF_DATE}:</label></dt>
+				<dd>{EXIF_DATE}</dd>
+			</dl>
+			<dl>
+				<dt><label>{L_EXIF_FOCAL}:</label></dt>
+				<dd>{EXIF_FOCAL} {L_EXIF_FOCAL_EXP}</dd>
+			</dl>
+			<dl>
+				<dt><label>{L_EXIF_EXPOSURE}:</label></dt>
+				<dd>{EXIF_EXPOSURE} {L_EXIF_EXPOSURE_EXP}</dd>
+			</dl>
+			<dl>
+				<dt><label>{L_EXIF_APERTURE}:</label></dt>
+				<dd>{EXIF_APERTURE}</dd>
+			</dl>
+			<dl>
+				<dt><label>{L_EXIF_ISO}:</label></dt>
+				<dd>{EXIF_ISO}</dd>
+			</dl>
+			<dl>
+				<dt><label>{L_EXIF_FLASH}:</label></dt>
+				<dd>{EXIF_FLASH}</dd>
+			</dl>
+			<dl>
+				<dt><label>{L_EXIF_WHITEB}:</label></dt>
+				<dd>{WHITEB}</dd>
+			</dl>
+			<dl>
+				<dt><label>{L_EXIF_CAM_MODEL}:</label></dt>
+				<dd>{CAM_MODEL}</dd>
+			</dl>
+		</fieldset>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+<!-- ENDIF -->
 <!-- IF RATING -->
 <a name="rating"></a>
 <form id="rateform" action="{S_ALBUM_ACTION}" method="post" onsubmit="return checkRateForm();">

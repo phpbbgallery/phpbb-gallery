@@ -60,6 +60,7 @@ CREATE TABLE phpbb_gallery_images (
 	image_album_id number(8) DEFAULT '0' NOT NULL,
 	image_view_count number(11) DEFAULT '0' NOT NULL,
 	image_status number(3) DEFAULT '0' NOT NULL,
+	image_has_exif number(3) DEFAULT '2' NOT NULL,
 	image_rates number(8) DEFAULT '0' NOT NULL,
 	image_rate_points number(8) DEFAULT '0' NOT NULL,
 	image_rate_avg number(8) DEFAULT '0' NOT NULL,

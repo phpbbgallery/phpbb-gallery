@@ -145,6 +145,7 @@ switch ($mode)
 			gallery_config_value('fake_thumb_size', 141);
 			gallery_config_value('disp_fake_thumb', 1);
 			gallery_config_value('personal_counter', 0);
+			gallery_config_value('exif_data', 1);
 			$album_config = load_album_config();
 
 			// create the modules
@@ -753,6 +754,8 @@ switch ($mode)
 						WHERE image_lock = 0
 							AND image_approval = 0';
 					$db->sql_query($sql);
+					gallery_column(GALLERY_IMAGES_TABLE, 'image_has_exif', array('UINT:3', 2));
+					gallery_config_value('exif_data', 1);
 
 				case '0.3.2':
 					//and drop the old column
@@ -931,6 +934,7 @@ switch ($mode)
 			gallery_config_value('thumbnail_info_line', 1);
 			gallery_config_value('fake_thumb_size', 141);
 			gallery_config_value('disp_fake_thumb', 1);
+			gallery_config_value('exif_data', 1);
 
 			// last and least the images...
 			$sql = 'SELECT i.*, u.user_colour, u.username

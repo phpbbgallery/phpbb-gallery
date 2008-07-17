@@ -19,6 +19,7 @@ CREATE TABLE phpbb_gallery_images (
 	image_album_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	image_view_count int(11) UNSIGNED DEFAULT '0' NOT NULL,
 	image_status int(3) UNSIGNED DEFAULT '0' NOT NULL,
+	image_has_exif int(3) UNSIGNED DEFAULT '2' NOT NULL,
 	image_rates mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	image_rate_points mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	image_rate_avg mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,

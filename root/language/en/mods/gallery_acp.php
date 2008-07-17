@@ -192,6 +192,7 @@ $lang = array_merge($lang, array(
 	'COPY_PERMISSIONS'				=> 'Copy Permissions from',
 
 	'DELETE_PERMISSIONS'			=> 'Delete permissions',
+	'DISP_EXIF_DATA'				=> 'Display Exif-data',
 	'DISP_FAKE_THUMB'				=> 'View thumbnail in albumlist',
 	'DONT_COPY_PERMISSIONS'			=> 'don\'t copy permissions',
 
