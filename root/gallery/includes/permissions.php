@@ -84,7 +84,7 @@ function get_album_access_array ()
 
 		$sql = "SELECT p.perm_album_id, $pull_data p.perm_system
 			FROM " . GALLERY_PERMISSIONS_TABLE . " as p
-			LEFT JOIN " .  GALLERY_PERM_ROLES_TABLE .  " as pr
+			LEFT JOIN " .  GALLERY_ROLES_TABLE .  " as pr
 				ON p.perm_role_id = pr.role_id
 			WHERE ( p.perm_user_id = $user_id
 				OR p.perm_group_id IN ($user_groups_ary))
