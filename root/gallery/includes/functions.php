@@ -38,6 +38,12 @@ if (!$gd_success)
 	}
 }
 
+$sql = 'SELECT *
+	FROM ' . GALLERY_USERS_TABLE . '
+	WHERE user_id = ' . (int) $user->data['user_id'];
+$result = $db->sql_query($sql);
+$user->gallery = $db->sql_fetchrow($result);
+
 // ----------------------------------------------------------------------------
 // This function will return the access data of the current user for a category
 // Default returning value is "0" (means NOT AUTHORISED)
@@ -600,12 +606,12 @@ function get_album_info($album_id)
 {
 	global $db, $user, $gallery_root_path, $phpbb_root_path, $phpEx;
 
-	$sql = 'SELECT ga.*, COUNT(gi.image_id) AS count
-		FROM ' . GALLERY_ALBUMS_TABLE . ' AS ga
-		LEFT JOIN ' . GALLERY_IMAGES_TABLE . " AS gi
-			ON ga.album_id = gi.image_album_id
-		WHERE ga.album_id = $album_id
-		GROUP BY ga.album_id";
+	$sql = 'SELECT a.*, w.watch_id
+		FROM ' . GALLERY_ALBUMS_TABLE . ' AS a
+		LEFT JOIN ' . GALLERY_WATCH_TABLE . ' AS w
+			ON a.album_id = w.album_id
+				AND w.user_id = ' . $user->data['user_id']  . "
+		WHERE a.album_id = $album_id";
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
@@ -922,8 +928,14 @@ function get_image_info($image_id)
 	global $db, $user;
 
 	$sql = 'SELECT *
-		FROM ' . GALLERY_IMAGES_TABLE . '
-		WHERE image_id = ' . $image_id;
+		FROM ' . GALLERY_IMAGES_TABLE . ' i
+		LEFT JOIN ' . GALLERY_WATCH_TABLE . ' w
+			ON w.image_id = i.image_id
+				AND w.user_id = ' . $user->data['user_id']  . '
+		LEFT JOIN ' . GALLERY_FAVORITES_TABLE . ' f
+			ON f.image_id = i.image_id
+				AND f.user_id = ' . $user->data['user_id']  . '
+		WHERE i.image_id = ' . $image_id;
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);

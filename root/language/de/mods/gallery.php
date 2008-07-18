@@ -199,7 +199,7 @@ $lang = array_merge($lang, array(
 
 	'LOOP_EXP'								=> 'Wenn du mehrere Bilder auf einmal hochlädst, kannst du sie mit <span style="font-weight: bold;">{NUM}</span> in der Bildbeschreibung und im Bild-Titel durchnummerieren.<br />
 												Der Zähler beginnt mit der Zahl, die du hier eingibst. Beispiel: "Bild {NUM}" ergibt: "Bild 1", "Bild 2", usw.',
-	'MISSING_MODE'							=> 'Kein Mudus ausgewählt',
+	'MISSING_MODE'							=> 'Kein Modus ausgewählt',
 	'MISSING_SUBMODE'						=> 'Kein Sub-Modus ausgewählt',
 	'MISSING_USERNAME'						=> 'Kein Benutzernamen angegeben',
 	'MISSING_COMMENT'						=> 'Keinen Text eingegeben',
@@ -222,6 +222,11 @@ $lang = array_merge($lang, array(
 ));
 
 $lang = array_merge($lang, array(
+	'ALBUMS'						=> 'Alben',
+
+	'FAVORITE_IMAGE'				=> 'zu Lieblingsbildern hinzufügen',
+	'FAVORITED_IMAGE'				=> 'Das Bild wurde zu deinen Lieblingsbildern hinzugefügt.',
+
 	'IMAGE_STATUS'					=> 'Status',
 	'IMAGES_REPORTED_SUCCESSFULLY'	=> 'Das Bild wurde erfolgreich gemeldet',
 
@@ -230,6 +235,21 @@ $lang = array_merge($lang, array(
 	'MISSING_REPORT_REASON'			=> 'Du musst einen Grund angeben um das Bild zu melden.',
 
 	'REPORT_IMAGE'					=> 'Bild melden',
+
+	'UNFAVORITE_IMAGE'				=> 'aus Lieblingsbildern entfernen',
+	'UNFAVORITED_IMAGE'				=> 'Das Bild wurde aus deinen Lieblingsbildern entfernt.',
+	'UNFAVORITED_IMAGES'			=> 'Die Bilder wurde aus deinen Lieblingsbildern entfernt.',
+	'UNWATCH_ALBUM'					=> 'Album nicht mehr beobachten',
+	'UNWATCH_IMAGE'					=> 'Bild nicht mehr beobachten',
+	'UNWATCHED_ALBUM'				=> 'Du wirst nicht mehr über neue Bilder in diesem Album benachrichtigt.',
+	'UNWATCHED_ALBUMS'				=> 'Du wirst nicht mehr über neue Bilder in diesen Alben benachrichtigt.',
+	'UNWATCHED_IMAGE'				=> 'Du wirst nicht mehr über Kommentare zu diesem Bild benachrichtigt.',
+	'UNWATCHED_IMAGES'				=> 'Du wirst nicht mehr über Kommentare zu diesen Bildern benachrichtigt.',
+
+	'WATCH_ALBUM'					=> 'Album beobachten',
+	'WATCH_IMAGE'					=> 'Bild beobachten',
+	'WATCHING_ALBUM'				=> 'Du wirst über neue Bilder in diesem Album benachrichtigt.',
+	'WATCHING_IMAGE'				=> 'Du wirst über Kommentare zu diesem Bild benachrichtigt.',
 ));
 
 ?>

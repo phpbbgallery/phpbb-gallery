@@ -243,12 +243,15 @@ $user->add_lang('mods/gallery');]]></action>
 define('GALLERY_ALBUMS_TABLE',			$table_prefix . 'gallery_albums');
 define('GALLERY_COMMENTS_TABLE',		$table_prefix . 'gallery_comments');
 define('GALLERY_CONFIG_TABLE',			$table_prefix . 'gallery_config');
+define('GALLERY_FAVORITES_TABLE',		$table_prefix . 'gallery_favorites');
 define('GALLERY_IMAGES_TABLE',			$table_prefix . 'gallery_images');
 define('GALLERY_MODSCACHE_TABLE',		$table_prefix . 'gallery_modscache');
 define('GALLERY_PERMISSIONS_TABLE',		$table_prefix . 'gallery_permissions');
 define('GALLERY_RATES_TABLE',			$table_prefix . 'gallery_rates');
 define('GALLERY_REPORTS_TABLE',			$table_prefix . 'gallery_reports');
-define('GALLERY_PERM_ROLES_TABLE',		$table_prefix . 'gallery_roles');]]></action>
+define('GALLERY_ROLES_TABLE',			$table_prefix . 'gallery_roles');
+define('GALLERY_USERS_TABLE',			$table_prefix . 'gallery_users');
+define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
       </edit>
     </open>
     <open src="includes/functions.php">

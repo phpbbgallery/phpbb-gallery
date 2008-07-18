@@ -19,6 +19,19 @@
 <!-- IF .picrow -->
 <table class="tablebg" cellspacing="1" width="100%">
 	<tr>
+		<td class="cat" colspan="{S_COLS}">
+			<table width="100%" cellspacing="0">
+			<tr>
+				<td class="nav" nowrap="nowrap">
+				<!-- IF not S_IS_BOT -->
+					<!-- IF U_WATCH_TOPIC --><a href="{U_WATCH_TOPIC}" title="{L_WATCH_TOPIC}">{L_WATCH_TOPIC}</a><!-- IF U_PRINT_TOPIC or U_EMAIL_TOPIC or U_BUMP_TOPIC or U_BOOKMARK_TOPIC --> | <!-- ENDIF --><!-- ENDIF -->
+				<!-- ENDIF -->
+				</td>
+			</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
 		<th align="center" colspan="{S_COLS}" nowrap="nowrap">{L_ALBUM} - {ALBUM_NAME}</th>
 	</tr>
 	<!-- BEGIN no_pics -->
@@ -78,6 +91,19 @@
 <br clear="all" />
 <!-- ELSEIF S_MODE == 2 -->
 <table class="tablebg" width="100%" cellspacing="1">
+	<tr>
+		<td class="cat" colspan="{S_COLS}">
+			<table width="100%" cellspacing="0">
+			<tr>
+				<td class="nav" nowrap="nowrap">
+				<!-- IF not S_IS_BOT -->
+					<!-- IF U_WATCH_TOPIC --><a href="{U_WATCH_TOPIC}" title="{L_WATCH_TOPIC}">{L_WATCH_TOPIC}</a><!-- IF U_PRINT_TOPIC or U_EMAIL_TOPIC or U_BUMP_TOPIC or U_BOOKMARK_TOPIC --> | <!-- ENDIF --><!-- ENDIF -->
+				<!-- ENDIF -->
+				</td>
+			</tr>
+			</table>
+		</td>
+	</tr>
 	<tr>
 		<th>{L_ALBUM}</th>
 	</tr>

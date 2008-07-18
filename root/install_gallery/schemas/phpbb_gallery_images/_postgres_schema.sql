@@ -182,6 +182,7 @@ CREATE TABLE phpbb_gallery_images (
 	image_rate_avg INT4 DEFAULT '0' NOT NULL CHECK (image_rate_avg >= 0),
 	image_comments INT4 DEFAULT '0' NOT NULL CHECK (image_comments >= 0),
 	image_last_comment INT4 DEFAULT '0' NOT NULL CHECK (image_last_comment >= 0),
+	image_favorited INT4 DEFAULT '0' NOT NULL CHECK (image_favorited >= 0),
 	PRIMARY KEY (image_id)
 );
 

@@ -222,6 +222,11 @@ $lang = array_merge($lang, array(
 ));
 
 $lang = array_merge($lang, array(
+	'ALBUMS'						=> 'Albums',
+
+	'FAVORITE_IMAGE'				=> 'Add to favorites',
+	'FAVORITED_IMAGE'				=> 'The image was added to your favorites.',
+
 	'IMAGE_STATUS'					=> 'Status',
 	'IMAGES_REPORTED_SUCCESSFULLY'	=> 'The image was successful reported',
 
@@ -230,6 +235,21 @@ $lang = array_merge($lang, array(
 	'MISSING_REPORT_REASON'			=> 'You need to mention a reason, to report an image.',
 
 	'REPORT_IMAGE'					=> 'Report image',
+
+	'UNFAVORITE_IMAGE'				=> 'remove from favorites',
+	'UNFAVORITED_IMAGE'				=> 'The image was removed from your favorites.',
+	'UNFAVORITED_IMAGES'			=> 'The images were removed from your favorites.',
+	'UNWATCH_ALBUM'					=> 'unsubscribe album',
+	'UNWATCH_IMAGE'					=> 'unsubscribe image',
+	'UNWATCHED_ALBUM'				=> 'You are no longer informed about new images in this album.',
+	'UNWATCHED_ALBUMS'				=> 'You are no longer informed about new images in these albums.',
+	'UNWATCHED_IMAGE'				=> 'You are no longer informed about new comments on this image.',
+	'UNWATCHED_IMAGES'				=> 'You are no longer informed about new comments on these images.',
+
+	'WATCH_ALBUM'					=> 'subscribe album',
+	'WATCH_IMAGE'					=> 'subscribe image',
+	'WATCHING_ALBUM'				=> 'You are now informed about new images in this album.',
+	'WATCHING_IMAGE'				=> 'You are now informed about new comments on this image.',
 ));
 
 ?>

@@ -176,6 +176,10 @@ switch ($mode)
 			add_module($ucp_gallery);
 			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_PERSONAL_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
 			add_module($ucp_gallery);
+			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_WATCH',	'module_mode' => 'manage_subscriptions',	'module_auth' => '');
+			add_module($ucp_gallery);
+			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_FAVORITES',	'module_mode' => 'manage_favorites',	'module_auth' => '');
+			add_module($ucp_gallery);
 
 			$gd_check = function_exists('gd_info') ? gd_info() : array();
 			$gd_success = isset($gd_check['GD Version']);
@@ -733,6 +737,11 @@ switch ($mode)
 					add_module($ucp_gallery);
 					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_PERSONAL_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
 					add_module($ucp_gallery);
+					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_WATCH',	'module_mode' => 'manage_subscriptions',	'module_auth' => '');
+					add_module($ucp_gallery);
+					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_FAVORITES',	'module_mode' => 'manage_favorites',	'module_auth' => '');
+					add_module($ucp_gallery);
+
 					$sql = 'SELECT module_id
 						FROM ' . MODULES_TABLE . "
 						WHERE module_langname = 'PHPBB_GALLERY'
@@ -756,6 +765,24 @@ switch ($mode)
 					$db->sql_query($sql);
 					gallery_column(GALLERY_IMAGES_TABLE, 'image_has_exif', array('UINT:3', 2));
 					gallery_config_value('exif_data', 1);
+					gallery_create_table_slap_db_tools('phpbb_gallery_users', true);
+					gallery_create_table_slap_db_tools('phpbb_gallery_watch', true);
+					gallery_create_table_slap_db_tools('phpbb_gallery_favorites', true);
+					gallery_column(GALLERY_IMAGES_TABLE, 'image_favorited', array('UINT', 0));
+					gallery_column(GALLERY_COMMENTS_TABLE, 'comment_user_colour', array('VCHAR:6', ''));
+					$sql = 'SELECT u.user_colour, c.comment_id
+						FROM ' . GALLERY_COMMENTS_TABLE . ' c
+						LEFT JOIN ' . USERS_TABLE . ' u
+							ON c.comment_user_id = u.user_id';
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$sql = 'UPDATE ' . GALLERY_COMMENTS_TABLE . "
+							SET comment_user_colour = '" . $row['user_colour'] . "'
+							WHERE comment_id = " . $row['comment_id'];
+						$db->sql_query($sql);
+					}
+					$db->sql_freeresult($result);
 
 				case '0.3.2':
 					//and drop the old column
@@ -767,7 +794,6 @@ switch ($mode)
 
 				case 'svn':
 					$album_config = load_album_config();
-
 				break;
 			}
 
@@ -865,9 +891,11 @@ switch ($mode)
 			$db->sql_freeresult($result);
 
 			// third the comments...
-			$sql = 'SELECT *
-				FROM ' . $convert_prefix . 'album_comment
-				ORDER BY comment_id';
+			$sql = 'SELECT c.*, u.user_colour
+				FROM ' . $convert_prefix . 'album_comment c
+				LEFT JOIN ' . USERS_TABLE . ' u
+					ON c.comment_user_id = u.user_id
+				ORDER BY c.comment_id';
 			$result = $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result))
 			{
@@ -879,6 +907,7 @@ switch ($mode)
 					'comment_image_id'		=> $row['comment_pic_id'],
 					'comment_user_id'		=> ($row['comment_user_id'] < 0) ? 1 : $row['comment_user_id'],
 					'comment_username'		=> $row['comment_username'],
+					'comment_user_colour'	=> $row['user_colour'],
 					'comment_user_ip'		=> decode_ip($row['comment_user_ip']),
 					'comment_time'			=> $row['comment_time'],
 					'comment'				=> $comment_text_data['text'],
@@ -1049,6 +1078,10 @@ switch ($mode)
 			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_SETTINGS',	'module_mode' => 'manage_settings',	'module_auth' => '');
 			add_module($ucp_gallery);
 			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_PERSONAL_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
+			add_module($ucp_gallery);
+			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_WATCH',	'module_mode' => 'manage_subscriptions',	'module_auth' => '');
+			add_module($ucp_gallery);
+			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_FAVORITES',	'module_mode' => 'manage_favorites',	'module_auth' => '');
 			add_module($ucp_gallery);
 
 			//album_type needs to be "album" for personal albums

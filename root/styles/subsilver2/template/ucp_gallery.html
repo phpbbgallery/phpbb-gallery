@@ -1,5 +1,144 @@
 <!-- INCLUDE ucp_header.html -->
 </form>
+<!-- IF S_PERSONAL_SETTINGS -->
+	<table class="tablebg" width="100%" cellspacing="1">
+		<tr>
+			<th colspan="4">{L_TITLE}</th>
+		</tr>
+		<tr>
+			<td class="row1" colspan="4"><p class="gensmall">{L_TITLE_EXPLAIN}</p></td>
+		</tr>
+	</table>
+	<br />
+	<form id="ucp_gallery" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+
+		<table class="tablebg" width="100%" cellspacing="1">
+		<tr>
+			<th colspan="2" valign="middle">{L_TITLE}</th>
+		</tr>
+		<!-- IF ERROR -->
+			<tr>
+				<td class="row3" colspan="2" align="center"><span class="gensmall error">{ERROR}</span></td>
+			</tr>
+		<!-- ENDIF -->
+		<tr>
+			<td class="row1" width="50%"><b class="genmed">{L_WATCH_OWN}:</b></td>
+			<td class="row2"><input type="radio" class="radio" name="watch_own" value="1"<!-- IF S_WATCH_OWN --> checked="checked"<!-- ENDIF --> /><span class="gen">{L_YES}</span>&nbsp; &nbsp;<input type="radio" class="radio" name="watch_own" value="0"<!-- IF not S_WATCH_OWN --> checked="checked"<!-- ENDIF --> /><span class="gen">{L_NO}</span></td>
+		</tr>
+		<tr>
+			<td class="row1" width="50%"><b class="genmed">{L_WATCH_COM}:</b></td>
+			<td class="row2"><input type="radio" class="radio" name="watch_com" value="1"<!-- IF S_WATCH_COM --> checked="checked"<!-- ENDIF --> /><span class="gen">{L_YES}</span>&nbsp; &nbsp;<input type="radio" class="radio" name="watch_com" value="0"<!-- IF not S_WATCH_COM --> checked="checked"<!-- ENDIF --> /><span class="gen">{L_NO}</span></td>
+		</tr>
+		<tr>
+			<td class="row1" width="50%"><b class="genmed">{L_WATCH_FAVO}:</b></td>
+			<td class="row2"><input type="radio" class="radio" name="watch_favo" value="1"<!-- IF S_WATCH_FAVO --> checked="checked"<!-- ENDIF --> /><span class="gen">{L_YES}</span>&nbsp; &nbsp;<input type="radio" class="radio" name="watch_favo" value="0"<!-- IF not S_WATCH_FAVO --> checked="checked"<!-- ENDIF --> /><span class="gen">{L_NO}</span></td>
+		</tr>
+		<tr>
+			<td class="cat" colspan="2" align="center">{S_HIDDEN_FIELDS}<input class="btnmain" type="submit" name="submit" value="{L_SUBMIT}" />&nbsp;&nbsp;<input class="btnlite" type="reset" value="{L_RESET}" name="reset" /></td>
+		</tr>
+		</table>
+	</form>
+<!-- ENDIF -->
+
+<!-- IF S_MANAGE_FAVORITES or S_MANAGE_SUBSCRIPTIONS -->
+	<table class="tablebg" width="100%" cellspacing="1">
+		<tr>
+			<th colspan="4">{L_TITLE}</th>
+		</tr>
+		<tr>
+			<td class="row1" colspan="4"><p class="gensmall">{L_TITLE_EXPLAIN}</p></td>
+		</tr>
+	</table>
+	<br />
+		<form id="ucp_gallery" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+
+		<!-- IF .album_row -->
+		<table class="tablebg" width="100%" cellspacing="1">
+			<tr>
+				<th nowrap="nowrap">{L_ALBUMS}</th>
+				<th width="37%" nowrap="nowrap">&nbsp;{L_LAST_IMAGE}&nbsp;</th>
+				<th width="5%" nowrap="nowrap">&nbsp;{L_MARK}&nbsp;</th>
+			</tr>
+			<!-- BEGIN album_row -->
+			<tr>
+
+				<td class="row1">
+					<a href="{album_row.U_VIEW_ALBUM}" class="topictitle">{album_row.ALBUM_NAME}</a><br />
+					<span>{album_row.ALBUM_DESC}</span>
+				</td>
+				<td class="row1" width="150" align="center">
+					<!-- IF DISP_FAKE_THUMB and album_row.THUMBNAIL --><span style="float: left; text-align: center; width: {FAKE_THUMB_SIZE}px; padding-right: 5px;"><img src="{album_row.THUMBNAIL}" style="max-width: {FAKE_THUMB_SIZE}px; max-height: {FAKE_THUMB_SIZE}px;" alt="{album_row.IMAGE_NAME}" /></span><!-- ENDIF -->
+					<!-- IF album_row.LAST_IMAGE -->
+						{L_POST_BY_AUTHOR} {album_row.UPLOADER}<br />
+						{L_POSTED_ON_DATE} {album_row.IMAGE_TIME}
+					<!-- ENDIF -->
+				</td>
+				<td class="row2" align="center">&nbsp;<input type="checkbox" name="album_id_ary[]" value="{album_row.ALBUM_ID}" />&nbsp;</td>
+			</tr>
+			<!-- END album_row -->
+		</table>
+		<table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
+			<tr>
+				<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('ucp_gallery', 'album_id_ary', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('ucp_gallery', 'album_id_ary', false); return false;">{L_UNMARK_ALL}</a></b></td>
+			</tr>
+		</table>
+		<br />
+		<!-- ENDIF -->
+
+		<table class="tablebg" width="100%" cellspacing="1">
+			<tr>
+				<!-- IF DISP_FAKE_THUMB --><th width="4%" nowrap="nowrap">&nbsp;</th><!-- ENDIF -->
+				<th nowrap="nowrap">{L_IMAGES}</th>
+				<!-- IF not S_MANAGE_FAVORITES --><th width="37%" nowrap="nowrap">&nbsp;{L_LAST_COMMENT}&nbsp;</th><!-- ENDIF -->
+				<th width="5%" nowrap="nowrap">&nbsp;{L_MARK}&nbsp;</th>
+			</tr>
+			<!-- BEGIN image_row -->
+			<tr>
+
+				<!-- IF DISP_FAKE_THUMB and image_row.THUMBNAIL --><td class="row1" width="{FAKE_THUMB_SIZE}" align="center"><span style="float: left; text-align: center; width: {FAKE_THUMB_SIZE}px; padding-right: 5px;"><img src="{image_row.THUMBNAIL}" style="max-width: {FAKE_THUMB_SIZE}px; max-height: {FAKE_THUMB_SIZE}px;" alt="{image_row.IMAGE_NAME}" /></span></td><!-- ENDIF -->
+				<td class="row1">
+					<a href="{image_row.U_IMAGE}" class="topictitle">{image_row.IMAGE_NAME}</a><br />
+					<span>{L_UPLOADED_BY} {image_row.UPLOADER}<br />
+					{L_POSTED_ON_DATE} {image_row.IMAGE_TIME}<br />
+					{L_ALBUM}: <a href="{image_row.U_VIEW_ALBUM}" style="font-weight: bold;">{image_row.ALBUM_NAME}</a></span>
+				</td>
+				<!-- IF not S_MANAGE_FAVORITES --><td class="row1" width="150" align="center">&nbsp;
+					<!-- IF image_row.COMMENT -->
+						{L_POST_BY_AUTHOR} {image_row.LAST_COMMENT_BY}<br />
+						{L_POSTED_ON_DATE} {image_row.LAST_COMMENT_TIME}
+					<!-- ENDIF -->
+				&nbsp;</td><!-- ENDIF -->
+				<td class="row2" align="center">&nbsp;<input type="checkbox" name="image_id_ary[]" value="{image_row.IMAGE_ID}" />&nbsp;</td>
+			</tr>
+			<!-- BEGINELSE -->
+			<tr>
+				<td class="row1" colspan="<!-- IF S_MANAGE_FAVORITES -->3<!-- ELSE -->4<!-- ENDIF -->">
+					<span><!-- IF S_MANAGE_FAVORITES -->{L_NO_FAVORITES}<!-- ELSE -->{L_NO_SUBSCRIPTIONS}<!-- ENDIF --></span>
+				</td>
+			</tr>
+			<!-- END image_row -->
+			<tr>
+				<td class="cat" colspan="6" align="right">
+					<select name="action">
+						<option value="" selected="selected">{L_CHOOSE_ACTION}</option>
+						<!-- IF S_MANAGE_FAVORITES -->
+							<option value="remove_favorite">{L_REMOVE_FROM_FAVORITES}</option>
+						<!-- ELSE -->
+							<option value="unsubscribe">{L_UNSUBSCRIBE}</option>
+						<!-- ENDIF -->
+					</select>
+					<input class="btnmain" type="submit" value="{L_SUBMIT}" />
+				</td>
+			</tr>
+		</table>
+		<table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
+			<tr>
+				<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('ucp_gallery', 'image_id_ary', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('ucp_gallery', 'image_id_ary', false); return false;">{L_UNMARK_ALL}</a></b></td>
+			</tr>
+		</table>
+	</form>
+<!-- ENDIF -->
+
 <!-- IF S_INFO_CREATE -->
 <table class="tablebg" width="100%" cellspacing="1">
 	<tr>

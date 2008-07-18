@@ -839,6 +839,7 @@ function get_schema_struct()
 			'comment_image_id'		=> array('UINT', NULL),
 			'comment_user_id'		=> array('UINT', 0),
 			'comment_username'		=> array('VCHAR:32', ''),
+			'comment_user_colour'	=> array('VCHAR:6', ''),
 			'comment_user_ip'		=> array('VCHAR:40', ''),
 			'comment_time'			=> array('UINT:11', 0),
 			'comment'				=> array('MTEXT_UNI', ''),
@@ -867,6 +868,20 @@ function get_schema_struct()
 	);
 //*/
 /*
+	$schema_data['phpbb_gallery_favorites'] = array(
+		'COLUMNS'		=> array(
+			'favorite_id'			=> array('UINT', NULL, 'auto_increment'),
+			'user_id'				=> array('UINT', 0),
+			'image_id'				=> array('UINT', 0),
+		),
+		'PRIMARY_KEY'	=> 'favorite_id',
+		'KEYS'		=> array(
+			'user_id'		=> array('INDEX', 'user_id'),
+			'image_id'		=> array('INDEX', 'image_id'),
+		),
+	);
+//*/
+/*
 	$schema_data['phpbb_gallery_images'] = array(
 		'COLUMNS'		=> array(
 			'image_id'				=> array('UINT', NULL, 'auto_increment'),
@@ -890,6 +905,7 @@ function get_schema_struct()
 			'image_rate_avg'		=> array('UINT', 0),
 			'image_comments'		=> array('UINT', 0),
 			'image_last_comment'	=> array('UINT', 0),
+			'image_favorited'		=> array('UINT', 0),
 		),
 		'PRIMARY_KEY'				=> 'image_id',
 		'KEYS'		=> array(
@@ -981,8 +997,36 @@ function get_schema_struct()
 		'PRIMARY_KEY'		=> 'role_id',
 	);
 //*/
+/*
+	$schema_data['phpbb_gallery_users'] = array(
+		'COLUMNS'		=> array(
+			'user_id'		=> array('UINT', 0),
+			'watch_own'		=> array('UINT:3', 0),
+			'watch_favo'	=> array('UINT:3', 0),
+			'watch_com'		=> array('UINT:3', 0),
+		),
+		'PRIMARY_KEY'		=> 'user_id',
+	);
+//*/
+/*
+	$schema_data['phpbb_gallery_watch'] = array(
+		'COLUMNS'		=> array(
+			'watch_id'		=> array('UINT', NULL, 'auto_increment'),
+			'album_id'		=> array('UINT', 0),
+			'image_id'		=> array('UINT', 0),
+			'user_id'		=> array('UINT', 0),
+		),
+		'PRIMARY_KEY'		=> 'watch_id',
+		'KEYS'		=> array(
+			'user_id'			=> array('INDEX', 'user_id'),
+			'image_id'			=> array('INDEX', 'image_id'),
+			'album_id'			=> array('INDEX', 'album_id'),
+		),
+	);
+//*/
 	return $schema_data;
 }
+echo $schema_path;
 
 
 /**

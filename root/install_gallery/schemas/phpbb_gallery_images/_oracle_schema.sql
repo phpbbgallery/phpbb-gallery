@@ -66,6 +66,7 @@ CREATE TABLE phpbb_gallery_images (
 	image_rate_avg number(8) DEFAULT '0' NOT NULL,
 	image_comments number(8) DEFAULT '0' NOT NULL,
 	image_last_comment number(8) DEFAULT '0' NOT NULL,
+	image_favorited number(8) DEFAULT '0' NOT NULL,
 	CONSTRAINT pk_phpbb_gallery_images PRIMARY KEY (image_id)
 )
 /

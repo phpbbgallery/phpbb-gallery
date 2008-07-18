@@ -49,6 +49,7 @@ CREATE TABLE phpbb_gallery_comments (
 	comment_image_id number(8) NOT NULL,
 	comment_user_id number(8) DEFAULT '0' NOT NULL,
 	comment_username varchar2(32) DEFAULT '' ,
+	comment_user_colour varchar2(6) DEFAULT '' ,
 	comment_user_ip varchar2(40) DEFAULT '' ,
 	comment_time number(11) DEFAULT '0' NOT NULL,
 	comment clob DEFAULT '' ,

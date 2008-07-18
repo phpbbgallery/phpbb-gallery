@@ -198,7 +198,6 @@ $sql = 'SELECT *
 	ORDER BY ' . $sort_method . ' ' . $sort_order;
 $result = $db->sql_query($sql);
 //there should also be a way to go with a limit here, but we'll see
-
 while ($row = $db->sql_fetchrow($result))
 {
 	if ($do_next)
@@ -213,6 +212,12 @@ while ($row = $db->sql_fetchrow($result))
 	}
 	$last_id = $row['image_id'];
 }
+$db->sql_freeresult($result);
+
+//Get Watch- and Favorite-mode
+$is_watching = $image_data['watch_id'];
+
+
 $template->assign_vars(array(
 	'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id"),
 
@@ -236,8 +241,13 @@ $template->assign_vars(array(
 	'IMAGE_TIME'		=> $user->format_date($image_data['image_time']),
 	'IMAGE_VIEW'		=> $image_data['image_view_count'],
 
-	'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?album_id=$album_id&amp;image_id=$image_id"))
-);
+	'L_BOOKMARK_TOPIC'	=> ($image_data['favorite_id']) ? $user->lang['UNFAVORITE_IMAGE'] : $user->lang['FAVORITE_IMAGE'],
+	'U_BOOKMARK_TOPIC'	=> ($user->data['user_id'] != ANONYMOUS) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=" . (($image_data['favorite_id']) ?  'un' : '') . "favorite&amp;album_id=$album_id&amp;image_id=$image_id") : '',
+	'L_WATCH_TOPIC'		=> ($image_data['watch_id']) ? $user->lang['UNWATCH_IMAGE'] : $user->lang['WATCH_IMAGE'],
+	'U_WATCH_TOPIC'		=> ($user->data['user_id'] != ANONYMOUS) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=" . (($image_data['watch_id']) ?  'un' : '') . "watch&amp;album_id=$album_id&amp;image_id=$image_id") : '',
+	'S_WATCHING_TOPIC'	=> ($image_data['watch_id']) ? true : false,
+	'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id"),
+));
 
 if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0)/* && ($album_access_array[$album_id]['i_exif'] == 1)*/ /* && $image_data['image_display_exif']*/)
 {

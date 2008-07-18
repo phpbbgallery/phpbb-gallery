@@ -37,8 +37,13 @@ function checkRateForm() {
 		<td class="cat">
 			<table width="100%" cellspacing="0">
 			<tr>
-				<td class="nav" nowrap="nowrap"><!-- IF U_PREVIOUS --><a href="{U_PREVIOUS}">{L_PREVIOUS}</a><!-- ENDIF --></td>
-				<td class="nav" align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><!-- IF U_NEXT --><a href="{U_NEXT}">{L_NEXT}</a>&nbsp;<!-- ENDIF --></td>
+				<td class="nav" nowrap="nowrap">&nbsp;
+				<!-- IF not S_IS_BOT -->
+					<!-- IF U_WATCH_TOPIC --><a href="{U_WATCH_TOPIC}" title="{L_WATCH_TOPIC}">{L_WATCH_TOPIC}</a><!-- IF U_PRINT_TOPIC or U_EMAIL_TOPIC or U_BUMP_TOPIC or U_BOOKMARK_TOPIC --> | <!-- ENDIF --><!-- ENDIF -->
+					<!-- IF U_BOOKMARK_TOPIC --><a href="{U_BOOKMARK_TOPIC}" title="{L_BOOKMARK_TOPIC}">{L_BOOKMARK_TOPIC}</a><!-- IF U_PRINT_TOPIC or U_EMAIL_TOPIC or U_BUMP_TOPIC --> | <!-- ENDIF --><!-- ENDIF -->
+				<!-- ENDIF -->
+				</td>
+				<td class="nav" align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><!-- IF U_PREVIOUS --><a href="{U_PREVIOUS}">{L_PREVIOUS}</a><!-- ENDIF --><!-- IF U_PREVIOUS and U_NEXT --> | <!-- ENDIF --><!-- IF U_NEXT --><a href="{U_NEXT}">{L_NEXT}</a>&nbsp;<!-- ENDIF --></td>
 			</tr>
 			</table>
 		</td>
@@ -184,7 +189,7 @@ function toggleElement(oElement)
 <!-- IF COMMENTS -->
 	<!-- IF POST_COMMENT and not S_IS_BOT -->
 		<a name="rating"></a>
-		<form name="postform" action="{S_COMMENT_ACTION}"" method="post" onsubmit="return checkCommentForm;">
+		<form name="postform" action="{S_COMMENT_ACTION}" method="post" onsubmit="return checkCommentForm;">
 			<table class="tablebg" cellspacing="1" width="100%">
 				<tr>
 					<th colspan="2" style="align: center;">{L_POST_COMMENT}</th>

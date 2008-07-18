@@ -190,6 +190,10 @@ if ($action && $image_id_ary)
 				$db->sql_query($sql);
 				$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . ' WHERE ' . $db->sql_in_set('report_image_id', $image_id_ary);
 				$db->sql_query($sql);
+				$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+				$db->sql_query($sql);
+				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+				$db->sql_query($sql);
 				$success = true;
 			}
 			else

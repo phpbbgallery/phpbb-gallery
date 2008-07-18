@@ -20,8 +20,11 @@ class ucp_gallery_info
 			'title'		=> 'PHPBB_GALLERY',
 			'version'	=> '0.3.2',
 			'modes'		=> array(
-				'manage_albums'	=> array('title' => 'UCP_GALLERY_PERSONAL_ALBUMS', 'auth' => '', 'cat' => array('PHPBB_GALLERY')),
-			),
+					'manage_albums'			=> array('title' => 'UCP_GALLERY_PERSONAL_ALBUMS', 'auth' => '', 'cat' => array('PHPBB_GALLERY')),
+					'manage_settings'		=> array('title' => 'UCP_GALLERY_SETTINGS', 'auth' => '', 'cat' => array('PHPBB_GALLERY')),
+					'manage_subscriptions'	=> array('title' => 'UCP_GALLERY_WATCH', 'auth' => '', 'cat' => array('PHPBB_GALLERY')),
+					'manage_favorites'		=> array('title' => 'UCP_GALLERY_FAVORITES', 'auth' => '', 'cat' => array('PHPBB_GALLERY')),
+				),
 			);
 	}
 }

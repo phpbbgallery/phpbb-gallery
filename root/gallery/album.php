@@ -21,7 +21,7 @@ include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 $user->session_begin();
 $auth->acl($user->data);
 $user->setup('mods/gallery');
-$user->setup('mods/info_ucp_gallery');
+$user->setup('mods/gallery_ucp');
 
 // Get general album information
 include_once("{$phpbb_root_path}{$gallery_root_path}includes/common.$phpEx");
@@ -58,7 +58,6 @@ if ($album_data['album_user_id'] > 0)
 	$album_access_array[$album_id] = $album_access_array[-3];
 }
 
-$total_pics = $album_data['count'];
 /**
 * Build Auth List
 */
@@ -129,7 +128,7 @@ if ($album_id <> 0)
 	$pics_per_page = $album_config['rows_per_page'] * $album_config['cols_per_page'];
 	$tot_unapproved = 0;
 
-	if ($total_pics > 0)
+	if ($album_data['album_images_real'] > 0)
 	{
 		$limit_sql = ($start == 0) ? $pics_per_page : $start .','. $pics_per_page;
 		$pic_approval_sql = ' AND image_status = 1';
@@ -303,6 +302,10 @@ $template->assign_vars(array(
 
 	'U_RETURN_LINK'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"),
 	'S_RETURN_LINK'				=> $user->lang['GALLERY'],
+
+	'L_WATCH_TOPIC'		=> ($album_data['watch_id']) ? $user->lang['UNWATCH_ALBUM'] : $user->lang['WATCH_ALBUM'],
+	'U_WATCH_TOPIC'		=> ($user->data['user_id'] != ANONYMOUS) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=album&amp;submode=" . (($album_data['watch_id']) ?  'un' : '') . "watch&amp;album_id=$album_id") : '',
+	'S_WATCHING_TOPIC'	=> ($album_data['watch_id']) ? true : false,
 ));
 
 // Output page

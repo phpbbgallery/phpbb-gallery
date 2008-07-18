@@ -22,69 +22,343 @@ class ucp_gallery
 	var $u_action;
 	function main($id, $mode)
 	{
-		global $user, $phpbb_root_path, $phpEx;
+		global $user, $phpbb_root_path, $phpEx, $db, $template;
 		$gallery_root_path = GALLERY_ROOT_PATH;
-		include($phpbb_root_path . $gallery_root_path . 'includes/constants.' . $phpEx);
+		include($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
 		include($phpbb_root_path . $gallery_root_path . 'includes/ucp_functions.' . $phpEx);
 
 		$user->add_lang('mods/gallery');
 		$user->add_lang('mods/gallery_acp');
+		$user->add_lang('mods/gallery_mcp');
+		$user->add_lang('mods/gallery_ucp');
 		$this->tpl_name = 'ucp_gallery';
 		add_form_key('ucp_gallery');
 
+		$mode = request_var('mode', '');
 		$action = request_var('action', '');
 		$cancel = (isset($_POST['cancel'])) ? true : false;
 		if ($cancel)
 		{
 			$action = '';
 		}
-		switch ($action)
+		switch ($mode)
 		{
-			case 'manage':
-				$title = 'MANAGE_SUBALBUMS';
+			case 'manage_albums':
+				switch ($action)
+				{
+					case 'manage':
+						$title = 'MANAGE_SUBALBUMS';
+						$this->page_title = $user->lang[$title];
+						$this->manage_albums();
+					break;
+
+					case 'create':
+						$title = 'CREATE_SUBALBUM';
+						$this->page_title = $user->lang[$title];
+						$this->create_album();
+					break;
+
+					case 'edit':
+						$title = 'EDIT_SUBALBUM';
+						$this->page_title = $user->lang[$title];
+						$this->edit_album();
+					break;
+
+					case 'delete':
+						$title = 'DELETE_ALBUM';
+						$this->page_title = $user->lang[$title];
+						$this->delete_album();
+					break;
+
+					case 'move':
+						$this->move_album();
+					break;
+
+					case 'initialise':
+						$this->initialise_album();
+					break;
+
+					default:
+						$title = 'UCP_GALLERY_PERSONAL_ALBUMS';
+						$this->page_title = $user->lang[$title];
+						if (!$user->data['album_id'])
+						{
+							$this->info();
+						}
+						else
+						{
+							$this->manage_albums();
+						}
+					break;
+				}
+			break;
+
+			case 'manage_favorites':
+				$title = 'UCP_GALLERY_FAVORITES';
 				$this->page_title = $user->lang[$title];
-				$this->manage_albums();
+				$this->manage_favorites();
 			break;
 
-			case 'create':
-				$title = 'CREATE_SUBALBUM';
+			case 'manage_subscriptions':
+				$title = 'UCP_GALLERY_WATCH';
 				$this->page_title = $user->lang[$title];
-				$this->create_album();
+				$this->manage_subscriptions();
 			break;
 
-			case 'edit':
-				$title = 'EDIT_SUBALBUM';
-				$this->page_title = $user->lang[$title];
-				$this->edit_album();
-			break;
-
-			case 'delete':
-				$title = 'DELETE_ALBUM';
-				$this->page_title = $user->lang[$title];
-				$this->delete_album();
-			break;
-
-			case 'move':
-				$this->move_album();
-			break;
-
-			case 'initialise':
-				$this->initialise_album();
-			break;
-
+			case 'manage_settings':
 			default:
-				$title = 'UCP_GALLERY_PERSONAL_ALBUMS';
+				$title = 'UCP_GALLERY_SETTINGS';
 				$this->page_title = $user->lang[$title];
-				if (!$user->data['album_id'])
-				{
-					$this->info();
-				}
-				else
-				{
-					$this->manage_albums();
-				}
+				$this->set_personal_settings();
 			break;
 		}
+	}
+
+	function set_personal_settings()
+	{
+		global $db, $user, $auth, $template, $cache;
+		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
+		$gallery_root_path = GALLERY_ROOT_PATH;
+
+		$submit = (isset($_POST['submit'])) ? true : false;
+
+		if($submit)
+		{
+			$sql = 'SELECT user_id
+				FROM ' . GALLERY_USERS_TABLE . "
+				WHERE user_id = {$user->data['user_id']}";
+			$result = $db->sql_query($sql);
+			$check = $db->sql_fetchrow($result);
+			$gallery_settings = array(
+				'user_id'		=> $user->data['user_id'],
+				'watch_own'		=> request_var('watch_own', 0),
+				'watch_com'		=> request_var('watch_com', 0),
+				'watch_favo'	=> request_var('watch_favo', 0),
+			);
+			if ($check['user_id'] == $user->data['user_id'])
+			{
+				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . ' 
+						SET ' . $db->sql_build_array('UPDATE', $gallery_settings) . '
+						WHERE user_id  = ' . (int) $user->data['user_id'];
+				$db->sql_query($sql);
+			}
+			else
+			{
+				$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $gallery_settings));
+			}
+			meta_refresh(3, $this->u_action);
+			$message = $user->lang['WATCH_CHANGED'] . '<br /><br />' . sprintf($user->lang['RETURN_UCP'], '<a href="' . $this->u_action . '">', '</a>');
+			trigger_error($message);
+		}
+
+
+		$template->assign_vars(array(
+			'S_PERSONAL_SETTINGS'	=> true,
+			'S_UCP_ACTION'			=> $this->u_action,
+
+			'L_TITLE'			=> $user->lang['UCP_GALLERY_SETTINGS'],
+			'L_TITLE_EXPLAIN'	=> $user->lang['WATCH_NOTE'],
+
+			'S_WATCH_OWN'		=> $user->gallery['watch_own'],
+			'S_WATCH_COM'		=> $user->gallery['watch_com'],
+			'S_WATCH_FAVO'		=> $user->gallery['watch_favo'],
+		));
+	}
+
+	function manage_favorites()
+	{
+		global $db, $user, $auth, $template, $cache, $album_config;
+		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
+		$gallery_root_path = GALLERY_ROOT_PATH;
+		include_once($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
+
+		$action = request_var('action', '');
+		$image_id_ary = request_var('image_id_ary', array(0));
+		if ($image_id_ary && ($action == 'remove_favorite'))
+		{
+			$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . ' WHERE user_id = ' . $user->data['user_id'] . ' AND ' . $db->sql_in_set('image_id', $image_id_ary);
+			$db->sql_query($sql);
+			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_favorited = image_favorited - 1 WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+			$db->sql_query($sql);
+
+			meta_refresh(3, $this->u_action);
+			$message = $user->lang['UNFAVORITED_IMAGES'] . '<br /><br />' . sprintf($user->lang['RETURN_UCP'], '<a href="' . $this->u_action . '">', '</a>');
+			trigger_error($message);
+		}
+
+		$start				= request_var('start', 0);
+		$images_per_page	= $config['topics_per_page'];
+		$total_images		= 0;
+		$sql = 'SELECT count(image_id) as images
+			FROM ' . GALLERY_FAVORITES_TABLE . "
+			WHERE user_id = {$user->data['user_id']}";
+		$result = $db->sql_query($sql);
+		while( $row = $db->sql_fetchrow($result) )
+		{
+			$total_images = $row['images'];
+		}
+		$db->sql_freeresult($result);
+		$sql = 'SELECT i.image_time, i.image_name, i.image_id, i.image_user_id, i.image_username, i.image_user_colour, i.image_album_id, a.album_name
+			FROM ' . GALLERY_FAVORITES_TABLE . " f
+			LEFT JOIN " . GALLERY_IMAGES_TABLE . " i
+				ON f.image_id = i.image_id
+			LEFT JOIN " . GALLERY_ALBUMS_TABLE . " a
+				ON a.album_id = i.image_album_id
+			WHERE f.user_id = {$user->data['user_id']}
+			LIMIT $start, $images_per_page";
+		$result = $db->sql_query($sql);
+		while( $row = $db->sql_fetchrow($result) )
+		{
+			$template->assign_block_vars('image_row', array(
+				'THUMBNAIL'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}thumbnail.$phpEx" , 'album_id=' . $row['image_album_id'] .  '&amp;image_id=' . $row['image_id']),
+				'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
+				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
+				'IMAGE_NAME'		=> $row['image_name'],
+				'ALBUM_NAME'		=> $row['album_name'],
+				'IMAGE_ID'			=> $row['image_id'],
+				'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx" , "album_id=" . $row['image_album_id']),
+				'U_IMAGE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx" , "album_id=" . $row['image_album_id'] . "&amp;image_id=" . $row['image_id']),
+			));
+		}
+		$db->sql_freeresult($result);
+
+		$template->assign_vars(array(
+			'S_MANAGE_FAVORITES'	=> true,
+			'S_UCP_ACTION'			=> $this->u_action,
+
+			'L_TITLE'				=> $user->lang['UCP_GALLERY_FAVORITES'],
+			'L_TITLE_EXPLAIN'		=> $user->lang['YOUR_FAVORITE_IMAGES'],
+
+			'PAGINATION'				=> generate_pagination(append_sid("{$phpbb_root_path}ucp.$phpEx", "i=gallery&amp;mode=manage_favorites"), $total_images, $images_per_page, $start),
+			'PAGE_NUMBER'				=> on_page($total_images, $images_per_page, $start),
+			'TOTAL_IMAGES'				=> ($total_images == 1) ? $user->lang['VIEW_ALBUM_IMAGE'] : sprintf($user->lang['VIEW_ALBUM_IMAGES'], $total_images),
+
+			'DISP_FAKE_THUMB'			=> true,
+			'FAKE_THUMB_SIZE'			=> (empty($album_config['fake_thumb_size'])) ? 50 : $album_config['fake_thumb_size'],
+		));
+	}
+
+	function manage_subscriptions()
+	{
+		global $db, $user, $auth, $template, $cache, $album_config;
+		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
+		$gallery_root_path = GALLERY_ROOT_PATH;
+		include_once($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
+
+		$action = request_var('action', '');
+		$image_id_ary = request_var('image_id_ary', array(0));
+		$album_id_ary = request_var('album_id_ary', array(0));
+		if (($image_id_ary || $album_id_ary) && ($action == 'unsubscribe'))
+		{
+			if ($album_id_ary)
+			{
+				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE user_id = ' . $user->data['user_id'] . ' AND ' . $db->sql_in_set('album_id', $album_id_ary);
+				$db->sql_query($sql);
+			}
+			if ($image_id_ary)
+			{
+				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE user_id = ' . $user->data['user_id'] . ' AND ' . $db->sql_in_set('image_id', $image_id_ary);
+				$db->sql_query($sql);
+			}
+
+			meta_refresh(3, $this->u_action);
+			$message = '';
+			if ($album_id_ary)
+			{
+				$message .= $user->lang['UNWATCHED_ALBUMS'] . '<br />';
+			}
+			if ($image_id_ary)
+			{
+				$message .= $user->lang['UNWATCHED_IMAGES'] . '<br />';
+			}
+			$message .= '<br />' . sprintf($user->lang['RETURN_UCP'], '<a href="' . $this->u_action . '">', '</a>');
+			trigger_error($message);
+		}
+
+		//subscribed albums
+		$sql = 'SELECT *
+			FROM ' . GALLERY_WATCH_TABLE . " w
+			LEFT JOIN " . GALLERY_ALBUMS_TABLE . " a
+				ON w.album_id = a.album_id
+			WHERE w.user_id = {$user->data['user_id']}
+				AND w.album_id <> 0";
+		$result = $db->sql_query($sql);
+		while( $row = $db->sql_fetchrow($result) )
+		{
+			$template->assign_block_vars('album_row', array(
+				'ALBUM_ID'			=> $row['album_id'],
+				'ALBUM_NAME'		=> $row['album_name'],
+				'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx" , "album_id=" . $row['album_id']),
+				'ALBUM_DESC'		=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
+
+				'THUMBNAIL'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}thumbnail.$phpEx" , 'album_id=' . $row['album_id'] .  '&amp;image_id=' . $row['album_last_image_id']),
+				'UPLOADER'			=> get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
+				'IMAGE_TIME'		=> $user->format_date($row['album_last_image_time']),
+				'IMAGE_NAME'		=> $row['album_last_image_name'],
+				'LAST_IMAGE'		=> $row['album_last_image_id'],
+				'U_IMAGE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx" , "album_id=" . $row['album_id'] . "&amp;image_id=" . $row['album_last_image_id']),
+			));
+		}
+		$db->sql_freeresult($result);
+
+		//subscribed images
+		$start				= request_var('start', 0);
+		$images_per_page	= $config['topics_per_page'];
+		$total_images		= 0;
+		$sql = 'SELECT count(image_id) as images
+			FROM ' . GALLERY_WATCH_TABLE . "
+			WHERE user_id = {$user->data['user_id']}
+				AND image_id <> 0";
+		$result = $db->sql_query($sql);
+		while( $row = $db->sql_fetchrow($result) )
+		{
+			$total_images = $row['images'];
+		}
+		$db->sql_freeresult($result);
+		$sql = 'SELECT *
+			FROM ' . GALLERY_WATCH_TABLE . " w
+			LEFT JOIN " . GALLERY_IMAGES_TABLE . " i
+				ON w.image_id = i.image_id
+			LEFT JOIN " . GALLERY_ALBUMS_TABLE . " a
+				ON a.album_id = i.image_album_id
+			LEFT JOIN " . GALLERY_COMMENTS_TABLE . " c
+				ON i.image_last_comment = c.comment_id
+			WHERE w.user_id = {$user->data['user_id']}
+				AND w.image_id <> 0
+			LIMIT $start, $images_per_page";
+		$result = $db->sql_query($sql);
+		while( $row = $db->sql_fetchrow($result) )
+		{
+			$template->assign_block_vars('image_row', array(
+				'THUMBNAIL'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}thumbnail.$phpEx" , 'album_id=' . $row['image_album_id'] .  '&amp;image_id=' . $row['image_id']),
+				'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
+				'LAST_COMMENT_BY'	=> get_username_string('full', $row['comment_user_id'], $row['comment_username'], $row['comment_user_colour']),
+				'COMMENT'			=> $row['image_comments'],
+				'LAST_COMMENT_TIME'	=> $user->format_date($row['comment_time']),
+				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
+				'IMAGE_NAME'		=> $row['image_name'],
+				'ALBUM_NAME'		=> $row['album_name'],
+				'IMAGE_ID'			=> $row['image_id'],
+				'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx" , "album_id=" . $row['image_album_id']),
+				'U_IMAGE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx" , "album_id=" . $row['image_album_id'] . "&amp;image_id=" . $row['image_id']),
+			));
+		}
+		$db->sql_freeresult($result);
+
+		$template->assign_vars(array(
+			'S_MANAGE_SUBSCRIPTIONS'	=> true,
+			'S_UCP_ACTION'				=> $this->u_action,
+
+			'L_TITLE'					=> $user->lang['UCP_GALLERY_FAVORITES'],
+			'L_TITLE_EXPLAIN'			=> $user->lang['YOUR_SUBSCRIPTIONS'],
+
+			'PAGINATION'				=> generate_pagination(append_sid("{$phpbb_root_path}ucp.$phpEx", "i=gallery&amp;mode=manage_favorites"), $total_images, $images_per_page, $start),
+			'PAGE_NUMBER'				=> on_page($total_images, $images_per_page, $start),
+			'TOTAL_IMAGES'				=> ($total_images == 1) ? $user->lang['VIEW_ALBUM_IMAGE'] : sprintf($user->lang['VIEW_ALBUM_IMAGES'], $total_images),
+
+			'DISP_FAKE_THUMB'			=> true,
+			'FAKE_THUMB_SIZE'			=> (empty($album_config['fake_thumb_size'])) ? 50 : $album_config['fake_thumb_size'],
+		));
 	}
 
 	function info()

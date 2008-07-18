@@ -10,6 +10,7 @@ CREATE TABLE phpbb_gallery_comments (
 	comment_image_id INTEGER UNSIGNED NOT NULL ,
 	comment_user_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	comment_username varchar(32) NOT NULL DEFAULT '',
+	comment_user_colour varchar(6) NOT NULL DEFAULT '',
 	comment_user_ip varchar(40) NOT NULL DEFAULT '',
 	comment_time INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	comment mediumtext(16777215) NOT NULL DEFAULT '',

@@ -70,6 +70,30 @@ if ($user->data['is_bot'])
 }
 switch ($mode)
 {
+	case 'album':
+		switch ($submode)
+		{
+			case 'watch':
+			case 'unwatch':
+				if ($album_access_array[$album_id]['i_view'] != 1)
+				{
+					if (!$user->data['is_registered'])
+					{
+						login_box($album_loginlink , $user->lang['LOGIN_INFO']);
+					}
+					else
+					{
+						meta_refresh(3, $album_backlink);
+						trigger_error('NOT_AUTHORISED');
+					}
+				}
+			break;
+
+			default:
+				trigger_error('MISSING_SUBMODE');
+			break;
+		}
+	break;
 	case 'image':
 		switch ($submode)
 		{
@@ -197,6 +221,23 @@ switch ($mode)
 					trigger_error('NOT_AUTHORISED');
 				}
 			break;
+			case 'watch':
+			case 'unwatch':
+			case 'favorite':
+			case 'unfavorite':
+				if ($album_access_array[$album_id]['i_view'] != 1)
+				{
+					if (!$user->data['is_registered'])
+					{
+						login_box($image_loginlink , $user->lang['LOGIN_INFO']);
+					}
+					else
+					{
+						meta_refresh(3, $image_backlink);
+						trigger_error('NOT_AUTHORISED');
+					}
+				}
+			break;
 
 			default:
 				trigger_error('MISSING_SUBMODE');
@@ -290,6 +331,37 @@ $template->assign_vars(array(
 
 switch ($mode)
 {
+	case 'album':
+	if ($mode == 'album')
+	{
+		switch ($submode)
+		{
+			case 'watch':
+			if ($submode == 'watch')
+			{
+				$sql_ary = array(
+					'album_id'			=> $album_id,
+					'user_id'			=> $user->data['user_id'],
+				);
+				$sql = 'INSERT INTO ' . GALLERY_WATCH_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+				$db->sql_query($sql);
+				$message = $user->lang['WATCHING_ALBUM'] . '<br />';
+				$submit = true;//to redirect
+			}
+			break;
+			case 'unwatch':
+			if ($submode == 'unwatch')
+			{
+				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . " WHERE album_id = $album_id AND user_id = " . $user->data['user_id'];
+				$db->sql_query($sql);
+				$message = $user->lang['UNWATCHED_ALBUM'] . '<br />';
+				$submit = true;//to redirect
+			}
+			break;
+		}
+	}
+	break;
+
 	case 'image':
 	if ($mode == 'image')
 	{
@@ -763,6 +835,63 @@ switch ($mode)
 				$message = $user->lang['IMAGES_REPORTED_SUCCESSFULLY'] . '<br />';
 			}
 			break;
+			case 'watch':
+			if ($submode == 'watch')
+			{
+				$sql_ary = array(
+					'image_id'			=> $image_id,
+					'user_id'			=> $user->data['user_id'],
+				);
+				$sql = 'INSERT INTO ' . GALLERY_WATCH_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+				$db->sql_query($sql);
+				$message = $user->lang['WATCHING_IMAGE'] . '<br />';
+				$submit = true;//to redirect
+			}
+			break;
+			case 'unwatch':
+			if ($submode == 'unwatch')
+			{
+				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . " WHERE image_id = $image_id AND user_id = " . $user->data['user_id'];
+				$db->sql_query($sql);
+				$message = $user->lang['UNWATCHED_IMAGE'] . '<br />';
+				$submit = true;//to redirect
+			}
+			break;
+			case 'favorite':
+			if ($submode == 'favorite')
+			{
+				$sql_ary = array(
+					'image_id'			=> $image_id,
+					'user_id'			=> $user->data['user_id'],
+				);
+				$sql = 'INSERT INTO ' . GALLERY_FAVORITES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+				$db->sql_query($sql);
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_favorited = image_favorited + 1 WHERE image_id = ' . $image_id;
+				$db->sql_query($sql);
+				if ($user->gallery['watch_favo'] && !$image_data['watch_id'])
+				{
+					$sql_ary = array(
+						'image_id'			=> $image_id,
+						'user_id'			=> $user->data['user_id'],
+					);
+					$sql = 'INSERT INTO ' . GALLERY_WATCH_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+					$db->sql_query($sql);
+				}
+				$message = $user->lang['FAVORITED_IMAGE'] . '<br />';
+				$submit = true;//to redirect
+			}
+			break;
+			case 'unfavorite':
+			if ($submode == 'unfavorite')
+			{
+				$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . " WHERE image_id = $image_id AND user_id = " . $user->data['user_id'];
+				$db->sql_query($sql);
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_favorited = image_favorited - 1 WHERE image_id = ' . $image_id;
+				$db->sql_query($sql);
+				$message = $user->lang['UNFAVORITED_IMAGE'] . '<br />';
+				$submit = true;//to redirect
+			}
+			break;
 			case 'delete':
 			if ($submode == 'delete')
 			{
@@ -785,8 +914,16 @@ switch ($mode)
 						WHERE comment_image_id = $image_id";
 					$result = $db->sql_query($sql);
 
+					$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . "
+						WHERE image_id = $image_id";
+					$result = $db->sql_query($sql);
+
 					$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . "
 						WHERE rate_image_id = $image_id";
+					$result = $db->sql_query($sql);
+
+					$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . "
+						WHERE image_id = $image_id";
 					$result = $db->sql_query($sql);
 
 					$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . "
@@ -889,6 +1026,15 @@ switch ($mode)
 							image_last_comment = $newest_comment
 							WHERE " . $db->sql_in_set('image_id', $image_id);
 						$db->sql_query($sql);
+						if ($user->gallery['watch_com'] && !$image_data['watch_id'])
+						{
+							$sql_ary = array(
+								'image_id'			=> $image_id,
+								'user_id'			=> $user->data['user_id'],
+							);
+							$sql = 'INSERT INTO ' . GALLERY_WATCH_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+							$db->sql_query($sql);
+						}
 						$message = $user->lang['COMMENT_STORED'] . '<br />';
 					}
 				}
@@ -1095,6 +1241,16 @@ function upload_image(&$image_data)
 	$sql = 'INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 	$db->sql_query($sql);
 	$image_id = $db->sql_nextid();
+
+	if ($user->gallery['watch_own'])
+	{
+		$sql_ary = array(
+			'image_id'			=> $image_id,
+			'user_id'			=> $user->data['user_id'],
+		);
+		$sql = 'INSERT INTO ' . GALLERY_WATCH_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+		$db->sql_query($sql);
+	}
 
 	return $image_id;
 }
