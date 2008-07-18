@@ -1659,7 +1659,7 @@ class acp_gallery
 				}
 				$sql = "SELECT pr.*
 					FROM " . GALLERY_PERMISSIONS_TABLE . " as p
-					LEFT JOIN " .  GALLERY_PERM_ROLES_TABLE .  " as pr
+					LEFT JOIN " .  GALLERY_ROLES_TABLE .  " as pr
 						ON p.perm_role_id = pr.role_id
 					WHERE p.perm_group_id = {$group_ary[0]}
 						AND $where";
@@ -1713,7 +1713,7 @@ class acp_gallery
 				$set_moderator = true;
 			}
 
-			$db->sql_query('INSERT INTO ' . GALLERY_PERM_ROLES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+			$db->sql_query('INSERT INTO ' . GALLERY_ROLES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 			$insert_role = $db->sql_nextid();
 			if ($album_ary != array())
 			{
