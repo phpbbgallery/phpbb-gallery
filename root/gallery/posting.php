@@ -374,7 +374,7 @@ switch ($mode)
 				//Check Album Configuration Quota
 				if ($album_config['max_pics'] >= 0)
 				{//do we have enough images in this album?
-					if ($album_data['count'] >= $album_config['max_pics'])
+					if ($album_data['album_images'] >= $album_config['max_pics'])
 					{
 						trigger_error('ALBUM_REACHED_QUOTA');
 					}
@@ -645,7 +645,9 @@ switch ($mode)
 								$image_data['thumbnail'] = '';
 							}
 
-							$image_id = upload_image($image_data);
+							$image_data = upload_image($image_data);
+							$image_id = $image_data['image_id'];
+							$image_name = $image_data['image_name'];
 						}
 					}//foreach
 					$image_id = ($images > 1) ? 0 : $image_id;
@@ -659,6 +661,7 @@ switch ($mode)
 					{
 						$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_IMAGE_TITLE'];
 					}
+					notify_gallery('album', $album_id, $image_name);
 				}//submit
 				$template->assign_vars(array(
 					'ERROR'						=> $error,
@@ -1011,7 +1014,7 @@ switch ($mode)
 						'comment_image_id'		=> $image_id,
 						'comment_user_id'		=> $user->data['user_id'],
 						'comment_username'		=> ($user->data['user_id'] != ANONYMOUS) ? $user->data['username'] : $comment_username,
-						#'comment_user_colour'	=> $user->data['user_colour'],
+						'comment_user_colour'	=> $user->data['user_colour'],
 						'comment_user_ip'		=> $user->ip,
 						'comment_time'			=> time(),
 						'comment'				=> $message_parser->message,
@@ -1035,6 +1038,7 @@ switch ($mode)
 							$sql = 'INSERT INTO ' . GALLERY_WATCH_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 							$db->sql_query($sql);
 						}
+						notify_gallery('image', $image_id, $image_data['image_name']);
 						$message = $user->lang['COMMENT_STORED'] . '<br />';
 					}
 				}
@@ -1252,6 +1256,173 @@ function upload_image(&$image_data)
 		$db->sql_query($sql);
 	}
 
-	return $image_id;
+	return array('image_id' => $image_id, 'image_name' => $image_data['image_name']);
+}
+
+function notify_gallery($mode, $handle_id, $image_name)
+{
+	global $phpbb_root_path, $gallery_root_path, $phpEx;
+	global $user, $db, $album_id, $image_id, $image_data, $album_data;
+
+	$help_mode = $mode . '_id';
+	$mode_id = $$help_mode;
+	$mode_notification = ($mode == 'album') ? 'image' : 'comment';
+
+	if (1 == 1)
+	{
+	
+	// Get banned User ID's
+	$sql = 'SELECT ban_userid
+		FROM ' . BANLIST_TABLE . '
+		WHERE ban_userid <> 0
+			AND ban_exclude <> 1';
+	$result = $db->sql_query($sql);
+
+	$sql_ignore_users = ANONYMOUS . ', ' . $user->data['user_id'];
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$sql_ignore_users .= ', ' . (int) $row['ban_userid'];
+	}
+	$db->sql_freeresult($result);
+	}
+
+	$notify_rows = array();
+
+	// -- get forum_userids	|| topic_userids
+	$sql = 'SELECT u.user_id, u.username, u.user_email, u.user_lang, u.user_notify_type, u.user_jabber
+		FROM ' . GALLERY_WATCH_TABLE . ' w, ' . USERS_TABLE . ' u
+		WHERE w.' . $help_mode . ' = ' . $handle_id . "
+			AND w.user_id NOT IN ($sql_ignore_users)
+			AND u.user_type IN (" . USER_NORMAL . ', ' . USER_FOUNDER . ')
+			AND u.user_id = w.user_id';
+	$result = $db->sql_query($sql);
+
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$notify_rows[$row['user_id']] = array(
+			'user_id'		=> $row['user_id'],
+			'username'		=> $row['username'],
+			'user_email'	=> $row['user_email'],
+			'user_jabber'	=> $row['user_jabber'],
+			'user_lang'		=> $row['user_lang'],
+			'notify_type'	=> ($mode != 'album') ? 'image' : 'album',
+			'template'		=> "new{$mode_notification}_notify",
+			'method'		=> $row['user_notify_type'],
+			'allowed'		=> false
+		);
+	}
+	$db->sql_freeresult($result);
+
+	if (!sizeof($notify_rows))
+	{
+		return;
+	}
+
+	// Make sure users are allowed to view the album
+	$i_view_ary = array();
+	$sql = "SELECT pr.i_view, p.perm_group_id
+		FROM " . GALLERY_PERMISSIONS_TABLE . " as p
+		LEFT JOIN " .  GALLERY_ROLES_TABLE .  " as pr
+			ON p.perm_role_id = pr.role_id
+		WHERE p.perm_album_id = $album_id
+		ORDER BY pr.i_view ASC";
+	$result = $db->sql_query($sql);
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$sql2 = "SELECT ug.user_id
+			FROM " . USER_GROUP_TABLE . " ug
+			WHERE ug.group_id = {$row['perm_group_id']}
+				AND ug.user_pending = 0";
+		$result2 = $db->sql_query($sql2);
+		while ($row2 = $db->sql_fetchrow($result2))
+		{
+			$i_view_ary[$row2['user_id']] = $row['i_view'];
+		}
+		$db->sql_freeresult($result2);
+	}
+	$db->sql_freeresult($result);
+
+
+
+	// Now, we have to do a little step before really sending, we need to distinguish our users a little bit. ;)
+	$msg_users = $delete_ids = $update_notification = array();
+	foreach ($notify_rows as $user_id => $row)
+	{
+		if (($i_view_ary[$row['user_id']] != 1) || !trim($row['user_email']))
+		{
+			$delete_ids[$row['notify_type']][] = $row['user_id'];
+		}
+		else
+		{
+			$msg_users[] = $row;
+			$update_notification[$row['notify_type']][] = $row['user_id'];
+		}
+	}
+	unset($notify_rows);
+
+	// Now, we are able to really send out notifications
+	if (sizeof($msg_users))
+	{
+		include_once($phpbb_root_path . 'includes/functions_messenger.' . $phpEx);
+		$messenger = new messenger();
+
+		$msg_list_ary = array();
+		foreach ($msg_users as $row)
+		{
+			$pos = (!isset($msg_list_ary[$row['template']])) ? 0 : sizeof($msg_list_ary[$row['template']]);
+
+			$msg_list_ary[$row['template']][$pos]['method']	= $row['method'];
+			$msg_list_ary[$row['template']][$pos]['email']	= $row['user_email'];
+			$msg_list_ary[$row['template']][$pos]['jabber']	= $row['user_jabber'];
+			$msg_list_ary[$row['template']][$pos]['name']	= $row['username'];
+			$msg_list_ary[$row['template']][$pos]['lang']	= $row['user_lang'];
+		}
+		unset($msg_users);
+
+		foreach ($msg_list_ary as $email_template => $email_list)
+		{
+			foreach ($email_list as $addr)
+			{
+				$messenger->template($email_template, $addr['lang']);
+
+				$messenger->to($addr['email'], $addr['name']);
+				$messenger->im($addr['jabber'], $addr['name']);
+
+				$messenger->assign_vars(array(
+					'USERNAME'		=> htmlspecialchars_decode($addr['name']),
+					'IMAGE_NAME'	=> htmlspecialchars_decode($image_name),
+					'ALBUM_NAME'	=> htmlspecialchars_decode($album_data['album_name']),
+
+					'U_ALBUM'				=> generate_board_url() . '/' . $gallery_root_path . "album.$phpEx?album_id=$album_id",
+					'U_IMAGE'				=> generate_board_url() . '/' . $gallery_root_path . "image_page.$phpEx?album_id=$album_id&image_id=$image_id",
+					'U_NEWEST_POST'			=> generate_board_url() . '/' . $gallery_root_path . "viewtopic.$phpEx?album_id=$album_id&image_id=$image_id",
+					'U_STOP_WATCHING_IMAGE'	=> generate_board_url() . '/' . $gallery_root_path . "posting.$phpEx?mode=image&submode=unwatch&album_id=$album_id&image_id=$image_id",
+					'U_STOP_WATCHING_ALBUM'	=> generate_board_url() . '/' . $gallery_root_path . "posting.$phpEx?mode=album&submode=unwatch&album_id=$album_id",
+				));
+
+				$messenger->send($addr['method']);
+			}
+		}
+		unset($msg_list_ary);
+
+		$messenger->save_queue();
+	}
+
+	// Now delete the user_ids not authorised to receive notifications on this topic/forum
+	if (!empty($delete_ids['image']))
+	{
+		$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . "
+			WHERE image_id = $image_id
+				AND " . $db->sql_in_set('user_id', $delete_ids['topic']);
+		$db->sql_query($sql);
+	}
+
+	if (!empty($delete_ids['album']))
+	{
+		$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . "
+			WHERE album_id = $album_id
+				AND " . $db->sql_in_set('user_id', $delete_ids['forum']);
+		$db->sql_query($sql);
+	}
 }
 ?>

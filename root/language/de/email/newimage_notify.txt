@@ -1,0 +1,13 @@
+Subject: Benachrichtigung über neue Bild — „{ALBUM_NAME}“
+
+Hallo {USERNAME},
+
+du erhältst diese Benachrichtigung, weil du das Album „{ALBUM_NAME}“ auf „{SITENAME}“ beobachtest. Seit deinem letzten Besuch wurde in diesem Album ein neues Bild hochgeladen: „{IMAGE_NAME}“. Du kannst den folgenden Link benutzen, um das Album anzusehen.
+
+{U_ALBUM}
+
+Wenn du das Album nicht länger beobachten möchtest, verwende entweder den Link „Album nicht mehr beobachten“ in dem entsprechenden Album oder besuche folgenden Link:
+
+{U_STOP_WATCHING_ALBUM}
+
+{EMAIL_SIG}

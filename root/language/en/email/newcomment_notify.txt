@@ -1,0 +1,13 @@
+Subject: New topic notification - "{IMAGE_NAME}"
+
+Hello {USERNAME},
+
+You are receiving this notification because you are watching the image, "{IMAGE_NAME}" at "{SITENAME}". This image has received a new comment since your last visit. You can use the following link to read the comment.
+
+{U_IMAGE}
+
+If you no longer wish to watch this forum you can either click the "Unsubscribe image" link found in the forum above, or by clicking the following link:
+
+{U_STOP_WATCHING_IMAGE}
+
+{EMAIL_SIG}
