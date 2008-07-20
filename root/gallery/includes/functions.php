@@ -765,7 +765,7 @@ function make_album_jumpbox($select_id = false, $ignore_id = false, $album = fal
 			$disabled = true;
 		}
 
-		if ($album_access_array[$row['album_id']]['i_view'] == 1)
+		if (gallery_acl_check('i_view', $row['album_id']))
 		{
 			if ($return_array)
 			{
@@ -826,7 +826,7 @@ function make_personal_jumpbox($album_user_id, $select_id = false, $ignore_id = 
 			$disabled = true;
 		}
 
-		if ($album_access_array[$row['album_id']]['i_view'] == 1)
+		if (gallery_acl_check('i_view', $row['album_id']))
 		{
 			if ($return_array)
 			{
@@ -874,7 +874,7 @@ function make_move_jumpbox($select_id = false, $ignore_id = false, $album = fals
 			$personal_info = true;
 			$forum_list .= '<option disabled="disabled" class="disabled-option">' . $user->lang['PERSONAL_ALBUMS'] . '</option>';
 		}
-		if ($album_access_array[$row['album_id']]['i_view'] == 1)
+		if (gallery_acl_check('i_view', $row['album_id']))
 		{
 			if ($album_user_id == $row['album_user_id'])
 			{
@@ -897,7 +897,7 @@ function make_move_jumpbox($select_id = false, $ignore_id = false, $album = fals
 			$album_user_id = $row['album_user_id'];
 			$disabled = false;
 
-			if (($album_access_array[$row['album_id']]['i_upload'] != 1))
+			if (!gallery_acl_check('i_upload', $row['album_id']))
 			{
 				$disabled = true;
 			}

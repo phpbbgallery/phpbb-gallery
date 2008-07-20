@@ -16,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 
 //see GALLERY_ROOT_PATH/permissions_overview.php for a short description
-function get_album_access_array ()
+function get_album_access_array()
 {
 	global $cache, $db, $user;
 	global $album_access_array, $album_config;
@@ -129,6 +129,99 @@ function get_album_access_array ()
 }
 
 /**
+* other call for the permissions
+*/
+function gallery_acl_check($mode, $album_id)
+{
+	global $user, $album_access_array, $cache;
+
+	$albums = $cache->obtain_album_list();
+	if ($album_id < 0)
+	{
+		if ($mode == 'album_count')
+		{
+			$access = $album_access_array[-2][$mode];
+		}
+		else
+		{
+			$access = ($album_access_array[-2][$mode] == 1) ? true : false;
+		}
+		return $access;
+	}
+	$album_data = $albums[$album_id];
+
+	if ($mode == 'i_count')
+	{
+		if ($album_data['album_user_id'] == $user->data['user_id'])
+		{
+			$access = $album_access_array[-2][$mode];
+		}
+		else if ($album_data['album_user_id'] > 0)
+		{
+			$access = $album_access_array[-3][$mode];
+		}
+		else
+		{
+			$access = $album_access_array[$album_id][$mode];
+		}
+	}
+	else
+	{
+		if ($album_data['album_user_id'] == $user->data['user_id'])
+		{
+			$access = ($album_access_array[-2][$mode] == 1) ? true : false;
+		}
+		else if ($album_data['album_user_id'] > 0)
+		{
+			$access = ($album_access_array[-3][$mode] == 1) ? true : false;
+		}
+		else
+		{
+			$access = ($album_access_array[$album_id][$mode] == 1) ? true : false;
+		}
+	}
+
+	return $access;
+}
+
+/**
+* get album lists by permissions
+*
+* @param	string	$permission		One of the permissions, Exp: i_view
+* @param	string	$mode			'array' || 'string'
+*/
+function gallery_acl_album_ids($permission, $mode = 'array')
+{
+	global $user, $album_access_array, $cache;
+
+	$album_list = '';
+	$album_array = array();
+	$albums = $cache->obtain_album_list();
+	foreach ($albums as $album)
+	{
+		if ($album['album_user_id'] == $user->data['user_id'])
+		{
+			$acl_case = -2;
+		}
+		else if ($album['album_user_id'] > 0)
+		{
+			$acl_case = -3;
+		}
+		else
+		{
+			$acl_case = $album['album_id'];
+		}
+		if ($album_access_array[$acl_case][$permission] == 1)
+		{
+			$album_list .= (($album_list) ? ', ' : '') . $album['album_id'];
+			$album_array[] = $album['album_id'];
+		}
+	}
+
+	return ($mode == 'array') ? $album_array : $album_list;
+}
+
+/**
 * User authorisation levels output
 *
 * @param	string	$mode			Can be forum or topic. Not in use at the moment.
@@ -147,18 +240,18 @@ function gen_album_auth_level($mode, $album_id, $album_status = 1)
 	$permissions = array_merge($permissions, array('c_post', 'c_edit', 'c_delete'));
 
 	$rules = array(
-		(($album_access_array[$album_id]['i_view'] == 1) && !$locked) ? $user->lang['ALBUM_VIEW_CAN'] : $user->lang['ALBUM_VIEW_CANNOT'],
-		(($album_access_array[$album_id]['i_upload'] == 1) && !$locked) ? $user->lang['ALBUM_UPLOAD_CAN'] : $user->lang['ALBUM_UPLOAD_CANNOT'],
-		(($album_access_array[$album_id]['i_edit'] == 1) && !$locked) ? $user->lang['ALBUM_EDIT_CAN'] : $user->lang['ALBUM_UPLOAD_CANNOT'],
-		(($album_access_array[$album_id]['i_delete'] == 1) && !$locked) ? $user->lang['ALBUM_DELETE_CAN'] : $user->lang['ALBUM_DELETE_CANNOT'],
+		(gallery_acl_check('i_view', $album_id) && !$locked) ? $user->lang['ALBUM_VIEW_CAN'] : $user->lang['ALBUM_VIEW_CANNOT'],
+		(gallery_acl_check('i_upload', $album_id) && !$locked) ? $user->lang['ALBUM_UPLOAD_CAN'] : $user->lang['ALBUM_UPLOAD_CANNOT'],
+		(gallery_acl_check('i_edit', $album_id) && !$locked) ? $user->lang['ALBUM_EDIT_CAN'] : $user->lang['ALBUM_UPLOAD_CANNOT'],
+		(gallery_acl_check('i_delete', $album_id) && !$locked) ? $user->lang['ALBUM_DELETE_CAN'] : $user->lang['ALBUM_DELETE_CANNOT'],
 	);
 	if ($album_config['comment'])
 	{
-		$rules[] = (($album_access_array[$album_id]['c_post'] == 1) && !$locked) ? $user->lang['ALBUM_COMMENT_CAN'] : $user->lang['ALBUM_COMMENT_CANNOT'];
+		$rules[] = (gallery_acl_check('c_post', $album_id) && !$locked) ? $user->lang['ALBUM_COMMENT_CAN'] : $user->lang['ALBUM_COMMENT_CANNOT'];
 	}
 	if ($album_config['rate'])
 	{
-		$rules[] = (($album_access_array[$album_id]['i_rate'] == 1) && !$locked) ? $user->lang['ALBUM_RATE_CAN'] : $user->lang['ALBUM_RATE_CANNOT'];
+		$rules[] = (gallery_acl_check('i_rate', $album_id) && !$locked) ? $user->lang['ALBUM_RATE_CAN'] : $user->lang['ALBUM_RATE_CANNOT'];
 	}
 
 	foreach ($rules as $rule)

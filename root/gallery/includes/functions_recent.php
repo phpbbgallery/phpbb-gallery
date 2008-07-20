@@ -28,18 +28,7 @@ function recent_gallery_images($rows, $columns, &$display)
 	$album_access_array = get_album_access_array();
 
 	$albums = $cache->obtain_album_list();
-	$allowed_albums = '';
-	foreach ($albums as $album)
-	{
-		if (($album['album_user_id'] > 0) && ($album_access_array[(($album['album_user_id'] == $user->data['user_id']) ? -2 : -3)]['i_view'] == 1))
-		{
-			$allowed_albums .= (($allowed_albums) ? ', ' : '') . $album['album_id'];
-		}
-		else if ($album_access_array[$album['album_id']]['i_view'] == 1)
-		{
-			$allowed_albums .= (($allowed_albums) ? ', ' : '') . $album['album_id'];
-		}
-	}
+	$allowed_albums = gallery_acl_album_ids('i_view', 'string');
 	$limit_sql = $rows * $columns;
 
 	if ($allowed_albums != '')

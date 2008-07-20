@@ -394,7 +394,7 @@ class ucp_gallery
 			//check if the user has already reached his limit
 			include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
 			$album_access_array = get_album_access_array();
-			if ($album_access_array[-2]['i_upload'] != 1)
+			if (!gallery_acl_check('i_upload', $album_id))
 			{
 				trigger_error('NO_PERSALBUM_ALLOWED');
 			}
@@ -523,7 +523,7 @@ class ucp_gallery
 		$album_access_array = get_album_access_array();
 
 		//check if the user has already reached his limit
-		if ($album_access_array[-2]['i_upload'] != 1)
+		if (!gallery_acl_check('i_upload', '-2'))
 		{
 			trigger_error('NO_PERSALBUM_ALLOWED');
 		}
@@ -532,7 +532,7 @@ class ucp_gallery
 			WHERE album_user_id = {$user->data['user_id']}";
 		$result = $db->sql_query($sql);
 		$albums = $db->sql_fetchrow($result);
-		if (($albums['albums'] - 1) >= $album_access_array[-2]['album_count'])
+		if (($albums['albums'] - 1) >= gallery_acl_check('album_count', '-2'))
 		{
 			trigger_error('NO_MORE_SUBALBUMS_ALLOWED');
 		}

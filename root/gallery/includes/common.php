@@ -21,7 +21,7 @@ include("{$phpbb_root_path}{$gallery_root_path}includes/constants.$phpEx");
 //
 $sql = 'SELECT *
 	FROM ' . GALLERY_CONFIG_TABLE;
-$result = $db->sql_query($sql);
+@$result = $db->sql_query($sql);
 
 while( $row = $db->sql_fetchrow($result) )
 {
@@ -34,7 +34,7 @@ $user->add_lang('mods/info_acp_gallery');
 // Disable gallery if the install_gallery/ directory is still present
 if (file_exists($phpbb_root_path . 'install_gallery'))
 {
-	trigger_error('REMOVE_GALLERY_INSTALL');
+	//REMOVE//trigger_error('REMOVE_GALLERY_INSTALL');
 }
 
 include("{$phpbb_root_path}{$gallery_root_path}includes/functions.$phpEx");

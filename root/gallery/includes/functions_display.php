@@ -88,7 +88,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			unset($right_id);
 		}
 
-		if ($album_access_array[($row['album_user_id'] > 0) ? (($row['album_user_id'] == $user->data['user_id']) ? -2 : -3) : $album_id]['i_view'] != 1)
+		if (gallery_acl_check('i_view', $album_id))
 		{
 			// if the user does not have permissions to list this forum, skip everything until next branch
 			$right_id = $row['right_id'];
@@ -97,7 +97,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 
 		$album_ids[] = $album_id;
 
-		$row['album_images'] = (($album_access_array[($row['album_user_id'] > 0) ? (($row['album_user_id'] == $user->data['user_id']) ? -2 : -3) : $album_id]['a_moderate'] != 1)) ? $row['album_images_real'] : $row['album_images'];
+		$row['album_images'] = (gallery_acl_check('a_moderate', $album_id)) ? $row['album_images_real'] : $row['album_images'];
 
 		//
 		if ($row['parent_id'] == $root_data['album_id'] || $row['parent_id'] == $branch_root_id)
