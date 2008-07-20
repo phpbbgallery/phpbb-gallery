@@ -114,6 +114,7 @@ if ($album_id <> 0)
 	{
 		$limit_sql = ($start == 0) ? $pics_per_page : $start .','. $pics_per_page;
 		$pic_approval_sql = ' AND image_status = 1';
+		$image_counter = $album_data['album_images'];
 		if (gallery_acl_check('a_moderate', $album_id))
 		{
 			$pic_approval_sql = '';
@@ -177,7 +178,7 @@ if ($album_id <> 0)
 					'TIME'		=> $user->format_date($picrow[$j]['image_time']),
 					'VIEW'		=> $picrow[$j]['image_view_count'],
 					'RATING'	=> (($album_config['rate'] == 1) && gallery_acl_check('i_rate', $album_id)) ? ( '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . "&amp;image_id=" . $picrow[$j]['image_id']) . '#rating">' . $user->lang['RATING'] . '</a>: ' . $picrow[$j]['rating'] . '<br />') : '',
-					'COMMENTS'	=> (($album_config['comment'] == 1) && gallery_acl_check('i_post', $album_id)) ? ( '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . "&amp;image_id=" . $picrow[$j]['image_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $picrow[$j]['image_comments'] . '<br />') : '',
+					'COMMENTS'	=> (($album_config['comment'] == 1) && gallery_acl_check('c_post', $album_id)) ? ( '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . "&amp;image_id=" . $picrow[$j]['image_id']) . '#comments">' . $user->lang['COMMENTS'] . '</a>: ' . $picrow[$j]['image_comments'] . '<br />') : '',
 
 					'EDIT'		=> $allow_edit ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['EDIT_IMAGE'] . '</a>' : '',
 					'DELETE'	=> $allow_delete ? '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=delete&amp;album_id=$album_id&amp;image_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['DELETE_IMAGE'] . '</a>' : '',
