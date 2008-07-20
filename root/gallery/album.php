@@ -61,22 +61,9 @@ if ($album_data['album_user_id'] > 0)
 /**
 * Build Auth List
 */
-$auth_key = array_keys($album_access_array[$album_id]);
-$auth_list = '';
-/*Needs to be fixed
-for ($i = 0; $i < (count($album_user_access) - 1); $i++)// ignore MODERATOR in this loop
-{// we should skip a loop if RATE and COMMENT is disabled
-	if((($album_config['rate'] == 0) && ($auth_key[$i] == 'rate')) || (($album_config['comment'] == 0) && ($auth_key[$i] == 'comment')))
-	{
-		continue;
-	}
-	$auth_list .= ($album_user_access[$auth_key[$i]] == 1) ? $user->lang['ALBUM_'. strtoupper($auth_key[$i]) .'_CAN'] : $user->lang['ALBUM_'. strtoupper($auth_key[$i]) .'_CANNOT'];
-	$auth_list .= '<br />';
-}*/
-/**
-* send cheaters home
-*/
-if(!$album_access_array[$album_id]['i_view'])
+gen_album_auth_level('album', $album_id, 0 /*replace with $album_data['album_status'] later*/);
+
+if ($album_access_array[$album_id]['i_view'] != 1)
 {
 	if ($user->data['is_bot'])
 	{
@@ -126,7 +113,7 @@ if ($album_id <> 0)
 	$sort_method = request_var('sort_method', $album_config['sort_method']);
 	$sort_order = request_var('sort_order', $album_config['sort_order']);
 	$pics_per_page = $album_config['rows_per_page'] * $album_config['cols_per_page'];
-	$tot_unapproved = 0;
+	$tot_unapproved = $image_counter = 0;
 
 	if ($album_data['album_images_real'] > 0)
 	{
@@ -135,6 +122,7 @@ if ($album_id <> 0)
 		if ($album_access_array[$album_id]['a_moderate'] == 1)
 		{
 			$pic_approval_sql = '';
+			$image_counter = $album_data['album_images_real'];
 		}
 
 		$sql = 'SELECT *
@@ -204,11 +192,6 @@ if ($album_id <> 0)
 				));
 			}
 		}
-
-		$template->assign_vars(array(
-			'PAGINATION'	=> generate_pagination(append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "id=$album_id&amp;sort_method=$sort_method&amp;sort_order=$sort_order"), $total_pics, $pics_per_page, $start),
-			'PAGE_NUMBER'	=> on_page($total_pics, $pics_per_page, $start),
-		));
 	}
 	else
 	{
@@ -239,20 +222,14 @@ if ($album_id <> 0)
 /**
 * Build Jumpbox
 */
-$album_jumpbox = $user->lang['JUMP_TO'] . ': ';
-$album_jumpbox .= '<form id="jumpbox" action="' . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx") . '" method="get">';
-$album_jumpbox .= '<p><select name="album_id" onchange="forms[\'jumpbox\'].submit()">';
 if (!$album_data['album_user_id'])
 {
-	$album_jumpbox .= make_album_jumpbox($album_id);
+	$album_jumpbox = make_album_jumpbox($album_id);
 }
 else
 {
-	$album_jumpbox .= make_personal_jumpbox($album_data['album_user_id'], $album_id);
+	$album_jumpbox = make_personal_jumpbox($album_data['album_user_id'], $album_id);
 }
-$album_jumpbox .= '</select>';
-$album_jumpbox .= '<input type="hidden" name="sid" value="' . $user->data['session_id'] . '" /></p>';
-$album_jumpbox .= '</form>';
 
 $allowed_create = false;
 if ($album_data['album_user_id'] == $user->data['user_id'])
@@ -272,6 +249,9 @@ if ($album_data['album_user_id'] == $user->data['user_id'])
 	}
 }
 $template->assign_vars(array(
+	'S_IS_POSTABLE'				=> ($album_data['album_type'] == FORUM_POST) ? true : false,
+	'UPLOAD_IMG'				=> /*($album_data['album_status'] == ITEM_LOCKED) ? $user->img('button_topic_locked', $post_alt) : */$user->img('button_upload_image', 'UPLOAD_IMAGE'),
+	'NEWEST_POST_IMG'			=> $user->img('button_upload_image', 'VIEW_NEWEST_POST'),
 	'S_MODE'					=> $album_data['album_type'],
 	'L_MODERATORS'				=> $l_moderator,
 	'MODERATORS'				=> $moderators_list,
@@ -285,6 +265,7 @@ $template->assign_vars(array(
 	'S_COLS'					=> $album_config['cols_per_page'],
 	'S_COL_WIDTH'				=> (100/$album_config['cols_per_page']) . '%',
 	'ALBUM_JUMPBOX'				=> $album_jumpbox,
+	'S_JUMPBOX_ACTION'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx"),
 	'S_ALBUM_ACTION'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"),
 	'TARGET_BLANK' 				=> ($album_config['fullpic_popup']) ? 'target="_blank"' : '',
 
@@ -298,10 +279,13 @@ $template->assign_vars(array(
 	'SORT_NEW_COMMENT_OPTION'	=> $sort_new_comment_option,
 	'SORT_ASC'					=> ($sort_order == 'ASC') ? 'selected="selected"' : '',
 	'SORT_DESC'					=> ($sort_order == 'DESC') ? 'selected="selected"' : '',
-	'S_AUTH_LIST'				=> $auth_list,
 
 	'U_RETURN_LINK'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"),
 	'S_RETURN_LINK'				=> $user->lang['GALLERY'],
+
+	'PAGINATION'				=> generate_pagination(append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "id=$album_id&amp;sort_method=$sort_method&amp;sort_order=$sort_order"), $image_counter, $pics_per_page, $start),
+	'TOTAL_IMAGES'				=> ($image_counter == 1) ? $user->lang['IMAGE_#'] : sprintf($user->lang['IMAGES_#'], $image_counter),
+	'PAGE_NUMBER'				=> on_page($image_counter, $pics_per_page, $start),
 
 	'L_WATCH_TOPIC'		=> ($album_data['watch_id']) ? $user->lang['UNWATCH_ALBUM'] : $user->lang['WATCH_ALBUM'],
 	'U_WATCH_TOPIC'		=> ($user->data['user_id'] != ANONYMOUS) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=album&amp;submode=" . (($album_data['watch_id']) ?  'un' : '') . "watch&amp;album_id=$album_id") : '',

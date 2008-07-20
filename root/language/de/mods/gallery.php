@@ -37,17 +37,17 @@ $lang = array_merge($lang, array(
 	'ALBUM_DELETE_CONFIRM'					=> 'Bist du sicher das du dieses Bild löschen möchtest?',
 	'ALBUM_NOT_EXIST'						=> 'Dieses Album existiert nicht',
 	'ALBUM_ID_NOT_EXIST'					=> 'Album ID %s existiert nicht',
-	'ALBUM_PERMISSIONS'						=> 'Album Berechtigungen',
+	'ALBUM_PERMISSIONS'						=> 'Berechtigungen in diesem Album',
 	'ALBUM_REACHED_QUOTA'					=> 'Dieses Album hat das Kontingent zum hochladen von Bildern erreicht. Es können keine weiteren Bilder mehr hochgeladen werden. Für weitere Information wende dich bitte an einen Administrator',
 	'ALBUM_UPLOAD_NEED_APPROVAL'			=> 'Dein Bild wurde erfolgreich hochgeladen.<br /><br />Aber die Funktion der Genehmigung von Bildern vor der Veröffentlichung ist aktiv. Somit muss dein Bild vor der Veröffentlichung von einem Administrator oder einem Moderator genehmigt werden.',
 	'ALBUM_UPLOAD_SUCCESSFUL'				=> 'Dein Bild wurde erfolgreich hochgeladen.',
 
 	'ALBUM_COMMENT_CAN'						=> 'Du <strong>darfst</strong> Bilder in diesem Album kommentieren',
 	'ALBUM_COMMENT_CANNOT'					=> 'Du <strong>darfst keine</strong> Bilder in diesem Album kommentieren',
-	'ALBUM_DELETE_CAN'						=> 'Du <strong>darfst</strong> Deine Bilder und Kommentare in diesem Album löschen',
-	'ALBUM_DELETE_CANNOT'					=> 'Du <strong>darfst nicht</strong> Deine Bilder und Kommentare in diesem Album löschen',
-	'ALBUM_EDIT_CAN'						=> 'Du <strong>darfst</strong> Deine Bilder und Kommentare in diesem Album bearbeiten',
-	'ALBUM_EDIT_CANNOT'						=> 'Du <strong>darfst nicht</strong> Deine Bilder und Kommentare in diesem Album bearbeiten',
+	'ALBUM_DELETE_CAN'						=> 'Du <strong>darfst</strong> deine Bilder in diesem Album löschen',
+	'ALBUM_DELETE_CANNOT'					=> 'Du <strong>darfst nicht</strong> deine Bilder in diesem Album <strong>nicht</strong> löschen',
+	'ALBUM_EDIT_CAN'						=> 'Du <strong>darfst</strong> deine Bilder in diesem Album bearbeiten',
+	'ALBUM_EDIT_CANNOT'						=> 'Du <strong>darfst</strong> deine Bilder in diesem Album <strong>nicht</strong> bearbeiten',
 	'ALBUM_RATE_CAN'						=> 'Du <strong>darfst</strong> Bilder in diesem Album bewerten',
 	'ALBUM_RATE_CANNOT'						=> 'Du <strong>darfst keine</strong> Bilder in diesem Album bewerten',
 	'ALBUM_UPLOAD_CAN'						=> 'Du <strong>darfst</strong> neue Bilder in diesem Album hochladen',
@@ -138,7 +138,7 @@ $lang = array_merge($lang, array(
 	'NO_ALBUMS'								=> 'In dieser Galerie gibt es keine Alben',
 	'NO_COMMENTS'							=> 'Noch keine Kommentare',
 	'NO_IMAGE_SPECIFIED'					=> 'Kein Bild angegeben',
-	'NO_IMAGES'								=> 'Keine Bilder',
+	'NO_IMAGES'								=> 'keine Bilder',
 	'NO_MOVE_LEFT'							=> 'Es gibt keine weiteren von Dir berechtigten Alben mehr in die Du die Bilder verschieben darfst.',
 	'NONE'									=> 'Keiner',
 	'NOT_ALLOWED_FILE_TYPE'					=> 'Dieser Datei Typ ist nicht erlaubt',
@@ -162,8 +162,8 @@ $lang = array_merge($lang, array(
 	'RECENT_PUBLIC_IMAGES'					=> 'Neuesten öffentliche Bilder',
 	'RATING_SUCCESSFUL'						=> 'Das Bild wurde erfolgreich bewertet.',
 
-	'SELECT_SORT_METHOD'					=> 'Wähle die Sortiermethode',
-	'SORT'									=> 'Sortieren',
+	//REMOVE 'SELECT_SORT_METHOD'					=> 'Wähle die Sortiermethode',
+	//REMOVE 'SORT'									=> 'Sortieren',
 	'SORT_ASCENDING'						=> 'Aufsteigend',
 	'SORT_DESCENDING'						=> 'Absteigend',
 	'STATUS'								=> 'Status',
@@ -224,15 +224,23 @@ $lang = array_merge($lang, array(
 $lang = array_merge($lang, array(
 	'ALBUMS'						=> 'Alben',
 
+	'BROWSING_ALBUM'				=> 'Mitglieder in diesem Album: %1$s',
+	'BROWSING_ALBUM_GUEST'			=> 'Mitglieder in diesem Album: %1$s und %2$d Gast',
+	'BROWSING_ALBUM_GUESTS'			=> 'Mitglieder in diesem Album: %1$s und %2$d Gäste',
+
 	'FAVORITE_IMAGE'				=> 'zu Lieblingsbildern hinzufügen',
 	'FAVORITED_IMAGE'				=> 'Das Bild wurde zu deinen Lieblingsbildern hinzugefügt.',
 
+	'IMAGE_#'						=> '1 Bild',
 	'IMAGE_STATUS'					=> 'Status',
+	'IMAGES_#'						=> '%s Bilder',
 	'IMAGES_REPORTED_SUCCESSFULLY'	=> 'Das Bild wurde erfolgreich gemeldet',
 
 	'LAST_COMMENT'					=> 'Letzter Kommentar',
 
 	'MISSING_REPORT_REASON'			=> 'Du musst einen Grund angeben um das Bild zu melden.',
+
+	'NO_IMAGES_LONG'				=> 'In diesem Album gibt es keine Bilder.',
 
 	'REPORT_IMAGE'					=> 'Bild melden',
 

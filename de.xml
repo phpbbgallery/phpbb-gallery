@@ -49,6 +49,12 @@
         <action type="after-add"><![CDATA[img_button_upload_image = button_upload_image.gif*25*96]]></action>
       </edit>
     </open>
+    <open src="styles/subsilver2/imageset/de/imageset.cfg">
+      <edit>
+        <find><![CDATA[img_button_topic_reply = button_topic_reply.gif]]></find>
+        <action type="after-add"><![CDATA[img_button_upload_image = button_upload_image.gif]]></action>
+      </edit>
+    </open>
     <diy-instructions lang="en-gb">see normal install-file</diy-instructions>
   </action-group>
 </mod>

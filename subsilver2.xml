@@ -45,6 +45,12 @@
       <file from="templates/subsilver2/styles/subsilver2/theme/images/gallery_lytebox/*.*" to="styles/subsilver2/theme/images/gallery_lytebox/*.*" />
       <file from="templates/subsilver2/styles/subsilver2/theme/images/icon_gallery.gif" to="styles/subsilver2/theme/images/icon_gallery.gif" />
     </copy>
+    <open src="styles/subsilver2/imageset/en/imageset.cfg">
+      <edit>
+        <find><![CDATA[img_button_topic_reply = button_topic_reply.gif]]></find>
+        <action type="after-add"><![CDATA[img_button_upload_image = button_upload_image.gif]]></action>
+      </edit>
+    </open>
     <open src="styles/subsilver2/template/overall_header.html">
       <edit>
         <find><![CDATA[<a href="{U_FAQ}"><img src="{T_THEME_PATH}/images/icon_mini_faq.gif" width="12" height="13" alt="*" /> {L_FAQ}</a>]]></find>

@@ -107,7 +107,7 @@
 		<legend>{L_ALBUM_SETTINGS}</legend>
 		<dl>
 			<dt><label for="album_type">{L_ALBUM_TYPE}:</label></dt>
-			<dd><select id="album_type" name="album_type"><option value="1"<!-- IF ALBUM_TYPE == 1 --> selected="selected"<!-- ENDIF -->>{L_ALBUM_CATEGORY}</option><option value="2"<!-- IF ALBUM_TYPE == 2 --> selected="selected"<!-- ENDIF -->>{L_ALBUM_NO_CATEGORY}</option></select></dd>
+			<dd><select id="album_type" name="album_type"><option value="0"<!-- IF not ALBUM_TYPE --> selected="selected"<!-- ENDIF -->>{L_ALBUM_CATEGORY}</option><option value="1"<!-- IF ALBUM_TYPE --> selected="selected"<!-- ENDIF -->>{L_ALBUM_NO_CATEGORY}</option></select></dd>
 		</dl>
 		<dl>
 			<dt><label for="parent_id">{L_ALBUM_PARENT}:</label></dt>

@@ -405,7 +405,7 @@ class ucp_gallery
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc(request_var('album_desc', '', true)),
 				'album_parents'					=> '',
-				'album_type'					=> 2,
+				'album_type'					=> 1,
 				'album_user_id'					=> $user->data['user_id'],
 				'album_last_username'			=> '',
 				'album_last_user_colour'		=> $user->data['user_colour'],
@@ -568,7 +568,7 @@ class ucp_gallery
 				'album_name'					=> request_var('album_name', '', true),
 				'parent_id'						=> request_var('parent_id', 0),
 				'album_parents'					=> '',
-				'album_type'					=> 2,
+				'album_type'					=> 1,
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc(request_var('album_desc', '', true)),
 				'album_user_id'					=> $user->data['user_id'],
@@ -680,7 +680,7 @@ class ucp_gallery
 				'parent_id'						=> request_var('parent_id', (($album_id == $user->data['album_id']) ? 0 : $user->data['album_id'])),
 				//left_id and right_id are created some lines later
 				'album_parents'					=> '',
-				'album_type'					=> 2,
+				'album_type'					=> 1,
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc(request_var('album_desc', '', true)),
 			);

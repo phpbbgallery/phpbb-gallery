@@ -783,6 +783,14 @@ switch ($mode)
 						$db->sql_query($sql);
 					}
 					$db->sql_freeresult($result);
+					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' 
+							SET album_type = 0
+							WHERE album_type = 1';
+					$db->sql_query($sql);
+					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' 
+							SET album_type = 1
+							WHERE album_type = 2';
+					$db->sql_query($sql);
 
 				case '0.3.2':
 					//and drop the old column
@@ -859,7 +867,7 @@ switch ($mode)
 						'left_id'						=> $left_id,
 						'right_id'						=> $left_id + 1,
 						'album_parents'					=> '',
-						'album_type'					=> 2,
+						'album_type'					=> 1,
 						'album_desc'					=> $album_desc_data['text'],
 						'album_desc_uid'				=> '',
 						'album_desc_bitfield'			=> '',
@@ -1022,7 +1030,7 @@ switch ($mode)
 					'album_desc_options'			=> 7,
 					'album_desc'					=> '',
 					'album_parents'					=> '',
-					'album_type'					=> 2,
+					'album_type'					=> 1,
 					'album_user_id'					=> ($row['image_user_id'] < 0) ? 1 : $row['image_user_id'],
 				);
 				$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));

@@ -38,6 +38,12 @@
       <file from="templates/subsilver2/styles/subsilver2/theme/images/gallery_lytebox/*.*" to="styles/subsilver2/theme/images/gallery_lytebox/*.*" />
       <file from="templates/subsilver2/styles/subsilver2/theme/images/icon_gallery.gif" to="styles/subsilver2/theme/images/icon_gallery.gif" />
     </copy>
+    <open src="styles/subsilver2/imageset/en/imageset.cfg">
+      <edit>
+        <find><![CDATA[img_button_topic_reply = button_topic_reply.gif]]></find>
+        <action type="after-add"><![CDATA[img_button_upload_image = button_upload_image.gif]]></action>
+      </edit>
+    </open>
     <open src="styles/subsilver2/theme/stylesheet.css">
       <edit>
         <find><![CDATA[#lbOverlay { position: absolute; top: 0; left: 0; z-index: 99998; width: 100%; height: 500px; }

@@ -44,10 +44,10 @@ $lang = array_merge($lang, array(
 
 	'ALBUM_COMMENT_CAN'					=> 'You <strong>can</strong> post comments to images in this album',
 	'ALBUM_COMMENT_CANNOT'				=> 'You <strong>cannot</strong> post comments to images in this album',
-	'ALBUM_DELETE_CAN'					=> 'You <strong>can</strong> delete your images and comments in this album',
-	'ALBUM_DELETE_CANNOT'				=> 'You <strong>cannot</strong> delete your images and comments in this album',
-	'ALBUM_EDIT_CAN'					=> 'You <strong>can</strong> edit your images and comments in this album',
-	'ALBUM_EDIT_CANNOT'					=> 'You <strong>cannot</strong> edit your images and comments in this album',
+	'ALBUM_DELETE_CAN'					=> 'You <strong>can</strong> delete your images in this album',
+	'ALBUM_DELETE_CANNOT'				=> 'You <strong>cannot</strong> delete your images in this album',
+	'ALBUM_EDIT_CAN'					=> 'You <strong>can</strong> edit your images in this album',
+	'ALBUM_EDIT_CANNOT'					=> 'You <strong>cannot</strong> edit your images in this album',
 	'ALBUM_RATE_CAN'					=> 'You <strong>can</strong> rate images in this album',
 	'ALBUM_RATE_CANNOT'					=> 'You <strong>cannot</strong> rate images in this album',
 	'ALBUM_UPLOAD_CAN'					=> 'You <strong>can</strong> upload new images in this album',
@@ -162,8 +162,8 @@ $lang = array_merge($lang, array(
 	'RECENT_PUBLIC_IMAGES'			=> 'Recent Public Images',
 	'RATING_SUCCESSFUL'				=> 'Your image has been rated successfully.',
 
-	'SELECT_SORT_METHOD'		=> 'Select sort method',
-	'SORT'						=> 'Sort',
+	//REMOVE 'SELECT_SORT_METHOD'		=> 'Select sort method',
+	//REMOVE 'SORT'						=> 'Sort',
 	'SORT_ASCENDING'			=> 'Ascending',
 	'SORT_DESCENDING'			=> 'Descending',
 	'STATUS'					=> 'Status',
@@ -224,30 +224,38 @@ $lang = array_merge($lang, array(
 $lang = array_merge($lang, array(
 	'ALBUMS'						=> 'Albums',
 
+	'BROWSING_ALBUM'				=> 'Users browsing this album: %1$s',
+	'BROWSING_ALBUM_GUEST'			=> 'Users browsing this album: %1$s and %2$d guest',
+	'BROWSING_ALBUM_GUESTS'			=> 'Users browsing this album: %1$s and %2$d guests',
+
 	'FAVORITE_IMAGE'				=> 'Add to favorites',
 	'FAVORITED_IMAGE'				=> 'The image was added to your favorites.',
 
+	'IMAGE_#'						=> '1 image',
 	'IMAGE_STATUS'					=> 'Status',
+	'IMAGES_#'						=> '%s images',
 	'IMAGES_REPORTED_SUCCESSFULLY'	=> 'The image was successful reported',
 
 	'LAST_COMMENT'					=> 'Last Comment',
 
 	'MISSING_REPORT_REASON'			=> 'You need to mention a reason, to report an image.',
 
+	'NO_IMAGES_LONG'				=> 'There are no images in this album.',
+
 	'REPORT_IMAGE'					=> 'Report image',
 
 	'UNFAVORITE_IMAGE'				=> 'remove from favorites',
 	'UNFAVORITED_IMAGE'				=> 'The image was removed from your favorites.',
 	'UNFAVORITED_IMAGES'			=> 'The images were removed from your favorites.',
-	'UNWATCH_ALBUM'					=> 'unsubscribe album',
-	'UNWATCH_IMAGE'					=> 'unsubscribe image',
+	'UNWATCH_ALBUM'					=> 'Unsubscribe album',
+	'UNWATCH_IMAGE'					=> 'Unsubscribe image',
 	'UNWATCHED_ALBUM'				=> 'You are no longer informed about new images in this album.',
 	'UNWATCHED_ALBUMS'				=> 'You are no longer informed about new images in these albums.',
 	'UNWATCHED_IMAGE'				=> 'You are no longer informed about new comments on this image.',
 	'UNWATCHED_IMAGES'				=> 'You are no longer informed about new comments on these images.',
 
-	'WATCH_ALBUM'					=> 'subscribe album',
-	'WATCH_IMAGE'					=> 'subscribe image',
+	'WATCH_ALBUM'					=> 'Subscribe album',
+	'WATCH_IMAGE'					=> 'Subscribe image',
 	'WATCHING_ALBUM'				=> 'You are now informed about new images in this album.',
 	'WATCHING_IMAGE'				=> 'You are now informed about new comments on this image.',
 ));

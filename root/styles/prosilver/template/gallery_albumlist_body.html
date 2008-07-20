@@ -15,7 +15,7 @@
 					<dl class="icon">
 						<dt><!-- IF albumrow.S_IS_CAT --><a href="{albumrow.U_VIEWALBUM}">{albumrow.ALBUM_NAME}</a><!-- ELSE -->{L_ALBUM}<!-- ENDIF --></dt>
 						<dd class="posts">{L_IMAGES}</dd>
-						<dd class="lastpost"><span>{L_LAST_IMAGE}</span></dd>
+						<dd class="g_lastimage" style="padding-left: 5px;"><span>{L_LAST_IMAGE}</span></dd>
 					</dl>
 				</li>
 			</ul>
@@ -35,9 +35,10 @@
 					<!-- IF albumrow.SUBALBUMS and albumrow.S_LIST_SUBALBUMS --><br /><strong>{albumrow.L_SUBALBUM_STR}</strong> {albumrow.SUBALBUMS}<!-- ENDIF -->
 				</dt>
 				<dd class="posts">{albumrow.IMAGES} <dfn>{L_IMAGES}</dfn></dd>
-				<dd class="lastpost"><span>
+				<dd class="g_lastimage" style="padding-left: 5px;"><span>
+					<!-- IF albumrow.LAST_IMAGE_TIME -->
 					<!-- IF DISP_FAKE_THUMB and albumrow.U_LAST_THUMB --><span style="float: left; text-align: center; width: {FAKE_THUMB_SIZE}px; padding-right: 5px;"><img src="{albumrow.U_LAST_THUMB}" style="max-width: {FAKE_THUMB_SIZE}px; max-height: {FAKE_THUMB_SIZE}px;" /></span><!-- ENDIF -->
-					<!-- IF albumrow.LAST_IMAGE_TIME --><dfn>{L_LAST_IMAGE}</dfn> <a href="{albumrow.U_LAST_IMAGE}" style="font-weight: bold;">{albumrow.LAST_IMAGE_NAME}</a><br />
+					<dfn>{L_LAST_IMAGE}</dfn> <a href="{albumrow.U_LAST_IMAGE}" style="font-weight: bold;">{albumrow.LAST_IMAGE_NAME}</a><br />
 					{L_POST_BY_AUTHOR} {albumrow.LAST_USER_FULL}
 					<a href="{albumrow.U_LAST_IMAGE}">{LAST_POST_IMG}</a> <br />{L_POSTED_ON_DATE} {albumrow.LAST_IMAGE_TIME}<!-- ELSE -->{L_NO_IMAGES}<!-- ENDIF --></span>
 				</dd>

@@ -827,7 +827,7 @@ class acp_gallery
 				'S_DESC_BBCODE_CHECKED'		=> true,
 				'S_DESC_SMILIES_CHECKED'	=> true,
 				'S_DESC_URLS_CHECKED'		=> true,
-				'ALBUM_TYPE'				=> 2,
+				'ALBUM_TYPE'				=> 1,
 				'ALBUM_IMAGE'				=> '',
 				));
 		}
@@ -1017,7 +1017,7 @@ class acp_gallery
 			);
 			generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], request_var('desc_parse_bbcode', false), request_var('desc_parse_urls', false), request_var('desc_parse_smilies', false));
 			$row = get_album_info($album_id);
-			if (($row['album_images_real'] > 0) && ($album_data['album_type'] == 1))
+			if (($row['album_images_real'] > 0) && !$album_data['album_type'])
 			{
 				trigger_error($user->lang['REMOVE_IMAGES_FOR_CAT'] . adm_back_link(append_sid("{$phpbb_admin_path}index.$phpEx", 'i=gallery&amp;mode=manage_albums&amp;action=edit&amp;album_id=' . $album_id)));
 			}
@@ -1249,7 +1249,7 @@ class acp_gallery
 				trigger_error('FORM_INVALID');
 			}
 			$album = get_album_info($album_id);
-			if (($album['album_type'] == 1) && (($album['right_id'] - $album['left_id']) > 2))
+			if (!$album['album_type'] && (($album['right_id'] - $album['left_id']) > 2))
 			{//handle subs if there
 				$handle_subs = request_var('handle_subs', 0);
 				//we have to learn how to delete or move the subs
@@ -1262,7 +1262,7 @@ class acp_gallery
 					trigger_error($user->lang['DELETE_ALBUM_SUBS'] . adm_back_link($this->u_action));
 				}
 			}
-			else if ($album['album_type'] == 2)
+			else if ($album['album_type'] == 1)
 			{//handle images if there
 				$handle_images = request_var('handle_images', -1);
 				if ($handle_images < 0)

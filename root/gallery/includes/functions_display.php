@@ -73,7 +73,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		$album_id = $row['album_id'];
 
 		// Category with no members
-		if ($row['album_type'] == 1 && ($row['left_id'] + 1 == $row['right_id']))
+		if (!$row['album_type'] && ($row['left_id'] + 1 == $row['right_id']))
 		{
 			continue;
 		}
@@ -102,7 +102,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		//
 		if ($row['parent_id'] == $root_data['album_id'] || $row['parent_id'] == $branch_root_id)
 		{
-			if ($row['album_type'] != 1)
+			if ($row['album_type'])
 			{
 				$album_ids_moderator[] = (int) $album_id;
 			}
@@ -111,14 +111,14 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			$parent_id = $album_id;
 			$album_rows[$album_id] = $row;
 
-			if ($row['album_type'] == 1 && $row['parent_id'] == $root_data['album_id'])
+			if (!$row['album_type'] && $row['parent_id'] == $root_data['album_id'])
 			{
 				$branch_root_id = $album_id;
 			}
 			$album_rows[$parent_id]['album_id_last_image'] = $row['album_id'];
 			$album_rows[$parent_id]['orig_album_last_image_time'] = $row['album_last_image_time'];
 		}
-		else if ($row['album_type'] != 1)
+		else if ($row['album_type'])
 		{
 			$subalbums[$parent_id][$album_id]['display'] = ($row['display_on_index']) ? true : false;
 			$subalbums[$parent_id][$album_id]['name'] = $row['album_name'];
@@ -155,7 +155,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 	foreach ($album_rows as $row)
 	{
 		// Empty category
-		if ($row['parent_id'] == $root_data['album_id'] && $row['album_type'] == 1)
+		if ($row['parent_id'] == $root_data['album_id'] && !$row['album_type'])
 		{
 			$template->assign_block_vars('albumrow', array(
 				'S_IS_CAT'				=> true,

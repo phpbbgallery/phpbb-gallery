@@ -37,14 +37,8 @@ function get_album_access_array ()
 	}
 	$albums = $cache->obtain_album_list();
 	$permissions = array('i_view', 'i_upload', 'i_edit', 'i_delete', 'i_approve', 'i_lock', 'i_report', 'i_count', 'a_moderate', 'album_count');
-	//if ($album_config['rate'])
-	//{
-			$permissions = array_merge($permissions, array('i_rate'));
-	//}
-	//if ($album_config['comment'])
-	//{
-			$permissions = array_merge($permissions, array('c_post', 'c_edit', 'c_delete'));
-	//}
+	$permissions = array_merge($permissions, array('i_rate'));
+	$permissions = array_merge($permissions, array('c_post', 'c_edit', 'c_delete'));
 
 	if (!$album_access_array)
 	{
@@ -134,4 +128,44 @@ function get_album_access_array ()
 	return $album_access_array;
 }
 
+/**
+* User authorisation levels output
+*
+* @param	string	$mode			Can be forum or topic. Not in use at the moment.
+* @param	int		$forum_id		The current forum the user is in.
+* @param	int		$forum_status	The forums status bit.
+*
+* copied by phpbb-function gen_forum_auth_level
+*/
+function gen_album_auth_level($mode, $album_id, $album_status = 1)
+{
+	global $template, $user, $album_config, $album_access_array;
+
+	$locked = ($album_status == ITEM_LOCKED && ($album_access_array[$album_id]['a_moderate'] != 1)) ? true : false;
+	$permissions = array('i_approve', 'i_lock', 'i_report', 'i_count', 'a_moderate', 'album_count');
+	$permissions = array_merge($permissions, array('i_rate'));
+	$permissions = array_merge($permissions, array('c_post', 'c_edit', 'c_delete'));
+
+	$rules = array(
+		(($album_access_array[$album_id]['i_view'] == 1) && !$locked) ? $user->lang['ALBUM_VIEW_CAN'] : $user->lang['ALBUM_VIEW_CANNOT'],
+		(($album_access_array[$album_id]['i_upload'] == 1) && !$locked) ? $user->lang['ALBUM_UPLOAD_CAN'] : $user->lang['ALBUM_UPLOAD_CANNOT'],
+		(($album_access_array[$album_id]['i_edit'] == 1) && !$locked) ? $user->lang['ALBUM_EDIT_CAN'] : $user->lang['ALBUM_UPLOAD_CANNOT'],
+		(($album_access_array[$album_id]['i_delete'] == 1) && !$locked) ? $user->lang['ALBUM_DELETE_CAN'] : $user->lang['ALBUM_DELETE_CANNOT'],
+	);
+	if ($album_config['comment'])
+	{
+		$rules[] = (($album_access_array[$album_id]['c_post'] == 1) && !$locked) ? $user->lang['ALBUM_COMMENT_CAN'] : $user->lang['ALBUM_COMMENT_CANNOT'];
+	}
+	if ($album_config['rate'])
+	{
+		$rules[] = (($album_access_array[$album_id]['i_rate'] == 1) && !$locked) ? $user->lang['ALBUM_RATE_CAN'] : $user->lang['ALBUM_RATE_CANNOT'];
+	}
+
+	foreach ($rules as $rule)
+	{
+		$template->assign_block_vars('rules', array('RULE' => $rule));
+	}
+
+	return;
+}
 ?>
