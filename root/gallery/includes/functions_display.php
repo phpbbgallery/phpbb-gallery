@@ -88,7 +88,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			unset($right_id);
 		}
 
-		if (gallery_acl_check('i_view', $album_id))
+		if (!gallery_acl_check('i_view', $album_id))
 		{
 			// if the user does not have permissions to list this forum, skip everything until next branch
 			$right_id = $row['right_id'];
