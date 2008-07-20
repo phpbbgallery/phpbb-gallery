@@ -760,7 +760,7 @@ function make_album_jumpbox($select_id = false, $ignore_id = false, $album = fal
 		$right = $row['right_id'];
 		$disabled = false;
 
-		if (((is_array($ignore_id) && in_array($row['album_id'], $ignore_id)) || $row['album_id'] == $ignore_id) || ($album && ($row['album_type'] != 2)))
+		if (((is_array($ignore_id) && in_array($row['album_id'], $ignore_id)) || $row['album_id'] == $ignore_id) || ($album && !$row['album_type']))
 		{
 			$disabled = true;
 		}
@@ -821,7 +821,7 @@ function make_personal_jumpbox($album_user_id, $select_id = false, $ignore_id = 
 		$right = $row['right_id'];
 		$disabled = false;
 
-		if (((is_array($ignore_id) && in_array($row['album_id'], $ignore_id)) || $row['album_id'] == $ignore_id) || ($album && ($row['album_type'] != 2)))
+		if (((is_array($ignore_id) && in_array($row['album_id'], $ignore_id)) || $row['album_id'] == $ignore_id) || ($album && !$row['album_type']))
 		{
 			$disabled = true;
 		}
