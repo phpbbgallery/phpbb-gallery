@@ -56,10 +56,7 @@ if (empty($album_data))
 {
 	trigger_error('ALBUM_NOT_EXIST');
 }
-if ($album_data['album_user_id'] > 0)
-{
-	$album_access_array[$album_id] = $album_access_array[(($album_data['album_user_id'] == $user->data['user_id']) ? -2 : -3)];
-}
+
 generate_album_nav($album_data);
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> $user->lang['MCP'],

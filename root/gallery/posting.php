@@ -45,10 +45,7 @@ if ($image_id)
 }
 $album_id = (isset($image_data['image_album_id'])) ? $image_data['image_album_id'] : $album_id;
 $album_data = get_album_info($album_id);
-if ($album_data['album_user_id'] > 0)
-{
-	$album_access_array[$album_id] = $album_access_array[(($album_data['album_user_id'] == $user->data['user_id']) ? -2 : -3)];
-}
+
 generate_album_nav($album_data);
 
 if ($image_id)
@@ -75,7 +72,7 @@ switch ($mode)
 		{
 			case 'watch':
 			case 'unwatch':
-				if ($album_access_array[$album_id]['i_view'] != 1)
+				if (!gallery_acl_check('i_view', $album_id))
 				{
 					if (!$user->data['is_registered'])
 					{
@@ -103,7 +100,7 @@ switch ($mode)
 					meta_refresh(3, $album_backlink);
 					trigger_error('ALBUM_IS_CATEGORY');
 				}
-				if ($album_access_array[$album_id]['i_upload'] != 1)
+				if (!gallery_acl_check('i_view', $album_id))
 				{
 					if (!$user->data['is_registered'])
 					{
@@ -117,7 +114,7 @@ switch ($mode)
 				}
 			break;
 			case 'edit':
-				if ($album_access_array[$album_id]['i_edit'] != 1)
+				if ((!gallery_acl_check('i_edit', $album_id)) || (($image_data['image_user_id'] <> $user->data['user_id']) && !gallery_acl_check('a_moderate', $album_id)))
 				{
 					if (!$user->data['is_registered'])
 					{
@@ -129,30 +126,14 @@ switch ($mode)
 						trigger_error('NOT_AUTHORISED');
 					}
 				}
-				else if (
-					($image_data['image_user_id'] <> $user->data['user_id'])
-				&&
-					($album_access_array[$album_id]['a_moderate'] != 1)
-				)
-				{
-					if (!$user->data['is_registered'])
-					{
-						login_box($image_loginlink , $user->lang['LOGIN_INFO']);
-					}
-					else
-					{
-						meta_refresh(3, $image_backlink);
-						trigger_error('NOT_AUTHORISED');
-					}
-				}
-				else if (($album_access_array[$album_id]['a_moderate'] != 1) && ($image_data['image_status'] != 1))
+				else if (!gallery_acl_check('a_moderate', $album_id) && ($image_data['image_status'] != 1))
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
 				}
 			break;
 			case 'report':
-				if ($album_access_array[$album_id]['i_report'] != 1)
+				if (!gallery_acl_check('i_report', $album_id) || ($image_data['image_user_id'] == $user->data['user_id']))
 				{
 					if (!$user->data['is_registered'])
 					{
@@ -164,30 +145,14 @@ switch ($mode)
 						trigger_error('NOT_AUTHORISED');
 					}
 				}
-				else if (
-					($image_data['image_user_id'] == $user->data['user_id'])
-				&&
-					($album_access_array[$album_id]['a_moderate'] != 1)
-				)
-				{
-					if (!$user->data['is_registered'])
-					{
-						login_box($image_loginlink , $user->lang['LOGIN_INFO']);
-					}
-					else
-					{
-						meta_refresh(3, $image_backlink);
-						trigger_error('NOT_AUTHORISED');
-					}
-				}
-				else if (($album_access_array[$album_id]['a_moderate'] != 1) && ($image_data['image_status'] != 1))
+				else if (!gallery_acl_check('a_moderate', $album_id) && ($image_data['image_status'] != 1))
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
 				}
 			break;
 			case 'delete':
-				if ($album_access_array[$album_id]['i_delete'] != 1)
+				if ((!gallery_acl_check('i_delete', $album_id)) || (($image_data['image_user_id'] <> $user->data['user_id']) && !gallery_acl_check('a_moderate', $album_id)))
 				{
 					if (!$user->data['is_registered'])
 					{
@@ -199,23 +164,7 @@ switch ($mode)
 						trigger_error('NOT_AUTHORISED');
 					}
 				}
-				else if (
-					($image_data['image_user_id'] <> $user->data['user_id'])
-				&&
-					($album_access_array[$album_id]['a_moderate'] != 1)
-				)
-				{
-					if (!$user->data['is_registered'])
-					{
-						login_box($image_loginlink , $user->lang['LOGIN_INFO']);
-					}
-					else
-					{
-						meta_refresh(3, $image_backlink);
-						trigger_error('NOT_AUTHORISED');
-					}
-				}
-				else if (($album_access_array[$album_id]['a_moderate'] != 1) && ($image_data['image_status'] != 1))
+				else if (!gallery_acl_check('a_moderate', $album_id) && ($image_data['image_status'] != 1))
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
@@ -225,7 +174,7 @@ switch ($mode)
 			case 'unwatch':
 			case 'favorite':
 			case 'unfavorite':
-				if ($album_access_array[$album_id]['i_view'] != 1)
+				if (!gallery_acl_check('i_view', $album_id))
 				{
 					if (!$user->data['is_registered'])
 					{
@@ -245,7 +194,7 @@ switch ($mode)
 		}
 	break;
 	case 'comment':
-		if (($image_data['image_status'] != 1) && ($album_access_array[$album_id]['a_moderate']))
+		if (($image_data['image_status'] != 1) && !gallery_acl_check('a_moderate', $album_id))
 		{
 			trigger_error('IMAGE_LOCKED');
 		}
@@ -258,7 +207,7 @@ switch ($mode)
 		switch ($submode)
 		{
 			case 'add':
-				if ($album_access_array[$album_id]['c_post'] != 1)
+				if (!gallery_acl_check('c_post', $album_id))
 				{
 					if (!$user->data['is_registered'])
 					{
@@ -273,7 +222,7 @@ switch ($mode)
 			break;
 
 			case 'edit':
-				if ($album_access_array[$album_id]['c_edit'] != 1)
+				if (!gallery_acl_check('c_edit', $album_id))
 				{
 					if (!$user->data['is_registered'])
 					{
@@ -293,7 +242,7 @@ switch ($mode)
 			break;
 
 			case 'delete':
-				if ($album_access_array[$album_id]['c_delete'] != 1)
+				if (!gallery_acl_check('c_delete', $album_id))
 				{
 					if (!$user->data['is_registered'])
 					{
@@ -387,7 +336,7 @@ switch ($mode)
 				$result = $db->sql_query($sql);
 				$row = $db->sql_fetchrow($result);
 				$own_pics = $row['count'];
-				if ($own_pics >= $album_access_array[$album_id]['i_count'])
+				if ($own_pics >= gallery_acl_check('i_count', $album_id))
 				{
 					trigger_error('USER_REACHED_QUOTA');
 				}

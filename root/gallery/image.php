@@ -67,11 +67,7 @@ if (empty($album_data))
 {
 	trigger_error('ALBUM_NOT_EXIST');
 }
-if ($album_data['album_user_id'] > 0)
-{
-	$album_access_array[$album_id] = $album_access_array[(($album_data['album_user_id'] == $user->data['user_id']) ? -2 : -3)];
-}
-if ($album_access_array[$album_id]['i_view'] != 1)
+if (!gallery_acl_check('i_view', $album_id))
 {
 	trigger_error('NOT_AUTHORISED');
 }
@@ -80,7 +76,7 @@ if ($album_access_array[$album_id]['i_view'] != 1)
 // ------------------------------------
 // Check Pic Approval
 // ------------------------------------
-if (($album_access_array[$album_id]['a_moderate'] != 1) && ($image_data['image_status'] != 1))
+if (!gallery_acl_check('a_moderate', $album_id) && ($image_data['image_status'] != 1))
 {
 	trigger_error($user->lang['NOT_AUTHORISED']);
 }
