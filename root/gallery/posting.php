@@ -98,7 +98,7 @@ switch ($mode)
 		switch ($submode)
 		{
 			case 'upload':
-				if ($album_data['album_type'] != 2)
+				if (!$album_data['album_type'])
 				{
 					meta_refresh(3, $album_backlink);
 					trigger_error('ALBUM_IS_CATEGORY');
