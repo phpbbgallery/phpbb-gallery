@@ -350,6 +350,7 @@ switch ($mode)
 					}
 
 					// Get File Upload Info
+					$image_id_ary = array();
 					$loop = request_var('image_num', 0);
 					$loop = ($loop != 0) ? $loop - 1 : $loop;
 					foreach ($_FILES['image']['type'] as $i => $type)
@@ -597,6 +598,7 @@ switch ($mode)
 							$image_data = upload_image($image_data);
 							$image_id = $image_data['image_id'];
 							$image_name = $image_data['image_name'];
+							$image_id_ary[] = $image_id;
 						}
 					}//foreach
 					$image_id = ($images > 1) ? 0 : $image_id;
@@ -611,6 +613,7 @@ switch ($mode)
 						$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_IMAGE_TITLE'];
 					}
 					notify_gallery('album', $album_id, $image_name);
+					handle_images_counter($image_id_ary, true);
 				}//submit
 				$template->assign_vars(array(
 					'ERROR'						=> $error,
@@ -710,7 +713,7 @@ switch ($mode)
 						WHERE image_id = $image_id";
 					$db->sql_query($sql);
 
-					if ($album_data['album_last_user_id'] == $image_id)
+					if ($album_data['album_last_image_id'] == $image_id)
 					{
 						$sql_ary = array(
 							'album_last_image_name'		=> $image_name,
@@ -861,6 +864,7 @@ switch ($mode)
 						@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_thumbnail']);
 					}
 					@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
+					handle_images_counter($image_id);
 
 					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . "
 						WHERE comment_image_id = $image_id";

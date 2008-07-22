@@ -62,6 +62,44 @@
       <file from="root/styles/prosilver/theme/images/gallery_lytebox/*.*" to="styles/prosilver/theme/images/gallery_lytebox/*.*" />
       <file from="root/styles/prosilver/theme/images/icon_gallery.gif" to="styles/prosilver/theme/images/icon_gallery.gif" />
     </copy>
+    <open src="index.php">
+      <edit>
+        <find><![CDATA[$l_total_topic_s = ($total_topics == 0) ? 'TOTAL_TOPICS_ZERO' : 'TOTAL_TOPICS_OTHER';]]></find>
+        <action type="after-add"><![CDATA[$total_images = $config['num_images'];
+$l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OTHER';]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA['TOTAL_USERS'	=> sprintf($user->lang[$l_total_user_s], $total_users),]]></find>
+        <action type="after-add"><![CDATA['TOTAL_IMAGES'	=> sprintf($user->lang[$l_total_image_s], $total_images),]]></action>
+      </edit>
+    </open>
+    <open src="memberlist.php">
+      <edit>
+        <find><![CDATA[			unset($module);
+		}]]></find>
+        <action type="after-add"><![CDATA[		// Gallery-statistics
+		$sql = 'SELECT *
+			FROM ' . GALLERY_USERS_TABLE . '
+			WHERE user_id = ' . $member['user_id'];
+		$result = $db->sql_query($sql);
+		$member = array_merge($member, $db->sql_fetchrow($result));
+		$db->sql_freeresult($result);
+		$user->add_lang('mods/gallery');
+
+		$images_per_day = $member['user_images'] / $memberdays;
+		$percentage_images = ($config['num_images']) ? min(100, ($member['user_images'] / $config['num_images']) * 100) : 0;]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[			'POSTS_DAY'			=> sprintf($user->lang['POST_DAY'], $posts_per_day),
+			'POSTS_PCT'			=> sprintf($user->lang['POST_PCT'], $percentage),]]></find>
+        <action type="after-add"><![CDATA[			'IMAGES'			=> $member['user_images'],
+			'IMAGES_DAY'		=> sprintf($user->lang['IMAGE_DAY'], $images_per_day),
+			'IMAGES_PCT'		=> sprintf($user->lang['IMAGE_PCT'], $percentage_images),
+			'SHOW_PERSONAL_ALBUM_OF'	=> sprintf($user->lang['SHOW_PERSONAL_ALBUM_OF'], $member['username']),
+			'U_GALLERY'			=> ($member['personal_album_id']) ? append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "album.$phpEx", "album_id=" . $member['personal_album_id']) : '',
+			'U_SEARCH_GALLERY'	=> append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "search.$phpEx", "user_id=" . $member['user_id']),]]></action>
+      </edit>
+    </open>
     <open src="includes/cache.php">
       <edit>
         <find><![CDATA[		return $hook_files;
@@ -164,6 +202,25 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
 		$sql_ary['session_page'] = (string) substr($this->page['page'], 0, 199);
 		$sql_ary['session_forum_id'] = $this->page['forum'];]]></find>
         <action type="after-add"><![CDATA[$sql_ary['session_album_id'] = $this->page['album'];]]></action>
+      </edit>
+    </open>
+    <open src="styles/prosilver/template/index_body.html">
+      <edit>
+        <find><![CDATA[<p>{TOTAL_POSTS} &bull; {TOTAL_TOPICS} &bull; {TOTAL_USERS} &bull; {NEWEST_USER}</p>]]></find>
+        <inline-edit>
+            <inline-find><![CDATA[{TOTAL_TOPICS}]]></inline-find>
+            <inline-action type="after-add"><![CDATA[ &bull; {TOTAL_IMAGES}]]></inline-action>
+        </inline-edit>
+      </edit>
+    </open>
+    <open src="styles/prosilver/template/memberlist_view.html">
+      <edit>
+        <find><![CDATA[<!-- IF S_GROUP_OPTIONS --><dt>{L_USERGROUPS}:</dt> <dd><select name="g">{S_GROUP_OPTIONS}</select> <input type="submit" name="submit" value="{L_GO}" class="button2" /></dd><!-- ENDIF -->]]></find>
+        <action type="after-add"><![CDATA[<!-- IF U_GALLERY --><dt>{L_GALLERY}:</dt> <dd><a href="{U_GALLERY}">{SHOW_PERSONAL_ALBUM_OF}</a></dd><!-- ENDIF -->]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[<dt>{L_TOTAL_POSTS}:</dt> <dd>{POSTS} | <strong><a href="{U_SEARCH_USER}">{L_SEARCH_USER_POSTS}</a></strong><!-- IF POSTS_PCT --><br />({POSTS_PCT} / {POSTS_DAY})<!-- ENDIF --></dd>]]></find>
+        <action type="after-add"><![CDATA[<dt>{L_TOTAL_IMAGES}:</dt> <dd>{IMAGES} | <strong><a href="{U_SEARCH_GALLERY}">{L_SEARCH_USER_IMAGES}</a></strong><!-- IF IMAGES_PCT --><br />({IMAGES_PCT} / {IMAGES_DAY})<!-- ENDIF --></dd>]]></action>
       </edit>
     </open>
     <open src="styles/prosilver/theme/bidi.css">

@@ -223,6 +223,7 @@ $lang = array_merge($lang, array(
 
 $lang = array_merge($lang, array(
 	'ALBUMS'						=> 'Alben',
+	'ALBUM_NAME'					=> 'Albumname',
 
 	'BROWSING_ALBUM'				=> 'Mitglieder in diesem Album: %1$s',
 	'BROWSING_ALBUM_GUEST'			=> 'Mitglieder in diesem Album: %1$s und %2$d Gast',
@@ -232,10 +233,11 @@ $lang = array_merge($lang, array(
 	'FAVORITED_IMAGE'				=> 'Das Bild wurde zu deinen Lieblingsbildern hinzugefügt.',
 
 	'IMAGE_#'						=> '1 Bild',
+	'IMAGE_DAY'						=> '%.2f Bilder pro Tag',
+	'IMAGE_PCT'						=> '%.2f%% aller Bilder',
 	'IMAGE_STATUS'					=> 'Status',
 	'IMAGES_#'						=> '%s Bilder',
 	'IMAGES_REPORTED_SUCCESSFULLY'	=> 'Das Bild wurde erfolgreich gemeldet',
-
 	'LAST_COMMENT'					=> 'Letzter Kommentar',
 
 	'MISSING_REPORT_REASON'			=> 'Du musst einen Grund angeben um das Bild zu melden.',
@@ -243,6 +245,11 @@ $lang = array_merge($lang, array(
 	'NO_IMAGES_LONG'				=> 'In diesem Album gibt es keine Bilder.',
 
 	'REPORT_IMAGE'					=> 'Bild melden',
+
+	'SEARCH_USER_IMAGES'			=> 'Bilder des Mitglieds anzeigen',
+	'SHOW_PERSONAL_ALBUM_OF'		=> 'Persönliches Album von %s anzeigen',
+
+	'TOTAL_IMAGES'					=> 'Bilder insgesamt',
 
 	'UNFAVORITE_IMAGE'				=> 'aus Lieblingsbildern entfernen',
 	'UNFAVORITED_IMAGE'				=> 'Das Bild wurde aus deinen Lieblingsbildern entfernt.',

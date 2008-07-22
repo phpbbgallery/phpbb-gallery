@@ -1,30 +1,12 @@
 <!-- INCLUDE overall_header.html -->
-
-<!-- IF S_HAS_SUBALBUM -->
-	<!-- INCLUDE gallery_albumlist_body.html -->
-	<br clear="all" />
-<!-- ENDIF -->
-
-<!-- IF S_IS_POSTABLE or S_NO_READ_ACCESS -->
 	<div id="pageheader">
-		<h2><a class="titles" href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>
-
-		<!-- IF MODERATORS -->
-			<p class="moderators"><!-- IF S_SINGLE_MODERATOR -->{L_MODERATOR}<!-- ELSE -->{L_MODERATORS}<!-- ENDIF -->: {MODERATORS}</p>
-		<!-- ENDIF -->
-		<!-- IF U_MCP -->
-			<p class="linkmcp">[ <a href="{U_MCP}">{L_MCP}</a> ]</p>
-		<!-- ENDIF -->
-		<!-- IF U_EDIT_ALBUM --><p class="linkmcp">[ <a href="{U_EDIT_ALBUM}">{L_EDIT_ALBUM}</a> ]<!-- IF U_MCP -->&nbsp;<!-- ENDIF --></p><!-- ENDIF -->
-		<!-- IF U_CREATE_ALBUM --><p class="linkmcp">[ <a href="{U_CREATE_ALBUM}">{L_CREATE_SUBALBUM}</a> ]&nbsp;</p><!-- ENDIF -->
+		<h2><a class="titles" href="{U_GALLERY_SEARCH}">{L_SEARCH}</a></h2>
 	</div>
 
 	<br clear="all" /><br />
-<!-- ENDIF -->
 
 <div id="pagecontent">
 
-<!-- IF S_IS_POSTABLE -->
 	<!-- IF U_UPLOAD_IMAGE or TOTAL_IMAGES -->
 		<table width="100%" cellspacing="1">
 		<tr>
@@ -53,7 +35,7 @@
 		</td>
 	</tr>
 	<tr>
-		<th align="center" colspan="{S_COLS}" nowrap="nowrap">{L_ALBUM} - {ALBUM_NAME}</th>
+		<th align="center" colspan="{S_COLS}" nowrap="nowrap">{SEARCH_NAME}</th>
 	</tr>
 	<!-- BEGIN no_pics -->
 	<tr>
@@ -73,6 +55,7 @@
 	<tr>
 		<!-- BEGIN pic_detail -->
 		<td class="row2"><span class="gensmall"> {L_IMAGE_TITLE}: <a href="{picrow.pic_detail.U_IMAGE}" style="font-weight: bold;">{picrow.pic_detail.IMAGE_NAME}</a><br />
+			{L_ALBUM_NAME}: <a href="{picrow.pic_detail.U_ALBUM}" style="font-weight: bold;">{picrow.pic_detail.ALBUM_NAME}</a><br />
 			{L_POSTER}: {picrow.pic_detail.POSTER}<br />
 			{L_POSTED}: {picrow.pic_detail.TIME}<br />
 			{L_VIEWS}: {picrow.pic_detail.VIEW}<br />
@@ -124,35 +107,11 @@
 		</tr>
 		</table>
 	<!-- ENDIF -->
-<!-- ENDIF -->
 
 		<br clear="all" />
 </div>
 
 <!-- INCLUDE breadcrumbs.html -->
-
-<!-- IF S_DISPLAY_ONLINE_LIST -->
-	<br clear="all" />
-
-	<table class="tablebg" width="100%" cellspacing="1">
-	<tr>
-		<td class="cat"><h4>{L_WHO_IS_ONLINE}</h4></td>
-	</tr>
-	<tr>
-		<td class="row1"><p class="gensmall">{LOGGED_IN_USER_LIST}</p></td>
-	</tr>
-	</table>
-<!-- ENDIF -->
-<!-- IF S_IS_POSTABLE -->
-
-	<br clear="all" />
-
-	<table width="100%" cellspacing="0">
-	<tr>
-		<td align="{S_CONTENT_FLOW_END}"><span class="gensmall"><!-- BEGIN rules -->{rules.RULE}<br /><!-- END rules --></span></td>
-	</tr>
-	</table>
-<!-- ENDIF -->
 
 <br clear="all" />
 

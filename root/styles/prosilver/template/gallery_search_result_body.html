@@ -1,0 +1,103 @@
+<!-- INCLUDE overall_header.html -->
+<h2><a href="{U_GALLERY_SEARCH}">{L_SEARCH}</a></h2>
+
+<!-- IF PAGINATION or TOTAL_POSTS or TOTAL_TOPICS -->
+	<div class="topic-actions">
+		<div class="pagination">
+			{TOTAL_IMAGES} &bull; {PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+		</div>
+	</div>
+<!-- ENDIF -->
+
+<!-- IF .picrow -->
+<div class="forumbg">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="icon">
+					<dt>{SEARCH_NAME}</dt>
+				</dl>
+			</li>
+		</ul>
+		<ul class="topiclist topics">
+			<li class="bg2">
+				<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline">
+					<!-- BEGIN picrow -->
+					<tr>
+						<!-- BEGIN piccol -->
+						<td align="center" style="width: {S_COL_WIDTH};" class="bg1"><span class="genmed"><a href="{picrow.piccol.U_IMAGE}"><img src="{picrow.piccol.THUMBNAIL}" alt="{picrow.piccol.DESC}" title="{picrow.piccol.DESC}" /></a><br />{picrow.piccol.APPROVAL}</span></td>
+						<!-- END piccol -->
+						<!-- BEGIN nopiccol --> 
+						<td align="center" style="width: {S_COL_WIDTH};" class="bg1"><span></span></td> 
+						<!-- END nopiccol -->
+					</tr>
+					<tr>
+						<!-- BEGIN pic_detail -->
+						<td class="bg2">
+							<span class="gensmall">
+								{L_IMAGE_TITLE}: <a href="{picrow.pic_detail.U_IMAGE}" style="font-weight: bold;">{picrow.pic_detail.IMAGE_NAME}</a><br />
+								{L_ALBUM_NAME}: <a href="{picrow.pic_detail.U_ALBUM}" style="font-weight: bold;">{picrow.pic_detail.ALBUM_NAME}</a><br />
+								{L_POSTER}: {picrow.pic_detail.POSTER}<br />
+								{L_POSTED}: {picrow.pic_detail.TIME}<br />
+								{L_VIEWS}: {picrow.pic_detail.VIEW}<br />
+								{picrow.pic_detail.RATING}
+								{picrow.pic_detail.COMMENTS}
+								{picrow.pic_detail.IP}
+								{picrow.pic_detail.EDIT}  {picrow.pic_detail.DELETE}  {picrow.pic_detail.STATUS}  {picrow.pic_detail.MOVE}
+							</span>
+						</td>
+						<!-- END pic_detail -->
+						<!-- BEGIN picnodetail --> 
+						<td class="bg2"><span></span></td> 
+						<!-- END picnodetail -->
+					</tr>
+					<!-- END picrow -->
+				</table>
+			</li>
+		</ul>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+<!-- ELSE -->
+	<div class="panel">
+		<div class="inner"><span class="corners-top"><span></span></span>
+		<strong>{L_NO_IMAGES_FOUND}</strong>
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+<!-- ENDIF -->
+
+	<form action="{S_SEARCH_ACTION}" method="post">
+	<fieldset class="display-options">
+		<label>{L_SORT_BY}: 
+			<select name="sort_method">
+				<option {SORT_TIME} value='image_time'>{L_TIME}</option>
+				<option {SORT_IMAGE_TITLE} value='image_name'>{L_IMAGE_TITLE}</option>
+				<option {SORT_USERNAME} value='image_username'>{L_SORT_USERNAME}</option>
+				<option {SORT_VIEW} value='image_view_count'>{L_VIEWS}</option>
+				{SORT_RATING_OPTION}
+				{SORT_COMMENTS_OPTION}
+				{SORT_NEW_COMMENT_OPTION}
+			</select>
+		</label>
+		<label>
+			<select name="sort_order">
+				<option {SORT_ASC} value='ASC'>{L_SORT_ASCENDING}</option>
+				<option {SORT_DESC} value='DESC'>{L_SORT_DESCENDING}</option>
+			</select> <input type="submit" name="sort" value="{L_GO}" class="button2" />
+		</label>
+	</fieldset>
+	</form>
+	<hr />
+	<!-- IF .picrow -->
+	<div class="topic-actions">
+		<div class="pagination">
+			{TOTAL_IMAGES} &bull; {PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+		</div>
+	</div>
+	<br />
+	<!-- ENDIF -->
+
+<!-- Please keep this little notice visible -->
+<div class="copyright">Powered by <!-- port started by tsr: http://phpbbgallery.ph.funpic.de --><a href="http://www.flying-bits.org/">nickvergessen</a></div>
+<!-- INCLUDE overall_footer.html -->

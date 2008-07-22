@@ -88,6 +88,9 @@ build_gallery_mcp_navigation($album_id, $mode, $option_id);
 
 if ($action && $image_id_ary)
 {
+	//add images to the counters
+	//sub images from the counters
+
 	$s_hidden_fields = build_hidden_fields(array(
 		'mode'				=> $mode,
 		'album_id'			=> $album_id,
@@ -100,6 +103,7 @@ if ($action && $image_id_ary)
 	{
 		$multiple = 'S';
 	}
+	// group by user-id and reduce on later call
 	switch ($action)
 	{
 		case 'images_move':
@@ -131,6 +135,7 @@ if ($action && $image_id_ary)
 		case 'images_unapprove':
 			if (confirm_box(true))
 			{
+				handle_image_counter($image_id_ary, false);
 				$sql_ary = array(
 					'image_status'			=> 0,
 				);
@@ -147,6 +152,7 @@ if ($action && $image_id_ary)
 		case 'images_approve':
 			if (confirm_box(true))
 			{
+				handle_image_counter($image_id_ary, true, true);
 				$sql_ary = array(
 					'image_status'			=> 1,
 				);
@@ -163,6 +169,7 @@ if ($action && $image_id_ary)
 		case 'images_lock':
 			if (confirm_box(true))
 			{
+				handle_image_counter($image_id_ary, false);
 				$sql_ary = array(
 					'image_status'			=> 2,
 				);
@@ -179,6 +186,7 @@ if ($action && $image_id_ary)
 		case 'images_delete':
 			if (confirm_box(true))
 			{
+				handle_image_counter($image_id_ary, false);
 				$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
 				$db->sql_query($sql);
 				$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . ' WHERE ' . $db->sql_in_set('comment_image_id', $image_id_ary);

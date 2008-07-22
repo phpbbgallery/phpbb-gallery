@@ -16,7 +16,7 @@
 
 @set_time_limit(0);
 
-$schema_path = './schemas/phpbb_gallery_images/';
+$schema_path = './schemas/phpbb_gallery_users/';
 
 if (!is_writable($schema_path))
 {
@@ -1000,10 +1000,12 @@ function get_schema_struct()
 /*
 	$schema_data['phpbb_gallery_users'] = array(
 		'COLUMNS'		=> array(
-			'user_id'		=> array('UINT', 0),
-			'watch_own'		=> array('UINT:3', 0),
-			'watch_favo'	=> array('UINT:3', 0),
-			'watch_com'		=> array('UINT:3', 0),
+			'user_id'			=> array('UINT', 0),
+			'watch_own'			=> array('UINT:3', 0),
+			'watch_favo'		=> array('UINT:3', 0),
+			'watch_com'			=> array('UINT:3', 0),
+			'user_images'		=> array('UINT', 0),
+			'personal_album_id'	=> array('UINT', 0),
 		),
 		'PRIMARY_KEY'		=> 'user_id',
 	);

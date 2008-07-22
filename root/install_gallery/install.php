@@ -146,6 +146,7 @@ switch ($mode)
 			gallery_config_value('disp_fake_thumb', 1);
 			gallery_config_value('personal_counter', 0);
 			gallery_config_value('exif_data', 1);
+			gallery_config_value('num_images', 0);
 			$album_config = load_album_config();
 
 			// create the modules
@@ -791,12 +792,33 @@ switch ($mode)
 							SET album_type = 1
 							WHERE album_type = 2';
 					$db->sql_query($sql);
+					$num_images = 0;
+					$sql = 'SELECT u.album_id, u.user_id, count(i.image_id) as images
+						FROM ' . USERS_TABLE . ' u
+						LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
+							ON i.image_user_id = u.user_id
+							AND i.image_status = 1
+						GROUP BY i.image_user_id';
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$sql_ary = array(
+							'user_id'				=> $row['user_id'],
+							'personal_album_id'		=> $row['album_id'],
+							'user_images'			=> $row['images'],
+						);
+						$num_images = $num_images + $row['images'];
+						$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+					}
+					$db->sql_freeresult($result);
+					set_config('num_images', $album_config['num_images'], true);
 
 				case '0.3.2':
 					//and drop the old column
 					//delete_gallery_column(GROUPS_TABLE, 'personal_subalbums');
 					//delete_gallery_column(GROUPS_TABLE, 'allow_personal_albums');
 					//delete_gallery_column(GROUPS_TABLE, 'view_personal_albums');
+					//delete_gallery_column(USERS_TABLE, 'album_id');
 				//no break;
 
 
@@ -972,6 +994,7 @@ switch ($mode)
 			gallery_config_value('fake_thumb_size', 141);
 			gallery_config_value('disp_fake_thumb', 1);
 			gallery_config_value('exif_data', 1);
+			gallery_config_value('num_images', 0);
 
 			// last and least the images...
 			$sql = 'SELECT i.*, u.user_colour, u.username
@@ -1170,6 +1193,26 @@ switch ($mode)
 			}
 			$db->sql_freeresult($result);
 			gallery_config_value('personal_counter', $total_galleries);
+			$num_images = 0;
+			$sql = 'SELECT u.album_id, u.user_id, count(i.image_id) as images
+				FROM ' . USERS_TABLE . ' u
+				LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
+					ON i.image_user_id = u.user_id
+					AND i.image_status = 1
+				GROUP BY i.image_user_id';
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$sql_ary = array(
+					'user_id'				=> $row['user_id'],
+					'personal_album_id'		=> $row['album_id'],
+					'user_images'			=> $row['images'],
+				);
+				$num_images = $num_images + $row['images'];
+				$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+			}
+			$db->sql_freeresult($result);
+			set_config('num_images', $album_config['num_images'], true);
 
 			$gd_check = function_exists('gd_info') ? gd_info() : array();
 			$gd_success = isset($gd_check['GD Version']);

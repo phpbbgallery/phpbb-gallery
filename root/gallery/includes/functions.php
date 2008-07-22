@@ -1101,5 +1101,32 @@ function get_album_moderators(&$album_moderators, $album_id = false)
 
 	return;
 }
+function handle_image_counter($image_id_ary, $add, $readd = false)
+{
+	global $config, $db;
+
+	$num_images = 0;
+	$sql = 'SELECT count(image_id) AS images, image_user_id
+		FROM ' . GALLERY_IMAGES_TABLE . '
+		WHERE image_status ' . (($readd) ? '<>' : '=') . ' 1
+			AND ' . $db->sql_in_set('image_id', $image_id_ary) . '
+		GROUP BY image_user_id';
+	$result = $db->sql_query($sql);
+
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$sql_ary = array(
+			'user_id'				=> $row['image_user_id'],
+			'user_images'			=> $row['images'],
+		);
+		$num_images = $num_images + $row['images'];
+		$sql = 'UPDATE ' . GALLERY_USERS_TABLE . ' SET user_images = user_images ' . (($add) ? '+ ' : '- ') . $row['images'] . '
+			WHERE ' . $db->sql_in_set('user_id', $row['image_user_id']);
+		$db->sql_query($sql);
+	}
+	$db->sql_freeresult($result);
+
+	set_config('num_images', (($add) ? $config['num_images'] + $num_images : $config['num_images'] - $num_images), true);
+}
 
 ?>

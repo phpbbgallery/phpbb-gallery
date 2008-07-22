@@ -44,6 +44,39 @@
         <action type="after-add"><![CDATA[img_button_upload_image = button_upload_image.gif]]></action>
       </edit>
     </open>
+    <open src="styles/subsilver2/template/index_body.html">
+      <edit>
+        <find><![CDATA[<td class="row1" width="100%" valign="middle"><p class="genmed">{TOTAL_POSTS} | {TOTAL_TOPICS} | {TOTAL_USERS} | {NEWEST_USER}</p></td>]]></find>
+        <inline-edit>
+            <inline-find><![CDATA[{TOTAL_TOPICS}]]></inline-find>
+            <inline-action type="after-add"><![CDATA[ | {TOTAL_IMAGES}]]></inline-action>
+        </inline-edit>
+      </edit>
+    </open>
+    <open src="styles/subsilver2/template/memberlist_view.html">
+      <edit>
+        <find><![CDATA[			<tr>
+				<td class="gen" align="{S_CONTENT_FLOW_END}" valign="top" nowrap="nowrap">{L_TOTAL_POSTS}: </td>
+				<td><b class="gen">{POSTS}</b><span class="genmed"><!-- IF POSTS_PCT --><br />[{POSTS_PCT} / {POSTS_DAY}]<!-- ENDIF --><br /><a href="{U_SEARCH_USER}">{L_SEARCH_USER_POSTS}</a></span></td>
+			</tr>]]></find>
+        <action type="after-add"><![CDATA[			<tr>
+				<td class="gen" align="{S_CONTENT_FLOW_END}" valign="top" nowrap="nowrap">{L_TOTAL_IMAGES}: </td>
+				<td><b class="gen">{IMAGES}</b><span class="genmed"><!-- IF IMAGES_PCT --><br />[{IMAGES_PCT} / {IMAGES_DAY}]<!-- ENDIF --><br /><a href="{U_SEARCH_GALLERY}">{L_SEARCH_USER_IMAGES}</a></span></td>
+			</tr>]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[			<tr>
+				<td class="gen" align="{S_CONTENT_FLOW_END}" nowrap="nowrap">{L_WEBSITE}: </td>
+				<td><!-- IF U_WWW --><b><a class="genmed" href="{U_WWW}">{U_WWW}</a></b><!-- ENDIF --></td>
+			</tr>]]></find>
+        <action type="after-add"><![CDATA[			<!-- IF U_GALLERY -->
+			<tr>
+				<td class="gen" align="{S_CONTENT_FLOW_END}" nowrap="nowrap">{L_GALLERY}: </td>
+				<td><b><a class="genmed" href="{U_GALLERY}">{SHOW_PERSONAL_ALBUM_OF}</a></b></td>
+			</tr>
+			<!-- ENDIF -->]]></action>
+      </edit>
+    </open>
     <open src="styles/subsilver2/theme/stylesheet.css">
       <edit>
         <find><![CDATA[#lbOverlay { position: absolute; top: 0; left: 0; z-index: 99998; width: 100%; height: 500px; }

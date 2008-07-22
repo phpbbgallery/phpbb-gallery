@@ -46,4 +46,9 @@ $lang = array_merge($lang, array(
 	'NEW_PERMISSIONS'							=> 'Neues Berechtigungs System',
 ));
 
+$lang = array_merge($lang, array(
+	'TOTAL_IMAGES_OTHER'						=> 'Bilder insgesamt: <strong>%d</strong>',
+	'TOTAL_IMAGES_ZERO'							=> 'Bilder insgesamt: <strong>0</strong>',
+));
+
 ?>

@@ -121,7 +121,7 @@ class acp_gallery
 
 	function import()
 	{
-		global $db, $template, $user, $phpbb_root_path, $gallery_root_path;
+		global $db, $template, $user, $config, $phpbb_root_path, $gallery_root_path;
 
 		$submit = (isset($_POST['submit'])) ? true : false;
 		$directory = $phpbb_root_path . GALLERY_ROOT_PATH . 'import/';
@@ -232,7 +232,7 @@ class acp_gallery
 
 			$image_count = count($results);
 			$counter = 0;
-			
+
 			foreach ($results as $image)
 			{
 				$image_path = $directory . utf8_decode($image);
@@ -419,6 +419,9 @@ class acp_gallery
 				$counter++;
 			}
 			$left = $image_count - $counter;
+			$sql = 'UPDATE ' . GALLERY_USERS_TABLE . " SET user_images = user_images + $counter WHERE user_id = $user_id";
+			$db->sql_query($sql);
+			set_config('num_images', $config['num_images'] + $counter, true);
 			update_lastimage_info($album_id);
 			$template->assign_vars(array(
 				'ACP_GALLERY_TITLE'				=> $user->lang['IMPORT_DEBUG'],

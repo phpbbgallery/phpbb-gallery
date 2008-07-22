@@ -34,12 +34,7 @@ $album_access_array = get_album_access_array();
 // ------------------------------------
 $user_id = request_var('user_id', 0);
 $album_id = request_var('album_id', request_var('id', 0));
-if ($user_id)
-{
-	$sql = 'SELECT album_id FROM ' . GALLERY_ALBUMS_TABLE . ' WHERE album_user_id = ' . $user_id . ' AND parent_id = 0';
-	$result = $db->sql_fetchrow($db->sql_query($sql));
-	$album_id = $result['album_id'];
-}
+
 if(!$album_id)
 {
 	trigger_error($user->lang['ALBUM_NOT_EXIST'], E_USER_WARNING);
@@ -83,7 +78,7 @@ if ($album_id <> 0)
 {
 	generate_album_nav($album_data);
 }
-/*if ($album_data['album_type'] == 2)
+/*if ($album_data['album_type'])
 { we just do this, when we have images */
 	if (gallery_acl_check('a_moderate', $album_id))
 	{
@@ -169,11 +164,13 @@ if ($album_id <> 0)
 					'APPROVAL'		=> $approval_link,
 				));
 
-				$allow_edit = ((gallery_acl_check('i_edit', $album_id) && ($picrow[$j]['image_user_id'] == $user->data['user_id'])) || gallery_acl_check('a_moderate', $album_id)) ? true : false;
-				$allow_delete = ((gallery_acl_check('i_delete', $album_id) && ($picrow[$j]['image_user_id'] == $user->data['user_id'])) || gallery_acl_check('a_moderate', $album_id)) ? true : false;
+				$user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
+				$allow_edit = ((gallery_acl_check('i_edit', $album_id) && ($picrow[$j]['image_user_id'] == $user_id)) || gallery_acl_check('a_moderate', $album_id)) ? true : false;
+				$allow_delete = ((gallery_acl_check('i_delete', $album_id) && ($picrow[$j]['image_user_id'] == $user_id)) || gallery_acl_check('a_moderate', $album_id)) ? true : false;
 
 				$template->assign_block_vars('picrow.pic_detail', array(
-					'TITLE'		=> $picrow[$j]['image_name'],
+					'U_IMAGE'		=> ($album_config['fullpic_popup']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . '&amp;image_id=' . $picrow[$j]['image_id']) : append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . '&amp;image_id=' . $picrow[$j]['image_id']),
+					'IMAGE_NAME'	=> $picrow[$j]['image_name'],
 					'POSTER'	=> get_username_string('full', $picrow[$j]['image_user_id'], ($picrow[$j]['image_user_id'] <> ANONYMOUS) ? $picrow[$j]['image_username'] : $user->lang['GUEST'], $picrow[$j]['image_user_colour']),
 					'TIME'		=> $user->format_date($picrow[$j]['image_time']),
 					'VIEW'		=> $picrow[$j]['image_view_count'],
@@ -230,15 +227,14 @@ else
 $allowed_create = false;
 if ($album_data['album_user_id'] == $user->data['user_id'])
 {
-	$allowed_create = $album_access_array[-2]['i_upload'];
-	if ($allowed_create)
+	if (gallery_acl_check('i_upload', '-2'))
 	{
 		$sql = 'SELECT COUNT(album_id) as albums
 			FROM ' . GALLERY_ALBUMS_TABLE . "
 			WHERE album_user_id = {$user->data['user_id']}";
 		$result = $db->sql_query($sql);
 		$albums = $db->sql_fetchrow($result);
-		if (($albums['albums'] - 1) >= $album_access_array[-2]['album_count'])
+		if (($albums['albums'] - 1) >= gallery_acl_check('album_count', '-2'))
 		{
 			$allowed_create = false;
 		}
@@ -247,7 +243,6 @@ if ($album_data['album_user_id'] == $user->data['user_id'])
 $template->assign_vars(array(
 	'S_IS_POSTABLE'				=> ($album_data['album_type'] == FORUM_POST) ? true : false,
 	'UPLOAD_IMG'				=> /*($album_data['album_status'] == ITEM_LOCKED) ? $user->img('button_topic_locked', $post_alt) : */$user->img('button_upload_image', 'UPLOAD_IMAGE'),
-	'NEWEST_POST_IMG'			=> $user->img('button_upload_image', 'VIEW_NEWEST_POST'),
 	'S_MODE'					=> $album_data['album_type'],
 	'L_MODERATORS'				=> $l_moderator,
 	'MODERATORS'				=> $moderators_list,
@@ -279,7 +274,7 @@ $template->assign_vars(array(
 	'U_RETURN_LINK'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"),
 	'S_RETURN_LINK'				=> $user->lang['GALLERY'],
 
-	'PAGINATION'				=> generate_pagination(append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "id=$album_id&amp;sort_method=$sort_method&amp;sort_order=$sort_order"), $image_counter, $pics_per_page, $start),
+	'PAGINATION'				=> generate_pagination(append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id&amp;sort_method=$sort_method&amp;sort_order=$sort_order"), $image_counter, $pics_per_page, $start),
 	'TOTAL_IMAGES'				=> ($image_counter == 1) ? $user->lang['IMAGE_#'] : sprintf($user->lang['IMAGES_#'], $image_counter),
 	'PAGE_NUMBER'				=> on_page($image_counter, $pics_per_page, $start),
 
