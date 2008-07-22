@@ -89,6 +89,8 @@ CREATE TABLE phpbb_gallery_users (
 	watch_own INT4 DEFAULT '0' NOT NULL CHECK (watch_own >= 0),
 	watch_favo INT4 DEFAULT '0' NOT NULL CHECK (watch_favo >= 0),
 	watch_com INT4 DEFAULT '0' NOT NULL CHECK (watch_com >= 0),
+	user_images INT4 DEFAULT '0' NOT NULL CHECK (user_images >= 0),
+	personal_album_id INT4 DEFAULT '0' NOT NULL CHECK (personal_album_id >= 0),
 	PRIMARY KEY (user_id)
 );
 

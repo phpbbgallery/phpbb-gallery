@@ -49,6 +49,8 @@ CREATE TABLE phpbb_gallery_users (
 	watch_own number(3) DEFAULT '0' NOT NULL,
 	watch_favo number(3) DEFAULT '0' NOT NULL,
 	watch_com number(3) DEFAULT '0' NOT NULL,
+	user_images number(8) DEFAULT '0' NOT NULL,
+	personal_album_id number(8) DEFAULT '0' NOT NULL,
 	CONSTRAINT pk_phpbb_gallery_users PRIMARY KEY (user_id)
 )
 /
