@@ -811,7 +811,7 @@ switch ($mode)
 						$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . $db->sql_build_array('INSERT', $sql_ary));
 					}
 					$db->sql_freeresult($result);
-					set_config('num_images', $album_config['num_images'], true);
+					set_config('num_images', $num_images, true);
 
 				case '0.3.2':
 					//and drop the old column
