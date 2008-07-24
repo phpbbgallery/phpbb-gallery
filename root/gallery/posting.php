@@ -655,7 +655,7 @@ switch ($mode)
 				}
 				if (!$error)
 				{
-					if (!$album_data['album_approval'])
+					if (!gallery_acl_check('i_approve', $album_id))
 					{
 						$message = $user->lang['ALBUM_UPLOAD_SUCCESSFUL'];
 					}
@@ -1176,7 +1176,7 @@ function upload_image(&$image_data)
 		'image_user_ip'			=> $user->ip,
 		'image_time'			=> $image_data['image_time'],
 		'image_album_id'		=> $image_data['image_album_id'],
-		'image_status'			=> 1,
+		'image_status'			=> (gallery_acl_check('i_approve', $album_id)) ? 1 : 0,
 	);
 
 	$message_parser				= new parse_message();
