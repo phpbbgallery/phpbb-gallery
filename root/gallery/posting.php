@@ -613,7 +613,11 @@ switch ($mode)
 						$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_IMAGE_TITLE'];
 					}
 					notify_gallery('album', $album_id, $image_name);
-					handle_images_counter($image_id_ary, true);
+					handle_image_counter($image_id_ary, true);
+					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . " 
+						SET album_images_real = album_images_real + $images
+						WHERE album_id = $album_id";
+					$db->sql_query($sql);
 				}//submit
 				$template->assign_vars(array(
 					'ERROR'						=> $error,
@@ -655,7 +659,7 @@ switch ($mode)
 				}
 				if (!$error)
 				{
-					if (!gallery_acl_check('i_approve', $album_id))
+					if (gallery_acl_check('i_approve', $album_id))
 					{
 						$message = $user->lang['ALBUM_UPLOAD_SUCCESSFUL'];
 					}
@@ -864,7 +868,7 @@ switch ($mode)
 						@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_thumbnail']);
 					}
 					@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
-					handle_images_counter($image_id);
+					handle_image_counter($image_id, false);
 
 					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . "
 						WHERE comment_image_id = $image_id";
@@ -1164,7 +1168,7 @@ page_footer();
 
 function upload_image(&$image_data)
 {
-	global $user, $db;
+	global $user, $db, $album_id;
 
 	$sql_ary = array(
 		'image_filename' 		=> $image_data['filename'],
