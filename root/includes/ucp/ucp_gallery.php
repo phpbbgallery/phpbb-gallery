@@ -394,7 +394,7 @@ class ucp_gallery
 			//check if the user has already reached his limit
 			include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
 			$album_access_array = get_album_access_array();
-			if (!gallery_acl_check('i_upload', $album_id))
+			if (!gallery_acl_check('i_upload', '-2'))
 			{
 				trigger_error('NO_PERSALBUM_ALLOWED');
 			}
