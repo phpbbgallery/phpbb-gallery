@@ -422,6 +422,10 @@ class acp_gallery
 			$sql = 'UPDATE ' . GALLERY_USERS_TABLE . " SET user_images = user_images + $counter WHERE user_id = $user_id";
 			$db->sql_query($sql);
 			set_config('num_images', $config['num_images'] + $counter, true);
+			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . " 
+				SET album_images_real = album_images_real + $counter
+				WHERE album_id = $album_id";
+			$db->sql_query($sql);
 			update_lastimage_info($album_id);
 			$template->assign_vars(array(
 				'ACP_GALLERY_TITLE'				=> $user->lang['IMPORT_DEBUG'],
