@@ -446,7 +446,7 @@ class acp_gallery
 
 	function configure_gallery()
 	{
-		global $db, $template, $user, $cache;
+		global $db, $template, $user, $cache, $config;
 
 		$sql = 'SELECT * FROM ' . GALLERY_CONFIG_TABLE;
 		$result = $db->sql_query($sql);
@@ -458,7 +458,7 @@ class acp_gallery
 			$default_config[$config_name] = isset($_POST['submit']) ? str_replace("'", "\'", $config_value) : $config_value;
 			$new[$config_name] = request_var($config_name, $default_config[$config_name]);
 
-			if( isset($_POST['submit']) )
+			if (isset($_POST['submit']))
 			{
 				// Is it salty ?
 				if (!check_form_key('acp_gallery'))
@@ -478,6 +478,7 @@ class acp_gallery
 
 		if (isset($_POST['submit']))
 		{
+			set_config('gallery_total_images', request_var('gallery_total_images', 0), true);
 			$cache->destroy('sql', GALLERY_CONFIG_TABLE);
 			trigger_error($user->lang['GALLERY_CONFIG_UPDATED'] . adm_back_link($this->u_action));
 		}
@@ -560,6 +561,7 @@ class acp_gallery
 			'FULLPIC_POPUP_DISABLED' 			=> ($new['fullpic_popup'] == 0) ? 'checked="checked"' : '',
 
 			'S_DISPLAY_EXIF_DATA' 				=> $new['exif_data'],
+			'S_TOTAL_IMAGES' 					=> $config['gallery_total_images'],
 
 			'S_GUEST' 							=> ALBUM_GUEST,
 			'S_USER' 							=> ALBUM_USER,

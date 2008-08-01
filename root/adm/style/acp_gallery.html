@@ -314,16 +314,16 @@
 	<fieldset>
 		<legend>{L_GALLERY_CONFIG}</legend>
 		<dl>
+			<dt><label for="comment">{L_COMMENT_SYSTEM}</label></dt>
+			<dd><input type="radio" class="radio" {COMMENT_ENABLED} name="comment" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {COMMENT_DISABLED} name="comment" value="0" />{L_NO}</dd>
+		</dl>
+		<dl>
 			<dt><label for="rate">{L_RATE_SYSTEM}</label></dt>
 			<dd><input type="radio" class="radio" {RATE_ENABLED} name="rate" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {RATE_DISABLED} name="rate" value="0" />{L_NO}</dd>
 		</dl>
 		<dl>
 			<dt><label for="rate_scale">{L_RATE_SCALE}</label></dt>
 			<dd><input class="post" type="text" name="rate_scale" value="{RATE_SCALE}" size="3" /></dd>
-		</dl>
-		<dl>
-			<dt><label for="comment">{L_COMMENT_SYSTEM}</label></dt>
-			<dd><input type="radio" class="radio" {COMMENT_ENABLED} name="comment" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {COMMENT_DISABLED} name="comment" value="0" />{L_NO}</dd>
 		</dl>
 		<dl>
 			<dt><label for="hotlink_prevent">{L_HOTLINK_PREVENT}</label></dt>
@@ -340,6 +340,10 @@
 		<dl>
 			<dt><label for="watermark_source">{L_WATERMARK_SOURCE}</label></dt>
 			<dd><input class="post" type="text" size="40" name="watermark_source" value="{WATERMARK_SOURCE}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="comment">{L_DISP_TOTAL_IMAGES}</label></dt>
+			<dd><input type="radio" class="radio"<!-- IF S_TOTAL_IMAGES --> checked="checked"<!-- ENDIF --> name="gallery_total_images" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_TOTAL_IMAGES --> checked="checked"<!-- ENDIF --> name="gallery_total_images" value="0" />{L_NO}</dd>
 		</dl>
 	</fieldset>
 

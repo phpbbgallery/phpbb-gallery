@@ -8,11 +8,10 @@
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 **/
-if (!defined('IN_PHPBB')) 
-{ 
-	exit; 
-} 
-
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
 if (empty($lang) || !is_array($lang))
 {
 	$lang = array();
@@ -194,6 +193,7 @@ $lang = array_merge($lang, array(
 	'DELETE_PERMISSIONS'			=> 'Delete permissions',
 	'DISP_EXIF_DATA'				=> 'Display Exif-data',
 	'DISP_FAKE_THUMB'				=> 'View thumbnail in albumlist',
+	'DISP_TOTAL_IMAGES'				=> 'show "Total images" on index.' . $phpEx,
 	'DONT_COPY_PERMISSIONS'			=> 'don\'t copy permissions',
 
 	'FAKE_THUMB_SIZE'				=> 'Thumbnail-size',
@@ -218,7 +218,7 @@ $lang = array_merge($lang, array(
 	'PERMISSION_C_DELETE'			=> 'Can delete comment',
 	'PERMISSION_C_EDIT'				=> 'Can edit comment',
 	'PERMISSION_C_POST'				=> 'Can comment on image',
-	'PERMISSION_I_APPROVE'			=> 'Can upload without approva',
+	'PERMISSION_I_APPROVE'			=> 'Can upload without approval',
 	'PERMISSION_I_COUNT'			=> 'Number of uploaded images',
 	'PERMISSION_I_DELETE'			=> 'Can delete images',
 	'PERMISSION_I_EDIT'				=> 'Can edit images',

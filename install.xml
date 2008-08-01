@@ -77,7 +77,7 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
       </edit>
       <edit>
         <find><![CDATA['TOTAL_USERS'	=> sprintf($user->lang[$l_total_user_s], $total_users),]]></find>
-        <action type="after-add"><![CDATA['TOTAL_IMAGES'	=> sprintf($user->lang[$l_total_image_s], $total_images),]]></action>
+        <action type="after-add"><![CDATA['TOTAL_IMAGES'	=> ($config['gallery_total_images']) ? sprintf($user->lang[$l_total_image_s], $total_images) : '',]]></action>
       </edit>
     </open>
     <open src="memberlist.php">
@@ -393,7 +393,7 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
         <find><![CDATA[<p>{TOTAL_POSTS} &bull; {TOTAL_TOPICS} &bull; {TOTAL_USERS} &bull; {NEWEST_USER}</p>]]></find>
         <inline-edit>
             <inline-find><![CDATA[{TOTAL_TOPICS}]]></inline-find>
-            <inline-action type="after-add"><![CDATA[ &bull; {TOTAL_IMAGES}]]></inline-action>
+            <inline-action type="after-add"><![CDATA[<!-- IF TOTAL_IMAGES --> &bull; {TOTAL_IMAGES}<!-- ENDIF -->]]></inline-action>
         </inline-edit>
       </edit>
     </open>

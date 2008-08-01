@@ -56,7 +56,7 @@
         <find><![CDATA[<td class="row1" width="100%" valign="middle"><p class="genmed">{TOTAL_POSTS} | {TOTAL_TOPICS} | {TOTAL_USERS} | {NEWEST_USER}</p></td>]]></find>
         <inline-edit>
             <inline-find><![CDATA[{TOTAL_TOPICS}]]></inline-find>
-            <inline-action type="after-add"><![CDATA[ | {TOTAL_IMAGES}]]></inline-action>
+            <inline-action type="after-add"><![CDATA[<!-- IF TOTAL_IMAGES --> | {TOTAL_IMAGES}<!-- ENDIF -->]]></inline-action>
         </inline-edit>
       </edit>
     </open>
