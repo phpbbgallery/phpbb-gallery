@@ -1003,6 +1003,7 @@ switch ($mode)
 			gallery_config_value('thumbnail_info_line', 1);
 			gallery_config_value('fake_thumb_size', 141);
 			gallery_config_value('disp_fake_thumb', 1);
+			gallery_config_value('exif_data', 1);
 			gallery_config_value('watermark_height', 50);
 			gallery_config_value('watermark_width', 200);
 			set_config('num_images', 0, true);
