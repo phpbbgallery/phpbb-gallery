@@ -101,6 +101,20 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
 			'U_SEARCH_GALLERY'	=> append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "search.$phpEx", "user_id=" . $member['user_id']),]]></action>
       </edit>
     </open>
+    <open src="viewtopic.php">
+      <edit>
+        <find><![CDATA['personal_album'	=> '',]]></find>
+        <action type="after-add"><![CDATA['gallery_album'	=> '',]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA['personal_album'	=> ($row['album_id']) ? append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "album.$phpEx", "album_id=" . $row['album_id']) : '',]]></find>
+        <action type="after-add"><![CDATA['gallery_album'	=> ($row['personal_album_id']) ? append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "album.$phpEx", "album_id=" . $row['personal_album_id']) : '',]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA['U_GALLERY'		=> $user_cache[$poster_id]['personal_album'],]]></find>
+        <action type="after-add"><![CDATA['U_GALLERY'		=> $user_cache[$poster_id]['gallery_album'],]]></action>
+      </edit>
+    </open>
     <open src="includes/cache.php">
       <edit>
         <find><![CDATA[		return $hook_files;

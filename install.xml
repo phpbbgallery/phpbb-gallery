@@ -225,15 +225,15 @@ $user->add_lang('mods/gallery');]]></action>
       </edit>
       <edit>
         <find><![CDATA['jabber'			=> '',]]></find>
-        <action type="after-add"><![CDATA['personal_album'	=> '',]]></action>
+        <action type="after-add"><![CDATA['gallery_album'	=> '',]]></action>
       </edit>
       <edit>
         <find><![CDATA['jabber'		=> ($row['user_jabber'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=jabber&amp;u=$poster_id") : '',]]></find>
-        <action type="after-add"><![CDATA['personal_album'	=> ($row['album_id']) ? append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "album.$phpEx", "album_id=" . $row['album_id']) : '',]]></action>
+        <action type="after-add"><![CDATA['gallery_album'	=> ($row['personal_album_id']) ? append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "album.$phpEx", "album_id=" . $row['personal_album_id']) : '',]]></action>
       </edit>
       <edit>
         <find><![CDATA['U_JABBER'		=> $user_cache[$poster_id]['jabber'],]]></find>
-        <action type="after-add"><![CDATA['U_GALLERY'		=> $user_cache[$poster_id]['personal_album'],]]></action>
+        <action type="after-add"><![CDATA['U_GALLERY'		=> $user_cache[$poster_id]['gallery_album'],]]></action>
       </edit>
     </open>
     <open src="includes/cache.php">

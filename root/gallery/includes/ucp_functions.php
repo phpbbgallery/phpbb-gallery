@@ -67,7 +67,7 @@ function album_hacking($album_id)
 {
 	global $user, $db;
 
-	if (!$user->data['album_id'])
+	if (!$user->gallery['personal_album_id'])
 	{
 		trigger_error('NEED_INITIALISE');
 	}

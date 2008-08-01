@@ -195,7 +195,7 @@ switch ($mode)
 			}
 
 			add_bbcode('album');
-			gallery_column(USERS_TABLE, 'album_id', array('UINT', 0));
+			//REMOVE WITH 0.3.3//gallery_column(USERS_TABLE, 'album_id', array('UINT', 0));
 			//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
 			//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'view_personal_albums', array('UINT', 1));
 			//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
@@ -824,6 +824,7 @@ switch ($mode)
 					//delete_gallery_column(GROUPS_TABLE, 'personal_subalbums');
 					//delete_gallery_column(GROUPS_TABLE, 'allow_personal_albums');
 					//delete_gallery_column(GROUPS_TABLE, 'view_personal_albums');
+					//delete_gallery_column(USERS_TABLE, 'album_id');
 					//not sure about this one because of the viewtopic.php delete_gallery_column(USERS_TABLE, 'album_id');
 				//no break;
 
@@ -1042,7 +1043,7 @@ switch ($mode)
 			}
 			$db->sql_freeresult($result);
 
-			gallery_column(USERS_TABLE, 'album_id', array('UINT', 0));
+			//REMOVE WITH 0.3.3//gallery_column(USERS_TABLE, 'album_id', array('UINT', 0));
 			//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
 			//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'view_personal_albums', array('UINT', 1));
 			//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
