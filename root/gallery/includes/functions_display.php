@@ -97,9 +97,9 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 
 		$album_ids[] = $album_id;
 
-		$row['album_images'] = (gallery_acl_check('a_moderate', $album_id)) ? $row['album_images_real'] : $row['album_images'];
+		$row['album_images'] = $row['album_images'];
+		$row['album_images_real'] = $row['album_images_real'];
 
-		//
 		if ($row['parent_id'] == $root_data['album_id'] || $row['parent_id'] == $branch_root_id)
 		{
 			if ($row['album_type'])
@@ -125,6 +125,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			$subalbums[$parent_id][$album_id]['orig_album_last_image_time'] = $row['album_last_image_time'];
 
 			$album_rows[$parent_id]['album_images'] += $row['album_images'];
+			$album_rows[$parent_id]['album_images_real'] += $row['album_images_real'];
 
 			if ($row['album_last_image_time'] > $album_rows[$parent_id]['album_last_image_time'])
 			{
@@ -254,6 +255,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			'ALBUM_NAME'			=> $row['album_name'],
 			'ALBUM_DESC'			=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
 			'IMAGES'				=> $row['album_images'],
+			'UNAPPROVED_IMAGES'		=> (gallery_acl_check('a_moderate', $album_id)) ? ($row['album_images_real'] - $row['album_images']) : 0,
 			'ALBUM_FOLDER_IMG'		=> $user->img($folder_image, $folder_alt),
 			'ALBUM_FOLDER_IMG_SRC'	=> $user->img($folder_image, $folder_alt, false, '', 'src'),
 			'ALBUM_FOLDER_IMG_ALT'	=> isset($user->lang[$folder_alt]) ? $user->lang[$folder_alt] : '',
