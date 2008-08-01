@@ -21,10 +21,7 @@ class acp_gallery
 
 		$user->add_lang('mods/gallery_acp');
 		$user->add_lang('mods/gallery');
-
-		// Set up the page
-		$this->tpl_name 	= 'acp_gallery';
-		// Salting the form...yumyum ...
+		$this->tpl_name = 'acp_gallery';
 		add_form_key('acp_gallery');
 
 		switch ($mode)
@@ -179,7 +176,7 @@ class acp_gallery
 			));
 		}
 		else
-		{// Is it salty ?
+		{
 			if (!check_form_key('acp_gallery'))
 			{
 				trigger_error('FORM_INVALID');
@@ -493,86 +490,51 @@ class acp_gallery
 			'ACP_GALLERY_TITLE'					=> $user->lang['GALLERY_CONFIG'],
 			'ACP_GALLERY_TITLE_EXPLAIN'			=> $user->lang['GALLERY_CONFIG_EXPLAIN'],
 
-			'MAX_IMAGES' 						=> $new['max_pics'],
-			'UPLOAD_IMAGES' 					=> $new['upload_images'],
-			'MAX_FILE_SIZE' 					=> $new['max_file_size'],
-			'MAX_WIDTH' 						=> $new['max_width'],
-			'MAX_HEIGHT' 						=> $new['max_height'],
-			'RSZ_WIDTH' 						=> $new['preview_rsz_width'],
-			'RSZ_HEIGHT' 						=> $new['preview_rsz_height'],
-			'ROWS_PER_PAGE' 					=> $new['rows_per_page'],
-			'COLS_PER_PAGE' 					=> $new['cols_per_page'],
-			'WATERMARK_SOURCE' 					=> $new['watermark_source'],
-			'THUMBNAIL_QUALITY' 				=> $new['thumbnail_quality'],
-			'THUMBNAIL_SIZE' 					=> $new['thumbnail_size'],
-			'PERSONAL_GALLERY_LIMIT' 			=> $new['personal_gallery_limit'],
+			//Album Settings
+			'ROWS_PER_PAGE'					=> $new['rows_per_page'],
+			'COLS_PER_PAGE'					=> $new['cols_per_page'],
+			'SORT_METHOD'					=> $new['sort_method'],
+			'SORT_ORDER'					=> $new['sort_order'],
+			'MAX_IMAGES_PER_ALBUM'			=> $new['max_pics'],
+			'FAKE_THUMB_SIZE'				=> $new['fake_thumb_size'],
+			'DISP_FAKE_THUMB'				=> $new['disp_fake_thumb'],
 
-			'FAKE_THUMB_SIZE' 					=> $new['fake_thumb_size'],
-			'DISP_FAKE_THUMB' 					=> $new['disp_fake_thumb'],
+			//Image Settings
+			'UPLOAD_IMAGES'					=> $new['upload_images'],
+			'MAX_FILE_SIZE'					=> $new['max_file_size'],
+			'MAX_WIDTH'						=> $new['max_width'],
+			'MAX_HEIGHT'					=> $new['max_height'],
+			'RSZ_WIDTH'						=> $new['preview_rsz_width'],
+			'RSZ_HEIGHT'					=> $new['preview_rsz_height'],
+			'S_JPG_ALLOWED'					=> $new['jpg_allowed'],
+			'S_PNG_ALLOWED'					=> $new['png_allowed'],
+			'S_GIF_ALLOWED'					=> $new['gif_allowed'],
+			'IMAGE_DESC_MAX_LENGTH'			=> $new['desc_length'],
+			'S_DISP_EXIF_DATA'				=> $new['exif_data'],
 
-			'THUMBNAIL_CACHE_ENABLED'			=> ($new['thumbnail_cache'] == 1) ? 'checked="checked"' : '',
-			'THUMBNAIL_CACHE_DISABLED'			=> ($new['thumbnail_cache'] == 0) ? 'checked="checked"' : '',
+			//Watermark options
+			'S_WATERMARK'					=> $new['watermark_images'],
+			'WATERMARK_SOURCE'				=> $new['watermark_source'],
+			'WATERMARK_HEIGHT'				=> $new['watermark_height'],
+			'WATERMARK_WIDTH'				=> $new['watermark_width'],
+			'BOARD_LINK'					=> generate_board_url(),
 
-			'INFO_LINE_ENABLED'					=> ($new['thumbnail_info_line'] == 1) ? 'checked="checked"' : '',
-			'INFO_LINE_DISABLED'				=> ($new['thumbnail_info_line'] == 0) ? 'checked="checked"' : '',
+			//Thumbnail Settings
+			'S_THUMBNAIL_CACHE'				=> $new['thumbnail_cache'],
+			'S_GD'							=> $new['gd_version'],
+			'THUMBNAIL_QUALITY'				=> $new['thumbnail_quality'],
+			'THUMBNAIL_SIZE'				=> $new['thumbnail_size'],
+			'S_INFO_LINE'					=> $new['thumbnail_info_line'],
 
-			'JPG_ENABLED' 						=> ($new['jpg_allowed'] == 1) ? 'checked="checked"' : '',
-			'JPG_DISABLED' 						=> ($new['jpg_allowed'] == 0) ? 'checked="checked"' : '',
-			'PNG_ENABLED' 						=> ($new['png_allowed'] == 1) ? 'checked="checked"' : '',
-			'PNG_DISABLED' 						=> ($new['png_allowed'] == 0) ? 'checked="checked"' : '',
-			'GIF_ENABLED' 						=> ($new['gif_allowed'] == 1) ? 'checked="checked"' : '',
-			'GIF_DISABLED' 						=> ($new['gif_allowed'] == 0) ? 'checked="checked"' : '',
-
-			'IMAGE_DESC_MAX_LENGTH' 				=> $new['desc_length'],
-
-			'WATERMARK_ENABLED' 				=> ($new['watermark_images'] == 1) ? 'checked="checked"' : '',
-			'WATERMARK_DISABLED' 				=> ($new['watermark_images'] == 0) ? 'checked="checked"' : '',
-
-			'HOTLINK_PREVENT_ENABLED' 			=> ($new['hotlink_prevent'] == 1) ? 'checked="checked"' : '',
-			'HOTLINK_PREVENT_DISABLED' 			=> ($new['hotlink_prevent'] == 0) ? 'checked="checked"' : '',
-			'HOTLINK_ALLOWED' 					=> $new['hotlink_allowed'],
-
-			'PERSONAL_GALLERY_USER' 			=> ($new['personal_gallery'] == ALBUM_USER) ? 'checked="checked"' : '',
-			'PERSONAL_GALLERY_PRIVATE' 			=> ($new['personal_gallery'] == ALBUM_PRIVATE) ? 'checked="checked"' : '',
-			'PERSONAL_GALLERY_ADMIN' 			=> ($new['personal_gallery'] == ALBUM_ADMIN) ? 'checked="checked"' : '',
-			'PERSONAL_GALLERY_VIEW_ALL' 		=> ($new['personal_gallery_view'] == ALBUM_GUEST) ? 'checked="checked"' : '',
-			'PERSONAL_GALLERY_VIEW_REG' 		=> ($new['personal_gallery_view'] == ALBUM_USER) ? 'checked="checked"' : '',
-			'PERSONAL_GALLERY_VIEW_PRIVATE' 	=> ($new['personal_gallery_view'] == ALBUM_PRIVATE) ? 'checked="checked"' : '',
-
-			'RATE_ENABLED' 						=> ($new['rate'] == 1) ? 'checked="checked"' : '',
-			'RATE_DISABLED' 					=> ($new['rate'] == 0) ? 'checked="checked"' : '',
-			'RATE_SCALE' 						=> $new['rate_scale'],
-
-			'COMMENT_ENABLED' 					=> ($new['comment'] == 1) ? 'checked="checked"' : '',
-			'COMMENT_DISABLED' 					=> ($new['comment'] == 0) ? 'checked="checked"' : '',
-
-			'NO_GD' 							=> ($new['gd_version'] == 0) ? 'checked="checked"' : '',
-			'GD_V1' 							=> ($new['gd_version'] == 1) ? 'checked="checked"' : '',
-			'GD_V2' 							=> ($new['gd_version'] == 2) ? 'checked="checked"' : '',
-
-			'SORT_TIME' 						=> ($new['sort_method'] == 'image_time') ? 'selected="selected"' : '',
-			'SORT_IMAGE_TITLE' 					=> ($new['sort_method'] == 'image_name') ? 'selected="selected"' : '',
-			'SORT_USERNAME' 					=> ($new['sort_method'] == 'username') ? 'selected="selected"' : '',
-			'SORT_VIEW' 						=> ($new['sort_method'] == 'image_view_count') ? 'selected="selected"' : '',
-			'SORT_RATING' 						=> ($new['sort_method'] == 'image_rate_avg') ? 'selected="selected"' : '',
-			'SORT_COMMENTS' 					=> ($new['sort_method'] == 'image_comments') ? 'selected="selected"' : '',
-			'SORT_NEW_COMMENT' 					=> ($new['sort_method'] == 'image_last_comment') ? 'selected="selected"' : '',
-			'SORT_ASC' 							=> ($new['sort_order'] == 'ASC') ? 'selected="selected"' : '',
-			'SORT_DESC' 						=> ($new['sort_order'] == 'DESC') ? 'selected="selected"' : '',
-
-			'FULLPIC_POPUP_ENABLED' 			=> ($new['fullpic_popup'] == 1) ? 'checked="checked"' : '',
-			'FULLPIC_POPUP_DISABLED' 			=> ($new['fullpic_popup'] == 0) ? 'checked="checked"' : '',
-
-			'S_DISP_EXIF_DATA' 					=> $new['exif_data'],
-			'S_DISP_TOTAL_IMAGES' 				=> $config['gallery_total_images'],
-			'S_DISP_USER_IMAGES_PROFIL' 		=> $config['gallery_user_images_profil'],
-			'S_DISP_PERSONAL_ALBUM_PROFIL' 		=> $config['gallery_personal_album_profil'],
-
-			'S_GUEST' 							=> ALBUM_GUEST,
-			'S_USER' 							=> ALBUM_USER,
-			'S_PRIVATE' 						=> ALBUM_PRIVATE,
-			'S_MOD' 							=> ALBUM_MOD,
-			'S_ADMIN' 							=> ALBUM_ADMIN,
+			//Gallery Configuration
+			'S_COMMENT'						=> $new['comment'],
+			'S_RATE'						=> $new['rate'],
+			'RATE_SCALE' 					=> $new['rate_scale'],
+			'S_HOTLINK_PREVENT'				=> $new['hotlink_prevent'],
+			'HOTLINK_ALLOWED'				=> $new['hotlink_allowed'],
+			'S_DISP_TOTAL_IMAGES'			=> $config['gallery_total_images'],
+			'S_DISP_USER_IMAGES_PROFIL'		=> $config['gallery_user_images_profil'],
+			'S_DISP_PERSONAL_ALBUM_PROFIL'	=> $config['gallery_personal_album_profil'],
 		));
 	}
 

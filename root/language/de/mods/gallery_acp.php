@@ -99,7 +99,7 @@ $lang = array_merge($lang, array(
 	
 	'GD_VERSION'						=> 'GD Version optimieren',
 	
-	'HOTLINK_ALLOWED'					=> 'Erlaubt Domains für Hot-Link (getrennt durch ein Komma)',
+	'HOTLINK_ALLOWED'					=> 'Erlaubt Domains für Hotlink (getrennt durch ein Komma)',
 	'HOTLINK_PREVENT'					=> 'Hotlink Prävention',
 	
 	'IMAGE_APPROVAL'					=> 'Genehmigung der Bilder',
@@ -111,7 +111,7 @@ $lang = array_merge($lang, array(
 	'LOOK_UP_ALBUM'						=> 'Album wählen',
 	
 	'MANUAL_THUMBNAIL'					=> 'Manuelles Vorschaubild',
-	'MAX_IMAGES'						=> 'Die maximale Anzahl der Bilder für jedes Album (-1 = unbegrenzt)',
+	'MAX_IMAGES_PER_ALBUM'				=> 'Die maximale Anzahl der Bilder für jedes Album (-1 = unbegrenzt)',
 	'MODERATOR_IMAGES_LIMIT'			=> 'Bilder pro Album für jeden Moderator (-1 = unbegrenzt)',
 	'MOVE_CONTENTS'						=> 'Alle Bilder verschieben',
 	'MOVE_DELETE'						=> 'Verschieben und löschen',
@@ -244,5 +244,11 @@ $lang = array_merge($lang, array(
 	'SET_PERMISSIONS'				=> '<br /><a href="%s">Berechtigungen</a> jetzt vergeben.',
 
 	'THIS_WILL_BE_REPORTED'			=> 'Bekannter Fehler, sorry guys!',
+
+	'WATERMARK'						=> 'Wasserzeichen',
+	'WATERMARK_EXP'					=> 'Um zu verhindern, dass kleine Bilder vollkommen vom Wasserzeichen verdeckt werden, kannst du hier eine Mindestgröße angeben.',
+	'WATERMARK_OPTIONS'				=> 'Wasserzeichen-Einstellungen',
+	'WATERMARK_WIDTH'				=> 'Mindestbreite',
+	'WATERMARK_HEIGHT'				=> 'Mindesthöhe',
 ));
 ?>

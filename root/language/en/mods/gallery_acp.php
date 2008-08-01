@@ -111,7 +111,7 @@ $lang = array_merge($lang, array(
 	'LOOK_UP_ALBUM'					=> 'Look up Album',
 	
 	'MANUAL_THUMBNAIL'				=> 'Manual thumbnail',
-	'MAX_IMAGES'					=> 'Maximum number of images for each Album (-1 = unlimited)',
+	'MAX_IMAGES_PER_ALBUM'			=> 'Maximum number of images for each Album (-1 = unlimited)',
 	'MODERATOR_IMAGES_LIMIT'			=> 'Images limit per Album for each moderator (-1 = unlimited)',
 	'MOVE_CONTENTS'					=> 'Move all images',
 	'MOVE_DELETE'					=> 'Move and delete',
@@ -244,6 +244,12 @@ $lang = array_merge($lang, array(
 	'SET_PERMISSIONS'				=> '<br />Set <a href="%s">permissions</a> now.',
 
 	'THIS_WILL_BE_REPORTED'			=> 'Known Bug, sorry guys!',
+
+	'WATERMARK'						=> 'Watermark',
+	'WATERMARK_EXP'					=> 'To avoid small images from being covered by the watermark, you may enter a minimum-width/height here.',
+	'WATERMARK_OPTIONS'				=> 'Watermark options',
+	'WATERMARK_WIDTH'				=> 'Minimum-width for watermark',
+	'WATERMARK_HEIGHT'				=> 'Minimum-height for watermark',
 ));
 
 ?>

@@ -138,8 +138,8 @@ $result = $db->sql_query($sql);
 // Okay, now we can send image to the browser
 // ------------------------------------
 $watermark_ok = false;
-
-if ($album_config['watermark_images'] && $gd_success)
+$file_size = getimagesize($phpbb_root_path . GALLERY_UPLOAD_PATH  . $image_data['image_filename']);
+if ($album_config['watermark_images'] && ($album_config['watermark_height'] < $file_size[0]) && ($album_config['watermark_width'] < $file_size[1]) && $gd_success)
 {
 	$marktype = substr($album_config['watermark_source'], strlen($album_config['watermark_source']) - 4, 4);
 	switch ( $marktype )

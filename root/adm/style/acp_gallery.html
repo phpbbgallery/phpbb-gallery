@@ -202,13 +202,13 @@
 			<dt><label for="sort_method">{L_DEFAULT_SORT_METHOD}</label></dt>
 			<dd>
 				<select name="sort_method">
-					<option {SORT_TIME} value='image_time'>{L_TIME}</option>
-					<option {SORT_IMAGE_TITLE} value='image_name'>{L_IMAGE_TITLE}</option>
-					<option {SORT_USERNAME} value='username'>{L_USERNAME}</option>
-					<option {SORT_VIEW} value='image_view_count'>{L_VIEWS}</option>
-					<option {SORT_RATING} value='image_rate_avg'>{L_RATING}</option>
-					<option {SORT_COMMENTS} value='image_comments'>{L_COMMENTS}</option>
-					<option {SORT_NEW_COMMENT} value='image_last_comment'>{L_NEW_COMMENT}</option>
+					<option<!-- IF SORT_METHOD == 'image_time' --> selected="selected"<!-- ENDIF --> value='image_time'>{L_TIME}</option>
+					<option<!-- IF SORT_METHOD == 'image_name' --> selected="selected"<!-- ENDIF --> value='image_name'>{L_IMAGE_TITLE}</option>
+					<option<!-- IF SORT_METHOD == 'username' --> selected="selected"<!-- ENDIF --> value='username'>{L_USERNAME}</option>
+					<option<!-- IF SORT_METHOD == 'image_view_count' --> selected="selected"<!-- ENDIF --> value='image_view_count'>{L_VIEWS}</option>
+					<option<!-- IF SORT_METHOD == 'image_rate_avg' --> selected="selected"<!-- ENDIF --> value='image_rate_avg'>{L_RATING}</option>
+					<option<!-- IF SORT_METHOD == 'image_comments' --> selected="selected"<!-- ENDIF --> value='image_comments'>{L_COMMENTS}</option>
+					<option<!-- IF SORT_METHOD == 'image_last_comment' --> selected="selected"<!-- ENDIF --> value='image_last_comment'>{L_NEW_COMMENT}</option>
 				</select>
 			</dd>
 		</dl>
@@ -216,18 +216,14 @@
 			<dt><label for="sort_order">{L_DEFAULT_SORT_ORDER}</label></dt>
 			<dd>
 				<select name="sort_order">
-					<option {SORT_ASC} value='ASC'>{L_SORT_ASCENDING}</option>
-					<option {SORT_DESC} value='DESC'>{L_SORT_DESCENDING}</option>
+					<option<!-- IF SORT_ORDER == 'ASC' --> selected="selected"<!-- ENDIF --> value='ASC'>{L_SORT_ASCENDING}</option>
+					<option<!-- IF SORT_ORDER == 'DESC' --> selected="selected"<!-- ENDIF --> value='DESC'>{L_SORT_DESCENDING}</option>
 				</select>
 			</dd>
 		</dl>
 		<dl>
-			<dt><label for="sort_order">{L_FULL_IMAGE_POPUP}</label></dt>
-			<dd><input type="radio" class="radio" {FULLPIC_POPUP_ENABLED} name="fullpic_popup" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {FULLPIC_POPUP_DISABLED} name="fullpic_popup" value="0" />{L_NO}</dd>
-		</dl>
-		<dl>
-			<dt><label for="max_pics">{L_MAX_IMAGES}</label></dt>
-			<dd><input class="post" type="text" maxlength="9" size="9" name="max_pics" value="{MAX_IMAGES}" /></dd>
+			<dt><label for="max_pics">{L_MAX_IMAGES_PER_ALBUM}</label></dt>
+			<dd><input class="post" type="text" maxlength="9" size="9" name="max_pics" value="{MAX_IMAGES_PER_ALBUM}" /></dd>
 		</dl>
 		<dl>
 			<dt><label for="disp_fake_thumb">{L_DISP_FAKE_THUMB}</label></dt>
@@ -266,16 +262,16 @@
 			<dd><input class="post" type="text" maxlength="9" size="9" name="preview_rsz_height" value="{RSZ_HEIGHT}" /></dd>
 		</dl>
 		<dl>
+			<dt><label for="max_height">{L_GIF_ALLOWED}</label></dt>
+			<dd><input type="radio" class="radio"<!-- IF S_GIF_ALLOWED --> checked="checked"<!-- ENDIF --> name="gif_allowed" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_GIF_ALLOWED --> checked="checked"<!-- ENDIF --> name="gif_allowed" value="0" />{L_NO}</dd>
+		</dl>
+		<dl>
 			<dt><label for="max_height">{L_JPG_ALLOWED}</label></dt>
-			<dd><input type="radio" class="radio" {JPG_ENABLED} name="jpg_allowed" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {JPG_DISABLED} name="jpg_allowed" value="0" />{L_NO}</dd>
+			<dd><input type="radio" class="radio"<!-- IF S_JPG_ALLOWED --> checked="checked"<!-- ENDIF --> name="jpg_allowed" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_JPG_ALLOWED --> checked="checked"<!-- ENDIF --> name="jpg_allowed" value="0" />{L_NO}</dd>
 		</dl>
 		<dl>
 			<dt><label for="max_height">{L_PNG_ALLOWED}</label></dt>
-			<dd><input type="radio" class="radio" {PNG_ENABLED} name="png_allowed" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {PNG_DISABLED} name="png_allowed" value="0" />{L_NO}</dd>
-		</dl>
-		<dl>
-			<dt><label for="max_height">{L_GIF_ALLOWED}</label></dt>
-			<dd><input type="radio" class="radio" {GIF_ENABLED} name="gif_allowed" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {GIF_DISABLED} name="gif_allowed" value="0" />{L_NO}</dd>
+			<dd><input type="radio" class="radio"<!-- IF S_PNG_ALLOWED --> checked="checked"<!-- ENDIF --> name="png_allowed" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF  not S_PNG_ALLOWED --> checked="checked"<!-- ENDIF --> name="png_allowed" value="0" />{L_NO}</dd>
 		</dl>
 		<dl>
 			<dt><label for="desc_length">{L_IMAGE_DESC_MAX_LENGTH}</label></dt>
@@ -286,15 +282,41 @@
 			<dd><input type="radio" class="radio"<!-- IF S_DISP_EXIF_DATA --> checked="checked"<!-- ENDIF --> name="exif_data" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_DISP_EXIF_DATA --> checked="checked"<!-- ENDIF --> name="exif_data" value="0" />{L_NO}</dd>
 		</dl>
 	</fieldset>
+
+	<fieldset>
+		<legend>{L_WATERMARK_OPTIONS}</legend>
+		<dl>
+			<dt><label for="watermark_images">{L_WATERMARK_IMAGES}</label></dt>
+			<dd><input type="radio" class="radio"<!-- IF S_WATERMARK --> checked="checked"<!-- ENDIF --> name="watermark_images" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_WATERMARK --> checked="checked"<!-- ENDIF --> name="watermark_images" value="0" />{L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="watermark_source">{L_WATERMARK_SOURCE}</label></dt>
+			<dd>{BOARD_LINK}/<input class="post" type="text" size="40" name="watermark_source" value="{WATERMARK_SOURCE}" /></dd>
+			<dd><img src="{BOARD_LINK}/{WATERMARK_SOURCE}" alt="{L_WATERMARK}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="comment">{L_WATERMARK_HEIGHT}</label>
+				<br /><span>{L_WATERMARK_EXP}</span></dt>
+			<dd><input class="post" type="text" size="6" name="watermark_height" value="{WATERMARK_HEIGHT}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="comment">{L_WATERMARK_WIDTH}</label>
+				<br /><span>{L_WATERMARK_EXP}</span></dt>
+			<dd><input class="post" type="text" size="6" name="watermark_width" value="{WATERMARK_WIDTH}" /></dd>
+		</dl>
+	</fieldset>
+
 	<fieldset>
 		<legend>{L_THUMBNAIL_SETTINGS}</legend>
 		<dl>
 			<dt><label for="thumbnail_cache">{L_THUMBNAIL_CACHE}</label></dt>
-			<dd><span><input type="radio" class="radio" {THUMBNAIL_CACHE_ENABLED} name="thumbnail_cache" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {THUMBNAIL_CACHE_DISABLED} name="thumbnail_cache" value="0" />{L_NO}</span></dd>
+			<dd><span><input type="radio" class="radio"<!-- IF S_THUMBNAIL_CACHE --> checked="checked"<!-- ENDIF --> name="thumbnail_cache" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_THUMBNAIL_CACHE --> checked="checked"<!-- ENDIF --> name="thumbnail_cache" value="0" />{L_NO}</span></dd>
 		</dl>
 		<dl>
 			<dt><label for="gd_version">{L_GD_VERSION}</label></dt>
-			<dd><span><input type="radio" class="radio" {NO_GD} name="gd_version" value="0" />{L_MANUAL_THUMBNAIL}&nbsp;&nbsp;<input type="radio" class="radio" {GD_V1} name="gd_version" value="1" />GD1&nbsp;&nbsp;<input type="radio" class="radio" {GD_V2} name="gd_version" value="2" />GD2</span></dd>
+			<dd><span><input type="radio" class="radio"<!-- IF not S_GD --> checked="checked"<!-- ENDIF --> name="gd_version" value="0" />{L_MANUAL_THUMBNAIL}</span></dd>
+			<dd><span><input type="radio" class="radio"<!-- IF S_GD == 1 --> checked="checked"<!-- ENDIF --> name="gd_version" value="1" />GD1</span></dd>
+			<dd><span><input type="radio" class="radio"<!-- IF S_GD == 2 --> checked="checked"<!-- ENDIF --> name="gd_version" value="2" />GD2</span></dd>
 		</dl>
 		<dl>
 			<dt><label for="thumbnail_size">{L_THUMBNAIL_SIZE}</label></dt>
@@ -306,7 +328,7 @@
 		</dl>
 		<dl>
 			<dt><label for="thumbnail_info_line">{L_INFO_LINE}</label></dt>
-			<dd><input type="radio" class="radio" {INFO_LINE_ENABLED} name="thumbnail_info_line" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {INFO_LINE_DISABLED} name="thumbnail_info_line" value="0" />{L_NO}</dd>
+			<dd><input type="radio" class="radio"<!-- IF S_INFO_LINE --> checked="checked"<!-- ENDIF --> name="thumbnail_info_line" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_INFO_LINE --> checked="checked"<!-- ENDIF --> name="thumbnail_info_line" value="0" />{L_NO}</dd>
 		</dl>
 	</fieldset>
 
@@ -315,11 +337,11 @@
 		<legend>{L_GALLERY_CONFIG}</legend>
 		<dl>
 			<dt><label for="comment">{L_COMMENT_SYSTEM}</label></dt>
-			<dd><input type="radio" class="radio" {COMMENT_ENABLED} name="comment" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {COMMENT_DISABLED} name="comment" value="0" />{L_NO}</dd>
+			<dd><input type="radio" class="radio"<!-- IF S_COMMENT --> checked="checked"<!-- ENDIF --> name="comment" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_COMMENT --> checked="checked"<!-- ENDIF --> name="comment" value="0" />{L_NO}</dd>
 		</dl>
 		<dl>
 			<dt><label for="rate">{L_RATE_SYSTEM}</label></dt>
-			<dd><input type="radio" class="radio" {RATE_ENABLED} name="rate" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {RATE_DISABLED} name="rate" value="0" />{L_NO}</dd>
+			<dd><input type="radio" class="radio"<!-- IF S_RATE --> checked="checked"<!-- ENDIF --> name="rate" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_RATE --> checked="checked"<!-- ENDIF --> name="rate" value="0" />{L_NO}</dd>
 		</dl>
 		<dl>
 			<dt><label for="rate_scale">{L_RATE_SCALE}</label></dt>
@@ -327,19 +349,11 @@
 		</dl>
 		<dl>
 			<dt><label for="hotlink_prevent">{L_HOTLINK_PREVENT}</label></dt>
-			<dd><input type="radio" class="radio" {HOTLINK_PREVENT_ENABLED} name="hotlink_prevent" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {HOTLINK_PREVENT_DISABLED} name="hotlink_prevent" value="0" />{L_NO}</dd>
+			<dd><input type="radio" class="radio"<!-- IF S_HOTLINK_PREVENT --> checked="checked"<!-- ENDIF --> name="hotlink_prevent" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_HOTLINK_PREVENT --> checked="checked"<!-- ENDIF --> name="hotlink_prevent" value="0" />{L_NO}</dd>
 		</dl>
 		<dl>
 			<dt><label for="hotlink_allowed">{L_HOTLINK_ALLOWED}</label></dt>
 			<dd><input class="post" type="text" size="40" name="hotlink_allowed" value="{HOTLINK_ALLOWED}" /></dd>
-		</dl>
-		<dl>
-			<dt><label for="watermark_images">{L_WATERMARK_IMAGES}</label></dt>
-			<dd><input type="radio" class="radio" {WATERMARK_ENABLED} name="watermark_images" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" {WATERMARK_DISABLED} name="watermark_images" value="0" />{L_NO}</dd>
-		</dl>
-		<dl>
-			<dt><label for="watermark_source">{L_WATERMARK_SOURCE}</label></dt>
-			<dd><input class="post" type="text" size="40" name="watermark_source" value="{WATERMARK_SOURCE}" /></dd>
 		</dl>
 		<dl>
 			<dt><label for="comment">{L_DISP_TOTAL_IMAGES}</label></dt>

@@ -146,6 +146,8 @@ switch ($mode)
 			gallery_config_value('disp_fake_thumb', 1);
 			gallery_config_value('personal_counter', 0);
 			gallery_config_value('exif_data', 1);
+			gallery_config_value('watermark_height', 50);
+			gallery_config_value('watermark_width', 200);
 			set_config('num_images', 0, true);
 			set_config('gallery_total_images', 1);
 			set_config('gallery_user_images_profil', 1);
@@ -818,6 +820,8 @@ switch ($mode)
 					set_config('gallery_total_images', 1);
 					set_config('gallery_user_images_profil', 1);
 					set_config('gallery_personal_album_profil', 1);
+					gallery_config_value('watermark_height', 50);
+					gallery_config_value('watermark_width', 200);
 
 				case '0.3.2':
 					//and drop the old column
@@ -831,7 +835,6 @@ switch ($mode)
 
 				case 'svn':
 					$album_config = load_album_config();
-					gallery_column(USERS_TABLE, 'album_id', array('UINT', 0));
 				break;
 			}
 
@@ -992,7 +995,6 @@ switch ($mode)
 			gallery_config_value('rate_scale', '10');
 			gallery_config_value('comment', '1');
 			gallery_config_value('gd_version', '2');
-			gallery_config_value('album_version', '0.2.4');
 			gallery_config_value('watermark_images', 1);
 			gallery_config_value('watermark_source', 'gallery/mark.png');
 			gallery_config_value('preview_rsz_height', 600);
@@ -1001,7 +1003,8 @@ switch ($mode)
 			gallery_config_value('thumbnail_info_line', 1);
 			gallery_config_value('fake_thumb_size', 141);
 			gallery_config_value('disp_fake_thumb', 1);
-			gallery_config_value('exif_data', 1);
+			gallery_config_value('watermark_height', 50);
+			gallery_config_value('watermark_width', 200);
 			set_config('num_images', 0, true);
 			set_config('gallery_total_images', 1);
 			set_config('gallery_user_images_profil', 1);
