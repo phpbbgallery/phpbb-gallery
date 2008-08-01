@@ -36,7 +36,7 @@
 				<!-- ENDIF -->
 				<!-- IF albumrow.ALBUM_IMAGE --></div><!-- ENDIF -->
 			</td>
-			<td class="row2" align="center"><p class="topicdetails">{albumrow.IMAGES}</p></td>
+			<td class="row2" align="center"><p class="topicdetails">{albumrow.IMAGES} <!-- IF albumrow.UNAPPROVED_IMAGES --> + <span style="color: red">{albumrow.UNAPPROVED_IMAGES}</span><!-- ENDIF --></p></td>
 			<td class="row2" align="center" nowrap="nowrap">
 				<!-- IF DISP_FAKE_THUMB and albumrow.U_LAST_THUMB --><span style="float: left; padding-right: 5px;"><img src="{albumrow.U_LAST_THUMB}" style="max-width: {FAKE_THUMB_SIZE}px; max-height: {FAKE_THUMB_SIZE}px;" /></span><!-- ENDIF -->
 				<!-- IF albumrow.LAST_IMAGE_TIME -->

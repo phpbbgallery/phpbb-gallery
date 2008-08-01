@@ -80,3 +80,7 @@ dd.g_status {
 	text-align: center;
 	font-size: 1.1em;
 }
+
+span.reported-images-number {
+	color: red;
+}

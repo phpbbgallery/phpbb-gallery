@@ -34,7 +34,7 @@
 					<!-- ENDIF -->
 					<!-- IF albumrow.SUBALBUMS and albumrow.S_LIST_SUBALBUMS --><br /><strong>{albumrow.L_SUBALBUM_STR}</strong> {albumrow.SUBALBUMS}<!-- ENDIF -->
 				</dt>
-				<dd class="posts">{albumrow.IMAGES} <dfn>{L_IMAGES}</dfn></dd>
+				<dd class="posts">{albumrow.IMAGES} <!-- IF albumrow.UNAPPROVED_IMAGES --> + <span class="reported-images-number">{albumrow.UNAPPROVED_IMAGES}</span><!-- ENDIF --> <dfn>{L_IMAGES}</dfn></dd>
 				<dd class="g_lastimage" style="padding-left: 5px;"><span>
 					<!-- IF albumrow.LAST_IMAGE_TIME -->
 					<!-- IF DISP_FAKE_THUMB and albumrow.U_LAST_THUMB --><span style="float: left; text-align: center; width: {FAKE_THUMB_SIZE}px; padding-right: 5px;"><img src="{albumrow.U_LAST_THUMB}" style="max-width: {FAKE_THUMB_SIZE}px; max-height: {FAKE_THUMB_SIZE}px;" /></span><!-- ENDIF -->
