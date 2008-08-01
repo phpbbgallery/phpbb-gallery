@@ -92,11 +92,12 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
       <edit>
         <find><![CDATA[			'POSTS_DAY'			=> sprintf($user->lang['POST_DAY'], $posts_per_day),
 			'POSTS_PCT'			=> sprintf($user->lang['POST_PCT'], $percentage),]]></find>
-        <action type="after-add"><![CDATA[			'IMAGES'			=> $member['user_images'],
+        <action type="after-add"><![CDATA[			'TOTAL_IMAGES'		=> $config['gallery_user_images_profil'],
+			'IMAGES'			=> $member['user_images'],
 			'IMAGES_DAY'		=> sprintf($user->lang['IMAGE_DAY'], $images_per_day),
 			'IMAGES_PCT'		=> sprintf($user->lang['IMAGE_PCT'], $percentage_images),
 			'SHOW_PERSONAL_ALBUM_OF'	=> sprintf($user->lang['SHOW_PERSONAL_ALBUM_OF'], $member['username']),
-			'U_GALLERY'			=> ($member['personal_album_id']) ? append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "album.$phpEx", "album_id=" . $member['personal_album_id']) : '',
+			'U_GALLERY'			=> ($member['personal_album_id'] && $config['gallery_personal_album_profil']) ? append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "album.$phpEx", "album_id=" . $member['personal_album_id']) : '',
 			'U_SEARCH_GALLERY'	=> append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "search.$phpEx", "user_id=" . $member['user_id']),]]></action>
       </edit>
     </open>
@@ -220,7 +221,7 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
       </edit>
       <edit>
         <find><![CDATA[<dt>{L_TOTAL_POSTS}:</dt> <dd>{POSTS} | <strong><a href="{U_SEARCH_USER}">{L_SEARCH_USER_POSTS}</a></strong><!-- IF POSTS_PCT --><br />({POSTS_PCT} / {POSTS_DAY})<!-- ENDIF --></dd>]]></find>
-        <action type="after-add"><![CDATA[<dt>{L_TOTAL_IMAGES}:</dt> <dd>{IMAGES} | <strong><a href="{U_SEARCH_GALLERY}">{L_SEARCH_USER_IMAGES}</a></strong><!-- IF IMAGES_PCT --><br />({IMAGES_PCT} / {IMAGES_DAY})<!-- ENDIF --></dd>]]></action>
+        <action type="after-add"><![CDATA[<!-- IF TOTAL_IMAGES --><dt>{L_TOTAL_IMAGES}:</dt> <dd>{IMAGES} | <strong><a href="{U_SEARCH_GALLERY}">{L_SEARCH_USER_IMAGES}</a></strong><!-- IF IMAGES_PCT --><br />({IMAGES_PCT} / {IMAGES_DAY})<!-- ENDIF --></dd><!-- ENDIF -->]]></action>
       </edit>
     </open>
     <open src="styles/prosilver/theme/bidi.css">

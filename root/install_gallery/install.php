@@ -146,7 +146,10 @@ switch ($mode)
 			gallery_config_value('disp_fake_thumb', 1);
 			gallery_config_value('personal_counter', 0);
 			gallery_config_value('exif_data', 1);
-			gallery_config_value('num_images', 0);
+			set_config('num_images', 0, true);
+			set_config('gallery_total_images', 1);
+			set_config('gallery_user_images_profil', 1);
+			set_config('gallery_personal_album_profil', 1);
 			$album_config = load_album_config();
 
 			// create the modules
@@ -812,18 +815,22 @@ switch ($mode)
 					}
 					$db->sql_freeresult($result);
 					set_config('num_images', $num_images, true);
+					set_config('gallery_total_images', 1);
+					set_config('gallery_user_images_profil', 1);
+					set_config('gallery_personal_album_profil', 1);
 
 				case '0.3.2':
 					//and drop the old column
 					//delete_gallery_column(GROUPS_TABLE, 'personal_subalbums');
 					//delete_gallery_column(GROUPS_TABLE, 'allow_personal_albums');
 					//delete_gallery_column(GROUPS_TABLE, 'view_personal_albums');
-					//delete_gallery_column(USERS_TABLE, 'album_id');
+					//not sure about this one because of the viewtopic.php delete_gallery_column(USERS_TABLE, 'album_id');
 				//no break;
 
 
 				case 'svn':
 					$album_config = load_album_config();
+					gallery_column(USERS_TABLE, 'album_id', array('UINT', 0));
 				break;
 			}
 
@@ -994,7 +1001,10 @@ switch ($mode)
 			gallery_config_value('fake_thumb_size', 141);
 			gallery_config_value('disp_fake_thumb', 1);
 			gallery_config_value('exif_data', 1);
-			gallery_config_value('num_images', 0);
+			set_config('num_images', 0, true);
+			set_config('gallery_total_images', 1);
+			set_config('gallery_user_images_profil', 1);
+			set_config('gallery_personal_album_profil', 1);
 
 			// last and least the images...
 			$sql = 'SELECT i.*, u.user_colour, u.username

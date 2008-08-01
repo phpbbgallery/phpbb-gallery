@@ -478,7 +478,10 @@ class acp_gallery
 
 		if (isset($_POST['submit']))
 		{
-			set_config('gallery_total_images', request_var('gallery_total_images', 0), true);
+			set_config('gallery_total_images', request_var('gallery_total_images', 0));
+			set_config('gallery_user_images_profil', request_var('gallery_user_images_profil', 0));
+			set_config('gallery_personal_album_profil', request_var('gallery_personal_album_profil', 0));
+			$cache->destroy('sql', CONFIG_TABLE);
 			$cache->destroy('sql', GALLERY_CONFIG_TABLE);
 			trigger_error($user->lang['GALLERY_CONFIG_UPDATED'] . adm_back_link($this->u_action));
 		}
@@ -560,8 +563,10 @@ class acp_gallery
 			'FULLPIC_POPUP_ENABLED' 			=> ($new['fullpic_popup'] == 1) ? 'checked="checked"' : '',
 			'FULLPIC_POPUP_DISABLED' 			=> ($new['fullpic_popup'] == 0) ? 'checked="checked"' : '',
 
-			'S_DISPLAY_EXIF_DATA' 				=> $new['exif_data'],
-			'S_TOTAL_IMAGES' 					=> $config['gallery_total_images'],
+			'S_DISP_EXIF_DATA' 					=> $new['exif_data'],
+			'S_DISP_TOTAL_IMAGES' 				=> $config['gallery_total_images'],
+			'S_DISP_USER_IMAGES_PROFIL' 		=> $config['gallery_user_images_profil'],
+			'S_DISP_PERSONAL_ALBUM_PROFIL' 		=> $config['gallery_personal_album_profil'],
 
 			'S_GUEST' 							=> ALBUM_GUEST,
 			'S_USER' 							=> ALBUM_USER,

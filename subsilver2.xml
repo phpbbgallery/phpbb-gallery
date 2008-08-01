@@ -72,10 +72,12 @@
 				<td class="gen" align="{S_CONTENT_FLOW_END}" valign="top" nowrap="nowrap">{L_TOTAL_POSTS}: </td>
 				<td><b class="gen">{POSTS}</b><span class="genmed"><!-- IF POSTS_PCT --><br />[{POSTS_PCT} / {POSTS_DAY}]<!-- ENDIF --><br /><a href="{U_SEARCH_USER}">{L_SEARCH_USER_POSTS}</a></span></td>
 			</tr>]]></find>
-        <action type="after-add"><![CDATA[			<tr>
-				<td class="gen" align="{S_CONTENT_FLOW_END}" valign="top" nowrap="nowrap">{L_TOTAL_IMAGES}: </td>
-				<td><b class="gen">{IMAGES}</b><span class="genmed"><!-- IF IMAGES_PCT --><br />[{IMAGES_PCT} / {IMAGES_DAY}]<!-- ENDIF --><br /><a href="{U_SEARCH_GALLERY}">{L_SEARCH_USER_IMAGES}</a></span></td>
-			</tr>]]></action>
+        <action type="after-add"><![CDATA[			<!-- IF TOTAL_IMAGES -->
+				<tr>
+					<td class="gen" align="{S_CONTENT_FLOW_END}" valign="top" nowrap="nowrap">{L_TOTAL_IMAGES}: </td>
+					<td><b class="gen">{IMAGES}</b><span class="genmed"><!-- IF IMAGES_PCT --><br />[{IMAGES_PCT} / {IMAGES_DAY}]<!-- ENDIF --><br /><a href="{U_SEARCH_GALLERY}">{L_SEARCH_USER_IMAGES}</a></span></td>
+				</tr>
+			<!-- ENDIF -->]]></action>
       </edit>
       <edit>
         <find><![CDATA[			<tr>

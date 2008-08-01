@@ -193,7 +193,9 @@ $lang = array_merge($lang, array(
 	'DELETE_PERMISSIONS'			=> 'Delete permissions',
 	'DISP_EXIF_DATA'				=> 'Display Exif-data',
 	'DISP_FAKE_THUMB'				=> 'View thumbnail in albumlist',
-	'DISP_TOTAL_IMAGES'				=> 'show "Total images" on index.' . $phpEx,
+	'DISP_PERSONAL_ALBUM_PROFIL'	=> 'Show link to personal album in user-profile',
+	'DISP_TOTAL_IMAGES'				=> 'Show "Total images" on index.' . $phpEx,
+	'DISP_USER_IMAGES_PROFIL'		=> 'Show statistic with uploaded images in user-profile',
 	'DONT_COPY_PERMISSIONS'			=> 'don\'t copy permissions',
 
 	'FAKE_THUMB_SIZE'				=> 'Thumbnail-size',

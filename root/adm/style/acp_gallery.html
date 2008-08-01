@@ -283,7 +283,7 @@
 		</dl>
 		<dl>
 			<dt><label for="exif_data">{L_DISP_EXIF_DATA}</label></dt>
-			<dd><input type="radio" class="radio"<!-- IF S_DISPLAY_EXIF_DATA --> checked="checked"<!-- ENDIF --> name="exif_data" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_DISPLAY_EXIF_DATA --> checked="checked"<!-- ENDIF --> name="exif_data" value="0" />{L_NO}</dd>
+			<dd><input type="radio" class="radio"<!-- IF S_DISP_EXIF_DATA --> checked="checked"<!-- ENDIF --> name="exif_data" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_DISP_EXIF_DATA --> checked="checked"<!-- ENDIF --> name="exif_data" value="0" />{L_NO}</dd>
 		</dl>
 	</fieldset>
 	<fieldset>
@@ -343,7 +343,15 @@
 		</dl>
 		<dl>
 			<dt><label for="comment">{L_DISP_TOTAL_IMAGES}</label></dt>
-			<dd><input type="radio" class="radio"<!-- IF S_TOTAL_IMAGES --> checked="checked"<!-- ENDIF --> name="gallery_total_images" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_TOTAL_IMAGES --> checked="checked"<!-- ENDIF --> name="gallery_total_images" value="0" />{L_NO}</dd>
+			<dd><input type="radio" class="radio"<!-- IF S_DISP_TOTAL_IMAGES --> checked="checked"<!-- ENDIF --> name="gallery_total_images" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_DISP_TOTAL_IMAGES --> checked="checked"<!-- ENDIF --> name="gallery_total_images" value="0" />{L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="comment">{L_DISP_PERSONAL_ALBUM_PROFIL}</label></dt>
+			<dd><input type="radio" class="radio"<!-- IF S_DISP_PERSONAL_ALBUM_PROFIL --> checked="checked"<!-- ENDIF --> name="gallery_personal_album_profil" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_DISP_PERSONAL_ALBUM_PROFIL --> checked="checked"<!-- ENDIF --> name="gallery_personal_album_profil" value="0" />{L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="comment">{L_DISP_USER_IMAGES_PROFIL}</label></dt>
+			<dd><input type="radio" class="radio"<!-- IF S_DISP_USER_IMAGES_PROFIL --> checked="checked"<!-- ENDIF --> name="gallery_user_images_profil" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_DISP_USER_IMAGES_PROFIL --> checked="checked"<!-- ENDIF --> name="gallery_user_images_profil" value="0" />{L_NO}</dd>
 		</dl>
 	</fieldset>
 
