@@ -181,13 +181,18 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
     <open src="includes/functions_user.php">
       <edit>
         <find><![CDATA[GALLERY_IMAGES_TABLE	=> array('image_username'),]]></find>
-        <action type="after-add"><![CDATA[GALLERY_ALBUMS_TABLE	=> array('album_last_username'),]]></action>
+        <action type="before-add"><![CDATA[		GALLERY_ALBUMS_TABLE	=> array('album_last_username'),
+		GALLERY_COMMENTS_TABLE	=> array('comment_username'),]]></action>
       </edit>
       <edit>
         <find><![CDATA[		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " SET image_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
 			WHERE " . $db->sql_in_set('image_user_id', $user_id_ary);
 		$db->sql_query($sql);]]></find>
-        <action type="after-add"><![CDATA[		$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . " SET album_last_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+        <action type="before-add"><![CDATA[		$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . " SET album_last_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('album_last_user_id', $user_id_ary);
+		$db->sql_query($sql);
+
+		$sql = 'UPDATE ' . GALLERY_COMMENTS_TABLE . " SET comment_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
 			WHERE " . $db->sql_in_set('album_last_user_id', $user_id_ary);
 		$db->sql_query($sql);]]></action>
       </edit>
