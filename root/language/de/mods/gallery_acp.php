@@ -34,8 +34,8 @@ $lang = array_merge($lang, array(
 	'ACP_CREATE_ALBUM_EXPLAIN'			=> 'Neues Album erstellen und konfigurieren.',
 	'ACP_EDIT_ALBUM_TITLE'				=> 'Album bearbeiten',
 	'ACP_EDIT_ALBUM_EXPLAIN'			=> 'Ein vorhandenes Album bearbeiten.',
-	'ACP_GALLERY_OVERVIEW'				=> 'phpBB Galerie Übersicht',
-	'ACP_GALLERY_OVERVIEW_EXPLAIN'		=> 'Galerie Admin Übersicht. Hier werden sich in der nächsten Version einige Statistiken etc. befinden.',
+	'ACP_GALLERY_OVERVIEW'				=> 'phpBB Galerie',
+	'ACP_GALLERY_OVERVIEW_EXPLAIN'		=> 'Hier findest du ein paar Statistiken zu deiner Galerie.',
 	'ACP_MANAGE_ALBUMS'					=> 'phpBB Galerie Album administration',
 	'ACP_MANAGE_ALBUMS_EXPLAIN'			=> 'Hier kannst du Deine Alben verwalten (Ehemalige Kategorien).',
 	
@@ -86,7 +86,7 @@ $lang = array_merge($lang, array(
 	
 	'GALLERY_ALBUMS_TITLE'				=> 'Galerie Alben Kontrolle',
 	'GALLERY_CATEGORIES_EXPLAIN'		=> 'Hier kannst du deine Alben verwalten: erstellen, ändern, löschen, sortieren, usw.',
-	'GALLERY_CLEAR_CACHE_CONFIRM'		=> 'Wenn du den Cache Feature für das Vorschaubild benutzt, musst du nach einer Änderungen in der Album Konfiguratioin den Cache Deiner Vorschaubild-Seite leeren um sie neu generieren zu lassen. <br /> <br /> Willst du ihn jetzt leeren?',
+	'GALLERY_CLEAR_CACHE_CONFIRM'		=> 'Wenn du den Cache Feature für das Vorschaubild benutzt, musst du nach einer Änderungen an den Einstellungen in "Gallery konfigurieren" den Cache deiner Vorschaubilder leeren, um sie neu generieren zu lassen.',
 	'GALLERY_CONFIG'					=> 'Galerie Konfiguration',
 	'GALLERY_CONFIG_EXPLAIN'			=> 'Hier kannst du die Allgemeinen Einstellungen von phpBB Galerie durchführen.',
 	'GALLERY_CONFIG_UPDATED'			=> 'Galerie Konfiguration wurde erfolgreich aktualisiert',
@@ -188,6 +188,7 @@ $lang = array_merge($lang, array(
 $lang = array_merge($lang, array(
 	'ALBUM_IMAGE'					=> 'Albumbild',
 
+	'CACHE_DIR_SIZE'				=> 'Größe des cache/-Ordners',
 	'COPY_PERMISSIONS'				=> 'Kopiere Berechtigungen von',
 
 	'DELETE_PERMISSIONS'			=> 'Berechtigungen löschen',
@@ -201,12 +202,21 @@ $lang = array_merge($lang, array(
 	'FAKE_THUMB_SIZE'				=> 'Thumbnailgröße',
 	'FAKE_THUMB_SIZE_EXP'			=> 'Wenn du die volle Größe wählst, denke an die 16 Pixel für die schwarze Info-Zeile',
 
+	'GALLERY_STATS'					=> 'Galerie Statistik',
+	'GALLERY_VERSION'				=> 'Version der phpBB Gallery',//ja mit ll und y, da es sich um den MOD-Namen handelt
+	'GUPLOAD_DIR_SIZE'				=> 'Größe des upload/-Ordners',
+
+	'IMAGES_PER_DAY'				=> 'Bilder pro Tag',
 	'IMPORT_DIR_EMPTY'				=> 'Das Verzeichnis %simport/ ist leer. Du musst die Bilder erst hochladen, bevor du sie importieren kannst.',
 	'IMPORT_SELECT'					=> 'Wähle die Bilder aus, die importiert werden sollen. Bilder die erfolgreich importiert wurden, werden aus der Auswahl gelöscht. Die anderen Bilder stehen dir danach noch zur Verfügung.',
 	'IMPORT_USER'					=> 'Hochgeladen durch',
 	'IMPORT_USER_EXP'				=> 'Du kannst die Bilder auch einem anderem Mitglied zuordnen lassen.',
 
 	'MISSING_ALBUM_NAME'			=> 'Du musst einen Namen für das Album eintragen.',
+
+	'NUMBER_ALBUMS'					=> 'Anzahl von Alben',
+	'NUMBER_IMAGES'					=> 'Anzahl von Bilder',
+	'NUMBER_PERSONALS'				=> 'Anzahl von Persönlichen Alben',
 
 	'OWN_PERSONAL_ALBUMS'			=> 'Eigene persönliche Alben',
 
@@ -234,6 +244,11 @@ $lang = array_merge($lang, array(
 	'PERMISSIONS_STORED'			=> 'Berechtigungen erfolgreich gespeichert.',
 
 	'REMOVE_IMAGES_FOR_CAT'			=> 'Du musst erst die Bilder aus dem Album entfernen, bevor du das Album zu einer Kategorie machen kannst.',
+	'RESYNC_IMAGECOUNTS'			=> 'Anzahl der hochgeladenen Bilder resynchronisieren',
+	'RESYNC_IMAGECOUNTS_EXPLAIN'	=> 'Es werden nur Bilder mitgezählt, die noch existieren.',
+	'RESYNC_IMAGECOUNTS_CONFIRM'	=> 'Bist du sicher, dass du die Anzahl der hochgeladenen Bilder resynchronisieren willst?',
+	'RESYNC_PERSONALS'				=> 'Persönliche Alben resynchronisieren',
+	'RESYNC_PERSONALS_CONFIRM'		=> 'Bist du sicher, dass du die Persönliche Alben resynchronisieren willst?',
 
 	'SELECT_ALBUMS'					=> 'Wähle Alben',
 	'SELECTED_ALBUMS'				=> 'Ausgewählte Alben',
@@ -251,4 +266,5 @@ $lang = array_merge($lang, array(
 	'WATERMARK_WIDTH'				=> 'Mindestbreite',
 	'WATERMARK_HEIGHT'				=> 'Mindesthöhe',
 ));
+
 ?>

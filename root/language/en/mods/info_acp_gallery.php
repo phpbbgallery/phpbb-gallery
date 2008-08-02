@@ -37,14 +37,11 @@ $lang = array_merge($lang, array(
 	'PHPBB_GALLERY'								=> 'phpBB Gallery',
 	'ACP_GALLERY_OVERVIEW'						=> 'Overview',
 	'ACP_GALLERY_MANAGE_ALBUMS'					=> 'Manage Albums',
-	'ACP_GALLERY_MANAGE_CACHE'					=> 'Manage Cache',
 	'ACP_GALLERY_CONFIGURE_GALLERY'				=> 'Configure Gallery',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'				=> 'Album Permissions',
-	'ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS'	=> 'Personal Album Permissions',
 	'ACP_IMPORT_ALBUMS'							=> 'Import Images',
 	'IMG_BUTTON_UPLOAD_IMAGE'					=> 'Upload image',
 	'REMOVE_GALLERY_INSTALL'					=> 'Please remove the install_gallery/ folder in order to be save.',
-	'NEW_PERMISSIONS'							=> 'New permission system',
 ));
 
 $lang = array_merge($lang, array(

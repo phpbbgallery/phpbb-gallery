@@ -34,8 +34,8 @@ $lang = array_merge($lang, array(
 	'ACP_CREATE_ALBUM_EXPLAIN'			=> 'Create and configure a new album.',
 	'ACP_EDIT_ALBUM_TITLE'				=> 'Edit album',
 	'ACP_EDIT_ALBUM_EXPLAIN'			=> 'Edit an existing album.',
-	'ACP_GALLERY_OVERVIEW'				=> 'phpBB Gallery Overview',
-	'ACP_GALLERY_OVERVIEW_EXPLAIN'		=> 'Gallery Admin Overview. In the next Version there will be some statistics etc. here.',
+	'ACP_GALLERY_OVERVIEW'				=> 'phpBB Gallery',
+	'ACP_GALLERY_OVERVIEW_EXPLAIN'		=> 'Here are some statistics about your gallery.',
 	'ACP_MANAGE_ALBUMS'				=> 'phpBB Gallery Album administration',
 	'ACP_MANAGE_ALBUMS_EXPLAIN'			=> 'Here you can manage your Albums (former categories).',
 
@@ -86,7 +86,7 @@ $lang = array_merge($lang, array(
 	
 	'GALLERY_ALBUMS_TITLE'				=> 'Gallery Albums Control',
 	'GALLERY_CATEGORIES_EXPLAIN'			=> 'On this screen you can manage your albums: create, alter, delete, sort, etc.',
-	'GALLERY_CLEAR_CACHE_CONFIRM'			=> 'If you use the Thumbnail Cache feature you must clear your thumbnail cache after changing your thumbnail settings in Album Configuration to make them re-generated.<br /><br /> Do you want to clear them now?',
+	'GALLERY_CLEAR_CACHE_CONFIRM'			=> 'If you use the Thumbnail Cache feature you must clear your thumbnail cache after changing your thumbnail settings in "Gallery configuration" to make them regenerated.',
 	'GALLERY_CONFIG'					=> 'Gallery Configuration',
 	'GALLERY_CONFIG_EXPLAIN'			=> 'You can change the general settings of phpBB Gallery here',
 	'GALLERY_CONFIG_UPDATED'			=> 'Gallery Configuration has been updated successfully',
@@ -188,6 +188,7 @@ $lang = array_merge($lang, array(
 $lang = array_merge($lang, array(
 	'ALBUM_IMAGE'					=> 'Album image',
 
+	'CACHE_DIR_SIZE'				=> 'cache/-directory size',
 	'COPY_PERMISSIONS'				=> 'Copy Permissions from',
 
 	'DELETE_PERMISSIONS'			=> 'Delete permissions',
@@ -201,12 +202,21 @@ $lang = array_merge($lang, array(
 	'FAKE_THUMB_SIZE'				=> 'Thumbnail-size',
 	'FAKE_THUMB_SIZE_EXP'			=> 'If you want to resize them to the full size, remember 16 pixels for the black-info-line',
 
+	'GALLERY_STATS'					=> 'Gallery statistics',
+	'GALLERY_VERSION'				=> 'Gallery version',
+	'GUPLOAD_DIR_SIZE'				=> 'upload/-directory size',
+
+	'IMAGES_PER_DAY'				=> 'Images per day',
 	'IMPORT_DIR_EMPTY'				=> 'The folder %simport/ is empty. You need to upload the images, before you can import them.',
 	'IMPORT_SELECT'					=> 'Choose the images which you want to import. Successful uploaded images are deleted. All other images are still available.',
 	'IMPORT_USER'					=> 'Uploaded by',
 	'IMPORT_USER_EXP'				=> 'You can add the images to another user here.',
 
 	'MISSING_ALBUM_NAME'			=> 'You need to enter a name for the album',
+
+	'NUMBER_ALBUMS'					=> 'Number of albums',
+	'NUMBER_IMAGES'					=> 'Number of images',
+	'NUMBER_PERSONALS'				=> 'Number of personal albums',
 
 	'OWN_PERSONAL_ALBUMS'			=> 'Own personal albums',
 
@@ -234,6 +244,11 @@ $lang = array_merge($lang, array(
 	'PERMISSIONS_STORED'			=> 'Permissions were stored successful.',
 
 	'REMOVE_IMAGES_FOR_CAT'			=> 'You need to remove the images of the album, before you can switch the album-type to category.',
+	'RESYNC_IMAGECOUNTS'			=> 'Resynchronise image counts',
+	'RESYNC_IMAGECOUNTS_EXPLAIN'	=> 'Only existing images will be taken into consideration.',
+	'RESYNC_IMAGECOUNTS_CONFIRM'	=> 'Are you sure you wish to resynchronise image counts?',
+	'RESYNC_PERSONALS'				=> 'Resynchronise personal album id\'s',
+	'RESYNC_PERSONALS_CONFIRM'		=> 'Are you sure you wish to resynchronise image counts?',
 
 	'SELECT_ALBUMS'					=> 'Select albums',
 	'SELECTED_ALBUMS'				=> 'Selected albums',
