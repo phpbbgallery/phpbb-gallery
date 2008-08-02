@@ -95,15 +95,16 @@ function recent_gallery_images($rows, $columns, &$display)
 				}
 
 				$template->assign_block_vars('picrow.pic_detail', array(
-					'TITLE'		=> ($display['name']) ? ($picrow[$j]['image_name']) : '',
-					'POSTER'	=> ($display['poster']) ? (get_username_string('full', $picrow[$j]['image_user_id'], (($picrow[$j]['image_user_id'] <> ANONYMOUS) ? $picrow[$j]['image_username'] : $user->lang['GUEST']), $picrow[$j]['image_user_colour'])) : '',
-					'TIME'		=> ($display['time']) ? ($user->format_date($picrow[$j]['image_time'])) : '',
-					'VIEWS'		=> ($display['views']) ? $picrow[$j]['image_view_count'] : '',
-					'RATINGS'	=> ($display['ratings']) ? (($album_config['rate'] == 1) ? $picrow[$j]['rating'] : 0) : '',
-					'L_COMMENT'	=> ($display['comments']) ? (($picrow[$j]['image_comments'] == 1) ? $user->lang['COMMENT'] : $user->lang['COMMENTS']) : '',
-					'COMMENTS'	=> ($display['comments']) ? (($album_config['comment'] == 1) ? $picrow[$j]['image_comments'] : 0) : '',
-					'ALBUM'		=> ($display['album']) ? $picrow[$j]['album_name'] : '',
-					'U_ALBUM'	=> ($display['album']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $picrow[$j]['album_id']) : '',
+					'U_IMAGE'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . '&amp;image_id=' . $picrow[$j]['image_id']),
+					'IMAGE_NAME'	=> ($display['name']) ? ($picrow[$j]['image_name']) : '',
+					'POSTER'		=> ($display['poster']) ? (get_username_string('full', $picrow[$j]['image_user_id'], (($picrow[$j]['image_user_id'] <> ANONYMOUS) ? $picrow[$j]['image_username'] : $user->lang['GUEST']), $picrow[$j]['image_user_colour'])) : '',
+					'TIME'			=> ($display['time']) ? ($user->format_date($picrow[$j]['image_time'])) : '',
+					'VIEWS'			=> ($display['views']) ? $picrow[$j]['image_view_count'] : '',
+					'RATINGS'		=> ($display['ratings']) ? (($album_config['rate'] == 1) ? $picrow[$j]['rating'] : 0) : '',
+					'L_COMMENT'		=> ($display['comments']) ? (($picrow[$j]['image_comments'] == 1) ? $user->lang['COMMENT'] : $user->lang['COMMENTS']) : '',
+					'COMMENTS'		=> ($display['comments']) ? (($album_config['comment'] == 1) ? $picrow[$j]['image_comments'] : 0) : '',
+					'ALBUM'			=> ($display['album']) ? $picrow[$j]['album_name'] : '',
+					'U_ALBUM'		=> ($display['album']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $picrow[$j]['album_id']) : '',
 				));
 			}
 		}

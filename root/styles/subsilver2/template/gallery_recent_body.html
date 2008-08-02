@@ -20,15 +20,15 @@
 	</tr>
 	<tr>
 		<!-- BEGIN pic_detail -->
-		<td class="row2"><span class="gensmall">
-			<!-- IF picrow.pic_detail.TITLE -->{L_IMAGE_TITLE}: {picrow.pic_detail.TITLE}<br /><!-- ENDIF -->
+		<td class="row2"><div style="overflow: hidden;">
+			<!-- IF picrow.pic_detail.IMAGE_NAME -->{L_IMAGE_TITLE}: <a href="{picrow.pic_detail.U_IMAGE}" style="font-weight: bold;">{picrow.pic_detail.IMAGE_NAME}</a><br /><!-- ENDIF -->
 			<!-- IF picrow.pic_detail.POSTER -->{L_POSTER}: {picrow.pic_detail.POSTER}<br /><!-- ENDIF -->
 			<!-- IF picrow.pic_detail.TIME -->{L_POSTED}: {picrow.pic_detail.TIME}<br /><!-- ENDIF -->
 			<!-- IF picrow.pic_detail.VIEWS -->{L_VIEWS}: {picrow.pic_detail.VIEWS}<br /><!-- ENDIF -->
 			<!-- IF picrow.pic_detail.RATINGS -->{L_RATING}: {picrow.pic_detail.RATINGS}<br /><!-- ENDIF -->
 			<!-- IF picrow.pic_detail.COMMENTS -->{picrow.pic_detail.L_COMMENT}: {picrow.pic_detail.COMMENTS}<br /><!-- ENDIF -->
 			<!-- IF picrow.pic_detail.ALBUM -->{L_ALBUM}: <a href="{picrow.pic_detail.U_ALBUM}" style="font-weight: bold;">{picrow.pic_detail.ALBUM}</a><br /><!-- ENDIF -->
-		</span></td>
+		</div></td>
 		<!-- END pic_detail -->
 		<!-- BEGIN picnodetail -->
 		<td class="row2"><span></span></td>
