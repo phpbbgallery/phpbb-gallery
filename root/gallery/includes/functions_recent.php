@@ -115,6 +115,7 @@ function recent_gallery_images($rows, $columns, &$display)
 	}
 
 	$template->assign_vars(array(
+		'S_COL_WIDTH'			=> (100/$album_config['cols_per_page']) . '%',
 		'S_COLS'				=> $columns,
 	));
 }
