@@ -38,7 +38,7 @@ $lang = array_merge($lang, array(
 	'ACP_GALLERY_OVERVIEW_EXPLAIN'		=> 'Hier findest du ein paar Statistiken zu deiner Galerie.',
 	'ACP_MANAGE_ALBUMS'					=> 'phpBB Galerie Album administration',
 	'ACP_MANAGE_ALBUMS_EXPLAIN'			=> 'Hier kannst du Deine Alben verwalten (Ehemalige Kategorien).',
-	
+
 	'ALBUM_AUTH_EXPLAIN'				=> 'Hier kannst Du auswählen, welche Benutzergruppen Alben moderieren dürfen oder nur privaten Zugang erhalten',
 	'ALBUM_AUTH_SUCCESSFULLY'			=> 'Einstellungen für die Berechtigungen wurden erfolgreich aktualisiert',
 	'ALBUM_AUTH_TITLE'					=> 'Album Berechtigungen',
@@ -51,7 +51,7 @@ $lang = array_merge($lang, array(
 	'ALBUM_PERSONAL_SUCCESSFULLY'		=> 'Die Einstellungen wurden erfolgreich aktuallisiert',
 	'ALBUM_TITLE'						=> 'Album Titel',
 	'ALBUM_UPDATED'						=> 'Das Album wurde erfolgreich aktuallisiert',
-	
+
 	'CAN_COMMENT'						=> 'Kann kommentieren',
 	'CAN_DELETE'						=> 'Kann löschen',
 	'CAN_EDIT'							=> 'Kann bearbeiten',
@@ -70,60 +70,60 @@ $lang = array_merge($lang, array(
 	'COMMENT_LEVEL'						=> 'Kommentar Level',
 	'COMMENT_SYSTEM'					=> 'Kommentar System aktivieren',
 	'CREATE_ALBUM'						=> 'Neues Album erstellen',
-	
+
 	'DEFAULT_SORT_METHOD'				=> 'Voreingestellte Sortiermethode',
 	'DEFAULT_SORT_ORDER'				=> 'Voreingestellte Sortierreihenfolge',
 	'DELETE_ALBUM'						=> 'Album löschen',
 	'DELETE_ALBUM_EXPLAIN'				=> 'Das untere Formular erlaubt Dir ein Album zu löschen und zu entscheiden ob du die Bilder löschen oder verschieben möchtest.',
 	'DELETE_ALL_IMAGES'					=> 'Lösche alle Bilder',
 	'DELETE_LEVEL'						=> 'Löschen Level',
-	
+
 	'EDIT_ALBUM'						=> 'Album bearbeiten',
 	'EDIT_LEVEL'						=> 'Bearbeiten Level',
 	'EXTRA_SETTINGS'					=> 'Extra Einstellungen',
-	
+
 	'FULL_IMAGE_POPUP'					=> 'Das Bild in voller Größe im Pop Up-Fenster ansehen',
-	
+
 	'GALLERY_ALBUMS_TITLE'				=> 'Galerie Alben Kontrolle',
 	'GALLERY_CATEGORIES_EXPLAIN'		=> 'Hier kannst du deine Alben verwalten: erstellen, ändern, löschen, sortieren, usw.',
 	'GALLERY_CLEAR_CACHE_CONFIRM'		=> 'Wenn du den Cache Feature für das Vorschaubild benutzt, musst du nach einer Änderungen an den Einstellungen in "Gallery konfigurieren" den Cache deiner Vorschaubilder leeren, um sie neu generieren zu lassen.',
 	'GALLERY_CONFIG'					=> 'Galerie Konfiguration',
 	'GALLERY_CONFIG_EXPLAIN'			=> 'Hier kannst du die Allgemeinen Einstellungen von phpBB Galerie durchführen.',
 	'GALLERY_CONFIG_UPDATED'			=> 'Galerie Konfiguration wurde erfolgreich aktualisiert',
-	
+
 	'GALLERY_ALL'						=> 'Alle',
 	'GALLERY_REG'						=> 'Registrierte',
 	'GALLERY_PRIVATE'					=> 'Privat',
 	'GALLERY_MOD'						=> 'Moderator',
 	'GALLERY_ADMIN'						=> 'Administrator',
-	
+
 	'GD_VERSION'						=> 'GD Version optimieren',
-	
+
 	'HOTLINK_ALLOWED'					=> 'Erlaubt Domains für Hotlink (getrennt durch ein Komma)',
 	'HOTLINK_PREVENT'					=> 'Hotlink Prävention',
-	
+
 	'IMAGE_APPROVAL'					=> 'Genehmigung der Bilder',
 	'IMAGE_SETTINGS'					=> 'Bilder Einstellungen',
 	'IMAGE_DESC_MAX_LENGTH'				=> 'Bild Beschreibung / Kommentar Max Länge (Bytes)',
 	'INFO_LINE'							=> 'Dateigröße auf dem Thumbnail anzeigen',
 	'IS_MODERATOR'						=> 'Ist Moderator',
-	
+
 	'LOOK_UP_ALBUM'						=> 'Album wählen',
-	
+
 	'MANUAL_THUMBNAIL'					=> 'Manuelles Vorschaubild',
 	'MAX_IMAGES_PER_ALBUM'				=> 'Die maximale Anzahl der Bilder für jedes Album (-1 = unbegrenzt)',
 	'MODERATOR_IMAGES_LIMIT'			=> 'Bilder pro Album für jeden Moderator (-1 = unbegrenzt)',
 	'MOVE_CONTENTS'						=> 'Alle Bilder verschieben',
 	'MOVE_DELETE'						=> 'Verschieben und löschen',
 	'MOVE_AND_DELETE'					=> 'Verschieben und löschen',
-	
+
 	'NEW_ALBUM_CREATED'					=> 'Neues Album wurde erfolgreich erstellt',
-	
+
 	'PERSONAL_GALLERIES'				=> 'Persönliche Alben',
 	'PERSONAL_GALLERY'					=> 'Erlaubt den Benutzern persönliche Alben anzulegen',
 	'PERSONAL_GALLERY_LIMIT'			=> 'Bilder für jedes persönliche Album (-1 = unbegrenzt)',
 	'PERSONAL_GALLERY_VIEW'				=> 'Wer darf persönliche Alben ansehen',
-	
+
 	'RATE'								=> 'Bewertung',
 	'RATE_LEVEL'						=> 'Bewertungs Level',
 	'RATE_SCALE'						=> 'Bewertungsskala',
@@ -131,20 +131,20 @@ $lang = array_merge($lang, array(
 	'ROWS_PER_PAGE'						=> 'Anzahl der Zeilen auf Bildvorschau-Seite',
 	'RSZ_HEIGHT'						=> 'Maximuale Höhe beim anzeigen eines Bildes',
 	'RSZ_WIDTH'							=> 'Maximuale Breite beim anzeigen eines Bildes',
-	
+
 	'SELECT_A_ALBUM'					=> 'Wähle ein Album',
-	
+
 	'THUMBNAIL_CACHE'					=> 'Bildvorschau Cache',
 	'THUMBNAIL_CACHE_CLEARED_SUCCESSFULLY'	=> '<br />Dein Bildvorschau Cache wurde erfolgreich geleert<br />&nbsp;',
 	'THUMBNAIL_QUALITY'					=> 'Bildvorschau Qualität (1-100)',
 	'THUMBNAIL_SETTINGS'				=> 'Bildvorschau Einstellungen',
-	
+
 	'UPLOAD'							=> 'Hochladen',
 	'UPLOAD_LEVEL'						=> 'Hochladen Level',
 	'USER_IMAGES_LIMIT'					=> 'Bilder pro Album für jeden Benutzer (-1 = unbegrenzt)',
-	
+
 	'VIEW_LEVEL'						=> 'Betrachten Level',
-	
+
 	'WATERMARK_IMAGES'					=> 'Wasserzeichen aktivieren',
 	'WATERMARK_SOURCE'		 			=> 'Wasserzeichen Bild (Releativer Pfad zum Forums Root)',
 
@@ -171,18 +171,10 @@ $lang = array_merge($lang, array(
 	'IMPORT_MISSING_DIR'			=> 'Gebe bitte das Verzeichnis an, wo sich Deine Bilder befinden.',
 	'IMPORT_MISSING_ALBUM'			=> 'Wähle bitte ein Album aus, in das die Bilder importiert werden sollen.',
 	'NO_DESC'						=> 'Keine Beschreibung',
-	'IMPORT_DEBUG'					=> 'Debug Import Status',
-	'IMPORT_DEBUG_MES'				=> '%1$s Bilder importiert. Es sind noch %2$s Bilder zu importieren. Wiederhole den Vorgang zum Import der restlichen Bilder.',
-	'IMPORT_DIR'				=> 'Vollständiger Pfad zu Deinen Bildern:',
-	'IMPORT_DIR_EXP'			=> 'Windows: C:/www/meineSeite/phpBB3/gallery/import<br />Linux: /home/user/www/phpBB3/gallery/import',
-	'IMPORT_DIR_DEL'			=> 'Bitte beachte, dass die Bilder aus dem Verzeichnis <span style="color: red;">gelöscht</span> werden.<br />Lege also vorher eine Kopie an.',
+	'IMPORT_DEBUG_MES'				=> '%1$s Bilder importiert. Es sind noch %2$s Bilder zu importieren.',
+	'IMPORT_FINISHED'				=> 'Alle %1$s Bilder erfolgreich importiert.',
 	'IMPORT_ALBUM'				=> 'Zielalbum:',
-	'IMPORT_CIRCLE'				=> 'Bilder die in einem Durchgang geladen werden sollen:',
 	'UPLOAD_IMAGES'				=> 'Mehrere Bilder auf einmal hochladen',
-
-	'VIEW_PERSONALS'			=> 'Darf persönliche Alben ansehen',
-	'CREATE_PERSONALS'			=> 'Darf persönliche Alben erstellen',
-	'ALLOWED_SUBS'				=> 'Anzahl der Subalben',
 ));
 
 $lang = array_merge($lang, array(

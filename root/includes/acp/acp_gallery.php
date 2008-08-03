@@ -100,13 +100,18 @@ class acp_gallery
 
 	function import()
 	{
-		global $db, $template, $user, $config, $phpbb_root_path, $gallery_root_path;
+		global $phpbb_admin_path, $phpbb_root_path, $gallery_root_path, $phpEx;
+		global $db, $template, $user, $config;
 
-		$submit = (isset($_POST['submit'])) ? true : false;
+		$images = request_var('images', array(''), true);
+		$images_string = request_var('images_string', '', true);
+		$images = ($images_string) ? explode('&quot;', utf8_decode($images_string)) : $images;
+		$submit = (isset($_POST['submit'])) ? true : ((empty($images)) ? false : true);
+
 		$directory = $phpbb_root_path . GALLERY_ROOT_PATH . 'import/';
+
 		if(!$submit)
 		{
-
 			$sql = 'SELECT *
 				FROM ' . GALLERY_CONFIG_TABLE;
 			$result = $db->sql_query($sql);
@@ -161,29 +166,25 @@ class acp_gallery
 		{
 			if (!check_form_key('acp_gallery'))
 			{
-				trigger_error('FORM_INVALID');
+				//debug: trigger_error('FORM_INVALID');
 			}
-
 			$sql = 'SELECT *
 				FROM ' . GALLERY_CONFIG_TABLE;
 			$result = $db->sql_query($sql);
 			while( $row = $db->sql_fetchrow($result) )
 			{
-				$album_config_name = $row['config_name'];
-				$album_config_value = $row['config_value'];
-				$album_config[$album_config_name] = $album_config_value;
+				$album_config[$row['config_name']] = $row['config_value'];
 			}
 			$db->sql_freeresult($result);
 
-			// There was no directory specified
-			// There was no album selected
-			$images = request_var('images', array(''), true);
-			$album_id = request_var('target', 0);
-			$user_id = request_var('user_id', 0);
+			$done_images_string = request_var('done_images_string', '', true);
+			$done_images = explode('&quot;', utf8_decode($done_images_string));
+			$album_id = request_var('album_id', 0);
 			if(!$album_id)
 			{
-				trigger_error($user->lang['IMPORT_MISSING_ALBUM'], E_USER_WARNING);
+				trigger_error('IMPORT_MISSING_ALBUM');
 			}
+			$user_id = request_var('user_id', 0);
 			$sql = 'SELECT username, user_colour
 				FROM ' . USERS_TABLE . "
 				WHERE user_id = $user_id";
@@ -195,31 +196,26 @@ class acp_gallery
 			}
 			$db->sql_freeresult($result);
 
-			// Take a look at the directory supplied
 			$results = array();
-
+			$images_per_loop = 0;
+			//this time we do:
 			foreach ($images as $image)
 			{
-				$results[] = $image;
+				if (($images_per_loop < 10) && !in_array($image, $done_images))
+				{
+					$results[] = $image;
+					$images_per_loop++;
+				}
 			}
 
-			// Do the work now
-			$image_user_id 	= $user_id;
-			$image_user_ip 	= $user->ip;
-			$image_username	= $username;
-			$image_user_colour	= $user_colour;
-
 			$image_count = count($results);
-			$counter = 0;
+			$counter = request_var('counter', 0);
 
 			foreach ($results as $image)
 			{
 				$image_path = $directory . utf8_decode($image);
-				//$imp_debug .= $image_path . '<br />-  ';
 
-				// Determine the file type
 				$filetype = getimagesize($image_path);
-
 				$image_width = $filetype[0];
 				$image_height = $filetype[1];
 
@@ -243,13 +239,9 @@ class acp_gallery
 					default:
 						break;
 				}
-
-				// Prep the image to be moved to the store
-
 				// Generate filename
 				srand((double)microtime()*1000000);// for older than version 4.2.0 of PHP
 				$image_filename = md5(uniqid(rand())) . $image_filetype;
-				$image_time 		= time() + 1;
 
 
 				$ini_val = ( @phpversion() >= '4.0.0' ) ? 'ini_get' : 'get_cfg_var';
@@ -372,8 +364,12 @@ class acp_gallery
 				}
 
 				// The source image is imported and thumbnailed, delete it
-				@unlink($image_path);
+				//@unlink($image_path);
 
+				$no_time = time();
+				$time = request_var('time', 0);
+				$time = ($time) ? $time : $no_time;
+				
 				$sql_ary = array(
 					'image_filename' 		=> $image_filename,
 					'image_thumbnail'		=> $image_thumbnail,
@@ -381,11 +377,11 @@ class acp_gallery
 					'image_desc'			=> '',
 					'image_desc_uid'		=> '',
 					'image_desc_bitfield'	=> '',
-					'image_user_id'			=> $image_user_id,
-					'image_username'		=> $image_username,
-					'image_user_colour'		=> $image_user_colour,
-					'image_user_ip'			=> $image_user_ip,
-					'image_time'			=> $image_time + $counter,
+					'image_user_id'			=> $user_id,
+					'image_username'		=> $username,
+					'image_user_colour'		=> $user_colour,
+					'image_user_ip'			=> $user->ip,
+					'image_time'			=> $time + $counter,
 					'image_album_id'		=> $album_id,
 					'image_status'			=> 1,
 				);
@@ -396,8 +392,10 @@ class acp_gallery
 
 				$db->sql_query('INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 				$counter++;
+				$done_images[] = $image;
+				$done_images_string .= (($done_images_string) ? '%22' : '') . urlencode($image);
 			}
-			$left = $image_count - $counter;
+			$left = count($images) - count($done_images);
 			$sql = 'UPDATE ' . GALLERY_USERS_TABLE . " SET user_images = user_images + $counter WHERE user_id = $user_id";
 			$db->sql_query($sql);
 			set_config('num_images', $config['num_images'] + $counter, true);
@@ -406,10 +404,25 @@ class acp_gallery
 				WHERE album_id = $album_id";
 			$db->sql_query($sql);
 			update_lastimage_info($album_id);
-			$template->assign_vars(array(
-				'ACP_GALLERY_TITLE'				=> $user->lang['IMPORT_DEBUG'],
-				'ACP_GALLERY_TITLE_EXPLAIN'		=> sprintf($user->lang['IMPORT_DEBUG_MES'], $counter, $left),
-			));
+			$images_string		= urlencode(implode('"', $images));
+			$done_images_string		= substr(urlencode(implode('"', $done_images)), 3, strlen($done_images_string));
+			$images_to_do = str_replace('%22' . $done_images_string, "", '%22' . $images_string);
+			if ('%22' . $images_string != $images_to_do)
+			{
+				$images_to_do = str_replace($done_images_string, "", $images_string);
+				$images_to_do = substr($images_to_do, 3, strlen($images_to_do));
+			}
+			if ($images_to_do)
+			{
+				$forward_url = $this->u_action . "&amp;album_id=$album_id&amp;time=$time&amp;counter=$counter&amp;user_id=$user_id&amp;images_string=$images_to_do";
+				meta_refresh(1, $forward_url);
+				trigger_error(sprintf($user->lang['IMPORT_DEBUG_MES'], $counter, $left + 1));
+				
+			}
+			else
+			{
+				trigger_error(sprintf($user->lang['IMPORT_FINISHED'], $counter) . adm_back_link($this->u_action));
+			}
 		}
 	}
 
