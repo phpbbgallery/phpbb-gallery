@@ -364,7 +364,7 @@ class acp_gallery
 				}
 
 				// The source image is imported and thumbnailed, delete it
-				//@unlink($image_path);
+				@unlink($image_path);
 
 				$no_time = time();
 				$time = request_var('time', 0);
