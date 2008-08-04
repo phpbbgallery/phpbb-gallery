@@ -88,6 +88,13 @@ class acp_gallery
 				$this->import();
 			break;
 
+			case 'cleanup':
+				$title = 'ACP_GALLERY_CLEANUP';
+				$this->page_title = $user->lang[$title];
+
+				$this->cleanup();
+			break;
+
 			case 'overview':
 			default:
 				$title = 'ACP_GALLERY_OVERVIEW';
@@ -558,6 +565,9 @@ class acp_gallery
 		$db->sql_freeresult($result);
 
 		$cache_dir_size = $gupload_dir_size = 0;
+		//this is much load, maybe we can store this into some variables?
+		//but refresh it, after every upload, or how you wanna do this?
+		/*
 		if ($gupload_dir = @opendir($phpbb_root_path . GALLERY_UPLOAD_PATH))
 		{
 			while (($file = readdir($gupload_dir)) !== false)
@@ -592,6 +602,7 @@ class acp_gallery
 		{
 			$cache_dir_size = $user->lang['NOT_AVAILABLE'];
 		}
+		//*/
 
 		$template->assign_vars(array(
 			'S_GALLERY_OVERVIEW'			=> true,
@@ -1737,6 +1748,308 @@ class acp_gallery
 			'STEP'					=> $step,
 			'PERM_SYSTEM'			=> $perm_system,
 			'S_ALBUM_ACTION' 		=> $this->u_action,
+		));
+	}
+
+	function cleanup()
+	{
+		global $db, $template, $user, $cache, $auth, $phpbb_root_path;
+
+		if (!$auth->acl_get('a_userdel'))
+		{
+			trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action . '&amp;u=' . $user_id), E_USER_WARNING);
+		}
+
+		$delete = (isset($_POST['delete'])) ? true : false;
+		$submit = (isset($_POST['submit'])) ? true : false;
+
+		$missing_sources = request_var('source', array(0));
+		$missing_entries = request_var('entry', array(''), true);
+		$missing_authors = request_var('author', array(0), true);
+		$missing_comments = request_var('comment', array(0), true);
+		$missing_personals = request_var('personal', array(0), true);
+		$s_hidden_fields = build_hidden_fields(array(
+			'source'		=> $missing_sources,
+			'entry'			=> $missing_entries,
+			'author'		=> $missing_authors,
+			'comment'		=> $missing_comments,
+			'personal'		=> $missing_personals,
+		));
+
+		if ($submit)
+		{
+			if ($missing_authors)
+			{
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
+					SET image_user_id = ' . ANONYMOUS . ",
+						image_user_colour = ''
+					WHERE " . $db->sql_in_set('image_id', $missing_authors);
+				$db->sql_query($sql);
+			}
+			if ($missing_comments)
+			{
+				$sql = 'UPDATE ' . GALLERY_COMMENTS_TABLE . ' 
+					SET comment_user_id = ' . ANONYMOUS . ",
+						comment_user_colour = ''
+					WHERE " . $db->sql_in_set('comment_id', $missing_comments);
+				$db->sql_query($sql);
+			}
+			trigger_error($user->lang['CLEAN_CHANGED'] . adm_back_link($this->u_action));
+		}
+
+		if (confirm_box(true))
+		{
+			$message = '';
+			if ($missing_sources)
+			{
+				$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $missing_sources);
+				$db->sql_query($sql);
+				$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . ' WHERE ' . $db->sql_in_set('comment_image_id', $missing_sources);
+				$db->sql_query($sql);
+				$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . ' WHERE ' . $db->sql_in_set('rate_image_id', $missing_sources);
+				$db->sql_query($sql);
+				$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . ' WHERE ' . $db->sql_in_set('report_image_id', $missing_sources);
+				$db->sql_query($sql);
+				$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $missing_sources);
+				$db->sql_query($sql);
+				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $missing_sources);
+				$db->sql_query($sql);
+				$message .= $user->lang['CLEAN_SOURCES_DONE'];
+			}
+			if ($missing_entries)
+			{
+				foreach ($missing_entries as $missing_image)
+				{
+					@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . utf8_decode($missing_image));
+				}
+				$message .= $user->lang['CLEAN_ENTRIES_DONE'];
+			}
+			if ($missing_authors)
+			{
+				$deleted_images = array();
+				$sql = 'SELECT image_id, image_thumbnail, image_filename
+					FROM ' . GALLERY_IMAGES_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $missing_authors);
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					//delete the files themselves
+					@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $row['image_thumbnail']);
+					@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $row['image_filename']);
+					$deleted_images[] = $row['image_id'];
+				}
+				// we have all image_ids in $deleted_images which are deleted
+				// aswell as the album_ids in $deleted_albums
+				// so now drop the comments, ratings, images and albums
+				if ($deleted_images)
+				{
+					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . ' WHERE ' . $db->sql_in_set('comment_image_id', $deleted_images);
+					$db->sql_query($sql);
+					$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $deleted_images);
+					$db->sql_query($sql);
+					$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $deleted_images);
+					$db->sql_query($sql);
+					$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . ' WHERE ' . $db->sql_in_set('rate_image_id', $deleted_images);
+					$db->sql_query($sql);
+					$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $deleted_images);
+					$db->sql_query($sql);
+				}
+				$message .= $user->lang['CLEAN_AUTHORS_DONE'];
+			}
+			if ($missing_comments)
+			{
+				$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . ' WHERE ' . $db->sql_in_set('comment_id', $missing_comments);
+				$db->sql_query($sql);
+				$message .= $user->lang['CLEAN_COMMENTS_DONE'];
+			}
+			if ($missing_personals)
+			{
+				$deleted_images = $deleted_albums = array(0);
+				$sql = 'SELECT album_id
+					FROM ' . GALLERY_ALBUMS_TABLE . '
+					WHERE ' . $db->sql_in_set('album_user_id', $missing_personals);
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					$deleted_albums[] = $row['album_id'];
+				}
+				$sql = 'SELECT image_id, image_thumbnail, image_filename
+					FROM ' . GALLERY_IMAGES_TABLE . '
+					WHERE ' . $db->sql_in_set('image_album_id', $deleted_albums);
+				@$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $row['image_thumbnail']);
+					@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $row['image_filename']);
+					$deleted_images[] = $row['image_id'];
+				}
+				if ($deleted_images)
+				{
+					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . ' WHERE ' . $db->sql_in_set('comment_image_id', $deleted_images);
+					$db->sql_query($sql);
+					$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $deleted_images);
+					$db->sql_query($sql);
+					$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $deleted_images);
+					$db->sql_query($sql);
+					$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . ' WHERE ' . $db->sql_in_set('rate_image_id', $deleted_images);
+					$db->sql_query($sql);
+					$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $deleted_images);
+					$db->sql_query($sql);
+				}
+				$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . ' WHERE ' . $db->sql_in_set('album_id', $deleted_albums);
+				$db->sql_query($sql);
+				$message .= $user->lang['CLEAN_PERSONALS_DONE'];
+			}
+
+			trigger_error($message . adm_back_link($this->u_action));
+		}
+		else if (($delete) || (isset($_POST['cancel'])))
+		{
+			if (isset($_POST['cancel']))
+			{
+				trigger_error($user->lang['CLEAN_GALLERY_ABORT'] . adm_back_link($this->u_action), E_USER_WARNING);
+			}
+			else
+			{
+				$user->lang['CLEAN_GALLERY_CONFIRM'] = $user->lang['CONFIRM_CLEAN'];
+				if ($missing_sources)
+				{
+					$user->lang['CLEAN_GALLERY_CONFIRM'] = $user->lang['CONFIRM_CLEAN_SOURCES'] . '<br />' . $user->lang['CLEAN_GALLERY_CONFIRM'];
+				}
+				if ($missing_entries)
+				{
+					$user->lang['CLEAN_GALLERY_CONFIRM'] = $user->lang['CONFIRM_CLEAN_ENTRIES'] . '<br />' . $user->lang['CLEAN_GALLERY_CONFIRM'];
+				}
+				if ($missing_authors)
+				{
+					$user->lang['CLEAN_GALLERY_CONFIRM'] = $user->lang['CONFIRM_CLEAN_AUTHORS'] . '<br />' . $user->lang['CLEAN_GALLERY_CONFIRM'];
+				}
+				if ($missing_comments)
+				{
+					$user->lang['CLEAN_GALLERY_CONFIRM'] = $user->lang['CONFIRM_CLEAN_COMMENTS'] . '<br />' . $user->lang['CLEAN_GALLERY_CONFIRM'];
+				}
+				if ($missing_personals)
+				{
+					$user->lang['CLEAN_GALLERY_CONFIRM'] = $user->lang['CONFIRM_CLEAN_PERSONALS'] . '<br />' . $user->lang['CLEAN_GALLERY_CONFIRM'];
+				}
+				confirm_box(false, 'CLEAN_GALLERY', $s_hidden_fields);
+			}
+		}
+
+		$requested_source = array();
+		$sql = 'SELECT gi.image_id, gi.image_name, gi.image_filemissing, gi.image_filename, gi.image_username, u.user_id
+			FROM ' . GALLERY_IMAGES_TABLE . ' gi
+			LEFT JOIN ' . USERS_TABLE . ' u
+				ON u.user_id = gi.image_user_id';
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			if ($row['image_filemissing'])
+			{
+				$template->assign_block_vars('sourcerow', array(
+					'IMAGE_ID'		=> $row['image_id'],
+					'IMAGE_NAME'	=> $row['image_name'],
+				));
+			}
+			if (!$row['user_id'])
+			{
+				$template->assign_block_vars('authorrow', array(
+					'IMAGE_ID'		=> $row['image_id'],
+					'AUTHOR_NAME'	=> $row['image_username'],
+				));
+			}
+			$requested_source[] = $row['image_filename'];
+		}
+		$db->sql_freeresult($result);
+
+		$check_mode = request_var('check_mode', '');
+		if ($check_mode == 'source')
+		{
+			$source_missing = array();
+			$sql = 'SELECT image_id, image_filename, image_filemissing
+				FROM ' . GALLERY_IMAGES_TABLE;
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				if (!file_exists($phpbb_root_path . GALLERY_UPLOAD_PATH . $row['image_filename']))
+				{
+					$source_missing[] = $row['image_id'];
+				}
+			}
+			$db->sql_freeresult($result);
+			if ($source_missing)
+			{
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . "
+					SET image_filemissing = 1
+					WHERE " . $db->sql_in_set('image_id', $source_missing);
+				$db->sql_query($sql);
+			}
+		}
+		if ($check_mode == 'entry')
+		{
+			$directory = $phpbb_root_path . GALLERY_UPLOAD_PATH;
+			$handle = opendir($directory);
+			while ($file = readdir($handle))
+			{
+				if (!is_dir($directory . "$file") &&
+				((substr(strtolower($file), '-4') == '.png') || (substr(strtolower($file), '-4') == '.gif') || (substr(strtolower($file), '-4') == '.jpg'))
+				&& !in_array($file, $requested_source)
+				)
+				{
+					$template->assign_block_vars('entryrow', array(
+						'FILE_NAME'				=> utf8_encode($file),
+					));
+				}
+			}
+			closedir($handle);
+		}
+
+
+		$sql = 'SELECT gc.comment_id, gc.comment_image_id, gc.comment_username, u.user_id
+			FROM ' . GALLERY_COMMENTS_TABLE . ' gc
+			LEFT JOIN ' . USERS_TABLE . ' u
+				ON u.user_id = gc.comment_user_id';
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			if (!$row['user_id'])
+			{
+				$template->assign_block_vars('commentrow', array(
+					'COMMENT_ID'	=> $row['comment_id'],
+					'IMAGE_ID'		=> $row['comment_image_id'],
+					'AUTHOR_NAME'	=> $row['comment_username'],
+				));
+			}
+		}
+		$db->sql_freeresult($result);
+
+		$sql = 'SELECT ga.album_id, ga.album_user_id, ga.album_name, u.user_id
+			FROM ' . GALLERY_ALBUMS_TABLE . ' ga
+			LEFT JOIN ' . USERS_TABLE . ' u
+				ON u.user_id = ga.album_user_id
+			WHERE ga.album_user_id <> 0
+				AND ga.parent_id = 0';
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			if (!$row['user_id'])
+			{
+				$template->assign_block_vars('personalrow', array(
+					'USER_ID'		=> $row['album_user_id'],
+					'ALBUM_ID'		=> $row['album_id'],
+					'AUTHOR_NAME'	=> $row['album_name'],
+				));
+			}
+		}
+		$db->sql_freeresult($result);
+
+		$template->assign_vars(array(
+			'S_GALLERY_MANAGE_RESTS'		=> true,
+			'ACP_GALLERY_TITLE'				=> $user->lang['ACP_GALLERY_CLEANUP'],
+			'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_GALLERY_CLEANUP_EXPLAIN'],
+			'CHECK_SOURCE'			=> $this->u_action . '&amp;check_mode=source',
+			'CHECK_ENTRY'			=> $this->u_action . '&amp;check_mode=entry',
+
+			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
 		));
 	}
 

@@ -20,6 +20,7 @@ CREATE TABLE phpbb_gallery_images (
 	image_album_id INTEGER DEFAULT 0 NOT NULL,
 	image_view_count INTEGER DEFAULT 0 NOT NULL,
 	image_status INTEGER DEFAULT 0 NOT NULL,
+	image_filemissing INTEGER DEFAULT 0 NOT NULL,
 	image_has_exif INTEGER DEFAULT 2 NOT NULL,
 	image_rates INTEGER DEFAULT 0 NOT NULL,
 	image_rate_points INTEGER DEFAULT 0 NOT NULL,

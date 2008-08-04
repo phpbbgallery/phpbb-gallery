@@ -45,6 +45,8 @@ $lang = array_merge($lang, array(
 ));
 
 $lang = array_merge($lang, array(
+	'ACP_GALLERY_CLEANUP'						=> 'Cleanup gallery',
+
 	'TOTAL_IMAGES_OTHER'						=> 'Total images <strong>%d</strong>',
 	'TOTAL_IMAGES_ZERO'							=> 'Total images <strong>0</strong>',
 ));

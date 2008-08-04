@@ -55,6 +55,10 @@ $user_id = $image_data['image_user_id'];
 $image_filetype = utf8_substr($image_data['image_filename'], strlen($image_data['image_filename']) - 4, 4);
 if (empty($image_data) || !file_exists($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']) )
 {
+	$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
+		SET image_filemissing = 1
+		WHERE image_id = ' . $image_id;
+	$db->sql_query($sql);
 	trigger_error('IMAGE_NOT_EXIST');
 }
 $sql = 'SELECT *

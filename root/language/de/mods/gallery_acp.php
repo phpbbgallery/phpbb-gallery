@@ -178,9 +178,33 @@ $lang = array_merge($lang, array(
 ));
 
 $lang = array_merge($lang, array(
+	'ACP_GALLERY_CLEANUP_EXPLAIN'	=> 'Hier kannst du Überreste aus der Galerie entfernen.',
+	'ALBUM_ID'						=> 'Album-ID',
 	'ALBUM_IMAGE'					=> 'Albumbild',
 
 	'CACHE_DIR_SIZE'				=> 'Größe des cache/-Ordners',
+	'CHANGE_AUTHOR'					=> 'Autor in Gast ändern',
+	'CHECK'							=> 'Überprüfen',
+	'CHECK_AUTHOR_EXPLAIN'			=> 'Keine Bilder ohne gültigen Autor gefunden.',
+	'CHECK_COMMENT_EXPLAIN'			=> 'Keine Kommentare ohne gültigen Autor gefunden.',
+	'CHECK_ENTRY_EXPLAIN'			=> 'Du musst die Überprüfung einmal starten, um nach Dateien ohne Datenbank-Eintrag zu suchen.',
+	'CHECK_PERSONALS_EXPLAIN'		=> 'Keine persönlichen Alben ohne Besitzer gefunden.',
+	'CHECK_SOURCE_EXPLAIN'			=> 'Es wurde kein Eintrag gefunden. Du solltest aber die Überprüfung einmal starten, um sicher zu gehen.',
+	'CLEAN_CHANGED'					=> 'Autor in "Gast" geändert.',
+	'CLEAN_GALLERY'					=> 'Galerie reinigen',
+	'CLEAN_GALLERY_ABORT'			=> 'Reinigung abgebrochen!',
+	'CLEAN_AUTHORS_DONE'			=> 'Bilder ohne Autor gelöscht.',
+	'CLEAN_COMMENTS_DONE'			=> 'Kommentare ohne Autor gelöscht.',
+	'CLEAN_ENTRIES_DONE'			=> 'Dateien ohne Datenbank-Einträge gelöscht.',
+	'CLEAN_PERSONALS_DONE'			=> 'Persönliche Alben ohne Besitzer gelöscht.',
+	'CLEAN_SOURCES_DONE'			=> 'Datenbank-Einträge ohne Dateien gelöscht.',
+	'COMMENT_ID'					=> 'Kommentar-ID',
+	'CONFIRM_CLEAN'					=> 'Dieser Vorgang kann nicht Rückgängig gemacht werden!',
+	'CONFIRM_CLEAN_AUTHORS'			=> 'Bilder ohne Autor löschen?',
+	'CONFIRM_CLEAN_COMMENTS'		=> 'Kommentare ohne Autor löschen?',
+	'CONFIRM_CLEAN_ENTRIES'			=> 'Dateien ohne Datenbank-Einträge löschen?',
+	'CONFIRM_CLEAN_PERSONALS'		=> 'Persönliche Alben ohne Besitzer löschen?',
+	'CONFIRM_CLEAN_SOURCES'			=> 'Datenbank-Einträge ohne Dateien löschen?',
 	'COPY_PERMISSIONS'				=> 'Kopiere Berechtigungen von',
 
 	'DELETE_PERMISSIONS'			=> 'Berechtigungen löschen',
@@ -198,12 +222,22 @@ $lang = array_merge($lang, array(
 	'GALLERY_VERSION'				=> 'Version der phpBB Gallery',//ja mit ll und y, da es sich um den MOD-Namen handelt
 	'GUPLOAD_DIR_SIZE'				=> 'Größe des upload/-Ordners',
 
+	'IMAGE_ID'						=> 'Bild-ID',
 	'IMAGES_PER_DAY'				=> 'Bilder pro Tag',
 	'IMPORT_DIR_EMPTY'				=> 'Das Verzeichnis %simport/ ist leer. Du musst die Bilder erst hochladen, bevor du sie importieren kannst.',
 	'IMPORT_SELECT'					=> 'Wähle die Bilder aus, die importiert werden sollen. Bilder die erfolgreich importiert wurden, werden aus der Auswahl gelöscht. Die anderen Bilder stehen dir danach noch zur Verfügung.',
 	'IMPORT_USER'					=> 'Hochgeladen durch',
 	'IMPORT_USER_EXP'				=> 'Du kannst die Bilder auch einem anderem Mitglied zuordnen lassen.',
 
+	'MANAGE_CRASHED_IMAGES'			=> 'Defekte Bilder verwalten',
+	'MANAGE_CRASHED_ENTRIES'		=> 'Defekte Einträge verwalten',
+	'MANAGE_PERSONALS'				=> 'Persönliche Alben verwalten',
+	'MISSING_AUTHOR'				=> 'Bilder ohne gültigen Autor',
+	'MISSING_AUTHOR_C'				=> 'Kommentare ohne gültigen Autor',
+	'MISSING_ENTRY'					=> 'Dateien ohne Datenbank-Eintrag',
+	'MISSING_OWNER'					=> 'Persönliche Alben ohne Besitzer',
+	'MISSING_OWNER_EXP'				=> 'Beim Löschen werden alle Subalben, Bilder und Kommentare mit gelöscht.',
+	'MISSING_SOURCE'				=> 'Datenbank-Einträge ohne Datei',
 	'MISSING_ALBUM_NAME'			=> 'Du musst einen Namen für das Album eintragen.',
 
 	'NUMBER_ALBUMS'					=> 'Anzahl von Alben',

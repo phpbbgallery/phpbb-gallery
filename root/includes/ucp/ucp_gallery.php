@@ -871,9 +871,13 @@ class ucp_gallery
 			{
 				$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . " WHERE comment_image_id IN ($deleted_images)";
 				$db->sql_query($sql);
-				$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . " WHERE rate_image_id IN ($deleted_images)";
+				$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . " WHERE image_id IN ($deleted_images)";
 				$db->sql_query($sql);
 				$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . " WHERE image_id IN ($deleted_images)";
+				$db->sql_query($sql);
+				$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . " WHERE rate_image_id IN ($deleted_images)";
+				$db->sql_query($sql);
+				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . " WHERE rate_image_id IN ($deleted_images)";
 				$db->sql_query($sql);
 			}
 			$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . " WHERE album_id IN ($deleted_albums)";

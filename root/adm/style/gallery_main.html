@@ -7,7 +7,7 @@
 
 <!-- IF S_GALLERY_OVERVIEW -->
 	<table cellspacing="1">
-		<caption>{L_FORUM_STATS}</caption>
+		<caption>{L_GALLERY_STATS}</caption>
 		<col class="col1" /><col class="col2" /><col class="col1" /><col class="col2" />
 	<thead>
 	<tr>
@@ -79,8 +79,8 @@
 	<fieldset>
 		<legend>{L_ALBUM_SETTINGS}</legend>
 		<dl>
-			<dt><label for="target">{L_IMPORT_ALBUM}</label></dt>
-			<dd><select id="target" name="target"><option value="0"<!-- IF not S_ALBUM_PARENT_ID --> selected="selected"<!-- ENDIF -->>{L_NO_PARENT_ALBUM}</option>{S_SELECT_IMPORT}</select></dd>
+			<dt><label for="album_id">{L_IMPORT_ALBUM}</label></dt>
+			<dd><select id="album_id" name="album_id"><option value="0"<!-- IF not S_ALBUM_PARENT_ID --> selected="selected"<!-- ENDIF -->>{L_NO_PARENT_ALBUM}</option>{S_SELECT_IMPORT}</select></dd>
 		</dl>
 		<dl>
 			<dt><label for="images">{L_IMAGES}:</label>
@@ -112,6 +112,89 @@
 		<p class="submit-buttons">
 			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
 			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</p>
+	</fieldset>
+	{S_FORM_TOKEN}
+</form>
+<!-- ENDIF -->
+
+<!-- IF S_GALLERY_MANAGE_RESTS -->
+<form id="acp_gallery" method="post" action="{U_ACTION}">
+	<fieldset>
+		<legend>{L_MANAGE_CRASHED_IMAGES}</legend>
+		<dl>
+			<dt><label for="source">{L_MISSING_SOURCE}:</label>
+				<br /><span><a href="{CHECK_SOURCE}">{L_CHECK}</a></span></dt>
+			<dd><!-- IF not .sourcerow -->
+				{L_CHECK_SOURCE_EXPLAIN}
+			<!-- ELSE -->
+				<select id="source" name="source[]" multiple="multiple">
+					<!-- BEGIN sourcerow --><option value="{sourcerow.IMAGE_ID}">{L_IMAGE_ID}: {sourcerow.IMAGE_ID} - {sourcerow.IMAGE_NAME}</option><!-- END sourcerow -->
+				</select>
+			<!-- ENDIF --></dd>
+		</dl>
+		<dl>
+			<dt><label for="entry">{L_MISSING_ENTRY}:</label>
+				<br /><span><a href="{CHECK_ENTRY}">{L_CHECK}</a></span></dt>
+			<dd><!-- IF not .entryrow -->
+				{L_CHECK_ENTRY_EXPLAIN}
+			<!-- ELSE -->
+				<select id="entry" name="entry[]" multiple="multiple">
+					<!-- BEGIN entryrow --><option value="{entryrow.FILE_NAME}">{entryrow.FILE_NAME}</option><!-- END entryrow -->
+				</select>
+			<!-- ENDIF --></dd>
+		</dl>
+
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="delete" name="delete" value="{L_DELETE}" />
+		</p>
+	</fieldset>
+
+	<fieldset>
+		<legend>{L_MANAGE_CRASHED_ENTRIES}</legend>
+		<dl>
+			<dt><label for="author">{L_MISSING_AUTHOR}:</label></dt>
+			<dd><!-- IF not .authorrow -->
+				{L_CHECK_AUTHOR_EXPLAIN}
+			<!-- ELSE -->
+				<select id="author" name="author[]" multiple="multiple">
+					<!-- BEGIN authorrow --><option value="{authorrow.IMAGE_ID}">{L_IMAGE_ID}: {authorrow.IMAGE_ID} - {L_AUTHOR}: {authorrow.AUTHOR_NAME}</option><!-- END authorrow -->
+				</select>
+			<!-- ENDIF --></dd>
+		</dl>
+		<dl>
+			<dt><label for="comment">{L_MISSING_AUTHOR_C}:</label></dt>
+			<dd><!-- IF not .commentrow -->
+				{L_CHECK_COMMENT_EXPLAIN}
+			<!-- ELSE -->
+				<select id="comment" name="comment[]" multiple="multiple">
+					<!-- BEGIN commentrow --><option value="{commentrow.COMMENT_ID}">{L_COMMENT_ID}: {commentrow.COMMENT_ID} - {L_IMAGE_ID}: {commentrow.IMAGE_ID} - {L_AUTHOR}: {commentrow.AUTHOR_NAME}</option><!-- END commentrow -->
+				</select>
+			<!-- ENDIF --></dd>
+		</dl>
+
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_CHANGE_AUTHOR}" />
+			<input class="button1" type="submit" id="delete" name="delete" value="{L_DELETE}" />
+		</p>
+	</fieldset>
+
+	<fieldset>
+		<legend>{L_MANAGE_PERSONALS}</legend>
+		<dl>
+			<dt><label for="personal">{L_MISSING_OWNER}:</label>
+				<br /><span>{L_MISSING_OWNER_EXP}</span></dt>
+			<dd><!-- IF not .personalrow -->
+				{L_CHECK_PERSONALS_EXPLAIN}
+			<!-- ELSE -->
+				<select id="personal" name="personal[]" multiple="multiple">
+					<!-- BEGIN personalrow --><option value="{personalrow.USER_ID}">{L_ALBUM_ID}: {personalrow.ALBUM_ID} - {L_AUTHOR}: {personalrow.AUTHOR_NAME}</option><!-- END personalrow -->
+				</select>
+			<!-- ENDIF --></dd>
+		</dl>
+
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="delete" name="delete" value="{L_DELETE}" />
 		</p>
 	</fieldset>
 	{S_FORM_TOKEN}

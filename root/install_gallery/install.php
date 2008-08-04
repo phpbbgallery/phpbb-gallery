@@ -164,8 +164,8 @@ switch ($mode)
 			add_module($acp_gallery_overview);
 			$acp_gallery_manage_albums = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_MANAGE_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
 			add_module($acp_gallery_manage_albums);
-			$acp_gallery_manage_cache = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_MANAGE_CACHE',	'module_mode' => 'manage_cache',	'module_auth' => '');
-			add_module($acp_gallery_manage_cache);
+			//REMOVE WITH 0.3.3//$acp_gallery_manage_cache = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_MANAGE_CACHE',	'module_mode' => 'manage_cache',	'module_auth' => '');
+			//REMOVE WITH 0.3.3//add_module($acp_gallery_manage_cache);
 			$acp_configure_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_CONFIGURE_GALLERY',	'module_mode' => 'configure_gallery',	'module_auth' => '');
 			add_module($acp_configure_gallery);
 			$album_permissions = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS',	'module_mode' => 'album_permissions',	'module_auth' => '');
@@ -174,6 +174,9 @@ switch ($mode)
 			//REMOVE WITH 0.3.3//add_module($album_personal_permissions);
 			$import_images = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_IMPORT_ALBUMS',	'module_mode' => 'import_images',	'module_auth' => '');
 			add_module($import_images);
+			$cleanup = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_CLEANUP',	'module_mode' => 'cleanup',	'module_auth' => '');
+			add_module($cleanup);
+
 			$ucp_gallery_overview = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 0,	'module_class' => 'ucp',	'module_langname'=> 'UCP_GALLERY',	'module_mode' => 'overview',	'module_auth' => '');
 			add_module($ucp_gallery_overview);
 			$ucp_module_id = $db->sql_nextid();
@@ -822,6 +825,10 @@ switch ($mode)
 					set_config('gallery_personal_album_profil', 1);
 					gallery_config_value('watermark_height', 50);
 					gallery_config_value('watermark_width', 200);
+					deactivate_module('ACP_GALLERY_MANAGE_CACHE');
+					gallery_column(GALLERY_IMAGES_TABLE, 'image_filemissing', array('UINT:3', 0));
+					$cleanup = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $album_config['acp_parent_module'],	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_CLEANUP',	'module_mode' => 'cleanup',	'module_auth' => '');
+					add_module($cleanup);
 
 				case '0.3.2':
 					//and drop the old column
@@ -835,6 +842,7 @@ switch ($mode)
 
 				case 'svn':
 					$album_config = load_album_config();
+
 				break;
 			}
 
@@ -1107,8 +1115,8 @@ switch ($mode)
 			add_module($acp_gallery_overview);
 			$acp_gallery_manage_albums = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_MANAGE_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
 			add_module($acp_gallery_manage_albums);
-			$acp_gallery_manage_cache = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_MANAGE_CACHE',	'module_mode' => 'manage_cache',	'module_auth' => '');
-			add_module($acp_gallery_manage_cache);
+			//REMOVE WITH 0.3.3//$acp_gallery_manage_cache = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_MANAGE_CACHE',	'module_mode' => 'manage_cache',	'module_auth' => '');
+			//REMOVE WITH 0.3.3//add_module($acp_gallery_manage_cache);
 			$acp_configure_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_CONFIGURE_GALLERY',	'module_mode' => 'configure_gallery',	'module_auth' => '');
 			add_module($acp_configure_gallery);
 			$album_permissions = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS',	'module_mode' => 'album_permissions',	'module_auth' => '');
@@ -1117,6 +1125,9 @@ switch ($mode)
 			//REMOVE WITH 0.3.3//add_module($album_personal_permissions);
 			$import_images = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_IMPORT_ALBUMS',	'module_mode' => 'import_images',	'module_auth' => '');
 			add_module($import_images);
+			$cleanup = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_CLEANUP',	'module_mode' => 'cleanup',	'module_auth' => '');
+			add_module($cleanup);
+
 			$ucp_gallery_overview = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 0,	'module_class' => 'ucp',	'module_langname'=> 'UCP_GALLERY',	'module_mode' => 'overview',	'module_auth' => '');
 			add_module($ucp_gallery_overview);
 			$ucp_module_id = $db->sql_nextid();

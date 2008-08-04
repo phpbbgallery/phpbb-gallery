@@ -176,6 +176,7 @@ CREATE TABLE phpbb_gallery_images (
 	image_album_id INT4 DEFAULT '0' NOT NULL CHECK (image_album_id >= 0),
 	image_view_count INT4 DEFAULT '0' NOT NULL CHECK (image_view_count >= 0),
 	image_status INT4 DEFAULT '0' NOT NULL CHECK (image_status >= 0),
+	image_filemissing INT4 DEFAULT '0' NOT NULL CHECK (image_filemissing >= 0),
 	image_has_exif INT4 DEFAULT '2' NOT NULL CHECK (image_has_exif >= 0),
 	image_rates INT4 DEFAULT '0' NOT NULL CHECK (image_rates >= 0),
 	image_rate_points INT4 DEFAULT '0' NOT NULL CHECK (image_rate_points >= 0),

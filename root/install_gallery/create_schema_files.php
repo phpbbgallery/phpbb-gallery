@@ -16,7 +16,7 @@
 
 @set_time_limit(0);
 
-$schema_path = './schemas/phpbb_gallery_users/';
+$schema_path = './schemas/phpbb_gallery_images/';
 
 if (!is_writable($schema_path))
 {
@@ -881,7 +881,7 @@ function get_schema_struct()
 		),
 	);
 //*/
-/*
+//*
 	$schema_data['phpbb_gallery_images'] = array(
 		'COLUMNS'		=> array(
 			'image_id'				=> array('UINT', NULL, 'auto_increment'),
@@ -899,6 +899,7 @@ function get_schema_struct()
 			'image_album_id'		=> array('UINT', 0),
 			'image_view_count'		=> array('UINT:11', 0),
 			'image_status'			=> array('UINT:3', 0),
+			'image_filemissing'		=> array('UINT:3', 0),
 			'image_has_exif'		=> array('UINT:3', 2),
 			'image_rates'			=> array('UINT', 0),
 			'image_rate_points'		=> array('UINT', 0),
