@@ -14,21 +14,6 @@ function checkRateForm() {
 }
 // -->
 </script>
-<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery_lytebox.js"></script>
-<script type="text/javascript" >
-	if (window.addEventListener) {
-		window.addEventListener("load",initLytebox,false);
-	} else if (window.attachEvent) {
-		window.attachEvent("onload",initLytebox);
-	} else {
-		window.onload = function() {initLytebox();}
-	}
-	function initLytebox() {
-		var imgMaxWidth = {IMAGE_RSZ_WIDTH};
-		var imgWarning = '';
-		myLytebox = new LyteBox(imgMaxWidth, imgWarning);
-	}
-</script>
 
 <h2><a href="#">{IMAGE_NAME}</a></h2>
 
@@ -53,7 +38,7 @@ function checkRateForm() {
 	</tr>
 	<tr>
 		<td class="row1" style="align: center;"><div style="text-align: center; padding: 20px;">
-			<a href="{U_IMAGE}" rel="lytebox" title="{IMAGE_NAME}" class="image-resize"><img src="{U_IMAGE}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-height: {IMAGE_RSZ_HEIGHT}px; max-width: {IMAGE_RSZ_WIDTH}px;" /></a>
+			<a href="{U_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->><img src="{U_IMAGE}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-height: {IMAGE_RSZ_HEIGHT}px; max-width: {IMAGE_RSZ_WIDTH}px;" /></a>
 		</div>
 			<!-- IF U_REPORT --><a href="{U_REPORT}">{REPORT_IMG}</a> <!-- ENDIF -->
 			<!-- IF U_DELETE --><a href="{U_DELETE}">{DELETE_IMG}</a> <!-- ENDIF -->

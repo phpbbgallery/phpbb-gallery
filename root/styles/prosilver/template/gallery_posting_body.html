@@ -1,19 +1,4 @@
 <!-- INCLUDE overall_header.html -->
-<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery_lytebox.js"></script>
-<script type="text/javascript" >
-	if (window.addEventListener) {
-		window.addEventListener("load",initLytebox,false);
-	} else if (window.attachEvent) {
-		window.attachEvent("onload",initLytebox);
-	} else {
-		window.onload = function() {initLytebox();}
-	}
-	function initLytebox() {
-		var imgMaxWidth = {IMAGE_RSZ_WIDTH};
-		var imgWarning = '';
-		myLytebox = new LyteBox(imgMaxWidth, imgWarning);
-	}
-</script>
 <h2><!-- IF U_VIEW_IMAGE --><a href="{U_VIEW_IMAGE}">{IMAGE_NAME}</a><!-- ELSE --><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a><!-- ENDIF --></h2>
 
 <!-- IF U_IMAGE -->
@@ -21,7 +6,7 @@
 	<div class="inner">
 		<span class="corners-top"><span></span></span>
 		<div style="text-align: center; padding: 20px;">
-			<a href="{U_IMAGE}" rel="lytebox" title="{IMAGE_NAME}" class="image-resize"><img src="{U_IMAGE}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-height: {IMAGE_RSZ_HEIGHT}px; max-width: {IMAGE_RSZ_WIDTH}px;" /></a></div>
+			<a href="{U_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->><img src="{U_IMAGE}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-height: {IMAGE_RSZ_HEIGHT}px; max-width: {IMAGE_RSZ_WIDTH}px;" /></a></div>
 		<span class="corners-bottom"><span></span></span>
 	</div>
 </div>

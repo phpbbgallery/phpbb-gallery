@@ -243,6 +243,26 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
         <action type="after-add"><![CDATA[<!-- IF TOTAL_IMAGES --><dt>{L_TOTAL_IMAGES}:</dt> <dd>{IMAGES} | <strong><a href="{U_SEARCH_GALLERY}">{L_SEARCH_USER_IMAGES}</a></strong><!-- IF IMAGES_PCT --><br />({IMAGES_PCT} / {IMAGES_DAY})<!-- ENDIF --></dd><!-- ENDIF -->]]></action>
       </edit>
     </open>
+    <open src="styles/prosilver/template/overall_header.html">
+      <edit>
+        <find><![CDATA[</head>]]></find>
+        <action type="before-add"><![CDATA[<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery_lytebox.js"></script>
+<script type="text/javascript" >
+	if (window.addEventListener) {
+		window.addEventListener("load",initLytebox,false);
+	} else if (window.attachEvent) {
+		window.attachEvent("onload",initLytebox);
+	} else {
+		window.onload = function() {initLytebox();}
+	}
+	function initLytebox() {
+		var imgMaxWidth = 1280;
+		var imgWarning = '';
+		myLytebox = new LyteBox(imgMaxWidth, imgWarning);
+	}
+</script>]]></action>
+      </edit>
+    </open>
     <open src="styles/prosilver/theme/bidi.css">
       <edit>
         <find><![CDATA[.rtl .sitehome, .rtl .icon-faq, .rtl .icon-members, .rtl .icon-home, .rtl .icon-ucp, .rtl .icon-register, .rtl .icon-logout,]]></find>

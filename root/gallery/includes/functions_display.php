@@ -215,7 +215,8 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		{
 			$last_image_name = $row['album_last_image_name'];
 			$last_image_time = $user->format_date($row['album_last_image_time']);
-			$last_image_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $row['album_id_last_image'] . '&amp;image_id=' . $row['album_last_image_id']);
+			$last_image_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", 'album_id=' . $row['album_id_last_image'] . '&amp;image_id=' . $row['album_last_image_id']);
+			$last_image_page_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $row['album_id_last_image'] . '&amp;image_id=' . $row['album_last_image_id']);
 			$last_thumb_url = append_sid("{$phpbb_root_path}{$gallery_root_path}thumbnail.$phpEx", 'album_id=' . $row['album_id_last_image'] . '&amp;image_id=' . $row['album_last_image_id']);
 		}
 		else
@@ -262,6 +263,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			'ALBUM_IMAGE'			=> $row['album_image'],
 			'U_LAST_THUMB'			=> $last_thumb_url,
 			'U_LAST_IMAGE'			=> $last_image_url,
+			'U_LAST_IMAGE_PAGE'		=> $last_image_page_url,
 			'LAST_IMAGE_NAME'		=> censor_text($last_image_name),
 			'LAST_IMAGE_TIME'		=> $last_image_time,
 			'LAST_USER_FULL'		=> get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),

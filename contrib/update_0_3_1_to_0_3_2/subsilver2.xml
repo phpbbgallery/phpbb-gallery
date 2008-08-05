@@ -79,6 +79,26 @@
 			<!-- ENDIF -->]]></action>
       </edit>
     </open>
+    <open src="styles/subsilver2/template/overall_header.html">
+      <edit>
+        <find><![CDATA[</head>]]></find>
+        <action type="before-add"><![CDATA[<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery_lytebox.js"></script>
+<script type="text/javascript" >
+	if (window.addEventListener) {
+		window.addEventListener("load",initLytebox,false);
+	} else if (window.attachEvent) {
+		window.attachEvent("onload",initLytebox);
+	} else {
+		window.onload = function() {initLytebox();}
+	}
+	function initLytebox() {
+		var imgMaxWidth = 1280;
+		var imgWarning = '';
+		myLytebox = new LyteBox(imgMaxWidth, imgWarning);
+	}
+</script>]]></action>
+      </edit>
+    </open>
     <open src="styles/subsilver2/theme/stylesheet.css">
       <edit>
         <find><![CDATA[#lbOverlay { position: absolute; top: 0; left: 0; z-index: 99998; width: 100%; height: 500px; }

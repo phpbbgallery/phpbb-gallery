@@ -64,7 +64,8 @@ while( $row = $db->sql_fetchrow($result) )
 		'REPORT_TIME'		=> $user->format_date($row['report_time']),
 		'IMAGE_TIME'		=> $user->format_date($row['image_time']),
 		'IMAGE_NAME'		=> $row['image_name'],
-		'U_IMAGE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx" , 'mode=report_details&amp;album_id=' . $album_id . '&amp;option_id=' . $row['report_id']),
+		'U_IMAGE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx" , "album_id=$album_id&amp;image_id=" . $row['image_id']),
+		'U_IMAGE_PAGE'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx" , 'mode=report_details&amp;album_id=' . $album_id . '&amp;option_id=' . $row['report_id']),
 	));
 }
 $db->sql_freeresult($result);

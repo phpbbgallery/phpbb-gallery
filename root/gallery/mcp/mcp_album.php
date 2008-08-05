@@ -41,7 +41,8 @@ while( $row = $db->sql_fetchrow($result) )
 		'IMAGE_ID'			=> $row['image_id'],
 		'S_REPORTED'		=> (isset($row['report_status']) && $row['report_status'] == 1) ? true : false,
 		'S_UNAPPROVED'		=> ($row['image_status'] == 0) ? true : false,
-		'U_IMAGE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx" , "album_id=$album_id&amp;image_id=" . $row['image_id']),
+		'U_IMAGE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx" , "album_id=$album_id&amp;image_id=" . $row['image_id']),
+		'U_IMAGE_PAGE'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx" , "album_id=$album_id&amp;image_id=" . $row['image_id']),
 		'U_REPORT'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx" , "mode=report_details&amp;album_id=$album_id&amp;option_id=" . $row['report_id']),
 		'U_QUEUE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx" , "mode=queue_details&amp;album_id=$album_id&amp;option_id=" . $row['image_id']),
 	));

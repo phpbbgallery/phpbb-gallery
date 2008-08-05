@@ -87,9 +87,9 @@
 			<!-- BEGIN image_row -->
 			<tr>
 
-				<!-- IF DISP_FAKE_THUMB and image_row.THUMBNAIL --><td class="row1" width="{FAKE_THUMB_SIZE}" align="center"><span style="float: left; text-align: center; width: {FAKE_THUMB_SIZE}px; padding-right: 5px;"><img src="{image_row.THUMBNAIL}" style="max-width: {FAKE_THUMB_SIZE}px; max-height: {FAKE_THUMB_SIZE}px;" alt="{image_row.IMAGE_NAME}" /></span></td><!-- ENDIF -->
+				<!-- IF DISP_FAKE_THUMB and image_row.THUMBNAIL --><td class="row1" width="{FAKE_THUMB_SIZE}" align="center"><span style="float: left; text-align: center; width: {FAKE_THUMB_SIZE}px; padding-right: 5px;"><a href="{image_row.U_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->><img src="{image_row.THUMBNAIL}" style="max-width: {FAKE_THUMB_SIZE}px; max-height: {FAKE_THUMB_SIZE}px;" alt="{image_row.IMAGE_NAME}" /></a></span></td><!-- ENDIF -->
 				<td class="row1">
-					<a href="<!-- IF not S_REPORT -->{image_row.U_IMAGE}<!-- ELSE -->{image_row.U_REPORT}<!-- ENDIF -->" class="topictitle">{image_row.IMAGE_NAME}</a><!-- IF image_row.S_REPORTED --> <a href="{image_row.U_REPORT}">{REPORTED_IMG}</a><!-- ENDIF --><!-- IF image_row.S_UNAPPROVED --> <a href="{image_row.U_QUEUE}">{UNAPPROVED_IMG}</a><!-- ENDIF --><br />
+					<a href="<!-- IF not S_REPORT -->{image_row.U_IMAGE_PAGE}<!-- ELSE -->{image_row.U_REPORT}<!-- ENDIF -->" class="topictitle">{image_row.IMAGE_NAME}</a><!-- IF image_row.S_REPORTED --> <a href="{image_row.U_REPORT}">{REPORTED_IMG}</a><!-- ENDIF --><!-- IF image_row.S_UNAPPROVED --> <a href="{image_row.U_QUEUE}">{UNAPPROVED_IMG}</a><!-- ENDIF --><br />
 					<span>{L_UPLOADED_BY} {image_row.UPLOADER}<br />
 					{L_POSTED_ON_DATE} {image_row.IMAGE_TIME}
 					<!-- IF image_row.REPORT_MOD --><br />{L_REPORT_MOD} {image_row.REPORT_MOD}<!-- ENDIF -->
@@ -137,21 +137,6 @@
 		<!-- ENDIF -->
 
 		<!-- IF S_GALLERY_MCP_REPO_DETAIL or S_GALLERY_MCP_QUEUE_DETAIL -->
-			<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery_lytebox.js"></script>
-			<script type="text/javascript" >
-				if (window.addEventListener) {
-					window.addEventListener("load",initLytebox,false);
-				} else if (window.attachEvent) {
-					window.attachEvent("onload",initLytebox);
-				} else {
-					window.onload = function() {initLytebox();}
-				}
-				function initLytebox() {
-					var imgMaxWidth = {IMAGE_RSZ_WIDTH};
-					var imgWarning = '';
-					myLytebox = new LyteBox(imgMaxWidth, imgWarning);
-				}
-			</script>
 			<form method="post" action="{S_MCP_ACTION}">
 			<table class="tablebg" width="100%" cellspacing="1">
 			<tr>
@@ -177,7 +162,7 @@
 						</tr>
 						</table>
 					<div style="text-align: center; padding: 20px;">
-						<a href="{U_IMAGE}" rel="lytebox" title="{IMAGE_NAME}" class="image-resize"><img src="{U_IMAGE}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-height: {IMAGE_RSZ_HEIGHT}px; max-width: {IMAGE_RSZ_WIDTH}px;" /></a>
+						<a href="{U_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->><img src="{U_IMAGE}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-height: {IMAGE_RSZ_HEIGHT}px; max-width: {IMAGE_RSZ_WIDTH}px;" /></a>
 					</div>
 					<!-- IF IMAGE_DESC -->
 						<hr />

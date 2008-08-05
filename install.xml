@@ -403,12 +403,6 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
         </inline-edit>
       </edit>
     </open>
-    <open src="styles/prosilver/template/overall_header.html">
-      <edit>
-        <find><![CDATA[<li class="icon-faq"><a href="{U_FAQ}" title="{L_FAQ_EXPLAIN}">{L_FAQ}</a></li>]]></find>
-        <action type="after-add"><![CDATA[<li class="icon-gallery"><a href="{U_GALLERY_MOD}" title="{L_GALLERY_EXPLAIN}">{L_GALLERY}</a></li>]]></action>
-      </edit>
-    </open>
     <open src="styles/prosilver/template/memberlist_view.html">
       <edit>
         <find><![CDATA[<!-- IF S_GROUP_OPTIONS --><dt>{L_USERGROUPS}:</dt> <dd><select name="g">{S_GROUP_OPTIONS}</select> <input type="submit" name="submit" value="{L_GO}" class="button2" /></dd><!-- ENDIF -->]]></find>
@@ -417,6 +411,30 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
       <edit>
         <find><![CDATA[<dt>{L_TOTAL_POSTS}:</dt> <dd>{POSTS} | <strong><a href="{U_SEARCH_USER}">{L_SEARCH_USER_POSTS}</a></strong><!-- IF POSTS_PCT --><br />({POSTS_PCT} / {POSTS_DAY})<!-- ENDIF --></dd>]]></find>
         <action type="after-add"><![CDATA[<!-- IF TOTAL_IMAGES --><dt>{L_TOTAL_IMAGES}:</dt> <dd>{IMAGES} | <strong><a href="{U_SEARCH_GALLERY}">{L_SEARCH_USER_IMAGES}</a></strong><!-- IF IMAGES_PCT --><br />({IMAGES_PCT} / {IMAGES_DAY})<!-- ENDIF --></dd><!-- ENDIF -->]]></action>
+      </edit>
+    </open>
+    <open src="styles/prosilver/template/overall_header.html">
+      <edit>
+        <find><![CDATA[</head>]]></find>
+        <action type="before-add"><![CDATA[<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery_lytebox.js"></script>
+<script type="text/javascript" >
+	if (window.addEventListener) {
+		window.addEventListener("load",initLytebox,false);
+	} else if (window.attachEvent) {
+		window.attachEvent("onload",initLytebox);
+	} else {
+		window.onload = function() {initLytebox();}
+	}
+	function initLytebox() {
+		var imgMaxWidth = 1280;
+		var imgWarning = '';
+		myLytebox = new LyteBox(imgMaxWidth, imgWarning);
+	}
+</script>]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[<li class="icon-faq"><a href="{U_FAQ}" title="{L_FAQ_EXPLAIN}">{L_FAQ}</a></li>]]></find>
+        <action type="after-add"><![CDATA[<li class="icon-gallery"><a href="{U_GALLERY_MOD}" title="{L_GALLERY_EXPLAIN}">{L_GALLERY}</a></li>]]></action>
       </edit>
     </open>
     <open src="styles/prosilver/template/viewtopic_body.html">

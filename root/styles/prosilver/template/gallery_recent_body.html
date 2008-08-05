@@ -15,7 +15,7 @@
 					<!-- BEGIN picrow -->
 					<tr>
 						<!-- BEGIN piccol -->
-						<td align="center" style="width: {S_COL_WIDTH};" class="bg1"><span class="genmed"><a href="{picrow.piccol.U_IMAGE}"><img src="{picrow.piccol.THUMBNAIL}" alt="{picrow.piccol.DESC}" title="{picrow.piccol.DESC}" /></a><br />{picrow.piccol.APPROVAL}</span></td>
+						<td align="center" style="width: {S_COL_WIDTH};" class="bg1"><span class="genmed"><a href="{picrow.piccol.U_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->><img src="{picrow.piccol.THUMBNAIL}" alt="{picrow.piccol.DESC}" title="{picrow.piccol.DESC}" /></a><br />{picrow.piccol.APPROVAL}</span></td>
 						<!-- END piccol -->
 						<!-- BEGIN nopiccol --> 
 						<td align="center" style="width: {S_COL_WIDTH};" class="bg1"><span></span></td> 
@@ -25,7 +25,7 @@
 						<!-- BEGIN pic_detail -->
 						<td class="bg2">
 							<div class="gensmall" style="overflow: hidden;">
-								<!-- IF picrow.pic_detail.IMAGE_NAME -->{L_IMAGE_TITLE}: <a href="{picrow.pic_detail.U_IMAGE}" style="font-weight: bold;">{picrow.pic_detail.IMAGE_NAME}</a><br /><!-- ENDIF -->
+								<!-- IF picrow.pic_detail.IMAGE_NAME -->{L_IMAGE_TITLE}: <a href="{picrow.pic_detail.U_IMAGE_PAGE}" style="font-weight: bold;">{picrow.pic_detail.IMAGE_NAME}</a><br /><!-- ENDIF -->
 								<!-- IF picrow.pic_detail.POSTER -->{L_POSTER}: {picrow.pic_detail.POSTER}<br /><!-- ENDIF -->
 								<!-- IF picrow.pic_detail.TIME -->{L_POSTED}: {picrow.pic_detail.TIME}<br /><!-- ENDIF -->
 								<!-- IF picrow.pic_detail.VIEWS -->{L_VIEWS}: {picrow.pic_detail.VIEWS}<br /><!-- ENDIF -->

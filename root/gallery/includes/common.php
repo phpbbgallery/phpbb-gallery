@@ -22,13 +22,13 @@ include("{$phpbb_root_path}{$gallery_root_path}includes/constants.$phpEx");
 $sql = 'SELECT *
 	FROM ' . GALLERY_CONFIG_TABLE;
 @$result = $db->sql_query($sql);
-
-while( $row = $db->sql_fetchrow($result) )
+while ($row = $db->sql_fetchrow($result))
 {
 	$album_config_name = $row['config_name'];
 	$album_config_value = $row['config_value'];
 	$album_config[$album_config_name] = $album_config_value;
 }
+$db->sql_freeresult($result);
 
 $user->add_lang('mods/info_acp_gallery');
 // Disable gallery if the install_gallery/ directory is still present
@@ -37,6 +37,9 @@ if (file_exists($phpbb_root_path . 'install_gallery'))
 	//REMOVE//trigger_error('REMOVE_GALLERY_INSTALL');
 }
 
+$template->assign_vars(array(
+	'S_GALLERY_HIGHSLIDE_JS' => file_exists($phpbb_root_path . 'highslide/highslide-full.js'),
+));
 include("{$phpbb_root_path}{$gallery_root_path}includes/functions.$phpEx");
 
 //dont display on recent image feature

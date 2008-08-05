@@ -45,7 +45,7 @@
 	<!-- BEGIN picrow -->
 	<tr>
 		<!-- BEGIN piccol -->
-		<td align="center" width="{S_COL_WIDTH}" class="row1"><span class="genmed"><a href="{picrow.piccol.U_IMAGE}" rel="lightbox" {TARGET_BLANK}><img src="{picrow.piccol.THUMBNAIL}" border="0" alt="{picrow.piccol.DESC}" title="{picrow.piccol.DESC}" vspace="10" /></a><br />
+		<td align="center" width="{S_COL_WIDTH}" class="row1"><span class="genmed"><a href="{picrow.piccol.U_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->><img src="{picrow.piccol.THUMBNAIL}" border="0" alt="{picrow.piccol.DESC}" title="{picrow.piccol.DESC}" vspace="10" /></a><br />
 			{picrow.piccol.APPROVAL}</span></td>
 		<!-- END piccol -->
 		<!-- BEGIN nopiccol -->
@@ -54,7 +54,7 @@
 	</tr>
 	<tr>
 		<!-- BEGIN pic_detail -->
-		<td class="row2"><div class="gensmall" style="overflow: hidden;"> {L_IMAGE_TITLE}: <a href="{picrow.pic_detail.U_IMAGE}" style="font-weight: bold;">{picrow.pic_detail.IMAGE_NAME}</a><br />
+		<td class="row2"><div class="gensmall" style="overflow: hidden;"> {L_IMAGE_TITLE}: <a href="{picrow.pic_detail.U_IMAGE_PAGE}" style="font-weight: bold;">{picrow.pic_detail.IMAGE_NAME}</a><br />
 			{L_ALBUM_NAME}: <a href="{picrow.pic_detail.U_ALBUM}" style="font-weight: bold;">{picrow.pic_detail.ALBUM_NAME}</a><br />
 			{L_POSTER}: {picrow.pic_detail.POSTER}<br />
 			{L_POSTED}: {picrow.pic_detail.TIME}<br />

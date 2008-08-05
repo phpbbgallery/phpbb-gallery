@@ -58,7 +58,8 @@ while( $row = $db->sql_fetchrow($result) )
 		'IMAGE_TIME'		=> $user->format_date($row['image_time']),
 		'IMAGE_NAME'		=> $row['image_name'],
 		'IMAGE_ID'			=> $row['image_id'],
-		'U_IMAGE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx" , "mode=queue_details&amp;album_id=$album_id&amp;option_id=" . $row['image_id']),
+		'U_IMAGE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx" , "album_id=$album_id&amp;image_id=" . $row['image_id']),
+		'U_IMAGE_PAGE'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx" , "mode=queue_details&amp;album_id=$album_id&amp;option_id=" . $row['image_id']),
 	));
 }
 $db->sql_freeresult($result);
