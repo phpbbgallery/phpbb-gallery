@@ -244,6 +244,7 @@ $lang = array_merge($lang, array(
 
 	'NO_IMAGES_LONG'				=> 'In diesem Album gibt es keine Bilder.',
 
+	'RANDOM_IMAGES'					=> 'Zufällige Bilder',
 	'REPORT_IMAGE'					=> 'Bild melden',
 
 	'SEARCH_USER_IMAGES'			=> 'Bilder des Mitglieds anzeigen',

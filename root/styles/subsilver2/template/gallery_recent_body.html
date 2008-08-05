@@ -3,11 +3,6 @@
 	<tr>
 		<th align="center" colspan="{S_COLS}" nowrap="nowrap">{L_RECENT_IMAGES}</th>
 	</tr>
-	<!-- BEGIN no_pics -->
-	<tr>
-		<td class="row1" align="center" height="50"><span class="gen">{L_NO_PICS}</span></td>
-	</tr>
-	<!-- END no_pics -->
 	<!-- BEGIN picrow -->
 	<tr>
 		<!-- BEGIN piccol -->
@@ -37,17 +32,61 @@
 	<!-- END picrow -->
 </table>
 <br clear="all" />
-<!-- ELSE -->
+<!-- ELSEIF S_RECENT -->
 <table class="tablebg" width="100%" cellspacing="1">
 	<tr>
-		<th>{L_ALBUM}</th>
+		<th>{L_RECENT_IMAGES}</th>
 	</tr>
 	<tr>
 		<td class="row1" align="center">{L_NO_IMAGES}</td>
 	</tr>
 </table>
 <!-- ENDIF -->
+<!-- IF .random -->
+<table class="tablebg" cellspacing="1" width="100%">
+	<tr>
+		<th align="center" colspan="{S_COLS}" nowrap="nowrap">{L_RANDOM_IMAGES}</th>
+	</tr>
+	<!-- BEGIN random -->
+	<tr>
+		<!-- BEGIN piccol -->
+		<td align="center" width="{S_COL_WIDTH}" class="row1"><span class="genmed"><a href="{random.piccol.U_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->><img src="{random.piccol.THUMBNAIL}" border="0" alt="{random.piccol.DESC}" title="{random.piccol.DESC}" vspace="10" /></a><br />
+			{random.piccol.APPROVAL}</span></td>
+		<!-- END piccol -->
+		<!-- BEGIN nopiccol -->
+		<td align="center" width="{S_COL_WIDTH}" class="row1"><span></span></td>
+		<!-- END nopiccol -->
+	</tr>
+	<tr>
+		<!-- BEGIN pic_detail -->
+		<td class="row2"><div style="overflow: hidden;">
+			<!-- IF random.pic_detail.IMAGE_NAME -->{L_IMAGE_TITLE}: <a href="{random.pic_detail.U_IMAGE_PAGE}" style="font-weight: bold;">{random.pic_detail.IMAGE_NAME}</a><br /><!-- ENDIF -->
+			<!-- IF random.pic_detail.POSTER -->{L_POSTER}: {random.pic_detail.POSTER}<br /><!-- ENDIF -->
+			<!-- IF random.pic_detail.TIME -->{L_POSTED}: {random.pic_detail.TIME}<br /><!-- ENDIF -->
+			<!-- IF random.pic_detail.VIEWS -->{L_VIEWS}: {random.pic_detail.VIEWS}<br /><!-- ENDIF -->
+			<!-- IF random.pic_detail.RATINGS -->{L_RATING}: {random.pic_detail.RATINGS}<br /><!-- ENDIF -->
+			<!-- IF random.pic_detail.COMMENTS -->{random.pic_detail.L_COMMENT}: {random.pic_detail.COMMENTS}<br /><!-- ENDIF -->
+			<!-- IF random.pic_detail.ALBUM -->{L_ALBUM}: <a href="{random.pic_detail.U_ALBUM}" style="font-weight: bold;">{random.pic_detail.ALBUM}</a><br /><!-- ENDIF -->
+		</div></td>
+		<!-- END pic_detail -->
+		<!-- BEGIN picnodetail -->
+		<td class="row2"><span></span></td>
+		<!-- END picnodetail -->
+	</tr>
+	<!-- END random -->
+</table>
 <br clear="all" />
+<!-- ELSEIF S_RANDOM -->
+<table class="tablebg" width="100%" cellspacing="1">
+	<tr>
+		<th>{L_RANDOM_IMAGES}</th>
+	</tr>
+	<tr>
+		<td class="row1" align="center">{L_NO_IMAGES}</td>
+	</tr>
+</table>
+<br clear="all" />
+<!-- ENDIF -->
 <!-- Please keep this little notice visible -->
 <div class="copyright"<!-- IF S_IN_GALLERY --> style="display: none;"<!-- ENDIF -->>Powered by <!-- port started by tsr: http://phpbbgallery.ph.funpic.de --><a href="http://www.flying-bits.org/">nickvergessen</a></div>
 <br clear="all" />

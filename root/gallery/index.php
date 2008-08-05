@@ -64,8 +64,13 @@ $display = array(
 	'comments'	=> false,
 	'album'		=> true,
 );
-//(rows, columns)
-recent_gallery_images(1, 4, $display);
+/**
+* rows		numeric default 1,
+* columns	numeric default 4,
+* display	array,
+* modes		string(recent|random|both),
+*/
+recent_gallery_images(1, 4, $display, 'both');
 
 /**
 * Start output the page
