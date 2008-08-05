@@ -273,6 +273,7 @@ $lang = array_merge($lang, array(
 	'RESYNC_IMAGECOUNTS'			=> 'Resynchronise image counts',
 	'RESYNC_IMAGECOUNTS_EXPLAIN'	=> 'Only existing images will be taken into consideration.',
 	'RESYNC_IMAGECOUNTS_CONFIRM'	=> 'Are you sure you wish to resynchronise image counts?',
+	'RESYNC_LAST_IMAGES'			=> 'Refresh "Last image"',
 	'RESYNC_PERSONALS'				=> 'Resynchronise personal album id\'s',
 	'RESYNC_PERSONALS_CONFIRM'		=> 'Are you sure you wish to resynchronise image counts?',
 

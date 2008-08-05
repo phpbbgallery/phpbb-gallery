@@ -453,6 +453,10 @@ class acp_gallery
 						$confirm = true;
 						$confirm_lang = 'CONFIRM_OPERATION';
 					break;
+					case 'last_images':
+						$confirm = true;
+						$confirm_lang = 'CONFIRM_OPERATION';
+					break;
 					case 'purge_cache':
 						$confirm = true;
 						$confirm_lang = 'GALLERY_CLEAR_CACHE_CONFIRM';
@@ -512,6 +516,18 @@ class acp_gallery
 						while ($row = $db->sql_fetchrow($result))
 						{
 							$db->sql_query('UPDATE ' . GALLERY_USERS_TABLE . " SET personal_album_id = {$row['album_id']} WHERE user_id = {$row['album_user_id']}");
+						}
+						$db->sql_freeresult($result);
+					break;
+
+					case 'last_images':
+						$sql = 'SELECT album_id
+							FROM ' . GALLERY_ALBUMS_TABLE;
+						$result = $db->sql_query($sql);
+						while ($row = $db->sql_fetchrow($result))
+						{
+							// 5 sql's per album, but you don't run this daily ;)
+							update_lastimage_info($row['album_id']);
 						}
 						$db->sql_freeresult($result);
 					break;
@@ -1754,11 +1770,6 @@ class acp_gallery
 	function cleanup()
 	{
 		global $db, $template, $user, $cache, $auth, $phpbb_root_path;
-
-		if (!$auth->acl_get('a_userdel'))
-		{
-			trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action . '&amp;u=' . $user_id), E_USER_WARNING);
-		}
 
 		$delete = (isset($_POST['delete'])) ? true : false;
 		$submit = (isset($_POST['submit'])) ? true : false;

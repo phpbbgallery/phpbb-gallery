@@ -273,6 +273,7 @@ $lang = array_merge($lang, array(
 	'RESYNC_IMAGECOUNTS'			=> 'Anzahl der hochgeladenen Bilder resynchronisieren',
 	'RESYNC_IMAGECOUNTS_EXPLAIN'	=> 'Es werden nur Bilder mitgezählt, die noch existieren.',
 	'RESYNC_IMAGECOUNTS_CONFIRM'	=> 'Bist du sicher, dass du die Anzahl der hochgeladenen Bilder resynchronisieren willst?',
+	'RESYNC_LAST_IMAGES'			=> '"Letztes Bild" neu ermitteln',
 	'RESYNC_PERSONALS'				=> 'Persönliche Alben resynchronisieren',
 	'RESYNC_PERSONALS_CONFIRM'		=> 'Bist du sicher, dass du die Persönliche Alben resynchronisieren willst?',
 
