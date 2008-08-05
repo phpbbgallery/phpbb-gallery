@@ -51,7 +51,8 @@
 
 		<form id="action_images_form" method="post" action="{U_ACTION}">
 			<dl>
-				<dt><label for="action_images">{L_RESYNC_IMAGECOUNTS}</label><br /><span>{L_RESYNC_IMAGECOUNTS_EXPLAIN}</span></dt>
+				<dt><label for="action_images">{L_RESYNC_IMAGECOUNTS}</label>
+					<br /><span>{L_RESYNC_IMAGECOUNTS_EXPLAIN}</span></dt>
 				<dd><input type="hidden" name="action" value="images" /><input class="button2" type="submit" id="action_images" name="action_images" value="{L_RUN}" /></dd>
 			</dl>
 		</form>
@@ -63,10 +64,18 @@
 			</dl>
 		</form>
 
+		<form id="action_last_images_form" method="post" action="{U_ACTION}">
+			<dl>
+				<dt><label for="action_last_images">{L_RESYNC_LAST_IMAGES}</label></dt>
+				<dd><input type="hidden" name="action" value="last_images" /><input class="button2" type="submit" id="action_last_images" name="action_last_images" value="{L_RUN}" /></dd>
+			</dl>
+		</form>
+
 		<!-- IF S_FOUNDER -->
 		<form id="action_purge_cache_form" method="post" action="{U_ACTION}">
 			<dl>
-				<dt><label for="action_purge_cache">{L_PURGE_CACHE}</label><br /><span>{L_GALLERY_CLEAR_CACHE_CONFIRM}</span></dt>
+				<dt><label for="action_purge_cache">{L_PURGE_CACHE}</label>
+					<br /><span>{L_GALLERY_CLEAR_CACHE_CONFIRM}</span></dt>
 				<dd><input type="hidden" name="action" value="purge_cache" /><input class="button2" type="submit" id="action_purge_cache" name="action_purge_cache" value="{L_RUN}" /></dd>
 			</dl>
 		</form>
