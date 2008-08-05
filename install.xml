@@ -43,8 +43,8 @@ For Features see the forum topic.]]></description>
       <link type="language" lang="en-gb" href="de.xml">Manual for German Language-set</link>
       <link type="template" lang="de" href="subsilver2.xml">Anleitung für das Style subsilver2</link>
       <link type="template" lang="en-gb" href="subsilver2.xml">Manual for subsilver2 Style</link>
-      <link type="parent" lang="en-gb" href="contrib/Addons/recent_images/install.xml">Addon: recent images on index.php</link>
-      <link type="parent" lang="de" href="contrib/Addons/recent_images/install.xml">Addon: neuste Bilder auf der index.php</link>
+      <link type="parent" lang="en-gb" href="contrib/Addons/recent_random_images/install.xml">Addon: recent images on index.php</link>
+      <link type="parent" lang="de" href="contrib/Addons/recent_random_images/install.xml">Addon: neuste Bilder auf der index.php</link>
     </link-group>
     <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
   </header>
