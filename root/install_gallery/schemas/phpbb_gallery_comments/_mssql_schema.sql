@@ -14,7 +14,7 @@ CREATE TABLE [phpbb_gallery_comments] (
 	[comment_id] [int] IDENTITY (1, 1) NOT NULL ,
 	[comment_image_id] [int] NOT NULL ,
 	[comment_user_id] [int] DEFAULT (0) NOT NULL ,
-	[comment_username] [varchar] (32) DEFAULT ('') NOT NULL ,
+	[comment_username] [varchar] (255) DEFAULT ('') NOT NULL ,
 	[comment_user_colour] [varchar] (6) DEFAULT ('') NOT NULL ,
 	[comment_user_ip] [varchar] (40) DEFAULT ('') NOT NULL ,
 	[comment_time] [int] DEFAULT (0) NOT NULL ,

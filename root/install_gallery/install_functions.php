@@ -215,4 +215,15 @@ function gallery_create_table_slap_db_tools($table, $drop = true)
 	unset($sql_query);
 }
 
+function change_column($table, $column_name, $column_data)
+{
+	global $db;
+
+	$phpbb_db_tools = new phpbb_db_tools($db);
+	if ($phpbb_db_tools->sql_column_exists($table, $column_name))
+	{
+		$phpbb_db_tools->sql_column_change($table, $column_name, $column_data);
+	}
+}
+
 ?>

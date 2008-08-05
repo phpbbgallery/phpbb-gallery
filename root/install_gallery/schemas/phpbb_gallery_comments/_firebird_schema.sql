@@ -8,7 +8,7 @@ CREATE TABLE phpbb_gallery_comments (
 	comment_id INTEGER NOT NULL,
 	comment_image_id INTEGER NOT NULL,
 	comment_user_id INTEGER DEFAULT 0 NOT NULL,
-	comment_username VARCHAR(32) CHARACTER SET NONE DEFAULT '' NOT NULL,
+	comment_username VARCHAR(255) CHARACTER SET NONE DEFAULT '' NOT NULL,
 	comment_user_colour VARCHAR(6) CHARACTER SET NONE DEFAULT '' NOT NULL,
 	comment_user_ip VARCHAR(40) CHARACTER SET NONE DEFAULT '' NOT NULL,
 	comment_time INTEGER DEFAULT 0 NOT NULL,

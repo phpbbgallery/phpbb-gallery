@@ -842,6 +842,7 @@ switch ($mode)
 
 				case 'svn':
 					$album_config = load_album_config();
+					change_column(GALLERY_COMMENTS_TABLE, 'comment_username', array('VCHAR', ''));
 
 				break;
 			}

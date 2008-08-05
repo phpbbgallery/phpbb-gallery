@@ -16,7 +16,7 @@
 
 @set_time_limit(0);
 
-$schema_path = './schemas/phpbb_gallery_images/';
+$schema_path = './schemas/phpbb_gallery_comments/';
 
 if (!is_writable($schema_path))
 {
@@ -838,7 +838,7 @@ function get_schema_struct()
 			'comment_id'			=> array('UINT', NULL, 'auto_increment'),
 			'comment_image_id'		=> array('UINT', NULL),
 			'comment_user_id'		=> array('UINT', 0),
-			'comment_username'		=> array('VCHAR:32', ''),
+			'comment_username'		=> array('VCHAR', ''),
 			'comment_user_colour'	=> array('VCHAR:6', ''),
 			'comment_user_ip'		=> array('VCHAR:40', ''),
 			'comment_time'			=> array('UINT:11', 0),
@@ -881,7 +881,7 @@ function get_schema_struct()
 		),
 	);
 //*/
-//*
+/*
 	$schema_data['phpbb_gallery_images'] = array(
 		'COLUMNS'		=> array(
 			'image_id'				=> array('UINT', NULL, 'auto_increment'),
