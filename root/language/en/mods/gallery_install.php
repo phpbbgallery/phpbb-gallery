@@ -37,6 +37,11 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'AFTER_INSTALL_GOTO'				=> 'Go to the %sGallery%s',
 
+	'INSTALLER_CHMOD'					=> 'Checking for CHMOD',
+	'INSTALLER_CHMOD_EXPLAIN'			=> 'The following directories need CHMOD 777, to make the gallery work.',
+	'INSTALLER_CHMOD_UNWRITABLE'		=> 'Unwriteable',
+	'INSTALLER_CHMOD_WRITABLE'			=> 'Writeable',
+
 	'INSTALLER_CONVERT'					=> 'Convert',
 	'INSTALLER_CONVERT_MENU'			=> 'Convertmenu',
 	'INSTALLER_CONVERT_NOTE'			=> 'Convert MOD to v%s',

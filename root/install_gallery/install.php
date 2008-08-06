@@ -90,6 +90,13 @@ $version = request_var('v', '0', true);
 $convert = request_var('convert', 0);
 $convert_prefix = request_var('convert_prefix', '', true);
 
+//Check some Dirs for the right CHMODs
+$chmod_dirs = array(
+	array('name' => GALLERY_ROOT_PATH . 'import/', 'chmod' => is_writable($phpbb_root_path . GALLERY_ROOT_PATH . 'import/')),
+	array('name' => GALLERY_ROOT_PATH . 'upload/', 'chmod' => is_writable($phpbb_root_path . GALLERY_ROOT_PATH . 'upload/')),
+	array('name' => GALLERY_ROOT_PATH . 'upload/cache/', 'chmod' => is_writable($phpbb_root_path . GALLERY_ROOT_PATH . 'upload/cache/')),
+);
+
 switch ($mode)
 {
 	case 'install':

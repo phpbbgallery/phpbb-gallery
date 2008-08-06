@@ -32,6 +32,11 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'AFTER_INSTALL_GOTO'				=> 'Zur %sGalerie%s',
 
+	'INSTALLER_CHMOD'					=> 'Auf Beschreibbarkeit überprüfen',
+	'INSTALLER_CHMOD_EXPLAIN'			=> 'Die folgenden Verzeichnisse müssen CHMOD auf 777 gesetzt haben, damit die Gallery reibungslos funktioniert.',
+	'INSTALLER_CHMOD_UNWRITABLE'		=> 'Unbeschreibbar',
+	'INSTALLER_CHMOD_WRITABLE'			=> 'Beschreibbar',
+
 	'INSTALLER_CONVERT'					=> 'Konvertieren',
 	'INSTALLER_CONVERT_MENU'			=> 'Konvertierung',
 	'INSTALLER_CONVERT_NOTE'			=> 'Konvertiere MOD zu v%s',
@@ -43,7 +48,7 @@ $lang = array_merge($lang, array(
 	'INSTALLER_CONVERT_WELCOME_NOTE'	=> 'Wenn du den MOD konvertierst, kopieren wir die Daten aus deine phpBB2-Installation in die phpBB3-Installation.',
 
 	'INSTALLER_INTRO'					=> 'Intro',
-	'INSTALLER_INTRO_WELCOME'			=> 'WIllkommen zur MOD-Installation',
+	'INSTALLER_INTRO_WELCOME'			=> 'Willkommen zur MOD-Installation',
 	'INSTALLER_INTRO_WELCOME_NOTE'		=> 'Bitte wähle aus, was du tun möchtest.',
 
 	'INSTALLER_INSTALL'					=> 'Installieren',

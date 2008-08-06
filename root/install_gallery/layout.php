@@ -59,9 +59,9 @@ echo '							<li' . (($version == '0.3.1') ? $activemenu : '') . '><a href="inst
 echo '							<li' . (($version == '0.3.0') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.3.0"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.3.0</span></a></li>';
 echo '							<li class="header">' . $user->lang['INSTALLER_UPDATE_MENU'] . ' 0.2.x</li>';
 echo '							<li' . (($version == '0.2.3') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.2.3"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.2.3</span></a></li>';
-echo '							<li' . (($version == '0.2.2') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.2.3"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.2.2</span></a></li>';
-echo '							<li' . (($version == '0.2.1') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.2.3"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.2.1</span></a></li>';
-echo '							<li' . (($version == '0.2.0') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.2.3"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.2.0</span></a></li>';
+echo '							<li' . (($version == '0.2.2') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.2.2"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.2.2</span></a></li>';
+echo '							<li' . (($version == '0.2.1') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.2.1"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.2.1</span></a></li>';
+echo '							<li' . (($version == '0.2.0') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.2.0"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.2.0</span></a></li>';
 echo '							<li class="header">' . $user->lang['INSTALLER_UPDATE_MENU'] . ' 0.1.x</li>';
 echo '							<li' . (($version == '0.1.3') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.1.3"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.1.3</span></a></li>';
 echo '							<li' . (($version == '0.1.2') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.1.2"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.1.2 - tsr</span></a></li>';
@@ -94,6 +94,24 @@ if ($mode == 'install')
 		echo '<h1>' . $user->lang['INSTALLER_INSTALL_WELCOME'] . '</h1>';
 		echo '<p>' . $user->lang['INSTALLER_INSTALL_WELCOME_NOTE'] . '</p>';
 		echo '<form id="acp_board" method="post" action="install.php?mode=install">';
+		echo '	<fieldset>';
+		echo '		<legend>' . $user->lang['INSTALLER_CHMOD'] . '</legend>';
+		echo '		<p>' . $user->lang['INSTALLER_CHMOD_EXPLAIN'] . '</p>';
+		foreach ($chmod_dirs as $dir)
+		{
+			echo '		<dl>';
+			echo '			<dt><label for="chmod">' . $dir['name'] . ':</label></dt>';
+				if ($dir['chmod'])
+				{
+					echo '			<dd><label><strong style="color:green">' . $user->lang['INSTALLER_CHMOD_WRITABLE'] . '</strong></label></dd>';
+				}
+				else
+				{
+					echo '			<dd><label><strong style="color:red">' . $user->lang['INSTALLER_CHMOD_UNWRITABLE'] . '</strong></label></dd>';
+				}
+			echo '		</dl>';
+		}
+		echo '	</fieldset>';
 		echo '	<fieldset>';
 		echo '		<legend>' . $user->lang['INSTALLER_INSTALL'] . '</legend>';
 		echo '		<dl>';
@@ -141,6 +159,24 @@ else if ($mode == 'convert')
 		echo '<p>' . $user->lang['INSTALLER_CONVERT_WELCOME_NOTE'] . '</p>';
 		echo '<form id="acp_board" method="post" action="install.php?mode=convert">';
 		echo '	<fieldset>';
+		echo '		<legend>' . $user->lang['INSTALLER_CHMOD'] . '</legend>';
+		echo '		<p>' . $user->lang['INSTALLER_CHMOD_EXPLAIN'] . '</p>';
+		foreach ($chmod_dirs as $dir)
+		{
+			echo '		<dl>';
+			echo '			<dt><label for="chmod">' . $dir['name'] . ':</label></dt>';
+				if ($dir['chmod'])
+				{
+					echo '			<dd><label><strong style="color:green">' . $user->lang['INSTALLER_CHMOD_WRITABLE'] . '</strong></label></dd>';
+				}
+				else
+				{
+					echo '			<dd><label><strong style="color:red">' . $user->lang['INSTALLER_CHMOD_UNWRITABLE'] . '</strong></label></dd>';
+				}
+			echo '		</dl>';
+		}
+		echo '	</fieldset>';
+		echo '	<fieldset>';
 		echo '		<legend>' . $user->lang['INSTALLER_CONVERT'] . '</legend>';
 		echo '		<dl>';
 		echo '			<dt><label for="convert_prefix">' . $user->lang['INSTALLER_CONVERT_PREFIX'] . ':</label></dt>';
@@ -182,6 +218,24 @@ else if ($mode == 'update')
 	{
 		echo '<h1>' . $user->lang['INSTALLER_UPDATE_WELCOME'] . '</h1>';
 		echo '<form id="acp_board" method="post" action="install.php?mode=' . $mode . '&amp;v=' . $version . '">';
+		echo '	<fieldset>';
+		echo '		<legend>' . $user->lang['INSTALLER_CHMOD'] . '</legend>';
+		echo '		<p>' . $user->lang['INSTALLER_CHMOD_EXPLAIN'] . '</p>';
+		foreach ($chmod_dirs as $dir)
+		{
+			echo '		<dl>';
+			echo '			<dt><label for="chmod">' . $dir['name'] . ':</label></dt>';
+				if ($dir['chmod'])
+				{
+					echo '			<dd><label><strong style="color:green">' . $user->lang['INSTALLER_CHMOD_WRITABLE'] . '</strong></label></dd>';
+				}
+				else
+				{
+					echo '			<dd><label><strong style="color:red">' . $user->lang['INSTALLER_CHMOD_UNWRITABLE'] . '</strong></label></dd>';
+				}
+			echo '		</dl>';
+		}
+		echo '	</fieldset>';
 		echo '	<fieldset>';
 		echo '		<legend>' . $user->lang['INSTALLER_UPDATE'] . '</legend>';
 		echo '		<dl>';
