@@ -284,6 +284,7 @@ $lang = array_merge($lang, array(
 	'SELECT_PERMISSIONS'			=> 'Wähle Berechtigungen',
 	'SELECTED_PERMISSIONS'			=> 'Ausgewählte Berechtigunen',
 	'SET_PERMISSIONS'				=> '<br /><a href="%s">Berechtigungen</a> jetzt vergeben.',
+	'SORRY_NO_STATISTIC'			=> 'Entschuldigung, aber dieser Statistik-Wert ist noch nicht verfügbar.',
 
 	'THIS_WILL_BE_REPORTED'			=> 'Bekannter Fehler, sorry guys!',
 

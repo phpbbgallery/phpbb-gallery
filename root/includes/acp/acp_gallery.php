@@ -580,10 +580,11 @@ class acp_gallery
 		}
 		$db->sql_freeresult($result);
 
-		$cache_dir_size = $gupload_dir_size = 0;
 		//this is much load, maybe we can store this into some variables?
 		//but refresh it, after every upload, or how you wanna do this?
+		$cache_dir_size = $gupload_dir_size = $user->lang['SORRY_NO_STATISTIC'];
 		/*
+		$cache_dir_size = $gupload_dir_size = 0;
 		if ($gupload_dir = @opendir($phpbb_root_path . GALLERY_UPLOAD_PATH))
 		{
 			while (($file = readdir($gupload_dir)) !== false)
