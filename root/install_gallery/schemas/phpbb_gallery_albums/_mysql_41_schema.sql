@@ -27,7 +27,6 @@ CREATE TABLE phpbb_gallery_albums (
 	album_last_user_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	display_on_index int(1) UNSIGNED DEFAULT '1' NOT NULL,
 	display_subalbum_list int(1) UNSIGNED DEFAULT '1' NOT NULL,
-	album_approval int(3) UNSIGNED DEFAULT '0' NOT NULL,
 	PRIMARY KEY (album_id)
 ) CHARACTER SET `utf8` COLLATE `utf8_bin`;
 

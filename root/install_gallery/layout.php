@@ -53,6 +53,7 @@ echo '						<ul>';
 echo '							<li class="header">' . $user->lang['INSTALLER_INSTALL_MENU'] . '</li>';
 echo '							<li' . (($mode == 'install') ? $activemenu : '') . '><a href="install.php?mode=install"><span>' . sprintf($user->lang['INSTALLER_INSTALL_VERSION'], $new_mod_version) . '</span></a></li>';
 echo '							<li' . (($mode == 'convert') ? $activemenu : '') . '><a href="install.php?mode=convert"><span>' . sprintf($user->lang['INSTALLER_CONVERT_NOTE'], $new_mod_version) . '</span></a></li>';
+echo '							<li' . (($mode == 'delete') ? $activemenu : '') . '><a href="install.php?mode=delete"><span>' . $user->lang['INSTALLER_DELETE_NOTE'] . '</span></a></li>';
 echo '							<li class="header">' . $user->lang['INSTALLER_UPDATE_MENU'] . ' 0.3.x</li>';
 echo '							<li' . (($version == 'svn') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=svn"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . ' SVN</span></a></li>';
 echo '							<li' . (($version == '0.3.1') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.3.1"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.3.1</span></a></li>';
@@ -185,6 +186,48 @@ else if ($mode == 'convert')
 		echo '		<dl>';
 		echo '			<dt><label for="convert">' . sprintf($user->lang['INSTALLER_CONVERT_NOTE'], $new_mod_version) . ':</label></dt>';
 		echo '			<dd><label><input name="convert" value="1" class="radio" type="radio" />' . $user->lang['YES'] . '</label><label><input name="convert" value="0" checked="checked" class="radio" type="radio" />' . $user->lang['NO'] . '</label></dd>';
+		echo '		</dl>';
+		echo '		<p class="submit-buttons">';
+		echo '			<input class="button1" id="submit" name="submit" value="Submit" type="submit" />&nbsp;';
+		echo '			<input class="button2" id="reset" name="reset" value="Reset" type="reset" />';
+		echo '		</p>';
+		echo '	</fieldset>';
+		echo '</form>';
+	}
+}
+else if ($mode == 'delete')
+{
+	if ($delete == 1)
+	{
+		if ($deleted)
+		{
+			echo '<div class="successbox">';
+			echo '	<h3>' . $user->lang['INFORMATION'] . '</h3>';
+			echo '	<p>' . $user->lang['INSTALLER_DELETE_SUCCESSFUL'] . '</p>';
+			echo '</div>';
+		}
+		else
+		{
+			echo '<div class="errorbox">';
+			echo '	<h3>' . $user->lang['WARNING'] . '</h3>';
+			echo '	<p>' . $user->lang['INSTALLER_DELETE_UNSUCCESSFUL'] . '</p>';
+			echo '</div>';
+		}
+	}
+	else
+	{
+		echo '<h1>' . $user->lang['INSTALLER_DELETE_WELCOME'] . '</h1>';
+		echo '<p>' . $user->lang['INSTALLER_DELETE_WELCOME_NOTE'] . '</p>';
+		echo '<form id="acp_board" method="post" action="install.php?mode=delete">';
+		echo '	<fieldset>';
+		echo '		<legend>' . $user->lang['INSTALLER_DELETE'] . '</legend>';
+		echo '		<dl>';
+		echo '			<dt><label for="bbcode_id">' . $user->lang['INSTALLER_DELETE_BBCODE'] . ':</label></dt>';
+		echo '			<dd>' . $select_bbcode . '</dd>';
+		echo '		</dl>';
+		echo '		<dl>';
+		echo '			<dt><label for="delete">' . $user->lang['INSTALLER_DELETE_NOTE'] . ':</label></dt>';
+		echo '			<dd><label><input name="delete" value="1" class="radio" type="radio" />' . $user->lang['YES'] . '</label><label><input name="delete" value="0" checked="checked" class="radio" type="radio" />' . $user->lang['NO'] . '</label></dd>';
 		echo '		</dl>';
 		echo '		<p class="submit-buttons">';
 		echo '			<input class="button1" id="submit" name="submit" value="Submit" type="submit" />&nbsp;';

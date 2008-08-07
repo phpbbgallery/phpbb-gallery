@@ -38,7 +38,6 @@ $lang = array_merge($lang, array(
 	'INSTALLER_CHMOD_WRITABLE'			=> 'Beschreibbar',
 
 	'INSTALLER_CONVERT'					=> 'Konvertieren',
-	'INSTALLER_CONVERT_MENU'			=> 'Konvertierung',
 	'INSTALLER_CONVERT_NOTE'			=> 'Konvertiere MOD zu v%s',
 	'INSTALLER_CONVERT_PREFIX'			=> 'Präfix der phpBB2-Installation',
 	'INSTALLER_CONVERT_SUCCESSFUL'		=> 'Konvertierung des MODs zu v%s war erfolgreich.<br />Kopiere nun die Bilder aus den Verzeichnissen album/upload und album/upload/cache aus der phpBB2-Installation in die der phpBB3-Installation.',
@@ -46,6 +45,14 @@ $lang = array_merge($lang, array(
 	'INSTALLER_CONVERT_UNSUCCESSFUL2'	=> 'Du hast kein Präfix für die phpBB2-Installation eingefügt.',
 	'INSTALLER_CONVERT_WELCOME'			=> 'Willkommen zur Konvertierung',
 	'INSTALLER_CONVERT_WELCOME_NOTE'	=> 'Wenn du den MOD konvertierst, kopieren wir die Daten aus deine phpBB2-Installation in die phpBB3-Installation.',
+
+	'INSTALLER_DELETE'					=> 'Löschen',
+	'INSTALLER_DELETE_NOTE'				=> 'Löschen',
+	'INSTALLER_DELETE_BBCODE'			=> 'Wähle den richtigen BBCode',
+	'INSTALLER_DELETE_SUCCESSFUL'		=> 'Die MOD wurde erfolgreich deinstalliert.<br />Du kannst nun alle Dateien löschen.',
+	'INSTALLER_DELETE_UNSUCCESSFUL'		=> 'Die MOD konnte <strong>nicht</strong> deinstalliert werden.',
+	'INSTALLER_DELETE_WELCOME'			=> 'Du möchtest die Gallery wirklich löschen?',
+	'INSTALLER_DELETE_WELCOME_NOTE'		=> 'Wenn du die MOD hier löschst, werden alle Datenbankeinträge gelöscht.',
 
 	'INSTALLER_INTRO'					=> 'Intro',
 	'INSTALLER_INTRO_WELCOME'			=> 'Willkommen zur MOD-Installation',
@@ -58,8 +65,6 @@ $lang = array_merge($lang, array(
 	'INSTALLER_INSTALL_VERSION'			=> 'Installiere MOD v%s',
 	'INSTALLER_INSTALL_WELCOME'			=> 'Willkommen zur Installation',
 	'INSTALLER_INSTALL_WELCOME_NOTE'	=> 'Wenn du den MOD installierst, werden möglicherweise vorhandene Datenbanktabellen mit gleichem Namen gelöscht.',
-
-	'INSTALLER_NEEDS_FOUNDER'			=> 'Du musst als Gründer eingeloggt sein.',
 
 	'INSTALLER_UPDATE'					=> 'Update',
 	'INSTALLER_UPDATE_MENU'				=> 'Updatemenü',

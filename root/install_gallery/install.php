@@ -96,6 +96,9 @@ $chmod_dirs = array(
 	array('name' => GALLERY_ROOT_PATH . 'upload/', 'chmod' => is_writable($phpbb_root_path . GALLERY_ROOT_PATH . 'upload/')),
 	array('name' => GALLERY_ROOT_PATH . 'upload/cache/', 'chmod' => is_writable($phpbb_root_path . GALLERY_ROOT_PATH . 'upload/cache/')),
 );
+$module_names = array('ACP_GALLERY_MANAGE_USER', 'ACP_GALLERY_MANAGE_RESTS', 'ACP_GALLERY_CLEANUP', 'ACP_IMPORT_ALBUMS', 'ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS', 'ACP_GALLERY_ALBUM_PERMISSIONS', 'ACP_GALLERY_CONFIGURE_GALLERY', 'ACP_GALLERY_MANAGE_CACHE', 'ACP_GALLERY_MANAGE_ALBUMS', 'ACP_GALLERY_OVERVIEW');
+$module_names = array_merge($module_names, array('UCP_GALLERY_PERSONAL_ALBUMS', 'UCP_GALLERY_FAVORITES', 'UCP_GALLERY_WATCH', 'UCP_GALLERY_SETTINGS'));
+$old_configs = array('user_pics_limit', 'mod_pics_limit', 'fullpic_popup', 'personal_gallery', 'personal_gallery_private', 'personal_gallery_limit', 'personal_gallery_view');
 
 switch ($mode)
 {
@@ -103,26 +106,26 @@ switch ($mode)
 		$installed = false;
 		if ($install == 1)
 		{
-			gallery_create_table_slap_db_tools('phpbb_gallery_albums', true);
-			gallery_create_table_slap_db_tools('phpbb_gallery_comments', true);
-			gallery_create_table_slap_db_tools('phpbb_gallery_config', true);
-			gallery_create_table_slap_db_tools('phpbb_gallery_images', true);
-			gallery_create_table_slap_db_tools('phpbb_gallery_rates', true);
-			gallery_create_table_slap_db_tools('phpbb_gallery_reports', true);
-			gallery_create_table_slap_db_tools('phpbb_gallery_roles', true);
-			gallery_create_table_slap_db_tools('phpbb_gallery_permissions', true);
-			gallery_create_table_slap_db_tools('phpbb_gallery_modscache', true);
+			nv_create_table('phpbb_gallery_albums', true);
+			nv_create_table('phpbb_gallery_comments', true);
+			nv_create_table('phpbb_gallery_config', true);
+			nv_create_table('phpbb_gallery_favorites', true);
+			nv_create_table('phpbb_gallery_images', true);
+			nv_create_table('phpbb_gallery_modscache', true);
+			nv_create_table('phpbb_gallery_permissions', true);
+			nv_create_table('phpbb_gallery_rates', true);
+			nv_create_table('phpbb_gallery_reports', true);
+			nv_create_table('phpbb_gallery_roles', true);
+			nv_create_table('phpbb_gallery_users', true);
+			nv_create_table('phpbb_gallery_watch', true);
 
 			//fill the GALLERY_CONFIG_TABLE with some values
 			gallery_config_value('max_pics', '1024');
-			gallery_config_value('user_pics_limit', '50');
-			gallery_config_value('mod_pics_limit', '250');
 			gallery_config_value('max_file_size', '128000');
 			gallery_config_value('max_width', '800');
 			gallery_config_value('max_height', '600');
 			gallery_config_value('rows_per_page', '3');
 			gallery_config_value('cols_per_page', '4');
-			gallery_config_value('fullpic_popup', '0');
 			gallery_config_value('thumbnail_quality', '50');
 			gallery_config_value('thumbnail_size', '125');
 			gallery_config_value('thumbnail_cache', '1');
@@ -134,15 +137,10 @@ switch ($mode)
 			gallery_config_value('desc_length', '512');
 			gallery_config_value('hotlink_prevent', '0');
 			gallery_config_value('hotlink_allowed', 'flying-bits.org');
-			gallery_config_value('personal_gallery', '0');
-			gallery_config_value('personal_gallery_private', '0');
-			gallery_config_value('personal_gallery_limit', '10');
-			gallery_config_value('personal_gallery_view', '1');
 			gallery_config_value('rate', '1');
 			gallery_config_value('rate_scale', '10');
 			gallery_config_value('comment', '1');
 			gallery_config_value('gd_version', '2');
-			gallery_config_value('album_version', '0.2.4');
 			gallery_config_value('watermark_images', 1);
 			gallery_config_value('watermark_source', 'gallery/mark.png');
 			gallery_config_value('preview_rsz_height', 600);
@@ -161,7 +159,65 @@ switch ($mode)
 			set_config('gallery_personal_album_profil', 1);
 			$album_config = load_album_config();
 
-			// create the modules
+			//remove the old modules:
+			$sql = 'SELECT module_id, module_class, left_id, right_id
+				FROM ' . MODULES_TABLE . '
+				WHERE ' . $db->sql_in_set('module_langname', $module_names);
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$module_id = $row['module_id'];
+
+				$sql = 'DELETE FROM ' . MODULES_TABLE . "
+					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+						AND module_id = $module_id";
+				$db->sql_query($sql);
+				$diff = 2;
+
+				$sql = 'UPDATE ' . MODULES_TABLE . "
+					SET right_id = right_id - $diff
+					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+						AND left_id < {$row['right_id']} AND right_id > {$row['right_id']}";
+				$db->sql_query($sql);
+
+				$sql = 'UPDATE ' . MODULES_TABLE . "
+					SET left_id = left_id - $diff, right_id = right_id - $diff
+					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+						AND left_id > {$row['right_id']}";
+				$db->sql_query($sql);
+			}
+			$db->sql_freeresult($result);
+
+			$sql = 'SELECT module_id, module_class, left_id, right_id
+				FROM ' . MODULES_TABLE . "
+				WHERE module_langname = 'PHPBB_GALLERY' OR module_langname = 'UCP_GALLERY'";
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$module_id = $row['module_id'];
+
+				$sql = 'DELETE FROM ' . MODULES_TABLE . "
+					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+						AND module_id = $module_id";
+				$db->sql_query($sql);
+				$diff = 2;
+
+				$sql = 'UPDATE ' . MODULES_TABLE . "
+					SET right_id = right_id - $diff
+					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+						AND left_id < {$row['right_id']} AND right_id > {$row['right_id']}";
+				$db->sql_query($sql);
+
+				$sql = 'UPDATE ' . MODULES_TABLE . "
+					SET left_id = left_id - $diff, right_id = right_id - $diff
+					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+						AND left_id > {$row['right_id']}";
+				$db->sql_query($sql);
+			}
+			$db->sql_freeresult($result);
+
+			//add the modules new:
+			// ->ACP
 			$acp_gallery = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 31,	'module_class' => 'acp',	'module_langname'=> 'PHPBB_GALLERY',	'module_mode' => '',	'module_auth' => '');
 			add_module($acp_gallery);
 			$acp_module_id = $db->sql_nextid();
@@ -171,23 +227,21 @@ switch ($mode)
 			add_module($acp_gallery_overview);
 			$acp_gallery_manage_albums = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_MANAGE_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
 			add_module($acp_gallery_manage_albums);
-			//REMOVE WITH 0.3.3//$acp_gallery_manage_cache = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_MANAGE_CACHE',	'module_mode' => 'manage_cache',	'module_auth' => '');
-			//REMOVE WITH 0.3.3//add_module($acp_gallery_manage_cache);
 			$acp_configure_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_CONFIGURE_GALLERY',	'module_mode' => 'configure_gallery',	'module_auth' => '');
 			add_module($acp_configure_gallery);
 			$album_permissions = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS',	'module_mode' => 'album_permissions',	'module_auth' => '');
 			add_module($album_permissions);
-			//REMOVE WITH 0.3.3//$album_personal_permissions = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS',	'module_mode' => 'album_personal_permissions',	'module_auth' => '');
-			//REMOVE WITH 0.3.3//add_module($album_personal_permissions);
 			$import_images = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_IMPORT_ALBUMS',	'module_mode' => 'import_images',	'module_auth' => '');
 			add_module($import_images);
-			$cleanup = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_CLEANUP',	'module_mode' => 'cleanup',	'module_auth' => '');
+			$cleanup = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_CLEANUP',	'module_mode' => 'cleanup',	'module_auth' => '');
 			add_module($cleanup);
 
+			// -> UCP
 			$ucp_gallery_overview = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 0,	'module_class' => 'ucp',	'module_langname'=> 'UCP_GALLERY',	'module_mode' => 'overview',	'module_auth' => '');
 			add_module($ucp_gallery_overview);
 			$ucp_module_id = $db->sql_nextid();
 			gallery_config_value('ucp_parent_module', $ucp_module_id);
+
 			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_SETTINGS',	'module_mode' => 'manage_settings',	'module_auth' => '');
 			add_module($ucp_gallery);
 			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_PERSONAL_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
@@ -207,11 +261,7 @@ switch ($mode)
 			}
 
 			add_bbcode('album');
-			//REMOVE WITH 0.3.3//gallery_column(USERS_TABLE, 'album_id', array('UINT', 0));
-			//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
-			//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'view_personal_albums', array('UINT', 1));
-			//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
-			gallery_column(SESSIONS_TABLE, 'session_album_id', array('UINT', 0));
+			nv_add_column(SESSIONS_TABLE, 'session_album_id', array('UINT', 0));
 			gallery_config_value('album_version', $new_mod_version, true);
 
 			// clear cache and log what we did
@@ -228,20 +278,20 @@ switch ($mode)
 			switch ($version)
 			{
 				case '0.1.2':
-					gallery_column(GALLERY_IMAGES_TABLE, 'pic_desc_bbcode_bitfield', array('VCHAR:255', ''));
-					gallery_column(GALLERY_IMAGES_TABLE, 'pic_desc_bbcode_uid', array('VCHAR:8', ''));
-					gallery_column(GALLERY_ALBUMS_TABLE, 'cat_desc_bbcode_bitfield', array('VCHAR:255', ''));
-					gallery_column(GALLERY_ALBUMS_TABLE, 'cat_desc_bbcode_uid', array('VCHAR:8', ''));
-					gallery_column(GALLERY_COMMENTS_TABLE, 'comment_text_bbcode_bitfield', array('VCHAR:255', ''));
-					gallery_column(GALLERY_COMMENTS_TABLE, 'comment_text_bbcode_uid', array('VCHAR:8', ''));
+					nv_add_column(GALLERY_IMAGES_TABLE, 'pic_desc_bbcode_bitfield', array('VCHAR:255', ''));
+					nv_add_column(GALLERY_IMAGES_TABLE, 'pic_desc_bbcode_uid', array('VCHAR:8', ''));
+					nv_add_column(GALLERY_ALBUMS_TABLE, 'cat_desc_bbcode_bitfield', array('VCHAR:255', ''));
+					nv_add_column(GALLERY_ALBUMS_TABLE, 'cat_desc_bbcode_uid', array('VCHAR:8', ''));
+					nv_add_column(GALLERY_COMMENTS_TABLE, 'comment_text_bbcode_bitfield', array('VCHAR:255', ''));
+					nv_add_column(GALLERY_COMMENTS_TABLE, 'comment_text_bbcode_uid', array('VCHAR:8', ''));
 				//no break;
 
 				case '0.1.3':
-					gallery_create_table_slap_db_tools('phpbb_gallery_albums', true);
-					gallery_create_table_slap_db_tools('phpbb_gallery_comments', true);
-					gallery_create_table_slap_db_tools('phpbb_gallery_config', true);
-					gallery_create_table_slap_db_tools('phpbb_gallery_images', true);
-					gallery_create_table_slap_db_tools('phpbb_gallery_rates', true);
+					nv_create_table('phpbb_gallery_albums', true);
+					nv_create_table('phpbb_gallery_comments', true);
+					nv_create_table('phpbb_gallery_config', true);
+					nv_create_table('phpbb_gallery_images', true);
+					nv_create_table('phpbb_gallery_rates', true);
 
 					// first lets make the albums...
 					$left_id = 1;
@@ -426,13 +476,9 @@ switch ($mode)
 					$phpbb_db_tools = new phpbb_db_tools($db);
 					$phpbb_db_tools->sql_column_change(GALLERY_IMAGES_TABLE, 'image_username', array('VCHAR:255', ''));
 
-					gallery_column(GALLERY_IMAGES_TABLE, 'image_user_colour', array('VCHAR:6', ''));
-					gallery_column(GALLERY_ALBUMS_TABLE, 'album_user_id', array('UINT', 0));
-					gallery_column(USERS_TABLE, 'album_id', array('UINT', 0));
-					//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
-					//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'view_personal_albums', array('UINT', 1));
-					//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
-
+					nv_add_column(GALLERY_IMAGES_TABLE, 'image_user_colour', array('VCHAR:6', ''));
+					nv_add_column(GALLERY_ALBUMS_TABLE, 'album_user_id', array('UINT', 0));
+					nv_add_column(USERS_TABLE, 'album_id', array('UINT', 0));
 					//update the new columns image_username and image_user_colour
 					$sql = 'SELECT i.image_user_id, i.image_id, u.username, u.user_colour
 						FROM ' . GALLERY_IMAGES_TABLE . ' AS i
@@ -505,125 +551,201 @@ switch ($mode)
 				//no break;
 
 				case '0.3.1':
-					//we didn't add this to all updates, so we just do it again. the function saves to be double
-					gallery_column(SESSIONS_TABLE, 'session_album_id', array('UINT', 0));
-
-					gallery_create_table_slap_db_tools('phpbb_gallery_roles', true);
-					gallery_create_table_slap_db_tools('phpbb_gallery_permissions', true);
-
 					$album_config = load_album_config();
 
-					//convert the permissions of personal albums to the new system
-					//maybe we already got some permissions
-					$roles_ary = array();
-					$sql = 'SELECT *
-						FROM ' . GALLERY_PERM_ROLES_TABLE;
+					//add new tables:
+					nv_create_table('phpbb_gallery_favorites', true);
+					nv_create_table('phpbb_gallery_modscache', true);
+					nv_create_table('phpbb_gallery_permissions', true);
+					nv_create_table('phpbb_gallery_reports', true);
+					nv_create_table('phpbb_gallery_roles', true);
+					nv_create_table('phpbb_gallery_users', true);
+					nv_create_table('phpbb_gallery_watch', true);
+
+					//add new columns:
+					nv_add_column(GALLERY_ALBUMS_TABLE, 'album_images', array('UINT', 0));
+					nv_add_column(GALLERY_ALBUMS_TABLE, 'album_images_real', array('UINT', 0));
+					nv_add_column(GALLERY_ALBUMS_TABLE, 'album_last_image_id', array('UINT', 0));
+					nv_add_column(GALLERY_ALBUMS_TABLE, 'album_image', array('VCHAR', ''));
+					nv_add_column(GALLERY_ALBUMS_TABLE, 'album_last_image_time', array('INT:11', 0));
+					nv_add_column(GALLERY_ALBUMS_TABLE, 'album_last_image_name', array('VCHAR', ''));
+					nv_add_column(GALLERY_ALBUMS_TABLE, 'album_last_username', array('VCHAR', ''));
+					nv_add_column(GALLERY_ALBUMS_TABLE, 'album_last_user_colour', array('VCHAR:6', ''));
+					nv_add_column(GALLERY_ALBUMS_TABLE, 'album_last_user_id', array('UINT', 0));
+					nv_add_column(GALLERY_ALBUMS_TABLE, 'display_on_index', array('UINT:1', 1));
+					nv_add_column(GALLERY_ALBUMS_TABLE, 'display_subalbum_list', array('UINT:1', 1));
+					nv_add_column(GALLERY_COMMENTS_TABLE, 'comment_user_colour', array('VCHAR:6', ''));
+					nv_add_column(GALLERY_IMAGES_TABLE, 'image_comments', array('UINT', 0));
+					nv_add_column(GALLERY_IMAGES_TABLE, 'image_last_comment', array('UINT', 0));
+					nv_add_column(GALLERY_IMAGES_TABLE, 'image_filemissing', array('UINT:3', 0));
+					nv_add_column(GALLERY_IMAGES_TABLE, 'image_rates', array('UINT', 0));
+					nv_add_column(GALLERY_IMAGES_TABLE, 'image_rate_points', array('UINT', 0));
+					nv_add_column(GALLERY_IMAGES_TABLE, 'image_rate_avg', array('UINT', 0));
+					nv_add_column(GALLERY_IMAGES_TABLE, 'image_status', array('UINT:3', 1));
+					nv_add_column(GALLERY_IMAGES_TABLE, 'image_has_exif', array('UINT:3', 2));
+					nv_add_column(GALLERY_IMAGES_TABLE, 'image_favorited', array('UINT', 0));
+					//we didn't add this to all updates, so we just do it again. the function saves to be double
+					nv_add_column(SESSIONS_TABLE, 'session_album_id', array('UINT', 0));
+
+					//change some current columns:
+					nv_change_column(GALLERY_COMMENTS_TABLE, 'comment_username', array('VCHAR', ''));
+
+					//remove the old modules:
+					$sql = 'SELECT module_id, module_class, left_id, right_id
+						FROM ' . MODULES_TABLE . '
+						WHERE ' . $db->sql_in_set('module_langname', $module_names);
 					$result = $db->sql_query($sql);
 					while ($row = $db->sql_fetchrow($result))
 					{
-						$roles_ary[$row['i_view'] . '_' . $row['i_upload'] . '_' . $row['i_edit'] . '_' . $row['i_delete'] . '_' . $row['i_rate'] . '_' . $row['i_approve'] . '_' . $row['i_lock'] . '_' . $row['i_report'] . '_' . $row['i_count'] . '_' . $row['c_post'] . '_' . $row['c_edit'] . '_' . $row['c_delete'] . '_' . $row['a_moderate'] . '_' . $row['album_count']] = $row['role_id'];
+						$module_id = $row['module_id'];
+
+						$sql = 'DELETE FROM ' . MODULES_TABLE . "
+							WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+								AND module_id = $module_id";
+						$db->sql_query($sql);
+						$diff = 2;
+
+						$sql = 'UPDATE ' . MODULES_TABLE . "
+							SET right_id = right_id - $diff
+							WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+								AND left_id < {$row['right_id']} AND right_id > {$row['right_id']}";
+						$db->sql_query($sql);
+
+						$sql = 'UPDATE ' . MODULES_TABLE . "
+							SET left_id = left_id - $diff, right_id = right_id - $diff
+							WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+								AND left_id > {$row['right_id']}";
+						$db->sql_query($sql);
 					}
 					$db->sql_freeresult($result);
 
-					//personal gallery permissions
-					gallery_create_table_slap_db_tools('phpbb_gallery_modscache', true);
-					$sql = 'SELECT group_id, personal_subalbums, allow_personal_albums, view_personal_albums
-						FROM ' . GROUPS_TABLE;
+					$sql = 'SELECT module_id, module_class, left_id, right_id
+						FROM ' . MODULES_TABLE . "
+						WHERE module_langname = 'PHPBB_GALLERY' OR module_langname = 'UCP_GALLERY'";
 					$result = $db->sql_query($sql);
 					while ($row = $db->sql_fetchrow($result))
 					{
-						$sql_ary = array();
-						$sql_ary = array(
-							'i_view' => $row['view_personal_albums'],
-							'i_upload' => $row['allow_personal_albums'],
-							'i_edit' => $row['allow_personal_albums'],
-							'i_delete' => $row['allow_personal_albums'],
-							'i_rate' => $album_config['rate'],
-							'i_approve' => 0,
-							'i_lock' => 0,
-							'i_report' => 1,
-							'i_count' => $album_config['user_pics_limit'],
-							'c_post' => $album_config['comment'],
-							'c_edit' => $album_config['comment'],
-							'c_delete' => $album_config['comment'],
-							'a_moderate' => 1,
-							'album_count' => $row['personal_subalbums'],
-						);
-						$sum_string = implode('_', $sql_ary);
-						if (!isset($roles_ary[$sum_string]))
-						{
-								$db->sql_query('INSERT INTO ' . GALLERY_PERM_ROLES_TABLE . $db->sql_build_array('INSERT', $sql_ary));
-								$data['role_id'] = $db->sql_nextid();
-								$roles_ary[$sum_string] = $data['role_id'];
-						}
-						$sql_ary = array();
-						$sql_ary = array(
-							'perm_role_id'			=> $roles_ary[$sum_string],
-							'perm_album_id'			=> 0,
-							'perm_user_id'			=> 0,
-							'perm_group_id'			=> $row['group_id'],
-							'perm_system'			=> 2,
-						);
-						$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . $db->sql_build_array('INSERT', $sql_ary));
-						
-						$sql_ary = array();
-						$sql_ary = array(
-							'i_view' => $row['view_personal_albums'],
-							'i_upload' => 0,
-							'i_edit' => 0,
-							'i_delete' => 0,
-							'i_rate' => $album_config['rate'],
-							'i_approve' => 0,
-							'i_lock' => 0,
-							'i_report' => 1,
-							'i_count' => $album_config['user_pics_limit'],
-							'c_post' => $album_config['comment'],
-							'c_edit' => $album_config['comment'],
-							'c_delete' => $album_config['comment'],
-							'a_moderate' => 0,
-							'album_count' => $row['personal_subalbums'],
-						);
-						$sum_string = implode('_', $sql_ary);
-						if (!isset($roles_ary[$sum_string]))
-						{
-								$db->sql_query('INSERT INTO ' . GALLERY_PERM_ROLES_TABLE . $db->sql_build_array('INSERT', $sql_ary));
-								$data['role_id'] = $db->sql_nextid();
-								$roles_ary[$sum_string] = $data['role_id'];
-						}
-						$sql_ary = array(
-							'perm_role_id'			=> $roles_ary[$sum_string],
-							'perm_album_id'			=> 0,
-							'perm_user_id'			=> 0,
-							'perm_group_id'			=> $row['group_id'],
-							'perm_system'			=> 3,
-						);
-						$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+						$module_id = $row['module_id'];
+
+						$sql = 'DELETE FROM ' . MODULES_TABLE . "
+							WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+								AND module_id = $module_id";
+						$db->sql_query($sql);
+						$diff = 2;
+
+						$sql = 'UPDATE ' . MODULES_TABLE . "
+							SET right_id = right_id - $diff
+							WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+								AND left_id < {$row['right_id']} AND right_id > {$row['right_id']}";
+						$db->sql_query($sql);
+
+						$sql = 'UPDATE ' . MODULES_TABLE . "
+							SET left_id = left_id - $diff, right_id = right_id - $diff
+							WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+								AND left_id > {$row['right_id']}";
+						$db->sql_query($sql);
 					}
 					$db->sql_freeresult($result);
 
-					//deactivate this useless module
-					deactivate_module('ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS');
+					//add the modules new:
+					// ->ACP
+					$acp_gallery = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 31,	'module_class' => 'acp',	'module_langname'=> 'PHPBB_GALLERY',	'module_mode' => '',	'module_auth' => '');
+					add_module($acp_gallery);
+					$acp_module_id = $db->sql_nextid();
+					gallery_config_value('acp_parent_module', $acp_module_id);
+
+					$acp_gallery_overview = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_OVERVIEW',	'module_mode' => 'overview',	'module_auth' => '');
+					add_module($acp_gallery_overview);
+					$acp_gallery_manage_albums = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_MANAGE_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
+					add_module($acp_gallery_manage_albums);
+					$acp_configure_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_CONFIGURE_GALLERY',	'module_mode' => 'configure_gallery',	'module_auth' => '');
+					add_module($acp_configure_gallery);
+					$album_permissions = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS',	'module_mode' => 'album_permissions',	'module_auth' => '');
+					add_module($album_permissions);
+					$import_images = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_IMPORT_ALBUMS',	'module_mode' => 'import_images',	'module_auth' => '');
+					add_module($import_images);
+					$cleanup = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_CLEANUP',	'module_mode' => 'cleanup',	'module_auth' => '');
+					add_module($cleanup);
+
+					// -> UCP
+					$ucp_gallery_overview = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 0,	'module_class' => 'ucp',	'module_langname'=> 'UCP_GALLERY',	'module_mode' => 'overview',	'module_auth' => '');
+					add_module($ucp_gallery_overview);
+					$ucp_module_id = $db->sql_nextid();
+					gallery_config_value('ucp_parent_module', $ucp_module_id);
+
+					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_SETTINGS',	'module_mode' => 'manage_settings',	'module_auth' => '');
+					add_module($ucp_gallery);
+					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_PERSONAL_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
+					add_module($ucp_gallery);
+					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_WATCH',	'module_mode' => 'manage_subscriptions',	'module_auth' => '');
+					add_module($ucp_gallery);
+					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_FAVORITES',	'module_mode' => 'manage_favorites',	'module_auth' => '');
+					add_module($ucp_gallery);
+
+					//add some new config's:
+					// -> general phpbb_config
+						$num_images = 0;
+						$sql = 'SELECT u.album_id, u.user_id, count(i.image_id) as images
+							FROM ' . USERS_TABLE . ' u
+							LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
+								ON i.image_user_id = u.user_id
+								AND i.image_status = 1
+							GROUP BY i.image_user_id';
+						$result = $db->sql_query($sql);
+						while ($row = $db->sql_fetchrow($result))
+						{
+							$sql_ary = array(
+								'user_id'				=> $row['user_id'],
+								'personal_album_id'		=> $row['album_id'],
+								'user_images'			=> $row['images'],
+							);
+							$num_images = $num_images + $row['images'];
+							$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+						}
+						$db->sql_freeresult($result);
+					set_config('num_images', $num_images, true);
+					set_config('gallery_total_images', 1);
+					set_config('gallery_user_images_profil', 1);
+					set_config('gallery_personal_album_profil', 1);
+					// -> gallery_config
 					gallery_config_value('fake_thumb_size', 141);
 					gallery_config_value('disp_fake_thumb', 1);
+					gallery_config_value('exif_data', 1);
+					gallery_config_value('watermark_height', 50);
+					gallery_config_value('watermark_width', 200);
+					//count the number of personal_gallerys in the config to reduce sqls
+						$sql = 'SELECT COUNT(album_id) AS albums
+							FROM ' . GALLERY_ALBUMS_TABLE . "
+							WHERE parent_id = 0
+								AND album_user_id <> 0";
+						$result = $db->sql_query($sql);
+						$total_galleries = 0;
+						if ($row = $db->sql_fetchrow($result))
+						{
+							$total_galleries = $row['albums'];
+						}
+						$db->sql_freeresult($result);
+					gallery_config_value('personal_counter', $total_galleries);
+					//change the sort_method if it is sepcial
+					if ($album_config['sort_method'] == 'rating')
+					{
+						gallery_config_value('sort_method', 'image_rate_avg', true);
+					}
+					else if ($album_config['sort_method'] == 'comments')
+					{
+						gallery_config_value('sort_method', 'image_comments', true);
+					}
+					else if ($album_config['sort_method'] == 'new_comment')
+					{
+						gallery_config_value('sort_method', 'image_last_comment', true);
+					}
 
-					gallery_column(GALLERY_ALBUMS_TABLE, 'album_images', array('UINT', 0));
-					gallery_column(GALLERY_ALBUMS_TABLE, 'album_images_real', array('UINT', 0));
-					gallery_column(GALLERY_ALBUMS_TABLE, 'album_last_image_id', array('UINT', 0));
-					gallery_column(GALLERY_ALBUMS_TABLE, 'album_image', array('VCHAR', ''));
-					gallery_column(GALLERY_ALBUMS_TABLE, 'album_last_image_time', array('INT:11', 0));
-					gallery_column(GALLERY_ALBUMS_TABLE, 'album_last_image_name', array('VCHAR', ''));
-					gallery_column(GALLERY_ALBUMS_TABLE, 'album_last_username', array('VCHAR', ''));
-					gallery_column(GALLERY_ALBUMS_TABLE, 'album_last_user_colour', array('VCHAR:6', ''));
-					gallery_column(GALLERY_ALBUMS_TABLE, 'album_last_user_id', array('UINT', 0));
-					gallery_column(GALLERY_ALBUMS_TABLE, 'display_on_index', array('UINT:1', 1));
-					gallery_column(GALLERY_ALBUMS_TABLE, 'display_subalbum_list', array('UINT:1', 1));
-
-					//album_type needs to be "album" for personal albums
-					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET album_type = 2';
+					// Update the data
+					// -> Albums
+					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET album_type = 1';
 					$db->sql_query($sql);
-					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET album_type = 1 WHERE album_user_id = 0';
+					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET album_type = 0 WHERE album_user_id = 0';
 					$db->sql_query($sql);
-
 					//add the information for the last_image to the albums part 1: last_image_id, image_count
 					$sql = 'SELECT COUNT(i.image_id) images, MAX(i.image_id) last_image_id, i.image_album_id
 						FROM ' . GALLERY_IMAGES_TABLE . " i
@@ -641,7 +763,6 @@ switch ($mode)
 						$db->sql_query($sql);
 					}
 					$db->sql_freeresult($result);
-
 					//add the information for the last_image to the albums part 2: correct album_type, images_real are all images, even unapproved
 					$sql = 'SELECT COUNT(i.image_id) images, i.image_album_id
 						FROM ' . GALLERY_IMAGES_TABLE . " i
@@ -651,14 +772,13 @@ switch ($mode)
 					{
 						$sql_ary = array(
 							'album_images_real'	=> $row['images'],
-							'album_type'		=> 2,
+							'album_type'		=> 1,
 						);
 						$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 							WHERE ' . $db->sql_in_set('album_id', $row['image_album_id']);
 						$db->sql_query($sql);
 					}
 					$db->sql_freeresult($result);
-
 					//add the information for the last_image to the albums part 3: user_id, username, user_colour, time, image_name
 					$sql = 'SELECT a.album_id, a.album_last_image_id, i.image_time, i.image_name, i.image_user_id, i.image_username, i.image_user_colour, u.user_colour
 						FROM ' . GALLERY_ALBUMS_TABLE . " a
@@ -682,25 +802,7 @@ switch ($mode)
 						$db->sql_query($sql);
 					}
 					$db->sql_freeresult($result);
-
-					//count the number of personal_gallerys in the config to reduce sqls
-					$sql = 'SELECT COUNT(album_id) AS albums
-						FROM ' . GALLERY_ALBUMS_TABLE . "
-						WHERE parent_id = 0
-							AND album_user_id <> 0";
-					$result = $db->sql_query($sql);
-					$total_galleries = 0;
-					if ($row = $db->sql_fetchrow($result))
-					{
-						$total_galleries = $row['albums'];
-					}
-					$db->sql_freeresult($result);
-					gallery_config_value('personal_counter', $total_galleries);
-
-					//less sqls update the images_table
-					gallery_column(GALLERY_IMAGES_TABLE, 'image_rates', array('UINT', 0));
-					gallery_column(GALLERY_IMAGES_TABLE, 'image_rate_points', array('UINT', 0));
-					gallery_column(GALLERY_IMAGES_TABLE, 'image_rate_avg', array('UINT', 0));
+					// -> Images
 					$sql = 'SELECT rate_image_id, COUNT(rate_user_ip) image_rates, AVG(rate_point) image_rate_avg, SUM(rate_point) image_rate_points
 						FROM ' . GALLERY_RATES_TABLE . '
 						GROUP BY rate_image_id';
@@ -715,8 +817,6 @@ switch ($mode)
 						$db->sql_query($sql);
 					}
 					$db->sql_freeresult($result);
-					gallery_column(GALLERY_IMAGES_TABLE, 'image_comments', array('UINT', 0));
-					gallery_column(GALLERY_IMAGES_TABLE, 'image_last_comment', array('UINT', 0));
 					$sql = 'SELECT COUNT(comment_id) comments, MAX(comment_id) image_last_comment, comment_image_id
 						FROM ' . GALLERY_COMMENTS_TABLE . "
 						GROUP BY comment_image_id";
@@ -729,47 +829,6 @@ switch ($mode)
 						$db->sql_query($sql);
 					}
 					$db->sql_freeresult($result);
-					//chaneg the sort_method if it is sepcial
-					if ($album_config['sort_method'] == 'rating')
-					{
-						gallery_config_value('sort_method', 'image_rate_avg', true);
-					}
-					else if ($album_config['sort_method'] == 'comments')
-					{
-						gallery_config_value('sort_method', 'image_comments', true);
-					}
-					else if ($album_config['sort_method'] == 'new_comment')
-					{
-						gallery_config_value('sort_method', 'image_last_comment', true);
-					}
-
-					//new UCP modules
-					deactivate_module('UCP_GALLERY_PERSONAL_ALBUMS');
-					$ucp_gallery_overview = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 0,	'module_class' => 'ucp',	'module_langname'=> 'UCP_GALLERY',	'module_mode' => 'overview',	'module_auth' => '');
-					add_module($ucp_gallery_overview);
-					$ucp_module_id = $db->sql_nextid();
-					gallery_config_value('ucp_parent_module', $ucp_module_id);
-					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_SETTINGS',	'module_mode' => 'manage_settings',	'module_auth' => '');
-					add_module($ucp_gallery);
-					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_PERSONAL_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
-					add_module($ucp_gallery);
-					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_WATCH',	'module_mode' => 'manage_subscriptions',	'module_auth' => '');
-					add_module($ucp_gallery);
-					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_FAVORITES',	'module_mode' => 'manage_favorites',	'module_auth' => '');
-					add_module($ucp_gallery);
-
-					$sql = 'SELECT module_id
-						FROM ' . MODULES_TABLE . "
-						WHERE module_langname = 'PHPBB_GALLERY'
-						LIMIT 1";
-					$result = $db->sql_query($sql);
-					while( $row = $db->sql_fetchrow($result) )
-					{
-						gallery_config_value('acp_parent_module', $row['module_id']);
-					}
-					$db->sql_freeresult($result);
-					gallery_create_table_slap_db_tools('phpbb_gallery_reports', true);
-					gallery_column(GALLERY_IMAGES_TABLE, 'image_status', array('UINT:3', 1));
 					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 						SET image_status = 2
 						WHERE image_lock = 1';
@@ -779,13 +838,7 @@ switch ($mode)
 						WHERE image_lock = 0
 							AND image_approval = 0';
 					$db->sql_query($sql);
-					gallery_column(GALLERY_IMAGES_TABLE, 'image_has_exif', array('UINT:3', 2));
-					gallery_config_value('exif_data', 1);
-					gallery_create_table_slap_db_tools('phpbb_gallery_users', true);
-					gallery_create_table_slap_db_tools('phpbb_gallery_watch', true);
-					gallery_create_table_slap_db_tools('phpbb_gallery_favorites', true);
-					gallery_column(GALLERY_IMAGES_TABLE, 'image_favorited', array('UINT', 0));
-					gallery_column(GALLERY_COMMENTS_TABLE, 'comment_user_colour', array('VCHAR:6', ''));
+					// -> Comments
 					$sql = 'SELECT u.user_colour, c.comment_id
 						FROM ' . GALLERY_COMMENTS_TABLE . ' c
 						LEFT JOIN ' . USERS_TABLE . ' u
@@ -799,57 +852,37 @@ switch ($mode)
 						$db->sql_query($sql);
 					}
 					$db->sql_freeresult($result);
-					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' 
-							SET album_type = 0
-							WHERE album_type = 1';
-					$db->sql_query($sql);
-					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' 
-							SET album_type = 1
-							WHERE album_type = 2';
-					$db->sql_query($sql);
-					$num_images = 0;
-					$sql = 'SELECT u.album_id, u.user_id, count(i.image_id) as images
-						FROM ' . USERS_TABLE . ' u
-						LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
-							ON i.image_user_id = u.user_id
-							AND i.image_status = 1
-						GROUP BY i.image_user_id';
-					$result = $db->sql_query($sql);
-					while ($row = $db->sql_fetchrow($result))
-					{
-						$sql_ary = array(
-							'user_id'				=> $row['user_id'],
-							'personal_album_id'		=> $row['album_id'],
-							'user_images'			=> $row['images'],
-						);
-						$num_images = $num_images + $row['images'];
-						$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . $db->sql_build_array('INSERT', $sql_ary));
-					}
-					$db->sql_freeresult($result);
-					set_config('num_images', $num_images, true);
-					set_config('gallery_total_images', 1);
-					set_config('gallery_user_images_profil', 1);
-					set_config('gallery_personal_album_profil', 1);
-					gallery_config_value('watermark_height', 50);
-					gallery_config_value('watermark_width', 200);
-					deactivate_module('ACP_GALLERY_MANAGE_CACHE');
-					gallery_column(GALLERY_IMAGES_TABLE, 'image_filemissing', array('UINT:3', 0));
-					$cleanup = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $album_config['acp_parent_module'],	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_CLEANUP',	'module_mode' => 'cleanup',	'module_auth' => '');
-					add_module($cleanup);
 
-				case '0.3.2':
-					//and drop the old column
-					//delete_gallery_column(GROUPS_TABLE, 'personal_subalbums');
-					//delete_gallery_column(GROUPS_TABLE, 'allow_personal_albums');
-					//delete_gallery_column(GROUPS_TABLE, 'view_personal_albums');
-					//delete_gallery_column(USERS_TABLE, 'album_id');
-					//not sure about this one because of the viewtopic.php delete_gallery_column(USERS_TABLE, 'album_id');
-				//no break;
+					//remove some old columns
+					nv_remove_column(GROUPS_TABLE, 'personal_subalbums');
+					nv_remove_column(GROUPS_TABLE, 'allow_personal_albums');
+					nv_remove_column(GROUPS_TABLE, 'view_personal_albums');
+					nv_remove_column(USERS_TABLE, 'album_id');
+					nv_remove_column(GALLERY_ALBUMS_TABLE, 'album_approval');
+					nv_remove_column(GALLERY_ALBUMS_TABLE, 'album_order');
 
+					//remove columns of the old permission-system
+					nv_remove_column(GALLERY_ALBUMS_TABLE, 'album_view_level');
+					nv_remove_column(GALLERY_ALBUMS_TABLE, 'album_upload_level');
+					nv_remove_column(GALLERY_ALBUMS_TABLE, 'album_rate_level');
+					nv_remove_column(GALLERY_ALBUMS_TABLE, 'album_comment_level');
+					nv_remove_column(GALLERY_ALBUMS_TABLE, 'album_edit_level');
+					nv_remove_column(GALLERY_ALBUMS_TABLE, 'album_delete_level');
+					nv_remove_column(GALLERY_ALBUMS_TABLE, 'album_view_groups');
+					nv_remove_column(GALLERY_ALBUMS_TABLE, 'album_upload_groups');
+					nv_remove_column(GALLERY_ALBUMS_TABLE, 'album_rate_groups');
+					nv_remove_column(GALLERY_ALBUMS_TABLE, 'album_comment_groups');
+					nv_remove_column(GALLERY_ALBUMS_TABLE, 'album_edit_groups');
+					nv_remove_column(GALLERY_ALBUMS_TABLE, 'album_delete_groups');
+					nv_remove_column(GALLERY_ALBUMS_TABLE, 'album_moderator_groups');
+
+					//remove the old configs:
+					$sql = 'DELETE FROM ' .GALLERY_CONFIG_TABLE . '
+						WHERE ' . $db->sql_in_set('config_name', $old_configs);
+					$db->sql_query($sql);
 
 				case 'svn':
 					$album_config = load_album_config();
-					change_column(GALLERY_COMMENTS_TABLE, 'comment_username', array('VCHAR', ''));
 
 				break;
 			}
@@ -879,15 +912,18 @@ switch ($mode)
 				$hexipbang = explode('.', chunk_split($int_ip, 2, '.'));
 				return hexdec($hexipbang[0]). '.' . hexdec($hexipbang[1]) . '.' . hexdec($hexipbang[2]) . '.' . hexdec($hexipbang[3]);
 			}
-			gallery_create_table_slap_db_tools('phpbb_gallery_albums', true);
-			gallery_create_table_slap_db_tools('phpbb_gallery_comments', true);
-			gallery_create_table_slap_db_tools('phpbb_gallery_config', true);
-			gallery_create_table_slap_db_tools('phpbb_gallery_images', true);
-			gallery_create_table_slap_db_tools('phpbb_gallery_rates', true);
-			gallery_create_table_slap_db_tools('phpbb_gallery_reports', true);
-			gallery_create_table_slap_db_tools('phpbb_gallery_roles', true);
-			gallery_create_table_slap_db_tools('phpbb_gallery_permissions', true);
-			gallery_create_table_slap_db_tools('phpbb_gallery_modscache', true);
+			nv_create_table('phpbb_gallery_albums', true);
+			nv_create_table('phpbb_gallery_comments', true);
+			nv_create_table('phpbb_gallery_config', true);
+			nv_create_table('phpbb_gallery_favorites', true);
+			nv_create_table('phpbb_gallery_images', true);
+			nv_create_table('phpbb_gallery_modscache', true);
+			nv_create_table('phpbb_gallery_permissions', true);
+			nv_create_table('phpbb_gallery_rates', true);
+			nv_create_table('phpbb_gallery_reports', true);
+			nv_create_table('phpbb_gallery_roles', true);
+			nv_create_table('phpbb_gallery_users', true);
+			nv_create_table('phpbb_gallery_watch', true);
 
 			// first lets make the albums...
 			$personal_album = array();
@@ -984,14 +1020,11 @@ switch ($mode)
 			// fourth the configs...
 			// because there might be some problems, we create them new...
 			gallery_config_value('max_pics', '1024');
-			gallery_config_value('user_pics_limit', '50');
-			gallery_config_value('mod_pics_limit', '250');
 			gallery_config_value('max_file_size', '128000');
 			gallery_config_value('max_width', '800');
 			gallery_config_value('max_height', '600');
 			gallery_config_value('rows_per_page', '3');
 			gallery_config_value('cols_per_page', '4');
-			gallery_config_value('fullpic_popup', '0');
 			gallery_config_value('thumbnail_quality', '50');
 			gallery_config_value('thumbnail_size', '125');
 			gallery_config_value('thumbnail_cache', '1');
@@ -1003,10 +1036,6 @@ switch ($mode)
 			gallery_config_value('desc_length', '512');
 			gallery_config_value('hotlink_prevent', '0');
 			gallery_config_value('hotlink_allowed', 'flying-bits.org');
-			gallery_config_value('personal_gallery', '0');
-			gallery_config_value('personal_gallery_private', '0');
-			gallery_config_value('personal_gallery_limit', '10');
-			gallery_config_value('personal_gallery_view', '1');
 			gallery_config_value('rate', '1');
 			gallery_config_value('rate_scale', '10');
 			gallery_config_value('comment', '1');
@@ -1063,11 +1092,7 @@ switch ($mode)
 			}
 			$db->sql_freeresult($result);
 
-			//REMOVE WITH 0.3.3//gallery_column(USERS_TABLE, 'album_id', array('UINT', 0));
-			//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'allow_personal_albums', array('UINT', 1));
-			//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'view_personal_albums', array('UINT', 1));
-			//REMOVE WITH 0.3.3//gallery_column(GROUPS_TABLE, 'personal_subalbums', array('UINT', 10));
-			gallery_column(SESSIONS_TABLE, 'session_album_id', array('UINT', 0));
+			nv_add_column(SESSIONS_TABLE, 'session_album_id', array('UINT', 0));
 
 			//now create the new personal albums
 			$sql = 'SELECT i.image_id, i.image_username, image_user_id
@@ -1092,6 +1117,7 @@ switch ($mode)
 				$sql2 = 'SELECT album_id FROM ' . GALLERY_ALBUMS_TABLE . ' WHERE parent_id = 0 AND album_user_id = ' . $row['image_user_id'] . ' LIMIT 1';
 				$result2 = $db->sql_query($sql2);
 				$row2 = $db->sql_fetchrow($result2);
+				$db->sql_freeresult($result2);
 
 				$sql3 = 'UPDATE ' . USERS_TABLE . ' 
 						SET album_id = ' . (int) $row2['album_id'] . '
@@ -1106,40 +1132,90 @@ switch ($mode)
 			}
 			$db->sql_freeresult($result);
 
-			// create the modules
-			$acp_gallery = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 31,	'module_class' => 'acp',	'module_langname'=> 'PHPBB_GALLERY',	'module_mode' => '',	'module_auth' => '');
-			add_module($acp_gallery);
-			$sql = 'SELECT module_id
-				FROM ' . MODULES_TABLE . "
-				WHERE module_langname = 'PHPBB_GALLERY'
-				LIMIT 1";
+
+			//remove the old modules:
+			$sql = 'SELECT module_id, module_class, left_id, right_id
+				FROM ' . MODULES_TABLE . '
+				WHERE ' . $db->sql_in_set('module_langname', $module_names);
 			$result = $db->sql_query($sql);
-			while( $row = $db->sql_fetchrow($result) )
+			while ($row = $db->sql_fetchrow($result))
 			{
-				$acp_gallery['module_id'] = $row['module_id'];
+				$module_id = $row['module_id'];
+
+				$sql = 'DELETE FROM ' . MODULES_TABLE . "
+					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+						AND module_id = $module_id";
+				$db->sql_query($sql);
+				$diff = 2;
+
+				$sql = 'UPDATE ' . MODULES_TABLE . "
+					SET right_id = right_id - $diff
+					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+						AND left_id < {$row['right_id']} AND right_id > {$row['right_id']}";
+				$db->sql_query($sql);
+
+				$sql = 'UPDATE ' . MODULES_TABLE . "
+					SET left_id = left_id - $diff, right_id = right_id - $diff
+					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+						AND left_id > {$row['right_id']}";
+				$db->sql_query($sql);
 			}
 			$db->sql_freeresult($result);
-			$acp_gallery_overview = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_OVERVIEW',	'module_mode' => 'overview',	'module_auth' => '');
+
+			$sql = 'SELECT module_id, module_class, left_id, right_id
+				FROM ' . MODULES_TABLE . "
+				WHERE module_langname = 'PHPBB_GALLERY' OR module_langname = 'UCP_GALLERY'";
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$module_id = $row['module_id'];
+
+				$sql = 'DELETE FROM ' . MODULES_TABLE . "
+					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+						AND module_id = $module_id";
+				$db->sql_query($sql);
+				$diff = 2;
+
+				$sql = 'UPDATE ' . MODULES_TABLE . "
+					SET right_id = right_id - $diff
+					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+						AND left_id < {$row['right_id']} AND right_id > {$row['right_id']}";
+				$db->sql_query($sql);
+
+				$sql = 'UPDATE ' . MODULES_TABLE . "
+					SET left_id = left_id - $diff, right_id = right_id - $diff
+					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+						AND left_id > {$row['right_id']}";
+				$db->sql_query($sql);
+			}
+			$db->sql_freeresult($result);
+
+			//add the modules new:
+			// ->ACP
+			$acp_gallery = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 31,	'module_class' => 'acp',	'module_langname'=> 'PHPBB_GALLERY',	'module_mode' => '',	'module_auth' => '');
+			add_module($acp_gallery);
+			$acp_module_id = $db->sql_nextid();
+			gallery_config_value('acp_parent_module', $acp_module_id);
+
+			$acp_gallery_overview = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_OVERVIEW',	'module_mode' => 'overview',	'module_auth' => '');
 			add_module($acp_gallery_overview);
-			$acp_gallery_manage_albums = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_MANAGE_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
+			$acp_gallery_manage_albums = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_MANAGE_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
 			add_module($acp_gallery_manage_albums);
-			//REMOVE WITH 0.3.3//$acp_gallery_manage_cache = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_MANAGE_CACHE',	'module_mode' => 'manage_cache',	'module_auth' => '');
-			//REMOVE WITH 0.3.3//add_module($acp_gallery_manage_cache);
-			$acp_configure_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_CONFIGURE_GALLERY',	'module_mode' => 'configure_gallery',	'module_auth' => '');
+			$acp_configure_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_CONFIGURE_GALLERY',	'module_mode' => 'configure_gallery',	'module_auth' => '');
 			add_module($acp_configure_gallery);
-			$album_permissions = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS',	'module_mode' => 'album_permissions',	'module_auth' => '');
+			$album_permissions = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS',	'module_mode' => 'album_permissions',	'module_auth' => '');
 			add_module($album_permissions);
-			//REMOVE WITH 0.3.3//$album_personal_permissions = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS',	'module_mode' => 'album_personal_permissions',	'module_auth' => '');
-			//REMOVE WITH 0.3.3//add_module($album_personal_permissions);
-			$import_images = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_IMPORT_ALBUMS',	'module_mode' => 'import_images',	'module_auth' => '');
+			$import_images = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_IMPORT_ALBUMS',	'module_mode' => 'import_images',	'module_auth' => '');
 			add_module($import_images);
-			$cleanup = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_CLEANUP',	'module_mode' => 'cleanup',	'module_auth' => '');
+			$cleanup = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_CLEANUP',	'module_mode' => 'cleanup',	'module_auth' => '');
 			add_module($cleanup);
 
+			// -> UCP
 			$ucp_gallery_overview = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 0,	'module_class' => 'ucp',	'module_langname'=> 'UCP_GALLERY',	'module_mode' => 'overview',	'module_auth' => '');
 			add_module($ucp_gallery_overview);
 			$ucp_module_id = $db->sql_nextid();
 			gallery_config_value('ucp_parent_module', $ucp_module_id);
+
 			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_SETTINGS',	'module_mode' => 'manage_settings',	'module_auth' => '');
 			add_module($ucp_gallery);
 			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_PERSONAL_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
@@ -1150,9 +1226,9 @@ switch ($mode)
 			add_module($ucp_gallery);
 
 			//album_type needs to be "album" for personal albums
-			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET album_type = 2';
+			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET album_type = 1';
 			$db->sql_query($sql);
-			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET album_type = 1 WHERE album_user_id = 0';
+			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET album_type = 0 WHERE album_user_id = 0';
 			$db->sql_query($sql);
 
 			//add the information for the last_image to the albums part 1: last_image_id, image_count
@@ -1182,7 +1258,7 @@ switch ($mode)
 			{
 				$sql_ary = array(
 					'album_images_real'	=> $row['images'],
-					'album_type'		=> 2,
+					'album_type'		=> 1,
 				);
 				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 					WHERE ' . $db->sql_in_set('album_id', $row['image_album_id']);
@@ -1271,37 +1347,90 @@ switch ($mode)
 		$deleted = false;
 		if ($delete == 1)
 		{
-			$delete_bbcode = request_var('delete_bbcode', 0);
-			if ($delete_bbcode)
-			{
-				$bbcode_id = request_var('bbcode_id', 0);
-				$sql = 'DELETE FROM ' . BBCODES_TABLE . " WHERE bbcode_id = $bbcode_id";
-				$db->sql_query($sql);
-			}
-			/*drop_dbs();
-			$bbcode_link1 = '<a href="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/image_page.php?image_id=${1}"><img src="' . $config['server_protocol'] . $config['server_name'] . $config['script_path'] . '/gallery/thumbnail.php?image_id=${1}" /></a>';
-			$bbcode_link2 = '<a href="gallery/image_page.php?id=${1}"><img src="gallery/thumbnail.php?pic_id=${1}" /></a>';
-			$sql = 'DELETE FROM ' . BBCODES_TABLE . " WHERE second_pass_replace = '$bbcode_link1' or second_pass_replace = '$bbcode_link2';";
-			$db->sql_query($sql);
-			$acp_gallery_module = '';
-			$sql = 'SELECT *
-				FROM ' . MODULES_TABLE . "
-				WHERE module_basename = 'gallery'
-					AND module_class = 'acp'";
-			$result = $db->sql_query($sql);
-			while( $row = $db->sql_fetchrow($result) )
-			{
-				$acp_gallery_module .= (($acp_gallery_module) ? ', ' : '') . $row['parent_id'];
-			}
-			$sql = 'DELETE FROM ' . MODULES_TABLE . " WHERE module_basename = 'gallery' or module_id IN ($acp_gallery_module);";
+			//drop the tables
+			nv_drop_table('phpbb_gallery_albums');
+			nv_drop_table('phpbb_gallery_comments');
+			nv_drop_table('phpbb_gallery_config');
+			nv_drop_table('phpbb_gallery_favorites');
+			nv_drop_table('phpbb_gallery_images');
+			nv_drop_table('phpbb_gallery_modscache');
+			nv_drop_table('phpbb_gallery_permissions');
+			nv_drop_table('phpbb_gallery_rates');
+			nv_drop_table('phpbb_gallery_reports');
+			nv_drop_table('phpbb_gallery_roles');
+			nv_drop_table('phpbb_gallery_users');
+			nv_drop_table('phpbb_gallery_watch');
+
+			$bbcode_id = request_var('bbcode_id', 0);
+			$sql = 'DELETE FROM ' . BBCODES_TABLE . " WHERE bbcode_id = $bbcode_id";
 			$db->sql_query($sql);
 
-			delete_gallery_column(USERS_TABLE, 'album_id');
-			delete_gallery_column(GROUPS_TABLE, 'allow_personal_albums');
-			delete_gallery_column(GROUPS_TABLE, 'view_personal_albums');
-			delete_gallery_column(GROUPS_TABLE, 'personal_subalbums');*/
-			//delete_gallery_column(SESSIONS_TABLE, 'session_album_id');
+			//remove the modules:
+			$sql = 'SELECT module_id, module_class, left_id, right_id
+				FROM ' . MODULES_TABLE . '
+				WHERE ' . $db->sql_in_set('module_langname', $module_names);
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$module_id = $row['module_id'];
+
+				$sql = 'DELETE FROM ' . MODULES_TABLE . "
+					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+						AND module_id = $module_id";
+				$db->sql_query($sql);
+				$diff = 2;
+
+				$sql = 'UPDATE ' . MODULES_TABLE . "
+					SET right_id = right_id - $diff
+					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+						AND left_id < {$row['right_id']} AND right_id > {$row['right_id']}";
+				$db->sql_query($sql);
+
+				$sql = 'UPDATE ' . MODULES_TABLE . "
+					SET left_id = left_id - $diff, right_id = right_id - $diff
+					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+						AND left_id > {$row['right_id']}";
+				$db->sql_query($sql);
+			}
+			$db->sql_freeresult($result);
+
+			$sql = 'SELECT module_id, module_class, left_id, right_id
+				FROM ' . MODULES_TABLE . "
+				WHERE module_langname = 'PHPBB_GALLERY' OR module_langname = 'UCP_GALLERY'";
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$module_id = $row['module_id'];
+
+				$sql = 'DELETE FROM ' . MODULES_TABLE . "
+					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+						AND module_id = $module_id";
+				$db->sql_query($sql);
+				$diff = 2;
+
+				$sql = 'UPDATE ' . MODULES_TABLE . "
+					SET right_id = right_id - $diff
+					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+						AND left_id < {$row['right_id']} AND right_id > {$row['right_id']}";
+				$db->sql_query($sql);
+
+				$sql = 'UPDATE ' . MODULES_TABLE . "
+					SET left_id = left_id - $diff, right_id = right_id - $diff
+					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
+						AND left_id > {$row['right_id']}";
+				$db->sql_query($sql);
+			}
+			$db->sql_freeresult($result);
+
+			//remove the columns
+			nv_remove_column(USERS_TABLE, 'album_id');
+			nv_remove_column(GROUPS_TABLE, 'allow_personal_albums');
+			nv_remove_column(GROUPS_TABLE, 'view_personal_albums');
+			nv_remove_column(GROUPS_TABLE, 'personal_subalbums');
+			nv_remove_column(SESSIONS_TABLE, 'session_album_id');
+
 			$cache->purge();
+			add_log('admin', 'LOG_PURGE_CACHE');
 			$deleted = true;
 		}
 		else
@@ -1312,7 +1441,7 @@ switch ($mode)
 			$result = $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result))
 			{
-				$select_bbcode .= ($select_bbcode == '') ? '<select name="bbcode_id"><option value="0">' . $user->lang['BBCODE_IS_DELETED'] . '</option>' : '';
+				$select_bbcode .= ($select_bbcode == '') ? '<select name="bbcode_id"><option value="0">' . $user->lang['INSTALLER_DELETE_BBCODE'] . '</option>' : '';
 				$select_bbcode .= '<option value="' . $row['bbcode_id'] . '">[' . $row['bbcode_tag'] . ']</option>';
 			}
 			$db->sql_freeresult($result);
@@ -1320,56 +1449,6 @@ switch ($mode)
 			{
 				$select_bbcode .= '</select>';
 			}
-
-			$dropping_tables = array(
-				array('name' => 'gallery_albums',		'v1' => '0.2.0'),
-				array('name' => 'gallery_config',		'v1' => '0.2.0'),
-				array('name' => 'gallery_comments',		'v1' => '0.2.0'),
-				array('name' => 'gallery_images',		'v1' => '0.2.0'),
-				array('name' => 'gallery_modscache',		'v1' => '0.4.0'),
-				array('name' => 'gallery_permissions',	'v1' => '0.4.0'),
-				array('name' => 'gallery_rates',			'v1' => '0.2.0'),
-				array('name' => 'gallery_reports',		'v1' => '0.4.0'),
-				array('name' => 'gallery_roles',			'v1' => '0.4.0'),
-				//array('name' => 'gallery_roles2',			'v1' => '0.4.0'),
-			);
-			$found_tables = $missed_tables = array();
-
-			foreach ($dropping_tables as $table)
-			{
-				$sql = 'SELECT * FROM ' . $table_prefix . $table['name'] . ' LIMIT 1';
-				if (@$result = $db->sql_query($sql))
-				{
-					$found_tables[] = $table_prefix . $table['name'];
-				}
-				else
-				{
-					$missed_tables[] = $table;
-				}
-			}
-
-			$dropping_columns = array(
-				array('name' => 'album_id',					'v1' => '0.2.0',	'table' => USERS_TABLE),
-				array('name' => 'session_album_id',			'v1' => '0.3.1',	'table' => SESSIONS_TABLE),
-				array('name' => 'allow_personal_albums',	'v1' => '0.2.3',	'table' => GROUPS_TABLE),
-				array('name' => 'view_personal_albums',		'v1' => '0.2.3',	'table' => GROUPS_TABLE),
-				array('name' => 'personal_subalbums',		'v1' => '0.2.3',	'table' => GROUPS_TABLE),
-			);
-			$found_columns = $missed_columns = array();
-
-			foreach ($dropping_columns as $column)
-			{
-				$phpbb_db_tools = new phpbb_db_tools($db);
-				if ($phpbb_db_tools->sql_column_exists($column['table'], $column['name']))
-				{
-					$found_columns[] = $table_prefix . $table['name'];
-				}
-				else
-				{
-					$missed_columns[] = $column;
-				}
-			}
-
 		}
 	break;
 

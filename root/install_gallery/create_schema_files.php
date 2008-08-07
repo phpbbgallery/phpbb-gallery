@@ -827,7 +827,6 @@ function get_schema_struct()
 			'album_last_user_id'		=> array('UINT', 0),
 			'display_on_index'			=> array('UINT:1', 1),
 			'display_subalbum_list'		=> array('UINT:1', 1),
-			'album_approval'			=> array('UINT:3', 0),
 		),
 		'PRIMARY_KEY'	=> 'album_id',
 	);

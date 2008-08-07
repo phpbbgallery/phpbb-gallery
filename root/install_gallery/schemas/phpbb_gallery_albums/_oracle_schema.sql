@@ -68,7 +68,6 @@ CREATE TABLE phpbb_gallery_albums (
 	album_last_user_id number(8) DEFAULT '0' NOT NULL,
 	display_on_index number(1) DEFAULT '1' NOT NULL,
 	display_subalbum_list number(1) DEFAULT '1' NOT NULL,
-	album_approval number(3) DEFAULT '0' NOT NULL,
 	CONSTRAINT pk_phpbb_gallery_albums PRIMARY KEY (album_id)
 )
 /

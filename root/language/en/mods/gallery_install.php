@@ -43,7 +43,6 @@ $lang = array_merge($lang, array(
 	'INSTALLER_CHMOD_WRITABLE'			=> 'Writeable',
 
 	'INSTALLER_CONVERT'					=> 'Convert',
-	'INSTALLER_CONVERT_MENU'			=> 'Convertmenu',
 	'INSTALLER_CONVERT_NOTE'			=> 'Convert MOD to v%s',
 	'INSTALLER_CONVERT_PREFIX'			=> 'Prefix of phpBB2-installation',
 	'INSTALLER_CONVERT_SUCCESSFUL'		=> 'Convert of the MOD to v%s was successful.<br />Now copy the image-files of album/upload and album/upload/cache of your phpbb2-Installation into the one\'s of the phpBB3.<br />Now delete the instalöl_gallery/ root.',
@@ -53,11 +52,11 @@ $lang = array_merge($lang, array(
 	'INSTALLER_CONVERT_WELCOME_NOTE'	=> 'When you choose to convert the MOD, we try to copy the data of your older phpBB2 Installation.',
 
 	'INSTALLER_DELETE'					=> 'Delete',
-	'INSTALLER_DELETE_MENU'				=> 'Deletemenu',
 	'INSTALLER_DELETE_NOTE'				=> 'Delete',
+	'INSTALLER_DELETE_BBCODE'			=> 'Choose BBCode',
 	'INSTALLER_DELETE_SUCCESSFUL'		=> 'Deleted the MOD successfully.<br />Now delete all files.',
 	'INSTALLER_DELETE_UNSUCCESSFUL'		=> 'Could <strong>not</strong> delete the MOD.',
-	'INSTALLER_DELETE_WELCOME'			=> 'Welcome to the Deletemenu',
+	'INSTALLER_DELETE_WELCOME'			=> 'You really want to delete the gallery?',
 	'INSTALLER_DELETE_WELCOME_NOTE'		=> 'When you choose to delete the MOD, we remove all sql-data insert by the installation.',
 
 	'INSTALLER_INTRO'					=> 'Intro',
@@ -71,8 +70,6 @@ $lang = array_merge($lang, array(
 	'INSTALLER_INSTALL_VERSION'			=> 'Install MOD v%s',
 	'INSTALLER_INSTALL_WELCOME'			=> 'Welcome to the Installationmenu',
 	'INSTALLER_INSTALL_WELCOME_NOTE'	=> 'When you choose to install the MOD, any database of previous versions will be dropped.',
-
-	'INSTALLER_NEEDS_FOUNDER'			=> 'You must be logged in as a founder.',
 
 	'INSTALLER_UPDATE'					=> 'Update',
 	'INSTALLER_UPDATE_MENU'				=> 'Updatemenu',

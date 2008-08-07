@@ -37,6 +37,7 @@ function load_album_config()
 
 	return $album_config;
 }
+
 function split_sql_file($sql, $delimiter)
 {
 	$sql = str_replace("\r" , '', $sql);
@@ -54,6 +55,7 @@ function split_sql_file($sql, $delimiter)
 
 	return $data;
 }
+
 function add_module($array)
 {
 	global $user;
@@ -65,6 +67,7 @@ function add_module($array)
 		trigger_error(sprintf($user->lang['MISSING_PARENT_MODULE'], $array['parent_id'], $user->lang[$array['module_langname']]));
 	}
 }
+
 function deactivate_module($module_langname)
 {
 	global $db;
@@ -72,7 +75,8 @@ function deactivate_module($module_langname)
 	$sql = 'UPDATE ' . MODULES_TABLE . " SET module_enabled = 0 WHERE module_langname = '$module_langname';";
 	$db->sql_query($sql);
 }
-function gallery_column($table, $column, $values)
+
+function nv_add_column($table, $column, $values)
 {
 	global $db;
 
@@ -82,7 +86,8 @@ function gallery_column($table, $column, $values)
 		$phpbb_db_tools->sql_column_add($table, $column, $values);
 	}
 }
-function delete_gallery_column($table, $column)
+
+function nv_remove_column($table, $column)
 {
 	global $db;
 
@@ -92,6 +97,7 @@ function delete_gallery_column($table, $column)
 		$phpbb_db_tools->sql_column_remove($table, $column);
 	}
 }
+
 function gallery_config_value($column, $value, $update = false)
 {
 	global $db;
@@ -117,6 +123,7 @@ function gallery_config_value($column, $value, $update = false)
 		$db->sql_query('UPDATE ' . GALLERY_CONFIG_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . " WHERE config_name = '$column'");
 	}
 }
+
 function add_bbcode($album_bbcode)
 {
 	global $db, $config;
@@ -173,7 +180,28 @@ function add_bbcode($album_bbcode)
 		$db->sql_query('UPDATE ' . BBCODES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . ' WHERE bbcode_id = ' . (int) $row['bbcode_id']);
 	}
 }
-function gallery_create_table_slap_db_tools($table, $drop = true)
+
+function nv_drop_table($table)
+{
+	global $db, $table_prefix, $db_schema;
+
+	$table_name = substr($table . '#', 6, -1);
+
+	if ($db->sql_layer != 'mssql')
+	{
+		$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . $table_name;
+		$result = $db->sql_query($sql);
+		$db->sql_freeresult($result);
+	}
+	else
+	{
+		$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . $table_name . ')
+			drop table ' . $table_prefix . $table_name;
+		$result = $db->sql_query($sql);
+		$db->sql_freeresult($result);
+	}
+}
+function nv_create_table($table, $drop = true)
 {
 	global $db, $table_prefix, $db_schema, $delimiter;
 
@@ -181,20 +209,7 @@ function gallery_create_table_slap_db_tools($table, $drop = true)
 
 	if ($drop)
 	{
-		//Drop if existing
-		if ($db->sql_layer != 'mssql')
-		{
-			$sql = 'DROP TABLE IF EXISTS ' . $table_prefix . $table_name;
-			$result = $db->sql_query($sql);
-			$db->sql_freeresult($result);
-		}
-		else
-		{
-			$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . $table_name . ')
-			drop table ' . $table_prefix . $table_name;
-			$result = $db->sql_query($sql);
-			$db->sql_freeresult($result);
-		}
+		nv_drop_table($table_name);
 	}
 
 	// locate the schema files
@@ -215,7 +230,7 @@ function gallery_create_table_slap_db_tools($table, $drop = true)
 	unset($sql_query);
 }
 
-function change_column($table, $column_name, $column_data)
+function nv_change_column($table, $column_name, $column_data)
 {
 	global $db;
 

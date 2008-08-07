@@ -110,7 +110,6 @@ CREATE TABLE phpbb_gallery_albums (
 	album_last_user_id INT4 DEFAULT '0' NOT NULL CHECK (album_last_user_id >= 0),
 	display_on_index INT4 DEFAULT '1' NOT NULL CHECK (display_on_index >= 0),
 	display_subalbum_list INT4 DEFAULT '1' NOT NULL CHECK (display_subalbum_list >= 0),
-	album_approval INT4 DEFAULT '0' NOT NULL CHECK (album_approval >= 0),
 	PRIMARY KEY (album_id)
 );
 
