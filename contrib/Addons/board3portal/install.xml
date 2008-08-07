@@ -22,7 +22,7 @@
     <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
   </header>
   <action-group>
-    <open src="index.php">
+    <open src="portal.php">
       <edit>
         <find><![CDATA[$user->setup('mods/lang_portal');]]></find>
         <action type="after-add"><![CDATA[include($phpbb_root_path . 'gallery/includes/functions_recent.' . $phpEx);
