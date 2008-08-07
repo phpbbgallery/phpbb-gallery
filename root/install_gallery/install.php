@@ -794,7 +794,7 @@ switch ($mode)
 							'album_last_image_time'		=> $row['image_time'],
 							'album_last_image_name'		=> $row['image_name'],
 							'album_last_username'		=> $row['image_username'],
-							'album_last_user_colour'	=> $row['user_colour'],
+							'album_last_user_colour'	=> isset($row['user_colour']) ? $row['user_colour'] : '',
 							'album_last_user_id'		=> $row['image_user_id'],
 						);
 						$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
@@ -957,7 +957,6 @@ switch ($mode)
 						'album_desc_uid'				=> '',
 						'album_desc_bitfield'			=> '',
 						'album_desc_options'			=> 7,
-						'album_approval'				=> $row['cat_approval'],
 					);
 					generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], true, true, true);
 					$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
@@ -1119,10 +1118,11 @@ switch ($mode)
 				$row2 = $db->sql_fetchrow($result2);
 				$db->sql_freeresult($result2);
 
-				$sql3 = 'UPDATE ' . USERS_TABLE . ' 
-						SET album_id = ' . (int) $row2['album_id'] . '
-						WHERE user_id  = ' . (int) $row['image_user_id'];
-				$db->sql_query($sql3);
+				$user_data = array(
+					'personal_album_id'		=> $row2['album_id'],
+					'user_id'				=> $row['image_user_id'],
+				);
+				$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $user_data));
 
 				$sql3 = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
 						SET image_album_id = ' . (int) $row2['album_id'] . '
@@ -1234,7 +1234,7 @@ switch ($mode)
 			//add the information for the last_image to the albums part 1: last_image_id, image_count
 			$sql = 'SELECT COUNT(i.image_id) images, MAX(i.image_id) last_image_id, i.image_album_id
 				FROM ' . GALLERY_IMAGES_TABLE . " i
-				WHERE i.image_approval = 1
+				WHERE i.image_status = 1
 				GROUP BY i.image_album_id";
 			$result = $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result))
@@ -1281,7 +1281,7 @@ switch ($mode)
 					'album_last_image_time'		=> $row['image_time'],
 					'album_last_image_name'		=> $row['image_name'],
 					'album_last_username'		=> $row['image_username'],
-					'album_last_user_colour'	=> $row['user_colour'],
+					'album_last_user_colour'	=> isset($row['user_colour']) ? $row['user_colour'] : '',
 					'album_last_user_id'		=> $row['image_user_id'],
 				);
 				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
@@ -1304,22 +1304,31 @@ switch ($mode)
 			$db->sql_freeresult($result);
 			gallery_config_value('personal_counter', $total_galleries);
 			$num_images = 0;
-			$sql = 'SELECT u.album_id, u.user_id, count(i.image_id) as images
+			$sql = 'SELECT u.user_id, count(i.image_id) as images, gu.personal_album_id
 				FROM ' . USERS_TABLE . ' u
 				LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
 					ON i.image_user_id = u.user_id
 					AND i.image_status = 1
+				LEFT JOIN ' . GALLERY_USERS_TABLE . ' gu
+					ON gu.user_id = u.user_id
 				GROUP BY i.image_user_id';
 			$result = $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result))
 			{
 				$sql_ary = array(
 					'user_id'				=> $row['user_id'],
-					'personal_album_id'		=> $row['album_id'],
 					'user_images'			=> $row['images'],
 				);
 				$num_images = $num_images + $row['images'];
-				$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+				if ($row['personal_album_id'])
+				{
+					$sql = 'UPDATE ' . GALLERY_USERS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+						WHERE ' . $db->sql_in_set('user_id', $row['user_id']);
+				}
+				else
+				{
+					$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+				}
 			}
 			$db->sql_freeresult($result);
 			set_config('num_images', $album_config['num_images'], true);

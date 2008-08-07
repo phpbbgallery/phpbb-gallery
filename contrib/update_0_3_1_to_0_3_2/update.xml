@@ -65,7 +65,8 @@
     <open src="index.php">
       <edit>
         <find><![CDATA[$l_total_topic_s = ($total_topics == 0) ? 'TOTAL_TOPICS_ZERO' : 'TOTAL_TOPICS_OTHER';]]></find>
-        <action type="after-add"><![CDATA[$total_images = $config['num_images'];
+        <action type="after-add"><![CDATA[$user->add_lang('mods/info_acp_gallery');
+$total_images = $config['num_images'];
 $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OTHER';]]></action>
       </edit>
       <edit>

@@ -209,7 +209,7 @@ function nv_create_table($table, $drop = true)
 
 	if ($drop)
 	{
-		nv_drop_table($table_name);
+		nv_drop_table($table);
 	}
 
 	// locate the schema files
