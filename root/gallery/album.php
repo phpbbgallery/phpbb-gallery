@@ -260,7 +260,6 @@ $template->assign_vars(array(
 	'ALBUM_JUMPBOX'				=> $album_jumpbox,
 	'S_JUMPBOX_ACTION'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx"),
 	'S_ALBUM_ACTION'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"),
-	'TARGET_BLANK' 				=> ($album_config['fullpic_popup']) ? 'target="_blank"' : '',
 
 	'SORT_TIME'					=> ($sort_method == 'image_time') ? 'selected="selected"' : '',
 	'SORT_IMAGE_TITLE'			=> ($sort_method == 'image_name') ? 'selected="selected"' : '',
