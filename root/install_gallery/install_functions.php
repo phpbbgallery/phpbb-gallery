@@ -132,19 +132,35 @@ function add_bbcode($album_bbcode)
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
+	//which bbcode template:
+	if (file_exists($phpbb_root_path . 'highslide/highslide-full.js'))
+	{
+			$bbcode_tpl = '<a class="highslide" onclick="return hs.expand(this)" href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?image_id={NUMBER}"><img src="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'thumbnail.php?image_id={NUMBER}" alt="{NUMBER}" /></a>'
+							. '<br /><a href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image_page.php?image_id={NUMBER}">{NUMBER}</a>';
+			$second_pass_replace => '<a class="highslide" onclick="return hs.expand(this)" href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?image_id=${1}"><img src="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'thumbnail.php?image_id=${1}" alt="${1}" /></a>'
+							. '<br /><a href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image_page.php?image_id=${1}">${1}</a>';
+	}
+	else
+	{
+			$bbcode_tpl = '<a rel="lytebox" class="image-resize" href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?image_id={NUMBER}"><img src="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'thumbnail.php?image_id={NUMBER}" alt="{NUMBER}" /></a>'
+							. '<br /><a href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image_page.php?image_id={NUMBER}">{NUMBER}</a>';
+			$second_pass_replace => '<a rel="lytebox" class="image-resize" href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?image_id=${1}"><img src="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'thumbnail.php?image_id=${1}" alt="${1}" /></a>'
+							. '<br /><a href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image_page.php?image_id=${1}">${1}</a>';
+	}
 
 	if (!$row)
 	{
 		$sql_ary = array(
 			'bbcode_tag'				=> $album_bbcode,
 			'bbcode_match'				=> '[' . $album_bbcode . ']{NUMBER}[/' . $album_bbcode . ']',
-			'bbcode_tpl'				=> '<a href="' . generate_board_url() . GALLERY_ROOT_PATH . '/image_page.php?image_id={NUMBER}"><img src="' . generate_board_url() . GALLERY_ROOT_PATH . '/thumbnail.php?image_id={NUMBER}" alt="image_id: {NUMBER}" /></a>',
+			'bbcode_tpl'				=> $bbcode_tpl,
+			'bbcode_tpl'				=> '<a href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image_page.php?image_id={NUMBER}"><img src="' . generate_board_url() . GALLERY_ROOT_PATH . '/thumbnail.php?image_id={NUMBER}" alt="image_id: {NUMBER}" /></a>',
 			'display_on_posting'		=> true,
 			'bbcode_helpline'			=> '',
 			'first_pass_match'			=> '!\[' . $album_bbcode . '\]([0-9]+)\[/' . $album_bbcode . '\]!i',
 			'first_pass_replace'		=> '[' . $album_bbcode . ':$uid]${1}[/' . $album_bbcode . ':$uid]',
 			'second_pass_match'			=> '!\[' . $album_bbcode . ':$uid\]([0-9]+)\[/' . $album_bbcode . ':$uid\]!s',
-			'second_pass_replace'		=> '<a href="' . generate_board_url() . GALLERY_ROOT_PATH . '/image_page.php?image_id=${1}"><img src="' . generate_board_url() . GALLERY_ROOT_PATH . '/thumbnail.php?image_id=${1}" alt="image_id: ${1}" /></a>',
+			'second_pass_replace'		=> $second_pass_replace,
 		);
 
 		$sql = 'SELECT MAX(bbcode_id) as max_bbcode_id
@@ -174,8 +190,8 @@ function add_bbcode($album_bbcode)
 	else
 	{
 		$sql_ary = array(
-			'bbcode_tpl'				=> '<a href="' . generate_board_url() . GALLERY_ROOT_PATH . '/image_page.php?image_id={NUMBER}"><img src="' . generate_board_url() . GALLERY_ROOT_PATH . '/thumbnail.php?image_id={NUMBER}" alt="image_id: {NUMBER}" /></a>',
-			'second_pass_replace'		=> '<a href="' . generate_board_url() . GALLERY_ROOT_PATH . '/image_page.php?image_id=${1}"><img src="' . generate_board_url() . GALLERY_ROOT_PATH . '/thumbnail.php?image_id=${1}" alt="image_id: ${1}" /></a>',
+			'bbcode_tpl'				=> $bbcode_tpl,
+			'second_pass_replace'		=> $second_pass_replace,
 		);
 		$db->sql_query('UPDATE ' . BBCODES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . ' WHERE bbcode_id = ' . (int) $row['bbcode_id']);
 	}
