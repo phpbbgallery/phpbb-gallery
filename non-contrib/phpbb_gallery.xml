@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mods>
+	<phpbb_gallery>
+		<author>nickvergesssen</author>
+		<title lang="en">phpBB-Gallery</title>
+		<description lang="en">trjhjrtj</description>
+		<download>http://www.flying-bits.org/download.php?mod_id=6</download>
+		<announcement>http://www.flying-bits.org/viewtopic.php?f=38</announcement>
+		<mod_version>
+			<major>0</major>
+			<minor>4</minor>
+			<revision>0</revision>
+			<release>-RC1</release>
+		</mod_version>
+		<installation>
+			<level>easy</level>
+			<time>120</time>
+			<target-version>
+				<target-primary>3.0.2</target-primary>
+				<target-major allow="exact">3</target-major>
+				<target-minor allow="exact">0</target-minor>
+			</target-version>
+		</installation>
+		<upgrade>
+			<level>easy</level>
+			<time>120</time>
+			<target-version>
+				<target-primary>3.0.2</target-primary>
+				<target-major allow="exact">3</target-major>
+				<target-minor allow="exact">0</target-minor>
+			</target-version>
+		</upgrade>
+	</phpbb_gallery>
+</mods>

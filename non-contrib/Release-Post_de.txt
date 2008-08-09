@@ -1,0 +1,25 @@
+[b]MOD Name:[/b] phpbb gallery
+[b]Autor:[/b] [url=http://www.flying-bits.org][b]nickvergessen[/b][/url]
+
+[b]MOD Version:[/b] 0.4.0-RC1
+[b]MOD Beschreibung:[/b]
+[list]Das ist eine Galerie für dein phpBB3.
+Wenn ich mehr Zeit habe, werde ich in diesem Forum eine "Feature"-Liste posten:
+http://www.flying-bits.org/viewforum.php?f=38[/list]
+
+[b]Features:[/b] Die Liste mit dne eingebauten Features ist noch nciht verfügbar.
+
+[b]Demo URL:[/b] http://www.flying-bits.org/gallery/index.php
+[b]Unterstpützte Sprachpakete:[/b] de, en
+[b]Unterstpützte Styles:[/b] prosilver, subsilver2
+
+[b]MOD Repository[/b]: http://code.bantux.de/svn/phpbb-gallery (SVN/Subversion)
+[b]Repository durchsuchen[/b]: http://code.bantux.de/repositories/show/phpbb-gallery
+[b]Bug-Tracker[/b]: http://www.flying-bits.org/bugtracker/viewcat.php?c=6
+(Bevor du einen Bug meldest, wirf einen Blick in die FAQ, ob du etwas dazu findest)
+
+
+[b]FAQ[/b]: http://www.flying-bits.org/viewforum.php?f=67
+
+[b]MOD Download:[/b] [size=150][b][url=http://www.flying-bits.org/download.php?mod_id=6]Download v0.4.0-RC1[/url][/b][/size]
+[b][color=#FF0000]Anmerkung[/color]:[/b] Da das Berechtigungssystem komplett überarbeitet wurde, musst du bei einem Update von einer Version unter 0.4.x oder einer Konvertierung von Smartor's Album-MOD alle Rechte neu vergeben.
