@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<?xml-stylesheet type="text/xsl" href="../modx.prosilver.en.xsl"?>
+<?xml-stylesheet type="text/xsl" href="../xml/modx.prosilver.en.xsl"?>
 <!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
 <!-- $Id$ -->
 <mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.0.xsd">
@@ -45,16 +45,32 @@
     <author-notes lang="en-gb">This file contains all parts of the History, all Developers, a.s.o.</author-notes>
     <history>
       <entry>
-        <date>2008-06-17</date>
+        <date>2008-08-09</date>
         <rev-version>0.4.0-RC1</rev-version>
         <changelog lang="en-gb">
           <change><![CDATA[[Add] Report #261: Installer/Updater for older versions]]></change>
           <change><![CDATA[[Add] Report #245: Button/Redirect after installation.]]></change>
           <change><![CDATA[[Add] Report #189: Number of maximum images]]></change>
           <change><![CDATA[[Add] Report #267: Limit total number of images by group.]]></change>
+          <change><![CDATA[[Add] Unreported: Display thumbnail on album-list]]></change>
+          <change><![CDATA[[Add] Report #31: album image]]></change>
+          <change><![CDATA[[Add] Report #185: Meta refresh on Moderating]]></change>
+          <change><![CDATA[[Add] Report #241: Report Image]]></change>
+          <change><![CDATA[[Add] Report #280: Display Exif-Data if available]]></change>
+          <change><![CDATA[[Add] Unreported: Red-Image-Counter for MOderators (unapproved images)]]></change>
+          <change><![CDATA[[Add] Unreported: Cleanup-Page, idea on Report #239: Cleanup DB after delete of a user]]></change>
+          <change><![CDATA[[Add] Unreported: MOD supports "MOD Version Check" by handyman´]]></change>
+          <change><![CDATA[[Add] Unreported: Filled the Statistic-Page in the ACP]]></change>
+          <change><![CDATA[[Add] Unreported: MOD supports "HighSlide Attachment & IMG" by stokerpiller]]></change>
 
           <change><![CDATA[[Change] Report #246: Hide "Your Personal Album" link.]]></change>
           <change><![CDATA[[Change] Unreported: MODx v1.2.0]]></change>
+          <change><![CDATA[[Change] Unreported: Permission-System]]></change>
+          <change><![CDATA[[Change] Unreported: Album-System (much faster now)]]></change>
+          <change><![CDATA[[Change] Report #181, Report #165 & Report #233: Rewrote ACP-Import]]></change>
+          <change><![CDATA[[Change] Unreported: Moved some Variables to _albums and -images to increase SQL-Speed and reduce number of SQLs]]></change>
+          <change><![CDATA[[Change] Report #263: Reject album deletion leads to 'empty' UserCP page]]></change>
+          <change><![CDATA[[Change] Unreported: Rewrote the hole MCP]]></change>
 
           <change><![CDATA[[Fix] Report #258: Repeat Bug 228: 0.2.3 to 0.3.0 upgrade won't update version]]></change>
           <change><![CDATA[[Fix] Report #260: Call to undefined function adm_back_link()]]></change>
@@ -62,6 +78,13 @@
           <change><![CDATA[[Fix] Report #262: bbcode is missing GALLERY_ROOT_PATH]]></change>
           <change><![CDATA[[Fix] Report #264: posting.php != S_IN_GALLERY]]></change>
           <change><![CDATA[[Fix] Report #254: Anonymous comments possible at private albums]]></change>
+          <change><![CDATA[[Fix] Report #265: icon buged on rtl]]></change>
+          <change><![CDATA[[Fix] Unreported: don't create albums without names]]></change>
+          <change><![CDATA[[Fix] Report #179: utf8 in file name on Import]]></change>
+          <change><![CDATA[[Fix] Report #128: wrong permissions on testing user-premissions]]></change>
+          <change><![CDATA[[Fix] Report #191: Comment Char limit]]></change>
+          <change><![CDATA[[Fix] Unreported: bbcode [list] bugged in image_page.php]]></change>
+          <change><![CDATA[[Fix] Reported: Add option to disable watermark for small images]]></change>
         </changelog>
       </entry>
       <entry>
