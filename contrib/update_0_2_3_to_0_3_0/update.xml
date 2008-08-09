@@ -27,7 +27,7 @@
       <link type="parent" lang="de" href="../history.xml">Entwicklung</link>
       <link type="parent" lang="en-gb" href="../../install.xml">Install</link>
       <link type="parent" lang="de" href="../../install.xml">Installations-Anleitung</link>
-      <link type="template" lang="de" href="xml/subsilver2.xml">Anleitung für das Style subsilver2</link>
+      <link type="template" lang="de" href="xml/subsilver2.xml">Anleitung fÃ¼r das Style subsilver2</link>
       <link type="template" lang="en-gb" href="xml/subsilver2.xml">Manual for subsilver2 Style</link>
       <link type="parent" lang="en-gb" href="../update_0_3_0_to_0_3_1/update.xml">Update from 0.3.0 to 0.3.1</link>
       <link type="parent" lang="de" href="../update_0_3_0_to_0_3_1/update.xml">Update von 0.3.0 auf 0.3.1</link>
@@ -44,7 +44,7 @@
           <change><![CDATA[[Add] Report #208: permissions for creating subalbums]]></change>
           <change><![CDATA[[Add] Report #212: Multiple Upload]]></change>
           <change><![CDATA[[Add] Report #15: edit and delete comments]]></change>
-          <change><![CDATA[[Add] Report #168: Persönliche Galerie verlinken]]></change>
+          <change><![CDATA[[Add] Report #168: PersÃ¶nliche Galerie verlinken]]></change>
           <change><![CDATA[[Add] Report #213: SVN: move pic from private subalbum not possible]]></change>
           <change><![CDATA[[Add] Report #211: Seitenauflistung in der "Wer ist online?"-Liste]]></change>
           <change><![CDATA[[Add] Report #126: Optional black info line at bottom.]]></change>
