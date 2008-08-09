@@ -86,7 +86,7 @@ switch ($db->sql_layer)
 $delete = request_var('delete', 0);
 $install = request_var('install', 0);
 $update = request_var('update', 0);
-$version = request_var('v', '0', true);
+$version = request_var('v', '0.0.0', true);
 $convert = request_var('convert', 0);
 $convert_prefix = request_var('convert_prefix', '', true);
 
