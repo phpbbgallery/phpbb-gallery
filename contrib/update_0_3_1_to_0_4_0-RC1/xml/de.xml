@@ -6,17 +6,17 @@
     <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
     <title lang="de">phpBB Gallery / phpBB Galerie</title>
     <title lang="en-gb">phpBB Gallery</title>
-    <description lang="de"><![CDATA[Das ist eine Galerie für dein phpBB3.
+    <description lang="de"><![CDATA[Das ist eine Galerie fÃ¼r dein phpBB3.
 Wenn ich mehr Zeit habe, werde ich in diesem Forum eine "Feature"-Liste posten:
 http://www.flying-bits.org/viewforum.php?f=38]]></description>
     <description lang="en-gb"><![CDATA[This is a gallery for your phpBB3.
 When I have some more time, I'll post a feature-list in this forum:
 http://www.flying-bits.org/viewforum.php?f=38]]></description>
-    <author-notes lang="de"><![CDATA[Die MOD untersützt die "MOD Version Check"-MOD von Handymman´:
+    <author-notes lang="de"><![CDATA[Die MOD untersÃ¼tzt die "MOD Version Check"-MOD von HandymmanÂ´:
 http://www.phpbb.com/community/viewtopic.php?f=69&t=691155
 
-Du kannst sie installieren, um über neue Versionen informiert zu werden, da ich keine Emails mehr schreiben werde.]]></author-notes>
-    <author-notes lang="en-gb"><![CDATA[This MOD supports the "MOD Version Check"-MOD by Handymman´:
+Du kannst sie installieren, um Ã¼ber neue Versionen informiert zu werden, da ich keine Emails mehr schreiben werde.]]></author-notes>
+    <author-notes lang="en-gb"><![CDATA[This MOD supports the "MOD Version Check"-MOD by HandymmanÂ´:
 http://www.phpbb.com/community/viewtopic.php?f=69&t=691155
 
 You may install it, to be informed about future versions, as I'm not going to send any more mails.]]></author-notes>
@@ -53,7 +53,7 @@ You may install it, to be informed about future versions, as I'm not going to se
         <action type="after-add"><![CDATA[img_button_upload_image = button_upload_image.gif]]></action>
       </edit>
     </open>
-    <diy-instructions lang="de"><![CDATA[Rufe install_gallery/install.php auf und führe das Update-Script aus
+    <diy-instructions lang="de"><![CDATA[Rufe install_gallery/install.php auf und fÃ¼hre das Update-Script aus
 
 Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
 
