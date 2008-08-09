@@ -37,6 +37,13 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'AFTER_INSTALL_GOTO'				=> 'Go to the %sGallery%s',
 
+	'EXAMPLE_ALBUM1'					=> 'Your first category',
+	'EXAMPLE_ALBUM2'					=> 'Your first album',
+	'EXAMPLE_ALBUM2_DESC'				=> 'Description of your first album.',
+	'EXAMPLE_DESC'						=> 'Thank you for installing phpBB Gallery v%s aka. &quot;DB-Bird&quot;.<br />'
+											. 'This is just an example-image, you may delete it.',
+	'EXAMPLE_DESC_UID'					=> '1vrbfkfh',
+
 	'INSTALLER_CHMOD'					=> 'Checking for CHMOD',
 	'INSTALLER_CHMOD_EXPLAIN'			=> 'The following directories need CHMOD 777, to make the gallery work.',
 	'INSTALLER_CHMOD_UNWRITABLE'		=> 'Unwriteable',

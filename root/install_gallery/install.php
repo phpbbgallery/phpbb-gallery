@@ -147,17 +147,201 @@ switch ($mode)
 			gallery_config_value('preview_rsz_width', 800);
 			gallery_config_value('upload_images', 10);
 			gallery_config_value('thumbnail_info_line', 1);
-			gallery_config_value('fake_thumb_size', 141);
+			gallery_config_value('fake_thumb_size', 70);
 			gallery_config_value('disp_fake_thumb', 1);
 			gallery_config_value('personal_counter', 0);
 			gallery_config_value('exif_data', 1);
 			gallery_config_value('watermark_height', 50);
 			gallery_config_value('watermark_width', 200);
-			set_config('num_images', 0, true);
+			set_config('num_images', 1, true);
 			set_config('gallery_total_images', 1);
 			set_config('gallery_user_images_profil', 1);
 			set_config('gallery_personal_album_profil', 1);
 			$album_config = load_album_config();
+
+			//creating an example album and image
+			//get some group_ids
+			$moderators_group_id = $registered_group_id = $guests_group_id = 0;
+			$sql = 'SELECT *
+				FROM ' . GROUPS_TABLE . '
+				WHERE group_type = ' . GROUP_SPECIAL;
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				if ($row['group_name'] == 'GLOBAL_MODERATORS')
+				{
+					$moderators_group_id = $row['group_id'];
+				}
+				if ($row['group_name'] == 'REGISTERED')
+				{
+					$registered_group_id = $row['group_id'];
+				}
+				if ($row['group_name'] == 'GUESTS')
+				{
+					$guests_group_id = $row['group_id'];
+				}
+			}
+			$db->sql_freeresult($result);
+			$album_data = array(
+				'album_id'				=> 1,
+				'parent_id'				=> 0,
+				'album_parents'			=> '',
+				'left_id'				=> 1,
+				'right_id'				=> 4,
+				'album_desc'			=> '',
+				'album_type'			=> 0,
+				'album_name'			=> $user->lang['EXAMPLE_ALBUM1'],
+				'album_desc_options'	=> 7,
+			);
+			$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
+			$album_data = array(
+				'album_id'				=> 2,
+				'parent_id'				=> 1,
+				'album_parents'			=> '',
+				'left_id'				=> 2,
+				'right_id'				=> 3,
+				'album_type'			=> 1,
+				'album_name'			=> $user->lang['EXAMPLE_ALBUM2'],
+				'album_desc'			=> $user->lang['EXAMPLE_ALBUM2_DESC'],
+				'album_desc_options'	=> 7,
+				'album_images'			=> 1,
+				'album_images_real'		=> 1,
+				'album_last_image_id'	=> 1,
+				'album_last_image_time'	=> time(),
+				'album_last_image_name'	=> 'DB-Bird',
+				'album_last_username'	=> 'nickvergessen',
+				'album_last_user_id'	=> 1,
+			);
+			$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
+			$image_data = array(
+				'image_id'				=> 1,
+				'image_filename'		=> 'e9572ef3661a7ae1c35ba09a067e57ae.jpg',
+				'image_thumbnail'		=> 'e9572ef3661a7ae1c35ba09a067e57ae.jpg',
+				'image_name'			=> 'DB-Bird',
+				'image_desc'			=> sprintf($user->lang['EXAMPLE_DESC'], $new_mod_version),
+				'image_desc_uid'		=> $user->lang['EXAMPLE_DESC_UID'],
+				'image_desc_bitfield'	=> '',
+				'image_user_id'			=> 1,
+				'image_username'		=> 'nickvergessen',
+				'image_user_colour'		=> '',
+				'image_user_ip'			=> '127.0.0.1',
+				'image_time'			=> time(),
+				'image_album_id'		=> 2,
+				'image_view_count'		=> 1,
+				'image_has_exif'		=> 1,
+				'image_status'			=> 1,
+			);
+			$db->sql_query('INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $image_data));
+			$modscache_data = array(
+				'album_id'				=> 1,
+				'group_id'				=> $moderators_group_id,
+				'group_name'			=> 'GLOBAL_MODERATORS',
+				'display_on_index'		=> 1,
+			);
+			$db->sql_query('INSERT INTO ' . GALLERY_MODSCACHE_TABLE . ' ' . $db->sql_build_array('INSERT', $modscache_data));
+			$modscache_data = array(
+				'album_id'				=> 2,
+				'group_id'				=> $moderators_group_id,
+				'group_name'			=> 'GLOBAL_MODERATORS',
+				'display_on_index'		=> 1,
+			);
+			$db->sql_query('INSERT INTO ' . GALLERY_MODSCACHE_TABLE . ' ' . $db->sql_build_array('INSERT', $modscache_data));
+			$permissions_data = array(
+				'perm_id'				=> 1,
+				'perm_role_id'			=> 1,
+				'perm_album_id'			=> 1,
+				'perm_group_id'			=> $moderators_group_id,
+			);
+			$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $permissions_data));
+			$permissions_data = array(
+				'perm_id'				=> 2,
+				'perm_role_id'			=> 1,
+				'perm_album_id'			=> 2,
+				'perm_group_id'			=> $moderators_group_id,
+			);
+			$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $permissions_data));
+			$permissions_data = array(
+				'perm_id'				=> 3,
+				'perm_role_id'			=> 2,
+				'perm_album_id'			=> 1,
+				'perm_group_id'			=> $registered_group_id,
+			);
+			$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $permissions_data));
+			$permissions_data = array(
+				'perm_id'				=> 4,
+				'perm_role_id'			=> 2,
+				'perm_album_id'			=> 2,
+				'perm_group_id'			=> $registered_group_id,
+			);
+			$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $permissions_data));
+			$permissions_data = array(
+				'perm_id'				=> 5,
+				'perm_role_id'			=> 3,
+				'perm_album_id'			=> 1,
+				'perm_group_id'			=> $guests_group_id,
+			);
+			$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $permissions_data));
+			$permissions_data = array(
+				'perm_id'				=> 6,
+				'perm_role_id'			=> 3,
+				'perm_album_id'			=> 2,
+				'perm_group_id'			=> $guests_group_id,
+			);
+			$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $permissions_data));
+			$roles_data = array(
+				'role_id'				=> 1,
+				'i_view'				=> 1,
+				'i_upload'				=> 1,
+				'i_edit'				=> 1,
+				'i_delete'				=> 1,
+				'i_rate'				=> 1,
+				'i_approve'				=> 1,
+				'i_lock'				=> 1,
+				'i_report'				=> 1,
+				'i_count'				=> 500,
+				'c_post'				=> 1,
+				'c_edit'				=> 1,
+				'c_delete'				=> 1,
+				'a_moderate'			=> 1,
+				'album_count'			=> 0,
+			);
+			$db->sql_query('INSERT INTO ' . GALLERY_ROLES_TABLE . ' ' . $db->sql_build_array('INSERT', $roles_data));
+			$roles_data = array(
+				'role_id'				=> 2,
+				'i_view'				=> 1,
+				'i_upload'				=> 1,
+				'i_edit'				=> 0,
+				'i_delete'				=> 0,
+				'i_rate'				=> 1,
+				'i_approve'				=> 1,
+				'i_lock'				=> 0,
+				'i_report'				=> 1,
+				'i_count'				=> 250,
+				'c_post'				=> 1,
+				'c_edit'				=> 0,
+				'c_delete'				=> 0,
+				'a_moderate'			=> 0,
+				'album_count'			=> 0,
+			);
+			$db->sql_query('INSERT INTO ' . GALLERY_ROLES_TABLE . ' ' . $db->sql_build_array('INSERT', $roles_data));
+			$roles_data = array(
+				'role_id'				=> 3,
+				'i_view'				=> 1,
+				'i_upload'				=> 0,
+				'i_edit'				=> 0,
+				'i_delete'				=> 0,
+				'i_rate'				=> 0,
+				'i_approve'				=> 0,
+				'i_lock'				=> 0,
+				'i_report'				=> 0,
+				'i_count'				=> 0,
+				'c_post'				=> 0,
+				'c_edit'				=> 0,
+				'c_delete'				=> 0,
+				'a_moderate'			=> 0,
+				'album_count'			=> 0,
+			);
+			$db->sql_query('INSERT INTO ' . GALLERY_ROLES_TABLE . ' ' . $db->sql_build_array('INSERT', $roles_data));
 
 			//remove the old modules:
 			$sql = 'SELECT module_id, module_class, left_id, right_id
@@ -708,7 +892,7 @@ switch ($mode)
 					set_config('gallery_user_images_profil', 1);
 					set_config('gallery_personal_album_profil', 1);
 					// -> gallery_config
-					gallery_config_value('fake_thumb_size', 141);
+					gallery_config_value('fake_thumb_size', 70);
 					gallery_config_value('disp_fake_thumb', 1);
 					gallery_config_value('exif_data', 1);
 					gallery_config_value('watermark_height', 50);
@@ -1047,8 +1231,9 @@ switch ($mode)
 			gallery_config_value('preview_rsz_width', 800);
 			gallery_config_value('upload_images', 10);
 			gallery_config_value('thumbnail_info_line', 1);
-			gallery_config_value('fake_thumb_size', 141);
+			gallery_config_value('fake_thumb_size', 70);
 			gallery_config_value('disp_fake_thumb', 1);
+			gallery_config_value('personal_counter', 0);
 			gallery_config_value('exif_data', 1);
 			gallery_config_value('watermark_height', 50);
 			gallery_config_value('watermark_width', 200);
