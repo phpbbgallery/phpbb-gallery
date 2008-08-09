@@ -114,6 +114,18 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
     </open>
     <open src="viewtopic.php">
       <edit>
+        <find><![CDATA[	'SELECT'	=> 'u.*, z.friend, z.foe, p.*',]]></find>
+        <action type="replace-with"><![CDATA[	'SELECT'	=> 'u.*, z.friend, z.foe, p.*, gu.personal_album_id',]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[			'ON'	=> 'z.user_id = ' . $user->data['user_id'] . ' AND z.zebra_id = p.poster_id'
+		)]]></find>
+        <action type="after-add"><![CDATA[		, array(
+			'FROM'	=> array(GALLERY_USERS_TABLE => 'gu'),
+			'ON'	=> 'gu.user_id = p.poster_id'
+		)]]></action>
+      </edit>
+      <edit>
         <find><![CDATA['personal_album'	=> '',]]></find>
         <action type="after-add"><![CDATA['gallery_album'	=> '',]]></action>
       </edit>
