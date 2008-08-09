@@ -877,7 +877,7 @@ class ucp_gallery
 				$db->sql_query($sql);
 				$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . " WHERE rate_image_id IN ($deleted_images)";
 				$db->sql_query($sql);
-				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . " WHERE rate_image_id IN ($deleted_images)";
+				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . " WHERE image_id IN ($deleted_images)";
 				$db->sql_query($sql);
 			}
 			$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . " WHERE album_id IN ($deleted_albums)";
