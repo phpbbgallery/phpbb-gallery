@@ -29,25 +29,25 @@
         <contributions />
       </author>
     </author-group>
-    <mod-version>0.3.2</mod-version>
+    <mod-version>0.4.0-RC1</mod-version>
     <installation>
-      <level>easy</level>
-      <time>600</time>
-      <target-version>3.0.1</target-version>
+      <level>intermediate</level>
+      <time>1200</time>
+      <target-version>3.0.2</target-version>
     </installation>
     <link-group>
-      <link type="parent" lang="en-gb" href="../install.xml">Manual</link>
       <link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
-      <link type="parent" lang="en-gb" href="update_0_3_1_to_0_3_2/update.xml">Update from 0.3.1 to 0.3.2</link>
-      <link type="parent" lang="de" href="update_0_3_1_to_0_3_2/update.xml">Update von 0.3.1 auf 0.3.2</link>
+      <link type="parent" lang="en-gb" href="../install.xml">Manual</link>
+      <link type="parent" lang="de" href="update_0_3_1_to_0_4_0-RC1/update.xml">Update von 0.3.1 auf 0.4.0-RC1</link>
+      <link type="parent" lang="en-gb" href="update_0_3_1_to_0_4_0-RC1/update.xml">Update from 0.3.1 to 0.4.0-RC1</link>
     </link-group>
-    <author-notes lang="en-gb">This file contains all parts of the History, all Developers, a.s.o.</author-notes>
     <author-notes lang="de">Diese Datei enthält alle Teile der History, alle Entickler, usw.</author-notes>
+    <author-notes lang="en-gb">This file contains all parts of the History, all Developers, a.s.o.</author-notes>
     <history>
       <entry>
         <date>2008-06-17</date>
-        <rev-version>0.3.2</rev-version>
-        <changelog lang="en-GB">
+        <rev-version>0.4.0-RC1</rev-version>
+        <changelog lang="en-gb">
           <change><![CDATA[[Add] Report #261: Installer/Updater for older versions]]></change>
           <change><![CDATA[[Add] Report #245: Button/Redirect after installation.]]></change>
           <change><![CDATA[[Add] Report #189: Number of maximum images]]></change>
@@ -67,7 +67,7 @@
       <entry>
         <date>2008-04-14</date>
         <rev-version>0.3.1</rev-version>
-        <changelog lang="en-GB">
+        <changelog lang="en-gb">
           <change><![CDATA[[Add] Report #150: mcp "select all"]]></change>
           <change><![CDATA[[Add] Report #166: select multiple images for delete]]></change>
 
@@ -99,7 +99,7 @@
       <entry>
         <date>2008-03-06</date>
         <rev-version>0.3.0</rev-version>
-        <changelog lang="en-GB">
+        <changelog lang="en-gb">
           <change><![CDATA[[Add] Report #138: Resize image in image view page]]></change>
           <change><![CDATA[[Add] Report #195: Reduce SQL phpbb_users left join]]></change>
           <change><![CDATA[[Add] Report #197: Personal Gallery Index - User colour are not showing...]]></change>
@@ -151,7 +151,7 @@
       <entry>
         <date>2008-01-24</date>
         <rev-version>0.2.3</rev-version>
-        <changelog lang="en-GB">
+        <changelog lang="en-gb">
           <change><![CDATA[Report #62: Watermark: Call to undefined function: imagecreatefromjpeg()]]></change>
           <change><![CDATA[Report #90: Add gd_info function check into the installer]]></change>
           <change><![CDATA[Report #100: bbcode]]></change>
@@ -183,7 +183,7 @@
       <entry>
         <date>2008-01-08</date>
         <rev-version>0.2.2</rev-version>
-        <changelog lang="en-GB">
+        <changelog lang="en-gb">
           <change><![CDATA[Report #63: Column 'comment_edit_time' cannot be null]]></change>
           <change><![CDATA[Report #65: Zip Upload]]></change>
           <change><![CDATA[Report #66: Unknown column 'pic_time' in 'order clause' [1054]]]></change>
@@ -233,14 +233,14 @@
       <entry>
         <date>2007-11-27</date>
         <rev-version>0.2.1</rev-version>
-        <changelog lang="en-GB">
+        <changelog lang="en-gb">
           <change><![CDATA[Report #64: wrong parse of bbcode on install.php]]></change>
         </changelog>
       </entry>
       <entry>
         <date>2007-11-26</date>
         <rev-version>0.2.0</rev-version>
-        <changelog lang="en-GB">
+        <changelog lang="en-gb">
           <change><![CDATA[Report #47: which word to use]]></change>
           <change><![CDATA[Report #48: missing constants in acp]]></change>
           <change><![CDATA[Report #49: Cannot use a scalar value as an array]]></change>
@@ -260,7 +260,7 @@
       <entry>
         <date>2007-11-12</date>
         <rev-version>0.1.3</rev-version>
-        <changelog lang="en-GB">
+        <changelog lang="en-gb">
           <change><![CDATA[Report #1: [Security] $album_root_path]]></change>
           <change><![CDATA[Report #3: [np] image_delete.php]]></change>
           <change><![CDATA[Report #4: $phpbb_root_path = '../';]]></change>

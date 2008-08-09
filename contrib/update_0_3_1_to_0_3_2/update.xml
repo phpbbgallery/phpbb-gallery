@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<?xml-stylesheet type="text/xsl" href="../../modx.prosilver.en.xsl"?>
+<?xml-stylesheet type="text/xsl" href="../../xml/modx.prosilver.en.xsl"?>
 <!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
 <mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.0.xsd">
   <header>
     <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+    <title lang="de">phpBB Gallery / phpBB Galerie</title>
     <title lang="en-gb">phpBB Gallery</title>
-    <description lang="en-gb"><![CDATA[see normal install-file]]></description>
-    <author-notes lang="en-gb">i hope you get it installed, otherwise you can ask for help on phpbb.de and phpbb.com
+    <description lang="de"><![CDATA[Das ist eine Galerie für dein phpBB3.
+Wenn ich mehr Zeit habe, werde ich in diesem Forum eine "Feature"-Liste posten:
+http://www.flying-bits.org/viewforum.php?f=38]]></description>
+    <description lang="en-gb"><![CDATA[This is a gallery for your phpBB3.
+When I have some more time, I'll post a feature-list in this forum:
+http://www.flying-bits.org/viewforum.php?f=38]]></description>
+    <author-notes lang="de"><![CDATA[Die MOD untersützt die "MOD Version Check"-MOD von Handymman´:
+http://www.phpbb.com/community/viewtopic.php?f=69&t=691155
 
+Du kannst sie installieren, um über neue Versionen informiert zu werden, da ich keine Emails mehr schreiben werde.]]></author-notes>
+    <author-notes lang="en-gb"><![CDATA[This MOD supports the "MOD Version Check"-MOD by Handymman´:
+http://www.phpbb.com/community/viewtopic.php?f=69&t=691155
 
-
-	NOTE: If you want to be informed, when there should be a new version of this MOD available,
-	Please register on my Site and join the Group "MODs - phpBB Gallery - Newsletter".
-
-	I you want to be informed when i release any new version for one of my MODs join the Group "MODs - Newsletter"</author-notes>
+You may install it, to be informed about future versions, as I'm not going to send any more mails.]]></author-notes>
     <author-group>
       <author>
         <realname>Joas Schilling</realname>
@@ -23,29 +29,32 @@
         <contributions />
       </author>
     </author-group>
-    <mod-version>0.3.2</mod-version>
+    <mod-version>0.4.0-RC1</mod-version>
     <installation>
-      <level>easy</level>
-      <time>240</time>
-      <target-version>3.0.1</target-version>
+      <level>intermediate</level>
+      <time>1200</time>
+      <target-version>3.0.2</target-version>
     </installation>
     <link-group>
-      <link type="parent" lang="en-gb" href="../history.xml">History</link>
       <link type="parent" lang="de" href="../history.xml">Entwicklung</link>
-      <link type="parent" lang="en-gb" href="../../install.xml">Install</link>
+      <link type="parent" lang="en-gb" href="../history.xml">History</link>
       <link type="parent" lang="de" href="../../install.xml">Installations-Anleitung</link>
-      <link type="language" lang="de" href="de.xml">Anleitung für das deutsche Sprachpaket</link>
-      <link type="language" lang="en-gb" href="de.xml">Manual for German Language-set</link>
-      <link type="template" lang="de" href="subsilver2.xml">Anleitung für das Style subsilver2</link>
-      <link type="template" lang="en-gb" href="subsilver2.xml">Manual for subsilver2 Style</link>
+      <link type="parent" lang="en-gb" href="../../install.xml">Install</link>
+      <link type="language" lang="de" href="xml/de.xml">Anleitung für das deutsche Sprachpaket</link>
+      <link type="language" lang="en-gb" href="xml/de.xml">Manual for German Language-set</link>
+      <link type="template" lang="de" href="xml/subsilver2.xml">Anleitung für das Style subsilver2</link>
+      <link type="template" lang="en-gb" href="xml/subsilver2.xml">Manual for subsilver2 Style</link>
     </link-group>
     <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
   </header>
   <action-group>
     <copy>
-      <file from="root/adm/style/acp_gallery.html" to="adm/style/acp_gallery.html" />
+      <file from="root/adm/mods/phpbb_gallery_version.php" to="adm/mods/phpbb_gallery_version.php" />
+      <file from="root/adm/style/*.html" to="adm/style/*.html" />
       <file from="root/gallery/*.*" to="gallery/*.*" />
+      <file from="root/gallery/import/*.*" to="gallery/import/*.*" />
       <file from="root/gallery/includes/*.*" to="gallery/includes/*.*" />
+      <file from="root/gallery/mcp/*.*" to="gallery/mcp/*.*" />
       <file from="root/gallery/upload/*.*" to="gallery/upload/*.*" />
       <file from="root/gallery/upload/cache/*.*" to="gallery/upload/cache/*.*" />
       <file from="root/includes/acp/acp_gallery.php" to="includes/acp/acp_gallery.php" />
@@ -53,8 +62,9 @@
       <file from="root/includes/ucp/ucp_gallery.php" to="includes/ucp/ucp_gallery.php" />
       <file from="root/includes/ucp/info/ucp_gallery.php" to="includes/ucp/info/ucp_gallery.php" />
       <file from="root/install_gallery/*.*" to="install_gallery/*.*" />
-      <file from="root/install_gallery/schemas/*.*" to="install_gallery/schemas/*.*" />
-      <file from="root/language/en/mods/*.*" to="language/en/mods/*.*" />
+      <file from="root/install_gallery/schemas/*/*.*" to="install_gallery/schemas/*/*.*" />
+      <file from="root/language/en/email/*.txt" to="language/en/email/*.txt" />
+      <file from="root/language/en/mods/*.php" to="language/en/mods/*.php" />
       <file from="root/styles/prosilver/imageset/en/button_upload_image.gif" to="styles/prosilver/imageset/en/button_upload_image.gif" />
       <file from="root/styles/prosilver/imageset/icon_contact_gallery.gif" to="styles/prosilver/imageset/icon_contact_gallery.gif" />
       <file from="root/styles/prosilver/template/*.*" to="styles/prosilver/template/*.*" />
@@ -270,6 +280,23 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
         <action type="before-add"><![CDATA[.rtl .icon-gallery,]]></action>
       </edit>
     </open>
-    <diy-instructions lang="en-gb">see normal install-file</diy-instructions>
+    <diy-instructions lang="de"><![CDATA[Rufe install_gallery/install.php auf und führe das Update-Script aus
+
+Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
+
+Aktualisiere deine Styles:
+    "Administrations-Bereich" (ACP) > "Styles" > "Templates" > jedes > "Aktualisieren"
+    "Administrations-Bereich" (ACP) > "Styles" > "Themes" > jedes > "Aktualisieren"
+    "Administrations-Bereich" (ACP) > "Styles" > "Grafiksammlungen" > jedes > "Aktualisieren"
+]]></diy-instructions>
+    <diy-instructions lang="en-gb"><![CDATA[Browse to install_gallery/install.php and run the update-script
+
+Clear your cache in the "Administration Control Panel" (ACP) > "General" > "Purge the cache"
+
+Refresh your Styles:
+    "Administration Control Panel" (ACP) > "Styles" > "Templates" > each > "refresh"
+    "Administration Control Panel" (ACP) > "Styles" > "Themes" > each > "refresh"
+    "Administration Control Panel" (ACP) > "Styles" > "Imagesets" > each > "refresh"
+]]></diy-instructions>
   </action-group>
 </mod>

@@ -37,7 +37,7 @@ $lang = array_merge($lang, array(
 	'EXAMPLE_ALBUM2_DESC'				=> 'Beschreibung deines ersten Albums.',
 	'EXAMPLE_DESC'						=> 'Danke dass du phpBB Gallery v%s aka. &quot;DB-Bird&quot; installiert hast.<br />'
 											. 'Das ist nur ein Beispiel-Bild. Du kannst es löschen, wenn du möchtest.',
-	'EXAMPLE_DESC_UID'					=> '1vrbfkfh',
+	'EXAMPLE_DESC_UID'					=> '3ogfgm0h',
 
 	'INSTALLER_CHMOD'					=> 'Auf Beschreibbarkeit überprüfen',
 	'INSTALLER_CHMOD_EXPLAIN'			=> 'Die folgenden Verzeichnisse müssen CHMOD auf 777 gesetzt haben, damit die Gallery reibungslos funktioniert.',

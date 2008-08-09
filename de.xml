@@ -4,16 +4,22 @@
 <mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.0.xsd">
   <header>
     <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+    <title lang="de">phpBB Gallery / phpBB Galerie</title>
     <title lang="en-gb">phpBB Gallery</title>
-    <description lang="en-gb"><![CDATA[see normal install-file]]></description>
-    <author-notes lang="en-gb">i hope you get it installed, otherwise you can ask for help on phpbb.de and phpbb.com
+    <description lang="de"><![CDATA[Das ist eine Galerie für dein phpBB3.
+Wenn ich mehr Zeit habe, werde ich in diesem Forum eine "Feature"-Liste posten:
+http://www.flying-bits.org/viewforum.php?f=38]]></description>
+    <description lang="en-gb"><![CDATA[This is a gallery for your phpBB3.
+When I have some more time, I'll post a feature-list in this forum:
+http://www.flying-bits.org/viewforum.php?f=38]]></description>
+    <author-notes lang="de"><![CDATA[Die MOD untersützt die "MOD Version Check"-MOD von Handymman´:
+http://www.phpbb.com/community/viewtopic.php?f=69&t=691155
 
+Du kannst sie installieren, um über neue Versionen informiert zu werden, da ich keine Emails mehr schreiben werde.]]></author-notes>
+    <author-notes lang="en-gb"><![CDATA[This MOD supports the "MOD Version Check"-MOD by Handymman´:
+http://www.phpbb.com/community/viewtopic.php?f=69&t=691155
 
-
-	NOTE: If you want to be informed, when there should be a new version of this MOD available,
-	Please register on my Site and join the Group "MODs - phpBB Gallery - Newsletter".
-
-	I you want to be informed when i release any new version for one of my MODs join the Group "MODs - Newsletter"</author-notes>
+You may install it, to be informed about future versions, as I'm not going to send any more mails.]]></author-notes>
     <author-group>
       <author>
         <realname>Joas Schilling</realname>
@@ -23,23 +29,24 @@
         <contributions />
       </author>
     </author-group>
-    <mod-version>0.3.2</mod-version>
+    <mod-version>0.4.0-RC1</mod-version>
     <installation>
-      <level>easy</level>
-      <time>240</time>
-      <target-version>3.0.1</target-version>
+      <level>intermediate</level>
+      <time>1200</time>
+      <target-version>3.0.2</target-version>
     </installation>
     <link-group>
-      <link type="parent" lang="en-gb" href="contrib/history.xml">History</link>
-      <link type="parent" lang="de" href="contrib/history.xml">Entwicklung</link>
-      <link type="parent" lang="en-gb" href="install.xml">Install</link>
-      <link type="parent" lang="de" href="install.xml">Installations-Anleitung</link>
+      <link type="parent" lang="de" href="../contrib/history.xml">Entwicklung</link>
+      <link type="parent" lang="en-gb" href="../contrib/history.xml">History</link>
+      <link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
+      <link type="parent" lang="en-gb" href="../install.xml">Install</link>
     </link-group>
     <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
   </header>
   <action-group>
     <copy>
-      <file from="languages/de/language/de/mods/*.*" to="language/de/mods/*.*" />
+      <file from="languages/de/language/de/email/*.txt" to="language/de/email/*.txt" />
+      <file from="languages/de/language/de/mods/*.php" to="language/de/mods/*.php" />
       <file from="languages/de/styles/prosilver/imageset/de/button_upload_image.gif" to="styles/prosilver/imageset/de/button_upload_image.gif" />
       <file from="languages/de/styles/subsilver2/imageset/de/*." to="styles/subsilver2/imageset/de/*.*" />
     </copy>
@@ -55,6 +62,23 @@
         <action type="after-add"><![CDATA[img_button_upload_image = button_upload_image.gif]]></action>
       </edit>
     </open>
-    <diy-instructions lang="en-gb">see normal install-file</diy-instructions>
+    <diy-instructions lang="de"><![CDATA[Rufe install_gallery/install.php auf und führe den Installer aus
+
+Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
+
+Aktualisiere deine Styles:
+    "Administrations-Bereich" (ACP) > "Styles" > "Templates" > jedes > "Aktualisieren"
+    "Administrations-Bereich" (ACP) > "Styles" > "Themes" > jedes > "Aktualisieren"
+    "Administrations-Bereich" (ACP) > "Styles" > "Grafiksammlungen" > jedes > "Aktualisieren"
+]]></diy-instructions>
+    <diy-instructions lang="en-gb"><![CDATA[Browse to install_gallery/install.php and run the installer
+
+Clear your cache in the "Administration Control Panel" (ACP) > "General" > "Purge the cache"
+
+Refresh your Styles:
+    "Administration Control Panel" (ACP) > "Styles" > "Templates" > each > "refresh"
+    "Administration Control Panel" (ACP) > "Styles" > "Themes" > each > "refresh"
+    "Administration Control Panel" (ACP) > "Styles" > "Imagesets" > each > "refresh"
+]]></diy-instructions>
   </action-group>
 </mod>
