@@ -76,7 +76,10 @@ $lang = array_merge($lang, array(
 
 	'REMOVE_FROM_FAVORITES'			=> 'Remove from favorites',
 
+	'UNSUBSCRIBE'					=> 'stop watching',
+
 	'YOUR_FAVORITE_IMAGES'			=> 'Here you can see your favorite-images. You may remove them, if you don\'t like them anymore.',
+	'YOUR_SUBSCRIPTIONS'			=> 'Here you see albums and images you get notified on.',
 
 	'WATCH_CHANGED'					=> 'Settings stored',
 	'WATCH_COM'						=> 'subscribe commented images by default',

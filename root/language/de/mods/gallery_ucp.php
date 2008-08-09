@@ -71,8 +71,11 @@ $lang = array_merge($lang, array(
 $lang = array_merge($lang, array(
 	'NO_FAVORITES'					=> 'Du hast keine Lieblingsbilder.',
 	'NO_SUBSCRIPTIONS'				=> 'Du beobachtest keine Bilder.',
+	'NO_SUBSCRIPTIONS_ALBUM'		=> 'Du beobachtest keine Alben.',
 
 	'REMOVE_FROM_FAVORITES'			=> 'Aus den Lieblingsbildern entfernen',
+
+	'UNSUBSCRIBE'					=> 'nicht mehr beobachten',
 
 	'YOUR_FAVORITE_IMAGES'			=> 'Hier siehst du deine Lieblingsbilder. Du kannst sie auch wieder entfernen, wenn sie dir nicht gefallen.',
 	'YOUR_SUBSCRIPTIONS'			=> 'Hier siehst du die Bilder und Alben, bei denen du benachrichtigt wirst.',

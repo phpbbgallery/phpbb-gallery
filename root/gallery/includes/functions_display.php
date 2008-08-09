@@ -221,7 +221,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		}
 		else
 		{
-			$last_image_name = $last_image_time = $last_image_url = $last_thumb_url = '';
+			$last_image_name = $last_image_time = $last_image_url = $last_image_page_url = $last_thumb_url = '';
 		}
 
 		// Output moderator listing ... if applicable
