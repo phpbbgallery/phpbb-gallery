@@ -179,6 +179,7 @@ $lang = array_merge($lang, array(
 
 $lang = array_merge($lang, array(
 	'ACP_GALLERY_CLEANUP_EXPLAIN'	=> 'Here you can delete some remains.',
+	'ADD_PERMISSIONS'				=> 'Add Permissions',
 	'ALBUM_ID'						=> 'Album-ID',
 	'ALBUM_IMAGE'					=> 'Album image',
 
