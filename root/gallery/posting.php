@@ -418,7 +418,6 @@ switch ($mode)
 								'filename'			=> '',
 								'image_album_id'	=> $album_data['album_id'],
 								'image_album_name'	=> $album_data['album_name'],
-								'image_approval'	=> (!$album_data['album_approval']) ? 1 : 0,
 								'image_desc'		=> str_replace('{NUM}', $loop, request_var('message', '', true)),
 								'image_name'		=> (request_var('filename', '') == 'filename') ? $image_data['image_tmp_name'] : str_replace('{NUM}', $loop, request_var('image_name', '', true)),
 								'image_time'		=> time() + $loop,
