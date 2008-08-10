@@ -11,6 +11,12 @@
 /**
 * @package phpbb_gallery
 */
+
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
 class phpbb_gallery_version
 {
 	function version()
