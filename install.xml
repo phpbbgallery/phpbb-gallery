@@ -94,12 +94,19 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
         <find><![CDATA[			unset($module);
 		}]]></find>
         <action type="after-add"><![CDATA[		// Gallery-statistics
+		$member_gallery = array('user_images' => 0, 'personal_album_id' => 0);
 		$sql = 'SELECT *
 			FROM ' . GALLERY_USERS_TABLE . '
 			WHERE user_id = ' . $member['user_id'];
 		$result = $db->sql_query($sql);
-		$member = array_merge($member, $db->sql_fetchrow($result));
+
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$member_gallery = array('user_images' => $row['user_images'], 'personal_album_id' => $row['personal_album_id']);
+		}
 		$db->sql_freeresult($result);
+
+		$member = array_merge($member, $member_gallery);
 		$user->add_lang('mods/gallery');
 
 		$images_per_day = $member['user_images'] / $memberdays;

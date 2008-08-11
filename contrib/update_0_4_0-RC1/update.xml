@@ -72,6 +72,31 @@ You may install it, to be informed about future versions, as I'm not going to se
       <file from="root/styles/prosilver/theme/images/gallery_lytebox/*.*" to="styles/prosilver/theme/images/gallery_lytebox/*.*" />
       <file from="root/styles/prosilver/theme/images/icon_gallery.gif" to="styles/prosilver/theme/images/icon_gallery.gif" />
     </copy>
+    <open src="memberlist.php">
+      <edit>
+        <find><![CDATA[		$sql = 'SELECT *
+			FROM ' . GALLERY_USERS_TABLE . '
+			WHERE user_id = ' . $member['user_id'];
+		$result = $db->sql_query($sql);
+		$member = array_merge($member, $db->sql_fetchrow($result));
+		$db->sql_freeresult($result);
+		$user->add_lang('mods/gallery');]]></find>
+        <action type="replace-with"><![CDATA[		$member_gallery = array('user_images' => 0, 'personal_album_id' => 0);
+		$sql = 'SELECT *
+			FROM ' . GALLERY_USERS_TABLE . '
+			WHERE user_id = ' . $member['user_id'];
+		$result = $db->sql_query($sql);
+
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$member_gallery = array('user_images' => $row['user_images'], 'personal_album_id' => $row['personal_album_id']);
+		}
+		$db->sql_freeresult($result);
+
+		$member = array_merge($member, $member_gallery);
+		$user->add_lang('mods/gallery');]]></action>
+      </edit>
+    </open>
     <diy-instructions lang="de"><![CDATA[Rufe install_gallery/install.php auf und führe das Update-Script aus
 
 Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
