@@ -1364,12 +1364,12 @@ function notify_gallery($mode, $handle_id, $image_name)
 		$messenger->save_queue();
 	}
 
-	// Now delete the user_ids not authorised to receive notifications on this topic/forum
+	// Now delete the user_ids not authorised to receive notifications on this image/album
 	if (!empty($delete_ids['image']))
 	{
 		$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . "
 			WHERE image_id = $image_id
-				AND " . $db->sql_in_set('user_id', $delete_ids['topic']);
+				AND " . $db->sql_in_set('user_id', $delete_ids['image']);
 		$db->sql_query($sql);
 	}
 
@@ -1377,7 +1377,7 @@ function notify_gallery($mode, $handle_id, $image_name)
 	{
 		$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . "
 			WHERE album_id = $album_id
-				AND " . $db->sql_in_set('user_id', $delete_ids['forum']);
+				AND " . $db->sql_in_set('user_id', $delete_ids['album']);
 		$db->sql_query($sql);
 	}
 }
