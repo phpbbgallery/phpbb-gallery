@@ -38,6 +38,7 @@ $image_id = request_var('image_id', 0);
 $comment_id = request_var('comment_id', 0);
 $error = '';
 $error_count = array();
+$slower_redirect = false;
 
 if ($image_id)
 {
@@ -665,6 +666,7 @@ switch ($mode)
 					else
 					{
 						$message = $user->lang['ALBUM_UPLOAD_NEED_APPROVAL'];
+						$slower_redirect = true;
 						$image_id = false;
 					}
 				}
@@ -1151,7 +1153,7 @@ if($submit)
 		$album_backlink = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id");
 		$message .= '<br />' . sprintf($user->lang['CLICK_RETURN_ALBUM'], '<a href="' . $album_backlink . '">', '</a>');
 	}
-	meta_refresh(3, ($image_id) ? $image_backlink : $album_backlink);
+	meta_refresh((($slower_redirect) ? 10 : 3), ($image_id) ? $image_backlink : $album_backlink);
 	trigger_error($message);
 }
 
