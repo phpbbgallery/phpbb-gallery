@@ -136,7 +136,7 @@ function gallery_acl_check($mode, $album_id)
 	global $user, $album_access_array, $cache;
 
 	$albums = $cache->obtain_album_list();
-	if ($album_id < 0)
+	if ($album_id == -2)
 	{
 		if ($mode == 'album_count')
 		{
@@ -145,6 +145,18 @@ function gallery_acl_check($mode, $album_id)
 		else
 		{
 			$access = ($album_access_array[-2][$mode] == 1) ? true : false;
+		}
+		return $access;
+	}
+	if ($album_id == -3)
+	{
+		if ($mode == 'album_count')
+		{
+			$access = $album_access_array[-3][$mode];
+		}
+		else
+		{
+			$access = ($album_access_array[-3][$mode] == 1) ? true : false;
 		}
 		return $access;
 	}
