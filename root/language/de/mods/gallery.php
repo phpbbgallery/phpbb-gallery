@@ -242,12 +242,14 @@ $lang = array_merge($lang, array(
 
 	'MISSING_REPORT_REASON'			=> 'Du musst einen Grund angeben um das Bild zu melden.',
 
+	'NO_IMAGES_FOUND'				=> 'Es wurden keine Bilder gefunden.',
 	'NO_IMAGES_LONG'				=> 'In diesem Album gibt es keine Bilder.',
 
 	'RANDOM_IMAGES'					=> 'Zufällige Bilder',
 	'REPORT_IMAGE'					=> 'Bild melden',
 
 	'SEARCH_USER_IMAGES'			=> 'Bilder des Mitglieds anzeigen',
+	'SEARCH_USER_IMAGES_OF'			=> 'Bilder von %s',
 	'SHOW_PERSONAL_ALBUM_OF'		=> 'Persönliches Album von %s anzeigen',
 
 	'TOTAL_IMAGES'					=> 'Bilder insgesamt',

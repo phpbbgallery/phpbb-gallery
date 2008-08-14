@@ -33,7 +33,7 @@ $album_access_array = get_album_access_array();
 // ------------------------------------
 $user_id = request_var('user_id', 0);
 
-$moderators_list = '';
+$moderators_list = $username = '';
 $total_pics = 0;
 
 	/**
@@ -62,6 +62,7 @@ $total_pics = 0;
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$image_counter++;
+			$username = $row['image_username'];
 		}
 		$db->sql_freeresult($result);
 		$sql = 'SELECT i.*, a.album_name
@@ -165,6 +166,7 @@ $template->assign_vars(array(
 	'S_COLS'					=> $album_config['cols_per_page'],
 	'S_COL_WIDTH'				=> (100/$album_config['cols_per_page']) . '%',
 	'S_SEARCH_ACTION'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", "user_id=$user_id"),
+	'SEARCH_NAME'				=> sprintf($user->lang['SEARCH_USER_IMAGES_OF'], $username),
 
 	'SORT_TIME'					=> ($sort_method == 'image_time') ? 'selected="selected"' : '',
 	'SORT_IMAGE_TITLE'			=> ($sort_method == 'image_name') ? 'selected="selected"' : '',
