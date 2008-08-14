@@ -154,7 +154,6 @@ function add_bbcode($album_bbcode)
 			'bbcode_tag'				=> $album_bbcode,
 			'bbcode_match'				=> '[' . $album_bbcode . ']{NUMBER}[/' . $album_bbcode . ']',
 			'bbcode_tpl'				=> $bbcode_tpl,
-			'bbcode_tpl'				=> '<a href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image_page.php?image_id={NUMBER}"><img src="' . generate_board_url() . GALLERY_ROOT_PATH . '/thumbnail.php?image_id={NUMBER}" alt="image_id: {NUMBER}" /></a>',
 			'display_on_posting'		=> true,
 			'bbcode_helpline'			=> '',
 			'first_pass_match'			=> '!\[' . $album_bbcode . '\]([0-9]+)\[/' . $album_bbcode . '\]!i',
