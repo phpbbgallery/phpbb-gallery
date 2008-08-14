@@ -244,7 +244,7 @@ $template->assign_vars(array(
 	'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id"),
 ));
 
-if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0)/* && gallery_acl_check('i_exif', $album_id)*/ /* && $image_data['image_display_exif']*/)
+if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (substr($image_data['image_filename'], -3, 3) == 'jpg'))
 {
 	$exif = @exif_read_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename'], 0, true);
 	if (!empty($exif["EXIF"]))
@@ -254,7 +254,13 @@ if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0)/* && galle
 
 		if(isset($exif["EXIF"]["DateTimeOriginal"]))
 		{
-			$timestamp = mktime(substr($exif["EXIF"]["DateTimeOriginal"], 11, 2), substr($exif["EXIF"]["DateTimeOriginal"], 14, 2), substr($exif["EXIF"]["DateTimeOriginal"], 17, 2), substr($exif["EXIF"]["DateTimeOriginal"], 5, 2), substr($exif["EXIF"]["DateTimeOriginal"], 8, 2), substr($exif["EXIF"]["DateTimeOriginal"], 0, 4));
+			$timestamp_year = substr($exif["EXIF"]["DateTimeOriginal"], 0, 4);
+			$timestamp_month = substr($exif["EXIF"]["DateTimeOriginal"], 5, 2);
+			$timestamp_day = substr($exif["EXIF"]["DateTimeOriginal"], 8, 2);
+			$timestamp_hour = substr($exif["EXIF"]["DateTimeOriginal"], 11, 2);
+			$timestamp_minute = substr($exif["EXIF"]["DateTimeOriginal"], 14, 2);
+			$timestamp_second = substr($exif["EXIF"]["DateTimeOriginal"], 17, 2);
+			$timestamp = mktime($timestamp_hour, $timestamp_minute, $timestamp_second, $timestamp_month, $timestamp_day, $timestamp_year);
 			$exif_date = $user->format_date($timestamp);
 		}
 		if(isset($exif["EXIF"]["FocalLength"]))
@@ -290,15 +296,15 @@ if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0)/* && galle
 		}
 
 		$template->assign_vars(array(
-			'EXIF_DATE'			=> $exif_date,
-			'EXIF_FOCAL'		=> $exif_focal,
-			'EXIF_EXPOSURE'		=> $exif_exposure,
-			'EXIF_APERTURE'		=> $exif_aperture,
-			'EXIF_ISO'			=> $exif_iso,
-			'EXIF_FLASH'		=> $exif_flash,
+			'EXIF_DATE'			=> htmlspecialchars($exif_date),
+			'EXIF_FOCAL'		=> htmlspecialchars($exif_focal),
+			'EXIF_EXPOSURE'		=> htmlspecialchars($exif_exposure),
+			'EXIF_APERTURE'		=> htmlspecialchars($exif_aperture),
+			'EXIF_ISO'			=> htmlspecialchars($exif_iso),
+			'EXIF_FLASH'		=> htmlspecialchars($exif_flash),
 
-			'WHITEB'		=> $exif_whitebalance,
-			'CAM_MODEL'		=> $exif_model,
+			'WHITEB'		=> htmlspecialchars($exif_whitebalance),
+			'CAM_MODEL'		=> htmlspecialchars($exif_model),
 			'S_EXIF_DATA'	=> true,
 		));
 
