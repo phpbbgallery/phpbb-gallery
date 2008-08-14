@@ -988,6 +988,7 @@ function update_lastimage_info($album_id)
 	$sql = 'SELECT *
 		FROM ' . GALLERY_IMAGES_TABLE . "
 		WHERE image_album_id = $album_id
+			AND image_status = 1
 		ORDER BY image_time DESC
 		LIMIT 1";
 	$result = $db->sql_query($sql);
@@ -1007,8 +1008,8 @@ function update_lastimage_info($album_id)
 	else
 	{
 		$sql_ary = array(
-			'album_images_real'			=> 0,
-			'album_images'				=> 0,
+			'album_images_real'			=> $images_real,
+			'album_images'				=> $images,
 			'album_last_image_id'		=> 0,
 			'album_last_image_time'		=> 0,
 			'album_last_image_name'		=> '',
