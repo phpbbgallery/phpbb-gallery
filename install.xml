@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
 <!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
-<!-- $Id$ -->
 <mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.0.xsd">
   <header>
     <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
@@ -133,19 +132,12 @@ while ($row = $db->sql_fetchrow($result))
 }
 $db->sql_freeresult($result);]]></find>
         <action type="after-add"><![CDATA[// Album info
-$sql = 'SELECT *
-	FROM ' . GALLERY_ALBUMS_TABLE . '
-	ORDER BY left_id ASC';
-$result = $db->sql_query($sql, 600);
-
-$album_data = array();
-while ($row = $db->sql_fetchrow($result))
-{
-	$album_data[$row['album_id']] = $row;
-}
-$db->sql_freeresult($result);
+$gallery_root_path = GALLERY_ROOT_PATH;
 $recent_image_addon = false;
-include("$phpbb_root_path" . GALLERY_ROOT_PATH . "includes/common.$phpEx");
+include_once("{$phpbb_root_path}{$gallery_root_path}includes/common.$phpEx");
+include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
+$album_access_array = get_album_access_array();
+$album_data = $cache->obtain_album_list();
 $user->add_lang('mods/gallery');]]></action>
       </edit>
       <edit>
@@ -174,12 +166,14 @@ $user->add_lang('mods/gallery');]]></action>
 			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
 		break;]]></find>
         <action type="after-add"><![CDATA[		case $gallery_root_path:
+			$location = $user->lang['GALLERY'];
+			$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx");
+
 			@$album_data[0]['album_name'];
 			$album_id = $row['session_album_id'];
-			$album_user_access = ($album_id) ? ((!$album_data[$album_id]['album_user_id']) ? album_user_access($album_id, $album_data[$album_id], 1, 0, 0, 0, 0, 0) : personal_album_access($album_data[$album_id]['album_user_id'])) : array();
 
 			preg_match('#^([a-z/]+)#i', $row['session_page'], $gallery_page);
-			if ($album_id && $album_user_access['view'])
+			if ($album_id && gallery_acl_check('i_view', $album_id))
 			{
 				switch ($gallery_page[1])
 				{
@@ -209,26 +203,16 @@ $user->add_lang('mods/gallery');]]></action>
 						}
 						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_id);
 					break;
-					default:
-						$location = $user->lang['GALLERY'];
-						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx");
-					break;
 				}
 			}
 			else
 			{
 				preg_match('#mode=([a-z]+)#', $row['session_page'], $on_page);
 				$on_page = (sizeof($on_page)) ? $on_page[1] : '';
-				switch ($on_page)
+				if (($on_page == 'personal') && (gallery_acl_check('i_view', '-3')))
 				{
-					case 'personal':
-						$location = $user->lang['PERSONAL_ALBUMS'];
-						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal');
-					break;
-					default:
-						$location = $user->lang['GALLERY'];
-						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx");
-					break;
+					$location = $user->lang['PERSONAL_ALBUMS'];
+					$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal');
 				}
 			}
 		break;]]></action>
