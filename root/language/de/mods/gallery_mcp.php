@@ -70,7 +70,7 @@ $lang = array_merge($lang, array(
 	'QUEUE_A_LOCK2_CONFIRM'			=> 'Bist du dir sicher, dass du das Bild sperren möchtest?',
 
 	'QUEUE_STATUS_0'				=> 'Das Bild wartet auf Freigabe.',
-	'QUEUE_STATUS_1'				=> 'Das Bild ist freigeschalten.',
+	'QUEUE_STATUS_1'				=> 'Das Bild ist freigeschaltet.',
 	'QUEUE_STATUS_2'				=> 'Das Bild ist gesperrt.',
 
 	'QUEUES_A_APPROVE'				=> 'Bilder freischalten',
@@ -120,12 +120,12 @@ $lang = array_merge($lang, array(
 	'VIEW_ALBUM_IMAGES'				=> '%s Bilder',
 	'VIEW_ALBUM_IMAGE'				=> '1 Bild',
 
-	'WAITING_APPROVED_IMAGE'		=> 'Insgesamt ist <span style="font-weight: bold;">%s</span> Bild freigeschalten.',
-	'WAITING_APPROVED_IMAGES'		=> 'Insgesamt sind <span style="font-weight: bold;">%s</span> Bilder freigeschalten.',
-	'WAITING_APPROVED_NONE'			=> 'Es sind keine Bilder freigeschalten.',
-	'WAITING_APPROVED_IMAGE'		=> 'Insgesamt ist <span style="font-weight: bold;">%s</span> Bild freigeschalten.',
-	'WAITING_APPROVED_IMAGES'		=> 'Insgesamt sind <span style="font-weight: bold;">%s</span> Bilder freigeschalten.',
-	'WAITING_APPROVED_NONE'			=> 'Es sind keine Bilder freigeschalten.',
+	'WAITING_APPROVED_IMAGE'		=> 'Insgesamt ist <span style="font-weight: bold;">%s</span> Bild freigeschaltet.',
+	'WAITING_APPROVED_IMAGES'		=> 'Insgesamt sind <span style="font-weight: bold;">%s</span> Bilder freigeschaltet.',
+	'WAITING_APPROVED_NONE'			=> 'Es sind keine Bilder freigeschaltet.',
+	'WAITING_APPROVED_IMAGE'		=> 'Insgesamt ist <span style="font-weight: bold;">%s</span> Bild freigeschaltet.',
+	'WAITING_APPROVED_IMAGES'		=> 'Insgesamt sind <span style="font-weight: bold;">%s</span> Bilder freigeschaltet.',
+	'WAITING_APPROVED_NONE'			=> 'Es sind keine Bilder freigeschaltet.',
 	'WAITING_LOCKED_IMAGE'			=> 'Insgesamt ist <span style="font-weight: bold;">%s</span> Bild gesperrt.',
 	'WAITING_LOCKED_IMAGES'			=> 'Insgesamt sind <span style="font-weight: bold;">%s</span> Bilder gesperrt.',
 	'WAITING_LOCKED_NONE'			=> 'Es sind keine Bilder gesperrt.',

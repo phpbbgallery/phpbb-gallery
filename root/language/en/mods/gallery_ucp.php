@@ -49,7 +49,7 @@ $lang = array_merge($lang, array(
 
 	'EDIT'							=> 'Edit',
 	'EDIT_SUBALBUM'					=> 'Edit Subalbum',
-	'EDIT_SUBALBUM_EXP'				=> 'You can edit you albums here.',
+	'EDIT_SUBALBUM_EXP'				=> 'You can edit your albums here.',
 	'EDITED_SUBALBUM'				=> 'Album successful edited',
 	'CREATED_SUBALBUM'				=> 'Subalbum successful created',
 	'MISSING_NAME'					=> 'Please insert a name for the album',

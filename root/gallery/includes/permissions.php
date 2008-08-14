@@ -242,7 +242,7 @@ function gen_album_auth_level($mode, $album_id, $album_status = 1)
 	$rules = array(
 		(gallery_acl_check('i_view', $album_id) && !$locked) ? $user->lang['ALBUM_VIEW_CAN'] : $user->lang['ALBUM_VIEW_CANNOT'],
 		(gallery_acl_check('i_upload', $album_id) && !$locked) ? $user->lang['ALBUM_UPLOAD_CAN'] : $user->lang['ALBUM_UPLOAD_CANNOT'],
-		(gallery_acl_check('i_edit', $album_id) && !$locked) ? $user->lang['ALBUM_EDIT_CAN'] : $user->lang['ALBUM_UPLOAD_CANNOT'],
+		(gallery_acl_check('i_edit', $album_id) && !$locked) ? $user->lang['ALBUM_EDIT_CAN'] : $user->lang['ALBUM_EDIT_CANNOT'],
 		(gallery_acl_check('i_delete', $album_id) && !$locked) ? $user->lang['ALBUM_DELETE_CAN'] : $user->lang['ALBUM_DELETE_CANNOT'],
 	);
 	if ($album_config['comment'])
