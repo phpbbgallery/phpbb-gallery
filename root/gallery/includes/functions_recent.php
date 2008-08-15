@@ -28,7 +28,8 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 	$album_access_array = get_album_access_array();
 
 	$albums = $cache->obtain_album_list();
-	$allowed_albums = gallery_acl_album_ids('i_view', 'string');
+	$view_albums = gallery_acl_album_ids('i_view', 'array');
+	$moderate_albums = gallery_acl_album_ids('a_moderate', 'array');
 	$limit_sql = $rows * $columns;
 	switch ($modes)
 	{
@@ -49,7 +50,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 		break;
 	}
 
-	if ($allowed_albums != '')
+	if (($view_albums != array()) || ($moderate_albums != array()))
 	{
 		$limit_sql = $rows * $columns;
 
@@ -70,8 +71,9 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 			$sql = "SELECT i.* $album_sql1
 				FROM " . GALLERY_IMAGES_TABLE . " AS i
 				$album_sql2
-				WHERE i.image_album_id IN ($allowed_albums)
-					AND i.image_status = 1
+				WHERE (" . $db->sql_in_set('i.image_album_id', $view_albums) . "
+						AND i.image_status = 1)
+					OR(" . $db->sql_in_set('i.image_album_id', $moderate_albums) . ")
 				GROUP BY i.image_id
 				ORDER BY i.image_time DESC
 				LIMIT $limit_sql";
@@ -151,8 +153,9 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 			$sql = "SELECT i.* $album_sql1
 				FROM " . GALLERY_IMAGES_TABLE . " AS i
 				$album_sql2
-				WHERE i.image_album_id IN ($allowed_albums)
-					AND i.image_status = 1
+				WHERE (" . $db->sql_in_set('i.image_album_id', $view_albums) . "
+						AND i.image_status = 1)
+					OR(" . $db->sql_in_set('i.image_album_id', $moderate_albums) . ")
 				GROUP BY i.image_id
 				ORDER BY $random
 				LIMIT $limit_sql";
