@@ -272,7 +272,7 @@ class acp_gallery
 				if (!$album_config['gd_version'])
 				{
 					$move_file($thumbtmp, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_thumbnail);
-					@chmod(ALBUM_CACHE_PATH . $image_thumbnail, 0777);
+					@chmod($phpbb_root_path . GALLERY_CACHE_PATH . $image_thumbnail, 0777);
 				}
 
 
@@ -362,7 +362,7 @@ class acp_gallery
 								@imagegif($thumbnail, $phpbb_root_path . GALLERY_CACHE_PATH . $image_thumbnail);
 							break;
 						}
-						@chmod(ALBUM_CACHE_PATH . $image_thumbnail, 0777);
+						@chmod($phpbb_root_path . GALLERY_CACHE_PATH . $image_thumbnail, 0777);
 					} // End IF $gd_errored
 				} // End Thumbnail Cache
 				else if ($album_config['gd_version'] > 0)
