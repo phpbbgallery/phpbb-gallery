@@ -251,29 +251,15 @@ class acp_gallery
 				$image_filename = md5(uniqid(rand())) . $image_filetype;
 
 
-				$ini_val = ( @phpversion() >= '4.0.0' ) ? 'ini_get' : 'get_cfg_var';
-
-				if (@$ini_val('open_basedir') <> '')
-				{
-					if (@phpversion() < '4.0.3')
-					{
-						trigger_error('open_basedir is set and your PHP version does not allow move_uploaded_file<br /><br />Please contact your server admin', E_USER_WARNING);
-					}
-					$move_file = 'move_uploaded_file';
-				}
-				else
-				{
-					$move_file = 'copy';
-				}
-				
-				$move_file($image_path, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
+				copy($image_path, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
 				@chmod($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename, 0777);
 
+				/*//we need to unsupport non-gd-installations!
 				if (!$album_config['gd_version'])
 				{
-					$move_file($thumbtmp, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_thumbnail);
+					copy($thumbtmp, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_thumbnail);
 					@chmod($phpbb_root_path . GALLERY_CACHE_PATH . $image_thumbnail, 0777);
-				}
+				}*/
 
 
 				if (($album_config['thumbnail_cache']) && ($album_config['gd_version'] > 0))
