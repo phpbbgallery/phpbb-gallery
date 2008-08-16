@@ -244,7 +244,7 @@ $template->assign_vars(array(
 	'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id"),
 ));
 
-if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (substr($image_data['image_filename'], -3, 3) == 'jpg'))
+if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (substr($image_data['image_filename'], -3, 3) == 'jpg') && function_exists('exif_read_data'))
 {
 	$exif = @exif_read_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename'], 0, true);
 	if (!empty($exif["EXIF"]))
