@@ -1,5 +1,7 @@
 <!-- INCLUDE overall_header.html -->
 
+<!-- IF not S_MOVING_IMAGES -->
+
 <div id="pageheader">
 	<p class="linkmcp">
 		[ <a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a> | <a href="{U_MOD_ALBUM}">{L_MODERATE_ALBUM}</a> ]
@@ -227,6 +229,22 @@
 		<br />
 	<!-- ENDIF -->
 </div>
+<!-- ELSE -->
+<form method="post" id="mcp" action="{S_MCP_ACTION}">
+	<div id="pagecontent">
+		<table class="tablebg" width="100%" cellspacing="1">
+		<tr>
+			<th>{L_MOVE}</th>
+		</tr>
+		<tr>
+			<td class="row1" align="center"><br /><p class="gen">{L_MOVE_TO_ALBUM}&nbsp; {S_ALBUM_SELECT}</p><br />
+			{S_HIDDEN_FIELDS}
+			<input type="submit" name="move" value="{L_MOVE}" class="btnmain" /></td>
+		</tr>
+		</table>
+	</div>
+</form>
+<!-- ENDIF -->
 
 <br clear="all" />
 
