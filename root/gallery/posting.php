@@ -608,16 +608,19 @@ switch ($mode)
 					{
 						$error .= (($error) ? '<br />' : '') . $user->lang['UPLOAD_NO_FILE'];
 					}
-					if ((request_var('image_name', '', true) == '') && (request_var('filename', '') != 'filename'))
+					else
 					{
-						$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_IMAGE_TITLE'];
+						if ((request_var('image_name', '', true) == '') && (request_var('filename', '') != 'filename'))
+						{
+							$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_IMAGE_TITLE'];
+						}
+						notify_gallery('album', $album_id, $image_name);
+						handle_image_counter($image_id_ary, true);
+						$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . " 
+							SET album_images_real = album_images_real + $images
+							WHERE album_id = $album_id";
+						$db->sql_query($sql);
 					}
-					notify_gallery('album', $album_id, $image_name);
-					handle_image_counter($image_id_ary, true);
-					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . " 
-						SET album_images_real = album_images_real + $images
-						WHERE album_id = $album_id";
-					$db->sql_query($sql);
 				}//submit
 				$template->assign_vars(array(
 					'ERROR'						=> $error,
