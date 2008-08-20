@@ -38,7 +38,7 @@ if (file_exists($phpbb_root_path . 'install_gallery'))
 }
 
 $template->assign_vars(array(
-	'S_GALLERY_HIGHSLIDE_JS' => file_exists($phpbb_root_path . 'highslide/highslide-full.js'),
+	'S_GALLERY_HIGHSLIDE_JS' => file_exists($phpbb_root_path . 'styles/' . $user->theme['template_path'] . '/theme/highslide/highslide-full.js'),
 ));
 include("{$phpbb_root_path}{$gallery_root_path}includes/functions.$phpEx");
 
