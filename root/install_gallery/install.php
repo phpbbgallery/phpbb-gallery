@@ -21,67 +21,11 @@ $user->setup();
 $user->add_lang('mods/gallery_install');
 $user->add_lang('mods/info_acp_gallery');
 
-$new_mod_version = '0.4.0-RC1';
+$new_mod_version = '0.4.0-RC2';
 $page_title = 'phpBB Gallery v' . $new_mod_version;
 $log_name = 'Modification "phpBB Gallery"' . ((request_var('update', 0) > 0) ? '-Update' : '') . ' v' . $new_mod_version;
 
 $mode = request_var('mode', '', true);
-
-// What sql_layer should we use?
-switch ($db->sql_layer)
-{
-	case 'mysql':
-		$db_schema = 'mysql_40';
-		$delimiter = ';';
-	break;
-
-	case 'mysql4':
-		if (version_compare($db->mysql_version, '4.1.3', '>='))
-		{
-			$db_schema = 'mysql_41';
-		}
-		else
-		{
-			$db_schema = 'mysql_40';
-		}
-		$delimiter = ';';
-	break;
-
-	case 'mysqli':
-		$db_schema = 'mysql_41';
-		$delimiter = ';';
-	break;
-
-	case 'mssql':
-	case 'mssql_odbc':
-		$db_schema = 'mssql';
-		$delimiter = 'GO';
-	break;
-
-	case 'postgres':
-		$db_schema = 'postgres';
-		$delimiter = ';';
-	break;
-
-	case 'sqlite':
-		$db_schema = 'sqlite';
-		$delimiter = ';';
-	break;
-
-	case 'firebird':
-		$db_schema = 'firebird';
-		$delimiter = ';;';
-	break;
-
-	case 'oracle':
-		$db_schema = 'oracle';
-		$delimiter = '/';
-	break;
-
-	default:
-		trigger_error('Sorry, unsupportet Databases found.');
-	break;
-}
 
 $delete = request_var('delete', 0);
 $install = request_var('install', 0);
@@ -89,6 +33,15 @@ $update = request_var('update', 0);
 $version = request_var('v', '0.0.0', true);
 $convert = request_var('convert', 0);
 $convert_prefix = request_var('convert_prefix', '', true);
+$choosen_acp_module = request_var('select_acp_module', 0);
+$choosen_ucp_module = request_var('select_ucp_module', 0);
+// if $choosen_acp_module is '-1' user wants to rebuild the ".MODs"-tab
+if ($choosen_acp_module < 0)
+{
+	$acp_mods_tab = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 0,	'module_class' => 'acp',	'module_langname'=> 'ACP_CAT_DOT_MODS',	'module_mode' => '',	'module_auth' => '');
+	add_module($acp_mods_tab);
+	$choosen_acp_module = $db->sql_nextid();
+}
 
 //Check some Dirs for the right CHMODs
 $chmod_dirs = array(
@@ -96,9 +49,10 @@ $chmod_dirs = array(
 	array('name' => GALLERY_ROOT_PATH . 'upload/', 'chmod' => is_writable($phpbb_root_path . GALLERY_ROOT_PATH . 'upload/')),
 	array('name' => GALLERY_ROOT_PATH . 'upload/cache/', 'chmod' => is_writable($phpbb_root_path . GALLERY_ROOT_PATH . 'upload/cache/')),
 );
-$module_names = array('ACP_GALLERY_MANAGE_USER', 'ACP_GALLERY_MANAGE_RESTS', 'ACP_GALLERY_CLEANUP', 'ACP_IMPORT_ALBUMS', 'ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS', 'ACP_GALLERY_ALBUM_PERMISSIONS', 'ACP_GALLERY_CONFIGURE_GALLERY', 'ACP_GALLERY_MANAGE_CACHE', 'ACP_GALLERY_MANAGE_ALBUMS', 'ACP_GALLERY_OVERVIEW');
-$module_names = array_merge($module_names, array('UCP_GALLERY_PERSONAL_ALBUMS', 'UCP_GALLERY_FAVORITES', 'UCP_GALLERY_WATCH', 'UCP_GALLERY_SETTINGS'));
+$module_names = array('ACP_GALLERY_MANAGE_USER', 'ACP_GALLERY_MANAGE_RESTS', 'ACP_GALLERY_CLEANUP', 'ACP_IMPORT_ALBUMS', 'ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS', 'ACP_GALLERY_ALBUM_PERMISSIONS', 'ACP_GALLERY_CONFIGURE_GALLERY', 'ACP_GALLERY_MANAGE_CACHE', 'ACP_GALLERY_MANAGE_ALBUMS', 'ACP_GALLERY_OVERVIEW', 'PHPBB_GALLERY');
+$module_names = array_merge($module_names, array('UCP_GALLERY_PERSONAL_ALBUMS', 'UCP_GALLERY_FAVORITES', 'UCP_GALLERY_WATCH', 'UCP_GALLERY_SETTINGS', 'UCP_GALLERY'));
 $old_configs = array('user_pics_limit', 'mod_pics_limit', 'fullpic_popup', 'personal_gallery', 'personal_gallery_private', 'personal_gallery_limit', 'personal_gallery_view');
+$create_new_modules = false;
 
 switch ($mode)
 {
@@ -346,63 +300,18 @@ switch ($mode)
 			//remove the old modules:
 			$sql = 'SELECT module_id, module_class, left_id, right_id
 				FROM ' . MODULES_TABLE . '
-				WHERE ' . $db->sql_in_set('module_langname', $module_names);
+				WHERE ' . $db->sql_in_set('module_langname', $module_names) . '
+				ORDER BY left_id DESC';
 			$result = $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result))
 			{
-				$module_id = $row['module_id'];
-
-				$sql = 'DELETE FROM ' . MODULES_TABLE . "
-					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-						AND module_id = $module_id";
-				$db->sql_query($sql);
-				$diff = 2;
-
-				$sql = 'UPDATE ' . MODULES_TABLE . "
-					SET right_id = right_id - $diff
-					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-						AND left_id < {$row['right_id']} AND right_id > {$row['right_id']}";
-				$db->sql_query($sql);
-
-				$sql = 'UPDATE ' . MODULES_TABLE . "
-					SET left_id = left_id - $diff, right_id = right_id - $diff
-					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-						AND left_id > {$row['right_id']}";
-				$db->sql_query($sql);
-			}
-			$db->sql_freeresult($result);
-
-			$sql = 'SELECT module_id, module_class, left_id, right_id
-				FROM ' . MODULES_TABLE . "
-				WHERE module_langname = 'PHPBB_GALLERY' OR module_langname = 'UCP_GALLERY'";
-			$result = $db->sql_query($sql);
-			while ($row = $db->sql_fetchrow($result))
-			{
-				$module_id = $row['module_id'];
-
-				$sql = 'DELETE FROM ' . MODULES_TABLE . "
-					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-						AND module_id = $module_id";
-				$db->sql_query($sql);
-				$diff = 2;
-
-				$sql = 'UPDATE ' . MODULES_TABLE . "
-					SET right_id = right_id - $diff
-					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-						AND left_id < {$row['right_id']} AND right_id > {$row['right_id']}";
-				$db->sql_query($sql);
-
-				$sql = 'UPDATE ' . MODULES_TABLE . "
-					SET left_id = left_id - $diff, right_id = right_id - $diff
-					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-						AND left_id > {$row['right_id']}";
-				$db->sql_query($sql);
+				remove_module($row['module_id'], $row['module_class']);
 			}
 			$db->sql_freeresult($result);
 
 			//add the modules new:
 			// ->ACP
-			$acp_gallery = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 31,	'module_class' => 'acp',	'module_langname'=> 'PHPBB_GALLERY',	'module_mode' => '',	'module_auth' => '');
+			$acp_gallery = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_acp_module,	'module_class' => 'acp',	'module_langname'=> 'PHPBB_GALLERY',	'module_mode' => '',	'module_auth' => '');
 			add_module($acp_gallery);
 			$acp_module_id = $db->sql_nextid();
 			gallery_config_value('acp_parent_module', $acp_module_id);
@@ -421,7 +330,7 @@ switch ($mode)
 			add_module($cleanup);
 
 			// -> UCP
-			$ucp_gallery_overview = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 0,	'module_class' => 'ucp',	'module_langname'=> 'UCP_GALLERY',	'module_mode' => 'overview',	'module_auth' => '');
+			$ucp_gallery_overview = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_ucp_module,	'module_class' => 'ucp',	'module_langname'=> 'UCP_GALLERY',	'module_mode' => 'overview',	'module_auth' => '');
 			add_module($ucp_gallery_overview);
 			$ucp_module_id = $db->sql_nextid();
 			gallery_config_value('ucp_parent_module', $ucp_module_id);
@@ -453,6 +362,15 @@ switch ($mode)
 			add_log('admin', 'LOG_INSTALL_INSTALLED', $log_name);
 			add_log('admin', 'LOG_PURGE_CACHE');
 			$installed = true;
+		}
+		else
+		{
+			$get_acp_module = select_parent_module('acp', 31, 'ACP_CAT_DOT_MODS');
+			$select_acp_module = $get_acp_module['list'];
+			$default_acp_module = $get_acp_module['default'];
+			$get_ucp_module = select_parent_module('ucp', 0, '');
+			$select_ucp_module = $get_ucp_module['list'];
+			$default_ucp_module = $get_ucp_module['default'];
 		}
 	break;
 	case 'update':
@@ -620,11 +538,6 @@ switch ($mode)
 					}
 					$db->sql_freeresult($result);
 
-					$sql = 'SELECT module_id FROM ' . MODULES_TABLE . " WHERE module_langname = 'PHPBB_GALLERY' LIMIT 1";
-					$result = $db->sql_query($sql);
-					$acp_gallery = $db->sql_fetchrow($result);
-					$album_personal_permissions = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_gallery['module_id'],	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS',	'module_mode' => 'album_personal_permissions',	'module_auth' => '');
-					add_module($album_personal_permissions);
 				//no break;
 
 				case '0.2.0':
@@ -634,18 +547,7 @@ switch ($mode)
 				//no break;
 
 				case '0.2.2':
-
-					//add new config-values
 					add_bbcode('album');
-
-					//create some new columns
-
-					// create the modules
-					$sql = 'SELECT module_id FROM ' . MODULES_TABLE . " WHERE module_langname = 'PHPBB_GALLERY' LIMIT 1";
-					$result = $db->sql_query($sql);
-					$acp_gallery = $db->sql_fetchrow($result);
-					$import_images = array('module_basename'	=> 'gallery',	'module_enabled'	=> 1,	'module_display'	=> 1,	'parent_id'			=> $acp_gallery['module_id'],	'module_class'		=> 'acp',	'module_langname'	=> 'ACP_IMPORT_ALBUMS',	'module_mode'		=> 'import_images',	'module_auth'		=> '');
-					add_module($import_images);
 				//no break;
 
 				case '0.2.3':
@@ -726,9 +628,6 @@ switch ($mode)
 						$db->sql_query($sql3);
 					}
 					$db->sql_freeresult($result);
-
-					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 163,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_PERSONAL_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
-					add_module($ucp_gallery);
 				//no break;
 
 				case '0.3.0':
@@ -777,63 +676,18 @@ switch ($mode)
 					//remove the old modules:
 					$sql = 'SELECT module_id, module_class, left_id, right_id
 						FROM ' . MODULES_TABLE . '
-						WHERE ' . $db->sql_in_set('module_langname', $module_names);
+						WHERE ' . $db->sql_in_set('module_langname', $module_names) . '
+						ORDER BY left_id DESC';
 					$result = $db->sql_query($sql);
 					while ($row = $db->sql_fetchrow($result))
 					{
-						$module_id = $row['module_id'];
-
-						$sql = 'DELETE FROM ' . MODULES_TABLE . "
-							WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-								AND module_id = $module_id";
-						$db->sql_query($sql);
-						$diff = 2;
-
-						$sql = 'UPDATE ' . MODULES_TABLE . "
-							SET right_id = right_id - $diff
-							WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-								AND left_id < {$row['right_id']} AND right_id > {$row['right_id']}";
-						$db->sql_query($sql);
-
-						$sql = 'UPDATE ' . MODULES_TABLE . "
-							SET left_id = left_id - $diff, right_id = right_id - $diff
-							WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-								AND left_id > {$row['right_id']}";
-						$db->sql_query($sql);
-					}
-					$db->sql_freeresult($result);
-
-					$sql = 'SELECT module_id, module_class, left_id, right_id
-						FROM ' . MODULES_TABLE . "
-						WHERE module_langname = 'PHPBB_GALLERY' OR module_langname = 'UCP_GALLERY'";
-					$result = $db->sql_query($sql);
-					while ($row = $db->sql_fetchrow($result))
-					{
-						$module_id = $row['module_id'];
-
-						$sql = 'DELETE FROM ' . MODULES_TABLE . "
-							WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-								AND module_id = $module_id";
-						$db->sql_query($sql);
-						$diff = 2;
-
-						$sql = 'UPDATE ' . MODULES_TABLE . "
-							SET right_id = right_id - $diff
-							WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-								AND left_id < {$row['right_id']} AND right_id > {$row['right_id']}";
-						$db->sql_query($sql);
-
-						$sql = 'UPDATE ' . MODULES_TABLE . "
-							SET left_id = left_id - $diff, right_id = right_id - $diff
-							WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-								AND left_id > {$row['right_id']}";
-						$db->sql_query($sql);
+						remove_module($row['module_id'], $row['module_class']);
 					}
 					$db->sql_freeresult($result);
 
 					//add the modules new:
 					// ->ACP
-					$acp_gallery = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 31,	'module_class' => 'acp',	'module_langname'=> 'PHPBB_GALLERY',	'module_mode' => '',	'module_auth' => '');
+					$acp_gallery = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_acp_module,	'module_class' => 'acp',	'module_langname'=> 'PHPBB_GALLERY',	'module_mode' => '',	'module_auth' => '');
 					add_module($acp_gallery);
 					$acp_module_id = $db->sql_nextid();
 					gallery_config_value('acp_parent_module', $acp_module_id);
@@ -852,7 +706,7 @@ switch ($mode)
 					add_module($cleanup);
 
 					// -> UCP
-					$ucp_gallery_overview = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 0,	'module_class' => 'ucp',	'module_langname'=> 'UCP_GALLERY',	'module_mode' => 'overview',	'module_auth' => '');
+					$ucp_gallery_overview = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_ucp_module,	'module_class' => 'ucp',	'module_langname'=> 'UCP_GALLERY',	'module_mode' => 'overview',	'module_auth' => '');
 					add_module($ucp_gallery_overview);
 					$ucp_module_id = $db->sql_nextid();
 					gallery_config_value('ucp_parent_module', $ucp_module_id);
@@ -1067,6 +921,79 @@ switch ($mode)
 						WHERE ' . $db->sql_in_set('config_name', $old_configs);
 					$db->sql_query($sql);
 
+				case '0.4.0-RC1':
+					$album_config = load_album_config();
+
+					if ($version == '0.4.0-RC1')
+					{
+						//sorry, i crashed your modules
+						//but u found a way to fix it again
+						//we'll find every empty spaces in the left_id and right_id-row
+						//and than we'll close them.
+						$sql = 'SELECT *
+							FROM ' . MODULES_TABLE . "
+							WHERE module_class IN ('acp', 'ucp')
+							ORDER BY module_class, left_id";
+						$result = $db->sql_query($sql);
+
+						while ($row = $db->sql_fetchrow($result))
+						{
+							$id_row[$row['module_class']][] = $row['left_id'];
+							$id_row[$row['module_class']][] = $row['right_id'];
+						}
+						$db->sql_freeresult($result);
+
+						//first we reorder the ACP:
+						//you'll have troubles here, if you installed the MOD twice
+						//or updated from any previous version
+						$test_id = $last_id = $id = 0;
+						sort($id_row['acp']);
+						foreach ($id_row['acp'] AS $id)
+						{
+							$test_id = $id - 1;
+							if ($test_id && !in_array($test_id, $id_row['acp']))
+							{
+								$diff = ($id - $last_id - 1);
+								$sql = 'UPDATE ' . MODULES_TABLE . "
+									SET left_id = left_id - $diff
+									WHERE left_id >= $id
+										AND module_class = 'acp'";
+								$db->sql_query($sql);
+								$sql = 'UPDATE ' . MODULES_TABLE . "
+									SET right_id = right_id - $diff
+									WHERE right_id >= $id
+										AND module_class = 'acp'";
+								$db->sql_query($sql);
+								//echo 'last_id: ' . $last_id . ' id: ' . $id . ' diff: ' . ($id - $last_id - 1);
+							}
+							$last_id = $id;
+						}
+
+						//now the UCP:
+						//troubles only occure on double install
+						$test_id = $last_id = $id = 0;
+						sort($id_row['ucp']);
+						foreach ($id_row['ucp'] AS $id)
+						{
+							$test_id = $id - 1;
+							if ($test_id && !in_array($test_id, $id_row['ucp']))
+							{
+								$diff = ($id - $last_id - 1);
+								$sql = 'UPDATE ' . MODULES_TABLE . "
+									SET left_id = left_id - $diff
+									WHERE left_id >= $id
+										AND module_class = 'ucp'";
+								$db->sql_query($sql);
+								$sql = 'UPDATE ' . MODULES_TABLE . "
+									SET right_id = right_id - $diff
+									WHERE right_id >= $id
+										AND module_class = 'ucp'";
+								$db->sql_query($sql);
+								//echo 'last_id: ' . $last_id . ' id: ' . $id . ' diff: ' . ($id - $last_id - 1);
+							}
+							$last_id = $id;
+						}
+					}
 				case 'svn':
 					$album_config = load_album_config();
 
@@ -1087,6 +1014,33 @@ switch ($mode)
 			add_log('admin', 'LOG_INSTALL_INSTALLED', $log_name);
 			add_log('admin', 'LOG_PURGE_CACHE');
 			$updated = true;
+		}
+		else
+		{
+			switch ($version)
+			{
+				case '0.1.2':
+				case '0.1.3':
+				case '0.2.0':
+				case '0.2.1':
+				case '0.2.2':
+				case '0.2.3':
+				case '0.3.0':
+				case '0.3.1':
+					$create_new_modules = true;
+				case '0.4.0-RC1':
+				case 'svn':
+				break;
+			}
+			if ($create_new_modules)
+			{
+				$get_acp_module = select_parent_module('acp', 31, 'ACP_CAT_DOT_MODS');
+				$select_acp_module = $get_acp_module['list'];
+				$default_acp_module = $get_acp_module['default'];
+				$get_ucp_module = select_parent_module('ucp', 0, '');
+				$select_ucp_module = $get_ucp_module['list'];
+				$default_ucp_module = $get_ucp_module['default'];
+			}
 		}
 	break;
 	case 'convert':
@@ -1323,63 +1277,18 @@ switch ($mode)
 			//remove the old modules:
 			$sql = 'SELECT module_id, module_class, left_id, right_id
 				FROM ' . MODULES_TABLE . '
-				WHERE ' . $db->sql_in_set('module_langname', $module_names);
+				WHERE ' . $db->sql_in_set('module_langname', $module_names) . '
+				ORDER BY left_id DESC';
 			$result = $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result))
 			{
-				$module_id = $row['module_id'];
-
-				$sql = 'DELETE FROM ' . MODULES_TABLE . "
-					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-						AND module_id = $module_id";
-				$db->sql_query($sql);
-				$diff = 2;
-
-				$sql = 'UPDATE ' . MODULES_TABLE . "
-					SET right_id = right_id - $diff
-					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-						AND left_id < {$row['right_id']} AND right_id > {$row['right_id']}";
-				$db->sql_query($sql);
-
-				$sql = 'UPDATE ' . MODULES_TABLE . "
-					SET left_id = left_id - $diff, right_id = right_id - $diff
-					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-						AND left_id > {$row['right_id']}";
-				$db->sql_query($sql);
-			}
-			$db->sql_freeresult($result);
-
-			$sql = 'SELECT module_id, module_class, left_id, right_id
-				FROM ' . MODULES_TABLE . "
-				WHERE module_langname = 'PHPBB_GALLERY' OR module_langname = 'UCP_GALLERY'";
-			$result = $db->sql_query($sql);
-			while ($row = $db->sql_fetchrow($result))
-			{
-				$module_id = $row['module_id'];
-
-				$sql = 'DELETE FROM ' . MODULES_TABLE . "
-					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-						AND module_id = $module_id";
-				$db->sql_query($sql);
-				$diff = 2;
-
-				$sql = 'UPDATE ' . MODULES_TABLE . "
-					SET right_id = right_id - $diff
-					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-						AND left_id < {$row['right_id']} AND right_id > {$row['right_id']}";
-				$db->sql_query($sql);
-
-				$sql = 'UPDATE ' . MODULES_TABLE . "
-					SET left_id = left_id - $diff, right_id = right_id - $diff
-					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-						AND left_id > {$row['right_id']}";
-				$db->sql_query($sql);
+				remove_module($row['module_id'], $row['module_class']);
 			}
 			$db->sql_freeresult($result);
 
 			//add the modules new:
 			// ->ACP
-			$acp_gallery = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 31,	'module_class' => 'acp',	'module_langname'=> 'PHPBB_GALLERY',	'module_mode' => '',	'module_auth' => '');
+			$acp_gallery = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_acp_module,	'module_class' => 'acp',	'module_langname'=> 'PHPBB_GALLERY',	'module_mode' => '',	'module_auth' => '');
 			add_module($acp_gallery);
 			$acp_module_id = $db->sql_nextid();
 			gallery_config_value('acp_parent_module', $acp_module_id);
@@ -1398,7 +1307,7 @@ switch ($mode)
 			add_module($cleanup);
 
 			// -> UCP
-			$ucp_gallery_overview = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 0,	'module_class' => 'ucp',	'module_langname'=> 'UCP_GALLERY',	'module_mode' => 'overview',	'module_auth' => '');
+			$ucp_gallery_overview = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_ucp_module,	'module_class' => 'ucp',	'module_langname'=> 'UCP_GALLERY',	'module_mode' => 'overview',	'module_auth' => '');
 			add_module($ucp_gallery_overview);
 			$ucp_module_id = $db->sql_nextid();
 			gallery_config_value('ucp_parent_module', $ucp_module_id);
@@ -1538,6 +1447,15 @@ switch ($mode)
 			add_log('admin', 'LOG_PURGE_CACHE');
 			$converted = true;
 		}
+		else
+		{
+			$get_acp_module = select_parent_module('acp', 31, 'ACP_CAT_DOT_MODS');
+			$select_acp_module = $get_acp_module['list'];
+			$default_acp_module = $get_acp_module['default'];
+			$get_ucp_module = select_parent_module('ucp', 0, '');
+			$select_ucp_module = $get_ucp_module['list'];
+			$default_ucp_module = $get_ucp_module['default'];
+		}
 	break;
 	case 'delete':
 		$deleted = false;
@@ -1564,57 +1482,12 @@ switch ($mode)
 			//remove the modules:
 			$sql = 'SELECT module_id, module_class, left_id, right_id
 				FROM ' . MODULES_TABLE . '
-				WHERE ' . $db->sql_in_set('module_langname', $module_names);
+				WHERE ' . $db->sql_in_set('module_langname', $module_names) . '
+				ORDER BY left_id DESC';
 			$result = $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result))
 			{
-				$module_id = $row['module_id'];
-
-				$sql = 'DELETE FROM ' . MODULES_TABLE . "
-					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-						AND module_id = $module_id";
-				$db->sql_query($sql);
-				$diff = 2;
-
-				$sql = 'UPDATE ' . MODULES_TABLE . "
-					SET right_id = right_id - $diff
-					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-						AND left_id < {$row['right_id']} AND right_id > {$row['right_id']}";
-				$db->sql_query($sql);
-
-				$sql = 'UPDATE ' . MODULES_TABLE . "
-					SET left_id = left_id - $diff, right_id = right_id - $diff
-					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-						AND left_id > {$row['right_id']}";
-				$db->sql_query($sql);
-			}
-			$db->sql_freeresult($result);
-
-			$sql = 'SELECT module_id, module_class, left_id, right_id
-				FROM ' . MODULES_TABLE . "
-				WHERE module_langname = 'PHPBB_GALLERY' OR module_langname = 'UCP_GALLERY'";
-			$result = $db->sql_query($sql);
-			while ($row = $db->sql_fetchrow($result))
-			{
-				$module_id = $row['module_id'];
-
-				$sql = 'DELETE FROM ' . MODULES_TABLE . "
-					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-						AND module_id = $module_id";
-				$db->sql_query($sql);
-				$diff = 2;
-
-				$sql = 'UPDATE ' . MODULES_TABLE . "
-					SET right_id = right_id - $diff
-					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-						AND left_id < {$row['right_id']} AND right_id > {$row['right_id']}";
-				$db->sql_query($sql);
-
-				$sql = 'UPDATE ' . MODULES_TABLE . "
-					SET left_id = left_id - $diff, right_id = right_id - $diff
-					WHERE module_class = '" . $db->sql_escape($row['module_class']) . "'
-						AND left_id > {$row['right_id']}";
-				$db->sql_query($sql);
+				remove_module($row['module_id'], $row['module_class']);
 			}
 			$db->sql_freeresult($result);
 
