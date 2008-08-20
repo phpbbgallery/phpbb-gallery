@@ -29,7 +29,7 @@
         <contributions />
       </author>
     </author-group>
-    <mod-version>0.4.0-RC1</mod-version>
+    <mod-version>0.4.0-RC2</mod-version>
     <installation>
       <level>intermediate</level>
       <time>1200</time>
@@ -44,6 +44,35 @@
     <author-notes lang="de">Diese Datei enthält alle Teile der History, alle Entickler, usw.</author-notes>
     <author-notes lang="en-gb">This file contains all parts of the History, all Developers, a.s.o.</author-notes>
     <history>
+      <entry>
+        <date>2008-08-20</date>
+        <rev-version>0.4.0-RC2</rev-version>
+        <changelog lang="en-gb">
+          <change><![CDATA[[Change] Report #283: After upload an image into a approval album, the redirect is too fast]]></change>
+          <change><![CDATA[[Change] Report #297: Login on and redirect to gallery/index.php]]></change>
+          <change><![CDATA[[Change] Unreported: Module handle on installation]]></change>
+
+          <change><![CDATA[[Debug] Unreported: Display of users online in the album]]></change>
+
+          <change><![CDATA[[Fix] Report #307: highslide moved to template]]></change>
+          <change><![CDATA[[Fix] Report #306: user_images not updated if it was empty]]></change>
+          <change><![CDATA[[Fix] Report #305: Empty posintg.php No values specified for SQL IN comparison]]></change>
+          <change><![CDATA[[Fix] Report #290 and more: some bugs in subsilver2 only]]></change>
+          <change><![CDATA[[Fix] Report #289: Blank image_page.php page]]></change>
+          <change><![CDATA[[Fix] Report #304: [phpBB Debug] PHP Notice: in file /includes/acp/acp_gallery.php on line 296]]></change>
+          <change><![CDATA[[Fix] Unreported: view unapproved images to moderators]]></change>
+          <change><![CDATA[[Fix] Report #286: Lang missing in search]]></change>
+          <change><![CDATA[[Fix] Report #302: Missing information for new approval images]]></change>
+          <change><![CDATA[[Fix] Report #288: Unknown column 'g.view_personal_albums' in viewonline.php]]></change>
+          <change><![CDATA[[Fix] Report #301: wrong permissions used on viewing personal-gallerys link]]></change>
+          <change><![CDATA[[Fix] Report #285: some language typos]]></change>
+          <change><![CDATA[[Fix] Report #i295: "NV Exif data" security risk]]></change>
+          <change><![CDATA[[Fix] Report #300: [album] wrong url for thumbnail]]></change>
+          <change><![CDATA[[Fix] Report #296: Posting Comment/Image: No values specified for SQL IN]]></change>
+          <change><![CDATA[[Fix] Report #284: array_merge(): Argument #2 is not an array]]></change>
+          <change><![CDATA[[Fix] Report #282: Undefined index: album_approval]]></change>
+        </changelog>
+      </entry>
       <entry>
         <date>2008-08-09</date>
         <rev-version>0.4.0-RC1</rev-version>
