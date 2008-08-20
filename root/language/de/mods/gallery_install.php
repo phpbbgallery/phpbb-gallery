@@ -82,8 +82,17 @@ $lang = array_merge($lang, array(
 	'INSTALLER_UPDATE_WELCOME'			=> 'Willkommen zum Update',
 
 	'MISSING_PARENT_MODULE'				=> 'Modul #%s fehlt als übergeordnetes Modul für "%s".',
+	'MODULES_ADVICE_SELECT'				=> 'Empfehlung ist "%s"',
+	'MODULES_CREATE_PARENT'				=> 'Übergeordnetes Standard-Modul erstellen',
+	'MODULES_MODULE_ID'					=> 'ID',
+	'MODULES_MODULE_NAME'				=> 'Name',
+	'MODULES_PARENT_SELECT'				=> 'Übergeordnetes Modul auswählen',
+	'MODULES_SELECT_4ACP'				=> 'Übergeordnetes Modul für den "Administrations-Bereich"',
+	'MODULES_SELECT_4UCP'				=> 'Übergeordnetes Modul für den "Persönlichen Bereich"',
+	'MODULES_SELECT_NONE'				=> 'kein übergeordnetes Modul',
 
 	'WARNING'							=> 'Warnung',
+	'0'									=> '',
 ));
 
 ?>

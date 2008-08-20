@@ -87,6 +87,14 @@ $lang = array_merge($lang, array(
 	'INSTALLER_UPDATE_WELCOME'			=> 'Welcome to the Updatemenu',
 
 	'MISSING_PARENT_MODULE'				=> 'Module #%s is missing as a parent module for "%s".',
+	'MODULES_ADVICE_SELECT'				=> 'Adviced is "%s"',
+	'MODULES_CREATE_PARENT'				=> 'Create parent standard-module',
+	'MODULES_MODULE_ID'					=> 'ID',
+	'MODULES_MODULE_NAME'				=> 'Name',
+	'MODULES_PARENT_SELECT'				=> 'Choose parent moduleÜbergeordnetes Modul auswählen',
+	'MODULES_SELECT_4ACP'				=> 'Choose parent module for "admin control panel"',
+	'MODULES_SELECT_4UCP'				=> 'Choose parent module for "user control panel"',
+	'MODULES_SELECT_NONE'				=> 'no parent module',
 
 	'WARNING'							=> 'Warning',
 ));
