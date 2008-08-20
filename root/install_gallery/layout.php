@@ -54,8 +54,9 @@ echo '							<li class="header">' . $user->lang['INSTALLER_INSTALL_MENU'] . '</l
 echo '							<li' . (($mode == 'install') ? $activemenu : '') . '><a href="install.php?mode=install"><span>' . sprintf($user->lang['INSTALLER_INSTALL_VERSION'], $new_mod_version) . '</span></a></li>';
 echo '							<li' . (($mode == 'convert') ? $activemenu : '') . '><a href="install.php?mode=convert"><span>' . sprintf($user->lang['INSTALLER_CONVERT_NOTE'], $new_mod_version) . '</span></a></li>';
 echo '							<li' . (($mode == 'delete') ? $activemenu : '') . '><a href="install.php?mode=delete"><span>' . $user->lang['INSTALLER_DELETE_NOTE'] . '</span></a></li>';
+echo '							<li class="header">' . $user->lang['INSTALLER_UPDATE_MENU'] . ' 0.4.x</li>';
+echo '							<li' . (($version == '0.4.0-RC1') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.4.0-RC1"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.4.0-RC1</span></a></li>';
 echo '							<li class="header">' . $user->lang['INSTALLER_UPDATE_MENU'] . ' 0.3.x</li>';
-echo '							<li' . (($version == 'svn') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=svn"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . ' SVN</span></a></li>';
 echo '							<li' . (($version == '0.3.1') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.3.1"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.3.1</span></a></li>';
 echo '							<li' . (($version == '0.3.0') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.3.0"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.3.0</span></a></li>';
 echo '							<li class="header">' . $user->lang['INSTALLER_UPDATE_MENU'] . ' 0.2.x</li>';
@@ -112,6 +113,19 @@ if ($mode == 'install')
 				}
 			echo '		</dl>';
 		}
+		echo '	</fieldset>';
+		echo '	<fieldset>';
+		echo '		<legend>' . $user->lang['MODULES_PARENT_SELECT'] . '</legend>';
+		echo '		<dl>';
+		echo '			<dt><label for="select_acp_module">' . $user->lang['MODULES_SELECT_4ACP'] . ':</label><br />
+						<span>' . $default_acp_module . '</span></dt>';
+		echo '			<dd>' . $select_acp_module . '</dd>';
+		echo '		</dl>';
+		echo '		<dl>';
+		echo '			<dt><label for="select_ucp_module">' . $user->lang['MODULES_SELECT_4UCP'] . ':</label><br />
+						<span>' . $default_ucp_module . '</span></dt>';
+		echo '			<dd>' . $select_ucp_module . '</dd>';
+		echo '		</dl>';
 		echo '	</fieldset>';
 		echo '	<fieldset>';
 		echo '		<legend>' . $user->lang['INSTALLER_INSTALL'] . '</legend>';
@@ -176,6 +190,19 @@ else if ($mode == 'convert')
 				}
 			echo '		</dl>';
 		}
+		echo '	</fieldset>';
+		echo '	<fieldset>';
+		echo '		<legend>' . $user->lang['MODULES_PARENT_SELECT'] . '</legend>';
+		echo '		<dl>';
+		echo '			<dt><label for="select_acp_module">' . $user->lang['MODULES_SELECT_4ACP'] . ':</label><br />
+						<span>' . $default_acp_module . '</span></dt>';
+		echo '			<dd>' . $select_acp_module . '</dd>';
+		echo '		</dl>';
+		echo '		<dl>';
+		echo '			<dt><label for="select_ucp_module">' . $user->lang['MODULES_SELECT_4UCP'] . ':</label><br />
+						<span>' . $default_ucp_module . '</span></dt>';
+		echo '			<dd>' . $select_ucp_module . '</dd>';
+		echo '		</dl>';
 		echo '	</fieldset>';
 		echo '	<fieldset>';
 		echo '		<legend>' . $user->lang['INSTALLER_CONVERT'] . '</legend>';
@@ -279,6 +306,22 @@ else if ($mode == 'update')
 			echo '		</dl>';
 		}
 		echo '	</fieldset>';
+		if ($create_new_modules)
+		{
+			echo '	<fieldset>';
+			echo '		<legend>' . $user->lang['MODULES_PARENT_SELECT'] . '</legend>';
+			echo '		<dl>';
+			echo '			<dt><label for="select_acp_module">' . $user->lang['MODULES_SELECT_4ACP'] . ':</label><br />
+							<span>' . $default_acp_module . '</span></dt>';
+			echo '			<dd>' . $select_acp_module . '</dd>';
+			echo '		</dl>';
+			echo '		<dl>';
+			echo '			<dt><label for="select_ucp_module">' . $user->lang['MODULES_SELECT_4UCP'] . ':</label><br />
+							<span>' . $default_ucp_module . '</span></dt>';
+			echo '			<dd>' . $select_ucp_module . '</dd>';
+			echo '		</dl>';
+			echo '	</fieldset>';
+		}
 		echo '	<fieldset>';
 		echo '		<legend>' . $user->lang['INSTALLER_UPDATE'] . '</legend>';
 		echo '		<dl>';

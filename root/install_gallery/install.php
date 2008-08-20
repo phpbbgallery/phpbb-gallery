@@ -994,6 +994,20 @@ switch ($mode)
 							$last_id = $id;
 						}
 					}
+					$total_images = 0;
+					$sql = 'SELECT COUNT(gi.image_id) AS num_images, u.user_id
+						FROM ' . USERS_TABLE . ' u
+						LEFT JOIN  ' . GALLERY_IMAGES_TABLE . ' gi ON (u.user_id = gi.image_user_id AND gi.image_status = 1)
+						GROUP BY u.user_id';
+					$result = $db->sql_query($sql);
+
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$total_images += $row['num_images'];
+						$db->sql_query('UPDATE ' . GALLERY_USERS_TABLE . " SET user_images = {$row['num_images']} WHERE user_id = {$row['user_id']}");
+					}
+					$db->sql_freeresult($result);
+					set_config('num_images', $total_images, true);
 				case 'svn':
 					$album_config = load_album_config();
 
