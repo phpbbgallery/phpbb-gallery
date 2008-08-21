@@ -34,8 +34,22 @@ $lang = array_merge($lang, array(
 	'EXIF_APERTURE'				=> 'Blende',
 	'EXIF_CAM_MODEL'			=> 'Kamera-Modell',
 	'EXIF_DATE'					=> 'Bild aufgenommen am',
+
 	'EXIF_EXPOSURE'				=> 'Belichtungszeit',
-	'EXIF_EXPOSURE_EXP'			=> 'Sek',// 'EXIF_EXPOSURE' unit
+		'EXIF_EXPOSURE_EXP'			=> 'Sek',// 'EXIF_EXPOSURE' unit
+	'EXIF_EXPOSURE_BIAS'		=> 'Belichtungskorrektur',
+		'EXIF_EXPOSURE_BIAS_EXP'	=> '%d LW',// 'EXIF_EXPOSURE_BIAS' unit
+	'EXIF_EXPOSURE_PROG'		=> 'Belichtungsprogramm',
+		'EXIF_EXPOSURE_PROG_0'		=> 'Nicht definiert',
+		'EXIF_EXPOSURE_PROG_1'		=> 'Manuell',
+		'EXIF_EXPOSURE_PROG_2'		=> 'Normal-Programm',
+		'EXIF_EXPOSURE_PROG_3'		=> 'Blendenpriorität',
+		'EXIF_EXPOSURE_PROG_4'		=> 'Verschlusspriorität',
+		'EXIF_EXPOSURE_PROG_5'		=> 'Kreativ-Programm (ausgerichtet auf Schärfentiefe)',
+		'EXIF_EXPOSURE_PROG_6'		=> 'Action-Programm (ausgerichtet auf schnelle Verschlussgeschwindigkeit)',
+		'EXIF_EXPOSURE_PROG_7'		=> 'Portrait-Modus (für CloseUp-Fotos mit unscharfem Hintergrund)',
+		'EXIF_EXPOSURE_PROG_8'		=> 'Landschaftsmodus (für Landschaftsfotos mit scharfem Hintergrund)',
+
 	'EXIF_FLASH'				=> 'Blitz',
 
 		'EXIF_FLASH_CASE_0'			=> 'Blitz wurde nicht ausgelöst',
@@ -67,8 +81,19 @@ $lang = array_merge($lang, array(
 		'EXIF_FLASH_CASE_95'		=> 'Blitz wurde ausgelöst, Automodus, Messblitz-Licht zurückgeworfen, Rote-Augen-Reduzierung',
 
 	'EXIF_FOCAL'				=> 'Brennweite',
-	'EXIF_FOCAL_EXP'			=> 'mm',// 'EXIF_FOCAL' unit
+		'EXIF_FOCAL_EXP'			=> 'mm',// 'EXIF_FOCAL' unit
+
 	'EXIF_ISO'					=> 'ISO-Empfindlichkeit',
+
+	'EXIF_METERING_MODE'		=> 'Belichtungs- Messmethode',
+		'EXIF_METERING_MODE_0'		=> 'Unbekannt',
+		'EXIF_METERING_MODE_1'		=> 'Durchschnitt',
+		'EXIF_METERING_MODE_2'		=> 'Mittenbetont',
+		'EXIF_METERING_MODE_3'		=> 'Spot',
+		'EXIF_METERING_MODE_4'		=> 'Multi-Spot',
+		'EXIF_METERING_MODE_5'		=> 'Multi-Segment',
+		'EXIF_METERING_MODE_6'		=> 'Teilbild',
+		'EXIF_METERING_MODE_255'	=> 'Andere',
 
 	'EXIF_NOT_AVAILABLE'		=> 'nicht verfügbar',
 
@@ -77,6 +102,6 @@ $lang = array_merge($lang, array(
 		'EXIF_WHITEB_MANU'			=> 'Manuell',
 
 	'SHOW_EXIF'					=> 'ein-/ausblenden',
-
 ));
+
 ?>

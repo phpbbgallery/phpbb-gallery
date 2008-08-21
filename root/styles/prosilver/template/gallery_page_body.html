@@ -104,7 +104,7 @@ function toggleElement(oElement)
 	<div class="inner">
 		<span class="corners-top"><span></span></span>
 		<h3>{L_EXIF-DATA} - <a href="javascript: toggleElement( getElement('exif_data_fieldset'));">{L_SHOW_EXIF}</a></h3>
-		<fieldset class="fields1" id="exif_data_fieldset" style="display: none;">
+		<fieldset class="fields1" id="exif_data_fieldset" style="display: none;" >
 			<dl>
 				<dt><label>{L_EXIF_DATE}:</label></dt>
 				<dd>{EXIF_DATE}</dd>
@@ -120,6 +120,18 @@ function toggleElement(oElement)
 			<dl>
 				<dt><label>{L_EXIF_APERTURE}:</label></dt>
 				<dd>{EXIF_APERTURE}</dd>
+			</dl>
+			<dl>
+				<dt><label>{L_EXIF_EXPOSURE_PROG}:</label></dt>
+				<dd>{EXIF_EXPOSURE_PROG}</dd>
+			</dl>
+			<dl>
+				<dt><label>{L_EXIF_EXPOSURE_BIAS}:</label></dt>
+				<dd>{EXIF_EXPOSURE_BIAS}</dd>
+			</dl>
+			<dl>
+				<dt><label>{L_EXIF_METERING_MODE}:</label></dt>
+				<dd>{EXIF_METERING_MODE}</dd>
 			</dl>
 			<dl>
 				<dt><label>{L_EXIF_ISO}:</label></dt>

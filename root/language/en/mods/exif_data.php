@@ -32,10 +32,23 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'EXIF-DATA'					=> 'EXIF-Data',
 	'EXIF_APERTURE'				=> 'F-number',
+	'EXIF_CAM_MODEL'			=> 'Camera-model',
 	'EXIF_DATE'					=> 'Image taken on',
 
 	'EXIF_EXPOSURE'				=> 'Shutter speed',
 		'EXIF_EXPOSURE_EXP'			=> 'Sec',// 'EXIF_EXPOSURE' unit
+	'EXIF_EXPOSURE_BIAS'		=> 'Exposure bias',
+		'EXIF_EXPOSURE_BIAS_EXP'	=> '%d EV',// 'EXIF_EXPOSURE_BIAS' unit
+	'EXIF_EXPOSURE_PROG'		=> 'Exposure program',
+		'EXIF_EXPOSURE_PROG_0'		=> 'Not defined',
+		'EXIF_EXPOSURE_PROG_1'		=> 'Manual',
+		'EXIF_EXPOSURE_PROG_2'		=> 'Normal program',
+		'EXIF_EXPOSURE_PROG_3'		=> 'Aperture priority',
+		'EXIF_EXPOSURE_PROG_4'		=> 'Shutter priority',
+		'EXIF_EXPOSURE_PROG_5'		=> 'Creative program (biased toward depth of field)',
+		'EXIF_EXPOSURE_PROG_6'		=> 'Action program (biased toward fast shutter speed)',
+		'EXIF_EXPOSURE_PROG_7'		=> 'Portrait mode (for closeup photos with the background out of focus)',
+		'EXIF_EXPOSURE_PROG_8'		=> 'Landscape mode (for landscape photos with the background in focus)',
 
 	'EXIF_FLASH'				=> 'Flash',
 
@@ -67,12 +80,22 @@ $lang = array_merge($lang, array(
 		'EXIF_FLASH_CASE_93'		=> 'Flash fired, auto mode, return light not detected, red-eye reduction mode',
 		'EXIF_FLASH_CASE_95'		=> 'Flash fired, auto mode, return light detected, red-eye reduction mode',
 
-	'EXIF_FOCAL'				=> 'Focus',
+	'EXIF_FOCAL'				=> 'Focus length',
 		'EXIF_FOCAL_EXP'			=> 'mm',// 'EXIF_FOCAL' unit
 
 	'EXIF_ISO'					=> 'ISO speed rating',
 
-	'EXIF_NOT_AVAILABLE'		=> 'not availabla',
+	'EXIF_METERING_MODE'		=> 'Metering mode',
+		'EXIF_METERING_MODE_0'		=> 'Unknown',
+		'EXIF_METERING_MODE_1'		=> 'Average',
+		'EXIF_METERING_MODE_2'		=> 'Center-weighted average',
+		'EXIF_METERING_MODE_3'		=> 'Spot',
+		'EXIF_METERING_MODE_4'		=> 'Multi-Spot',
+		'EXIF_METERING_MODE_5'		=> 'Pattern',
+		'EXIF_METERING_MODE_6'		=> 'Partial',
+		'EXIF_METERING_MODE_255'	=> 'Other',
+
+	'EXIF_NOT_AVAILABLE'		=> 'not available',
 
 	'EXIF_WHITEB'				=> 'Whitebalance',
 		'EXIF_WHITEB_AUTO'			=> 'Auto',
@@ -80,4 +103,5 @@ $lang = array_merge($lang, array(
 
 	'SHOW_EXIF'					=> 'show/hide',
 ));
+
 ?>

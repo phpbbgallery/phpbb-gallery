@@ -250,6 +250,7 @@ if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (substr
 	if (!empty($exif["EXIF"]))
 	{
 		$exif_date = $exif_focal =  $exif_aperture = $exif_exposure = $exif_iso = 
+		$exif_exposureprogram = $exif_exposure_bias = $exif_metering_mode = 
 		$exif_whitebalance = $exif_flash = $exif_make = $exif_model = $user->lang['EXIF_NOT_AVAILABLE'];
 
 		if(isset($exif["EXIF"]["DateTimeOriginal"]))
@@ -284,7 +285,7 @@ if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (substr
 		}
 		if (isset($exif["EXIF"]["WhiteBalance"]))
 		{
-			$exif_whitebalance = $user->lang['EXIF_WHITEB_' . (($exif["EXIF"]["WhiteBalance"]) ? 'AUTO' : 'MANU')];
+			$exif_whitebalance = $user->lang['EXIF_WHITEB_' . (($exif["EXIF"]["WhiteBalance"]) ? 'MANU' : 'AUTO')];
 		}
 		if(isset($exif["EXIF"]["Flash"]))
 		{
@@ -294,6 +295,18 @@ if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (substr
 		{
 			$exif_model = ucwords($exif["IFD0"]["Model"]);
 		}
+		if (isset($exif["EXIF"]["ExposureProgram"]))
+		{
+			$exif_exposureprogram = $user->lang['EXIF_EXPOSURE_PROG_' . $exif["EXIF"]["ExposureProgram"]];
+		}
+		if (isset($exif["EXIF"]["ExposureBiasValue"]))
+		{
+			$exif_exposure_bias = sprintf($user->lang['EXIF_EXPOSURE_BIAS_EXP'], $exif["EXIF"]["ExposureBiasValue"]);
+		}
+		if (isset($exif["EXIF"]["MeteringMode"]))
+		{
+			$exif_metering_mode = $user->lang['EXIF_METERING_MODE_' . $exif["EXIF"]["MeteringMode"]];
+		}
 
 		$template->assign_vars(array(
 			'EXIF_DATE'			=> htmlspecialchars($exif_date),
@@ -302,6 +315,9 @@ if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (substr
 			'EXIF_APERTURE'		=> htmlspecialchars($exif_aperture),
 			'EXIF_ISO'			=> htmlspecialchars($exif_iso),
 			'EXIF_FLASH'		=> htmlspecialchars($exif_flash),
+			'EXIF_EXPOSURE_PROG'	=> htmlspecialchars($exif_exposureprogram),
+			'EXIF_EXPOSURE_BIAS'	=> htmlspecialchars($exif_exposure_bias),
+			'EXIF_METERING_MODE'	=> htmlspecialchars($exif_metering_mode),
 
 			'WHITEB'		=> htmlspecialchars($exif_whitebalance),
 			'CAM_MODEL'		=> htmlspecialchars($exif_model),
