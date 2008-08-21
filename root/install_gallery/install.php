@@ -673,53 +673,6 @@ switch ($mode)
 					//change some current columns:
 					nv_change_column(GALLERY_COMMENTS_TABLE, 'comment_username', array('VCHAR', ''));
 
-					//remove the old modules:
-					$sql = 'SELECT module_id, module_class, left_id, right_id
-						FROM ' . MODULES_TABLE . '
-						WHERE ' . $db->sql_in_set('module_langname', $module_names) . '
-						ORDER BY left_id DESC';
-					$result = $db->sql_query($sql);
-					while ($row = $db->sql_fetchrow($result))
-					{
-						remove_module($row['module_id'], $row['module_class']);
-					}
-					$db->sql_freeresult($result);
-
-					//add the modules new:
-					// ->ACP
-					$acp_gallery = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_acp_module,	'module_class' => 'acp',	'module_langname'=> 'PHPBB_GALLERY',	'module_mode' => '',	'module_auth' => '');
-					add_module($acp_gallery);
-					$acp_module_id = $db->sql_nextid();
-					gallery_config_value('acp_parent_module', $acp_module_id);
-
-					$acp_gallery_overview = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_OVERVIEW',	'module_mode' => 'overview',	'module_auth' => '');
-					add_module($acp_gallery_overview);
-					$acp_configure_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_CONFIGURE_GALLERY',	'module_mode' => 'configure_gallery',	'module_auth' => '');
-					add_module($acp_configure_gallery);
-					$acp_gallery_manage_albums = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_MANAGE_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
-					add_module($acp_gallery_manage_albums);
-					$album_permissions = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS',	'module_mode' => 'album_permissions',	'module_auth' => '');
-					add_module($album_permissions);
-					$import_images = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_IMPORT_ALBUMS',	'module_mode' => 'import_images',	'module_auth' => '');
-					add_module($import_images);
-					$cleanup = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_CLEANUP',	'module_mode' => 'cleanup',	'module_auth' => '');
-					add_module($cleanup);
-
-					// -> UCP
-					$ucp_gallery_overview = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_ucp_module,	'module_class' => 'ucp',	'module_langname'=> 'UCP_GALLERY',	'module_mode' => 'overview',	'module_auth' => '');
-					add_module($ucp_gallery_overview);
-					$ucp_module_id = $db->sql_nextid();
-					gallery_config_value('ucp_parent_module', $ucp_module_id);
-
-					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_SETTINGS',	'module_mode' => 'manage_settings',	'module_auth' => '');
-					add_module($ucp_gallery);
-					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_PERSONAL_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
-					add_module($ucp_gallery);
-					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_WATCH',	'module_mode' => 'manage_subscriptions',	'module_auth' => '');
-					add_module($ucp_gallery);
-					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_FAVORITES',	'module_mode' => 'manage_favorites',	'module_auth' => '');
-					add_module($ucp_gallery);
-
 					//add some new config's:
 					// -> general phpbb_config
 						$num_images = 0;
@@ -927,6 +880,18 @@ switch ($mode)
 				case '0.4.0-RC1':
 					$album_config = load_album_config();
 
+					//remove the old modules:
+					$sql = 'SELECT module_id, module_class, left_id, right_id
+						FROM ' . MODULES_TABLE . '
+						WHERE ' . $db->sql_in_set('module_langname', $module_names) . '
+						ORDER BY left_id DESC';
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						remove_module($row['module_id'], $row['module_class']);
+					}
+					$db->sql_freeresult($result);
+
 					if ($version == '0.4.0-RC1')
 					{
 						//sorry, i crashed your modules
@@ -997,6 +962,42 @@ switch ($mode)
 							$last_id = $id;
 						}
 					}
+
+					//add the modules new:
+					// ->ACP
+					$acp_gallery = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_acp_module,	'module_class' => 'acp',	'module_langname'=> 'PHPBB_GALLERY',	'module_mode' => '',	'module_auth' => '');
+					add_module($acp_gallery);
+					$acp_module_id = $db->sql_nextid();
+					gallery_config_value('acp_parent_module', $acp_module_id);
+
+					$acp_gallery_overview = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_OVERVIEW',	'module_mode' => 'overview',	'module_auth' => '');
+					add_module($acp_gallery_overview);
+					$acp_configure_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_CONFIGURE_GALLERY',	'module_mode' => 'configure_gallery',	'module_auth' => '');
+					add_module($acp_configure_gallery);
+					$acp_gallery_manage_albums = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_MANAGE_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
+					add_module($acp_gallery_manage_albums);
+					$album_permissions = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS',	'module_mode' => 'album_permissions',	'module_auth' => '');
+					add_module($album_permissions);
+					$import_images = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_IMPORT_ALBUMS',	'module_mode' => 'import_images',	'module_auth' => '');
+					add_module($import_images);
+					$cleanup = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_CLEANUP',	'module_mode' => 'cleanup',	'module_auth' => '');
+					add_module($cleanup);
+
+					// -> UCP
+					$ucp_gallery_overview = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_ucp_module,	'module_class' => 'ucp',	'module_langname'=> 'UCP_GALLERY',	'module_mode' => 'overview',	'module_auth' => '');
+					add_module($ucp_gallery_overview);
+					$ucp_module_id = $db->sql_nextid();
+					gallery_config_value('ucp_parent_module', $ucp_module_id);
+
+					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_SETTINGS',	'module_mode' => 'manage_settings',	'module_auth' => '');
+					add_module($ucp_gallery);
+					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_PERSONAL_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
+					add_module($ucp_gallery);
+					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_WATCH',	'module_mode' => 'manage_subscriptions',	'module_auth' => '');
+					add_module($ucp_gallery);
+					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_FAVORITES',	'module_mode' => 'manage_favorites',	'module_auth' => '');
+					add_module($ucp_gallery);
+
 					$total_images = 0;
 					$sql = 'SELECT COUNT(gi.image_id) AS num_images, u.user_id
 						FROM ' . USERS_TABLE . ' u
