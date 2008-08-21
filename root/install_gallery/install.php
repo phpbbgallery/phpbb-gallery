@@ -582,8 +582,8 @@ switch ($mode)
 						}
 
 						$sql_ary = array(
-							'image_username'      => $row['username'],
-							'image_user_colour'      => $row['user_colour'],
+							'image_username'		=> $row['username'],
+							'image_user_colour'		=> $row['user_colour'],
 						);
 
 						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
@@ -886,10 +886,13 @@ switch ($mode)
 					$result = $db->sql_query($sql);
 					while ($row = $db->sql_fetchrow($result))
 					{
-						$sql = 'UPDATE ' . GALLERY_COMMENTS_TABLE . "
-							SET comment_user_colour = '" . $row['user_colour'] . "'
-							WHERE comment_id = " . $row['comment_id'];
-						$db->sql_query($sql);
+						if (isset($row['user_colour']))
+						{
+							$sql = 'UPDATE ' . GALLERY_COMMENTS_TABLE . "
+								SET comment_user_colour = '" . $row['user_colour'] . "'
+								WHERE comment_id = " . $row['comment_id'];
+							$db->sql_query($sql);
+						}
 					}
 					$db->sql_freeresult($result);
 
@@ -1153,7 +1156,7 @@ switch ($mode)
 					'comment_image_id'		=> $row['comment_pic_id'],
 					'comment_user_id'		=> ($row['comment_user_id'] < 0) ? 1 : $row['comment_user_id'],
 					'comment_username'		=> $row['comment_username'],
-					'comment_user_colour'	=> $row['user_colour'],
+					'comment_user_colour'	=> (isset($row['user_colour'])) ? $row['user_colour'] : '',
 					'comment_user_ip'		=> decode_ip($row['comment_user_ip']),
 					'comment_time'			=> $row['comment_time'],
 					'comment'				=> $comment_text_data['text'],
