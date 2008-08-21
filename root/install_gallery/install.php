@@ -1045,9 +1045,9 @@ switch ($mode)
 				case '0.2.3':
 				case '0.3.0':
 				case '0.3.1':
-					$create_new_modules = true;
 				case '0.4.0-RC1':
 				case 'svn':
+					$create_new_modules = true;
 				break;
 			}
 			if ($create_new_modules)
