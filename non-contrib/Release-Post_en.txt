@@ -1,7 +1,7 @@
 [b]Modification Name:[/b] phpbb gallery
 [b]Author:[/b] [url=http://www.flying-bits.org][b]nickvergessen[/b][/url]
 
-[b]Modification Version:[/b] 0.4.0-RC1
+[b]Modification Version:[/b] 0.4.0-RC2
 [b]Modification Description:[/b]
 [list]This is a gallery for your phpBB3.
 When I have some more time, I'll post a feature-list in this forum:
@@ -21,5 +21,5 @@ http://www.flying-bits.org/viewforum.php?f=38[/list]
 
 [b]FAQ[/b]: http://www.flying-bits.org/viewforum.php?f=67
 
-[b]Modification Download:[/b] [size=150][b][url=http://www.flying-bits.org/download.php?mod_id=6]Download v0.4.0-RC1[/url][/b][/size]
+[b]Modification Download:[/b] [size=150][b][url=http://www.flying-bits.org/download.php?mod_id=6]Download v0.4.0-RC2[/url][/b][/size]
 [b][color=#FF0000]Note[/color]:[/b] Because of a complete change in the permissions-system you need to set all permissions new, when you update from previous versions (than 0.4.x), or convert from Smartor's Album MOD.

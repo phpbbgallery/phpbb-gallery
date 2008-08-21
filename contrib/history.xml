@@ -45,9 +45,11 @@
     <author-notes lang="en-gb">This file contains all parts of the History, all Developers, a.s.o.</author-notes>
     <history>
       <entry>
-        <date>2008-08-20</date>
+        <date>2008-08-21</date>
         <rev-version>0.4.0-RC2</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Add] Exif Data: Exposure bias, Exposure program & Metering mode]]></change>
+
           <change><![CDATA[[Change] Report #283: After upload an image into a approval album, the redirect is too fast]]></change>
           <change><![CDATA[[Change] Report #297: Login on and redirect to gallery/index.php]]></change>
           <change><![CDATA[[Change] Unreported: Module handle on installation]]></change>

@@ -29,7 +29,7 @@ You may install it, to be informed about future versions, as I'm not going to se
         <contributions />
       </author>
     </author-group>
-    <mod-version>0.4.0-RC1</mod-version>
+    <mod-version>0.4.0-RC2</mod-version>
     <installation>
       <level>intermediate</level>
       <time>1200</time>
@@ -38,14 +38,17 @@ You may install it, to be informed about future versions, as I'm not going to se
     <link-group>
       <link type="parent" lang="de" href="../../history.xml">Entwicklung</link>
       <link type="parent" lang="en-gb" href="../../history.xml">History</link>
-      <link type="parent" lang="de" href="../update.xml">Update von 0.3.1 auf 0.4.0-RC1</link>
-      <link type="parent" lang="en-gb" href="../update.xml">Update from 0.3.1 to 0.4.0-RC1</link>
+      <link type="parent" lang="de" href="../update.xml">Update von 0.4.0-RC1 auf 0.4.0-RC2</link>
+      <link type="parent" lang="en-gb" href="../update.xml">Update from 0.4.0-RC1 to 0.4.0-RC2</link>
     </link-group>
     <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
   </header>
   <action-group>
     <copy>
-      <file from="templates/subsilver2/styles/subsilver2/imageset/de/button_upload_image.gif" to="styles/subsilver2/imageset/de/button_upload_image.gif" />
+      <file from="root/language/de/email/*.txt" to="language/de/email/*.txt" />
+      <file from="root/language/de/mods/*.php" to="language/de/mods/*.php" />
+      <file from="root/styles/prosilver/imageset/de/button_upload_image.gif" to="styles/prosilver/imageset/de/button_upload_image.gif" />
+      <file from="root/styles/subsilver2/imageset/de/button_upload_image.gif" to="styles/subsilver2/imageset/de/button_upload_image.gif" />
     </copy>
     <diy-instructions lang="de"><![CDATA[Rufe install_gallery/install.php auf und führe das Update-Script aus
 
