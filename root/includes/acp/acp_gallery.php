@@ -14,10 +14,12 @@ class acp_gallery
 	var $u_action;
 	function main($id, $mode)
 	{
-		global $user, $phpbb_root_path, $phpEx, $template;
+		global $user, $phpbb_root_path, $phpEx, $template, $db;
 		$gallery_root_path = GALLERY_ROOT_PATH;
 		include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/constants.' . $phpEx);
-		include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/acp_functions.' . $phpEx);
+		include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/functions.' . $phpEx);
+		include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/permissions.' . $phpEx);
+		$album_access_array = get_album_access_array();
 
 		$user->add_lang('mods/gallery_acp');
 		$user->add_lang('mods/gallery');
@@ -166,7 +168,7 @@ class acp_gallery
 				'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_IMPORT_ALBUMS_EXPLAIN'],
 				'L_IMPORT_DIR_EMPTY'			=> sprintf($user->lang['IMPORT_DIR_EMPTY'], GALLERY_ROOT_PATH),
 				'S_ALBUM_IMPORT_ACTION'			=> $this->u_action,
-				'S_SELECT_IMPORT' 				=> make_album_select(0, false, false, false, false),
+				'S_SELECT_IMPORT' 				=> gallery_albumbox(false, 'album_id', 0, 'i_upload'),//make_album_select(0, false, false, false, false),
 			));
 		}
 		else
@@ -726,14 +728,14 @@ class acp_gallery
 		global $db, $user, $auth, $template, $cache;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 
+		$parent_id = request_var('parent_id', 0);
 		$template->assign_vars(array(
 			'S_MANAGE_ALBUMS'				=> true,
-			'S_ALBUM_ACTION'				=> $this->u_action . '&amp;action=create',
+			'S_ALBUM_ACTION'				=> $this->u_action . '&amp;action=create&amp;album_id=' . $parent_id,
 
 			'ACP_GALLERY_TITLE'			=> $user->lang['ACP_MANAGE_ALBUMS'],
 			'ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['ACP_MANAGE_ALBUMS_EXPLAIN'],
 		));
-		$parent_id = request_var('parent_id', 0);
 		if (!$parent_id)
 		{
 			$navigation = $user->lang['GALLERY_INDEX'];
@@ -799,14 +801,12 @@ class acp_gallery
 		$submit = (isset($_POST['submit'])) ? true : false;
 		if(!$submit)
 		{
-			$parents_list = make_album_select(0, false, false, false, false);
-			$copy_list = make_album_select(0);
 			$template->assign_vars(array(
 				'S_CREATE_ALBUM'				=> true,
 				'ACP_GALLERY_TITLE'				=> $user->lang['GALLERY_ALBUMS_TITLE'],
 				'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_CREATE_ALBUM_EXPLAIN'],
-				'S_PARENT_OPTIONS'				=> $parents_list,
-				'S_COPY_OPTIONS'				=> $copy_list,
+				'S_PARENT_OPTIONS'				=> gallery_albumbox(true, '', request_var('album_id', 0)),
+				'S_COPY_OPTIONS'				=> gallery_albumbox(true, '', request_var('album_id', 0)),
 				'S_ALBUM_ACTION'				=> $this->u_action . '&amp;action=create',
 				'S_DESC_BBCODE_CHECKED'		=> true,
 				'S_DESC_SMILIES_CHECKED'	=> true,
@@ -959,8 +959,6 @@ class acp_gallery
 			}
 			$album_data = $db->sql_fetchrow($result);
 			$album_desc_data = generate_text_for_edit($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_options']);
-			$parents_list = make_album_select($album_data['parent_id'], $album_id);
-			$copy_list = make_album_select(0, $album_id);
 
 			$template->assign_vars(array(
 				'S_EDIT_ALBUM'				=> true,
@@ -968,8 +966,8 @@ class acp_gallery
 				'ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['ACP_EDIT_ALBUM_EXPLAIN'],
 
 				'S_ALBUM_ACTION' 			=> $this->u_action . '&amp;action=edit&amp;album_id=' . $album_id,
-				'S_PARENT_OPTIONS'			=> $parents_list,
-				'S_COPY_OPTIONS'			=> $copy_list,
+				'S_PARENT_OPTIONS'			=> gallery_albumbox(true, '', $album_data['parent_id'], '', $album_id),
+				'S_COPY_OPTIONS'			=> gallery_albumbox(true, '', 0, '', $album_id),
 
 				'ALBUM_NAME' 				=> $album_data['album_name'],
 				'ALBUM_DESC'				=> $album_desc_data['text'],
@@ -1403,7 +1401,7 @@ class acp_gallery
 
 	function permissions()
 	{
-		global $db, $template, $user, $cache;
+		global $db, $template, $user, $cache, $album_access_array;
 
 		$sql = 'SELECT *
 			FROM ' . GALLERY_CONFIG_TABLE;
@@ -1489,9 +1487,8 @@ class acp_gallery
 
 		if ($step == 0)
 		{
-			$album_list = make_album_select(0);
 			$template->assign_vars(array(
-				'ALBUM_LIST'		=> $album_list,
+				'ALBUM_LIST'		=> gallery_albumbox(true, ''),
 			));
 			$step = 1;
 		}

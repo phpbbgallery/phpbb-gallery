@@ -213,17 +213,6 @@ if ($album_id <> 0)
 		$sort_new_comment_option .= '>' . $user->lang['NEW_COMMENT'] . '</option>';
 	}
 /*}*/
-/**
-* Build Jumpbox
-*/
-if (!$album_data['album_user_id'])
-{
-	$album_jumpbox = make_album_jumpbox($album_id);
-}
-else
-{
-	$album_jumpbox = make_personal_jumpbox($album_data['album_user_id'], $album_id);
-}
 
 $allowed_create = false;
 if ($album_data['album_user_id'] == $user->data['user_id'])
@@ -257,7 +246,6 @@ $template->assign_vars(array(
 
 	'S_COLS'					=> $album_config['cols_per_page'],
 	'S_COL_WIDTH'				=> (100/$album_config['cols_per_page']) . '%',
-	'ALBUM_JUMPBOX'				=> $album_jumpbox,
 	'S_JUMPBOX_ACTION'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx"),
 	'S_ALBUM_ACTION'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"),
 
@@ -272,6 +260,7 @@ $template->assign_vars(array(
 	'SORT_ASC'					=> ($sort_order == 'ASC') ? 'selected="selected"' : '',
 	'SORT_DESC'					=> ($sort_order == 'DESC') ? 'selected="selected"' : '',
 
+	'ALBUM_JUMPBOX'				=> gallery_albumbox(false, '', $album_id),
 	'U_RETURN_LINK'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"),
 	'S_RETURN_LINK'				=> $user->lang['GALLERY'],
 

@@ -121,9 +121,7 @@ if ($action && $image_id_ary)
 			}
 			else
 			{
-				$category_select = '<select name="moving_target">';
-				$category_select .= make_move_jumpbox($album_id);
-				$category_select .= '</select>';
+				$category_select = gallery_albumbox(false, 'moving_target', $album_id, 'i_upload', $album_id);
 				$template->assign_vars(array(
 					'S_MOVING_IMAGES'	=> true,
 					'S_ALBUM_SELECT'	=> $category_select,

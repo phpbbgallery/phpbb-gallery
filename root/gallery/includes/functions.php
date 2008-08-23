@@ -190,33 +190,41 @@ function get_album_parents(&$album_data)
 }
 
 /**
-* make the jump box, parent_album box, etc
+* Generate gallery-albumbox
+* @param	bool				$ignore_personals		list personal albums
+* @param	string				$select_name			request_var() for the select-box
+* @param	int					$select_id				selected album
+* @param	string				$requested_permission	Exp: for moving a image you need i_upload permissions or a_moderate
+* @param	(string || array)	$ignore_id				disabled albums, Exp: on moving: the album where the image is now
+*
+* @return	string				$gallery_albumbox		if ($select_name) {full select-box} else {list with options}
 */
-function make_album_jumpbox($select_id = false, $ignore_id = false, $album = false, $ignore_acl = false, $ignore_nonpost = false, $ignore_emptycat = true, $only_acl_post = false, $return_array = false)
+function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $requested_permission = false, $ignore_id = false)
 {
-	global $db, $user, $auth, $album_access_array;
+	global $db, $user, $auth, $cache, $album_access_array;
 
-	// no permissions yet
-	$acl = ($ignore_acl) ? '' : (($only_acl_post) ? 'f_post' : array('f_list', 'a_forum', 'a_forumadd', 'a_forumdel'));
+	// Instead of the query we use the cache
+	$album_data = $cache->obtain_album_list();
 
-	// This query is identical to the jumpbox one
-	$sql = 'SELECT *
-		FROM ' . GALLERY_ALBUMS_TABLE . '
-		WHERE album_user_id = 0
-		ORDER BY left_id ASC';
-	$result = $db->sql_query($sql, 600);
-
-	$right = 0;
+	$right = $last_a_u_id = 0;
 	$padding_store = array('0' => '');
-	$padding = '';
-	$forum_list = ($return_array) ? array() : '';
+	$padding = $album_list = '';
 
-	// Sometimes it could happen that forums will be displayed here not be displayed within the index page
-	// This is the result of forums not displayed at index, having list permissions and a parent of a forum with no permissions.
+	// Sometimes it could happen that albums will be displayed here not be displayed within the index page
+	// This is the result of albums not displayed at index and a parent of a album with no permissions.
 	// If this happens, the padding could be "broken"
 
-	while ($row = $db->sql_fetchrow($result))
+	foreach ($album_data as $row)
 	{
+		if ($row['album_user_id'] != $last_a_u_id)
+		{
+			if (!$last_a_u_id && gallery_acl_check('i_view', '-3') && !$ignore_personals)
+			{
+				$album_list .= '<option disabled="disabled" class="disabled-option">' . $user->lang['PERSONAL_ALBUMS'] . '</option>';
+			}
+			$padding = '';
+			$padding_store[$row['parent_id']] = '';
+		}
 		if ($row['left_id'] < $right)
 		{
 			$padding .= '&nbsp; &nbsp;';
@@ -228,168 +236,41 @@ function make_album_jumpbox($select_id = false, $ignore_id = false, $album = fal
 		}
 
 		$right = $row['right_id'];
+		$last_a_u_id = $row['album_user_id'];
 		$disabled = false;
 
-		if (((is_array($ignore_id) && in_array($row['album_id'], $ignore_id)) || $row['album_id'] == $ignore_id) || ($album && !$row['album_type']))
+		if (
+		//is in the ignore_id
+		((is_array($ignore_id) && in_array($row['album_id'], $ignore_id)) || $row['album_id'] == $ignore_id)
+		||
+		//need upload permissions (for moving)
+		(($requested_permission == 'i_upload') && (($row['album_type'] == G_ALBUM_CAT) || (!gallery_acl_check('i_upload', $row['album_id']) && !gallery_acl_check('a_moderate', $row['album_id'])))))
 		{
 			$disabled = true;
 		}
 
-		if (gallery_acl_check('i_view', $row['album_id']))
+		if (gallery_acl_check('i_view', $row['album_id']) && (!$row['album_user_id'] || !$ignore_personals))
 		{
-			if ($return_array)
-			{
-				// Include some more information...
-				$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? true : false) : (($row['album_id'] == $select_id) ? true : false);
-				$forum_list[$row['album_id']] = array_merge(array('padding' => $padding, 'selected' => ($selected && !$disabled), 'disabled' => $disabled), $row);
-			}
-			else
-			{
-				$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? ' selected="selected"' : '') : (($row['album_id'] == $select_id) ? ' selected="selected"' : '');
-				$forum_list .= '<option value="' . $row['album_id'] . '"' . (($disabled) ? ' disabled="disabled" class="disabled-option"' : $selected) . '>' . $padding . $row['album_name'] . '</option>';
-			}
+			$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? ' selected="selected"' : '') : (($row['album_id'] == $select_id) ? ' selected="selected"' : '');
+			$album_list .= '<option value="' . $row['album_id'] . '"' . (($disabled) ? ' disabled="disabled" class="disabled-option"' : $selected) . '>' . $padding . $row['album_name'] . ' (ID: ' . $row['album_id'] . ')</option>';
 		}
 	}
-	$db->sql_freeresult($result);
 	unset($padding_store);
 
-	return $forum_list;
-}
-
-function make_personal_jumpbox($album_user_id, $select_id = false, $ignore_id = false, $album = false, $ignore_acl = false, $ignore_nonpost = false, $ignore_emptycat = true, $only_acl_post = false, $return_array = false)
-{
-	global $db, $user, $auth, $album_access_array;
-
-	// This query is identical to the jumpbox one
-	$sql = 'SELECT *
-		FROM ' . GALLERY_ALBUMS_TABLE . "
-		WHERE album_user_id = $album_user_id
-		ORDER BY left_id ASC";
-	$result = $db->sql_query($sql, 600);
-
-	$right = 0;
-	$padding_store = array('0' => '');
-	$padding = '';
-	$forum_list = ($return_array) ? array() : '';
-
-	// Sometimes it could happen that forums will be displayed here not be displayed within the index page
-	// This is the result of forums not displayed at index, having list permissions and a parent of a forum with no permissions.
-	// If this happens, the padding could be "broken"
-
-	while ($row = $db->sql_fetchrow($result))
+	if ($select_name)
 	{
-		if ($row['left_id'] < $right)
-		{
-			$padding .= '&nbsp; &nbsp;';
-			$padding_store[$row['parent_id']] = $padding;
-		}
-		else if ($row['left_id'] > $right + 1)
-		{
-			$padding = (isset($padding_store[$row['parent_id']])) ? $padding_store[$row['parent_id']] : '';
-		}
-
-		$right = $row['right_id'];
-		$disabled = false;
-
-		if (((is_array($ignore_id) && in_array($row['album_id'], $ignore_id)) || $row['album_id'] == $ignore_id) || ($album && !$row['album_type']))
-		{
-			$disabled = true;
-		}
-
-		if (gallery_acl_check('i_view', $row['album_id']))
-		{
-			if ($return_array)
-			{
-				// Include some more information...
-				$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? true : false) : (($row['album_id'] == $select_id) ? true : false);
-				$forum_list[$row['album_id']] = array_merge(array('padding' => $padding, 'selected' => ($selected && !$disabled), 'disabled' => $disabled), $row);
-			}
-			else
-			{
-				$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? ' selected="selected"' : '') : (($row['album_id'] == $select_id) ? ' selected="selected"' : '');
-				$forum_list .= '<option value="' . $row['album_id'] . '"' . (($disabled) ? ' disabled="disabled" class="disabled-option"' : $selected) . '>' . $padding . $row['album_name'] . '</option>';
-			}
-		}
+		$gallery_albumbox = "<select name='$select_name'>";
+		$gallery_albumbox .= $album_list;
+		$gallery_albumbox .= '</select>';
 	}
-	$db->sql_freeresult($result);
-	unset($padding_store);
-
-	return $forum_list;
-}
-
-function make_move_jumpbox($select_id = false, $ignore_id = false, $album = false, $ignore_acl = false, $ignore_nonpost = false, $ignore_emptycat = true, $only_acl_post = false, $return_array = false)
-{
-	global $db, $user, $auth, $album_access_array;
-
-	// This query is identical to the jumpbox one
-	$sql = 'SELECT *
-		FROM ' . GALLERY_ALBUMS_TABLE . "
-		ORDER BY album_user_id, left_id ASC";
-	$result = $db->sql_query($sql);
-
-	$album_user_id = $right = 0;
-	$padding_store = array('0' => '');
-	$padding = '';
-	$forum_list = ($return_array) ? array() : '';
-	$personal_info = false;
-
-	// Sometimes it could happen that forums will be displayed here not be displayed within the index page
-	// This is the result of forums not displayed at index, having list permissions and a parent of a forum with no permissions.
-	// If this happens, the padding could be "broken"
-
-	while ($row = $db->sql_fetchrow($result))
+	else
 	{
-		if (($row['album_user_id'] > 0) && !$personal_info)
-		{
-			$personal_info = true;
-			$forum_list .= '<option disabled="disabled" class="disabled-option">' . $user->lang['PERSONAL_ALBUMS'] . '</option>';
-		}
-		if (gallery_acl_check('i_view', $row['album_id']))
-		{
-			if ($album_user_id == $row['album_user_id'])
-			{
-				if ($row['left_id'] < $right)
-				{
-					$padding .= '&nbsp; &nbsp;';
-					$padding_store[$row['parent_id']] = $padding;
-				}
-				else if ($row['left_id'] > $right + 1)
-				{
-					$padding = (isset($padding_store[$row['parent_id']])) ? $padding_store[$row['parent_id']] : '';
-				}
-			}
-			else
-			{
-				$padding = '';
-			}
-
-			$right = $row['right_id'];
-			$album_user_id = $row['album_user_id'];
-			$disabled = false;
-
-			if (!gallery_acl_check('i_upload', $row['album_id']))
-			{
-				$disabled = true;
-			}
-
-			if ($return_array)
-			{
-				// Include some more information...
-				$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? true : false) : (($row['album_id'] == $select_id) ? true : false);
-				$forum_list[$row['album_id']] = array_merge(array('padding' => $padding, 'selected' => ($selected && !$disabled), 'disabled' => $disabled), $row);
-			}
-			else
-			{
-				$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? ' selected="selected"' : '') : (($row['album_id'] == $select_id) ? ' selected="selected"' : '');
-				$forum_list .= '<option value="' . $row['album_id'] . '"' . (($disabled) ? ' disabled="disabled" class="disabled-option"' : $selected) . '>' . $padding . $row['album_name'] . '</option>';
-			}
-		}
+		$gallery_albumbox = $album_list;
 	}
-	$db->sql_freeresult($result);
-	unset($padding_store);
 
-	return $forum_list;
+	return $gallery_albumbox;
 }
+
 /**
 * get image info
 */
@@ -571,6 +452,7 @@ function get_album_moderators(&$album_moderators, $album_id = false)
 
 	return;
 }
+
 function handle_image_counter($image_id_ary, $add, $readd = false)
 {
 	global $config, $db;
@@ -602,6 +484,52 @@ function handle_image_counter($image_id_ary, $add, $readd = false)
 	$db->sql_freeresult($result);
 
 	set_config('num_images', (($add) ? $config['num_images'] + $num_images : $config['num_images'] - $num_images), true);
+}
+
+/**
+* Get forum branch
+*/
+function get_album_branch($album_id, $type = 'all', $order = 'descending', $include_album = true)
+{
+	global $db;
+
+	switch ($type)
+	{
+		case 'parents':
+			$condition = 'a1.left_id BETWEEN a2.left_id AND a2.right_id';
+		break;
+
+		case 'children':
+			$condition = 'a2.left_id BETWEEN a1.left_id AND a1.right_id';
+		break;
+
+		default:
+			$condition = 'a2.left_id BETWEEN a1.left_id AND a1.right_id OR a1.left_id BETWEEN a2.left_id AND a2.right_id';
+		break;
+	}
+
+	$rows = array();
+
+	$sql = 'SELECT a2.*
+		FROM ' . GALLERY_ALBUMS_TABLE . ' a1
+		LEFT JOIN ' . GALLERY_ALBUMS_TABLE . " a2 ON ($condition) AND a2.album_user_id = 0
+		WHERE a1.album_id = $album_id
+			AND a1.album_user_id = 0
+		ORDER BY a2.left_id " . (($order == 'descending') ? 'ASC' : 'DESC');
+	$result = $db->sql_query($sql);
+
+	while ($row = $db->sql_fetchrow($result))
+	{
+		if (!$include_album && $row['album_id'] == $album_id)
+		{
+			continue;
+		}
+
+		$rows[] = $row;
+	}
+	$db->sql_freeresult($result);
+
+	return $rows;
 }
 
 ?>
