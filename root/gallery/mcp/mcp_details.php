@@ -24,6 +24,7 @@ if ($mode == 'queue_details')
 	$template->assign_vars(array(
 		'IMAGE_STATUS'		=> $row['image_status'],
 		'STATUS'			=> $user->lang['QUEUE_STATUS_' . $row['image_status']],
+		'REPORT_ID'			=> $row['image_id'],
 	));
 }
 if ($mode == 'report_details')
