@@ -14,7 +14,7 @@ function checkRateForm() {
 }
 // -->
 </script>
-<h2><a href="#">{IMAGE_NAME}</a></h2>
+<h2><a href="{S_ALBUM_ACTION}">{IMAGE_NAME}</a></h2>
 
 <p class="{S_CONTENT_FLOW_END} rightside"><!-- IF U_NEXT --><a href="{U_NEXT}">{L_NEXT}</a><!-- ENDIF --></p>
 <p><!-- IF U_PREVIOUS --><a href="{U_PREVIOUS}">{L_PREVIOUS}</a><!-- ENDIF -->&nbsp;</p>
@@ -104,7 +104,7 @@ function toggleElement(oElement)
 	<div class="inner">
 		<span class="corners-top"><span></span></span>
 		<h3>{L_EXIF-DATA} - <a href="javascript: toggleElement( getElement('exif_data_fieldset'));">{L_SHOW_EXIF}</a></h3>
-		<fieldset class="fields1" id="exif_data_fieldset" style="display: none;" >
+		<fieldset class="fields1" id="exif_data_fieldset" style="display: none;">
 			<dl>
 				<dt><label>{L_EXIF_DATE}:</label></dt>
 				<dd>{EXIF_DATE}</dd>
@@ -269,6 +269,17 @@ function toggleElement(oElement)
 	</div>
 	<!-- ENDIF -->
 <!-- ENDIF -->
+
+<p></p><p><a href="{U_RETURN_LINK}" class="left-box {S_CONTENT_FLOW_BEGIN}" accesskey="r">{L_RETURN_TO} {S_RETURN_LINK}</a></p>
+<form method="post" id="jumpbox" action="{S_JUMPBOX_ACTION}" onsubmit="if(document.jumpbox.album_id.value == -1){return false;}">
+	<fieldset class="jumpbox">
+		<label for="album_id" accesskey="album_id">{L_JUMP_TO}:</label>
+		<select name="album_id" id="album_id" onchange="if(this.options[this.selectedIndex].value != -1){ document.forms['jumpbox'].submit() }">
+			{ALBUM_JUMPBOX}
+		</select>
+		<input type="submit" value="{L_GO}" class="button2" />
+	</fieldset>
+</form>
 
 <!-- Please keep this little notice visible -->
 <div class="copyright">Powered by <!-- port started by tsr: http://phpbbgallery.ph.funpic.de --><a href="http://www.flying-bits.org/">nickvergessen</a></div>
