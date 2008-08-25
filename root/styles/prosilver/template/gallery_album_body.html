@@ -1,4 +1,29 @@
 <!-- INCLUDE overall_header.html -->
+<script type="text/JavaScript">
+function getElement(iElementId)
+{
+	if (document.all) 
+	{
+		return document.all[iElementId];
+	}
+	if (document.getElementById)
+	{
+		return document.getElementById(iElementId);
+	}
+}
+
+function toggleElement(oElement)
+{
+	if (oElement.style.display == "none")
+	{
+		oElement.style.display = "";
+	}
+	else
+	{
+		oElement.style.display = "none";
+	}
+}
+</script>
 <!-- IF U_MCP --><p>[&nbsp;<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</p><!-- ENDIF -->
 <h2><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>
 
@@ -31,7 +56,7 @@
 	</div>
 <!-- ENDIF -->
 
-<!-- IF .picrow -->
+<!-- IF .image_row -->
 <div class="forumbg">
 	<div class="inner">
 		<span class="corners-top"><span></span></span>
@@ -45,35 +70,53 @@
 		<ul class="topiclist topics">
 			<li class="bg2">
 				<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline">
-					<!-- BEGIN picrow -->
+					<!-- BEGIN image_row -->
 					<tr>
-						<!-- BEGIN piccol -->
-						<td align="center" style="width: {S_COL_WIDTH};" class="bg1"><span class="genmed"><a href="{picrow.piccol.U_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->><img src="{picrow.piccol.THUMBNAIL}" alt="{picrow.piccol.DESC}" title="{picrow.piccol.DESC}" /></a><br />{picrow.piccol.APPROVAL}</span></td>
-						<!-- END piccol -->
-						<!-- BEGIN nopiccol --> 
-						<td align="center" style="width: {S_COL_WIDTH};" class="bg1"><span></span></td> 
-						<!-- END nopiccol -->
-					</tr>
-					<tr>
-						<!-- BEGIN pic_detail -->
-						<td class="bg2">
-							<div class="gensmall" style="overflow: hidden;">
-								{L_IMAGE_TITLE}: <a href="{picrow.pic_detail.U_IMAGE_PAGE}" style="font-weight: bold;">{picrow.pic_detail.IMAGE_NAME}</a><br />
-								{L_POSTER}: {picrow.pic_detail.POSTER}<br />
-								{L_POSTED}: {picrow.pic_detail.TIME}<br />
-								{L_VIEWS}: {picrow.pic_detail.VIEW}<br />
-								{picrow.pic_detail.RATING}
-								{picrow.pic_detail.COMMENTS}
-								{picrow.pic_detail.IP}
-								{picrow.pic_detail.EDIT}  {picrow.pic_detail.DELETE}  {picrow.pic_detail.STATUS}  {picrow.pic_detail.MOVE}
-							</div>
+						<!-- BEGIN image -->
+						<td class="bg2" valign="top" style="width: {S_COL_WIDTH};">
+							<table width="100%" cellpadding="2" cellspacing="5" border="0" class="forumline">
+								<tr>
+									<td align="center" style="height: {S_THUMBNAIL_SIZE}px;" class="bg1<!-- IF image_row.image.S_UNAPPROVED --> unapproved<!-- ENDIF --><!-- IF image_row.image.S_REPORTED --> reported<!-- ENDIF -->">
+										<span class="genmed">
+											<a href="{image_row.image.U_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->>
+												<img src="{image_row.image.U_THUMBNAIL}" alt="{image_row.image.IMAGE_NAME}" title="{image_row.image.IMAGE_NAME}" />
+											</a>
+										</span>
+									</td>
+								</tr>
+								<tr>
+									<td class="bg2" valign="top">
+										<div class="gensmall" style="overflow: hidden;">
+											{L_IMAGE_NAME}: <a href="{image_row.image.U_IMAGE_PAGE}" style="font-weight: bold;">{image_row.image.IMAGE_NAME}</a><br />
+											{L_POSTER}: {image_row.image.POSTER}<br />
+											{L_POSTED}: {image_row.image.TIME}<br />
+											{L_VIEWS}: {image_row.image.VIEW}<br />
+											<!-- IF image_row.image.S_RATINGS -->{L_RATING}: <a href="{image_row.image.U_RATINGS}">{image_row.image.S_RATINGS}</a><br /><!-- ENDIF -->
+											<!-- IF image_row.image.S_COMMENTS -->{image_row.image.L_COMMENTS}: <a href="{image_row.image.U_COMMENTS}">{image_row.image.S_COMMENTS}</a><br /><!-- ENDIF -->
+											<!-- IF image_row.image.S_IP -->{L_IP}: {image_row.image.S_IP} &#187; <a href="{image_row.image.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a><br /><!-- ENDIF -->
+											<a href="javascript: toggleElement( getElement('moderate_{image_row.image.IMAGE_ID}'));">{L_MODERATE}</a>
+											<div id="moderate_{image_row.image.IMAGE_ID}" style="display: none;">
+												<!-- IF image_row.image.U_REPORT -->&#187; <a href="{image_row.image.U_REPORT}" class="reported-images-number">{L_READ_REPORT}</a><br /><!-- ENDIF -->
+												<!-- IF image_row.image.U_STATUS -->&#187; <a href="{image_row.image.U_STATUS}">{image_row.image.L_STATUS}</a><br /><!-- ENDIF -->
+												<!-- IF image_row.image.U_MOVE -->&#187; <a href="{image_row.image.U_MOVE}">{L_MOVE}</a><br /><!-- ENDIF -->
+												<!-- IF image_row.image.U_EDIT -->&#187; <a href="{image_row.image.U_EDIT}">{L_EDIT_IMAGE}</a><br /><!-- ENDIF -->
+												<!-- IF image_row.image.U_DELETE -->&#187; <a href="{image_row.image.U_DELETE}">{L_DELETE_IMAGE}</a><br /><!-- ENDIF -->
+											</div>
+										</div>
+									</td>
+								</tr>
+							</table>
 						</td>
-						<!-- END pic_detail -->
-						<!-- BEGIN picnodetail --> 
-						<td class="bg2"><span></span></td> 
-						<!-- END picnodetail -->
+						<!-- END image -->
+						<!-- BEGIN no_image --> 
+							<td class="bg2" valign="top" style="width: {S_COL_WIDTH};">
+								<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline"><tr>
+								<td style="height: {S_THUMBNAIL_SIZE}px;" class="bg1"></td>
+								</tr></table>
+							</td> 
+						<!-- END no_image -->
 					</tr>
-					<!-- END picrow -->
+					<!-- END image_row -->
 				</table>
 			</li>
 		</ul>
@@ -113,7 +156,7 @@
 	</fieldset>
 	</form>
 	<hr />
-	<!-- IF .picrow -->
+	<!-- IF .image_row -->
 	<div class="topic-actions">
 		<!-- IF U_UPLOAD_IMAGE -->
 			<div class="buttons">

@@ -1,4 +1,29 @@
 <!-- INCLUDE overall_header.html -->
+<script type="text/JavaScript">
+function getElement(iElementId)
+{
+	if (document.all) 
+	{
+		return document.all[iElementId];
+	}
+	if (document.getElementById)
+	{
+		return document.getElementById(iElementId);
+	}
+}
+
+function toggleElement(oElement)
+{
+	if (oElement.style.display == "none")
+	{
+		oElement.style.display = "";
+	}
+	else
+	{
+		oElement.style.display = "none";
+	}
+}
+</script>
 	<div id="pageheader">
 		<h2><a class="titles" href="{U_GALLERY_SEARCH}">{L_SEARCH}</a></h2>
 	</div>
@@ -22,7 +47,7 @@
 		</table>
 	<!-- ENDIF -->
 
-<!-- IF S_IS_POSTABLE or .picrow -->
+<!-- IF S_IS_POSTABLE or .image_row -->
 <table class="tablebg" cellspacing="1" width="100%">
 	<tr>
 		<td class="cat" colspan="{S_COLS}">
@@ -37,38 +62,60 @@
 	<tr>
 		<th align="center" colspan="{S_COLS}" nowrap="nowrap">{SEARCH_NAME}</th>
 	</tr>
-	<!-- BEGIN no_pics -->
+	<!-- BEGIN image_row -->
+	<tr>
+		<!-- BEGIN image -->
+		<td class="row2" valign="top" style="width: {S_COL_WIDTH};">
+			<table width="100%" cellpadding="2" cellspacing="5" border="0" class="forumline">
+				<tr>
+					<td align="center" class="row1" style="height: {S_THUMBNAIL_SIZE}px;">
+					<span class="genmed">
+						<a href="{image_row.image.U_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->>
+							<img src="{image_row.image.U_THUMBNAIL}" alt="{image_row.image.IMAGE_NAME}" title="{image_row.image.IMAGE_NAME}" />
+						</a>
+					</span>
+					</td>
+				</tr>
+				<tr>
+					<td class="row2" valign="top">
+					<div class="gensmall" style="overflow: hidden;">
+					<!-- IF image_row.image.S_UNAPPROVED and image_row.image.U_STATUS --><a style="font-weight: bold;" class="reported-images-number" href="{image_row.image.U_STATUS}">{image_row.image.L_STATUS}</a><br /><br /><!-- ENDIF -->
+					<!-- IF image_row.image.S_REPORTED and image_row.image.U_REPORT --><a style="font-weight: bold;" class="reported-images-number" href="{image_row.image.U_REPORT}">{L_READ_REPORT}</a><br /><br /><!-- ENDIF -->
+						{L_IMAGE_NAME}: <a href="{image_row.image.U_IMAGE_PAGE}" style="font-weight: bold;">{image_row.image.IMAGE_NAME}</a><br />
+						{L_ALBUM_NAME}: <a href="{image_row.image.U_ALBUM}" style="font-weight: bold;">{image_row.image.ALBUM_NAME}</a><br />
+						{L_POSTER}: {image_row.image.POSTER}<br />
+						{L_POSTED}: {image_row.image.TIME}<br />
+						{L_VIEWS}: {image_row.image.VIEW}<br />
+						<!-- IF image_row.image.S_RATINGS -->{L_RATING}: <a href="{image_row.image.U_RATINGS}">{image_row.image.S_RATINGS}</a><br /><!-- ENDIF -->
+						<!-- IF image_row.image.S_COMMENTS -->{image_row.image.L_COMMENTS}: <a href="{image_row.image.U_COMMENTS}">{image_row.image.S_COMMENTS}</a><br /><!-- ENDIF -->
+						<!-- IF image_row.image.S_IP -->{L_IP}: {image_row.image.S_IP} &#187; <a href="{image_row.image.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a><br /><!-- ENDIF -->
+						<a href="javascript: toggleElement( getElement('moderate_{image_row.image.IMAGE_ID}'));">{L_MODERATE}</a>
+						<div id="moderate_{image_row.image.IMAGE_ID}" style="display: none;">
+							<!-- IF image_row.image.U_REPORT -->&#187; <a href="{image_row.image.U_REPORT}" class="reported-images-number">{L_READ_REPORT}</a><br /><!-- ENDIF -->
+							<!-- IF image_row.image.U_STATUS -->&#187; <a href="{image_row.image.U_STATUS}">{image_row.image.L_STATUS}</a><br /><!-- ENDIF -->
+							<!-- IF image_row.image.U_MOVE -->&#187; <a href="{image_row.image.U_MOVE}">{L_MOVE}</a><br /><!-- ENDIF -->
+							<!-- IF image_row.image.U_EDIT -->&#187; <a href="{image_row.image.U_EDIT}">{L_EDIT_IMAGE}</a><br /><!-- ENDIF -->
+							<!-- IF image_row.image.U_DELETE -->&#187; <a href="{image_row.image.U_DELETE}">{L_DELETE_IMAGE}</a><br /><!-- ENDIF -->
+						</div>
+					</div>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<!-- END image -->
+		<!-- BEGIN no_image --> 
+			<td class="row2" valign="top" style="width: {S_COL_WIDTH};">
+				<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline"><tr>
+				<td style="height: {S_THUMBNAIL_SIZE}px;" class="row1"></td>
+				</tr></table>
+			</td> 
+		<!-- END no_image -->
+	</tr>
+	<!-- BEGINELSE -->
 	<tr>
 		<td class="row1" align="center" height="30"><span class="gen">{L_NO_IMAGES_LONG}</span></td>
 	</tr>
-	<!-- END no_pics -->
-	<!-- BEGIN picrow -->
-	<tr>
-		<!-- BEGIN piccol -->
-		<td align="center" width="{S_COL_WIDTH}" class="row1"><span class="genmed"><a href="{picrow.piccol.U_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->><img src="{picrow.piccol.THUMBNAIL}" border="0" alt="{picrow.piccol.DESC}" title="{picrow.piccol.DESC}" vspace="10" /></a><br />
-			{picrow.piccol.APPROVAL}</span></td>
-		<!-- END piccol -->
-		<!-- BEGIN nopiccol -->
-		<td align="center" width="{S_COL_WIDTH}" class="row1"><span></span></td>
-		<!-- END nopiccol -->
-	</tr>
-	<tr>
-		<!-- BEGIN pic_detail -->
-		<td class="row2"><div class="gensmall" style="overflow: hidden;"> {L_IMAGE_TITLE}: <a href="{picrow.pic_detail.U_IMAGE_PAGE}" style="font-weight: bold;">{picrow.pic_detail.IMAGE_NAME}</a><br />
-			{L_ALBUM_NAME}: <a href="{picrow.pic_detail.U_ALBUM}" style="font-weight: bold;">{picrow.pic_detail.ALBUM_NAME}</a><br />
-			{L_POSTER}: {picrow.pic_detail.POSTER}<br />
-			{L_POSTED}: {picrow.pic_detail.TIME}<br />
-			{L_VIEWS}: {picrow.pic_detail.VIEW}<br />
-			{picrow.pic_detail.RATING}
-			{picrow.pic_detail.COMMENTS}
-			{picrow.pic_detail.IP}
-			{picrow.pic_detail.EDIT}	{picrow.pic_detail.DELETE}	{picrow.pic_detail.STATUS}	{picrow.pic_detail.MOVE} </div> </td>
-		<!-- END pic_detail -->
-		<!-- BEGIN picnodetail -->
-		<td class="row2"><span></span></td>
-		<!-- END picnodetail -->
-	</tr>
-	<!-- END picrow -->
+	<!-- END image_row -->
 	<tr>
 		<td class="cat" colspan="{S_COLS}" align="center" height="28">
 			<form action="{S_ALBUM_ACTION}" method="post">

@@ -270,4 +270,16 @@ $lang = array_merge($lang, array(
 	'WATCHING_IMAGE'				=> 'Du wirst über Kommentare zu diesem Bild benachrichtigt.',
 ));
 
+//Added after 0.4.0-RC2
+$lang = array_merge($lang, array(
+	'APPROVE_IMAGE'					=> 'Bild freischalten',
+
+	'CHANGE_IMAGE_STATUS'			=> 'Bildstatus ändern',
+
+	'IMAGE_ALREADY_REPORTED'		=> 'Das Bild wurde bereits gemeldet.',
+	'IMAGE_NAME'					=> 'Bildname',
+
+	'READ_REPORT'					=> 'Meldung ansehen',
+));
+
 ?>

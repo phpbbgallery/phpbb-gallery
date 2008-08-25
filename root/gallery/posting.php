@@ -780,7 +780,20 @@ switch ($mode)
 					);
 					if (!$error)
 					{
+						if ($image_data['image_reported'])
+						{
+							trigger_error('IMAGE_ALREADY_REPORTED');
+						}
 						$sql = 'INSERT INTO ' . GALLERY_REPORTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+						$db->sql_query($sql);
+						$report_id = $db->sql_nextid();
+						$sql_ary = array(
+							'image_reported'				=> $report_id,
+						);
+
+						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
+							SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
+							WHERE image_id = $image_id";
 						$db->sql_query($sql);
 					}
 				}

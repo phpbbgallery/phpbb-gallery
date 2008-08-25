@@ -7,153 +7,79 @@
 BEGIN;
 
 /*
-
 	Domain definition
-
 */
-
 CREATE DOMAIN varchar_ci AS varchar(255) NOT NULL DEFAULT ''::character varying;
 
-
-
 /*
-
 	Operation Functions
-
 */
-
 CREATE FUNCTION _varchar_ci_equal(varchar_ci, varchar_ci) RETURNS boolean AS 'SELECT LOWER($1) = LOWER($2)' LANGUAGE SQL STRICT;
-
 CREATE FUNCTION _varchar_ci_not_equal(varchar_ci, varchar_ci) RETURNS boolean AS 'SELECT LOWER($1) != LOWER($2)' LANGUAGE SQL STRICT;
-
 CREATE FUNCTION _varchar_ci_less_than(varchar_ci, varchar_ci) RETURNS boolean AS 'SELECT LOWER($1) < LOWER($2)' LANGUAGE SQL STRICT;
-
 CREATE FUNCTION _varchar_ci_less_equal(varchar_ci, varchar_ci) RETURNS boolean AS 'SELECT LOWER($1) <= LOWER($2)' LANGUAGE SQL STRICT;
-
 CREATE FUNCTION _varchar_ci_greater_than(varchar_ci, varchar_ci) RETURNS boolean AS 'SELECT LOWER($1) > LOWER($2)' LANGUAGE SQL STRICT;
-
 CREATE FUNCTION _varchar_ci_greater_equals(varchar_ci, varchar_ci) RETURNS boolean AS 'SELECT LOWER($1) >= LOWER($2)' LANGUAGE SQL STRICT;
 
-
-
 /*
-
 	Operators
-
 */
-
 CREATE OPERATOR <(
-
   PROCEDURE = _varchar_ci_less_than,
-
   LEFTARG = varchar_ci,
-
   RIGHTARG = varchar_ci,
-
   COMMUTATOR = >,
-
   NEGATOR = >=,
-
   RESTRICT = scalarltsel,
-
   JOIN = scalarltjoinsel);
-
-
 
 CREATE OPERATOR <=(
-
   PROCEDURE = _varchar_ci_less_equal,
-
   LEFTARG = varchar_ci,
-
   RIGHTARG = varchar_ci,
-
   COMMUTATOR = >=,
-
   NEGATOR = >,
-
   RESTRICT = scalarltsel,
-
   JOIN = scalarltjoinsel);
 
-
-
 CREATE OPERATOR >(
-
   PROCEDURE = _varchar_ci_greater_than,
-
   LEFTARG = varchar_ci,
-
   RIGHTARG = varchar_ci,
-
   COMMUTATOR = <,
-
   NEGATOR = <=,
-
   RESTRICT = scalargtsel,
-
   JOIN = scalargtjoinsel);
-
-
 
 CREATE OPERATOR >=(
-
   PROCEDURE = _varchar_ci_greater_equals,
-
   LEFTARG = varchar_ci,
-
   RIGHTARG = varchar_ci,
-
   COMMUTATOR = <=,
-
   NEGATOR = <,
-
   RESTRICT = scalargtsel,
-
   JOIN = scalargtjoinsel);
 
-
-
 CREATE OPERATOR <>(
-
   PROCEDURE = _varchar_ci_not_equal,
-
   LEFTARG = varchar_ci,
-
   RIGHTARG = varchar_ci,
-
   COMMUTATOR = <>,
-
   NEGATOR = =,
-
   RESTRICT = neqsel,
-
   JOIN = neqjoinsel);
 
-
-
 CREATE OPERATOR =(
-
   PROCEDURE = _varchar_ci_equal,
-
   LEFTARG = varchar_ci,
-
   RIGHTARG = varchar_ci,
-
   COMMUTATOR = =,
-
   NEGATOR = <>,
-
   RESTRICT = eqsel,
-
   JOIN = eqjoinsel,
-
   HASHES,
-
   MERGES,
-
   SORT1= <);
-
 
 /*
 	Table: 'phpbb_gallery_images'
@@ -184,6 +110,7 @@ CREATE TABLE phpbb_gallery_images (
 	image_comments INT4 DEFAULT '0' NOT NULL CHECK (image_comments >= 0),
 	image_last_comment INT4 DEFAULT '0' NOT NULL CHECK (image_last_comment >= 0),
 	image_favorited INT4 DEFAULT '0' NOT NULL CHECK (image_favorited >= 0),
+	image_reported INT4 DEFAULT '0' NOT NULL CHECK (image_reported >= 0),
 	PRIMARY KEY (image_id)
 );
 

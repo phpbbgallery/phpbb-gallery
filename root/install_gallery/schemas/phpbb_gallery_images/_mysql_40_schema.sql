@@ -27,6 +27,7 @@ CREATE TABLE phpbb_gallery_images (
 	image_comments mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	image_last_comment mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	image_favorited mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
+	image_reported mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	PRIMARY KEY (image_id),
 	KEY image_album_id (image_album_id),
 	KEY image_user_id (image_user_id),

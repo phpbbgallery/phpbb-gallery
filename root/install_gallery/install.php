@@ -184,6 +184,7 @@ switch ($mode)
 				'image_view_count'		=> 1,
 				'image_has_exif'		=> 1,
 				'image_status'			=> 1,
+				'image_reported'		=> 0,
 			);
 			$db->sql_query('INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $image_data));
 			$modscache_data = array(
@@ -1012,9 +1013,22 @@ switch ($mode)
 					}
 					$db->sql_freeresult($result);
 					set_config('num_images', $total_images, true);
+				case '0.4.0-RC2':
+					$album_config = load_album_config();
+					nv_add_column(GALLERY_IMAGES_TABLE, 'image_reported', array('UINT', 0));
+					$sql = 'SELECT report_image_id, report_id
+						FROM ' . GALLERY_REPORTS_TABLE . "
+						WHERE report_status = 1";
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_reported = ' . $row['report_id'] . '
+							WHERE ' . $db->sql_in_set('image_id', $row['report_image_id']);
+						$db->sql_query($sql);
+					}
+					$db->sql_freeresult($result);
 				case 'svn':
 					$album_config = load_album_config();
-
 				break;
 			}
 
@@ -1046,8 +1060,9 @@ switch ($mode)
 				case '0.3.0':
 				case '0.3.1':
 				case '0.4.0-RC1':
-				case 'svn':
 					$create_new_modules = true;
+				case '0.4.0-RC2':
+				case 'svn':
 				break;
 			}
 			if ($create_new_modules)
@@ -1243,6 +1258,7 @@ switch ($mode)
 					'image_album_id'		=> (in_array($row['pic_cat_id'], $personal_album) ? 0 : $row['pic_cat_id']),
 					'image_view_count'		=> $row['pic_view_count'],
 					'image_status'			=> ($row['pic_lock']) ? 2 : $row['pic_approval'],
+					'image_reported'		=> 0,
 				);
 				generate_text_for_storage($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], $image_data['image_desc_options'], true, true, true);
 				unset($image_data['image_desc_options']);

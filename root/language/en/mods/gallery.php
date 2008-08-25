@@ -271,4 +271,16 @@ $lang = array_merge($lang, array(
 	'WATCHING_IMAGE'				=> 'You are now informed about new comments on this image.',
 ));
 
+//Added after 0.4.0-RC2
+$lang = array_merge($lang, array(
+	'APPROVE_IMAGE'					=> 'Approve image',
+
+	'CHANGE_IMAGE_STATUS'			=> 'Change image-status',
+
+	'IMAGE_ALREADY_REPORTED'		=> 'The image was already reported.',
+	'IMAGE_NAME'					=> 'Imagename',
+
+	'READ_REPORT'					=> 'Read report message',
+));
+
 ?>

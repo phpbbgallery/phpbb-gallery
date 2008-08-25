@@ -1,35 +1,87 @@
-<!-- IF .picrow -->
+<script type="text/JavaScript">
+function getElement(iElementId)
+{
+	if (document.all) 
+	{
+		return document.all[iElementId];
+	}
+	if (document.getElementById)
+	{
+		return document.getElementById(iElementId);
+	}
+}
+
+function toggleElement(oElement)
+{
+	if (oElement.style.display == "none")
+	{
+		oElement.style.display = "";
+	}
+	else
+	{
+		oElement.style.display = "none";
+	}
+}
+</script>
+<!-- IF .recent -->
 <table class="tablebg" cellspacing="1" width="100%">
 	<tr>
 		<th align="center" colspan="{S_COLS}" nowrap="nowrap">{L_RECENT_IMAGES}</th>
 	</tr>
-	<!-- BEGIN picrow -->
+	<!-- BEGIN recent -->
 	<tr>
-		<!-- BEGIN piccol -->
-		<td align="center" width="{S_COL_WIDTH}" class="row1"><span class="genmed"><a href="{picrow.piccol.U_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->><img src="{picrow.piccol.THUMBNAIL}" border="0" alt="{picrow.piccol.DESC}" title="{picrow.piccol.DESC}" vspace="10" /></a><br />
-			{picrow.piccol.APPROVAL}</span></td>
-		<!-- END piccol -->
-		<!-- BEGIN nopiccol -->
-		<td align="center" width="{S_COL_WIDTH}" class="row1"><span></span></td>
-		<!-- END nopiccol -->
+		<!-- BEGIN image -->
+		<td class="row2" valign="top" style="width: {S_COL_WIDTH};">
+			<table width="100%" cellpadding="2" cellspacing="5" border="0" class="forumline">
+				<tr>
+					<td align="center" class="row1" style="height: {S_THUMBNAIL_SIZE}px;">
+					<span class="genmed">
+						<a href="{recent.image.U_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->>
+							<img src="{recent.image.U_THUMBNAIL}" alt="{recent.image.IMAGE_NAME}" title="{recent.image.IMAGE_NAME}" />
+						</a>
+					</span>
+					</td>
+				</tr>
+				<tr>
+					<td class="row2" valign="top">
+					<div class="gensmall" style="overflow: hidden;">
+					<!-- IF recent.image.S_UNAPPROVED and recent.image.U_STATUS --><a style="font-weight: bold;" class="reported-images-number" href="{recent.image.U_STATUS}">{recent.image.L_STATUS}</a><br /><br /><!-- ENDIF -->
+					<!-- IF recent.image.S_REPORTED and recent.image.U_REPORT --><a style="font-weight: bold;" class="reported-images-number" href="{recent.image.U_REPORT}">{L_READ_REPORT}</a><br /><br /><!-- ENDIF -->
+						<!-- IF recent.image.IMAGE_NAME -->{L_IMAGE_NAME}: <a href="{recent.image.U_IMAGE_PAGE}" style="font-weight: bold;">{recent.image.IMAGE_NAME}</a><br /><!-- ENDIF -->
+						<!-- IF recent.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{recent.image.U_ALBUM}" style="font-weight: bold;">{recent.image.ALBUM_NAME}</a><br /><!-- ENDIF -->
+						<!-- IF recent.image.POSTER -->{L_POSTER}: {recent.image.POSTER}<br /><!-- ENDIF -->
+						<!-- IF recent.image.TIME -->{L_POSTED}: {recent.image.TIME}<br /><!-- ENDIF -->
+						<!-- IF recent.image.VIEW -->{L_VIEWS}: {recent.image.VIEW}<br /><!-- ENDIF -->
+						<!-- IF recent.image.S_RATINGS -->{L_RATING}: <a href="{recent.image.U_RATINGS}">{recent.image.S_RATINGS}</a><br /><!-- ENDIF -->
+						<!-- IF recent.image.S_COMMENTS -->{recent.image.L_COMMENTS}: <a href="{recent.image.U_COMMENTS}">{recent.image.S_COMMENTS}</a><br /><!-- ENDIF -->
+						<!-- IF recent.image.S_IP -->{L_IP}: {recent.image.S_IP} &#187; <a href="{recent.image.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a><br /><!-- ENDIF -->
+						<a href="javascript: toggleElement( getElement('moderate_{recent.image.IMAGE_ID}'));">{L_MODERATE}</a>
+						<div id="moderate_{recent.image.IMAGE_ID}" style="display: none;">
+							<!-- IF recent.image.U_REPORT -->&#187; <a href="{recent.image.U_REPORT}" class="reported-images-number">{L_READ_REPORT}</a><br /><!-- ENDIF -->
+							<!-- IF recent.image.U_STATUS -->&#187; <a href="{recent.image.U_STATUS}">{recent.image.L_STATUS}</a><br /><!-- ENDIF -->
+							<!-- IF recent.image.U_MOVE -->&#187; <a href="{recent.image.U_MOVE}">{L_MOVE}</a><br /><!-- ENDIF -->
+							<!-- IF recent.image.U_EDIT -->&#187; <a href="{recent.image.U_EDIT}">{L_EDIT_IMAGE}</a><br /><!-- ENDIF -->
+							<!-- IF recent.image.U_DELETE -->&#187; <a href="{recent.image.U_DELETE}">{L_DELETE_IMAGE}</a><br /><!-- ENDIF -->
+						</div>
+					</div>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<!-- END image -->
+		<!-- BEGIN no_image --> 
+			<td class="row2" valign="top" style="width: {S_COL_WIDTH};">
+				<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline"><tr>
+				<td style="height: {S_THUMBNAIL_SIZE}px;" class="row1"></td>
+				</tr></table>
+			</td> 
+		<!-- END no_image -->
 	</tr>
+	<!-- BEGINELSE -->
 	<tr>
-		<!-- BEGIN pic_detail -->
-		<td class="row2"><div style="overflow: hidden;">
-			<!-- IF picrow.pic_detail.IMAGE_NAME -->{L_IMAGE_TITLE}: <a href="{picrow.pic_detail.U_IMAGE_PAGE}" style="font-weight: bold;">{picrow.pic_detail.IMAGE_NAME}</a><br /><!-- ENDIF -->
-			<!-- IF picrow.pic_detail.POSTER -->{L_POSTER}: {picrow.pic_detail.POSTER}<br /><!-- ENDIF -->
-			<!-- IF picrow.pic_detail.TIME -->{L_POSTED}: {picrow.pic_detail.TIME}<br /><!-- ENDIF -->
-			<!-- IF picrow.pic_detail.VIEWS -->{L_VIEWS}: {picrow.pic_detail.VIEWS}<br /><!-- ENDIF -->
-			<!-- IF picrow.pic_detail.RATINGS -->{L_RATING}: {picrow.pic_detail.RATINGS}<br /><!-- ENDIF -->
-			<!-- IF picrow.pic_detail.COMMENTS -->{picrow.pic_detail.L_COMMENT}: {picrow.pic_detail.COMMENTS}<br /><!-- ENDIF -->
-			<!-- IF picrow.pic_detail.ALBUM -->{L_ALBUM}: <a href="{picrow.pic_detail.U_ALBUM}" style="font-weight: bold;">{picrow.pic_detail.ALBUM}</a><br /><!-- ENDIF -->
-		</div></td>
-		<!-- END pic_detail -->
-		<!-- BEGIN picnodetail -->
-		<td class="row2"><span></span></td>
-		<!-- END picnodetail -->
+		<td class="row1" align="center" height="30"><span class="gen">{L_NO_IMAGES_LONG}</span></td>
 	</tr>
-	<!-- END picrow -->
+	<!-- END recent -->
 </table>
 <br clear="all" />
 <!-- ELSEIF S_RECENT -->
@@ -49,29 +101,56 @@
 	</tr>
 	<!-- BEGIN random -->
 	<tr>
-		<!-- BEGIN piccol -->
-		<td align="center" width="{S_COL_WIDTH}" class="row1"><span class="genmed"><a href="{random.piccol.U_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->><img src="{random.piccol.THUMBNAIL}" border="0" alt="{random.piccol.DESC}" title="{random.piccol.DESC}" vspace="10" /></a><br />
-			{random.piccol.APPROVAL}</span></td>
-		<!-- END piccol -->
-		<!-- BEGIN nopiccol -->
-		<td align="center" width="{S_COL_WIDTH}" class="row1"><span></span></td>
-		<!-- END nopiccol -->
+		<!-- BEGIN image -->
+		<td class="row2" valign="top" style="width: {S_COL_WIDTH};">
+			<table width="100%" cellpadding="2" cellspacing="5" border="0" class="forumline">
+				<tr>
+					<td align="center" class="row1" style="height: {S_THUMBNAIL_SIZE}px;">
+					<span class="genmed">
+						<a href="{random.image.U_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->>
+							<img src="{random.image.U_THUMBNAIL}" alt="{random.image.IMAGE_NAME}" title="{random.image.IMAGE_NAME}" />
+						</a>
+					</span>
+					</td>
+				</tr>
+				<tr>
+					<td class="row2" valign="top">
+					<div class="gensmall" style="overflow: hidden;">
+					<!-- IF random.image.S_UNAPPROVED and random.image.U_STATUS --><a style="font-weight: bold;" class="reported-images-number" href="{random.image.U_STATUS}">{random.image.L_STATUS}</a><br /><br /><!-- ENDIF -->
+					<!-- IF random.image.S_REPORTED and random.image.U_REPORT --><a style="font-weight: bold;" class="reported-images-number" href="{random.image.U_REPORT}">{L_READ_REPORT}</a><br /><br /><!-- ENDIF -->
+						<!-- IF random.image.IMAGE_NAME -->{L_IMAGE_NAME}: <a href="{random.image.U_IMAGE_PAGE}" style="font-weight: bold;">{random.image.IMAGE_NAME}</a><br /><!-- ENDIF -->
+						<!-- IF random.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{random.image.U_ALBUM}" style="font-weight: bold;">{random.image.ALBUM_NAME}</a><br /><!-- ENDIF -->
+						<!-- IF random.image.POSTER -->{L_POSTER}: {random.image.POSTER}<br /><!-- ENDIF -->
+						<!-- IF random.image.TIME -->{L_POSTED}: {random.image.TIME}<br /><!-- ENDIF -->
+						<!-- IF random.image.VIEW -->{L_VIEWS}: {random.image.VIEW}<br /><!-- ENDIF -->
+						<!-- IF random.image.S_RATINGS -->{L_RATING}: <a href="{random.image.U_RATINGS}">{random.image.S_RATINGS}</a><br /><!-- ENDIF -->
+						<!-- IF random.image.S_COMMENTS -->{random.image.L_COMMENTS}: <a href="{random.image.U_COMMENTS}">{random.image.S_COMMENTS}</a><br /><!-- ENDIF -->
+						<!-- IF random.image.S_IP -->{L_IP}: {random.image.S_IP} &#187; <a href="{random.image.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a><br /><!-- ENDIF -->
+						<a href="javascript: toggleElement( getElement('moderate_{random.image.IMAGE_ID}'));">{L_MODERATE}</a>
+						<div id="moderate_{random.image.IMAGE_ID}" style="display: none;">
+							<!-- IF random.image.U_REPORT -->&#187; <a href="{random.image.U_REPORT}" class="reported-images-number">{L_READ_REPORT}</a><br /><!-- ENDIF -->
+							<!-- IF random.image.U_STATUS -->&#187; <a href="{random.image.U_STATUS}">{random.image.L_STATUS}</a><br /><!-- ENDIF -->
+							<!-- IF random.image.U_MOVE -->&#187; <a href="{random.image.U_MOVE}">{L_MOVE}</a><br /><!-- ENDIF -->
+							<!-- IF random.image.U_EDIT -->&#187; <a href="{random.image.U_EDIT}">{L_EDIT_IMAGE}</a><br /><!-- ENDIF -->
+							<!-- IF random.image.U_DELETE -->&#187; <a href="{random.image.U_DELETE}">{L_DELETE_IMAGE}</a><br /><!-- ENDIF -->
+						</div>
+					</div>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<!-- END image -->
+		<!-- BEGIN no_image --> 
+			<td class="row2" valign="top" style="width: {S_COL_WIDTH};">
+				<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline"><tr>
+				<td style="height: {S_THUMBNAIL_SIZE}px;" class="row1"></td>
+				</tr></table>
+			</td> 
+		<!-- END no_image -->
 	</tr>
+	<!-- BEGINELSE -->
 	<tr>
-		<!-- BEGIN pic_detail -->
-		<td class="row2"><div style="overflow: hidden;">
-			<!-- IF random.pic_detail.IMAGE_NAME -->{L_IMAGE_TITLE}: <a href="{random.pic_detail.U_IMAGE_PAGE}" style="font-weight: bold;">{random.pic_detail.IMAGE_NAME}</a><br /><!-- ENDIF -->
-			<!-- IF random.pic_detail.POSTER -->{L_POSTER}: {random.pic_detail.POSTER}<br /><!-- ENDIF -->
-			<!-- IF random.pic_detail.TIME -->{L_POSTED}: {random.pic_detail.TIME}<br /><!-- ENDIF -->
-			<!-- IF random.pic_detail.VIEWS -->{L_VIEWS}: {random.pic_detail.VIEWS}<br /><!-- ENDIF -->
-			<!-- IF random.pic_detail.RATINGS -->{L_RATING}: {random.pic_detail.RATINGS}<br /><!-- ENDIF -->
-			<!-- IF random.pic_detail.COMMENTS -->{random.pic_detail.L_COMMENT}: {random.pic_detail.COMMENTS}<br /><!-- ENDIF -->
-			<!-- IF random.pic_detail.ALBUM -->{L_ALBUM}: <a href="{random.pic_detail.U_ALBUM}" style="font-weight: bold;">{random.pic_detail.ALBUM}</a><br /><!-- ENDIF -->
-		</div></td>
-		<!-- END pic_detail -->
-		<!-- BEGIN picnodetail -->
-		<td class="row2"><span></span></td>
-		<!-- END picnodetail -->
+		<td class="row1" align="center" height="30"><span class="gen">{L_NO_IMAGES_LONG}</span></td>
 	</tr>
 	<!-- END random -->
 </table>

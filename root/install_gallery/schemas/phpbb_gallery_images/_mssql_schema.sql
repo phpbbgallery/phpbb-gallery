@@ -33,7 +33,8 @@ CREATE TABLE [phpbb_gallery_images] (
 	[image_rate_avg] [int] DEFAULT (0) NOT NULL ,
 	[image_comments] [int] DEFAULT (0) NOT NULL ,
 	[image_last_comment] [int] DEFAULT (0) NOT NULL ,
-	[image_favorited] [int] DEFAULT (0) NOT NULL 
+	[image_favorited] [int] DEFAULT (0) NOT NULL ,
+	[image_reported] [int] DEFAULT (0) NOT NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 

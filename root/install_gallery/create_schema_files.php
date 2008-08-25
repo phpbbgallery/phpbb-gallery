@@ -906,6 +906,7 @@ function get_schema_struct()
 			'image_comments'		=> array('UINT', 0),
 			'image_last_comment'	=> array('UINT', 0),
 			'image_favorited'		=> array('UINT', 0),
+			'image_reported'		=> array('UINT', 0),
 		),
 		'PRIMARY_KEY'				=> 'image_id',
 		'KEYS'		=> array(

@@ -28,6 +28,23 @@ include_once("{$phpbb_root_path}{$gallery_root_path}includes/common.$phpEx");
 include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
 $album_access_array = get_album_access_array();
 include_once("{$phpbb_root_path}{$gallery_root_path}mcp/mcp_functions.$phpEx");
+$mode = request_var('mode', 'album');
+
+if ($mode == 'whois' && $auth->acl_get('a_') && request_var('ip', ''))
+{
+	include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+
+	$template->assign_var('WHOIS', user_ipwhois(request_var('ip', '')));
+
+	// Output the page
+	page_header($user->lang['WHO_IS_ONLINE']);
+
+	$template->set_filenames(array(
+		'body' => 'viewonline_whois.html')
+	);
+
+	page_footer();
+}
 
 //Basic-Information && Permissions
 $image_id = request_var('image_id', 0);
@@ -73,14 +90,13 @@ $template->assign_vars(array(
 ));
 
 //some other basic-variables
-$mode = request_var('mode', 'album');
 $action = request_var('action', '');
 $option_id = request_var('option_id', 0);
 $submit = (isset($_POST['submit'])) ? true : false;
 $action = request_var('action', '');
 $redirect = request_var('redirect', $mode);
 $moving_target = request_var('moving_target', 0);
-$image_id = request_var('image_id', 0);
+$image_id = request_var('image_id', request_var('option_id', 0));
 $image_id_ary = ($image_id) ? array($image_id) : request_var('image_id_ary', array(0));
 
 //build navigation
@@ -214,6 +230,9 @@ if ($action && $image_id_ary)
 				$sql = 'UPDATE ' . GALLERY_REPORTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 					WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
 				$db->sql_query($sql);
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_reported = 0
+					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+				$db->sql_query($sql);
 				$success = true;
 			}
 			else
@@ -231,6 +250,18 @@ if ($action && $image_id_ary)
 				$sql = 'UPDATE ' . GALLERY_REPORTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 					WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
 				$db->sql_query($sql);
+				$sql = 'SELECT report_image_id, report_id
+					FROM ' . GALLERY_REPORTS_TABLE . "
+					WHERE report_status = 1
+						AND " . $db->sql_in_set('report_id', $image_id_ary);;
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_reported = ' . $row['report_id'] . '
+						WHERE ' . $db->sql_in_set('image_id', $row['report_image_id']);
+					$db->sql_query($sql);
+				}
+				$db->sql_freeresult($result);
 				$success = true;
 			}
 			else
@@ -242,6 +273,9 @@ if ($action && $image_id_ary)
 			if (confirm_box(true))
 			{
 				$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . ' WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
+				$db->sql_query($sql);
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_reported = 0
+					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
 				$db->sql_query($sql);
 				$success = true;
 			}

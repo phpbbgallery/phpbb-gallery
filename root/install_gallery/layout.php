@@ -55,6 +55,8 @@ echo '							<li' . (($mode == 'install') ? $activemenu : '') . '><a href="insta
 echo '							<li' . (($mode == 'convert') ? $activemenu : '') . '><a href="install.php?mode=convert"><span>' . sprintf($user->lang['INSTALLER_CONVERT_NOTE'], $new_mod_version) . '</span></a></li>';
 echo '							<li' . (($mode == 'delete') ? $activemenu : '') . '><a href="install.php?mode=delete"><span>' . $user->lang['INSTALLER_DELETE_NOTE'] . '</span></a></li>';
 echo '							<li class="header">' . $user->lang['INSTALLER_UPDATE_MENU'] . ' 0.4.x</li>';
+echo '							<li' . (($version == 'svn') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=svn"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . ' SVN</span></a></li>';
+echo '							<li' . (($version == '0.4.0-RC2') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.4.0-RC2"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.4.0-RC2</span></a></li>';
 echo '							<li' . (($version == '0.4.0-RC1') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.4.0-RC1"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.4.0-RC1</span></a></li>';
 echo '							<li class="header">' . $user->lang['INSTALLER_UPDATE_MENU'] . ' 0.3.x</li>';
 echo '							<li' . (($version == '0.3.1') ? $activemenu : '') . '><a href="install.php?mode=update&amp;v=0.3.1"><span>' . $user->lang['INSTALLER_UPDATE_VERSION'] . '0.3.1</span></a></li>';
