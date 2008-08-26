@@ -31,8 +31,8 @@ while ($row = $db->sql_fetchrow($result))
 $db->sql_freeresult($result);
 
 $user->add_lang('mods/info_acp_gallery');
-// Disable gallery if the install_gallery/ directory is still present
-if (file_exists($phpbb_root_path . 'install_gallery'))
+// Disable gallery if the install/ directory is still present
+if (file_exists($phpbb_root_path . 'install'))
 {
 	//REMOVE//trigger_error('REMOVE_GALLERY_INSTALL');
 }
