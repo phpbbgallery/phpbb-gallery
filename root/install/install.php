@@ -2,12 +2,12 @@
 
 /**
 *
-* @package phpBB3 - phpBB Gallery database updater
+* @package NV Install
 * @version $Id$
-* @copyright (c) 2007 phpBB Gallery
+* @copyright (c) 2008 nickvergessen http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
-*/
+**/
 
 define('IN_PHPBB', true);
 $phpbb_root_path = '../';
@@ -383,7 +383,7 @@ if ($submit)
 			$cache->purge();
 			add_log('admin', 'LOG_INSTALL_INSTALLED', $log_name);
 			add_log('admin', 'LOG_PURGE_CACHE');
-			$message = sprintf($user->lang['INSTALLER_INSTALL_SUCCESSFUL'], $new_mod_version);
+			$message = sprintf($user->lang['INSTALL_SUCCESSFUL'], $new_mod_version);
 			trigger_error($message);
 
 		break;
@@ -415,8 +415,10 @@ else
 
 	$template->assign_vars(array(
 		'CREATE_MODULES'		=> true,
+		'S_UCP_MODULE'			=> true,
 		'DEFAULT_UCP_MODULE'	=> $default_ucp_module,
 		'SELECT_UCP_MODULE'		=> $select_ucp_module,
+		'S_ACP_MODULE'			=> true,
 		'DEFAULT_ACP_MODULE'	=> $default_acp_module,
 		'SELECT_ACP_MODULE'		=> $select_acp_module,
 	));

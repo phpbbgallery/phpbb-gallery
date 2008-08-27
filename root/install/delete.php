@@ -2,12 +2,12 @@
 
 /**
 *
-* @package phpBB3 - phpBB Gallery database updater
+* @package NV Install
 * @version $Id$
-* @copyright (c) 2007 phpBB Gallery
+* @copyright (c) 2008 nickvergessen http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
-*/
+**/
 
 define('IN_PHPBB', true);
 $phpbb_root_path = '../';
@@ -76,7 +76,7 @@ if ($submit)
 	*/
 	$cache->purge();
 	add_log('admin', 'LOG_PURGE_CACHE');
-	$message = $user->lang['INSTALLER_DELETE_SUCCESSFUL'];
+	$message = $user->lang['DELETE_SUCCESSFUL'];
 	trigger_error($message);
 }
 else
@@ -87,7 +87,7 @@ else
 	$result = $db->sql_query($sql);
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$select_bbcode .= ($select_bbcode == '') ? '<select name="bbcode_id"><option value="0">' . $user->lang['INSTALLER_DELETE_BBCODE'] . '</option>' : '';
+		$select_bbcode .= ($select_bbcode == '') ? '<select name="bbcode_id"><option value="0">' . $user->lang['DELETE_BBCODE'] . '</option>' : '';
 		$select_bbcode .= '<option value="' . $row['bbcode_id'] . '">[' . $row['bbcode_tag'] . ']</option>';
 	}
 	$db->sql_freeresult($result);

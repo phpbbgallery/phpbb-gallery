@@ -2,12 +2,12 @@
 
 /**
 *
-* @package phpBB3 - phpBB Gallery database updater
+* @package NV Install
 * @version $Id$
-* @copyright (c) 2007 phpBB Gallery
+* @copyright (c) 2008 nickvergessen http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
-*/
+**/
 
 define('IN_PHPBB', true);
 $phpbb_root_path = '../';
@@ -30,13 +30,13 @@ $template->assign_vars(array(
 	'S_IN_CONVERT'			=> true,
 	'U_ACTION'				=> append_sid("{$phpbb_root_path}install/convert.php", "mode=$mode"),
 	'MODE'					=> $mode,
-	'CONVERT_NOTE_SMARTOR'	=> $user->lang['INSTALLER_CONVERT_SMARTOR'],
-	'CONVERT_NOTE'			=> sprintf($user->lang['INSTALLER_CONVERT_NOTE'], $new_mod_version),
+	'CONVERT_NOTE_SMARTOR'	=> $user->lang['CONVERT_SMARTOR'],
+	'CONVERT_NOTE'			=> sprintf($user->lang['CONVERT_NOTE'], $new_mod_version),
 ));
 
 if ($submit && ($convert_prefix == ''))
 {
-	$message = sprintf($user->lang['INSTALLER_CONVERT_UNSUCCESSFUL2'], $new_mod_version);
+	$message = sprintf($user->lang['CONVERT_PREFIX_MISSING'], $new_mod_version);
 	$message .= install_back_link(append_sid("{$phpbb_root_path}install/convert.$phpEx", "mode=$mode"));
 	trigger_error($message, E_USER_WARNING);
 	$submit = false;
@@ -575,7 +575,7 @@ if ($submit)
 			$cache->purge();
 			add_log('admin', 'LOG_INSTALL_INSTALLED', $log_name);
 			add_log('admin', 'LOG_PURGE_CACHE');
-			$message = sprintf($user->lang['INSTALLER_CONVERT_SUCCESSFUL'], $new_mod_version);
+			$message = sprintf($user->lang['CONVERT_SUCCESSFUL'] . '<br />' . $user->lang['CONVERT_SUCCESSFUL_ADD'], $new_mod_version);
 			trigger_error($message);
 
 		break;
@@ -613,8 +613,10 @@ else
 
 	$template->assign_vars(array(
 		'CREATE_MODULES'		=> true,
+		'S_UCP_MODULE'			=> true,
 		'DEFAULT_UCP_MODULE'	=> $default_ucp_module,
 		'SELECT_UCP_MODULE'		=> $select_ucp_module,
+		'S_ACP_MODULE'			=> true,
 		'DEFAULT_ACP_MODULE'	=> $default_acp_module,
 		'SELECT_ACP_MODULE'		=> $select_acp_module,
 	));

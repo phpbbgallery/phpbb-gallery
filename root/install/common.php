@@ -2,12 +2,12 @@
 
 /**
 *
-* @package phpBB3 - phpBB Gallery database updater
+* @package NV Install
 * @version $Id$
-* @copyright (c) 2007 phpBB Gallery
+* @copyright (c) 2008 nickvergessen http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
-*/
+**/
 
 define('IN_PHPBB', true);
 $phpbb_root_path = '../';
@@ -19,13 +19,13 @@ $user->session_begin();
 $auth->acl($user->data);
 $user->setup();
 
-$user->add_lang('mods/gallery_install');
-$user->add_lang('mods/info_acp_gallery');
+$user->add_lang('mods/nv_install');
+$user->add_lang('mods/nv_install_gallery');
 
 $new_mod_version = '0.4.0-RC3';
 $last_mod_version = '0.4.0-RC2';
-$page_title = 'phpBB Gallery v' . $new_mod_version;
-$log_name = 'Modification "phpBB Gallery" v' . $new_mod_version;
+$page_title = sprintf($user->lang['PAGE_TITLE'], $new_mod_version);
+$log_name = 'Modification "'. sprintf($user->lang['PAGE_TITLE'], $new_mod_version) . '"';
 
 $module_names = array('ACP_GALLERY_MANAGE_USER', 'ACP_GALLERY_MANAGE_RESTS', 'ACP_GALLERY_CLEANUP', 'ACP_IMPORT_ALBUMS', 'ACP_GALLERY_ALBUM_PERSONAL_PERMISSIONS', 'ACP_GALLERY_ALBUM_PERMISSIONS', 'ACP_GALLERY_CONFIGURE_GALLERY', 'ACP_GALLERY_MANAGE_CACHE', 'ACP_GALLERY_MANAGE_ALBUMS', 'ACP_GALLERY_OVERVIEW', 'PHPBB_GALLERY');
 $module_names = array_merge($module_names, array('UCP_GALLERY_PERSONAL_ALBUMS', 'UCP_GALLERY_FAVORITES', 'UCP_GALLERY_WATCH', 'UCP_GALLERY_SETTINGS', 'UCP_GALLERY'));
@@ -37,9 +37,9 @@ $template->set_custom_template('../install/style', 'nv_install');
 $template->assign_var('T_TEMPLATE_PATH', '../install/style');
 
 $template->assign_vars(array(
-	'GALLERY_ROOT_PATH'			=> $phpbb_root_path . $gallery_root_path,
-	'INSTALL_VERSION'			=> sprintf($user->lang['INSTALLER_INSTALL_VERSION'], $new_mod_version),
-	'PAGE_TITLE'				=> 'phpBB Gallery v' . $new_mod_version,
+	'U_SPECIAL_ROOT_PATH'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}"),
+	'INSTALL_VERSION'			=> sprintf($user->lang['INSTALL_VERSION'], $new_mod_version),
+	'PAGE_TITLE'				=> $page_title,
 
 	'U_INTRO'				=> append_sid("{$phpbb_root_path}install/index.php"),
 	'U_INSTALL'				=> append_sid("{$phpbb_root_path}install/install.php"),

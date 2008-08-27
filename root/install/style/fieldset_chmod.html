@@ -1,0 +1,14 @@
+		<fieldset>
+			<legend>{L_CHMOD}</legend>
+			<p>{L_CHMOD_EXPLAIN}</p>
+			<!-- BEGIN chmods -->
+				<dl>
+					<dt><label for="chmod">{chmods.DIR}</label></dt>
+					<!-- IF chmods.S_WRITABLE -->
+						<dd><label><strong style="color:green">{L_CHMOD_WRITABLE}</strong></label></dd>
+					<!-- ELSE -->
+						<dd><label><strong style="color:red">{L_CHMOD_UNWRITABLE}</strong></label></dd>
+					<!-- ENDIF -->
+				</dl>
+			<!-- END chmods -->
+		</fieldset>

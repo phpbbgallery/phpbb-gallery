@@ -2,12 +2,12 @@
 
 /**
 *
-* @package phpBB3 - phpBB Gallery database updater
+* @package NV Install
 * @version $Id$
-* @copyright (c) 2007 phpBB Gallery
+* @copyright (c) 2008 nickvergessen http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
-*/
+**/
 
 define('IN_PHPBB', true);
 $phpbb_root_path = '../';

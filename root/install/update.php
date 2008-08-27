@@ -2,12 +2,12 @@
 
 /**
 *
-* @package phpBB3 - phpBB Gallery database updater
+* @package NV Install
 * @version $Id$
-* @copyright (c) 2007 phpBB Gallery
+* @copyright (c) 2008 nickvergessen http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
-*/
+**/
 
 define('IN_PHPBB', true);
 $phpbb_root_path = '../';
@@ -17,7 +17,6 @@ include($phpbb_root_path . 'install/common.' . $phpEx);
 $load_step = request_var('step', 1);
 $confirm = request_var('confirm', 0);
 $submit = ((isset($_POST['submit']) && $confirm) || ($load_step > 1)) ? true : false;
-$mode = request_var('mode', 'smartor');
 
 $message = $aiming_version = $select_ucp_module = $default_ucp_module = $select_acp_module = $default_acp_module = $personal_album = '';
 $choosen_acp_module = request_var('select_acp_module', 0);
@@ -92,7 +91,7 @@ $template->assign_vars(array(
 	'S_IN_UPDATE'			=> true,
 	'U_ACTION'				=> append_sid("{$phpbb_root_path}install/update.php", "v=$version"),
 	'VERSION'				=> $version,
-	'UPDATE_NOTE'			=> sprintf($user->lang['INSTALLER_UPDATE_NOTE'], $version, $new_mod_version),
+	'UPDATE_NOTE'			=> sprintf($user->lang['UPDATE_NOTE'], $version, $new_mod_version),
 ));
 
 if ($submit)
@@ -940,7 +939,7 @@ if ($submit)
 			$cache->purge();
 			add_log('admin', 'LOG_INSTALL_INSTALLED', $log_name);
 			add_log('admin', 'LOG_PURGE_CACHE');
-			$message = sprintf($user->lang['INSTALLER_CONVERT_SUCCESSFUL'], $new_mod_version);
+			$message = sprintf($user->lang['UPDATE_SUCCESSFUL'], $new_mod_version);
 			trigger_error($message);
 
 		break;
@@ -980,8 +979,10 @@ else
 
 	$template->assign_vars(array(
 		'CREATE_MODULES'		=> $create_new_modules,
+		'S_UCP_MODULE'			=> $create_new_modules,
 		'DEFAULT_UCP_MODULE'	=> $default_ucp_module,
 		'SELECT_UCP_MODULE'		=> $select_ucp_module,
+		'S_ACP_MODULE'			=> $create_new_modules,
 		'DEFAULT_ACP_MODULE'	=> $default_acp_module,
 		'SELECT_ACP_MODULE'		=> $select_acp_module,
 	));

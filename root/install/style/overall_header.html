@@ -11,17 +11,17 @@
 <div id="wrap">
 	<div id="page-header">
 		<h1>{PAGE_TITLE}</h1>
-		<p><a href="{ROOT_PATH}">{L_INDEX}</a> &bull; <a href="{GALLERY_ROOT_PATH}">{L_GALLERY}</a></p>
+		<p><a href="{ROOT_PATH}">{L_INDEX}</a><!-- IF U_SPECIAL_ROOT_PATH --> &bull; <a href="{U_SPECIAL_ROOT_PATH}">{L_SPECIAL_ROOT_PATH}</a><!-- ENDIF --></p>
 		<p id="skip"><a href="#acp">{L_SKIP}</a></p>
 	</div>
 	<div id="page-body">
 		<div id="tabs">
 			<ul>
-				<li<!-- IF S_IN_INTRO --> id="activetab"<!-- ENDIF -->><a href="{U_INTRO}"><span>{L_INSTALLER_INTRO}</span></a></li>
-				<li<!-- IF S_IN_INSTALL --> id="activetab"<!-- ENDIF -->><a href="{U_INSTALL}"><span>{L_INSTALLER_INSTALL}</span></a></li>
-				<li<!-- IF S_IN_UPDATE --> id="activetab"<!-- ENDIF -->><a href="{U_UPDATE}"><span>{L_INSTALLER_UPDATE}</span></a></li>
-				<li<!-- IF S_IN_CONVERT --> id="activetab"<!-- ENDIF -->><a href="{U_CONVERT}"><span>{L_INSTALLER_CONVERT}</span></a></li>
-				<li<!-- IF S_IN_DELETE --> id="activetab"<!-- ENDIF -->><a href="{U_DELETE}"><span>{L_INSTALLER_DELETE}</span></a></li>
+				<li<!-- IF S_IN_INTRO --> id="activetab"<!-- ENDIF -->><a href="{U_INTRO}"><span>{L_TAB_INTRO}</span></a></li>
+				<li<!-- IF S_IN_INSTALL --> id="activetab"<!-- ENDIF -->><a href="{U_INSTALL}"><span>{L_TAB_INSTALL}</span></a></li>
+				<!-- IF U_UPDATE --><li<!-- IF S_IN_UPDATE --> id="activetab"<!-- ENDIF -->><a href="{U_UPDATE}"><span>{L_TAB_UPDATE}</span></a></li><!-- ENDIF -->
+				<!-- IF U_CONVERT --><li<!-- IF S_IN_CONVERT --> id="activetab"<!-- ENDIF -->><a href="{U_CONVERT}"><span>{L_TAB_CONVERT}</span></a></li><!-- ENDIF -->
+				<!-- IF U_DELETE --><li<!-- IF S_IN_DELETE --> id="activetab"<!-- ENDIF -->><a href="{U_DELETE}"><span>{L_TAB_DELETE}</span></a></li><!-- ENDIF -->
 			</ul>
 		</div>
 
@@ -33,24 +33,23 @@
 						<p>{INSTALL_VERSION}</p>
 						<ul>
 							<!-- IF S_IN_INSTALL -->
-								<li class="header">{L_INSTALLER_INSTALL_MENU}</li>
+								<li class="header">{L_TAB_INSTALL}</li>
 								<li id="activemenu"><a href="{U_I_INSTALL}"><span>{INSTALL_VERSION}</span></a></li>
 							<!-- ENDIF -->
 							<!-- IF S_IN_UPDATE -->
 								<!-- BEGIN menu_row -->
-									<li class="header">{L_INSTALLER_UPDATE_MENU} {menu_row.VERSION}</li>
+									<li class="header">{L_TAB_UPDATE} {menu_row.VERSION}</li>
 									<!-- BEGIN update -->
-										<li<!-- IF VERSION == menu_row.update.VERSION --> id="activemenu"<!-- ENDIF -->><a href="{menu_row.update.U_VERSION}"><span>{L_INSTALLER_UPDATE_VERSION}{menu_row.update.VERSION}</span></a></li>
+										<li<!-- IF VERSION == menu_row.update.VERSION --> id="activemenu"<!-- ENDIF -->><a href="{menu_row.update.U_VERSION}"><span>{L_UPDATE_VERSION}{menu_row.update.VERSION}</span></a></li>
 									<!-- END update -->
 								<!-- END menu_row -->
 							<!-- ENDIF -->
 							<!-- IF S_IN_CONVERT -->
-								<li class="header">{L_INSTALLER_CONVERT}</li>
+								<li class="header">{L_CONVERTER}</li>
 								<li <!-- IF MODE == 'smartor' --> id="activemenu"<!-- ENDIF -->><a href="{U_C_SMARTOR}"><span>{CONVERT_NOTE_SMARTOR}</span></a></li>
 							<!-- ENDIF -->
 							<!-- IF S_IN_DELETE -->
-								<li class="header">{L_INSTALLER_DELETE}</li>
-								<li id="activemenu"><a href="{U_I_DELETE}"><span>{L_INSTALLER_DELETE_NOTE}</span></a></li>
+								<li id="activemenu"><a href="{U_I_DELETE}"><span>{L_DELETE_NOTE}</span></a></li>
 							<!-- ENDIF -->
 						</ul>
 					</div>
