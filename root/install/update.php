@@ -933,6 +933,50 @@ if ($submit)
 
 		case 26:
 			/*
+			* Update image rate-data: >0.3.1 missed on convertor so repeat
+			*/
+			$sql = 'SELECT rate_image_id, COUNT(rate_user_ip) image_rates, AVG(rate_point) image_rate_avg, SUM(rate_point) image_rate_points
+				FROM ' . GALLERY_RATES_TABLE . '
+				GROUP BY rate_image_id';
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+					SET image_rates = ' . $row['image_rates'] . ',
+						image_rate_points = ' . $row['image_rate_points'] . ',
+						image_rate_avg = ' . round($row['image_rate_avg'], 2) * 100 . '
+					WHERE image_id = ' . $row['rate_image_id'];
+				$db->sql_query($sql);
+			}
+			$db->sql_freeresult($result);
+
+			$load_new_step = $load_step + 1;
+			$message = sprintf($user->lang['STEP_LOG'], ($full_update_steps - $steps_offset), (25 - $steps_offset), $user->lang['STEPS_UPDATE_IMAGES'], $user->lang['STEP_SUCCESSFUL']);
+		break;
+
+		case 27:
+			/*
+			* Update image comment-data >0.3.1 missed on convertor so repeat
+			*/
+			$sql = 'SELECT COUNT(comment_id) comments, MAX(comment_id) image_last_comment, comment_image_id
+				FROM ' . GALLERY_COMMENTS_TABLE . "
+				GROUP BY comment_image_id";
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_comments = ' . $row['comments'] . ',
+					image_last_comment = ' . $row['image_last_comment'] . '
+					WHERE ' . $db->sql_in_set('image_id', $row['comment_image_id']);
+				$db->sql_query($sql);
+			}
+			$db->sql_freeresult($result);
+
+			$load_new_step = $load_step + 1;
+			$message = sprintf($user->lang['STEP_LOG'], ($full_update_steps - $steps_offset), (25 - $steps_offset), $user->lang['STEPS_UPDATE_IMAGES'], $user->lang['STEP_SUCCESSFUL']);
+		break;
+
+		case 26:
+			/*
 			* Final step
 			*/
 			gallery_config_value('album_version', $new_mod_version, true);
