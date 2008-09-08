@@ -7,11 +7,11 @@
 Wenn ich mehr Zeit habe, werde ich in diesem Forum eine "Feature"-Liste posten:
 http://www.flying-bits.org/viewforum.php?f=38[/list]
 
-[b]Features:[/b] Die Liste mit dne eingebauten Features ist noch nciht verfügbar.
+[b]Features:[/b] Die Liste mit den eingebauten Features ist noch nciht verfügbar.
 
 [b]Demo URL:[/b] http://www.flying-bits.org/gallery/index.php
-[b]Unterstpützte Sprachpakete:[/b] de, en
-[b]Unterstpützte Styles:[/b] prosilver, subsilver2
+[b]Unterstützte Sprachpakete:[/b] de, en
+[b]Unterstützte Styles:[/b] prosilver, subsilver2
 
 [b]MOD Repository[/b]: http://code.bantux.de/svn/phpbb-gallery (SVN/Subversion)
 [b]Repository durchsuchen[/b]: http://code.bantux.de/repositories/show/phpbb-gallery
