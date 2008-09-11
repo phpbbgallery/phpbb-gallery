@@ -48,8 +48,8 @@ function get_album_access_array()
 		foreach ($permissions as $permission)
 		{
 			$album_access_array[-1][$permission] = 0;
-			$album_access_array[-2][$permission] = 0;
-			$album_access_array[-3][$permission] = 0;
+			$album_access_array[OWN_GALLERY_PERMISSIONS][$permission] = 0;
+			$album_access_array[PERSONAL_GALLERY_PERMISSIONS][$permission] = 0;
 			//generate for the sql
 			$pull_data .= " MAX($permission) as $permission,";
 		}
@@ -91,14 +91,14 @@ function get_album_access_array()
 				case 3:
 					foreach ($permissions as $permission)
 					{
-						$album_access_array[-3][$permission] = $row[$permission];
+						$album_access_array[PERSONAL_GALLERY_PERMISSIONS][$permission] = $row[$permission];
 					}
 				break;
 
 				case 2:
 					foreach ($permissions as $permission)
 					{
-						$album_access_array[-2][$permission] = $row[$permission];
+						$album_access_array[OWN_GALLERY_PERMISSIONS][$permission] = $row[$permission];
 					}
 				break;
 
@@ -131,11 +131,11 @@ function get_album_access_array()
 /**
 * other call for the permissions
 */
-function gallery_acl_check($mode, $album_id, $album_user_id = false)
+function gallery_acl_check($mode, $album_id, $album_user_id = -1)
 {
 	global $user, $album_access_array, $cache;
 
-	if (!isset($album_user_id) && ($album_id > 0))
+	if (($album_user_id < 0) && ($album_id > 0))
 	{
 		$albums = $cache->obtain_album_list();
 		$album_user_id = $albums[$album_id]['album_user_id'];
@@ -217,11 +217,11 @@ function gallery_acl_album_ids($permission, $mode = 'array')
 	{
 		if ($album['album_user_id'] == $user->data['user_id'])
 		{
-			$acl_case = -2;
+			$acl_case = OWN_GALLERY_PERMISSIONS;
 		}
 		else if ($album['album_user_id'] > 0)
 		{
-			$acl_case = -3;
+			$acl_case = PERSONAL_GALLERY_PERMISSIONS;
 		}
 		else
 		{

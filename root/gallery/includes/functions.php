@@ -252,7 +252,7 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 			$disabled = true;
 		}
 
-		if ($select_id == SETTING_PERMISSIONS)
+		if (($select_id == SETTING_PERMISSIONS) && $row['album_user_id'])
 		{
 			$list = true;
 		}
