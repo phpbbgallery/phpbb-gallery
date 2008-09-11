@@ -207,6 +207,8 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 	$album_data = $cache->obtain_album_list();
 
 	$right = $last_a_u_id = 0;
+	$access_own = $access_personal = false;
+	$c_access_own = $c_access_personal = false;
 	$padding_store = array('0' => '');
 	$padding = $album_list = '';
 
@@ -216,9 +218,10 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 
 	foreach ($album_data as $row)
 	{
+		$list = false;
 		if ($row['album_user_id'] != $last_a_u_id)
 		{
-			if (!$last_a_u_id && gallery_acl_check('i_view', '-3') && !$ignore_personals)
+			if (!$last_a_u_id && gallery_acl_check('i_view', PERSONAL_GALLERY_PERMISSIONS) && !$ignore_personals)
 			{
 				$album_list .= '<option disabled="disabled" class="disabled-option">' . $user->lang['PERSONAL_ALBUMS'] . '</option>';
 			}
@@ -244,12 +247,46 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 		((is_array($ignore_id) && in_array($row['album_id'], $ignore_id)) || $row['album_id'] == $ignore_id)
 		||
 		//need upload permissions (for moving)
-		(($requested_permission == 'i_upload') && (($row['album_type'] == G_ALBUM_CAT) || (!gallery_acl_check('i_upload', $row['album_id']) && !gallery_acl_check('a_moderate', $row['album_id'])))))
+		(($requested_permission == 'i_upload') && (($row['album_type'] == G_ALBUM_CAT) || (!gallery_acl_check('i_upload', $row['album_id'], $row['album_user_id']) && !gallery_acl_check('a_moderate', $row['album_id'], $row['album_user_id'])))))
 		{
 			$disabled = true;
 		}
 
-		if (gallery_acl_check('i_view', $row['album_id']) && (!$row['album_user_id'] || !$ignore_personals))
+		if ($select_id == SETTING_PERMISSIONS)
+		{
+			$list = true;
+		}
+		else if (!$row['album_user_id'])
+		{
+			if (gallery_acl_check('i_view', $row['album_id'], $row['album_user_id']))
+			{
+				$list = true;
+			}
+			#echo $row['album_user_id'] . $row['album_id'] . '<br />';
+		}
+		else if (!$ignore_personals)
+		{
+			if ($row['album_user_id'] == $user->data['user_id'])
+			{
+				if (!$c_access_own)
+				{
+					$c_access_own = true;
+					$access_own = gallery_acl_check('i_view', OWN_GALLERY_PERMISSIONS);
+				}
+				$list = $access_own;
+			}
+			else if ($row['album_user_id'])
+			{
+				if (!$c_access_personal)
+				{
+					$c_access_personal = true;
+					$access_personal = gallery_acl_check('i_view', PERSONAL_GALLERY_PERMISSIONS);
+				}
+				$list = $access_personal;
+			}
+		}
+
+		if ($list)
 		{
 			$selected = (is_array($select_id)) ? ((in_array($row['album_id'], $select_id)) ? ' selected="selected"' : '') : (($row['album_id'] == $select_id) ? ' selected="selected"' : '');
 			$album_list .= '<option value="' . $row['album_id'] . '"' . (($disabled) ? ' disabled="disabled" class="disabled-option"' : $selected) . '>' . $padding . $row['album_name'] . ' (ID: ' . $row['album_id'] . ')</option>';

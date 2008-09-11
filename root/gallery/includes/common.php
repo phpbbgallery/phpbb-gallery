@@ -34,7 +34,7 @@ $user->add_lang('mods/info_acp_gallery');
 // Disable gallery if the install/ directory is still present
 if (file_exists($phpbb_root_path . 'install'))
 {
-	//REMOVE//trigger_error('REMOVE_GALLERY_INSTALL');
+	trigger_error('REMOVE_GALLERY_INSTALL');
 }
 
 $template->assign_vars(array(

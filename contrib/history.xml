@@ -52,6 +52,7 @@
 
           <change><![CDATA[[Change] Report #299: Move Images into personal albums]]></change>
 
+          <change><![CDATA[[Fix] Report #323: Slow loading page when creating albums-list]]></change>
           <change><![CDATA[[Fix] Unreported: wrong class for the MOVE-Button]]></change>
           <change><![CDATA[[Fix] phpBB.de-p1022203: Unknown column 'username' in 'order clause']]></change>
           <change><![CDATA[[Fix] Report #311: Unable to Approve and Unapprove images]]></change>

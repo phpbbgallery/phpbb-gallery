@@ -77,8 +77,8 @@ recent_gallery_images(1, 4, $display, 'both');
 */
 
 $template->assign_vars(array(
-	'U_YOUR_PERSONAL_GALLERY' 		=> (gallery_acl_check('i_upload', '-2')) ? ($user->gallery['personal_album_id'] > 0) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $user->gallery['personal_album_id']) : append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums') : '',
-	'U_USERS_PERSONAL_GALLERIES' 	=> (gallery_acl_check('i_view', '-3')) ? append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal') : '',
+	'U_YOUR_PERSONAL_GALLERY' 		=> (gallery_acl_check('i_upload', OWN_GALLERY_PERMISSIONS)) ? ($user->gallery['personal_album_id'] > 0) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $user->gallery['personal_album_id']) : append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums') : '',
+	'U_USERS_PERSONAL_GALLERIES' 	=> (gallery_acl_check('i_view', PERSONAL_GALLERY_PERMISSIONS)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal') : '',
 
 	'S_LOGIN_ACTION'				=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login&amp;redirect=' . urlencode("{$gallery_root_path}index.$phpEx" . (($mode == 'personal') ? '?mode=personal' : ''))),
 	'S_COLS' 						=> $album_config['cols_per_page'],

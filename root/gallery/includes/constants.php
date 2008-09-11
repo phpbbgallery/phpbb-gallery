@@ -22,6 +22,10 @@ define('ALBUM_DIR_NAME', 'gallery/');
 define('G_ALBUM_CAT', 0);
 define('G_ALBUM_UPLOAD', 1);
 
+define('SETTING_PERMISSIONS', -39839);
+define('OWN_GALLERY_PERMISSIONS', -2);
+define('PERSONAL_GALLERY_PERMISSIONS', -3);
+
 define('GALLERY_UPLOAD_PATH', GALLERY_ROOT_PATH . 'upload/');
 define('GALLERY_CACHE_PATH', GALLERY_UPLOAD_PATH . 'cache/');
 

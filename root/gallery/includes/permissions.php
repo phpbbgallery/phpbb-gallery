@@ -131,46 +131,50 @@ function get_album_access_array()
 /**
 * other call for the permissions
 */
-function gallery_acl_check($mode, $album_id)
+function gallery_acl_check($mode, $album_id, $album_user_id = false)
 {
 	global $user, $album_access_array, $cache;
 
-	$albums = $cache->obtain_album_list();
-	if ($album_id == -2)
+	if (!isset($album_user_id) && ($album_id > 0))
+	{
+		$albums = $cache->obtain_album_list();
+		$album_user_id = $albums[$album_id]['album_user_id'];
+	}
+
+	if ($album_id == OWN_GALLERY_PERMISSIONS)
 	{
 		if ($mode == 'album_count')
 		{
-			$access = $album_access_array[-2][$mode];
+			$access = $album_access_array[OWN_GALLERY_PERMISSIONS][$mode];
 		}
 		else
 		{
-			$access = ($album_access_array[-2][$mode] == 1) ? true : false;
+			$access = ($album_access_array[OWN_GALLERY_PERMISSIONS][$mode] == 1) ? true : false;
 		}
 		return $access;
 	}
-	if ($album_id == -3)
+	if ($album_id == PERSONAL_GALLERY_PERMISSIONS)
 	{
 		if ($mode == 'album_count')
 		{
-			$access = $album_access_array[-3][$mode];
+			$access = $album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode];
 		}
 		else
 		{
-			$access = ($album_access_array[-3][$mode] == 1) ? true : false;
+			$access = ($album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode] == 1) ? true : false;
 		}
 		return $access;
 	}
-	$album_data = $albums[$album_id];
 
 	if ($mode == 'i_count')
 	{
-		if ($album_data['album_user_id'] == $user->data['user_id'])
+		if ($album_user_id == $user->data['user_id'])
 		{
-			$access = $album_access_array[-2][$mode];
+			$access = $album_access_array[OWN_GALLERY_PERMISSIONS][$mode];
 		}
-		else if ($album_data['album_user_id'] > 0)
+		else if ($album_user_id > 0)
 		{
-			$access = $album_access_array[-3][$mode];
+			$access = $album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode];
 		}
 		else
 		{
@@ -179,13 +183,13 @@ function gallery_acl_check($mode, $album_id)
 	}
 	else
 	{
-		if ($album_data['album_user_id'] == $user->data['user_id'])
+		if ($album_user_id == $user->data['user_id'])
 		{
-			$access = ($album_access_array[-2][$mode] == 1) ? true : false;
+			$access = ($album_access_array[OWN_GALLERY_PERMISSIONS][$mode] == 1) ? true : false;
 		}
-		else if ($album_data['album_user_id'] > 0)
+		else if ($album_user_id > 0)
 		{
-			$access = ($album_access_array[-3][$mode] == 1) ? true : false;
+			$access = ($album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode] == 1) ? true : false;
 		}
 		else
 		{
