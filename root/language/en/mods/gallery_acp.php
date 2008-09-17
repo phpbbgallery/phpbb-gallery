@@ -296,4 +296,14 @@ $lang = array_merge($lang, array(
 	'WATERMARK_HEIGHT'				=> 'Minimum-height for watermark',
 ));
 
+// Added for 0.4.0-RC3
+$lang = array_merge($lang, array(
+	'PERMISSION_NO_GROUP'			=> 'You didn\'t select a group to set the permissions.',
+	'PURGED_CACHE'					=> 'Purged the cache',
+
+	'RESYNCED_IMAGECOUNTS'			=> 'Resynchronised image counts',
+	'RESYNCED_LAST_IMAGES'			=> 'Refreshed "Last image"',
+	'RESYNCED_PERSONALS'			=> 'Resynchronised personal album id\'s',
+));
+
 ?>

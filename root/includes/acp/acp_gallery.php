@@ -486,7 +486,7 @@ class acp_gallery
 						}
 						$db->sql_freeresult($result);
 						set_config('num_images', $total_images, true);
-
+						trigger_error($user->lang['RESYNCED_IMAGECOUNTS'] . adm_back_link($this->u_action));
 					break;
 
 					case 'personals':
@@ -506,6 +506,7 @@ class acp_gallery
 							$db->sql_query('UPDATE ' . GALLERY_USERS_TABLE . " SET personal_album_id = {$row['album_id']} WHERE user_id = {$row['album_user_id']}");
 						}
 						$db->sql_freeresult($result);
+						trigger_error($user->lang['RESYNCED_PERSONALS'] . adm_back_link($this->u_action));
 					break;
 
 					case 'last_images':
@@ -518,6 +519,7 @@ class acp_gallery
 							update_lastimage_info($row['album_id']);
 						}
 						$db->sql_freeresult($result);
+						trigger_error($user->lang['RESYNCED_LAST_IMAGES'] . adm_back_link($this->u_action));
 					break;
 
 					case 'purge_cache':
@@ -537,6 +539,7 @@ class acp_gallery
 						}
 
 						@closedir($cache_dir);
+						trigger_error($user->lang['PURGED_CACHE'] . adm_back_link($this->u_action));
 					break;
 				}
 			}
@@ -1488,7 +1491,7 @@ class acp_gallery
 		if ($step == 0)
 		{
 			$template->assign_vars(array(
-				'ALBUM_LIST'		=> gallery_albumbox(true, ''),
+				'ALBUM_LIST'		=> gallery_albumbox(true, '', SETTING_PERMISSIONS),
 			));
 			$step = 1;
 		}
@@ -1570,7 +1573,7 @@ class acp_gallery
 			{
 				trigger_error('FORM_INVALID');
 			}
-			//ALbum names
+			//Album names
 			foreach ($albums as $album)
 			{
 				if (in_array($album['album_id'], $album_ary))
@@ -1582,6 +1585,10 @@ class acp_gallery
 				}
 			}
 			//Group names
+			if (!$group_list)
+			{
+				trigger_error($user->lang['PERMISSION_NO_GROUP'] . adm_back_link($this->u_action), E_USER_WARNING);
+			}
 			$sql = 'SELECT group_id, group_type, group_name, group_colour FROM ' . GROUPS_TABLE . "
 				WHERE group_id IN ($group_list)";
 			$result = $db->sql_query($sql);

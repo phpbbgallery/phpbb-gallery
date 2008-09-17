@@ -296,4 +296,14 @@ $lang = array_merge($lang, array(
 	'WATERMARK_HEIGHT'				=> 'Mindesthöhe',
 ));
 
+// Added for 0.4.0-RC3
+$lang = array_merge($lang, array(
+	'PERMISSION_NO_GROUP'			=> 'Du hast keine Gruppe ausgewählt, für die du Berechtigungen vergeben möchtest.',
+	'PURGED_CACHE'					=> 'Cache geleert',
+
+	'RESYNCED_IMAGECOUNTS'			=> 'Anzahl der hochgeladenen Bilder resynchronisiert',
+	'RESYNCED_LAST_IMAGES'			=> '"Letztes Bild" neu ermittelt',
+	'RESYNCED_PERSONALS'			=> 'Persönliche Alben resynchronisiert',
+));
+
 ?>
