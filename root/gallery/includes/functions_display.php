@@ -191,7 +191,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 				{
 					$subalbums_list[] = array(
 						'link'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $subalbum_id),
-						'name'		=> utf8_substr($subalbum_row['name'], 0, 5),//REMOVE
+						'name'		=> $subalbum_row['name'],
 					);
 				}
 				else
