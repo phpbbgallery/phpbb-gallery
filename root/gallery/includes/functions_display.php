@@ -191,7 +191,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 				{
 					$subalbums_list[] = array(
 						'link'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $subalbum_id),
-						'name'		=> $subalbum_row['name'],
+						'name'		=> utf8_substr($subalbum_row['name'], 0, 5),//REMOVE
 					);
 				}
 				else
@@ -213,7 +213,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		// Create last post link information, if appropriate
 		if ($row['album_last_image_id'])
 		{
-			$last_image_name = $row['album_last_image_name'];
+			$last_image_name = (utf8_strlen(htmlspecialchars_decode($row['album_last_image_name'])) > $album_config['shorted_imagenames'] + 3 )? (utf8_substr(htmlspecialchars_decode($row['album_last_image_name']), 0, $album_config['shorted_imagenames']) . '...') : ($row['album_last_image_name']);
 			$last_image_time = $user->format_date($row['album_last_image_time']);
 			$last_image_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", 'album_id=' . $row['album_id_last_image'] . '&amp;image_id=' . $row['album_last_image_id']);
 			$last_image_page_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $row['album_id_last_image'] . '&amp;image_id=' . $row['album_last_image_id']);

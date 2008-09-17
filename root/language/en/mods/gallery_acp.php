@@ -304,6 +304,9 @@ $lang = array_merge($lang, array(
 	'RESYNCED_IMAGECOUNTS'			=> 'Resynchronised image counts',
 	'RESYNCED_LAST_IMAGES'			=> 'Refreshed "Last image"',
 	'RESYNCED_PERSONALS'			=> 'Resynchronised personal album id\'s',
+
+	'SHORTED_IMAGENAMES'			=> 'Shorten Imagenames',
+	'SHORTED_IMAGENAMES_EXP'		=> 'If the name of an image is to long and doesn\'t include spaces, the layout maybe destroyed.',
 ));
 
 ?>

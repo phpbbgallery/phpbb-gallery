@@ -720,6 +720,7 @@ class acp_gallery
 			'RATE_SCALE' 					=> $new['rate_scale'],
 			'S_HOTLINK_PREVENT'				=> $new['hotlink_prevent'],
 			'HOTLINK_ALLOWED'				=> $new['hotlink_allowed'],
+			'SHORTED_IMAGENAMES'			=> $new['shorted_imagenames'],
 			'S_DISP_TOTAL_IMAGES'			=> $config['gallery_total_images'],
 			'S_DISP_USER_IMAGES_PROFIL'		=> $config['gallery_user_images_profil'],
 			'S_DISP_PERSONAL_ALBUM_PROFIL'	=> $config['gallery_personal_album_profil'],

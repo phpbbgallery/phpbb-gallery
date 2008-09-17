@@ -174,16 +174,21 @@
 			<dd><input class="post" type="text" size="40" name="hotlink_allowed" value="{HOTLINK_ALLOWED}" /></dd>
 		</dl>
 		<dl>
-			<dt><label for="comment">{L_DISP_TOTAL_IMAGES}</label></dt>
+			<dt><label for="gallery_total_images">{L_DISP_TOTAL_IMAGES}</label></dt>
 			<dd><input type="radio" class="radio"<!-- IF S_DISP_TOTAL_IMAGES --> checked="checked"<!-- ENDIF --> name="gallery_total_images" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_DISP_TOTAL_IMAGES --> checked="checked"<!-- ENDIF --> name="gallery_total_images" value="0" />{L_NO}</dd>
 		</dl>
 		<dl>
-			<dt><label for="comment">{L_DISP_PERSONAL_ALBUM_PROFIL}</label></dt>
+			<dt><label for="gallery_personal_album_profil">{L_DISP_PERSONAL_ALBUM_PROFIL}</label></dt>
 			<dd><input type="radio" class="radio"<!-- IF S_DISP_PERSONAL_ALBUM_PROFIL --> checked="checked"<!-- ENDIF --> name="gallery_personal_album_profil" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_DISP_PERSONAL_ALBUM_PROFIL --> checked="checked"<!-- ENDIF --> name="gallery_personal_album_profil" value="0" />{L_NO}</dd>
 		</dl>
 		<dl>
-			<dt><label for="comment">{L_DISP_USER_IMAGES_PROFIL}</label></dt>
+			<dt><label for="gallery_user_images_profil">{L_DISP_USER_IMAGES_PROFIL}</label></dt>
 			<dd><input type="radio" class="radio"<!-- IF S_DISP_USER_IMAGES_PROFIL --> checked="checked"<!-- ENDIF --> name="gallery_user_images_profil" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_DISP_USER_IMAGES_PROFIL --> checked="checked"<!-- ENDIF --> name="gallery_user_images_profil" value="0" />{L_NO}</dd>
+		</dl>
+		<dl>
+			<dt><label for="shorted_imagenames">{L_SHORTED_IMAGENAMES}</label>
+				<br /><span>{L_SHORTED_IMAGENAMES_EXP}</span></dt>
+			<dd><input class="post" type="text" maxlength="3" size="3" name="shorted_imagenames" value="{SHORTED_IMAGENAMES}" /></dd>
 		</dl>
 	</fieldset>
 

@@ -304,6 +304,9 @@ $lang = array_merge($lang, array(
 	'RESYNCED_IMAGECOUNTS'			=> 'Anzahl der hochgeladenen Bilder resynchronisiert',
 	'RESYNCED_LAST_IMAGES'			=> '"Letztes Bild" neu ermittelt',
 	'RESYNCED_PERSONALS'			=> 'Persönliche Alben resynchronisiert',
+
+	'SHORTED_IMAGENAMES'			=> 'Bildernamen kürzen',
+	'SHORTED_IMAGENAMES_EXP'		=> 'Sollte der Name eines Bildes zu lange sein und kein Leerzeichen enthalten, kann es zu Problemen im Layout führen.',
 ));
 
 ?>
