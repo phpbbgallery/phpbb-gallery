@@ -183,7 +183,8 @@ $lang = array_merge($lang, array(
 	'UPLOAD_THUMBNAIL_FROM_MACHINE'		=> 'Upload its thumbnail from your machine (must be the same filetype as your image)',
 	'UPLOAD_THUMBNAIL_SIZE_TOO_BIG'		=> 'Your thumbnail dimension size is too large',
 	'UPLOAD_TO_ALBUM'					=> 'Upload to album',
-	'USER_REACHED_QUOTA'				=> 'You have reached your quota of imagess. You cannot upload any more. Please contact the administrator for more information.',
+	'USER_REACHED_QUOTA'				=> 'You are not allowed to upload more than %s images.<br /><br />Please contact the administrator for more information.',
+	'USER_NEARLY_REACHED_QUOTA'			=> 'You are not allowed to upload more than %s images, but you already uploaded %s images. So there are only %s filelines displayed.',
 	'USERS_PERSONAL_ALBUMS'				=> 'Users Personal Albums',
 
 	'VIEW_ALBUM'					=> 'View album',

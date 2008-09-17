@@ -52,6 +52,7 @@
 
           <change><![CDATA[[Change] Report #299: Move Images into personal albums]]></change>
 
+          <change><![CDATA[[Fix] Report #326: uploading multiple files cheats on quota]]></change>
           <change><![CDATA[[Fix] Report #i328: mcp.php missing check for permissions]]></change>
           <change><![CDATA[[Fix] Report #323: Slow loading page when creating albums-list]]></change>
           <change><![CDATA[[Fix] Unreported: wrong class for the MOVE-Button]]></change>

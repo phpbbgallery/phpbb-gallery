@@ -339,7 +339,7 @@ switch ($mode)
 				$own_pics = $row['count'];
 				if ($own_pics >= gallery_acl_check('i_count', $album_id))
 				{
-					trigger_error('USER_REACHED_QUOTA');
+					trigger_error(sprintf($user->lang['USER_REACHED_QUOTA'], gallery_acl_check('i_count', $album_id)));
 				}
 
 				$images = 0;
@@ -650,7 +650,17 @@ switch ($mode)
 				));
 
 				$count = 0;
-				while($count < $album_config['upload_images'])
+				$upload_image_files = $album_config['upload_images'];
+				if ((gallery_acl_check('i_count', $album_id) - $own_pics) < $upload_image_files)
+				{
+					$upload_image_files = (gallery_acl_check('i_count', $album_id) - $own_pics);
+					$error .= (($error) ? '<br />' : '') . sprintf($user->lang['USER_NEARLY_REACHED_QUOTA'], gallery_acl_check('i_count', $album_id), $own_pics, $upload_image_files);
+					$template->assign_vars(array(
+						'ERROR'						=> $error,
+					));
+				}
+
+				while ($count < $upload_image_files)
 				{
 					$template->assign_block_vars('upload_image', array());
 					$count++;
@@ -698,8 +708,8 @@ switch ($mode)
 					{
 						trigger_error('MISSING_IMAGE_TITLE');
 					}
-					$message_parser 			= new parse_message();
-					$message_parser->message 	= utf8_normalize_nfc($image_desc);
+					$message_parser				= new parse_message();
+					$message_parser->message	= utf8_normalize_nfc($image_desc);
 					if($message_parser->message)
 					{
 						$message_parser->parse(true, true, true, true, false, true, true, true);
