@@ -277,7 +277,7 @@ if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (substr
 		if(isset($exif["EXIF"]["ExposureTime"]))
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["ExposureTime"]);
-			$exif_exposure = '1/' . $den/$num;
+			if ($num > $den) { $exif_exposure = $num/$den; } else { $exif_exposure = ' 1/' . $den/$num ; }
 		}
 		if(isset($exif["EXIF"]["FNumber"]))
 		{
@@ -306,7 +306,9 @@ if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (substr
 		}
 		if (isset($exif["EXIF"]["ExposureBiasValue"]))
 		{
-			$exif_exposure_bias = sprintf($user->lang['EXIF_EXPOSURE_BIAS_EXP'], $exif["EXIF"]["ExposureBiasValue"]);
+			list($num,$den) = explode("/",$exif["EXIF"]["ExposureBiasValue"]);
+			if (($num/$den) == 0) { $exif_exposure_bias = 0; }
+			$exif_exposure_bias = sprintf($user->lang['EXIF_EXPOSURE_BIAS_EXP'], $exif_exposure_bias);
 		}
 		if (isset($exif["EXIF"]["MeteringMode"]))
 		{
