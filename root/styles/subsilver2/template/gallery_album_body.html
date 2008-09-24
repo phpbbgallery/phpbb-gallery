@@ -99,7 +99,7 @@ function toggleElement(oElement)
 					<div class="gensmall" style="overflow: hidden;">
 					<!-- IF image_row.image.S_UNAPPROVED and image_row.image.U_STATUS --><a style="font-weight: bold;" class="reported-images-number" href="{image_row.image.U_STATUS}">{image_row.image.L_STATUS}</a><br /><br /><!-- ENDIF -->
 					<!-- IF image_row.image.S_REPORTED and image_row.image.U_REPORT --><a style="font-weight: bold;" class="reported-images-number" href="{image_row.image.U_REPORT}">{L_READ_REPORT}</a><br /><br /><!-- ENDIF -->
-						{L_IMAGE_NAME}: <a href="{image_row.image.U_IMAGE_PAGE}" style="font-weight: bold;">{image_row.image.IMAGE_NAME}</a><br />
+						{L_IMAGE_NAME}: <a href="{image_row.image.U_IMAGE_PAGE}" style="font-weight: bold;" title="{image_row.image.IMAGE_NAME_FULL}">{image_row.image.IMAGE_NAME}</a><br />
 						{L_POSTER}: {image_row.image.POSTER}<br />
 						{L_POSTED}: {image_row.image.TIME}<br />
 						{L_VIEWS}: {image_row.image.VIEW}<br />

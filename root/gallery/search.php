@@ -117,7 +117,8 @@ $total_pics = 0;
 					'S_UNAPPROVED'	=> (gallery_acl_check('a_moderate', $album_id) && (!$picrow[$j]['image_status'])) ? true : false,
 					'S_REPORTED'	=> (gallery_acl_check('a_moderate', $album_id) && $picrow[$j]['image_reported']) ? true : false,
 
-					'IMAGE_NAME'	=> $picrow[$j]['image_name'],
+					'IMAGE_NAME'	=> (utf8_strlen(htmlspecialchars_decode($picrow[$j]['image_name'])) > $album_config['shorted_imagenames'] + 3 )? (utf8_substr(htmlspecialchars_decode($picrow[$j]['image_name']), 0, $album_config['shorted_imagenames']) . '...') : ($picrow[$j]['image_name']),
+					'IMAGE_NAME_FULL'	=> $picrow[$j]['image_name'],
 					'ALBUM_NAME'	=> $picrow[$j]['album_name'],
 					'POSTER'		=> get_username_string('full', $picrow[$j]['image_user_id'], ($picrow[$j]['image_user_id'] <> ANONYMOUS) ? $picrow[$j]['image_username'] : $user->lang['GUEST'], $picrow[$j]['image_user_colour']),
 					'TIME'			=> $user->format_date($picrow[$j]['image_time']),
