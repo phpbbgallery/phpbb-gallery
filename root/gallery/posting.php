@@ -420,11 +420,11 @@ switch ($mode)
 								'image_album_id'	=> $album_data['album_id'],
 								'image_album_name'	=> $album_data['album_name'],
 								'image_desc'		=> str_replace('{NUM}', $loop, request_var('message', '', true)),
-								'image_name'		=> (request_var('filename', '') == 'filename') ? $image_data['image_tmp_name'] : str_replace('{NUM}', $loop, request_var('image_name', '', true)),
 								'image_time'		=> time() + $loop,
 								'thumbnail'			=> '',
 								'username'			=> request_var('username', $user->data['username']),
 							);
+							$image_data_2['image_name'] = (request_var('filename', '') == 'filename') ? str_replace("_", " ", utf8_substr($image_data['image_tmp_name'], 0, -4)) : str_replace('{NUM}', $loop, request_var('image_name', '', true));
 							$image_data = array_merge($image_data, $image_data_2);
 
 							if(!$image_data['image_name'])
