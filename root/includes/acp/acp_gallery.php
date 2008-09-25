@@ -368,7 +368,6 @@ class acp_gallery
 				$sql_ary = array(
 					'image_filename' 		=> $image_filename,
 					'image_thumbnail'		=> $image_thumbnail,
-					'image_name'			=> (request_var('filename', '') == 'filename') ? $image : str_replace('{NUM}', $counter + 1, request_var('image_name', '', true)),
 					'image_desc'			=> '',
 					'image_desc_uid'		=> '',
 					'image_desc_bitfield'	=> '',
@@ -380,9 +379,10 @@ class acp_gallery
 					'image_album_id'		=> $album_id,
 					'image_status'			=> 1,
 				);
+				$sql_ary['image_name'] = (request_var('filename', '') == 'filename') ? str_replace("_", " ", utf8_substr($image, 0, -4)) : str_replace('{NUM}', $counter + 1, request_var('image_name', '', true));
 				if ($sql_ary['image_name'] == '')
 				{
-					$sql_ary['image_name'] = $image;
+					$sql_ary['image_name'] = str_replace("_", " ", utf8_substr($image, 0, -4));
 				}
 
 				$db->sql_query('INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
@@ -409,7 +409,9 @@ class acp_gallery
 			}
 			if ($images_to_do)
 			{
-				$forward_url = $this->u_action . "&amp;album_id=$album_id&amp;time=$time&amp;counter=$counter&amp;user_id=$user_id&amp;images_string=$images_to_do";
+				$imagename = request_var('image_name', '');
+				$filename = request_var('filename', '');
+				$forward_url = $this->u_action . "&amp;album_id=$album_id&amp;time=$time&amp;counter=$counter&amp;user_id=$user_id" . (($filename) ? '&amp;filename=' . request_var('filename', '') : '') . (($imagename && !$filename) ? '&amp;image_name=' . request_var('image_name', '') : '') . "&amp;images_string=$images_to_do";
 				meta_refresh(1, $forward_url);
 				trigger_error(sprintf($user->lang['IMPORT_DEBUG_MES'], $counter, $left + 1));
 				
