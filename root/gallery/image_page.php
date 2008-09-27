@@ -111,51 +111,51 @@ if (isset($_POST['rate']))
 		trigger_error('FORM_INVALID');
 	}
 
-		if (!$album_config['rate'] || !gallery_acl_check('i_rate', $album_id))
-		{
-			trigger_error($user->lang['NOT_AUTHORISED']);
-		}
-		else if ($already_rated)
-		{
-			trigger_error($user->lang['ALREADY_RATED']);
-		}
-		$rate_point = request_var('rate', 0);
-		if( ($rate_point <= 0) || ($rate_point > $album_config['rate_scale']) )
-		{
-			trigger_error($user->lang['OUT_OF_RANGE_VALUE']);
-		}
-		$rate_user_id = $user->data['user_id'];
-		$rate_user_ip = $user->ip;
+	if (!$album_config['rate'] || !gallery_acl_check('i_rate', $album_id))
+	{
+		trigger_error($user->lang['NOT_AUTHORISED']);
+	}
+	else if ($already_rated)
+	{
+		trigger_error($user->lang['ALREADY_RATED']);
+	}
+	$rate_point = request_var('rate', 0);
+	if( ($rate_point <= 0) || ($rate_point > $album_config['rate_scale']) )
+	{
+		trigger_error($user->lang['OUT_OF_RANGE_VALUE']);
+	}
+	$rate_user_id = $user->data['user_id'];
+	$rate_user_ip = $user->ip;
 
-		$sql_ary = array(
-			'rate_image_id'	=> $image_id,
-			'rate_user_id'	=> $rate_user_id,
-			'rate_user_ip'	=> $rate_user_ip,
-			'rate_point'	=> $rate_point,
-		);
-		$db->sql_query('INSERT INTO ' . GALLERY_RATES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
-		$sql = 'SELECT rate_image_id, COUNT(rate_user_ip) image_rates, AVG(rate_point) image_rate_avg, SUM(rate_point) image_rate_points
-			FROM ' . GALLERY_RATES_TABLE . "
-			WHERE rate_image_id = $image_id
-			GROUP BY rate_image_id";
-		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result))
-		{
-			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-				SET image_rates = ' . $row['image_rates'] . ',
-					image_rate_points = ' . $row['image_rate_points'] . ',
-					image_rate_avg = ' . round($row['image_rate_avg'], 2) * 100 . '
-				WHERE image_id = ' . $row['rate_image_id'];
-			$db->sql_query($sql);
-		}
-		$db->sql_freeresult($result);
+	$sql_ary = array(
+		'rate_image_id'	=> $image_id,
+		'rate_user_id'	=> $rate_user_id,
+		'rate_user_ip'	=> $rate_user_ip,
+		'rate_point'	=> $rate_point,
+	);
+	$db->sql_query('INSERT INTO ' . GALLERY_RATES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+	$sql = 'SELECT rate_image_id, COUNT(rate_user_ip) image_rates, AVG(rate_point) image_rate_avg, SUM(rate_point) image_rate_points
+		FROM ' . GALLERY_RATES_TABLE . "
+		WHERE rate_image_id = $image_id
+		GROUP BY rate_image_id";
+	$result = $db->sql_query($sql);
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+			SET image_rates = ' . $row['image_rates'] . ',
+				image_rate_points = ' . $row['image_rate_points'] . ',
+				image_rate_avg = ' . round($row['image_rate_avg'], 2) * 100 . '
+			WHERE image_id = ' . $row['rate_image_id'];
+		$db->sql_query($sql);
+	}
+	$db->sql_freeresult($result);
 
-		$message = $user->lang['RATING_SUCCESSFUL'];
-		$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>");
-		$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
+	$message = $user->lang['RATING_SUCCESSFUL'];
+	$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>");
+	$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
 
-		meta_refresh(3, append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id&rate_set=1") . '#rating'));
-		trigger_error($message);
+	meta_refresh(3, append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id&rate_set=1") . '#rating'));
+	trigger_error($message);
 }
 
 /**
