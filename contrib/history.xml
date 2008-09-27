@@ -54,6 +54,8 @@
           <change><![CDATA[[Change] Report #299: Move Images into personal albums]]></change>
           <change><![CDATA[[Change] Report #334: Remove file-type on image-name]]></change>
 
+          <change><![CDATA[[Fix] Unreported: Meta-Refresh after rating is phpBB2-Style]]></change>
+          <change><![CDATA[[Fix] Report #332: ACP Import multiple pages loose image-name]]></change>
           <change><![CDATA[[Fix] Report #322: Long file names with _ making out of templates problem]]></change>
           <change><![CDATA[[Fix] Unreport: Wrong labels for config values in ACP]]></change>
           <change><![CDATA[[Fix] Report #319: error in SQL syntax]]></change>

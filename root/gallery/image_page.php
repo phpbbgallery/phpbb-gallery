@@ -33,9 +33,8 @@ if (!$image_id)
 {
 	trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
 }
-// ------------------------------------
+
 // Salting the form...yumyum ...
-// ------------------------------------
 add_form_key('gallery');
 
 /**
@@ -71,9 +70,9 @@ if (!gallery_acl_check('i_view', $album_id))
 	}
 }
 
-// ------------------------------------
-// Check Pic Rating
-// ------------------------------------
+/**
+* Check Pic Rating
+*/
 
 $already_rated = false;
 
@@ -93,18 +92,17 @@ if (($album_config['rate'] <> 0) && $user->data['is_registered'])
 	}
 }
 
-// ------------------------------------
-// Check Pic Approval
-// ------------------------------------
+/**
+* Check Pic Approval
+*/
 if (!gallery_acl_check('a_moderate', $album_id) && ($image_data['image_status'] != 1))
 {
 	trigger_error($user->lang['NOT_AUTHORISED']);
 }
 
-// ------------------------------------
-// Posting Comments & Rating
-// ------------------------------------
-
+/**
+* Posting Comments & Rating
+*/
 if (isset($_POST['rate']))
 {
 	// Check the salt... yumyum
@@ -113,10 +111,6 @@ if (isset($_POST['rate']))
 		trigger_error('FORM_INVALID');
 	}
 
-	include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
-
-	if (isset($_POST['rate']))
-	{
 		if (!$album_config['rate'] || !gallery_acl_check('i_rate', $album_id))
 		{
 			trigger_error($user->lang['NOT_AUTHORISED']);
@@ -132,9 +126,7 @@ if (isset($_POST['rate']))
 		}
 		$rate_user_id = $user->data['user_id'];
 		$rate_user_ip = $user->ip;
-		// --------------------------------
-		// Insert into the DB
-		// --------------------------------
+
 		$sql_ary = array(
 			'rate_image_id'	=> $image_id,
 			'rate_user_id'	=> $rate_user_id,
@@ -158,25 +150,16 @@ if (isset($_POST['rate']))
 		}
 		$db->sql_freeresult($result);
 
-		// --------------------------------
-		// Complete... now send a message to user
-		// --------------------------------
 		$message = $user->lang['RATING_SUCCESSFUL'];
-
-		$template->assign_vars(array(
-			'META' => '<meta http-equiv="refresh" content="3;url=' . append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?album_id=$album_id&amp;image_id=$image_id&rate_set=1#rating") . '">',
-		));
 		$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>");
-
 		$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
-		trigger_error($message, E_USER_WARNING);
-	}
+
+		meta_refresh(3, append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id&rate_set=1") . '#rating'));
+		trigger_error($message);
 }
 
-/*
-+----------------------------------------------------------
-| Main work here...
-+----------------------------------------------------------
+/**
+* Main work here...
 */
 $previous_id = $next_id = $last_id = 0;
 $do_next = false;
