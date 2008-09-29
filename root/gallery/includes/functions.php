@@ -526,7 +526,7 @@ function handle_image_counter($image_id_ary, $add, $readd = false)
 /**
 * Get forum branch
 */
-function get_album_branch($album_id, $type = 'all', $order = 'descending', $include_album = true)
+function get_album_branch($branch_user_id, $album_id, $type = 'all', $order = 'descending', $include_album = true)
 {
 	global $db;
 
@@ -549,9 +549,9 @@ function get_album_branch($album_id, $type = 'all', $order = 'descending', $incl
 
 	$sql = 'SELECT a2.*
 		FROM ' . GALLERY_ALBUMS_TABLE . ' a1
-		LEFT JOIN ' . GALLERY_ALBUMS_TABLE . " a2 ON ($condition) AND a2.album_user_id = 0
+		LEFT JOIN ' . GALLERY_ALBUMS_TABLE . " a2 ON ($condition) AND a2.album_user_id = $branch_user_id
 		WHERE a1.album_id = $album_id
-			AND a1.album_user_id = 0
+			AND a1.album_user_id = $branch_user_id
 		ORDER BY a2.left_id " . (($order == 'descending') ? 'ASC' : 'DESC');
 	$result = $db->sql_query($sql);
 

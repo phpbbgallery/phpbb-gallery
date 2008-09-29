@@ -83,49 +83,5 @@ function album_hacking($album_id)
 		trigger_error('NO_ALBUM_STEALING');
 	}
 }
-/**
-* Get forum branch
-*/
-function get_album_branch($album_id, $type = 'all', $order = 'descending', $include_album = true)
-{
-	global $db, $user;
 
-	switch ($type)
-	{
-		case 'parents':
-			$condition = 'a1.left_id BETWEEN a2.left_id AND a2.right_id';
-		break;
-
-		case 'children':
-			$condition = 'a2.left_id BETWEEN a1.left_id AND a1.right_id';
-		break;
-
-		default:
-			$condition = 'a2.left_id BETWEEN a1.left_id AND a1.right_id OR a1.left_id BETWEEN a2.left_id AND a2.right_id';
-		break;
-	}
-
-	$rows = array();
-
-	$sql = 'SELECT a2.*
-		FROM ' . GALLERY_ALBUMS_TABLE . ' a1
-		LEFT JOIN ' . GALLERY_ALBUMS_TABLE . " a2 ON ($condition) AND a2.album_user_id = {$user->data['user_id']}
-		WHERE a1.album_id = $album_id
-			AND a1.album_user_id = {$user->data['user_id']}
-		ORDER BY a2.left_id " . (($order == 'descending') ? 'ASC' : 'DESC');
-	$result = $db->sql_query($sql);
-
-	while ($row = $db->sql_fetchrow($result))
-	{
-		if (!$include_album && $row['album_id'] == $album_id)
-		{
-			continue;
-		}
-
-		$rows[] = $row;
-	}
-	$db->sql_freeresult($result);
-
-	return $rows;
-}
 ?>

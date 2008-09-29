@@ -13,69 +13,74 @@ if (!defined('IN_PHPBB'))
 {
 	exit;
 }
-
-include($phpbb_root_path . 'common.'.$phpEx);
-include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
-include($phpbb_root_path . 'includes/acp/acp_modules.' . $phpEx);
-include($phpbb_root_path . 'includes/acp/acp_bbcodes.' . $phpEx);
-include($phpbb_root_path . 'includes/db/db_tools.' . $phpEx);
-include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+if (!defined('IN_INSTALL'))
+{
+	// Someone has tried to access the file direct. This is not a good idea, so exit
+	exit;
+}
 
 $gallery_root_path = GALLERY_ROOT_PATH;
-// What sql_layer should we use?
-switch ($db->sql_layer)
+
+function get_dbms_infos()
 {
-	case 'mysql':
-		$db_schema = 'mysql_40';
-		$delimiter = ';';
-	break;
+	global $db;
 
-	case 'mysql4':
-		if (version_compare($db->mysql_version, '4.1.3', '>='))
-		{
-			$db_schema = 'mysql_41';
-		}
-		else
-		{
-			$db_schema = 'mysql_40';
-		}
-		$delimiter = ';';
-	break;
+	switch ($db->sql_layer)
+	{
+		case 'mysql':
+			$return['db_schema'] = 'mysql_40';
+			$return['delimiter'] = ';';
+		break;
 
-	case 'mysqli':
-		$db_schema = 'mysql_41';
-		$delimiter = ';';
-	break;
+		case 'mysql4':
+			if (version_compare($db->mysql_version, '4.1.3', '>='))
+			{
+				$return['db_schema'] = 'mysql_41';
+			}
+			else
+			{
+				$return['db_schema'] = 'mysql_40';
+			}
+			$return['delimiter'] = ';';
+		break;
 
-	case 'mssql':
-	case 'mssql_odbc':
-		$db_schema = 'mssql';
-		$delimiter = 'GO';
-	break;
+		case 'mysqli':
+			$return['db_schema'] = 'mysql_41';
+			$return['delimiter'] = ';';
+		break;
 
-	case 'postgres':
-		$db_schema = 'postgres';
-		$delimiter = ';';
-	break;
+		case 'mssql':
+		case 'mssql_odbc':
+			$return['db_schema'] = 'mssql';
+			$return['delimiter'] = 'GO';
+		break;
 
-	case 'sqlite':
-		$db_schema = 'sqlite';
-		$delimiter = ';';
-	break;
+		case 'postgres':
+			$return['db_schema'] = 'postgres';
+			$return['delimiter'] = ';';
+		break;
 
-	case 'firebird':
-		$db_schema = 'firebird';
-		$delimiter = ';;';
-	break;
+		case 'sqlite':
+			$return['db_schema'] = 'sqlite';
+			$return['delimiter'] = ';';
+		break;
 
-	case 'oracle':
-		$db_schema = 'oracle';
-		$delimiter = '/';
-	break;
+		case 'firebird':
+			$return['db_schema'] = 'firebird';
+			$return['delimiter'] = ';;';
+		break;
 
-	default:
-		trigger_error('Sorry, unsupportet Databases found.');
-	break;
+		case 'oracle':
+			$return['db_schema'] = 'oracle';
+			$return['delimiter'] = '/';
+		break;
+
+		default:
+			trigger_error('Sorry, unsupportet Databases found.');
+		break;
+	}
+
+	return $return;
 }
 
 /*
@@ -100,28 +105,19 @@ function split_sql_file($sql, $delimiter)
 }
 
 /*
-* Create a back-link
-*	Note: just like phpbb3's adm_back_link
-* @param	string	$u_action	back-link-url
-*/
-function install_back_link($u_action)
-{
-	global $user;
-	return '<br /><br /><a href="' . $u_action . '">&laquo; ' . $user->lang['BACK_TO_PREV'] . '</a>';
-}
-
-/*
 * Creates a new db-table
 *	Note: we don't check for it on anyother way, so it might return a SQL-Error,
 *	if you create the same table twice without this!
 * @param	string	$table	table-name
 * @param	bool	$drop	drops the table if it exist.
 */
-function nv_create_table($table, $drop = true)
+function nv_create_table($table, $dbms_data, $drop = true)
 {
 	global $db, $table_prefix, $db_schema, $delimiter;
 
 	$table_name = substr($table . '#', 6, -1);
+	$db_schema = $dbms_data['db_schema'];
+	$delimiter = $dbms_data['delimiter'];
 
 	if ($drop)
 	{
@@ -167,8 +163,39 @@ function nv_drop_table($table)
 	{
 		$sql = 'if exists (select * from sysobjects where name = ' . $table_prefix . $table_name . ')
 			drop table ' . $table_prefix . $table_name;
+		$sql = "IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{$table_prefix}{$table_name}')
+			DROP TABLE {$table_prefix}{$table_name}";
 		$result = $db->sql_query($sql);
 		$db->sql_freeresult($result);
+	}
+}
+
+/*
+* Advanced: Add/update a gallery-config value
+*/
+function set_gallery_config($column, $value, $update = false)
+{
+	global $db;
+
+	$sql = 'SELECT * FROM ' . GALLERY_CONFIG_TABLE . " WHERE config_name = '$column'";
+	$result = $db->sql_query($sql);
+	$row = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+	if (!$row)
+	{
+		$sql_ary = array(
+			'config_name'				=> $column,
+			'config_value'				=> $value,
+		);
+		$db->sql_query('INSERT INTO ' . GALLERY_CONFIG_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+	}
+	else
+	{
+		$sql_ary = array(
+			'config_name'				=> $column,
+			'config_value'				=> $value,
+		);
+		$db->sql_query('UPDATE ' . GALLERY_CONFIG_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . " WHERE config_name = '$column'");
 	}
 }
 
@@ -249,18 +276,35 @@ function nv_remove_column($table, $column)
 }
 
 /*
+* Adds a index to a table
+* @param	string	$table	table-name
+* @param	string	$index_name	index-name
+* @param	array	$column	column-name
+*/
+function nv_add_index($table, $index_name, $column)
+{
+	global $db;
+
+	$phpbb_db_tools = new phpbb_db_tools($db);
+	if ($phpbb_db_tools->sql_column_exists($table, $column))
+	{
+		$phpbb_db_tools->sql_create_index($table_name, $index_name, $column);
+	}
+}
+
+/*
 * Creates a dropdown box with all modules to choose a parent-module for a new module to avoid "PARENT_NO_EXIST"
 * Note: you will loose all data of this column!
 * @param	string	$module_class	'acp' or 'mcp' or 'ucp'
 * @param	int		$default_id		the "standard" id of the module: enter 0 if not available, Exp: 31
 * @param	string	$default_langname	language-less name Exp for 31 (.MODs): ACP_CAT_DOT_MODS
 */
-function select_parent_module($module_class, $default_id, $default_langname)
+function module_select($module_class, $default_id, $default_langname)
 {
 	global $db, $user;
 
-	$select_module_list = '';
-	$found_selected = ($default_id > 0) ? false : true;
+	$module_options = '<option value="0">' . $user->lang['MODULES_SELECT_NONE'] . '</option>';
+	$found_selected = false;
 
 	$sql = 'SELECT module_id, module_langname, module_class
 		FROM ' . MODULES_TABLE . "
@@ -274,34 +318,15 @@ function select_parent_module($module_class, $default_id, $default_langname)
 		{
 			$selected = ' selected="selected"';
 			$found_selected = true;
-			$default_note = $user->lang['MODULES_MODULE_ID'] . ': ' . $row['module_id'] . ' - ' . $user->lang['MODULES_MODULE_NAME'] . ': ' . $row['module_langname'];
 		}
-		if ($select_module_list == '')
-		{
-			$select_module_list .= '<option value="0">' . $user->lang['MODULES_SELECT_NONE'] . '</option>';
-		}
-		$select_module_list .= '<option value="' . $row['module_id'] . '"' . $selected . '>' . $user->lang['MODULES_MODULE_ID'] . ': ' . $row['module_id'] . ' - ' . $user->lang['MODULES_MODULE_NAME'] . ': ' . $row['module_langname'] . '</option>';
+		$module_options .= '<option value="' . $row['module_id'] . '"' . $selected .'>' . ((isset($user->lang[$row['module_langname']])) ? $user->lang[$row['module_langname']] : $row['module_langname']) . '</option>';
 	}
-	$db->sql_freeresult($result);
-	if (!$default_id)
+	if (!$found_selected && $default_id)
 	{
-		$default_note = $user->lang['MODULES_SELECT_NONE'];
+		$module_options = '<option value="-1">' . $user->lang['MODULES_CREATE_PARENT'] . '</option>' . $module_options;
 	}
 
-	$select_module = '<select name="select_' . $module_class . '_module">';
-	if (!$found_selected)
-	{
-		$select_module .= '<option value="-1">' . $user->lang['MODULES_CREATE_PARENT'] . '</option>';
-		$default_note = $user->lang['MODULES_CREATE_PARENT'];
-	}
-	$select_module .= $select_module_list;
-	$select_module .= '</select>';
-	$return = array(
-		'default'	=> sprintf($user->lang['MODULES_ADVICE_SELECT'], $default_note),
-		'list'		=> $select_module,
-	);
-
-	return $return;
+	return $module_options;
 }
 
 /*
@@ -330,51 +355,32 @@ function remove_module($module_id, $module_class)
 /*
 * Advanced: Load gallery-config values
 */
-function load_album_config()
+function load_gallery_config()
 {
 	global $db;
 
-	$sql = 'SELECT *
-		FROM ' . GALLERY_CONFIG_TABLE;
-	$result = $db->sql_query($sql);
+	$gallery_config = array();
 
+	$sql = 'SELECT * FROM ' . GALLERY_CONFIG_TABLE;
+	$result = $db->sql_query($sql);
 	while( $row = $db->sql_fetchrow($result) )
 	{
-		$album_config_name = $row['config_name'];
-		$album_config_value = $row['config_value'];
-		$album_config[$album_config_name] = $album_config_value;
+		$gallery_config[$row['config_name']] = $row['config_value'];
 	}
+	$db->sql_freeresult($result);
 
-	return $album_config;
+	return $gallery_config;
 }
 
 /*
-* Advanced: Add/update a gallery-config value
+* Create a back-link
+*	Note: just like phpbb3's adm_back_link
+* @param	string	$u_action	back-link-url
 */
-function gallery_config_value($column, $value, $update = false)
+function adm_back_link($u_action)
 {
-	global $db;
-
-	$sql = 'SELECT * FROM ' . GALLERY_CONFIG_TABLE . " WHERE config_name = '$column'";
-	$result = $db->sql_query($sql);
-	$row = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
-	if (!$row)
-	{
-		$sql_ary = array(
-			'config_name'				=> $column,
-			'config_value'				=> $value,
-		);
-		$db->sql_query('INSERT INTO ' . GALLERY_CONFIG_TABLE . $db->sql_build_array('INSERT', $sql_ary));
-	}
-	else if ($update)
-	{
-		$sql_ary = array(
-			'config_name'				=> $column,
-			'config_value'				=> $value,
-		);
-		$db->sql_query('UPDATE ' . GALLERY_CONFIG_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . " WHERE config_name = '$column'");
-	}
+	global $user;
+	return '<br /><br /><a href="' . $u_action . '">&laquo; ' . $user->lang['BACK_TO_PREV'] . '</a>';
 }
 
 /*

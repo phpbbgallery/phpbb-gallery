@@ -625,7 +625,7 @@ class acp_gallery
 			'TOTAL_PERSONALS'		=> $album_config['personal_counter'],
 			'GUPLOAD_DIR_SIZE'		=> $gupload_dir_size,
 			'CACHE_DIR_SIZE'		=> $cache_dir_size,
-			'GALLERY_VERSION'		=> $album_config['album_version'],
+			'GALLERY_VERSION'		=> $album_config['phpbb_gallery_version'],
 
 			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
 		));
@@ -750,7 +750,7 @@ class acp_gallery
 		{
 			$navigation = '<a href="' . $this->u_action . '">' . $user->lang['GALLERY_INDEX'] . '</a>';
 
-			$albums_nav = get_album_branch($parent_id, 'parents', 'descending');
+			$albums_nav = get_album_branch(0, $parent_id, 'parents', 'descending');
 			foreach ($albums_nav as $row)
 			{
 				if ($row['album_id'] == $parent_id)

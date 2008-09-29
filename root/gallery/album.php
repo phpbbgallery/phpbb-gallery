@@ -128,6 +128,7 @@ if ($album_id <> 0)
 		{
 			$picrow[] = $row;
 		}
+		$db->sql_freeresult($result);
 		for ($i = 0; $i < count($picrow); $i += $album_config['cols_per_page'])
 		{
 			$template->assign_block_vars('image_row', array());

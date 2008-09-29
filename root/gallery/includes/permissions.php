@@ -137,8 +137,8 @@ function gallery_acl_check($mode, $album_id, $album_user_id = -1)
 
 	if (($album_user_id < 0) && ($album_id > 0))
 	{
-		$albums = $cache->obtain_album_list();
-		$album_user_id = $albums[$album_id]['album_user_id'];
+		#$albums = $cache->obtain_album_list();
+		$album_user_id = 0;#$albums[$album_id]['album_user_id'];
 	}
 
 	if ($album_id == OWN_GALLERY_PERMISSIONS)

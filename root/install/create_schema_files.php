@@ -867,6 +867,29 @@ function get_schema_struct()
 	);
 //*/
 /*
+	$schema_data['phpbb_gallery_copyts_albums'] = array(
+		'COLUMNS'		=> array(
+			'album_id'				=> array('UINT', NULL, 'auto_increment'),
+			'parent_id'				=> array('UINT', 0),
+			'left_id'				=> array('UINT', 1),
+			'right_id'				=> array('UINT', 2),
+			'album_name'			=> array('VCHAR:255', ''),
+			'album_desc'			=> array('MTEXT_UNI', ''),
+			'album_user_id'			=> array('UINT', 0),
+		),
+		'PRIMARY_KEY'	=> 'album_id',
+	);
+//*/
+/*
+	$schema_data['phpbb_gallery_copyts_users'] = array(
+		'COLUMNS'		=> array(
+			'user_id'			=> array('UINT', 0),
+			'personal_album_id'	=> array('UINT', 0),
+		),
+		'PRIMARY_KEY'		=> 'user_id',
+	);
+//*/
+/*
 	$schema_data['phpbb_gallery_favorites'] = array(
 		'COLUMNS'		=> array(
 			'favorite_id'			=> array('UINT', NULL, 'auto_increment'),

@@ -25,6 +25,7 @@ class ucp_gallery
 		global $user, $phpbb_root_path, $phpEx, $db, $template;
 		$gallery_root_path = GALLERY_ROOT_PATH;
 		include($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
+		include($phpbb_root_path . $gallery_root_path . 'includes/constants.' . $phpEx);
 		include($phpbb_root_path . $gallery_root_path . 'includes/ucp_functions.' . $phpEx);
 
 		$user->add_lang('mods/gallery');
@@ -467,7 +468,7 @@ class ucp_gallery
 		{
 			$navigation = $user->lang['PERSONAL_ALBUM'];
 
-			$albums_nav = get_album_branch($parent_id, 'parents', 'descending');
+			$albums_nav = get_album_branch($user->data['user_id'], $parent_id, 'parents', 'descending');
 			foreach ($albums_nav as $row)
 			{
 				if ($row['album_id'] == $parent_id)
