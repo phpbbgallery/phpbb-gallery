@@ -22,7 +22,7 @@ class acp_gallery_info
 				'configure_gallery'				=> array('title' => 'ACP_GALLERY_CONFIGURE_GALLERY',			'auth' => 'acl_a_board', 'cat' => array('PHPBB_GALLERY')),
 				'album_permissions'				=> array('title' => 'ACP_GALLERY_ALBUM_PERMISSIONS',			'auth' => 'acl_a_board', 'cat' => array('PHPBB_GALLERY')),
 				'import_images'					=> array('title' => 'ACP_IMPORT_ALBUMS',						'auth' => 'acl_a_board', 'cat' => array('PHPBB_GALLERY')),
-				'manage_rests'					=> array('title' => 'ACP_GALLERY_MANAGE_RESTS',					'auth' => 'acl_a_board', 'cat' => array('PHPBB_GALLERY')),
+				'cleanup'						=> array('title' => 'ACP_GALLERY_CLEANUP',						'auth' => 'acl_a_board', 'cat' => array('PHPBB_GALLERY')),
 				),
 			);
 	}
