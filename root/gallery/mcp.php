@@ -178,7 +178,7 @@ if ($action && $image_id_ary)
 					'image_status'			=> 1,
 				);
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+					WHERE ' . $db->sql_in_set('image_id', $image_id_ary) . ' AND image_user_id <> ' . $user->data['user_id'];
 				$db->sql_query($sql);
 				$success = true;
 			}

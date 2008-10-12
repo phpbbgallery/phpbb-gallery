@@ -51,8 +51,9 @@
           <change><![CDATA[[Add] Unreported: Jumpbox to the image_page.php]]></change>
           <change><![CDATA[[Add] Unreported: Display message after successful resync in the ACP]]></change>
 
-          <change><![CDATA[[Change] Report #299: Move Images into personal albums]]></change>
+          <change><![CDATA[[Change] Report #338: Able to approve own images]]></change>
           <change><![CDATA[[Change] Report #334: Remove file-type on image-name]]></change>
+          <change><![CDATA[[Change] Report #299: Move Images into personal albums]]></change>
 
           <change><![CDATA[[Fix] Unreported: Meta-Refresh after rating is phpBB2-Style]]></change>
           <change><![CDATA[[Fix] Report #332: ACP Import multiple pages loose image-name]]></change>
