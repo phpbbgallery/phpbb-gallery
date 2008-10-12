@@ -29,11 +29,6 @@ $album_access_array = get_album_access_array();
 
 $image_id = request_var('image_id', 0);
 $album_id = request_var('album_id', 0);
-if (!gallery_acl_check('a_moderate', $album_id))
-{
-	meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"));
-	trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
-}
 include_once("{$phpbb_root_path}{$gallery_root_path}mcp/mcp_functions.$phpEx");
 $mode = request_var('mode', 'album');
 
@@ -51,6 +46,12 @@ if ($mode == 'whois' && $auth->acl_get('a_') && request_var('ip', ''))
 	);
 
 	page_footer();
+}
+
+if (!gallery_acl_check('a_moderate', $album_id))
+{
+	meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"));
+	trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 }
 
 //Basic-Information && Permissions
