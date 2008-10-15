@@ -62,11 +62,10 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 					ON i.image_album_id = a.album_id
 				WHERE (" . $db->sql_in_set('i.image_album_id', $view_albums) . '
 						AND i.image_status = 1)' . 
-					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . "
+					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . '
 				GROUP BY i.image_id
-				ORDER BY i.image_time DESC
-				LIMIT $limit_sql";
-			$result = $db->sql_query($sql);
+				ORDER BY i.image_time DESC';
+			$result = $db->sql_query_limit($sql, $limit_sql);
 
 			$picrow = array();
 
@@ -159,9 +158,8 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 						AND i.image_status = 1)' . 
 					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . "
 				GROUP BY i.image_id
-				ORDER BY $random
-				LIMIT $limit_sql";
-			$result = $db->sql_query($sql);
+				ORDER BY $random";
+			$result = $db->sql_query_limit($sql, $limit_sql);
 
 			$picrow = array();
 

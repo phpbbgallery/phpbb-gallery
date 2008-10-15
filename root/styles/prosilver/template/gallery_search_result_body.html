@@ -112,23 +112,8 @@ function toggleElement(oElement)
 
 	<form action="{S_SEARCH_ACTION}" method="post">
 	<fieldset class="display-options">
-		<label>{L_SORT_BY}: 
-			<select name="sort_method">
-				<option {SORT_TIME} value='image_time'>{L_TIME}</option>
-				<option {SORT_IMAGE_TITLE} value='image_name'>{L_IMAGE_TITLE}</option>
-				<option {SORT_USERNAME} value='image_username'>{L_SORT_USERNAME}</option>
-				<option {SORT_VIEW} value='image_view_count'>{L_VIEWS}</option>
-				{SORT_RATING_OPTION}
-				{SORT_COMMENTS_OPTION}
-				{SORT_NEW_COMMENT_OPTION}
-			</select>
-		</label>
-		<label>
-			<select name="sort_order">
-				<option {SORT_ASC} value='ASC'>{L_SORT_ASCENDING}</option>
-				<option {SORT_DESC} value='DESC'>{L_SORT_DESCENDING}</option>
-			</select> <input type="submit" name="sort" value="{L_GO}" class="button2" />
-		</label>
+		<label>{L_SORT_BY} {S_SELECT_SORT_KEY}</label>
+		<label>{S_SELECT_SORT_DIR} <input type="submit" name="sort" value="{L_GO}" class="button2" /></label>
 	</fieldset>
 	</form>
 	<hr />

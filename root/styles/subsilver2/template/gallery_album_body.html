@@ -135,23 +135,7 @@ function toggleElement(oElement)
 	<!-- END image_row -->
 	<tr>
 		<td class="cat" colspan="{S_COLS}" align="center" height="28">
-			<form action="{S_ALBUM_ACTION}" method="post">
-				<span class="gensmall">{L_SORT_BY}:</span>
-				<select name="sort_method">
-					<option {SORT_TIME} value='image_time'>{L_TIME}</option>
-					<option {SORT_IMAGE_TITLE} value='image_name'>{L_IMAGE_TITLE}</option>
-					<option {SORT_USERNAME} value='image_username'>{L_USERNAME}</option>
-					<option {SORT_VIEW} value='image_view_count'>{L_VIEWS}</option>
-				{SORT_RATING_OPTION}
-				{SORT_COMMENTS_OPTION}
-				{SORT_NEW_COMMENT_OPTION}
-				 </select>
-				<select name="sort_order">
-					<option {SORT_ASC} value='ASC'>{L_ASCENDING}</option>
-					<option {SORT_DESC} value='DESC'>{L_DESCENDING}</option>
-				</select>
-				<input type="submit" name="sort" value="{L_GO}" class="button2" />
-			</form>
+			<form action="{S_ALBUM_ACTION}" method="post"><span class="gensmall">{L_SORT_BY}</span> {S_SELECT_SORT_KEY} {S_SELECT_SORT_DIR}&nbsp;<input class="btnlite" type="submit" name="sort" value="{L_GO}" /></form>
 		</td>
 	</tr>
 </table>

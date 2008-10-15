@@ -20,13 +20,13 @@
 			<dt><label for="sort_method">{L_DEFAULT_SORT_METHOD}</label></dt>
 			<dd>
 				<select name="sort_method">
-					<option<!-- IF SORT_METHOD == 'image_time' --> selected="selected"<!-- ENDIF --> value='image_time'>{L_TIME}</option>
-					<option<!-- IF SORT_METHOD == 'image_name' --> selected="selected"<!-- ENDIF --> value='image_name'>{L_IMAGE_TITLE}</option>
-					<option<!-- IF SORT_METHOD == 'image_username' --> selected="selected"<!-- ENDIF --> value='image_username'>{L_USERNAME}</option>
-					<option<!-- IF SORT_METHOD == 'image_view_count' --> selected="selected"<!-- ENDIF --> value='image_view_count'>{L_VIEWS}</option>
-					<option<!-- IF SORT_METHOD == 'image_rate_avg' --> selected="selected"<!-- ENDIF --> value='image_rate_avg'>{L_RATING}</option>
-					<option<!-- IF SORT_METHOD == 'image_comments' --> selected="selected"<!-- ENDIF --> value='image_comments'>{L_COMMENTS}</option>
-					<option<!-- IF SORT_METHOD == 'image_last_comment' --> selected="selected"<!-- ENDIF --> value='image_last_comment'>{L_NEW_COMMENT}</option>
+					<option<!-- IF SORT_METHOD == 't' --> selected="selected"<!-- ENDIF --> value='t'>{L_TIME}</option>
+					<option<!-- IF SORT_METHOD == 'n' --> selected="selected"<!-- ENDIF --> value='n'>{L_IMAGE_TITLE}</option>
+					<option<!-- IF SORT_METHOD == 'u' --> selected="selected"<!-- ENDIF --> value='u'>{L_USERNAME}</option>
+					<option<!-- IF SORT_METHOD == 'vc' --> selected="selected"<!-- ENDIF --> value='vc'>{L_VIEWS}</option>
+					<option<!-- IF SORT_METHOD == 'r' --> selected="selected"<!-- ENDIF --> value='r'>{L_RATING}</option>
+					<option<!-- IF SORT_METHOD == 'c' --> selected="selected"<!-- ENDIF --> value='c'>{L_COMMENTS}</option>
+					<option<!-- IF SORT_METHOD == 'lc' --> selected="selected"<!-- ENDIF --> value='lc'>{L_NEW_COMMENT}</option>
 				</select>
 			</dd>
 		</dl>
@@ -34,8 +34,8 @@
 			<dt><label for="sort_order">{L_DEFAULT_SORT_ORDER}</label></dt>
 			<dd>
 				<select name="sort_order">
-					<option<!-- IF SORT_ORDER == 'ASC' --> selected="selected"<!-- ENDIF --> value='ASC'>{L_SORT_ASCENDING}</option>
-					<option<!-- IF SORT_ORDER == 'DESC' --> selected="selected"<!-- ENDIF --> value='DESC'>{L_SORT_DESCENDING}</option>
+					<option<!-- IF SORT_ORDER == 'a' --> selected="selected"<!-- ENDIF --> value='a'>{L_SORT_ASCENDING}</option>
+					<option<!-- IF SORT_ORDER == 'd' --> selected="selected"<!-- ENDIF --> value='d'>{L_SORT_DESCENDING}</option>
 				</select>
 			</dd>
 		</dl>

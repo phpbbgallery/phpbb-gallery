@@ -274,6 +274,7 @@ $lang = array_merge($lang, array(
 
 //Added after 0.4.0-RC2
 $lang = array_merge($lang, array(
+	'ALL_IMAGES'					=> 'All image',
 	'APPROVE_IMAGE'					=> 'Approve image',
 
 	'CHANGE_IMAGE_STATUS'			=> 'Change image-status',

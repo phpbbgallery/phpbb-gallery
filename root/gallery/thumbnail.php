@@ -41,8 +41,7 @@ if (!$image_id)
 
 $sql = 'SELECT *
 	FROM ' . GALLERY_IMAGES_TABLE . '
-	WHERE image_id = ' . $image_id . '
-	LIMIT 1';
+	WHERE image_id = ' . (int) $image_id;
 $result = $db->sql_query($sql);
 
 $image_data = $db->sql_fetchrow($result);

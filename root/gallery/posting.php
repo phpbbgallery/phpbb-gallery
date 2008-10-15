@@ -1122,9 +1122,8 @@ switch ($mode)
 					$sql = 'SELECT comment_id
 						FROM ' . GALLERY_COMMENTS_TABLE . "
 						WHERE comment_image_id = $image_id
-						ORDER BY comment_id
-						LIMIT 1";
-					$result = $db->sql_query($sql);
+						ORDER BY comment_id";
+					$result = $db->sql_query_limit($sql, 1);
 					$row = $db->sql_fetchrow($result);
 					$last_comment_id = (isset($row['comment_id']))? $row['comment_id'] : 0;
 					$db->sql_freeresult($result);

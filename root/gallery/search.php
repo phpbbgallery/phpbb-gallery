@@ -40,12 +40,33 @@ $total_pics = 0;
 	* Build the thumbnail page
 	*/
 	$start = request_var('start', 0);
-	$sort_method = request_var('sort_method', $album_config['sort_method']);
-	$sort_order = request_var('sort_order', $album_config['sort_order']);
 	$pics_per_page = $album_config['rows_per_page'] * $album_config['cols_per_page'];
 	$tot_unapproved = $image_counter = 0;
 
-		$limit_sql = ($start == 0) ? $pics_per_page : $start .','. $pics_per_page;
+$sort_days	= request_var('st', 0);
+$sort_key	= request_var('sk', $album_config['sort_method']);
+$sort_dir	= request_var('sd', $album_config['sort_order']);
+$limit_days = array(0 => $user->lang['ALL_IMAGES'], 1 => $user->lang['1_DAY'], 7 => $user->lang['7_DAYS'], 14 => $user->lang['2_WEEKS'], 30 => $user->lang['1_MONTH'], 90 => $user->lang['3_MONTHS'], 180 => $user->lang['6_MONTHS'], 365 => $user->lang['1_YEAR']);
+
+$sort_by_text = array('t' => $user->lang['TIME'], 'n' => $user->lang['IMAGE_TITLE'], 'u' => $user->lang['SORT_USERNAME'], 'vc' => $user->lang['VIEWS']);
+$sort_by_sql = array('t' => 'image_time', 'n' => 'image_name', 'u' => 'image_username', 'vc' => 'image_view_count');
+
+if ($album_config['rate'] == 1)
+{
+	$sort_by_text['r'] = $user->lang['RATING'];
+	$sort_by_sql['r'] = 'image_rate_avg';
+}
+if ($album_config['comment'] == 1)
+{
+	$sort_by_text['c'] = $user->lang['COMMENTS'];
+	$sort_by_sql['c'] = 'image_comments';
+	$sort_by_text['lc'] = $user->lang['NEW_COMMENT'];
+	$sort_by_sql['lc'] = 'image_last_comment';
+}
+$s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
+gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
+$sql_sort_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
+
 		$view_string = gallery_acl_album_ids('i_view', 'string');
 		$view_string = ($view_string) ? 'image_album_id IN (' . $view_string . ') AND image_status = 1' : 'image_album_id = 0';
 		$moderativ_string = gallery_acl_album_ids('a_moderate', 'string');
@@ -71,9 +92,8 @@ $total_pics = 0;
 				ON a.album_id = i.image_album_id
 			WHERE image_user_id = ' . $user_id . "
 				AND ($view_string $moderativ_string)
-			ORDER BY $sort_method $sort_order
-			LIMIT $limit_sql";
-		$result = $db->sql_query($sql);
+			ORDER BY $sql_sort_order";
+		$result = $db->sql_query_limit($sql, $pics_per_page, $start);
 
 		$picrow = array();
 
@@ -142,27 +162,6 @@ $total_pics = 0;
 			}
 		}
 
-	/**
-	* additional sorting options
-	*/
-	$sort_rating_option = $sort_new_comment_option = $sort_comments_option = '';
-	if ($album_config['rate'] == 1)
-	{
-		$sort_rating_option = '<option value="image_rate_avg" ';
-		$sort_rating_option .= ($sort_method == 'image_rate_avg') ? 'selected="selected"' : '';
-		$sort_rating_option .= '>' . $user->lang['RATING'] . '</option>';
-	}
-	if ($album_config['comment'] == 1)
-	{
-		$sort_comments_option = '<option value="image_comments" ';
-		$sort_comments_option .= ($sort_method == 'image_comments') ? 'selected="selected"' : '';
-		$sort_comments_option .= '>' . $user->lang['COMMENTS'] . '</option>';
-
-		$sort_new_comment_option = '<option value="image_last_comment" ';
-		$sort_new_comment_option .= ($sort_method == 'image_last_comment') ? 'selected="selected"' : '';
-		$sort_new_comment_option .= '>' . $user->lang['NEW_COMMENT'] . '</option>';
-	}
-
 $template->assign_vars(array(
 	'S_THUMBNAIL_SIZE'			=> $album_config['thumbnail_size'] + 20 + (($album_config['thumbnail_info_line']) ? 16 : 0),
 	'S_COLS'					=> $album_config['cols_per_page'],
@@ -170,18 +169,10 @@ $template->assign_vars(array(
 	'S_SEARCH_ACTION'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", "user_id=$user_id"),
 	'SEARCH_NAME'				=> sprintf($user->lang['SEARCH_USER_IMAGES_OF'], $username),
 
-	'SORT_TIME'					=> ($sort_method == 'image_time') ? 'selected="selected"' : '',
-	'SORT_IMAGE_TITLE'			=> ($sort_method == 'image_name') ? 'selected="selected"' : '',
-	'SORT_USERNAME' 			=> ($sort_method == 'image_username') ? 'selected="selected"' : '',
-	'SORT_VIEW'					=> ($sort_method == 'image_view_count') ? 'selected="selected"' : '',
+	'S_SELECT_SORT_DIR'		=> $s_sort_dir,
+	'S_SELECT_SORT_KEY'		=> $s_sort_key,
 
-	'SORT_RATING_OPTION'		=> $sort_rating_option,
-	'SORT_COMMENTS_OPTION'		=> $sort_comments_option,
-	'SORT_NEW_COMMENT_OPTION'	=> $sort_new_comment_option,
-	'SORT_ASC'					=> ($sort_order == 'ASC') ? 'selected="selected"' : '',
-	'SORT_DESC'					=> ($sort_order == 'DESC') ? 'selected="selected"' : '',
-
-	'PAGINATION'				=> generate_pagination(append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", "user_id=$user_id&amp;sort_method=$sort_method&amp;sort_order=$sort_order"), $image_counter, $pics_per_page, $start),
+	'PAGINATION'				=> generate_pagination(append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", "user_id=$user_id&amp;sk=$sort_key&amp;sd=$sort_dir&amp;st=$sort_days"), $image_counter, $pics_per_page, $start),
 	'TOTAL_IMAGES'				=> ($image_counter == 1) ? $user->lang['IMAGE_#'] : sprintf($user->lang['IMAGES_#'], $image_counter),
 	'PAGE_NUMBER'				=> on_page($image_counter, $pics_per_page, $start),
 ));

@@ -17,9 +17,8 @@ if ($mode == 'queue_details')
 {
 	$sql = 'SELECT *
 		FROM ' . GALLERY_IMAGES_TABLE . "
-		WHERE image_id = $option_id
-		LIMIT 1";
-	$result = $db->sql_query($sql);
+		WHERE image_id = $option_id";
+	$result = $db->sql_query_limit($sql, 1);
 	$row = $db->sql_fetchrow($result);
 	$template->assign_vars(array(
 		'IMAGE_STATUS'		=> $row['image_status'],
@@ -35,9 +34,8 @@ if ($mode == 'report_details')
 			ON r.reporter_id = u.user_id
 		LEFT JOIN " . GALLERY_IMAGES_TABLE . " i
 			ON r.report_image_id = i.image_id
-		WHERE r.report_id = $option_id
-		LIMIT 1";
-	$result = $db->sql_query($sql);
+		WHERE r.report_id = $option_id";
+	$result = $db->sql_query_limit($sql, 1);
 	$row = $db->sql_fetchrow($result);
 	$template->assign_vars(array(
 		'REPORTER'			=> get_username_string('full', $row['reporter_id'], $row['reporter_name'], $row['reporter_colour']),

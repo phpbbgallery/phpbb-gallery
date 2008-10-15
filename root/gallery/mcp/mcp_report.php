@@ -16,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 $start				= request_var('start', 0);
 $sort_key			= request_var('sk', 'image_time');
-$sort_dir			= request_var('sd', 'DESC');
+$sort_dir			= (request_var('sd', 'DESC') == 'DESC') ? 'DESC' : 'ASC';
 $images_per_page	= $config['topics_per_page'];
 $count_images		= 0;
 
@@ -50,9 +50,8 @@ $sql = 'SELECT r.*, u.username reporter_name, u.user_colour reporter_colour, m.u
 		ON r.report_image_id = i.image_id
 	WHERE r.report_album_id = $album_id
 		AND r.report_status = $report_status
-	ORDER BY $sort_key $sort_dir
-	LIMIT $start, $images_per_page";
-$result = $db->sql_query($sql);
+	ORDER BY $sort_key $sort_dir";//REMOVE
+$result = $db->sql_query_limit($sql, $images_per_page, $start);
 while( $row = $db->sql_fetchrow($result) )
 {
 	$template->assign_block_vars('image_row', array(

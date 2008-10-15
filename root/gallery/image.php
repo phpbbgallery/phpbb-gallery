@@ -43,8 +43,7 @@ if (!$image_id)
 
 $sql = 'SELECT *
 	FROM ' . GALLERY_IMAGES_TABLE . '
-	WHERE image_id = ' . $image_id . '
-	LIMIT 1';
+	WHERE image_id = ' . (int) $image_id;
 $result = $db->sql_query($sql);
 
 $image_data = $db->sql_fetchrow($result);
@@ -62,9 +61,8 @@ if (empty($image_data) || !file_exists($phpbb_root_path . GALLERY_UPLOAD_PATH . 
 	trigger_error('IMAGE_NOT_EXIST');
 }
 $sql = 'SELECT *
-	FROM ' . GALLERY_ALBUMS_TABLE . '
-	WHERE album_id = ' . $album_id . '
-	LIMIT 1';
+	FROM ' . GALLERY_ALBUMS_TABLE . "
+	WHERE album_id = $album_id";
 $result = $db->sql_query($sql);
 $album_data = $db->sql_fetchrow($result);
 if (empty($album_data))
@@ -131,10 +129,9 @@ if ($album_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER'])
 // Increase view counter
 // ------------------------------------
 
-$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . "
 	SET image_view_count = image_view_count + 1
-	WHERE image_id = ' . $image_id . '
-	LIMIT 1';
+	WHERE image_id = $image_id";
 $result = $db->sql_query($sql);
 
 

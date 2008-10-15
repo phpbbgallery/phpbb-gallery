@@ -634,6 +634,8 @@ class install_update extends module
 
 			case '0.4.0-RC2':
 				set_gallery_config('shorted_imagenames', 25);
+				set_gallery_config('sort_method', 't');
+				set_gallery_config('sort_order', 'd');
 
 				$sql = 'SELECT report_image_id, report_id
 					FROM ' . GALLERY_REPORTS_TABLE . "

@@ -14,8 +14,6 @@ if (!defined('IN_PHPBB'))
 	die('Hacking attempt');
 }
 
-
-//see GALLERY_ROOT_PATH/permissions_overview.php for a short description
 function get_album_access_array()
 {
 	global $cache, $db, $user;

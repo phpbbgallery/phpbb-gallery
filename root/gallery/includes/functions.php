@@ -106,8 +106,7 @@ function generate_album_nav(&$album_data)
 	{
 		$sql = 'SELECT user_id, username, user_colour
 			FROM ' . USERS_TABLE . '
-			WHERE user_id = ' . $album_data['album_user_id'] . '
-			LIMIT 1';
+			WHERE user_id = ' . (int) $album_data['album_user_id'];
 		$result = $db->sql_query($sql);
 
 		while ($row = $db->sql_fetchrow($result))
@@ -377,8 +376,7 @@ function update_lastimage_info($album_id)
 		FROM ' . GALLERY_IMAGES_TABLE . "
 		WHERE image_album_id = $album_id
 			AND image_status = 1
-		ORDER BY image_time DESC
-		LIMIT 1";
+		ORDER BY image_time DESC";
 	$result = $db->sql_query($sql);
 	if ($row = $db->sql_fetchrow($result))
 	{

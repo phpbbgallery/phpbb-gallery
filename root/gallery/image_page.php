@@ -56,8 +56,6 @@ if (empty($album_data))
 /**
 * Check the permissions
 */
-//echo gallery_acl_check('i_view', $album_id);
-//echo gallery_acl_album_ids('i_view', 'array');
 if (!gallery_acl_check('i_view', $album_id))
 {
 	if (!$user->data['is_registered'])
@@ -80,10 +78,8 @@ if (($album_config['rate'] <> 0) && $user->data['is_registered'])
 {
 	$sql = 'SELECT *
 		FROM ' . GALLERY_RATES_TABLE . '
-		WHERE rate_image_id = ' . $image_id . '
-			AND rate_user_id = ' . $user->data['user_id'] . '
-		LIMIT 1';
-
+		WHERE rate_image_id = ' . (int) $image_id . '
+			AND rate_user_id = ' . (int) $user->data['user_id'];
 	$result = $db->sql_query($sql);
 
 	if ($db->sql_affectedrows($result) > 0)
@@ -163,8 +159,6 @@ if (isset($_POST['rate']))
 */
 $previous_id = $next_id = $last_id = 0;
 $do_next = false;
-$sort_method = request_var('sort_method', $album_config['sort_method']);
-$sort_order = request_var('sort_order', $album_config['sort_order']);
 $image_approval_sql = ' AND image_status = 1';
 if (gallery_acl_check('a_moderate', $album_id))
 {
@@ -173,7 +167,7 @@ if (gallery_acl_check('a_moderate', $album_id))
 $sql = 'SELECT *
 	FROM ' . GALLERY_IMAGES_TABLE . '
 	WHERE image_album_id = ' . $album_id . $image_approval_sql . '
-	ORDER BY ' . $sort_method . ' ' . $sort_order;
+	ORDER BY ' . $album_config['sort_method'] . ' ' . $album_config['sort_order'];
 $result = $db->sql_query($sql);
 //there should also be a way to go with a limit here, but we'll see
 while ($row = $db->sql_fetchrow($result))
@@ -277,7 +271,10 @@ if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (substr
 		}
 		if(isset($exif["EXIF"]["Flash"]))
 		{
-			$exif_flash = $user->lang['EXIF_FLASH_CASE_' . $exif["EXIF"]["Flash"]];
+			if (isset($user->lang['EXIF_FLASH_CASE_' . $exif["EXIF"]["Flash"]]))
+			{
+				$exif_flash = $user->lang['EXIF_FLASH_CASE_' . $exif["EXIF"]["Flash"]];
+			}
 		}
 		if (isset($exif["IFD0"]["Model"]))
 		{
@@ -285,17 +282,23 @@ if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (substr
 		}
 		if (isset($exif["EXIF"]["ExposureProgram"]))
 		{
-			$exif_exposureprogram = $user->lang['EXIF_EXPOSURE_PROG_' . $exif["EXIF"]["ExposureProgram"]];
+			if (isset($user->lang['EXIF_EXPOSURE_PROG_' . $exif["EXIF"]["ExposureProgram"]]))
+			{
+				$exif_exposureprogram = $user->lang['EXIF_EXPOSURE_PROG_' . $exif["EXIF"]["ExposureProgram"]];
+			}
 		}
 		if (isset($exif["EXIF"]["ExposureBiasValue"]))
 		{
 			list($num,$den) = explode("/",$exif["EXIF"]["ExposureBiasValue"]);
-			if (($num/$den) == 0) { $exif_exposure_bias = 0; }
+			if (($num/$den) == 0) { $exif_exposure_bias = 0; } else { $exif_exposure_bias = $exif["EXIF"]["ExposureBiasValue"]; }
 			$exif_exposure_bias = sprintf($user->lang['EXIF_EXPOSURE_BIAS_EXP'], $exif_exposure_bias);
 		}
 		if (isset($exif["EXIF"]["MeteringMode"]))
 		{
-			$exif_metering_mode = $user->lang['EXIF_METERING_MODE_' . $exif["EXIF"]["MeteringMode"]];
+			if (isset($user->lang['EXIF_METERING_MODE_' . $exif["EXIF"]["MeteringMode"]]))
+			{
+				$exif_metering_mode = $user->lang['EXIF_METERING_MODE_' . $exif["EXIF"]["MeteringMode"]];
+			}
 		}
 
 		$template->assign_vars(array(
@@ -397,22 +400,17 @@ if ($album_config['comment'])
 	$comments_per_page = 10;
 	
 	$start = request_var('start', 0);
-	
-	$sort_order = request_var('sort_order', 'ASC');
-	
+	$sort_order = (request_var('sort_order', 'ASC') == 'ASC') ? 'ASC' : 'DESC';
+
 	if ($total_comments > 0)
 	{
-		$limit_sql = ($start == 0) ? $comments_per_page : $start .','. $comments_per_page;
-
 		$sql = 'SELECT c.*, u.user_id, u.username, u.user_colour
 			FROM ' . GALLERY_COMMENTS_TABLE . ' AS c
-			LEFT JOIN ' . USERS_TABLE . ' AS u
+			LEFT JOIN ' . USERS_TABLE . " AS u
 				ON c.comment_user_id = u.user_id
-			WHERE c.comment_image_id = ' . $image_id . '
-			ORDER BY c.comment_id ' . $sort_order . '
-			LIMIT ' . $limit_sql;
-
-		$result = $db->sql_query($sql);
+			WHERE c.comment_image_id = $image_id
+			ORDER BY c.comment_id $sort_order";
+		$result = $db->sql_query_limit($sql, $comments_per_page, $start);
 
 		$commentrow = array();
 
@@ -425,7 +423,7 @@ if ($album_config['comment'])
 		
 		for ($i = 0; $i < count($commentrow); $i++)
 		{
-			if (($commentrow[$i]['user_id'] == ALBUM_GUEST) || ($commentrow[$i]['username'] == ''))
+			if (($commentrow[$i]['user_id'] == ANONYMOUS) || ($commentrow[$i]['username'] == ''))
 			{
 				$poster = ($commentrow[$i]['comment_username'] != '') ? $user->lang['GUEST'] : $commentrow[$i]['comment_username'];
 			}
@@ -440,15 +438,11 @@ if ($album_config['comment'])
 					FROM ' . GALLERY_COMMENTS_TABLE . ' AS c
 					LEFT JOIN ' . USERS_TABLE . ' AS u
 						ON c.comment_edit_user_id = u.user_id
-					WHERE c.comment_id = ' . $commentrow[$i]['comment_id']. '
-					LIMIT 1';
-
+					WHERE c.comment_id = ' . (int) $commentrow[$i]['comment_id'];
 				$result = $db->sql_query($sql);
-
 				$lastedit_row = $db->sql_fetchrow($result);
 
 				$edit_info = ($commentrow[$i]['comment_edit_count'] == 1) ? $user->lang['EDITED_TIME_TOTAL'] : $user->lang['EDITED_TIMES_TOTAL'];
-
 				$edit_info = '<br /><br />&raquo;&nbsp;'. sprintf($edit_info, get_username_string('full', $lastedit_row['user_id'], $lastedit_row['username'], $lastedit_row['user_colour']), $user->format_date($commentrow[$i]['comment_edit_time']), $commentrow[$i]['comment_edit_count']) .'<br />';
 			}
 			else

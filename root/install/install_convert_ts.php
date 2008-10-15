@@ -320,8 +320,8 @@ class install_convert_ts extends module
 		set_gallery_config('thumbnail_quality', '50');
 		set_gallery_config('thumbnail_size', '125');
 		set_gallery_config('thumbnail_cache', '1');
-		set_gallery_config('sort_method', 'image_time');
-		set_gallery_config('sort_order', 'DESC');
+		set_gallery_config('sort_method', 't');
+		set_gallery_config('sort_order', 'd');
 		set_gallery_config('jpg_allowed', '1');
 		set_gallery_config('png_allowed', '1');
 		set_gallery_config('gif_allowed', '0');
