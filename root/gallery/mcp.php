@@ -48,12 +48,6 @@ if ($mode == 'whois' && $auth->acl_get('a_') && request_var('ip', ''))
 	page_footer();
 }
 
-if (!gallery_acl_check('a_moderate', $album_id))
-{
-	meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"));
-	trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
-}
-
 //Basic-Information && Permissions
 if($image_id)
 {
@@ -70,6 +64,13 @@ if($image_id)
 	//deny-cheating
 	$album_id = $image_data['image_album_id'];
 }
+
+if (!gallery_acl_check('a_moderate', $album_id))
+{
+	meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"));
+	trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
+}
+
 $sql = 'SELECT *
 	FROM ' . GALLERY_ALBUMS_TABLE . '
 	WHERE album_id = ' . $album_id;
@@ -107,8 +108,6 @@ $image_id_ary = ($image_id) ? array($image_id) : request_var('image_id_ary', arr
 
 //build navigation
 build_gallery_mcp_navigation($album_id, $mode, $option_id);
-
-//REMOVE send back anonymous!
 
 if ($action && $image_id_ary)
 {
