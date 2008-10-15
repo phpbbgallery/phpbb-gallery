@@ -157,6 +157,12 @@ if (isset($_POST['rate']))
 /**
 * Main work here...
 */
+// Increase view
+$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . "
+	SET image_view_count = image_view_count + 1
+	WHERE image_id = $image_id";
+$result = $db->sql_query($sql);
+
 $previous_id = $next_id = $last_id = 0;
 $do_next = false;
 $image_approval_sql = ' AND image_status = 1';

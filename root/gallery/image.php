@@ -118,26 +118,9 @@ if ($album_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER'])
 }
 
 
-/*
-+----------------------------------------------------------
-| Main work here...
-+----------------------------------------------------------
+/**
+* Main work here...
 */
-
-
-// ------------------------------------
-// Increase view counter
-// ------------------------------------
-
-$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . "
-	SET image_view_count = image_view_count + 1
-	WHERE image_id = $image_id";
-$result = $db->sql_query($sql);
-
-
-// ------------------------------------
-// Okay, now we can send image to the browser
-// ------------------------------------
 $watermark_ok = false;
 $file_size = getimagesize($phpbb_root_path . GALLERY_UPLOAD_PATH  . $image_data['image_filename']);
 if ($album_config['watermark_images'] && ($album_config['watermark_height'] < $file_size[0]) && ($album_config['watermark_width'] < $file_size[1]) && $gd_success)
