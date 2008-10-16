@@ -50,9 +50,6 @@ $lang = array_merge($lang, array(
 	'IMAGE_REPORTED'				=> 'Das Bild wurde gemeldet.',
 	'IMAGE_UNAPPROVED'				=> 'Das Bild wartet auf freigabe.',
 
-	'LAST_QUEUE_IMAGES'				=> 'Die letzten 5 Bilder, die auf Freigabe warten',
-	'LAST_REPORTED_IMAGES'			=> 'Die letzten 5 gemeldeten Bilder',
-
 	'MODERATE_ALBUM'				=> 'Album moderieren',
 
 	'QUEUE_A_APPROVE'				=> 'Bild freischalten',
@@ -120,9 +117,6 @@ $lang = array_merge($lang, array(
 	'VIEW_ALBUM_IMAGES'				=> '%s Bilder',
 	'VIEW_ALBUM_IMAGE'				=> '1 Bild',
 
-	'WAITING_APPROVED_IMAGE'		=> 'Insgesamt ist <span style="font-weight: bold;">%s</span> Bild freigeschaltet.',
-	'WAITING_APPROVED_IMAGES'		=> 'Insgesamt sind <span style="font-weight: bold;">%s</span> Bilder freigeschaltet.',
-	'WAITING_APPROVED_NONE'			=> 'Es sind keine Bilder freigeschaltet.',
 	'WAITING_APPROVED_IMAGE'		=> 'Insgesamt ist <span style="font-weight: bold;">%s</span> Bild freigeschaltet.',
 	'WAITING_APPROVED_IMAGES'		=> 'Insgesamt sind <span style="font-weight: bold;">%s</span> Bilder freigeschaltet.',
 	'WAITING_APPROVED_NONE'			=> 'Es sind keine Bilder freigeschaltet.',
