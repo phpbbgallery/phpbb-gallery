@@ -40,7 +40,7 @@ IMPORT: You need to work over the install.xml first, but the "DIY-Instructions"!
     <diy-instructions lang="de"><![CDATA[Schritt für Schritt:
 • mache ein Datenbank-Backup deiner phpBB2 und phpBB3-Installation.
 • Stelle die Tabellen des Album-MODs (phpbb_album, phpbb_album_cat, phpbb_album_comment, phpbb_album_config, phpbb_album_rate) udn wenn du es installiert hattest die des Clowns-Packages (phpbb_album_sp_config) in deiner phpBB3-Installation wieder her.
-• gehe zur install_gallery/install.php > Konvertiere MOD zu "aktuelle Version"
+• gehe zur install/ > Konvertiere MOD zu "aktuelle Version"
 • gebe nun das Präfix deiner phpBB2-Installation ein (Das Präfix ist der kurze Teil am Anfang der Datenbank-Tabellen-Namen in diesem Beispiel "phpbb_")
 • Konvertiere.
 
@@ -54,7 +54,7 @@ IMPORT: You need to work over the install.xml first, but the "DIY-Instructions"!
     <diy-instructions lang="en-gb"><![CDATA[Step by Step:
 • make a database-backup of your phpbb2-installation and phpbb3-installation.
 • take the tables of the album-MOD (phpbb_album, phpbb_album_cat, phpbb_album_comment, phpbb_album_config, phpbb_album_rate) and if you got it, the Clowns-Package (phpbb_album_sp_config) and put these tables into your phpBB3-database
-• go to install_gallery/install.php > Convert MOD to "current version"
+• go to install/ > Convert MOD to "current version"
 • enter the Prefix of your phpBB2-Installation (Prefix is the short-part in front of the database-table-names (in this example "phpbb_")
 • and convert.
 

@@ -40,10 +40,10 @@ You may install it, to be informed about future versions, as I'm not going to se
       <link type="parent" lang="en-gb" href="contrib/history.xml">History</link>
       <link type="parent" lang="de" href="contrib/update_0_4_0-RC1_to_0_4_0-RC2/update.xml">Update von 0.4.0-RC1 auf 0.4.0-RC2</link>
       <link type="parent" lang="en-gb" href="contrib/update_0_4_0-RC1_to_0_4_0-RC2/update.xml">Update from 0.4.0-RC1 to 0.4.0-RC2</link>
-      <link type="language" lang="de" href="xml/de.xml">Anleitung für das deutsche Sprachpaket</link>
-      <link type="language" lang="en-gb" href="xml/de.xml">Manual for German Language-set</link>
-      <link type="template" lang="de" href="xml/subsilver2.xml">Anleitung für das Style subsilver2</link>
-      <link type="template" lang="en-gb" href="xml/subsilver2.xml">Manual for subsilver2 Style</link>
+      <link type="language" lang="de" href="contrib/de.xml">Anleitung für das deutsche Sprachpaket</link>
+      <link type="language" lang="en-gb" href="contrib/de.xml">Manual for German Language-set</link>
+      <link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>
+      <link type="template" lang="en-gb" href="contrib/subsilver2.xml">Manual for subsilver2 Style</link>
       <link type="parent" lang="de" href="contrib/Addons/recent_random_images/install.xml">Addon: neuste &amp; zufällige Bilder auf der index.php</link>
       <link type="parent" lang="en-gb" href="contrib/Addons/recent_random_images/install.xml">Addon: recent &amp; random images on index.php</link>
       <link type="parent" lang="de" href="contrib/Addons/board3portal/install.xml">Addon: neuste &amp; zufällige Bilder auf der portal.php vom Board3Portal</link>
@@ -469,7 +469,7 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
         <action type="after-add"><![CDATA[@import url("gallery_lytebox.css");]]></action>
       </edit>
     </open>
-    <diy-instructions lang="de"><![CDATA[Rufe install_gallery/install.php auf und führe den Installer aus
+    <diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe den Installer aus
 
 Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
 
@@ -478,7 +478,7 @@ Aktualisiere deine Styles:
     "Administrations-Bereich" (ACP) > "Styles" > "Themes" > jedes > "Aktualisieren"
     "Administrations-Bereich" (ACP) > "Styles" > "Grafiksammlungen" > jedes > "Aktualisieren"
 ]]></diy-instructions>
-    <diy-instructions lang="en-gb"><![CDATA[Browse to install_gallery/install.php and run the installer
+    <diy-instructions lang="en-gb"><![CDATA[Browse to install/ and run the installer
 
 Clear your cache in the "Administration Control Panel" (ACP) > "General" > "Purge the cache"
 

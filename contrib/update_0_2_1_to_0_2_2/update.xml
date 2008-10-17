@@ -108,6 +108,23 @@ You don't need to do this, when you fixed the bug on your self.]]></comment>
         <action type="replace-with"><![CDATA[.upload-icon span	{ background-image: url("{T_IMAGESET_LANG_PATH}/button_upload_image.gif"); }]]></action>
       </edit>
     </open>
-    <diy-instructions lang="en-gb">see normal install-file</diy-instructions>
+    <diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
+
+Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
+
+Aktualisiere deine Styles:
+    "Administrations-Bereich" (ACP) > "Styles" > "Templates" > jedes > "Aktualisieren"
+    "Administrations-Bereich" (ACP) > "Styles" > "Themes" > jedes > "Aktualisieren"
+    "Administrations-Bereich" (ACP) > "Styles" > "Grafiksammlungen" > jedes > "Aktualisieren"
+]]></diy-instructions>
+    <diy-instructions lang="en-gb"><![CDATA[Browse to install/ and run the update-script
+
+Clear your cache in the "Administration Control Panel" (ACP) > "General" > "Purge the cache"
+
+Refresh your Styles:
+    "Administration Control Panel" (ACP) > "Styles" > "Templates" > each > "refresh"
+    "Administration Control Panel" (ACP) > "Styles" > "Themes" > each > "refresh"
+    "Administration Control Panel" (ACP) > "Styles" > "Imagesets" > each > "refresh"
+]]></diy-instructions>
   </action-group>
 </mod>

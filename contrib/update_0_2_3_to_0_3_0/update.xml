@@ -27,8 +27,8 @@
       <link type="parent" lang="de" href="../history.xml">Entwicklung</link>
       <link type="parent" lang="en-gb" href="../../install.xml">Install</link>
       <link type="parent" lang="de" href="../../install.xml">Installations-Anleitung</link>
-      <link type="template" lang="de" href="xml/subsilver2.xml">Anleitung für das Style subsilver2</link>
-      <link type="template" lang="en-gb" href="xml/subsilver2.xml">Manual for subsilver2 Style</link>
+      <link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>
+      <link type="template" lang="en-gb" href="contrib/subsilver2.xml">Manual for subsilver2 Style</link>
       <link type="parent" lang="en-gb" href="../update_0_3_0_to_0_3_1/update.xml">Update from 0.3.0 to 0.3.1</link>
       <link type="parent" lang="de" href="../update_0_3_0_to_0_3_1/update.xml">Update von 0.3.0 auf 0.3.1</link>
     </link-group>
@@ -314,17 +314,23 @@ $user->add_lang('mods/gallery');]]></action>
         <action type="replace-with"><![CDATA[]]></action>
       </edit>
     </open>
-    <diy-instructions lang="en-gb">see normal install-file
-Please delete the following files, before copy the new root to your forum:
-gallery/album_personal.php
-gallery/album_personal_index.php
-gallery/edit.php
-gallery/image_delete.php
-gallery/upload.php
-styles/prosilver/template/gallery_edit_body.html
-styles/prosilver/template/gallery_upload_body.html
-styles/prosilver/template/gallery_personal_index_body.html
-styles/prosilver/template/gallery_personal_body.html
-    </diy-instructions>
+    <diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
+
+Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
+
+Aktualisiere deine Styles:
+    "Administrations-Bereich" (ACP) > "Styles" > "Templates" > jedes > "Aktualisieren"
+    "Administrations-Bereich" (ACP) > "Styles" > "Themes" > jedes > "Aktualisieren"
+    "Administrations-Bereich" (ACP) > "Styles" > "Grafiksammlungen" > jedes > "Aktualisieren"
+]]></diy-instructions>
+    <diy-instructions lang="en-gb"><![CDATA[Browse to install/ and run the update-script
+
+Clear your cache in the "Administration Control Panel" (ACP) > "General" > "Purge the cache"
+
+Refresh your Styles:
+    "Administration Control Panel" (ACP) > "Styles" > "Templates" > each > "refresh"
+    "Administration Control Panel" (ACP) > "Styles" > "Themes" > each > "refresh"
+    "Administration Control Panel" (ACP) > "Styles" > "Imagesets" > each > "refresh"
+]]></diy-instructions>
   </action-group>
 </mod>

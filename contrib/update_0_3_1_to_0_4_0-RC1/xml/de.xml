@@ -53,7 +53,7 @@ You may install it, to be informed about future versions, as I'm not going to se
         <action type="after-add"><![CDATA[img_button_upload_image = button_upload_image.gif]]></action>
       </edit>
     </open>
-    <diy-instructions lang="de"><![CDATA[Rufe install_gallery/install.php auf und führe das Update-Script aus
+    <diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
 
 Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
 
@@ -62,7 +62,7 @@ Aktualisiere deine Styles:
     "Administrations-Bereich" (ACP) > "Styles" > "Themes" > jedes > "Aktualisieren"
     "Administrations-Bereich" (ACP) > "Styles" > "Grafiksammlungen" > jedes > "Aktualisieren"
 ]]></diy-instructions>
-    <diy-instructions lang="en-gb"><![CDATA[Browse to install_gallery/install.php and run the update-script
+    <diy-instructions lang="en-gb"><![CDATA[Browse to install/ and run the update-script
 
 Clear your cache in the "Administration Control Panel" (ACP) > "General" > "Purge the cache"
 
