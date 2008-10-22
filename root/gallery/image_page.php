@@ -170,10 +170,14 @@ if (gallery_acl_check('a_moderate', $album_id))
 {
 	$image_approval_sql = '';
 }
+
+$sort_by_sql = array('t' => 'image_time', 'n' => 'image_name', 'u' => 'image_username', 'vc' => 'image_view_count', 'r' => 'image_rate_avg', 'c' => 'image_comments', 'lc' => 'image_last_comment');
+$sql_sort_order = $sort_by_sql[$album_config['sort_method']] . ' ' . (($album_config['sort_order'] == 'd') ? 'DESC' : 'ASC');
+
 $sql = 'SELECT *
 	FROM ' . GALLERY_IMAGES_TABLE . '
-	WHERE image_album_id = ' . $album_id . $image_approval_sql . '
-	ORDER BY ' . $album_config['sort_method'] . ' ' . $album_config['sort_order'];
+	WHERE image_album_id = ' . (int) $album_id . $image_approval_sql . '
+	ORDER BY ' . $sql_sort_order;
 $result = $db->sql_query($sql);
 //there should also be a way to go with a limit here, but we'll see
 while ($row = $db->sql_fetchrow($result))
