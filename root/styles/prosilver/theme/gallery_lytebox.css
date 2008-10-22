@@ -84,3 +84,15 @@ dd.g_status {
 span.reported-images-number {
 	color: red;
 }
+
+.unapproved {
+	background-position: 100% 0;
+	background-repeat: no-repeat;
+	background-image: url("{T_IMAGESET_LANG_PATH}/g_unapproved.gif");
+}
+
+.reported {
+	background-position: 100% 0;
+	background-repeat: no-repeat;
+	background-image: url("{T_IMAGESET_LANG_PATH}/g_reported.gif");
+}

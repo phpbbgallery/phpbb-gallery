@@ -56,6 +56,7 @@
           <change><![CDATA[[Change] Report #334: Remove file-type on image-name]]></change>
           <change><![CDATA[[Change] Report #299: Move Images into personal albums]]></change>
 
+          <change><![CDATA[[Fix] Report #342: Missing note "waiting for approval"]]></change>
           <change><![CDATA[[Fix] Topic #797: inconsistent language packages]]></change>
           <change><![CDATA[[Fix] Unreported: Exif-Data: "ExposureBiasValue", "Flash", "ExposureProgram" & "MeteringMode"]]></change>
           <change><![CDATA[[Fix] Report #341: PostgreSQL: sql_query using hard LIMIT]]></change>
