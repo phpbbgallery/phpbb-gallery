@@ -514,6 +514,7 @@ class ucp_gallery
 			'U_GOTO'			=> append_sid($phpbb_root_path . $gallery_root_path . "album.$phpEx", 'album_id=' . $parent_id),
 			'U_EDIT'			=> $this->u_action . '&amp;action=edit&amp;album_id=' . $parent_id,
 			'U_DELETE'			=> $this->u_action . '&amp;action=delete&amp;album_id=' . $parent_id,
+			'U_UPLOAD'			=> append_sid($phpbb_root_path . $gallery_root_path . "posting.$phpEx", 'mode=image&amp;submode=upload&amp;album_id=' . $parent_id),
 			'ICON_MOVE_DOWN'			=> '<img src="' . $phpbb_root_path . '/adm/images/icon_down.gif" alt="" />',
 			'ICON_MOVE_DOWN_DISABLED'	=> '<img src="' . $phpbb_root_path . '/adm/images/icon_down_disabled.gif" alt="" />',
 			'ICON_MOVE_UP'				=> '<img src="' . $phpbb_root_path . '/adm/images/icon_up.gif" alt="" />',
