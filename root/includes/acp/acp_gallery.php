@@ -1222,11 +1222,11 @@ class acp_gallery
 				'S_ALBUM_ACTION'		=>  $this->u_action . '&amp;action=delete&amp;album_id=' . $album_id,
 				'ALBUM_DELETE'			=> sprintf($user->lang['ALBUM_DELETE'], $thisalbum['album_name']),
 				'ALBUM_TYPE'			=> $thisalbum['album_type'],
-				'S_PARENT_OPTIONS'		=> make_album_select($thisalbum['parent_id'], $album_id),
+				'S_PARENT_OPTIONS'		=> gallery_albumbox(false, '', $thisalbum['parent_id'], 'i_upload', $album_id),
 				'ALBUM_NAME'			=> $thisalbum['album_name'],
 				'ALBUM_DESC'			=> generate_text_for_display($thisalbum['album_desc'], $thisalbum['album_desc_uid'], $thisalbum['album_desc_bitfield'], $thisalbum['album_desc_options']),
-				'S_MOVE_ALBUM_OPTIONS'	=> make_album_select(false, $album_id),
-				'S_MOVE_IMAGE_OPTIONS'	=> make_album_select(false, $album_id, true),
+				'S_MOVE_ALBUM_OPTIONS'	=> gallery_albumbox(false, '', false, 'i_view', $album_id),
+				'S_MOVE_IMAGE_OPTIONS'	=> gallery_albumbox(false, '', false, 'i_upload', $album_id),
 			));
 		}
 		else
