@@ -168,7 +168,7 @@ class acp_gallery
 				'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_IMPORT_ALBUMS_EXPLAIN'],
 				'L_IMPORT_DIR_EMPTY'			=> sprintf($user->lang['IMPORT_DIR_EMPTY'], GALLERY_ROOT_PATH),
 				'S_ALBUM_IMPORT_ACTION'			=> $this->u_action,
-				'S_SELECT_IMPORT' 				=> gallery_albumbox(false, 'album_id', 0, 'i_upload'),//make_album_select(0, false, false, false, false),
+				'S_SELECT_IMPORT' 				=> gallery_albumbox(false, 'album_id', 0, 'i_upload'),
 			));
 		}
 		else
