@@ -57,6 +57,7 @@
           <change><![CDATA[[Change] Report #334: Remove file-type on image-name]]></change>
           <change><![CDATA[[Change] Report #299: Move Images into personal albums]]></change>
 
+          <change><![CDATA[[Fix] Report #344: Language-Vars for Permissions]]></change>
           <change><![CDATA[[Fix] PM #524: undefined function make_album_select]]></change>
           <change><![CDATA[[Fix] Report #342: Missing note "waiting for approval"]]></change>
           <change><![CDATA[[Fix] Topic #797: inconsistent language packages]]></change>
