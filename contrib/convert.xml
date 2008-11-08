@@ -19,11 +19,11 @@ IMPORT: You need to work over the install.xml first, but the "DIY-Instructions"!
         <contributions />
       </author>
     </author-group>
-    <mod-version>0.4.0-RC2</mod-version>
+    <mod-version>0.4.0-RC3</mod-version>
     <installation>
       <level>intermediate</level>
       <time>1200</time>
-      <target-version>3.0.2</target-version>
+      <target-version>3.0.3</target-version>
     </installation>
     <link-group>
       <link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
