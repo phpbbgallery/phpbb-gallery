@@ -45,6 +45,13 @@
     <author-notes lang="en-gb">This file contains all parts of the History, all Developers, a.s.o.</author-notes>
     <history>
       <entry>
+        <date>YYYY-MM-DD</date>
+        <rev-version>X.Y.Z</rev-version>
+        <changelog lang="en-gb">
+          <change><![CDATA[[Fix] Topic #883: STAGE_COPY_TABLE_EXPLAIN is german]]></change>
+        </changelog>
+      </entry>
+      <entry>
         <date>2008-11-09</date>
         <rev-version>0.4.0-RC3</rev-version>
         <changelog lang="en-gb">
