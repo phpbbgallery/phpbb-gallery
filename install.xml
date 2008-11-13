@@ -29,7 +29,7 @@ You may install it, to be informed about future versions, as I'm not going to se
         <contributions />
       </author>
     </author-group>
-    <mod-version>0.4.0-RC3</mod-version>
+    <mod-version>0.4.0</mod-version>
     <installation>
       <level>intermediate</level>
       <time>1200</time>
@@ -38,8 +38,8 @@ You may install it, to be informed about future versions, as I'm not going to se
     <link-group>
       <link type="parent" lang="de" href="contrib/history.xml">Entwicklung</link>
       <link type="parent" lang="en-gb" href="contrib/history.xml">History</link>
-      <link type="parent" lang="de" href="contrib/update_0_4_0-RC1_to_0_4_0-RC2/update.xml">Update von 0.4.0-RC1 auf 0.4.0-RC2</link>
-      <link type="parent" lang="en-gb" href="contrib/update_0_4_0-RC1_to_0_4_0-RC2/update.xml">Update from 0.4.0-RC1 to 0.4.0-RC2</link>
+      <link type="parent" lang="de" href="contrib/update_0_4_0-RC3_to_0_4_0/update.xml">Update von 0.4.0-RC3 auf 0.4.0</link>
+      <link type="parent" lang="en-gb" href="contrib/update_0_4_0-RC3_to_0_4_0/update.xml">Update from 0.4.0-RC3 to 0.4.0</link>
       <link type="language" lang="de" href="contrib/de.xml">Anleitung für das deutsche Sprachpaket</link>
       <link type="language" lang="en-gb" href="contrib/de.xml">Manual for German Language-set</link>
       <link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>
@@ -310,7 +310,7 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
     <open src="includes/functions.php">
       <edit>
         <find><![CDATA[// The following assigns all _common_ variables that may be used at any point in a template.]]></find>
-        <action type="after-add"><![CDATA[$user->add_lang('mods/info_acp_gallery');]]></action>
+        <action type="before-add"><![CDATA[$user->add_lang('mods/info_acp_gallery');]]></action>
       </edit>
       <edit>
         <find><![CDATA['L_ONLINE_EXPLAIN'	=> $l_online_time,]]></find>

@@ -29,7 +29,7 @@
         <contributions />
       </author>
     </author-group>
-    <mod-version>0.4.0-RC3</mod-version>
+    <mod-version>0.4.0</mod-version>
     <installation>
       <level>intermediate</level>
       <time>1200</time>
@@ -38,15 +38,15 @@
     <link-group>
       <link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
       <link type="parent" lang="en-gb" href="../install.xml">Manual</link>
-      <link type="parent" lang="de" href="update_0_4_0-RC2_to_0_4_0-RC3/update.xml">Update von 0.4.0-RC2 auf 0.4.0-RC3</link>
-      <link type="parent" lang="en-gb" href="update_0_4_0-RC2_to_0_4_0-RC3/update.xml">Update from 0.4.0-RC2 to 0.4.0-RC3</link>
+      <link type="parent" lang="de" href="update_0_4_0-RC3_to_0_4_0/update.xml">Update von 0.4.0-RC3 auf 0.4.0</link>
+      <link type="parent" lang="en-gb" href="update_0_4_0-RC3_to_0_4_0/update.xml">Update from 0.4.0-RC3 to 0.4.0</link>
     </link-group>
     <author-notes lang="de">Diese Datei enthält alle Teile der History, alle Entickler, usw.</author-notes>
     <author-notes lang="en-gb">This file contains all parts of the History, all Developers, a.s.o.</author-notes>
     <history>
       <entry>
         <date>YYYY-MM-DD</date>
-        <rev-version>X.Y.Z</rev-version>
+        <rev-version>0.4.0</rev-version>
         <changelog lang="en-gb">
           <change><![CDATA[[Fix] Topic #883: STAGE_COPY_TABLE_EXPLAIN is german]]></change>
         </changelog>
