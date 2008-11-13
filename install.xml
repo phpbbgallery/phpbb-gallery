@@ -311,11 +311,12 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
     <open src="includes/functions.php">
       <edit>
         <find><![CDATA[// The following assigns all _common_ variables that may be used at any point in a template.]]></find>
-        <action type="before-add"><![CDATA[$user->add_lang('mods/info_acp_gallery');]]></action>
+        <action type="before-add"><![CDATA[	$user->add_lang('mods/info_acp_gallery');
+	$gallery_root_path = GALLERY_ROOT_PATH;]]></action>
       </edit>
       <edit>
         <find><![CDATA['L_ONLINE_EXPLAIN'	=> $l_online_time,]]></find>
-        <action type="before-add"><![CDATA['U_GALLERY_MOD'			=> append_sid("{$phpbb_root_path}gallery/index.$phpEx"),]]></action>
+        <action type="before-add"><![CDATA['U_GALLERY_MOD'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"),]]></action>
       </edit>
     </open>
     <open src="includes/functions_user.php">

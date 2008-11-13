@@ -72,6 +72,20 @@ You may install it, to be informed about future versions, as I'm not going to se
       <file from="root/styles/prosilver/theme/images/gallery_lytebox/*.*" to="styles/prosilver/theme/images/gallery_lytebox/*.*" />
       <file from="root/styles/prosilver/theme/images/icon_gallery.gif" to="styles/prosilver/theme/images/icon_gallery.gif" />
     </copy>
+    <open src="includes/functions.php">
+      <edit>
+        <find><![CDATA[// The following assigns all _common_ variables that may be used at any point in a template.
+	$user->add_lang('mods/info_acp_gallery');]]></find>
+        <action type="replace-with"><![CDATA[$user->add_lang('mods/info_acp_gallery');
+	$gallery_root_path = GALLERY_ROOT_PATH;
+
+	// The following assigns all _common_ variables that may be used at any point in a template.]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA['U_GALLERY_MOD'			=> append_sid("{$phpbb_root_path}gallery/index.$phpEx"),]]></find>
+        <action type="before-add"><![CDATA['U_GALLERY_MOD'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"),]]></action>
+      </edit>
+    </open>
     <open src="includes/session.php">
       <edit>
         <find><![CDATA[							if ($result === false)
