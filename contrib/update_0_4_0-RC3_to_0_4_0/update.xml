@@ -91,6 +91,17 @@ You may install it, to be informed about future versions, as I'm not going to se
 							}]]></action>
       </edit>
     </open>
+    <open src="styles/prosilver/template/memberlist_view.html">
+      <edit>
+        <find><![CDATA[<!-- IF TOTAL_IMAGES --><dt>{L_TOTAL_IMAGES}:</dt> <dd>{IMAGES} | <strong><a href="{U_SEARCH_GALLERY}">{L_SEARCH_USER_IMAGES}</a></strong><!-- IF IMAGES_PCT --><br />({IMAGES_PCT} / {IMAGES_DAY})<!-- ENDIF --></dd><!-- ENDIF -->]]></find>
+        <action type="replace-with"><![CDATA[			<!-- IF TOTAL_IMAGES -->
+				<dt>{L_TOTAL_IMAGES}:</dt>
+					<dd>{IMAGES} | <strong><a href="{U_SEARCH_GALLERY}">{L_SEARCH_USER_IMAGES}</a></strong>
+						<!-- IF IMAGES_PCT --><br />({IMAGES_PCT} / {IMAGES_DAY})<!-- ENDIF -->
+					</dd>
+			<!-- ENDIF -->]]></action>
+      </edit>
+    </open>
     <diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
 
 Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"

@@ -49,6 +49,7 @@
         <rev-version>0.4.0</rev-version>
         <changelog lang="en-gb">
           <change><![CDATA[[Change] Unreported: better Search-Code for second session edit]]></change>
+          <change><![CDATA[[Change] Report #354: Searchcode for total-images changed]]></change>
 
           <change><![CDATA[[Fix] Report #353: Missing update of session, after unset($sql_ary['session_album_id']);]]></change>
           <change><![CDATA[[Fix] Topic #883: STAGE_COPY_TABLE_EXPLAIN is german]]></change>
