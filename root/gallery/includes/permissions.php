@@ -40,7 +40,8 @@ function get_album_access_array()
 
 	if (!$album_access_array)
 	{
-		$user_groups_ary = $pull_data = '';
+		$pull_data = '';
+		$user_groups_ary = array();
 
 		//set all parts of the permissions to 0 / "no"
 		foreach ($permissions as $permission)
@@ -70,17 +71,17 @@ function get_album_access_array()
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$user_groups_ary .= (($user_groups_ary) ? ', ' : '') . $row['group_id'];
+			$user_groups_ary[] = $row['group_id'];
 		}
 		$db->sql_freeresult($result);
 
 		$sql = "SELECT p.perm_album_id, $pull_data p.perm_system
 			FROM " . GALLERY_PERMISSIONS_TABLE . " as p
-			LEFT JOIN " .  GALLERY_ROLES_TABLE .  " as pr
+			LEFT JOIN " . GALLERY_ROLES_TABLE .  " as pr
 				ON p.perm_role_id = pr.role_id
 			WHERE ( p.perm_user_id = $user_id
-				OR p.perm_group_id IN ($user_groups_ary))
-			GROUP BY p.perm_system DESC, p.perm_album_id ASC";
+				OR " . $db->sql_in_set('p.perm_group_id', $user_groups_ary) . ')
+			GROUP BY p.perm_system DESC, p.perm_album_id ASC';
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
