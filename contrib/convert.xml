@@ -7,9 +7,9 @@
     <title lang="de">phpBB Gallery / phpBB Galerie</title>
     <title lang="en-gb">phpBB Gallery</title>
     <description lang="de"><![CDATA[Diese Anleitung ermöglicht ein Konvertieren der Daten aus dem Album-MOD für phpBB2 von smartor
-WICHTIG: Es muss zuerst die install.xml durchgearbeitet werden, abgesehen von den "Manuellen Vorgänge"!]]></description>
+WICHTIG: Du musst zuerst die install.xml durchgearbeiten. Folge danach genau den Anweisungen, der "Manuellen Vorgänge" aus dieser Datei (convert.xml)!]]></description>
     <description lang="en-gb"><![CDATA[This manual allows you to convert your data from the album-MOD for phpBB2 by smartor
-IMPORT: You need to work over the install.xml first, but the "DIY-Instructions"!]]></description>
+IMPORTANT: You need to complete the normal install.xml first. When doing the convertion, make sure you follow the "DIY-Instructions" of this file (convert.xml) strictly!]]></description>
     <author-group>
       <author>
         <realname>Joas Schilling</realname>
@@ -44,6 +44,10 @@ IMPORT: You need to work over the install.xml first, but the "DIY-Instructions"!
 • gebe nun das Präfix deiner phpBB2-Installation ein (Das Präfix ist der kurze Teil am Anfang der Datenbank-Tabellen-Namen in diesem Beispiel "phpbb_")
 • Konvertiere.
 
+• Nach dem erfolgreichen Abschluss der Konvertierung kannst du einige Datenbank-Tabellen aus deiner Datenbank löschen:
+  • Smartor-Album MOD: DEINPRÄFIX_album, DEINPRÄFIX_album_cat, DEINPRÄFIX_album_comment, DEINPRÄFIX_album_config, DEINPRÄFIX_album_rate
+  • TS-Gallery MOD: DEINPRÄFIX_gallery_comment, DEINPRÄFIX_gallery_pics, DEINPRÄFIX_gallery_rate
+
 • Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
 
 • Aktualisiere deine Styles:
@@ -57,6 +61,10 @@ IMPORT: You need to work over the install.xml first, but the "DIY-Instructions"!
 • go to install/ > Convert MOD to "current version"
 • enter the Prefix of your phpBB2-Installation (Prefix is the short-part in front of the database-table-names (in this example "phpbb_")
 • and convert.
+
+• After successful conversion, you can delete some tables from your database:
+  • Smartor-Album MOD: YOURPREFIX_album, YOURPREFIX_album_cat, YOURPREFIX_album_comment, YOURPREFIX_album_config, YOURPREFIX_album_rate
+  • TS-Gallery MOD: YOURPREFIX_gallery_comment, YOURPREFIX_gallery_pics, YOURPREFIX_gallery_rate
 
 • Clear your cache in the "Administration Control Panel" (ACP) > "General" > "Purge the cache"
 
