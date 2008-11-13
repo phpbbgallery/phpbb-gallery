@@ -168,7 +168,7 @@ class install_install extends module
 
 			$passed['files'] = ($write && $passed['files']) ? true : false;
 
-			$write = ($write) ? '<strong style="color:green">' . $user->lang['WRITABLE'] . '</strong>' : (($exists) ? '<strong style="color:red">' . $user->lang['UNWRITABLE'] . '</strong>' : '');
+			$write = ($write) ? '<strong style="color:green">' . $user->lang['WRITABLE'] . '</strong>' : '<strong style="color:red">' . $user->lang['UNWRITABLE'] . '</strong>';
 
 			$template->assign_block_vars('checks', array(
 				'TITLE'		=> $dir,

@@ -51,6 +51,7 @@
           <change><![CDATA[[Change] Unreported: better Search-Code for second session edit]]></change>
           <change><![CDATA[[Change] Report #354: Searchcode for total-images changed]]></change>
 
+          <change><![CDATA[[Fix] Report #355: install/install_*.php Undefined variable: exists]]></change>
           <change><![CDATA[[Fix] Report #352: U_GALLERY_MOD not usign GALLERY_ROOT_PATH on install]]></change>
           <change><![CDATA[[Fix] Report #353: Missing update of session, after unset($sql_ary['session_album_id']);]]></change>
           <change><![CDATA[[Fix] Topic #883: STAGE_COPY_TABLE_EXPLAIN is german]]></change>
