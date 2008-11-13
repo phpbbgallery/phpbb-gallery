@@ -356,7 +356,12 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
         <action type="after-add"><![CDATA['album'				=> (isset($_REQUEST['album_id']) && $_REQUEST['album_id'] > 0) ? (int) $_REQUEST['album_id'] : 0,]]></action>
       </edit>
       <edit>
-        <find><![CDATA[$sql_ary['session_forum_id'] = $this->page['forum'];]]></find>
+        <find><![CDATA[							$sql_ary = array('session_time' => $this->time_now);
+
+							if ($this->update_session_page)
+							{
+								$sql_ary['session_page'] = substr($this->page['page'], 0, 199);
+								$sql_ary['session_forum_id'] = $this->page['forum'];]]></find>
         <action type="after-add"><![CDATA[$sql_ary['session_album_id'] = $this->page['album'];]]></action>
       </edit>
       <edit>
@@ -365,6 +370,13 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
         <action type="before-add"><![CDATA[							if ($result === false)
 							{
 								unset($sql_ary['session_album_id']);
+								$db->sql_return_on_error(true);
+
+								$sql = 'UPDATE ' . SESSIONS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
+									WHERE session_id = '" . $db->sql_escape($this->session_id) . "'";
+								$result = $db->sql_query($sql);
+
+								$db->sql_return_on_error(false);
 							}]]></action>
       </edit>
       <edit>

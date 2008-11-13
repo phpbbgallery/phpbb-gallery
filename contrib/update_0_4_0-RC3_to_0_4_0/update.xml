@@ -72,6 +72,25 @@ You may install it, to be informed about future versions, as I'm not going to se
       <file from="root/styles/prosilver/theme/images/gallery_lytebox/*.*" to="styles/prosilver/theme/images/gallery_lytebox/*.*" />
       <file from="root/styles/prosilver/theme/images/icon_gallery.gif" to="styles/prosilver/theme/images/icon_gallery.gif" />
     </copy>
+    <open src="includes/session.php">
+      <edit>
+        <find><![CDATA[							if ($result === false)
+							{
+								unset($sql_ary['session_album_id']);
+							}]]></find>
+        <action type="replace-with"><![CDATA[							if ($result === false)
+							{
+								unset($sql_ary['session_album_id']);
+								$db->sql_return_on_error(true);
+
+								$sql = 'UPDATE ' . SESSIONS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
+									WHERE session_id = '" . $db->sql_escape($this->session_id) . "'";
+								$result = $db->sql_query($sql);
+
+								$db->sql_return_on_error(false);
+							}]]></action>
+      </edit>
+    </open>
     <diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
 
 Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
