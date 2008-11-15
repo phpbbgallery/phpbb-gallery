@@ -350,7 +350,7 @@ class ucp_gallery
 			'S_MANAGE_SUBSCRIPTIONS'	=> true,
 			'S_UCP_ACTION'				=> $this->u_action,
 
-			'L_TITLE'					=> $user->lang['UCP_GALLERY_FAVORITES'],
+			'L_TITLE'					=> $user->lang['UCP_GALLERY_WATCH'],
 			'L_TITLE_EXPLAIN'			=> $user->lang['YOUR_SUBSCRIPTIONS'],
 
 			'PAGINATION'				=> generate_pagination(append_sid("{$phpbb_root_path}ucp.$phpEx", "i=gallery&amp;mode=manage_subscriptions"), $total_images, $images_per_page, $start),
