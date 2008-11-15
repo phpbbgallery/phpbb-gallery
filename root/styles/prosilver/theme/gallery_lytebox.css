@@ -34,6 +34,7 @@
 #lbDetailsData { padding: 0 10px; }
 #lbDetailsData.grey { color: #333333; }
 
+
 #lbDetails { width: 60%; float: left; text-align: left; }
 #lbCaption { display: block; font-weight: bold; }
 #lbNumberDisplay { float: left; display: block; padding-bottom: 1.0em; }

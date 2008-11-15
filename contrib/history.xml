@@ -50,6 +50,7 @@
         <changelog lang="en-gb">
           <change><![CDATA[[Add] Report #356: Add BBCode-Buttons and smilies (subsilver2)]]></change>
 
+          <change><![CDATA[[Change] Report #349: Lytebox-Update from 3.20 to 3.22]]></change>
           <change><![CDATA[[Change] Report #356: Reorganize subsilver2 layout of image_page.php]]></change>
           <change><![CDATA[[Change] Report #350: better convert-instructions]]></change>
           <change><![CDATA[[Change] Unreported: better Search-Code for second session edit]]></change>
