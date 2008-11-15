@@ -55,6 +55,7 @@
           <change><![CDATA[[Change] Unreported: better Search-Code for second session edit]]></change>
           <change><![CDATA[[Change] Report #354: Searchcode for total-images changed]]></change>
 
+          <change><![CDATA[[Fix] Report #359: Moderator-link visible without permissions]]></change>
           <change><![CDATA[[Fix] Unreported: wrong headline for "manage subscription"]]></change>
           <change><![CDATA[[Fix] Report #358: .JPG-images from conversion are not visible]]></change>
           <change><![CDATA[[Fix] Report #361: Pagination on manage subscription leeds to favorites]]></change>

@@ -55,6 +55,7 @@ function toggleElement(oElement)
 						<!-- IF recent.image.S_RATINGS -->{L_RATING}: <a href="{recent.image.U_RATINGS}">{recent.image.S_RATINGS}</a><br /><!-- ENDIF -->
 						<!-- IF recent.image.S_COMMENTS -->{recent.image.L_COMMENTS}: <a href="{recent.image.U_COMMENTS}">{recent.image.S_COMMENTS}</a><br /><!-- ENDIF -->
 						<!-- IF recent.image.S_IP -->{L_IP}: {recent.image.S_IP} &#187; <a href="{recent.image.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a><br /><!-- ENDIF -->
+						<!-- IF recent.image.U_REPORT or recent.image.U_STATUS or recent.image.U_MOVE or  recent.image.U_EDIT or recent.image.U_DELETE -->
 						<a href="javascript: toggleElement( getElement('moderate_{recent.image.IMAGE_ID}'));">{L_MODERATE}</a>
 						<div id="moderate_{recent.image.IMAGE_ID}" style="display: none;">
 							<!-- IF recent.image.U_REPORT -->&#187; <a href="{recent.image.U_REPORT}" class="reported-images-number">{L_READ_REPORT}</a><br /><!-- ENDIF -->
@@ -63,6 +64,7 @@ function toggleElement(oElement)
 							<!-- IF recent.image.U_EDIT -->&#187; <a href="{recent.image.U_EDIT}">{L_EDIT_IMAGE}</a><br /><!-- ENDIF -->
 							<!-- IF recent.image.U_DELETE -->&#187; <a href="{recent.image.U_DELETE}">{L_DELETE_IMAGE}</a><br /><!-- ENDIF -->
 						</div>
+						<!-- ENDIF -->
 					</div>
 					</td>
 				</tr>
@@ -126,6 +128,7 @@ function toggleElement(oElement)
 						<!-- IF random.image.S_RATINGS -->{L_RATING}: <a href="{random.image.U_RATINGS}">{random.image.S_RATINGS}</a><br /><!-- ENDIF -->
 						<!-- IF random.image.S_COMMENTS -->{random.image.L_COMMENTS}: <a href="{random.image.U_COMMENTS}">{random.image.S_COMMENTS}</a><br /><!-- ENDIF -->
 						<!-- IF random.image.S_IP -->{L_IP}: {random.image.S_IP} &#187; <a href="{random.image.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a><br /><!-- ENDIF -->
+						<!-- IF random.image.U_REPORT or random.image.U_STATUS or random.image.U_MOVE or  random.image.U_EDIT or random.image.U_DELETE -->
 						<a href="javascript: toggleElement( getElement('moderate_{random.image.IMAGE_ID}'));">{L_MODERATE}</a>
 						<div id="moderate_{random.image.IMAGE_ID}" style="display: none;">
 							<!-- IF random.image.U_REPORT -->&#187; <a href="{random.image.U_REPORT}" class="reported-images-number">{L_READ_REPORT}</a><br /><!-- ENDIF -->
@@ -134,6 +137,7 @@ function toggleElement(oElement)
 							<!-- IF random.image.U_EDIT -->&#187; <a href="{random.image.U_EDIT}">{L_EDIT_IMAGE}</a><br /><!-- ENDIF -->
 							<!-- IF random.image.U_DELETE -->&#187; <a href="{random.image.U_DELETE}">{L_DELETE_IMAGE}</a><br /><!-- ENDIF -->
 						</div>
+						<!-- ENDIF -->
 					</div>
 					</td>
 				</tr>

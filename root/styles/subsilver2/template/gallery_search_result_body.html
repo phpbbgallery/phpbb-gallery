@@ -89,6 +89,7 @@ function toggleElement(oElement)
 						<!-- IF image_row.image.S_RATINGS -->{L_RATING}: <a href="{image_row.image.U_RATINGS}">{image_row.image.S_RATINGS}</a><br /><!-- ENDIF -->
 						<!-- IF image_row.image.S_COMMENTS -->{image_row.image.L_COMMENTS}: <a href="{image_row.image.U_COMMENTS}">{image_row.image.S_COMMENTS}</a><br /><!-- ENDIF -->
 						<!-- IF image_row.image.S_IP -->{L_IP}: {image_row.image.S_IP} &#187; <a href="{image_row.image.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a><br /><!-- ENDIF -->
+						<!-- IF image_row.image.U_REPORT or image_row.image.U_STATUS or image_row.image.U_MOVE or  image_row.image.U_EDIT or image_row.image.U_DELETE -->
 						<a href="javascript: toggleElement( getElement('moderate_{image_row.image.IMAGE_ID}'));">{L_MODERATE}</a>
 						<div id="moderate_{image_row.image.IMAGE_ID}" style="display: none;">
 							<!-- IF image_row.image.U_REPORT -->&#187; <a href="{image_row.image.U_REPORT}" class="reported-images-number">{L_READ_REPORT}</a><br /><!-- ENDIF -->
@@ -97,6 +98,7 @@ function toggleElement(oElement)
 							<!-- IF image_row.image.U_EDIT -->&#187; <a href="{image_row.image.U_EDIT}">{L_EDIT_IMAGE}</a><br /><!-- ENDIF -->
 							<!-- IF image_row.image.U_DELETE -->&#187; <a href="{image_row.image.U_DELETE}">{L_DELETE_IMAGE}</a><br /><!-- ENDIF -->
 						</div>
+						<!-- ENDIF -->
 					</div>
 					</td>
 				</tr>
