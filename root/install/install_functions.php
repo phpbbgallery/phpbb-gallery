@@ -33,7 +33,7 @@ function get_dbms_infos()
 		break;
 
 		case 'mysql4':
-			if (version_compare($db->mysql_version, '4.1.3', '>='))
+			if (version_compare($db->sql_server_info(true), '4.1.3', '>='))
 			{
 				$return['db_schema'] = 'mysql_41';
 			}
