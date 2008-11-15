@@ -126,7 +126,7 @@ $file_size = getimagesize($phpbb_root_path . GALLERY_UPLOAD_PATH  . $image_data[
 if ($album_config['watermark_images'] && ($album_config['watermark_height'] < $file_size[0]) && ($album_config['watermark_width'] < $file_size[1]) && $gd_success)
 {
 	$marktype = substr($album_config['watermark_source'], strlen($album_config['watermark_source']) - 4, 4);
-	switch ( $marktype )
+	switch ($marktype)
 	{
 		case '.png':
 			$nm = imagecreatefrompng($phpbb_root_path . $album_config['watermark_source']);
@@ -136,6 +136,7 @@ if ($album_config['watermark_images'] && ($album_config['watermark_height'] < $f
 			$nm = imagecreatefromgif($phpbb_root_path . $album_config['watermark_source']);
 		break;
 
+		case '.JPG':
 		case '.jpg':
 		case 'jpeg':
 			$nm = imagecreatefromjpeg($phpbb_root_path .$album_config['watermark_source']);
@@ -160,6 +161,7 @@ if ($album_config['watermark_images'] && ($album_config['watermark_height'] < $f
 				$im = imagecreatefromgif($phpbb_root_path . GALLERY_UPLOAD_PATH  . $image_data['image_filename']);
 			break;
 
+			case '.JPG':
 			case '.jpg':
 			case 'jpeg':
 				$im = imagecreatefromjpeg($phpbb_root_path . GALLERY_UPLOAD_PATH  . $image_data['image_filename']);
@@ -209,6 +211,7 @@ else
 		break;
 
 		case '.jpg':
+		case '.JPG':
 			header('Content-type: image/jpeg');
 		break;
 
