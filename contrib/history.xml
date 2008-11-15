@@ -55,6 +55,7 @@
           <change><![CDATA[[Change] Unreported: better Search-Code for second session edit]]></change>
           <change><![CDATA[[Change] Report #354: Searchcode for total-images changed]]></change>
 
+          <change><![CDATA[[Fix] Report #361: Pagination on manage subscription leeds to favorites]]></change>
           <change><![CDATA[[Fix] Report #356: Add Custom BBCode-Buttons (prosilver)]]></change>
           <change><![CDATA[[Fix] Report #360: installer not working on version compare for mysql]]></change>
           <change><![CDATA[[Fix] Report #348: SQL-Error when user is in no group => copy phpBB solution]]></change>

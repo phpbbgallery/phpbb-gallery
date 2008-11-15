@@ -162,8 +162,6 @@ $lang = array_merge($lang, array(
 	'RECENT_PUBLIC_IMAGES'			=> 'Recent Public Images',
 	'RATING_SUCCESSFUL'				=> 'Your image has been rated successfully.',
 
-	//REMOVE 'SELECT_SORT_METHOD'		=> 'Select sort method',
-	//REMOVE 'SORT'						=> 'Sort',
 	'SORT_ASCENDING'			=> 'Ascending',
 	'SORT_DESCENDING'			=> 'Descending',
 	'STATUS'					=> 'Status',

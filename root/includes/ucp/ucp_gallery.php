@@ -353,7 +353,7 @@ class ucp_gallery
 			'L_TITLE'					=> $user->lang['UCP_GALLERY_FAVORITES'],
 			'L_TITLE_EXPLAIN'			=> $user->lang['YOUR_SUBSCRIPTIONS'],
 
-			'PAGINATION'				=> generate_pagination(append_sid("{$phpbb_root_path}ucp.$phpEx", "i=gallery&amp;mode=manage_favorites"), $total_images, $images_per_page, $start),
+			'PAGINATION'				=> generate_pagination(append_sid("{$phpbb_root_path}ucp.$phpEx", "i=gallery&amp;mode=manage_subscriptions"), $total_images, $images_per_page, $start),
 			'PAGE_NUMBER'				=> on_page($total_images, $images_per_page, $start),
 			'TOTAL_IMAGES'				=> ($total_images == 1) ? $user->lang['VIEW_ALBUM_IMAGE'] : sprintf($user->lang['VIEW_ALBUM_IMAGES'], $total_images),
 
