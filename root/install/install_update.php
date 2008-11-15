@@ -320,6 +320,8 @@ class install_update extends module
 
 				nv_add_index(GALLERY_USERS_TABLE,	'pg_palbum_id',				array('personal_album_id'));
 				nv_add_index(SESSIONS_TABLE,		'session_aid',				array('session_album_id'));
+
+			case '0.4.0-RC3':
 			break;
 		}
 
@@ -651,6 +653,13 @@ class install_update extends module
 
 
 			case '0.4.0-RC3':
+				set_gallery_config('comment_length', 1024);
+				set_gallery_config('description_length', 1024);
+				set_gallery_config('allow_rates', 1);
+				set_gallery_config('allow_comments', 1);
+				set_gallery_config('link_thumbnail', 1);
+				set_gallery_config('link_image_name', 1);
+				set_gallery_config('link_image_icon', 1);
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
 			break;

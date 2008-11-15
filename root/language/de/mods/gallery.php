@@ -154,7 +154,7 @@ $lang = array_merge($lang, array(
 	'PERSONAL_ALBUM_OF_USER'				=> 'Persönliches Album von %s',
 	'PERSONAL_ALBUMS'						=> 'Persönliche Alben',
 	'PLAIN_TEXT_ONLY'						=> 'Nur Textformat',
-	'POST_COMMENT'							=> 'Einen Kommentar schreiben',
+	'POST_COMMENT'							=> 'Kommentar schreiben',
 	'POSTER'								=> 'Autor',
 
 	'RATING'								=> 'Bewertung',
@@ -162,8 +162,6 @@ $lang = array_merge($lang, array(
 	'RECENT_PUBLIC_IMAGES'					=> 'Neuesten öffentliche Bilder',
 	'RATING_SUCCESSFUL'						=> 'Das Bild wurde erfolgreich bewertet.',
 
-	//REMOVE 'SELECT_SORT_METHOD'					=> 'Wähle die Sortiermethode',
-	//REMOVE 'SORT'									=> 'Sortieren',
 	'SORT_ASCENDING'						=> 'Aufsteigend',
 	'SORT_DESCENDING'						=> 'Absteigend',
 	'STATUS'								=> 'Status',
@@ -282,6 +280,18 @@ $lang = array_merge($lang, array(
 	'IMAGE_NAME'					=> 'Bildname',
 
 	'READ_REPORT'					=> 'Meldung ansehen',
+));
+
+//Added after 0.4.0-RC3
+$lang = array_merge($lang, array(
+	'COMMENT_LENGTH'				=> 'Gib deinen Kommentar hier ein. Er darf nicht mehr als <strong>%d</strong> Zeichen enthalten.',
+
+	'DESCRIPTION_LENGTH'			=> 'Gib deine Beschreibung hier ein. Sie darf nicht mehr als <strong>%d</strong> Zeichen enthalten.',
+	'DONT_RATE_IMAGE'				=> 'Bild nicht bewerten',
+
+	'POST_COMMENT_RATE_IMAGE'		=> 'Kommentar schreiben und Bild bewerten',
+
+	'RATE_IMAGE'					=> 'Bild bewerten',
 ));
 
 ?>

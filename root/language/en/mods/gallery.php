@@ -285,4 +285,16 @@ $lang = array_merge($lang, array(
 	'READ_REPORT'					=> 'Read report message',
 ));
 
+//Added after 0.4.0-RC3
+$lang = array_merge($lang, array(
+	'COMMENT_LENGTH'				=> 'Enter your comment here, it may contain no more than <strong>%d</strong> characters.',
+
+	'DESCRIPTION_LENGTH'			=> 'Enter your descriptions here, it may contain no more than <strong>%d</strong> characters.',
+	'DONT_RATE_IMAGE'				=> 'Don\'t rate image',
+
+	'POST_COMMENT_RATE_IMAGE'		=> 'Post a comment and rate the image',
+
+	'RATE_IMAGE'					=> 'Rate the image',
+));
+
 ?>

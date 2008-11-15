@@ -21,7 +21,7 @@
 	<fieldset class="fields1">
 	<!-- IF ERROR --><p class="error">{ERROR}</p><!-- ENDIF -->
 
-			<!-- IF REQ_USERNAME -->
+			<!-- IF not S_USER_LOGGED_IN -->
 			<dl>
 				<dt><label for="username">{L_USERNAME}:</label></dt>
 				<dd id="username"><input class="inputbox autowidth" type="text" name="username" value="{USERNAME}" size="60" maxlength="32" /></dd>
@@ -35,10 +35,22 @@
 					<!-- IF S_UPLOAD --><dd id="filename"><input type="checkbox" class="checkbox" name="filename" value="filename" /> {L_ORIG_FILENAME}</dd><!-- ENDIF -->
 				</dl>
 			<!-- ENDIF -->
+			<!-- IF S_ALLOWED_TO_RATE -->
+				<dl>
+					<dt><label>{L_YOUR_RATING}:</label></dt>
+					<dd>
+						<select name="rate">
+						<!-- BEGIN rate_scale -->
+							<!-- IF rate_scale.RATE_POINT == 1 --><option value="0">{L_DONT_RATE_IMAGE}</option><!-- ENDIF -->
+							<option value="{rate_scale.RATE_POINT}">{rate_scale.RATE_POINT}</option>
+						<!-- END rate_scale -->
+						</select>
+					</dd>
+				</dl>
+			<!-- ENDIF -->
 			<!-- IF not S_REPORT -->
 			<dl>
-				<dt><label for="description"><!-- IF S_COMMENT -->{L_YOUR_COMMENT}<!-- ELSE -->{L_IMAGE_DESC}<!-- ENDIF -->:</label>
-				<br />{L_MAX_LENGTH}: <b>{S_PIC_DESC_MAX_LENGTH}</b></dt>
+				<dt><label for="description"><!-- IF S_COMMENT -->{L_YOUR_COMMENT}<!-- ELSE -->{L_IMAGE_DESC}<!-- ENDIF -->:</label></dt>
 			</dl>
 			<!-- INCLUDE posting_buttons.html -->
 			<div id="smiley-box">
@@ -51,6 +63,18 @@
 				<!-- IF S_SHOW_SMILEY_LINK and S_SMILIES_ALLOWED-->
 					<br /><a href="{U_MORE_SMILIES}" onclick="popup(this.href, 300, 350, '_phpbbsmilies'); return false;">{L_MORE_SMILIES}</a>
 				<!-- ENDIF -->
+
+				<!-- IF BBCODE_STATUS -->
+				<!-- IF .smiley --><hr /><!-- ENDIF -->
+				{BBCODE_STATUS}<br />
+				<!-- IF S_BBCODE_ALLOWED -->
+					{IMG_STATUS}<br />
+					{FLASH_STATUS}<br />
+					{URL_STATUS}<br />
+					{SMILIES_STATUS}<hr />
+				<!-- ENDIF -->
+				<!-- ENDIF -->
+				<!-- IF S_UPLOAD or S_EDIT -->{L_DESCRIPTION_LENGTH}<!-- ELSEIF not S_REPORT -->{L_COMMENT_LENGTH}<!-- ENDIF -->
 			</div>
 			<!-- ENDIF -->
 			<div id="message-box">

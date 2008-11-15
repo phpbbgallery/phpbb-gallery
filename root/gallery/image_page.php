@@ -22,12 +22,25 @@ $auth->acl($user->data);
 $user->setup('mods/gallery');
 $user->add_lang('mods/exif_data');
 
+/**
+* Filestructure:
+*
+* - Check the request and get image_data
+* - Check the permissions and approval
+* - Main work here...
+* - Exif-Data
+* - Rating
+* - Posting comment
+* - Listing comment
+*
+*/
+
+/**
+* Check the request and get image_data
+*/
 include_once("{$phpbb_root_path}{$gallery_root_path}includes/common.$phpEx");
 include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
 $album_access_array = get_album_access_array();
-/**
-* Check the request
-*/
 $image_id = request_var('image_id', request_var('id', 0));
 if (!$image_id)
 {
@@ -37,9 +50,6 @@ if (!$image_id)
 // Salting the form...yumyum ...
 add_form_key('gallery');
 
-/**
-* Get the image info
-*/
 $image_data = get_image_info($image_id);
 $album_id = $image_data['image_album_id'];
 $user_id = $image_data['image_user_id'];
@@ -54,7 +64,7 @@ if (empty($album_data))
 }
 
 /**
-* Check the permissions
+* Check the permissions and approval
 */
 if (!gallery_acl_check('i_view', $album_id))
 {
@@ -67,91 +77,9 @@ if (!gallery_acl_check('i_view', $album_id))
 		trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
 	}
 }
-
-/**
-* Check Pic Rating
-*/
-
-$already_rated = false;
-
-if (($album_config['rate'] <> 0) && $user->data['is_registered'])
-{
-	$sql = 'SELECT *
-		FROM ' . GALLERY_RATES_TABLE . '
-		WHERE rate_image_id = ' . (int) $image_id . '
-			AND rate_user_id = ' . (int) $user->data['user_id'];
-	$result = $db->sql_query($sql);
-
-	if ($db->sql_affectedrows($result) > 0)
-	{
-		$already_rated = true;
-	}
-}
-
-/**
-* Check Pic Approval
-*/
 if (!gallery_acl_check('a_moderate', $album_id) && ($image_data['image_status'] != 1))
 {
 	trigger_error($user->lang['NOT_AUTHORISED']);
-}
-
-/**
-* Posting Comments & Rating
-*/
-if (isset($_POST['rate']))
-{
-	// Check the salt... yumyum
-	if (!check_form_key('gallery'))
-	{
-		trigger_error('FORM_INVALID');
-	}
-
-	if (!$album_config['rate'] || !gallery_acl_check('i_rate', $album_id))
-	{
-		trigger_error($user->lang['NOT_AUTHORISED']);
-	}
-	else if ($already_rated)
-	{
-		trigger_error($user->lang['ALREADY_RATED']);
-	}
-	$rate_point = request_var('rate', 0);
-	if( ($rate_point <= 0) || ($rate_point > $album_config['rate_scale']) )
-	{
-		trigger_error($user->lang['OUT_OF_RANGE_VALUE']);
-	}
-	$rate_user_id = $user->data['user_id'];
-	$rate_user_ip = $user->ip;
-
-	$sql_ary = array(
-		'rate_image_id'	=> $image_id,
-		'rate_user_id'	=> $rate_user_id,
-		'rate_user_ip'	=> $rate_user_ip,
-		'rate_point'	=> $rate_point,
-	);
-	$db->sql_query('INSERT INTO ' . GALLERY_RATES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
-	$sql = 'SELECT rate_image_id, COUNT(rate_user_ip) image_rates, AVG(rate_point) image_rate_avg, SUM(rate_point) image_rate_points
-		FROM ' . GALLERY_RATES_TABLE . "
-		WHERE rate_image_id = $image_id
-		GROUP BY rate_image_id";
-	$result = $db->sql_query($sql);
-	while ($row = $db->sql_fetchrow($result))
-	{
-		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-			SET image_rates = ' . $row['image_rates'] . ',
-				image_rate_points = ' . $row['image_rate_points'] . ',
-				image_rate_avg = ' . round($row['image_rate_avg'], 2) * 100 . '
-			WHERE image_id = ' . $row['rate_image_id'];
-		$db->sql_query($sql);
-	}
-	$db->sql_freeresult($result);
-
-	$message = $user->lang['RATING_SUCCESSFUL'];
-	$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_ALBUM'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id") . "\">", "</a>");
-	$message .= "<br /><br />" . sprintf($user->lang['CLICK_RETURN_GALLERY_INDEX'], "<a href=\"" . append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx") . "\">", "</a>");
-
-	meta_refresh(3, append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id&rate_set=1") . '#rating');
-	trigger_error($message);
 }
 
 /**
@@ -236,6 +164,9 @@ $template->assign_vars(array(
 	'ALBUM_JUMPBOX'		=> gallery_albumbox(false, '', $album_id),
 ));
 
+/**
+* Exif-Data
+*/
 if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (substr($image_data['image_filename'], -3, 3) == 'jpg') && function_exists('exif_read_data'))
 {
 	$exif = @exif_read_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename'], 0, true);
@@ -344,146 +275,177 @@ if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (substr
 	}
 }
 
-if ($album_config['rate'])
+/**
+* Rating
+*/
+if ($album_config['allow_rates'])
 {
-	$template->assign_vars(array(
-		'RATING'		=> $user->lang['RATING'],
-		'IMAGE_RATING'	=> ($image_data['image_rates'] <> 0) ? $image_data['image_rate_avg'] / 100 : $user->lang['NOT_RATED'],
-	));
-	
-	if (gallery_acl_check('i_rate', $album_id))
+	$allowed_to_rate = $your_rating = false;
+
+	if ($user->data['is_registered'])
 	{
-		$ratebox = false;
-		if ($user->data['user_id'] == ANONYMOUS)
+		$sql = 'SELECT *
+			FROM ' . GALLERY_RATES_TABLE . '
+			WHERE rate_image_id = ' . (int) $image_id . '
+				AND rate_user_id = ' . (int) $user->data['user_id'];
+		$result = $db->sql_query($sql);
+
+		if ($db->sql_affectedrows($result) > 0)
 		{
-				$ratebox = '<a href="' . append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=login&amp;redirect=" . urlencode("{$gallery_root_path}image_page.$phpEx?album_id=$album_id&image_id=$image_id")) . '">' . $user->lang['LOGIN_TO_RATE'] . '</a>';
+			$rated = $db->sql_fetchrow($result);
+			$your_rating = $rated['rate_point'];
 		}
-		else if ($user->data['user_id'] == $image_data['image_user_id'])
-		{
-			$ratebox = $user->lang['NO_RATE_ON_OWN_IMAGES'];
-		}
-		if (!$ratebox)
-		{
-			if (!$already_rated)
-			{
-				$ratebox = '<select name="rate">';
-				for ($i = 0; $i < $album_config['rate_scale']; $i++)
-				{
-					$rate_point = $i + 1;
-					$ratebox .= '<option value="' . $rate_point . '">' . $rate_point . '</option>';
-				}
-				$ratebox .= '</select> &nbsp; &nbsp; <input type="submit" name="submit" value="' . $user->lang['SUBMIT'] . '" class="button1" />';
-			}
-			else
-			{
-				$ratebox = $user->lang['ALREADY_RATED'];
-			}
-		}
-		$template->assign_vars(array(
-			'YOUR_RATING'	=> true,
-			'S_RATEBOX'	=> $ratebox,
-		));
 	}
+
+	// Check: User didn't rate yet, has permissions, it's not the users own image and the user is logged in
+	if (!$your_rating && gallery_acl_check('i_rate', $album_id) && ($user->data['user_id'] != $image_data['image_user_id']) && ($user->data['user_id'] != ANONYMOUS))
+	{
+		for ($rate_scale = 1; $rate_scale <= $album_config['rate_scale']; $rate_scale++)
+		{
+			$template->assign_block_vars('rate_scale', array(
+				'RATE_POINT'	=> $rate_scale,
+			));
+		}
+		$allowed_to_rate = true;
+	}
+	$template->assign_vars(array(
+		'IMAGE_RATING'		=> ($image_data['image_rates'] <> 0) ? $image_data['image_rate_avg'] / 100 : $user->lang['NOT_RATED'],
+		'S_YOUR_RATING'		=> $your_rating,
+		'S_ALLOWED_TO_RATE'	=> $allowed_to_rate,
+	));
 }
 
-if ($album_config['comment'])
+/**
+* Posting comment
+*/
+if ($album_config['allow_comments'] && gallery_acl_check('c_post', $album_id))
 {
 	$user->add_lang('posting');
+	include_once("{$phpbb_root_path}includes/functions_posting.$phpEx");
+
+	$bbcode_status	= ($config['allow_bbcode']) ? true : false;
+	$smilies_status	= ($bbcode_status && $config['allow_smilies']) ? true : false;
+	$img_status		= ($bbcode_status) ? true : false;
+	$url_status		= ($config['allow_post_links']) ? true : false;
+	$flash_status	= false;
+	$quote_status	= true;
+
+	// Build custom bbcodes array
+	display_custom_bbcodes();
+
+	// Build smilies array
+	generate_smilies('inline', 0);
+
 	$template->assign_vars(array(
-		'COMMENTS'		=> true,
-		'IMAGE_COMMENTS'	=> $image_data['image_comments'],
+		'S_ALLOWED_TO_COMMENT'	=> true,
+
+		'BBCODE_STATUS'			=> ($bbcode_status) ? sprintf($user->lang['BBCODE_IS_ON'], '<a href="' . append_sid("{$phpbb_root_path}faq.$phpEx", 'mode=bbcode') . '">', '</a>') : sprintf($user->lang['BBCODE_IS_OFF'], '<a href="' . append_sid("{$phpbb_root_path}faq.$phpEx", 'mode=bbcode') . '">', '</a>'),
+		'IMG_STATUS'			=> ($img_status) ? $user->lang['IMAGES_ARE_ON'] : $user->lang['IMAGES_ARE_OFF'],
+		'FLASH_STATUS'			=> ($flash_status) ? $user->lang['FLASH_IS_ON'] : $user->lang['FLASH_IS_OFF'],
+		'SMILIES_STATUS'		=> ($smilies_status) ? $user->lang['SMILIES_ARE_ON'] : $user->lang['SMILIES_ARE_OFF'],
+		'URL_STATUS'			=> ($bbcode_status && $url_status) ? $user->lang['URL_IS_ON'] : $user->lang['URL_IS_OFF'],
+
+		'S_BBCODE_ALLOWED'		=> $bbcode_status,
+		'S_SMILIES_ALLOWED'		=> $smilies_status,
+		'S_LINKS_ALLOWED'		=> $url_status,
+		'S_BBCODE_IMG'			=> $img_status,
+		'S_BBCODE_URL'			=> $url_status,
+		'S_BBCODE_FLASH'		=> $flash_status,
+		'S_BBCODE_QUOTE'		=> $quote_status,
+		'L_COMMENT_LENGTH'		=> sprintf($user->lang['COMMENT_LENGTH'], $album_config['comment_length']),
+		'S_COMMENT_ACTION'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=add"),
 	));
-	
-	if (gallery_acl_check('c_post', $album_id))
-	{
-		$template->assign_vars(array(
-			'POST_COMMENT'			=> true,
-			'YOUR_COMMENT'			=> true,
-			'S_COMMENTBOX' 			=> true,
-			'S_BBCODE_ALLOWED' 		=> true,
-			'S_MAX_LENGTH' 			=> $album_config['desc_length'],
-			'S_COMMENT_ACTION' 		=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=add"),
-		));
-	}
-	
-	$total_comments = $image_data['image_comments'];
-	$comments_per_page = 10;
-	
+}
+
+
+/**
+* Listing comment
+*/
+if ($album_config['allow_comments'] /*&& gallery_acl_check('c_read', $album_id)*/)
+{
+	$user->add_lang('viewtopic');
 	$start = request_var('start', 0);
 	$sort_order = (request_var('sort_order', 'ASC') == 'ASC') ? 'ASC' : 'DESC';
+	$template->assign_vars(array(
+		'S_ALLOWED_READ_COMMENTS'	=> true,
+		'IMAGE_COMMENTS'			=> $image_data['image_comments'],
+		'SORT_ASC'					=> ($sort_order == 'ASC') ? true : false,
+	));
 
-	if ($total_comments > 0)
+	if ($image_data['image_comments'] > 0)
 	{
-		$sql = 'SELECT c.*, u.user_id, u.username, u.user_colour
+		$sql = 'SELECT c.*, u.*
 			FROM ' . GALLERY_COMMENTS_TABLE . ' AS c
 			LEFT JOIN ' . USERS_TABLE . " AS u
 				ON c.comment_user_id = u.user_id
 			WHERE c.comment_image_id = $image_id
 			ORDER BY c.comment_id $sort_order";
-		$result = $db->sql_query_limit($sql, $comments_per_page, $start);
+		$result = $db->sql_query_limit($sql, $config['posts_per_page'], $start);
 
-		$commentrow = array();
-
-		while( $row = $db->sql_fetchrow($result) )
+		while ($commentrow = $db->sql_fetchrow($result))
 		{
-			$commentrow[] = $row;
-		}
-		
-		$even = 0;
-		
-		for ($i = 0; $i < count($commentrow); $i++)
-		{
-			if (($commentrow[$i]['user_id'] == ANONYMOUS) || ($commentrow[$i]['username'] == ''))
-			{
-				$poster = ($commentrow[$i]['comment_username'] != '') ? $user->lang['GUEST'] : $commentrow[$i]['comment_username'];
-			}
-			else
-			{
-				$poster = '<a href="'. append_sid("{$phpbb_root_path}memberlist.$phpEx?mode=viewprofile&amp;u=" . $commentrow[$i]['user_id']) . '" class="username-coloured">' . $commentrow[$i]['username'] . '</a>';
-			}
-
-			if ($commentrow[$i]['comment_edit_count'] > 0)
+			$edit_info = '';
+			if ($commentrow['comment_edit_count'] > 0)
 			{
 				$sql = 'SELECT c.comment_id, c.comment_edit_user_id, u.user_id, u.username, u.user_colour
 					FROM ' . GALLERY_COMMENTS_TABLE . ' AS c
 					LEFT JOIN ' . USERS_TABLE . ' AS u
 						ON c.comment_edit_user_id = u.user_id
-					WHERE c.comment_id = ' . (int) $commentrow[$i]['comment_id'];
+					WHERE c.comment_id = ' . (int) $commentrow['comment_id'];
 				$result = $db->sql_query($sql);
 				$lastedit_row = $db->sql_fetchrow($result);
 
-				$edit_info = ($commentrow[$i]['comment_edit_count'] == 1) ? $user->lang['EDITED_TIME_TOTAL'] : $user->lang['EDITED_TIMES_TOTAL'];
-				$edit_info = '<br /><br />&raquo;&nbsp;'. sprintf($edit_info, get_username_string('full', $lastedit_row['user_id'], $lastedit_row['username'], $lastedit_row['user_colour']), $user->format_date($commentrow[$i]['comment_edit_time']), $commentrow[$i]['comment_edit_count']) .'<br />';
+				$edit_info = ($commentrow['comment_edit_count'] == 1) ? $user->lang['EDITED_TIME_TOTAL'] : $user->lang['EDITED_TIMES_TOTAL'];
+				$edit_info = sprintf($edit_info, get_username_string('full', $lastedit_row['user_id'], $lastedit_row['username'], $lastedit_row['user_colour']), $user->format_date($commentrow['comment_edit_time']), $commentrow['comment_edit_count']);
 			}
-			else
+
+			// Maybe we'll cache this one day... maybe, one day!
+			get_user_rank($commentrow['user_rank'], $commentrow['user_posts'], $commentrow['rank_title'], $commentrow['rank_image'], $commentrow['rank_image_src']);
+			if ($commentrow['user_sig'] && $config['allow_sig'] && $user->optionget('viewsigs'))
 			{
-				$edit_info = '';
+				$commentrow['user_sig'] = censor_text($commentrow['user_sig']);
+
+				if ($commentrow['user_sig_bbcode_bitfield'])
+				{
+					$bbcode->bbcode_second_pass($commentrow['user_sig'], $commentrow['user_sig_bbcode_uid'], $commentrow['user_sig_bbcode_bitfield']);
+				}
+
+				$commentrow['user_sig'] = bbcode_nl2br($commentrow['user_sig']);
+				$commentrow['user_sig'] = smiley_text($commentrow['user_sig']);
 			}
 
 			$template->assign_block_vars('commentrow', array(
-				'ID'			=> $commentrow[$i]['comment_id'],
-				'POSTER'		=> get_username_string('full', $commentrow[$i]['user_id'], ($commentrow[$i]['user_id'] <> ANONYMOUS) ? $commentrow[$i]['username'] : ($user->lang['GUEST'] . ': ' . $commentrow[$i]['comment_username']), $commentrow[$i]['user_colour']),
-				'TIME'			=> $user->format_date($commentrow[$i]['comment_time']),
-				'IP'			=> ($user->data['user_type'] == USER_FOUNDER) ? '<br />' . $user->lang['IP'] . ': <a href="http://www.nic.com/cgi-bin/whois.cgi?query=' . $commentrow[$i]['comment_user_ip'] . '">' . $commentrow[$i]['comment_user_ip'] .'</a><br />' : '',
-				'TEXT'			=> generate_text_for_display($commentrow[$i]['comment'], $commentrow[$i]['comment_uid'], $commentrow[$i]['comment_bitfield'], 7),
+				'U_COMMENT'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;start=$start&amp;sort_order=$sort_order") . '#' . $commentrow['comment_id'],
+				'COMMENT_ID'	=> $commentrow['comment_id'],
+				'TIME'			=> $user->format_date($commentrow['comment_time']),
+				'TEXT'			=> generate_text_for_display($commentrow['comment'], $commentrow['comment_uid'], $commentrow['comment_bitfield'], 7),
 				'EDIT_INFO'		=> $edit_info,
-				'EDIT'			=> (gallery_acl_check('a_moderate', $album_id) || (gallery_acl_check('c_edit', $album_id) && ($commentrow[$i]['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=edit&amp;comment_id=" . $commentrow[$i]['comment_id']) : '',
-				'DELETE'		=> (gallery_acl_check('a_moderate', $album_id) || (gallery_acl_check('c_delete', $album_id) && ($commentrow[$i]['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=delete&amp;comment_id=" . $commentrow[$i]['comment_id']) : '',
+				'U_DELETE'		=> (gallery_acl_check('a_moderate', $album_id) || (gallery_acl_check('c_delete', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=delete&amp;comment_id=" . $commentrow['comment_id']) : '',
+				'U_EDIT'		=> (gallery_acl_check('a_moderate', $album_id) || (gallery_acl_check('c_edit', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=edit&amp;comment_id=" . $commentrow['comment_id']) : '',
+				'U_INFO'		=> ($auth->acl_get('a_')) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'mode=whois&amp;ip=' . $commentrow['comment_user_ip']) : '',
+
+				'POSTER_AVATAR'			=> ($user->optionget('viewavatars')) ? get_user_avatar($commentrow['user_avatar'], $commentrow['user_avatar_type'], $commentrow['user_avatar_width'], $commentrow['user_avatar_height']) : '',
+				'POST_AUTHOR_FULL'		=> get_username_string('full', $commentrow['user_id'], ($commentrow['user_id'] <> ANONYMOUS) ? $commentrow['username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['user_colour']),
+				'POST_AUTHOR_COLOUR'	=> get_username_string('colour', $commentrow['user_id'], ($commentrow['user_id'] <> ANONYMOUS) ? $commentrow['username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['user_colour']),
+				'POST_AUTHOR'			=> get_username_string('username', $commentrow['user_id'], ($commentrow['user_id'] <> ANONYMOUS) ? $commentrow['username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['user_colour']),
+				'U_POST_AUTHOR'			=> get_username_string('profile', $commentrow['user_id'], ($commentrow['user_id'] <> ANONYMOUS) ? $commentrow['username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['user_colour']),
+
+				'RANK_TITLE'			=> $commentrow['rank_title'],
+				'RANK_IMG'				=> $commentrow['rank_image'],
+				'RANK_IMG_SRC'			=> $commentrow['rank_image_src'],
+				'SIGNATURE'				=> $commentrow['user_sig'],
 			));
 		}
 
 		$template->assign_vars(array(
-			'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_POST'),
-			'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_POST'),
-			'PAGINATION'	=> generate_pagination(append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?album_id=$album_id&amp;image_id=$image_id&amp;sort_order=$sort_order"), $total_comments, $comments_per_page, $start),
-			'PAGE_NUMBER'	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $comments_per_page ) + 1 ), ceil( $total_comments / $comments_per_page ))
+			'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_COMMENT'),
+			'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_COMMENT'),
+			'INFO_IMG'			=> $user->img('icon_post_info', 'VIEW_INFO'),
+			'MINI_POST_IMG'		=> $user->img('icon_post_target_unread', 'COMMENT'),
+			'PROFILE_IMG'		=> $user->img('icon_user_profile', 'READ_PROFILE'),
+			'PAGE_NUMBER'		=> sprintf($user->lang['PAGE_OF'], (floor($start / $config['posts_per_page']) + 1), ceil($image_data['image_comments'] / $config['posts_per_page'])),
+			'PAGINATION'		=> generate_pagination(append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;sort_order=$sort_order"), $image_data['image_comments'], $config['posts_per_page'], $start),
 		));
-	}
-	else
-	{
-		$template->assign_vars(array(
-			'NO_COMMENTS' => true)
-		);
 	}
 }
 

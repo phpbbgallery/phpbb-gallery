@@ -321,6 +321,15 @@ class install_convert extends module
 		// Added 0.4.0-RC3
 		set_gallery_config('shorted_imagenames', 25);
 
+		// Added 0.4.0
+		set_gallery_config('comment_length', 1024);
+		set_gallery_config('description_length', 1024);
+		set_gallery_config('allow_rates', 1);
+		set_gallery_config('allow_comments', 1);
+		set_gallery_config('link_thumbnail', 1);
+		set_gallery_config('link_image_name', 1);
+		set_gallery_config('link_image_icon', 1);
+
 		$convert_prefix = request_var('convert_prefix', '');
 		$template->assign_vars(array(
 			'BODY'		=> $user->lang['STAGE_CREATE_TABLE_EXPLAIN'],

@@ -271,6 +271,15 @@ class install_install extends module
 		// Added 0.4.0-RC3
 		set_gallery_config('shorted_imagenames', 25);
 
+		// Added 0.4.0
+		set_gallery_config('comment_length', 1024);
+		set_gallery_config('description_length', 1024);
+		set_gallery_config('allow_rates', 1);
+		set_gallery_config('allow_comments', 1);
+		set_gallery_config('link_thumbnail', 1);
+		set_gallery_config('link_image_name', 1);
+		set_gallery_config('link_image_icon', 1);
+
 		$submit = $user->lang['NEXT_STEP'];
 
 		$url = $this->p_master->module_url . "?mode=$mode&amp;sub=advanced";

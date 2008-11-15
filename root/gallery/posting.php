@@ -36,7 +36,7 @@ $submode = request_var('submode', '');
 $album_id = request_var('album_id', 0);
 $image_id = request_var('image_id', 0);
 $comment_id = request_var('comment_id', 0);
-$error = '';
+$error = $message = '';
 $error_count = array();
 $slower_redirect = false;
 
@@ -272,12 +272,35 @@ switch ($mode)
 	break;
 }
 
-generate_smilies('inline', 0);
+$bbcode_status	= ($config['allow_bbcode']) ? true : false;
+$smilies_status	= ($bbcode_status && $config['allow_smilies']) ? true : false;
+$img_status		= ($bbcode_status) ? true : false;
+$url_status		= ($config['allow_post_links']) ? true : false;
+$flash_status	= false;
+$quote_status	= true;
 $template->assign_vars(array(
-	'S_BBCODE_ALLOWED'			=> ($config['allow_bbcode']) ? true : false,
-	'S_SMILIES_ALLOWED'			=> ($config['allow_bbcode'] && $config['allow_smilies']) ? true : false,
-	'S_PIC_DESC_MAX_LENGTH'		=> $album_config['desc_length'],
+	'BBCODE_STATUS'			=> ($bbcode_status) ? sprintf($user->lang['BBCODE_IS_ON'], '<a href="' . append_sid("{$phpbb_root_path}faq.$phpEx", 'mode=bbcode') . '">', '</a>') : sprintf($user->lang['BBCODE_IS_OFF'], '<a href="' . append_sid("{$phpbb_root_path}faq.$phpEx", 'mode=bbcode') . '">', '</a>'),
+	'IMG_STATUS'			=> ($img_status) ? $user->lang['IMAGES_ARE_ON'] : $user->lang['IMAGES_ARE_OFF'],
+	'FLASH_STATUS'			=> ($flash_status) ? $user->lang['FLASH_IS_ON'] : $user->lang['FLASH_IS_OFF'],
+	'SMILIES_STATUS'		=> ($smilies_status) ? $user->lang['SMILIES_ARE_ON'] : $user->lang['SMILIES_ARE_OFF'],
+	'URL_STATUS'			=> ($bbcode_status && $url_status) ? $user->lang['URL_IS_ON'] : $user->lang['URL_IS_OFF'],
+
+	'S_BBCODE_ALLOWED'			=> $bbcode_status,
+	'S_SMILIES_ALLOWED'			=> $smilies_status,
+	'S_LINKS_ALLOWED'			=> $url_status,
+	'S_BBCODE_IMG'			=> $img_status,
+	'S_BBCODE_URL'			=> $url_status,
+	'S_BBCODE_FLASH'		=> $flash_status,
+	'S_BBCODE_QUOTE'		=> $quote_status,
 ));
+
+// Build custom bbcodes array
+display_custom_bbcodes();
+//REMOVE	$message_parser->parse($post_data['enable_bbcode'], ($config['allow_post_links']) ? $post_data['enable_urls'] : false, $post_data['enable_smilies'], $img_status, $flash_status, $quote_status, $config['allow_post_links']);
+
+
+// Build smilies array
+generate_smilies('inline', 0);
 
 switch ($mode)
 {
@@ -626,7 +649,6 @@ switch ($mode)
 					'ERROR'						=> $error,
 					'U_VIEW_ALBUM'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"),
 					'CAT_TITLE'					=> $album_data['album_name'],
-					'S_PIC_DESC_MAX_LENGTH'		=> $album_config['desc_length'],
 					'S_MAX_FILESIZE'			=> $album_config['max_file_size'],
 					'S_MAX_WIDTH'				=> $album_config['max_width'],
 					'S_MAX_HEIGHT'				=> $album_config['max_height'],
@@ -641,7 +663,7 @@ switch ($mode)
 
 					'IMAGE_RSZ_WIDTH'		=> $album_config['preview_rsz_width'],
 					'IMAGE_RSZ_HEIGHT'		=> $album_config['preview_rsz_height'],
-					'REQ_USERNAME'			=> (!$user->data['is_registered']) ? true : false,
+					'L_DESCRIPTION_LENGTH'	=> sprintf($user->lang['DESCRIPTION_LENGTH'], $album_config['description_length']),
 					'USERNAME'				=> request_var('username', '', true),
 					'IMAGE_NAME'			=> request_var('image_name', '', true),
 					'MESSAGE'				=> request_var('message', '', true),
@@ -748,6 +770,7 @@ switch ($mode)
 				$template->assign_vars(array(
 					'IMAGE_NAME'		=> $image_data['image_name'],
 					'MESSAGE'			=> $message_parser->message,
+					'L_DESCRIPTION_LENGTH'	=> sprintf($user->lang['DESCRIPTION_LENGTH'], $album_config['description_length']),
 
 					'U_IMAGE'			=> ($image_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
 					'U_VIEW_IMAGE'		=> ($image_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
@@ -947,6 +970,80 @@ switch ($mode)
 	{
 		$comment = $comment_username = '';
 		$comment_username_req = false;
+		/*
+		* Rating-System: now you can comment and rate in one form
+		*/
+		$rate_point = request_var('rate', 0);
+		if ($album_config['allow_rates'])
+		{
+			$allowed_to_rate = $your_rating = false;
+
+			if ($user->data['is_registered'])
+			{
+				$sql = 'SELECT *
+					FROM ' . GALLERY_RATES_TABLE . '
+					WHERE rate_image_id = ' . (int) $image_id . '
+						AND rate_user_id = ' . (int) $user->data['user_id'];
+				$result = $db->sql_query($sql);
+
+				if ($db->sql_affectedrows($result) > 0)
+				{
+					$rated = $db->sql_fetchrow($result);
+					$your_rating = $rated['rate_point'];
+				}
+			}
+
+			// Check: User didn't rate yet, has permissions, it's not the users own image and the user is logged in
+			if (!$your_rating && gallery_acl_check('i_rate', $album_id) && ($user->data['user_id'] != $image_data['image_user_id']) && ($user->data['user_id'] != ANONYMOUS))
+			{
+				// User just rated the image, so we store it
+				if ($rate_point > 0)
+				{
+					if ($rate_point > $album_config['rate_scale'])
+					{
+						trigger_error('OUT_OF_RANGE_VALUE');
+					}
+
+					$sql_ary = array(
+						'rate_image_id'	=> $image_id,
+						'rate_user_id'	=> $user->data['user_id'],
+						'rate_user_ip'	=> $user->ip,
+						'rate_point'	=> $rate_point,
+					);
+					$db->sql_query('INSERT INTO ' . GALLERY_RATES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+					$sql = 'SELECT rate_image_id, COUNT(rate_user_ip) image_rates, AVG(rate_point) image_rate_avg, SUM(rate_point) image_rate_points
+						FROM ' . GALLERY_RATES_TABLE . "
+						WHERE rate_image_id = $image_id
+						GROUP BY rate_image_id";
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+							SET image_rates = ' . $row['image_rates'] . ',
+								image_rate_points = ' . $row['image_rate_points'] . ',
+								image_rate_avg = ' . round($row['image_rate_avg'], 2) * 100 . '
+							WHERE image_id = ' . $row['rate_image_id'];
+						$db->sql_query($sql);
+					}
+					$db->sql_freeresult($result);
+					$message .= $user->lang['RATING_SUCCESSFUL'] . '<br />';
+				}
+				// else we show the drop down
+				else
+				{
+					for ($rate_scale = 1; $rate_scale <= $album_config['rate_scale']; $rate_scale++)
+					{
+						$template->assign_block_vars('rate_scale', array(
+							'RATE_POINT'	=> $rate_scale,
+						));
+					}
+					$allowed_to_rate = true;
+				}
+			}
+			$template->assign_vars(array(
+				'S_ALLOWED_TO_RATE'	=> $allowed_to_rate,
+			));
+		}
 		switch ($submode)
 		{
 			case 'add':
@@ -977,7 +1074,7 @@ switch ($mode)
 							$submit = false;
 						}
 					}
-					if ($comment_text == '')
+					if (($comment_text == '') && !$rate_point)
 					{
 						$submit = false;
 						$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_COMMENT'];
@@ -1005,7 +1102,7 @@ switch ($mode)
 						'comment_uid'			=> $message_parser->bbcode_uid,
 						'comment_bitfield'		=> $message_parser->bbcode_bitfield,
 					);
-					if (!$error)
+					if ((!$error) && (($sql_ary['comment'] != '') && $rate_point))
 					{
 						$db->sql_query('INSERT INTO ' . GALLERY_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 						$newest_comment = $db->sql_nextid();
@@ -1023,7 +1120,7 @@ switch ($mode)
 							$db->sql_query($sql);
 						}
 						notify_gallery('image', $image_id, $image_data['image_name']);
-						$message = $user->lang['COMMENT_STORED'] . '<br />';
+						$message .= $user->lang['COMMENT_STORED'] . '<br />';
 					}
 				}
 				else
@@ -1095,7 +1192,7 @@ switch ($mode)
 					if (!$error)
 					{
 						$db->sql_query('UPDATE ' . GALLERY_COMMENTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . ' WHERE comment_id = ' . (int) $comment_id);
-						$message = $user->lang['COMMENT_STORED'] . '<br />';
+						$message .= $user->lang['COMMENT_STORED'] . '<br />';
 					}
 				}
 				else
@@ -1154,6 +1251,7 @@ switch ($mode)
 			'MESSAGE'				=> $comment,
 			'USERNAME'				=> $comment_username,
 			'REQ_USERNAME'			=> $comment_username_req,
+			'L_COMMENT_LENGTH'		=> sprintf($user->lang['COMMENT_LENGTH'], $album_config['comment_length']),
 
 			'IMAGE_RSZ_WIDTH'	=> $album_config['preview_rsz_width'],
 			'IMAGE_RSZ_HEIGHT'	=> $album_config['preview_rsz_height'],

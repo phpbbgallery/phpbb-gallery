@@ -45,8 +45,8 @@ function checkRateForm() {
 			<!-- IF U_EDIT --><a href="{U_EDIT}">{EDIT_IMG}</a> <!-- ENDIF -->
 		</td>
 	</tr>
-	<tr>
-		<td class="row2">
+</table>
+<br clear="all" />
 <table class="tablebg" cellspacing="1" width="100%">
 	<tr>
 		<th colspan="2">{L_DETAILS}</th>
@@ -77,6 +77,12 @@ function checkRateForm() {
 		<td width="25%" align="right"><span class="genmed">{L_VIEWS}:</span></td>
 		<td><span class="genmed">{IMAGE_VIEW}</span></td>
 	</tr>
+	<!-- IF S_ALLOWED_TO_RATE or S_YOUR_RATING -->
+		<tr class="row1">
+			<td width="25%" align="right"><span class="genmed">{L_RATING}:</span></td>
+			<td><span class="genmed">{IMAGE_RATING}<!-- IF S_YOUR_RATING --> ({L_YOUR_RATING}: {S_YOUR_RATING})<!-- ENDIF --></span></td>
+		</tr>
+	<!-- ENDIF -->
 </table>
 <br clear="all" />
 
@@ -160,99 +166,223 @@ function toggleElement(oElement)
 <br clear="all" />
 <!-- ENDIF -->
 
-<!-- IF RATING -->
-<a name="rating"></a>
-<form name="rateform" action="{S_ALBUM_ACTION}" method="post" onsubmit="return checkRateForm();">
-<table class="tablebg" cellspacing="1" width="100%">
-	<tr>
-		<th colspan="2" style="align: center;">{L_RATING}</th>
-	</tr>
-	<tr class="row1">
-		<td width="25%" align="right"><span class="genmed">{L_RATING}:</span></td>
-		<td><span class="genmed">{IMAGE_RATING}</span></td>
-	</tr>
-	<!-- IF YOUR_RATING -->
-	<tr class="row1">
-		<td width="25%" align="right"><span class="genmed">{L_YOUR_RATING}:</span></td>
-		<td><span class="genmed">{S_RATEBOX}</span></td>
-	</tr>
-	<!-- ENDIF -->
-</table>
-{S_FORM_TOKEN}
-</form>
-<br clear="all" />
-<!-- ENDIF -->
-
-<!-- IF COMMENTS -->
-	<!-- IF POST_COMMENT and not S_IS_BOT -->
+<!-- IF not S_IS_BOT and (S_ALLOWED_TO_RATE or S_ALLOWED_TO_COMMENT) -->
 		<a name="rating"></a>
 		<form name="postform" action="{S_COMMENT_ACTION}" method="post" onsubmit="return checkCommentForm;">
 			<table class="tablebg" cellspacing="1" width="100%">
 				<tr>
-					<th colspan="2" style="align: center;">{L_POST_COMMENT}</th>
+					<th colspan="2" style="align: center;"><!-- IF S_ALLOWED_TO_RATE and S_ALLOWED_TO_COMMENT -->{L_POST_COMMENT_RATE_IMAGE}<!-- ELSEIF S_ALLOWED_TO_COMMENT -->{L_POST_COMMENT}<!-- ELSE -->{L_RATE_IMAGE}<!-- ENDIF --></th>
 				</tr>
+				<!-- IF S_ALLOWED_TO_RATE -->
+				<tr class="row1">
+					<td class="row1" width="22%" height="28"><b class="genmed">{L_YOUR_RATING}:</b></td>
+					<td><span class="genmed">
+						<select name="rate">
+						<!-- BEGIN rate_scale -->
+							<!-- IF rate_scale.RATE_POINT == 1 --><option value="0">{L_DONT_RATE_IMAGE}</option><!-- ENDIF -->
+							<option value="{rate_scale.RATE_POINT}">{rate_scale.RATE_POINT}</option>
+						<!-- END rate_scale -->
+						</select>
+						<!-- IF not S_ALLOWED_TO_COMMENT -->
+							<input type="submit" name="rate" value="{L_SUBMIT}" class="btnmain" />
+						<!-- ENDIF -->
+						</span></td>
+				</tr>
+				<!-- ENDIF -->
 				<!-- IF not S_USER_LOGGED_IN -->
 				<tr class="row1">
-					<td width="25%" align="right"><span class="genmed">{L_USERNAME}:</span></td>
+					<td class="row1" width="22%" height="28"><b class="genmed">{L_USERNAME}:</b></td>
 					<td><span class="genmed">
 						<input class="inputbox autowidth" type="text" name="username" maxlength="32" />
 						</span></td>
 				</tr>
 				<!-- ENDIF -->
-				<tr class="row1">
-					<td width="25%" align="right"><span class="genmed">{L_YOUR_COMMENT}:</span></td>
-					<td><span class="genmed"><textarea name="message" class="inputbox" cols="60" rows="4"></textarea></span></td>
+				<tr>
+					<td class="row1" width="22%" valign="top"><b class="genmed">{L_YOUR_COMMENT}:</b><br /><span class="gensmall">{L_COMMENT_LENGTH}</span><br /><br />
+					<!-- IF S_SMILIES_ALLOWED -->
+						<table width="100%" cellspacing="5" cellpadding="0" border="0" align="center">
+						<tr>
+							<td class="gensmall" align="center"><b>{L_SMILIES}</b></td>
+						</tr>
+						<tr>
+							<td align="center">
+								<!-- BEGIN smiley -->
+									<a href="#" onclick="insert_text('{smiley.A_SMILEY_CODE}', true); return false;" style="line-height: 20px;"><img src="{smiley.SMILEY_IMG}" width="{smiley.SMILEY_WIDTH}" height="{smiley.SMILEY_HEIGHT}" alt="{smiley.SMILEY_CODE}" title="{smiley.SMILEY_DESC}" hspace="2" vspace="2" /></a>
+								<!-- END smiley -->
+							</td>
+						</tr>
+
+						<!-- IF S_SHOW_SMILEY_LINK -->
+							<tr>
+								<td align="center"><a class="nav" href="{U_MORE_SMILIES}" onclick="popup(this.href, 300, 350, '_phpbbsmilies'); return false;">{L_MORE_SMILIES}</a></td>
+							</tr>
+						<!-- ENDIF -->
+
+						</table>
+					<!-- ENDIF -->
+					</td>
+					<td class="row2" valign="top">
+						<script type="text/javascript">
+						// <![CDATA[
+							var form_name = 'postform';
+							var text_name = 'message';
+						// ]]>
+						</script>
+
+						<table width="100%" cellspacing="0" cellpadding="0" border="0">
+						<!-- INCLUDE posting_buttons.html -->
+						<tr>
+							<td valign="top" style="width: 100%;"><textarea name="message" rows="10" cols="76" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" style="width: 98%;"></textarea></td>
+							<!-- IF S_BBCODE_ALLOWED -->
+							<td width="80" align="center" valign="top">
+								<script type="text/javascript">
+								// <![CDATA[
+									colorPalette('v', 7, 6)
+								// ]]>
+								</script>
+							</td>
+							<!-- ENDIF -->
+					 	</tr>
+						</table>
+					</td>
 				</tr>
-				<tr class="cat">
-					<td colspan="2"><input type="submit" name="submit" value="{L_SUBMIT}" class="button1" /></td>
+				<tr class="cat" colspan="2" align="center">
+					<td colspan="2"><input type="submit" name="submit" value="{L_SUBMIT}" class="btnmain" /></td>
 				</tr>
 			</table>
 			{S_FORM_TOKEN}
 		</form>
 		<br clear="all" />
-	<!-- ENDIF -->
-	<a name="comments"></a>
-	<table class="tablebg" cellspacing="1" width="100%">
+<!-- ENDIF -->
+
+<!-- IF S_ALLOWED_READ_COMMENTS -->
+<!-- IF IMAGE_COMMENTS -->
+	<table width="100%" cellspacing="1">
+	<tr>
+			<td class="nav" valign="middle" nowrap="nowrap">{PAGE_NUMBER}<br /></td>
+			<td class="gensmall" nowrap="nowrap">&nbsp;[ {IMAGE_COMMENTS} ]&nbsp;</td>
+			<td class="gensmall" width="100%" align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
+	</tr>
+	</table>
+<!-- ENDIF -->
+
+<!-- BEGIN commentrow -->
+	<table class="tablebg" width="100%" cellspacing="1">
+	<!-- IF commentrow.S_FIRST_ROW -->
 		<tr>
-			<th style="align: center;">{L_COMMENTS}</th>
+			<th>{L_AUTHOR}</th>
+			<th>{L_COMMENTS}</th>
 		</tr>
-		<!-- IF commentrow -->
-			<tr class="cat">
-				<td align="right">{IMAGE_COMMENTS} {L_COMMENTS} &bull; {PAGE_NUMBER}
-					<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF --></td>
-			</tr>
-			<!-- BEGIN commentrow -->
-			<tr class="<!-- IF commentrow.S_ROW_COUNT is odd -->row2<!-- ELSE -->row1<!-- ENDIF -->">
-				<td>
-					{L_POST_BY_AUTHOR} {commentrow.POSTER} {L_POSTED_ON_DATE} {commentrow.TIME}<br />
-					<br />
-						<div>{commentrow.TEXT}</div>
-					<!-- IF commentrow.EDIT_INFO --><br />{commentrow.EDIT_INFO}<!-- ENDIF -->
+	<!-- ENDIF -->
+	<!-- IF commentrow.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+
+	<!-- IF commentrow.S_IGNORE_POST -->
+			<td class="gensmall" colspan="2" height="25" align="center"><!-- IF commentrow.S_FIRST_UNREAD --><a name="unread"></a><!-- ENDIF --><a name="p{commentrow.POST_ID}"></a>{commentrow.L_IGNORE_POST}</td>
+	<!-- ELSE -->
+
+			<td align="center" valign="middle">
+				<!-- IF commentrow.S_FIRST_UNREAD --><a name="unread"></a><!-- ENDIF --><a name="p{commentrow.POST_ID}"></a>
+				<b class="postauthor"<!-- IF commentrow.POST_AUTHOR_COLOUR --> style="color: {commentrow.POST_AUTHOR_COLOUR}"<!-- ENDIF -->>{commentrow.POST_AUTHOR}</b>
+			</td>
+			<td width="100%" height="25">
+				<table width="100%" cellspacing="0">
+				<tr>
+				<!-- IF commentrow.POST_ICON_IMG -->
+					<td><img src="{T_ICONS_PATH}{commentrow.POST_ICON_IMG}" width="{commentrow.POST_ICON_IMG_WIDTH}" height="{commentrow.POST_ICON_IMG_HEIGHT}" alt="" title="" /></td>
+				<!-- ENDIF -->
+					<td class="gensmall" width="100%"><div style="float: {S_CONTENT_FLOW_END};"><!-- IF S_IS_BOT -->{MINI_POST_IMG}<!-- ELSE --><a href="{commentrow.U_COMMENT}">{MINI_POST_IMG}</a><!-- ENDIF --><b>{L_POSTED}:</b> {commentrow.TIME}&nbsp;</div></td>
+				</tr>
+				</table>
+			</td>
+		</tr>
+		
+		<!-- IF commentrow.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+
+			<td valign="top" class="profile">
+				<table cellspacing="4" align="center" width="150">
+			<!-- IF commentrow.ONLINE_IMG -->
+				<tr>
+					<td>{commentrow.ONLINE_IMG}</td>
+				</tr>
+			<!-- ENDIF -->
+			<!-- IF commentrow.RANK_TITLE -->
+				<tr>
+					<td class="postdetails">{commentrow.RANK_TITLE}</td>
+				</tr>
+			<!-- ENDIF -->
+			<!-- IF commentrow.RANK_IMG -->
+				<tr>
+					<td>{commentrow.RANK_IMG}</td>
+				</tr>
+			<!-- ENDIF -->
+			<!-- IF commentrow.POSTER_AVATAR -->
+				<tr>
+					<td>{commentrow.POSTER_AVATAR}</td>
+				</tr>
+			<!-- ENDIF -->
+				</table>
+			</td>
+			<td valign="top">
+				<table width="100%" cellspacing="5">
+				<tr>
+					<td>
+						<div class="postbody">{commentrow.TEXT}</div>
+
+					<!-- IF commentrow.SIGNATURE -->
+						<span class="postbody"><br />_________________<br />{commentrow.SIGNATURE}</span>
+					<!-- ENDIF -->
+
+					<!-- IF commentrow.EDIT_INFO -->
+						<br /><br />
+						<span class="gensmall">{commentrow.EDIT_INFO}</span>
+					<!-- ENDIF -->
+
+					<br clear="all" /><br />
+
 						<table width="100%" cellspacing="0">
 						<tr valign="middle">
 							<td class="gensmall" align="{S_CONTENT_FLOW_END}">
 							<!-- IF not S_IS_BOT -->
-								<!-- IF commentrow.EDIT --><a href="{commentrow.EDIT}">{EDIT_IMG}</a> <!-- ENDIF -->
-								<!-- IF commentrow.DELETE --><a href="{commentrow.DELETE}">{DELETE_IMG}</a> <!-- ENDIF -->
+								<!-- IF commentrow.U_INFO --><a href="{commentrow.U_INFO}" onclick="popup(this.href, 750, 500); return false;">{INFO_IMG}</a> <!-- ENDIF --> 
+								<!-- IF commentrow.U_DELETE --><a href="{commentrow.U_DELETE}">{DELETE_IMG}</a> <!-- ENDIF -->
 							<!-- ENDIF -->
 							</td>
 						</tr>
 						</table>
-				</td>
+					</td>
+				</tr>
+				</table>
+			</td>
+		</tr>
+
+		<!-- IF commentrow.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+
+			<td class="profile"></td>
+			<td><div class="gensmall" style="float: {S_CONTENT_FLOW_BEGIN};">&nbsp;<!-- IF commentrow.U_POST_AUTHOR --><a href="{commentrow.U_POST_AUTHOR}">{PROFILE_IMG}</a> <!-- ENDIF --></div> <div class="gensmall" style="float: {S_CONTENT_FLOW_END};"><!-- IF not S_IS_BOT and commentrow.U_EDIT --><a href="{commentrow.U_EDIT}">{EDIT_IMG}</a><!-- ENDIF -->&nbsp;</div></td>
+	<!-- ENDIF -->
+		</tr>
+		<tr>
+			<td class="spacer" colspan="2" height="1"><img src="images/spacer.gif" alt="" width="1" height="1" /></td>
+		</tr>
+
+	<!-- IF commentrow.S_LAST_ROW -->
+			<tr class="cat" colspan="2" align="center">
+				<td colspan="2"><form action="{S_ALBUM_ACTION}" method="post">{L_ORDER}: <select name="sort_order"><option value="ASC"<!-- IF SORT_ASC --> selected="selected"<!-- ENDIF -->>{L_SORT_ASCENDING}</option><option value="DESC"<!-- IF not SORT_ASC --> selected="selected"<!-- ENDIF -->>{L_SORT_DESCENDING}</option></select>&nbsp;<input type="submit" name="submit" value="{L_GO}" class="btnmain" /></form></td>
 			</tr>
-			<!-- END commentrow -->
-		<!-- ELSE -->
-			<tr class="row1">
-				<td><span class="genmed">{L_NO_COMMENTS}</span></td>
-			</tr>
-		<!-- ENDIF -->
+	<!-- ENDIF -->
+	</table>
+<!-- END commentrow -->
+
+<!-- IF IMAGE_COMMENTS -->
+	<table width="100%" cellspacing="1">
+	<tr>
+			<td class="nav" valign="middle" nowrap="nowrap">{PAGE_NUMBER}<br /></td>
+			<td class="gensmall" nowrap="nowrap">&nbsp;[ {IMAGE_COMMENTS} ]&nbsp;</td>
+			<td class="gensmall" width="100%" align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
+	</tr>
 	</table>
 <!-- ENDIF -->
-
-	</td>
-	</tr>
-</table>
-<br clear="all" />
+<!-- ENDIF -->
 
 <table width="100%" cellspacing="0">
 <tr>

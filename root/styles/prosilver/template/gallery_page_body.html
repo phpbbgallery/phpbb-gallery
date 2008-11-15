@@ -69,6 +69,12 @@ function checkRateForm() {
 				<dt><label>{L_VIEWS}:</label></dt>
 				<dd>{IMAGE_VIEW}</dd>
 			</dl>
+			<!-- IF S_ALLOWED_TO_RATE or S_YOUR_RATING -->
+				<dl>
+					<dt><label>{L_RATING}:</label></dt>
+					<dd>{IMAGE_RATING}<!-- IF S_YOUR_RATING --> ({L_YOUR_RATING}: {S_YOUR_RATING})<!-- ENDIF --></dd>
+				</dl>
+			<!-- ENDIF -->
 		</fieldset>
 		<span class="corners-bottom"><span></span></span>
 	</div>
@@ -154,25 +160,68 @@ function toggleElement(oElement)
 	</div>
 </div>
 <!-- ENDIF -->
-<!-- IF RATING -->
+
+<!-- IF not S_IS_BOT and (S_ALLOWED_TO_RATE or S_ALLOWED_TO_COMMENT) -->
 <a name="rating"></a>
-<form id="rateform" action="{S_ALBUM_ACTION}" method="post" onsubmit="return checkRateForm();">
+<form id="postform" action="{S_COMMENT_ACTION}" method="post" onsubmit="return checkCommentForm;">
 <div id="postingbox" class="panel">
 	<div class="inner">
 		<span class="corners-top"><span></span></span>
-		<h3>{L_RATING}</h3>
+		<h3><!-- IF S_ALLOWED_TO_RATE and S_ALLOWED_TO_COMMENT -->{L_POST_COMMENT_RATE_IMAGE}<!-- ELSEIF S_ALLOWED_TO_COMMENT -->{L_POST_COMMENT}<!-- ELSE -->{L_RATE_IMAGE}<!-- ENDIF --></h3>
 		<fieldset class="fields1">
-			<dl>
-				<dt><label>{L_RATING}:</label></dt>
-				<dd>{IMAGE_RATING}</dd>
-			</dl>
-			<!-- IF YOUR_RATING -->
-			<dl>
-				<dt><label>{L_YOUR_RATING}:</label></dt>
-				<dd>{S_RATEBOX}</dd>
-			</dl>
+			<!-- IF S_ALLOWED_TO_RATE -->
+				<dl>
+					<dt><label>{L_YOUR_RATING}:</label></dt>
+					<dd>
+						<select name="rate">
+						<!-- BEGIN rate_scale -->
+							<!-- IF rate_scale.RATE_POINT == 1 --><option value="0">{L_DONT_RATE_IMAGE}</option><!-- ENDIF -->
+							<option value="{rate_scale.RATE_POINT}">{rate_scale.RATE_POINT}</option>
+						<!-- END rate_scale -->
+						</select>
+						<!-- IF not S_ALLOWED_TO_COMMENT -->
+							<input type="submit" name="rate" value="{L_SUBMIT}" class="button1" />
+						<!-- ENDIF -->
+					</dd>
+				</dl>
 			<!-- ENDIF -->
-		</fieldset>
+			<!-- IF S_ALLOWED_TO_COMMENT -->
+				<!-- IF not S_USER_LOGGED_IN -->
+					<dl>
+						<dt><label>{L_USERNAME}:</label></dt>
+						<dd><input class="inputbox autowidth" type="text" name="username" maxlength="32" /></dd>
+					</dl>
+				<!-- ENDIF -->
+				<!-- INCLUDE posting_buttons.html -->
+				<div id="smiley-box">
+					<!-- IF S_SMILIES_ALLOWED and .smiley -->
+						<strong>{L_SMILIES}</strong><br />
+						<!-- BEGIN smiley -->
+							<a href="#" onclick="insert_text('{smiley.A_SMILEY_CODE}', true); return false;"><img src="{smiley.SMILEY_IMG}" width="{smiley.SMILEY_WIDTH}" height="{smiley.SMILEY_HEIGHT}" alt="{smiley.SMILEY_CODE}" title="{smiley.SMILEY_DESC}" /></a>
+						<!-- END smiley -->
+					<!-- ENDIF -->
+					<!-- IF S_SHOW_SMILEY_LINK and S_SMILIES_ALLOWED-->
+						<br /><a href="{U_MORE_SMILIES}" onclick="popup(this.href, 300, 350, '_phpbbsmilies'); return false;">{L_MORE_SMILIES}</a>
+					<!-- ENDIF -->
+
+					<!-- IF BBCODE_STATUS -->
+					<!-- IF .smiley --><hr /><!-- ENDIF -->
+					{BBCODE_STATUS}<br />
+					<!-- IF S_BBCODE_ALLOWED -->
+						{IMG_STATUS}<br />
+						{FLASH_STATUS}<br />
+						{URL_STATUS}<br />
+						{SMILIES_STATUS}<hr />
+					<!-- ENDIF -->
+					<!-- ENDIF -->
+					{L_COMMENT_LENGTH}
+				</div>
+				<div id="message-box">
+					<textarea name="message" id="message" rows="10" cols="76" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" class="inputbox"></textarea>
+				</div>
+				<input type="submit" name="submit" value="{L_SUBMIT}" class="button1" />
+			</fieldset>
+		<!-- ENDIF -->
 		{S_FORM_TOKEN}
 		<span class="corners-bottom"><span></span></span>
 	</div>
@@ -180,37 +229,9 @@ function toggleElement(oElement)
 </form>
 <!-- ENDIF -->
 
-<!-- IF COMMENTS -->
-	<!-- IF POST_COMMENT and not S_IS_BOT -->
-	<a name="rating"></a>
-	<form id="postform" action="{S_COMMENT_ACTION}" method="post" onsubmit="return checkCommentForm;">
-	<div id="postingbox" class="panel">
-		<div class="inner">
-			<span class="corners-top"><span></span></span>
-			<h3>{L_POST_COMMENT}</h3>
-			<fieldset class="fields1">
-				<!-- IF not S_USER_LOGGED_IN -->
-				<dl>
-					<dt><label>{L_USERNAME}:</label></dt>
-					<dd><input class="inputbox autowidth" type="text" name="username" maxlength="32" /></dd>
-				</dl>
-				<!-- ENDIF -->
-				<dl>
-					<dt><label>{L_YOUR_COMMENT}:</label></dt>
-					<dd><!-- INCLUDE posting_buttons.html --></dd>
-					<dd><textarea name="message" class="inputbox" cols="60" rows="4"></textarea></dd>
-					<dd><input type="submit" name="submit" value="{L_SUBMIT}" class="button1" /></dd>
-				</dl>
-			</fieldset>
-			{S_FORM_TOKEN}
-			<span class="corners-bottom"><span></span></span>
-		</div>
-	</div>
-	</form>
-	<!-- ENDIF -->
-
-	<a name="comments"></a>
-	<!-- IF NO_COMMENTS -->
+<!-- IF S_ALLOWED_READ_COMMENTS -->
+<a name="comments"></a>
+<!-- IF not .commentrow -->
 	<div id="postingbox" class="panel">
 		<div class="inner">
 			<span class="corners-top"><span></span></span>
@@ -224,29 +245,40 @@ function toggleElement(oElement)
 			<span class="corners-bottom"><span></span></span>
 		</div>
 	</div>
-	<!-- ELSE -->
+<!-- ELSE -->
 	<div class="topic-actions">
 		<div class="pagination">
 			{IMAGE_COMMENTS} {L_COMMENTS} &bull; {PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
 		</div>
 	</div>
 	<!-- BEGIN commentrow -->
-	<a name="{commentrow.ID}"></a>
+	<a id="{commentrow.COMMENT_ID}"></a>
 	<div class="post <!-- IF commentrow.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
 		<div class="inner">
 			<span class="corners-top"><span></span></span>
 			<div class="postbody">
-				<!-- IF commentrow.EDIT or  commentrow.DELETE -->
+				<!-- IF commentrow.U_DELETE or commentrow.U_EDIT or commentrow.U_INFO -->
 					<ul class="profile-icons">
-						<!-- IF commentrow.EDIT --><li class="edit-icon"><a href="{commentrow.EDIT}" title="{L_EDIT_POST}"><span>{L_EDIT_POST}</span></a></li><!-- ENDIF -->
-						<!-- IF commentrow.DELETE --><li class="delete-icon"><a href="{commentrow.DELETE}" title="{L_DELETE_POST}"><span>{L_DELETE_POST}</span></a></li><!-- ENDIF -->
+						<!-- IF commentrow.U_EDIT --><li class="edit-icon"><a href="{commentrow.U_EDIT}" title="{L_EDIT_POST}"><span>{L_EDIT_POST}</span></a></li><!-- ENDIF -->
+						<!-- IF commentrow.U_DELETE --><li class="delete-icon"><a href="{commentrow.U_DELETE}" title="{L_DELETE_POST}"><span>{L_DELETE_POST}</span></a></li><!-- ENDIF -->
+						<!-- IF commentrow.U_INFO --><li class="info-icon"><a href="{commentrow.U_INFO}" title="{L_VIEW_INFO}" onclick="popup(this.href, 750, 500); return false;"><span>{L_VIEW_INFO}</span></a></li><!-- ENDIF -->
 					</ul>
 				<!-- ENDIF -->
-				<p class="author"><a href="#"><img src="{T_IMAGESET_PATH}/icon_post_target.gif" width="11" height="9" alt="{L_COMMENT}" title="{L_COMMENT}" /></a>{L_POST_BY_AUTHOR} <strong>{commentrow.POSTER}</strong> {L_POSTED_ON_DATE} {commentrow.TIME} </p>
+				<p class="author"><a href="{commentrow.U_COMMENT}">{MINI_POST_IMG}</a>&nbsp;{L_POST_BY_AUTHOR} <strong>{commentrow.POST_AUTHOR_FULL}</strong> {L_POSTED_ON_DATE} {commentrow.TIME} </p>
 				<div class="content">{commentrow.TEXT}</div>
-				{commentrow.EDIT_INFO}
-				<span class="genmed">{commentrow.IP}</span>
+				<!-- IF commentrow.EDIT_INFO --><div class="notice">{commentrow.EDIT_INFO}</div><!-- ENDIF -->
+				<!-- IF commentrow.SIGNATURE --><div id="sig{commentrow.COMMENT_ID}" class="signature">{commentrow.SIGNATURE}</div><!-- ENDIF -->
 			</div>
+			<dl class="postprofile" id="profile{commentrow.COMMENT_ID}">
+				<dt>
+					<!-- IF commentrow.POSTER_AVATAR -->
+						<!-- IF commentrow.U_POST_AUTHOR --><a href="{commentrow.U_POST_AUTHOR}">{commentrow.POSTER_AVATAR}</a><!-- ELSE -->{commentrow.POSTER_AVATAR}<!-- ENDIF --><br />
+					<!-- ENDIF -->
+					<!-- IF not commentrow.U_POST_AUTHOR --><strong>{commentrow.POST_AUTHOR_FULL}</strong><!-- ELSE -->{commentrow.POST_AUTHOR_FULL}<!-- ENDIF -->
+				</dt>
+
+				<!-- IF commentrow.RANK_TITLE or commentrow.RANK_IMG --><dd>{commentrow.RANK_TITLE}<!-- IF commentrow.RANK_TITLE and commentrow.RANK_IMG --><br /><!-- ENDIF -->{commentrow.RANK_IMG}</dd><!-- ENDIF -->
+			</dl>
 			<span class="corners-bottom"><span></span></span>
 		</div>
 	</div>
@@ -254,20 +286,17 @@ function toggleElement(oElement)
 
 	<form action="{S_ALBUM_ACTION}" method="post">
 	<fieldset class="display-options" style="margin-top: 0; ">
-		<label>{L_ORDER}: <select name="sort_order"><option {SORT_ASC} value='ASC'>{L_SORT_ASCENDING}</option><option {SORT_DESC} value='DESC'>{L_SORT_DESCENDING}</option></select>&nbsp;<input type="submit" name="submit" value="{L_GO}" class="button2" /></label>
+		<label>{L_ORDER}: <select name="sort_order"><option value="ASC"<!-- IF SORT_ASC --> selected="selected"<!-- ENDIF -->>{L_SORT_ASCENDING}</option><option value="DESC"<!-- IF not SORT_ASC --> selected="selected"<!-- ENDIF -->>{L_SORT_DESCENDING}</option></select>&nbsp;<input type="submit" name="submit" value="{L_GO}" class="button2" /></label>
 	</fieldset>
 	</form>
 	<hr />
 
 	<div class="topic-actions">
-		<!--div class="buttons">
-			<div class="upload-icon"><a href="{U_UPLOAD_PIC}"><span>{L_UPLOAD_PIC}</span></a></div>
-		</div-->
 		<div class="pagination">
 			{IMAGE_COMMENTS} {L_COMMENTS} &bull; {PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
 		</div>
 	</div>
-	<!-- ENDIF -->
+<!-- ENDIF -->
 <!-- ENDIF -->
 
 <p></p><p><a href="{U_RETURN_LINK}" class="left-box {S_CONTENT_FLOW_BEGIN}" accesskey="r">{L_RETURN_TO} {S_RETURN_LINK}</a></p>

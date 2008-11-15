@@ -48,10 +48,14 @@
         <date>YYYY-MM-DD</date>
         <rev-version>0.4.0</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Add] Report #356: Add BBCode-Buttons and smilies (subsilver2)]]></change>
+
+          <change><![CDATA[[Change] Report #356: Reorganize subsilver2 layout of image_page.php]]></change>
           <change><![CDATA[[Change] Report #350: better convert-instructions]]></change>
           <change><![CDATA[[Change] Unreported: better Search-Code for second session edit]]></change>
           <change><![CDATA[[Change] Report #354: Searchcode for total-images changed]]></change>
 
+          <change><![CDATA[[Fix] Report #356: Add Custom BBCode-Buttons (prosilver)]]></change>
           <change><![CDATA[[Fix] Report #360: installer not working on version compare for mysql]]></change>
           <change><![CDATA[[Fix] Report #348: SQL-Error when user is in no group => copy phpBB solution]]></change>
           <change><![CDATA[[Fix] Report #351: BBCode colorPalette needs images/spacer.gif]]></change>
