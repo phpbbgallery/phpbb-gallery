@@ -1466,34 +1466,28 @@ class acp_gallery
 
 		$album_name_ary = array();
 		//build the array with some kind of order.
-		$permissions = array();
+		$permissions = $permission_parts['misc'] = $permission_parts['m'] = $permission_parts['c'] = $permission_parts['i'] = array();
 		if ($perm_system != 2)
 		{
-			$permissions = array_merge($permissions, array('i_view'));
+			$permission_parts['i'] = array_merge($permission_parts['i'], array('i_view'));
 		}
 		if ($perm_system != 3)
 		{
-			$permissions = array_merge($permissions, array('i_upload', 'i_approve'));
+			$permission_parts['i'] = array_merge($permission_parts['i'], array('i_upload', 'i_approve'));
 		}
-		$permissions = array_merge($permissions, array('i_edit', 'i_delete', 'i_lock', 'i_report'));
-		//im not sure, whether whe should add this everytime, so you can make the rights without the users having them already
-		//if ($album_config['rate'])
-		//{
-			$permissions = array_merge($permissions, array('i_rate'));
-		//}
-		//if ($album_config['comment'])
-		//{
-			$permissions = array_merge($permissions, array('c_post', 'c_edit', 'c_delete'));
-		//}
-		$permissions = array_merge($permissions, array('a_moderate'));
+		$permission_parts['i'] = array_merge($permission_parts['i'], array('i_edit', 'i_delete', 'i_report', 'i_rate'));
+		$permission_parts['c'] = array_merge($permission_parts['c'], array('c_read', 'c_post', 'c_edit', 'c_delete'));
+		$permission_parts['m'] = array_merge($permission_parts['m'], array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_status'));
+		$permission_parts['misc'] = array_merge($permission_parts['misc'], array('a_list'));
 		if ($perm_system != 3)
 		{
-			$permissions = array_merge($permissions, array('i_count'));
+			$permission_parts['misc'] = array_merge($permission_parts['misc'], array('i_count'));
 		}
 		if ($perm_system == 2)
 		{
-			$permissions = array_merge($permissions, array('album_count'));
+			$permission_parts['misc'] = array_merge($permission_parts['misc'], array('album_count'));
 		}
+		$permissions = array_merge($permissions, $permission_parts['i'], $permission_parts['c'], $permission_parts['m'], $permission_parts['misc']);
 
 		$albums = $cache->obtain_album_list();
 
@@ -1622,9 +1616,9 @@ class acp_gallery
 				{
 					$where = 'p.perm_system = ' . $perm_system;
 				}
-				$sql = "SELECT pr.*
-					FROM " . GALLERY_PERMISSIONS_TABLE . " as p
-					LEFT JOIN " .  GALLERY_ROLES_TABLE .  " as pr
+				$sql = 'SELECT pr.*
+					FROM ' . GALLERY_PERMISSIONS_TABLE . ' p
+					LEFT JOIN ' .  GALLERY_ROLES_TABLE .  " pr
 						ON p.perm_role_id = pr.role_id
 					WHERE p.perm_group_id = {$group_ary[0]}
 						AND $where";
@@ -1634,17 +1628,26 @@ class acp_gallery
 			}
 
 			//Permissions
-			foreach ($permissions as $permission)
+			foreach ($permission_parts as $perm_groupname => $permission)
 			{
-				$template->assign_block_vars('permission', array(
-					'PERMISSION'			=> $user->lang['PERMISSION_' . strtoupper($permission)],
-					'S_FIELD_NAME'			=> $permission,
-					'S_NO'					=> ((isset($perm_ary[$permission]) && ($perm_ary[$permission] == 0)) ? true : false),
-					'S_YES'					=> ((isset($perm_ary[$permission]) && ($perm_ary[$permission] == 1)) ? true : false),
-					'S_NEVER'				=> ((isset($perm_ary[$permission]) && ($perm_ary[$permission] == 2)) ? true : false),
-					'S_VALUE'				=> ((isset($perm_ary[$permission])) ? $perm_ary[$permission] : 0),
-					'S_COUNT_FIELD'			=> (substr($permission, -6, 6) == '_count') ? true : false,
+				$template->assign_block_vars('perm_group', array(
+					'PERMISSION_GROUP'			=> $user->lang['PERMISSION_' . strtoupper($perm_groupname)],
+					'PERM_GROUP_ID'				=> $perm_groupname,
 				));
+				$string = implode(', ', $permission);
+				foreach ($permission_parts[$perm_groupname] as $permission)
+				{
+					#echo $permission;
+					$template->assign_block_vars('perm_group.permission', array(
+						'PERMISSION'			=> $user->lang['PERMISSION_' . strtoupper($permission)],
+						'S_FIELD_NAME'			=> $permission,
+						'S_NO'					=> ((isset($perm_ary[$permission]) && ($perm_ary[$permission] == 0)) ? true : false),
+						'S_YES'					=> ((isset($perm_ary[$permission]) && ($perm_ary[$permission] == 1)) ? true : false),
+						'S_NEVER'				=> ((isset($perm_ary[$permission]) && ($perm_ary[$permission] == 2)) ? true : false),
+						'S_VALUE'				=> ((isset($perm_ary[$permission])) ? $perm_ary[$permission] : 0),
+						'S_COUNT_FIELD'			=> (substr($permission, -6, 6) == '_count') ? true : false,
+					));
+				}
 			}
 			$step = 3;
 		}

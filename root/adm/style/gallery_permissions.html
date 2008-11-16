@@ -1,18 +1,28 @@
 <!-- INCLUDE overall_header.html -->
-<script type="text/javascript">
-// <![CDATA[
-	var active_pmask = '0';
-	var active_fmask = '0';
-	var active_cat = '0';
+<script type="text/JavaScript">
+function getElement(iElementId)
+{
+	if (document.all) 
+	{
+		return document.all[iElementId];
+	}
+	if (document.getElementById)
+	{
+		return document.getElementById(iElementId);
+	}
+}
 
-	var id = '000';
-
-	var role_options = new Array();
-
-	<!-- IF S_ROLE_JS_ARRAY -->
-		{S_ROLE_JS_ARRAY}
-	<!-- ENDIF -->
-// ]]>
+function toggleElement(oElement)
+{
+	if (oElement.style.display == "none")
+	{
+		oElement.style.display = "";
+	}
+	else
+	{
+		oElement.style.display = "none";
+	}
+}
 </script>
 <script type="text/javascript" src="style/permissions.js"></script>
 <a name="maincontent"></a>
@@ -79,6 +89,7 @@
 
 		<div class="permissions-panel" id="options{grouprow.S_ROW_COUNT}{p_mask.f_mask.S_ROW_COUNT}{p_mask.f_mask.category.S_ROW_COUNT}">
 			<span class="corners-top"><span></span></span>
+				<!-- BEGIN perm_group -->
 			<div class="tablewrap">
 				<table id="table{p_mask.S_ROW_COUNT}{p_mask.f_mask.S_ROW_COUNT}{p_mask.f_mask.category.S_ROW_COUNT}" cellspacing="1">
 				<colgroup>
@@ -89,29 +100,30 @@
 				</colgroup>
 				<thead>
 				<tr>
-					<th class="name" scope="col"><strong>{L_PERMISSION}</strong></th>
-					<th class="value permissions-yes" scope="col">{L_PERMISSION_YES}</th>
-					<th class="value permissions-no" scope="col">{L_PERMISSION_NO}</th>
-					<th class="value permissions-never" scope="col">{L_PERMISSION_NEVER}</th>
+					<th class="name" scope="col"><strong>{perm_group.PERMISSION_GROUP}</strong></th>
+					<th class="value permissions-yes" scope="col" style="width: 10%;">{L_PERMISSION_YES}</th>
+					<th class="value permissions-no" scope="col" style="width: 10%;">{L_PERMISSION_NO}</th>
+					<th class="value permissions-never" scope="col" style="width: 10%;">{L_PERMISSION_NEVER}</th>
 				</tr>
 				</thead>
 				<tbody>
 				<!-- BEGIN permission -->
-					<!-- IF permission.S_ROW_COUNT is even --><tr class="row4"><!-- ELSE --><tr class="row3"><!-- ENDIF -->
-					<th class="permissions-name<!-- IF permission.S_ROW_COUNT is even --> row4<!-- ELSE --> row3<!-- ENDIF -->">{permission.PERMISSION}</th>
-						<!-- IF not permission.S_COUNT_FIELD -->
-							<td class="permissions-yes"><label for="{permission.S_FIELD_NAME}_y"><input id="{permission.S_FIELD_NAME}_y" name="{permission.S_FIELD_NAME}" class="radio" type="radio"<!-- IF permission.S_YES --> checked="checked"<!-- ENDIF --> value="2" /></label></td>
-							<td class="permissions-no"><label for="{permission.S_FIELD_NAME}_u"><input id="{permission.S_FIELD_NAME}_u" name="{permission.S_FIELD_NAME}" class="radio" type="radio"<!-- IF permission.S_NO --> checked="checked"<!-- ENDIF --> value="1" /></label></td>
-							<td class="permissions-never"><label for="{permission.S_FIELD_NAME}_n"><input  id="{permission.S_FIELD_NAME}_n" name="{permission.S_FIELD_NAME}" class="radio" type="radio"<!-- IF permission.S_NEVER --> checked="checked"<!-- ENDIF --> value="3" /></label></td>
+					<!-- IF perm_group.permission.S_ROW_COUNT is even --><tr class="row4"><!-- ELSE --><tr class="row3"><!-- ENDIF -->
+					<th class="permissions-name<!-- IF perm_group.permission.S_ROW_COUNT is even --> row4<!-- ELSE --> row3<!-- ENDIF -->">{perm_group.permission.PERMISSION}</th>
+						<!-- IF not perm_group.permission.S_COUNT_FIELD -->
+							<td class="permissions-yes"><label for="{perm_group.permission.S_FIELD_NAME}_y"><input id="{perm_group.permission.S_FIELD_NAME}_y" name="{perm_group.permission.S_FIELD_NAME}" class="radio" type="radio"<!-- IF perm_group.permission.S_YES --> checked="checked"<!-- ENDIF --> value="2" /></label></td>
+							<td class="permissions-no"><label for="{perm_group.permission.S_FIELD_NAME}_u"><input id="{perm_group.permission.S_FIELD_NAME}_u" name="{perm_group.permission.S_FIELD_NAME}" class="radio" type="radio"<!-- IF perm_group.permission.S_NO --> checked="checked"<!-- ENDIF --> value="1" /></label></td>
+							<td class="permissions-never"><label for="{perm_group.permission.S_FIELD_NAME}_n"><input id="{perm_group.permission.S_FIELD_NAME}_n" name="{perm_group.permission.S_FIELD_NAME}" class="radio" type="radio"<!-- IF perm_group.permission.S_NEVER --> checked="checked"<!-- ENDIF --> value="3" /></label></td>
 						<!-- ELSE -->
-							<td class="permissions" colspan="3"><input class="text medium" type="text" id="{permission.S_FIELD_NAME}" name="{permission.S_FIELD_NAME}" value="{permission.S_VALUE}" maxlength="7" /></td>
+							<td class="permissions" colspan="3"><input class="text medium" type="text" id="{perm_group.permission.S_FIELD_NAME}" name="{perm_group.permission.S_FIELD_NAME}" value="{perm_group.permission.S_VALUE}" maxlength="7" /></td>
 						<!-- ENDIF -->
 				</tr>
 				<!-- END permission -->
 				</tbody>
 				</table>
-			</div>
+			</div><br />
 
+				<!-- END perm_group -->
 			<span class="corners-bottom"><span></span></span>
 		</div>
 			<div class="clearfix"></div>

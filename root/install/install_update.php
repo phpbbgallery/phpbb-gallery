@@ -322,6 +322,15 @@ class install_update extends module
 				nv_add_index(SESSIONS_TABLE,		'session_aid',				array('session_album_id'));
 
 			case '0.4.0-RC3':
+				nv_add_column(GALLERY_ROLES_TABLE,	'a_list',					array('UINT:3', 0));
+				nv_add_column(GALLERY_ROLES_TABLE,	'c_read',					array('UINT:3', 0));
+				nv_add_column(GALLERY_ROLES_TABLE,	'm_comments',				array('UINT:3', 0));
+				nv_add_column(GALLERY_ROLES_TABLE,	'm_delete',					array('UINT:3', 0));
+				nv_add_column(GALLERY_ROLES_TABLE,	'm_edit',					array('UINT:3', 0));
+				nv_add_column(GALLERY_ROLES_TABLE,	'm_move',					array('UINT:3', 0));
+				nv_add_column(GALLERY_ROLES_TABLE,	'm_status',					array('UINT:3', 0));
+
+			case '0.4.0':
 			break;
 		}
 
@@ -660,6 +669,28 @@ class install_update extends module
 				set_gallery_config('link_thumbnail', 'lytebox');
 				set_gallery_config('link_image_name', 'image_page');
 				set_gallery_config('link_image_icon', 'image_page');
+				// Update new permissions
+				$sql = 'SELECT role_id, a_moderate, i_view, c_post
+					FROM ' . GALLERY_ROLES_TABLE;
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					$sql_ary = array(
+						'a_list'		=> $row['i_view'],
+						'c_read'		=> $row['c_post'],
+						'm_comments'	=> $row['a_moderate'],
+						'm_delete'		=> $row['a_moderate'],
+						'm_edit'		=> $row['a_moderate'],
+						'm_move'		=> $row['a_moderate'],
+						'm_status'		=> $row['a_moderate'],
+					);
+					$sql = 'UPDATE ' . GALLERY_ROLES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+						WHERE ' . $db->sql_in_set('role_id', $row['role_id']);
+					$db->sql_query($sql);
+				}
+				$db->sql_freeresult($result);
+
+			case '0.4.0':
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
 			break;
