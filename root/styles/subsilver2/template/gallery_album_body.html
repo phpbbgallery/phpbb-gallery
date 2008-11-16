@@ -87,11 +87,7 @@ function toggleElement(oElement)
 			<table width="100%" cellpadding="2" cellspacing="5" border="0" class="forumline">
 				<tr>
 					<td align="center" class="row1" style="height: {S_THUMBNAIL_SIZE}px;">
-					<span class="genmed">
-						<a href="{image_row.image.U_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->>
-							<img src="{image_row.image.U_THUMBNAIL}" alt="{image_row.image.IMAGE_NAME}" title="{image_row.image.IMAGE_NAME}" />
-						</a>
-					</span>
+					<span class="genmed">{image_row.image.UC_THUMBNAIL}</span>
 					</td>
 				</tr>
 				<tr>
@@ -99,7 +95,7 @@ function toggleElement(oElement)
 					<div class="gensmall" style="overflow: hidden;">
 					<!-- IF image_row.image.S_UNAPPROVED and image_row.image.U_STATUS --><a style="font-weight: bold;" class="reported-images-number" href="{image_row.image.U_STATUS}">{image_row.image.L_STATUS}</a><br /><br /><!-- ENDIF -->
 					<!-- IF image_row.image.S_REPORTED and image_row.image.U_REPORT --><a style="font-weight: bold;" class="reported-images-number" href="{image_row.image.U_REPORT}">{L_READ_REPORT}</a><br /><br /><!-- ENDIF -->
-						{L_IMAGE_NAME}: <a href="{image_row.image.U_IMAGE_PAGE}" style="font-weight: bold;" title="{image_row.image.IMAGE_NAME_FULL}">{image_row.image.IMAGE_NAME}</a><br />
+						{L_IMAGE_NAME}: {image_row.image.UC_IMAGE_NAME}<br />
 						{L_POSTER}: {image_row.image.POSTER}<br />
 						{L_POSTED}: {image_row.image.TIME}<br />
 						{L_VIEWS}: {image_row.image.VIEW}<br />

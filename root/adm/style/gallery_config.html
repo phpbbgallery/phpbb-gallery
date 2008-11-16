@@ -53,6 +53,7 @@
 			<dd><input class="post" type="text" maxlength="12" size="5" name="fake_thumb_size" value="{FAKE_THUMB_SIZE}" /></dd>
 		</dl>
 	</fieldset>
+
 	<fieldset>
 		<legend>{L_IMAGE_SETTINGS}</legend>
 		<dl>
@@ -150,7 +151,6 @@
 		</dl>
 	</fieldset>
 
-
 	<fieldset>
 		<legend>{L_GALLERY_CONFIG}</legend>
 		<dl>
@@ -189,6 +189,52 @@
 			<dt><label for="shorted_imagenames">{L_SHORTED_IMAGENAMES}</label>
 				<br /><span>{L_SHORTED_IMAGENAMES_EXP}</span></dt>
 			<dd><input class="post" type="text" maxlength="3" size="3" name="shorted_imagenames" value="{SHORTED_IMAGENAMES}" /></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{L_UC_LINK_CONFIG}</legend>
+		<dl>
+			<dt><label for="link_thumbnail">{L_UC_THUMBNAIL}</label></dt>
+			<dd>
+				<select name="link_thumbnail">
+					<option<!-- IF UC_THUMBNAIL == 'lytebox' --> selected="selected"<!-- ENDIF --> value='lytebox'>{L_UC_LINK_LYTEBOX}</option>
+					<!-- IF S_GALLERY_HIGHSLIDE_JS -->
+						<option<!-- IF UC_THUMBNAIL == 'highslide' --> selected="selected"<!-- ENDIF --> value='highslide'>{L_UC_LINK_HIGHSLIDE}</option>
+					<!-- ENDIF -->
+					<option<!-- IF UC_THUMBNAIL == 'image_page' --> selected="selected"<!-- ENDIF --> value='image_page'>{L_UC_LINK_IMAGE_PAGE}</option>
+					<option<!-- IF UC_THUMBNAIL == 'image' --> selected="selected"<!-- ENDIF --> value='image'>{L_UC_LINK_IMAGE}</option>
+					<option<!-- IF UC_THUMBNAIL == 'none' --> selected="selected"<!-- ENDIF --> value='none'>{L_UC_LINK_NONE}</option>
+				</select>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="link_image_name">{L_UC_IMAGE_NAME}</label></dt>
+			<dd>
+				<select name="link_image_name">
+					<option<!-- IF UC_IMAGE_NAME == 'lytebox' --> selected="selected"<!-- ENDIF --> value='lytebox'>{L_UC_LINK_LYTEBOX}</option>
+					<!-- IF S_GALLERY_HIGHSLIDE_JS -->
+						<option<!-- IF UC_IMAGE_NAME == 'highslide' --> selected="selected"<!-- ENDIF --> value='highslide'>{L_UC_LINK_HIGHSLIDE}</option>
+					<!-- ENDIF -->
+					<option<!-- IF UC_IMAGE_NAME == 'image_page' --> selected="selected"<!-- ENDIF --> value='image_page'>{L_UC_LINK_IMAGE_PAGE}</option>
+					<option<!-- IF UC_IMAGE_NAME == 'image' --> selected="selected"<!-- ENDIF --> value='image'>{L_UC_LINK_IMAGE}</option>
+					<option<!-- IF UC_IMAGE_NAME == 'none' --> selected="selected"<!-- ENDIF --> value='none'>{L_UC_LINK_NONE}</option>
+				</select>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="link_image_icon">{L_UC_IMAGE_ICON}</label></dt>
+			<dd>
+				<select name="link_image_icon">
+					<option<!-- IF UC_IMAGE_ICON == 'lytebox' --> selected="selected"<!-- ENDIF --> value='lytebox'>{L_UC_LINK_LYTEBOX}</option>
+					<!-- IF S_GALLERY_HIGHSLIDE_JS -->
+						<option<!-- IF UC_IMAGE_ICON == 'highslide' --> selected="selected"<!-- ENDIF --> value='highslide'>{L_UC_LINK_HIGHSLIDE}</option>
+					<!-- ENDIF -->
+					<option<!-- IF UC_IMAGE_ICON == 'image_page' --> selected="selected"<!-- ENDIF --> value='image_page'>{L_UC_LINK_IMAGE_PAGE}</option>
+					<option<!-- IF UC_IMAGE_ICON == 'image' --> selected="selected"<!-- ENDIF --> value='image'>{L_UC_LINK_IMAGE}</option>
+					<option<!-- IF UC_IMAGE_ICON == 'none' --> selected="selected"<!-- ENDIF --> value='none'>{L_UC_LINK_NONE}</option>
+				</select>
+			</dd>
 		</dl>
 	</fieldset>
 

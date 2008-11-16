@@ -309,4 +309,17 @@ $lang = array_merge($lang, array(
 	'SHORTED_IMAGENAMES_EXP'		=> 'Sollte der Name eines Bildes zu lange sein und kein Leerzeichen enthalten, kann es zu Problemen im Layout führen.',
 ));
 
+// Added for 0.4.0
+$lang = array_merge($lang, array(
+	'UC_IMAGE_NAME'					=> 'Bildname',
+	'UC_IMAGE_ICON'					=> '"Letzes Bild"-Icon',
+	'UC_LINK_CONFIG'				=> 'Link Konfiguration',
+	'UC_LINK_HIGHSLIDE'				=> 'Highslide-Feature öffnen',
+	'UC_LINK_IMAGE'					=> 'Bild öffnen',
+	'UC_LINK_IMAGE_PAGE'			=> 'Image-page (mit Kommentaren und Bewertungen) öffnen',
+	'UC_LINK_LYTEBOX'				=> 'Lytebox-Feature öffnen',
+	'UC_LINK_NONE'					=> 'Kein Link',
+	'UC_THUMBNAIL'					=> 'Thumbnail',
+));
+
 ?>

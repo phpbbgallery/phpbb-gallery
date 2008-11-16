@@ -213,16 +213,17 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		// Create last post link information, if appropriate
 		if ($row['album_last_image_id'])
 		{
-			$last_image_name = (utf8_strlen(htmlspecialchars_decode($row['album_last_image_name'])) > $album_config['shorted_imagenames'] + 3 )? (utf8_substr(htmlspecialchars_decode($row['album_last_image_name']), 0, $album_config['shorted_imagenames']) . '...') : ($row['album_last_image_name']);
-			$last_image_name_full = $row['album_last_image_name'];
-			$last_image_time = $user->format_date($row['album_last_image_time']);
-			$last_image_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", 'album_id=' . $row['album_id_last_image'] . '&amp;image_id=' . $row['album_last_image_id']);
+			$lastimage_name = $row['album_last_image_name'];
+			$lastimage_time = $user->format_date($row['album_last_image_time']);
+			$lastimage_image_id = $row['album_last_image_id'];
 			$last_image_page_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $row['album_id_last_image'] . '&amp;image_id=' . $row['album_last_image_id']);
 			$last_thumb_url = append_sid("{$phpbb_root_path}{$gallery_root_path}thumbnail.$phpEx", 'album_id=' . $row['album_id_last_image'] . '&amp;image_id=' . $row['album_last_image_id']);
+			$lastimage_album_id = $row['album_id_last_image'];
 		}
 		else
 		{
 			$last_image_name = $last_image_name_full = $last_image_time = $last_image_url = $last_image_page_url = $last_thumb_url = '';
+			$lastimage_album_id = $lastimage_name = '';
 		}
 
 		// Output moderator listing ... if applicable
@@ -249,7 +250,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		$template->assign_block_vars('albumrow', array(
 			'S_IS_CAT'			=> false,
 			'S_NO_CAT'			=> $catless && !$last_catless,
-			#'S_LOCKED_ALBUM'	=> ($row['album_status'] == ITEM_LOCKED) ? true : false,
+			//'S_LOCKED_ALBUM'	=> ($row['album_status'] == ITEM_LOCKED) ? true : false,
 			'S_LIST_SUBALBUMS'	=> ($row['display_subalbum_list']) ? true : false,
 			'S_SUBALBUMS'		=> (sizeof($subalbums_list)) ? true : false,
 
@@ -262,13 +263,11 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			'ALBUM_FOLDER_IMG_SRC'	=> $user->img($folder_image, $folder_alt, false, '', 'src'),
 			'ALBUM_FOLDER_IMG_ALT'	=> isset($user->lang[$folder_alt]) ? $user->lang[$folder_alt] : '',
 			'ALBUM_IMAGE'			=> $row['album_image'],
-			'U_LAST_THUMB'			=> $last_thumb_url,
-			'U_LAST_IMAGE'			=> $last_image_url,
-			'U_LAST_IMAGE_PAGE'		=> $last_image_page_url,
-			'LAST_IMAGE_NAME'		=> censor_text($last_image_name),
-			'LAST_IMAGE_NAME_FULL'	=> censor_text($last_image_name_full),
-			'LAST_IMAGE_TIME'		=> $last_image_time,
+			'LAST_IMAGE_TIME'		=> $lastimage_time,
 			'LAST_USER_FULL'		=> get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
+			'UC_FAKE_THUMBNAIL'		=> ($album_config['disp_fake_thumb']) ? generate_image_link('fake_thumbnail', $album_config['link_thumbnail'], $lastimage_image_id, $lastimage_name, $lastimage_album_id) : '',
+			'UC_IMAGE_NAME'			=> generate_image_link('image_name', $album_config['link_image_name'], $lastimage_image_id, $lastimage_name, $lastimage_album_id),
+			'UC_LASTIMAGE_ICON'		=> generate_image_link('lastimage_icon', $album_config['link_image_icon'], $lastimage_image_id, $lastimage_name, $lastimage_album_id),
 			'ALBUM_COLOUR'			=> get_username_string('colour', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
 			'MODERATORS'			=> $moderators_list,
 			'SUBALBUMS'				=> $s_subalbums_list,
@@ -297,8 +296,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		'S_HAS_SUBALBUM'	=> ($visible_albums) ? true : false,
 		'L_SUBFORUM'		=> ($visible_albums == 1) ? $user->lang['SUBALBUM'] : $user->lang['SUBALBUMS'],
 		'LAST_POST_IMG'		=> $user->img('icon_topic_latest', 'VIEW_LATEST_POST'),
-		'DISP_FAKE_THUMB'	=> (empty($album_config['disp_fake_thumb'])) ? 0 : $album_config['disp_fake_thumb'],
-		'FAKE_THUMB_SIZE'	=> (empty($album_config['fake_thumb_size'])) ? 50 : $album_config['fake_thumb_size'],
+		'FAKE_THUMB_SIZE'	=> $album_config['fake_thumb_size'],
 	));
 
 	if ($return_moderators)

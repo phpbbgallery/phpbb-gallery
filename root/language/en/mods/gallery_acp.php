@@ -309,4 +309,17 @@ $lang = array_merge($lang, array(
 	'SHORTED_IMAGENAMES_EXP'		=> 'If the name of an image is to long and doesn\'t include spaces, the layout maybe destroyed.',
 ));
 
+// Added for 0.4.0
+$lang = array_merge($lang, array(
+	'UC_IMAGE_NAME'					=> 'Imagename',
+	'UC_IMAGE_ICON'					=> 'Lastimage icon',
+	'UC_LINK_CONFIG'				=> 'Link configuration',
+	'UC_LINK_HIGHSLIDE'				=> 'Open Highslide-Feature',
+	'UC_LINK_IMAGE'					=> 'Open Image',
+	'UC_LINK_IMAGE_PAGE'			=> 'Open Image-page (with comments and rates)',
+	'UC_LINK_LYTEBOX'				=> 'Open Lytebox-Feature',
+	'UC_LINK_NONE'					=> 'No Link',
+	'UC_THUMBNAIL'					=> 'Thumbnail',
+));
+
 ?>

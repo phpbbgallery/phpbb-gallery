@@ -633,7 +633,7 @@ class acp_gallery
 
 	function configure_gallery()
 	{
-		global $db, $template, $user, $cache, $config;
+		global $db, $template, $user, $cache, $phpbb_root_path, $config;
 
 		$sql = 'SELECT * FROM ' . GALLERY_CONFIG_TABLE;
 		$result = $db->sql_query($sql);
@@ -726,6 +726,12 @@ class acp_gallery
 			'S_DISP_TOTAL_IMAGES'			=> $config['gallery_total_images'],
 			'S_DISP_USER_IMAGES_PROFIL'		=> $config['gallery_user_images_profil'],
 			'S_DISP_PERSONAL_ALBUM_PROFIL'	=> $config['gallery_personal_album_profil'],
+
+			//Link Configuration
+			'S_GALLERY_HIGHSLIDE_JS'		=> file_exists($phpbb_root_path . 'styles/' . $user->theme['template_path'] . '/theme/highslide/highslide-full.js'),
+			'UC_THUMBNAIL'					=> $new['link_thumbnail'],
+			'UC_IMAGE_NAME'					=> $new['link_image_name'],
+			'UC_IMAGE_ICON' 				=> $new['link_image_icon'],
 		));
 	}
 

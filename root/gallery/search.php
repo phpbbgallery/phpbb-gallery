@@ -130,15 +130,12 @@ $sql_sort_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' :
 
 				$template->assign_block_vars('image_row.image', array(
 					'IMAGE_ID'		=> $picrow[$j]['image_id'],
-					'U_IMAGE'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . '&amp;image_id=' . $picrow[$j]['image_id']),
-					'U_THUMBNAIL'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}thumbnail.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . '&amp;image_id=' . $picrow[$j]['image_id']),
-					'U_IMAGE_PAGE'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . '&amp;image_id=' . $picrow[$j]['image_id']),
+					'UC_IMAGE_NAME'	=> generate_image_link('image_name', $album_config['link_image_name'], $picrow[$j]['image_id'], $picrow[$j]['image_name'], $picrow[$j]['image_album_id']),
+					'UC_THUMBNAIL'	=> generate_image_link('thumbnail', $album_config['link_thumbnail'], $picrow[$j]['image_id'], $picrow[$j]['image_name'], $picrow[$j]['image_album_id']),
 					'U_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $picrow[$j]['image_album_id']),
 					'S_UNAPPROVED'	=> (gallery_acl_check('a_moderate', $album_id) && (!$picrow[$j]['image_status'])) ? true : false,
 					'S_REPORTED'	=> (gallery_acl_check('a_moderate', $album_id) && $picrow[$j]['image_reported']) ? true : false,
 
-					'IMAGE_NAME'	=> (utf8_strlen(htmlspecialchars_decode($picrow[$j]['image_name'])) > $album_config['shorted_imagenames'] + 3 )? (utf8_substr(htmlspecialchars_decode($picrow[$j]['image_name']), 0, $album_config['shorted_imagenames']) . '...') : ($picrow[$j]['image_name']),
-					'IMAGE_NAME_FULL'	=> $picrow[$j]['image_name'],
 					'ALBUM_NAME'	=> $picrow[$j]['album_name'],
 					'POSTER'		=> get_username_string('full', $picrow[$j]['image_user_id'], ($picrow[$j]['image_user_id'] <> ANONYMOUS) ? $picrow[$j]['image_username'] : $user->lang['GUEST'], $picrow[$j]['image_user_colour']),
 					'TIME'			=> $user->format_date($picrow[$j]['image_time']),

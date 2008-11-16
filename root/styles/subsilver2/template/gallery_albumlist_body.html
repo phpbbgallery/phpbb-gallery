@@ -38,13 +38,11 @@
 			</td>
 			<td class="row2" align="center"><p class="topicdetails">{albumrow.IMAGES} <!-- IF albumrow.UNAPPROVED_IMAGES --> + <span style="color: red">{albumrow.UNAPPROVED_IMAGES}</span><!-- ENDIF --></p></td>
 			<td class="row2" align="center" nowrap="nowrap">
-				<!-- IF DISP_FAKE_THUMB and albumrow.U_LAST_THUMB --><span style="float: left; padding-right: 5px;"><a href="{albumrow.U_LAST_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->><img src="{albumrow.U_LAST_THUMB}" alt="{albumrow.LAST_IMAGE_NAME}" style="max-width: {FAKE_THUMB_SIZE}px; max-height: {FAKE_THUMB_SIZE}px;" /></a></span><!-- ENDIF -->
 				<!-- IF albumrow.LAST_IMAGE_TIME -->
-					<div style="overflow: hidden;"><p class="topicdetails"><a href="{albumrow.U_LAST_IMAGE_PAGE}" style="font-weight: bold;" title="{albumrow.LAST_IMAGE_NAME_FULL}">{albumrow.LAST_IMAGE_NAME}</a></p></div>
+					<!-- IF albumrow.UC_FAKE_THUMBNAIL --><span style="float: left; text-align: center; width: {FAKE_THUMB_SIZE}px; padding-right: 5px;">{albumrow.UC_FAKE_THUMBNAIL}</span><!-- ENDIF -->
+					<p class="topicdetails">{albumrow.UC_IMAGE_NAME}</p>
 					<p class="topicdetails">{albumrow.LAST_IMAGE_TIME}</p>
-					<p class="topicdetails">{albumrow.LAST_USER_FULL}
-						<a href="{albumrow.U_LAST_IMAGE}">{LAST_POST_IMG}</a>
-					</p>
+					<p class="topicdetails">{albumrow.LAST_USER_FULL} {albumrow.UC_LASTIMAGE_ICON}</p>
 				<!-- ELSE -->
 					<p class="topicdetails">{L_NO_IMAGES}</p>
 				<!-- ENDIF -->

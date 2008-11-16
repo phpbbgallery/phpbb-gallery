@@ -48,6 +48,7 @@
         <date>YYYY-MM-DD</date>
         <rev-version>0.4.0</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Add] Report #345: Link configuration for thumbnails/image_names/lastimage-icon]]></change>
           <change><![CDATA[[Add] Report #356: Add BBCode-Buttons and smilies (subsilver2)]]></change>
 
           <change><![CDATA[[Change] Report #349: Lytebox-Update from 3.20 to 3.22]]></change>

@@ -35,11 +35,7 @@ function toggleElement(oElement)
 			<table width="100%" cellpadding="2" cellspacing="5" border="0" class="forumline">
 				<tr>
 					<td align="center" class="row1" style="height: {S_THUMBNAIL_SIZE}px;">
-					<span class="genmed">
-						<a href="{recent.image.U_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->>
-							<img src="{recent.image.U_THUMBNAIL}" alt="{recent.image.IMAGE_NAME}" title="{recent.image.IMAGE_NAME}" />
-						</a>
-					</span>
+					<span class="genmed">{recent.image.UC_THUMBNAIL}</span>
 					</td>
 				</tr>
 				<tr>
@@ -47,7 +43,7 @@ function toggleElement(oElement)
 					<div class="gensmall" style="overflow: hidden;">
 					<!-- IF recent.image.S_UNAPPROVED and recent.image.U_STATUS --><a style="font-weight: bold;" class="reported-images-number" href="{recent.image.U_STATUS}">{recent.image.L_STATUS}</a><br /><br /><!-- ENDIF -->
 					<!-- IF recent.image.S_REPORTED and recent.image.U_REPORT --><a style="font-weight: bold;" class="reported-images-number" href="{recent.image.U_REPORT}">{L_READ_REPORT}</a><br /><br /><!-- ENDIF -->
-						<!-- IF recent.image.IMAGE_NAME -->{L_IMAGE_NAME}: <a href="{recent.image.U_IMAGE_PAGE}" style="font-weight: bold;" title="{recent.image.IMAGE_NAME_FULL}">{recent.image.IMAGE_NAME}</a><br /><!-- ENDIF -->
+						<!-- IF recent.image.UC_IMAGE_NAME -->{L_IMAGE_NAME}: {recent.image.UC_IMAGE_NAME}<br /><!-- ENDIF -->
 						<!-- IF recent.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{recent.image.U_ALBUM}" style="font-weight: bold;">{recent.image.ALBUM_NAME}</a><br /><!-- ENDIF -->
 						<!-- IF recent.image.POSTER -->{L_POSTER}: {recent.image.POSTER}<br /><!-- ENDIF -->
 						<!-- IF recent.image.TIME -->{L_POSTED}: {recent.image.TIME}<br /><!-- ENDIF -->
@@ -108,11 +104,7 @@ function toggleElement(oElement)
 			<table width="100%" cellpadding="2" cellspacing="5" border="0" class="forumline">
 				<tr>
 					<td align="center" class="row1" style="height: {S_THUMBNAIL_SIZE}px;">
-					<span class="genmed">
-						<a href="{random.image.U_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->>
-							<img src="{random.image.U_THUMBNAIL}" alt="{random.image.IMAGE_NAME}" title="{random.image.IMAGE_NAME}" />
-						</a>
-					</span>
+					<span class="genmed">{random.image.UC_THUMBNAIL}</span>
 					</td>
 				</tr>
 				<tr>
@@ -120,7 +112,7 @@ function toggleElement(oElement)
 					<div class="gensmall" style="overflow: hidden;">
 					<!-- IF random.image.S_UNAPPROVED and random.image.U_STATUS --><a style="font-weight: bold;" class="reported-images-number" href="{random.image.U_STATUS}">{random.image.L_STATUS}</a><br /><br /><!-- ENDIF -->
 					<!-- IF random.image.S_REPORTED and random.image.U_REPORT --><a style="font-weight: bold;" class="reported-images-number" href="{random.image.U_REPORT}">{L_READ_REPORT}</a><br /><br /><!-- ENDIF -->
-						<!-- IF random.image.IMAGE_NAME -->{L_IMAGE_NAME}: <a href="{random.image.U_IMAGE_PAGE}" style="font-weight: bold;" title="{random.image.IMAGE_NAME_FULL}">{random.image.IMAGE_NAME}</a><br /><!-- ENDIF -->
+						<!-- IF random.image.UC_IMAGE_NAME -->{L_IMAGE_NAME}: {random.image.UC_IMAGE_NAME}<br /><!-- ENDIF -->
 						<!-- IF random.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{random.image.U_ALBUM}" style="font-weight: bold;">{random.image.ALBUM_NAME}</a><br /><!-- ENDIF -->
 						<!-- IF random.image.POSTER -->{L_POSTER}: {random.image.POSTER}<br /><!-- ENDIF -->
 						<!-- IF random.image.TIME -->{L_POSTED}: {random.image.TIME}<br /><!-- ENDIF -->

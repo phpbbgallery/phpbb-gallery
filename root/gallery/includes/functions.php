@@ -567,4 +567,58 @@ function get_album_branch($branch_user_id, $album_id, $type = 'all', $order = 'd
 	return $rows;
 }
 
+/**
+* Generate link to image
+*/
+function generate_image_link($content, $mode, $image_id, $image_name, $album_id)
+{
+	global $phpbb_root_path, $phpEx, $user, $gallery_root_path, $album_config;
+
+	$image_page_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id");
+	$image_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "album_id=$album_id&amp;image_id=$image_id");
+	$thumbnail_url = append_sid("{$phpbb_root_path}{$gallery_root_path}thumbnail.$phpEx", "album_id=$album_id&amp;image_id=$image_id");
+	switch ($content)
+	{
+		case 'image_name':
+			$shorten_image_name = (utf8_strlen(htmlspecialchars_decode($image_name)) > $album_config['shorted_imagenames'] + 3 )? (utf8_substr(htmlspecialchars_decode($image_name), 0, $album_config['shorted_imagenames']) . '...') : ($image_name);
+			$content = '<span style="font-weight: bold;">' . $shorten_image_name . '</span>';
+		break;
+		case 'thumbnail':
+			$content = '<img src="{U_THUMBNAIL}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" />';
+			$content = str_replace(array('{U_THUMBNAIL}', '{IMAGE_NAME}'), array($thumbnail_url, $image_name), $content);
+		break;
+		case 'fake_thumbnail':
+			$content = '<img src="{U_THUMBNAIL}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-width: {FAKE_THUMB_SIZE}px; max-height: {FAKE_THUMB_SIZE}px;" />';
+			$content = str_replace(array('{U_THUMBNAIL}', '{IMAGE_NAME}', '{FAKE_THUMB_SIZE}'), array($thumbnail_url, $image_name, $album_config['fake_thumb_size']), $content);
+		break;
+		case 'lastimage_icon':
+			$content = $user->img('icon_topic_latest', 'VIEW_LATEST_POST');
+		break;
+	}
+	switch ($mode)
+	{
+		case 'highslide':
+			$url = $image_url;
+			$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" class="highslide" onclick="return hs.expand(this)">{CONTENT}</a>';
+		break;
+		case 'lytebox':
+			$url = $image_url;
+			$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" rel="lytebox" class="image-resize">{CONTENT}</a>';
+		break;
+		case 'image_page':
+			$url = $image_page_url;
+			$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}">{CONTENT}</a>';
+		break;
+		case 'image':
+			$url = $image_url;
+			$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}">{CONTENT}</a>';
+		break;
+		case 'none':
+			$url = $image_page_url;
+			$tpl = '{CONTENT}';
+		break;
+	}
+	return str_replace(array('{IMAGE_URL}', '{IMAGE_NAME}', '{CONTENT}'), array($url, $image_name, $content), $tpl);
+}
+
 ?>

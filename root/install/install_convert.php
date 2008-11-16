@@ -326,9 +326,9 @@ class install_convert extends module
 		set_gallery_config('description_length', 1024);
 		set_gallery_config('allow_rates', 1);
 		set_gallery_config('allow_comments', 1);
-		set_gallery_config('link_thumbnail', 1);
-		set_gallery_config('link_image_name', 1);
-		set_gallery_config('link_image_icon', 1);
+		set_gallery_config('link_thumbnail', 'lytebox');
+		set_gallery_config('link_image_name', 'image_page');
+		set_gallery_config('link_image_icon', 'image_page');
 
 		$convert_prefix = request_var('convert_prefix', '');
 		$template->assign_vars(array(
