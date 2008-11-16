@@ -91,7 +91,7 @@ class install_convert_ts extends module
 					'TITLE'		=> $user->lang['INSTALL_CONGRATS'],
 					'BODY'		=> sprintf($user->lang['CONVERT_COMPLETE_EXPLAIN'], NEWEST_PG_VERSION),
 					'L_SUBMIT'	=> $user->lang['GOTO_GALLERY'],
-					'U_ACTION'	=> append_sid($phpbb_root_path . 'gallery/index.' . $phpEx),
+					'U_ACTION'	=> append_sid($phpbb_root_path . GALLERY_ROOT_PATH . 'index.' . $phpEx),
 				));
 
 
@@ -149,7 +149,7 @@ class install_convert_ts extends module
 			'LEGEND_EXPLAIN'	=> $user->lang['FILES_REQUIRED_EXPLAIN'],
 		));
 
-		$directories = array('gallery/import/', 'gallery/upload/', 'gallery/upload/cache/');
+		$directories = array(GALLERY_ROOT_PATH . 'import/', GALLERY_UPLOAD_PATH, GALLERY_CACHE_PATH);
 
 		umask(0);
 
@@ -333,7 +333,7 @@ class install_convert_ts extends module
 		set_gallery_config('comment', '1');
 		set_gallery_config('gd_version', '2');
 		set_gallery_config('watermark_images', 1);
-		set_gallery_config('watermark_source', 'gallery/mark.png');
+		set_gallery_config('watermark_source', GALLERY_ROOT_PATH . 'mark.png');
 		set_gallery_config('preview_rsz_height', 600);
 		set_gallery_config('preview_rsz_width', 800);
 		set_gallery_config('upload_images', 10);
