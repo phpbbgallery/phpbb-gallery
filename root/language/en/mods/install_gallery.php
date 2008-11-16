@@ -89,4 +89,8 @@ $lang = array_merge($lang, array(
 	'VERSION_NOT_SUPPORTED'		=> 'Sorry, but your updates from < 0.2.0 are not supported from this install-version.',
 ));
 
+$lang = array_merge($lang, array(
+	'MISSING_CONSTANTS'			=> 'Before you can run the install-script, you need to upload your edited files, especially the includes/constants.php.',
+));
+
 ?>

@@ -76,6 +76,7 @@
         <date>2008-11-09</date>
         <rev-version>0.4.0-RC3</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Add] Report #357: Remind users on editing the includes/constants.php]]></change>
           <change><![CDATA[[Add] Report #343: Upload-Link in the UCP]]></change>
           <change><![CDATA[[Add] Unreported: Jumpbox to the image_page.php]]></change>
           <change><![CDATA[[Add] Unreported: Display message after successful resync in the ACP]]></change>

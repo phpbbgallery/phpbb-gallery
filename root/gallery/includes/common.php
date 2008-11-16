@@ -31,11 +31,6 @@ while ($row = $db->sql_fetchrow($result))
 $db->sql_freeresult($result);
 
 $user->add_lang('mods/info_acp_gallery');
-// Disable gallery if the install/ directory is still present
-if (file_exists($phpbb_root_path . 'install'))
-{
-	trigger_error('REMOVE_GALLERY_INSTALL');
-}
 
 $template->assign_vars(array(
 	'S_GALLERY_HIGHSLIDE_JS' => file_exists($phpbb_root_path . 'styles/' . $user->theme['template_path'] . '/theme/highslide/highslide-full.js'),

@@ -14,7 +14,7 @@
 define('IN_PHPBB', true);
 define('IN_INSTALL', true);
 
-define('NEWEST_PG_VERSION', '0.4.0-RC3');
+define('NEWEST_PG_VERSION', '0.4.0');
 
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
@@ -32,6 +32,11 @@ $user->setup();
 
 $user->add_lang('install');
 $user->add_lang('mods/install_gallery');
+
+if (!defined('GALLERY_ROOT_PATH'))
+{
+	trigger_error('MISSING_CONSTANTS');
+}
 
 //need some module-names
 $user->add_lang('acp/common');

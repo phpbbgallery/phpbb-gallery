@@ -89,4 +89,8 @@ $lang = array_merge($lang, array(
 	'VERSION_NOT_SUPPORTED'		=> 'Leider konnte das Update-Schema für Versionen < 0.2.0 nicht übernommen werden.',
 ));
 
+$lang = array_merge($lang, array(
+	'MISSING_CONSTANTS'			=> 'Bevor du das Installations-Skript aufrufen kannst, musst du deine geänderten Dateien hochladen, insbesondere die includes/constants.php.',
+));
+
 ?>
