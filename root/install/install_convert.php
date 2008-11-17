@@ -329,6 +329,7 @@ class install_convert extends module
 		set_gallery_config('link_thumbnail', 'lytebox');
 		set_gallery_config('link_image_name', 'image_page');
 		set_gallery_config('link_image_icon', 'image_page');
+		set_gallery_config('resize_images', 1);
 
 		$convert_prefix = request_var('convert_prefix', '');
 		$template->assign_vars(array(

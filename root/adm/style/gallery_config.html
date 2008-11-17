@@ -73,6 +73,10 @@
 			<dd><input class="post" type="text" maxlength="9" size="9" name="max_height" value="{MAX_HEIGHT}" /></dd>
 		</dl>
 		<dl>
+			<dt><label for="resize_images">{L_RESIZE_IMAGES}</label></dt>
+			<dd><input type="radio" class="radio"<!-- IF S_RESIZE_IMAGES --> checked="checked"<!-- ENDIF --> name="resize_images" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_RESIZE_IMAGES --> checked="checked"<!-- ENDIF --> name="resize_images" value="0" />{L_NO}</dd>
+		</dl>
+		<dl>
 			<dt><label for="preview_rsz_width">{L_RSZ_WIDTH}</label></dt>
 			<dd><input class="post" type="text" maxlength="9" size="9" name="preview_rsz_width" value="{RSZ_WIDTH}" /></dd>
 		</dl>

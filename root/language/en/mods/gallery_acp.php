@@ -322,6 +322,8 @@ $lang = array_merge($lang, array(
 
 // Added for 0.4.0
 $lang = array_merge($lang, array(
+	'RESIZE_IMAGES'					=> 'Resize bigger images',
+
 	'UC_IMAGE_NAME'					=> 'Imagename',
 	'UC_IMAGE_ICON'					=> 'Lastimage icon',
 	'UC_LINK_CONFIG'				=> 'Link configuration',

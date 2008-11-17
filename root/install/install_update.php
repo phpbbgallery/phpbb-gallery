@@ -691,6 +691,7 @@ class install_update extends module
 					$db->sql_query($sql);
 				}
 				$db->sql_freeresult($result);
+				set_gallery_config('resize_images', 1);
 
 			case '0.4.0':
 

@@ -694,6 +694,7 @@ class acp_gallery
 			'MAX_FILE_SIZE'					=> $new['max_file_size'],
 			'MAX_WIDTH'						=> $new['max_width'],
 			'MAX_HEIGHT'					=> $new['max_height'],
+			'S_RESIZE_IMAGES'				=> $new['resize_images'],
 			'RSZ_WIDTH'						=> $new['preview_rsz_width'],
 			'RSZ_HEIGHT'					=> $new['preview_rsz_height'],
 			'S_JPG_ALLOWED'					=> $new['jpg_allowed'],

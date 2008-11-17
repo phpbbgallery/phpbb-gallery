@@ -296,8 +296,6 @@ $template->assign_vars(array(
 
 // Build custom bbcodes array
 display_custom_bbcodes();
-//REMOVE	$message_parser->parse($post_data['enable_bbcode'], ($config['allow_post_links']) ? $post_data['enable_urls'] : false, $post_data['enable_smilies'], $img_status, $flash_status, $quote_status, $config['allow_post_links']);
-
 
 // Build smilies array
 generate_smilies('inline', 0);
@@ -395,13 +393,9 @@ switch ($mode)
 								$image_data['thumbnail_size']	= $_FILES['thumbnail']['size'][$i];
 								$image_data['thumbnail_tmp']	= $_FILES['thumbnail']['tmp_name'][$i];
 							}
-							if (
-								((!$image_data['image_size']) || ($image_data['image_size'] > $album_config['max_file_size']))
-								||
-								(($album_config['gd_version'] == 0) && (!$image_data['thumbnail_size'] || ($image_data['thumbnail_size'] > $album_config['max_file_size'])))
-							)
+							// Watch for 10-times max-file-sizewe will watch for the real size after resize, if enabled
+							if ((!$image_data['image_size']) || ($image_data['image_size'] > (10 * $album_config['max_file_size'])))
 							{
-								//$error_count[] = 'BAD_UPLOAD_FILE_SIZE';
 								trigger_error('BAD_UPLOAD_FILE_SIZE');
 							}
 							switch ($image_data['image_type'])
@@ -470,11 +464,7 @@ switch ($mode)
 							{
 								$image_data['filename'] = md5(uniqid(rand())) . $image_data['image_type2'];
 							}
-							while(file_exists(GALLERY_UPLOAD_PATH . $image_data['filename']));
-							if ($album_config['gd_version'] == 0)
-							{
-								$image_data['thumbnail'] = $image_data['filename'];
-							}
+							while(file_exists($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']));
 
 							$ini_val = ( @phpversion() >= '4.0.0' ) ? 'ini_get' : 'get_cfg_var';
 							if (@$ini_val('open_basedir') <> '')
@@ -491,61 +481,84 @@ switch ($mode)
 							}
 							$move_file($image_data['image_tmp'], $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
 							@chmod($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename'], 0777);
-							if ($album_config['gd_version'] == 0)
-							{
-								$move_file($image_data['thumbnail_tmp'], $phpbb_root_path . GALLERY_CACHE_PATH . $image_data['thumbnail']);
-								@chmod($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['thumbnail'], 0777);
-							}
 
 							$image_size = getimagesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
 							$image_data['width'] = $image_size[0];
 							$image_data['height'] = $image_size[1];
-							if (($image_data['width'] > $album_config['max_width']) || ($image_data['height'] > $album_config['max_height']))
+
+							switch ($image_data['image_type2']) 
 							{
-								@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
-								if ($album_config['gd_version'] == 0)
-								{
-									@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['thumbnail']);
-								}
-								trigger_error('UPLOAD_IMAGE_SIZE_TOO_BIG');
+								case '.jpg': 
+									$read_function = 'imagecreatefromjpeg'; 
+								break; 
+								case '.png': 
+									$read_function = 'imagecreatefrompng'; 
+								break; 
+								case '.gif': 
+									$read_function = 'imagecreatefromgif'; 
+								break;
 							}
 
-							if ($album_config['gd_version'] == 0)
+							$src = $read_function($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
+							if (($image_data['width'] > $album_config['max_width']) || ($image_data['height'] > $album_config['max_height']))
 							{
-								$thumbnail_size = getimagesize($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['thumbnail']);
-								$image_data['thumbnail_width'] = $thumbnail_size[0];
-								$image_data['thumbnail_height'] = $thumbnail_size[1];
-								if (($image_data['thumbnail_width'] > $album_config['thumbnail_size']) || ($image_data['thumbnail_height'] > $album_config['thumbnail_size']))
+								/**
+								* Resize overside images
+								*/
+								if ($album_config['resize_images'])
+								{
+									// Resize it
+									if (($image_data['width'] / $album_config['max_width']) > ($image_data['height'] / $album_config['max_height']))
+									{
+										$thumbnail_width	= $album_config['max_width'];
+										$thumbnail_height	= $album_config['max_height'] * (($image_data['height'] / $album_config['max_height']) / ($image_data['width'] / $album_config['max_width']));
+									}
+									else
+									{
+										$thumbnail_height	= $album_config['max_height'];
+										$thumbnail_width	= $album_config['max_width'] * (($image_data['width'] / $album_config['max_width']) / ($image_data['height'] / $album_config['max_height']));
+									}
+									$thumbnail = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
+									$resize_function = ($album_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
+									$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $image_data['width'], $image_data['height']);
+									switch ($image_data['image_type2'])
+									{
+										case '.jpg':
+											@imagejpeg($thumbnail, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename'], 100);
+										break;
+
+										case '.png':
+											@imagepng($thumbnail, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
+										break;
+
+										case '.gif':
+											@imagegif($thumbnail, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
+										break;
+									}
+									@chmod($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['thumbnail'], 0777);
+								}
+								else
 								{
 									@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
-									@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['thumbnail']);
-									trigger_error('UPLOAD_THUMBNAIL_SIZE_TOO_BIG');
+									trigger_error('UPLOAD_IMAGE_SIZE_TOO_BIG');
 								}
+								$image_data['width'] = $thumbnail_width;
+								$image_data['height'] = $thumbnail_height;
+							}
+							if (filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']) > $album_config['max_file_size'])
+							{
+								@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
+								trigger_error('BAD_UPLOAD_FILE_SIZE');
 							}
 
 							// This image is okay, we can cache its thumbnail now
 							if (($album_config['thumbnail_cache']) && ($album_config['gd_version'] > 0)) 
 							{
-								$gd_errored = FALSE; 
-								switch ($image_data['image_type2']) 
-								{
-									case '.jpg': 
-										$read_function = 'imagecreatefromjpeg'; 
-									break; 
-
-									case '.png': 
-										$read_function = 'imagecreatefrompng'; 
-									break; 
-
-									case '.gif': 
-										$read_function = 'imagecreatefromgif'; 
-									break;
-								}
-
+								$gd_errored = false;
 								$src = $read_function($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
 								if (!$src)
 								{
-									$gd_errored = TRUE;
+									$gd_errored = true;
 									$image_data['thumbnail'] = '';
 								}
 								else if (($image_data['width'] > $album_config['thumbnail_size']) || ($image_data['height'] > $album_config['thumbnail_size']))
