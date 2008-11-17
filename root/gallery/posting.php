@@ -235,7 +235,7 @@ switch ($mode)
 						trigger_error('NOT_AUTHORISED');
 					}
 				}
-				else if ((($comment_data['comment_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_comment', $album_id)) || !$user->data['is_registered'])
+				else if ((($comment_data['comment_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_comments', $album_id)) || !$user->data['is_registered'])
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
@@ -255,7 +255,7 @@ switch ($mode)
 						trigger_error('NOT_AUTHORISED');
 					}
 				}
-				else if ((($comment_data['comment_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_comment', $album_id)) || !$user->data['is_registered'])
+				else if ((($comment_data['comment_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_comments', $album_id)) || !$user->data['is_registered'])
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
@@ -738,9 +738,9 @@ switch ($mode)
 					}
 
 
-					// --------------------------------
-					// Update the DB
-					// --------------------------------
+					/**
+					* Update the DB
+					*/
 					$sql_ary = array(
 						'image_name'				=> $image_name,
 						'image_desc'				=> $message_parser->message,
@@ -800,9 +800,9 @@ switch ($mode)
 						$error = $user->lang['MISSING_REPORT_REASON'];
 						$submit = false;
 					}
-					// --------------------------------
-					// Update the DB
-					// --------------------------------
+					/**
+					* Update the DB
+					*/
 					$sql_ary = array(
 						'report_album_id'			=> $album_id,
 						'report_image_id'			=> $image_id,
@@ -1102,7 +1102,7 @@ switch ($mode)
 						'comment_uid'			=> $message_parser->bbcode_uid,
 						'comment_bitfield'		=> $message_parser->bbcode_bitfield,
 					);
-					if ((!$error) && (($sql_ary['comment'] != '') && $rate_point))
+					if ((!$error) && ($sql_ary['comment'] != ''))
 					{
 						$db->sql_query('INSERT INTO ' . GALLERY_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 						$newest_comment = $db->sql_nextid();

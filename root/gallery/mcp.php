@@ -31,6 +31,7 @@ $image_id = request_var('image_id', 0);
 $album_id = request_var('album_id', 0);
 include_once("{$phpbb_root_path}{$gallery_root_path}mcp/mcp_functions.$phpEx");
 $mode = request_var('mode', 'album');
+$action = request_var('action', '');
 
 if ($mode == 'whois' && $auth->acl_get('a_') && request_var('ip', ''))
 {
@@ -65,10 +66,28 @@ if($image_id)
 	$album_id = $image_data['image_album_id'];
 }
 
-if (!gallery_acl_check('a_moderate', $album_id))
+/**
+* Check for all the requested permissions
+*/
+if (!gallery_acl_check('m_', $album_id))
 {
 	meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"));
-	trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
+	trigger_error('NOT_AUTHORISED');
+}
+if ((substr($mode, 0, 7) == 'report_') && !gallery_acl_check('m_report', $album_id))
+{
+	meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"));
+	trigger_error('NOT_AUTHORISED');
+}
+if ((substr($mode, 0, 6) == 'queue_') && !gallery_acl_check('m_status', $album_id))
+{
+	meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"));
+	trigger_error('NOT_AUTHORISED');
+}
+if (($action == 'images_move') && !gallery_acl_check('m_move', $album_id))
+{
+	meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"));
+	trigger_error('NOT_AUTHORISED');
 }
 
 $sql = 'SELECT *
@@ -97,7 +116,6 @@ $template->assign_vars(array(
 ));
 
 //some other basic-variables
-$action = request_var('action', '');
 $option_id = request_var('option_id', 0);
 $submit = (isset($_POST['submit'])) ? true : false;
 $action = request_var('action', '');
@@ -178,7 +196,7 @@ if ($action && $image_id_ary)
 					'image_status'			=> 1,
 				);
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-					WHERE ' . $db->sql_in_set('image_id', $image_id_ary) . ' AND image_user_id <> ' . $user->data['user_id'];
+					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
 				$db->sql_query($sql);
 				$success = true;
 			}
@@ -305,7 +323,7 @@ if ($action && $image_id_ary)
 // <- if ($action && $image_id_ary)
 }
 
-
+$sort_by_sql = array('image_time', 'image_name', 'image_username', 'image_view_count', 'image_rate_avg', 'image_comments', 'image_last_comment');
 switch ($mode)
 {
 	case 'album':

@@ -13,6 +13,7 @@ if (!defined('IN_PHPBB'))
 {
 	die('Hacking attempt');
 }
+
 if ($mode == 'queue_details')
 {
 	$sql = 'SELECT *
@@ -28,13 +29,19 @@ if ($mode == 'queue_details')
 }
 if ($mode == 'report_details')
 {
+	$m_status = ' AND i.image_status = 1';
+	if (gallery_acl_check('m_status', $album_id))
+	{
+		$m_status = '';
+	}
 	$sql = 'SELECT r.*, u.username reporter_name, u.user_colour reporter_colour, i.*
 		FROM ' . GALLERY_REPORTS_TABLE . " r
 		LEFT JOIN " . USERS_TABLE . " u
 			ON r.reporter_id = u.user_id
 		LEFT JOIN " . GALLERY_IMAGES_TABLE . " i
 			ON r.report_image_id = i.image_id
-		WHERE r.report_id = $option_id";
+		WHERE r.report_id = $option_id
+			$m_status";
 	$result = $db->sql_query_limit($sql, 1);
 	$row = $db->sql_fetchrow($result);
 	$template->assign_vars(array(

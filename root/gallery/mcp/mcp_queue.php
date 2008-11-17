@@ -20,6 +20,11 @@ $sort_dir			= (request_var('sd', 'DESC') == 'DESC') ? 'DESC' : 'ASC';
 $images_per_page	= $config['topics_per_page'];
 $count_images		= 0;
 
+if (!in_array($sort_key, $sort_by_sql))
+{
+	$sort_key = 'image_time';
+}
+
 $where_case = '';
 if ($mode == 'queue_unapproved')
 {
@@ -38,7 +43,7 @@ $sql = 'SELECT image_id
 	WHERE image_album_id = $album_id
 	$where_case";
 $result = $db->sql_query($sql);
-while( $row = $db->sql_fetchrow($result) )
+while ($row = $db->sql_fetchrow($result))
 {
 	$count_images++;
 }
@@ -47,9 +52,9 @@ $sql = 'SELECT image_time, image_name, image_id, image_user_id, image_username, 
 	FROM ' . GALLERY_IMAGES_TABLE . "
 	WHERE image_album_id = $album_id
 	$where_case
-	ORDER BY $sort_key $sort_dir";//REMOVE
+	ORDER BY $sort_key $sort_dir";
 $result = $db->sql_query_limit($sql, $images_per_page, $start);
-while( $row = $db->sql_fetchrow($result) )
+while ($row = $db->sql_fetchrow($result))
 {
 	$template->assign_block_vars('image_row', array(
 		'THUMBNAIL'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}thumbnail.$phpEx" , 'album_id=' . $album_id .  '&amp;image_id=' . $row['image_id']),

@@ -20,6 +20,17 @@ $sort_dir			= (request_var('sd', 'DESC') == 'DESC') ? 'DESC' : 'ASC';
 $images_per_page	= $config['topics_per_page'];
 $count_images		= 0;
 
+if (!in_array($sort_key, $sort_by_sql))
+{
+	$sort_key = 'image_time';
+}
+
+$m_status = ' AND i.image_status = 1';
+if (gallery_acl_check('m_status', $album_id))
+{
+	$m_status = '';
+}
+
 if ($mode == 'report_open')
 {
 	$report_status = 1;
@@ -33,7 +44,8 @@ $sql = 'SELECT r.*, i.*
 	LEFT JOIN " . GALLERY_IMAGES_TABLE . " i
 		ON r.report_image_id = i.image_id
 	WHERE r.report_album_id = $album_id
-		AND r.report_status = $report_status";
+		AND r.report_status = $report_status
+		$m_status";
 $result = $db->sql_query($sql);
 while( $row = $db->sql_fetchrow($result) )
 {
@@ -50,7 +62,8 @@ $sql = 'SELECT r.*, u.username reporter_name, u.user_colour reporter_colour, m.u
 		ON r.report_image_id = i.image_id
 	WHERE r.report_album_id = $album_id
 		AND r.report_status = $report_status
-	ORDER BY $sort_key $sort_dir";//REMOVE
+		$m_status
+	ORDER BY $sort_key $sort_dir";
 $result = $db->sql_query_limit($sql, $images_per_page, $start);
 while( $row = $db->sql_fetchrow($result) )
 {

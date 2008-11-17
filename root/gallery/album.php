@@ -79,8 +79,7 @@ if ($album_id <> 0)
 }
 /*if ($album_data['album_type'])
 { we just do this, when we have images */
-	//REMOVE @to_do for 0.4.0
-	if (gallery_acl_check('a_moderate', $album_id))
+	if (gallery_acl_check('m_', $album_id))
 	{
 		$template->assign_vars(array(
 			'U_MCP'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx?album_id=$album_id"),
