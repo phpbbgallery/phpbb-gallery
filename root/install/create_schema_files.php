@@ -1022,6 +1022,7 @@ function get_schema_struct()
 			'm_delete'		=> array('UINT:3', 0),
 			'm_edit'		=> array('UINT:3', 0),
 			'm_move'		=> array('UINT:3', 0),
+			'm_report'		=> array('UINT:3', 0),
 			'm_status'		=> array('UINT:3', 0),
 			'album_count'	=> array('UINT', 0),
 		),

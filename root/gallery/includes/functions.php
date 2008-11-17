@@ -220,7 +220,7 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 		$list = false;
 		if ($row['album_user_id'] != $last_a_u_id)
 		{
-			if (!$last_a_u_id && gallery_acl_check('i_view', PERSONAL_GALLERY_PERMISSIONS) && !$ignore_personals)
+			if (!$last_a_u_id && gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS) && !$ignore_personals)
 			{
 				$album_list .= '<option disabled="disabled" class="disabled-option">' . $user->lang['PERSONAL_ALBUMS'] . '</option>';
 			}
@@ -246,7 +246,7 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 		((is_array($ignore_id) && in_array($row['album_id'], $ignore_id)) || $row['album_id'] == $ignore_id)
 		||
 		//need upload permissions (for moving)
-		(($requested_permission == 'i_upload') && (($row['album_type'] == G_ALBUM_CAT) || (!gallery_acl_check('i_upload', $row['album_id'], $row['album_user_id']) && !gallery_acl_check('a_moderate', $row['album_id'], $row['album_user_id'])))))
+		(($requested_permission == 'm_move') && (($row['album_type'] == G_ALBUM_CAT) || (!gallery_acl_check('i_upload', $row['album_id'], $row['album_user_id']) && !gallery_acl_check('m_move', $row['album_id'], $row['album_user_id'])))))
 		{
 			$disabled = true;
 		}
@@ -257,7 +257,7 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 		}
 		else if (!$row['album_user_id'])
 		{
-			if (gallery_acl_check('i_view', $row['album_id'], $row['album_user_id']))
+			if (gallery_acl_check('a_list', $row['album_id'], $row['album_user_id']))
 			{
 				$list = true;
 			}
@@ -270,7 +270,7 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 				if (!$c_access_own)
 				{
 					$c_access_own = true;
-					$access_own = gallery_acl_check('i_view', OWN_GALLERY_PERMISSIONS);
+					$access_own = gallery_acl_check('a_list', OWN_GALLERY_PERMISSIONS);
 				}
 				$list = $access_own;
 			}
@@ -279,7 +279,7 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 				if (!$c_access_personal)
 				{
 					$c_access_personal = true;
-					$access_personal = gallery_acl_check('i_view', PERSONAL_GALLERY_PERMISSIONS);
+					$access_personal = gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS);
 				}
 				$list = $access_personal;
 			}

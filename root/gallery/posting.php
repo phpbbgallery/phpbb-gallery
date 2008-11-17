@@ -101,7 +101,7 @@ switch ($mode)
 					meta_refresh(3, $album_backlink);
 					trigger_error('ALBUM_IS_CATEGORY');
 				}
-				if (!gallery_acl_check('i_view', $album_id))
+				if (!gallery_acl_check('i_upload', $album_id))
 				{
 					if (!$user->data['is_registered'])
 					{
@@ -115,7 +115,7 @@ switch ($mode)
 				}
 			break;
 			case 'edit':
-				if ((!gallery_acl_check('i_edit', $album_id)) || (($image_data['image_user_id'] <> $user->data['user_id']) && !gallery_acl_check('a_moderate', $album_id)))
+				if ((!gallery_acl_check('i_edit', $album_id)) || (($image_data['image_user_id'] <> $user->data['user_id']) && !gallery_acl_check('m_edit', $album_id)))
 				{
 					if (!$user->data['is_registered'])
 					{
@@ -127,7 +127,7 @@ switch ($mode)
 						trigger_error('NOT_AUTHORISED');
 					}
 				}
-				else if (!gallery_acl_check('a_moderate', $album_id) && ($image_data['image_status'] != 1))
+				else if (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != 1))
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
@@ -146,14 +146,14 @@ switch ($mode)
 						trigger_error('NOT_AUTHORISED');
 					}
 				}
-				else if (!gallery_acl_check('a_moderate', $album_id) && ($image_data['image_status'] != 1))
+				else if (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != 1))
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
 				}
 			break;
 			case 'delete':
-				if ((!gallery_acl_check('i_delete', $album_id)) || (($image_data['image_user_id'] <> $user->data['user_id']) && !gallery_acl_check('a_moderate', $album_id)))
+				if ((!gallery_acl_check('i_delete', $album_id)) || (($image_data['image_user_id'] <> $user->data['user_id']) && !gallery_acl_check('m_delete', $album_id)))
 				{
 					if (!$user->data['is_registered'])
 					{
@@ -165,7 +165,7 @@ switch ($mode)
 						trigger_error('NOT_AUTHORISED');
 					}
 				}
-				else if (!gallery_acl_check('a_moderate', $album_id) && ($image_data['image_status'] != 1))
+				else if (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != 1))
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
@@ -195,7 +195,7 @@ switch ($mode)
 		}
 	break;
 	case 'comment':
-		if (($image_data['image_status'] != 1) && !gallery_acl_check('a_moderate', $album_id))
+		if (($image_data['image_status'] != 1) && !gallery_acl_check('m_status', $album_id))
 		{
 			trigger_error('IMAGE_LOCKED');
 		}
@@ -235,7 +235,7 @@ switch ($mode)
 						trigger_error('NOT_AUTHORISED');
 					}
 				}
-				else if ((($comment_data['comment_user_id'] != $user->data['user_id']) && ($user->data['user_type'] != USER_FOUNDER)) || !$user->data['is_registered'])
+				else if ((($comment_data['comment_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_comment', $album_id)) || !$user->data['is_registered'])
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
@@ -255,7 +255,7 @@ switch ($mode)
 						trigger_error('NOT_AUTHORISED');
 					}
 				}
-				else if ((($comment_data['comment_user_id'] != $user->data['user_id']) && ($user->data['user_type'] != USER_FOUNDER)) || !$user->data['is_registered'])
+				else if ((($comment_data['comment_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_comment', $album_id)) || !$user->data['is_registered'])
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');

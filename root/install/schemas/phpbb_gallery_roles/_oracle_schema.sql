@@ -65,6 +65,7 @@ CREATE TABLE phpbb_gallery_roles (
 	m_delete number(3) DEFAULT '0' NOT NULL,
 	m_edit number(3) DEFAULT '0' NOT NULL,
 	m_move number(3) DEFAULT '0' NOT NULL,
+	m_report number(3) DEFAULT '0' NOT NULL,
 	m_status number(3) DEFAULT '0' NOT NULL,
 	album_count number(8) DEFAULT '0' NOT NULL,
 	CONSTRAINT pk_phpbb_gallery_roles PRIMARY KEY (role_id)

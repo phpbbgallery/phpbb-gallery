@@ -88,7 +88,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			unset($right_id);
 		}
 
-		if (!gallery_acl_check('i_view', $album_id, $row['album_user_id']))
+		if (!gallery_acl_check('a_list', $album_id, $row['album_user_id']))
 		{
 			// if the user does not have permissions to list this forum, skip everything until next branch
 			$right_id = $row['right_id'];
@@ -258,7 +258,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			'ALBUM_NAME'			=> $row['album_name'],
 			'ALBUM_DESC'			=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
 			'IMAGES'				=> $row['album_images'],
-			'UNAPPROVED_IMAGES'		=> (gallery_acl_check('a_moderate', $album_id, $row['album_user_id'])) ? ($row['album_images_real'] - $row['album_images']) : 0,
+			'UNAPPROVED_IMAGES'		=> (gallery_acl_check('m_status', $album_id, $row['album_user_id'])) ? ($row['album_images_real'] - $row['album_images']) : 0,
 			'ALBUM_FOLDER_IMG'		=> $user->img($folder_image, $folder_alt),
 			'ALBUM_FOLDER_IMG_SRC'	=> $user->img($folder_image, $folder_alt, false, '', 'src'),
 			'ALBUM_FOLDER_IMG_ALT'	=> isset($user->lang[$folder_alt]) ? $user->lang[$folder_alt] : '',

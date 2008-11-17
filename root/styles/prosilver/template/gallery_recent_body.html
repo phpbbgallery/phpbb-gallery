@@ -54,7 +54,7 @@ function toggleElement(oElement)
 											<!-- IF recent.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{recent.image.U_ALBUM}" style="font-weight: bold;">{recent.image.ALBUM_NAME}</a><br /><!-- ENDIF -->
 											<!-- IF recent.image.POSTER -->{L_POSTER}: {recent.image.POSTER}<br /><!-- ENDIF -->
 											<!-- IF recent.image.TIME -->{L_POSTED}: {recent.image.TIME}<br /><!-- ENDIF -->
-											<!-- IF recent.image.VIEW -->{L_VIEWS}: {recent.image.VIEW}<br /><!-- ENDIF -->
+											<!-- IF recent.image.VIEW > -1 -->{L_VIEWS}: {recent.image.VIEW}<br /><!-- ENDIF -->
 											<!-- IF recent.image.S_RATINGS -->{L_RATING}: <a href="{recent.image.U_RATINGS}">{recent.image.S_RATINGS}</a><br /><!-- ENDIF -->
 											<!-- IF recent.image.S_COMMENTS -->{recent.image.L_COMMENTS}: <a href="{recent.image.U_COMMENTS}">{recent.image.S_COMMENTS}</a><br /><!-- ENDIF -->
 											<!-- IF recent.image.S_IP -->{L_IP}: {recent.image.S_IP} &#187; <a href="{recent.image.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a><br /><!-- ENDIF -->
@@ -130,7 +130,7 @@ function toggleElement(oElement)
 											<!-- IF random.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{random.image.U_ALBUM}" style="font-weight: bold;">{random.image.ALBUM_NAME}</a><br /><!-- ENDIF -->
 											<!-- IF random.image.POSTER -->{L_POSTER}: {random.image.POSTER}<br /><!-- ENDIF -->
 											<!-- IF random.image.TIME -->{L_POSTED}: {random.image.TIME}<br /><!-- ENDIF -->
-											<!-- IF random.image.VIEW -->{L_VIEWS}: {random.image.VIEW}<br /><!-- ENDIF -->
+											<!-- IF random.image.VIEW > -1 -->{L_VIEWS}: {random.image.VIEW}<br /><!-- ENDIF -->
 											<!-- IF random.image.S_RATINGS -->{L_RATING}: <a href="{random.image.U_RATINGS}">{random.image.S_RATINGS}</a><br /><!-- ENDIF -->
 											<!-- IF random.image.S_COMMENTS -->{random.image.L_COMMENTS}: <a href="{random.image.U_COMMENTS}">{random.image.S_COMMENTS}</a><br /><!-- ENDIF -->
 											<!-- IF random.image.S_IP -->{L_IP}: {random.image.S_IP} &#187; <a href="{random.image.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a><br /><!-- ENDIF -->

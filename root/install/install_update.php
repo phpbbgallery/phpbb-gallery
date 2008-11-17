@@ -328,6 +328,7 @@ class install_update extends module
 				nv_add_column(GALLERY_ROLES_TABLE,	'm_delete',					array('UINT:3', 0));
 				nv_add_column(GALLERY_ROLES_TABLE,	'm_edit',					array('UINT:3', 0));
 				nv_add_column(GALLERY_ROLES_TABLE,	'm_move',					array('UINT:3', 0));
+				nv_add_column(GALLERY_ROLES_TABLE,	'm_report',					array('UINT:3', 0));
 				nv_add_column(GALLERY_ROLES_TABLE,	'm_status',					array('UINT:3', 0));
 
 			case '0.4.0':
@@ -682,6 +683,7 @@ class install_update extends module
 						'm_delete'		=> $row['a_moderate'],
 						'm_edit'		=> $row['a_moderate'],
 						'm_move'		=> $row['a_moderate'],
+						'm_report'		=> $row['a_moderate'],
 						'm_status'		=> $row['a_moderate'],
 					);
 					$sql = 'UPDATE ' . GALLERY_ROLES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '

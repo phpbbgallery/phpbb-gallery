@@ -78,7 +78,7 @@ if (!gallery_acl_check('i_view', $album_id))
 // ------------------------------------
 // Check Pic Approval
 // ------------------------------------
-if (!gallery_acl_check('a_moderate', $album_id) && ($image_data['image_status'] != 1))
+if (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != 1))
 {
 	trigger_error($user->lang['NOT_AUTHORISED']);
 }

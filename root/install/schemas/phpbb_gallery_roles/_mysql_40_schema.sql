@@ -24,6 +24,7 @@ CREATE TABLE phpbb_gallery_roles (
 	m_delete int(3) UNSIGNED DEFAULT '0' NOT NULL,
 	m_edit int(3) UNSIGNED DEFAULT '0' NOT NULL,
 	m_move int(3) UNSIGNED DEFAULT '0' NOT NULL,
+	m_report int(3) UNSIGNED DEFAULT '0' NOT NULL,
 	m_status int(3) UNSIGNED DEFAULT '0' NOT NULL,
 	album_count mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	PRIMARY KEY (role_id)

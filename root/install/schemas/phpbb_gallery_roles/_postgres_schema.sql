@@ -107,6 +107,7 @@ CREATE TABLE phpbb_gallery_roles (
 	m_delete INT4 DEFAULT '0' NOT NULL CHECK (m_delete >= 0),
 	m_edit INT4 DEFAULT '0' NOT NULL CHECK (m_edit >= 0),
 	m_move INT4 DEFAULT '0' NOT NULL CHECK (m_move >= 0),
+	m_report INT4 DEFAULT '0' NOT NULL CHECK (m_report >= 0),
 	m_status INT4 DEFAULT '0' NOT NULL CHECK (m_status >= 0),
 	album_count INT4 DEFAULT '0' NOT NULL CHECK (album_count >= 0),
 	PRIMARY KEY (role_id)

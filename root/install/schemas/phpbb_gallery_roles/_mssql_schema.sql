@@ -31,6 +31,7 @@ CREATE TABLE [phpbb_gallery_roles] (
 	[m_delete] [int] DEFAULT (0) NOT NULL ,
 	[m_edit] [int] DEFAULT (0) NOT NULL ,
 	[m_move] [int] DEFAULT (0) NOT NULL ,
+	[m_report] [int] DEFAULT (0) NOT NULL ,
 	[m_status] [int] DEFAULT (0) NOT NULL ,
 	[album_count] [int] DEFAULT (0) NOT NULL 
 ) ON [PRIMARY]

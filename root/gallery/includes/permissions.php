@@ -34,9 +34,13 @@ function get_album_access_array()
 		}
 	}
 	$albums = $cache->obtain_album_list();
-	$permissions = array('i_view', 'i_upload', 'i_edit', 'i_delete', 'i_approve', 'i_lock', 'i_report', 'i_count', 'a_moderate', 'album_count');
-	$permissions = array_merge($permissions, array('i_rate'));
-	$permissions = array_merge($permissions, array('c_post', 'c_edit', 'c_delete'));
+
+	$permissions = $permission_parts['misc'] = $permission_parts['m'] = $permission_parts['c'] = $permission_parts['i'] = array();
+	$permission_parts['i'] = array('i_view', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate');
+	$permission_parts['c'] = array('c_read', 'c_post', 'c_edit', 'c_delete');
+	$permission_parts['m'] = array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status');
+	$permission_parts['misc'] = array('a_list', 'i_count', 'album_count', 'a_moderate');
+	$permissions = array_merge($permissions, $permission_parts['i'], $permission_parts['c'], $permission_parts['m'], $permission_parts['misc']);
 
 	if (!$album_access_array)
 	{

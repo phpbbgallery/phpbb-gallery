@@ -275,6 +275,7 @@ $lang = array_merge($lang, array(
 	'PERMISSION_M_DELETE'			=> 'Kann Bilder löschen',
 	'PERMISSION_M_EDIT'				=> 'Kann Bilder bearbeiten',
 	'PERMISSION_M_MOVE'				=> 'Kann Bilder verschieben',
+	'PERMISSION_M_REPORT'			=> 'Kann Meldungen bearbeiten',
 	'PERMISSION_M_STATUS'			=> 'Kann Bilder freischalten und sperren',
 
 	'PERMISSION_EMPTY'				=> 'Du hast nicht alle Berechtigungen gesetzt.',

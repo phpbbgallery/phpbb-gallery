@@ -1477,7 +1477,7 @@ class acp_gallery
 		}
 		$permission_parts['i'] = array_merge($permission_parts['i'], array('i_edit', 'i_delete', 'i_report', 'i_rate'));
 		$permission_parts['c'] = array_merge($permission_parts['c'], array('c_read', 'c_post', 'c_edit', 'c_delete'));
-		$permission_parts['m'] = array_merge($permission_parts['m'], array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_status'));
+		$permission_parts['m'] = array_merge($permission_parts['m'], array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status'));
 		$permission_parts['misc'] = array_merge($permission_parts['misc'], array('a_list'));
 		if ($perm_system != 3)
 		{
