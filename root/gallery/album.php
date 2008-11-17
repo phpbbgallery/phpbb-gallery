@@ -141,11 +141,35 @@ if ($album_id <> 0)
 			WHERE image_album_id = ' . (int) $album_id . "
 				$image_status_check
 			ORDER BY $sql_sort_order";
-		$result = $db->sql_query_limit($sql, $pics_per_page, $start);
+		if (request_var('mode', '') == 'slide_show')
+		{
+			$result = $db->sql_query($sql);
+			if (file_exists($phpbb_root_path . 'styles/' . $user->theme['template_path'] . '/theme/highslide/highslide-full.js'))
+			{
+				$trigger_message = $user->lang['SLIDE_SHOW_HIGHSLIDE'];
+				while ($row = $db->sql_fetchrow($result))
+				{
+					$picrow[] = generate_image_link('image_name', 'highslide', $row['image_id'], $row['image_name'], $row['image_album_id']);
+				}
+			}
+			else
+			{
+				$trigger_message = $user->lang['SLIDE_SHOW_START'];
+				while ($row = $db->sql_fetchrow($result))
+				{
+					$picrow[] = generate_image_link('image_name', 'lytebox_slide_show', $row['image_id'], $row['image_name'], $row['image_album_id']);
+				}
+			}
+			trigger_error($trigger_message . '<br /><br />' . implode(', ', $picrow));
+		}
+		else
+		{
+			$result = $db->sql_query_limit($sql, $pics_per_page, $start);
+		}
 
 		$picrow = array();
 
-		while( $row = $db->sql_fetchrow($result) )
+		while ($row = $db->sql_fetchrow($result))
 		{
 			$picrow[] = $row;
 		}
@@ -238,6 +262,7 @@ $template->assign_vars(array(
 										append_sid("{$phpbb_root_path}ucp.$phpEx", "i=gallery&amp;mode=manage_albums&amp;action=create&amp;parent_id=$album_id&amp;redirect=album") : '',
 	'U_EDIT_ALBUM'				=> ($album_data['album_user_id'] == $user->data['user_id']) ?
 										append_sid("{$phpbb_root_path}ucp.$phpEx", "i=gallery&amp;mode=manage_albums&amp;action=edit&amp;album_id=$album_id&amp;redirect=album") : '',
+	'U_SLIDE_SHOW'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id&amp;mode=slide_show"),
 
 	'S_THUMBNAIL_SIZE'			=> $album_config['thumbnail_size'] + 20 + (($album_config['thumbnail_info_line']) ? 16 : 0),
 	'S_COLS'					=> $album_config['cols_per_page'],

@@ -292,6 +292,10 @@ $lang = array_merge($lang, array(
 	'POST_COMMENT_RATE_IMAGE'		=> 'Kommentar schreiben und Bild bewerten',
 
 	'RATE_IMAGE'					=> 'Bild bewerten',
+
+	'SLIDE_SHOW'					=> 'Diashow',
+	'SLIDE_SHOW_HIGHSLIDE'			=> 'Um die Diashow zu starten, klicke auf einen der Bildnamen und dann auf das "play"-Icon:',
+	'SLIDE_SHOW_START'				=> 'Um die Diashow zu starten, klicke auf einen der Bildnamen:',
 ));
 
 ?>

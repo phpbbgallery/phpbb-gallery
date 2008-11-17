@@ -53,6 +53,10 @@ function toggleElement(oElement)
 		</div>
 	<!-- ENDIF -->
 
+	<!-- IF S_IS_POSTABLE and U_SLIDE_SHOW and not S_IS_BOT -->
+		<div class="pagination"><a href="{U_SLIDE_SHOW}">{L_SLIDE_SHOW}</a><!-- IF PAGINATION or TOTAL_IMAGES or U_SLIDE_SHOW --> &bull;&nbsp;<!-- ENDIF --></div>
+	<!-- ENDIF -->
+
 	</div>
 <!-- ENDIF -->
 

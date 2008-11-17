@@ -293,6 +293,10 @@ $lang = array_merge($lang, array(
 	'POST_COMMENT_RATE_IMAGE'		=> 'Post a comment and rate the image',
 
 	'RATE_IMAGE'					=> 'Rate the image',
+
+	'SLIDE_SHOW'					=> 'Slideshow',
+	'SLIDE_SHOW_HIGHSLIDE'			=> 'To start the slideshow, click on one of the image-names and than click on the "play"-icon:',
+	'SLIDE_SHOW_START'				=> 'To start the slideshow, click on one of the image-names:',
 ));
 
 ?>

@@ -71,7 +71,7 @@ function toggleElement(oElement)
 		<td class="cat" colspan="{S_COLS}">
 				<table width="100%" cellspacing="0">
 				<tr class="nav">
-					<td valign="middle">&nbsp;<!-- IF U_WATCH_TOPIC --><a href="{U_WATCH_TOPIC}" title="{L_WATCH_TOPIC}">{L_WATCH_TOPIC}</a><!-- IF U_PRINT_TOPIC or U_EMAIL_TOPIC or U_BUMP_TOPIC or U_BOOKMARK_TOPIC --> | <!-- ENDIF --><!-- ENDIF --></td>
+					<td valign="middle"><!-- IF S_IS_POSTABLE and U_SLIDE_SHOW and not S_IS_BOT -->&nbsp;<a href="{U_SLIDE_SHOW}">{L_SLIDE_SHOW}</a>&nbsp;<!-- IF U_WATCH_TOPIC --> &bull; <!-- ENDIF --><!-- ENDIF -->&nbsp;<!-- IF U_WATCH_TOPIC --><a href="{U_WATCH_TOPIC}" title="{L_WATCH_TOPIC}">{L_WATCH_TOPIC}</a><!-- IF U_PRINT_TOPIC or U_EMAIL_TOPIC or U_BUMP_TOPIC or U_BOOKMARK_TOPIC --> | <!-- ENDIF --><!-- ENDIF --></td>
 					<td align="{S_CONTENT_FLOW_END}" valign="middle">&nbsp;</td>
 				</tr>
 				</table>

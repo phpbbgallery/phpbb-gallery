@@ -605,6 +605,10 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id)
 			$url = $image_url;
 			$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" rel="lytebox" class="image-resize">{CONTENT}</a>';
 		break;
+		case 'lytebox_slide_show':
+			$url = $image_url;
+			$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" rel="lyteshow[album]" class="image-resize">{CONTENT}</a>';
+		break;
 		case 'image_page':
 			$url = $image_page_url;
 			$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}">{CONTENT}</a>';
