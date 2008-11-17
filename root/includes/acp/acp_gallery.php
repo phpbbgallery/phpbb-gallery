@@ -1657,9 +1657,11 @@ class acp_gallery
 			{
 				trigger_error('FORM_INVALID');
 			}
+			$set_moderator = false;
 			foreach ($permissions as $permission)
 			{
-				$submitted_valued = request_var($permission, 0);//hacked for deny empty submit
+				//hacked for deny empty submit
+				$submitted_valued = request_var($permission, 0);
 				if (substr($permission, -6, 6) == '_count')
 				{
 					$submitted_valued = $submitted_valued + 1;
@@ -1669,16 +1671,15 @@ class acp_gallery
 					trigger_error('PERMISSION_EMPTY', E_USER_WARNING);
 				}
 				$sql_ary[$permission] = $submitted_valued - 1;
+				if ((substr($permission, 0, 2) == 'm_') && ($sql_ary[$permission] == 1))
+				{
+					$set_moderator = true;
+				}
 			}
 			//need to set some defaults here
 			if ($perm_system == 2)
 			{//view your own personal albums
 				$sql_ary['i_view'] = 1;
-			}
-			$set_moderator = false;
-			if ($sql_ary['a_moderate'] == 1)
-			{
-				$set_moderator = true;
 			}
 
 			$db->sql_query('INSERT INTO ' . GALLERY_ROLES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
