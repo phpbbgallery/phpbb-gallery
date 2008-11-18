@@ -48,7 +48,6 @@ if ($mode == 'personal')
 		'S_PERSONAL_GALLERY' 		=> true,
 	));
 }
-{
 /**
 * add a personal albums category to the album listing if the user has permission to view personal albums
 */
