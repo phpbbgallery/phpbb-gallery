@@ -48,12 +48,11 @@ if ($mode == 'personal')
 		'S_PERSONAL_GALLERY' 		=> true,
 	));
 }
-else if ($album_config['personal_album_index'])
 {
 /**
 * add a personal albums category to the album listing if the user has permission to view personal albums
 */
-if (gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS))
+else if ($album_config['personal_album_index'] && gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS))
 {
 	$personal_albums = array();
 	$images = $images_real = $last_image = 0;
@@ -110,13 +109,6 @@ if (gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS))
 		'SUBALBUM_NAME'	=> $user->lang['YOUR_PERSONAL_ALBUM'],
 	));
 }
-/**
-* add categories and albums to the album listing
-*/
-}
-
-
-
 
 /**
 * Recent Public Pics
