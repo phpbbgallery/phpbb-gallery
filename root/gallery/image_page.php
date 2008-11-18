@@ -147,6 +147,7 @@ $template->assign_vars(array(
 	'IMAGE_NAME'		=> $image_data['image_name'],
 	'IMAGE_DESC'		=> generate_text_for_display($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], 7),
 	'IMAGE_BBCODE'		=> '[album]' . $image_id . '[/album]',
+	'IMAGE_URL'			=> generate_board_url(false) . '/' . $gallery_root_path . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id",
 	'POSTER'			=> get_username_string('full', $image_data['image_user_id'], ($image_data['image_username']) ? $image_data['image_username'] : $user->lang['GUEST'], $image_data['image_user_colour']),
 	'IMAGE_TIME'		=> $user->format_date($image_data['image_time']),
 	'IMAGE_VIEW'		=> $image_data['image_view_count'],

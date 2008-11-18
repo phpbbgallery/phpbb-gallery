@@ -290,6 +290,8 @@ $lang = array_merge($lang, array(
 	'DESCRIPTION_LENGTH'			=> 'Enter your descriptions here, it may contain no more than <strong>%d</strong> characters.',
 	'DONT_RATE_IMAGE'				=> 'Don\'t rate image',
 
+	'IMAGE_URL'						=> 'Image-URL',
+
 	'POST_COMMENT_RATE_IMAGE'		=> 'Post a comment and rate the image',
 
 	'RATE_IMAGE'					=> 'Rate the image',

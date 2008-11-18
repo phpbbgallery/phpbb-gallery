@@ -48,6 +48,7 @@
         <date>YYYY-MM-DD</date>
         <rev-version>0.4.0</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Add] Report #266: Image URL on gallery_page_body.html]]></change>
           <change><![CDATA[[Add] Report #317: disable watermark by permissions]]></change>
           <change><![CDATA[[Add] Report #142: Show "Personal galleries" as an category on index page]]></change>
           <change><![CDATA[[Add] Report #303: Slide/Dia Show]]></change>

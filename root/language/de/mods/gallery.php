@@ -289,6 +289,8 @@ $lang = array_merge($lang, array(
 	'DESCRIPTION_LENGTH'			=> 'Gib deine Beschreibung hier ein. Sie darf nicht mehr als <strong>%d</strong> Zeichen enthalten.',
 	'DONT_RATE_IMAGE'				=> 'Bild nicht bewerten',
 
+	'IMAGE_URL'						=> 'Bildlink',
+
 	'POST_COMMENT_RATE_IMAGE'		=> 'Kommentar schreiben und Bild bewerten',
 
 	'RATE_IMAGE'					=> 'Bild bewerten',
