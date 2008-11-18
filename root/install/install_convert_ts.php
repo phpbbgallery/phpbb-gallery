@@ -359,6 +359,7 @@ class install_convert_ts extends module
 		set_gallery_config('link_image_name', 'image_page');
 		set_gallery_config('link_image_icon', 'image_page');
 		set_gallery_config('resize_images', 1);
+		set_gallery_config('personal_album_index', 0);
 
 		$template->assign_vars(array(
 			'BODY'		=> $user->lang['STAGE_CREATE_TABLE_EXPLAIN'],

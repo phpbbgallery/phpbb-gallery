@@ -322,6 +322,9 @@ $lang = array_merge($lang, array(
 
 // Added for 0.4.0
 $lang = array_merge($lang, array(
+	'PERSONAL_ALBUM_INDEX'			=> 'View personal albums as album on the index',
+	'PERSONAL_ALBUM_INDEX_EXP'		=> 'If choosen "No", there will be the link, right beneath.',
+
 	'RESIZE_IMAGES'					=> 'Resize bigger images',
 
 	'UC_IMAGE_NAME'					=> 'Imagename',

@@ -322,6 +322,9 @@ $lang = array_merge($lang, array(
 
 // Added for 0.4.0
 $lang = array_merge($lang, array(
+	'PERSONAL_ALBUM_INDEX'			=> 'Persönliche Alben in der Galerie-Übersicht als Album anzeigen',
+	'PERSONAL_ALBUM_INDEX_EXP'		=> 'Wenn "Nein" ausgewählt ist, wird der Link unterhalb der Alben angezeigt.',
+
 	'RESIZE_IMAGES'					=> 'Größere Bilder verkleinern',
 
 	'UC_IMAGE_NAME'					=> 'Bildname',

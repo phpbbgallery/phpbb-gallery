@@ -727,6 +727,7 @@ class acp_gallery
 			'S_DISP_TOTAL_IMAGES'			=> $config['gallery_total_images'],
 			'S_DISP_USER_IMAGES_PROFIL'		=> $config['gallery_user_images_profil'],
 			'S_DISP_PERSONAL_ALBUM_PROFIL'	=> $config['gallery_personal_album_profil'],
+			'S_PERSONAL_ALBUM_INDEX'		=> $new['personal_album_index'],
 
 			//Link Configuration
 			'S_GALLERY_HIGHSLIDE_JS'		=> file_exists($phpbb_root_path . 'styles/' . $user->theme['template_path'] . '/theme/highslide/highslide-full.js'),

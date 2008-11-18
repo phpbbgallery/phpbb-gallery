@@ -56,6 +56,9 @@ function get_album_access_array()
 			//generate for the sql
 			$pull_data .= " MAX($permission) as $permission,";
 		}
+		$album_access_array[-1]['m_'] = 0;
+		$album_access_array[OWN_GALLERY_PERMISSIONS]['m_'] = 0;
+		$album_access_array[PERSONAL_GALLERY_PERMISSIONS]['m_'] = 0;
 		foreach ($albums as $album)
 		{
 			foreach ($permissions as $permission)

@@ -160,6 +160,7 @@ if ($album_id <> 0)
 					$picrow[] = generate_image_link('image_name', 'lytebox_slide_show', $row['image_id'], $row['image_name'], $row['image_album_id']);
 				}
 			}
+			$db->sql_freeresult($result);
 			trigger_error($trigger_message . '<br /><br />' . implode(', ', $picrow));
 		}
 		else
