@@ -269,6 +269,7 @@ $lang = array_merge($lang, array(
 	'PERMISSION_I_REPORT'			=> 'Can report images',
 	'PERMISSION_I_UPLOAD'			=> 'Can upload images',
 	'PERMISSION_I_VIEW'				=> 'Can view images',
+	'PERMISSION_I_WATERMARK'		=> 'Can view images without watermark',
 	'PERMISSION_M'					=> 'Moderation',
 	'PERMISSION_MISC'				=> 'Misc', //Miscellaneous
 	'PERMISSION_M_COMMENTS'			=> 'Can moderate comments',

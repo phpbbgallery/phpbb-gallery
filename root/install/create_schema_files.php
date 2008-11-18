@@ -1006,6 +1006,7 @@ function get_schema_struct()
 			'a_list'		=> array('UINT:3', 0),
 			'a_moderate'	=> array('UINT:3', 0),
 			'i_view'		=> array('UINT:3', 0),
+			'i_watermark'	=> array('UINT:3', 0),
 			'i_upload'		=> array('UINT:3', 0),
 			'i_edit'		=> array('UINT:3', 0),
 			'i_delete'		=> array('UINT:3', 0),

@@ -330,6 +330,7 @@ class install_update extends module
 				nv_add_column(GALLERY_ROLES_TABLE,	'm_move',					array('UINT:3', 0));
 				nv_add_column(GALLERY_ROLES_TABLE,	'm_report',					array('UINT:3', 0));
 				nv_add_column(GALLERY_ROLES_TABLE,	'm_status',					array('UINT:3', 0));
+				nv_add_column(GALLERY_ROLES_TABLE,	'i_watermark',				array('UINT:3', 0));
 
 			case '0.4.0':
 			break;

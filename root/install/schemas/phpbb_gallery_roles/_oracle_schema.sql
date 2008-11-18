@@ -49,6 +49,7 @@ CREATE TABLE phpbb_gallery_roles (
 	a_list number(3) DEFAULT '0' NOT NULL,
 	a_moderate number(3) DEFAULT '0' NOT NULL,
 	i_view number(3) DEFAULT '0' NOT NULL,
+	i_watermark number(3) DEFAULT '0' NOT NULL,
 	i_upload number(3) DEFAULT '0' NOT NULL,
 	i_edit number(3) DEFAULT '0' NOT NULL,
 	i_delete number(3) DEFAULT '0' NOT NULL,

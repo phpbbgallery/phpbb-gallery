@@ -91,6 +91,7 @@ CREATE TABLE phpbb_gallery_roles (
 	a_list INT4 DEFAULT '0' NOT NULL CHECK (a_list >= 0),
 	a_moderate INT4 DEFAULT '0' NOT NULL CHECK (a_moderate >= 0),
 	i_view INT4 DEFAULT '0' NOT NULL CHECK (i_view >= 0),
+	i_watermark INT4 DEFAULT '0' NOT NULL CHECK (i_watermark >= 0),
 	i_upload INT4 DEFAULT '0' NOT NULL CHECK (i_upload >= 0),
 	i_edit INT4 DEFAULT '0' NOT NULL CHECK (i_edit >= 0),
 	i_delete INT4 DEFAULT '0' NOT NULL CHECK (i_delete >= 0),

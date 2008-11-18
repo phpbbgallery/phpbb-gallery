@@ -15,6 +15,7 @@ CREATE TABLE [phpbb_gallery_roles] (
 	[a_list] [int] DEFAULT (0) NOT NULL ,
 	[a_moderate] [int] DEFAULT (0) NOT NULL ,
 	[i_view] [int] DEFAULT (0) NOT NULL ,
+	[i_watermark] [int] DEFAULT (0) NOT NULL ,
 	[i_upload] [int] DEFAULT (0) NOT NULL ,
 	[i_edit] [int] DEFAULT (0) NOT NULL ,
 	[i_delete] [int] DEFAULT (0) NOT NULL ,

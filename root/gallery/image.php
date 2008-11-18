@@ -123,7 +123,7 @@ if ($album_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER'])
 */
 $watermark_ok = false;
 $file_size = getimagesize($phpbb_root_path . GALLERY_UPLOAD_PATH  . $image_data['image_filename']);
-if ($album_config['watermark_images'] && ($album_config['watermark_height'] < $file_size[0]) && ($album_config['watermark_width'] < $file_size[1]) && $gd_success)
+if (!gallery_acl_check('i_watermark', $album_id) && $album_config['watermark_images'] && ($album_config['watermark_height'] < $file_size[0]) && ($album_config['watermark_width'] < $file_size[1]) && $gd_success)
 {
 	$marktype = substr($album_config['watermark_source'], strlen($album_config['watermark_source']) - 4, 4);
 	switch ($marktype)

@@ -8,6 +8,7 @@ CREATE TABLE phpbb_gallery_roles (
 	a_list int(3) UNSIGNED DEFAULT '0' NOT NULL,
 	a_moderate int(3) UNSIGNED DEFAULT '0' NOT NULL,
 	i_view int(3) UNSIGNED DEFAULT '0' NOT NULL,
+	i_watermark int(3) UNSIGNED DEFAULT '0' NOT NULL,
 	i_upload int(3) UNSIGNED DEFAULT '0' NOT NULL,
 	i_edit int(3) UNSIGNED DEFAULT '0' NOT NULL,
 	i_delete int(3) UNSIGNED DEFAULT '0' NOT NULL,

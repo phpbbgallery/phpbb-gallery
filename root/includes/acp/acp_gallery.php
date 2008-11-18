@@ -1473,6 +1473,7 @@ class acp_gallery
 		{
 			$permission_parts['i'] = array_merge($permission_parts['i'], array('i_view'));
 		}
+		$permission_parts['i'] = array_merge($permission_parts['i'], array('i_watermark'));
 		if ($perm_system != 3)
 		{
 			$permission_parts['i'] = array_merge($permission_parts['i'], array('i_upload', 'i_approve'));
@@ -1678,9 +1679,9 @@ class acp_gallery
 					$set_moderator = true;
 				}
 			}
-			//need to set some defaults here
+			// Need to set a defaults here: view your own personal albums
 			if ($perm_system == 2)
-			{//view your own personal albums
+			{
 				$sql_ary['i_view'] = 1;
 			}
 
