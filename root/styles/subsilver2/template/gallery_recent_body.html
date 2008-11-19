@@ -162,6 +162,89 @@ function toggleElement(oElement)
 </table>
 <br clear="all" />
 <!-- ENDIF -->
+
+<!-- IF S_COMMENTS -->
+<!-- BEGIN commentrow -->
+	<table class="tablebg" width="100%" cellspacing="1">
+	<!-- IF commentrow.S_FIRST_ROW -->
+		<tr>
+			<th>{L_AUTHOR}</th>
+			<th>{L_RECENT_COMMENTS}</th>
+		</tr>
+	<!-- ENDIF -->
+	<!-- IF commentrow.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+
+	<!-- IF commentrow.S_IGNORE_POST -->
+			<td class="gensmall" colspan="2" height="25" align="center"><!-- IF commentrow.S_FIRST_UNREAD --><a name="unread"></a><!-- ENDIF --><a name="p{commentrow.POST_ID}"></a>{commentrow.L_IGNORE_POST}</td>
+	<!-- ELSE -->
+
+			<td align="center" valign="middle">
+				<!-- IF commentrow.S_FIRST_UNREAD --><a name="unread"></a><!-- ENDIF --><a name="p{commentrow.POST_ID}"></a>
+				<b class="postauthor"<!-- IF commentrow.POST_AUTHOR_COLOUR --> style="color: {commentrow.POST_AUTHOR_COLOUR}"<!-- ENDIF -->>{commentrow.POST_AUTHOR}</b>
+			</td>
+			<td width="100%" height="25">
+				<table width="100%" cellspacing="0">
+				<tr>
+					<td class="gensmall"><div style="float: {S_CONTENT_FLOW_END};"><!-- IF S_IS_BOT -->{MINI_POST_IMG}<!-- ELSE --><a href="{commentrow.U_COMMENT}">{MINI_POST_IMG}</a><!-- ENDIF --><b>{L_POSTED}:</b> {commentrow.TIME}&nbsp;</div></td>
+				</tr>
+				</table>
+			</td>
+		</tr>
+		
+		<!-- IF commentrow.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+
+			<td valign="top" class="profile">
+				<table cellspacing="4" align="center" width="150">
+				<tr>
+					<td>{L_COMMENT_ON}:<br />
+						{commentrow.UC_IMAGE_NAME}</td>
+				</tr>
+				<tr>
+					<td>{commentrow.UC_THUMBNAIL}</td>
+				</tr>
+				<tr>
+					<td>{L_POST_BY_AUTHOR} {commentrow.IMAGE_AUTHOR}<br />
+						{L_POSTED_ON_DATE} {commentrow.IMAGE_TIME}</td>
+				</tr>
+				</table>
+			</td>
+			<td valign="top">
+				<table width="100%" cellspacing="5">
+				<tr>
+					<td>
+						<div class="postbody">{commentrow.TEXT}</div>
+
+					<br clear="all" /><br />
+
+						<table width="100%" cellspacing="0">
+						<tr valign="middle">
+							<td class="gensmall" align="{S_CONTENT_FLOW_END}">
+							<!-- IF not S_IS_BOT -->
+								<!-- IF commentrow.U_INFO --><a href="{commentrow.U_INFO}" onclick="popup(this.href, 750, 500); return false;">{INFO_IMG}</a> <!-- ENDIF --> 
+								<!-- IF commentrow.U_DELETE --><a href="{commentrow.U_DELETE}">{DELETE_IMG}</a> <!-- ENDIF -->
+							<!-- ENDIF -->
+							</td>
+						</tr>
+						</table>
+					</td>
+				</tr>
+				</table>
+			</td>
+		</tr>
+
+		<!-- IF commentrow.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+
+			<td class="profile"></td>
+			<td><div class="gensmall" style="float: {S_CONTENT_FLOW_BEGIN};">&nbsp;<!-- IF commentrow.U_POST_AUTHOR --><a href="{commentrow.U_POST_AUTHOR}">{PROFILE_IMG}</a> <!-- ENDIF --></div> <div class="gensmall" style="float: {S_CONTENT_FLOW_END};"><!-- IF not S_IS_BOT and commentrow.U_EDIT --><a href="{commentrow.U_EDIT}">{EDIT_IMG}</a><!-- ENDIF -->&nbsp;</div></td>
+	<!-- ENDIF -->
+		</tr>
+		<tr>
+			<td class="spacer" colspan="2" height="1"><img src="images/spacer.gif" alt="" width="1" height="1" /></td>
+		</tr>
+	</table>
+<!-- END commentrow -->
+<!-- ENDIF -->
+
 <!-- Please keep this little notice visible -->
 <div class="copyright"<!-- IF S_IN_GALLERY --> style="display: none;"<!-- ENDIF -->>Powered by <!-- port started by tsr: http://phpbbgallery.ph.funpic.de --><a href="http://www.flying-bits.org/">nickvergessen</a></div>
 <br clear="all" />

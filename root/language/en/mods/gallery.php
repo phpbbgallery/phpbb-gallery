@@ -286,6 +286,7 @@ $lang = array_merge($lang, array(
 //Added after 0.4.0-RC3
 $lang = array_merge($lang, array(
 	'COMMENT_LENGTH'				=> 'Enter your comment here, it may contain no more than <strong>%d</strong> characters.',
+	'COMMENT_ON'					=> 'Comment on',
 
 	'DESCRIPTION_LENGTH'			=> 'Enter your descriptions here, it may contain no more than <strong>%d</strong> characters.',
 	'DONT_RATE_IMAGE'				=> 'Don\'t rate image',
@@ -295,6 +296,7 @@ $lang = array_merge($lang, array(
 	'POST_COMMENT_RATE_IMAGE'		=> 'Post a comment and rate the image',
 
 	'RATE_IMAGE'					=> 'Rate the image',
+	'RECENT_COMMENTS'				=> 'Recent comments',
 
 	'SLIDE_SHOW'					=> 'Slideshow',
 	'SLIDE_SHOW_HIGHSLIDE'			=> 'To start the slideshow, click on one of the image-names and than click on the "play"-icon:',

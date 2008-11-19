@@ -174,6 +174,51 @@ function toggleElement(oElement)
 	</div>
 </div>
 <!-- ENDIF -->
+<!-- IF .commentrow -->
+	<h4>{L_RECENT_COMMENTS}</h4>
+	<!-- BEGIN commentrow -->
+	<a id="{commentrow.COMMENT_ID}"></a>
+	<div class="post <!-- IF commentrow.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<div class="postbody">
+				<!-- IF commentrow.U_DELETE or commentrow.U_EDIT or commentrow.U_INFO -->
+					<ul class="profile-icons">
+						<!-- IF commentrow.U_EDIT --><li class="edit-icon"><a href="{commentrow.U_EDIT}" title="{L_EDIT_POST}"><span>{L_EDIT_POST}</span></a></li><!-- ENDIF -->
+						<!-- IF commentrow.U_DELETE --><li class="delete-icon"><a href="{commentrow.U_DELETE}" title="{L_DELETE_POST}"><span>{L_DELETE_POST}</span></a></li><!-- ENDIF -->
+						<!-- IF commentrow.U_INFO --><li class="info-icon"><a href="{commentrow.U_INFO}" title="{L_VIEW_INFO}" onclick="popup(this.href, 750, 500); return false;"><span>{L_VIEW_INFO}</span></a></li><!-- ENDIF -->
+					</ul>
+				<!-- ENDIF -->
+				<p class="author"><a href="{commentrow.U_COMMENT}">{MINI_POST_IMG}</a>&nbsp;{L_POST_BY_AUTHOR} <strong>{commentrow.POST_AUTHOR_FULL}</strong> {L_POSTED_ON_DATE} {commentrow.TIME} </p>
+				<div class="content">{commentrow.TEXT}</div>
+			</div>
+			<dl class="postprofile" id="profile{commentrow.COMMENT_ID}">
+				<dd>{L_COMMENT_ON}:</dd>
+				<dd>{commentrow.UC_IMAGE_NAME}</dd>
+				<dt>{commentrow.UC_THUMBNAIL}</dt><br />
+
+				<dd>{L_POST_BY_AUTHOR} {commentrow.IMAGE_AUTHOR}</dd>
+				<dd>{L_POSTED_ON_DATE} {commentrow.IMAGE_TIME}</dd>
+			</dl>
+			<span class="corners-bottom"><span></span></span>
+		</div>
+	</div>
+	<!-- END commentrow -->
+<!-- ELSEIF S_COMMENTS -->
+	<div id="postingbox" class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<h3>{L_COMMENTS}</h3>
+			<fieldset class="fields1">
+				<dl>
+					<dt><label>{L_COMMENTS}:</label></dt>
+					<dd>{L_NO_COMMENTS}</dd>
+				</dl>
+			</fieldset>
+			<span class="corners-bottom"><span></span></span>
+		</div>
+	</div>
+<!-- ENDIF -->
 
 <!-- Please keep this little notice visible -->
 <div class="copyright"<!-- IF S_IN_GALLERY --> style="display: none;"<!-- ENDIF -->>Powered by <!-- port started by tsr: http://phpbbgallery.ph.funpic.de --><a href="http://www.flying-bits.org/">nickvergessen</a></div>

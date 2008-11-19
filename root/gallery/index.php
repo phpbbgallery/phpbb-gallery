@@ -126,9 +126,9 @@ $display = array(
 * rows		numeric default 1,
 * columns	numeric default 4,
 * display	array,
-* modes		string(recent|random|both),
+* modes		string(recent|random|comment|!recent|!random|!comment|all), Exp: '!recent' means random + comment
 */
-recent_gallery_images(1, 4, $display, 'both');
+recent_gallery_images(1, 4, $display, 'all');
 
 /**
 * Start output the page

@@ -285,6 +285,7 @@ $lang = array_merge($lang, array(
 //Added after 0.4.0-RC3
 $lang = array_merge($lang, array(
 	'COMMENT_LENGTH'				=> 'Gib deinen Kommentar hier ein. Er darf nicht mehr als <strong>%d</strong> Zeichen enthalten.',
+	'COMMENT_ON'					=> 'Kommentar zu',
 
 	'DESCRIPTION_LENGTH'			=> 'Gib deine Beschreibung hier ein. Sie darf nicht mehr als <strong>%d</strong> Zeichen enthalten.',
 	'DONT_RATE_IMAGE'				=> 'Bild nicht bewerten',
@@ -294,6 +295,7 @@ $lang = array_merge($lang, array(
 	'POST_COMMENT_RATE_IMAGE'		=> 'Kommentar schreiben und Bild bewerten',
 
 	'RATE_IMAGE'					=> 'Bild bewerten',
+	'RECENT_COMMENTS'				=> 'Neuesten Kommentare',
 
 	'SLIDE_SHOW'					=> 'Diashow',
 	'SLIDE_SHOW_HIGHSLIDE'			=> 'Um die Diashow zu starten, klicke auf einen der Bildnamen und dann auf das "play"-Icon:',

@@ -36,17 +36,44 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 		case 'recent':
 			$recent = true;
 			$random = false;
+			$comment = false;
 		break;
 
 		case 'random':
 			$recent = false;
 			$random = true;
+			$comment = false;
 		break;
 
+		case 'comment':
+			$recent = false;
+			$random = false;
+			$comment = true;
+		break;
+		case '!recent':
+			$recent = false;
+			$random = true;
+			$comment = true;
+		break;
+
+		case '!random':
+			$recent = true;
+			$random = false;
+			$comment = true;
+		break;
+
+		case '!comment':
+			$recent = true;
+			$random = true;
+			$comment = false;
+		break;
+
+		case 'all':
 		case 'both':
 		default:
 			$recent = true;
 			$random = true;
+			$comment = true;
 		break;
 	}
 
@@ -220,6 +247,57 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 				}
 			}
 		}
+	}
+
+	if ($album_config['allow_comments'] && $comment)
+	{
+		$user->add_lang('viewtopic');
+		$template->assign_vars(array(
+			'S_COMMENTS'	=> true,
+		));
+
+		$sql = 'SELECT c.*, i.*
+			FROM ' . GALLERY_COMMENTS_TABLE . ' c
+			LEFT JOIN ' . GALLERY_IMAGES_TABLE . " i
+				ON c.comment_image_id = i.image_id
+			WHERE " . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('c_read', 'array')) . "
+			ORDER BY c.comment_id DESC";
+		$result = $db->sql_query_limit($sql, $limit_sql);
+
+		while ($commentrow = $db->sql_fetchrow($result))
+		{
+			$image_id = $commentrow['image_id'];
+			$album_id = $commentrow['image_album_id'];
+
+			$template->assign_block_vars('commentrow', array(
+				'U_COMMENT'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id") . '#' . $commentrow['comment_id'],
+				'COMMENT_ID'	=> $commentrow['comment_id'],
+				'TIME'			=> $user->format_date($commentrow['comment_time']),
+				'TEXT'			=> generate_text_for_display($commentrow['comment'], $commentrow['comment_uid'], $commentrow['comment_bitfield'], 7),
+				'U_DELETE'		=> (gallery_acl_check('m_comments', $album_id) || (gallery_acl_check('c_delete', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=delete&amp;comment_id=" . $commentrow['comment_id']) : '',
+				'U_EDIT'		=> (gallery_acl_check('m_comments', $album_id) || (gallery_acl_check('c_edit', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=edit&amp;comment_id=" . $commentrow['comment_id']) : '',
+				'U_INFO'		=> ($auth->acl_get('a_')) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'mode=whois&amp;ip=' . $commentrow['comment_user_ip']) : '',
+
+				'UC_THUMBNAIL'			=> generate_image_link('thumbnail', $album_config['link_image_name'], $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
+				'UC_IMAGE_NAME'			=> generate_image_link('image_name', $album_config['link_image_name'], $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
+				'IMAGE_AUTHOR'			=> get_username_string('full', $commentrow['image_user_id'], ($commentrow['image_user_id'] <> ANONYMOUS) ? $commentrow['image_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['image_comment_username']), $commentrow['image_user_colour']),
+				'IMAGE_TIME'			=> $user->format_date($commentrow['image_time']),
+
+				'POST_AUTHOR_FULL'		=> get_username_string('full', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_comment_username']), $commentrow['comment_user_colour']),
+				'POST_AUTHOR_COLOUR'	=> get_username_string('colour', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_comment_username']), $commentrow['comment_user_colour']),
+				'POST_AUTHOR'			=> get_username_string('username', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_comment_username']), $commentrow['comment_user_colour']),
+				'U_POST_AUTHOR'			=> get_username_string('profile', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_comment_username']), $commentrow['comment_user_colour']),
+			));
+		}
+		$db->sql_freeresult($result);
+
+		$template->assign_vars(array(
+			'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_COMMENT'),
+			'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_COMMENT'),
+			'INFO_IMG'			=> $user->img('icon_post_info', 'VIEW_INFO'),
+			'MINI_POST_IMG'		=> $user->img('icon_post_target_unread', 'COMMENT'),
+			'PROFILE_IMG'		=> $user->img('icon_user_profile', 'READ_PROFILE'),
+		));
 	}
 
 	$template->assign_vars(array(

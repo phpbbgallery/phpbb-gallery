@@ -376,8 +376,8 @@ if ($album_config['allow_comments'] && gallery_acl_check('c_read', $album_id))
 	if ($image_data['image_comments'] > 0)
 	{
 		$sql = 'SELECT c.*, u.*
-			FROM ' . GALLERY_COMMENTS_TABLE . ' AS c
-			LEFT JOIN ' . USERS_TABLE . " AS u
+			FROM ' . GALLERY_COMMENTS_TABLE . ' c
+			LEFT JOIN ' . USERS_TABLE . " u
 				ON c.comment_user_id = u.user_id
 			WHERE c.comment_image_id = $image_id
 			ORDER BY c.comment_id $sort_order";
@@ -389,8 +389,8 @@ if ($album_config['allow_comments'] && gallery_acl_check('c_read', $album_id))
 			if ($commentrow['comment_edit_count'] > 0)
 			{
 				$sql = 'SELECT c.comment_id, c.comment_edit_user_id, u.user_id, u.username, u.user_colour
-					FROM ' . GALLERY_COMMENTS_TABLE . ' AS c
-					LEFT JOIN ' . USERS_TABLE . ' AS u
+					FROM ' . GALLERY_COMMENTS_TABLE . ' c
+					LEFT JOIN ' . USERS_TABLE . ' u
 						ON c.comment_edit_user_id = u.user_id
 					WHERE c.comment_id = ' . (int) $commentrow['comment_id'];
 				$result = $db->sql_query($sql);

@@ -14,42 +14,28 @@
       <target-version>3.0.3</target-version>
     </installation>
     <link-group>
-      <link type="parent" lang="en-gb" href="../../history.xml">History</link>
-      <link type="parent" lang="de" href="../../history.xml">Entwicklung</link>
-      <link type="parent" lang="en-gb" href="../../../install.xml">Install</link>
-      <link type="parent" lang="de" href="../../../install.xml">Installations-Anleitung</link>
-      <link type="parent" lang="en-gb" href="contrib/update_1_0_1_to_1_0_2/update.xml">Update from 1.0.1 to 1.0.2</link>
-      <link type="parent" lang="de" href="contrib/update_1_0_1_to_1_0_2/update.xml">Update von 1.0.1 auf 1.0.2</link>
+      <link type="parent" lang="en-gb" href="../../install.xml">Install</link>
+      <link type="parent" lang="de" href="../../install.xml">Installations-Anleitung</link>
     </link-group>
     <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
   </header>
   <action-group>
     <open src="index.php">
       <edit>
-        <find><![CDATA[$user->setup('viewforum');]]></find>
-        <action type="after-add"><![CDATA[include($phpbb_root_path . 'gallery/includes/functions_recent.' . $phpEx);
-$display = array(
-	'name'		=> true,
-	'poster'	=> true,
-	'time'		=> true,
-	'views'		=> true,
-	'ratings'	=> false,
-	'comments'	=> false,
-	'album'		=> true,
-);
-/**
+        <find><![CDATA[/**
+* rows		numeric default 1,
+* columns	numeric default 4,
+* display	array,
+* modes		string(recent|random|both),
+*/
+recent_gallery_images(1, 4, $display, 'both');]]></find>
+        <action type="replace-with"><![CDATA[/**
 * rows		numeric default 1,
 * columns	numeric default 4,
 * display	array,
 * modes		string(recent|random|comment|!recent|!random|!comment|all), Exp: '!recent' means random + comment
 */
 recent_gallery_images(1, 4, $display, 'all');]]></action>
-      </edit>
-    </open>
-    <open src="styles/prosilver/template/index_body.html">
-      <edit>
-        <find><![CDATA[<!-- INCLUDE forumlist_body.html -->]]></find>
-        <action type="before-add"><![CDATA[<!-- INCLUDE gallery_recent_body.html -->]]></action>
       </edit>
     </open>
   </action-group>
