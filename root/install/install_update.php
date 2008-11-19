@@ -694,6 +694,8 @@ class install_update extends module
 				$db->sql_freeresult($result);
 				set_gallery_config('resize_images', 1);
 				set_gallery_config('personal_album_index', 0);
+				set_gallery_config('personal_album_index', 0);
+				set_gallery_config('view_image_url', 1);
 
 			case '0.4.0':
 

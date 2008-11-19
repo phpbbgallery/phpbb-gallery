@@ -702,6 +702,7 @@ class acp_gallery
 			'S_GIF_ALLOWED'					=> $new['gif_allowed'],
 			'IMAGE_DESC_MAX_LENGTH'			=> $new['desc_length'],
 			'S_DISP_EXIF_DATA'				=> $new['exif_data'],
+			'S_VIEW_IMAGE_URL'				=> $new['view_image_url'],
 
 			//Watermark options
 			'S_WATERMARK'					=> $new['watermark_images'],

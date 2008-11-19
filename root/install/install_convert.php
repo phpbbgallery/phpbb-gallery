@@ -331,6 +331,7 @@ class install_convert extends module
 		set_gallery_config('link_image_icon', 'image_page');
 		set_gallery_config('resize_images', 1);
 		set_gallery_config('personal_album_index', 0);
+		set_gallery_config('view_image_url', 1);
 
 		$convert_prefix = request_var('convert_prefix', '');
 		$template->assign_vars(array(

@@ -337,6 +337,8 @@ $lang = array_merge($lang, array(
 	'UC_LINK_LYTEBOX'				=> 'Lytebox-Feature öffnen',
 	'UC_LINK_NONE'					=> 'Kein Link',
 	'UC_THUMBNAIL'					=> 'Thumbnail',
+
+	'VIEW_IMAGE_URL'				=> 'Link zum Bild auf der Imagepage anzeigen',
 ));
 
 ?>
