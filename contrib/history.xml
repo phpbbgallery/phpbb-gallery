@@ -48,6 +48,7 @@
         <date>YYYY-MM-DD</date>
         <rev-version>0.4.0</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Add] Report #309: Require permissions for the ACP-modules]]></change>
           <change><![CDATA[[Add] Report #144: Show newest comments and a random picture on index page]]></change>
           <change><![CDATA[[Add] Report #266: Image URL on gallery_page_body.html]]></change>
           <change><![CDATA[[Add] Report #317: disable watermark by permissions]]></change>

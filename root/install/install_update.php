@@ -352,7 +352,8 @@ class install_update extends module
 	*/
 	function update_db_data($mode, $sub)
 	{
-		global $user, $template, $table_prefix, $db;
+		global $user, $template, $table_prefix, $db, $phpbb_root_path, $phpEx, $cache;
+		include($phpbb_root_path . 'includes/acp/auth.' . $phpEx);
 
 		$gallery_config = load_gallery_config();
 		$database_step = request_var('step', 0);
@@ -696,6 +697,36 @@ class install_update extends module
 				set_gallery_config('personal_album_index', 0);
 				set_gallery_config('personal_album_index', 0);
 				set_gallery_config('view_image_url', 1);
+				$auth_admin = new auth_admin();
+				$auth_admin->acl_add_option(array(
+					'local'			=> array(),
+					'global'		=> array('a_gallery_manage', 'a_gallery_albums', 'a_gallery_import', 'a_gallery_cleanup')
+				));
+				$cache->destroy('acl_options');
+				$sql = 'UPDATE ' . MODULES_TABLE . " SET
+					module_auth = 'acl_a_gallery_manage'
+					WHERE module_langname = 'ACP_GALLERY_OVERVIEW'";
+				$db->sql_query($sql);
+				$sql = 'UPDATE ' . MODULES_TABLE . " SET
+					module_auth = 'acl_a_gallery_manage'
+					WHERE module_langname = 'ACP_GALLERY_CONFIGURE_GALLERY'";
+				$db->sql_query($sql);
+				$sql = 'UPDATE ' . MODULES_TABLE . " SET
+					module_auth = 'acl_a_gallery_albums'
+					WHERE module_langname = 'ACP_GALLERY_MANAGE_ALBUMS'";
+				$db->sql_query($sql);
+				$sql = 'UPDATE ' . MODULES_TABLE . " SET
+					module_auth = 'acl_a_gallery_albums'
+					WHERE module_langname = 'ACP_GALLERY_ALBUM_PERMISSIONS'";
+				$db->sql_query($sql);
+				$sql = 'UPDATE ' . MODULES_TABLE . " SET
+					module_auth = 'acl_a_gallery_import'
+					WHERE module_langname = 'ACP_IMPORT_ALBUMS'";
+				$db->sql_query($sql);
+				$sql = 'UPDATE ' . MODULES_TABLE . " SET
+					module_auth = 'acl_a_gallery_cleanup'
+					WHERE module_langname = 'ACP_GALLERY_CLEANUP'";
+				$db->sql_query($sql);
 
 			case '0.4.0':
 

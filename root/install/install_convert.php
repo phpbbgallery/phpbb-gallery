@@ -247,7 +247,8 @@ class install_convert extends module
 	*/
 	function load_schema($mode, $sub)
 	{
-		global $user, $template;
+		global $user, $template, $phpbb_root_path, $phpEx, $cache;
+		include($phpbb_root_path . 'includes/acp/auth.' . $phpEx);
 
 		$this->page_title = $user->lang['STAGE_CREATE_TABLE'];
 		$s_hidden_fields = '';
@@ -332,6 +333,13 @@ class install_convert extends module
 		set_gallery_config('resize_images', 1);
 		set_gallery_config('personal_album_index', 0);
 		set_gallery_config('view_image_url', 1);
+
+		$auth_admin = new auth_admin();
+		$auth_admin->acl_add_option(array(
+			'local'			=> array(),
+			'global'		=> array('a_gallery_manage', 'a_gallery_albums', 'a_gallery_import', 'a_gallery_cleanup')
+		));
+		$cache->destroy('acl_options');
 
 		$convert_prefix = request_var('convert_prefix', '');
 		$template->assign_vars(array(
