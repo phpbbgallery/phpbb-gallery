@@ -592,7 +592,7 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id)
 			$content = str_replace(array('{U_THUMBNAIL}', '{IMAGE_NAME}', '{FAKE_THUMB_SIZE}'), array($thumbnail_url, $image_name, $album_config['fake_thumb_size']), $content);
 		break;
 		case 'lastimage_icon':
-			$content = $user->img('icon_topic_latest', 'VIEW_LATEST_POST');
+			$content = $user->img('icon_topic_latest', 'VIEW_LATEST_IMAGE');
 		break;
 	}
 	switch ($mode)

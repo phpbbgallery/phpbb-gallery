@@ -187,7 +187,7 @@ $lang = array_merge($lang, array(
 
 	'VIEW_ALBUM'					=> 'View album',
 	'VIEW_IMAGE'					=> 'View image',
-	'VIEW_THE_LATEST_IMAGE'			=> 'View the latest image',
+	'VIEW_LATEST_IMAGE'				=> 'View the latest image',
 	'VIEWS'							=> 'Views',
 
 	'WAITING_FOR_APPROVAL'			=> 'image(s) waiting for approval',
