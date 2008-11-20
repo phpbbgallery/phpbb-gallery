@@ -57,11 +57,13 @@ You may install it, to be informed about future versions, as I'm not going to se
       <file from="root/adm/mods/phpbb_gallery_version.php" to="adm/mods/phpbb_gallery_version.php" />
       <file from="root/adm/style/*.html" to="adm/style/*.html" />
       <file from="root/gallery/*.*" to="gallery/*.*" />
-      <file from="root/gallery/import/*.*" to="gallery/import/*.*" />
+      <file from="root/gallery/images/*.*" to="gallery/images/*.*" />
+      <file from="root/gallery/images/cache/*.*" to="gallery/images/cache/*.*" />
+      <file from="root/gallery/images/import/*.*" to="gallery/images/import/*.*" />
+      <file from="root/gallery/images/medium/*.*" to="gallery/images/medium/*.*" />
+      <file from="root/gallery/images/upload/*.*" to="gallery/images/upload/*.*" />
       <file from="root/gallery/includes/*.*" to="gallery/includes/*.*" />
       <file from="root/gallery/mcp/*.*" to="gallery/mcp/*.*" />
-      <file from="root/gallery/upload/*.*" to="gallery/upload/*.*" />
-      <file from="root/gallery/upload/cache/*.*" to="gallery/upload/cache/*.*" />
       <file from="root/includes/acp/acp_gallery.php" to="includes/acp/acp_gallery.php" />
       <file from="root/includes/acp/info/acp_gallery.php" to="includes/acp/info/acp_gallery.php" />
       <file from="root/includes/ucp/ucp_gallery.php" to="includes/ucp/ucp_gallery.php" />
