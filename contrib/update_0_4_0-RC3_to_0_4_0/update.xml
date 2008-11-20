@@ -118,6 +118,9 @@ You may install it, to be informed about future versions, as I'm not going to se
     </open>
     <diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
 
+Du musst die Dateien aus gallery/upload/cache/ nach gallery/images/cache/ kopieren.
+Du musst die Dateien aus gallery/upload/ nach gallery/images/upload/ kopieren.
+
 Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
 
 Aktualisiere deine Styles:
@@ -126,6 +129,9 @@ Aktualisiere deine Styles:
     "Administrations-Bereich" (ACP) > "Styles" > "Grafiksammlungen" > jedes > "Aktualisieren"
 ]]></diy-instructions>
     <diy-instructions lang="en-gb"><![CDATA[Browse to install/ and run the update-script
+
+You need to move the files from gallery/upload/cache/ to gallery/images/cache/ .
+You need to move the files from gallery/upload/ to gallery/images/upload/ .
 
 Clear your cache in the "Administration Control Panel" (ACP) > "General" > "Purge the cache"
 

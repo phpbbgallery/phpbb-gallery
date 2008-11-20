@@ -19,7 +19,7 @@ IMPORTANT: You need to complete the normal install.xml first. When doing the con
         <contributions />
       </author>
     </author-group>
-    <mod-version>0.4.0-RC3</mod-version>
+    <mod-version>0.4.0</mod-version>
     <installation>
       <level>intermediate</level>
       <time>1200</time>
@@ -35,7 +35,7 @@ IMPORTANT: You need to complete the normal install.xml first. When doing the con
   </header>
   <action-group>
     <copy>
-      <file from="phpBB2-Installation/album_mod/upload/*.*" to="gallery/upload/*.*" />
+      <file from="phpBB2-Installation/album_mod/upload/*.*" to="gallery/images/upload/*.*" />
     </copy>
     <diy-instructions lang="de"><![CDATA[Schritt für Schritt:
 • mache ein Datenbank-Backup deiner phpBB2 und phpBB3-Installation.
