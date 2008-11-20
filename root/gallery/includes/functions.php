@@ -581,7 +581,7 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id)
 	switch ($content)
 	{
 		case 'image_name':
-			$shorten_image_name = (utf8_strlen(htmlspecialchars_decode($image_name)) > $album_config['shorted_imagenames'] + 3 )? (utf8_substr(htmlspecialchars_decode($image_name), 0, $album_config['shorted_imagenames']) . '...') : ($image_name);
+			$shorten_image_name = (utf8_strlen(htmlspecialchars_decode($image_name)) > $album_config['shorted_imagenames'] + 3 ) ? (utf8_substr(htmlspecialchars_decode($image_name), 0, $album_config['shorted_imagenames']) . '...') : ($image_name);
 			$content = '<span style="font-weight: bold;">' . $shorten_image_name . '</span>';
 		break;
 		case 'thumbnail':

@@ -136,7 +136,7 @@ $sql_sort_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' :
 					'S_UNAPPROVED'	=> (gallery_acl_check('m_status', $album_id) && (!$picrow[$j]['image_status'])) ? true : false,
 					'S_REPORTED'	=> (gallery_acl_check('m_report', $album_id) && $picrow[$j]['image_reported']) ? true : false,
 
-					'ALBUM_NAME'	=> $picrow[$j]['album_name'],
+					'ALBUM_NAME'	=> ((utf8_strlen(htmlspecialchars_decode($picrow[$j]['album_name'])) > $album_config['shorted_imagenames'] + 3 ) ? (utf8_substr(htmlspecialchars_decode($picrow[$j]['album_name']), 0, $album_config['shorted_imagenames']) . '...') : ($picrow[$j]['album_name'])),
 					'POSTER'		=> get_username_string('full', $picrow[$j]['image_user_id'], ($picrow[$j]['image_user_id'] <> ANONYMOUS) ? $picrow[$j]['image_username'] : $user->lang['GUEST'], $picrow[$j]['image_user_colour']),
 					'TIME'			=> $user->format_date($picrow[$j]['image_time']),
 					'VIEW'			=> $picrow[$j]['image_view_count'],

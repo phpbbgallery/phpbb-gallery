@@ -133,7 +133,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 						'S_UNAPPROVED'	=> (gallery_acl_check('m_status', $album_id, $picrow[$j]['album_user_id']) && (!$picrow[$j]['image_status'])) ? true : false,
 						'S_REPORTED'	=> (gallery_acl_check('m_report', $album_id, $picrow[$j]['album_user_id']) && $picrow[$j]['image_reported']) ? true : false,
 
-						'ALBUM_NAME'	=> ($display['album']) ? $picrow[$j]['album_name'] : '',
+						'ALBUM_NAME'	=> ($display['album']) ? ((utf8_strlen(htmlspecialchars_decode($picrow[$j]['album_name'])) > $album_config['shorted_imagenames'] + 3 ) ? (utf8_substr(htmlspecialchars_decode($picrow[$j]['album_name']), 0, $album_config['shorted_imagenames']) . '...') : ($picrow[$j]['album_name'])) : '',
 						'POSTER'		=> ($display['poster']) ? get_username_string('full', $picrow[$j]['image_user_id'], ($picrow[$j]['image_user_id'] <> ANONYMOUS) ? $picrow[$j]['image_username'] : $user->lang['GUEST'], $picrow[$j]['image_user_colour']) : '',
 						'TIME'			=> ($display['time']) ? $user->format_date($picrow[$j]['image_time']) : '',
 						'VIEW'			=> ($display['views']) ? $picrow[$j]['image_view_count'] : -1,
@@ -224,7 +224,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 						'S_UNAPPROVED'	=> (gallery_acl_check('m_status', $album_id, $picrow[$j]['album_user_id']) && (!$picrow[$j]['image_status'])) ? true : false,
 						'S_REPORTED'	=> (gallery_acl_check('m_report', $album_id, $picrow[$j]['album_user_id']) && $picrow[$j]['image_reported']) ? true : false,
 
-						'ALBUM_NAME'	=> ($display['album']) ? $picrow[$j]['album_name'] : '',
+						'ALBUM_NAME'	=> ($display['album']) ? ((utf8_strlen(htmlspecialchars_decode($picrow[$j]['album_name'])) > $album_config['shorted_imagenames'] + 3 ) ? (utf8_substr(htmlspecialchars_decode($picrow[$j]['album_name']), 0, $album_config['shorted_imagenames']) . '...') : ($picrow[$j]['album_name'])) : '',
 						'POSTER'		=> ($display['poster']) ? get_username_string('full', $picrow[$j]['image_user_id'], ($picrow[$j]['image_user_id'] <> ANONYMOUS) ? $picrow[$j]['image_username'] : $user->lang['GUEST'], $picrow[$j]['image_user_colour']) : '',
 						'TIME'			=> ($display['time']) ? $user->format_date($picrow[$j]['image_time']) : '',
 						'VIEW'			=> ($display['views']) ? $picrow[$j]['image_view_count'] : -1,
