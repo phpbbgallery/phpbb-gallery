@@ -22,6 +22,6 @@ http://www.flying-bits.org/viewforum.php?f=38[/list]
 [b]FAQ[/b]: http://www.flying-bits.org/viewforum.php?f=67
 
 [b]MOD Download:[/b] [size=150][b][url=http://www.flying-bits.org/download.php?mod_id=6]Download v0.4.0[/url][/b][/size]
-[list][url=]alternativer Download[/url][/list]
+[list][url=http://code.bantux.de/versions/download/3?attachment_id=33]alternativer Download[/url][/list]
 [b][color=#FF0000]Anmerkung[/color]:[/b] Da das Berechtigungssystem komplett überarbeitet wurde, musst du bei einem Update von einer Version unter 0.4.x oder einer Konvertierung von Smartor's Album-MOD alle Rechte neu vergeben.
 [b][color=#FF0000]Anmerkung[/color]:[/b] Von 0.4.0-RC3 nach 0.4.0 wurden wieder Teile des Berechtigungssytems geändert. Daher müssen die Berechtigungen zum moderieren der Alben neu vergeben werden. Auch gibt es jetzt Berechtigungen für die ACP-Module. Also nicht wundern, wenn diese verschwinden. Du musst dir nur im phpBB-Berechtigungssystem die nötigen Rechte geben.
