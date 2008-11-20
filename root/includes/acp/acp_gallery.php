@@ -117,7 +117,7 @@ class acp_gallery
 		$images = ($images_string) ? explode('&quot;', utf8_decode($images_string)) : $images;
 		$submit = (isset($_POST['submit'])) ? true : ((empty($images)) ? false : true);
 
-		$directory = $phpbb_root_path . GALLERY_ROOT_PATH . 'import/';
+		$directory = $phpbb_root_path . GALLERY_IMPORT_PATH;
 
 		if(!$submit)
 		{
@@ -166,7 +166,7 @@ class acp_gallery
 				'S_IMPORT_IMAGES'				=> true,
 				'ACP_GALLERY_TITLE'				=> $user->lang['ACP_IMPORT_ALBUMS'],
 				'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_IMPORT_ALBUMS_EXPLAIN'],
-				'L_IMPORT_DIR_EMPTY'			=> sprintf($user->lang['IMPORT_DIR_EMPTY'], GALLERY_ROOT_PATH),
+				'L_IMPORT_DIR_EMPTY'			=> sprintf($user->lang['IMPORT_DIR_EMPTY'], GALLERY_IMPORT_PATH),
 				'S_ALBUM_IMPORT_ACTION'			=> $this->u_action,
 				'S_SELECT_IMPORT' 				=> gallery_albumbox(false, 'album_id', 0, 'i_upload'),
 			));

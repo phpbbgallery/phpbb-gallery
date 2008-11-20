@@ -225,7 +225,7 @@ $lang = array_merge($lang, array(
 
 	'IMAGE_ID'						=> 'Image-ID',
 	'IMAGES_PER_DAY'				=> 'Images per day',
-	'IMPORT_DIR_EMPTY'				=> 'The folder %simport/ is empty. You need to upload the images, before you can import them.',
+	'IMPORT_DIR_EMPTY'				=> 'The folder %s is empty. You need to upload the images, before you can import them.',
 	'IMPORT_SELECT'					=> 'Choose the images which you want to import. Successful uploaded images are deleted. All other images are still available.',
 	'IMPORT_USER'					=> 'Uploaded by',
 	'IMPORT_USER_EXP'				=> 'You can add the images to another user here.',

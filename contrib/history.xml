@@ -62,6 +62,7 @@
           <change><![CDATA[[Add] Report #345: Link configuration for thumbnails/image_names/lastimage-icon]]></change>
           <change><![CDATA[[Add] Report #356: Add BBCode-Buttons and smilies (subsilver2)]]></change>
 
+          <change><![CDATA[[Change] Unreported: moved import/ to images/import/]]></change>
           <change><![CDATA[[Change] Report #252: moved thumbnail creation to image.php]]></change>
           <change><![CDATA[[Change] Report #349: Lytebox-Update from 3.20 to 3.22]]></change>
           <change><![CDATA[[Change] Report #356: Reorganize subsilver2 layout of image_page.php]]></change>

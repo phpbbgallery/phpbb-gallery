@@ -225,7 +225,7 @@ $lang = array_merge($lang, array(
 
 	'IMAGE_ID'						=> 'Bild-ID',
 	'IMAGES_PER_DAY'				=> 'Bilder pro Tag',
-	'IMPORT_DIR_EMPTY'				=> 'Das Verzeichnis %simport/ ist leer. Du musst die Bilder erst hochladen, bevor du sie importieren kannst.',
+	'IMPORT_DIR_EMPTY'				=> 'Das Verzeichnis %s ist leer. Du musst die Bilder erst hochladen, bevor du sie importieren kannst.',
 	'IMPORT_SELECT'					=> 'Wähle die Bilder aus, die importiert werden sollen. Bilder die erfolgreich importiert wurden, werden aus der Auswahl gelöscht. Die anderen Bilder stehen dir danach noch zur Verfügung.',
 	'IMPORT_USER'					=> 'Hochgeladen durch',
 	'IMPORT_USER_EXP'				=> 'Du kannst die Bilder auch einem anderem Mitglied zuordnen lassen.',
