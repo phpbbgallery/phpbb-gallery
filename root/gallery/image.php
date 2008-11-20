@@ -203,25 +203,35 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 			}
 		}
 
-		if ($mode == 'thumbnail')
+		$save_file = (($mode == 'thumbnail') && $album_config['thumbnail_cache']) ? true : (($mode == 'medium') && $album_config['medium_cache']) ? true : false;
+		$wirte_source = '';
+		if ($save_file)
 		{
-			$wirte_source = $phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_filename'];
-		}
-		else
-		{
-			$wirte_source = $phpbb_root_path . GALLERY_MEDIUM_PATH . $image_data['image_filename'];
+			$wirte_source = $phpbb_root_path . (($mode == 'thumbnail') ? GALLERY_CACHE_PATH : GALLERY_MEDIUM_PATH) . $image_data['image_filename'];
 		}
 		switch ($image_filetype)
 		{
 			case '.jpg':
 			case '.gif':
+				if (!$save_file)
+				{
+					header('Content-type: image/jpeg');
+				}
 				@imagejpeg($thumb_file, $wirte_source, (($thumbnail) ? $album_config['thumbnail_quality'] : 100));
 			break;
 			case '.png':
+				if (!$save_file)
+				{
+					header('Content-type: image/png');
+				}
 				@imagepng($thumb_file, $wirte_source);
 			break;
 		}
 		@chmod($image_source, 0777);
+		if (!$save_file)
+		{
+			exit;
+		}
 	}
 }
 

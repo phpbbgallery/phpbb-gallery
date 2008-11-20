@@ -323,6 +323,8 @@ $lang = array_merge($lang, array(
 
 // Added for 0.4.0
 $lang = array_merge($lang, array(
+	'MEDIUM_CACHE'					=> 'Cache resized images for image-page',
+
 	'PERSONAL_ALBUM_INDEX'			=> 'View personal albums as album on the index',
 	'PERSONAL_ALBUM_INDEX_EXP'		=> 'If choosen "No", there will be the link, right beneath.',
 

@@ -695,14 +695,16 @@ class acp_gallery
 			'MAX_WIDTH'						=> $new['max_width'],
 			'MAX_HEIGHT'					=> $new['max_height'],
 			'S_RESIZE_IMAGES'				=> $new['resize_images'],
-			'RSZ_WIDTH'						=> $new['preview_rsz_width'],
-			'RSZ_HEIGHT'					=> $new['preview_rsz_height'],
 			'S_JPG_ALLOWED'					=> $new['jpg_allowed'],
 			'S_PNG_ALLOWED'					=> $new['png_allowed'],
 			'S_GIF_ALLOWED'					=> $new['gif_allowed'],
 			'IMAGE_DESC_MAX_LENGTH'			=> $new['desc_length'],
 			'S_DISP_EXIF_DATA'				=> $new['exif_data'],
 			'S_VIEW_IMAGE_URL'				=> $new['view_image_url'],
+			//Mediumthumbnails
+			'S_MEDIUM_CACHE'				=> $new['medium_cache'],
+			'RSZ_WIDTH'						=> $new['preview_rsz_width'],
+			'RSZ_HEIGHT'					=> $new['preview_rsz_height'],
 
 			//Watermark options
 			'S_WATERMARK'					=> $new['watermark_images'],

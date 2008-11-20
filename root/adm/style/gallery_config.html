@@ -77,6 +77,10 @@
 			<dd><input type="radio" class="radio"<!-- IF S_RESIZE_IMAGES --> checked="checked"<!-- ENDIF --> name="resize_images" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_RESIZE_IMAGES --> checked="checked"<!-- ENDIF --> name="resize_images" value="0" />{L_NO}</dd>
 		</dl>
 		<dl>
+			<dt><label for="medium_cache">{L_MEDIUM_CACHE}</label></dt>
+			<dd><input type="radio" class="radio"<!-- IF S_MEDIUM_CACHE --> checked="checked"<!-- ENDIF --> name="medium_cache" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" class="radio"<!-- IF not S_MEDIUM_CACHE --> checked="checked"<!-- ENDIF --> name="medium_cache" value="0" />{L_NO}</dd>
+		</dl>
+		<dl>
 			<dt><label for="preview_rsz_width">{L_RSZ_WIDTH}</label></dt>
 			<dd><input class="post" type="text" maxlength="9" size="9" name="preview_rsz_width" value="{RSZ_WIDTH}" /></dd>
 		</dl>
@@ -141,7 +145,6 @@
 		</dl>
 		<dl>
 			<dt><label for="gd_version">{L_GD_VERSION}</label></dt>
-			<dd><span><input type="radio" class="radio"<!-- IF not S_GD --> checked="checked"<!-- ENDIF --> name="gd_version" value="0" />{L_MANUAL_THUMBNAIL}</span></dd>
 			<dd><span><input type="radio" class="radio"<!-- IF S_GD == 1 --> checked="checked"<!-- ENDIF --> name="gd_version" value="1" />GD1</span></dd>
 			<dd><span><input type="radio" class="radio"<!-- IF S_GD == 2 --> checked="checked"<!-- ENDIF --> name="gd_version" value="2" />GD2</span></dd>
 		</dl>

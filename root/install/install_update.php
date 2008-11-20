@@ -153,7 +153,7 @@ class install_update extends module
 			'LEGEND_EXPLAIN'	=> $user->lang['FILES_REQUIRED_EXPLAIN'],
 		));
 
-		$directories = array(GALLERY_ROOT_PATH . 'import/', GALLERY_UPLOAD_PATH, GALLERY_CACHE_PATH);
+		$directories = array(GALLERY_IMPORT_PATH, GALLERY_UPLOAD_PATH, GALLERY_MEDIUM_PATH, GALLERY_CACHE_PATH);
 
 		umask(0);
 
@@ -665,6 +665,7 @@ class install_update extends module
 
 
 			case '0.4.0-RC3':
+				// Some new configs
 				set_gallery_config('comment_length', 1024);
 				set_gallery_config('description_length', 1024);
 				set_gallery_config('allow_rates', 1);
@@ -672,6 +673,12 @@ class install_update extends module
 				set_gallery_config('link_thumbnail', 'lytebox');
 				set_gallery_config('link_image_name', 'image_page');
 				set_gallery_config('link_image_icon', 'image_page');
+				set_gallery_config('resize_images', 1);
+				set_gallery_config('personal_album_index', 0);
+				set_gallery_config('personal_album_index', 0);
+				set_gallery_config('view_image_url', 1);
+				set_gallery_config('medium_cache', 1);
+
 				// Update new permissions
 				$sql = 'SELECT role_id, a_moderate, i_view, c_post
 					FROM ' . GALLERY_ROLES_TABLE;
@@ -693,16 +700,14 @@ class install_update extends module
 					$db->sql_query($sql);
 				}
 				$db->sql_freeresult($result);
-				set_gallery_config('resize_images', 1);
-				set_gallery_config('personal_album_index', 0);
-				set_gallery_config('personal_album_index', 0);
-				set_gallery_config('view_image_url', 1);
 				$auth_admin = new auth_admin();
 				$auth_admin->acl_add_option(array(
 					'local'			=> array(),
 					'global'		=> array('a_gallery_manage', 'a_gallery_albums', 'a_gallery_import', 'a_gallery_cleanup')
 				));
 				$cache->destroy('acl_options');
+
+				// Update the ACP-Modules permissions
 				$sql = 'UPDATE ' . MODULES_TABLE . " SET
 					module_auth = 'acl_a_gallery_manage'
 					WHERE module_langname = 'ACP_GALLERY_OVERVIEW'";

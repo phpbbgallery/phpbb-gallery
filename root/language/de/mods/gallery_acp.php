@@ -323,6 +323,8 @@ $lang = array_merge($lang, array(
 
 // Added for 0.4.0
 $lang = array_merge($lang, array(
+	'MEDIUM_CACHE'					=> 'Verkleinerte Bilder für die Image-page cachen',
+
 	'PERSONAL_ALBUM_INDEX'			=> 'Persönliche Alben in der Galerie-Übersicht als Album anzeigen',
 	'PERSONAL_ALBUM_INDEX_EXP'		=> 'Wenn "Nein" ausgewählt ist, wird der Link unterhalb der Alben angezeigt.',
 

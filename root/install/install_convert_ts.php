@@ -149,7 +149,7 @@ class install_convert_ts extends module
 			'LEGEND_EXPLAIN'	=> $user->lang['FILES_REQUIRED_EXPLAIN'],
 		));
 
-		$directories = array(GALLERY_ROOT_PATH . 'import/', GALLERY_UPLOAD_PATH, GALLERY_CACHE_PATH);
+		$directories = array(GALLERY_IMPORT_PATH, GALLERY_UPLOAD_PATH, GALLERY_MEDIUM_PATH, GALLERY_CACHE_PATH);
 
 		umask(0);
 
@@ -362,6 +362,7 @@ class install_convert_ts extends module
 		set_gallery_config('resize_images', 1);
 		set_gallery_config('personal_album_index', 0);
 		set_gallery_config('view_image_url', 1);
+		set_gallery_config('medium_cache', 1);
 
 		$auth_admin = new auth_admin();
 		$auth_admin->acl_add_option(array(
