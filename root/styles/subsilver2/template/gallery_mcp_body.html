@@ -89,7 +89,7 @@
 			<!-- BEGIN image_row -->
 			<tr>
 
-				<!-- IF DISP_FAKE_THUMB and image_row.THUMBNAIL --><td class="row1" width="{FAKE_THUMB_SIZE}" align="center"><span style="float: left; text-align: center; width: {FAKE_THUMB_SIZE}px; padding-right: 5px;"><a href="{image_row.U_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->><img src="{image_row.THUMBNAIL}" style="max-width: {FAKE_THUMB_SIZE}px; max-height: {FAKE_THUMB_SIZE}px;" alt="{image_row.IMAGE_NAME}" /></a></span></td><!-- ENDIF -->
+				<!-- IF DISP_FAKE_THUMB and image_row.THUMBNAIL --><td class="row1" width="{FAKE_THUMB_SIZE}" align="center"><span style="float: left; text-align: center; width: {FAKE_THUMB_SIZE}px; padding-right: 5px;">{image_row.THUMBNAIL}</span></td><!-- ENDIF -->
 				<td class="row1">
 					<a href="<!-- IF not S_REPORT -->{image_row.U_IMAGE_PAGE}<!-- ELSE -->{image_row.U_REPORT}<!-- ENDIF -->" class="topictitle">{image_row.IMAGE_NAME}</a><!-- IF image_row.S_REPORTED --> <a href="{image_row.U_REPORT}">{REPORTED_IMG}</a><!-- ENDIF --><!-- IF image_row.S_UNAPPROVED --> <a href="{image_row.U_QUEUE}">{UNAPPROVED_IMG}</a><!-- ENDIF --><br />
 					<span>{L_UPLOADED_BY} {image_row.UPLOADER}<br />
@@ -163,9 +163,7 @@
 							</td>
 						</tr>
 						</table>
-					<div style="text-align: center; padding: 20px;">
-						<a href="{U_IMAGE}"<!-- IF S_GALLERY_HIGHSLIDE_JS --> class="highslide" onclick="return hs.expand(this)"<!-- ELSE --> rel="lytebox" class="image-resize"<!-- ENDIF -->><img src="{U_IMAGE}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-height: {IMAGE_RSZ_HEIGHT}px; max-width: {IMAGE_RSZ_WIDTH}px;" /></a>
-					</div>
+					<div style="text-align: center; padding: 20px;">{UC_IMAGE}</div>
 					<!-- IF IMAGE_DESC -->
 						<hr />
 						<span style="font-weight: bold;">{L_IMAGE_DESC}:</span><br />

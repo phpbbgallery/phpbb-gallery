@@ -576,7 +576,8 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id)
 
 	$image_page_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id");
 	$image_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "album_id=$album_id&amp;image_id=$image_id");
-	$thumbnail_url = append_sid("{$phpbb_root_path}{$gallery_root_path}thumbnail.$phpEx", "album_id=$album_id&amp;image_id=$image_id");
+	$thumb_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "mode=thumbnail&amp;album_id=$album_id&amp;image_id=$image_id");
+	$medium_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "mode=medium&amp;album_id=$album_id&amp;image_id=$image_id");
 	switch ($content)
 	{
 		case 'image_name':
@@ -585,11 +586,15 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id)
 		break;
 		case 'thumbnail':
 			$content = '<img src="{U_THUMBNAIL}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" />';
-			$content = str_replace(array('{U_THUMBNAIL}', '{IMAGE_NAME}'), array($thumbnail_url, $image_name), $content);
+			$content = str_replace(array('{U_THUMBNAIL}', '{IMAGE_NAME}'), array($thumb_url, $image_name), $content);
 		break;
 		case 'fake_thumbnail':
 			$content = '<img src="{U_THUMBNAIL}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-width: {FAKE_THUMB_SIZE}px; max-height: {FAKE_THUMB_SIZE}px;" />';
-			$content = str_replace(array('{U_THUMBNAIL}', '{IMAGE_NAME}', '{FAKE_THUMB_SIZE}'), array($thumbnail_url, $image_name, $album_config['fake_thumb_size']), $content);
+			$content = str_replace(array('{U_THUMBNAIL}', '{IMAGE_NAME}', '{FAKE_THUMB_SIZE}'), array($thumb_url, $image_name, $album_config['fake_thumb_size']), $content);
+		break;
+		case 'medium':
+			$content = '<img src="{U_MEDIUM}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" />';
+			$content = str_replace(array('{U_MEDIUM}', '{IMAGE_NAME}'), array($medium_url, $image_name), $content);
 		break;
 		case 'lastimage_icon':
 			$content = $user->img('icon_topic_latest', 'VIEW_LATEST_IMAGE');

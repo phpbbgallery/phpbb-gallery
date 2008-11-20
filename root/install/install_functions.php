@@ -398,16 +398,16 @@ function add_bbcode($album_bbcode)
 	//which bbcode template:
 	if (file_exists($phpbb_root_path . 'highslide/highslide-full.js'))
 	{
-			$bbcode_tpl = '<a class="highslide" onclick="return hs.expand(this)" href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?image_id={NUMBER}"><img src="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'thumbnail.php?image_id={NUMBER}" alt="{NUMBER}" /></a>'
+			$bbcode_tpl = '<a class="highslide" onclick="return hs.expand(this)" href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?image_id={NUMBER}"><img src="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?mode=thumbnail&image_id={NUMBER}" alt="{NUMBER}" /></a>'
 							. '<br /><a href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image_page.php?image_id={NUMBER}">{NUMBER}</a>';
-			$second_pass_replace = '<a class="highslide" onclick="return hs.expand(this)" href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?image_id=${1}"><img src="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'thumbnail.php?image_id=${1}" alt="${1}" /></a>'
+			$second_pass_replace = '<a class="highslide" onclick="return hs.expand(this)" href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?image_id=${1}"><img src="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?mode=thumbnail&image_id=${1}" alt="${1}" /></a>'
 							. '<br /><a href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image_page.php?image_id=${1}">${1}</a>';
 	}
 	else
 	{
-			$bbcode_tpl = '<a rel="lytebox" class="image-resize" href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?image_id={NUMBER}"><img src="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'thumbnail.php?image_id={NUMBER}" alt="{NUMBER}" /></a>'
+			$bbcode_tpl = '<a rel="lytebox" class="image-resize" href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?image_id={NUMBER}"><img src="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?mode=thumbnail&image_id={NUMBER}" alt="{NUMBER}" /></a>'
 							. '<br /><a href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image_page.php?image_id={NUMBER}">{NUMBER}</a>';
-			$second_pass_replace = '<a rel="lytebox" class="image-resize" href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?image_id=${1}"><img src="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'thumbnail.php?image_id=${1}" alt="${1}" /></a>'
+			$second_pass_replace = '<a rel="lytebox" class="image-resize" href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?image_id=${1}"><img src="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?mode=thumbnail&image_id=${1}" alt="${1}" /></a>'
 							. '<br /><a href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image_page.php?image_id=${1}">${1}</a>';
 	}
 

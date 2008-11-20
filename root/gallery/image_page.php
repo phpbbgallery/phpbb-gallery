@@ -44,7 +44,7 @@ $album_access_array = get_album_access_array();
 $image_id = request_var('image_id', request_var('id', 0));
 if (!$image_id)
 {
-	trigger_error($user->lang['NO_IMAGE_SPECIFIED'], E_USER_WARNING);
+	trigger_error('NO_IMAGE_SPECIFIED');
 }
 
 // Salting the form...yumyum ...
@@ -55,12 +55,12 @@ $album_id = $image_data['image_album_id'];
 $user_id = $image_data['image_user_id'];
 if (empty($image_data) || !file_exists($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']))
 {
-	trigger_error($user->lang['IMAGE_NOT_EXIST'], E_USER_WARNING);
+	trigger_error('IMAGE_NOT_EXIST');
 }
 $album_data = get_album_info($album_id);
 if (empty($album_data))
 {
-	trigger_error($user->lang['ALBUM_NOT_EXIST'], E_USER_WARNING);
+	trigger_error('ALBUM_NOT_EXIST');
 }
 
 /**
@@ -74,12 +74,12 @@ if (!gallery_acl_check('i_view', $album_id))
 	}
 	else
 	{
-		trigger_error($user->lang['NOT_AUTHORISED'], E_USER_WARNING);
+		trigger_error('NOT_AUTHORISED');
 	}
 }
 if (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != 1))
 {
-	trigger_error($user->lang['NOT_AUTHORISED']);
+	trigger_error('NOT_AUTHORISED');
 }
 
 /**
@@ -131,11 +131,9 @@ $is_watching = $image_data['watch_id'];
 $template->assign_vars(array(
 	'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id"),
 
-	'U_IMAGE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx?album_id=$album_id&amp;image_id=$image_id"),
+	'UC_IMAGE'			=> generate_image_link('medium', 'image', $image_id, $image_data['image_name'], $album_id),
 	'U_PREVIOUS'		=> ($previous_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?album_id=$album_id&amp;image_id=$previous_id") : '',
 	'U_NEXT'			=> ($next_id && ($next_id != $previous_id)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?album_id=$album_id&amp;image_id=$next_id") : '',
-	'IMAGE_RSZ_WIDTH'	=> $album_config['preview_rsz_width'],
-	'IMAGE_RSZ_HEIGHT'	=> $album_config['preview_rsz_height'],
 
 	'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_IMAGE'),
 	'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_IMAGE'),

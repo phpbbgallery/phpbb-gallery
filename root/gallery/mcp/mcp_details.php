@@ -59,11 +59,9 @@ $template->assign_vars(array(
 	'IMAGE_DESC'		=> generate_text_for_display($row['image_desc'], $row['image_desc_uid'], $row['image_desc_bitfield'], 7),
 	'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 	'IMAGE_TIME'		=> $user->format_date($row['image_time']),
-	'U_IMAGE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx" , 'album_id=' . $album_id . '&amp;image_id=' . $row['image_id']),
+	'UC_IMAGE'			=> generate_image_link('medium', $album_config['link_thumbnail'], $row['image_id'], $row['image_name'], $album_id),
 	'U_EDIT_IMAGE'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx" , 'album_id=' . $album_id . '&amp;image_id=' . $row['image_id'] . '&amp;mode=image&amp;submode=edit'),
 	'U_DELETE_IMAGE'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx" , 'album_id=' . $album_id . '&amp;image_id=' . $row['image_id'] . '&amp;mode=image&amp;submode=delete'),
-	'IMAGE_RSZ_WIDTH'	=> $album_config['preview_rsz_width'],
-	'IMAGE_RSZ_HEIGHT'	=> $album_config['preview_rsz_height'],
 	'S_MCP_ACTION'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx" , "mode=" . (($mode == 'report_details') ? 'report_open' : 'queue_unapproved') . "&amp;album_id=$album_id"),
 ));
 

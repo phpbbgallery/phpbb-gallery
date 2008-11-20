@@ -57,7 +57,7 @@ $result = $db->sql_query_limit($sql, $images_per_page, $start);
 while ($row = $db->sql_fetchrow($result))
 {
 	$template->assign_block_vars('image_row', array(
-		'THUMBNAIL'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}thumbnail.$phpEx" , 'album_id=' . $album_id .  '&amp;image_id=' . $row['image_id']),
+		'THUMBNAIL'			=> generate_image_link('fake_thumbnail', $album_config['link_thumbnail'], $row['image_id'], $row['image_name'], $album_id),
 		'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 		'IMAGE_TIME'		=> $user->format_date($row['image_time']),
 		'IMAGE_NAME'		=> $row['image_name'],
