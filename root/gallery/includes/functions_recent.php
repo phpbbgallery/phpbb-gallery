@@ -127,8 +127,8 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 
 					$template->assign_block_vars('recent.image', array(
 						'IMAGE_ID'		=> $picrow[$j]['image_id'],
-						'UC_THUMBNAIL'	=> generate_image_link('thumbnail', $album_config['link_thumbnail'], $picrow[$j]['image_id'], $picrow[$j]['image_name'], $picrow[$j]['image_album_id']),
 						'UC_IMAGE_NAME'	=> ($display['name']) ? (generate_image_link('image_name', $album_config['link_image_name'], $picrow[$j]['image_id'], $picrow[$j]['image_name'], $picrow[$j]['image_album_id'])) : '',
+						'UC_THUMBNAIL'	=> generate_image_link('thumbnail', $album_config['link_thumbnail'], $picrow[$j]['image_id'], $picrow[$j]['image_name'], $picrow[$j]['image_album_id']),
 						'U_ALBUM'		=> ($display['album']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $picrow[$j]['image_album_id']) : '',
 						'S_UNAPPROVED'	=> (gallery_acl_check('m_status', $album_id, $picrow[$j]['album_user_id']) && (!$picrow[$j]['image_status'])) ? true : false,
 						'S_REPORTED'	=> (gallery_acl_check('m_report', $album_id, $picrow[$j]['album_user_id']) && $picrow[$j]['image_reported']) ? true : false,
@@ -219,7 +219,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 					$template->assign_block_vars('random.image', array(
 						'IMAGE_ID'		=> $picrow[$j]['image_id'],
 						'UC_IMAGE_NAME'	=> ($display['name']) ? (generate_image_link('image_name', $album_config['link_image_name'], $picrow[$j]['image_id'], $picrow[$j]['image_name'], $picrow[$j]['image_album_id'])) : '',
-						'UC_THUMBNAIL'	=> generate_image_link('thumbnail', $album_config['link_image_name'], $picrow[$j]['image_id'], $picrow[$j]['image_name'], $picrow[$j]['image_album_id']),
+						'UC_THUMBNAIL'	=> generate_image_link('thumbnail', $album_config['link_thumbnail'], $picrow[$j]['image_id'], $picrow[$j]['image_name'], $picrow[$j]['image_album_id']),
 						'U_ALBUM'		=> ($display['album']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $picrow[$j]['image_album_id']) : '',
 						'S_UNAPPROVED'	=> (gallery_acl_check('m_status', $album_id, $picrow[$j]['album_user_id']) && (!$picrow[$j]['image_status'])) ? true : false,
 						'S_REPORTED'	=> (gallery_acl_check('m_report', $album_id, $picrow[$j]['album_user_id']) && $picrow[$j]['image_reported']) ? true : false,
