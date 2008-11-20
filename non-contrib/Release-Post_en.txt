@@ -1,7 +1,7 @@
 [b]Modification Name:[/b] phpbb gallery
 [b]Author:[/b] [url=http://www.flying-bits.org][b]nickvergessen[/b][/url]
 
-[b]Modification Version:[/b] 0.4.0-RC3
+[b]Modification Version:[/b] 0.4.0
 [b]Modification Description:[/b]
 [list]This is a gallery for your phpBB3.
 When I have some more time, I'll post a feature-list in this forum:
@@ -15,11 +15,13 @@ http://www.flying-bits.org/viewforum.php?f=38[/list]
 
 [b]MOD Repository[/b]: http://code.bantux.de/svn/phpbb-gallery (SVN/Subversion)
 [b]Browse Repository[/b]: http://code.bantux.de/repositories/show/phpbb-gallery
-[b]Bug-Tracker[/b]: http://www.flying-bits.org/bugtracker/viewcat.php?c=6
+[b]Bug-Tracker[/b]: http://www.flying-bits.org/go/bugtracker/
 (Before reporting a bug see the FAQ, whether there is something you should know about that bug)
 
 
 [b]FAQ[/b]: http://www.flying-bits.org/viewforum.php?f=67
 
-[b]Modification Download:[/b] [size=150][b][url=http://www.flying-bits.org/download.php?mod_id=6]Download v0.4.0-RC3[/url][/b][/size]
-[b][color=#FF0000]Note[/color]:[/b] Because of a complete change in the permissions-system you need to set all permissions new, when you update from previous versions (than 0.4.x), or convert from Smartor's Album MOD.
+[b]Mod Download:[/b] [size=150][b][url=http://www.flying-bits.org/download.php?mod_id=6]Download v0.4.0[/url][/b][/size]
+[list][url=]alternate Download[/url][/list]
+[b][color=#FF0000]Note[/color]:[/b] Because of a complete change on the permissions-system you need to set all permissions new, when you update from previous versions (than 0.4.x), or convert from Smartor's Album MOD.
+[b][color=#FF0000]Note[/color]:[/b] Because of some more changes on the permissions-system you need to set the moderator-permissions new, when you update from 0.4.0-RC3 to 0.4.0. Now the ACP-Modules have permissions aswell, so don't wonder when they disappear, just set the permissions in the phpBB-permissions-system.
