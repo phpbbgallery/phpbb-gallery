@@ -34,8 +34,8 @@ $lang['permission_cat']['gallery'] = 'phpBB Galerie';
 
 // Adding the permissions
 $lang = array_merge($lang, array(
-	'acl_a_gallery_manage'		=> array('lang' => 'Kann die Einstellungen der phpBB Gallery ändern', 'cat' => 'gallery'),
-	'acl_a_gallery_albums'		=> array('lang' => 'Kann Alben und Berechtigungen hinzufügen und ändern', 'cat' => 'gallery'),
+	'acl_a_gallery_manage'		=> array('lang' => 'Kann die Einstellungen der phpBB Gallery Ã¤ndern', 'cat' => 'gallery'),
+	'acl_a_gallery_albums'		=> array('lang' => 'Kann Alben und Berechtigungen hinzufÃ¼gen und Ã¤ndern', 'cat' => 'gallery'),
 	'acl_a_gallery_import'		=> array('lang' => 'Kann die Import-Funktion benutzen', 'cat' => 'gallery'),
 	'acl_a_gallery_cleanup'		=> array('lang' => 'Kann die phpBB Gallery reinigen', 'cat' => 'gallery'),
 ));
