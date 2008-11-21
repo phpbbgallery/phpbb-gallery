@@ -7,7 +7,7 @@
     <title lang="en-gb"><![CDATA[phpBB Gallery - recent & random images]]></title>
     <description lang="en-gb"><![CDATA[Adds recent & random images to index.php]]></description>
     <author-notes lang="en-gb">i hope you get it installed, otherwise you can ask for help on phpbb.de and phpbb.com</author-notes>
-    <mod-version>1.0.3</mod-version>
+    <mod-version>1.0.4</mod-version>
     <installation>
       <level>easy</level>
       <time>300</time>
@@ -27,7 +27,8 @@
     <open src="index.php">
       <edit>
         <find><![CDATA[$user->setup('viewforum');]]></find>
-        <action type="after-add"><![CDATA[include($phpbb_root_path . 'gallery/includes/functions_recent.' . $phpEx);
+        <action type="after-add"><![CDATA[include($gallery_root_path = GALLERY_ROOT_PATH;
+include($phpbb_root_path . $gallery_root_path . 'includes/functions_recent.' . $phpEx);
 $display = array(
 	'name'		=> true,
 	'poster'	=> true,

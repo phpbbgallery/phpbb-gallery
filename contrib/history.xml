@@ -45,6 +45,14 @@
     <author-notes lang="en-gb">This file contains all parts of the History, all Developers, a.s.o.</author-notes>
     <history>
       <entry>
+        <date>YYYY-MM-DD</date>
+        <rev-version>X.Y.Z</rev-version>
+        <changelog lang="en-gb">
+          <change><![CDATA[[Fix] Unreported: Call to a member function bbcode_second_pass() on a non-object in gallery/image_page.php]]></change>
+          <change><![CDATA[[Fix] Unreported: Missed to use gallery_root_path on add-on]]></change>
+        </changelog>
+      </entry>
+      <entry>
         <date>2008-11-20</date>
         <rev-version>0.4.0</rev-version>
         <changelog lang="en-gb">

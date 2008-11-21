@@ -373,6 +373,10 @@ if ($album_config['allow_comments'] && gallery_acl_check('c_read', $album_id))
 
 	if ($image_data['image_comments'] > 0)
 	{
+		if ($bbcode_bitfield !== '')
+		{
+			$bbcode = new bbcode(base64_encode($bbcode_bitfield));
+		}
 		$sql = 'SELECT c.*, u.*
 			FROM ' . GALLERY_COMMENTS_TABLE . ' c
 			LEFT JOIN ' . USERS_TABLE . " u
