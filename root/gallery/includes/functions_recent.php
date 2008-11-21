@@ -30,6 +30,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 	$albums = $cache->obtain_album_list();
 	$view_albums = gallery_acl_album_ids('i_view', 'array');
 	$moderate_albums = gallery_acl_album_ids('m_status', 'array');
+	$comment_albums = gallery_acl_album_ids('c_read', 'array');
 	$limit_sql = $rows * $columns;
 	switch ($modes)
 	{
@@ -249,7 +250,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 		}
 	}
 
-	if ($album_config['allow_comments'] && $comment)
+	if ($album_config['allow_comments'] && $comment && ($comment_albums != array()))
 	{
 		$user->add_lang('viewtopic');
 		$template->assign_vars(array(
@@ -260,7 +261,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 			FROM ' . GALLERY_COMMENTS_TABLE . ' c
 			LEFT JOIN ' . GALLERY_IMAGES_TABLE . " i
 				ON c.comment_image_id = i.image_id
-			WHERE " . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('c_read', 'array')) . "
+			WHERE " . $db->sql_in_set('i.image_album_id', $comment_albums) . "
 			ORDER BY c.comment_id DESC";
 		$result = $db->sql_query_limit($sql, $limit_sql);
 
