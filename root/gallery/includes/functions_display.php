@@ -216,14 +216,15 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			$lastimage_name = $row['album_last_image_name'];
 			$lastimage_time = $user->format_date($row['album_last_image_time']);
 			$lastimage_image_id = $row['album_last_image_id'];
-			$last_image_page_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $row['album_id_last_image'] . '&amp;image_id=' . $row['album_last_image_id']);
-			$last_thumb_url = append_sid("{$phpbb_root_path}{$gallery_root_path}thumbnail.$phpEx", 'album_id=' . $row['album_id_last_image'] . '&amp;image_id=' . $row['album_last_image_id']);
 			$lastimage_album_id = $row['album_id_last_image'];
+			$lastimage_uc_thumbnail = generate_image_link('fake_thumbnail', $album_config['link_thumbnail'], $lastimage_image_id, $lastimage_name, $lastimage_album_id);
+			$lastimage_uc_name = generate_image_link('image_name', $album_config['link_image_name'], $lastimage_image_id, $lastimage_name, $lastimage_album_id);
+			$lastimage_uc_icon = generate_image_link('lastimage_icon', $album_config['link_image_icon'], $lastimage_image_id, $lastimage_name, $lastimage_album_id);
 		}
 		else
 		{
-			$last_image_name = $last_image_name_full = $last_image_time = $last_image_url = $last_image_page_url = $last_thumb_url = '';
-			$lastimage_album_id = $lastimage_name = '';
+			$lastimage_time = $lastimage_image_id = $lastimage_album_id = 0;
+			$lastimage_name = $lastimage_thumbnail = $lastimage_uc_name = $lastimage_uc_icon = '';
 		}
 
 		// Output moderator listing ... if applicable
@@ -265,9 +266,9 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			'ALBUM_IMAGE'			=> $row['album_image'],
 			'LAST_IMAGE_TIME'		=> $lastimage_time,
 			'LAST_USER_FULL'		=> get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
-			'UC_FAKE_THUMBNAIL'		=> ($album_config['disp_fake_thumb']) ? generate_image_link('fake_thumbnail', $album_config['link_thumbnail'], $lastimage_image_id, $lastimage_name, $lastimage_album_id) : '',
-			'UC_IMAGE_NAME'			=> generate_image_link('image_name', $album_config['link_image_name'], $lastimage_image_id, $lastimage_name, $lastimage_album_id),
-			'UC_LASTIMAGE_ICON'		=> generate_image_link('lastimage_icon', $album_config['link_image_icon'], $lastimage_image_id, $lastimage_name, $lastimage_album_id),
+			'UC_FAKE_THUMBNAIL'		=> ($album_config['disp_fake_thumb']) ? $lastimage_uc_thumbnail : '',
+			'UC_IMAGE_NAME'			=> $lastimage_uc_name,
+			'UC_LASTIMAGE_ICON'		=> $lastimage_uc_icon,
 			'ALBUM_COLOUR'			=> get_username_string('colour', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
 			'MODERATORS'			=> $moderators_list,
 			'SUBALBUMS'				=> $s_subalbums_list,
