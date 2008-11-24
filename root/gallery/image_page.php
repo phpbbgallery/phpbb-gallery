@@ -15,6 +15,7 @@ $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 $gallery_root_path = GALLERY_ROOT_PATH;
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
 
 // Start session management
 $user->session_begin();
@@ -373,10 +374,9 @@ if ($album_config['allow_comments'] && gallery_acl_check('c_read', $album_id))
 
 	if ($image_data['image_comments'] > 0)
 	{
-		if ($bbcode_bitfield !== '')
-		{
-			$bbcode = new bbcode(base64_encode($bbcode_bitfield));
-		}
+		$bbcode_bitfield = '' | base64_decode($row['bbcode_bitfield']);
+		$bbcode = new bbcode($bbcode_bitfield);
+
 		$sql = 'SELECT c.*, u.*
 			FROM ' . GALLERY_COMMENTS_TABLE . ' c
 			LEFT JOIN ' . USERS_TABLE . " u
