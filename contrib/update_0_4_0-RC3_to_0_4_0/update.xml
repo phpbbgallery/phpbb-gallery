@@ -86,7 +86,7 @@ You may install it, to be informed about future versions, as I'm not going to se
       </edit>
       <edit>
         <find><![CDATA['U_GALLERY_MOD'			=> append_sid("{$phpbb_root_path}gallery/index.$phpEx"),]]></find>
-        <action type="before-add"><![CDATA['U_GALLERY_MOD'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"),]]></action>
+        <action type="replace-with"><![CDATA['U_GALLERY_MOD'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"),]]></action>
       </edit>
     </open>
     <open src="includes/session.php">
