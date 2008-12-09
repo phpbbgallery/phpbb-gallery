@@ -309,7 +309,19 @@ else
 		break;
 	}
 
-	readfile($image_source);
+	if (@readfile($image_source) == false)
+	{
+		$fp = @fopen($image_source, 'rb');
+			if ($fp !== false)
+			{
+				while (!feof($fp))
+				{
+					echo fread($fp, 8192);
+				}
+				fclose($fp);
+			}
+	}
+	flush();
 }
 
 ?>
