@@ -50,6 +50,7 @@
         <changelog lang="en-gb">
           <change><![CDATA[[Add] Report #383: Prev- and Next-Button on album.php (Patch by Dr.Death)]]></change>
 
+          <change><![CDATA[[Fix] Report #374: Reported topics show gallery-css]]></change>
           <change><![CDATA[[Fix] Report #380: Warning: readfile() has been disabled for security reasons]]></change>
           <change><![CDATA[[Fix] Report #379: Thumbnails on recent comments open with wrong adjustment]]></change>
           <change><![CDATA[[Fix] Report #377: Missing lang-string for EDIT_COMMENT]]></change>

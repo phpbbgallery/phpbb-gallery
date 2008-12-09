@@ -86,13 +86,13 @@ span.reported-images-number {
 	color: red;
 }
 
-.unapproved {
+.g_unapproved {
 	background-position: 100% 0;
 	background-repeat: no-repeat;
 	background-image: url("{T_IMAGESET_LANG_PATH}/g_unapproved.gif");
 }
 
-.reported {
+.g_reported {
 	background-position: 100% 0;
 	background-repeat: no-repeat;
 	background-image: url("{T_IMAGESET_LANG_PATH}/g_reported.gif");
