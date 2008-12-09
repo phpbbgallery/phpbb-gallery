@@ -50,6 +50,7 @@
         <changelog lang="en-gb">
           <change><![CDATA[[Add] Report #383: Prev- and Next-Button on album.php (Patch by Dr.Death)]]></change>
 
+          <change><![CDATA[[Fix] Report #379: Thumbnails on recent comments open with wrong adjustment]]></change>
           <change><![CDATA[[Fix] Report #377: Missing lang-string for EDIT_COMMENT]]></change>
           <change><![CDATA[[Fix] Report #384: Undefined variable: lastimage_uc_thumbnail]]></change>
           <change><![CDATA[[Fix] Report #385: installation and conversion missing "module_auth"]]></change>
