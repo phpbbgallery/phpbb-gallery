@@ -1986,6 +1986,12 @@ class acp_gallery
 		if ($check_mode == 'source')
 		{
 			$source_missing = array();
+
+			//Reset the status: a image might have been viewed without file but the file is back
+			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+				SET image_filemissing = 0';
+			$db->sql_query($sql);
+
 			$sql = 'SELECT image_id, image_filename, image_filemissing
 				FROM ' . GALLERY_IMAGES_TABLE;
 			$result = $db->sql_query($sql);
