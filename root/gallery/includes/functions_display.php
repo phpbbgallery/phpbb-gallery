@@ -224,7 +224,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		else
 		{
 			$lastimage_time = $lastimage_image_id = $lastimage_album_id = 0;
-			$lastimage_name = $lastimage_thumbnail = $lastimage_uc_name = $lastimage_uc_icon = '';
+			$lastimage_name = $lastimage_uc_thumbnail = $lastimage_uc_name = $lastimage_uc_icon = '';
 		}
 
 		// Output moderator listing ... if applicable
