@@ -511,12 +511,12 @@ switch ($mode)
 									if (($image_data['width'] / $album_config['max_width']) > ($image_data['height'] / $album_config['max_height']))
 									{
 										$thumbnail_width	= $album_config['max_width'];
-										$thumbnail_height	= $album_config['max_height'] * (($image_data['height'] / $album_config['max_height']) / ($image_data['width'] / $album_config['max_width']));
+										$thumbnail_height	= round($album_config['max_height'] * (($image_data['height'] / $album_config['max_height']) / ($image_data['width'] / $album_config['max_width'])));
 									}
 									else
 									{
 										$thumbnail_height	= $album_config['max_height'];
-										$thumbnail_width	= $album_config['max_width'] * (($image_data['width'] / $album_config['max_width']) / ($image_data['height'] / $album_config['max_height']));
+										$thumbnail_width	= round($album_config['max_width'] * (($image_data['width'] / $album_config['max_width']) / ($image_data['height'] / $album_config['max_height'])));
 									}
 									$thumbnail = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
 									$resize_function = ($album_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
