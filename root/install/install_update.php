@@ -706,6 +706,8 @@ class install_update extends module
 				));
 				$cache->destroy('acl_options');
 
+			case '0.4.0':
+
 				// Update the ACP-Modules permissions
 				$sql = 'UPDATE ' . MODULES_TABLE . " SET
 					module_auth = 'acl_a_gallery_manage'
@@ -732,7 +734,7 @@ class install_update extends module
 					WHERE module_langname = 'ACP_GALLERY_CLEANUP'";
 				$db->sql_query($sql);
 
-			case '0.4.0':
+			case '0.4.1-dev':
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
 			break;
