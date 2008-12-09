@@ -303,4 +303,9 @@ $lang = array_merge($lang, array(
 	'SLIDE_SHOW_START'				=> 'To start the slideshow, click on one of the image-names:',
 ));
 
+//Added after 0.4.0
+$lang = array_merge($lang, array(
+	'EDIT_COMMENT'					=> 'Edit comment',
+));
+
 ?>

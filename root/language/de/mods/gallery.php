@@ -302,4 +302,9 @@ $lang = array_merge($lang, array(
 	'SLIDE_SHOW_START'				=> 'Um die Diashow zu starten, klicke auf einen der Bildnamen:',
 ));
 
+//Added after 0.4.0
+$lang = array_merge($lang, array(
+	'EDIT_COMMENT'					=> 'Kommentar ändern',
+));
+
 ?>
