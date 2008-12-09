@@ -608,7 +608,8 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id)
 		break;
 		case 'lytebox':
 			$url = $image_url;
-			$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" rel="lytebox" class="image-resize">{CONTENT}</a>';
+			// LPI is a little credit to Dr.Death =)
+			$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" rel="lytebox[LPI]" class="image-resize">{CONTENT}</a>';
 		break;
 		case 'lytebox_slide_show':
 			$url = $image_url;
