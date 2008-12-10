@@ -156,71 +156,83 @@ function get_album_access_array()
 */
 function gallery_acl_check($mode, $album_id, $album_user_id = -1)
 {
-	global $user, $album_access_array, $cache;
+	static $_gallery_acl_cache;
 
+	// Do we have a function call without $album_user_id ?
 	if (($album_user_id < 0) && ($album_id > 0))
 	{
+		global $cache;
+
 		$albums = $cache->obtain_album_list();
 		$album_user_id = $albums[$album_id]['album_user_id'];
 	}
+
+	if (isset($_gallery_acl_cache[$album_id][$mode]))
+	{
+		return $_gallery_acl_cache[$album_id][$mode];
+	}
+
+
+
+	global $user, $album_access_array;
 
 	if ($album_id == OWN_GALLERY_PERMISSIONS)
 	{
 		if ($mode == 'album_count')
 		{
-			$access = $album_access_array[OWN_GALLERY_PERMISSIONS][$mode];
+			$_gallery_acl_cache[$album_id][$mode] = $album_access_array[OWN_GALLERY_PERMISSIONS][$mode];
 		}
 		else
 		{
-			$access = ($album_access_array[OWN_GALLERY_PERMISSIONS][$mode] == 1) ? true : false;
+			$_gallery_acl_cache[$album_id][$mode] = ($album_access_array[OWN_GALLERY_PERMISSIONS][$mode] == 1) ? true : false;
 		}
-		return $access;
+		return $_gallery_acl_cache[$album_id][$mode];
 	}
 	if ($album_id == PERSONAL_GALLERY_PERMISSIONS)
 	{
 		if ($mode == 'album_count')
 		{
-			$access = $album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode];
+			$_gallery_acl_cache[$album_id][$mode] = $album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode];
 		}
 		else
 		{
-			$access = ($album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode] == 1) ? true : false;
+			$_gallery_acl_cache[$album_id][$mode] = ($album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode] == 1) ? true : false;
 		}
-		return $access;
+		return $_gallery_acl_cache[$album_id][$mode];
 	}
 
 	if ($mode == 'i_count')
 	{
 		if ($album_user_id == $user->data['user_id'])
 		{
-			$access = $album_access_array[OWN_GALLERY_PERMISSIONS][$mode];
+			$_gallery_acl_cache[$album_id][$mode] = $album_access_array[OWN_GALLERY_PERMISSIONS][$mode];
 		}
 		else if ($album_user_id > 0)
 		{
-			$access = $album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode];
+			$_gallery_acl_cache[$album_id][$mode] = $album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode];
 		}
 		else
 		{
-			$access = $album_access_array[$album_id][$mode];
+			$_gallery_acl_cache[$album_id][$mode] = $album_access_array[$album_id][$mode];
 		}
 	}
 	else
 	{
 		if ($album_user_id == $user->data['user_id'])
 		{
-			$access = ($album_access_array[OWN_GALLERY_PERMISSIONS][$mode] == 1) ? true : false;
+			$_gallery_acl_cache[$album_id][$mode] = ($album_access_array[OWN_GALLERY_PERMISSIONS][$mode] == 1) ? true : false;
 		}
 		else if ($album_user_id > 0)
 		{
-			$access = ($album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode] == 1) ? true : false;
+			$_gallery_acl_cache[$album_id][$mode] = ($album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode] == 1) ? true : false;
 		}
 		else
 		{
-			$access = ($album_access_array[$album_id][$mode] == 1) ? true : false;
+			$_gallery_acl_cache[$album_id][$mode] = ($album_access_array[$album_id][$mode] == 1) ? true : false;
 		}
 	}
 
-	return $access;
+	return $_gallery_acl_cache[$album_id][$mode];
 }
 
 /**
