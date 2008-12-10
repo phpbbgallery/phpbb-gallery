@@ -399,7 +399,6 @@ if ($album_config['allow_comments'] && gallery_acl_check('c_read', $album_id))
 				$lastedit_row = $db->sql_fetchrow($result_2);
 				$db->sql_freeresult($result_2);
 
-
 				$edit_info = ($commentrow['comment_edit_count'] == 1) ? $user->lang['EDITED_TIME_TOTAL'] : $user->lang['EDITED_TIMES_TOTAL'];
 				$edit_info = sprintf($edit_info, get_username_string('full', $lastedit_row['user_id'], $lastedit_row['username'], $lastedit_row['user_colour']), $user->format_date($commentrow['comment_edit_time']), $commentrow['comment_edit_count']);
 			}
