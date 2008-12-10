@@ -306,6 +306,8 @@ $lang = array_merge($lang, array(
 //Added after 0.4.0
 $lang = array_merge($lang, array(
 	'EDIT_COMMENT'					=> 'Edit comment',
+
+	'UNLOCK_IMAGE'					=> 'Unlock image',
 ));
 
 ?>

@@ -43,7 +43,7 @@ function toggleElement(oElement)
 						<td class="bg2" valign="top" style="width: {S_COL_WIDTH};">
 							<table width="100%" cellpadding="2" cellspacing="5" border="0" class="forumline">
 								<tr>
-									<td align="center" style="height: {S_THUMBNAIL_SIZE}px;" class="bg1<!-- IF recent.image.S_UNAPPROVED --> g_unapproved<!-- ENDIF --><!-- IF recent.image.S_REPORTED --> g_reported<!-- ENDIF -->">
+									<td align="center" style="height: {S_THUMBNAIL_SIZE}px;" class="bg1<!-- IF recent.image.S_UNAPPROVED --> g_unapproved<!-- ENDIF --><!-- IF recent.image.S_LOCKED --> g_locked<!-- ENDIF --><!-- IF recent.image.S_REPORTED --> g_reported<!-- ENDIF -->">
 										<span class="genmed">{recent.image.UC_THUMBNAIL}</span>
 									</td>
 								</tr>
@@ -119,7 +119,7 @@ function toggleElement(oElement)
 						<td class="bg2" valign="top" style="width: {S_COL_WIDTH};">
 							<table width="100%" cellpadding="2" cellspacing="5" border="0" class="forumline">
 								<tr>
-									<td align="center" style="height: {S_THUMBNAIL_SIZE}px;" class="bg1<!-- IF random.image.S_UNAPPROVED --> unapproved<!-- ENDIF --><!-- IF random.image.S_REPORTED --> reported<!-- ENDIF -->">
+									<td align="center" style="height: {S_THUMBNAIL_SIZE}px;" class="bg1<!-- IF random.image.S_UNAPPROVED --> g_unapproved<!-- ENDIF --><!-- IF random.image.S_LOCKED --> g_locked<!-- ENDIF --><!-- IF random.image.S_REPORTED --> g_reported<!-- ENDIF -->">
 										<span class="genmed">{random.image.UC_THUMBNAIL}</span>
 									</td>
 								</tr>

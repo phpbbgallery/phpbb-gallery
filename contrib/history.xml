@@ -50,6 +50,7 @@
         <changelog lang="en-gb">
           <change><![CDATA[[Add] Report #383: Prev- and Next-Button on album.php (Patch by Dr.Death)]]></change>
 
+          <change><![CDATA[[Fix] Report #376: No Info on album-page when image is locked]]></change>
           <change><![CDATA[[Fix] Report #375: Images might have non-natural image-size]]></change>
           <change><![CDATA[[Fix] Report #373: status of missing files not reset on clean-up]]></change>
           <change><![CDATA[[Fix] Report #374: Reported topics show gallery-css]]></change>
