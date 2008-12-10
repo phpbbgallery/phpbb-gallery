@@ -256,13 +256,6 @@ class acp_gallery
 				copy($image_path, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
 				@chmod($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename, 0777);
 
-				/*//we need to unsupport non-gd-installations!
-				if (!$album_config['gd_version'])
-				{
-					copy($thumbtmp, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_thumbnail);
-					@chmod($phpbb_root_path . GALLERY_CACHE_PATH . $image_thumbnail, 0777);
-				}*/
-
 
 				if (($album_config['thumbnail_cache']) && ($album_config['gd_version'] > 0))
 				{
@@ -393,6 +386,15 @@ class acp_gallery
 			$left = count($images) - count($done_images);
 			$sql = 'UPDATE ' . GALLERY_USERS_TABLE . " SET user_images = user_images + $counter WHERE user_id = $user_id";
 			$db->sql_query($sql);
+			if ($db->sql_affectedrows() != 1)
+			{
+				$sql_ary = array(
+					'user_id'				=> $user_id,
+					'user_images'			=> $counter,
+				);
+				$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+				$db->sql_query($sql);
+			}
 			set_config('num_images', $config['num_images'] + $counter, true);
 			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . " 
 				SET album_images_real = album_images_real + $counter
@@ -485,6 +487,15 @@ class acp_gallery
 						{
 							$total_images += $row['num_images'];
 							$db->sql_query('UPDATE ' . GALLERY_USERS_TABLE . " SET user_images = {$row['num_images']} WHERE user_id = {$row['user_id']}");
+							if ($db->sql_affectedrows() != 1)
+							{
+								$sql_ary = array(
+									'user_id'				=> $row['user_id'],
+									'user_images'			=> $row['num_images'],
+								);
+								$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+								$db->sql_query($sql);
+							}
 						}
 						$db->sql_freeresult($result);
 						set_config('num_images', $total_images, true);
@@ -506,6 +517,15 @@ class acp_gallery
 						while ($row = $db->sql_fetchrow($result))
 						{
 							$db->sql_query('UPDATE ' . GALLERY_USERS_TABLE . " SET personal_album_id = {$row['album_id']} WHERE user_id = {$row['album_user_id']}");
+							if ($db->sql_affectedrows() != 1)
+							{
+								$sql_ary = array(
+									'user_id'				=> $row['user_id'],
+									'personal_album_id'		=> $row['album_id'],
+								);
+								$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+								$db->sql_query($sql);
+							}
 						}
 						$db->sql_freeresult($result);
 						trigger_error($user->lang['RESYNCED_PERSONALS'] . adm_back_link($this->u_action));
