@@ -74,6 +74,19 @@ You may install it, to be informed about future versions, as I'm not going to se
       <file from="root/styles/prosilver/theme/images/icon_gallery.gif" to="styles/prosilver/theme/images/icon_gallery.gif" />
       <file from="gallery/upload/*.*" to="gallery/images/upload/*.*" />
     </copy>
+    <open src="includes/functions_user.php">
+      <edit>
+        <find><![CDATA[	// Delete auth entries from the groups table
+	$sql = 'DELETE FROM ' . ACL_GROUPS_TABLE . "
+		WHERE group_id = $group_id";
+	$db->sql_query($sql);]]></find>
+        <action type="after-add"><![CDATA[
+	// Delete the group from the gallery-moderators
+	$sql = 'DELETE FROM ' . GALLERY_MODSCACHE_TABLE . "
+		WHERE group_id = $group_id";
+	$db->sql_query($sql);]]></action>
+      </edit>
+    </open>
     <diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
 
 Du musst die Dateien aus gallery/upload/cache/ nach gallery/images/cache/ kopieren.

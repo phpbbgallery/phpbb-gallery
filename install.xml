@@ -72,8 +72,7 @@ You may install it, to be informed about future versions, as I'm not going to se
       <file from="root/install_gallery/schemas/*/*.*" to="install_gallery/schemas/*/*.*" />
       <file from="root/language/en/email/*.txt" to="language/en/email/*.txt" />
       <file from="root/language/en/mods/*.php" to="language/en/mods/*.php" />
-      <file from="root/styles/prosilver/imageset/en/button_upload_image.gif" to="styles/prosilver/imageset/en/button_upload_image.gif" />
-      <file from="root/styles/prosilver/imageset/icon_contact_gallery.gif" to="styles/prosilver/imageset/icon_contact_gallery.gif" />
+      <file from="root/styles/prosilver/imageset/*.*" to="styles/prosilver/imageset/*.*" />
       <file from="root/styles/prosilver/template/*.*" to="styles/prosilver/template/*.*" />
       <file from="root/styles/prosilver/theme/gallery_lytebox.css" to="styles/prosilver/theme/gallery_lytebox.css" />
       <file from="root/styles/prosilver/theme/images/gallery_lytebox/*.*" to="styles/prosilver/theme/images/gallery_lytebox/*.*" />
@@ -352,6 +351,17 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
 		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " SET image_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
 			WHERE " . $db->sql_in_set('image_user_id', $user_id_ary);
 		$db->sql_query($sql);]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[	// Delete auth entries from the groups table
+	$sql = 'DELETE FROM ' . ACL_GROUPS_TABLE . "
+		WHERE group_id = $group_id";
+	$db->sql_query($sql);]]></find>
+        <action type="after-add"><![CDATA[
+	// Delete the group from the gallery-moderators
+	$sql = 'DELETE FROM ' . GALLERY_MODSCACHE_TABLE . "
+		WHERE group_id = $group_id";
+	$db->sql_query($sql);]]></action>
       </edit>
     </open>
     <open src="includes/session.php">
