@@ -164,6 +164,8 @@ function toggleElement(oElement)
 <!-- ENDIF -->
 
 <!-- IF S_COMMENTS -->
+<h3><a href="javascript: toggleElement( getElement('recent-comments'));">{L_RECENT_COMMENTS}</a></h3>
+<div id="recent-comments" style="display: none;">
 <!-- BEGIN commentrow -->
 	<table class="tablebg" width="100%" cellspacing="1">
 	<!-- IF commentrow.S_FIRST_ROW -->
@@ -243,6 +245,7 @@ function toggleElement(oElement)
 		</tr>
 	</table>
 <!-- END commentrow -->
+</div>
 <!-- ENDIF -->
 
 <!-- Please keep this little notice visible -->

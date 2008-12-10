@@ -175,7 +175,8 @@ function toggleElement(oElement)
 </div>
 <!-- ENDIF -->
 <!-- IF .commentrow -->
-	<h4>{L_RECENT_COMMENTS}</h4>
+	<h4><a href="javascript: toggleElement( getElement('recent-comments'));">{L_RECENT_COMMENTS}</a></h4>
+	<div id="recent-comments" style="display: none;">
 	<!-- BEGIN commentrow -->
 	<a id="{commentrow.COMMENT_ID}"></a>
 	<div class="post <!-- IF commentrow.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
@@ -204,6 +205,7 @@ function toggleElement(oElement)
 		</div>
 	</div>
 	<!-- END commentrow -->
+	</div>
 <!-- ELSEIF S_COMMENTS -->
 	<div id="postingbox" class="panel">
 		<div class="inner">
