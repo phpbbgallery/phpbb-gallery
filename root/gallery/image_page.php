@@ -397,6 +397,8 @@ if ($album_config['allow_comments'] && gallery_acl_check('c_read', $album_id))
 					WHERE c.comment_id = ' . (int) $commentrow['comment_id'];
 				$result_2 = $db->sql_query($sql_2);
 				$lastedit_row = $db->sql_fetchrow($result_2);
+				$db->sql_freeresult($result_2);
+
 
 				$edit_info = ($commentrow['comment_edit_count'] == 1) ? $user->lang['EDITED_TIME_TOTAL'] : $user->lang['EDITED_TIMES_TOTAL'];
 				$edit_info = sprintf($edit_info, get_username_string('full', $lastedit_row['user_id'], $lastedit_row['username'], $lastedit_row['user_colour']), $user->format_date($commentrow['comment_edit_time']), $commentrow['comment_edit_count']);
@@ -439,6 +441,7 @@ if ($album_config['allow_comments'] && gallery_acl_check('c_read', $album_id))
 				'SIGNATURE'				=> $commentrow['user_sig'],
 			));
 		}
+		$db->sql_freeresult($result);
 
 		$template->assign_vars(array(
 			'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_COMMENT'),
