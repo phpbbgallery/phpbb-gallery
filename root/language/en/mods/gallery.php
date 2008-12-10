@@ -307,6 +307,11 @@ $lang = array_merge($lang, array(
 $lang = array_merge($lang, array(
 	'EDIT_COMMENT'					=> 'Edit comment',
 
+	'RATES_COUNT'					=> 'Rates',
+	'RATE_STRING'					=> '%1$s (%2$s Rate)', // 1.Rating-average 2.number of rates
+	'RATES_STRING'					=> '%1$s (%2$s Rates)',
+	'RATING_AVG'					=> 'Rating-average',
+
 	'UNLOCK_IMAGE'					=> 'Unlock image',
 ));
 

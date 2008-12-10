@@ -100,7 +100,7 @@ if (gallery_acl_check('m_status', $album_id))
 	$image_approval_sql = '';
 }
 
-$sort_by_sql = array('t' => 'image_time', 'n' => 'image_name', 'u' => 'image_username', 'vc' => 'image_view_count', 'r' => 'image_rate_avg', 'c' => 'image_comments', 'lc' => 'image_last_comment');
+$sort_by_sql = array('t' => 'image_time', 'n' => 'image_name', 'u' => 'image_username', 'vc' => 'image_view_count', 'ra' => 'image_rate_avg', 'r' => 'image_rates', 'c' => 'image_comments', 'lc' => 'image_last_comment');
 $sql_sort_order = $sort_by_sql[$album_config['sort_method']] . ' ' . (($album_config['sort_order'] == 'd') ? 'DESC' : 'ASC');
 
 $sql = 'SELECT *
@@ -309,7 +309,7 @@ if ($album_config['allow_rates'])
 		$allowed_to_rate = true;
 	}
 	$template->assign_vars(array(
-		'IMAGE_RATING'		=> ($image_data['image_rates'] <> 0) ? $image_data['image_rate_avg'] / 100 : $user->lang['NOT_RATED'],
+		'IMAGE_RATING'		=> ($image_data['image_rates'] <> 0) ? sprintf((($image_data['image_rates'] == 1) ? $user->lang['RATE_STRING'] : $user->lang['RATES_STRING']), $image_data['image_rate_avg'] / 100, $image_data['image_rates']) : $user->lang['NOT_RATED'],
 		'S_YOUR_RATING'		=> $your_rating,
 		'S_ALLOWED_TO_RATE'	=> $allowed_to_rate,
 	));

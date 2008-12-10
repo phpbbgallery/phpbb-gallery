@@ -48,6 +48,7 @@
         <date>YYYY-MM-DD</date>
         <rev-version>X.Y.Z</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Add] Report #386: Display the number of ratings received]]></change>
           <change><![CDATA[[Add] Report #383: Prev- and Next-Button on album.php (Patch by Dr.Death)]]></change>
 
           <change><![CDATA[[Change] Report #371: Collapse recent comments on recent-body]]></change>

@@ -112,8 +112,10 @@ if ($album_id <> 0)
 
 	if ($album_config['rate'] == 1)
 	{
-		$sort_by_text['r'] = $user->lang['RATING'];
-		$sort_by_sql['r'] = 'image_rate_avg';
+		$sort_by_text['ra'] = $user->lang['RATING'];
+		$sort_by_sql['ra'] = 'image_rate_avg';
+		$sort_by_text['r'] = $user->lang['RATES_COUNT'];
+		$sort_by_sql['r'] = 'image_rates';
 	}
 	if ($album_config['comment'] == 1)
 	{
@@ -193,7 +195,7 @@ if ($album_id <> 0)
 				}
 				else
 				{
-					$picrow[$j]['rating'] = $picrow[$j]['image_rate_avg'] / 100;
+					$picrow[$j]['rating'] = sprintf((($picrow[$j]['image_rates'] == 1) ? $user->lang['RATE_STRING'] : $user->lang['RATES_STRING']), $picrow[$j]['image_rate_avg'] / 100, $picrow[$j]['image_rates']);
 				}
 
 				$approval_link = (gallery_acl_check('m_status', $album_id) && ($picrow[$j]['image_status'] == 0)) ? '<a href="'. append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "mode=queue_details&amp;album_id=$album_id&amp;option_id=" . $picrow[$j]['image_id']) . '">' . $user->lang['APPROVE'] . '</a>' : '';

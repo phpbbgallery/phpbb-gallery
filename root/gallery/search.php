@@ -53,8 +53,10 @@ $sort_by_sql = array('t' => 'image_time', 'n' => 'image_name', 'u' => 'image_use
 
 if ($album_config['rate'] == 1)
 {
-	$sort_by_text['r'] = $user->lang['RATING'];
-	$sort_by_sql['r'] = 'image_rate_avg';
+	$sort_by_text['ra'] = $user->lang['RATING_AVG'];
+	$sort_by_sql['ra'] = 'image_rate_avg';
+	$sort_by_text['r'] = $user->lang['RATES_COUNT'];
+	$sort_by_sql['r'] = 'image_rates';
 }
 if ($album_config['comment'] == 1)
 {
@@ -121,7 +123,7 @@ $sql_sort_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' :
 				}
 				else
 				{
-					$picrow[$j]['rating'] = $picrow[$j]['image_rate_avg'] / 100;
+					$picrow[$j]['rating'] = sprintf((($picrow[$j]['image_rates'] == 1) ? $user->lang['RATE_STRING'] : $user->lang['RATES_STRING']), $picrow[$j]['image_rate_avg'] / 100, $picrow[$j]['image_rates']);
 				}
 
 				$perm_user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];

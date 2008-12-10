@@ -120,7 +120,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 					}
 					else if ($display['ratings'])
 					{
-						$picrow[$j]['rating'] = $picrow[$j]['image_rate_avg'] / 100;
+						$picrow[$j]['rating'] = sprintf((($picrow[$j]['image_rates'] == 1) ? $user->lang['RATE_STRING'] : $user->lang['RATES_STRING']), $picrow[$j]['image_rate_avg'] / 100, $picrow[$j]['image_rates']);
 					}
 					$perm_user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
 					$allow_edit = ((gallery_acl_check('i_edit', $album_id, $picrow[$j]['album_user_id']) && ($picrow[$j]['image_user_id'] == $perm_user_id)) || gallery_acl_check('m_edit', $album_id, $picrow[$j]['album_user_id'])) ? true : false;
@@ -212,7 +212,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 					}
 					else if ($display['ratings'])
 					{
-						$picrow[$j]['rating'] = $picrow[$j]['image_rate_avg'] / 100;
+						$picrow[$j]['rating'] = sprintf((($picrow[$j]['image_rates'] == 1) ? $user->lang['RATE_STRING'] : $user->lang['RATES_STRING']), $picrow[$j]['image_rate_avg'] / 100, $picrow[$j]['image_rates']);
 					}
 					$perm_user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
 					$allow_edit = ((gallery_acl_check('i_edit', $album_id, $picrow[$j]['album_user_id']) && ($picrow[$j]['image_user_id'] == $perm_user_id)) || gallery_acl_check('m_edit', $album_id, $picrow[$j]['album_user_id'])) ? true : false;
