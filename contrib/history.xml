@@ -50,6 +50,7 @@
         <changelog lang="en-gb">
           <change><![CDATA[[Add] Report #383: Prev- and Next-Button on album.php (Patch by Dr.Death)]]></change>
 
+          <change><![CDATA[[Fix] Report #382: invisible comments after editing comment]]></change>
           <change><![CDATA[[Fix] Report #381: double checks for same auth => made static]]></change>
           <change><![CDATA[[Fix] Report #369: deleted Mod-Group still shows up]]></change>
           <change><![CDATA[[Fix] Report #376: No Info on album-page when image is locked]]></change>

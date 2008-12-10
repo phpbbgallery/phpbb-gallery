@@ -390,13 +390,13 @@ if ($album_config['allow_comments'] && gallery_acl_check('c_read', $album_id))
 			$edit_info = '';
 			if ($commentrow['comment_edit_count'] > 0)
 			{
-				$sql = 'SELECT c.comment_id, c.comment_edit_user_id, u.user_id, u.username, u.user_colour
+				$sql_2 = 'SELECT c.comment_id, c.comment_edit_user_id, u.user_id, u.username, u.user_colour
 					FROM ' . GALLERY_COMMENTS_TABLE . ' c
 					LEFT JOIN ' . USERS_TABLE . ' u
 						ON c.comment_edit_user_id = u.user_id
 					WHERE c.comment_id = ' . (int) $commentrow['comment_id'];
-				$result = $db->sql_query($sql);
-				$lastedit_row = $db->sql_fetchrow($result);
+				$result_2 = $db->sql_query($sql_2);
+				$lastedit_row = $db->sql_fetchrow($result_2);
 
 				$edit_info = ($commentrow['comment_edit_count'] == 1) ? $user->lang['EDITED_TIME_TOTAL'] : $user->lang['EDITED_TIMES_TOTAL'];
 				$edit_info = sprintf($edit_info, get_username_string('full', $lastedit_row['user_id'], $lastedit_row['username'], $lastedit_row['user_colour']), $user->format_date($commentrow['comment_edit_time']), $commentrow['comment_edit_count']);
