@@ -292,6 +292,26 @@ if (!gallery_acl_check('i_watermark', $album_id) && $possible_watermark && $albu
 }
 else
 {
+	/**
+	* Get a browser friendly UTF-8 encoded filename
+	* function copied from phpBB itself
+	*/
+	function header_filename($file)
+	{
+		$user_agent = (!empty($_SERVER['HTTP_USER_AGENT'])) ? htmlspecialchars((string) $_SERVER['HTTP_USER_AGENT']) : '';
+
+		// There be dragons here.
+		// Not many follows the RFC...
+		if (strpos($user_agent, 'MSIE') !== false || strpos($user_agent, 'Safari') !== false || strpos($user_agent, 'Konqueror') !== false)
+		{
+			return "filename=" . rawurlencode($file);
+		}
+
+		// follow the RFC for extended filename for the rest
+		return "filename*=UTF-8''" . rawurlencode($file);
+	}
+	header('Content-Disposition: inline; ' . header_filename(htmlspecialchars_decode($image_data['image_name'])));
+
 	switch ($image_filetype)
 	{
 		case '.png':

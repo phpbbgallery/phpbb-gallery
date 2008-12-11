@@ -53,6 +53,7 @@
 
           <change><![CDATA[[Change] Report #371: Collapse recent comments on recent-body]]></change>
 
+          <change><![CDATA[[Fix] Unreported: Save files with correct name, when downloading]]></change>
           <change><![CDATA[[Fix] Report #388: resync doens't create entry for p_g_users-table]]></change>
           <change><![CDATA[[Fix] Report #382: invisible comments after editing comment]]></change>
           <change><![CDATA[[Fix] Report #381: double checks for same auth => made static]]></change>
