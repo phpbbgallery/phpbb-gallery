@@ -45,10 +45,6 @@ You may install it, to be informed about future versions, as I'm not going to se
       <link type="language" lang="en-gb" href="contrib/de.xml">Manual for German Language-set</link>
       <link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>
       <link type="template" lang="en-gb" href="contrib/subsilver2.xml">Manual for subsilver2 Style</link>
-      <link type="parent" lang="de" href="contrib/Addons/recent_random_images/install.xml">Addon: neuste &amp; zufällige Bilder auf der index.php</link>
-      <link type="parent" lang="en-gb" href="contrib/Addons/recent_random_images/install.xml">Addon: recent &amp; random images on index.php</link>
-      <link type="parent" lang="de" href="contrib/Addons/board3portal/install.xml">Addon: neuste &amp; zufällige Bilder auf der portal.php vom Board3Portal</link>
-      <link type="parent" lang="en-gb" href="contrib/Addons/board3portal/install.xml">Addon: recent &amp; random images on portal.php of Board3Portal</link>
     </link-group>
     <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
   </header>
