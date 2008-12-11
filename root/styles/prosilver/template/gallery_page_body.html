@@ -268,7 +268,7 @@ function toggleElement(oElement)
 						<!-- IF commentrow.U_INFO --><li class="info-icon"><a href="{commentrow.U_INFO}" title="{L_VIEW_INFO}" onclick="popup(this.href, 750, 500); return false;"><span>{L_VIEW_INFO}</span></a></li><!-- ENDIF -->
 					</ul>
 				<!-- ENDIF -->
-				<p class="author"><a href="{commentrow.U_COMMENT}">{MINI_POST_IMG}</a>&nbsp;{L_POST_BY_AUTHOR} <strong>{commentrow.POST_AUTHOR_FULL}</strong> {L_POSTED_ON_DATE} {commentrow.TIME} </p>
+				<p class="author"><a href="{commentrow.U_COMMENT}">{MINI_POST_IMG}</a>&nbsp;{L_POST_BY_AUTHOR} <strong>{commentrow.POST_AUTHOR_FULL}</strong> &raquo; {commentrow.TIME} </p>
 				<div class="content">{commentrow.TEXT}</div>
 				<!-- IF commentrow.EDIT_INFO --><div class="notice">{commentrow.EDIT_INFO}</div><!-- ENDIF -->
 				<!-- IF commentrow.SIGNATURE --><div id="sig{commentrow.COMMENT_ID}" class="signature">{commentrow.SIGNATURE}</div><!-- ENDIF -->

@@ -39,7 +39,7 @@
 					<!-- IF albumrow.UC_FAKE_THUMBNAIL --><span style="float: left; text-align: center; width: {FAKE_THUMB_SIZE}px; padding-right: 5px;">{albumrow.UC_FAKE_THUMBNAIL}</span><!-- ENDIF -->
 					<dfn>{L_LAST_IMAGE}</dfn> {albumrow.UC_IMAGE_NAME}<br />
 					{L_POST_BY_AUTHOR} {albumrow.LAST_USER_FULL} {albumrow.UC_LASTIMAGE_ICON}<br />
-					{L_POSTED_ON_DATE} {albumrow.LAST_IMAGE_TIME}<!-- ELSE -->{L_NO_IMAGES}<!-- ENDIF --></span>
+					{albumrow.LAST_IMAGE_TIME}<!-- ELSE -->{L_NO_IMAGES}<!-- ENDIF --></span>
 				</dd>
 			</dl>
 		</li>

@@ -400,7 +400,7 @@ if ($album_config['allow_comments'] && gallery_acl_check('c_read', $album_id))
 				$db->sql_freeresult($result_2);
 
 				$edit_info = ($commentrow['comment_edit_count'] == 1) ? $user->lang['EDITED_TIME_TOTAL'] : $user->lang['EDITED_TIMES_TOTAL'];
-				$edit_info = sprintf($edit_info, get_username_string('full', $lastedit_row['user_id'], $lastedit_row['username'], $lastedit_row['user_colour']), $user->format_date($commentrow['comment_edit_time']), $commentrow['comment_edit_count']);
+				$edit_info = sprintf($edit_info, get_username_string('full', $lastedit_row['user_id'], $lastedit_row['username'], $lastedit_row['user_colour']), $user->format_date($commentrow['comment_edit_time'], false, true), $commentrow['comment_edit_count']);
 			}
 
 			// Maybe we'll cache this one day... maybe, one day!
