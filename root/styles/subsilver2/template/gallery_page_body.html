@@ -122,50 +122,12 @@ function toggleElement(oElement)
 	</tr>
 </table>
 <table class="tablebg" cellspacing="1" width="100%" id="exif_data_fieldset" style="display: none;">
-	<tr class="row1">
-		<td width="25%" align="right"><span class="genmed">{L_EXIF_DATE}:</span></td>
-			<td><span class="genmed">{EXIF_DATE}</span></td>
-	</tr>
-	<tr class="row1">
-		<td width="25%" align="right"><span class="genmed">{L_EXIF_FOCAL}:</span></td>
-			<td><span class="genmed">{EXIF_FOCAL} {L_EXIF_FOCAL_EXP}</span></td>
-	</tr>
-	<tr class="row1">
-		<td width="25%" align="right"><span class="genmed">{L_EXIF_EXPOSURE}:</span></td>
-			<td><span class="genmed">{EXIF_EXPOSURE} {L_EXIF_EXPOSURE_EXP}</span></td>
-	</tr>
-	<tr class="row1">
-		<td width="25%" align="right"><span class="genmed">{L_EXIF_APERTURE}:</span></td>
-			<td><span class="genmed">{EXIF_APERTURE}</span></td>
-	</tr>
-	<tr class="row1">
-		<td width="25%" align="right"><span class="genmed">{L_EXIF_EXPOSURE_PROG}:</span></td>
-			<td><span class="genmed">{EXIF_EXPOSURE_PROG}</span></td>
-	</tr>
-	<tr class="row1">
-		<td width="25%" align="right"><span class="genmed">{L_EXIF_EXPOSURE_BIAS}:</span></td>
-			<td><span class="genmed">{EXIF_EXPOSURE_BIAS}</span></td>
-	</tr>
-	<tr class="row1">
-		<td width="25%" align="right"><span class="genmed">{L_EXIF_METERING_MODE}:</span></td>
-			<td><span class="genmed">{EXIF_METERING_MODE}</span></td>
-	</tr>
-	<tr class="row1">
-		<td width="25%" align="right"><span class="genmed">{L_EXIF_ISO}:</span></td>
-			<td><span class="genmed">{EXIF_ISO}</span></td>
-	</tr>
-	<tr class="row1">
-		<td width="25%" align="right"><span class="genmed">{L_EXIF_FLASH}:</span></td>
-			<td><span class="genmed">{EXIF_FLASH}</span></td>
-	</tr>
-	<tr class="row1">
-		<td width="25%" align="right"><span class="genmed">{L_EXIF_WHITEB}:</span></td>
-			<td><span class="genmed">{WHITEB}</span></td>
-	</tr>
-	<tr class="row1">
-		<td width="25%" align="right"><span class="genmed">{L_EXIF_CAM_MODEL}:</span></td>
-			<td><span class="genmed">{CAM_MODEL}</span></td>
-	</tr>
+	<!-- BEGIN exif_value -->
+		<tr class="row1">
+			<td width="25%" align="right"><span class="genmed">{exif_value.EXIF_NAME}:</span></td>
+				<td><span class="genmed">{exif_value.EXIF_VALUE}</span></td>
+		</tr>
+	<!-- END exif_value -->
 </table>
 <br clear="all" />
 <!-- ENDIF -->

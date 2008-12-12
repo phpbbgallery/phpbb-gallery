@@ -172,9 +172,7 @@ if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (substr
 	$exif = @exif_read_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename'], 0, true);
 	if (!empty($exif["EXIF"]))
 	{
-		$exif_date = $exif_focal =  $exif_aperture = $exif_exposure = $exif_iso = 
-		$exif_exposureprogram = $exif_exposure_bias = $exif_metering_mode = 
-		$exif_whitebalance = $exif_flash = $exif_make = $exif_model = $user->lang['EXIF_NOT_AVAILABLE'];
+		$exif_data = array();
 
 		if(isset($exif["EXIF"]["DateTimeOriginal"]))
 		{
@@ -185,78 +183,77 @@ if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (substr
 			$timestamp_minute = substr($exif["EXIF"]["DateTimeOriginal"], 14, 2);
 			$timestamp_second = substr($exif["EXIF"]["DateTimeOriginal"], 17, 2);
 			$timestamp = mktime($timestamp_hour, $timestamp_minute, $timestamp_second, $timestamp_month, $timestamp_day, $timestamp_year);
-			$exif_date = $user->format_date($timestamp);
+			$exif_data['exif_date'] = $user->format_date($timestamp);
 		}
 		if(isset($exif["EXIF"]["FocalLength"]))
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["FocalLength"]);
-			$exif_focal  = ($num/$den);
+			$exif_data['exif_focal'] = sprintf($user->lang['EXIF_FOCAL_EXP'], ($num/$den));
 		}
 		if(isset($exif["EXIF"]["ExposureTime"]))
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["ExposureTime"]);
 			if ($num > $den) { $exif_exposure = $num/$den; } else { $exif_exposure = ' 1/' . $den/$num ; }
+			$exif_data['exif_exposure'] = sprintf($user->lang['EXIF_EXPOSURE_EXP'], $exif_exposure);
 		}
 		if(isset($exif["EXIF"]["FNumber"]))
 		{
 			list($num,$den) = explode("/",$exif["EXIF"]["FNumber"]);
-			$exif_aperture  = "F/" . ($num/$den);
+			$exif_data['exif_aperture'] = "F/" . ($num/$den);
 		}
 		if(isset($exif["EXIF"]["ISOSpeedRatings"]))
 		{
-			$exif_iso = $exif["EXIF"]["ISOSpeedRatings"];
+			$exif_data['exif_iso'] = $exif["EXIF"]["ISOSpeedRatings"];
 		}
 		if (isset($exif["EXIF"]["WhiteBalance"]))
 		{
-			$exif_whitebalance = $user->lang['EXIF_WHITEB_' . (($exif["EXIF"]["WhiteBalance"]) ? 'MANU' : 'AUTO')];
+			$exif_data['exif_whitebalance'] = $user->lang['EXIF_WHITEB_' . (($exif["EXIF"]["WhiteBalance"]) ? 'MANU' : 'AUTO')];
 		}
 		if(isset($exif["EXIF"]["Flash"]))
 		{
 			if (isset($user->lang['EXIF_FLASH_CASE_' . $exif["EXIF"]["Flash"]]))
 			{
-				$exif_flash = $user->lang['EXIF_FLASH_CASE_' . $exif["EXIF"]["Flash"]];
+				$exif_data['exif_flash'] = $user->lang['EXIF_FLASH_CASE_' . $exif["EXIF"]["Flash"]];
 			}
 		}
 		if (isset($exif["IFD0"]["Model"]))
 		{
-			$exif_model = ucwords($exif["IFD0"]["Model"]);
+			$exif_data['exif_cam_model'] = ucwords($exif["IFD0"]["Model"]);
 		}
 		if (isset($exif["EXIF"]["ExposureProgram"]))
 		{
 			if (isset($user->lang['EXIF_EXPOSURE_PROG_' . $exif["EXIF"]["ExposureProgram"]]))
 			{
-				$exif_exposureprogram = $user->lang['EXIF_EXPOSURE_PROG_' . $exif["EXIF"]["ExposureProgram"]];
+				$exif_data['exif_exposure_prog'] = $user->lang['EXIF_EXPOSURE_PROG_' . $exif["EXIF"]["ExposureProgram"]];
 			}
 		}
 		if (isset($exif["EXIF"]["ExposureBiasValue"]))
 		{
 			list($num,$den) = explode("/",$exif["EXIF"]["ExposureBiasValue"]);
 			if (($num/$den) == 0) { $exif_exposure_bias = 0; } else { $exif_exposure_bias = $exif["EXIF"]["ExposureBiasValue"]; }
-			$exif_exposure_bias = sprintf($user->lang['EXIF_EXPOSURE_BIAS_EXP'], $exif_exposure_bias);
+			$exif_data['exif_exposure_bias'] = sprintf($user->lang['EXIF_EXPOSURE_BIAS_EXP'], $exif_exposure_bias);
 		}
 		if (isset($exif["EXIF"]["MeteringMode"]))
 		{
 			if (isset($user->lang['EXIF_METERING_MODE_' . $exif["EXIF"]["MeteringMode"]]))
 			{
-				$exif_metering_mode = $user->lang['EXIF_METERING_MODE_' . $exif["EXIF"]["MeteringMode"]];
+				$exif_data['exif_metering_mode'] = $user->lang['EXIF_METERING_MODE_' . $exif["EXIF"]["MeteringMode"]];
 			}
 		}
 
-		$template->assign_vars(array(
-			'EXIF_DATE'			=> htmlspecialchars($exif_date),
-			'EXIF_FOCAL'		=> htmlspecialchars($exif_focal),
-			'EXIF_EXPOSURE'		=> htmlspecialchars($exif_exposure),
-			'EXIF_APERTURE'		=> htmlspecialchars($exif_aperture),
-			'EXIF_ISO'			=> htmlspecialchars($exif_iso),
-			'EXIF_FLASH'		=> htmlspecialchars($exif_flash),
-			'EXIF_EXPOSURE_PROG'	=> htmlspecialchars($exif_exposureprogram),
-			'EXIF_EXPOSURE_BIAS'	=> htmlspecialchars($exif_exposure_bias),
-			'EXIF_METERING_MODE'	=> htmlspecialchars($exif_metering_mode),
-
-			'WHITEB'		=> htmlspecialchars($exif_whitebalance),
-			'CAM_MODEL'		=> htmlspecialchars($exif_model),
-			'S_EXIF_DATA'	=> true,
-		));
+		if ($exif_data != '')
+		{
+			foreach ($exif_data as $exif => $value)
+			{
+				$template->assign_block_vars('exif_value', array(
+					'EXIF_NAME'			=> $user->lang[strtoupper($exif)],
+					'EXIF_VALUE'		=> htmlspecialchars($value),
+				));
+			}
+			$template->assign_vars(array(
+				'S_EXIF_DATA'	=> true,
+			));
+		}
 
 		if ($image_data['image_has_exif'] == 2)
 		{

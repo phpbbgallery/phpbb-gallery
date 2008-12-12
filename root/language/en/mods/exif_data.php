@@ -36,7 +36,7 @@ $lang = array_merge($lang, array(
 	'EXIF_DATE'					=> 'Image taken on',
 
 	'EXIF_EXPOSURE'				=> 'Shutter speed',
-		'EXIF_EXPOSURE_EXP'			=> 'Sec',// 'EXIF_EXPOSURE' unit
+		'EXIF_EXPOSURE_EXP'			=> '%s Sec',// 'EXIF_EXPOSURE' unit
 	'EXIF_EXPOSURE_BIAS'		=> 'Exposure bias',
 		'EXIF_EXPOSURE_BIAS_EXP'	=> '%s EV',// 'EXIF_EXPOSURE_BIAS' unit
 	'EXIF_EXPOSURE_PROG'		=> 'Exposure program',
@@ -81,7 +81,7 @@ $lang = array_merge($lang, array(
 		'EXIF_FLASH_CASE_95'		=> 'Flash fired, auto mode, return light detected, red-eye reduction mode',
 
 	'EXIF_FOCAL'				=> 'Focus length',
-		'EXIF_FOCAL_EXP'			=> 'mm',// 'EXIF_FOCAL' unit
+		'EXIF_FOCAL_EXP'			=> '%s mm',// 'EXIF_FOCAL' unit
 
 	'EXIF_ISO'					=> 'ISO speed rating',
 

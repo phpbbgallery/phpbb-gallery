@@ -114,51 +114,13 @@ function toggleElement(oElement)
 	<div class="inner">
 		<span class="corners-top"><span></span></span>
 		<h3>{L_EXIF-DATA} - <a href="javascript: toggleElement( getElement('exif_data_fieldset'));">{L_SHOW_EXIF}</a></h3>
-		<fieldset class="fields1" id="exif_data_fieldset">
-			<dl>
-				<dt><label>{L_EXIF_DATE}:</label></dt>
-				<dd>{EXIF_DATE}</dd>
-			</dl>
-			<dl>
-				<dt><label>{L_EXIF_FOCAL}:</label></dt>
-				<dd>{EXIF_FOCAL} {L_EXIF_FOCAL_EXP}</dd>
-			</dl>
-			<dl>
-				<dt><label>{L_EXIF_EXPOSURE}:</label></dt>
-				<dd>{EXIF_EXPOSURE} {L_EXIF_EXPOSURE_EXP}</dd>
-			</dl>
-			<dl>
-				<dt><label>{L_EXIF_APERTURE}:</label></dt>
-				<dd>{EXIF_APERTURE}</dd>
-			</dl>
-			<dl>
-				<dt><label>{L_EXIF_EXPOSURE_PROG}:</label></dt>
-				<dd>{EXIF_EXPOSURE_PROG}</dd>
-			</dl>
-			<dl>
-				<dt><label>{L_EXIF_EXPOSURE_BIAS}:</label></dt>
-				<dd>{EXIF_EXPOSURE_BIAS}</dd>
-			</dl>
-			<dl>
-				<dt><label>{L_EXIF_METERING_MODE}:</label></dt>
-				<dd>{EXIF_METERING_MODE}</dd>
-			</dl>
-			<dl>
-				<dt><label>{L_EXIF_ISO}:</label></dt>
-				<dd>{EXIF_ISO}</dd>
-			</dl>
-			<dl>
-				<dt><label>{L_EXIF_FLASH}:</label></dt>
-				<dd>{EXIF_FLASH}</dd>
-			</dl>
-			<dl>
-				<dt><label>{L_EXIF_WHITEB}:</label></dt>
-				<dd>{WHITEB}</dd>
-			</dl>
-			<dl>
-				<dt><label>{L_EXIF_CAM_MODEL}:</label></dt>
-				<dd>{CAM_MODEL}</dd>
-			</dl>
+		<fieldset class="fields1" id="exif_data_fieldset" style="display: none;">
+			<!-- BEGIN exif_value -->
+				<dl>
+					<dt><label>{exif_value.EXIF_NAME}:</label></dt>
+					<dd>{exif_value.EXIF_VALUE}</dd>
+				</dl>
+			<!-- END exif_value -->
 		</fieldset>
 		<span class="corners-bottom"><span></span></span>
 	</div>
