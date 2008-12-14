@@ -335,6 +335,9 @@ class install_convert extends module
 		set_gallery_config('view_image_url', 1);
 		set_gallery_config('medium_cache', 1);
 
+		// Added 0.4.1
+		set_gallery_config('link_imagepage', 'lytebox');
+
 		$auth_admin = new auth_admin();
 		$auth_admin->acl_add_option(array(
 			'local'			=> array(),

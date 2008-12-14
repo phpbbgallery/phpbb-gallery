@@ -343,4 +343,9 @@ $lang = array_merge($lang, array(
 	'VIEW_IMAGE_URL'				=> 'View Image-URL on imagepage',
 ));
 
+// Added for 0.4.1
+$lang = array_merge($lang, array(
+	'UC_IMAGEPAGE'					=> 'Image on Image-page (with comments and rates)',
+));
+
 ?>

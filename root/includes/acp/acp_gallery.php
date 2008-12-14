@@ -755,8 +755,9 @@ class acp_gallery
 			//Link Configuration
 			'S_GALLERY_HIGHSLIDE_JS'		=> file_exists($phpbb_root_path . 'styles/' . $user->theme['template_path'] . '/theme/highslide/highslide-full.js'),
 			'UC_THUMBNAIL'					=> $new['link_thumbnail'],
+			'UC_IMAGEPAGE'					=> $new['link_imagepage'],
 			'UC_IMAGE_NAME'					=> $new['link_image_name'],
-			'UC_IMAGE_ICON' 				=> $new['link_image_icon'],
+			'UC_IMAGE_ICON'					=> $new['link_image_icon'],
 		));
 	}
 

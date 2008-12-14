@@ -735,6 +735,7 @@ class install_update extends module
 				$db->sql_query($sql);
 
 			case '0.4.1-dev':
+				set_gallery_config('link_imagepage', $gallery_config['link_thumbnail']);
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
 			break;
@@ -797,6 +798,10 @@ class install_update extends module
 				nv_remove_column(GALLERY_ALBUMS_TABLE,	'album_edit_groups');
 				nv_remove_column(GALLERY_ALBUMS_TABLE,	'album_delete_groups');
 				nv_remove_column(GALLERY_ALBUMS_TABLE,	'album_moderator_groups');
+
+			case '0.4.0-RC3':
+			case '0.4.0':
+			case '0.4.1':
 			break;
 		}
 
