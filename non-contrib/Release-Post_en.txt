@@ -15,9 +15,9 @@ http://www.flying-bits.org/viewforum.php?f=38[/list]
 [list]more languages can be found [url=http://www.flying-bits.org/viewforum.php?f=78]here[/url][/list]
 
 [b]Repositories[/b]: [list]
-[*][b]MOD Repository[/b]: http://code.bantux.de/svn/phpbb-gallery (SVN/Subversion)
-[*][b]Language-Packages Repository[/b]: http://code.bantux.de/svn/phpbb-gallery-lang (SVN/Subversion)
-[*][b]Addons Repository[/b]: http://code.bantux.de/svn/phpbb-gallery-addons (SVN/Subversion)
+[*][b]MOD Repository[/b]: http://code.bantux.org/svn/phpbb-gallery (SVN/Subversion)
+[*][b]Language-Packages Repository[/b]: http://code.bantux.org/svn/phpbb-gallery-lang (SVN/Subversion)
+[*][b]Addons Repository[/b]: http://code.bantux.org/svn/phpbb-gallery-addons (SVN/Subversion)
 [/list]
 [b]Bug-Tracker[/b]: http://www.flying-bits.org/go/bugtracker/
 (Before reporting a bug see the FAQ, whether there is something you should know about that bug)
@@ -26,7 +26,7 @@ http://www.flying-bits.org/viewforum.php?f=38[/list]
 [b]FAQ & Known-Issues[/b]: [list][*][url=http://www.flying-bits.org/viewforum.php?f=67]FAQ[/url]
 [*][url=http://www.flying-bits.org/viewtopic.php?f=67&t=1028]Known-Issues[/url][/list]
 
-[b]Downloads:[/b] [size=150][b][url=http://code.bantux.de/projects/list_files/phpbb-gallery]Download v0.4.1[/url][/b][/size]
+[b]Downloads:[/b] [size=150][b][url=http://code.bantux.org/projects/list_files/phpbb-gallery]Download v0.4.1[/url][/b][/size]
 [list][*][url=http://www.flying-bits.org/viewforum.php?f=78]Language-Packages[/url]
 [*][url=http://www.flying-bits.org/viewforum.php?f=80]Addons[/url][/list]
 
