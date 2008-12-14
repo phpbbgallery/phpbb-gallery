@@ -54,6 +54,7 @@
           <change><![CDATA[[Change] Report #390: ACP-Option for the link-to-click on image-page]]></change>
           <change><![CDATA[[Change] Report #371: Collapse recent comments on recent-body]]></change>
 
+          <change><![CDATA[[Fix] Unreported: Animate and Transpate gif's unsopported on image_page]]></change>
           <change><![CDATA[[Fix] Unreported: Timestamp-Fix for 3.0.4]]></change>
           <change><![CDATA[[Fix] Unreported: Save files with correct name, when downloading]]></change>
           <change><![CDATA[[Fix] Report #388: resync doens't create entry for p_g_users-table]]></change>

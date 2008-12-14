@@ -570,7 +570,7 @@ function get_album_branch($branch_user_id, $album_id, $type = 'all', $order = 'd
 /**
 * Generate link to image
 */
-function generate_image_link($content, $mode, $image_id, $image_name, $album_id)
+function generate_image_link($content, $mode, $image_id, $image_name, $album_id, $is_gif = false)
 {
 	global $phpbb_root_path, $phpEx, $user, $gallery_root_path, $album_config;
 
@@ -595,6 +595,12 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id)
 		case 'medium':
 			$content = '<img src="{U_MEDIUM}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" />';
 			$content = str_replace(array('{U_MEDIUM}', '{IMAGE_NAME}'), array($medium_url, $image_name), $content);
+			//cheat for animated/transparent gifs
+			if ($is_gif)
+			{
+				$content = '<img src="{U_MEDIUM}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-width: {MEDIUM_WIDTH_SIZE}px; max-height: {MEDIUM_HEIGHT_SIZE}px;" />';
+				$content = str_replace(array('{U_MEDIUM}', '{IMAGE_NAME}', '{MEDIUM_HEIGHT_SIZE}', '{MEDIUM_WIDTH_SIZE}'), array($image_url, $image_name, $album_config['preview_rsz_height'], $album_config['preview_rsz_width']), $content);
+			}
 		break;
 		case 'lastimage_icon':
 			$content = $user->img('icon_topic_latest', 'VIEW_LATEST_IMAGE');
