@@ -132,7 +132,7 @@ $is_watching = $image_data['watch_id'];
 $template->assign_vars(array(
 	'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id"),
 
-	'UC_IMAGE'			=> generate_image_link('medium', 'image', $image_id, $image_data['image_name'], $album_id),
+	'UC_IMAGE'			=> generate_image_link('medium', $album_config['link_imagepage'], $image_id, $image_data['image_name'], $album_id),
 	'U_PREVIOUS'		=> ($previous_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?album_id=$album_id&amp;image_id=$previous_id") : '',
 	'U_NEXT'			=> ($next_id && ($next_id != $previous_id)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?album_id=$album_id&amp;image_id=$next_id") : '',
 
