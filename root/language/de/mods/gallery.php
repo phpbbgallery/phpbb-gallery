@@ -309,6 +309,7 @@ $lang = array_merge($lang, array(
 	'RATES_COUNT'					=> 'Bewertungen',
 	'RATE_STRING'					=> '%1$s (%2$s Bewertung)', // 1.Rating-average 2.number of rates
 	'RATES_STRING'					=> '%1$s (%2$s Bewertungen)',
+	'RATING_AVG'					=> 'Bewertungsdurchschnitt',
 
 	'UNLOCK_IMAGE'					=> 'Bild entsperren',
 ));
