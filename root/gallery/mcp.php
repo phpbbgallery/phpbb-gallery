@@ -255,9 +255,17 @@ if ($action && $image_id_ary)
 				$sql = 'UPDATE ' . GALLERY_REPORTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 					WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
 				$db->sql_query($sql);
-				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_reported = 0
-					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
-				$db->sql_query($sql);
+				$sql = 'SELECT report_image_id
+					FROM ' . GALLERY_REPORTS_TABLE . '
+					WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_reported = 0
+						WHERE image_id = '. $row['report_image_id'];
+					$db->sql_query($sql);
+				}
+				$db->sql_freeresult($result);
 				$success = true;
 			}
 			else
@@ -276,9 +284,9 @@ if ($action && $image_id_ary)
 					WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
 				$db->sql_query($sql);
 				$sql = 'SELECT report_image_id, report_id
-					FROM ' . GALLERY_REPORTS_TABLE . "
+					FROM ' . GALLERY_REPORTS_TABLE . '
 					WHERE report_status = 1
-						AND " . $db->sql_in_set('report_id', $image_id_ary);;
+						AND ' . $db->sql_in_set('report_id', $image_id_ary);
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{

@@ -741,8 +741,8 @@ class acp_gallery
 			'S_INFO_LINE'					=> $new['thumbnail_info_line'],
 
 			//Gallery Configuration
-			'S_COMMENT'						=> $new['comment'],
-			'S_RATE'						=> $new['rate'],
+			'S_COMMENT'						=> $new['allow_comments'],
+			'S_RATE'						=> $new['allow_rates'],
 			'RATE_SCALE' 					=> $new['rate_scale'],
 			'S_HOTLINK_PREVENT'				=> $new['hotlink_prevent'],
 			'HOTLINK_ALLOWED'				=> $new['hotlink_allowed'],

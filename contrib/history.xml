@@ -45,7 +45,7 @@
     <author-notes lang="en-gb">This file contains all parts of the History, all Developers, a.s.o.</author-notes>
     <history>
       <entry>
-        <date>YYYY-MM-DD</date>
+        <date>2008-12-22</date>
         <rev-version>0.4.1</rev-version>
         <changelog lang="en-gb">
           <change><![CDATA[[Add] Report #386: Display the number of ratings received]]></change>
@@ -54,6 +54,10 @@
           <change><![CDATA[[Change] Report #390: ACP-Option for the link-to-click on image-page]]></change>
           <change><![CDATA[[Change] Report #371: Collapse recent comments on recent-body]]></change>
 
+          <change><![CDATA[[Fix] Report #397: Unable to completely disable Rating and Comments - wrong variables]]></change>
+          <change><![CDATA[[Fix] Report #393: Images stays reported, when report is closed]]></change>
+          <change><![CDATA[[Fix] Report #396: Undefined index: comment_comment_username]]></change>
+          <change><![CDATA[[Fix] Report #391: Not viewing rates on own images]]></change>
           <change><![CDATA[[Fix] Unreported: Animate and Transpate gif's unsopported on image_page]]></change>
           <change><![CDATA[[Fix] Unreported: Timestamp-Fix for 3.0.4]]></change>
           <change><![CDATA[[Fix] Unreported: Save files with correct name, when downloading]]></change>
