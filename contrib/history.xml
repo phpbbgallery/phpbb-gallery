@@ -54,6 +54,7 @@
           <change><![CDATA[[Change] Report #390: ACP-Option for the link-to-click on image-page]]></change>
           <change><![CDATA[[Change] Report #371: Collapse recent comments on recent-body]]></change>
 
+          <change><![CDATA[[Fix] Report #393: Images stays reported, when report is closed]]></change>
           <change><![CDATA[[Fix] Report #396: Undefined index: comment_comment_username]]></change>
           <change><![CDATA[[Fix] Report #391: Not viewing rates on own images]]></change>
           <change><![CDATA[[Fix] Unreported: Animate and Transpate gif's unsopported on image_page]]></change>

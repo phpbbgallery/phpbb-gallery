@@ -737,6 +737,20 @@ class install_update extends module
 			case '0.4.1':
 				set_gallery_config('link_imagepage', $gallery_config['link_thumbnail']);
 
+				// Resync the reported flags in addition to #393
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_reported = 0';
+				$db->sql_query($sql);
+				$sql = 'SELECT report_image_id, report_id
+					FROM ' . GALLERY_REPORTS_TABLE . '
+					WHERE report_status = 1';
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_reported = ' . $row['report_id'] . '
+						WHERE image_id = ' . $row['report_image_id'];
+					$db->sql_query($sql);
+				}
+				$db->sql_freeresult($result);
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
 			break;
 		}
