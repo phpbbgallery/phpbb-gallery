@@ -45,8 +45,8 @@ You may install it, to be informed about future versions, as I'm not going to se
   </header>
   <action-group>
     <copy>
-      <file from="root/language/de/email/*.txt" to="language/de/email/*.txt" />
-      <file from="root/language/de/mods/*.php" to="language/de/mods/*.php" />
+      <file from="root/language/de/email/*.*" to="language/de/email/*.*" />
+      <file from="root/language/de/mods/*.*" to="language/de/mods/*.*" />
       <file from="root/styles/prosilver/imageset/de/button_upload_image.gif" to="styles/prosilver/imageset/de/button_upload_image.gif" />
       <file from="root/styles/subsilver2/imageset/de/button_upload_image.gif" to="styles/subsilver2/imageset/de/button_upload_image.gif" />
     </copy>
