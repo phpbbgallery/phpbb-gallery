@@ -479,7 +479,9 @@ class acp_gallery
 						$total_images = 0;
 						$sql = 'SELECT COUNT(gi.image_id) AS num_images, u.user_id
 							FROM ' . USERS_TABLE . ' u
-							LEFT JOIN  ' . GALLERY_IMAGES_TABLE . ' gi ON (u.user_id = gi.image_user_id AND gi.image_status = 1)
+							LEFT JOIN  ' . GALLERY_IMAGES_TABLE . ' gi
+								ON u.user_id = gi.image_user_id
+									AND gi.image_status = 1
 							GROUP BY u.user_id';
 						$result = $db->sql_query($sql);
 
@@ -520,7 +522,7 @@ class acp_gallery
 							if ($db->sql_affectedrows() != 1)
 							{
 								$sql_ary = array(
-									'user_id'				=> $row['user_id'],
+									'user_id'				=> $row['album_user_id'],
 									'personal_album_id'		=> $row['album_id'],
 								);
 								$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
