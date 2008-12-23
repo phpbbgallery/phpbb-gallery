@@ -477,18 +477,23 @@ class acp_gallery
 						}
 
 						$total_images = 0;
-						$sql = 'SELECT COUNT(gi.image_id) AS num_images, u.user_id
-							FROM ' . USERS_TABLE . ' u
-							LEFT JOIN  ' . GALLERY_IMAGES_TABLE . ' gi
-								ON u.user_id = gi.image_user_id
-									AND gi.image_status = 1
-							GROUP BY u.user_id';
+
+						$sql = 'UPDATE ' . GALLERY_USERS_TABLE . "
+							SET user_images = 0";
+						$db->sql_query($sql);
+
+						$sql = 'SELECT COUNT(image_id) num_images, image_user_id user_id
+							FROM ' . GALLERY_IMAGES_TABLE . '
+							WHERE image_status = 1
+							GROUP BY image_user_id';
 						$result = $db->sql_query($sql);
 
 						while ($row = $db->sql_fetchrow($result))
 						{
 							$total_images += $row['num_images'];
-							$db->sql_query('UPDATE ' . GALLERY_USERS_TABLE . " SET user_images = {$row['num_images']} WHERE user_id = {$row['user_id']}");
+							$sql = 'UPDATE ' . GALLERY_USERS_TABLE . " SET user_images = {$row['num_images']} WHERE user_id = {$row['user_id']}";
+							$db->sql_query($sql);
+
 							if ($db->sql_affectedrows() != 1)
 							{
 								$sql_ary = array(
@@ -510,6 +515,10 @@ class acp_gallery
 							trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
 						}
 
+						$sql = 'UPDATE ' . GALLERY_USERS_TABLE . "
+							SET personal_album_id = 0";
+						$db->sql_query($sql);
+
 						$sql = 'SELECT album_id, album_user_id
 							FROM ' . GALLERY_ALBUMS_TABLE . '
 							WHERE album_user_id <> 0
@@ -518,7 +527,9 @@ class acp_gallery
 
 						while ($row = $db->sql_fetchrow($result))
 						{
-							$db->sql_query('UPDATE ' . GALLERY_USERS_TABLE . " SET personal_album_id = {$row['album_id']} WHERE user_id = {$row['album_user_id']}");
+							$sql = 'UPDATE ' . GALLERY_USERS_TABLE . " SET personal_album_id = {$row['album_id']} WHERE user_id = {$row['album_user_id']}";
+							$db->sql_query($sql);
+
 							if ($db->sql_affectedrows() != 1)
 							{
 								$sql_ary = array(
