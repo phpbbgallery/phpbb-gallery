@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* exif-data [English]
+* exif_data [English]
 *
 * @package phpBB Gallery / NV Exif Data
 * @version $Id$
