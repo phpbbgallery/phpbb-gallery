@@ -66,7 +66,7 @@ $lang = array_merge($lang, array(
 	'PARSE_BBCODE'					=> 'parse bbcodes',//@todo acp#
 	'PARSE_SMILIES'					=> 'parse smiles',//@todo acp#
 	'PARSE_URLS'					=> 'parse urls',//@todo acp#
-	'PERSONAL_ALBUM'				=> 'personal album',#
+	'PERSONAL_ALBUM'				=> 'personal album',//@todo acp#
 
 	'REMOVE_FROM_FAVORITES'			=> 'Remove from favorites',#
 
