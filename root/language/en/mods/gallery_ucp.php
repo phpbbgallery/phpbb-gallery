@@ -29,7 +29,6 @@ $lang = array_merge($lang, array(
 	'ALBUM_PARENT'					=> 'Parent Album',#
 	'ATTACHED_SUBALBUMS'			=> 'Attached subalbums',#
 
-	'CREATE_PERSONAL_ALBUM'			=> 'create personal album',
 	'CREATE_SUBALBUM'				=> 'Create subalbum',#
 	'CREATE_SUBALBUM_EXP'			=> 'You may attach a new subalbum to your personal gallery.',#
 	'CREATED_SUBALBUM'				=> 'Subalbum successful created',#
@@ -46,10 +45,8 @@ $lang = array_merge($lang, array(
 
 	'GOTO'							=> 'Go To',#
 
-	'MANAGE_PERSONAL_ALBUM'			=> 'Here you can manage your personal album. You may add subalbums, add and edit descriptions, change the order of display, etc.',
 	'MANAGE_SUBALBUMS'				=> 'manage your subalbums',#
 	'MISSING_ALBUM_NAME'			=> 'Please insert a name for the album',#
-	'MOVED_ALBUMS'					=> 'Albums successful moved',
 
 	'NEED_INITIALISE'				=> 'You don\'t have a personal album yet.',#
 	'NO_ALBUM_STEALING'				=> 'You are not allowed to manage the Album of other users.',#
@@ -59,9 +56,7 @@ $lang = array_merge($lang, array(
 	'NO_PERSALBUM_ALLOWED'			=> 'You don\'t have the permissions create your personal album',#
 	'NO_PERSONAL_ALBUM'				=> 'You don\'t have a personal album yet. Here you can create your personal album, with some subalbums.<br />In personal albums only the owner can upload images.',#
 	'NO_SUBALBUMS'					=> 'no subalbums',//@todo gallery_acp.php#
-	'NO_SUBALBUMS_ALLOWED'			=> 'You don\'t have the permissions to add subalbums to your personal album',
 	'NO_SUBSCRIPTIONS'				=> 'You didn\'t subscribe to any image.',#
-	'NO_SUBSCRIPTIONS_ALBUM'		=> 'You didn\'t subscribe to any album.',
 
 	'PARSE_BBCODE'					=> 'parse bbcodes',//@todo acp#
 	'PARSE_SMILIES'					=> 'parse smiles',//@todo acp#

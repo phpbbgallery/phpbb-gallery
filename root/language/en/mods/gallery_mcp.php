@@ -111,10 +111,10 @@ $lang = array_merge($lang, array(
 	'WAITING_LOCKED_IMAGE'			=> 'In total there is <span style="font-weight: bold;">%s</span> image locked.',#
 	'WAITING_LOCKED_IMAGES'			=> 'In total there are <span style="font-weight: bold;">%s</span> images locked.',#
 	'WAITING_LOCKED_NONE'			=> 'No images locked.',#
-	'WAITING_REPORTED_DONE'			=> 'No reports reviewed.',
-	'WAITING_REPORTED_IMAGE'		=> 'In total there is <span style="font-weight: bold;">%s</span> report to review.',
-	'WAITING_REPORTED_IMAGES'		=> 'In total there are <span style="font-weight: bold;">%s</span> reports to review.',
-	'WAITING_REPORTED_NONE'			=> 'No reports to review.',
+	'WAITING_REPORTED_DONE'			=> 'No reports reviewed.',#
+	'WAITING_REPORTED_IMAGE'		=> 'In total there is <span style="font-weight: bold;">%s</span> report to review.',#
+	'WAITING_REPORTED_IMAGES'		=> 'In total there are <span style="font-weight: bold;">%s</span> reports to review.',#
+	'WAITING_REPORTED_NONE'			=> 'No reports to review.',#
 	'WAITING_UNAPPROVED_IMAGE'		=> 'In total there is <span style="font-weight: bold;">%s</span> image waiting for approval.',#
 	'WAITING_UNAPPROVED_IMAGES'		=> 'In total there are <span style="font-weight: bold;">%s</span> images waiting for approval.',#
 	'WAITING_UNAPPROVED_NONE'		=> 'No images waiting for approval.',#

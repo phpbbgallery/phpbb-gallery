@@ -24,7 +24,6 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'ACP_CREATE_ALBUM_TITLE'			=> 'Create new album',
 	'ACP_CREATE_ALBUM_EXPLAIN'			=> 'Create and configure a new album.',#
 	'ACP_EDIT_ALBUM_TITLE'				=> 'Edit album',#
 	'ACP_EDIT_ALBUM_EXPLAIN'			=> 'Edit an existing album.',#
@@ -37,11 +36,8 @@ $lang = array_merge($lang, array(
 	'ACP_MANAGE_ALBUMS_EXPLAIN'			=> 'Here you can manage your Albums (former categories).',#
 
 	'ADD_PERMISSIONS'					=> 'Add Permissions',#
-	'ALBUM_AUTH_EXPLAIN'				=> 'Here you can choose which usergroup(s) can moderate albums or just have private access',
-	'ALBUM_AUTH_SUCCESSFULLY'			=> 'Authorization Settings have been updated successfully',
 	'ALBUM_AUTH_TITLE'					=> 'Album Permissions',#
 	'ALBUM_CATEGORY'					=> 'Category',#
-	'ALBUM_CHANGED_ORDER'				=> 'Album order has been changed successfully',
 	'ALBUM_DELETE'						=> 'Delete %s',#
 	'ALBUM_DELETED'						=> 'This album has been deleted successfully.',#
 	'ALBUM_DESC'						=> 'Album Description',#
@@ -50,23 +46,9 @@ $lang = array_merge($lang, array(
 	'ALBUM_NAME'						=> 'Album Name',#
 	'ALBUM_NO_CATEGORY'					=> 'Album',#
 	'ALBUM_PARENT'						=> 'Parent Album',#
-	'ALBUM_PERMISSIONS'					=> 'Album Permissions',
-	'ALBUM_PERSONAL_GALLERY_EXPLAIN'	=> 'On this page, you can choose which usergroups have right to create and view personal galleries. These settings only affect when you set "PRIVATE" for "Allowed to create personal gallery for users" or "Who can view personal galleries" in Album Configuration screen',
-	'ALBUM_PERSONAL_GALLERY_TITLE'		=> 'Personal Gallery',
-	'ALBUM_PERSONAL_SUCCESSFULLY'		=> 'The setting has been updated successfully',
 	'ALBUM_SETTINGS'					=> 'Album Settings',#
-	'ALBUM_TITLE'						=> 'Album Title',
 	'ALBUM_TYPE'						=> 'Album Type',#
 	'ALBUM_UPDATED'						=> 'Album has been updated successfully.',#
-
-	//@todo
-	'CAN_COMMENT'					=> 'Can comment',
-	'CAN_CREATE'					=> 'Can create',
-	'CAN_DELETE'					=> 'Can delete',
-	'CAN_EDIT'						=> 'Can edit',
-	'CAN_RATE'						=> 'Can rate',
-	'CAN_UPLOAD'					=> 'Can upload',
-	'CAN_VIEW'						=> 'Can view',
 
 	'CACHE_DIR_SIZE'				=> 'cache/-directory size',#
 	'CHANGE_AUTHOR'					=> 'Change author to guest',#
@@ -80,17 +62,12 @@ $lang = array_merge($lang, array(
 	'CLEAN_CHANGED'					=> 'Author changed to "Guest".',#
 	'CLEAN_COMMENTS_DONE'			=> 'Comments without valid author deleted.',#
 	'CLEAN_ENTRIES_DONE'			=> 'Files without database-entry deleted.',#
-	'CLEAN_GALLERY'					=> 'Clean gallery',
+	'CLEAN_GALLERY'					=> 'Clean gallery',#
 	'CLEAN_GALLERY_ABORT'			=> 'Cleanup abort!',#
 	'CLEAN_PERSONALS_DONE'			=> 'Personal albums without valid owner deleted.',#
 	'CLEAN_SOURCES_DONE'			=> 'Images without file deleted.',#
-	'CLEAR_CACHE'					=> 'Clear Cache',
-	'CLICK_RETURN_ALBUM_AUTH'		=> 'Click %shere%s to return to the Album Permissions',
-	'CLICK_RETURN_ALBUM_PERSONAL'	=> 'Click %shere%s to return to the Personal Gallery Settings',
-	'CLICK_RETURN_GALLERY_ALBUM'	=> 'Click %shere%s to return to the Album Manager',
-	'CLICK_RETURN_GALLERY_CONFIG'	=> 'Click %shere%s to return to the Gallery Configuration',
 	'COLS_PER_PAGE'					=> 'Number of columns on thumbnail page',#
-	'COMMENT'						=> 'Comment',
+	'COMMENT'						=> 'Comment',#
 	'COMMENT_ID'					=> 'Comment-ID',#
 	'COMMENT_LEVEL'					=> 'Comment Level',
 	'COMMENT_SYSTEM'				=> 'Enable comment system',#
@@ -108,9 +85,7 @@ $lang = array_merge($lang, array(
 	'DELETE_ALBUM'					=> 'Delete Album',#
 	'DELETE_ALBUM_EXPLAIN'			=> 'The form below will allow you to delete a album and decide where you want to put the images it contained',#
 	'DELETE_ALBUM_SUBS'				=> 'Please remove the subalbums first',//@todo#
-	'DELETE_ALL_IMAGES'				=> 'Delete all images',
 	'DELETE_IMAGES'					=> 'Delete Images',#
-	'DELETE_LEVEL'					=> 'Delete Level',
 	'DELETE_PERMISSIONS'			=> 'Delete permissions',#
 	'DELETE_SUBS'					=> 'Delete subalbums',#
 	'DISP_EXIF_DATA'				=> 'Display Exif-data',#
@@ -121,15 +96,11 @@ $lang = array_merge($lang, array(
 	'DONT_COPY_PERMISSIONS'			=> 'don\'t copy permissions',#
 
 	'EDIT_ALBUM'					=> 'Edit Album',#
-	'EDIT_LEVEL'					=> 'Edit Level',
-	'EXTRA_SETTINGS'				=> 'Extra Settings',
 
 	'FAKE_THUMB_SIZE'				=> 'Thumbnail-size',#
 	'FAKE_THUMB_SIZE_EXP'			=> 'If you want to resize them to the full size, remember 16 pixels for the black-info-line',#
-	'FULL_IMAGE_POPUP'				=> 'View full image as a popup',
 
 	'GALLERY_ALBUMS_TITLE'			=> 'Gallery Albums Control',#
-	'GALLERY_CATEGORIES_EXPLAIN'	=> 'On this screen you can manage your albums: create, alter, delete, sort, etc.',
 	'GALLERY_CLEAR_CACHE_CONFIRM'	=> 'If you use the Thumbnail Cache feature you must clear your thumbnail cache after changing your thumbnail settings in "Gallery configuration" to make them regenerated.',//@todo#
 	'GALLERY_CONFIG'				=> 'Gallery Configuration',#
 	'GALLERY_CONFIG_EXPLAIN'		=> 'You can change the general settings of phpBB Gallery here.',#
@@ -140,19 +111,11 @@ $lang = array_merge($lang, array(
 	'GD_VERSION'					=> 'Optimize for GD version',#
 	'GUPLOAD_DIR_SIZE'				=> 'upload/-directory size',#
 
-	//@todo
-	'GALLERY_ALL'					=> 'All',
-	'GALLERY_REG'					=> 'Registered',
-	'GALLERY_PRIVATE'				=> 'Private',
-	'GALLERY_MOD'					=> 'Moderator',
-	'GALLERY_ADMIN'					=> 'Administrator',
-
 	'HANDLE_IMAGES'					=> 'What to do with the images',#
 	'HANDLE_SUBS'					=> 'What to do with the subalbums',#
 	'HOTLINK_ALLOWED'				=> 'Allowed domains for hotlink (separated by a comma)',#
 	'HOTLINK_PREVENT'				=> 'Hotlink Prevention',#
 
-	'IMAGE_APPROVAL'				=> 'Image Approval',
 	'IMAGE_DESC_MAX_LENGTH'			=> 'Image Description/Comment Max Length (bytes)',#
 	'IMAGE_ID'						=> 'Image-ID',#
 	'IMAGE_SETTINGS'				=> 'Image Settings',
@@ -161,20 +124,15 @@ $lang = array_merge($lang, array(
 	'IMPORT_DEBUG_MES'				=> '%1$s images imported. There are still %2$s images remaining.',#
 	'IMPORT_DIR_EMPTY'				=> 'The folder %s is empty. You need to upload the images, before you can import them.',#
 	'IMPORT_FINISHED'				=> 'All %1$s images successful imported.',#
-	'IMPORT_MISSING_DIR'			=> 'Please provide the directory where the images reside.',
 	'IMPORT_MISSING_ALBUM'			=> 'Please select an album to import the images into.',#
 	'IMPORT_SELECT'					=> 'Choose the images which you want to import. Successful uploaded images are deleted. All other images are still available.',#
 	'IMPORT_USER'					=> 'Uploaded by',#
 	'IMPORT_USER_EXP'				=> 'You can add the images to another user here.',#
 	'INFO_LINE'						=> 'Display file-size on thumbnail',#
-	'IS_MODERATOR'					=> 'Is Moderator',
-
-	'LOOK_UP_ALBUM'					=> 'Look up Album',
 
 	'MANAGE_CRASHED_ENTRIES'		=> 'Manage crashed entries',#
 	'MANAGE_CRASHED_IMAGES'			=> 'Manage crashed images',#
 	'MANAGE_PERSONALS'				=> 'Manage personal albums',#
-	'MANUAL_THUMBNAIL'				=> 'Manual thumbnail',
 	'MAX_IMAGES_PER_ALBUM'			=> 'Maximum number of images for each Album (-1 = unlimited)',#
 	'MEDIUM_CACHE'					=> 'Cache resized images for image-page',#
 	'MISSING_ALBUM_NAME'			=> 'You need to enter a name for the album.',#
@@ -184,13 +142,8 @@ $lang = array_merge($lang, array(
 	'MISSING_OWNER'					=> 'Personal albums without valid owner',#
 	'MISSING_OWNER_EXP'				=> 'Subalbums, images and comments get deleted aswell.',#
 	'MISSING_SOURCE'				=> 'Images without files',#
-	'MODERATOR_IMAGES_LIMIT'		=> 'Images limit per Album for each moderator (-1 = unlimited)',
-	'MOVE_AND_DELETE'				=> 'Move and delete',
-	'MOVE_CONTENTS'					=> 'Move all images',
-	'MOVE_DELETE'					=> 'Move and delete',
 
 	'NEW_ALBUM_CREATED'				=> 'New album has been created successfully',#
-	'NO_DESC'						=> 'no description',
 	'NO_PARENT_ALBUM'				=> '&raquo; No Parent Album',#
 	'NO_SUBALBUMS'					=> 'No Albums attached',#
 	'NUMBER_ALBUMS'					=> 'Number of albums',#
@@ -237,14 +190,8 @@ $lang = array_merge($lang, array(
 	'PERMISSIONS_STORED'			=> 'Permissions were stored successful.',#
 	'PERSONAL_ALBUM_INDEX'			=> 'View personal albums as album on the index',#
 	'PERSONAL_ALBUM_INDEX_EXP'		=> 'If choosen "No", there will be the link, right beneath.',#
-	'PERSONAL_GALLERIES'			=> 'Personal Galleries',
-	'PERSONAL_GALLERY'				=> 'Allowed to create personal gallery for users',
-	'PERSONAL_GALLERY_LIMIT'		=> 'Images limit for each personal gallery (-1 = unlimited)',
-	'PERSONAL_GALLERY_VIEW'			=> 'Who can view personal galleries',
 	'PURGED_CACHE'					=> 'Purged the cache',#
 
-	'RATE'							=> 'Rate',
-	'RATE_LEVEL'					=> 'Rate Level',
 	'RATE_SCALE'					=> 'Rating Scale',#
 	'RATE_SYSTEM'					=> 'Enable rating system',#
 	'REMOVE_IMAGES_FOR_CAT'			=> 'You need to remove the images of the album, before you can switch the album-type to category.',#
@@ -254,7 +201,7 @@ $lang = array_merge($lang, array(
 	'RESYNC_IMAGECOUNTS_EXPLAIN'	=> 'Only existing images will be taken into consideration.',#
 	'RESYNC_LAST_IMAGES'			=> 'Refresh "Last image"',#
 	'RESYNC_PERSONALS'				=> 'Resynchronise personal album id\'s',#
-	'RESYNC_PERSONALS_CONFIRM'		=> 'Are you sure you wish to resynchronise image counts?',
+	'RESYNC_PERSONALS_CONFIRM'		=> 'Are you sure you wish to resynchronise image counts?',#
 	'RESYNCED_IMAGECOUNTS'			=> 'Resynchronised image counts',#
 	'RESYNCED_LAST_IMAGES'			=> 'Refreshed "Last image"',#
 	'RESYNCED_PERSONALS'			=> 'Resynchronised personal album id\'s',#
@@ -262,7 +209,6 @@ $lang = array_merge($lang, array(
 	'RSZ_HEIGHT'					=> 'Maximum-height on viewing image',#
 	'RSZ_WIDTH'						=> 'Maximum-width on viewing image',#
 
-	'SELECT_A_ALBUM'				=> 'Select an album',
 	'SELECT_ALBUMS'					=> 'Select albums',#
 	'SELECT_GROUPS'					=> 'Select groups',#
 	'SELECT_PERMISSIONS'			=> 'Select permissions',#
@@ -276,7 +222,6 @@ $lang = array_merge($lang, array(
 
 	'THIS_WILL_BE_REPORTED'					=> 'Known Bug, sorry guys!',#
 	'THUMBNAIL_CACHE'						=> 'Thumbnail cache',#
-	'THUMBNAIL_CACHE_CLEARED_SUCCESSFULLY'	=> '<br />Your thumbnail cache has been cleared successfully<br />&nbsp;',
 	'THUMBNAIL_QUALITY'						=> 'Thumbnail quality (1-100)',#
 	'THUMBNAIL_SETTINGS'					=> 'Thumbnail Settings',#
 
@@ -290,13 +235,9 @@ $lang = array_merge($lang, array(
 	'UC_LINK_LYTEBOX'				=> 'Open Lytebox-Feature',#
 	'UC_LINK_NONE'					=> 'No Link',#
 	'UC_THUMBNAIL'					=> 'Thumbnail',#
-	'UPLOAD'						=> 'Upload',
 	'UPLOAD_IMAGES'					=> 'Upload Multiple Images',#
-	'UPLOAD_LEVEL'					=> 'Upload Level',
-	'USER_IMAGES_LIMIT'				=> 'Images limit per Album for each user (-1 = unlimited)',
 
 	'VIEW_IMAGE_URL'				=> 'View Image-URL on imagepage',#
-	'VIEW_LEVEL'					=> 'View Level',
 
 	'WATERMARK'						=> 'Watermark',#
 	'WATERMARK_EXP'					=> 'To avoid small images from being covered by the watermark, you may enter a minimum-width/height here.',#
