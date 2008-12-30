@@ -39,8 +39,6 @@ $lang = array_merge($lang, array(
 	'PERSONAL_ALBUM'					=> 'Persönliches Album',
 	'PHPBB_GALLERY'						=> 'phpBB Galerie',
 
-	'REMOVE_GALLERY_INSTALL'			=> 'Bitte entferne zur Sicherheit den Ordner install_gallery/.',
-
 	'TOTAL_IMAGES_OTHER'				=> 'Bilder insgesamt: <strong>%d</strong>',
 	'TOTAL_IMAGES_ZERO'					=> 'Bilder insgesamt: <strong>0</strong>',
 ));

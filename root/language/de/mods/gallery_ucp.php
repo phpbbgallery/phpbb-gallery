@@ -29,7 +29,6 @@ $lang = array_merge($lang, array(
 	'ALBUM_PARENT'					=> 'Übergeordnetes Album',
 	'ATTACHED_SUBALBUMS'			=> 'Verknüpfte Subalben',
 
-	'CREATE_PERSONAL_ALBUM'			=> 'Erstelle persönliches Album',
 	'CREATE_SUBALBUM'				=> 'Erstelle ein Subalbum',
 	'CREATE_SUBALBUM_EXP'			=> 'Du kannst ein Subalbum zu Deinem persönlichem Album hinzufügen.',
 	'CREATED_SUBALBUM'				=> 'Subalbum erfolgreich bearbeitet',
@@ -46,10 +45,8 @@ $lang = array_merge($lang, array(
 
 	'GOTO'							=> 'Gehe zu',
 
-	'MANAGE_PERSONAL_ALBUM'			=> 'Hier kannst Du Dein persönliches Album verwalten. Du kannst Subalben hinzufügen, Beschreibungen hinzufügen und bearbeiten, die Reihenfolge der Anzeige beeinflussen und vieles mehr.',
 	'MANAGE_SUBALBUMS'				=> 'Verwalte Deine Subalben',
-	'MISSING_NAME'					=> 'Gib bitte einen Namen für das Album an',
-	'MOVED_ALBUMS'					=> 'Album erfolgreich verschoben',
+	'MISSING_ALBUM_NAME'			=> 'Gib bitte einen Namen für das Album an',
 
 	'NEED_INITIALISE'				=> 'Du hast bisher noch kein Subalbum.',
 	'NO_ALBUM_STEALING'				=> 'Du bist nicht berechtigt Alben von anderen Benutzern zu verwalten.',
@@ -59,9 +56,7 @@ $lang = array_merge($lang, array(
 	'NO_PERSALBUM_ALLOWED'			=> 'Du bist nicht berechtigt eine persönliches Album zu erstellen.',
 	'NO_PERSONAL_ALBUM'				=> 'Dein persönliches Album existiert noch nicht. Du kannst Dir hier ein privates Album und weitere Subalben erstellen.<br />Nur der Album Besitzer kann in diese persönlichen Alben Bilder hochladen.',
 	'NO_SUBALBUMS'					=> 'Keine Subalben',
-	'NO_SUBALBUMS_ALLOWED'			=> 'Du bist nicht berechtigt Subalben zu Deinem persönlichem Album hinzuzufügen.',
 	'NO_SUBSCRIPTIONS'				=> 'Du beobachtest keine Bilder.',
-	'NO_SUBSCRIPTIONS_ALBUM'		=> 'Du beobachtest keine Alben.',
 
 	'PARSE_BBCODE'					=> 'BBCodes erkennen',
 	'PARSE_SMILIES'					=> 'Smilies erkennen',
