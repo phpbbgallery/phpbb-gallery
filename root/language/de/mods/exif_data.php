@@ -1,40 +1,33 @@
 <?php
-
 /**
 *
-* @package phpBB3 - gallery
-* @version $Id: gallery_acp.php 347 2008-03-03 17:39:58Z nickvergessen $
-* @copyright (c) 2007 nickvergessen
+* exif_data [Deutsch]
+*
+* @package phpBB Gallery / NV Exif Data
+* @version $Id$
+* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 **/
-if (!defined('IN_PHPBB')) 
-{ 
-	exit; 
+
+/**
+* DO NOT CHANGE
+*/
+if (!defined('IN_PHPBB'))
+{
+	exit;
 }
+
 if (empty($lang) || !is_array($lang))
 {
 	$lang = array();
 }
-
-// DEVELOPERS PLEASE NOTE
-//
-// All language files should use UTF-8 as their encoding and the files must not contain a BOM.
-//
-// Placeholders can now contain order information, e.g. instead of
-// 'Page %s of %s' you can (and should) write 'Page %1$s of %2$s', this allows
-// translators to re-order the output of data while ensuring it remains correct
-//
-// You do not need this where single placeholders are used, e.g. 'Message %d' is fine
-// equally where a string contains only two placeholders which are used to wrap text
-// in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
 $lang = array_merge($lang, array(
 	'EXIF-DATA'					=> 'EXIF-Daten',
 	'EXIF_APERTURE'				=> 'Blende',
 	'EXIF_CAM_MODEL'			=> 'Kamera-Modell',
 	'EXIF_DATE'					=> 'Bild aufgenommen am',
-
 	'EXIF_EXPOSURE'				=> 'Belichtungszeit',
 		'EXIF_EXPOSURE_EXP'			=> '%s Sek',// 'EXIF_EXPOSURE' unit
 	'EXIF_EXPOSURE_BIAS'		=> 'Belichtungskorrektur',
@@ -49,9 +42,7 @@ $lang = array_merge($lang, array(
 		'EXIF_EXPOSURE_PROG_6'		=> 'Action-Programm (ausgerichtet auf schnelle Verschlussgeschwindigkeit)',
 		'EXIF_EXPOSURE_PROG_7'		=> 'Portrait-Modus (für CloseUp-Fotos mit unscharfem Hintergrund)',
 		'EXIF_EXPOSURE_PROG_8'		=> 'Landschaftsmodus (für Landschaftsfotos mit scharfem Hintergrund)',
-
 	'EXIF_FLASH'				=> 'Blitz',
-
 		'EXIF_FLASH_CASE_0'			=> 'Blitz wurde nicht ausgelöst',
 		'EXIF_FLASH_CASE_1'			=> 'Blitz wurde ausgelöst',
 		'EXIF_FLASH_CASE_5'			=> 'Kein Messblitz-Licht zurückgeworfen',
@@ -79,12 +70,9 @@ $lang = array_merge($lang, array(
 		'EXIF_FLASH_CASE_89'		=> 'Blitz wurde ausgelöst, Automodus, Rote-Augen-Reduzierung',
 		'EXIF_FLASH_CASE_93'		=> 'Blitz wurde ausgelöst, Automodus, kein Messblitz-Licht zurückgeworfen, Rote-Augen-Reduzierung',
 		'EXIF_FLASH_CASE_95'		=> 'Blitz wurde ausgelöst, Automodus, Messblitz-Licht zurückgeworfen, Rote-Augen-Reduzierung',
-
 	'EXIF_FOCAL'				=> 'Brennweite',
 		'EXIF_FOCAL_EXP'			=> '%s mm',// 'EXIF_FOCAL' unit
-
 	'EXIF_ISO'					=> 'ISO-Empfindlichkeit',
-
 	'EXIF_METERING_MODE'		=> 'Belichtungs- Messmethode',
 		'EXIF_METERING_MODE_0'		=> 'Unbekannt',
 		'EXIF_METERING_MODE_1'		=> 'Durchschnitt',
@@ -94,9 +82,7 @@ $lang = array_merge($lang, array(
 		'EXIF_METERING_MODE_5'		=> 'Multi-Segment',
 		'EXIF_METERING_MODE_6'		=> 'Teilbild',
 		'EXIF_METERING_MODE_255'	=> 'Andere',
-
 	'EXIF_NOT_AVAILABLE'		=> 'nicht verfügbar',
-
 	'EXIF_WHITEB'				=> 'Weißabgleich',
 		'EXIF_WHITEB_AUTO'			=> 'Automatisch',
 		'EXIF_WHITEB_MANU'			=> 'Manuell',

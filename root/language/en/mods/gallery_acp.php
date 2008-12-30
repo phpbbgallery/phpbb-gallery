@@ -59,15 +59,14 @@ $lang = array_merge($lang, array(
 	'ALBUM_TYPE'						=> 'Album Type',
 	'ALBUM_UPDATED'						=> 'Album has been updated successfully',
 
-
 	//@todo
 	'CAN_COMMENT'					=> 'Can comment',
+	'CAN_CREATE'					=> 'Can create',
 	'CAN_DELETE'					=> 'Can delete',
 	'CAN_EDIT'						=> 'Can edit',
 	'CAN_RATE'						=> 'Can rate',
 	'CAN_UPLOAD'					=> 'Can upload',
 	'CAN_VIEW'						=> 'Can view',
-	'CAN_CREATE'					=> 'Can create',
 
 	'CACHE_DIR_SIZE'				=> 'cache/-directory size',
 	'CHANGE_AUTHOR'					=> 'Change author to guest',
@@ -172,8 +171,8 @@ $lang = array_merge($lang, array(
 
 	'LOOK_UP_ALBUM'					=> 'Look up Album',
 
-	'MANAGE_CRASHED_IMAGES'			=> 'Manage crashed images',
 	'MANAGE_CRASHED_ENTRIES'		=> 'Manage crashed entries',
+	'MANAGE_CRASHED_IMAGES'			=> 'Manage crashed images',
 	'MANAGE_PERSONALS'				=> 'Manage personal albums',
 	'MANUAL_THUMBNAIL'				=> 'Manual thumbnail',
 	'MAX_IMAGES_PER_ALBUM'			=> 'Maximum number of images for each Album (-1 = unlimited)',
@@ -251,8 +250,8 @@ $lang = array_merge($lang, array(
 	'REMOVE_IMAGES_FOR_CAT'			=> 'You need to remove the images of the album, before you can switch the album-type to category.',
 	'RESIZE_IMAGES'					=> 'Resize bigger images',
 	'RESYNC_IMAGECOUNTS'			=> 'Resynchronise image counts',
-	'RESYNC_IMAGECOUNTS_EXPLAIN'	=> 'Only existing images will be taken into consideration.',
 	'RESYNC_IMAGECOUNTS_CONFIRM'	=> 'Are you sure you wish to resynchronise image counts?',
+	'RESYNC_IMAGECOUNTS_EXPLAIN'	=> 'Only existing images will be taken into consideration.',
 	'RESYNC_LAST_IMAGES'			=> 'Refresh "Last image"',
 	'RESYNC_PERSONALS'				=> 'Resynchronise personal album id\'s',
 	'RESYNC_PERSONALS_CONFIRM'		=> 'Are you sure you wish to resynchronise image counts?',

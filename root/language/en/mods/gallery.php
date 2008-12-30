@@ -26,17 +26,23 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'ALBUM'							=> 'Album',
 	'ALBUM_DELETE_CONFIRM'			=> 'Are you sure you want to delete these images?',
+	'ALBUM_ID_NOT_EXIST'			=> 'Album %s does not exist',
+	'ALBUM_IS_CATEGORY'				=> 'The album you cheated to, is a category-album.<br />You can\'t upload to categories.',
 	'ALBUM_NAME'					=> 'Albumname',
 	'ALBUM_NOT_EXIST'				=> 'This album does not exist',
-	'ALBUM_ID_NOT_EXIST'			=> 'Album %s does not exist',
 	'ALBUM_PERMISSIONS'				=> 'Album Permissions',
 	'ALBUM_REACHED_QUOTA'			=> 'This album has reached the quota of images. You cannot upload any more. Please contact the administrator for more information.',
 	'ALBUM_UPLOAD_NEED_APPROVAL'	=> 'Your image has been uploaded successfully.<br /><br />But the feature Image Approval has been enabled so your image must be approved by a administrator or a moderator before posting',
 	'ALBUM_UPLOAD_SUCCESSFUL'		=> 'Your image has been uploaded successfully',
 	'ALBUMS'						=> 'Albums',
 	'ALL_IMAGES'					=> 'All image',
+	'ALREADY_RATED'					=> 'You have already rated this image',
+	'APPROVAL'						=> 'Approval',
+	'APPROVE'						=> 'Approve',
 	'APPROVE_IMAGE'					=> 'Approve image',
+	'APPROVED'						=> 'Approved',
 
+	//@todo
 	'ALBUM_COMMENT_CAN'			=> 'You <strong>can</strong> post comments to images in this album',
 	'ALBUM_COMMENT_CANNOT'		=> 'You <strong>cannot</strong> post comments to images in this album',
 	'ALBUM_DELETE_CAN'			=> 'You <strong>can</strong> delete your images in this album',
@@ -50,16 +56,11 @@ $lang = array_merge($lang, array(
 	'ALBUM_VIEW_CAN'			=> 'You <strong>can</strong> view images in this album',
 	'ALBUM_VIEW_CANNOT'			=> 'You <strong>cannot</strong> view images in this album',
 
-	'ALBUM_IS_CATEGORY'				=> 'The album you cheated to, is a category-album.<br />You can\'t upload to categories.',
-	'ALREADY_RATED'					=> 'You have already rated this image',
-	'APPROVAL'						=> 'Approval',
-	'APPROVE'						=> 'Approve',
-	'APPROVED'						=> 'Approved',
 
 	//@todo
+	'GIF_ALLOWED'					=> 'Allowed to upload GIF files',
 	'JPG_ALLOWED'					=> 'Allowed to upload JPG files',
 	'PNG_ALLOWED'					=> 'Allowed to upload PNG files',
-	'GIF_ALLOWED'					=> 'Allowed to upload GIF files',
 
 	'BAD_UPLOAD_FILE_SIZE'			=> 'Your uploaded file is too large',
 	'BROWSING_ALBUM'				=> 'Users browsing this album: %1$s',
@@ -110,6 +111,7 @@ $lang = array_merge($lang, array(
 	'FILE'									=> 'File',
 	'FILETYPE_AND_THUMBNAIL_DO_NOT_MATCH'	=> 'Your image and your thumbnail must be the same type',
 
+	//@todo
 	'GALLERY_INSTALLATION'			=> 'Install v%s',
 	'GALLERY_UPDATE'				=> 'Update v%s to v%s',
 	'GALLERY_UPDATE_SMARTOR'		=> 'Update from Smartor-Album to v%s',
@@ -246,8 +248,8 @@ $lang = array_merge($lang, array(
 	'UPLOAD_THUMBNAIL_FROM_MACHINE'		=> 'Upload its thumbnail from your machine (must be the same filetype as your image)',
 	'UPLOAD_THUMBNAIL_SIZE_TOO_BIG'		=> 'Your thumbnail dimension size is too large',
 	'UPLOAD_TO_ALBUM'					=> 'Upload to album',
-	'USER_REACHED_QUOTA'				=> 'You are not allowed to upload more than %s images.<br /><br />Please contact the administrator for more information.',
 	'USER_NEARLY_REACHED_QUOTA'			=> 'You are not allowed to upload more than %s images, but you already uploaded %s images. So there are only %s filelines displayed.',
+	'USER_REACHED_QUOTA'				=> 'You are not allowed to upload more than %s images.<br /><br />Please contact the administrator for more information.',
 	'USERS_PERSONAL_ALBUMS'				=> 'Users Personal Albums',
 
 	'VIEW_ALBUM'					=> 'View album',
