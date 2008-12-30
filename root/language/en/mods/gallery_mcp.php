@@ -1,36 +1,27 @@
 <?php
-
 /**
 *
-* @package phpBB3 - gallery
+* gallery_mcp [English]
+*
+* @package phpBB Gallery
 * @version $Id$
-* @copyright (c) 2007 nickvergessen
+* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 **/
-if (!defined('IN_PHPBB')) 
-{ 
-	exit; 
+
+/**
+* DO NOT CHANGE
+*/
+if (!defined('IN_PHPBB'))
+{
+	exit;
 }
 
 if (empty($lang) || !is_array($lang))
 {
 	$lang = array();
 }
-
-
-// DEVELOPERS PLEASE NOTE
-//
-// All language files should use UTF-8 as their encoding and the files must not contain a BOM.
-//
-// Placeholders can now contain order information, e.g. instead of
-// 'Page %s of %s' you can (and should) write 'Page %1$s of %2$s', this allows
-// translators to re-order the output of data while ensuring it remains correct
-//
-// You do not need this where single placeholders are used, e.g. 'Message %d' is fine
-// equally where a string contains only two placeholders which are used to wrap text
-// in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
-
 
 $lang = array_merge($lang, array(
 	'CHOOSE_ACTION'					=> 'Select desired action',
@@ -58,13 +49,13 @@ $lang = array_merge($lang, array(
 	'QUEUE_A_DELETE'				=> 'Delete image',
 	'QUEUE_A_DELETE2'				=> 'Delete image?',
 	'QUEUE_A_DELETE2_CONFIRM'		=> 'Are you sure, you want to delete this image?',
+	'QUEUE_A_LOCK'					=> 'Lock image',
+	'QUEUE_A_LOCK2'					=> 'Lock image?',
+	'QUEUE_A_LOCK2_CONFIRM'			=> 'Are you sure, you want to lock this image?',
 	'QUEUE_A_MOVE'					=> 'Move image',
 	'QUEUE_A_UNAPPROVE'				=> 'Disapprove image',
 	'QUEUE_A_UNAPPROVE2'			=> 'Disapprove image?',
 	'QUEUE_A_UNAPPROVE2_CONFIRM'	=> 'Are you sure, you want to disapprove this image?',
-	'QUEUE_A_LOCK'					=> 'Lock image',
-	'QUEUE_A_LOCK2'					=> 'Lock image?',
-	'QUEUE_A_LOCK2_CONFIRM'			=> 'Are you sure, you want to lock this image?',
 
 	'QUEUE_STATUS_0'				=> 'This image is waiting for approval.',
 	'QUEUE_STATUS_1'				=> 'This image is approved.',
@@ -76,13 +67,13 @@ $lang = array_merge($lang, array(
 	'QUEUES_A_DELETE'				=> 'Delete images',
 	'QUEUES_A_DELETE2'				=> 'Delete images?',
 	'QUEUES_A_DELETE2_CONFIRM'		=> 'Are you sure, you want to delete these images?',
+	'QUEUES_A_LOCK'					=> 'Lock images',
+	'QUEUES_A_LOCK2'				=> 'Lock images?',
+	'QUEUES_A_LOCK2_CONFIRM'		=> 'Are you sure, you want to lock these images?',
 	'QUEUES_A_MOVE'					=> 'Move images',
 	'QUEUES_A_UNAPPROVE'			=> 'Disapprove images',
 	'QUEUES_A_UNAPPROVE2'			=> 'Disapprove images?',
 	'QUEUES_A_UNAPPROVE2_CONFIRM'	=> 'Are you sure, you want to disapprove these images?',
-	'QUEUES_A_LOCK'					=> 'Lock images',
-	'QUEUES_A_LOCK2'				=> 'Lock images?',
-	'QUEUES_A_LOCK2_CONFIRM'		=> 'Are you sure, you want to lock these images?',
 
 	'REPORT_A_CLOSE'				=> 'Close report',
 	'REPORT_A_CLOSE2'				=> 'Close report?',
@@ -107,15 +98,15 @@ $lang = array_merge($lang, array(
 	'REPORTS_A_OPEN2'				=> 'Open reports?',
 	'REPORTS_A_OPEN2_CONFIRM'		=> 'Are you sure, you want to open these reports?',
 
-	'REPORTER'						=> 'Reporting user',
 	'REPORT_MOD'					=> 'Edited by',
-	'REPORTER_AND_ALBUM'			=> 'Reporter & Album',
 	'REPORTED_IMAGES'				=> 'Reported images',
+	'REPORTER'						=> 'Reporting user',
+	'REPORTER_AND_ALBUM'			=> 'Reporter & Album',
 
 	'UPLOADED_BY'					=> 'Uploaded by',
 
-	'VIEW_ALBUM_IMAGES'				=> '%s images',
 	'VIEW_ALBUM_IMAGE'				=> '1 image',
+	'VIEW_ALBUM_IMAGES'				=> '%s images',
 
 	'WAITING_APPROVED_IMAGE'		=> 'In total there is <span style="font-weight: bold;">%s</span> image approved..',
 	'WAITING_APPROVED_IMAGES'		=> 'In total there are <span style="font-weight: bold;">%s</span> images approved.',
