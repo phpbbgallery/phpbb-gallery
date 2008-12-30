@@ -134,7 +134,6 @@ $lang = array_merge($lang, array(
 	'NEW_COMMENT'							=> 'New Comment',
 	'NO_ALBUMS'								=> 'There are no albums in this gallery.',
 	'NO_COMMENTS'							=> 'No comments yet',
-	'NO_IMAGE_SPECIFIED'					=> 'No image specified',
 	'NO_IMAGES'								=> 'No images',
 	'NO_IMAGES_FOUND'						=> 'No images found.',
 	'NO_IMAGES_LONG'						=> 'There are no images in this album.',

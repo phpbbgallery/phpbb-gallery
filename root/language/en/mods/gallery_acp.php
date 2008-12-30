@@ -69,7 +69,6 @@ $lang = array_merge($lang, array(
 	'COLS_PER_PAGE'					=> 'Number of columns on thumbnail page',
 	'COMMENT'						=> 'Comment',
 	'COMMENT_ID'					=> 'Comment-ID',
-	'COMMENT_LEVEL'					=> 'Comment Level',
 	'COMMENT_SYSTEM'				=> 'Enable comment system',
 	'CONFIRM_CLEAN'					=> 'This step can not be undone!',
 	'CONFIRM_CLEAN_AUTHORS'			=> 'Delete images without valid author?',
@@ -118,7 +117,6 @@ $lang = array_merge($lang, array(
 
 	'IMAGE_DESC_MAX_LENGTH'			=> 'Image Description/Comment Max Length (bytes)',
 	'IMAGE_ID'						=> 'Image-ID',
-	'IMAGE_SETTINGS'				=> 'Image Settings',
 	'IMAGES_PER_DAY'				=> 'Images per day',
 	'IMPORT_ALBUM'					=> 'Album to import images to:',
 	'IMPORT_DEBUG_MES'				=> '%1$s images imported. There are still %2$s images remaining.',
@@ -184,7 +182,6 @@ $lang = array_merge($lang, array(
 	'PERMISSION_M_REPORT'			=> 'Can manage reports',
 	'PERMISSION_M_STATUS'			=> 'Can approve and lock images',
 
-
 	'PERMISSION_EMPTY'				=> 'You didn\'t set all permissions.',
 	'PERMISSION_NO_GROUP'			=> 'You didn\'t select a group to set the permissions.',
 	'PERMISSIONS_STORED'			=> 'Permissions were stored successful.',
@@ -214,7 +211,6 @@ $lang = array_merge($lang, array(
 	'SELECT_PERMISSIONS'			=> 'Select permissions',
 	'SELECTED_ALBUMS'				=> 'Selected albums',
 	'SELECTED_GROUPS'				=> 'Selected groups',
-	'SELECTED_PERMISSIONS'			=> 'Selected permissions',
 	'SET_PERMISSIONS'				=> '<br />Set <a href="%s">permissions</a> now.',
 	'SHORTED_IMAGENAMES'			=> 'Shorten Imagenames',
 	'SHORTED_IMAGENAMES_EXP'		=> 'If the name of an image is to long and doesn\'t include spaces, the layout maybe destroyed.',
