@@ -139,10 +139,6 @@ function get_album_access_array()
 						}
 					}
 				break;
-
-				default:
-					trigger_error('PERMISSION_SYSTEM_FAILURE_01');
-				break;
 			}
 		}
 		$db->sql_freeresult($result);

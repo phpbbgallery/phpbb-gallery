@@ -425,13 +425,7 @@ switch ($mode)
 									trigger_error('NOT_ALLOWED_FILE_TYPE');
 								break;
 							}
-							if ($album_config['gd_version'] == 0)
-							{
-								if ($image_data['image_type'] <> $image_data['thumbnail_type'])
-								{
-									trigger_error('FILETYPE_AND_THUMBTYPE_DO_NOT_MATCH');
-								}
-							}
+
 							$image_data_2 = array(
 								'filename'			=> '',
 								'image_album_id'	=> $album_data['album_id'],
@@ -446,7 +440,7 @@ switch ($mode)
 
 							if(!$image_data['image_name'])
 							{
-								trigger_error('MISSING_IMAGE_TITLE');
+								trigger_error('MISSING_IMAGE_NAME');
 							}
 							if (!$user->data['is_registered'] && $image_data['username'])
 							{
@@ -648,7 +642,7 @@ switch ($mode)
 					{
 						if ((request_var('image_name', '', true) == '') && (request_var('filename', '') != 'filename'))
 						{
-							$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_IMAGE_TITLE'];
+							$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_IMAGE_NAME'];
 						}
 						notify_gallery('album', $album_id, $image_name);
 						handle_image_counter($image_id_ary, true);
@@ -741,7 +735,7 @@ switch ($mode)
 
 					if(empty($image_name))
 					{
-						trigger_error('MISSING_IMAGE_TITLE');
+						trigger_error('MISSING_IMAGE_NAME');
 					}
 					$message_parser				= new parse_message();
 					$message_parser->message	= utf8_normalize_nfc($image_desc);

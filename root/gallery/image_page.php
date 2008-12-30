@@ -45,7 +45,7 @@ $album_access_array = get_album_access_array();
 $image_id = request_var('image_id', request_var('id', 0));
 if (!$image_id)
 {
-	trigger_error('NO_IMAGE_SPECIFIED');
+	trigger_error('IMAGE_NOT_EXIST');
 }
 
 // Salting the form...yumyum ...

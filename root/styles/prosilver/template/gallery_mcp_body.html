@@ -1,6 +1,6 @@
 <!-- INCLUDE overall_header.html -->
 
-<h2>{L_MODCP}</h2>
+<h2>{L_MCP}</h2>
 
 <!-- IF not S_MOVING_IMAGES -->
 
@@ -62,7 +62,7 @@
 								<!-- IF DISP_FAKE_THUMB and image_row.THUMBNAIL --><span style="float: left; text-align: center; width: {FAKE_THUMB_SIZE}px; padding-right: 5px;">{image_row.THUMBNAIL}</span><!-- ENDIF -->
 								<a href="<!-- IF not S_REPORT -->{image_row.U_IMAGE_PAGE}<!-- ELSE -->{image_row.U_REPORT}<!-- ENDIF -->" class="topictitle">{image_row.IMAGE_NAME}</a><!-- IF image_row.S_REPORTED --> <a href="{image_row.U_REPORT}">{REPORTED_IMG}</a><!-- ENDIF --><!-- IF image_row.S_UNAPPROVED --> <a href="{image_row.U_QUEUE}">{UNAPPROVED_IMG}</a><!-- ENDIF --><br />
 								<span>{L_UPLOADED_BY} {image_row.UPLOADER}<br />
-								{L_POSTED_ON_DATE} {image_row.IMAGE_TIME}
+								&raquo; {image_row.IMAGE_TIME}
 								<!-- IF image_row.REPORT_MOD --><br />{L_REPORT_MOD} {image_row.REPORT_MOD}<!-- ENDIF --></span>
 							</dt>
 							<!-- IF S_COMMENTS --><dd class="g_comments">{image_row.COMMENTS}</dd><!-- ENDIF -->
@@ -70,7 +70,7 @@
 							<!-- IF S_REPORTER -->
 								<dd class="moderation">
 									<span>{L_REPORT_BY} {image_row.REPORTER}<br />
-									{L_POSTED_ON_DATE} {image_row.REPORT_TIME}<br />
+									{image_row.REPORT_TIME}<br />
 									{L_ALBUM}: <a href="{U_VIEW_ALBUM}" style="font-weight: bold;">{ALBUM_NAME}</a></span>
 								</dd>
 							<!-- ENDIF -->
@@ -87,7 +87,7 @@
 					<label>{L_SORT_BY} 
 						<select name="sk">
 							<option<!-- IF S_SORT_KEY == 'image_time' --> selected="selected"<!-- ENDIF --> value='image_time'>{L_TIME}</option>
-							<option<!-- IF S_SORT_KEY == 'image_name' --> selected="selected"<!-- ENDIF --> value='image_name'>{L_IMAGE_TITLE}</option>
+							<option<!-- IF S_SORT_KEY == 'image_name' --> selected="selected"<!-- ENDIF --> value='image_name'>{L_IMAGE_NAME}</option>
 							<option<!-- IF S_SORT_KEY == 'image_username' --> selected="selected"<!-- ENDIF --> value='image_username'>{L_SORT_USERNAME}</option>
 							<!-- IF not S_REPORT_LIST or S_QUEUE_LIST -->
 								<option<!-- IF S_SORT_KEY == 'image_view_count' --> selected="selected"<!-- ENDIF --> value='image_view_count'>{L_VIEWS}</option>
@@ -168,7 +168,7 @@
 				<h3>{IMAGE_NAME}</h3>
 				<p class="author">
 					{L_UPLOADED_BY} {UPLOADER}<br />
-					{L_POSTED_ON_DATE} {IMAGE_TIME}<br />
+					{IMAGE_TIME}<br />
 					{L_ALBUM}: <a href="{U_VIEW_ALBUM}" style="font-weight: bold;">{ALBUM_NAME}</a><br />
 					{L_STATUS}: <span style="font-weight: bold;">{STATUS}</span>
 				</p>
@@ -191,7 +191,7 @@
 				<div class="inner"><span class="corners-top"><span></span></span>
 
 				<div class="postbody">
-					<p class="author">{L_REPORT_BY} {REPORTER} {L_POSTED_ON_DATE} {REPORT_TIME}</p>
+					<p class="author">{L_REPORT_BY} {REPORTER} &raquo; {REPORT_TIME}</p>
 					<div class="content">{REPORT_NOTE}</div>
 				</div>
 

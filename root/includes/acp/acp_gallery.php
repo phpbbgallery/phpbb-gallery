@@ -823,7 +823,7 @@ class acp_gallery
 
 		for( $i = 0; $i < count($album); $i++ )
 		{
-			$folder_image = ($album[$i]['left_id'] + 1 != $album[$i]['right_id']) ? '<img src="images/icon_subfolder.gif" alt="' . $user->lang['SUBFORUM'] . '" />' : '<img src="images/icon_folder.gif" alt="' . $user->lang['FOLDER'] . '" />';
+			$folder_image = ($album[$i]['left_id'] + 1 != $album[$i]['right_id']) ? '<img src="images/icon_subfolder.gif" alt="' . $user->lang['SUBALBUMS'] . '" />' : '<img src="images/icon_folder.gif" alt="' . $user->lang['ALBUM'] . '" />';
 			$template->assign_block_vars('catrow', array(
 				'FOLDER_IMAGE'			=> $folder_image,
 				'U_ALBUM'				=> $this->u_action . '&amp;parent_id=' . $album[$i]['album_id'],
@@ -994,7 +994,7 @@ class acp_gallery
 
 		if (!$album_id = request_var('album_id', 0))
 		{
-			trigger_error('No Album ID', E_USER_WARNING);
+			trigger_error('ALBUM_NOT_EXIST', E_USER_WARNING);
 		}
 
 		$submit = (isset($_POST['submit'])) ? true : false;
@@ -1006,7 +1006,7 @@ class acp_gallery
 			$result = $db->sql_query($sql);
 			if ($db->sql_affectedrows($result) == 0)
 			{
-				trigger_error('The requested album does not exist', E_USER_WARNING);
+				trigger_error('ALBUM_NOT_EXIST', E_USER_WARNING);
 			}
 			$album_data = $db->sql_fetchrow($result);
 			$album_desc_data = generate_text_for_edit($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_options']);
@@ -1217,7 +1217,7 @@ class acp_gallery
 
 		if (!$album_id = request_var('album_id', 0))
 		{
-			trigger_error('No Album ID', E_USER_WARNING);
+			trigger_error('ALBUM_NOT_EXIST', E_USER_WARNING);
 		}
 		else
 		{
@@ -1227,7 +1227,7 @@ class acp_gallery
 			$result = $db->sql_query($sql);
 			if ($db->sql_affectedrows($result) == 0)
 			{
-				trigger_error('The requested album does not exist', E_USER_WARNING);
+				trigger_error('ALBUM_NOT_EXIST', E_USER_WARNING);
 			}
 		}
 
@@ -1256,7 +1256,7 @@ class acp_gallery
 
 			if(!$album_found)
 			{
-				trigger_error('The requested album does not exist', E_USER_WARNING);
+				trigger_error('ALBUM_NOT_EXIST', E_USER_WARNING);
 			}
 
 			$template->assign_vars(array(
@@ -1370,7 +1370,7 @@ class acp_gallery
 
 		if (!$album_id = request_var('album_id', 0))
 		{
-			trigger_error('No Album ID', E_USER_WARNING);
+			trigger_error('ALBUM_NOT_EXIST', E_USER_WARNING);
 		}
 		else
 		{
@@ -1380,7 +1380,7 @@ class acp_gallery
 			$result = $db->sql_query($sql);
 			if ($db->sql_affectedrows($result) == 0)
 			{
-				trigger_error('The requested album does not exist', E_USER_WARNING);
+				trigger_error('ALBUM_NOT_EXIST', E_USER_WARNING);
 			}
 		}
 		$move = request_var('move', '', true);
@@ -1447,7 +1447,7 @@ class acp_gallery
 		$db->sql_query($sql);
 		$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 		$cache->destroy('_albums');
-		trigger_error($user->lang['ALBUM_CHANGED_ORDER'] . adm_back_link($this->u_action));
+		redirect($this->u_action);
 	}
 
 	function permissions()

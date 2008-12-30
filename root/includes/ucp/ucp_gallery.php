@@ -589,7 +589,7 @@ class ucp_gallery
 			);
 			if (!$album_data['album_name'])
 			{
-				trigger_error('MISSING_NAME');
+				trigger_error('MISSING_ALBUM_NAME');
 			}
 			$album_data['parent_id'] = ($album_data['parent_id']) ? $album_data['parent_id'] : $user->gallery['personal_album_id'];
 			generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], request_var('desc_parse_bbcode', false), request_var('desc_parse_urls', false), request_var('desc_parse_smilies', false));
@@ -656,7 +656,7 @@ class ucp_gallery
 			$result = $db->sql_query($sql);
 			if ($db->sql_affectedrows($result) == 0)
 			{
-				trigger_error('The requested album does not exist', E_USER_WARNING);
+				trigger_error('ALBUM_NOT_EXIST', E_USER_WARNING);
 			}
 			$album_data = $db->sql_fetchrow($result);
 			$album_desc_data = generate_text_for_edit($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_options']);

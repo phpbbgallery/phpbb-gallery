@@ -107,7 +107,7 @@ if ($album_id <> 0)
 	$sort_dir	= request_var('sd', $album_config['sort_order']);
 	$limit_days = array(0 => $user->lang['ALL_IMAGES'], 1 => $user->lang['1_DAY'], 7 => $user->lang['7_DAYS'], 14 => $user->lang['2_WEEKS'], 30 => $user->lang['1_MONTH'], 90 => $user->lang['3_MONTHS'], 180 => $user->lang['6_MONTHS'], 365 => $user->lang['1_YEAR']);
 
-	$sort_by_text = array('t' => $user->lang['TIME'], 'n' => $user->lang['IMAGE_TITLE'], 'u' => $user->lang['SORT_USERNAME'], 'vc' => $user->lang['VIEWS']);
+	$sort_by_text = array('t' => $user->lang['TIME'], 'n' => $user->lang['IMAGE_NAME'], 'u' => $user->lang['SORT_USERNAME'], 'vc' => $user->lang['VIEWS']);
 	$sort_by_sql = array('t' => 'image_time', 'n' => 'image_name', 'u' => 'image_username', 'vc' => 'image_view_count');
 
 	if ($album_config['rate'] == 1)
@@ -242,6 +242,7 @@ if ($album_data['album_user_id'] == $user->data['user_id'])
 {
 	if (gallery_acl_check('i_upload', OWN_GALLERY_PERMISSIONS))
 	{
+		$allowed_create = true;
 		$sql = 'SELECT COUNT(album_id) as albums
 			FROM ' . GALLERY_ALBUMS_TABLE . "
 			WHERE album_user_id = {$user->data['user_id']}";
