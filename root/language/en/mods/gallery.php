@@ -34,7 +34,6 @@ $lang = array_merge($lang, array(
 	'ALBUM_UPLOAD_NEED_APPROVAL'	=> 'Your image has been uploaded successfully.<br /><br />But the feature Image Approval has been enabled so your image must be approved by a administrator or a moderator before posting',
 	'ALBUM_UPLOAD_SUCCESSFUL'		=> 'Your image has been uploaded successfully',
 	'ALL_IMAGES'					=> 'All image',
-	'APPROVAL'						=> 'Approval',
 	'APPROVE'						=> 'Approve',
 	'APPROVE_IMAGE'					=> 'Approve image',
 
