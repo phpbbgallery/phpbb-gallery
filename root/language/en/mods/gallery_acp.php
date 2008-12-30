@@ -162,7 +162,7 @@ $lang = array_merge($lang, array(
 	'IMPORT_DIR_EMPTY'				=> 'The folder %s is empty. You need to upload the images, before you can import them.',#
 	'IMPORT_FINISHED'				=> 'All %1$s images successful imported.',#
 	'IMPORT_MISSING_DIR'			=> 'Please provide the directory where the images reside.',
-	'IMPORT_MISSING_ALBUM'			=> 'Please select an album to import the images into.',
+	'IMPORT_MISSING_ALBUM'			=> 'Please select an album to import the images into.',#
 	'IMPORT_SELECT'					=> 'Choose the images which you want to import. Successful uploaded images are deleted. All other images are still available.',#
 	'IMPORT_USER'					=> 'Uploaded by',#
 	'IMPORT_USER_EXP'				=> 'You can add the images to another user here.',#
@@ -232,9 +232,9 @@ $lang = array_merge($lang, array(
 	'PERMISSION_M_STATUS'			=> 'Can approve and lock images',#
 
 
-	'PERMISSION_EMPTY'				=> 'You didn\'t set all permissions.',
+	'PERMISSION_EMPTY'				=> 'You didn\'t set all permissions.',#
 	'PERMISSION_NO_GROUP'			=> 'You didn\'t select a group to set the permissions.',#
-	'PERMISSIONS_STORED'			=> 'Permissions were stored successful.',
+	'PERMISSIONS_STORED'			=> 'Permissions were stored successful.',#
 	'PERSONAL_ALBUM_INDEX'			=> 'View personal albums as album on the index',#
 	'PERSONAL_ALBUM_INDEX_EXP'		=> 'If choosen "No", there will be the link, right beneath.',#
 	'PERSONAL_GALLERIES'			=> 'Personal Galleries',
@@ -274,7 +274,7 @@ $lang = array_merge($lang, array(
 	'SHORTED_IMAGENAMES_EXP'		=> 'If the name of an image is to long and doesn\'t include spaces, the layout maybe destroyed.',#
 	'SORRY_NO_STATISTIC'			=> 'Sorry, this statistic-value is not yet available.',#
 
-	'THIS_WILL_BE_REPORTED'					=> 'Known Bug, sorry guys!',
+	'THIS_WILL_BE_REPORTED'					=> 'Known Bug, sorry guys!',#
 	'THUMBNAIL_CACHE'						=> 'Thumbnail cache',#
 	'THUMBNAIL_CACHE_CLEARED_SUCCESSFULLY'	=> '<br />Your thumbnail cache has been cleared successfully<br />&nbsp;',
 	'THUMBNAIL_QUALITY'						=> 'Thumbnail quality (1-100)',#

@@ -51,12 +51,12 @@ $lang = array_merge($lang, array(
 	'MISSING_ALBUM_NAME'			=> 'Please insert a name for the album',#
 	'MOVED_ALBUMS'					=> 'Albums successful moved',
 
-	'NEED_INITIALISE'				=> 'You don\'t have a personal album yet.',
-	'NO_ALBUM_STEALING'				=> 'You are not allowed to manage the Album of other users.',
+	'NEED_INITIALISE'				=> 'You don\'t have a personal album yet.',#
+	'NO_ALBUM_STEALING'				=> 'You are not allowed to manage the Album of other users.',#
 	'NO_FAVORITES'					=> 'You don\'t have any favorites.',#
-	'NO_MORE_SUBALBUMS_ALLOWED'		=> 'You added your maximum of subalbums to your personal album',
+	'NO_MORE_SUBALBUMS_ALLOWED'		=> 'You added your maximum of subalbums to your personal album',#
 	'NO_PARENT_ALBUM'				=> '&laquo;-- no parent',#
-	'NO_PERSALBUM_ALLOWED'			=> 'You don\'t have the permissions create your personal album',
+	'NO_PERSALBUM_ALLOWED'			=> 'You don\'t have the permissions create your personal album',#
 	'NO_PERSONAL_ALBUM'				=> 'You don\'t have a personal album yet. Here you can create your personal album, with some subalbums.<br />In personal albums only the owner can upload images.',#
 	'NO_SUBALBUMS'					=> 'no subalbums',//@todo gallery_acp.php#
 	'NO_SUBALBUMS_ALLOWED'			=> 'You don\'t have the permissions to add subalbums to your personal album',
