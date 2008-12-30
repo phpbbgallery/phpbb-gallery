@@ -35,7 +35,7 @@ $lang = array_merge($lang, array(
 	'CREATED_SUBALBUM'				=> 'Subalbum successful created',#
 
 	'DELETE_ALBUM'					=> 'Delete Album',#
-	'DELETE_ALBUM_CONFIRM'			=> 'Delete Album, with all attached subalbums and images?',
+	'DELETE_ALBUM_CONFIRM'			=> 'Delete Album, with all attached subalbums and images?',#
 	'DELETED_ALBUMS'				=> 'Albums successful deleted',#
 
 	'EDIT'							=> 'Edit',#
