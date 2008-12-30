@@ -706,8 +706,6 @@ class install_update extends module
 				));
 				$cache->destroy('acl_options');
 
-			case '0.4.0':
-
 				// Update the ACP-Modules permissions
 				$sql = 'UPDATE ' . MODULES_TABLE . " SET
 					module_auth = 'acl_a_gallery_manage'
@@ -734,8 +732,8 @@ class install_update extends module
 					WHERE module_langname = 'ACP_GALLERY_CLEANUP'";
 				$db->sql_query($sql);
 
-			case '0.4.1':
-				set_gallery_config('link_imagepage', $gallery_config['link_thumbnail']);
+			case '0.4.0':
+				set_gallery_config('link_imagepage', 'lytebox');
 
 				// Resync the reported flags in addition to #393
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_reported = 0';
@@ -751,6 +749,8 @@ class install_update extends module
 					$db->sql_query($sql);
 				}
 				$db->sql_freeresult($result);
+
+			case '0.4.1':
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
 			break;
 		}
