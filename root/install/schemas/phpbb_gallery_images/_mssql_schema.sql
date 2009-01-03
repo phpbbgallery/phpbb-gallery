@@ -34,7 +34,10 @@ CREATE TABLE [phpbb_gallery_images] (
 	[image_comments] [int] DEFAULT (0) NOT NULL ,
 	[image_last_comment] [int] DEFAULT (0) NOT NULL ,
 	[image_favorited] [int] DEFAULT (0) NOT NULL ,
-	[image_reported] [int] DEFAULT (0) NOT NULL 
+	[image_reported] [int] DEFAULT (0) NOT NULL ,
+	[filesize_upload] [int] DEFAULT (0) NOT NULL ,
+	[filesize_medium] [int] DEFAULT (0) NOT NULL ,
+	[filesize_cache] [int] DEFAULT (0) NOT NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 

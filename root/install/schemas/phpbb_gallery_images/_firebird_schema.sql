@@ -28,7 +28,10 @@ CREATE TABLE phpbb_gallery_images (
 	image_comments INTEGER DEFAULT 0 NOT NULL,
 	image_last_comment INTEGER DEFAULT 0 NOT NULL,
 	image_favorited INTEGER DEFAULT 0 NOT NULL,
-	image_reported INTEGER DEFAULT 0 NOT NULL
+	image_reported INTEGER DEFAULT 0 NOT NULL,
+	filesize_upload INTEGER DEFAULT 0 NOT NULL,
+	filesize_medium INTEGER DEFAULT 0 NOT NULL,
+	filesize_cache INTEGER DEFAULT 0 NOT NULL
 );;
 
 ALTER TABLE phpbb_gallery_images ADD PRIMARY KEY (image_id);;

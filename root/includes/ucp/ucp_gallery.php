@@ -27,6 +27,7 @@ class ucp_gallery
 		include($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
 		include($phpbb_root_path . $gallery_root_path . 'includes/constants.' . $phpEx);
 		include($phpbb_root_path . $gallery_root_path . 'includes/ucp_functions.' . $phpEx);
+		$album_config = load_gallery_config();
 
 		$user->add_lang('mods/gallery');
 		$user->add_lang('mods/gallery_acp');
@@ -168,10 +169,11 @@ class ucp_gallery
 
 	function manage_favorites()
 	{
-		global $db, $user, $auth, $template, $cache, $album_config;
+		global $db, $user, $auth, $template, $cache, $gallery_root_path;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 		$gallery_root_path = GALLERY_ROOT_PATH;
 		include_once($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
+		$album_config = load_gallery_config();
 
 		$action = request_var('action', '');
 		$image_id_ary = request_var('image_id_ary', array(0));
@@ -211,10 +213,10 @@ class ucp_gallery
 		while( $row = $db->sql_fetchrow($result) )
 		{
 			$template->assign_block_vars('image_row', array(
-				'THUMBNAIL'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}thumbnail.$phpEx" , 'album_id=' . $row['image_album_id'] .  '&amp;image_id=' . $row['image_id']),
+				'UC_IMAGE_NAME'		=> generate_image_link('image_name', $album_config['link_image_name'], $row['image_id'], $row['image_name'], $row['image_album_id']),
+				'UC_FAKE_THUMBNAIL'	=> generate_image_link('fake_thumbnail', $album_config['link_thumbnail'], $row['image_id'], $row['image_name'], $row['image_album_id']),
 				'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
-				'IMAGE_NAME'		=> $row['image_name'],
 				'ALBUM_NAME'		=> $row['album_name'],
 				'IMAGE_ID'			=> $row['image_id'],
 				'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx" , "album_id=" . $row['image_album_id']),
@@ -241,10 +243,11 @@ class ucp_gallery
 
 	function manage_subscriptions()
 	{
-		global $db, $user, $auth, $template, $cache, $album_config;
+		global $db, $user, $auth, $template, $cache, $gallery_root_path;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 		$gallery_root_path = GALLERY_ROOT_PATH;
 		include_once($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
+		$album_config = load_gallery_config();
 
 		$action = request_var('action', '');
 		$image_id_ary = request_var('image_id_ary', array(0));
@@ -284,7 +287,7 @@ class ucp_gallery
 			WHERE w.user_id = {$user->data['user_id']}
 				AND w.album_id <> 0";
 		$result = $db->sql_query($sql);
-		while( $row = $db->sql_fetchrow($result) )
+		while ($row = $db->sql_fetchrow($result))
 		{
 			$template->assign_block_vars('album_row', array(
 				'ALBUM_ID'			=> $row['album_id'],
@@ -292,10 +295,10 @@ class ucp_gallery
 				'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx" , "album_id=" . $row['album_id']),
 				'ALBUM_DESC'		=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
 
-				'THUMBNAIL'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}thumbnail.$phpEx" , 'album_id=' . $row['album_id'] .  '&amp;image_id=' . $row['album_last_image_id']),
+				'UC_IMAGE_NAME'		=> generate_image_link('image_name', $album_config['link_image_name'], $row['album_last_image_id'], $row['album_last_image_name'], $row['album_id']),
+				'UC_FAKE_THUMBNAIL'	=> generate_image_link('fake_thumbnail', $album_config['link_thumbnail'], $row['album_last_image_id'], $row['album_last_image_name'], $row['album_id']),
 				'UPLOADER'			=> get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
-				'IMAGE_TIME'		=> $user->format_date($row['album_last_image_time']),
-				'IMAGE_NAME'		=> $row['album_last_image_name'],
+				'LAST_IMAGE_TIME'	=> $user->format_date($row['album_last_image_time']),
 				'LAST_IMAGE'		=> $row['album_last_image_id'],
 				'U_IMAGE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx" , "album_id=" . $row['album_id'] . "&amp;image_id=" . $row['album_last_image_id']),
 			));
@@ -317,16 +320,16 @@ class ucp_gallery
 		}
 		$db->sql_freeresult($result);
 		$sql = 'SELECT *
-			FROM ' . GALLERY_WATCH_TABLE . " w
-			LEFT JOIN " . GALLERY_IMAGES_TABLE . " i
+			FROM ' . GALLERY_WATCH_TABLE . ' w
+			LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
 				ON w.image_id = i.image_id
-			LEFT JOIN " . GALLERY_ALBUMS_TABLE . " a
+			LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
 				ON a.album_id = i.image_album_id
-			LEFT JOIN " . GALLERY_COMMENTS_TABLE . " c
+			LEFT JOIN ' . GALLERY_COMMENTS_TABLE . " c
 				ON i.image_last_comment = c.comment_id
 			WHERE w.user_id = {$user->data['user_id']}
 				AND w.image_id <> 0
-			LIMIT $start, $images_per_page";
+			LIMIT $start, $images_per_page";//@todo
 		$result = $db->sql_query($sql);
 		while( $row = $db->sql_fetchrow($result) )
 		{
@@ -337,7 +340,8 @@ class ucp_gallery
 				'COMMENT'			=> $row['image_comments'],
 				'LAST_COMMENT_TIME'	=> $user->format_date($row['comment_time']),
 				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
-				'IMAGE_NAME'		=> $row['image_name'],
+				'UC_IMAGE_NAME'		=> generate_image_link('image_name', $album_config['link_image_name'], $row['image_id'], $row['image_name'], $row['album_id']),
+				'UC_FAKE_THUMBNAIL'	=> generate_image_link('fake_thumbnail', $album_config['link_thumbnail'], $row['image_id'], $row['image_name'], $row['album_id']),
 				'ALBUM_NAME'		=> $row['album_name'],
 				'IMAGE_ID'			=> $row['image_id'],
 				'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx" , "album_id=" . $row['image_album_id']),

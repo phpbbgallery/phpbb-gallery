@@ -69,6 +69,9 @@ CREATE TABLE phpbb_gallery_images (
 	image_last_comment number(8) DEFAULT '0' NOT NULL,
 	image_favorited number(8) DEFAULT '0' NOT NULL,
 	image_reported number(8) DEFAULT '0' NOT NULL,
+	filesize_upload number(20) DEFAULT '0' NOT NULL,
+	filesize_medium number(20) DEFAULT '0' NOT NULL,
+	filesize_cache number(20) DEFAULT '0' NOT NULL,
 	CONSTRAINT pk_phpbb_gallery_images PRIMARY KEY (image_id)
 )
 /

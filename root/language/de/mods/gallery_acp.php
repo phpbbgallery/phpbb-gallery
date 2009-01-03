@@ -133,6 +133,7 @@ $lang = array_merge($lang, array(
 	'MANAGE_PERSONALS'				=> 'Persönliche Alben verwalten',
 	'MAX_IMAGES_PER_ALBUM'			=> 'Die maximale Anzahl der Bilder für jedes Album (-1 = unbegrenzt)',
 	'MEDIUM_CACHE'					=> 'Verkleinerte Bilder für die Image-page cachen',
+	'MEDIUM_DIR_SIZE'				=> 'Größe des medium/-Ordners',
 	'MISSING_ALBUM_NAME'			=> 'Du musst einen Namen für das Album eintragen.',
 	'MISSING_AUTHOR'				=> 'Bilder ohne gültigen Autor',
 	'MISSING_AUTHOR_C'				=> 'Kommentare ohne gültigen Autor',

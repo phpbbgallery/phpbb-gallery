@@ -44,6 +44,21 @@ $sql = 'SELECT *
 $result = $db->sql_query($sql);
 $user->gallery = $db->sql_fetchrow($result);
 
+function load_gallery_config($gallery_config = false)
+{
+	global $db;
+
+	$sql = 'SELECT * FROM ' . GALLERY_CONFIG_TABLE;
+	$result = $db->sql_query($sql);
+
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$gallery_config[$row['config_name']] = $row['config_value'];
+	}
+	$db->sql_freeresult($result);
+
+	return $gallery_config;
+}
 /**
 * Get album children (for displaying the subalbums
 */
@@ -573,6 +588,11 @@ function get_album_branch($branch_user_id, $album_id, $type = 'all', $order = 'd
 function generate_image_link($content, $mode, $image_id, $image_name, $album_id, $is_gif = false)
 {
 	global $phpbb_root_path, $phpEx, $user, $gallery_root_path, $album_config;
+
+	if (!$album_config)
+	{
+		$album_config = load_gallery_config();
+	}
 
 	$image_page_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id");
 	$image_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "album_id=$album_id&amp;image_id=$image_id");

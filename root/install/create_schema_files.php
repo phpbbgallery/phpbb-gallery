@@ -930,6 +930,9 @@ function get_schema_struct()
 			'image_last_comment'	=> array('UINT', 0),
 			'image_favorited'		=> array('UINT', 0),
 			'image_reported'		=> array('UINT', 0),
+			'filesize_upload'		=> array('UINT:20', 0),
+			'filesize_medium'		=> array('UINT:20', 0),
+			'filesize_cache'		=> array('UINT:20', 0),
 		),
 		'PRIMARY_KEY'				=> 'image_id',
 		'KEYS'		=> array(

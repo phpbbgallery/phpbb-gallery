@@ -24,6 +24,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
+	'ALBUMS'						=> 'Alben',
 	'ALBUM_DESC'					=> 'Beschreibung',
 	'ALBUM_NAME'					=> 'Name',
 	'ALBUM_PARENT'					=> 'Übergeordnetes Album',

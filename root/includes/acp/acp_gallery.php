@@ -445,6 +445,10 @@ class acp_gallery
 						$confirm = true;
 						$confirm_lang = 'CONFIRM_OPERATION';
 					break;
+					case 'stats':
+						$confirm = true;
+						$confirm_lang = 'CONFIRM_OPERATION';
+					break;
 					case 'last_images':
 						$confirm = true;
 						$confirm_lang = 'CONFIRM_OPERATION';
@@ -544,6 +548,32 @@ class acp_gallery
 						trigger_error($user->lang['RESYNCED_PERSONALS'] . adm_back_link($this->u_action));
 					break;
 
+					case 'stats':
+						if (!$auth->acl_get('a_board'))
+						{
+							trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
+						}
+
+						// Hopefully this won't take to long!
+						$sql = 'SELECT image_id, image_filename, image_thumbnail
+							FROM ' . GALLERY_IMAGES_TABLE;
+						$result = $db->sql_query($sql);
+						while ($row = $db->sql_fetchrow($result))
+						{
+							$sql_ary = array(
+								'filesize_upload'		=> @filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $row['image_filename']),
+								'filesize_medium'		=> @filesize($phpbb_root_path . GALLERY_MEDIUM_PATH . $row['image_thumbnail']),
+								'filesize_cache'		=> @filesize($phpbb_root_path . GALLERY_CACHE_PATH . $row['image_thumbnail']),
+							);
+							$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+								WHERE ' . $db->sql_in_set('image_id', $row['image_id']);
+							$db->sql_query($sql);
+						}
+						$db->sql_freeresult($result);
+
+						redirect($this->u_action);
+					break;
+
 					case 'last_images':
 						$sql = 'SELECT album_id
 							FROM ' . GALLERY_ALBUMS_TABLE;
@@ -593,59 +623,18 @@ class acp_gallery
 		$boarddays = (time() - $config['board_startdate']) / 86400;
 		$images_per_day = sprintf('%.2f', $config['num_images'] / $boarddays);
 
-		$num_albums = 0;
-		$sql = 'SELECT album_user_id
-			FROM ' . GALLERY_ALBUMS_TABLE;
+		$sql = 'SELECT COUNT(album_user_id) num_albums
+			FROM ' . GALLERY_ALBUMS_TABLE . '
+			WHERE album_user_id = 0';
 		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result))
-		{
-			if ($row['album_user_id'] == 0)
-			{
-				$num_albums++;
-			}
-		}
+		$num_albums = $db->sql_fetchfield('num_albums');
 		$db->sql_freeresult($result);
 
-		//this is much load, maybe we can store this into some variables?
-		//but refresh it, after every upload, or how you wanna do this?
-		$cache_dir_size = $gupload_dir_size = $user->lang['SORRY_NO_STATISTIC'];
-		/*
-		$cache_dir_size = $gupload_dir_size = 0;
-		if ($gupload_dir = @opendir($phpbb_root_path . GALLERY_UPLOAD_PATH))
-		{
-			while (($file = readdir($gupload_dir)) !== false)
-			{
-				if ($file[0] != '.' && $file != 'CVS' && strpos($file, 'index.') === false)
-				{
-					$gupload_dir_size += filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $file);
-				}
-			}
-			closedir($gupload_dir);
-
-			$gupload_dir_size = get_formatted_filesize($gupload_dir_size);
-		}
-		else
-		{
-			$gupload_dir_size = $user->lang['NOT_AVAILABLE'];
-		}
-		if ($cache_dir = @opendir($phpbb_root_path . GALLERY_CACHE_PATH))
-		{
-			while (($file = readdir($cache_dir)) !== false)
-			{
-				if ($file[0] != '.' && $file != 'CVS' && strpos($file, 'index.') === false)
-				{
-					$cache_dir_size += filesize($phpbb_root_path . GALLERY_CACHE_PATH . $file);
-				}
-			}
-			closedir($cache_dir);
-
-			$cache_dir_size = get_formatted_filesize($cache_dir_size);
-		}
-		else
-		{
-			$cache_dir_size = $user->lang['NOT_AVAILABLE'];
-		}
-		//*/
+		$sql = 'SELECT SUM(filesize_upload) as stat, SUM(filesize_medium) as stat_medium, SUM(filesize_cache) as stat_cache
+			FROM ' . GALLERY_IMAGES_TABLE;
+		$result = $db->sql_query($sql);
+		$dir_sizes = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
 
 		$template->assign_vars(array(
 			'S_GALLERY_OVERVIEW'			=> true,
@@ -656,8 +645,9 @@ class acp_gallery
 			'IMAGES_PER_DAY'		=> $images_per_day,
 			'TOTAL_ALBUMS'			=> $num_albums,
 			'TOTAL_PERSONALS'		=> $album_config['personal_counter'],
-			'GUPLOAD_DIR_SIZE'		=> $gupload_dir_size,
-			'CACHE_DIR_SIZE'		=> $cache_dir_size,
+			'GUPLOAD_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat']),
+			'MEDIUM_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat_medium']),
+			'CACHE_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat_cache']),
 			'GALLERY_VERSION'		=> $album_config['phpbb_gallery_version'],
 
 			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,

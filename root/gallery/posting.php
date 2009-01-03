@@ -539,90 +539,11 @@ switch ($mode)
 								$image_data['width'] = $thumbnail_width;
 								$image_data['height'] = $thumbnail_height;
 							}
-							if (filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']) > $album_config['max_file_size'])
+							$image_data['image_filesize'] = filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
+							if ($image_data['image_filesize'] > $album_config['max_file_size'])
 							{
 								@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
 								trigger_error('BAD_UPLOAD_FILE_SIZE');
-							}
-
-							// This image is okay, we can cache its thumbnail now
-							if (($album_config['thumbnail_cache']) && ($album_config['gd_version'] > 0)) 
-							{
-								$gd_errored = false;
-								$src = $read_function($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
-								if (!$src)
-								{
-									$gd_errored = true;
-									$image_data['thumbnail'] = '';
-								}
-								else if (($image_data['width'] > $album_config['thumbnail_size']) || ($image_data['height'] > $album_config['thumbnail_size']))
-								{
-									// Resize it
-									if ($image_data['width'] > $image_data['height'])
-									{
-										$thumbnail_width	= $album_config['thumbnail_size'];
-										$thumbnail_height	= $album_config['thumbnail_size'] * ($image_data['height'] / $image_data['width']);
-									}
-									else
-									{
-										$thumbnail_height	= $album_config['thumbnail_size'];
-										$thumbnail_width	= $album_config['thumbnail_size'] * ($image_data['width'] / $image_data['height']);
-									}
-
-									// Create thumbnail + 16 Pixel extra for imagesize text 
-									if ($album_config['thumbnail_info_line'])
-									{// Create image details credits to Dr.Death
-										$thumbnail = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height + 16) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height + 16); 
-									}
-									else
-									{
-										$thumbnail = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
-									}
-									$resize_function = ($album_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
-									@$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $image_data['width'], $image_data['height']);
-
-									if ($album_config['thumbnail_info_line'])
-									{// Create image details credits to Dr.Death
-										$dimension_font = 1;
-										$dimension_filesize = filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
-										$dimension_string = $image_data['width'] . "x" . $image_data['height'] . "(" . intval($dimension_filesize/1024) . "KiB)";
-										$dimension_colour = ImageColorAllocate($thumbnail,255,255,255);
-										$dimension_height = imagefontheight($dimension_font);
-										$dimension_width = imagefontwidth($dimension_font) * strlen($dimension_string);
-										$dimension_x = ($thumbnail_width - $dimension_width) / 2;
-										$dimension_y = $thumbnail_height + ((16 - $dimension_height) / 2);
-										imagestring($thumbnail, 1, $dimension_x, $dimension_y, $dimension_string, $dimension_colour);
-									}
-
-								}
-								else
-								{
-									$thumbnail = $src;
-								}
-								if (!$gd_errored)
-								{
-									$image_data['thumbnail'] = $image_data['filename'];
-									// Write to disk
-									switch ($image_data['image_type2'])
-									{
-										case '.jpg':
-											@imagejpeg($thumbnail, $phpbb_root_path . GALLERY_CACHE_PATH . $image_data['thumbnail'], $album_config['thumbnail_quality']);
-										break;
-
-										case '.png':
-											@imagepng($thumbnail, $phpbb_root_path . GALLERY_CACHE_PATH . $image_data['thumbnail']);
-										break;
-
-										case '.gif':
-											@imagegif($thumbnail, $phpbb_root_path . GALLERY_CACHE_PATH . $image_data['thumbnail']);
-										break;
-									}
-									@chmod($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['thumbnail'], 0777);
-								}
-							}
-							else if ($album_config['gd_version'] > 0)
-							{
-								$image_data['thumbnail'] = '';
 							}
 
 							$image_data = upload_image($image_data);
@@ -1303,7 +1224,6 @@ function upload_image(&$image_data)
 
 	$sql_ary = array(
 		'image_filename' 		=> $image_data['filename'],
-		'image_thumbnail'		=> $image_data['thumbnail'],
 		'image_name'			=> $image_data['image_name'],
 		'image_user_id'			=> $user->data['user_id'],
 		'image_user_colour'		=> $user->data['user_colour'],
@@ -1312,6 +1232,7 @@ function upload_image(&$image_data)
 		'image_time'			=> $image_data['image_time'],
 		'image_album_id'		=> $image_data['image_album_id'],
 		'image_status'			=> (gallery_acl_check('i_approve', $album_id)) ? 1 : 0,
+		'filesize_upload'		=> $image_data['image_filesize'],
 	);
 
 	$message_parser				= new parse_message();

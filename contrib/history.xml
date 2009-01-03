@@ -45,6 +45,14 @@
     <author-notes lang="en-gb">This file contains all parts of the History, all Developers, a.s.o.</author-notes>
     <history>
       <entry>
+        <date>YYYY-MM-DD</date>
+        <rev-version>X.Y.Z</rev-version>
+        <changelog lang="en-gb">
+          <change><![CDATA[[Fix] Unreported: 'Hacking Attempt' in UCP]]></change>
+          <change><![CDATA[[Fix] Unreported: Missing statistic-values]]></change>
+        </changelog>
+      </entry>
+      <entry>
         <date>2008-12-22</date>
         <rev-version>0.4.1</rev-version>
         <changelog lang="en-gb">

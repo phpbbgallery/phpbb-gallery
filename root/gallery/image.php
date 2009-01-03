@@ -232,6 +232,20 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 		{
 			exit;
 		}
+		else
+		{
+			if ($mode == 'thumbnail')
+			{
+				$sql_ary = array('filesize_cache' => @filesize($wirte_source));
+			}
+			else
+			{
+				$sql_ary = array('filesize_medium' => @filesize($wirte_source));
+			}
+			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+				WHERE ' . $db->sql_in_set('image_id', $image_id);
+			$db->sql_query($sql);
+		}
 	}
 }
 

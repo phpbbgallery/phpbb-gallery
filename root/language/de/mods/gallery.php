@@ -117,7 +117,7 @@ $lang = array_merge($lang, array(
 	'LAST_COMMENT'					=> 'Letzter Kommentar',
 	'LAST_IMAGE'					=> 'Letztes Bild',
 	'LOGIN_EXPLAIN_UPLOAD'			=> 'Du musst registriert und angemeldet sein, um Bilder hochladen zu können.',
-	'LOOP_EXP'						=> 'Wenn du mehrere Bilder auf einmal hochlädst, kannst du sie mit <span style="font-weight: bold;">{NUM}</span> in der Bildbeschreibung und im Bild-Titel durchnummerieren.<br />
+	'LOOP_EXP'						=> 'Wenn du mehrere Bilder auf einmal hochlädst, kannst du sie mit <span style="font-weight: bold;">{NUM}</span> in der Bildbeschreibung und im Bildname durchnummerieren.<br />
 										Der Zähler beginnt mit der Zahl, die du hier eingibst. Beispiel: "Bild {NUM}" ergibt: "Bild 1", "Bild 2", usw.',
 
 	'MAX_FILE_SIZE'					=> 'Maximale Dateigröße (bytes)',
@@ -141,7 +141,7 @@ $lang = array_merge($lang, array(
 	'NOT_RATED'						=> 'Nicht bewertet',
 
 	'ORDER'							=> 'Reihenfolge',
-	'ORIG_FILENAME'					=> 'Dateinamen als Bild-Titel verwenden (das Eingabefeld ist ohne Funktion)',
+	'ORIG_FILENAME'					=> 'Dateinamen als Bildname verwenden (das Eingabefeld ist ohne Funktion)',
 	'OUT_OF_RANGE_VALUE'			=> 'Wert ist ausserhalb des Bereichs',
 
 	'PERSONAL_ALBUMS'				=> 'Persönliche Alben',

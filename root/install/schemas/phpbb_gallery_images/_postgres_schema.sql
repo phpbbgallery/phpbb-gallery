@@ -111,6 +111,9 @@ CREATE TABLE phpbb_gallery_images (
 	image_last_comment INT4 DEFAULT '0' NOT NULL CHECK (image_last_comment >= 0),
 	image_favorited INT4 DEFAULT '0' NOT NULL CHECK (image_favorited >= 0),
 	image_reported INT4 DEFAULT '0' NOT NULL CHECK (image_reported >= 0),
+	filesize_upload INT4 DEFAULT '0' NOT NULL CHECK (filesize_upload >= 0),
+	filesize_medium INT4 DEFAULT '0' NOT NULL CHECK (filesize_medium >= 0),
+	filesize_cache INT4 DEFAULT '0' NOT NULL CHECK (filesize_cache >= 0),
 	PRIMARY KEY (image_id)
 );
 

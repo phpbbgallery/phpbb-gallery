@@ -333,6 +333,10 @@ class install_update extends module
 				nv_add_column(GALLERY_ROLES_TABLE,	'i_watermark',				array('UINT:3', 0));
 
 			case '0.4.0':
+			case '0.4.1':
+				nv_add_column(GALLERY_IMAGES_TABLE,	'filesize_upload',			array('UINT:20', 0));
+				nv_add_column(GALLERY_IMAGES_TABLE,	'filesize_medium',			array('UINT:20', 0));
+				nv_add_column(GALLERY_IMAGES_TABLE,	'filesize_cache',			array('UINT:20', 0));
 			break;
 		}
 

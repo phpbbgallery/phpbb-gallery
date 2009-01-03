@@ -29,7 +29,10 @@ CREATE TABLE phpbb_gallery_images (
 	image_comments INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	image_last_comment INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	image_favorited INTEGER UNSIGNED NOT NULL DEFAULT '0',
-	image_reported INTEGER UNSIGNED NOT NULL DEFAULT '0'
+	image_reported INTEGER UNSIGNED NOT NULL DEFAULT '0',
+	filesize_upload INTEGER UNSIGNED NOT NULL DEFAULT '0',
+	filesize_medium INTEGER UNSIGNED NOT NULL DEFAULT '0',
+	filesize_cache INTEGER UNSIGNED NOT NULL DEFAULT '0'
 );
 
 CREATE INDEX phpbb_gallery_images_image_album_id ON phpbb_gallery_images (image_album_id);
