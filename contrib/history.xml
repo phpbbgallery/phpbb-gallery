@@ -48,6 +48,7 @@
         <date>YYYY-MM-DD</date>
         <rev-version>X.Y.Z</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Fix] Report #407: Undefined index: EXIF_WHITEBALANCE]]></change>
           <change><![CDATA[[Fix] Unreported: 'Hacking Attempt' in UCP]]></change>
           <change><![CDATA[[Fix] Unreported: Missing statistic-values]]></change>
         </changelog>

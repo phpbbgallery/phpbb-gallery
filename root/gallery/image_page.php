@@ -207,7 +207,7 @@ if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (substr
 		}
 		if (isset($exif["EXIF"]["WhiteBalance"]))
 		{
-			$exif_data['exif_whitebalance'] = $user->lang['EXIF_WHITEB_' . (($exif["EXIF"]["WhiteBalance"]) ? 'MANU' : 'AUTO')];
+			$exif_data['exif_whiteb'] = $user->lang['EXIF_WHITEB_' . (($exif["EXIF"]["WhiteBalance"]) ? 'MANU' : 'AUTO')];
 		}
 		if(isset($exif["EXIF"]["Flash"]))
 		{
