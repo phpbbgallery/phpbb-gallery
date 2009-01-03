@@ -204,8 +204,8 @@ $lang = array_merge($lang, array(
 	'RESYNCED_LAST_IMAGES'			=> '"Letztes Bild" neu ermittelt',
 	'RESYNCED_PERSONALS'			=> 'Persönliche Alben resynchronisiert',
 	'ROWS_PER_PAGE'					=> 'Anzahl der Zeilen auf Bildvorschau-Seite',
-	'RSZ_HEIGHT'					=> 'Maximuale Höhe beim anzeigen eines Bildes',
-	'RSZ_WIDTH'						=> 'Maximuale Breite beim anzeigen eines Bildes',
+	'RSZ_HEIGHT'					=> 'Maximale Höhe beim anzeigen eines Bildes',
+	'RSZ_WIDTH'						=> 'Maximale Breite beim anzeigen eines Bildes',
 
 	'SELECT_ALBUMS'					=> 'Wähle Alben',
 	'SELECT_GROUPS'					=> 'Wähle Gruppen',
