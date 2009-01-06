@@ -65,20 +65,7 @@ You may install it, to be informed about future versions, as I'm not going to se
       <file from="root/includes/ucp/ucp_gallery.php" to="includes/ucp/ucp_gallery.php" />
       <file from="root/includes/ucp/info/ucp_gallery.php" to="includes/ucp/info/ucp_gallery.php" />
       <file from="root/install/*.*" to="install/*.*" />
-      <file from="root/install/schemas/phpbb_gallery_albums/*.*" to="install/schemas/phpbb_gallery_albums/*.*" />
-      <file from="root/install/schemas/phpbb_gallery_comments/*.*" to="install/schemas/phpbb_gallery_comments/*.*" />
-      <file from="root/install/schemas/phpbb_gallery_config/*.*" to="install/schemas/phpbb_gallery_config/*.*" />
-      <file from="root/install/schemas/phpbb_gallery_copyts_albums/*.*" to="install/schemas/phpbb_gallery_copyts_albums/*.*" />
-      <file from="root/install/schemas/phpbb_gallery_copyts_users/*.*" to="install/schemas/phpbb_gallery_copyts_users/*.*" />
-      <file from="root/install/schemas/phpbb_gallery_favorites/*.*" to="install/schemas/phpbb_gallery_favorites/*.*" />
-      <file from="root/install/schemas/phpbb_gallery_images/*.*" to="install/schemas/phpbb_gallery_images/*.*" />
-      <file from="root/install/schemas/phpbb_gallery_modscache/*.*" to="install/schemas/phpbb_gallery_modscache/*.*" />
-      <file from="root/install/schemas/phpbb_gallery_permissions/*.*" to="install/schemas/phpbb_gallery_permissions/*.*" />
-      <file from="root/install/schemas/phpbb_gallery_rates/*.*" to="install/schemas/phpbb_gallery_rates/*.*" />
-      <file from="root/install/schemas/phpbb_gallery_reports/*.*" to="install/schemas/phpbb_gallery_reports/*.*" />
-      <file from="root/install/schemas/phpbb_gallery_roles/*.*" to="install/schemas/phpbb_gallery_roles/*.*" />
-      <file from="root/install/schemas/phpbb_gallery_users/*.*" to="install/schemas/phpbb_gallery_users/*.*" />
-      <file from="root/install/schemas/phpbb_gallery_watch/*.*" to="install/schemas/phpbb_gallery_watch/*.*" />
+      <file from="root/install/schemas/*.*" to="install/schemas/*.*" />
       <file from="root/language/en/email/*.*" to="language/en/email/*.*" />
       <file from="root/language/en/mods/*.*" to="language/en/mods/*.*" />
       <file from="root/styles/prosilver/imageset/*.*" to="styles/prosilver/imageset/*.*" />
