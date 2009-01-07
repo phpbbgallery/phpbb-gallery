@@ -1151,7 +1151,7 @@ class acp_gallery
 			$copy_permissions = request_var('copy_permissions', 0);
 			if ($copy_permissions <> 0)
 			{
-				//delete the old permissions and thatn copy the new one's
+				//delete the old permissions and than copy the new one's
 				$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . "
 					WHERE perm_album_id = $album_id";
 				$result = $db->sql_query($sql);
@@ -1265,13 +1265,14 @@ class acp_gallery
 			));
 		}
 		else
-		{// Is it salty ?//$album_id
+		{
+			// Is it salty ?
 			if (!check_form_key('acp_gallery'))
 			{
 				trigger_error('FORM_INVALID');
 			}
 			$album = get_album_info($album_id);
-			if (!$album['album_type'] && (($album['right_id'] - $album['left_id']) > 2))
+			if (($album['album_type'] == 1) && (($album['right_id'] - $album['left_id']) > 2))
 			{//handle subs if there
 				$handle_subs = request_var('handle_subs', 0);
 				//we have to learn how to delete or move the subs
@@ -1284,7 +1285,7 @@ class acp_gallery
 					trigger_error($user->lang['DELETE_ALBUM_SUBS'] . adm_back_link($this->u_action));
 				}
 			}
-			else if ($album['album_type'] == 1)
+			else if ($album['album_type'] == 2)
 			{//handle images if there
 				$handle_images = request_var('handle_images', -1);
 				if ($handle_images < 0)
