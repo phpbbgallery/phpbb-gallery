@@ -165,8 +165,8 @@ if ($album_id <> 0)
 			$db->sql_freeresult($result);
 
 			$template->assign_vars(array(
-				'MESSAGE_TITLE'		=> $trigger_message,
-				'MESSAGE_TEXT'		=> implode(', ', $picrow),
+				'MESSAGE_TITLE'		=> $user->lang['SLIDE_SHOW'],
+				'MESSAGE_TEXT'		=> $trigger_message . '<br /><br />' . implode(', ', $picrow),
 			));
 
 			page_header($user->lang['SLIDE_SHOW']);
