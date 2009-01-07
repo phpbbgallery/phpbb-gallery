@@ -50,6 +50,7 @@
         <changelog lang="en-gb">
           <change><![CDATA[[Add] Unreported: Missing statistic-values]]></change>
 
+          <change><![CDATA[[Fix] Report #416: Install-Error on PostgreSQL and Orcale]]></change>
           <change><![CDATA[[Fix] Report #406: Can not edit message when use subsilver2]]></change>
           <change><![CDATA[[Fix] Report #404: No note on subsilver2 when no comments were added]]></change>
           <change><![CDATA[[Fix] Report #401: Type in German language file]]></change>

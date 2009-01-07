@@ -1,10 +1,10 @@
 <?php
-/** 
+/**
 *
 * @package phpBB3
 * @version $Id$
-* @copyright (c) 2006 phpBB Group 
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License 
+* @copyright (c) 2006 phpBB Group
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 * This file creates new schema files for every database.
 * The filenames will be prefixed with an underscore to not overwrite the current schema files.
@@ -323,7 +323,7 @@ foreach ($supported_dbms as $dbms)
 		}
 
 		// Table specific so we don't get overlap
-		$modded_array = array(); 
+		$modded_array = array();
 
 		// Write columns one by one...
 		foreach ($table_data['COLUMNS'] as $column_name => $column_data)
@@ -1072,132 +1072,7 @@ echo $schema_path;
 */
 function custom_data($dbms)
 {
-	switch ($dbms)
-	{
-		case 'oracle':
-			return <<<EOF
-/*
-  This first section is optional, however its probably the best method
-  of running phpBB on Oracle. If you already have a tablespace and user created
-  for phpBB you can leave this section commented out!
-
-  The first set of statements create a phpBB tablespace and a phpBB user,
-  make sure you change the password of the phpBB user before you run this script!!
-*/
-
-/*
-CREATE TABLESPACE "PHPBB"
-	LOGGING 
-	DATAFILE 'E:\ORACLE\ORADATA\LOCAL\PHPBB.ora' 
-	SIZE 10M
-	AUTOEXTEND ON NEXT 10M
-	MAXSIZE 100M;
-
-CREATE USER "PHPBB" 
-	PROFILE "DEFAULT" 
-	IDENTIFIED BY "phpbb_password" 
-	DEFAULT TABLESPACE "PHPBB" 
-	QUOTA UNLIMITED ON "PHPBB" 
-	ACCOUNT UNLOCK;
-
-GRANT ANALYZE ANY TO "PHPBB";
-GRANT CREATE SEQUENCE TO "PHPBB";
-GRANT CREATE SESSION TO "PHPBB";
-GRANT CREATE TABLE TO "PHPBB";
-GRANT CREATE TRIGGER TO "PHPBB";
-GRANT CREATE VIEW TO "PHPBB";
-GRANT "CONNECT" TO "PHPBB";
-
-COMMIT;
-DISCONNECT;
-
-CONNECT phpbb/phpbb_password;
-*/
-EOF;
-
-		break;
-
-		case 'postgres':
-			return <<<EOF
-/*
-	Domain definition
-*/
-CREATE DOMAIN varchar_ci AS varchar(255) NOT NULL DEFAULT ''::character varying;
-
-/*
-	Operation Functions
-*/
-CREATE FUNCTION _varchar_ci_equal(varchar_ci, varchar_ci) RETURNS boolean AS 'SELECT LOWER($1) = LOWER($2)' LANGUAGE SQL STRICT;
-CREATE FUNCTION _varchar_ci_not_equal(varchar_ci, varchar_ci) RETURNS boolean AS 'SELECT LOWER($1) != LOWER($2)' LANGUAGE SQL STRICT;
-CREATE FUNCTION _varchar_ci_less_than(varchar_ci, varchar_ci) RETURNS boolean AS 'SELECT LOWER($1) < LOWER($2)' LANGUAGE SQL STRICT;
-CREATE FUNCTION _varchar_ci_less_equal(varchar_ci, varchar_ci) RETURNS boolean AS 'SELECT LOWER($1) <= LOWER($2)' LANGUAGE SQL STRICT;
-CREATE FUNCTION _varchar_ci_greater_than(varchar_ci, varchar_ci) RETURNS boolean AS 'SELECT LOWER($1) > LOWER($2)' LANGUAGE SQL STRICT;
-CREATE FUNCTION _varchar_ci_greater_equals(varchar_ci, varchar_ci) RETURNS boolean AS 'SELECT LOWER($1) >= LOWER($2)' LANGUAGE SQL STRICT;
-
-/*
-	Operators
-*/
-CREATE OPERATOR <(
-  PROCEDURE = _varchar_ci_less_than,
-  LEFTARG = varchar_ci,
-  RIGHTARG = varchar_ci,
-  COMMUTATOR = >,
-  NEGATOR = >=,
-  RESTRICT = scalarltsel,
-  JOIN = scalarltjoinsel);
-
-CREATE OPERATOR <=(
-  PROCEDURE = _varchar_ci_less_equal,
-  LEFTARG = varchar_ci,
-  RIGHTARG = varchar_ci,
-  COMMUTATOR = >=,
-  NEGATOR = >,
-  RESTRICT = scalarltsel,
-  JOIN = scalarltjoinsel);
-
-CREATE OPERATOR >(
-  PROCEDURE = _varchar_ci_greater_than,
-  LEFTARG = varchar_ci,
-  RIGHTARG = varchar_ci,
-  COMMUTATOR = <,
-  NEGATOR = <=,
-  RESTRICT = scalargtsel,
-  JOIN = scalargtjoinsel);
-
-CREATE OPERATOR >=(
-  PROCEDURE = _varchar_ci_greater_equals,
-  LEFTARG = varchar_ci,
-  RIGHTARG = varchar_ci,
-  COMMUTATOR = <=,
-  NEGATOR = <,
-  RESTRICT = scalargtsel,
-  JOIN = scalargtjoinsel);
-
-CREATE OPERATOR <>(
-  PROCEDURE = _varchar_ci_not_equal,
-  LEFTARG = varchar_ci,
-  RIGHTARG = varchar_ci,
-  COMMUTATOR = <>,
-  NEGATOR = =,
-  RESTRICT = neqsel,
-  JOIN = neqjoinsel);
-
-CREATE OPERATOR =(
-  PROCEDURE = _varchar_ci_equal,
-  LEFTARG = varchar_ci,
-  RIGHTARG = varchar_ci,
-  COMMUTATOR = =,
-  NEGATOR = <>,
-  RESTRICT = eqsel,
-  JOIN = eqjoinsel,
-  HASHES,
-  MERGES,
-  SORT1= <);
-
-EOF;
-		break;
-	}
-
+	// Just needed for new DBs, so phpBB already did this.
 	return '';
 }
 
