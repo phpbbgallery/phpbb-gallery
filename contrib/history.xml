@@ -50,6 +50,7 @@
         <changelog lang="en-gb">
           <change><![CDATA[[Add] Unreported: Missing statistic-values]]></change>
 
+          <change><![CDATA[[Fix] Unreported: wrong alternate text on deleting comments]]></change>
           <change><![CDATA[[Fix] Unreported: Same page-title for all modes on posting.php]]></change>
           <change><![CDATA[[Fix] Report #414: Slide show doesn't print the hole list on some server configuration]]></change>
           <change><![CDATA[[Fix] Report #413: Viewing rate and comment link even if disabled]]></change>

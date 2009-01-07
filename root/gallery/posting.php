@@ -1173,7 +1173,7 @@ switch ($mode)
 					}
 					else
 					{
-						confirm_box(false, 'DELETE_COMMENT', $s_hidden_fields);
+						confirm_box(false, 'DELETE_COMMENT2', $s_hidden_fields);
 					}
 				}
 

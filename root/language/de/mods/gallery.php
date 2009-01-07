@@ -73,8 +73,9 @@ $lang = array_merge($lang, array(
 	'COMMENT_TOO_LONG'				=> 'Dein Kommentar ist zu lang',
 	'COMMENTS'						=> 'Kommentare',
 
-	'DELETE_COMMENT'				=> 'Kommentar löschen?',
-	'DELETE_COMMENT_CONFIRM'		=> 'Bist Du Dir sicher das Du den Kommentar löschen möchtest?',
+	'DELETE_COMMENT'				=> 'Kommentar löschen',
+	'DELETE_COMMENT2'				=> 'Kommentar löschen?',
+	'DELETE_COMMENT2_CONFIRM'		=> 'Bist Du Dir sicher das Du den Kommentar löschen möchtest?',
 	'DELETE_IMAGE'					=> 'Löschen',
 	'DELETE_IMAGE2'					=> 'Das Bild löschen?',
 	'DELETE_IMAGE2_CONFIRM'			=> 'Bist Du Dir sicher das Du das Bild löschen möchtest?',
