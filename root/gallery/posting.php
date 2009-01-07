@@ -640,6 +640,7 @@ switch ($mode)
 				}
 				$message .= '<br />';
 				update_lastimage_info($album_id);
+				$page_title = $user->lang['UPLOAD_IMAGE'];
 			}
 			break;
 			case 'edit':
@@ -710,6 +711,7 @@ switch ($mode)
 					'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id"),
 				));
 				$message = $user->lang['IMAGES_UPDATED_SUCCESSFULLY'] . '<br />';
+				$page_title = $user->lang['EDIT_IMAGE'];
 			}
 			break;
 			case 'report':
@@ -770,6 +772,7 @@ switch ($mode)
 					'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=report&amp;album_id=$album_id&amp;image_id=$image_id"),
 				));
 				$message = $user->lang['IMAGES_REPORTED_SUCCESSFULLY'] . '<br />';
+				$page_title = $user->lang['REPORT_IMAGE'];
 			}
 			break;
 			case 'watch':
@@ -1058,6 +1061,7 @@ switch ($mode)
 						$comment_username_req = true;
 					}
 				}
+				$page_title = $user->lang['POST_COMMENT'];
 			break;
 
 			case 'edit':
@@ -1129,6 +1133,7 @@ switch ($mode)
 					$comment = $comment_ary['text'];
 					$comment_username = $comment_data['comment_username'];
 				}
+				$page_title = $user->lang['EDIT_COMMENT'];
 			break;
 
 			case 'delete':
@@ -1209,11 +1214,12 @@ if($submit)
 }
 
 // Output page
-$page_title = $user->lang['UPLOAD_IMAGE'];
 page_header($page_title);
+
 $template->set_filenames(array(
 	'body' => 'gallery_posting_body.html',
 ));
+
 page_footer();
 
 
