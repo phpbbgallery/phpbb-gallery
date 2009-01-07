@@ -140,10 +140,10 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 						'TIME'			=> ($display['time']) ? $user->format_date($picrow[$j]['image_time']) : '',
 						'VIEW'			=> ($display['views']) ? $picrow[$j]['image_view_count'] : -1,
 
-						'S_RATINGS'		=> ($display['ratings']) ? (($album_config['rate'] == 1) && gallery_acl_check('i_rate', $album_id, $picrow[$j]['album_user_id'])) ? $picrow[$j]['rating'] : '' : '',
+						'S_RATINGS'		=> ($display['ratings']) ? (($album_config['allow_rates'] == 1) && gallery_acl_check('i_rate', $album_id, $picrow[$j]['album_user_id'])) ? $picrow[$j]['rating'] : '' : '',
 						'U_RATINGS'		=> ($display['ratings']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . "&amp;image_id=" . $picrow[$j]['image_id']) . '#rating' : '',
 						'L_COMMENTS'	=> ($display['comments']) ? ($picrow[$j]['image_comments'] == 1) ? $user->lang['COMMENT'] : $user->lang['COMMENTS'] : '',
-						'S_COMMENTS'	=> ($display['comments']) ? (($album_config['comment'] == 1) && gallery_acl_check('c_read', $album_id, $picrow[$j]['album_user_id'])) ? (($picrow[$j]['image_comments']) ? $picrow[$j]['image_comments'] : $user->lang['NO_COMMENTS']) : '' : '',
+						'S_COMMENTS'	=> ($display['comments']) ? (($album_config['allow_comments'] == 1) && gallery_acl_check('c_read', $album_id, $picrow[$j]['album_user_id'])) ? (($picrow[$j]['image_comments']) ? $picrow[$j]['image_comments'] : $user->lang['NO_COMMENTS']) : '' : '',
 						'U_COMMENTS'	=> ($display['comments']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . "&amp;image_id=" . $picrow[$j]['image_id']) . '#comments' : '',
 
 						'S_IP'		=> ($auth->acl_get('a_')) ? $picrow[$j]['image_user_ip'] : '',
@@ -232,10 +232,10 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 						'TIME'			=> ($display['time']) ? $user->format_date($picrow[$j]['image_time']) : '',
 						'VIEW'			=> ($display['views']) ? $picrow[$j]['image_view_count'] : -1,
 
-						'S_RATINGS'		=> ($display['ratings']) ? (($album_config['rate'] == 1) && gallery_acl_check('i_rate', $album_id, $picrow[$j]['album_user_id'])) ? $picrow[$j]['rating'] : '' : '',
+						'S_RATINGS'		=> ($display['ratings']) ? (($album_config['allow_rates'] == 1) && gallery_acl_check('i_rate', $album_id, $picrow[$j]['album_user_id'])) ? $picrow[$j]['rating'] : '' : '',
 						'U_RATINGS'		=> ($display['ratings']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . "&amp;image_id=" . $picrow[$j]['image_id']) . '#rating' : '',
 						'L_COMMENTS'	=> ($display['comments']) ? ($picrow[$j]['image_comments'] == 1) ? $user->lang['COMMENT'] : $user->lang['COMMENTS'] : '',
-						'S_COMMENTS'	=> ($display['comments']) ? (($album_config['comment'] == 1) && gallery_acl_check('c_read', $album_id, $picrow[$j]['album_user_id'])) ? (($picrow[$j]['image_comments']) ? $picrow[$j]['image_comments'] : $user->lang['NO_COMMENTS']) : '' : '',
+						'S_COMMENTS'	=> ($display['comments']) ? (($album_config['allow_comments'] == 1) && gallery_acl_check('c_read', $album_id, $picrow[$j]['album_user_id'])) ? (($picrow[$j]['image_comments']) ? $picrow[$j]['image_comments'] : $user->lang['NO_COMMENTS']) : '' : '',
 						'U_COMMENTS'	=> ($display['comments']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . "&amp;image_id=" . $picrow[$j]['image_id']) . '#comments' : '',
 
 						'S_IP'		=> ($auth->acl_get('a_')) ? $picrow[$j]['image_user_ip'] : '',
