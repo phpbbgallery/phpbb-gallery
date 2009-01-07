@@ -163,7 +163,17 @@ if ($album_id <> 0)
 				}
 			}
 			$db->sql_freeresult($result);
-			trigger_error($trigger_message . '<br /><br />' . implode(', ', $picrow));
+
+			$template->assign_vars(array(
+				'MESSAGE_TITLE'		=> $trigger_message,
+				'MESSAGE_TEXT'		=> implode(', ', $picrow),
+			));
+
+			page_header($user->lang['SLIDE_SHOW']);
+			$template->set_filenames(array(
+				'body' => 'message_body.html')
+			);
+			page_footer();
 		}
 		else
 		{
