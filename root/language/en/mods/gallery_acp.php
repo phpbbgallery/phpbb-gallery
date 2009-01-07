@@ -117,6 +117,7 @@ $lang = array_merge($lang, array(
 
 	'IMAGE_DESC_MAX_LENGTH'			=> 'Image Description/Comment Max Length (bytes)',
 	'IMAGE_ID'						=> 'Image-ID',
+	'IMAGE_SETTINGS'				=> 'Image settings',
 	'IMAGES_PER_DAY'				=> 'Images per day',
 	'IMPORT_ALBUM'					=> 'Album to import images to:',
 	'IMPORT_DEBUG_MES'				=> '%1$s images imported. There are still %2$s images remaining.',
