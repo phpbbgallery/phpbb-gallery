@@ -103,8 +103,6 @@ $lang = array_merge($lang, array(
 	'REPORTER'						=> 'Meldender Benutzer',
 	'REPORTER_AND_ALBUM'			=> 'Meldender Benutzer & Album',
 
-	'UPLOADED_BY'					=> 'Hochgeladen von',
-
 	'WAITING_APPROVED_IMAGE'		=> 'Insgesamt ist <span style="font-weight: bold;">%s</span> Bild freigeschaltet.',
 	'WAITING_APPROVED_IMAGES'		=> 'Insgesamt sind <span style="font-weight: bold;">%s</span> Bilder freigeschaltet.',
 	'WAITING_APPROVED_NONE'			=> 'Es sind keine Bilder freigeschaltet.',

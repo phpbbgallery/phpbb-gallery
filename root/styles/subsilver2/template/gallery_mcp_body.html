@@ -92,7 +92,7 @@
 				<!-- IF DISP_FAKE_THUMB and image_row.THUMBNAIL --><td class="row1" width="{FAKE_THUMB_SIZE}" align="center"><span style="float: left; text-align: center; width: {FAKE_THUMB_SIZE}px; padding-right: 5px;">{image_row.THUMBNAIL}</span></td><!-- ENDIF -->
 				<td class="row1">
 					<a href="<!-- IF not S_REPORT -->{image_row.U_IMAGE_PAGE}<!-- ELSE -->{image_row.U_REPORT}<!-- ENDIF -->" class="topictitle">{image_row.IMAGE_NAME}</a><!-- IF image_row.S_REPORTED --> <a href="{image_row.U_REPORT}">{REPORTED_IMG}</a><!-- ENDIF --><!-- IF image_row.S_UNAPPROVED --> <a href="{image_row.U_QUEUE}">{UNAPPROVED_IMG}</a><!-- ENDIF --><br />
-					<span>{L_UPLOADED_BY} {image_row.UPLOADER}<br />
+					<span>{L_POST_BY_AUTHOR} {image_row.UPLOADER}<br />
 					{image_row.IMAGE_TIME}
 					<!-- IF image_row.REPORT_MOD --><br />{L_REPORT_MOD} {image_row.REPORT_MOD}<!-- ENDIF -->
 				</td>
@@ -146,7 +146,7 @@
 			</tr>
 			<tr>
 				<td class="row1">
-					{L_UPLOADED_BY} {UPLOADER}<br />
+					{L_POST_BY_AUTHOR} {UPLOADER}<br />
 					{IMAGE_TIME}<br />
 					{L_ALBUM}: <a href="{U_VIEW_ALBUM}" style="font-weight: bold;">{ALBUM_NAME}</a><br />
 					{L_STATUS}: <span style="font-weight: bold;">{STATUS}</span>

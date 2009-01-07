@@ -45,8 +45,8 @@ function toggleElement(oElement)
 					<!-- IF recent.image.S_REPORTED and recent.image.U_REPORT --><a style="font-weight: bold;" class="reported-images-number" href="{recent.image.U_REPORT}">{L_READ_REPORT}</a><br /><br /><!-- ENDIF -->
 						<!-- IF recent.image.UC_IMAGE_NAME -->{L_IMAGE_NAME}: {recent.image.UC_IMAGE_NAME}<br /><!-- ENDIF -->
 						<!-- IF recent.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{recent.image.U_ALBUM}" style="font-weight: bold;">{recent.image.ALBUM_NAME}</a><br /><!-- ENDIF -->
-						<!-- IF recent.image.POSTER -->{L_POSTER}: {recent.image.POSTER}<br /><!-- ENDIF -->
-						<!-- IF recent.image.TIME -->{L_POSTED}: {recent.image.TIME}<br /><!-- ENDIF -->
+						<!-- IF recent.image.POSTER -->{L_UPLOADED_BY_USER}: {recent.image.POSTER}<br /><!-- ENDIF -->
+						<!-- IF recent.image.TIME -->{L_UPLOADED_ON_DATE}: {recent.image.TIME}<br /><!-- ENDIF -->
 						<!-- IF recent.image.VIEW > -1 -->{L_VIEWS}: {recent.image.VIEW}<br /><!-- ENDIF -->
 						<!-- IF recent.image.S_RATINGS -->{L_RATING}: <a href="{recent.image.U_RATINGS}">{recent.image.S_RATINGS}</a><br /><!-- ENDIF -->
 						<!-- IF recent.image.S_COMMENTS -->{recent.image.L_COMMENTS}: <a href="{recent.image.U_COMMENTS}">{recent.image.S_COMMENTS}</a><br /><!-- ENDIF -->
@@ -114,8 +114,8 @@ function toggleElement(oElement)
 					<!-- IF random.image.S_REPORTED and random.image.U_REPORT --><a style="font-weight: bold;" class="reported-images-number" href="{random.image.U_REPORT}">{L_READ_REPORT}</a><br /><br /><!-- ENDIF -->
 						<!-- IF random.image.UC_IMAGE_NAME -->{L_IMAGE_NAME}: {random.image.UC_IMAGE_NAME}<br /><!-- ENDIF -->
 						<!-- IF random.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{random.image.U_ALBUM}" style="font-weight: bold;">{random.image.ALBUM_NAME}</a><br /><!-- ENDIF -->
-						<!-- IF random.image.POSTER -->{L_POSTER}: {random.image.POSTER}<br /><!-- ENDIF -->
-						<!-- IF random.image.TIME -->{L_POSTED}: {random.image.TIME}<br /><!-- ENDIF -->
+						<!-- IF random.image.POSTER -->{L_UPLOADED_BY_USER}: {random.image.POSTER}<br /><!-- ENDIF -->
+						<!-- IF random.image.TIME -->{L_UPLOADED_ON_DATE}: {random.image.TIME}<br /><!-- ENDIF -->
 						<!-- IF random.image.VIEW > -1 -->{L_VIEWS}: {random.image.VIEW}<br /><!-- ENDIF -->
 						<!-- IF random.image.S_RATINGS -->{L_RATING}: <a href="{random.image.U_RATINGS}">{random.image.S_RATINGS}</a><br /><!-- ENDIF -->
 						<!-- IF random.image.S_COMMENTS -->{random.image.L_COMMENTS}: <a href="{random.image.U_COMMENTS}">{random.image.S_COMMENTS}</a><br /><!-- ENDIF -->
@@ -205,7 +205,7 @@ function toggleElement(oElement)
 					<td>{commentrow.UC_THUMBNAIL}</td>
 				</tr>
 				<tr>
-					<td>{L_POST_BY_AUTHOR} {commentrow.IMAGE_AUTHOR}<br />
+					<td>{L_UPLOADED_BY_USER} {commentrow.IMAGE_AUTHOR}<br />
 						{commentrow.IMAGE_TIME}</td>
 				</tr>
 				</table>

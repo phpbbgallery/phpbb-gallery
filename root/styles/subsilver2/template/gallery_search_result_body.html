@@ -79,8 +79,8 @@ function toggleElement(oElement)
 					<!-- IF image_row.image.S_REPORTED and image_row.image.U_REPORT --><a style="font-weight: bold;" class="reported-images-number" href="{image_row.image.U_REPORT}">{L_READ_REPORT}</a><br /><br /><!-- ENDIF -->
 						{L_IMAGE_NAME}: {image_row.image.UC_IMAGE_NAME}<br />
 						{L_ALBUM_NAME}: <a href="{image_row.image.U_ALBUM}" style="font-weight: bold;">{image_row.image.ALBUM_NAME}</a><br />
-						{L_POSTER}: {image_row.image.POSTER}<br />
-						{L_POSTED}: {image_row.image.TIME}<br />
+						{L_UPLOADED_BY_USER}: {image_row.image.POSTER}<br />
+						{L_UPLOADED_ON_DATE}: {image_row.image.TIME}<br />
 						{L_VIEWS}: {image_row.image.VIEW}<br />
 						<!-- IF image_row.image.S_RATINGS -->{L_RATING}: <a href="{image_row.image.U_RATINGS}">{image_row.image.S_RATINGS}</a><br /><!-- ENDIF -->
 						<!-- IF image_row.image.S_COMMENTS -->{image_row.image.L_COMMENTS}: <a href="{image_row.image.U_COMMENTS}">{image_row.image.S_COMMENTS}</a><br /><!-- ENDIF -->

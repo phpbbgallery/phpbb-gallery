@@ -103,8 +103,6 @@ $lang = array_merge($lang, array(
 	'REPORTER'						=> 'Reporting user',
 	'REPORTER_AND_ALBUM'			=> 'Reporter & Album',
 
-	'UPLOADED_BY'					=> 'Uploaded by',
-
 	'WAITING_APPROVED_IMAGE'		=> 'In total there is <span style="font-weight: bold;">%s</span> image approved..',
 	'WAITING_APPROVED_IMAGES'		=> 'In total there are <span style="font-weight: bold;">%s</span> images approved.',
 	'WAITING_APPROVED_NONE'			=> 'No images approved.',
