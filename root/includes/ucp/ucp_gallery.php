@@ -1,10 +1,9 @@
 <?php
-
 /**
 *
-* @package phpBB3
-* @version $Id: acp_gallery.php 256 2008-01-25 18:52:19Z nickvergessen $
-* @copyright (c) 2007 phpBB Gallery
+* @package phpBB Gallery
+* @version $Id$
+* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -12,11 +11,15 @@
 /**
 * @ignore
 */
+
 if (!defined('IN_PHPBB'))
 {
 	exit;
 }
 
+/**
+* @package ucp
+*/
 class ucp_gallery
 {
 	var $u_action;
@@ -845,7 +848,7 @@ class ucp_gallery
 					$parent_id = $row['parent_id'];
 				}
 			}
-			for( $i = 0; $i < count($album); $i++ )
+			for ($i = 0; $i < count($album); $i++)
 			{
 				if (($left_id <= $album[$i]['left_id']) && ($album[$i]['left_id'] <= $right_id))
 				{
@@ -857,7 +860,7 @@ class ucp_gallery
 			// now get the images in $deleted_images
 			$sql = 'SELECT image_id, image_thumbnail, image_filename
 				FROM ' . GALLERY_IMAGES_TABLE . '
-				WHERE image_album_id IN (' . $deleted_albums . ')
+				WHERE ' . $db->sql_in_set('image_album_id', $deleted_albums) . '
 				ORDER BY image_id ASC';
 			$result = $db->sql_query($sql);
 
@@ -895,24 +898,26 @@ class ucp_gallery
 				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . " SET personal_album_id = 0 WHERE personal_album_id IN ($deleted_albums)";
 				$db->sql_query($sql);
 
-			$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . " 
-					SET config_value = config_value - 1
-					WHERE config_name  = 'personal_counter'";
-			$db->sql_query($sql);
+				$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . " 
+						SET config_value = config_value - 1
+						WHERE config_name  = 'personal_counter'";
+				$db->sql_query($sql);
 			}
-
-			//solve the left_id right_id problem
-			$delete_id = $right_id - ($left_id - 1);
-			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
-				SET left_id = left_id - $delete_id
-				WHERE left_id > $left_id
-					AND album_user_id = {$user->data['user_id']}";
-			$db->sql_query($sql);
-			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
-				SET right_id = right_id - $delete_id
-				WHERE right_id > $right_id
-					AND album_user_id = {$user->data['user_id']}";
-			$db->sql_query($sql);
+			else
+			{
+				//solve the left_id right_id problem
+				$delete_id = $right_id - ($left_id - 1);
+				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
+					SET left_id = left_id - $delete_id
+					WHERE left_id > $left_id
+						AND album_user_id = {$user->data['user_id']}";
+				$db->sql_query($sql);
+				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
+					SET right_id = right_id - $delete_id
+					WHERE right_id > $right_id
+						AND album_user_id = {$user->data['user_id']}";
+				$db->sql_query($sql);
+			}
 
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 			$cache->destroy('sql', GALLERY_IMAGES_TABLE);

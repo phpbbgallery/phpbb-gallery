@@ -1,12 +1,15 @@
 <?php
-
 /**
 *
-* @package phpBB3
-* @version $Id: upload.php 288 2008-02-14 16:29:33Z nickvergessen $
-* @copyright (c) 2007 phpBB Gallery
+* @package phpBB Gallery
+* @version $Id$
+* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
+*/
+
+/**
+* @ignore
 */
 
 define('IN_PHPBB', true);
@@ -453,20 +456,9 @@ switch ($mode)
 							}
 
 							// Generate filename and upload
-							srand((double)microtime()*1000000);// for older than version 4.2.0 of PHP
-							do
+							$image_data['filename'] = md5(unique_id()) . $image_data['image_type2'];
+							if (@ini_get('open_basedir') <> '')
 							{
-								$image_data['filename'] = md5(uniqid(rand())) . $image_data['image_type2'];
-							}
-							while(file_exists($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']));
-
-							$ini_val = ( @phpversion() >= '4.0.0' ) ? 'ini_get' : 'get_cfg_var';
-							if (@$ini_val('open_basedir') <> '')
-							{
-								if (@phpversion() < '4.0.3')
-								{
-									trigger_error('open_basedir is set and your PHP version does not allow move_uploaded_file<br /><br />Please contact your server admin', E_USER_WARNING);
-								}
 								$move_file = 'move_uploaded_file';
 							}
 							else

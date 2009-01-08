@@ -1,18 +1,22 @@
 <?php
-
 /**
 *
-* @package phpBB3
+* @package phpBB Gallery
 * @version $Id$
-* @copyright (c) 2007 phpBB Gallery
+* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
 
-if ( !defined('IN_PHPBB') )
+/**
+* @ignore
+*/
+
+if (!defined('IN_PHPBB'))
 {
-	die('Hacking attempt');
+	exit;
 }
+
 $gallery_root_path = GALLERY_ROOT_PATH;
 include("{$phpbb_root_path}{$gallery_root_path}includes/constants.$phpEx");
 

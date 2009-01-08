@@ -1,9 +1,9 @@
 <?php
 /**
 *
-* @package phpBB3
-* @version $Id: acp_gallery.php 256 2008-01-25 18:52:19Z nickvergessen $
-* @copyright (c) 2007 phpBB Gallery
+* @package phpBB Gallery
+* @version $Id$
+* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */

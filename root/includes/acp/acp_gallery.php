@@ -1,14 +1,25 @@
 <?php
-
 /**
 *
-* @package phpBB3
+* @package phpBB Gallery
 * @version $Id$
-* @copyright (c) 2007 phpBB Gallery
+* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
 
+/**
+* @ignore
+*/
+
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
+/**
+* @package acp
+*/
 class acp_gallery
 {
 	var $u_action;
@@ -180,7 +191,7 @@ class acp_gallery
 			$sql = 'SELECT *
 				FROM ' . GALLERY_CONFIG_TABLE;
 			$result = $db->sql_query($sql);
-			while( $row = $db->sql_fetchrow($result) )
+			while ($row = $db->sql_fetchrow($result))
 			{
 				$album_config[$row['config_name']] = $row['config_value'];
 			}
@@ -198,7 +209,7 @@ class acp_gallery
 				FROM ' . USERS_TABLE . "
 				WHERE user_id = $user_id";
 			$result = $db->sql_query($sql);
-			while( $row = $db->sql_fetchrow($result) )
+			while ($row = $db->sql_fetchrow($result))
 			{
 				$username = $row['username'];
 				$user_colour = $row['user_colour'];
@@ -248,10 +259,7 @@ class acp_gallery
 					default:
 						break;
 				}
-				// Generate filename
-				srand((double)microtime()*1000000);// for older than version 4.2.0 of PHP
-				$image_filename = md5(uniqid(rand())) . $image_filetype;
-
+				$image_filename = md5(unique_id()) . $image_filetype;
 
 				copy($image_path, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
 				@chmod($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename, 0777);
@@ -259,26 +267,26 @@ class acp_gallery
 
 				if (($album_config['thumbnail_cache']) && ($album_config['gd_version'] > 0))
 				{
-					$gd_errored = FALSE;
+					$gd_errored = false;
 					switch ($image_filetype)
 					{
 						case '.jpg':
 							$read_function = 'imagecreatefromjpeg';
-							break;
+						break;
 
 						case '.png':
 							$read_function = 'imagecreatefrompng';
-							break;
+						break;
 
 						case '.gif':
 							$read_function = 'imagecreatefromgif';
-							break;
+						break;
 					}
 					$src = $read_function($phpbb_root_path . GALLERY_UPLOAD_PATH  . $image_filename);
 
 					if (!$src)
 					{
-						$gd_errored = TRUE;
+						$gd_errored = true;
 						$image_thumbnail = '';
 					}
 					else if (($image_width > $album_config['thumbnail_size']) || ($image_height > $album_config['thumbnail_size']))
@@ -357,7 +365,7 @@ class acp_gallery
 				$no_time = time();
 				$time = request_var('time', 0);
 				$time = ($time) ? $time : $no_time;
-				
+
 				$sql_ary = array(
 					'image_filename' 		=> $image_filename,
 					'image_thumbnail'		=> $image_thumbnail,

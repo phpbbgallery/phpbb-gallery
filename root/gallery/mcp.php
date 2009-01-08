@@ -1,12 +1,15 @@
 <?php
-
 /**
 *
-* @package phpBB3
+* @package phpBB Gallery
 * @version $Id$
-* @copyright (c) 2007 phpBB Gallery
+* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
+*/
+
+/**
+* @ignore
 */
 
 define('IN_PHPBB', true);
@@ -255,6 +258,7 @@ if ($action && $image_id_ary)
 				$sql = 'UPDATE ' . GALLERY_REPORTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 					WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
 				$db->sql_query($sql);
+				//@todo UPDATE where image_reported in $image_id_ary?
 				$sql = 'SELECT report_image_id
 					FROM ' . GALLERY_REPORTS_TABLE . '
 					WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
@@ -307,6 +311,7 @@ if ($action && $image_id_ary)
 			{
 				$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . ' WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
 				$db->sql_query($sql);
+				//@todo UPDATE where image_reported in $image_id_ary?
 				$sql = 'SELECT report_image_id
 					FROM ' . GALLERY_REPORTS_TABLE . '
 					WHERE ' . $db->sql_in_set('report_id', $image_id_ary);

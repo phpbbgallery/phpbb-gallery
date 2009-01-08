@@ -1,18 +1,22 @@
 <?php
-
 /**
 *
-* @package phpBB3
-* @version $Id: functions_display.php 225 2008-01-13 13:35:16Z nickvergessen $
-* @copyright (c) 2007 phpBB Gallery
+* @package phpBB Gallery
+* @version $Id$
+* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
 
+/**
+* @ignore
+*/
+
 if (!defined('IN_PHPBB'))
 {
-	die('Hacking attempt');
+	exit;
 }
+
 function recent_gallery_images($rows, $columns, &$display, $modes)
 {
 	global $db, $phpEx, $user, $cache, $auth;

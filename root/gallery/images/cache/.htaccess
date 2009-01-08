@@ -1,1 +1,4 @@
-Options -Indexes -ExecCGI -Includes
+<Files *>
+	Order Allow,Deny
+	Deny from All
+</Files>

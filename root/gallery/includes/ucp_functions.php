@@ -1,16 +1,20 @@
 <?php
 /**
 *
-* @package phpBB3
-* @version $Id: acp_functions.php 286 2008-02-06 19:55:38Z stoffel04 $
-* @copyright (c) 2007 phpBB Gallery
+* @package phpBB Gallery
+* @version $Id$
+* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
 
+/**
+* @ignore
+*/
+
 if (!defined('IN_PHPBB'))
 {
-	die('Hacking attempt');
+	exit;
 }
 
 function personal_album_select($user_id, $select_id = 0, $disable_id = 0)

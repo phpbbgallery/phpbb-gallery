@@ -1,17 +1,20 @@
 <?php
-
 /**
 *
-* @package phpBB3
+* @package phpBB Gallery
 * @version $Id$
-* @copyright (c) 2007 phpBB Gallery
+* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
 
+/**
+* @ignore
+*/
+
 if (!defined('IN_PHPBB'))
 {
-	die('Hacking attempt');
+	exit;
 }
 
 if ($mode == 'queue_details')

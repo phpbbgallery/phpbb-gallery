@@ -1,12 +1,15 @@
 <?php
-
 /**
 *
-* @package phpBB3
-* @version $Id: album.php 541 2008-06-28 08:48:56Z nickvergessen $
-* @copyright (c) 2007 phpBB Gallery
+* @package phpBB Gallery
+* @version $Id$
+* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
+*/
+
+/**
+* @ignore
 */
 
 define('IN_PHPBB', true);
@@ -53,7 +56,7 @@ $sort_by_sql = array('t' => 'image_time', 'n' => 'image_name', 'u' => 'image_use
 
 if ($album_config['rate'] == 1)
 {
-	$sort_by_text['ra'] = $user->lang['RATING_AVG'];
+	$sort_by_text['ra'] = $user->lang['RATING'];
 	$sort_by_sql['ra'] = 'image_rate_avg';
 	$sort_by_text['r'] = $user->lang['RATES_COUNT'];
 	$sort_by_sql['r'] = 'image_rates';
