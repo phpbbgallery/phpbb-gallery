@@ -739,7 +739,8 @@ class install_update extends module
 			case '0.4.0':
 				set_gallery_config('link_imagepage', 'lytebox');
 
-				// Resync the reported flags in addition to #393
+			case '0.4.1':
+				// Resync the reported flags in addition to #393, #417
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_reported = 0';
 				$db->sql_query($sql);
 				$sql = 'SELECT report_image_id, report_id
@@ -754,7 +755,8 @@ class install_update extends module
 				}
 				$db->sql_freeresult($result);
 
-			case '0.4.1':
+				// Delete "confirmed deleted subalbums" #410
+
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
 			break;
 		}
