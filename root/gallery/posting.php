@@ -16,7 +16,6 @@ define('IN_PHPBB', true);
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
-$gallery_root_path = GALLERY_ROOT_PATH;
 include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
@@ -28,8 +27,10 @@ $auth->acl($user->data);
 $user->setup('mods/gallery');
 $user->add_lang('posting');
 
-include_once("{$phpbb_root_path}{$gallery_root_path}includes/common.$phpEx");
-include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
+$gallery_root_path = GALLERY_ROOT_PATH;
+include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
+include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
+include($phpbb_root_path . $gallery_root_path . 'includes/functions_display.' . $phpEx);
 $album_access_array = get_album_access_array();
 
 add_form_key('gallery');
@@ -46,8 +47,8 @@ $slower_redirect = false;
 if ($image_id)
 {
 	$image_data = get_image_info($image_id);
+	$album_id = $image_data['image_album_id'];
 }
-$album_id = (isset($image_data['image_album_id'])) ? $image_data['image_album_id'] : $album_id;
 $album_data = get_album_info($album_id);
 
 generate_album_nav($album_data);
@@ -64,7 +65,7 @@ if ($album_id)
 }
 $index_backlink = append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx");
 
-//send some cheaters back
+// Send some cheaters back
 if ($user->data['is_bot'])
 {
 	redirect(($image_id) ? $image_backlink : $album_backlink);
@@ -281,6 +282,7 @@ $img_status		= ($bbcode_status) ? true : false;
 $url_status		= ($config['allow_post_links']) ? true : false;
 $flash_status	= false;
 $quote_status	= true;
+
 $template->assign_vars(array(
 	'BBCODE_STATUS'			=> ($bbcode_status) ? sprintf($user->lang['BBCODE_IS_ON'], '<a href="' . append_sid("{$phpbb_root_path}faq.$phpEx", 'mode=bbcode') . '">', '</a>') : sprintf($user->lang['BBCODE_IS_OFF'], '<a href="' . append_sid("{$phpbb_root_path}faq.$phpEx", 'mode=bbcode') . '">', '</a>'),
 	'IMG_STATUS'			=> ($img_status) ? $user->lang['IMAGES_ARE_ON'] : $user->lang['IMAGES_ARE_OFF'],
@@ -320,7 +322,7 @@ switch ($mode)
 				$sql = 'INSERT INTO ' . GALLERY_WATCH_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 				$db->sql_query($sql);
 				$message = $user->lang['WATCHING_ALBUM'] . '<br />';
-				$submit = true;//to redirect
+				$submit = true; // For redirect
 			}
 			break;
 			case 'unwatch':
@@ -329,7 +331,7 @@ switch ($mode)
 				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . " WHERE album_id = $album_id AND user_id = " . $user->data['user_id'];
 				$db->sql_query($sql);
 				$message = $user->lang['UNWATCHED_ALBUM'] . '<br />';
-				$submit = true;//to redirect
+				$submit = true; // For redirect
 			}
 			break;
 		}
@@ -345,23 +347,23 @@ switch ($mode)
 			if ($submode == 'upload')
 			{
 				// Upload Quota Check
-				//Check Album Configuration Quota
+				// 1. Check Album Configuration Quota
 				if ($album_config['max_pics'] >= 0)
-				{//do we have enough images in this album?
+				{
 					if ($album_data['album_images'] >= $album_config['max_pics'])
 					{
 						trigger_error('ALBUM_REACHED_QUOTA');
 					}
 				}
-				// Check User Limit
-				$sql = 'SELECT COUNT(image_id) AS count
+				// 2. Check User Limit
+				$sql = 'SELECT COUNT(image_id) count
 					FROM ' . GALLERY_IMAGES_TABLE . '
 					WHERE image_user_id = ' . $user->data['user_id'] . '
 						AND image_album_id = ' . $album_id;
 				$result = $db->sql_query($sql);
-				$row = $db->sql_fetchrow($result);
-				$own_pics = $row['count'];
-				if ($own_pics >= gallery_acl_check('i_count', $album_id))
+				$own_images = $db->sql_fetchfield('count');
+				$db->sql_freeresult($result);
+				if ($own_images >= gallery_acl_check('i_count', $album_id))
 				{
 					trigger_error(sprintf($user->lang['USER_REACHED_QUOTA'], gallery_acl_check('i_count', $album_id)));
 				}
@@ -396,8 +398,8 @@ switch ($mode)
 								$image_data['thumbnail_size']	= $_FILES['thumbnail']['size'][$i];
 								$image_data['thumbnail_tmp']	= $_FILES['thumbnail']['tmp_name'][$i];
 							}
-							// Watch for 10-times max-file-sizewe will watch for the real size after resize, if enabled
-							if ((!$image_data['image_size']) || ($image_data['image_size'] > (10 * $album_config['max_file_size'])))
+							// Watch for 8-times max-file-sizewe will watch for the real size after resize, if enabled
+							if ((!$image_data['image_size']) || ($image_data['image_size'] > (8 * $album_config['max_file_size'])))
 							{
 								trigger_error('BAD_UPLOAD_FILE_SIZE');
 							}
@@ -406,20 +408,23 @@ switch ($mode)
 								case 'image/jpeg':
 								case 'image/jpg':
 								case 'image/pjpeg':
-									if (!$album_config['jpg_allowed']) {
+									if (!$album_config['jpg_allowed'])
+									{
 										trigger_error('NOT_ALLOWED_FILE_TYPE');
 									}
 									$image_data['image_type2'] = '.jpg';
 								break;
 								case 'image/png':
 								case 'image/x-png':
-									if (!$album_config['png_allowed']) {
+									if (!$album_config['png_allowed'])
+									{
 										trigger_error('NOT_ALLOWED_FILE_TYPE');
 									}
 									$image_data['image_type2'] = '.png';
 								break;
 								case 'image/gif':
-									if (!$album_config['gif_allowed']) {
+									if (!$album_config['gif_allowed'])
+									{
 										trigger_error('NOT_ALLOWED_FILE_TYPE');
 									}
 									$image_data['image_type2'] = '.gif';
@@ -441,13 +446,13 @@ switch ($mode)
 							$image_data_2['image_name'] = (request_var('filename', '') == 'filename') ? str_replace("_", " ", utf8_substr($image_data['image_tmp_name'], 0, -4)) : str_replace('{NUM}', $loop, request_var('image_name', '', true));
 							$image_data = array_merge($image_data, $image_data_2);
 
-							if(!$image_data['image_name'])
+							if (!$image_data['image_name'])
 							{
 								trigger_error('MISSING_IMAGE_NAME');
 							}
 							if (!$user->data['is_registered'] && $image_data['username'])
 							{
-								include_once("{$phpbb_root_path}includes/functions_user.$phpEx");
+								include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 								$result = validate_username($image_data['username']);
 								if ($result['error'])
 								{
@@ -543,10 +548,10 @@ switch ($mode)
 							$image_name = $image_data['image_name'];
 							$image_id_ary[] = $image_id;
 						}
-					}//foreach
+					}// end foreach
 					$image_id = ($images > 1) ? 0 : $image_id;
-					// Complete... now send a message to user
 
+					// Complete... now send a message to user
 					if ($images < 1)
 					{
 						$error .= (($error) ? '<br />' : '') . $user->lang['UPLOAD_NO_FILE'];
@@ -557,14 +562,17 @@ switch ($mode)
 						{
 							$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_IMAGE_NAME'];
 						}
-						notify_gallery('album', $album_id, $image_name);
+
+						gallery_notification('album', $album_id, $image_name);
 						handle_image_counter($image_id_ary, true);
+
 						$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . " 
 							SET album_images_real = album_images_real + $images
 							WHERE album_id = $album_id";
 						$db->sql_query($sql);
 					}
-				}//submit
+				}
+
 				$template->assign_vars(array(
 					'ERROR'						=> $error,
 					'U_VIEW_ALBUM'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"),
@@ -593,10 +601,10 @@ switch ($mode)
 
 				$count = 0;
 				$upload_image_files = $album_config['upload_images'];
-				if ((gallery_acl_check('i_count', $album_id) - $own_pics) < $upload_image_files)
+				if ((gallery_acl_check('i_count', $album_id) - $own_images) < $upload_image_files)
 				{
-					$upload_image_files = (gallery_acl_check('i_count', $album_id) - $own_pics);
-					$error .= (($error) ? '<br />' : '') . sprintf($user->lang['USER_NEARLY_REACHED_QUOTA'], gallery_acl_check('i_count', $album_id), $own_pics, $upload_image_files);
+					$upload_image_files = (gallery_acl_check('i_count', $album_id) - $own_images);
+					$error .= (($error) ? '<br />' : '') . sprintf($user->lang['USER_NEARLY_REACHED_QUOTA'], gallery_acl_check('i_count', $album_id), $own_images, $upload_image_files);
 					$template->assign_vars(array(
 						'ERROR'						=> $error,
 					));
@@ -631,7 +639,7 @@ switch ($mode)
 					$message = $user->lang['UPLOAD_NO_FILE'];
 				}
 				$message .= '<br />';
-				update_lastimage_info($album_id);
+				update_album_info($album_id);
 				$page_title = $user->lang['UPLOAD_IMAGE'];
 			}
 			break;
@@ -658,10 +666,6 @@ switch ($mode)
 						$message_parser->parse(true, true, true, true, false, true, true, true);
 					}
 
-
-					/**
-					* Update the DB
-					*/
 					$sql_ary = array(
 						'image_name'				=> $image_name,
 						'image_desc'				=> $message_parser->message,
@@ -715,6 +719,7 @@ switch ($mode)
 					{
 						trigger_error('FORM_INVALID');
 					}
+
 					$report_message = request_var('message', '', true);
 					$error = '';
 					if ($report_message == '')
@@ -722,9 +727,7 @@ switch ($mode)
 						$error = $user->lang['MISSING_REPORT_REASON'];
 						$submit = false;
 					}
-					/**
-					* Update the DB
-					*/
+
 					$sql_ary = array(
 						'report_album_id'			=> $album_id,
 						'report_image_id'			=> $image_id,
@@ -733,6 +736,7 @@ switch ($mode)
 						'report_time'				=> time(),
 						'report_status'				=> 1,
 					);
+
 					if (!$error)
 					{
 						if ($image_data['image_reported'])
@@ -742,13 +746,10 @@ switch ($mode)
 						$sql = 'INSERT INTO ' . GALLERY_REPORTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 						$db->sql_query($sql);
 						$report_id = $db->sql_nextid();
-						$sql_ary = array(
-							'image_reported'				=> $report_id,
-						);
 
 						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
-							SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
-							WHERE image_id = $image_id";
+							SET image_reported = ' . $report_id . '
+							WHERE image_id = ' . (int) $image_id;
 						$db->sql_query($sql);
 					}
 				}
@@ -777,7 +778,7 @@ switch ($mode)
 				$sql = 'INSERT INTO ' . GALLERY_WATCH_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 				$db->sql_query($sql);
 				$message = $user->lang['WATCHING_IMAGE'] . '<br />';
-				$submit = true;//to redirect
+				$submit = true; // For redirect
 			}
 			break;
 			case 'unwatch':
@@ -786,7 +787,7 @@ switch ($mode)
 				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . " WHERE image_id = $image_id AND user_id = " . $user->data['user_id'];
 				$db->sql_query($sql);
 				$message = $user->lang['UNWATCHED_IMAGE'] . '<br />';
-				$submit = true;//to redirect
+				$submit = true; // For redirect
 			}
 			break;
 			case 'favorite':
@@ -798,7 +799,9 @@ switch ($mode)
 				);
 				$sql = 'INSERT INTO ' . GALLERY_FAVORITES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 				$db->sql_query($sql);
-				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_favorited = image_favorited + 1 WHERE image_id = ' . $image_id;
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+					SET image_favorited = image_favorited + 1
+					WHERE image_id = ' . $image_id;
 				$db->sql_query($sql);
 				if ($user->gallery['watch_favo'] && !$image_data['watch_id'])
 				{
@@ -810,7 +813,7 @@ switch ($mode)
 					$db->sql_query($sql);
 				}
 				$message = $user->lang['FAVORITED_IMAGE'] . '<br />';
-				$submit = true;//to redirect
+				$submit = true; // For redirect
 			}
 			break;
 			case 'unfavorite':
@@ -818,10 +821,12 @@ switch ($mode)
 			{
 				$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . " WHERE image_id = $image_id AND user_id = " . $user->data['user_id'];
 				$db->sql_query($sql);
-				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_favorited = image_favorited - 1 WHERE image_id = ' . $image_id;
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+					SET image_favorited = image_favorited - 1
+					WHERE image_id = ' . $image_id;
 				$db->sql_query($sql);
 				$message = $user->lang['UNFAVORITED_IMAGE'] . '<br />';
-				$submit = true;//to redirect
+				$submit = true; // For redirect
 			}
 			break;
 			case 'delete':
@@ -836,35 +841,38 @@ switch ($mode)
 				if (confirm_box(true))
 				{
 
-					if (($image_data['image_thumbnail'] <> '') && @file_exists($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_thumbnail']))
+					if (@file_exists($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_thumbnail']))
 					{
 						@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_thumbnail']);
+					}
+					if (@file_exists($phpbb_root_path . GALLERY_MEDIUM_PATH . $image_data['image_thumbnail']))
+					{
+						@unlink($phpbb_root_path . GALLERY_MEDIUM_PATH . $image_data['image_thumbnail']);
 					}
 					@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
 					handle_image_counter($image_id, false);
 
 					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . "
 						WHERE comment_image_id = $image_id";
-					$result = $db->sql_query($sql);
+					$db->sql_query($sql);
 
 					$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . "
 						WHERE image_id = $image_id";
-					$result = $db->sql_query($sql);
+					$db->sql_query($sql);
 
 					$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . "
 						WHERE rate_image_id = $image_id";
-					$result = $db->sql_query($sql);
+					$db->sql_query($sql);
 
 					$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . "
 						WHERE image_id = $image_id";
-					$result = $db->sql_query($sql);
+					$db->sql_query($sql);
 
 					$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . "
 						WHERE image_id = $image_id";
-					$result = $db->sql_query($sql);
+					$db->sql_query($sql);
 
-					//update album-information
-					update_lastimage_info($album_id);
+					update_album_info($album_id);
 
 					$submit = true;
 					$message = $user->lang['DELETED_IMAGE'] . '<br />';
@@ -903,17 +911,16 @@ switch ($mode)
 
 			if ($user->data['is_registered'])
 			{
-				$sql = 'SELECT *
+				$sql = 'SELECT rate_point
 					FROM ' . GALLERY_RATES_TABLE . '
 					WHERE rate_image_id = ' . (int) $image_id . '
 						AND rate_user_id = ' . (int) $user->data['user_id'];
 				$result = $db->sql_query($sql);
-
 				if ($db->sql_affectedrows($result) > 0)
 				{
-					$rated = $db->sql_fetchrow($result);
-					$your_rating = $rated['rate_point'];
+					$your_rating = $db->sql_fetchfield('rate_point');
 				}
+				$db->sql_freeresult($result);
 			}
 
 			// Check: User didn't rate yet, has permissions, it's not the users own image and the user is logged in
@@ -934,6 +941,7 @@ switch ($mode)
 						'rate_point'	=> $rate_point,
 					);
 					$db->sql_query('INSERT INTO ' . GALLERY_RATES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+
 					$sql = 'SELECT rate_image_id, COUNT(rate_user_ip) image_rates, AVG(rate_point) image_rate_avg, SUM(rate_point) image_rate_points
 						FROM ' . GALLERY_RATES_TABLE . "
 						WHERE rate_image_id = $image_id
@@ -949,6 +957,7 @@ switch ($mode)
 						$db->sql_query($sql);
 					}
 					$db->sql_freeresult($result);
+
 					$message .= $user->lang['RATING_SUCCESSFUL'] . '<br />';
 				}
 				// else we show the drop down
@@ -963,9 +972,7 @@ switch ($mode)
 					$allowed_to_rate = true;
 				}
 			}
-			$template->assign_vars(array(
-				'S_ALLOWED_TO_RATE'	=> $allowed_to_rate,
-			));
+			$template->assign_var('S_ALLOWED_TO_RATE', $allowed_to_rate);
 		}
 		switch ($submode)
 		{
@@ -990,6 +997,7 @@ switch ($mode)
 							$submit = false;
 							$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_USERNAME'];
 						}
+						include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 						$result = validate_username($comment_username);
 						if ($result['error'])
 						{
@@ -1029,8 +1037,10 @@ switch ($mode)
 					{
 						$db->sql_query('INSERT INTO ' . GALLERY_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 						$newest_comment = $db->sql_nextid();
-						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " SET image_comments = image_comments + 1,
-							image_last_comment = $newest_comment
+
+						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . "
+							SET image_comments = image_comments + 1,
+								image_last_comment = $newest_comment
 							WHERE " . $db->sql_in_set('image_id', $image_id);
 						$db->sql_query($sql);
 						if ($user->gallery['watch_com'] && !$image_data['watch_id'])
@@ -1042,7 +1052,7 @@ switch ($mode)
 							$sql = 'INSERT INTO ' . GALLERY_WATCH_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 							$db->sql_query($sql);
 						}
-						notify_gallery('image', $image_id, $image_data['image_name']);
+						gallery_notification('image', $image_id, $image_data['image_name']);
 						$message .= $user->lang['COMMENT_STORED'] . '<br />';
 					}
 				}
@@ -1078,6 +1088,7 @@ switch ($mode)
 							$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_USERNAME'];
 							$comment_username_req = true;
 						}
+						include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 						$result = validate_username($comment_username);
 						if ($result['error'])
 						{
@@ -1141,18 +1152,21 @@ switch ($mode)
 				{
 					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . " WHERE comment_id = $comment_id;";
 					$db->sql_query($sql);
-					$sql = 'SELECT comment_id
+
+					$sql = 'SELECT MAX(comment_id) last_comment
 						FROM ' . GALLERY_COMMENTS_TABLE . "
 						WHERE comment_image_id = $image_id
 						ORDER BY comment_id";
 					$result = $db->sql_query_limit($sql, 1);
-					$row = $db->sql_fetchrow($result);
-					$last_comment_id = (isset($row['comment_id']))? $row['comment_id'] : 0;
+					$last_comment_id = $db->sql_fetchfield('last_comment');
 					$db->sql_freeresult($result);
-					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " SET image_comments = image_comments - 1,
-						image_last_comment = $last_comment_id
+
+					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . "
+						SET image_comments = image_comments - 1,
+							image_last_comment = $last_comment_id
 						WHERE " . $db->sql_in_set('image_id', $image_id);
 					$db->sql_query($sql);
+
 					$submit = true;
 					$message = $user->lang['DELETED_COMMENT'] . '<br />';
 				}
@@ -1168,9 +1182,9 @@ switch ($mode)
 						confirm_box(false, 'DELETE_COMMENT2', $s_hidden_fields);
 					}
 				}
-
 			break;
 		}
+
 		$template->assign_vars(array(
 			'ERROR'					=> $error,
 			'MESSAGE'				=> $comment,
@@ -1178,9 +1192,9 @@ switch ($mode)
 			'REQ_USERNAME'			=> $comment_username_req,
 			'L_COMMENT_LENGTH'		=> sprintf($user->lang['COMMENT_LENGTH'], $album_config['comment_length']),
 
-			'IMAGE_RSZ_WIDTH'	=> $album_config['preview_rsz_width'],
-			'IMAGE_RSZ_HEIGHT'	=> $album_config['preview_rsz_height'],
-			'U_IMAGE'			=> ($image_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
+			'IMAGE_RSZ_WIDTH'		=> $album_config['preview_rsz_width'],
+			'IMAGE_RSZ_HEIGHT'		=> $album_config['preview_rsz_height'],
+			'U_IMAGE'				=> ($image_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
 			'U_VIEW_IMAGE'			=> ($image_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
 			'IMAGE_NAME'			=> ($image_id) ? $image_data['image_name'] : '',
 
@@ -1189,6 +1203,7 @@ switch ($mode)
 	}
 	break;
 }
+
 if($submit)
 {
 	if ($image_id)
@@ -1205,7 +1220,6 @@ if($submit)
 	trigger_error($message);
 }
 
-// Output page
 page_header($page_title);
 
 $template->set_filenames(array(
@@ -1214,8 +1228,9 @@ $template->set_filenames(array(
 
 page_footer();
 
-
-
+/**
+* Insert the image into the database
+*/
 function upload_image(&$image_data)
 {
 	global $user, $db, $album_id;
@@ -1266,7 +1281,14 @@ function upload_image(&$image_data)
 	return array('image_id' => $image_id, 'image_name' => $image_data['image_name']);
 }
 
-function notify_gallery($mode, $handle_id, $image_name)
+/**
+* Gallery Notification
+*
+* borrowed from phpBB3
+* @author: phpBB Group
+* @function: user_notification
+*/
+function gallery_notification($mode, $handle_id, $image_name)
 {
 	global $phpbb_root_path, $gallery_root_path, $phpEx;
 	global $user, $db, $album_id, $image_id, $image_data, $album_data;
@@ -1275,9 +1297,6 @@ function notify_gallery($mode, $handle_id, $image_name)
 	$mode_id = $$help_mode;
 	$mode_notification = ($mode == 'album') ? 'image' : 'comment';
 
-	if (1 == 1)
-	{
-	
 	// Get banned User ID's
 	$sql = 'SELECT ban_userid
 		FROM ' . BANLIST_TABLE . '
@@ -1291,11 +1310,10 @@ function notify_gallery($mode, $handle_id, $image_name)
 		$sql_ignore_users .= ', ' . (int) $row['ban_userid'];
 	}
 	$db->sql_freeresult($result);
-	}
 
 	$notify_rows = array();
 
-	// -- get forum_userids	|| topic_userids
+	// -- get album_userids	|| image_userids
 	$sql = 'SELECT u.user_id, u.username, u.user_email, u.user_lang, u.user_notify_type, u.user_jabber
 		FROM ' . GALLERY_WATCH_TABLE . ' w, ' . USERS_TABLE . ' u
 		WHERE w.' . $help_mode . ' = ' . $handle_id . "

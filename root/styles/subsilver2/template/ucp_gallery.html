@@ -210,34 +210,34 @@
 		<td class="row2" colspan="3"><b class="genmed">{NAVIGATION}<!-- IF S_ALBUM --> [<a href="{U_EDIT}">{L_EDIT}</a> | <a href="{U_DELETE}">{L_DELETE}</a> | <a href="{U_GOTO}">{L_GOTO}</a> | <a href="{U_UPLOAD}">{L_UPLOAD_IMAGE}</a>]<!-- ENDIF --></b></td>
 	</tr>
 	<tr>
-		<td class="cat" colspan="3"><b class="genmed"><!-- IF .catrow -->{L_ATTACHED_SUBALBUMS}<!-- ELSE -->{L_NO_SUBALBUMS}<!-- ENDIF --></b></td>
+		<td class="cat" colspan="3"><b class="genmed"><!-- IF .album_row -->{L_ATTACHED_SUBALBUMS}<!-- ELSE -->{L_NO_SUBALBUMS}<!-- ENDIF --></b></td>
 	</tr>
-	<!-- BEGIN catrow -->
-		<!-- IF catrow.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-			<td style="padding: 4px;" width="20" align="center" valign="middle"><img src="{catrow.FOLDER_IMAGE}" alt="" /></td>
+	<!-- BEGIN album_row -->
+		<!-- IF album_row.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+			<td style="padding: 4px;" width="20" align="center" valign="middle"><img src="{album_row.FOLDER_IMAGE}" alt="" /></td>
 			<td style="padding: 4px;" width="100%" valign="top">
-				<p class="topictitle"><a href="{catrow.U_ALBUM}">{catrow.ALBUM_NAME}</a></p>
-				<!-- IF catrow.ALBUM_DESCRIPTION --><p class="gensmall"><br />{catrow.ALBUM_DESCRIPTION}</p><!-- ENDIF -->
+				<p class="topictitle"><a href="{album_row.U_ALBUM}">{album_row.ALBUM_NAME}</a></p>
+				<!-- IF album_row.ALBUM_DESCRIPTION --><p class="gensmall"><br />{album_row.ALBUM_DESCRIPTION}</p><!-- ENDIF -->
 			</td>
 			<td style="padding: 4px;" align="{S_CONTENT_FLOW_BEGIN}" valign="top" nowrap="nowrap">
-					<!-- IF catrow.S_FIRST_ROW && not catrow.S_LAST_ROW -->
+					<!-- IF album_row.S_FIRST_ROW && not album_row.S_LAST_ROW -->
 						{ICON_MOVE_UP_DISABLED}
-						<a href="{catrow.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
-					<!-- ELSEIF not catrow.S_FIRST_ROW && not catrow.S_LAST_ROW-->
-						<a href="{catrow.U_MOVE_UP}">{ICON_MOVE_UP}</a>
-						<a href="{catrow.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
-					<!-- ELSEIF catrow.S_LAST_ROW && not catrow.S_FIRST_ROW -->
-						<a href="{catrow.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+						<a href="{album_row.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+					<!-- ELSEIF not album_row.S_FIRST_ROW && not album_row.S_LAST_ROW-->
+						<a href="{album_row.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+						<a href="{album_row.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+					<!-- ELSEIF album_row.S_LAST_ROW && not album_row.S_FIRST_ROW -->
+						<a href="{album_row.U_MOVE_UP}">{ICON_MOVE_UP}</a>
 						{ICON_MOVE_DOWN_DISABLED}
 					<!-- ELSE -->
 						{ICON_MOVE_UP_DISABLED}
 						{ICON_MOVE_DOWN_DISABLED}
 					<!-- ENDIF -->
-					<a href="{catrow.U_EDIT}">{ICON_EDIT}</a>
-					<a href="{catrow.U_DELETE}">{ICON_DELETE}</a>
+					<a href="{album_row.U_EDIT}">{ICON_EDIT}</a>
+					<a href="{album_row.U_DELETE}">{ICON_DELETE}</a>
 			</td>
 		</tr>
-	<!-- END catrow -->
+	<!-- END album_row -->
 	<tr>
 		<td class="cat" colspan="3" align="{S_CONTENT_FLOW_END}">
 			<input class="button2" name="addforum" type="submit" value="{L_CREATE_SUBALBUM}" /> &nbsp;

@@ -25,42 +25,29 @@ $auth->acl($user->data);
 $user->setup('mods/gallery');
 
 // Get general album information
-include_once("{$phpbb_root_path}{$gallery_root_path}includes/common.$phpEx");
-include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
+include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
+include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
 $album_access_array = get_album_access_array();
 
 /**
-* Check whether the requested image and album exit.
+* Check whether the requested image & album exit.
 */
-$image_id = request_var('image_id', request_var('pic_id', 0));
-$sql = 'SELECT *
-	FROM ' . GALLERY_IMAGES_TABLE . '
-	WHERE image_id = ' . (int) $image_id;
-$result = $db->sql_query($sql);
-$image_data = $db->sql_fetchrow($result);
-$db->sql_freeresult($result);
+$image_id = request_var('image_id',0);
+$image_data = get_image_info($image_id);
 
 $album_id = $image_data['image_album_id'];
+$album_data = get_album_info($album_id);
+
 $user_id = $image_data['image_user_id'];
 
 $image_filetype = utf8_substr($image_data['image_filename'], strlen($image_data['image_filename']) - 4, 4);
-if (empty($image_data) || !file_exists($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']) )
+if (!file_exists($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']))
 {
 	$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
 		SET image_filemissing = 1
 		WHERE image_id = ' . $image_id;
 	$db->sql_query($sql);
 	trigger_error('IMAGE_NOT_EXIST');
-}
-$sql = 'SELECT *
-	FROM ' . GALLERY_ALBUMS_TABLE . '
-	WHERE album_id = ' . (int) $album_id;
-$result = $db->sql_query($sql);
-$album_data = $db->sql_fetchrow($result);
-$db->sql_freeresult($result);
-if (empty($album_data))
-{
-	trigger_error('ALBUM_NOT_EXIST');
 }
 
 /**
@@ -71,6 +58,7 @@ if ((!gallery_acl_check('i_view', $album_id)) || (!gallery_acl_check('m_status',
 	trigger_error('NOT_AUTHORISED');
 }
 
+//@todo: Unreported: Hotlink prevention doesn't working
 if ($album_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER']))
 {
 	$check_referer = trim($HTTP_SERVER_VARS['HTTP_REFERER']);
@@ -96,8 +84,6 @@ if ($album_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER'])
 	{
 		$good_referers = array_merge($good_referers, explode(',', $album_config['hotlink_allowed']));
 	}
-
-	$errored = true;
 
 	if (!in_array($check_referer, $good_referers))
 	{
@@ -145,7 +131,7 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 	}
 	if (!file_exists($image_source))
 	{
-		// Regenerate and write to thumbnails/
+		// Regenerate and write to images/$mode/
 		switch (utf8_substr($image_source, utf8_strlen($image_source) - 4, 4))
 		{
 			case '.png':
@@ -311,7 +297,10 @@ else
 {
 	/**
 	* Get a browser friendly UTF-8 encoded filename
-	* function copied from phpBB itself
+	*
+	* copied from phpBB3
+	* @author: phpBB Group
+	* @function: header_filename
 	*/
 	function header_filename($file)
 	{

@@ -30,6 +30,7 @@ $lang = array_merge($lang, array(
 	'ALBUM_PARENT'					=> 'Parent Album',
 	'ATTACHED_SUBALBUMS'			=> 'Attached subalbums',
 
+	'CREATE_PERSONAL_ALBUM'			=> 'Create personal album',
 	'CREATE_SUBALBUM'				=> 'Create subalbum',
 	'CREATE_SUBALBUM_EXP'			=> 'You may attach a new subalbum to your personal gallery.',
 	'CREATED_SUBALBUM'				=> 'Subalbum successful created',

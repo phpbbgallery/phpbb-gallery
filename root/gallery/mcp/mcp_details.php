@@ -20,8 +20,8 @@ if (!defined('IN_PHPBB'))
 if ($mode == 'queue_details')
 {
 	$sql = 'SELECT *
-		FROM ' . GALLERY_IMAGES_TABLE . "
-		WHERE image_id = $option_id";
+		FROM ' . GALLERY_IMAGES_TABLE . '
+		WHERE image_id = ' . (int) $option_id;
 	$result = $db->sql_query_limit($sql, 1);
 	$row = $db->sql_fetchrow($result);
 	$template->assign_vars(array(
@@ -29,6 +29,7 @@ if ($mode == 'queue_details')
 		'STATUS'			=> $user->lang['QUEUE_STATUS_' . $row['image_status']],
 		'REPORT_ID'			=> $row['image_id'],
 	));
+	$db->sql_freeresult($result);
 }
 if ($mode == 'report_details')
 {
@@ -38,10 +39,10 @@ if ($mode == 'report_details')
 		$m_status = '';
 	}
 	$sql = 'SELECT r.*, u.username reporter_name, u.user_colour reporter_colour, i.*
-		FROM ' . GALLERY_REPORTS_TABLE . " r
-		LEFT JOIN " . USERS_TABLE . " u
+		FROM ' . GALLERY_REPORTS_TABLE . ' r
+		LEFT JOIN ' . USERS_TABLE . ' u
 			ON r.reporter_id = u.user_id
-		LEFT JOIN " . GALLERY_IMAGES_TABLE . " i
+		LEFT JOIN ' . GALLERY_IMAGES_TABLE . " i
 			ON r.report_image_id = i.image_id
 		WHERE r.report_id = $option_id
 			$m_status";
@@ -55,6 +56,7 @@ if ($mode == 'report_details')
 		'REPORT_STATUS'		=> ($row['report_status'] == 1) ? true : false,
 		'STATUS'			=> $user->lang['REPORT_STATUS_' . $row['report_status']] . ' ' . $user->lang['QUEUE_STATUS_' . $row['image_status']],
 	));
+	$db->sql_freeresult($result);
 }
 
 $template->assign_vars(array(

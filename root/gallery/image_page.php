@@ -39,32 +39,29 @@ $user->add_lang('mods/exif_data');
 *
 */
 
+include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
+include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
+include($phpbb_root_path . $gallery_root_path . 'includes/functions_display.' . $phpEx);
+$album_access_array = get_album_access_array();
+
 /**
 * Check the request and get image_data
 */
-include_once("{$phpbb_root_path}{$gallery_root_path}includes/common.$phpEx");
-include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
-$album_access_array = get_album_access_array();
-$image_id = request_var('image_id', request_var('id', 0));
-if (!$image_id)
-{
-	trigger_error('IMAGE_NOT_EXIST');
-}
-
-// Salting the form...yumyum ...
-add_form_key('gallery');
-
+$image_id = request_var('image_id', 0);
 $image_data = get_image_info($image_id);
+
 $album_id = $image_data['image_album_id'];
-$user_id = $image_data['image_user_id'];
-if (empty($image_data) || !file_exists($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']))
-{
-	trigger_error('IMAGE_NOT_EXIST');
-}
 $album_data = get_album_info($album_id);
-if (empty($album_data))
+
+$user_id = $image_data['image_user_id'];
+
+if (!file_exists($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']))
 {
-	trigger_error('ALBUM_NOT_EXIST');
+	$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
+		SET image_filemissing = 1
+		WHERE image_id = ' . $image_id;
+	$db->sql_query($sql);
+	trigger_error('IMAGE_NOT_EXIST');
 }
 
 /**
@@ -74,7 +71,7 @@ if (!gallery_acl_check('i_view', $album_id))
 {
 	if (!$user->data['is_registered'])
 	{
-		login_box("{$gallery_root_path}image_page.$phpEx?album_id=$album_id&amp;image_id=$image_id", $user->lang['LOGIN_INFO']);
+		login_box("{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id", $user->lang['LOGIN_INFO']);
 	}
 	else
 	{
@@ -86,14 +83,18 @@ if (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] !=
 	trigger_error('NOT_AUTHORISED');
 }
 
+// Build the navigation
+generate_album_nav($album_data);
+// Salting the form...yumyum ...
+add_form_key('gallery');
+
 /**
 * Main work here...
 */
-// Increase view
-$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . "
+$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 	SET image_view_count = image_view_count + 1
-	WHERE image_id = $image_id";
-$result = $db->sql_query($sql);
+	WHERE image_id = ' . (int) $image_id;
+$db->sql_query($sql);
 
 $previous_id = $next_id = $last_id = 0;
 $do_next = false;
@@ -111,7 +112,7 @@ $sql = 'SELECT *
 	WHERE image_album_id = ' . (int) $album_id . $image_approval_sql . '
 	ORDER BY ' . $sql_sort_order;
 $result = $db->sql_query($sql);
-//there should also be a way to go with a limit here, but we'll see
+//@todo: there should also be a way to go with a limit here, but we'll see
 while ($row = $db->sql_fetchrow($result))
 {
 	if ($do_next)
@@ -131,13 +132,12 @@ $db->sql_freeresult($result);
 //Get Watch- and Favorite-mode
 $is_watching = $image_data['watch_id'];
 
-
 $template->assign_vars(array(
-	'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx?album_id=$album_id"),
+	'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"),
 
 	'UC_IMAGE'			=> generate_image_link('medium', $album_config['link_imagepage'], $image_id, $image_data['image_name'], $album_id, ((substr($image_data['image_filename'], 0 -3) == 'gif') ? true : false)),
-	'U_PREVIOUS'		=> ($previous_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?album_id=$album_id&amp;image_id=$previous_id") : '',
-	'U_NEXT'			=> ($next_id && ($next_id != $previous_id)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx?album_id=$album_id&amp;image_id=$next_id") : '',
+	'U_PREVIOUS'		=> ($previous_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$previous_id") : '',
+	'U_NEXT'			=> ($next_id && ($next_id != $previous_id)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$next_id") : '',
 
 	'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_IMAGE'),
 	'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_IMAGE'),
@@ -295,6 +295,7 @@ if ($album_config['allow_rates'])
 			$rated = $db->sql_fetchrow($result);
 			$your_rating = $rated['rate_point'];
 		}
+		$db->sql_freeresult($result);
 	}
 
 	// Check: User didn't rate yet, has permissions, it's not the users own image and the user is logged in
@@ -322,7 +323,7 @@ if ($album_config['allow_rates'])
 if ($album_config['allow_comments'] && gallery_acl_check('c_post', $album_id))
 {
 	$user->add_lang('posting');
-	include_once("{$phpbb_root_path}includes/functions_posting.$phpEx");
+	include("{$phpbb_root_path}includes/functions_posting.$phpEx");
 
 	$bbcode_status	= ($config['allow_bbcode']) ? true : false;
 	$smilies_status	= ($bbcode_status && $config['allow_smilies']) ? true : false;
@@ -455,10 +456,6 @@ if ($album_config['allow_comments'] && gallery_acl_check('c_read', $album_id))
 	}
 }
 
-// Build the navigation
-generate_album_nav($album_data);
-
-// Output page
 page_header($user->lang['VIEW_IMAGE'] . ' - ' . $image_data['image_name']);
 
 $template->set_filenames(array(

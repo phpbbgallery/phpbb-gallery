@@ -42,7 +42,7 @@ else
 {
 	$report_status = 2;
 }
-$sql = 'SELECT r.*, i.*
+$sql = 'SELECT COUNT(i.image_id) images
 	FROM ' . GALLERY_REPORTS_TABLE . " r
 	LEFT JOIN " . GALLERY_IMAGES_TABLE . " i
 		ON r.report_image_id = i.image_id
@@ -50,25 +50,23 @@ $sql = 'SELECT r.*, i.*
 		AND r.report_status = $report_status
 		$m_status";
 $result = $db->sql_query($sql);
-while( $row = $db->sql_fetchrow($result) )
-{
-	$count_images++;
-}
+$count_images = $db->sql_fetchfield('images');
 $db->sql_freeresult($result);
+
 $sql = 'SELECT r.*, u.username reporter_name, u.user_colour reporter_colour, m.username mod_username, m.user_colour mod_user_colour, i.*
-	FROM ' . GALLERY_REPORTS_TABLE . " r
-	LEFT JOIN " . USERS_TABLE . " u
+	FROM ' . GALLERY_REPORTS_TABLE . ' r
+	LEFT JOIN ' . USERS_TABLE . ' u
 		ON r.reporter_id = u.user_id
-	LEFT JOIN " . USERS_TABLE . " m
+	LEFT JOIN ' . USERS_TABLE . ' m
 		ON r.report_manager = m.user_id
-	LEFT JOIN " . GALLERY_IMAGES_TABLE . " i
+	LEFT JOIN ' . GALLERY_IMAGES_TABLE . " i
 		ON r.report_image_id = i.image_id
 	WHERE r.report_album_id = $album_id
 		AND r.report_status = $report_status
 		$m_status
 	ORDER BY $sort_key $sort_dir";
 $result = $db->sql_query_limit($sql, $images_per_page, $start);
-while( $row = $db->sql_fetchrow($result) )
+while ($row = $db->sql_fetchrow($result))
 {
 	$template->assign_block_vars('image_row', array(
 		'THUMBNAIL'			=> generate_image_link('fake_thumbnail', $album_config['link_thumbnail'], $row['image_id'], $row['image_name'], $album_id),
@@ -84,6 +82,7 @@ while( $row = $db->sql_fetchrow($result) )
 	));
 }
 $db->sql_freeresult($result);
+
 if ($report_status == 2)
 {
 	$desc_string = $user->lang['WAITING_REPORTED_DONE'];

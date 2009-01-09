@@ -10,32 +10,32 @@
 		<table cellspacing="1">
 			<col class="row1" /><col class="row1" /><col class="row2" />
 		<tbody>
-		<!-- BEGIN catrow -->
+		<!-- BEGIN album_row -->
 			<tr>
-				<td style="width: 5%; text-align: center;">{catrow.FOLDER_IMAGE}</td>
+				<td style="width: 5%; text-align: center;">{album_row.FOLDER_IMAGE}</td>
 				<td>
-					<!-- IF catrow.ALBUM_IMAGE --><div style="float: {S_CONTENT_FLOW_BEGIN}; margin-right: 5px;"><img src="{T_IMAGES_PATH}{catrow.ALBUM_IMAGE}" alt="{catrow.ALBUM_NAME}" /></div><!-- ENDIF -->
-					<strong><a href="{catrow.U_ALBUM}">{catrow.ALBUM_NAME}</a></strong>
-					<!-- IF catrow.ALBUM_DESCRIPTION --><br /><span>{catrow.ALBUM_DESCRIPTION}</span><!-- ENDIF -->
-					<!-- IF catrow.S_FORUM_POST --><br /><br /><span>{L_TOPICS}: <strong>{catrow.FORUM_TOPICS}</strong> / {L_POSTS}: <b>{catrow.FORUM_POSTS}</b></span><!-- ENDIF -->
+					<!-- IF album_row.ALBUM_IMAGE --><div style="float: {S_CONTENT_FLOW_BEGIN}; margin-right: 5px;"><img src="{T_IMAGES_PATH}{album_row.ALBUM_IMAGE}" alt="{album_row.ALBUM_NAME}" /></div><!-- ENDIF -->
+					<strong><a href="{album_row.U_ALBUM}">{album_row.ALBUM_NAME}</a></strong>
+					<!-- IF album_row.ALBUM_DESCRIPTION --><br /><span>{album_row.ALBUM_DESCRIPTION}</span><!-- ENDIF -->
+					<!-- IF album_row.S_FORUM_POST --><br /><br /><span>{L_TOPICS}: <strong>{album_row.FORUM_TOPICS}</strong> / {L_POSTS}: <b>{album_row.FORUM_POSTS}</b></span><!-- ENDIF -->
 				</td>
 				<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
-					<!-- IF catrow.S_FIRST_ROW && not catrow.S_LAST_ROW -->
+					<!-- IF album_row.S_FIRST_ROW && not album_row.S_LAST_ROW -->
 						{ICON_MOVE_UP_DISABLED}
-						<a href="{catrow.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
-					<!-- ELSEIF not catrow.S_FIRST_ROW && not catrow.S_LAST_ROW-->
-						<a href="{catrow.U_MOVE_UP}">{ICON_MOVE_UP}</a>
-						<a href="{catrow.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
-					<!-- ELSEIF catrow.S_LAST_ROW && not catrow.S_FIRST_ROW -->
-						<a href="{catrow.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+						<a href="{album_row.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+					<!-- ELSEIF not album_row.S_FIRST_ROW && not album_row.S_LAST_ROW-->
+						<a href="{album_row.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+						<a href="{album_row.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+					<!-- ELSEIF album_row.S_LAST_ROW && not album_row.S_FIRST_ROW -->
+						<a href="{album_row.U_MOVE_UP}">{ICON_MOVE_UP}</a>
 						{ICON_MOVE_DOWN_DISABLED}
 					<!-- ELSE -->
 						{ICON_MOVE_UP_DISABLED}
 						{ICON_MOVE_DOWN_DISABLED}
 					<!-- ENDIF -->
-					<a href="{catrow.U_EDIT}">{ICON_EDIT}</a>
+					<a href="{album_row.U_EDIT}">{ICON_EDIT}</a>
 					{ICON_SYNC_DISABLED}
-					<a href="{catrow.U_DELETE}">{ICON_DELETE}</a>
+					<a href="{album_row.U_DELETE}">{ICON_DELETE}</a>
 				</td>
 			</tr>
 		<!-- BEGINELSE -->
@@ -46,7 +46,7 @@
 				</td>
 				<td style="width: 100px;"></td>
 			</tr>
-		<!-- END catrow -->
+		<!-- END album_row -->
 		</tbody>
 		</table>
 		<form id="albums" method="post" action="{S_ALBUM_ACTION}">

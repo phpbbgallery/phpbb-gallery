@@ -144,6 +144,7 @@ $lang = array_merge($lang, array(
 	'MISSING_SOURCE'				=> 'Images without files',
 
 	'NEW_ALBUM_CREATED'				=> 'New album has been created successfully',
+	'NO_ALBUM_SELECTED'				=> 'You need to select atleast one album.',
 	'NO_PARENT_ALBUM'				=> '&raquo; No Parent Album',
 	'NO_SUBALBUMS'					=> 'No Albums attached',
 	'NUMBER_ALBUMS'					=> 'Number of albums',
@@ -218,7 +219,6 @@ $lang = array_merge($lang, array(
 	'SHORTED_IMAGENAMES_EXP'		=> 'If the name of an image is to long and doesn\'t include spaces, the layout maybe destroyed.',
 	'SORRY_NO_STATISTIC'			=> 'Sorry, this statistic-value is not yet available.',
 
-	'THIS_WILL_BE_REPORTED'			=> 'Known Bug, sorry guys!',
 	'THUMBNAIL_CACHE'				=> 'Thumbnail cache',
 	'THUMBNAIL_QUALITY'				=> 'Thumbnail quality (1-100)',
 	'THUMBNAIL_SETTINGS'			=> 'Thumbnail Settings',

@@ -80,14 +80,17 @@ function build_gallery_mcp_navigation ($album_id, $mode, $option_id = false)
 				));
 				if ($navsubsection['mode'] == $mode)
 				{
+					$page_title = $user->lang[$navsubsection['name']];
 					$template->assign_vars(array(
 						'S_' . $navsubsection['name']	=> true,
-						'SUBSECTION'					=> $user->lang[$navsubsection['name']],
+						'SUBSECTION'					=> $page_title,
 					));
 				}
 			}
 		}
 	}
+
+	return $page_title;
 }
 
 ?>

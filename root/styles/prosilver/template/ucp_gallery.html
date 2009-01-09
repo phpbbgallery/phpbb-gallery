@@ -213,40 +213,40 @@
 	<ul class="topiclist">
 		<li class="header">
 			<dl class="icon">
-				<dt><!-- IF .catrow -->{L_ATTACHED_SUBALBUMS}<!-- ELSE -->{L_NO_SUBALBUMS}<!-- ENDIF --></dt>
+				<dt><!-- IF .album_row -->{L_ATTACHED_SUBALBUMS}<!-- ELSE -->{L_NO_SUBALBUMS}<!-- ENDIF --></dt>
 			</dl>
 		</li>
 	</ul>
-	<!-- IF .catrow -->
+	<!-- IF .album_row -->
 	<ul class="topiclist cplist">
-		<!-- BEGIN catrow -->
-		<li class="row<!-- IF topicrow.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF -->">
-			<dl class="icon" style="background-image: url({catrow.FOLDER_IMAGE}); background-repeat: no-repeat;">
-				<dt title="{catrow.ALBUM_NAME}">
-					<!-- IF catrow.FORUM_IMAGE --><div style="float: {S_CONTENT_FLOW_BEGIN}; margin-right: 5px;">{catrow.FORUM_IMAGE}</div><!-- ENDIF -->
-					<a href="{catrow.U_ALBUM}" class="topictitle">{catrow.ALBUM_NAME}</a>
-					<!-- IF catrow.ALBUM_DESCRIPTION --><br />{catrow.ALBUM_DESCRIPTION}<!-- ENDIF -->
+		<!-- BEGIN album_row -->
+		<li class="row<!-- IF album_row.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF -->">
+			<dl class="icon" style="background-image: url({album_row.FOLDER_IMAGE}); background-repeat: no-repeat;">
+				<dt title="{album_row.ALBUM_NAME}">
+					<!-- IF album_row.FORUM_IMAGE --><div style="float: {S_CONTENT_FLOW_BEGIN}; margin-right: 5px;">{album_row.FORUM_IMAGE}</div><!-- ENDIF -->
+					<a href="{album_row.U_ALBUM}" class="topictitle">{album_row.ALBUM_NAME}</a>
+					<!-- IF album_row.ALBUM_DESCRIPTION --><br />{album_row.ALBUM_DESCRIPTION}<!-- ENDIF -->
 				</dt>
 				<dd class="mark" style="width: 120px;">
-					<!-- IF catrow.S_FIRST_ROW && not catrow.S_LAST_ROW -->
+					<!-- IF album_row.S_FIRST_ROW && not album_row.S_LAST_ROW -->
 						{ICON_MOVE_UP_DISABLED}
-						<a href="{catrow.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
-					<!-- ELSEIF not catrow.S_FIRST_ROW && not catrow.S_LAST_ROW-->
-						<a href="{catrow.U_MOVE_UP}">{ICON_MOVE_UP}</a>
-						<a href="{catrow.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
-					<!-- ELSEIF catrow.S_LAST_ROW && not catrow.S_FIRST_ROW -->
-						<a href="{catrow.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+						<a href="{album_row.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+					<!-- ELSEIF not album_row.S_FIRST_ROW && not album_row.S_LAST_ROW-->
+						<a href="{album_row.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+						<a href="{album_row.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+					<!-- ELSEIF album_row.S_LAST_ROW && not album_row.S_FIRST_ROW -->
+						<a href="{album_row.U_MOVE_UP}">{ICON_MOVE_UP}</a>
 						{ICON_MOVE_DOWN_DISABLED}
 					<!-- ELSE -->
 						{ICON_MOVE_UP_DISABLED}
 						{ICON_MOVE_DOWN_DISABLED}
 					<!-- ENDIF -->
-					<a href="{catrow.U_EDIT}">{ICON_EDIT}</a>
-					<a href="{catrow.U_DELETE}">{ICON_DELETE}</a>
+					<a href="{album_row.U_EDIT}">{ICON_EDIT}</a>
+					<a href="{album_row.U_DELETE}">{ICON_DELETE}</a>
 				</dd>
 			</dl>
 		</li>
-		<!-- END catrow -->
+		<!-- END album_row -->
 	</ul>
 	<!-- ENDIF -->
 <form id="albums" method="post" action="{U_CREATE_SUBALBUM}">

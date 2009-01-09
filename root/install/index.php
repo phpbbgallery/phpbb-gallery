@@ -3,8 +3,11 @@
 *
 * @package phpBB Gallery
 * @version $Id$
-* @copyright (c) 2005 phpBB Group
+* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+* borrowed from phpBB3
+* @author: phpBB Group
 *
 */
 

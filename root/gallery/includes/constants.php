@@ -17,11 +17,6 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
-// only need for converter
-define('ALBUM_UPLOAD_PATH', 'upload/');
-define('ALBUM_CACHE_PATH', 'upload/cache/');
-define('ALBUM_DIR_NAME', 'gallery/');
-
 define('G_ALBUM_CAT', 0);
 define('G_ALBUM_UPLOAD', 1);
 

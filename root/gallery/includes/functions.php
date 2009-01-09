@@ -19,41 +19,30 @@ if (!defined('IN_PHPBB'))
 
 $gallery_root_path = GALLERY_ROOT_PATH;
 
-$gd_check = function_exists('gd_info') ? gd_info() : array();;
-$gd_success = isset($gd_check['GD Version']);
-if (!$gd_success)
-{
-	if (!isset($album_config['gd_version']))
-	{
-		$sql = 'SELECT * FROM ' . GALLERY_CONFIG_TABLE . " WHERE config_name = 'gd_version'";
-		$result = $db->sql_query($sql);
-		while( $row = $db->sql_fetchrow($result) )
-		{
-			$album_config_name = $row['config_name'];
-			$album_config_value = $row['config_value'];
-			$album_config[$album_config_name] = $album_config_value;
-		}
-	}
-	if ($album_config['gd_version'] > 0)
-	{
-		$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . " SET config_value = 0 WHERE config_name = 'gd_version'";
-		$result = $db->sql_query($sql);
-		$album_config['gd_version'] = 0;
-	}
-}
-
 $sql = 'SELECT *
 	FROM ' . GALLERY_USERS_TABLE . '
 	WHERE user_id = ' . (int) $user->data['user_id'];
 $result = $db->sql_query($sql);
 $user->gallery = $db->sql_fetchrow($result);
+$db->sql_freeresult($result);
+if ($db->sql_affectedrows())
+{
+	$user->gallery['exists'] = true;
+}
 
-function load_gallery_config($gallery_config = false)
+/**
+* Loading the gallery_config
+*/
+function load_gallery_config()
 {
 	global $db;
 
-	$sql = 'SELECT * FROM ' . GALLERY_CONFIG_TABLE;
+	// When addons are installed, before the install script is run, this would through an error.
+	$db->sql_return_on_error(true);
+	$sql = 'SELECT *
+		FROM ' . GALLERY_CONFIG_TABLE;
 	$result = $db->sql_query($sql);
+	$db->sql_return_on_error(false);
 
 	while ($row = $db->sql_fetchrow($result))
 	{
@@ -63,44 +52,53 @@ function load_gallery_config($gallery_config = false)
 
 	return $gallery_config;
 }
+
 /**
-* Get album children (for displaying the subalbums
+* Set config value. Creates missing album_config entry.
+*
+* borrowed from phpBB3
+* @author: phpBB Group
+* @function: set_config
 */
-function get_album_children($album_id)
+function set_gallery_config($config_name, $config_value, $is_dynamic = false)
 {
-	global $db, $phpEx, $phpbb_root_path, $gallery_root_path;
+	global $db, $album_config /*, $cache*/;
 
-	$rows = array();
+	$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . "
+		SET config_value = '" . $db->sql_escape($config_value) . "'
+		WHERE config_name = '" . $db->sql_escape($config_name) . "'";
+	$db->sql_query($sql);
 
-	$sql = 'SELECT *
-		FROM ' . GALLERY_ALBUMS_TABLE . "
-		WHERE parent_id = $album_id
-		ORDER BY left_id ASC";
-	$result = $db->sql_query($sql);
-	$navigation = '';
-
-	while ($row = $db->sql_fetchrow($result))
+	if (!$db->sql_affectedrows() && !isset($album_config[$config_name]))
 	{
-		$rows[] = $row;
-		$navigation .= (($navigation) ? ', ' : '') . '<a href="' . append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $row['album_id']) . '">' . $row['album_name'] . '</a>';
+		$sql = 'INSERT INTO ' . GALLERY_CONFIG_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'config_name'	=> $config_name,
+			'config_value'	=> $config_value,
+			/*'is_dynamic'	=> ($is_dynamic) ? 1 : 0,*/));
+		$db->sql_query($sql);
 	}
-	$db->sql_freeresult($result);
 
-	return $navigation;
+	$album_config[$config_name] = $config_value;
+
+	/*if (!$is_dynamic)
+	{
+		$cache->destroy('config');
+	}*/
 }
+
 /**
-* Get album details
+* Get album information
 */
 function get_album_info($album_id)
 {
 	global $db, $user, $gallery_root_path, $phpbb_root_path, $phpEx;
 
 	$sql = 'SELECT a.*, w.watch_id
-		FROM ' . GALLERY_ALBUMS_TABLE . ' AS a
-		LEFT JOIN ' . GALLERY_WATCH_TABLE . ' AS w
+		FROM ' . GALLERY_ALBUMS_TABLE . ' a
+		LEFT JOIN ' . GALLERY_WATCH_TABLE . ' w
 			ON a.album_id = w.album_id
-				AND w.user_id = ' . $user->data['user_id']  . "
-		WHERE a.album_id = $album_id";
+				AND w.user_id = ' . $user->data['user_id'] . '
+		WHERE a.album_id = ' . (int) $album_id;
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
@@ -108,103 +106,63 @@ function get_album_info($album_id)
 	if (!$row)
 	{
 		meta_refresh(3, append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"));
-		trigger_error(sprintf($user->lang['ALBUM_ID_NOT_EXIST'], $album_id));
+		trigger_error('ALBUM_NOT_EXIST');
 	}
 
 	return $row;
 }
 
-function generate_album_nav(&$album_data)
+/**
+* Get image information
+*/
+function get_image_info($image_id)
 {
-	global $db, $user, $template, $auth;
-	global $phpEx, $phpbb_root_path, $gallery_root_path;
+	global $db, $user, $gallery_root_path, $phpbb_root_path, $phpEx;
 
-	// Get album parents
-	$album_parents = get_album_parents($album_data);
-	if ($album_data['album_user_id'] > 0 )
+	$sql = 'SELECT *
+		FROM ' . GALLERY_IMAGES_TABLE . ' i
+		LEFT JOIN ' . GALLERY_WATCH_TABLE . ' w
+			ON w.image_id = i.image_id
+				AND w.user_id = ' . $user->data['user_id'] . '
+		LEFT JOIN ' . GALLERY_FAVORITES_TABLE . ' f
+			ON f.image_id = i.image_id
+				AND f.user_id = ' . $user->data['user_id'] . '
+		WHERE i.image_id = ' . (int) $image_id;
+	$result = $db->sql_query($sql);
+	$row = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+
+	if (!$row)
 	{
-		$sql = 'SELECT user_id, username, user_colour
-			FROM ' . USERS_TABLE . '
-			WHERE user_id = ' . (int) $album_data['album_user_id'];
-		$result = $db->sql_query($sql);
-
-		while ($row = $db->sql_fetchrow($result))
-		{
-			$template->assign_block_vars('navlinks', array(
-				'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],
-				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal'))
-			);
-		}
+		meta_refresh(3, append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"));
+		trigger_error('IMAGE_NOT_EXIST');
 	}
 
-	// Build navigation links
-	if (!empty($album_parents))
-	{
-		foreach ($album_parents as $parent_album_id => $parent_data)
-		{
-			list($parent_name, $parent_type) = array_values($parent_data);
-
-			$template->assign_block_vars('navlinks', array(
-				'FORUM_NAME'	=> $parent_name,
-				'FORUM_ID'		=> $parent_album_id,
-				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $parent_album_id))
-			);
-		}
-	}
-
-	$template->assign_block_vars('navlinks', array(
-		'FORUM_NAME'	=> $album_data['album_name'],
-		'FORUM_ID'		=> $album_data['album_id'],
-		'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_data['album_id']))
-	);
-	$template->assign_vars(array(
-		'ALBUM_ID' 		=> $album_data['album_id'],
-		'ALBUM_NAME'	=> $album_data['album_name'],
-		'ALBUM_DESC'	=> generate_text_for_display($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options']))
-	);
-	return;
+	return $row;
 }
 
 /**
-* Returns album parents as an array. Get them from album_data if available, or update the database otherwise
+* Check whether the album_user is the user who wants to do something
 */
-function get_album_parents(&$album_data)
+function check_album_user($album_id)
 {
-	global $db;
+	global $user, $db;
 
-	$album_parents = array();
-	if ($album_data['parent_id'] > 0)
+	if (!$user->gallery['personal_album_id'])
 	{
-		if ($album_data['album_parents'] == '')
-		{
-			$sql = 'SELECT album_id, album_name, album_type
-				FROM ' . GALLERY_ALBUMS_TABLE . '
-				WHERE left_id < ' . $album_data['left_id'] . '
-					AND right_id > ' . $album_data['right_id'] . '
-					AND album_user_id = ' . $album_data['album_user_id'] . '
-				ORDER BY left_id ASC';
-			$result = $db->sql_query($sql);
-
-			while ($row = $db->sql_fetchrow($result))
-			{
-				$album_parents[$row['album_id']] = array($row['album_name'], (int) $row['album_type']);
-			}
-			$db->sql_freeresult($result);
-
-			$album_data['album_parents'] = serialize($album_parents);
-
-			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
-				SET album_parents = '" . $db->sql_escape($album_data['album_parents']) . "'
-				WHERE parent_id = " . $album_data['parent_id'];
-			$db->sql_query($sql);
-		}
-		else
-		{
-			$album_parents = unserialize($album_data['album_parents']);
-		}
+		trigger_error('NEED_INITIALISE');
 	}
 
-	return $album_parents;
+	$sql = 'SELECT album_id
+		FROM ' . GALLERY_ALBUMS_TABLE . '
+		WHERE album_id = ' . (int) $album_id . '
+			AND album_user_id = ' . $user->data['user_id'];
+	$result = $db->sql_query($sql);
+
+	if (!$row = $db->sql_fetchrow($result))
+	{
+		trigger_error('NO_ALBUM_STEALING');
+	}
 }
 
 /**
@@ -214,12 +172,13 @@ function get_album_parents(&$album_data)
 * @param	int					$select_id				selected album
 * @param	string				$requested_permission	Exp: for moving a image you need i_upload permissions or a_moderate
 * @param	(string || array)	$ignore_id				disabled albums, Exp: on moving: the album where the image is now
+* @param	int					$album_user_id			for the select-boxes of the ucp so you only can attach to your own albums
 *
 * @return	string				$gallery_albumbox		if ($select_name) {full select-box} else {list with options}
 */
-function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $requested_permission = false, $ignore_id = false)
+function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $requested_permission = false, $ignore_id = false, $album_user_id = 0)
 {
-	global $db, $user, $auth, $cache, $album_access_array;
+	global $db, $user, $cache, $album_access_array;
 
 	// Instead of the query we use the cache
 	$album_data = $cache->obtain_album_list();
@@ -280,7 +239,6 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 			{
 				$list = true;
 			}
-			#echo $row['album_user_id'] . $row['album_id'] . '<br />';
 		}
 		else if (!$ignore_personals)
 		{
@@ -302,6 +260,14 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 				}
 				$list = $access_personal;
 			}
+		}
+		if (($album_user_id > 0) && ($album_user_id != $row['album_user_id']))
+		{
+			$list = false;
+		}
+		else if (($album_user_id > 0) && ($row['parent_id'] == 0))
+		{
+			$disabled = true;
 		}
 
 		if ($list)
@@ -327,75 +293,49 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 }
 
 /**
-* get image info
+* Update album information
+* Resets the following columns with the correct value:
+* - album_images, _real
+* - album_last_image_id, _time, _name
+* - album_last_username, _user_colour, _user_id
 */
-function get_image_info($image_id)
+function update_album_info($album_id)
 {
 	global $db, $user;
 
-	$sql = 'SELECT *
-		FROM ' . GALLERY_IMAGES_TABLE . ' i
-		LEFT JOIN ' . GALLERY_WATCH_TABLE . ' w
-			ON w.image_id = i.image_id
-				AND w.user_id = ' . $user->data['user_id']  . '
-		LEFT JOIN ' . GALLERY_FAVORITES_TABLE . ' f
-			ON f.image_id = i.image_id
-				AND f.user_id = ' . $user->data['user_id']  . '
-		WHERE i.image_id = ' . $image_id;
-	$result = $db->sql_query($sql);
-	$row = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
-
-	if (!$row)
-	{
-		trigger_error('IMAGE_NOT_EXIST');
-	}
-
-	return $row;
-}
-
-/**
-* Update Album-Information
-*/
-function update_lastimage_info($album_id)
-{
-	global $db, $user;
-
-	//update album-information
 	$images_real = $images = $album_user_id = 0;
+
+	// Get the album_user_id, so we can keep the user_colour
 	$sql = 'SELECT album_user_id
-		FROM ' . GALLERY_ALBUMS_TABLE . "
-		WHERE album_id = $album_id";
+		FROM ' . GALLERY_ALBUMS_TABLE . '
+		WHERE album_id = ' . (int) $album_id;
 	$result = $db->sql_query($sql);
-	if ($row = $db->sql_fetchrow($result))
-	{
-		$album_user_id = $row['album_user_id'];
-	}
+	$album_user_id = $db->sql_fetchfield('album_user_id');
 	$db->sql_freeresult($result);
+
+	// Number of approved images
 	$sql = 'SELECT COUNT(image_id) images
-		FROM ' . GALLERY_IMAGES_TABLE . "
-		WHERE image_album_id = $album_id
-			AND image_status = 1";
+		FROM ' . GALLERY_IMAGES_TABLE . '
+		WHERE image_status = 1
+			AND image_album_id = ' . (int) $album_id;
 	$result = $db->sql_query($sql);
-	if ($row = $db->sql_fetchrow($result))
-	{
-		$images = $row['images'];
-	}
+	$images = $db->sql_fetchfield('images');
 	$db->sql_freeresult($result);
+
+	// Number of total images
 	$sql = 'SELECT COUNT(image_id) images_real
-		FROM ' . GALLERY_IMAGES_TABLE . "
-		WHERE image_album_id = $album_id";
+		FROM ' . GALLERY_IMAGES_TABLE . '
+		WHERE image_album_id = ' . (int) $album_id;
 	$result = $db->sql_query($sql);
-	if ($row = $db->sql_fetchrow($result))
-	{
-		$images_real = $row['images_real'];
-	}
+	$images_real = $db->sql_fetchfield('images_real');
 	$db->sql_freeresult($result);
-	$sql = 'SELECT *
-		FROM ' . GALLERY_IMAGES_TABLE . "
-		WHERE image_album_id = $album_id
-			AND image_status = 1
-		ORDER BY image_time DESC";
+
+	// Data of the last approved image
+	$sql = 'SELECT image_id, image_time, image_name, image_username, image_user_colour, image_user_id
+		FROM ' . GALLERY_IMAGES_TABLE . '
+		WHERE image_status = 1 AND
+			image_album_id = ' . (int) $album_id . '
+		ORDER BY image_time DESC';
 	$result = $db->sql_query($sql);
 	if ($row = $db->sql_fetchrow($result))
 	{
@@ -412,6 +352,7 @@ function update_lastimage_info($album_id)
 	}
 	else
 	{
+		// No approved image, so we clear the columns
 		$sql_ary = array(
 			'album_images_real'			=> $images_real,
 			'album_images'				=> $images,
@@ -428,6 +369,7 @@ function update_lastimage_info($album_id)
 		}
 	}
 	$db->sql_freeresult($result);
+
 	$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 		WHERE ' . $db->sql_in_set('album_id', $album_id);
 	$db->sql_query($sql);
@@ -436,83 +378,18 @@ function update_lastimage_info($album_id)
 }
 
 /**
-* Obtain list of moderators of each album
+* Handle user- & total image_counter
+*
+* @param	array	$image_id_ary	array with the image_ids which changed their status
+* @param	bool	$add			are we adding or removing the images
+* @param	bool	$readd			is it possible that there are images which aren't really changed
 */
-function get_album_moderators(&$album_moderators, $album_id = false)
-{
-	global $config, $template, $db, $phpbb_root_path, $phpEx, $user;
-
-	// Have we disabled the display of moderators? If so, then return
-	// from whence we came ...
-	if (!$config['load_moderators'])
-	{
-		return;
-	}
-
-	$album_sql = '';
-
-	if ($album_id !== false)
-	{
-		if (!is_array($album_id))
-		{
-			$album_id = array($album_id);
-		}
-
-		// If we don't have a forum then we can't have a moderator
-		if (!sizeof($album_id))
-		{
-			return;
-		}
-
-		$album_sql = 'AND m.' . $db->sql_in_set('album_id', $album_id);
-	}
-
-	$sql_array = array(
-		'SELECT'	=> 'm.*, u.user_colour, g.group_colour, g.group_type',
-
-		'FROM'		=> array(
-			GALLERY_MODSCACHE_TABLE	=> 'm',
-		),
-
-		'LEFT_JOIN'	=> array(
-			array(
-				'FROM'	=> array(USERS_TABLE => 'u'),
-				'ON'	=> 'm.user_id = u.user_id',
-			),
-			array(
-				'FROM'	=> array(GROUPS_TABLE => 'g'),
-				'ON'	=> 'm.group_id = g.group_id',
-			),
-		),
-
-		'WHERE'		=> "m.display_on_index = 1 $album_sql",
-	);
-
-	$sql = $db->sql_build_query('SELECT', $sql_array);
-	$result = $db->sql_query($sql, 3600);
-
-	while ($row = $db->sql_fetchrow($result))
-	{
-		if (!empty($row['user_id']))
-		{
-			$album_moderators[$row['album_id']][] = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']);
-		}
-		else
-		{
-			$album_moderators[$row['album_id']][] = '<a' . (($row['group_colour']) ? ' style="color:#' . $row['group_colour'] . ';"' : '') . ' href="' . append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=group&amp;g=' . $row['group_id']) . '">' . (($row['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $row['group_name']] : $row['group_name']) . '</a>';
-		}
-	}
-	$db->sql_freeresult($result);
-
-	return;
-}
-
 function handle_image_counter($image_id_ary, $add, $readd = false)
 {
 	global $config, $db;
 
 	$num_images = 0;
-	$sql = 'SELECT count(image_id) AS images, image_user_id
+	$sql = 'SELECT COUNT(image_id) images, image_user_id
 		FROM ' . GALLERY_IMAGES_TABLE . '
 		WHERE image_status ' . (($readd) ? '<>' : '=') . ' 1
 			AND ' . $db->sql_in_set('image_id', $image_id_ary) . '
@@ -526,7 +403,8 @@ function handle_image_counter($image_id_ary, $add, $readd = false)
 			'user_images'			=> $row['images'],
 		);
 		$num_images = $num_images + $row['images'];
-		$sql = 'UPDATE ' . GALLERY_USERS_TABLE . ' SET user_images = user_images ' . (($add) ? '+ ' : '- ') . $row['images'] . '
+		$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
+			SET user_images = user_images ' . (($add) ? '+ ' : '- ') . $row['images'] . '
 			WHERE ' . $db->sql_in_set('user_id', $row['image_user_id']);
 		$db->sql_query($sql);
 		if ($db->sql_affectedrows() != 1)
@@ -541,7 +419,11 @@ function handle_image_counter($image_id_ary, $add, $readd = false)
 }
 
 /**
-* Get forum branch
+* Get album branch
+*
+* borrowed from phpBB3
+* @author: phpBB Group
+* @function: get_forum_branch
 */
 function get_album_branch($branch_user_id, $album_id, $type = 'all', $order = 'descending', $include_album = true)
 {
@@ -588,6 +470,13 @@ function get_album_branch($branch_user_id, $album_id, $type = 'all', $order = 'd
 
 /**
 * Generate link to image
+*
+* @param	string	$content	what's in the link: image_name, thumbnail, fake_thumbnail, medium or lastimage_icon
+* @param	string	$mode		where does the link leed to: highslide, lytebox, lytebox_slide_show, image_page, image, none
+* @param	int		$image_id
+* @param	string	$image_name
+* @param	int		$album_id
+* @param	bool	$is_gif		we need to know whether we display a gif, so we can use a better medium-image
 */
 function generate_image_link($content, $mode, $image_id, $image_name, $album_id, $is_gif = false)
 {
@@ -658,6 +547,7 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 			$tpl = '{CONTENT}';
 		break;
 	}
+
 	return str_replace(array('{IMAGE_URL}', '{IMAGE_NAME}', '{CONTENT}'), array($url, $image_name, $content), $tpl);
 }
 

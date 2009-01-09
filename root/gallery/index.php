@@ -16,29 +16,25 @@ define('IN_PHPBB', true);
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
-$gallery_root_path = GALLERY_ROOT_PATH;
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
-include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
 // Start session management
 $user->session_begin();
 $auth->acl($user->data);
 $user->setup('mods/gallery');
 
-
-//
-// Get general album information
-//
-include_once("{$phpbb_root_path}{$gallery_root_path}includes/common.$phpEx");
-include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
+$gallery_root_path = GALLERY_ROOT_PATH;
+include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
+include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
+include($phpbb_root_path . $gallery_root_path . 'includes/functions_display.' . $phpEx);
 $album_access_array = get_album_access_array();
 
 
 /**
-* Build Album-Index
+* Display albums
 */
 $mode = request_var('mode', 'index', true);
-include($phpbb_root_path . $gallery_root_path . 'includes/functions_display.' . $phpEx);
 display_albums(($mode == 'personal') ? 'personal' : 0);
 if ($mode == 'personal')
 {
@@ -47,16 +43,13 @@ if ($mode == 'personal')
 		'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal'))
 	);
 
-	$template->assign_vars(array(
-		'S_PERSONAL_GALLERY' 		=> true,
-	));
+	$template->assign_var('S_PERSONAL_GALLERY', true);
 }
 /**
-* add a personal albums category to the album listing if the user has permission to view personal albums
+* Add a personal albums category to the album listing if the user has permission to view personal albums
 */
 else if ($album_config['personal_album_index'] && gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS))
 {
-	$personal_albums = array();
 	$images = $images_real = $last_image = 0;
 	$sql = 'SELECT *
 		FROM ' . GALLERY_ALBUMS_TABLE . '
@@ -64,7 +57,6 @@ else if ($album_config['personal_album_index'] && gallery_acl_check('a_list', PE
 	$result = $db->sql_query($sql);
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$personal_albums[] = $row['album_id'];
 		$images = $row['album_images'];
 		$images_real = $row['album_images_real'];
 		if ($last_image < $row['album_last_image_id'])
@@ -113,7 +105,7 @@ else if ($album_config['personal_album_index'] && gallery_acl_check('a_list', PE
 }
 
 /**
-* Recent Public Pics
+* Recent images & comments and random images
 */
 include($phpbb_root_path . $gallery_root_path . 'includes/functions_recent.' . $phpEx);
 $display = array(
@@ -126,8 +118,8 @@ $display = array(
 	'album'		=> true,
 );
 /**
-* rows		numeric default 1,
-* columns	numeric default 4,
+* rows		int		default 1,
+* columns	int		default 4,
 * display	array,
 * modes		string(recent|random|comment|!recent|!random|!comment|all), Exp: '!recent' means random + comment
 */
@@ -136,7 +128,6 @@ recent_gallery_images(1, 4, $display, 'all');
 /**
 * Start output the page
 */
-
 $template->assign_vars(array(
 	'U_YOUR_PERSONAL_GALLERY' 		=> (!$album_config['personal_album_index'] && gallery_acl_check('i_upload', OWN_GALLERY_PERMISSIONS)) ? ($user->gallery['personal_album_id'] > 0) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $user->gallery['personal_album_id']) : append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums') : '',
 	'U_USERS_PERSONAL_GALLERIES' 	=> (!$album_config['personal_album_index'] &&gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal') : '',
@@ -146,14 +137,12 @@ $template->assign_vars(array(
 	'S_COL_WIDTH' 					=> (100/$album_config['cols_per_page']) . '%',
 ));
 
-// Output page
-$page_title = $user->lang['GALLERY'];
-
-page_header($page_title);
+page_header($user->lang['GALLERY']);
 
 $template->set_filenames(array(
 	'body' => 'gallery_index_body.html')
 );
 
 page_footer();
+
 ?>

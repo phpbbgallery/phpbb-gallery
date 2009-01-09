@@ -24,17 +24,16 @@ function get_album_access_array()
 
 	if ($album_config == array())
 	{
-		// Get Album Config
+		// If we don't have the config, we don't have the function to call it aswell?
 		$sql = 'SELECT *
 			FROM ' . GALLERY_CONFIG_TABLE;
 		$result = $db->sql_query($sql);
 
-		while( $row = $db->sql_fetchrow($result) )
+		while ($row = $db->sql_fetchrow($result))
 		{
-			$album_config_name = $row['config_name'];
-			$album_config_value = $row['config_value'];
-			$album_config[$album_config_name] = $album_config_value;
+			$album_config[$row['config_name']] = $row['config_value'];
 		}
+		$db->sql_freeresult($result);
 	}
 	$albums = $cache->obtain_album_list();
 
@@ -151,7 +150,7 @@ function get_album_access_array()
 }
 
 /**
-* other call for the permissions
+* An other call for the permissions ...
 */
 function gallery_acl_check($mode, $album_id, $album_user_id = -1)
 {
@@ -170,8 +169,6 @@ function gallery_acl_check($mode, $album_id, $album_user_id = -1)
 	{
 		return $_gallery_acl_cache[$album_id][$mode];
 	}
-
-
 
 	global $user, $album_access_array;
 
@@ -235,7 +232,7 @@ function gallery_acl_check($mode, $album_id, $album_user_id = -1)
 }
 
 /**
-* get album lists by permissions
+* Get album lists by permissions
 *
 * @param	string	$permission		One of the permissions, Exp: i_view
 * @param	string	$mode			'array' || 'string'
@@ -278,7 +275,9 @@ function gallery_acl_album_ids($permission, $mode = 'array')
 * @param	int		$forum_id		The current forum the user is in.
 * @param	int		$forum_status	The forums status bit.
 *
-* copied by phpbb-function gen_forum_auth_level
+* borrowed from phpBB3
+* @author: phpBB Group
+* @function: gen_forum_auth_level
 */
 function gen_album_auth_level($mode, $album_id, $album_status = 1)
 {

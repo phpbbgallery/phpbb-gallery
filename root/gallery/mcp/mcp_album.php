@@ -35,14 +35,14 @@ if (gallery_acl_check('m_status', $album_id))
 }
 
 $sql = 'SELECT i.*, r.report_status, r.report_id
-	FROM ' . GALLERY_IMAGES_TABLE . " i
-	LEFT JOIN " . GALLERY_REPORTS_TABLE . " r
+	FROM ' . GALLERY_IMAGES_TABLE . ' i
+	LEFT JOIN ' . GALLERY_REPORTS_TABLE . " r
 		ON r.report_image_id = i.image_id
 	WHERE image_album_id = $album_id
 		$m_status
 	ORDER BY i.$sort_key $sort_dir";
 $result = $db->sql_query_limit($sql, $images_per_page, $start);
-while( $row = $db->sql_fetchrow($result) )
+while ($row = $db->sql_fetchrow($result))
 {
 	$template->assign_block_vars('image_row', array(
 		'THUMBNAIL'			=> generate_image_link('fake_thumbnail', $album_config['link_thumbnail'], $row['image_id'], $row['image_name'], $album_id),
@@ -61,6 +61,8 @@ while( $row = $db->sql_fetchrow($result) )
 		'U_QUEUE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx" , "mode=queue_details&amp;album_id=$album_id&amp;option_id=" . $row['image_id']),
 	));
 }
+$db->sql_freeresult($result);
+
 $template->assign_vars(array(
 	'S_SORT_DESC'			=> ($sort_dir == 'DESC') ? true : false,
 	'S_SORT_KEY'			=> $sort_key,

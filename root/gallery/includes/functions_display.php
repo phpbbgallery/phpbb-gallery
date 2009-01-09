@@ -17,6 +17,13 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
+/**
+* Display albums
+*
+* borrowed from phpBB3
+* @author: phpBB Group
+* @function: display_forums
+*/
 function display_albums($root_data = '', $display_moderators = true, $return_moderators = false)
 {
 	global $db, $auth, $user, $template, $album_access_array;
@@ -53,19 +60,20 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 	$sql_array = array(
 		'SELECT'	=> 'a.*',
 		'FROM'		=> array(
-			GALLERY_ALBUMS_TABLE		=> 'a'
+			GALLERY_ALBUMS_TABLE		=> 'a',
 		),
 		'LEFT_JOIN'	=> array(),
+		'ORDER_BY'	=> 'a.album_user_id, a.left_id',
 	);
+
+	//@todo #298: sort personal albums by username
 
 	$sql = $db->sql_build_query('SELECT', array(
 		'SELECT'	=> $sql_array['SELECT'],
 		'FROM'		=> $sql_array['FROM'],
 		'LEFT_JOIN'	=> $sql_array['LEFT_JOIN'],
-
 		'WHERE'		=> $sql_where,
-
-		'ORDER_BY'	=> 'a.album_user_id, a.left_id',
+		'ORDER_BY'	=> $sql_array['ORDER_BY'],
 	));
 
 	$result = $db->sql_query($sql);
@@ -239,9 +247,6 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			$moderators_list = implode(', ', $album_moderators[$album_id]);
 		}
 
-		#$l_post_click_count = ($row['forum_type'] == FORUM_LINK) ? 'CLICKS' : 'POSTS';
-		#$post_click_count = ($row['forum_type'] != FORUM_LINK || $row['forum_flags'] & FORUM_FLAG_LINK_TRACK) ? $row['forum_posts'] : '';
-
 		$s_subalbums_list = array();
 		foreach ($subalbums_list as $subalbum)
 		{
@@ -310,5 +315,191 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 	}
 
 	return array($active_album_ary, array());
+}
+
+/**
+* Create album navigation links for given album, create parent
+* list if currently null, assign basic album info to template
+*
+* borrowed from phpBB3
+* @author: phpBB Group
+* @function: generate_forum_nav
+*/
+function generate_album_nav(&$album_data)
+{
+	global $db, $user, $template;
+	global $phpEx, $phpbb_root_path, $gallery_root_path;
+
+	// Get album parents
+	$album_parents = get_album_parents($album_data);
+
+	// Display username for personal albums
+	if ($album_data['album_user_id'] > 0)
+	{
+		$sql = 'SELECT user_id, username, user_colour
+			FROM ' . USERS_TABLE . '
+			WHERE user_id = ' . (int) $album_data['album_user_id'];
+		$result = $db->sql_query($sql);
+
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $user->lang['PERSONAL_ALBUMS'],
+				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal'),
+			));
+		}
+		$db->sql_freeresult($result);
+	}
+
+	// Build navigation links
+	if (!empty($album_parents))
+	{
+		foreach ($album_parents as $parent_album_id => $parent_data)
+		{
+			list($parent_name, $parent_type) = array_values($parent_data);
+
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $parent_name,
+				'FORUM_ID'		=> $parent_album_id,
+				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $parent_album_id),
+			));
+		}
+	}
+
+	$template->assign_block_vars('navlinks', array(
+		'FORUM_NAME'	=> $album_data['album_name'],
+		'FORUM_ID'		=> $album_data['album_id'],
+		'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_data['album_id']),
+	));
+
+	$template->assign_vars(array(
+		'ALBUM_ID' 		=> $album_data['album_id'],
+		'ALBUM_NAME'	=> $album_data['album_name'],
+		'ALBUM_DESC'	=> generate_text_for_display($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options']),
+	));
+
+	return;
+}
+
+/**
+* Returns album parents as an array. Get them from album_data if available, or update the database otherwise
+*
+* borrowed from phpBB3
+* @author: phpBB Group
+* @function: get_forum_parents
+*/
+function get_album_parents(&$album_data)
+{
+	global $db;
+
+	$album_parents = array();
+	if ($album_data['parent_id'] > 0)
+	{
+		if ($album_data['album_parents'] == '')
+		{
+			$sql = 'SELECT album_id, album_name, album_type
+				FROM ' . GALLERY_ALBUMS_TABLE . '
+				WHERE left_id < ' . $album_data['left_id'] . '
+					AND right_id > ' . $album_data['right_id'] . '
+					AND album_user_id = ' . $album_data['album_user_id'] . '
+				ORDER BY left_id ASC';
+			$result = $db->sql_query($sql);
+
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$album_parents[$row['album_id']] = array($row['album_name'], (int) $row['album_type']);
+			}
+			$db->sql_freeresult($result);
+
+			$album_data['album_parents'] = serialize($album_parents);
+
+			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
+				SET album_parents = '" . $db->sql_escape($album_data['album_parents']) . "'
+				WHERE parent_id = " . $album_data['parent_id'];
+			$db->sql_query($sql);
+		}
+		else
+		{
+			$album_parents = unserialize($album_data['album_parents']);
+		}
+	}
+
+	return $album_parents;
+}
+
+/**
+* Obtain list of moderators of each album
+*
+* borrowed from phpBB3
+* @author: phpBB Group
+* @function: get_forum_moderators
+*/
+function get_album_moderators(&$album_moderators, $album_id = false)
+{
+	global $config, $template, $db, $phpbb_root_path, $phpEx, $user;
+
+	// Have we disabled the display of moderators? If so, then return
+	// from whence we came ...
+	if (!$config['load_moderators'])
+	{
+		return;
+	}
+
+	$album_sql = '';
+
+	if ($album_id !== false)
+	{
+		if (!is_array($album_id))
+		{
+			$album_id = array($album_id);
+		}
+
+		// If we don't have a forum then we can't have a moderator
+		if (!sizeof($album_id))
+		{
+			return;
+		}
+
+		$album_sql = 'AND m.' . $db->sql_in_set('album_id', $album_id);
+	}
+
+	$sql_array = array(
+		'SELECT'	=> 'm.*, u.user_colour, g.group_colour, g.group_type',
+
+		'FROM'		=> array(
+			GALLERY_MODSCACHE_TABLE	=> 'm',
+		),
+
+		'LEFT_JOIN'	=> array(
+			array(
+				'FROM'	=> array(USERS_TABLE => 'u'),
+				'ON'	=> 'm.user_id = u.user_id',
+			),
+			array(
+				'FROM'	=> array(GROUPS_TABLE => 'g'),
+				'ON'	=> 'm.group_id = g.group_id',
+			),
+		),
+
+		'WHERE'		=> "m.display_on_index = 1 $album_sql",
+	);
+
+	$sql = $db->sql_build_query('SELECT', $sql_array);
+	$result = $db->sql_query($sql, 3600);
+
+	while ($row = $db->sql_fetchrow($result))
+	{
+		if (!empty($row['user_id']))
+		{
+			$album_moderators[$row['album_id']][] = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']);
+		}
+		else
+		{
+			$album_moderators[$row['album_id']][] = '<a' . (($row['group_colour']) ? ' style="color:#' . $row['group_colour'] . ';"' : '') . ' href="' . append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=group&amp;g=' . $row['group_id']) . '">' . (($row['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $row['group_name']] : $row['group_name']) . '</a>';
+		}
+	}
+	$db->sql_freeresult($result);
+
+	return;
 }
 ?>

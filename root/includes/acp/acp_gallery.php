@@ -25,11 +25,14 @@ class acp_gallery
 	var $u_action;
 	function main($id, $mode)
 	{
-		global $user, $phpbb_root_path, $phpEx, $template, $db;
+		global $album_config, $db, $template, $user;
+		global $gallery_root_path, $phpbb_root_path, $phpEx;
 		$gallery_root_path = GALLERY_ROOT_PATH;
-		include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/constants.' . $phpEx);
-		include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/functions.' . $phpEx);
-		include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/permissions.' . $phpEx);
+
+		include($phpbb_root_path . $gallery_root_path . 'includes/constants.' . $phpEx);
+		include($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
+		include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
+		$album_config = load_gallery_config();
 		$album_access_array = get_album_access_array();
 
 		$user->add_lang('mods/gallery_acp');
@@ -39,6 +42,14 @@ class acp_gallery
 
 		switch ($mode)
 		{
+			case 'configure_gallery':
+				$title = 'GALLERY_CONFIG';
+				$this->tpl_name = 'gallery_config';
+				$this->page_title = $user->lang[$title];
+
+				$this->configure_gallery();
+			break;
+
 			case 'manage_albums':
 				$action = request_var('action', '');
 				$this->tpl_name = 'gallery_albums';
@@ -77,14 +88,6 @@ class acp_gallery
 					break;
 				}
 			break;
-			
-			case 'configure_gallery':
-				$title = 'GALLERY_CONFIG';
-				$this->tpl_name = 'gallery_config';
-				$this->page_title = $user->lang[$title];
-
-				$this->configure_gallery();
-			break;
 
 			case 'album_permissions':
 				$title = 'ALBUM_AUTH_TITLE';
@@ -120,8 +123,8 @@ class acp_gallery
 
 	function import()
 	{
-		global $phpbb_admin_path, $phpbb_root_path, $gallery_root_path, $phpEx;
-		global $db, $template, $user, $config;
+		global $album_config, $config, $db, $template, $user;
+		global $gallery_root_path, $phpbb_root_path, $phpEx;
 
 		$images = request_var('images', array(''), true);
 		$images_string = request_var('images_string', '', true);
@@ -130,24 +133,13 @@ class acp_gallery
 
 		$directory = $phpbb_root_path . GALLERY_IMPORT_PATH;
 
-		if(!$submit)
+		if (!$submit)
 		{
-			$sql = 'SELECT *
-				FROM ' . GALLERY_CONFIG_TABLE;
-			$result = $db->sql_query($sql);
-			while( $row = $db->sql_fetchrow($result) )
-			{
-				$album_config_name = $row['config_name'];
-				$album_config_value = $row['config_value'];
-				$album_config[$album_config_name] = $album_config_value;
-			}
-			$db->sql_freeresult($result);
-
 			$sql = 'SELECT username, user_id
 				FROM ' . USERS_TABLE . "
 				ORDER BY user_id ASC";
 			$result = $db->sql_query($sql);
-			while( $row = $db->sql_fetchrow($result) )
+			while ($row = $db->sql_fetchrow($result))
 			{
 				$template->assign_block_vars('userrow', array(
 					'USER_ID'				=> $row['user_id'],
@@ -173,29 +165,25 @@ class acp_gallery
 				}
 			}
 			closedir($handle);
+
 			$template->assign_vars(array(
 				'S_IMPORT_IMAGES'				=> true,
 				'ACP_GALLERY_TITLE'				=> $user->lang['ACP_IMPORT_ALBUMS'],
 				'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_IMPORT_ALBUMS_EXPLAIN'],
 				'L_IMPORT_DIR_EMPTY'			=> sprintf($user->lang['IMPORT_DIR_EMPTY'], GALLERY_IMPORT_PATH),
 				'S_ALBUM_IMPORT_ACTION'			=> $this->u_action,
-				'S_SELECT_IMPORT' 				=> gallery_albumbox(false, 'album_id', 0, 'i_upload'),
+				'S_SELECT_IMPORT' 				=> gallery_albumbox(true, 'album_id', 0, ''),
 			));
 		}
 		else
 		{
+			/**
+			* Commented to allow the loop
 			if (!check_form_key('acp_gallery'))
 			{
-				//debug: trigger_error('FORM_INVALID');
+				trigger_error('FORM_INVALID');
 			}
-			$sql = 'SELECT *
-				FROM ' . GALLERY_CONFIG_TABLE;
-			$result = $db->sql_query($sql);
-			while ($row = $db->sql_fetchrow($result))
-			{
-				$album_config[$row['config_name']] = $row['config_value'];
-			}
-			$db->sql_freeresult($result);
+			*/
 
 			$done_images_string = request_var('done_images_string', '', true);
 			$done_images = explode('&quot;', utf8_decode($done_images_string));
@@ -205,9 +193,10 @@ class acp_gallery
 				trigger_error('IMPORT_MISSING_ALBUM');
 			}
 			$user_id = request_var('user_id', 0);
+
 			$sql = 'SELECT username, user_colour
-				FROM ' . USERS_TABLE . "
-				WHERE user_id = $user_id";
+				FROM ' . USERS_TABLE . '
+				WHERE user_id = ' . (int) $user_id;
 			$result = $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result))
 			{
@@ -218,7 +207,7 @@ class acp_gallery
 
 			$results = array();
 			$images_per_loop = 0;
-			//this time we do:
+			// This time we do:
 			foreach ($images as $image)
 			{
 				if (($images_per_loop < 10) && !in_array($image, $done_images))
@@ -264,102 +253,7 @@ class acp_gallery
 				copy($image_path, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
 				@chmod($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename, 0777);
 
-
-				if (($album_config['thumbnail_cache']) && ($album_config['gd_version'] > 0))
-				{
-					$gd_errored = false;
-					switch ($image_filetype)
-					{
-						case '.jpg':
-							$read_function = 'imagecreatefromjpeg';
-						break;
-
-						case '.png':
-							$read_function = 'imagecreatefrompng';
-						break;
-
-						case '.gif':
-							$read_function = 'imagecreatefromgif';
-						break;
-					}
-					$src = $read_function($phpbb_root_path . GALLERY_UPLOAD_PATH  . $image_filename);
-
-					if (!$src)
-					{
-						$gd_errored = true;
-						$image_thumbnail = '';
-					}
-					else if (($image_width > $album_config['thumbnail_size']) || ($image_height > $album_config['thumbnail_size']))
-					{
-						// Resize it
-						if ($image_width > $image_height)
-						{
-							$thumbnail_width 	= $album_config['thumbnail_size'];
-							$thumbnail_height 	= $album_config['thumbnail_size'] * ($image_height/$image_width);
-						}
-						else
-						{
-							$thumbnail_height 	= $album_config['thumbnail_size'];
-							$thumbnail_width 	= $album_config['thumbnail_size'] * ($image_width/$image_height);
-						}
-
-						if ($album_config['thumbnail_info_line'])
-						{// Create image details credits to Dr.Death
-							$thumbnail = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height + 16) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height + 16); 
-						}
-						else
-						{
-							$thumbnail = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
-						}
-						$resize_function = ($album_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
-						@$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $image_width, $image_height);
-
-						if ($album_config['thumbnail_info_line'])
-						{// Create image details credits to Dr.Death
-							$dimension_font = 1;
-							$dimension_filesize = filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
-							$dimension_string = $image_width . "x" . $image_height . "(" . intval($dimension_filesize/1024) . "KiB)";
-							$dimension_colour = ImageColorAllocate($thumbnail,255,255,255);
-							$dimension_height = imagefontheight($dimension_font);
-							$dimension_width = imagefontwidth($dimension_font) * strlen($dimension_string);
-							$dimension_x = ($thumbnail_width - $dimension_width) / 2;
-							$dimension_y = $thumbnail_height + ((16 - $dimension_height) / 2);
-							imagestring($thumbnail, 1, $dimension_x, $dimension_y, $dimension_string, $dimension_colour);
-						}
-					}
-					else
-					{
-						$thumbnail = $src;
-					}
-
-					if (!$gd_errored)
-					{
-						$image_thumbnail = $image_filename;
-
-						// Write to disk
-						switch ($image_filetype)
-						{
-							case '.jpg':
-								@imagejpeg($thumbnail, $phpbb_root_path . GALLERY_CACHE_PATH . $image_thumbnail, $album_config['thumbnail_quality']);
-							break;
-
-							case '.png':
-								@imagepng($thumbnail, $phpbb_root_path . GALLERY_CACHE_PATH . $image_thumbnail);
-							break;
-
-							case '.gif':
-								@imagegif($thumbnail, $phpbb_root_path . GALLERY_CACHE_PATH . $image_thumbnail);
-							break;
-						}
-						@chmod($phpbb_root_path . GALLERY_CACHE_PATH . $image_thumbnail, 0777);
-					} // End IF $gd_errored
-				} // End Thumbnail Cache
-				else if ($album_config['gd_version'] > 0)
-				{
-					$image_thumbnail = '';
-				}
-
-				// The source image is imported and thumbnailed, delete it
+				// The source image is imported, so we delete it.
 				@unlink($image_path);
 
 				$no_time = time();
@@ -392,7 +286,10 @@ class acp_gallery
 				$done_images_string .= (($done_images_string) ? '%22' : '') . urlencode($image);
 			}
 			$left = count($images) - count($done_images);
-			$sql = 'UPDATE ' . GALLERY_USERS_TABLE . " SET user_images = user_images + $counter WHERE user_id = $user_id";
+
+			$sql = 'UPDATE ' . GALLERY_USERS_TABLE . "
+				SET user_images = user_images + $counter
+				WHERE user_id = " . $user_id;
 			$db->sql_query($sql);
 			if ($db->sql_affectedrows() != 1)
 			{
@@ -404,12 +301,9 @@ class acp_gallery
 				$db->sql_query($sql);
 			}
 			set_config('num_images', $config['num_images'] + $counter, true);
-			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . " 
-				SET album_images_real = album_images_real + $counter
-				WHERE album_id = $album_id";
-			$db->sql_query($sql);
-			update_lastimage_info($album_id);
-			$images_string		= urlencode(implode('"', $images));
+			update_album_info($album_id);
+
+			$images_string			= urlencode(implode('"', $images));
 			$done_images_string		= substr(urlencode(implode('"', $done_images)), 3, strlen($done_images_string));
 			$images_to_do = str_replace('%22' . $done_images_string, "", '%22' . $images_string);
 			if ('%22' . $images_string != $images_to_do)
@@ -435,198 +329,202 @@ class acp_gallery
 
 	function overview()
 	{
-		global $template, $user, $db, $phpbb_root_path, $config, $auth;
+		global $album_config, $template, $user, $db, $phpbb_root_path, $config, $auth;
 
 		$action = request_var('action', '');
 		$id = request_var('i', '');
 		$mode = 'overview';
-			if (!confirm_box(true))
-			{
-				$confirm = false;
-				switch ($action)
-				{
-					case 'images':
-						$confirm = true;
-						$confirm_lang = 'RESYNC_IMAGECOUNTS_CONFIRM';
-					break;
-					case 'personals':
-						$confirm = true;
-						$confirm_lang = 'CONFIRM_OPERATION';
-					break;
-					case 'stats':
-						$confirm = true;
-						$confirm_lang = 'CONFIRM_OPERATION';
-					break;
-					case 'last_images':
-						$confirm = true;
-						$confirm_lang = 'CONFIRM_OPERATION';
-					break;
-					case 'purge_cache':
-						$confirm = true;
-						$confirm_lang = 'GALLERY_CLEAR_CACHE_CONFIRM';
-					break;
-				}
 
-				if ($confirm)
-				{
-					//echo $id . $mode . $action;
-					confirm_box(false, $user->lang[$confirm_lang], build_hidden_fields(array(
-						'i'			=> $id,
-						'mode'		=> $mode,
-						'action'	=> $action,
-					)));
-				}
+		if (!confirm_box(true))
+		{
+			$confirm = false;
+			switch ($action)
+			{
+				case 'images':
+					$confirm = true;
+					$confirm_lang = 'RESYNC_IMAGECOUNTS_CONFIRM';
+				break;
+				case 'personals':
+					$confirm = true;
+					$confirm_lang = 'CONFIRM_OPERATION';
+				break;
+				case 'stats':
+					$confirm = true;
+					$confirm_lang = 'CONFIRM_OPERATION';
+				break;
+				case 'last_images':
+					$confirm = true;
+					$confirm_lang = 'CONFIRM_OPERATION';
+				break;
+				case 'purge_cache':
+					$confirm = true;
+					$confirm_lang = 'GALLERY_CLEAR_CACHE_CONFIRM';
+				break;
 			}
-			else
+
+			if ($confirm)
 			{
-				switch ($action)
-				{
-
+				confirm_box(false, $user->lang[$confirm_lang], build_hidden_fields(array(
+					'i'			=> $id,
+					'mode'		=> $mode,
+					'action'	=> $action,
+				)));
+			}
+		}
+		else
+		{
+			switch ($action)
+			{
 					case 'images':
-						if (!$auth->acl_get('a_board'))
-						{
-							trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
-						}
+					if (!$auth->acl_get('a_board'))
+					{
+						trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
+					}
 
-						$total_images = 0;
+					$total_images = 0;
+					$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
+						SET user_images = 0';
+					$db->sql_query($sql);
 
-						$sql = 'UPDATE ' . GALLERY_USERS_TABLE . "
-							SET user_images = 0";
+					$sql = 'SELECT COUNT(image_id) num_images, image_user_id user_id
+						FROM ' . GALLERY_IMAGES_TABLE . '
+						WHERE image_status = 1
+						GROUP BY image_user_id';
+					$result = $db->sql_query($sql);
+
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$total_images += $row['num_images'];
+						$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
+							SET user_images = ' . $row['num_images'] . '
+							WHERE user_id = ' . $row['user_id'];
 						$db->sql_query($sql);
 
-						$sql = 'SELECT COUNT(image_id) num_images, image_user_id user_id
-							FROM ' . GALLERY_IMAGES_TABLE . '
-							WHERE image_status = 1
-							GROUP BY image_user_id';
-						$result = $db->sql_query($sql);
-
-						while ($row = $db->sql_fetchrow($result))
-						{
-							$total_images += $row['num_images'];
-							$sql = 'UPDATE ' . GALLERY_USERS_TABLE . " SET user_images = {$row['num_images']} WHERE user_id = {$row['user_id']}";
-							$db->sql_query($sql);
-
-							if ($db->sql_affectedrows() != 1)
-							{
-								$sql_ary = array(
-									'user_id'				=> $row['user_id'],
-									'user_images'			=> $row['num_images'],
-								);
-								$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-								$db->sql_query($sql);
-							}
-						}
-						$db->sql_freeresult($result);
-						set_config('num_images', $total_images, true);
-						trigger_error($user->lang['RESYNCED_IMAGECOUNTS'] . adm_back_link($this->u_action));
-					break;
-
-					case 'personals':
-						if (!$auth->acl_get('a_board'))
-						{
-							trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
-						}
-
-						$sql = 'UPDATE ' . GALLERY_USERS_TABLE . "
-							SET personal_album_id = 0";
-						$db->sql_query($sql);
-
-						$sql = 'SELECT album_id, album_user_id
-							FROM ' . GALLERY_ALBUMS_TABLE . '
-							WHERE album_user_id <> 0
-								AND parent_id = 0';
-						$result = $db->sql_query($sql);
-
-						while ($row = $db->sql_fetchrow($result))
-						{
-							$sql = 'UPDATE ' . GALLERY_USERS_TABLE . " SET personal_album_id = {$row['album_id']} WHERE user_id = {$row['album_user_id']}";
-							$db->sql_query($sql);
-
-							if ($db->sql_affectedrows() != 1)
-							{
-								$sql_ary = array(
-									'user_id'				=> $row['album_user_id'],
-									'personal_album_id'		=> $row['album_id'],
-								);
-								$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-								$db->sql_query($sql);
-							}
-						}
-						$db->sql_freeresult($result);
-						trigger_error($user->lang['RESYNCED_PERSONALS'] . adm_back_link($this->u_action));
-					break;
-
-					case 'stats':
-						if (!$auth->acl_get('a_board'))
-						{
-							trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
-						}
-
-						// Hopefully this won't take to long!
-						$sql = 'SELECT image_id, image_filename, image_thumbnail
-							FROM ' . GALLERY_IMAGES_TABLE;
-						$result = $db->sql_query($sql);
-						while ($row = $db->sql_fetchrow($result))
+						if ($db->sql_affectedrows() != 1)
 						{
 							$sql_ary = array(
-								'filesize_upload'		=> @filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $row['image_filename']),
-								'filesize_medium'		=> @filesize($phpbb_root_path . GALLERY_MEDIUM_PATH . $row['image_thumbnail']),
-								'filesize_cache'		=> @filesize($phpbb_root_path . GALLERY_CACHE_PATH . $row['image_thumbnail']),
+								'user_id'				=> $row['user_id'],
+								'user_images'			=> $row['num_images'],
 							);
-							$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-								WHERE ' . $db->sql_in_set('image_id', $row['image_id']);
+							$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 							$db->sql_query($sql);
 						}
-						$db->sql_freeresult($result);
+					}
+					$db->sql_freeresult($result);
 
-						redirect($this->u_action);
-					break;
+					set_config('num_images', $total_images, true);
+					trigger_error($user->lang['RESYNCED_IMAGECOUNTS'] . adm_back_link($this->u_action));
+				break;
 
-					case 'last_images':
-						$sql = 'SELECT album_id
-							FROM ' . GALLERY_ALBUMS_TABLE;
-						$result = $db->sql_query($sql);
-						while ($row = $db->sql_fetchrow($result))
+				case 'personals':
+					if (!$auth->acl_get('a_board'))
+					{
+						trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
+					}
+
+					$sql = 'UPDATE ' . GALLERY_USERS_TABLE . "
+						SET personal_album_id = 0";
+					$db->sql_query($sql);
+
+					$sql = 'SELECT album_id, album_user_id
+						FROM ' . GALLERY_ALBUMS_TABLE . '
+						WHERE album_user_id <> 0
+							AND parent_id = 0
+						GROUP BY album_user_id';
+					$result = $db->sql_query($sql);
+
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
+							SET personal_album_id = ' . $row['album_id'] . '
+							WHERE user_id = ' . $row['album_user_id'];
+						$db->sql_query($sql);
+
+						if ($db->sql_affectedrows() != 1)
 						{
-							// 5 sql's per album, but you don't run this daily ;)
-							update_lastimage_info($row['album_id']);
+							$sql_ary = array(
+								'user_id'				=> $row['album_user_id'],
+								'personal_album_id'		=> $row['album_id'],
+							);
+							$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+							$db->sql_query($sql);
 						}
-						$db->sql_freeresult($result);
-						trigger_error($user->lang['RESYNCED_LAST_IMAGES'] . adm_back_link($this->u_action));
-					break;
+					}
+					$db->sql_freeresult($result);
 
-					case 'purge_cache':
-						if ((int) $user->data['user_type'] !== USER_FOUNDER)
+					trigger_error($user->lang['RESYNCED_PERSONALS'] . adm_back_link($this->u_action));
+				break;
+
+				case 'stats':
+					if (!$auth->acl_get('a_board'))
+					{
+						trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
+					}
+
+					// Hopefully this won't take to long!
+					$sql = 'SELECT image_id, image_filename, image_thumbnail
+						FROM ' . GALLERY_IMAGES_TABLE;
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$sql_ary = array(
+							'filesize_upload'		=> @filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $row['image_filename']),
+							'filesize_medium'		=> @filesize($phpbb_root_path . GALLERY_MEDIUM_PATH . $row['image_thumbnail']),
+							'filesize_cache'		=> @filesize($phpbb_root_path . GALLERY_CACHE_PATH . $row['image_thumbnail']),
+						);
+						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+							SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+							WHERE ' . $db->sql_in_set('image_id', $row['image_id']);
+						$db->sql_query($sql);
+					}
+					$db->sql_freeresult($result);
+
+					redirect($this->u_action);
+				break;
+
+				case 'last_images':
+					$sql = 'SELECT album_id
+						FROM ' . GALLERY_ALBUMS_TABLE;
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						// 5 sql's per album, but you don't run this daily ;)
+						update_album_info($row['album_id']);
+					}
+					$db->sql_freeresult($result);
+					trigger_error($user->lang['RESYNCED_LAST_IMAGES'] . adm_back_link($this->u_action));
+				break;
+
+				case 'purge_cache':
+					if ($user->data['user_type'] != USER_FOUNDER)
+					{
+						trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
+					}
+
+					$cache_dir = @opendir($phpbb_root_path . GALLERY_CACHE_PATH);
+					while ($cache_file = @readdir($cache_dir))
+					{
+						if (preg_match('/(\.gif$|\.png$|\.jpg|\.jpeg)$/is', $cache_file))
 						{
-							trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
+							@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $cache_file);
 						}
+					}
+					@closedir($cache_dir);
 
-						$cache_dir = @opendir($phpbb_root_path . GALLERY_CACHE_PATH);
-
-						while( $cache_file = @readdir($cache_dir) )
+					$medium_dir = @opendir($phpbb_root_path . GALLERY_MEDIUM_PATH);
+					while ($medium_file = @readdir($medium_dir))
+					{
+						if (preg_match('/(\.gif$|\.png$|\.jpg|\.jpeg)$/is', $medium_file))
 						{
-							if( preg_match('/(\.gif$|\.png$|\.jpg|\.jpeg)$/is', $cache_file) )
-							{
-								@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $cache_file);
-							}
+							@unlink($phpbb_root_path . GALLERY_MEDIUM_PATH . $medium_file);
 						}
+					}
+					@closedir($medium_dir);
 
-						@closedir($cache_dir);
-						trigger_error($user->lang['PURGED_CACHE'] . adm_back_link($this->u_action));
-					break;
-				}
+					trigger_error($user->lang['PURGED_CACHE'] . adm_back_link($this->u_action));
+				break;
 			}
-
-		$sql = 'SELECT *
-			FROM ' . GALLERY_CONFIG_TABLE;
-		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result))
-		{
-			$album_config_name = $row['config_name'];
-			$album_config_value = $row['config_value'];
-			$album_config[$album_config_name] = $album_config_value;
 		}
-		$db->sql_freeresult($result);
 
 		$boarddays = (time() - $config['board_startdate']) / 86400;
 		$images_per_day = sprintf('%.2f', $config['num_images'] / $boarddays);
@@ -666,39 +564,36 @@ class acp_gallery
 	{
 		global $db, $template, $user, $cache, $phpbb_root_path, $config;
 
-		$sql = 'SELECT * FROM ' . GALLERY_CONFIG_TABLE;
-		$result = $db->sql_query($sql);
+		// Is it salty ?
+		if (isset($_POST['submit']) && !check_form_key('acp_gallery'))
+		{
+			trigger_error('FORM_INVALID');
+		}
+		$submit = isset($_POST['submit']) ? true : false;
 
-		while( $row = $db->sql_fetchrow($result) )
+		$sql = 'SELECT *
+			FROM ' . GALLERY_CONFIG_TABLE;
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
 		{
 			$config_name = $row['config_name'];
 			$config_value = $row['config_value'];
-			$default_config[$config_name] = isset($_POST['submit']) ? str_replace("'", "\'", $config_value) : $config_value;
+			$default_config[$config_name] = ($submit) ? str_replace("'", "\'", $config_value) : $config_value;
 			$new[$config_name] = request_var($config_name, $default_config[$config_name]);
 
-			if (isset($_POST['submit']))
+			if ($submit)
 			{
-				// Is it salty ?
-				if (!check_form_key('acp_gallery'))
-				{
-					trigger_error('FORM_INVALID');
-				}
-
-				$sql_ary = array(
-					'config_value'		=> $new[$config_name],
-				);
-				$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . '
-					SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
-					WHERE config_name = '$config_name'" ;
-				$db->sql_query($sql);
+				set_gallery_config($config_name, $new[$config_name]);
 			}
 		}
+		$db->sql_freeresult($result);
 
-		if (isset($_POST['submit']))
+		if ($submit)
 		{
 			set_config('gallery_total_images', request_var('gallery_total_images', 0));
 			set_config('gallery_user_images_profil', request_var('gallery_user_images_profil', 0));
 			set_config('gallery_personal_album_profil', request_var('gallery_personal_album_profil', 0));
+
 			$cache->destroy('sql', CONFIG_TABLE);
 			$cache->destroy('sql', GALLERY_CONFIG_TABLE);
 			trigger_error($user->lang['GALLERY_CONFIG_UPDATED'] . adm_back_link($this->u_action));
@@ -779,12 +674,13 @@ class acp_gallery
 
 		$parent_id = request_var('parent_id', 0);
 		$template->assign_vars(array(
-			'S_MANAGE_ALBUMS'				=> true,
-			'S_ALBUM_ACTION'				=> $this->u_action . '&amp;action=create&amp;album_id=' . $parent_id,
+			'S_MANAGE_ALBUMS'			=> true,
+			'S_ALBUM_ACTION'			=> $this->u_action . '&amp;action=create&amp;album_id=' . $parent_id,
 
 			'ACP_GALLERY_TITLE'			=> $user->lang['ACP_MANAGE_ALBUMS'],
 			'ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['ACP_MANAGE_ALBUMS_EXPLAIN'],
 		));
+
 		if (!$parent_id)
 		{
 			$navigation = $user->lang['GALLERY_INDEX'];
@@ -806,6 +702,7 @@ class acp_gallery
 				}
 			}
 		}
+
 		$album = array();
 		$sql = 'SELECT *
 			FROM ' . GALLERY_ALBUMS_TABLE . '
@@ -818,11 +715,12 @@ class acp_gallery
 		{
 			$album[] = $row;
 		}
+		$db->sql_freeresult($result);
 
-		for( $i = 0; $i < count($album); $i++ )
+		for ($i = 0; $i < count($album); $i++)
 		{
 			$folder_image = ($album[$i]['left_id'] + 1 != $album[$i]['right_id']) ? '<img src="images/icon_subfolder.gif" alt="' . $user->lang['SUBALBUMS'] . '" />' : '<img src="images/icon_folder.gif" alt="' . $user->lang['ALBUM'] . '" />';
-			$template->assign_block_vars('catrow', array(
+			$template->assign_block_vars('album_row', array(
 				'FOLDER_IMAGE'			=> $folder_image,
 				'U_ALBUM'				=> $this->u_action . '&amp;parent_id=' . $album[$i]['album_id'],
 				'ALBUM_NAME'			=> $album[$i]['album_name'],
@@ -846,9 +744,11 @@ class acp_gallery
 	{
 		global $db, $user, $auth, $template, $cache;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
-		include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+
+		include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+
 		$submit = (isset($_POST['submit'])) ? true : false;
-		if(!$submit)
+		if (!$submit)
 		{
 			$template->assign_vars(array(
 				'S_CREATE_ALBUM'				=> true,
@@ -865,11 +765,13 @@ class acp_gallery
 				));
 		}
 		else
-		{// Is it salty ?
+		{
+			// Is it salty ?
 			if (!check_form_key('acp_gallery'))
 			{
 				trigger_error('FORM_INVALID');
 			}
+
 			$album_data = array(
 				'album_name'					=> request_var('album_name', '', true),
 				'parent_id'						=> request_var('parent_id', 0),
@@ -888,7 +790,12 @@ class acp_gallery
 			{
 				trigger_error($user->lang['MISSING_ALBUM_NAME'] . adm_back_link(append_sid("{$phpbb_admin_path}index.$phpEx", 'i=gallery&amp;mode=manage_albums&action=create')));
 			}
-			//the following is copied from the forum management. thx to the developers
+
+			/**
+			* borrowed from phpBB3
+			* @author: phpBB Group
+			* @location: acp_forums->manage_forums
+			*/
 			if ($album_data['parent_id'])
 			{
 				$sql = 'SELECT left_id, right_id, album_type
@@ -920,44 +827,48 @@ class acp_gallery
 			}
 			else
 			{
-				$sql = 'SELECT MAX(right_id) AS right_id
+				$sql = 'SELECT MAX(right_id) right_id
 					FROM ' . GALLERY_ALBUMS_TABLE . '
 					WHERE album_user_id = ' . $album_data['album_user_id'];
 				$result = $db->sql_query($sql);
-				$row = $db->sql_fetchrow($result);
+				$right_id = $db->sql_fetchfield('right_id');
 				$db->sql_freeresult($result);
 
-				$album_data['left_id'] = $row['right_id'] + 1;
-				$album_data['right_id'] = $row['right_id'] + 2;
+				$album_data['left_id'] = $right_id + 1;
+				$album_data['right_id'] = $right_id + 2;
 			}
 			$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
 			$album_data['album_id'] = $db->sql_nextid();
 			$album_id = $album_data['album_id'];
+
 			$copy_permissions = request_var('copy_permissions', 0);
 			if ($copy_permissions <> 0)
 			{
-				//delete the old permissions and thatn copy the new one's
-				$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . "
-					WHERE perm_album_id = $album_id";
-				$result = $db->sql_query($sql);
+				// Delete the old permissions and than copy the new one's
+				$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . '
+					WHERE perm_album_id = ' . $album_id;
+				$db->sql_query($sql);
+
 				$sql = 'SELECT *
-						FROM ' . GALLERY_PERMISSIONS_TABLE . '
-						WHERE perm_album_id = ' . $copy_permissions;
+					FROM ' . GALLERY_PERMISSIONS_TABLE . '
+					WHERE perm_album_id = ' . $copy_permissions;
 				$result = $db->sql_query($sql);
 				while($row = $db->sql_fetchrow($result))
 				{
 					$perm_data = array(
-						'perm_role_id'					=> $row['perm_role_id'],
-						'perm_album_id'					=> $album_id,
-						'perm_user_id'					=> $row['perm_user_id'],
-						'perm_group_id'					=> $row['perm_group_id'],
-						'perm_system'					=> $row['perm_system'],
+						'perm_role_id'			=> $row['perm_role_id'],
+						'perm_album_id'			=> $album_id,
+						'perm_user_id'			=> $row['perm_user_id'],
+						'perm_group_id'			=> $row['perm_group_id'],
+						'perm_system'			=> $row['perm_system'],
 					);
 					$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $perm_data));
 				}
 				$db->sql_freeresult($result);
-				$sql = 'SELECT * FROM ' . GALLERY_MODSCACHE_TABLE . "
-					WHERE album_id = $copy_permissions";
+
+				$sql = 'SELECT *
+					FROM ' . GALLERY_MODSCACHE_TABLE . '
+					WHERE album_id = ' . $copy_permissions;
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -988,25 +899,15 @@ class acp_gallery
 	{
 		global $db, $user, $auth, $template, $cache;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
-		include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
-		if (!$album_id = request_var('album_id', 0))
-		{
-			trigger_error('ALBUM_NOT_EXIST', E_USER_WARNING);
-		}
+		include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+
+		$album_id = request_var('album_id', 0);
 
 		$submit = (isset($_POST['submit'])) ? true : false;
 		if(!$submit)
 		{
-			$sql = 'SELECT *
-				FROM ' . GALLERY_ALBUMS_TABLE . "
-				WHERE album_id = '$album_id'";
-			$result = $db->sql_query($sql);
-			if ($db->sql_affectedrows($result) == 0)
-			{
-				trigger_error('ALBUM_NOT_EXIST', E_USER_WARNING);
-			}
-			$album_data = $db->sql_fetchrow($result);
+			$album_data = get_album_info($album_id);
 			$album_desc_data = generate_text_for_edit($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_options']);
 
 			$template->assign_vars(array(
@@ -1029,12 +930,12 @@ class acp_gallery
 			));
 		}
 		else
-		{// Is it salty ?
+		{
+			// Is it salty ?
 			if (!check_form_key('acp_gallery'))
 			{
 				trigger_error('FORM_INVALID');
 			}
-			$album_data = array();
 			$album_data = array(
 				'album_name'					=> request_var('album_name', '', true),
 				'parent_id'						=> request_var('parent_id', 0),
@@ -1045,6 +946,7 @@ class acp_gallery
 				'album_desc'					=> utf8_normalize_nfc(request_var('album_desc', '', true)),
 				'album_image'					=> request_var('album_image', ''),
 			);
+
 			generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], request_var('desc_parse_bbcode', false), request_var('desc_parse_urls', false), request_var('desc_parse_smilies', false));
 			$row = get_album_info($album_id);
 			if (($row['album_images_real'] > 0) && !$album_data['album_type'])
@@ -1055,22 +957,21 @@ class acp_gallery
 			{
 				trigger_error($user->lang['MISSING_ALBUM_NAME'] . adm_back_link(append_sid("{$phpbb_admin_path}index.$phpEx", 'i=gallery&amp;mode=manage_albums&amp;action=edit&amp;album_id=' . $album_id)));
 			}
+
+			// If the parent is different, the left_id and right_id have changed.
 			if ($row['parent_id'] != $album_data['parent_id'])
-			{//if the parent is different, we'll have to watch out because the left_id and right_id have changed
-				//how many do we have to move and how far
+			{
+				// How many do we have to move and how far.
 				$moving_ids = ($row['right_id'] - $row['left_id']) + 1;
 				$sql = 'SELECT MAX(right_id) AS right_id
 					FROM ' . GALLERY_ALBUMS_TABLE . '
 					WHERE album_user_id = ' . $row['album_user_id'];
 				$result = $db->sql_query($sql);
-				$highest = $db->sql_fetchrow($result);
+				$moving_distance = ($db->sql_fetchfield('right_id') - $row['left_id']) + 1;
 				$db->sql_freeresult($result);
-				$moving_distance = ($highest['right_id'] - $row['left_id']) + 1;
 				$stop_updating = $moving_distance + $row['left_id'];
 
-				//echo '$moving_distance ' . $moving_distance . '; $moving_ids ' . $moving_ids;
-
-				//update the moving album... move it to the end
+				// Update the moving albums... move them to the end.
 				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
 					SET right_id = right_id + ' . $moving_distance . ',
 						left_id = left_id + ' . $moving_distance . '
@@ -1078,80 +979,78 @@ class acp_gallery
 						left_id >= ' . $row['left_id'] . '
 						AND right_id <= ' . $row['right_id'];
 				$db->sql_query($sql);
+
 				$new['left_id'] = $row['left_id'] + $moving_distance;
 				$new['right_id'] = $row['right_id'] + $moving_distance;
 
-				//close the gap, we got
+				// Close the gap, we produced through moving.
 				if ($album_data['parent_id'] == 0)
-				{//we move to root
-					//left_id
+				{
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
 						SET left_id = left_id - ' . $moving_ids . '
-						WHERE album_user_id = ' . $row['album_user_id'] . ' AND
-							left_id >= ' . $row['left_id'];
+						WHERE album_user_id = ' . $row['album_user_id'] . '
+							AND left_id >= ' . $row['left_id'];
 					$db->sql_query($sql);
-					//right_id
+
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
 						SET right_id = right_id - ' . $moving_ids . '
-						WHERE album_user_id = ' . $row['album_user_id'] . ' AND
-							right_id >= ' . $row['left_id'];
+						WHERE album_user_id = ' . $row['album_user_id'] . '
+							AND right_id >= ' . $row['left_id'];
 					$db->sql_query($sql);
 				}
 				else
 				{
-					//close the gap
-					//left_id
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
 						SET left_id = left_id - ' . $moving_ids . '
-						WHERE album_user_id = ' . $row['album_user_id'] . ' AND
-							left_id >= ' . $row['left_id'] . '
+						WHERE album_user_id = ' . $row['album_user_id'] . '
+							AND left_id >= ' . $row['left_id'] . '
 							AND right_id <= ' . $stop_updating;
 					$db->sql_query($sql);
-					//right_id
+
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
 						SET right_id = right_id - ' . $moving_ids . '
-						WHERE album_user_id = ' . $row['album_user_id'] . ' AND
-							right_id >= ' . $row['left_id'] . '
+						WHERE album_user_id = ' . $row['album_user_id'] . '
+							AND right_id >= ' . $row['left_id'] . '
 							AND right_id <= ' . $stop_updating;
 					$db->sql_query($sql);
 
-					//create new gap
-					//need parent_information
+					// Create new gap, therefore we need parent_information.
 					$parent = get_album_info($album_data['parent_id']);
-					//left_id
+
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
 						SET left_id = left_id + ' . $moving_ids . '
-						WHERE album_user_id = ' . $row['album_user_id'] . ' AND
-							left_id >= ' . $parent['right_id'] . '
-							AND right_id <= ' . $stop_updating;
-					$db->sql_query($sql);
-					//right_id
-					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
-						SET right_id = right_id + ' . $moving_ids . '
-						WHERE album_user_id = ' . $row['album_user_id'] . ' AND
-							right_id >= ' . $parent['right_id'] . '
+						WHERE album_user_id = ' . $row['album_user_id'] . '
+							AND left_id >= ' . $parent['right_id'] . '
 							AND right_id <= ' . $stop_updating;
 					$db->sql_query($sql);
 
-					//close the gap again
-					//new parent right_id!!!
+					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
+						SET right_id = right_id + ' . $moving_ids . '
+						WHERE album_user_id = ' . $row['album_user_id'] . '
+							AND right_id >= ' . $parent['right_id'] . '
+							AND right_id <= ' . $stop_updating;
+					$db->sql_query($sql);
+
+					// Move the albums to the suggested gap.
 					$parent['right_id'] = $parent['right_id'] + $moving_ids;
 					$move_back = ($new['right_id'] - $parent['right_id']) + 1;
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
 						SET left_id = left_id - ' . $move_back . ',
 							right_id = right_id - ' . $move_back . '
-						WHERE album_user_id = ' . $row['album_user_id'] . ' AND
-							left_id >= ' . $stop_updating;
+						WHERE album_user_id = ' . $row['album_user_id'] . '
+							AND left_id >= ' . $stop_updating;
 					$db->sql_query($sql);
 				}
 			}
+
+			// The album name has changed, clear the parents list of all albums.
 			if ($row['album_name'] != $album_data['album_name'])
 			{
-				// the forum name has changed, clear the parents list of all forums (for safety)
 				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 					SET album_parents = ''";
 				$db->sql_query($sql);
 			}
+
 			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' 
 					SET ' . $db->sql_build_array('UPDATE', $album_data) . '
 					WHERE album_id  = ' . (int) $album_id;
@@ -1159,13 +1058,14 @@ class acp_gallery
 			$copy_permissions = request_var('copy_permissions', 0);
 			if ($copy_permissions <> 0)
 			{
-				//delete the old permissions and than copy the new one's
-				$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . "
-					WHERE perm_album_id = $album_id";
+				// Delete the old permissions and than copy the new one's
+				$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . '
+					WHERE perm_album_id = ' . $album_id;
 				$result = $db->sql_query($sql);
+
 				$sql = 'SELECT *
-						FROM ' . GALLERY_PERMISSIONS_TABLE . '
-						WHERE perm_album_id = ' . $copy_permissions;
+					FROM ' . GALLERY_PERMISSIONS_TABLE . '
+					WHERE perm_album_id = ' . $copy_permissions;
 				$result = $db->sql_query($sql);
 				while($row = $db->sql_fetchrow($result))
 				{
@@ -1179,10 +1079,13 @@ class acp_gallery
 					$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $perm_data));
 				}
 				$db->sql_freeresult($result);
-				$sql = 'DELETE FROM ' . GALLERY_MODSCACHE_TABLE . " WHERE album_id = $album_id";
+
+				$sql = 'DELETE FROM ' . GALLERY_MODSCACHE_TABLE . '
+					WHERE album_id = ' . $album_id;
 				$db->sql_query($sql);
-				$sql = 'SELECT * FROM ' . GALLERY_MODSCACHE_TABLE . "
-					WHERE album_id = $copy_permissions";
+
+				$sql = 'SELECT * FROM ' . GALLERY_MODSCACHE_TABLE . '
+					WHERE album_id = ' . $copy_permissions;
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -1213,61 +1116,23 @@ class acp_gallery
 	{
 		global $db, $template, $user, $cache;
 
-		if (!$album_id = request_var('album_id', 0))
-		{
-			trigger_error('ALBUM_NOT_EXIST', E_USER_WARNING);
-		}
-		else
-		{
-			$sql = 'SELECT *
-				FROM ' . GALLERY_ALBUMS_TABLE . "
-				WHERE album_id = '$album_id'";
-			$result = $db->sql_query($sql);
-			if ($db->sql_affectedrows($result) == 0)
-			{
-				trigger_error('ALBUM_NOT_EXIST', E_USER_WARNING);
-			}
-		}
+		$album_id = request_var('album_id', 0);
+		$album_data = get_album_info($album_id);
 
 		$submit = (isset($_POST['submit'])) ? true : false;
-		if(!$submit)
+		if (!$submit)
 		{
-			$sql = 'SELECT *
-					FROM ' . GALLERY_ALBUMS_TABLE . '
-					WHERE album_id = ' . $album_id;
-			$result = $db->sql_query($sql);
-
-			$album_found = false;
-			while($row = $db->sql_fetchrow($result))
-			{
-				if($row['album_id'] == $album_id)
-				{
-					$thisalbum = $row;
-					$album_found = true;
-				}
-				else
-				{
-					$albumrow[] = $row;
-				}
-			}
-			$db->sql_freeresult($result);
-
-			if(!$album_found)
-			{
-				trigger_error('ALBUM_NOT_EXIST', E_USER_WARNING);
-			}
-
 			$template->assign_vars(array(
 				'S_DELETE_ALBUM'		=> true,
 				'ACP_GALLERY_TITLE'			=> $user->lang['DELETE_ALBUM'],
 				'ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['DELETE_ALBUM_EXPLAIN'],
 
 				'S_ALBUM_ACTION'		=>  $this->u_action . '&amp;action=delete&amp;album_id=' . $album_id,
-				'ALBUM_DELETE'			=> sprintf($user->lang['ALBUM_DELETE'], $thisalbum['album_name']),
-				'ALBUM_TYPE'			=> $thisalbum['album_type'],
-				'S_PARENT_OPTIONS'		=> gallery_albumbox(false, '', $thisalbum['parent_id'], 'i_upload', $album_id),
-				'ALBUM_NAME'			=> $thisalbum['album_name'],
-				'ALBUM_DESC'			=> generate_text_for_display($thisalbum['album_desc'], $thisalbum['album_desc_uid'], $thisalbum['album_desc_bitfield'], $thisalbum['album_desc_options']),
+				'ALBUM_DELETE'			=> sprintf($user->lang['ALBUM_DELETE'], $album_data['album_name']),
+				'ALBUM_TYPE'			=> $album_data['album_type'],
+				'S_PARENT_OPTIONS'		=> gallery_albumbox(false, '', $album_data['parent_id'], 'i_upload', $album_id),
+				'ALBUM_NAME'			=> $album_data['album_name'],
+				'ALBUM_DESC'			=> generate_text_for_display($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options']),
 				'S_MOVE_ALBUM_OPTIONS'	=> gallery_albumbox(false, '', false, 'i_view', $album_id),
 				'S_MOVE_IMAGE_OPTIONS'	=> gallery_albumbox(false, '', false, 'i_upload', $album_id),
 			));
@@ -1279,11 +1144,11 @@ class acp_gallery
 			{
 				trigger_error('FORM_INVALID');
 			}
-			$album = get_album_info($album_id);
+			$album = $album_data;
 			if (($album['album_type'] == 1) && (($album['right_id'] - $album['left_id']) > 2))
-			{//handle subs if there
+			{
 				$handle_subs = request_var('handle_subs', 0);
-				//we have to learn how to delete or move the subs
+				// We have to learn how to delete or move the subs
 				if ((($album['right_id'] - $album['left_id']) > 2) && ($handle_subs >= 0))
 				{
 					trigger_error($user->lang['DELETE_ALBUM_SUBS'] . adm_back_link($this->u_action));
@@ -1294,42 +1159,49 @@ class acp_gallery
 				}
 			}
 			else if ($album['album_type'] == 2)
-			{//handle images if there
+			{
+				// Delete images
 				$handle_images = request_var('handle_images', -1);
 				if ($handle_images < 0)
 				{
 					$sql = 'SELECT image_id, image_filename, image_thumbnail, image_album_id
-							FROM ' . GALLERY_IMAGES_TABLE . "
-							WHERE image_album_id = '$album_id'";
+							FROM ' . GALLERY_IMAGES_TABLE . '
+							WHERE image_album_id = ' . $album_id;
 					$result = $db->sql_query($sql);
-					
-					$picrow = array();
-					while ($row = $db ->sql_fetchrow($result))
+
+					$images = array();
+					$deleted_images = '';
+					while ($row = $db->sql_fetchrow($result))
 					{
-						$picrow[] = $row;
-						$pic_id_row[] = $row['image_id'];
+						$images[] = $row;
+						$deleted_images .= (($deleted_images) ? ', ' : '') . $row['image_id'];
 					}
-					if(count($picrow) > 0)
+					$db->sql_freeresult($result);
+
+					if (count($images) > 0)
 					{
-						// Delete all physical pic & cached thumbnail files
-						for ($i = 0; $i < count($picrow); $i++)
+						// Delete the files themselves.
+						for ($i = 0; $i < count($images); $i++)
 						{
-							@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $picrow[$i]['image_thumbnail']);
-							@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $picrow[$i]['image_filename']);
+							@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $images[$i]['image_thumbnail']);
+							@unlink($phpbb_root_path . GALLERY_MEDIUM_PATH . $images[$i]['image_filename']);
+							@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $images[$i]['image_filename']);
 						}
 
-						$pic_id_sql = '(' . implode(',', $pic_id_row) . ')';
-						// Delete all related ratings
-						$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . '
-							WHERE rate_image_id IN ' . $pic_id_sql;
+						$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . "
+							WHERE comment_image_id IN ($deleted_images)";
 						$result = $db->sql_query($sql);
-						// Delete all related comments
-						$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . '
-							WHERE comment_image_id IN ' . $pic_id_sql;
+						$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . "
+							WHERE rate_image_id IN ($deleted_images)";
 						$result = $db->sql_query($sql);
-						// Delete pic entries in db
+						$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . "
+							WHERE image_id IN ($deleted_images)";
+						$result = $db->sql_query($sql);
 						$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . "
-							WHERE image_album_id = '$album_id'";
+							WHERE image_album_id = $album_id";
+						$result = $db->sql_query($sql);
+						$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . "
+							WHERE image_id IN ($deleted_images)";
 						$result = $db->sql_query($sql);
 					}
 				}
@@ -1341,23 +1213,29 @@ class acp_gallery
 					$db->sql_query($sql);
 				}
 			}
-			//reorder the other albums
-			//left_id
+
 			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 				SET left_id = left_id - 2
-				WHERE album_user_id = {$album['album_user_id']} AND
-				left_id > " . $album['left_id'];
+				WHERE album_user_id = {$album['album_user_id']}
+					AND left_id > " . $album['left_id'];
 			$db->sql_query($sql);
-			//right_id
+
 			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 				SET right_id = right_id - 2
-				WHERE album_user_id = {$album['album_user_id']} AND
-				right_id > " . $album['left_id'];
+				WHERE album_user_id = {$album['album_user_id']}
+					AND right_id > " . $album['left_id'];
 			$db->sql_query($sql);
-			$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . "
-				WHERE album_id = '$album_id'";
+
+			$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . '
+				WHERE album_id = ' . $album_id;
 			$result = $db->sql_query($sql);
+
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
+			$cache->destroy('sql', GALLERY_COMMENTS_TABLE);
+			$cache->destroy('sql', GALLERY_FAVORITES_TABLE);
+			$cache->destroy('sql', GALLERY_IMAGES_TABLE);
+			$cache->destroy('sql', GALLERY_RATES_TABLE);
+			$cache->destroy('sql', GALLERY_WATCH_TABLE);
 			$cache->destroy('_albums');
 			trigger_error($user->lang['ALBUM_DELETED'] . adm_back_link($this->u_action));
 		}
@@ -1367,22 +1245,8 @@ class acp_gallery
 	{
 		global $db, $user, $cache;
 
-		if (!$album_id = request_var('album_id', 0))
-		{
-			trigger_error('ALBUM_NOT_EXIST', E_USER_WARNING);
-		}
-		else
-		{
-			$sql = 'SELECT *
-				FROM ' . GALLERY_ALBUMS_TABLE . "
-				WHERE album_id = '$album_id'";
-			$result = $db->sql_query($sql);
-			if ($db->sql_affectedrows($result) == 0)
-			{
-				trigger_error('ALBUM_NOT_EXIST', E_USER_WARNING);
-			}
-		}
-		$move = request_var('move', '', true);
+		$album_id = request_var('album_id', 0);
+		$move = request_var('move', '');
 		$moving = get_album_info($album_id);
 
 		$sql = 'SELECT album_id, left_id, right_id
@@ -1391,17 +1255,12 @@ class acp_gallery
 				AND album_user_id = {$moving['album_user_id']}
 				AND " . (($move == 'move_up') ? "right_id < {$moving['right_id']} ORDER BY right_id DESC" : "left_id > {$moving['left_id']} ORDER BY left_id ASC");
 		$result = $db->sql_query_limit($sql, 1);
-
-		$target = array();
-		while ($row = $db->sql_fetchrow($result))
-		{
-			$target = $row;
-		}
+		$target = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
 		if (!sizeof($target))
 		{
-			// The forum is already on top or bottom
+			// The album is already on top or bottom
 			return false;
 		}
 
@@ -1451,17 +1310,7 @@ class acp_gallery
 
 	function permissions()
 	{
-		global $db, $template, $user, $cache, $album_access_array;
-
-		$sql = 'SELECT *
-			FROM ' . GALLERY_CONFIG_TABLE;
-		$result = $db->sql_query($sql);
-		while( $row = $db->sql_fetchrow($result) )
-		{
-			$album_config_name = $row['config_name'];
-			$album_config_value = $row['config_value'];
-			$album_config[$album_config_name] = $album_config_value;
-		}
+		global $db, $template, $user, $cache, $album_config;
 
 		$submit = (isset($_POST['submit'])) ? true : false;
 		$delete = (isset($_POST['delete'])) ? true : false;
@@ -1481,29 +1330,30 @@ class acp_gallery
 			{
 				trigger_error('FORM_INVALID');
 			}
-			//you wished to drop the permissions
+
+			// User dropped the permissions
 			$drop_perm_ary = request_var('drop_perm', array(''));
 			$drop_perm_string = implode(', ', $drop_perm_ary);
 			if ($drop_perm_string && $album_list)
 			{
-				$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . "
-					WHERE " . $db->sql_in_set('perm_group_id', $drop_perm_ary) . "
-						AND " . $db->sql_in_set('perm_album_id', $album_ary) . "
-						AND perm_system = $perm_system";
+				$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . '
+					WHERE ' . $db->sql_in_set('perm_group_id', $drop_perm_ary) . '
+						AND ' . $db->sql_in_set('perm_album_id', $album_ary) . '
+						AND perm_system = ' . $perm_system;
 				$db->sql_query($sql);
 			}
 			else if ($drop_perm_string)
 			{
-				$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . "
-					WHERE " . $db->sql_in_set('perm_group_id', $drop_perm_ary) . "
-						AND perm_system = $perm_system";
+				$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . '
+					WHERE ' . $db->sql_in_set('perm_group_id', $drop_perm_ary) . '
+						AND perm_system = ' . $perm_system;
 				$db->sql_query($sql);
 			}
 			$step = 1;
 		}
 
 		$album_name_ary = array();
-		//build the array with some kind of order.
+		// Build the array with some kind of order.
 		$permissions = $permission_parts['misc'] = $permission_parts['m'] = $permission_parts['c'] = $permission_parts['i'] = array();
 		if ($perm_system != 2)
 		{
@@ -1532,9 +1382,7 @@ class acp_gallery
 
 		if ($step == 0)
 		{
-			$template->assign_vars(array(
-				'ALBUM_LIST'		=> gallery_albumbox(true, '', SETTING_PERMISSIONS),
-			));
+			$template->assign_var('ALBUM_LIST', gallery_albumbox(true, '', SETTING_PERMISSIONS));
 			$step = 1;
 		}
 		else if ($step == 1)
@@ -1564,7 +1412,8 @@ class acp_gallery
 				}
 			}
 
-			$sql = 'SELECT group_id, group_type, group_name, group_colour FROM ' . GROUPS_TABLE;
+			$sql = 'SELECT group_id, group_type, group_name, group_colour
+				FROM ' . GROUPS_TABLE;
 			$result = $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result))
 			{
@@ -1585,7 +1434,7 @@ class acp_gallery
 				{
 					if (!isset($album_ary[0]))
 					{
-						trigger_error('THIS_WILL_BE_REPORTED', E_USER_WARNING);
+						trigger_error('NO_ALBUM_SELECTED', E_USER_WARNING);
 					}
 					$where = 'perm_album_id = ' . $album_ary[0];
 				}
@@ -1631,7 +1480,8 @@ class acp_gallery
 			{
 				trigger_error($user->lang['PERMISSION_NO_GROUP'] . adm_back_link($this->u_action), E_USER_WARNING);
 			}
-			$sql = 'SELECT group_id, group_type, group_name, group_colour FROM ' . GROUPS_TABLE . "
+			$sql = 'SELECT group_id, group_type, group_name, group_colour
+				FROM ' . GROUPS_TABLE . "
 				WHERE group_id IN ($group_list)";
 			$result = $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result))
@@ -1699,7 +1549,7 @@ class acp_gallery
 			$set_moderator = false;
 			foreach ($permissions as $permission)
 			{
-				//hacked for deny empty submit
+				// Hacked for deny empty submit
 				$submitted_valued = request_var($permission, 0);
 				if (substr($permission, -6, 6) == '_count')
 				{
@@ -1886,8 +1736,9 @@ class acp_gallery
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
-					//delete the files themselves
+					// Delete the files themselves
 					@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $row['image_thumbnail']);
+					@unlink($phpbb_root_path . GALLERY_MEDIUM_PATH . $row['image_filename']);
 					@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $row['image_filename']);
 					$deleted_images[] = $row['image_id'];
 				}
@@ -1933,6 +1784,7 @@ class acp_gallery
 				while ($row = $db->sql_fetchrow($result))
 				{
 					@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $row['image_thumbnail']);
+					@unlink($phpbb_root_path . GALLERY_MEDIUM_PATH . $row['image_filename']);
 					@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $row['image_filename']);
 					$deleted_images[] = $row['image_id'];
 				}
@@ -1954,6 +1806,12 @@ class acp_gallery
 				$message .= $user->lang['CLEAN_PERSONALS_DONE'];
 			}
 
+			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
+			$cache->destroy('sql', GALLERY_COMMENTS_TABLE);
+			$cache->destroy('sql', GALLERY_FAVORITES_TABLE);
+			$cache->destroy('sql', GALLERY_IMAGES_TABLE);
+			$cache->destroy('sql', GALLERY_RATES_TABLE);
+			$cache->destroy('sql', GALLERY_WATCH_TABLE);
 			trigger_error($message . adm_back_link($this->u_action));
 		}
 		else if (($delete) || (isset($_POST['cancel'])))
@@ -2020,7 +1878,7 @@ class acp_gallery
 		{
 			$source_missing = array();
 
-			//Reset the status: a image might have been viewed without file but the file is back
+			// Reset the status: a image might have been viewed without file but the file is back
 			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 				SET image_filemissing = 0';
 			$db->sql_query($sql);

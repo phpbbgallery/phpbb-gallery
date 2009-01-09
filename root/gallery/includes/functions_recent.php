@@ -17,18 +17,27 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
+/**
+* Display recent images & comments and random images
+*/
 function recent_gallery_images($rows, $columns, &$display, $modes)
 {
 	global $db, $phpEx, $user, $cache, $auth;
 	global $phpbb_root_path, $album_config, $config, $template;
 
-	include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
-
-	$user->add_lang('mods/gallery');
-	$recent_image_addon = true;
 	$gallery_root_path = GALLERY_ROOT_PATH;
-	include_once("{$phpbb_root_path}{$gallery_root_path}includes/common.$phpEx");
-	include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
+	$user->add_lang('mods/gallery');
+
+	if (!function_exists('generate_text_for_display'))
+	{
+		include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+	}
+	if (!function_exists('load_gallery_config'))
+	{
+		$recent_image_addon = true;
+		include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
+		include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
+	}
 	$album_access_array = get_album_access_array();
 
 	$albums = $cache->obtain_album_list();
@@ -36,6 +45,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 	$moderate_albums = gallery_acl_album_ids('m_status', 'array');
 	$comment_albums = gallery_acl_album_ids('c_read', 'array');
 	$limit_sql = $rows * $columns;
+
 	switch ($modes)
 	{
 		case 'recent':
@@ -88,6 +98,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 
 		if ($recent)
 		{
+			$recent_images = array();
 			$sql = "SELECT i.*, a.album_name, a.album_id, a.album_user_id
 				FROM " . GALLERY_IMAGES_TABLE . " i
 				LEFT JOIN " . GALLERY_ALBUMS_TABLE . " a
@@ -99,65 +110,65 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 				ORDER BY i.image_time DESC';
 			$result = $db->sql_query_limit($sql, $limit_sql);
 
-			$picrow = array();
-
-			while( $row = $db->sql_fetchrow($result) )
+			while ($row = $db->sql_fetchrow($result))
 			{
-				$picrow[] = $row;
+				$recent_images[] = $row;
 			}
-			for ($i = 0; $i < count($picrow); $i += $columns)
+			$db->sql_freeresult($result);
+
+			for ($i = 0; $i < count($recent_images); $i += $columns)
 			{
 				$template->assign_block_vars('recent', array());
 
 				for ($j = $i; $j < ($i + $columns); $j++)
 				{
-					if( $j >= count($picrow) )
+					if ($j >= count($recent_images))
 					{
 						$template->assign_block_vars('recent.no_image', array());
 						continue;
 					}
-					$album_id = $picrow[$j]['image_album_id'];
+					$album_id = $recent_images[$j]['image_album_id'];
 
-					if ($display['ratings'] && !$picrow[$j]['image_rates'])
+					if ($display['ratings'] && !$recent_images[$j]['image_rates'])
 					{
-						$picrow[$j]['rating'] = $user->lang['NOT_RATED'];
+						$recent_images[$j]['rating'] = $user->lang['NOT_RATED'];
 					}
 					else if ($display['ratings'])
 					{
-						$picrow[$j]['rating'] = sprintf((($picrow[$j]['image_rates'] == 1) ? $user->lang['RATE_STRING'] : $user->lang['RATES_STRING']), $picrow[$j]['image_rate_avg'] / 100, $picrow[$j]['image_rates']);
+						$recent_images[$j]['rating'] = sprintf((($recent_images[$j]['image_rates'] == 1) ? $user->lang['RATE_STRING'] : $user->lang['RATES_STRING']), $recent_images[$j]['image_rate_avg'] / 100, $recent_images[$j]['image_rates']);
 					}
 					$perm_user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
-					$allow_edit = ((gallery_acl_check('i_edit', $album_id, $picrow[$j]['album_user_id']) && ($picrow[$j]['image_user_id'] == $perm_user_id)) || gallery_acl_check('m_edit', $album_id, $picrow[$j]['album_user_id'])) ? true : false;
-					$allow_delete = ((gallery_acl_check('i_delete', $album_id, $picrow[$j]['album_user_id']) && ($picrow[$j]['image_user_id'] == $perm_user_id)) || gallery_acl_check('m_delete', $album_id, $picrow[$j]['album_user_id'])) ? true : false;
+					$allow_edit = ((gallery_acl_check('i_edit', $album_id, $recent_images[$j]['album_user_id']) && ($recent_images[$j]['image_user_id'] == $perm_user_id)) || gallery_acl_check('m_edit', $album_id, $recent_images[$j]['album_user_id'])) ? true : false;
+					$allow_delete = ((gallery_acl_check('i_delete', $album_id, $recent_images[$j]['album_user_id']) && ($recent_images[$j]['image_user_id'] == $perm_user_id)) || gallery_acl_check('m_delete', $album_id, $recent_images[$j]['album_user_id'])) ? true : false;
 
 					$template->assign_block_vars('recent.image', array(
-						'IMAGE_ID'		=> $picrow[$j]['image_id'],
-						'UC_IMAGE_NAME'	=> ($display['name']) ? (generate_image_link('image_name', $album_config['link_image_name'], $picrow[$j]['image_id'], $picrow[$j]['image_name'], $picrow[$j]['image_album_id'])) : '',
-						'UC_THUMBNAIL'	=> generate_image_link('thumbnail', $album_config['link_thumbnail'], $picrow[$j]['image_id'], $picrow[$j]['image_name'], $picrow[$j]['image_album_id']),
-						'U_ALBUM'		=> ($display['album']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $picrow[$j]['image_album_id']) : '',
-						'S_UNAPPROVED'	=> (gallery_acl_check('m_status', $album_id, $picrow[$j]['album_user_id']) && (!$picrow[$j]['image_status'])) ? true : false,
-						'S_LOCKED'		=> (gallery_acl_check('m_status', $album_id) && ($picrow[$j]['image_status'] == 2)) ? true : false,
-						'S_REPORTED'	=> (gallery_acl_check('m_report', $album_id, $picrow[$j]['album_user_id']) && $picrow[$j]['image_reported']) ? true : false,
+						'IMAGE_ID'		=> $recent_images[$j]['image_id'],
+						'UC_IMAGE_NAME'	=> ($display['name']) ? (generate_image_link('image_name', $album_config['link_image_name'], $recent_images[$j]['image_id'], $recent_images[$j]['image_name'], $recent_images[$j]['image_album_id'])) : '',
+						'UC_THUMBNAIL'	=> generate_image_link('thumbnail', $album_config['link_thumbnail'], $recent_images[$j]['image_id'], $recent_images[$j]['image_name'], $recent_images[$j]['image_album_id']),
+						'U_ALBUM'		=> ($display['album']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $recent_images[$j]['image_album_id']) : '',
+						'S_UNAPPROVED'	=> (gallery_acl_check('m_status', $album_id, $recent_images[$j]['album_user_id']) && (!$recent_images[$j]['image_status'])) ? true : false,
+						'S_LOCKED'		=> (gallery_acl_check('m_status', $album_id) && ($recent_images[$j]['image_status'] == 2)) ? true : false,
+						'S_REPORTED'	=> (gallery_acl_check('m_report', $album_id, $recent_images[$j]['album_user_id']) && $recent_images[$j]['image_reported']) ? true : false,
 
-						'ALBUM_NAME'	=> ($display['album']) ? ((utf8_strlen(htmlspecialchars_decode($picrow[$j]['album_name'])) > $album_config['shorted_imagenames'] + 3 ) ? (utf8_substr(htmlspecialchars_decode($picrow[$j]['album_name']), 0, $album_config['shorted_imagenames']) . '...') : ($picrow[$j]['album_name'])) : '',
-						'POSTER'		=> ($display['poster']) ? get_username_string('full', $picrow[$j]['image_user_id'], ($picrow[$j]['image_user_id'] <> ANONYMOUS) ? $picrow[$j]['image_username'] : $user->lang['GUEST'], $picrow[$j]['image_user_colour']) : '',
-						'TIME'			=> ($display['time']) ? $user->format_date($picrow[$j]['image_time']) : '',
-						'VIEW'			=> ($display['views']) ? $picrow[$j]['image_view_count'] : -1,
+						'ALBUM_NAME'	=> ($display['album']) ? ((utf8_strlen(htmlspecialchars_decode($recent_images[$j]['album_name'])) > $album_config['shorted_imagenames'] + 3 ) ? htmlspecialchars(utf8_substr(htmlspecialchars_decode($recent_images[$j]['album_name']), 0, $album_config['shorted_imagenames']) . '...') : ($recent_images[$j]['album_name'])) : '',
+						'POSTER'		=> ($display['poster']) ? get_username_string('full', $recent_images[$j]['image_user_id'], ($recent_images[$j]['image_user_id'] <> ANONYMOUS) ? $recent_images[$j]['image_username'] : $user->lang['GUEST'], $recent_images[$j]['image_user_colour']) : '',
+						'TIME'			=> ($display['time']) ? $user->format_date($recent_images[$j]['image_time']) : '',
+						'VIEW'			=> ($display['views']) ? $recent_images[$j]['image_view_count'] : -1,
 
-						'S_RATINGS'		=> ($display['ratings']) ? (($album_config['allow_rates'] == 1) && gallery_acl_check('i_rate', $album_id, $picrow[$j]['album_user_id'])) ? $picrow[$j]['rating'] : '' : '',
-						'U_RATINGS'		=> ($display['ratings']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . "&amp;image_id=" . $picrow[$j]['image_id']) . '#rating' : '',
-						'L_COMMENTS'	=> ($display['comments']) ? ($picrow[$j]['image_comments'] == 1) ? $user->lang['COMMENT'] : $user->lang['COMMENTS'] : '',
-						'S_COMMENTS'	=> ($display['comments']) ? (($album_config['allow_comments'] == 1) && gallery_acl_check('c_read', $album_id, $picrow[$j]['album_user_id'])) ? (($picrow[$j]['image_comments']) ? $picrow[$j]['image_comments'] : $user->lang['NO_COMMENTS']) : '' : '',
-						'U_COMMENTS'	=> ($display['comments']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . "&amp;image_id=" . $picrow[$j]['image_id']) . '#comments' : '',
+						'S_RATINGS'		=> ($display['ratings']) ? (($album_config['allow_rates'] == 1) && gallery_acl_check('i_rate', $album_id, $recent_images[$j]['album_user_id'])) ? $recent_images[$j]['rating'] : '' : '',
+						'U_RATINGS'		=> ($display['ratings']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $recent_images[$j]['image_album_id'] . "&amp;image_id=" . $recent_images[$j]['image_id']) . '#rating' : '',
+						'L_COMMENTS'	=> ($display['comments']) ? ($recent_images[$j]['image_comments'] == 1) ? $user->lang['COMMENT'] : $user->lang['COMMENTS'] : '',
+						'S_COMMENTS'	=> ($display['comments']) ? (($album_config['allow_comments'] == 1) && gallery_acl_check('c_read', $album_id, $recent_images[$j]['album_user_id'])) ? (($recent_images[$j]['image_comments']) ? $recent_images[$j]['image_comments'] : $user->lang['NO_COMMENTS']) : '' : '',
+						'U_COMMENTS'	=> ($display['comments']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $recent_images[$j]['image_album_id'] . "&amp;image_id=" . $recent_images[$j]['image_id']) . '#comments' : '',
 
-						'S_IP'		=> ($auth->acl_get('a_')) ? $picrow[$j]['image_user_ip'] : '',
-						'U_WHOIS'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'mode=whois&amp;ip=' . $picrow[$j]['image_user_ip']),
-						'U_REPORT'	=> (gallery_acl_check('m_report', $album_id, $picrow[$j]['album_user_id']) && $picrow[$j]['image_reported']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "mode=report_details&amp;album_id=$album_id&amp;option_id=" . $picrow[$j]['image_reported']) : '',
-						'U_STATUS'	=> (gallery_acl_check('m_status', $album_id, $picrow[$j]['album_user_id'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "mode=queue_details&amp;album_id=$album_id&amp;option_id=" . $picrow[$j]['image_id']) : '',
-						'L_STATUS'	=> (!$picrow[$j]['image_status']) ? $user->lang['APPROVE_IMAGE'] : (($picrow[$j]['image_status'] == 1) ? $user->lang['CHANGE_IMAGE_STATUS'] : $user->lang['UNLOCK_IMAGE']),
-						'U_MOVE'	=> (gallery_acl_check('m_move', $album_id, $picrow[$j]['album_user_id'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "action=images_move&amp;album_id=$album_id&amp;image_id=" . $picrow[$j]['image_id'] . "&amp;redirect=redirect") : '',
-						'U_EDIT'	=> $allow_edit ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=" . $picrow[$j]['image_id']) : '',
-						'U_DELETE'	=> $allow_delete ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=delete&amp;album_id=$album_id&amp;image_id=" . $picrow[$j]['image_id']) : '',
+						'S_IP'		=> ($auth->acl_get('a_')) ? $recent_images[$j]['image_user_ip'] : '',
+						'U_WHOIS'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'mode=whois&amp;ip=' . $recent_images[$j]['image_user_ip']),
+						'U_REPORT'	=> (gallery_acl_check('m_report', $album_id, $recent_images[$j]['album_user_id']) && $recent_images[$j]['image_reported']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "mode=report_details&amp;album_id=$album_id&amp;option_id=" . $recent_images[$j]['image_reported']) : '',
+						'U_STATUS'	=> (gallery_acl_check('m_status', $album_id, $recent_images[$j]['album_user_id'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "mode=queue_details&amp;album_id=$album_id&amp;option_id=" . $recent_images[$j]['image_id']) : '',
+						'L_STATUS'	=> (!$recent_images[$j]['image_status']) ? $user->lang['APPROVE_IMAGE'] : (($recent_images[$j]['image_status'] == 1) ? $user->lang['CHANGE_IMAGE_STATUS'] : $user->lang['UNLOCK_IMAGE']),
+						'U_MOVE'	=> (gallery_acl_check('m_move', $album_id, $recent_images[$j]['album_user_id'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "action=images_move&amp;album_id=$album_id&amp;image_id=" . $recent_images[$j]['image_id'] . "&amp;redirect=redirect") : '',
+						'U_EDIT'	=> $allow_edit ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=" . $recent_images[$j]['image_id']) : '',
+						'U_DELETE'	=> $allow_delete ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=delete&amp;album_id=$album_id&amp;image_id=" . $recent_images[$j]['image_id']) : '',
 					));
 				}
 			}
@@ -170,16 +181,18 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 				case 'postgres':
 					$random = 'RANDOM()';
 				break;
-			
+
 				case 'mssql':
 				case 'mssql_odbc':
 					$random = 'NEWID()';
 				break;
-			
+
 				default:
 					$random = 'RAND()';
 				break;
 			}
+
+			$random_images = array();
 			$sql = "SELECT i.*, a.album_name, a.album_id, a.album_user_id
 				FROM " . GALLERY_IMAGES_TABLE . " i
 				LEFT JOIN " . GALLERY_ALBUMS_TABLE . " a
@@ -191,65 +204,65 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 				ORDER BY $random";
 			$result = $db->sql_query_limit($sql, $limit_sql);
 
-			$picrow = array();
-
-			while( $row = $db->sql_fetchrow($result) )
+			while ($row = $db->sql_fetchrow($result))
 			{
-				$picrow[] = $row;
+				$random_images[] = $row;
 			}
-			for ($i = 0; $i < count($picrow); $i += $columns)
+			$db->sql_freeresult($result);
+
+			for ($i = 0; $i < count($random_images); $i += $columns)
 			{
 				$template->assign_block_vars('random', array());
 
 				for ($j = $i; $j < ($i + $columns); $j++)
 				{
-					if( $j >= count($picrow) )
+					if ($j >= count($random_images))
 					{
 						$template->assign_block_vars('random.no_image', array());
 						continue;
 					}
-					$album_id = $picrow[$j]['image_album_id'];
+					$album_id = $random_images[$j]['image_album_id'];
 
-					if ($display['ratings'] && !$picrow[$j]['image_rates'])
+					if ($display['ratings'] && !$random_images[$j]['image_rates'])
 					{
-						$picrow[$j]['rating'] = $user->lang['NOT_RATED'];
+						$random_images[$j]['rating'] = $user->lang['NOT_RATED'];
 					}
 					else if ($display['ratings'])
 					{
-						$picrow[$j]['rating'] = sprintf((($picrow[$j]['image_rates'] == 1) ? $user->lang['RATE_STRING'] : $user->lang['RATES_STRING']), $picrow[$j]['image_rate_avg'] / 100, $picrow[$j]['image_rates']);
+						$random_images[$j]['rating'] = sprintf((($random_images[$j]['image_rates'] == 1) ? $user->lang['RATE_STRING'] : $user->lang['RATES_STRING']), $random_images[$j]['image_rate_avg'] / 100, $random_images[$j]['image_rates']);
 					}
 					$perm_user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
-					$allow_edit = ((gallery_acl_check('i_edit', $album_id, $picrow[$j]['album_user_id']) && ($picrow[$j]['image_user_id'] == $perm_user_id)) || gallery_acl_check('m_edit', $album_id, $picrow[$j]['album_user_id'])) ? true : false;
-					$allow_delete = ((gallery_acl_check('i_delete', $album_id, $picrow[$j]['album_user_id']) && ($picrow[$j]['image_user_id'] == $perm_user_id)) || gallery_acl_check('m_delete', $album_id, $picrow[$j]['album_user_id'])) ? true : false;
+					$allow_edit = ((gallery_acl_check('i_edit', $album_id, $random_images[$j]['album_user_id']) && ($random_images[$j]['image_user_id'] == $perm_user_id)) || gallery_acl_check('m_edit', $album_id, $random_images[$j]['album_user_id'])) ? true : false;
+					$allow_delete = ((gallery_acl_check('i_delete', $album_id, $random_images[$j]['album_user_id']) && ($random_images[$j]['image_user_id'] == $perm_user_id)) || gallery_acl_check('m_delete', $album_id, $random_images[$j]['album_user_id'])) ? true : false;
 
 					$template->assign_block_vars('random.image', array(
-						'IMAGE_ID'		=> $picrow[$j]['image_id'],
-						'UC_IMAGE_NAME'	=> ($display['name']) ? (generate_image_link('image_name', $album_config['link_image_name'], $picrow[$j]['image_id'], $picrow[$j]['image_name'], $picrow[$j]['image_album_id'])) : '',
-						'UC_THUMBNAIL'	=> generate_image_link('thumbnail', $album_config['link_thumbnail'], $picrow[$j]['image_id'], $picrow[$j]['image_name'], $picrow[$j]['image_album_id']),
-						'U_ALBUM'		=> ($display['album']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $picrow[$j]['image_album_id']) : '',
-						'S_UNAPPROVED'	=> (gallery_acl_check('m_status', $album_id, $picrow[$j]['album_user_id']) && (!$picrow[$j]['image_status'])) ? true : false,
-						'S_LOCKED'		=> (gallery_acl_check('m_status', $album_id) && ($picrow[$j]['image_status'] == 2)) ? true : false,
-						'S_REPORTED'	=> (gallery_acl_check('m_report', $album_id, $picrow[$j]['album_user_id']) && $picrow[$j]['image_reported']) ? true : false,
+						'IMAGE_ID'		=> $random_images[$j]['image_id'],
+						'UC_IMAGE_NAME'	=> ($display['name']) ? (generate_image_link('image_name', $album_config['link_image_name'], $random_images[$j]['image_id'], $random_images[$j]['image_name'], $random_images[$j]['image_album_id'])) : '',
+						'UC_THUMBNAIL'	=> generate_image_link('thumbnail', $album_config['link_thumbnail'], $random_images[$j]['image_id'], $random_images[$j]['image_name'], $random_images[$j]['image_album_id']),
+						'U_ALBUM'		=> ($display['album']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $random_images[$j]['image_album_id']) : '',
+						'S_UNAPPROVED'	=> (gallery_acl_check('m_status', $album_id, $random_images[$j]['album_user_id']) && (!$random_images[$j]['image_status'])) ? true : false,
+						'S_LOCKED'		=> (gallery_acl_check('m_status', $album_id) && ($random_images[$j]['image_status'] == 2)) ? true : false,
+						'S_REPORTED'	=> (gallery_acl_check('m_report', $album_id, $random_images[$j]['album_user_id']) && $random_images[$j]['image_reported']) ? true : false,
 
-						'ALBUM_NAME'	=> ($display['album']) ? ((utf8_strlen(htmlspecialchars_decode($picrow[$j]['album_name'])) > $album_config['shorted_imagenames'] + 3 ) ? (utf8_substr(htmlspecialchars_decode($picrow[$j]['album_name']), 0, $album_config['shorted_imagenames']) . '...') : ($picrow[$j]['album_name'])) : '',
-						'POSTER'		=> ($display['poster']) ? get_username_string('full', $picrow[$j]['image_user_id'], ($picrow[$j]['image_user_id'] <> ANONYMOUS) ? $picrow[$j]['image_username'] : $user->lang['GUEST'], $picrow[$j]['image_user_colour']) : '',
-						'TIME'			=> ($display['time']) ? $user->format_date($picrow[$j]['image_time']) : '',
-						'VIEW'			=> ($display['views']) ? $picrow[$j]['image_view_count'] : -1,
+						'ALBUM_NAME'	=> ($display['album']) ? ((utf8_strlen(htmlspecialchars_decode($random_images[$j]['album_name'])) > $album_config['shorted_imagenames'] + 3 ) ? htmlspecialchars(utf8_substr(htmlspecialchars_decode($random_images[$j]['album_name']), 0, $album_config['shorted_imagenames']) . '...') : ($random_images[$j]['album_name'])) : '',
+						'POSTER'		=> ($display['poster']) ? get_username_string('full', $random_images[$j]['image_user_id'], ($random_images[$j]['image_user_id'] <> ANONYMOUS) ? $random_images[$j]['image_username'] : $user->lang['GUEST'], $random_images[$j]['image_user_colour']) : '',
+						'TIME'			=> ($display['time']) ? $user->format_date($random_images[$j]['image_time']) : '',
+						'VIEW'			=> ($display['views']) ? $random_images[$j]['image_view_count'] : -1,
 
-						'S_RATINGS'		=> ($display['ratings']) ? (($album_config['allow_rates'] == 1) && gallery_acl_check('i_rate', $album_id, $picrow[$j]['album_user_id'])) ? $picrow[$j]['rating'] : '' : '',
-						'U_RATINGS'		=> ($display['ratings']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . "&amp;image_id=" . $picrow[$j]['image_id']) . '#rating' : '',
-						'L_COMMENTS'	=> ($display['comments']) ? ($picrow[$j]['image_comments'] == 1) ? $user->lang['COMMENT'] : $user->lang['COMMENTS'] : '',
-						'S_COMMENTS'	=> ($display['comments']) ? (($album_config['allow_comments'] == 1) && gallery_acl_check('c_read', $album_id, $picrow[$j]['album_user_id'])) ? (($picrow[$j]['image_comments']) ? $picrow[$j]['image_comments'] : $user->lang['NO_COMMENTS']) : '' : '',
-						'U_COMMENTS'	=> ($display['comments']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $picrow[$j]['image_album_id'] . "&amp;image_id=" . $picrow[$j]['image_id']) . '#comments' : '',
+						'S_RATINGS'		=> ($display['ratings']) ? (($album_config['allow_rates'] == 1) && gallery_acl_check('i_rate', $album_id, $random_images[$j]['album_user_id'])) ? $random_images[$j]['rating'] : '' : '',
+						'U_RATINGS'		=> ($display['ratings']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $random_images[$j]['image_album_id'] . "&amp;image_id=" . $random_images[$j]['image_id']) . '#rating' : '',
+						'L_COMMENTS'	=> ($display['comments']) ? ($random_images[$j]['image_comments'] == 1) ? $user->lang['COMMENT'] : $user->lang['COMMENTS'] : '',
+						'S_COMMENTS'	=> ($display['comments']) ? (($album_config['allow_comments'] == 1) && gallery_acl_check('c_read', $album_id, $random_images[$j]['album_user_id'])) ? (($random_images[$j]['image_comments']) ? $random_images[$j]['image_comments'] : $user->lang['NO_COMMENTS']) : '' : '',
+						'U_COMMENTS'	=> ($display['comments']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $random_images[$j]['image_album_id'] . "&amp;image_id=" . $random_images[$j]['image_id']) . '#comments' : '',
 
-						'S_IP'		=> ($auth->acl_get('a_')) ? $picrow[$j]['image_user_ip'] : '',
-						'U_WHOIS'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'mode=whois&amp;ip=' . $picrow[$j]['image_user_ip']),
-						'U_REPORT'	=> (gallery_acl_check('m_report', $album_id, $picrow[$j]['album_user_id']) && $picrow[$j]['image_reported']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "mode=report_details&amp;album_id=$album_id&amp;option_id=" . $picrow[$j]['image_reported']) : '',
-						'U_STATUS'	=> (gallery_acl_check('m_status', $album_id, $picrow[$j]['album_user_id']) && ($picrow[$j]['image_status'] || ($user->data['user_id'] <> $picrow[$j]['image_user_id']))) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "mode=queue_details&amp;album_id=$album_id&amp;option_id=" . $picrow[$j]['image_id']) : '',
-						'L_STATUS'	=> (!$picrow[$j]['image_status']) ? $user->lang['APPROVE_IMAGE'] : (($picrow[$j]['image_status'] == 1) ? $user->lang['CHANGE_IMAGE_STATUS'] : $user->lang['UNLOCK_IMAGE']),
-						'U_MOVE'	=> (gallery_acl_check('m_move', $album_id, $picrow[$j]['album_user_id'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "action=images_move&amp;album_id=$album_id&amp;image_id=" . $picrow[$j]['image_id'] . "&amp;redirect=redirect") : '',
-						'U_EDIT'	=> $allow_edit ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=" . $picrow[$j]['image_id']) : '',
-						'U_DELETE'	=> $allow_delete ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=delete&amp;album_id=$album_id&amp;image_id=" . $picrow[$j]['image_id']) : '',
+						'S_IP'		=> ($auth->acl_get('a_')) ? $random_images[$j]['image_user_ip'] : '',
+						'U_WHOIS'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'mode=whois&amp;ip=' . $random_images[$j]['image_user_ip']),
+						'U_REPORT'	=> (gallery_acl_check('m_report', $album_id, $random_images[$j]['album_user_id']) && $random_images[$j]['image_reported']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "mode=report_details&amp;album_id=$album_id&amp;option_id=" . $random_images[$j]['image_reported']) : '',
+						'U_STATUS'	=> (gallery_acl_check('m_status', $album_id, $random_images[$j]['album_user_id']) && ($random_images[$j]['image_status'] || ($user->data['user_id'] <> $random_images[$j]['image_user_id']))) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "mode=queue_details&amp;album_id=$album_id&amp;option_id=" . $random_images[$j]['image_id']) : '',
+						'L_STATUS'	=> (!$random_images[$j]['image_status']) ? $user->lang['APPROVE_IMAGE'] : (($random_images[$j]['image_status'] == 1) ? $user->lang['CHANGE_IMAGE_STATUS'] : $user->lang['UNLOCK_IMAGE']),
+						'U_MOVE'	=> (gallery_acl_check('m_move', $album_id, $random_images[$j]['album_user_id'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "action=images_move&amp;album_id=$album_id&amp;image_id=" . $random_images[$j]['image_id'] . "&amp;redirect=redirect") : '',
+						'U_EDIT'	=> $allow_edit ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=" . $random_images[$j]['image_id']) : '',
+						'U_DELETE'	=> $allow_delete ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=delete&amp;album_id=$album_id&amp;image_id=" . $random_images[$j]['image_id']) : '',
 					));
 				}
 			}
