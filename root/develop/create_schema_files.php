@@ -16,7 +16,7 @@
 
 @set_time_limit(0);
 
-$schema_path = './schemas//';
+$schema_path = '../install/schemas//';
 
 if (!is_writable($schema_path))
 {

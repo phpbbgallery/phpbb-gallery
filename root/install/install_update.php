@@ -124,7 +124,7 @@ class install_update extends module
 			'BODY'		=> $user->lang['REQUIREMENTS_EXPLAIN'],
 		));
 
-		$passed = array('php' => false, 'files' => false,);
+		$passed = array('php' => false, 'files' => false, 'dirs' => false,);
 
 		// Test for basic PHP settings
 		$template->assign_block_vars('checks', array(
@@ -158,11 +158,16 @@ class install_update extends module
 			'LEGEND_EXPLAIN'	=> $user->lang['FILES_REQUIRED_EXPLAIN'],
 		));
 
-		$directories = array(GALLERY_IMPORT_PATH, GALLERY_UPLOAD_PATH, GALLERY_MEDIUM_PATH, GALLERY_CACHE_PATH);
+		$directories = array(
+			GALLERY_IMPORT_PATH,
+			GALLERY_UPLOAD_PATH,
+			GALLERY_MEDIUM_PATH,
+			GALLERY_CACHE_PATH,
+		);
 
 		umask(0);
 
-		$passed['files'] = true;
+		$passed['dirs'] = true;
 		foreach ($directories as $dir)
 		{
 			$write = false;
@@ -186,7 +191,7 @@ class install_update extends module
 
 			@unlink($phpbb_root_path . $dir . 'test_lock');
 
-			$passed['files'] = ($write && $passed['files']) ? true : false;
+			$passed['dirs'] = ($write && $passed['dirs']) ? true : false;
 
 			$write = ($write) ? '<strong style="color:green">' . $user->lang['WRITABLE'] . '</strong>' : '<strong style="color:red">' . $user->lang['UNWRITABLE'] . '</strong>';
 
@@ -197,6 +202,35 @@ class install_update extends module
 				'S_EXPLAIN'	=> false,
 				'S_LEGEND'	=> false,
 			));
+		}
+
+		// Check whether all old files are deleted
+		include($phpbb_root_path . 'install/outdated_files.' . $phpEx);
+
+		umask(0);
+
+		$passed['files'] = true;
+		foreach ($oudated_files as $file)
+		{
+			if (@file_exists($phpbb_root_path . $file))
+			{
+				if ($passed['files'])
+				{
+					$template->assign_block_vars('checks', array(
+						'S_LEGEND'			=> true,
+						'LEGEND'			=> $user->lang['FILES_OUTDATED'],
+						'LEGEND_EXPLAIN'	=> $user->lang['FILES_OUTDATED_EXPLAIN'],
+					));
+				}
+				$template->assign_block_vars('checks', array(
+					'TITLE'		=> $file,
+					'RESULT'	=> '<strong style="color:red">' . $user->lang['FILES_EXISTS'] . '</strong>',
+
+					'S_EXPLAIN'	=> false,
+					'S_LEGEND'	=> false,
+				));
+				$passed['files'] = false;
+			}
 		}
 
 		$url = (!in_array(false, $passed)) ? $this->p_master->module_url . "?mode=$mode&amp;sub=update_db" : $this->p_master->module_url . "?mode=$mode&amp;sub=requirements";
