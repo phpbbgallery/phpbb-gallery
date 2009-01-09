@@ -121,212 +121,6 @@ class acp_gallery
 		}
 	}
 
-	function import()
-	{
-		global $album_config, $config, $db, $template, $user;
-		global $gallery_root_path, $phpbb_root_path, $phpEx;
-
-		$images = request_var('images', array(''), true);
-		$images_string = request_var('images_string', '', true);
-		$images = ($images_string) ? explode('&quot;', utf8_decode($images_string)) : $images;
-		$submit = (isset($_POST['submit'])) ? true : ((empty($images)) ? false : true);
-
-		$directory = $phpbb_root_path . GALLERY_IMPORT_PATH;
-
-		if (!$submit)
-		{
-			$sql = 'SELECT username, user_id
-				FROM ' . USERS_TABLE . "
-				ORDER BY user_id ASC";
-			$result = $db->sql_query($sql);
-			while ($row = $db->sql_fetchrow($result))
-			{
-				$template->assign_block_vars('userrow', array(
-					'USER_ID'				=> $row['user_id'],
-					'USERNAME'				=> $row['username'],
-					'SELECTED'				=> ($row['user_id'] == $user->data['user_id']) ? true : false,
-				));
-			}
-			$db->sql_freeresult($result);
-
-			$handle = opendir($directory);
-
-			while ($file = readdir($handle))
-			{
-				if (!is_dir($directory . "$file") && (
-				((substr(strtolower($file), '-4') == '.png') && $album_config['png_allowed']) ||
-				((substr(strtolower($file), '-4') == '.gif') && $album_config['gif_allowed']) ||
-				((substr(strtolower($file), '-4') == '.jpg') && $album_config['jpg_allowed'])
-				))
-				{
-					$template->assign_block_vars('imagerow', array(
-						'FILE_NAME'				=> utf8_encode($file),
-					));
-				}
-			}
-			closedir($handle);
-
-			$template->assign_vars(array(
-				'S_IMPORT_IMAGES'				=> true,
-				'ACP_GALLERY_TITLE'				=> $user->lang['ACP_IMPORT_ALBUMS'],
-				'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_IMPORT_ALBUMS_EXPLAIN'],
-				'L_IMPORT_DIR_EMPTY'			=> sprintf($user->lang['IMPORT_DIR_EMPTY'], GALLERY_IMPORT_PATH),
-				'S_ALBUM_IMPORT_ACTION'			=> $this->u_action,
-				'S_SELECT_IMPORT' 				=> gallery_albumbox(true, 'album_id', 0, ''),
-			));
-		}
-		else
-		{
-			/**
-			* Commented to allow the loop
-			if (!check_form_key('acp_gallery'))
-			{
-				trigger_error('FORM_INVALID');
-			}
-			*/
-
-			$done_images_string = request_var('done_images_string', '', true);
-			$done_images = explode('&quot;', utf8_decode($done_images_string));
-			$album_id = request_var('album_id', 0);
-			if(!$album_id)
-			{
-				trigger_error('IMPORT_MISSING_ALBUM');
-			}
-			$user_id = request_var('user_id', 0);
-
-			$sql = 'SELECT username, user_colour
-				FROM ' . USERS_TABLE . '
-				WHERE user_id = ' . (int) $user_id;
-			$result = $db->sql_query($sql);
-			while ($row = $db->sql_fetchrow($result))
-			{
-				$username = $row['username'];
-				$user_colour = $row['user_colour'];
-			}
-			$db->sql_freeresult($result);
-
-			$results = array();
-			$images_per_loop = 0;
-			// This time we do:
-			foreach ($images as $image)
-			{
-				if (($images_per_loop < 10) && !in_array($image, $done_images))
-				{
-					$results[] = $image;
-					$images_per_loop++;
-				}
-			}
-
-			$image_count = count($results);
-			$counter = request_var('counter', 0);
-
-			foreach ($results as $image)
-			{
-				$image_path = $directory . utf8_decode($image);
-
-				$filetype = getimagesize($image_path);
-				$image_width = $filetype[0];
-				$image_height = $filetype[1];
-
-				switch ($filetype['mime'])
-				{
-					case 'image/jpeg':
-					case 'image/jpg':
-					case 'image/pjpeg':
-						$image_filetype = '.jpg';
-						break;
-
-					case 'image/png':
-					case 'image/x-png':
-						$image_filetype = '.png';
-						break;
-
-					case 'image/gif':
-						$image_filetype = '.gif';
-						break;
-
-					default:
-						break;
-				}
-				$image_filename = md5(unique_id()) . $image_filetype;
-
-				copy($image_path, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
-				@chmod($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename, 0777);
-
-				// The source image is imported, so we delete it.
-				@unlink($image_path);
-
-				$no_time = time();
-				$time = request_var('time', 0);
-				$time = ($time) ? $time : $no_time;
-
-				$sql_ary = array(
-					'image_filename' 		=> $image_filename,
-					'image_thumbnail'		=> $image_thumbnail,
-					'image_desc'			=> '',
-					'image_desc_uid'		=> '',
-					'image_desc_bitfield'	=> '',
-					'image_user_id'			=> $user_id,
-					'image_username'		=> $username,
-					'image_user_colour'		=> $user_colour,
-					'image_user_ip'			=> $user->ip,
-					'image_time'			=> $time + $counter,
-					'image_album_id'		=> $album_id,
-					'image_status'			=> 1,
-				);
-				$sql_ary['image_name'] = (request_var('filename', '') == 'filename') ? str_replace("_", " ", utf8_substr($image, 0, -4)) : str_replace('{NUM}', $counter + 1, request_var('image_name', '', true));
-				if ($sql_ary['image_name'] == '')
-				{
-					$sql_ary['image_name'] = str_replace("_", " ", utf8_substr($image, 0, -4));
-				}
-
-				$db->sql_query('INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
-				$counter++;
-				$done_images[] = $image;
-				$done_images_string .= (($done_images_string) ? '%22' : '') . urlencode($image);
-			}
-			$left = count($images) - count($done_images);
-
-			$sql = 'UPDATE ' . GALLERY_USERS_TABLE . "
-				SET user_images = user_images + $counter
-				WHERE user_id = " . $user_id;
-			$db->sql_query($sql);
-			if ($db->sql_affectedrows() != 1)
-			{
-				$sql_ary = array(
-					'user_id'				=> $user_id,
-					'user_images'			=> $counter,
-				);
-				$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-				$db->sql_query($sql);
-			}
-			set_config('num_images', $config['num_images'] + $counter, true);
-			update_album_info($album_id);
-
-			$images_string			= urlencode(implode('"', $images));
-			$done_images_string		= substr(urlencode(implode('"', $done_images)), 3, strlen($done_images_string));
-			$images_to_do = str_replace('%22' . $done_images_string, "", '%22' . $images_string);
-			if ('%22' . $images_string != $images_to_do)
-			{
-				$images_to_do = str_replace($done_images_string, "", $images_string);
-				$images_to_do = substr($images_to_do, 3, strlen($images_to_do));
-			}
-			if ($images_to_do)
-			{
-				$imagename = request_var('image_name', '');
-				$filename = request_var('filename', '');
-				$forward_url = $this->u_action . "&amp;album_id=$album_id&amp;time=$time&amp;counter=$counter&amp;user_id=$user_id" . (($filename) ? '&amp;filename=' . request_var('filename', '') : '') . (($imagename && !$filename) ? '&amp;image_name=' . request_var('image_name', '') : '') . "&amp;images_string=$images_to_do";
-				meta_refresh(1, $forward_url);
-				trigger_error(sprintf($user->lang['IMPORT_DEBUG_MES'], $counter, $left + 1));
-				
-			}
-			else
-			{
-				trigger_error(sprintf($user->lang['IMPORT_FINISHED'], $counter) . adm_back_link($this->u_action));
-			}
-		}
-	}
-
 	function overview()
 	{
 		global $album_config, $template, $user, $db, $phpbb_root_path, $config, $auth;
@@ -1659,6 +1453,213 @@ class acp_gallery
 			'S_ALBUM_ACTION' 		=> $this->u_action,
 		));
 	}
+
+	function import()
+	{
+		global $album_config, $config, $db, $template, $user;
+		global $gallery_root_path, $phpbb_root_path, $phpEx;
+
+		$images = request_var('images', array(''), true);
+		$images_string = request_var('images_string', '', true);
+		$images = ($images_string) ? explode('&quot;', utf8_decode($images_string)) : $images;
+		$submit = (isset($_POST['submit'])) ? true : ((empty($images)) ? false : true);
+
+		$directory = $phpbb_root_path . GALLERY_IMPORT_PATH;
+
+		if (!$submit)
+		{
+			$sql = 'SELECT username, user_id
+				FROM ' . USERS_TABLE . "
+				ORDER BY user_id ASC";
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$template->assign_block_vars('userrow', array(
+					'USER_ID'				=> $row['user_id'],
+					'USERNAME'				=> $row['username'],
+					'SELECTED'				=> ($row['user_id'] == $user->data['user_id']) ? true : false,
+				));
+			}
+			$db->sql_freeresult($result);
+
+			$handle = opendir($directory);
+
+			while ($file = readdir($handle))
+			{
+				if (!is_dir($directory . "$file") && (
+				((substr(strtolower($file), '-4') == '.png') && $album_config['png_allowed']) ||
+				((substr(strtolower($file), '-4') == '.gif') && $album_config['gif_allowed']) ||
+				((substr(strtolower($file), '-4') == '.jpg') && $album_config['jpg_allowed'])
+				))
+				{
+					$template->assign_block_vars('imagerow', array(
+						'FILE_NAME'				=> utf8_encode($file),
+					));
+				}
+			}
+			closedir($handle);
+
+			$template->assign_vars(array(
+				'S_IMPORT_IMAGES'				=> true,
+				'ACP_GALLERY_TITLE'				=> $user->lang['ACP_IMPORT_ALBUMS'],
+				'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_IMPORT_ALBUMS_EXPLAIN'],
+				'L_IMPORT_DIR_EMPTY'			=> sprintf($user->lang['IMPORT_DIR_EMPTY'], GALLERY_IMPORT_PATH),
+				'S_ALBUM_IMPORT_ACTION'			=> $this->u_action,
+				'S_SELECT_IMPORT' 				=> gallery_albumbox(true, 'album_id', 0, ''),
+			));
+		}
+		else
+		{
+			/**
+			* Commented to allow the loop
+			if (!check_form_key('acp_gallery'))
+			{
+				trigger_error('FORM_INVALID');
+			}
+			*/
+
+			$done_images_string = request_var('done_images_string', '', true);
+			$done_images = explode('&quot;', utf8_decode($done_images_string));
+			$album_id = request_var('album_id', 0);
+			if(!$album_id)
+			{
+				trigger_error('IMPORT_MISSING_ALBUM');
+			}
+			$user_id = request_var('user_id', 0);
+
+			$sql = 'SELECT username, user_colour
+				FROM ' . USERS_TABLE . '
+				WHERE user_id = ' . (int) $user_id;
+			$result = $db->sql_query($sql);
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$username = $row['username'];
+				$user_colour = $row['user_colour'];
+			}
+			$db->sql_freeresult($result);
+
+			$results = array();
+			$images_per_loop = 0;
+			// This time we do:
+			foreach ($images as $image)
+			{
+				if (($images_per_loop < 10) && !in_array($image, $done_images))
+				{
+					$results[] = $image;
+					$images_per_loop++;
+				}
+			}
+
+			$image_count = count($results);
+			$counter = request_var('counter', 0);
+
+			foreach ($results as $image)
+			{
+				$image_path = $directory . utf8_decode($image);
+
+				$filetype = getimagesize($image_path);
+				$image_width = $filetype[0];
+				$image_height = $filetype[1];
+
+				switch ($filetype['mime'])
+				{
+					case 'image/jpeg':
+					case 'image/jpg':
+					case 'image/pjpeg':
+						$image_filetype = '.jpg';
+						break;
+
+					case 'image/png':
+					case 'image/x-png':
+						$image_filetype = '.png';
+						break;
+
+					case 'image/gif':
+						$image_filetype = '.gif';
+						break;
+
+					default:
+						break;
+				}
+				$image_filename = md5(unique_id()) . $image_filetype;
+
+				copy($image_path, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
+				@chmod($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename, 0777);
+
+				// The source image is imported, so we delete it.
+				@unlink($image_path);
+
+				$no_time = time();
+				$time = request_var('time', 0);
+				$time = ($time) ? $time : $no_time;
+
+				$sql_ary = array(
+					'image_filename' 		=> $image_filename,
+					'image_thumbnail'		=> $image_thumbnail,
+					'image_desc'			=> '',
+					'image_desc_uid'		=> '',
+					'image_desc_bitfield'	=> '',
+					'image_user_id'			=> $user_id,
+					'image_username'		=> $username,
+					'image_user_colour'		=> $user_colour,
+					'image_user_ip'			=> $user->ip,
+					'image_time'			=> $time + $counter,
+					'image_album_id'		=> $album_id,
+					'image_status'			=> 1,
+				);
+				$sql_ary['image_name'] = (request_var('filename', '') == 'filename') ? str_replace("_", " ", utf8_substr($image, 0, -4)) : str_replace('{NUM}', $counter + 1, request_var('image_name', '', true));
+				if ($sql_ary['image_name'] == '')
+				{
+					$sql_ary['image_name'] = str_replace("_", " ", utf8_substr($image, 0, -4));
+				}
+
+				$db->sql_query('INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+				$counter++;
+				$done_images[] = $image;
+				$done_images_string .= (($done_images_string) ? '%22' : '') . urlencode($image);
+			}
+			$left = count($images) - count($done_images);
+
+			$sql = 'UPDATE ' . GALLERY_USERS_TABLE . "
+				SET user_images = user_images + $counter
+				WHERE user_id = " . $user_id;
+			$db->sql_query($sql);
+			if ($db->sql_affectedrows() != 1)
+			{
+				$sql_ary = array(
+					'user_id'				=> $user_id,
+					'user_images'			=> $counter,
+				);
+				$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+				$db->sql_query($sql);
+			}
+			set_config('num_images', $config['num_images'] + $counter, true);
+			update_album_info($album_id);
+
+			$images_string			= urlencode(implode('"', $images));
+			$done_images_string		= substr(urlencode(implode('"', $done_images)), 3, strlen($done_images_string));
+			$images_to_do = str_replace('%22' . $done_images_string, "", '%22' . $images_string);
+			if ('%22' . $images_string != $images_to_do)
+			{
+				$images_to_do = str_replace($done_images_string, "", $images_string);
+				$images_to_do = substr($images_to_do, 3, strlen($images_to_do));
+			}
+			if ($images_to_do)
+			{
+				$imagename = request_var('image_name', '');
+				$filename = request_var('filename', '');
+				$forward_url = $this->u_action . "&amp;album_id=$album_id&amp;time=$time&amp;counter=$counter&amp;user_id=$user_id" . (($filename) ? '&amp;filename=' . request_var('filename', '') : '') . (($imagename && !$filename) ? '&amp;image_name=' . request_var('image_name', '') : '') . "&amp;images_string=$images_to_do";
+				meta_refresh(1, $forward_url);
+				trigger_error(sprintf($user->lang['IMPORT_DEBUG_MES'], $counter, $left + 1));
+				
+			}
+			else
+			{
+				trigger_error(sprintf($user->lang['IMPORT_FINISHED'], $counter) . adm_back_link($this->u_action));
+			}
+		}
+	}
+
 
 	function cleanup()
 	{
