@@ -52,6 +52,7 @@
 
           <change><![CDATA[[Change] Unreported: Author » Uploaded By]]></change>
 
+          <change><![CDATA[[Fix] Report #298: sort personal albums by username]]></change>
           <change><![CDATA[[Fix] Report #414: Images stays reported, when report is deleted (Related to Report #393)]]></change>
           <change><![CDATA[[Fix] Report #410: Missing error message for deleting with subalbums]]></change>
           <change><![CDATA[[Fix] Unreported: wrong alternate text on deleting comments]]></change>

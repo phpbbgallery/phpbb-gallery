@@ -43,6 +43,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 	{
 		$root_data = array('album_id' => 0);
 		$sql_where = 'album_user_id > 0';
+		$mode_personal = true;
 
 		$start = request_var('start', 0);
 		$limit = ceil($config['topics_per_page'] / 2);
@@ -66,7 +67,14 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		'ORDER_BY'	=> 'a.album_user_id, a.left_id',
 	);
 
-	//@todo #298: sort personal albums by username
+	if (isset($mode_personal))
+	{
+		$sql_array['LEFT_JOIN'][] = array(
+			'FROM'	=> array(USERS_TABLE => 'u'),
+			'ON'	=> 'u.user_id = a.album_user_id'
+		);
+		$sql_array['ORDER_BY'] = 'u.username_clean, a.left_id';
+	}
 
 	$sql = $db->sql_build_query('SELECT', array(
 		'SELECT'	=> $sql_array['SELECT'],
