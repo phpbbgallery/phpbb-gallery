@@ -112,7 +112,8 @@ $lang = array_merge($lang, array(
 
 	'HANDLE_IMAGES'					=> 'What to do with the images',
 	'HANDLE_SUBS'					=> 'What to do with the subalbums',
-	'HOTLINK_ALLOWED'				=> 'Allowed domains for hotlink (separated by a comma)',
+	'HOTLINK_ALLOWED'				=> 'Allowed domains for hotlink',
+	'HOTLINK_ALLOWED_EXP'			=> 'separated by a comma',
 	'HOTLINK_PREVENT'				=> 'Hotlink Prevention',
 
 	'IMAGE_DESC_MAX_LENGTH'			=> 'Image Description/Comment Max Length (bytes)',
@@ -238,12 +239,13 @@ $lang = array_merge($lang, array(
 	'VIEW_IMAGE_URL'				=> 'View Image-URL on imagepage',
 
 	'WATERMARK'						=> 'Watermark',
-	'WATERMARK_EXP'					=> 'To avoid small images from being covered by the watermark, you may enter a minimum-width/height here.',
 	'WATERMARK_HEIGHT'				=> 'Minimum-height for watermark',
+	'WATERMARK_HEIGHT_EXP'			=> 'To avoid small images from being covered by the watermark, you may enter a minimum-width/height here.',
 	'WATERMARK_IMAGES'				=> 'Watermark images',
 	'WATERMARK_OPTIONS'				=> 'Watermark options',
 	'WATERMARK_SOURCE'		 		=> 'Watermark source file (relative to your phpbb root)',
 	'WATERMARK_WIDTH'				=> 'Minimum-width for watermark',
+	'WATERMARK_WIDTH_EXP'			=> 'To avoid small images from being covered by the watermark, you may enter a minimum-width/height here.',
 ));
 
 ?>

@@ -112,7 +112,8 @@ $lang = array_merge($lang, array(
 
 	'HANDLE_IMAGES'					=> 'Was soll mit Bildern passieren',
 	'HANDLE_SUBS'					=> 'Was soll mit angehängten Alben passieren',
-	'HOTLINK_ALLOWED'				=> 'Erlaubt Domains für Hotlink (getrennt durch ein Komma)',
+	'HOTLINK_ALLOWED'				=> 'Erlaubt Domains für Hotlink',
+	'HOTLINK_ALLOWED_EXP'			=> 'getrennt durch ein Komma',
 	'HOTLINK_PREVENT'				=> 'Hotlink Prävention',
 
 	'IMAGE_DESC_MAX_LENGTH'			=> 'Bild Beschreibung / Kommentar Max Länge (Bytes)',
@@ -238,12 +239,13 @@ $lang = array_merge($lang, array(
 	'VIEW_IMAGE_URL'				=> 'Link zum Bild auf der Imagepage anzeigen',
 
 	'WATERMARK'						=> 'Wasserzeichen',
-	'WATERMARK_EXP'					=> 'Um zu verhindern, dass kleine Bilder vollkommen vom Wasserzeichen verdeckt werden, kannst du hier eine Mindestgröße angeben.',
 	'WATERMARK_HEIGHT'				=> 'Mindesthöhe',
+	'WATERMARK_HEIGHT_EXP'			=> 'Um zu verhindern, dass kleine Bilder vollkommen vom Wasserzeichen verdeckt werden, kannst du hier eine Mindestgröße angeben.',
 	'WATERMARK_IMAGES'				=> 'Wasserzeichen aktivieren',
 	'WATERMARK_OPTIONS'				=> 'Wasserzeichen-Einstellungen',
 	'WATERMARK_SOURCE'		 		=> 'Wasserzeichen Bild (Releativer Pfad zum Forums Root)',
 	'WATERMARK_WIDTH'				=> 'Mindestbreite',
+	'WATERMARK_WIDTH_EXP'			=> 'Um zu verhindern, dass kleine Bilder vollkommen vom Wasserzeichen verdeckt werden, kannst du hier eine Mindestgröße angeben.',
 ));
 
 ?>

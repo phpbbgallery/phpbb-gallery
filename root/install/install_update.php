@@ -760,6 +760,13 @@ class install_update extends module
 				}
 				$db->sql_freeresult($result);
 
+				// We moved the configurations-panel to a new file
+				$sql = 'UPDATE ' . MODULES_TABLE . "
+					SET module_basename = 'gallery_config',
+						module_mode = 'main'
+					WHERE module_langname = 'ACP_GALLERY_CONFIGURE_GALLERY'";
+				$db->sql_query($sql);
+
 				// Delete "confirmed deleted subalbums" #410
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
@@ -880,7 +887,7 @@ class install_update extends module
 
 			$acp_gallery_overview = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_OVERVIEW',	'module_mode' => 'overview',	'module_auth' => '');
 			add_module($acp_gallery_overview);
-			$acp_configure_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_CONFIGURE_GALLERY',	'module_mode' => 'configure_gallery',	'module_auth' => '');
+			$acp_configure_gallery = array('module_basename' => 'gallery_config',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_CONFIGURE_GALLERY',	'module_mode' => 'main',	'module_auth' => 'acl_a_gallery_manage');
 			add_module($acp_configure_gallery);
 			$acp_gallery_manage_albums = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_MANAGE_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
 			add_module($acp_gallery_manage_albums);

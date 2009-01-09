@@ -23,6 +23,7 @@ if (!defined('IN_PHPBB'))
 class acp_gallery
 {
 	var $u_action;
+
 	function main($id, $mode)
 	{
 		global $album_config, $db, $template, $user;
@@ -42,12 +43,11 @@ class acp_gallery
 
 		switch ($mode)
 		{
-			case 'configure_gallery':
-				$title = 'GALLERY_CONFIG';
-				$this->tpl_name = 'gallery_config';
+			case 'overview':
+				$title = 'ACP_GALLERY_OVERVIEW';
 				$this->page_title = $user->lang[$title];
 
-				$this->configure_gallery();
+				$this->overview();
 			break;
 
 			case 'manage_albums':
@@ -111,12 +111,8 @@ class acp_gallery
 				$this->cleanup();
 			break;
 
-			case 'overview':
 			default:
-				$title = 'ACP_GALLERY_OVERVIEW';
-				$this->page_title = $user->lang[$title];
-
-				$this->overview();
+				trigger_error('NO_MODE', E_USER_ERROR);
 			break;
 		}
 	}
@@ -351,113 +347,6 @@ class acp_gallery
 			'GALLERY_VERSION'		=> $album_config['phpbb_gallery_version'],
 
 			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
-		));
-	}
-
-	function configure_gallery()
-	{
-		global $db, $template, $user, $cache, $phpbb_root_path, $config;
-
-		// Is it salty ?
-		if (isset($_POST['submit']) && !check_form_key('acp_gallery'))
-		{
-			trigger_error('FORM_INVALID');
-		}
-		$submit = isset($_POST['submit']) ? true : false;
-
-		$sql = 'SELECT *
-			FROM ' . GALLERY_CONFIG_TABLE;
-		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result))
-		{
-			$config_name = $row['config_name'];
-			$config_value = $row['config_value'];
-			$default_config[$config_name] = ($submit) ? str_replace("'", "\'", $config_value) : $config_value;
-			$new[$config_name] = request_var($config_name, $default_config[$config_name]);
-
-			if ($submit)
-			{
-				set_gallery_config($config_name, $new[$config_name]);
-			}
-		}
-		$db->sql_freeresult($result);
-
-		if ($submit)
-		{
-			set_config('gallery_total_images', request_var('gallery_total_images', 0));
-			set_config('gallery_user_images_profil', request_var('gallery_user_images_profil', 0));
-			set_config('gallery_personal_album_profil', request_var('gallery_personal_album_profil', 0));
-
-			$cache->destroy('sql', CONFIG_TABLE);
-			$cache->destroy('sql', GALLERY_CONFIG_TABLE);
-			trigger_error($user->lang['GALLERY_CONFIG_UPDATED'] . adm_back_link($this->u_action));
-		}
-
-		$template->assign_vars(array(
-			'S_CONFIGURE_GALLERY'				=> true,
-			'S_ALBUM_CONFIG_ACTION' 			=> $this->u_action,
-
-			'ACP_GALLERY_TITLE'					=> $user->lang['GALLERY_CONFIG'],
-			'ACP_GALLERY_TITLE_EXPLAIN'			=> $user->lang['GALLERY_CONFIG_EXPLAIN'],
-
-			//Album Settings
-			'ROWS_PER_PAGE'					=> $new['rows_per_page'],
-			'COLS_PER_PAGE'					=> $new['cols_per_page'],
-			'SORT_METHOD'					=> $new['sort_method'],
-			'SORT_ORDER'					=> $new['sort_order'],
-			'MAX_IMAGES_PER_ALBUM'			=> $new['max_pics'],
-			'FAKE_THUMB_SIZE'				=> $new['fake_thumb_size'],
-			'DISP_FAKE_THUMB'				=> $new['disp_fake_thumb'],
-
-			//Image Settings
-			'UPLOAD_IMAGES'					=> $new['upload_images'],
-			'MAX_FILE_SIZE'					=> $new['max_file_size'],
-			'MAX_WIDTH'						=> $new['max_width'],
-			'MAX_HEIGHT'					=> $new['max_height'],
-			'S_RESIZE_IMAGES'				=> $new['resize_images'],
-			'S_JPG_ALLOWED'					=> $new['jpg_allowed'],
-			'S_PNG_ALLOWED'					=> $new['png_allowed'],
-			'S_GIF_ALLOWED'					=> $new['gif_allowed'],
-			'IMAGE_DESC_MAX_LENGTH'			=> $new['desc_length'],
-			'S_DISP_EXIF_DATA'				=> $new['exif_data'],
-			'S_VIEW_IMAGE_URL'				=> $new['view_image_url'],
-			//Mediumthumbnails
-			'S_MEDIUM_CACHE'				=> $new['medium_cache'],
-			'RSZ_WIDTH'						=> $new['preview_rsz_width'],
-			'RSZ_HEIGHT'					=> $new['preview_rsz_height'],
-
-			//Watermark options
-			'S_WATERMARK'					=> $new['watermark_images'],
-			'WATERMARK_SOURCE'				=> $new['watermark_source'],
-			'WATERMARK_HEIGHT'				=> $new['watermark_height'],
-			'WATERMARK_WIDTH'				=> $new['watermark_width'],
-			'BOARD_LINK'					=> generate_board_url(),
-
-			//Thumbnail Settings
-			'S_THUMBNAIL_CACHE'				=> $new['thumbnail_cache'],
-			'S_GD'							=> $new['gd_version'],
-			'THUMBNAIL_QUALITY'				=> $new['thumbnail_quality'],
-			'THUMBNAIL_SIZE'				=> $new['thumbnail_size'],
-			'S_INFO_LINE'					=> $new['thumbnail_info_line'],
-
-			//Gallery Configuration
-			'S_COMMENT'						=> $new['allow_comments'],
-			'S_RATE'						=> $new['allow_rates'],
-			'RATE_SCALE' 					=> $new['rate_scale'],
-			'S_HOTLINK_PREVENT'				=> $new['hotlink_prevent'],
-			'HOTLINK_ALLOWED'				=> $new['hotlink_allowed'],
-			'SHORTED_IMAGENAMES'			=> $new['shorted_imagenames'],
-			'S_DISP_TOTAL_IMAGES'			=> $config['gallery_total_images'],
-			'S_DISP_USER_IMAGES_PROFIL'		=> $config['gallery_user_images_profil'],
-			'S_DISP_PERSONAL_ALBUM_PROFIL'	=> $config['gallery_personal_album_profil'],
-			'S_PERSONAL_ALBUM_INDEX'		=> $new['personal_album_index'],
-
-			//Link Configuration
-			'S_GALLERY_HIGHSLIDE_JS'		=> file_exists($phpbb_root_path . 'styles/' . $user->theme['template_path'] . '/theme/highslide/highslide-full.js'),
-			'UC_THUMBNAIL'					=> $new['link_thumbnail'],
-			'UC_IMAGEPAGE'					=> $new['link_imagepage'],
-			'UC_IMAGE_NAME'					=> $new['link_image_name'],
-			'UC_IMAGE_ICON'					=> $new['link_image_icon'],
 		));
 	}
 

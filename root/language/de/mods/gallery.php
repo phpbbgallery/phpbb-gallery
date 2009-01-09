@@ -25,7 +25,6 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'ALBUM'							=> 'Album',
-	'ALBUM_ID_NOT_EXIST'			=> 'Album ID %s existiert nicht',
 	'ALBUM_IS_CATEGORY'				=> 'Das Album, in welches du dich gemogelt hast, ist eine Kategorie.<br />In Kategorien können keine Bilder hochgeladen werden.',
 	'ALBUM_NAME'					=> 'Albumname',
 	'ALBUM_NOT_EXIST'				=> 'Dieses Album existiert nicht',

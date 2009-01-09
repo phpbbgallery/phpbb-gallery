@@ -25,7 +25,6 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'ALBUM'							=> 'Album',
-	'ALBUM_ID_NOT_EXIST'			=> 'Album %s does not exist',
 	'ALBUM_IS_CATEGORY'				=> 'The album you cheated to, is a category-album.<br />You can\'t upload to categories.',
 	'ALBUM_NAME'					=> 'Albumname',
 	'ALBUM_NOT_EXIST'				=> 'This album does not exist',
