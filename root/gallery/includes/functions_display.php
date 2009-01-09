@@ -27,7 +27,7 @@ if (!defined('IN_PHPBB'))
 function display_albums($root_data = '', $display_moderators = true, $return_moderators = false)
 {
 	global $db, $auth, $user, $template, $album_access_array;
-	global $phpbb_root_path, $gallery_root_path, $phpEx, $config, $album_config;
+	global $phpbb_root_path, $gallery_root_path, $phpEx, $config, $gallery_config;
 
 	$album_rows = $subalbums = $album_ids = $album_ids_moderator = $album_moderators = $active_album_ary = array();
 	$parent_id = $visible_albums = 0;
@@ -47,10 +47,10 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 
 		$start = request_var('start', 0);
 		$limit = ceil($config['topics_per_page'] / 2);
-		$total_galleries = $album_config['personal_counter'];
-		$pagination = generate_pagination("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=$mode', $album_config['personal_counter'], $limit, $start);
+		$total_galleries = $gallery_config['personal_counter'];
+		$pagination = generate_pagination("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=$mode', $gallery_config['personal_counter'], $limit, $start);
 		$template->assign_vars(array(
-			'PAGINATION'			=> generate_pagination("{$phpbb_root_path}{$gallery_root_path}index.$phpEx?mode=$mode", $album_config['personal_counter'], $limit, $start),
+			'PAGINATION'			=> generate_pagination("{$phpbb_root_path}{$gallery_root_path}index.$phpEx?mode=$mode", $gallery_config['personal_counter'], $limit, $start),
 		));
 	}
 	else
@@ -237,9 +237,9 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			$lastimage_time = $user->format_date($row['album_last_image_time']);
 			$lastimage_image_id = $row['album_last_image_id'];
 			$lastimage_album_id = $row['album_id_last_image'];
-			$lastimage_uc_thumbnail = generate_image_link('fake_thumbnail', $album_config['link_thumbnail'], $lastimage_image_id, $lastimage_name, $lastimage_album_id);
-			$lastimage_uc_name = generate_image_link('image_name', $album_config['link_image_name'], $lastimage_image_id, $lastimage_name, $lastimage_album_id);
-			$lastimage_uc_icon = generate_image_link('lastimage_icon', $album_config['link_image_icon'], $lastimage_image_id, $lastimage_name, $lastimage_album_id);
+			$lastimage_uc_thumbnail = generate_image_link('fake_thumbnail', $gallery_config['link_thumbnail'], $lastimage_image_id, $lastimage_name, $lastimage_album_id);
+			$lastimage_uc_name = generate_image_link('image_name', $gallery_config['link_image_name'], $lastimage_image_id, $lastimage_name, $lastimage_album_id);
+			$lastimage_uc_icon = generate_image_link('lastimage_icon', $gallery_config['link_image_icon'], $lastimage_image_id, $lastimage_name, $lastimage_album_id);
 		}
 		else
 		{
@@ -283,7 +283,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			'ALBUM_IMAGE'			=> $row['album_image'],
 			'LAST_IMAGE_TIME'		=> $lastimage_time,
 			'LAST_USER_FULL'		=> get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
-			'UC_FAKE_THUMBNAIL'		=> ($album_config['disp_fake_thumb']) ? $lastimage_uc_thumbnail : '',
+			'UC_FAKE_THUMBNAIL'		=> ($gallery_config['disp_fake_thumb']) ? $lastimage_uc_thumbnail : '',
 			'UC_IMAGE_NAME'			=> $lastimage_uc_name,
 			'UC_LASTIMAGE_ICON'		=> $lastimage_uc_icon,
 			'ALBUM_COLOUR'			=> get_username_string('colour', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
@@ -314,7 +314,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		'S_HAS_SUBALBUM'	=> ($visible_albums) ? true : false,
 		'L_SUBFORUM'		=> ($visible_albums == 1) ? $user->lang['SUBALBUM'] : $user->lang['SUBALBUMS'],
 		'LAST_POST_IMG'		=> $user->img('icon_topic_latest', 'VIEW_LATEST_POST'),
-		'FAKE_THUMB_SIZE'	=> $album_config['fake_thumb_size'],
+		'FAKE_THUMB_SIZE'	=> $gallery_config['fake_thumb_size'],
 	));
 
 	if ($return_moderators)

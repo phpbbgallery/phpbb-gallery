@@ -23,7 +23,7 @@ if (!defined('IN_PHPBB'))
 function recent_gallery_images($rows, $columns, &$display, $modes)
 {
 	global $db, $phpEx, $user, $cache, $auth;
-	global $phpbb_root_path, $album_config, $config, $template;
+	global $phpbb_root_path, $gallery_config, $config, $template;
 
 	$gallery_root_path = GALLERY_ROOT_PATH;
 	$user->add_lang('mods/gallery');
@@ -143,22 +143,22 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 
 					$template->assign_block_vars('recent.image', array(
 						'IMAGE_ID'		=> $recent_images[$j]['image_id'],
-						'UC_IMAGE_NAME'	=> ($display['name']) ? (generate_image_link('image_name', $album_config['link_image_name'], $recent_images[$j]['image_id'], $recent_images[$j]['image_name'], $recent_images[$j]['image_album_id'])) : '',
-						'UC_THUMBNAIL'	=> generate_image_link('thumbnail', $album_config['link_thumbnail'], $recent_images[$j]['image_id'], $recent_images[$j]['image_name'], $recent_images[$j]['image_album_id']),
+						'UC_IMAGE_NAME'	=> ($display['name']) ? (generate_image_link('image_name', $gallery_config['link_image_name'], $recent_images[$j]['image_id'], $recent_images[$j]['image_name'], $recent_images[$j]['image_album_id'])) : '',
+						'UC_THUMBNAIL'	=> generate_image_link('thumbnail', $gallery_config['link_thumbnail'], $recent_images[$j]['image_id'], $recent_images[$j]['image_name'], $recent_images[$j]['image_album_id']),
 						'U_ALBUM'		=> ($display['album']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $recent_images[$j]['image_album_id']) : '',
 						'S_UNAPPROVED'	=> (gallery_acl_check('m_status', $album_id, $recent_images[$j]['album_user_id']) && (!$recent_images[$j]['image_status'])) ? true : false,
 						'S_LOCKED'		=> (gallery_acl_check('m_status', $album_id) && ($recent_images[$j]['image_status'] == 2)) ? true : false,
 						'S_REPORTED'	=> (gallery_acl_check('m_report', $album_id, $recent_images[$j]['album_user_id']) && $recent_images[$j]['image_reported']) ? true : false,
 
-						'ALBUM_NAME'	=> ($display['album']) ? ((utf8_strlen(htmlspecialchars_decode($recent_images[$j]['album_name'])) > $album_config['shorted_imagenames'] + 3 ) ? htmlspecialchars(utf8_substr(htmlspecialchars_decode($recent_images[$j]['album_name']), 0, $album_config['shorted_imagenames']) . '...') : ($recent_images[$j]['album_name'])) : '',
+						'ALBUM_NAME'	=> ($display['album']) ? ((utf8_strlen(htmlspecialchars_decode($recent_images[$j]['album_name'])) > $gallery_config['shorted_imagenames'] + 3 ) ? htmlspecialchars(utf8_substr(htmlspecialchars_decode($recent_images[$j]['album_name']), 0, $gallery_config['shorted_imagenames']) . '...') : ($recent_images[$j]['album_name'])) : '',
 						'POSTER'		=> ($display['poster']) ? get_username_string('full', $recent_images[$j]['image_user_id'], ($recent_images[$j]['image_user_id'] <> ANONYMOUS) ? $recent_images[$j]['image_username'] : $user->lang['GUEST'], $recent_images[$j]['image_user_colour']) : '',
 						'TIME'			=> ($display['time']) ? $user->format_date($recent_images[$j]['image_time']) : '',
 						'VIEW'			=> ($display['views']) ? $recent_images[$j]['image_view_count'] : -1,
 
-						'S_RATINGS'		=> ($display['ratings']) ? (($album_config['allow_rates'] == 1) && gallery_acl_check('i_rate', $album_id, $recent_images[$j]['album_user_id'])) ? $recent_images[$j]['rating'] : '' : '',
+						'S_RATINGS'		=> ($display['ratings']) ? (($gallery_config['allow_rates'] == 1) && gallery_acl_check('i_rate', $album_id, $recent_images[$j]['album_user_id'])) ? $recent_images[$j]['rating'] : '' : '',
 						'U_RATINGS'		=> ($display['ratings']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $recent_images[$j]['image_album_id'] . "&amp;image_id=" . $recent_images[$j]['image_id']) . '#rating' : '',
 						'L_COMMENTS'	=> ($display['comments']) ? ($recent_images[$j]['image_comments'] == 1) ? $user->lang['COMMENT'] : $user->lang['COMMENTS'] : '',
-						'S_COMMENTS'	=> ($display['comments']) ? (($album_config['allow_comments'] == 1) && gallery_acl_check('c_read', $album_id, $recent_images[$j]['album_user_id'])) ? (($recent_images[$j]['image_comments']) ? $recent_images[$j]['image_comments'] : $user->lang['NO_COMMENTS']) : '' : '',
+						'S_COMMENTS'	=> ($display['comments']) ? (($gallery_config['allow_comments'] == 1) && gallery_acl_check('c_read', $album_id, $recent_images[$j]['album_user_id'])) ? (($recent_images[$j]['image_comments']) ? $recent_images[$j]['image_comments'] : $user->lang['NO_COMMENTS']) : '' : '',
 						'U_COMMENTS'	=> ($display['comments']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $recent_images[$j]['image_album_id'] . "&amp;image_id=" . $recent_images[$j]['image_id']) . '#comments' : '',
 
 						'S_IP'		=> ($auth->acl_get('a_')) ? $recent_images[$j]['image_user_ip'] : '',
@@ -237,22 +237,22 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 
 					$template->assign_block_vars('random.image', array(
 						'IMAGE_ID'		=> $random_images[$j]['image_id'],
-						'UC_IMAGE_NAME'	=> ($display['name']) ? (generate_image_link('image_name', $album_config['link_image_name'], $random_images[$j]['image_id'], $random_images[$j]['image_name'], $random_images[$j]['image_album_id'])) : '',
-						'UC_THUMBNAIL'	=> generate_image_link('thumbnail', $album_config['link_thumbnail'], $random_images[$j]['image_id'], $random_images[$j]['image_name'], $random_images[$j]['image_album_id']),
+						'UC_IMAGE_NAME'	=> ($display['name']) ? (generate_image_link('image_name', $gallery_config['link_image_name'], $random_images[$j]['image_id'], $random_images[$j]['image_name'], $random_images[$j]['image_album_id'])) : '',
+						'UC_THUMBNAIL'	=> generate_image_link('thumbnail', $gallery_config['link_thumbnail'], $random_images[$j]['image_id'], $random_images[$j]['image_name'], $random_images[$j]['image_album_id']),
 						'U_ALBUM'		=> ($display['album']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $random_images[$j]['image_album_id']) : '',
 						'S_UNAPPROVED'	=> (gallery_acl_check('m_status', $album_id, $random_images[$j]['album_user_id']) && (!$random_images[$j]['image_status'])) ? true : false,
 						'S_LOCKED'		=> (gallery_acl_check('m_status', $album_id) && ($random_images[$j]['image_status'] == 2)) ? true : false,
 						'S_REPORTED'	=> (gallery_acl_check('m_report', $album_id, $random_images[$j]['album_user_id']) && $random_images[$j]['image_reported']) ? true : false,
 
-						'ALBUM_NAME'	=> ($display['album']) ? ((utf8_strlen(htmlspecialchars_decode($random_images[$j]['album_name'])) > $album_config['shorted_imagenames'] + 3 ) ? htmlspecialchars(utf8_substr(htmlspecialchars_decode($random_images[$j]['album_name']), 0, $album_config['shorted_imagenames']) . '...') : ($random_images[$j]['album_name'])) : '',
+						'ALBUM_NAME'	=> ($display['album']) ? ((utf8_strlen(htmlspecialchars_decode($random_images[$j]['album_name'])) > $gallery_config['shorted_imagenames'] + 3 ) ? htmlspecialchars(utf8_substr(htmlspecialchars_decode($random_images[$j]['album_name']), 0, $gallery_config['shorted_imagenames']) . '...') : ($random_images[$j]['album_name'])) : '',
 						'POSTER'		=> ($display['poster']) ? get_username_string('full', $random_images[$j]['image_user_id'], ($random_images[$j]['image_user_id'] <> ANONYMOUS) ? $random_images[$j]['image_username'] : $user->lang['GUEST'], $random_images[$j]['image_user_colour']) : '',
 						'TIME'			=> ($display['time']) ? $user->format_date($random_images[$j]['image_time']) : '',
 						'VIEW'			=> ($display['views']) ? $random_images[$j]['image_view_count'] : -1,
 
-						'S_RATINGS'		=> ($display['ratings']) ? (($album_config['allow_rates'] == 1) && gallery_acl_check('i_rate', $album_id, $random_images[$j]['album_user_id'])) ? $random_images[$j]['rating'] : '' : '',
+						'S_RATINGS'		=> ($display['ratings']) ? (($gallery_config['allow_rates'] == 1) && gallery_acl_check('i_rate', $album_id, $random_images[$j]['album_user_id'])) ? $random_images[$j]['rating'] : '' : '',
 						'U_RATINGS'		=> ($display['ratings']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $random_images[$j]['image_album_id'] . "&amp;image_id=" . $random_images[$j]['image_id']) . '#rating' : '',
 						'L_COMMENTS'	=> ($display['comments']) ? ($random_images[$j]['image_comments'] == 1) ? $user->lang['COMMENT'] : $user->lang['COMMENTS'] : '',
-						'S_COMMENTS'	=> ($display['comments']) ? (($album_config['allow_comments'] == 1) && gallery_acl_check('c_read', $album_id, $random_images[$j]['album_user_id'])) ? (($random_images[$j]['image_comments']) ? $random_images[$j]['image_comments'] : $user->lang['NO_COMMENTS']) : '' : '',
+						'S_COMMENTS'	=> ($display['comments']) ? (($gallery_config['allow_comments'] == 1) && gallery_acl_check('c_read', $album_id, $random_images[$j]['album_user_id'])) ? (($random_images[$j]['image_comments']) ? $random_images[$j]['image_comments'] : $user->lang['NO_COMMENTS']) : '' : '',
 						'U_COMMENTS'	=> ($display['comments']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $random_images[$j]['image_album_id'] . "&amp;image_id=" . $random_images[$j]['image_id']) . '#comments' : '',
 
 						'S_IP'		=> ($auth->acl_get('a_')) ? $random_images[$j]['image_user_ip'] : '',
@@ -269,7 +269,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 		}
 	}
 
-	if ($album_config['allow_comments'] && $comment && ($comment_albums != array()))
+	if ($gallery_config['allow_comments'] && $comment && ($comment_albums != array()))
 	{
 		$user->add_lang('viewtopic');
 		$template->assign_vars(array(
@@ -298,8 +298,8 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 				'U_EDIT'		=> (gallery_acl_check('m_comments', $album_id) || (gallery_acl_check('c_edit', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=edit&amp;comment_id=" . $commentrow['comment_id']) : '',
 				'U_INFO'		=> ($auth->acl_get('a_')) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'mode=whois&amp;ip=' . $commentrow['comment_user_ip']) : '',
 
-				'UC_THUMBNAIL'			=> generate_image_link('thumbnail', $album_config['link_thumbnail'], $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
-				'UC_IMAGE_NAME'			=> generate_image_link('image_name', $album_config['link_image_name'], $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
+				'UC_THUMBNAIL'			=> generate_image_link('thumbnail', $gallery_config['link_thumbnail'], $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
+				'UC_IMAGE_NAME'			=> generate_image_link('image_name', $gallery_config['link_image_name'], $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
 				'IMAGE_AUTHOR'			=> get_username_string('full', $commentrow['image_user_id'], ($commentrow['image_user_id'] <> ANONYMOUS) ? $commentrow['image_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['image_comment_username']), $commentrow['image_user_colour']),
 				'IMAGE_TIME'			=> $user->format_date($commentrow['image_time']),
 
@@ -321,8 +321,8 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 	}
 
 	$template->assign_vars(array(
-		'S_THUMBNAIL_SIZE'			=> $album_config['thumbnail_size'] + 20 + (($album_config['thumbnail_info_line']) ? 16 : 0),
-		'S_COL_WIDTH'			=> (100/$album_config['cols_per_page']) . '%',
+		'S_THUMBNAIL_SIZE'			=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? 16 : 0),
+		'S_COL_WIDTH'			=> (100/$gallery_config['cols_per_page']) . '%',
 		'S_COLS'				=> $columns,
 		'S_RANDOM'				=> $random,
 		'S_RECENT'				=> $recent,

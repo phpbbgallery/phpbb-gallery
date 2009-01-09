@@ -26,14 +26,14 @@ class acp_gallery
 
 	function main($id, $mode)
 	{
-		global $album_config, $db, $template, $user;
+		global $gallery_config, $db, $template, $user;
 		global $gallery_root_path, $phpbb_root_path, $phpEx;
 		$gallery_root_path = GALLERY_ROOT_PATH;
 
 		include($phpbb_root_path . $gallery_root_path . 'includes/constants.' . $phpEx);
 		include($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
 		include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
-		$album_config = load_gallery_config();
+		$gallery_config = load_gallery_config();
 		$album_access_array = get_album_access_array();
 
 		$user->add_lang('mods/gallery_acp');
@@ -119,7 +119,7 @@ class acp_gallery
 
 	function overview()
 	{
-		global $album_config, $template, $user, $db, $phpbb_root_path, $config, $auth;
+		global $gallery_config, $template, $user, $db, $phpbb_root_path, $config, $auth;
 
 		$action = request_var('action', '');
 		$id = request_var('i', '');
@@ -340,11 +340,11 @@ class acp_gallery
 			'TOTAL_IMAGES'			=> $config['num_images'],
 			'IMAGES_PER_DAY'		=> $images_per_day,
 			'TOTAL_ALBUMS'			=> $num_albums,
-			'TOTAL_PERSONALS'		=> $album_config['personal_counter'],
+			'TOTAL_PERSONALS'		=> $gallery_config['personal_counter'],
 			'GUPLOAD_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat']),
 			'MEDIUM_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat_medium']),
 			'CACHE_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat_cache']),
-			'GALLERY_VERSION'		=> $album_config['phpbb_gallery_version'],
+			'GALLERY_VERSION'		=> $gallery_config['phpbb_gallery_version'],
 
 			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
 		));
@@ -993,7 +993,7 @@ class acp_gallery
 
 	function permissions()
 	{
-		global $db, $template, $user, $cache, $album_config;
+		global $db, $template, $user, $cache;
 
 		$submit = (isset($_POST['submit'])) ? true : false;
 		$delete = (isset($_POST['delete'])) ? true : false;
@@ -1345,7 +1345,7 @@ class acp_gallery
 
 	function import()
 	{
-		global $album_config, $config, $db, $template, $user;
+		global $gallery_config, $config, $db, $template, $user;
 		global $gallery_root_path, $phpbb_root_path, $phpEx;
 
 		$images = request_var('images', array(''), true);
@@ -1376,9 +1376,9 @@ class acp_gallery
 			while ($file = readdir($handle))
 			{
 				if (!is_dir($directory . "$file") && (
-				((substr(strtolower($file), '-4') == '.png') && $album_config['png_allowed']) ||
-				((substr(strtolower($file), '-4') == '.gif') && $album_config['gif_allowed']) ||
-				((substr(strtolower($file), '-4') == '.jpg') && $album_config['jpg_allowed'])
+				((substr(strtolower($file), '-4') == '.png') && $gallery_config['png_allowed']) ||
+				((substr(strtolower($file), '-4') == '.gif') && $gallery_config['gif_allowed']) ||
+				((substr(strtolower($file), '-4') == '.jpg') && $gallery_config['jpg_allowed'])
 				))
 				{
 					$template->assign_block_vars('imagerow', array(

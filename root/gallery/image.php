@@ -59,7 +59,7 @@ if ((!gallery_acl_check('i_view', $album_id)) || (!gallery_acl_check('m_status',
 }
 
 //@todo: Unreported: Hotlink prevention doesn't working
-if ($album_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER']))
+if ($gallery_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER']))
 {
 	$check_referer = trim($HTTP_SERVER_VARS['HTTP_REFERER']);
 	if (substr($check_referer, 0, 7) == 'http://')
@@ -80,9 +80,9 @@ if ($album_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER'])
 	}
 
 	$good_referers = array($config['server_name']);
-	if ($album_config['hotlink_allowed'] != '')
+	if ($gallery_config['hotlink_allowed'] != '')
 	{
-		$good_referers = array_merge($good_referers, explode(',', $album_config['hotlink_allowed']));
+		$good_referers = array_merge($good_referers, explode(',', $gallery_config['hotlink_allowed']));
 	}
 
 	if (!in_array($check_referer, $good_referers))
@@ -119,14 +119,14 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 {
 	if ($mode == 'thumbnail')
 	{
-		$resize_width = $album_config['thumbnail_size'];
-		$resize_height = $album_config['thumbnail_size'];
+		$resize_width = $gallery_config['thumbnail_size'];
+		$resize_height = $gallery_config['thumbnail_size'];
 		$thumbnail = true;
 	}
 	else
 	{
-		$resize_width = $album_config['preview_rsz_width'];
-		$resize_height = $album_config['preview_rsz_height'];
+		$resize_width = $gallery_config['preview_rsz_width'];
+		$resize_height = $gallery_config['preview_rsz_height'];
 		$thumbnail = false;
 	}
 	if (!file_exists($image_source))
@@ -167,18 +167,18 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 
 			// Create thumbnail + 16 Pixel extra for imagesize text 
 			// Create image details credits to Dr.Death
-			if ($album_config['thumbnail_info_line'] && $thumbnail)
+			if ($gallery_config['thumbnail_info_line'] && $thumbnail)
 			{
-				$thumb_file = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height + 16) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height + 16); 
+				$thumb_file = ($gallery_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height + 16) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height + 16); 
 			}
 			else
 			{
-				$thumb_file = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
+				$thumb_file = ($gallery_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
 			}
-			$resize_function = ($album_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
+			$resize_function = ($gallery_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
 			@$resize_function($thumb_file, $image_file, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $image_width, $image_height);
 
-			if ($album_config['thumbnail_info_line'] && $thumbnail)
+			if ($gallery_config['thumbnail_info_line'] && $thumbnail)
 			{
 				$dimension_font = 1;
 				$dimension_filesize = filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
@@ -192,7 +192,7 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 			}
 		}
 
-		$save_file = (($mode == 'thumbnail') && $album_config['thumbnail_cache']) ? true : (($mode == 'medium') && $album_config['medium_cache']) ? true : false;
+		$save_file = (($mode == 'thumbnail') && $gallery_config['thumbnail_cache']) ? true : (($mode == 'medium') && $gallery_config['medium_cache']) ? true : false;
 		$wirte_source = '';
 		if ($save_file)
 		{
@@ -206,7 +206,7 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 				{
 					header('Content-type: image/jpeg');
 				}
-				@imagejpeg($thumb_file, $wirte_source, (($thumbnail) ? $album_config['thumbnail_quality'] : 100));
+				@imagejpeg($thumb_file, $wirte_source, (($thumbnail) ? $gallery_config['thumbnail_quality'] : 100));
 			break;
 			case '.png':
 				if (!$save_file)
@@ -242,10 +242,10 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 * Watermark
 */
 $file_size = getimagesize($image_source);
-if (!gallery_acl_check('i_watermark', $album_id) && $possible_watermark && $album_config['watermark_images'] &&
-	($album_config['watermark_height'] < $file_size[0]) && ($album_config['watermark_width'] < $file_size[1]))
+if (!gallery_acl_check('i_watermark', $album_id) && $possible_watermark && $gallery_config['watermark_images'] &&
+	($gallery_config['watermark_height'] < $file_size[0]) && ($gallery_config['watermark_width'] < $file_size[1]))
 {
-	$watermark_source = $phpbb_root_path . $album_config['watermark_source'];
+	$watermark_source = $phpbb_root_path . $gallery_config['watermark_source'];
 	switch (substr($watermark_source, (strlen($watermark_source) - 4), 4))
 	{
 		case '.png':

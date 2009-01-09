@@ -105,7 +105,7 @@ if (gallery_acl_check('m_status', $album_id))
 }
 
 $sort_by_sql = array('t' => 'image_time', 'n' => 'image_name', 'u' => 'image_username', 'vc' => 'image_view_count', 'ra' => 'image_rate_avg', 'r' => 'image_rates', 'c' => 'image_comments', 'lc' => 'image_last_comment');
-$sql_sort_order = $sort_by_sql[$album_config['sort_method']] . ' ' . (($album_config['sort_order'] == 'd') ? 'DESC' : 'ASC');
+$sql_sort_order = $sort_by_sql[$gallery_config['sort_method']] . ' ' . (($gallery_config['sort_order'] == 'd') ? 'DESC' : 'ASC');
 
 $sql = 'SELECT *
 	FROM ' . GALLERY_IMAGES_TABLE . '
@@ -135,7 +135,7 @@ $is_watching = $image_data['watch_id'];
 $template->assign_vars(array(
 	'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"),
 
-	'UC_IMAGE'			=> generate_image_link('medium', $album_config['link_imagepage'], $image_id, $image_data['image_name'], $album_id, ((substr($image_data['image_filename'], 0 -3) == 'gif') ? true : false)),
+	'UC_IMAGE'			=> generate_image_link('medium', $gallery_config['link_imagepage'], $image_id, $image_data['image_name'], $album_id, ((substr($image_data['image_filename'], 0 -3) == 'gif') ? true : false)),
 	'U_PREVIOUS'		=> ($previous_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$previous_id") : '',
 	'U_NEXT'			=> ($next_id && ($next_id != $previous_id)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$next_id") : '',
 
@@ -149,7 +149,7 @@ $template->assign_vars(array(
 	'IMAGE_NAME'		=> $image_data['image_name'],
 	'IMAGE_DESC'		=> generate_text_for_display($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], 7),
 	'IMAGE_BBCODE'		=> '[album]' . $image_id . '[/album]',
-	'IMAGE_URL'			=> ($album_config['view_image_url']) ? generate_board_url(false) . '/' . $gallery_root_path . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id" : '',
+	'IMAGE_URL'			=> ($gallery_config['view_image_url']) ? generate_board_url(false) . '/' . $gallery_root_path . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id" : '',
 	'POSTER'			=> get_username_string('full', $image_data['image_user_id'], ($image_data['image_username']) ? $image_data['image_username'] : $user->lang['GUEST'], $image_data['image_user_colour']),
 	'IMAGE_TIME'		=> $user->format_date($image_data['image_time']),
 	'IMAGE_VIEW'		=> $image_data['image_view_count'],
@@ -170,7 +170,7 @@ $template->assign_vars(array(
 /**
 * Exif-Data
 */
-if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (substr($image_data['image_filename'], -3, 3) == 'jpg') && function_exists('exif_read_data'))
+if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (substr($image_data['image_filename'], -3, 3) == 'jpg') && function_exists('exif_read_data'))
 {
 	$exif = @exif_read_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename'], 0, true);
 	if (!empty($exif["EXIF"]))
@@ -278,7 +278,7 @@ if ($album_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (substr
 /**
 * Rating
 */
-if ($album_config['allow_rates'])
+if ($gallery_config['allow_rates'])
 {
 	$allowed_to_rate = $your_rating = false;
 
@@ -301,7 +301,7 @@ if ($album_config['allow_rates'])
 	// Check: User didn't rate yet, has permissions, it's not the users own image and the user is logged in
 	if (!$your_rating && gallery_acl_check('i_rate', $album_id) && ($user->data['user_id'] != $image_data['image_user_id']) && ($user->data['user_id'] != ANONYMOUS))
 	{
-		for ($rate_scale = 1; $rate_scale <= $album_config['rate_scale']; $rate_scale++)
+		for ($rate_scale = 1; $rate_scale <= $gallery_config['rate_scale']; $rate_scale++)
 		{
 			$template->assign_block_vars('rate_scale', array(
 				'RATE_POINT'	=> $rate_scale,
@@ -320,7 +320,7 @@ if ($album_config['allow_rates'])
 /**
 * Posting comment
 */
-if ($album_config['allow_comments'] && gallery_acl_check('c_post', $album_id))
+if ($gallery_config['allow_comments'] && gallery_acl_check('c_post', $album_id))
 {
 	$user->add_lang('posting');
 	include("{$phpbb_root_path}includes/functions_posting.$phpEx");
@@ -354,7 +354,7 @@ if ($album_config['allow_comments'] && gallery_acl_check('c_post', $album_id))
 		'S_BBCODE_URL'			=> $url_status,
 		'S_BBCODE_FLASH'		=> $flash_status,
 		'S_BBCODE_QUOTE'		=> $quote_status,
-		'L_COMMENT_LENGTH'		=> sprintf($user->lang['COMMENT_LENGTH'], $album_config['comment_length']),
+		'L_COMMENT_LENGTH'		=> sprintf($user->lang['COMMENT_LENGTH'], $gallery_config['comment_length']),
 		'S_COMMENT_ACTION'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=add"),
 	));
 }
@@ -363,7 +363,7 @@ if ($album_config['allow_comments'] && gallery_acl_check('c_post', $album_id))
 /**
 * Listing comment
 */
-if ($album_config['allow_comments'] && gallery_acl_check('c_read', $album_id))
+if ($gallery_config['allow_comments'] && gallery_acl_check('c_read', $album_id))
 {
 	$user->add_lang('viewtopic');
 	$start = request_var('start', 0);

@@ -48,7 +48,7 @@ if ($mode == 'personal')
 /**
 * Add a personal albums category to the album listing if the user has permission to view personal albums
 */
-else if ($album_config['personal_album_index'] && gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS))
+else if ($gallery_config['personal_album_index'] && gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS))
 {
 	$images = $images_real = $last_image = 0;
 	$sql = 'SELECT *
@@ -92,9 +92,9 @@ else if ($album_config['personal_album_index'] && gallery_acl_check('a_list', PE
 		'UNAPPROVED_IMAGES'		=> $images_real,
 		'LAST_IMAGE_TIME'		=> $lastimage_time,
 		'LAST_USER_FULL'		=> get_username_string('full', $lastimage_user_id, $lastimage_username, $lastimage_user_colour),
-		'UC_FAKE_THUMBNAIL'		=> ($album_config['disp_fake_thumb']) ? generate_image_link('fake_thumbnail', $album_config['link_thumbnail'], $lastimage_image_id, $lastimage_name, $lastimage_album_id) : '',
-		'UC_IMAGE_NAME'			=> generate_image_link('image_name', $album_config['link_image_name'], $lastimage_image_id, $lastimage_name, $lastimage_album_id),
-		'UC_LASTIMAGE_ICON'		=> generate_image_link('lastimage_icon', $album_config['link_image_icon'], $lastimage_image_id, $lastimage_name, $lastimage_album_id),
+		'UC_FAKE_THUMBNAIL'		=> ($gallery_config['disp_fake_thumb']) ? generate_image_link('fake_thumbnail', $gallery_config['link_thumbnail'], $lastimage_image_id, $lastimage_name, $lastimage_album_id) : '',
+		'UC_IMAGE_NAME'			=> generate_image_link('image_name', $gallery_config['link_image_name'], $lastimage_image_id, $lastimage_name, $lastimage_album_id),
+		'UC_LASTIMAGE_ICON'		=> generate_image_link('lastimage_icon', $gallery_config['link_image_icon'], $lastimage_image_id, $lastimage_name, $lastimage_album_id),
 	));
 
 	// Assign subforums loop for style authors
@@ -129,12 +129,12 @@ recent_gallery_images(1, 4, $display, 'all');
 * Start output the page
 */
 $template->assign_vars(array(
-	'U_YOUR_PERSONAL_GALLERY' 		=> (!$album_config['personal_album_index'] && gallery_acl_check('i_upload', OWN_GALLERY_PERMISSIONS)) ? ($user->gallery['personal_album_id'] > 0) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $user->gallery['personal_album_id']) : append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums') : '',
-	'U_USERS_PERSONAL_GALLERIES' 	=> (!$album_config['personal_album_index'] &&gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal') : '',
+	'U_YOUR_PERSONAL_GALLERY' 		=> (!$gallery_config['personal_album_index'] && gallery_acl_check('i_upload', OWN_GALLERY_PERMISSIONS)) ? ($user->gallery['personal_album_id'] > 0) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $user->gallery['personal_album_id']) : append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums') : '',
+	'U_USERS_PERSONAL_GALLERIES' 	=> (!$gallery_config['personal_album_index'] &&gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal') : '',
 
 	'S_LOGIN_ACTION'				=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login&amp;redirect=' . urlencode("{$gallery_root_path}index.$phpEx" . (($mode == 'personal') ? '?mode=personal' : ''))),
-	'S_COLS' 						=> $album_config['cols_per_page'],
-	'S_COL_WIDTH' 					=> (100/$album_config['cols_per_page']) . '%',
+	'S_COLS' 						=> $gallery_config['cols_per_page'],
+	'S_COL_WIDTH' 					=> (100/$gallery_config['cols_per_page']) . '%',
 ));
 
 page_header($user->lang['GALLERY']);

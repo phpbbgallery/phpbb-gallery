@@ -20,9 +20,9 @@ if (!defined('IN_PHPBB'))
 function get_album_access_array()
 {
 	global $cache, $db, $user;
-	global $album_access_array, $album_config;
+	global $album_access_array, $gallery_config;
 
-	if ($album_config == array())
+	if ($gallery_config == array())
 	{
 		// If we don't have the config, we don't have the function to call it aswell?
 		$sql = 'SELECT *
@@ -31,7 +31,7 @@ function get_album_access_array()
 
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$album_config[$row['config_name']] = $row['config_value'];
+			$gallery_config[$row['config_name']] = $row['config_value'];
 		}
 		$db->sql_freeresult($result);
 	}
@@ -281,7 +281,7 @@ function gallery_acl_album_ids($permission, $mode = 'array')
 */
 function gen_album_auth_level($mode, $album_id, $album_status = 1)
 {
-	global $template, $user, $album_config, $album_access_array;
+	global $template, $user, $gallery_config, $album_access_array;
 
 	$locked = ($album_status == ITEM_LOCKED && ($album_access_array[$album_id]['a_moderate'] != 1)) ? true : false;
 	$permissions = array('i_approve', 'i_lock', 'i_report', 'i_count', 'a_moderate', 'album_count');
@@ -294,11 +294,11 @@ function gen_album_auth_level($mode, $album_id, $album_status = 1)
 		(gallery_acl_check('i_edit', $album_id) && !$locked) ? $user->lang['ALBUM_EDIT_CAN'] : $user->lang['ALBUM_EDIT_CANNOT'],
 		(gallery_acl_check('i_delete', $album_id) && !$locked) ? $user->lang['ALBUM_DELETE_CAN'] : $user->lang['ALBUM_DELETE_CANNOT'],
 	);
-	if ($album_config['comment'])
+	if ($gallery_config['comment'])
 	{
 		$rules[] = (gallery_acl_check('c_post', $album_id) && !$locked) ? $user->lang['ALBUM_COMMENT_CAN'] : $user->lang['ALBUM_COMMENT_CANNOT'];
 	}
-	if ($album_config['rate'])
+	if ($gallery_config['rate'])
 	{
 		$rules[] = (gallery_acl_check('i_rate', $album_id) && !$locked) ? $user->lang['ALBUM_RATE_CAN'] : $user->lang['ALBUM_RATE_CANNOT'];
 	}

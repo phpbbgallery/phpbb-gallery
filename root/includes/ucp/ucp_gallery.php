@@ -26,14 +26,14 @@ class ucp_gallery
 
 	function main($id, $mode)
 	{
-		global $album_access_array, $album_config, $db, $template, $user;
+		global $album_access_array, $gallery_config, $db, $template, $user;
 		global $gallery_root_path, $phpbb_root_path, $phpEx;
 		$gallery_root_path = GALLERY_ROOT_PATH;
 
 		include($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
 		include($phpbb_root_path . $gallery_root_path . 'includes/constants.' . $phpEx);
 		include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
-		$album_config = load_gallery_config();
+		$gallery_config = load_gallery_config();
 		$album_access_array = get_album_access_array();
 
 		$user->add_lang('mods/gallery');
@@ -233,7 +233,7 @@ class ucp_gallery
 				);
 				$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $gallery_settings));
 			}
-			set_gallery_config('personal_counter', $album_config['personal_counter'] + 1);
+			set_gallery_config('personal_counter', $gallery_config['personal_counter'] + 1);
 
 			$cache->destroy('_albums');
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
@@ -606,7 +606,7 @@ class ucp_gallery
 
 	function delete_album()
 	{
-		global $album_config, $cache, $db, $template, $user;
+		global $gallery_config, $cache, $db, $template, $user;
 		global $phpbb_root_path, $phpEx;
 
 		$s_hidden_fields = build_hidden_fields(array(
@@ -701,7 +701,7 @@ class ucp_gallery
 					WHERE ' . $db->sql_in_set('personal_album_id', $deleted_albums);
 				$db->sql_query($sql);
 
-				set_gallery_config('personal_counter', $album_config['personal_counter'] - 1);
+				set_gallery_config('personal_counter', $gallery_config['personal_counter'] - 1);
 			}
 			else
 			{
@@ -812,7 +812,7 @@ class ucp_gallery
 
 	function manage_subscriptions()
 	{
-		global $album_config, $db, $template, $user;
+		global $gallery_config, $db, $template, $user;
 		global $gallery_root_path, $phpbb_root_path, $phpEx;
 
 		$action = request_var('action', '');
@@ -865,8 +865,8 @@ class ucp_gallery
 				'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx" , "album_id=" . $row['album_id']),
 				'ALBUM_DESC'		=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
 
-				'UC_IMAGE_NAME'		=> generate_image_link('image_name', $album_config['link_image_name'], $row['album_last_image_id'], $row['album_last_image_name'], $row['album_id']),
-				'UC_FAKE_THUMBNAIL'	=> generate_image_link('fake_thumbnail', $album_config['link_thumbnail'], $row['album_last_image_id'], $row['album_last_image_name'], $row['album_id']),
+				'UC_IMAGE_NAME'		=> generate_image_link('image_name', $gallery_config['link_image_name'], $row['album_last_image_id'], $row['album_last_image_name'], $row['album_id']),
+				'UC_FAKE_THUMBNAIL'	=> generate_image_link('fake_thumbnail', $gallery_config['link_thumbnail'], $row['album_last_image_id'], $row['album_last_image_name'], $row['album_id']),
 				'UPLOADER'			=> get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
 				'LAST_IMAGE_TIME'	=> $user->format_date($row['album_last_image_time']),
 				'LAST_IMAGE'		=> $row['album_last_image_id'],
@@ -877,7 +877,7 @@ class ucp_gallery
 
 		// Subscribed images
 		$start				= request_var('start', 0);
-		$images_per_page	= $album_config['rows_per_page'] * $album_config['cols_per_page'];
+		$images_per_page	= $gallery_config['rows_per_page'] * $gallery_config['cols_per_page'];
 		$total_images		= 0;
 
 		$sql = 'SELECT COUNT(image_id) as images
@@ -908,8 +908,8 @@ class ucp_gallery
 				'COMMENT'			=> $row['image_comments'],
 				'LAST_COMMENT_TIME'	=> $user->format_date($row['comment_time']),
 				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
-				'UC_IMAGE_NAME'		=> generate_image_link('image_name', $album_config['link_image_name'], $row['image_id'], $row['image_name'], $row['album_id']),
-				'UC_FAKE_THUMBNAIL'	=> generate_image_link('fake_thumbnail', $album_config['link_thumbnail'], $row['image_id'], $row['image_name'], $row['album_id']),
+				'UC_IMAGE_NAME'		=> generate_image_link('image_name', $gallery_config['link_image_name'], $row['image_id'], $row['image_name'], $row['album_id']),
+				'UC_FAKE_THUMBNAIL'	=> generate_image_link('fake_thumbnail', $gallery_config['link_thumbnail'], $row['image_id'], $row['image_name'], $row['album_id']),
 				'ALBUM_NAME'		=> $row['album_name'],
 				'IMAGE_ID'			=> $row['image_id'],
 				'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx" , "album_id=" . $row['image_album_id']),
@@ -930,13 +930,13 @@ class ucp_gallery
 			'TOTAL_IMAGES'				=> ($total_images == 1) ? $user->lang['VIEW_ALBUM_IMAGE'] : sprintf($user->lang['VIEW_ALBUM_IMAGES'], $total_images),
 
 			'DISP_FAKE_THUMB'			=> true,
-			'FAKE_THUMB_SIZE'			=> $album_config['fake_thumb_size'],
+			'FAKE_THUMB_SIZE'			=> $gallery_config['fake_thumb_size'],
 		));
 	}
 
 	function manage_favorites()
 	{
-		global $album_config, $db, $template, $user;
+		global $gallery_config, $db, $template, $user;
 		global $gallery_root_path, $phpbb_root_path, $phpEx;
 
 		$action = request_var('action', '');
@@ -958,7 +958,7 @@ class ucp_gallery
 		}
 
 		$start				= request_var('start', 0);
-		$images_per_page	= $album_config['rows_per_page'] * $album_config['cols_per_page'];
+		$images_per_page	= $gallery_config['rows_per_page'] * $gallery_config['cols_per_page'];
 		$total_images		= 0;
 
 		$sql = 'SELECT COUNT(image_id) as images
@@ -979,8 +979,8 @@ class ucp_gallery
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$template->assign_block_vars('image_row', array(
-				'UC_IMAGE_NAME'		=> generate_image_link('image_name', $album_config['link_image_name'], $row['image_id'], $row['image_name'], $row['image_album_id']),
-				'UC_FAKE_THUMBNAIL'	=> generate_image_link('fake_thumbnail', $album_config['link_thumbnail'], $row['image_id'], $row['image_name'], $row['image_album_id']),
+				'UC_IMAGE_NAME'		=> generate_image_link('image_name', $gallery_config['link_image_name'], $row['image_id'], $row['image_name'], $row['image_album_id']),
+				'UC_FAKE_THUMBNAIL'	=> generate_image_link('fake_thumbnail', $gallery_config['link_thumbnail'], $row['image_id'], $row['image_name'], $row['image_album_id']),
 				'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
 				'ALBUM_NAME'		=> $row['album_name'],
@@ -1003,7 +1003,7 @@ class ucp_gallery
 			'TOTAL_IMAGES'				=> ($total_images == 1) ? $user->lang['VIEW_ALBUM_IMAGE'] : sprintf($user->lang['VIEW_ALBUM_IMAGES'], $total_images),
 
 			'DISP_FAKE_THUMB'			=> true,
-			'FAKE_THUMB_SIZE'			=> (empty($album_config['fake_thumb_size'])) ? 50 : $album_config['fake_thumb_size'],
+			'FAKE_THUMB_SIZE'			=> (empty($gallery_config['fake_thumb_size'])) ? 50 : $gallery_config['fake_thumb_size'],
 		));
 	}
 

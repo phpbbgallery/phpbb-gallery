@@ -21,7 +21,7 @@ $user->add_lang('mods/info_acp_gallery');
 $gallery_root_path = GALLERY_ROOT_PATH;
 include($phpbb_root_path . $gallery_root_path . 'includes/constants.' . $phpEx);
 include($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
-$album_config = load_gallery_config();
+$gallery_config = load_gallery_config();
 
 // Don't display Gallery-NavLink / activate Gallery-Tab on "recent-random-images"
 $recent_image_addon = isset($recent_image_addon);

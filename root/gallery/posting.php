@@ -348,9 +348,9 @@ switch ($mode)
 			{
 				// Upload Quota Check
 				// 1. Check Album Configuration Quota
-				if ($album_config['max_pics'] >= 0)
+				if ($gallery_config['max_pics'] >= 0)
 				{
-					if ($album_data['album_images'] >= $album_config['max_pics'])
+					if ($album_data['album_images'] >= $gallery_config['max_pics'])
 					{
 						trigger_error('ALBUM_REACHED_QUOTA');
 					}
@@ -392,14 +392,14 @@ switch ($mode)
 						{
 							$loop = $loop + 1;
 							$images = $images + 1;
-							if ($album_config['gd_version'] == 0)
+							if ($gallery_config['gd_version'] == 0)
 							{
 								$image_data['thumbnail_type']	= $_FILES['thumbnail']['type'][$i];
 								$image_data['thumbnail_size']	= $_FILES['thumbnail']['size'][$i];
 								$image_data['thumbnail_tmp']	= $_FILES['thumbnail']['tmp_name'][$i];
 							}
 							// Watch for 8-times max-file-sizewe will watch for the real size after resize, if enabled
-							if ((!$image_data['image_size']) || ($image_data['image_size'] > (8 * $album_config['max_file_size'])))
+							if ((!$image_data['image_size']) || ($image_data['image_size'] > (8 * $gallery_config['max_file_size'])))
 							{
 								trigger_error('BAD_UPLOAD_FILE_SIZE');
 							}
@@ -408,7 +408,7 @@ switch ($mode)
 								case 'image/jpeg':
 								case 'image/jpg':
 								case 'image/pjpeg':
-									if (!$album_config['jpg_allowed'])
+									if (!$gallery_config['jpg_allowed'])
 									{
 										trigger_error('NOT_ALLOWED_FILE_TYPE');
 									}
@@ -416,14 +416,14 @@ switch ($mode)
 								break;
 								case 'image/png':
 								case 'image/x-png':
-									if (!$album_config['png_allowed'])
+									if (!$gallery_config['png_allowed'])
 									{
 										trigger_error('NOT_ALLOWED_FILE_TYPE');
 									}
 									$image_data['image_type2'] = '.png';
 								break;
 								case 'image/gif':
-									if (!$album_config['gif_allowed'])
+									if (!$gallery_config['gif_allowed'])
 									{
 										trigger_error('NOT_ALLOWED_FILE_TYPE');
 									}
@@ -491,26 +491,26 @@ switch ($mode)
 							}
 
 							$src = $read_function($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
-							if (($image_data['width'] > $album_config['max_width']) || ($image_data['height'] > $album_config['max_height']))
+							if (($image_data['width'] > $gallery_config['max_width']) || ($image_data['height'] > $gallery_config['max_height']))
 							{
 								/**
 								* Resize overside images
 								*/
-								if ($album_config['resize_images'])
+								if ($gallery_config['resize_images'])
 								{
 									// Resize it
-									if (($image_data['width'] / $album_config['max_width']) > ($image_data['height'] / $album_config['max_height']))
+									if (($image_data['width'] / $gallery_config['max_width']) > ($image_data['height'] / $gallery_config['max_height']))
 									{
-										$thumbnail_width	= $album_config['max_width'];
-										$thumbnail_height	= round($album_config['max_height'] * (($image_data['height'] / $album_config['max_height']) / ($image_data['width'] / $album_config['max_width'])));
+										$thumbnail_width	= $gallery_config['max_width'];
+										$thumbnail_height	= round($gallery_config['max_height'] * (($image_data['height'] / $gallery_config['max_height']) / ($image_data['width'] / $gallery_config['max_width'])));
 									}
 									else
 									{
-										$thumbnail_height	= $album_config['max_height'];
-										$thumbnail_width	= round($album_config['max_width'] * (($image_data['width'] / $album_config['max_width']) / ($image_data['height'] / $album_config['max_height'])));
+										$thumbnail_height	= $gallery_config['max_height'];
+										$thumbnail_width	= round($gallery_config['max_width'] * (($image_data['width'] / $gallery_config['max_width']) / ($image_data['height'] / $gallery_config['max_height'])));
 									}
-									$thumbnail = ($album_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
-									$resize_function = ($album_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
+									$thumbnail = ($gallery_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
+									$resize_function = ($gallery_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
 									$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $image_data['width'], $image_data['height']);
 									switch ($image_data['image_type2'])
 									{
@@ -537,7 +537,7 @@ switch ($mode)
 								$image_data['height'] = $thumbnail_height;
 							}
 							$image_data['image_filesize'] = filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
-							if ($image_data['image_filesize'] > $album_config['max_file_size'])
+							if ($image_data['image_filesize'] > $gallery_config['max_file_size'])
 							{
 								@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
 								trigger_error('BAD_UPLOAD_FILE_SIZE');
@@ -577,21 +577,21 @@ switch ($mode)
 					'ERROR'						=> $error,
 					'U_VIEW_ALBUM'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"),
 					'CAT_TITLE'					=> $album_data['album_name'],
-					'S_MAX_FILESIZE'			=> $album_config['max_file_size'],
-					'S_MAX_WIDTH'				=> $album_config['max_width'],
-					'S_MAX_HEIGHT'				=> $album_config['max_height'],
+					'S_MAX_FILESIZE'			=> $gallery_config['max_file_size'],
+					'S_MAX_WIDTH'				=> $gallery_config['max_width'],
+					'S_MAX_HEIGHT'				=> $gallery_config['max_height'],
 
-					'S_JPG'					=> ($album_config['jpg_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
-					'S_PNG'					=> ($album_config['png_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
-					'S_GIF'					=> ($album_config['gif_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
-					'S_THUMBNAIL_SIZE'		=> $album_config['thumbnail_size'],
-					'S_THUMBNAIL'			=> ($album_config['gd_version']) ? true : false,
-					'S_MULTI_IMAGES'		=> ($album_config['upload_images'] > 1) ? true : false,
+					'S_JPG'					=> ($gallery_config['jpg_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
+					'S_PNG'					=> ($gallery_config['png_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
+					'S_GIF'					=> ($gallery_config['gif_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
+					'S_THUMBNAIL_SIZE'		=> $gallery_config['thumbnail_size'],
+					'S_THUMBNAIL'			=> ($gallery_config['gd_version']) ? true : false,
+					'S_MULTI_IMAGES'		=> ($gallery_config['upload_images'] > 1) ? true : false,
 					'S_ALBUM_ACTION'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=upload&amp;album_id=$album_id"),
 
-					'IMAGE_RSZ_WIDTH'		=> $album_config['preview_rsz_width'],
-					'IMAGE_RSZ_HEIGHT'		=> $album_config['preview_rsz_height'],
-					'L_DESCRIPTION_LENGTH'	=> sprintf($user->lang['DESCRIPTION_LENGTH'], $album_config['description_length']),
+					'IMAGE_RSZ_WIDTH'		=> $gallery_config['preview_rsz_width'],
+					'IMAGE_RSZ_HEIGHT'		=> $gallery_config['preview_rsz_height'],
+					'L_DESCRIPTION_LENGTH'	=> sprintf($user->lang['DESCRIPTION_LENGTH'], $gallery_config['description_length']),
 					'USERNAME'				=> request_var('username', '', true),
 					'IMAGE_NAME'			=> request_var('image_name', '', true),
 					'MESSAGE'				=> request_var('message', '', true),
@@ -600,7 +600,7 @@ switch ($mode)
 				));
 
 				$count = 0;
-				$upload_image_files = $album_config['upload_images'];
+				$upload_image_files = $gallery_config['upload_images'];
 				if ((gallery_acl_check('i_count', $album_id) - $own_images) < $upload_image_files)
 				{
 					$upload_image_files = (gallery_acl_check('i_count', $album_id) - $own_images);
@@ -616,10 +616,6 @@ switch ($mode)
 					$count++;
 				}
 
-				if ($album_config['gd_version'] == 0)
-				{
-					$template->assign_block_vars('switch_manual_thumbnail', array());
-				}
 				if (!$error)
 				{
 					if (gallery_acl_check('i_approve', $album_id))
@@ -695,12 +691,12 @@ switch ($mode)
 				$template->assign_vars(array(
 					'IMAGE_NAME'		=> $image_data['image_name'],
 					'MESSAGE'			=> $message_parser->message,
-					'L_DESCRIPTION_LENGTH'	=> sprintf($user->lang['DESCRIPTION_LENGTH'], $album_config['description_length']),
+					'L_DESCRIPTION_LENGTH'	=> sprintf($user->lang['DESCRIPTION_LENGTH'], $gallery_config['description_length']),
 
 					'U_IMAGE'			=> ($image_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
 					'U_VIEW_IMAGE'		=> ($image_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
-					'IMAGE_RSZ_WIDTH'	=> $album_config['preview_rsz_width'],
-					'IMAGE_RSZ_HEIGHT'	=> $album_config['preview_rsz_height'],
+					'IMAGE_RSZ_WIDTH'	=> $gallery_config['preview_rsz_width'],
+					'IMAGE_RSZ_HEIGHT'	=> $gallery_config['preview_rsz_height'],
 
 					'S_IMAGE'			=> true,
 					'S_EDIT'			=> true,
@@ -758,8 +754,8 @@ switch ($mode)
 					'ERROR'				=> $error,
 					'U_IMAGE'			=> ($image_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
 					'U_VIEW_IMAGE'		=> ($image_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
-					'IMAGE_RSZ_WIDTH'	=> $album_config['preview_rsz_width'],
-					'IMAGE_RSZ_HEIGHT'	=> $album_config['preview_rsz_height'],
+					'IMAGE_RSZ_WIDTH'	=> $gallery_config['preview_rsz_width'],
+					'IMAGE_RSZ_HEIGHT'	=> $gallery_config['preview_rsz_height'],
 
 					'S_REPORT'			=> true,
 					'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=report&amp;album_id=$album_id&amp;image_id=$image_id"),
@@ -905,7 +901,7 @@ switch ($mode)
 		* Rating-System: now you can comment and rate in one form
 		*/
 		$rate_point = request_var('rate', 0);
-		if ($album_config['allow_rates'])
+		if ($gallery_config['allow_rates'])
 		{
 			$allowed_to_rate = $your_rating = false;
 
@@ -929,7 +925,7 @@ switch ($mode)
 				// User just rated the image, so we store it
 				if ($rate_point > 0)
 				{
-					if ($rate_point > $album_config['rate_scale'])
+					if ($rate_point > $gallery_config['rate_scale'])
 					{
 						trigger_error('OUT_OF_RANGE_VALUE');
 					}
@@ -963,7 +959,7 @@ switch ($mode)
 				// else we show the drop down
 				else
 				{
-					for ($rate_scale = 1; $rate_scale <= $album_config['rate_scale']; $rate_scale++)
+					for ($rate_scale = 1; $rate_scale <= $gallery_config['rate_scale']; $rate_scale++)
 					{
 						$template->assign_block_vars('rate_scale', array(
 							'RATE_POINT'	=> $rate_scale,
@@ -1010,7 +1006,7 @@ switch ($mode)
 						$submit = false;
 						$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_COMMENT'];
 					}
-					if (utf8_strlen($comment_text) > $album_config['desc_length'])
+					if (utf8_strlen($comment_text) > $gallery_config['desc_length'])
 					{
 						$submit = false;
 						$error .= (($error) ? '<br />' : '') . $user->lang['COMMENT_TOO_LONG'];
@@ -1103,7 +1099,7 @@ switch ($mode)
 						$submit = false;
 						$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_COMMENT'];
 					}
-					if (utf8_strlen($comment_text) > $album_config['desc_length'])
+					if (utf8_strlen($comment_text) > $gallery_config['desc_length'])
 					{
 						$submit = false;
 						$error .= (($error) ? '<br />' : '') . $user->lang['COMMENT_TOO_LONG'];
@@ -1190,10 +1186,10 @@ switch ($mode)
 			'MESSAGE'				=> $comment,
 			'USERNAME'				=> $comment_username,
 			'REQ_USERNAME'			=> $comment_username_req,
-			'L_COMMENT_LENGTH'		=> sprintf($user->lang['COMMENT_LENGTH'], $album_config['comment_length']),
+			'L_COMMENT_LENGTH'		=> sprintf($user->lang['COMMENT_LENGTH'], $gallery_config['comment_length']),
 
-			'IMAGE_RSZ_WIDTH'		=> $album_config['preview_rsz_width'],
-			'IMAGE_RSZ_HEIGHT'		=> $album_config['preview_rsz_height'],
+			'IMAGE_RSZ_WIDTH'		=> $gallery_config['preview_rsz_width'],
+			'IMAGE_RSZ_HEIGHT'		=> $gallery_config['preview_rsz_height'],
 			'U_IMAGE'				=> ($image_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
 			'U_VIEW_IMAGE'			=> ($image_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
 			'IMAGE_NAME'			=> ($image_id) ? $image_data['image_name'] : '',

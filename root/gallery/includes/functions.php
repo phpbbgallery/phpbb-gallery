@@ -62,14 +62,14 @@ function load_gallery_config()
 */
 function set_gallery_config($config_name, $config_value, $is_dynamic = false)
 {
-	global $db, $album_config /*, $cache*/;
+	global $db, $gallery_config /*, $cache*/;
 
 	$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . "
 		SET config_value = '" . $db->sql_escape($config_value) . "'
 		WHERE config_name = '" . $db->sql_escape($config_name) . "'";
 	$db->sql_query($sql);
 
-	if (!$db->sql_affectedrows() && !isset($album_config[$config_name]))
+	if (!$db->sql_affectedrows() && !isset($gallery_config[$config_name]))
 	{
 		$sql = 'INSERT INTO ' . GALLERY_CONFIG_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'config_name'	=> $config_name,
@@ -78,7 +78,7 @@ function set_gallery_config($config_name, $config_value, $is_dynamic = false)
 		$db->sql_query($sql);
 	}
 
-	$album_config[$config_name] = $config_value;
+	$gallery_config[$config_name] = $config_value;
 
 	/*if (!$is_dynamic)
 	{
@@ -480,11 +480,11 @@ function get_album_branch($branch_user_id, $album_id, $type = 'all', $order = 'd
 */
 function generate_image_link($content, $mode, $image_id, $image_name, $album_id, $is_gif = false)
 {
-	global $phpbb_root_path, $phpEx, $user, $gallery_root_path, $album_config;
+	global $phpbb_root_path, $phpEx, $user, $gallery_root_path, $gallery_config;
 
-	if (!$album_config)
+	if (!$gallery_config)
 	{
-		$album_config = load_gallery_config();
+		$gallery_config = load_gallery_config();
 	}
 
 	$image_page_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id");
@@ -494,7 +494,7 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 	switch ($content)
 	{
 		case 'image_name':
-			$shorten_image_name = (utf8_strlen(htmlspecialchars_decode($image_name)) > $album_config['shorted_imagenames'] + 3 ) ? (utf8_substr(htmlspecialchars_decode($image_name), 0, $album_config['shorted_imagenames']) . '...') : ($image_name);
+			$shorten_image_name = (utf8_strlen(htmlspecialchars_decode($image_name)) > $gallery_config['shorted_imagenames'] + 3 ) ? (utf8_substr(htmlspecialchars_decode($image_name), 0, $gallery_config['shorted_imagenames']) . '...') : ($image_name);
 			$content = '<span style="font-weight: bold;">' . $shorten_image_name . '</span>';
 		break;
 		case 'thumbnail':
@@ -503,7 +503,7 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 		break;
 		case 'fake_thumbnail':
 			$content = '<img src="{U_THUMBNAIL}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-width: {FAKE_THUMB_SIZE}px; max-height: {FAKE_THUMB_SIZE}px;" />';
-			$content = str_replace(array('{U_THUMBNAIL}', '{IMAGE_NAME}', '{FAKE_THUMB_SIZE}'), array($thumb_url, $image_name, $album_config['fake_thumb_size']), $content);
+			$content = str_replace(array('{U_THUMBNAIL}', '{IMAGE_NAME}', '{FAKE_THUMB_SIZE}'), array($thumb_url, $image_name, $gallery_config['fake_thumb_size']), $content);
 		break;
 		case 'medium':
 			$content = '<img src="{U_MEDIUM}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" />';
@@ -512,7 +512,7 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 			if ($is_gif)
 			{
 				$content = '<img src="{U_MEDIUM}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-width: {MEDIUM_WIDTH_SIZE}px; max-height: {MEDIUM_HEIGHT_SIZE}px;" />';
-				$content = str_replace(array('{U_MEDIUM}', '{IMAGE_NAME}', '{MEDIUM_HEIGHT_SIZE}', '{MEDIUM_WIDTH_SIZE}'), array($image_url, $image_name, $album_config['preview_rsz_height'], $album_config['preview_rsz_width']), $content);
+				$content = str_replace(array('{U_MEDIUM}', '{IMAGE_NAME}', '{MEDIUM_HEIGHT_SIZE}', '{MEDIUM_WIDTH_SIZE}'), array($image_url, $image_name, $gallery_config['preview_rsz_height'], $gallery_config['preview_rsz_width']), $content);
 			}
 		break;
 		case 'lastimage_icon':

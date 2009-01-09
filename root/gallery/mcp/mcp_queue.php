@@ -58,7 +58,7 @@ $result = $db->sql_query_limit($sql, $images_per_page, $start);
 while ($row = $db->sql_fetchrow($result))
 {
 	$template->assign_block_vars('image_row', array(
-		'THUMBNAIL'			=> generate_image_link('fake_thumbnail', $album_config['link_thumbnail'], $row['image_id'], $row['image_name'], $album_id),
+		'THUMBNAIL'			=> generate_image_link('fake_thumbnail', $gallery_config['link_thumbnail'], $row['image_id'], $row['image_name'], $album_id),
 		'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 		'IMAGE_TIME'		=> $user->format_date($row['image_time']),
 		'IMAGE_NAME'		=> $row['image_name'],
@@ -112,8 +112,8 @@ $template->assign_vars(array(
 	'REPORTED_IMG'				=> $user->img('icon_topic_reported', 'IMAGE_REPORTED'),
 	'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'IMAGE_UNAPPROVED'),
 	'S_MCP_ACTION'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx" , "mode=$mode&amp;album_id=$album_id"),
-	'DISP_FAKE_THUMB'			=> (empty($album_config['disp_fake_thumb'])) ? 0 : $album_config['disp_fake_thumb'],
-	'FAKE_THUMB_SIZE'			=> (empty($album_config['fake_thumb_size'])) ? 50 : $album_config['fake_thumb_size'],
+	'DISP_FAKE_THUMB'			=> (empty($gallery_config['disp_fake_thumb'])) ? 0 : $gallery_config['disp_fake_thumb'],
+	'FAKE_THUMB_SIZE'			=> (empty($gallery_config['fake_thumb_size'])) ? 50 : $gallery_config['fake_thumb_size'],
 ));
 
 ?>

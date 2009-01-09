@@ -41,8 +41,8 @@ $album_id	= request_var('album_id', 0);
 $start		= request_var('start', 0);
 $mode		= request_var('mode', '');
 $sort_days	= request_var('st', 0);
-$sort_key	= request_var('sk', $album_config['sort_method']);
-$sort_dir	= request_var('sd', $album_config['sort_order']);
+$sort_key	= request_var('sk', $gallery_config['sort_method']);
+$sort_dir	= request_var('sd', $gallery_config['sort_order']);
 $album_data	= get_album_info($album_id);
 
 /**
@@ -89,7 +89,7 @@ display_albums($album_data);
 		}
 	}
 
-	$images_per_page = $album_config['rows_per_page'] * $album_config['cols_per_page'];
+	$images_per_page = $gallery_config['rows_per_page'] * $gallery_config['cols_per_page'];
 	$tot_unapproved = $image_counter = 0;
 
 	/**
@@ -99,14 +99,14 @@ display_albums($album_data);
 	$sort_by_text = array('t' => $user->lang['TIME'], 'n' => $user->lang['IMAGE_NAME'], 'u' => $user->lang['SORT_USERNAME'], 'vc' => $user->lang['VIEWS']);
 	$sort_by_sql = array('t' => 'image_time', 'n' => 'image_name', 'u' => 'image_username', 'vc' => 'image_view_count');
 
-	if ($album_config['rate'] == 1)
+	if ($gallery_config['rate'] == 1)
 	{
 		$sort_by_text['ra'] = $user->lang['RATING'];
 		$sort_by_sql['ra'] = 'image_rate_avg';
 		$sort_by_text['r'] = $user->lang['RATES_COUNT'];
 		$sort_by_sql['r'] = 'image_rates';
 	}
-	if ($album_config['comment'] == 1)
+	if ($gallery_config['comment'] == 1)
 	{
 		$sort_by_text['c'] = $user->lang['COMMENTS'];
 		$sort_by_sql['c'] = 'image_comments';
@@ -179,11 +179,11 @@ display_albums($album_data);
 			$images[] = $row;
 		}
 		$db->sql_freeresult($result);
-		for ($i = 0; $i < count($images); $i += $album_config['cols_per_page'])
+		for ($i = 0; $i < count($images); $i += $gallery_config['cols_per_page'])
 		{
 			$template->assign_block_vars('image_row', array());
 
-			for ($j = $i; $j < ($i + $album_config['cols_per_page']); $j++)
+			for ($j = $i; $j < ($i + $gallery_config['cols_per_page']); $j++)
 			{
 				if ($j >= count($images))
 				{
@@ -206,8 +206,8 @@ display_albums($album_data);
 
 				$template->assign_block_vars('image_row.image', array(
 					'IMAGE_ID'		=> $images[$j]['image_id'],
-					'UC_IMAGE_NAME'	=> generate_image_link('image_name', $album_config['link_image_name'], $images[$j]['image_id'], $images[$j]['image_name'], $images[$j]['image_album_id']),
-					'UC_THUMBNAIL'	=> generate_image_link('thumbnail', $album_config['link_thumbnail'], $images[$j]['image_id'], $images[$j]['image_name'], $images[$j]['image_album_id']),
+					'UC_IMAGE_NAME'	=> generate_image_link('image_name', $gallery_config['link_image_name'], $images[$j]['image_id'], $images[$j]['image_name'], $images[$j]['image_album_id']),
+					'UC_THUMBNAIL'	=> generate_image_link('thumbnail', $gallery_config['link_thumbnail'], $images[$j]['image_id'], $images[$j]['image_name'], $images[$j]['image_album_id']),
 					'S_UNAPPROVED'	=> (gallery_acl_check('m_status', $album_id) && (!$images[$j]['image_status'])) ? true : false,
 					'S_LOCKED'		=> (gallery_acl_check('m_status', $album_id) && ($images[$j]['image_status'] == 2)) ? true : false,
 					'S_REPORTED'	=> (gallery_acl_check('m_report', $album_id) && $images[$j]['image_reported']) ? true : false,
@@ -216,10 +216,10 @@ display_albums($album_data);
 					'TIME'			=> $user->format_date($images[$j]['image_time']),
 					'VIEW'			=> $images[$j]['image_view_count'],
 
-					'S_RATINGS'		=> (($album_config['allow_rates'] == 1) && gallery_acl_check('i_rate', $album_id)) ? $images[$j]['rating'] : '',
+					'S_RATINGS'		=> (($gallery_config['allow_rates'] == 1) && gallery_acl_check('i_rate', $album_id)) ? $images[$j]['rating'] : '',
 					'U_RATINGS'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $images[$j]['image_album_id'] . "&amp;image_id=" . $images[$j]['image_id']) . '#rating',
 					'L_COMMENTS'	=> ($images[$j]['image_comments'] == 1) ? $user->lang['COMMENT'] : $user->lang['COMMENTS'],
-					'S_COMMENTS'	=> (($album_config['allow_comments'] == 1) && gallery_acl_check('c_read', $album_id)) ? (($images[$j]['image_comments']) ? $images[$j]['image_comments'] : $user->lang['NO_COMMENTS']) : '',
+					'S_COMMENTS'	=> (($gallery_config['allow_comments'] == 1) && gallery_acl_check('c_read', $album_id)) ? (($images[$j]['image_comments']) ? $images[$j]['image_comments'] : $user->lang['NO_COMMENTS']) : '',
 					'U_COMMENTS'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $images[$j]['image_album_id'] . "&amp;image_id=" . $images[$j]['image_id']) . '#comments',
 
 					'S_IP'		=> ($auth->acl_get('a_')) ? $images[$j]['image_user_ip'] : '',
@@ -270,9 +270,9 @@ $template->assign_vars(array(
 										append_sid("{$phpbb_root_path}ucp.$phpEx", "i=gallery&amp;mode=manage_albums&amp;action=edit&amp;album_id=$album_id&amp;redirect=album") : '',
 	'U_SLIDE_SHOW'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id&amp;mode=slide_show"),
 
-	'S_THUMBNAIL_SIZE'			=> $album_config['thumbnail_size'] + 20 + (($album_config['thumbnail_info_line']) ? 16 : 0),
-	'S_COLS'					=> $album_config['cols_per_page'],
-	'S_COL_WIDTH'				=> (100/$album_config['cols_per_page']) . '%',
+	'S_THUMBNAIL_SIZE'			=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? 16 : 0),
+	'S_COLS'					=> $gallery_config['cols_per_page'],
+	'S_COL_WIDTH'				=> (100/$gallery_config['cols_per_page']) . '%',
 	'S_JUMPBOX_ACTION'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx"),
 	'S_ALBUM_ACTION'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"),
 
