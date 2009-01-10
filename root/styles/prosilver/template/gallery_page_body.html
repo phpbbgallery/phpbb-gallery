@@ -16,17 +16,17 @@ function checkRateForm() {
 </script>
 <h2><a href="{S_ALBUM_ACTION}">{IMAGE_NAME}</a></h2>
 
-<p class="{S_CONTENT_FLOW_END} rightside"><!-- IF U_NEXT --><a href="{U_NEXT}">{L_NEXT}</a><!-- ENDIF --></p>
-<p><!-- IF U_PREVIOUS --><a href="{U_PREVIOUS}">{L_PREVIOUS}</a><!-- ENDIF -->&nbsp;</p>
 <div class="post bg2">
 	<div class="inner">
 		<span class="corners-top"><span></span></span>
+		<!-- IF UC_PREVIOUS --><p style="float: left; text-align: left;">{UC_PREVIOUS_IMAGE}<br />{UC_PREVIOUS}</p><!-- ENDIF -->
+		<!-- IF UC_NEXT --><p style="float: right; text-align: right;">{UC_NEXT_IMAGE}<br />{UC_NEXT}</p><!-- ENDIF -->
 		<div style="text-align: center; padding: 20px;">{UC_IMAGE}</div>
 		<span class="corners-bottom"><span></span></span>
 	</div>
 </div>
 
-<div id="postingbox" class="panel">
+<div id="details" class="panel">
 	<div class="inner">
 		<span class="corners-top"><span></span></span>
 		<h3>{L_DETAILS}</h3>
@@ -110,7 +110,7 @@ function toggleElement(oElement)
 	}
 }
 </script>
-<div id="postingbox" class="panel">
+<div id="exif" class="panel">
 	<div class="inner">
 		<span class="corners-top"><span></span></span>
 		<h3>{L_EXIF-DATA} - <a href="javascript: toggleElement( getElement('exif_data_fieldset'));">{L_SHOW_EXIF}</a></h3>
@@ -198,7 +198,7 @@ function toggleElement(oElement)
 <!-- IF S_ALLOWED_READ_COMMENTS -->
 <a name="comments"></a>
 <!-- IF not .commentrow -->
-	<div id="postingbox" class="panel">
+	<div id="comments" class="panel">
 		<div class="inner">
 			<span class="corners-top"><span></span></span>
 			<h3>{L_COMMENTS}</h3>

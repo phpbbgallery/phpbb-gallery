@@ -97,6 +97,7 @@ $sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 $db->sql_query($sql);
 
 $previous_id = $next_id = $last_id = 0;
+$previous_name = $next_name = $last_name = '';
 $do_next = false;
 $image_approval_sql = ' AND image_status = 1';
 if (gallery_acl_check('m_status', $album_id))
@@ -107,7 +108,7 @@ if (gallery_acl_check('m_status', $album_id))
 $sort_by_sql = array('t' => 'image_time', 'n' => 'image_name', 'u' => 'image_username', 'vc' => 'image_view_count', 'ra' => 'image_rate_avg', 'r' => 'image_rates', 'c' => 'image_comments', 'lc' => 'image_last_comment');
 $sql_sort_order = $sort_by_sql[$gallery_config['sort_method']] . ' ' . (($gallery_config['sort_order'] == 'd') ? 'DESC' : 'ASC');
 
-$sql = 'SELECT *
+$sql = 'SELECT image_id, image_name
 	FROM ' . GALLERY_IMAGES_TABLE . '
 	WHERE image_album_id = ' . (int) $album_id . $image_approval_sql . '
 	ORDER BY ' . $sql_sort_order;
@@ -118,13 +119,16 @@ while ($row = $db->sql_fetchrow($result))
 	if ($do_next)
 	{
 		$next_id = $row['image_id'];
+		$next_name = $row['image_name'];
 	}
 	$do_next = false;
 	if ($row['image_id'] == $image_id)
 	{
+		$previous_name = $last_name;
 		$previous_id = $last_id;
 		$do_next = true;
 	}
+	$last_name = $row['image_name'];
 	$last_id = $row['image_id'];
 }
 $db->sql_freeresult($result);
@@ -135,9 +139,11 @@ $is_watching = $image_data['watch_id'];
 $template->assign_vars(array(
 	'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"),
 
+	'UC_PREVIOUS_IMAGE'	=> generate_image_link('thumbnail', 'image_page', $previous_id, $previous_name, $album_id),
+	'UC_PREVIOUS'		=> generate_image_link('image_name_unbold', 'image_page_prev', $previous_id, $previous_name, $album_id),
 	'UC_IMAGE'			=> generate_image_link('medium', $gallery_config['link_imagepage'], $image_id, $image_data['image_name'], $album_id, ((substr($image_data['image_filename'], 0 -3) == 'gif') ? true : false)),
-	'U_PREVIOUS'		=> ($previous_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$previous_id") : '',
-	'U_NEXT'			=> ($next_id && ($next_id != $previous_id)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$next_id") : '',
+	'UC_NEXT_IMAGE'		=> generate_image_link('thumbnail', 'image_page', $next_id, $next_name, $album_id),
+	'UC_NEXT'			=> generate_image_link('image_name_unbold', 'image_page_next', $next_id, $next_name, $album_id),
 
 	'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_IMAGE'),
 	'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_IMAGE'),
