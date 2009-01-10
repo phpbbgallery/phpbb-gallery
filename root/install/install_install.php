@@ -293,6 +293,12 @@ class install_install extends module
 		// Added 0.4.1
 		set_gallery_config('link_imagepage', 'lytebox');
 
+		// Added //@todo
+		set_gallery_config('rrc_gindex_mode', 'all');
+		set_gallery_config('rrc_gindex_rows', 1);
+		set_gallery_config('rrc_gindex_columns', 4);
+		set_gallery_config('rrc_gindex_comments', 0);
+
 		$auth_admin = new auth_admin();
 		$auth_admin->acl_add_option(array(
 			'local'			=> array(),

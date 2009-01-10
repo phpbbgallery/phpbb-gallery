@@ -165,7 +165,7 @@ function toggleElement(oElement)
 
 <!-- IF S_COMMENTS -->
 <h3><a href="javascript: toggleElement( getElement('recent-comments'));">{L_RECENT_COMMENTS}</a></h3>
-<div id="recent-comments" style="display: none;">
+<div id="recent-comments"<!-- IF COLLAPSE_COMMENTS --> style="display: none;"<!-- ENDIF -->>
 <!-- BEGIN commentrow -->
 	<table class="tablebg" width="100%" cellspacing="1">
 	<!-- IF commentrow.S_FIRST_ROW -->

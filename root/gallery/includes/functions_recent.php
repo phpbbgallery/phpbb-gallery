@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 /**
 * Display recent images & comments and random images
 */
-function recent_gallery_images($rows, $columns, &$display, $modes)
+function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_comments = false)
 {
 	global $db, $phpEx, $user, $cache, $auth;
 	global $phpbb_root_path, $gallery_config, $config, $template;
@@ -65,6 +65,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 			$random = false;
 			$comment = true;
 		break;
+
 		case '!recent':
 			$recent = false;
 			$random = true;
@@ -317,6 +318,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes)
 			'INFO_IMG'			=> $user->img('icon_post_info', 'VIEW_INFO'),
 			'MINI_POST_IMG'		=> $user->img('icon_post_target_unread', 'COMMENT'),
 			'PROFILE_IMG'		=> $user->img('icon_user_profile', 'READ_PROFILE'),
+			'COLLAPSE_COMMENTS'	=> $collapse_comments,
 		));
 	}
 

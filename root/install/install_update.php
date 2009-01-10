@@ -801,6 +801,11 @@ class install_update extends module
 					WHERE module_langname = 'ACP_GALLERY_CONFIGURE_GALLERY'";
 				$db->sql_query($sql);
 
+				set_gallery_config('rrc_gindex_mode', 'all');
+				set_gallery_config('rrc_gindex_rows', 1);
+				set_gallery_config('rrc_gindex_columns', 4);
+				set_gallery_config('rrc_gindex_comments', 0);
+
 				// Delete "confirmed deleted subalbums" #410
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";

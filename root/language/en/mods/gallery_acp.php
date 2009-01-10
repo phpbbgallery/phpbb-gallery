@@ -207,6 +207,21 @@ $lang = array_merge($lang, array(
 	'RESYNCED_LAST_IMAGES'			=> 'Refreshed "Last image"',
 	'RESYNCED_PERSONALS'			=> 'Resynchronised personal album id\'s',
 	'ROWS_PER_PAGE'					=> 'Number of rows on thumbnail page',
+
+	'RRC_GINDEX'					=> 'Recent- & Random-Images & Comment - Feature',
+	'RRC_GINDEX_COLUMNS'			=> 'Columns',
+	'RRC_GINDEX_COMMENTS'			=> 'Collapse comments',
+	'RRC_GINDEX_MODE'				=> 'Mode',
+	'RRC_GINDEX_ROWS'				=> 'Rows',
+	'RRC_MODE_AALL'					=> 'Nothing',
+	'RRC_MODE_ACOMMENTS'			=> 'No comments',
+	'RRC_MODE_ALL'					=> 'Comments, Random images & Recent images',
+	'RRC_MODE_ARANDOM'				=> 'No random images',
+	'RRC_MODE_ARECENT'				=> 'No recent images',
+	'RRC_MODE_COMMENTS'				=> 'Comments',
+	'RRC_MODE_RANDOM'				=> 'Random images',
+	'RRC_MODE_RECENT'				=> 'Recent images',
+
 	'RSZ_HEIGHT'					=> 'Maximum-height on viewing image',
 	'RSZ_WIDTH'						=> 'Maximum-width on viewing image',
 

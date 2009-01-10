@@ -30,7 +30,7 @@ class acp_gallery_config
 
 	function main($id, $mode)
 	{
-		global $db, $user, $auth, $cache, $template;
+		global $db, $user, $auth, $cache, $template, $gallery_config;
 		global $config, $phpbb_root_path, $phpbb_admin_path, $phpEx;
 		$gallery_root_path = GALLERY_ROOT_PATH;
 
@@ -67,8 +67,8 @@ class acp_gallery_config
 						'legend2'				=> 'ALBUM_SETTINGS',
 						'rows_per_page'			=> array('lang' => 'ROWS_PER_PAGE',			'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 						'cols_per_page'			=> array('lang' => 'COLS_PER_PAGE',			'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
-						'sort_method'			=> array('lang' => 'DEFAULT_SORT_METHOD',	'validate' => 'int',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'sort_method_select'),
-						'sort_order'			=> array('lang' => 'DEFAULT_SORT_ORDER',	'validate' => 'int',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'sort_order_select'),
+						'sort_method'			=> array('lang' => 'DEFAULT_SORT_METHOD',	'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'sort_method_select'),
+						'sort_order'			=> array('lang' => 'DEFAULT_SORT_ORDER',	'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'sort_order_select'),
 						'max_pics'				=> array('lang' => 'MAX_IMAGES_PER_ALBUM',	'validate' => 'int',	'type' => 'text:7:7',		'gallery' => true,	'explain' => false),
 						'disp_fake_thumb'		=> array('lang' => 'DISP_FAKE_THUMB',		'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 						'fake_thumb_size'		=> array('lang' => 'FAKE_THUMB_SIZE',		'validate' => 'int',	'type' => 'text:7:4',		'gallery' => true,	'explain' => true),
@@ -103,12 +103,18 @@ class acp_gallery_config
 						'watermark_width'		=> array('lang' => 'WATERMARK_WIDTH',		'validate' => 'int',	'type' => 'text:7:4',		'gallery' => true,	'explain' => true),
 
 						'legend6'				=> 'UC_LINK_CONFIG',
-						'link_thumbnail'		=> array('lang' => 'UC_THUMBNAIL',			'validate' => 'bool',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'uc_select'),
-						'link_imagepage'		=> array('lang' => 'UC_IMAGEPAGE',			'validate' => 'bool',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'uc_select'),
-						'link_image_name'		=> array('lang' => 'UC_IMAGE_NAME',			'validate' => 'bool',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'uc_select'),
-						'link_image_icon'		=> array('lang' => 'UC_IMAGE_ICON',			'validate' => 'bool',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'uc_select'),
+						'link_thumbnail'		=> array('lang' => 'UC_THUMBNAIL',			'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'uc_select'),
+						'link_imagepage'		=> array('lang' => 'UC_IMAGEPAGE',			'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'uc_select'),
+						'link_image_name'		=> array('lang' => 'UC_IMAGE_NAME',			'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'uc_select'),
+						'link_image_icon'		=> array('lang' => 'UC_IMAGE_ICON',			'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'uc_select'),
 
-						'legend7'				=> '',
+						'legend7'				=> 'RRC_GINDEX',
+						'rrc_gindex_mode'		=> array('lang' => 'RRC_GINDEX_MODE',		'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'rrc_gindex'),
+						'rrc_gindex_rows'		=> array('lang' => 'RRC_GINDEX_ROWS',		'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
+						'rrc_gindex_columns'	=> array('lang' => 'RRC_GINDEX_COLUMNS',	'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
+						'rrc_gindex_comments'	=> array('lang' => 'RRC_GINDEX_COMMENTS',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
+
+						'legend8'				=> '',
 					)
 				);
 			break;
@@ -247,7 +253,7 @@ class acp_gallery_config
 		$sort_method_options .= '<option' . (($value == 'c') ? ' selected="selected"' : '') . " value='c'>" . $user->lang['COMMENTS'] . '</option>';
 		$sort_method_options .= '<option' . (($value == 'lc') ? ' selected="selected"' : '') . " value='lc'>" . $user->lang['NEW_COMMENT'] . '</option>';
 
-		return "<select name=\"sort_method\" id=\"sort_method\">$sort_method_options</select>";
+		return "<select name=\"config[sort_method]\" id=\"sort_method\">$sort_method_options</select>";
 	}
 
 	/**
@@ -260,7 +266,7 @@ class acp_gallery_config
 		$sort_order_options = '<option' . (($value == 'd') ? ' selected="selected"' : '') . " value='d'>" . $user->lang['SORT_DESCENDING'] . '</option>';
 		$sort_order_options .= '<option' . (($value == 'a') ? ' selected="selected"' : '') . " value='a'>" . $user->lang['SORT_ASCENDING'] . '</option>';
 
-		return "<select name=\"sort_order\" id=\"sort_order\">$sort_order_options</select>";
+		return "<select name=\"config[sort_order]\" id=\"sort_order\">$sort_order_options</select>";
 	}
 
 	/**
@@ -271,8 +277,8 @@ class acp_gallery_config
 		$key_gd1	= ($value == 1) ? ' checked="checked"' : '';
 		$key_gd2	= ($value == 2) ? ' checked="checked"' : '';
 
-		$tpl = '<label><input type="radio" name="' . $key . '" value="1"' . $key_gd1 . ' class="radio" /> GD1</label>';
-		$tpl .= '<label><input type="radio" id="' . $key . '" name="' . $key . '" value="2"' . $key_gd2 . ' class="radio" /> GD2</label>';
+		$tpl = '<label><input type="radio" name="config[' . $key . ']" value="1"' . $key_gd1 . ' class="radio" /> GD1</label>';
+		$tpl .= '<label><input type="radio" id="' . $key . '" name="config[' . $key . ']" value="2"' . $key_gd2 . ' class="radio" /> GD2</label>';
 
 		return $tpl;
 	}
@@ -306,7 +312,26 @@ class acp_gallery_config
 		$sort_order_options .= '<option' . (($value == 'image') ? ' selected="selected"' : '') . " value='image'>" . $user->lang['UC_LINK_IMAGE'] . '</option>';
 		$sort_order_options .= '<option' . (($value == 'none') ? ' selected="selected"' : '') . " value='none'>" . $user->lang['UC_LINK_NONE'] . '</option>';
 
-		return "<select name=\"$key\" id=\"$key\">$sort_order_options</select>";
+		return "<select name=\"config[$key]\" id=\"$key\">$sort_order_options</select>";
+	}
+
+	/**
+	* Select RRC-Config on gallery/index.php
+	*/
+	function rrc_gindex($value, $key)
+	{
+		global $user;
+
+		$rrc_gindex_options = '<option' . (($value == 'recent') ? ' selected="selected"' : '') . " value='recent'>" . $user->lang['RRC_MODE_RECENT'] . '</option>';
+		$rrc_gindex_options .= '<option' . (($value == 'random') ? ' selected="selected"' : '') . " value='random'>" . $user->lang['RRC_MODE_RANDOM'] . '</option>';
+		$rrc_gindex_options .= '<option' . (($value == 'comment') ? ' selected="selected"' : '') . " value='comment'>" . $user->lang['RRC_MODE_COMMENTS'] . '</option>';
+		$rrc_gindex_options .= '<option' . (($value == '!recent') ? ' selected="selected"' : '') . " value='!recent'>" . $user->lang['RRC_MODE_ARECENT'] . '</option>';
+		$rrc_gindex_options .= '<option' . (($value == '!random') ? ' selected="selected"' : '') . " value='!random'>" . $user->lang['RRC_MODE_ARANDOM'] . '</option>';
+		$rrc_gindex_options .= '<option' . (($value == '!comment') ? ' selected="selected"' : '') . " value='!comment'>" . $user->lang['RRC_MODE_ACOMMENTS'] . '</option>';
+		$rrc_gindex_options .= '<option' . (($value == 'all') ? ' selected="selected"' : '') . " value='all'>" . $user->lang['RRC_MODE_ALL'] . '</option>';
+		$rrc_gindex_options .= '<option' . (($value == '!all') ? ' selected="selected"' : '') . " value='!all'>" . $user->lang['RRC_MODE_AALL'] . '</option>';
+
+		return "<select name=\"config[$key]\" id=\"$key\">$rrc_gindex_options</select>";
 	}
 }
 

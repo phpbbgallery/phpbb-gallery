@@ -207,6 +207,21 @@ $lang = array_merge($lang, array(
 	'RESYNCED_LAST_IMAGES'			=> '"Letztes Bild" neu ermittelt',
 	'RESYNCED_PERSONALS'			=> 'Persönliche Alben resynchronisiert',
 	'ROWS_PER_PAGE'					=> 'Anzahl der Zeilen auf Bildvorschau-Seite',
+
+	'RRC_GINDEX'					=> 'Neueste & zufällige Bilder & Kommentare - Feature',
+	'RRC_GINDEX_COLUMNS'			=> 'Spalten',
+	'RRC_GINDEX_COMMENTS'			=> 'Kommentare einklappen',
+	'RRC_GINDEX_MODE'				=> 'Modus',
+	'RRC_GINDEX_ROWS'				=> 'Zeilen',
+	'RRC_MODE_AALL'					=> 'Nichts',
+	'RRC_MODE_ACOMMENTS'			=> 'Ohne Kommentare',
+	'RRC_MODE_ALL'					=> 'Kommentare, Neueste & zufällige Bilder',
+	'RRC_MODE_ARANDOM'				=> 'Ohne zufällige Bilder',
+	'RRC_MODE_ARECENT'				=> 'Ohne neueste Bilder',
+	'RRC_MODE_COMMENTS'				=> 'Kommentare',
+	'RRC_MODE_RANDOM'				=> 'Zufällige Bilder',
+	'RRC_MODE_RECENT'				=> 'Neueste Bilder',
+
 	'RSZ_HEIGHT'					=> 'Maximale Höhe beim anzeigen eines Bildes',
 	'RSZ_WIDTH'						=> 'Maximale Breite beim anzeigen eines Bildes',
 

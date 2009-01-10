@@ -48,6 +48,7 @@
         <date>YYYY-MM-DD</date>
         <rev-version>X.Y.Z</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Add] Report #403: Config for the recent-part on gallery/index.php]]></change>
           <change><![CDATA[[Add] Unreported: Missing statistic-values]]></change>
 
           <change><![CDATA[[Change] Unreported: Renamed $album_config to $gallery_config]]></change>

@@ -122,8 +122,12 @@ $display = array(
 * columns	int		default 4,
 * display	array,
 * modes		string(recent|random|comment|!recent|!random|!comment|all), Exp: '!recent' means random + comment
+* collapse	bool	collapse comments
 */
-recent_gallery_images(1, 4, $display, 'all');
+if ($gallery_config['rrc_gindex_mode'] != '!all')
+{
+	recent_gallery_images($gallery_config['rrc_gindex_rows'], $gallery_config['rrc_gindex_columns'], $display, $gallery_config['rrc_gindex_mode'], $gallery_config['rrc_gindex_comments']);
+}
 
 /**
 * Start output the page
