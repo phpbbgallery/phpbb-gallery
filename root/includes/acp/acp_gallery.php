@@ -1562,12 +1562,14 @@ class acp_gallery
 		$missing_authors = request_var('author', array(0), true);
 		$missing_comments = request_var('comment', array(0), true);
 		$missing_personals = request_var('personal', array(0), true);
+		$personals_bad = request_var('personal_bad', array(0), true);
 		$s_hidden_fields = build_hidden_fields(array(
 			'source'		=> $missing_sources,
 			'entry'			=> $missing_entries,
 			'author'		=> $missing_authors,
 			'comment'		=> $missing_comments,
 			'personal'		=> $missing_personals,
+			'personal_bad'	=> $personals_bad,
 		));
 
 		if ($submit)
@@ -1656,12 +1658,14 @@ class acp_gallery
 				$db->sql_query($sql);
 				$message .= $user->lang['CLEAN_COMMENTS_DONE'];
 			}
-			if ($missing_personals)
+			if ($missing_personals || $personals_bad)
 			{
+				$delete_albums = array_merge($missing_personals, $personals_bad);
+
 				$deleted_images = $deleted_albums = array(0);
 				$sql = 'SELECT album_id
 					FROM ' . GALLERY_ALBUMS_TABLE . '
-					WHERE ' . $db->sql_in_set('album_user_id', $missing_personals);
+					WHERE ' . $db->sql_in_set('album_user_id', $delete_albums);
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -1693,7 +1697,14 @@ class acp_gallery
 				}
 				$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . ' WHERE ' . $db->sql_in_set('album_id', $deleted_albums);
 				$db->sql_query($sql);
-				$message .= $user->lang['CLEAN_PERSONALS_DONE'];
+				if ($missing_personals)
+				{
+					$message .= $user->lang['CLEAN_PERSONALS_DONE'];
+				}
+				if ($personals_bad)
+				{
+					$message .= $user->lang['CLEAN_PERSONALS_BAD_DONE'];
+				}
 			}
 
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
@@ -1732,6 +1743,10 @@ class acp_gallery
 				if ($missing_personals)
 				{
 					$user->lang['CLEAN_GALLERY_CONFIRM'] = $user->lang['CONFIRM_CLEAN_PERSONALS'] . '<br />' . $user->lang['CLEAN_GALLERY_CONFIRM'];
+				}
+				if ($personals_bad)
+				{
+					$user->lang['CLEAN_GALLERY_CONFIRM'] = $user->lang['CONFIRM_CLEAN_PERSONALS_BAD'] . '<br />' . $user->lang['CLEAN_GALLERY_CONFIRM'];
 				}
 				confirm_box(false, 'CLEAN_GALLERY', $s_hidden_fields);
 			}
@@ -1847,6 +1862,11 @@ class acp_gallery
 					'AUTHOR_NAME'	=> $row['album_name'],
 				));
 			}
+			$template->assign_block_vars('personal_bad_row', array(
+				'USER_ID'		=> $row['album_user_id'],
+				'ALBUM_ID'		=> $row['album_id'],
+				'AUTHOR_NAME'	=> $row['album_name'],
+			));
 		}
 		$db->sql_freeresult($result);
 

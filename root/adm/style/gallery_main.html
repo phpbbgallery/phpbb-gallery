@@ -198,13 +198,24 @@
 	<fieldset>
 		<legend>{L_MANAGE_PERSONALS}</legend>
 		<dl>
-			<dt><label for="personal">{L_MISSING_OWNER}:</label>
+			<dt><label for="personal_missing">{L_MISSING_OWNER}:</label>
 				<br /><span>{L_MISSING_OWNER_EXP}</span></dt>
 			<dd><!-- IF not .personalrow -->
 				{L_CHECK_PERSONALS_EXPLAIN}
 			<!-- ELSE -->
-				<select id="personal" name="personal[]" multiple="multiple">
+				<select id="personal_missing" name="personal[]" multiple="multiple">
 					<!-- BEGIN personalrow --><option value="{personalrow.USER_ID}">{L_ALBUM_ID}: {personalrow.ALBUM_ID} - {L_AUTHOR}: {personalrow.AUTHOR_NAME}</option><!-- END personalrow -->
+				</select>
+			<!-- ENDIF --></dd>
+		</dl>
+		<dl>
+			<dt><label for="personal_bad">{L_PERSONAL_ALBUMS}:</label>
+				<br /><span>{L_MISSING_OWNER_EXP}</span></dt>
+			<dd><!-- IF not .personal_bad_row -->
+				{L_CHECK_PERSONALS_BAD_EXPLAIN}
+			<!-- ELSE -->
+				<select id="personal_bad" name="personal_bad[]" multiple="multiple">
+					<!-- BEGIN personal_bad_row --><option value="{personal_bad_row.USER_ID}">{L_ALBUM_ID}: {personal_bad_row.ALBUM_ID} - {L_AUTHOR}: {personal_bad_row.AUTHOR_NAME}</option><!-- END personal_bad_row -->
 				</select>
 			<!-- ENDIF --></dd>
 		</dl>
