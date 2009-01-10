@@ -1713,6 +1713,7 @@ class acp_gallery
 			$cache->destroy('sql', GALLERY_IMAGES_TABLE);
 			$cache->destroy('sql', GALLERY_RATES_TABLE);
 			$cache->destroy('sql', GALLERY_WATCH_TABLE);
+			$cache->destroy('_albums');
 			trigger_error($message . adm_back_link($this->u_action));
 		}
 		else if (($delete) || (isset($_POST['cancel'])))
@@ -1845,12 +1846,12 @@ class acp_gallery
 		}
 		$db->sql_freeresult($result);
 
-		$sql = 'SELECT ga.album_id, ga.album_user_id, ga.album_name, u.user_id
+		$sql = 'SELECT ga.album_id, ga.album_user_id, ga.album_name, u.user_id, SUM(ga.album_images_real) images
 			FROM ' . GALLERY_ALBUMS_TABLE . ' ga
 			LEFT JOIN ' . USERS_TABLE . ' u
 				ON u.user_id = ga.album_user_id
 			WHERE ga.album_user_id <> 0
-				AND ga.parent_id = 0';
+			GROUP BY ga.album_user_id';
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
@@ -1866,6 +1867,7 @@ class acp_gallery
 				'USER_ID'		=> $row['album_user_id'],
 				'ALBUM_ID'		=> $row['album_id'],
 				'AUTHOR_NAME'	=> $row['album_name'],
+				'IMAGES'		=> $row['images'],
 			));
 		}
 		$db->sql_freeresult($result);
