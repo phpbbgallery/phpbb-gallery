@@ -185,8 +185,10 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (subs
 			$timestamp_hour = substr($exif["EXIF"]["DateTimeOriginal"], 11, 2);
 			$timestamp_minute = substr($exif["EXIF"]["DateTimeOriginal"], 14, 2);
 			$timestamp_second = substr($exif["EXIF"]["DateTimeOriginal"], 17, 2);
-			$timestamp = mktime($timestamp_hour, $timestamp_minute, $timestamp_second, $timestamp_month, $timestamp_day, $timestamp_year);
-			$exif_data['exif_date'] = $user->format_date($timestamp);
+			if (($timestamp = @mktime($timestamp_hour, $timestamp_minute, $timestamp_second, $timestamp_month, $timestamp_day, $timestamp_year)) === true)
+			{
+				$exif_data['exif_date'] = $user->format_date($timestamp);
+			}
 		}
 		if(isset($exif["EXIF"]["FocalLength"]))
 		{
