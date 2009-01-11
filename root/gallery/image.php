@@ -146,6 +146,10 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 		}
 		$image_file = $create_function($phpbb_root_path . GALLERY_UPLOAD_PATH  . $image_data['image_filename']);
 
+		// Make them transparent again
+		imagealphablending($image_file, true);
+		imagesavealpha($image_file, true);
+
 		$image_size = getimagesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
 		$image_width = $image_size[0];
 		$image_height = $image_size[1];
@@ -201,12 +205,18 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 		switch ($image_filetype)
 		{
 			case '.jpg':
-			case '.gif':
 				if (!$save_file)
 				{
 					header('Content-type: image/jpeg');
 				}
 				@imagejpeg($thumb_file, $wirte_source, (($thumbnail) ? $gallery_config['thumbnail_quality'] : 100));
+			break;
+			case '.gif':
+				if (!$save_file)
+				{
+					header('Content-type: image/gif');
+				}
+				@imagegif($thumb_file, $wirte_source);
 			break;
 			case '.png':
 				if (!$save_file)
@@ -243,6 +253,7 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 */
 $file_size = getimagesize($image_source);
 if (!gallery_acl_check('i_watermark', $album_id) && $possible_watermark && $gallery_config['watermark_images'] &&
+	file_exists($phpbb_root_path . $gallery_config['watermark_source']) &&
 	($gallery_config['watermark_height'] < $file_size[0]) && ($gallery_config['watermark_width'] < $file_size[1]))
 {
 	$watermark_source = $phpbb_root_path . $gallery_config['watermark_source'];

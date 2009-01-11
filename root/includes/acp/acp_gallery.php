@@ -311,6 +311,14 @@ class acp_gallery
 					}
 					@closedir($medium_dir);
 
+					$sql_ary = array(
+						'filesize_medium'		=> @filesize($phpbb_root_path . GALLERY_MEDIUM_PATH . $row['image_thumbnail']),
+						'filesize_cache'		=> @filesize($phpbb_root_path . GALLERY_CACHE_PATH . $row['image_thumbnail']),
+					);
+					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+						SET ' . $db->sql_build_array('UPDATE', $sql_ary);
+					$db->sql_query($sql);
+
 					trigger_error($user->lang['PURGED_CACHE'] . adm_back_link($this->u_action));
 				break;
 			}

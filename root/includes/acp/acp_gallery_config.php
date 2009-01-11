@@ -91,7 +91,7 @@ class acp_gallery_config
 
 						'legend4'				=> 'THUMBNAIL_SETTINGS',
 						'thumbnail_cache'		=> array('lang' => 'THUMBNAIL_CACHE',		'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
-						'gd_version'			=> array('lang' => 'GD_VERSION',			'validate' => 'bool',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'gd_radio'),
+						'gd_version'			=> array('lang' => 'GD_VERSION',			'validate' => 'int',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'gd_radio'),
 						'thumbnail_size'		=> array('lang' => 'THUMBNAIL_SIZE',		'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 						'thumbnail_quality'		=> array('lang' => 'THUMBNAIL_QUALITY',		'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 						'thumbnail_info_line'	=> array('lang' => 'INFO_LINE',				'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
@@ -277,8 +277,8 @@ class acp_gallery_config
 		$key_gd1	= ($value == 1) ? ' checked="checked"' : '';
 		$key_gd2	= ($value == 2) ? ' checked="checked"' : '';
 
-		$tpl = '<label><input type="radio" name="config[' . $key . ']" value="1"' . $key_gd1 . ' class="radio" /> GD1</label>';
-		$tpl .= '<label><input type="radio" id="' . $key . '" name="config[' . $key . ']" value="2"' . $key_gd2 . ' class="radio" /> GD2</label>';
+		$tpl = "<label><input type=\"radio\" name=\"config[$key]\" value=\"1\" $key_gd1 class=\"radio\" /> GD1</label>";
+		$tpl .= "<label><input type=\"radio\" id=\"$key\" name=\"config[$key]\" value=\"2\" $key_gd2  class=\"radio\" /> GD2</label>";
 
 		return $tpl;
 	}
