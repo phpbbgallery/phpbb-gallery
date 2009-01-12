@@ -1492,7 +1492,7 @@ class acp_gallery
 
 				$sql_ary = array(
 					'image_filename' 		=> $image_filename,
-					'image_thumbnail'		=> $image_thumbnail,
+					'image_thumbnail'		=> '',
 					'image_desc'			=> '',
 					'image_desc_uid'		=> '',
 					'image_desc_bitfield'	=> '',
@@ -1704,6 +1704,10 @@ class acp_gallery
 					$db->sql_query($sql);
 				}
 				$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . ' WHERE ' . $db->sql_in_set('album_id', $deleted_albums);
+				$db->sql_query($sql);
+				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
+					SET personal_album_id = 0
+					WHERE ' . $db->sql_in_set('user_id', $delete_albums);
 				$db->sql_query($sql);
 				if ($missing_personals)
 				{
