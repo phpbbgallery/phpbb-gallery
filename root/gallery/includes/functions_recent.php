@@ -100,11 +100,11 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 		if ($recent)
 		{
 			$recent_images = array();
-			$sql = "SELECT i.*, a.album_name, a.album_id, a.album_user_id
-				FROM " . GALLERY_IMAGES_TABLE . " i
-				LEFT JOIN " . GALLERY_ALBUMS_TABLE . " a
+			$sql = 'SELECT i.*, a.album_name, a.album_id, a.album_user_id
+				FROM ' . GALLERY_IMAGES_TABLE . ' i
+				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
 					ON i.image_album_id = a.album_id
-				WHERE (" . $db->sql_in_set('i.image_album_id', $view_albums) . '
+				WHERE (' . $db->sql_in_set('i.image_album_id', $view_albums) . '
 						AND i.image_status = 1)' . 
 					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . '
 				GROUP BY i.image_id
@@ -194,11 +194,11 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 			}
 
 			$random_images = array();
-			$sql = "SELECT i.*, a.album_name, a.album_id, a.album_user_id
-				FROM " . GALLERY_IMAGES_TABLE . " i
-				LEFT JOIN " . GALLERY_ALBUMS_TABLE . " a
+			$sql = 'SELECT i.*, a.album_name, a.album_id, a.album_user_id
+				FROM ' . GALLERY_IMAGES_TABLE . ' i
+				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
 					ON i.image_album_id = a.album_id
-				WHERE (" . $db->sql_in_set('i.image_album_id', $view_albums) . '
+				WHERE (' . $db->sql_in_set('i.image_album_id', $view_albums) . '
 						AND i.image_status = 1)' . 
 					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . "
 				GROUP BY i.image_id
@@ -279,10 +279,10 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 
 		$sql = 'SELECT c.*, i.*
 			FROM ' . GALLERY_COMMENTS_TABLE . ' c
-			LEFT JOIN ' . GALLERY_IMAGES_TABLE . " i
+			LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
 				ON c.comment_image_id = i.image_id
-			WHERE " . $db->sql_in_set('i.image_album_id', $comment_albums) . "
-			ORDER BY c.comment_id DESC";
+			WHERE ' . $db->sql_in_set('i.image_album_id', $comment_albums) . '
+			ORDER BY c.comment_id DESC';
 		$result = $db->sql_query_limit($sql, $limit_sql);
 
 		while ($commentrow = $db->sql_fetchrow($result))
@@ -301,7 +301,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 
 				'UC_THUMBNAIL'			=> generate_image_link('thumbnail', $gallery_config['link_thumbnail'], $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
 				'UC_IMAGE_NAME'			=> generate_image_link('image_name', $gallery_config['link_image_name'], $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
-				'IMAGE_AUTHOR'			=> get_username_string('full', $commentrow['image_user_id'], ($commentrow['image_user_id'] <> ANONYMOUS) ? $commentrow['image_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['image_comment_username']), $commentrow['image_user_colour']),
+				'IMAGE_AUTHOR'			=> get_username_string('full', $commentrow['image_user_id'], ($commentrow['image_user_id'] <> ANONYMOUS) ? $commentrow['image_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['image_username']), $commentrow['image_user_colour']),
 				'IMAGE_TIME'			=> $user->format_date($commentrow['image_time']),
 
 				'POST_AUTHOR_FULL'		=> get_username_string('full', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['comment_user_colour']),
@@ -324,7 +324,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 
 	$template->assign_vars(array(
 		'S_THUMBNAIL_SIZE'			=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? 16 : 0),
-		'S_COL_WIDTH'			=> (100/$gallery_config['cols_per_page']) . '%',
+		'S_COL_WIDTH'			=> (100 / $gallery_config['cols_per_page']) . '%',
 		'S_COLS'				=> $columns,
 		'S_RANDOM'				=> $random,
 		'S_RECENT'				=> $recent,

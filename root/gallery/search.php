@@ -6,6 +6,9 @@
 * @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
+* partially borrowed from phpBB3
+* @author: phpBB Group
+* @location: search.php
 */
 
 /**
@@ -23,32 +26,53 @@ include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 $user->session_begin();
 $auth->acl($user->data);
 $user->setup('mods/gallery');
+$user->add_lang('search');
 
-// Get general album information
+// Get general gallery stuff
 $gallery_root_path = GALLERY_ROOT_PATH;
 include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
 include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
 $album_access_array = get_album_access_array();
 
+// Define initial vars
+//@todo: 
+$mode			= request_var('mode', '');
+$search_id		= request_var('search_id', '');
+$start			= request_var('start', 0);
+$image_id		= request_var('image_id', 0);
 
-/**
-* Check the request
-*/
-$user_id = request_var('user_id', 0);
-$start = request_var('start', 0);
-$username = '';
+$submit			= request_var('submit', false);
+$keywords		= utf8_normalize_nfc(request_var('keywords', '', true));
+$add_keywords	= utf8_normalize_nfc(request_var('add_keywords', '', true));
+$username		= request_var('username', '', true);
+$user_id		= request_var('user_id', 0);
+//@todo: 
+$search_terms	= request_var('terms', 'all');
+$search_album	= request_var('aid', array(0));
+$search_child	= request_var('sc', true);
+$search_fields	= request_var('sf', 'all');
+//@todo: <[[
+$sort_days		= request_var('st', 0);
+$sort_key		= request_var('sk', 't');
+$sort_dir		= request_var('sd', 'd');
+// ]]>
+
+
+// Is user able to search? Has search been disabled?
+if (!$auth->acl_get('u_search') || !$config['load_search'])
+{
+	$template->assign_var('S_NO_SEARCH', true);
+	trigger_error('NO_SEARCH');
+}
+
+// Define some vars
 $images_per_page = $gallery_config['rows_per_page'] * $gallery_config['cols_per_page'];
 $tot_unapproved = $image_counter = 0;
 
 /**
 * Build the sort options
 */
-
-$sort_days	= request_var('st', 0);
-$sort_key	= request_var('sk', $gallery_config['sort_method']);
-$sort_dir	= request_var('sd', $gallery_config['sort_order']);
 $limit_days = array(0 => $user->lang['ALL_IMAGES'], 1 => $user->lang['1_DAY'], 7 => $user->lang['7_DAYS'], 14 => $user->lang['2_WEEKS'], 30 => $user->lang['1_MONTH'], 90 => $user->lang['3_MONTHS'], 180 => $user->lang['6_MONTHS'], 365 => $user->lang['1_YEAR']);
-
 $sort_by_text = array('t' => $user->lang['TIME'], 'n' => $user->lang['IMAGE_NAME'], 'u' => $user->lang['SORT_USERNAME'], 'vc' => $user->lang['VIEWS']);
 $sort_by_sql = array('t' => 'image_time', 'n' => 'image_name', 'u' => 'image_username', 'vc' => 'image_view_count');
 
@@ -66,122 +90,436 @@ if ($gallery_config['comment'] == 1)
 	$sort_by_text['lc'] = $user->lang['NEW_COMMENT'];
 	$sort_by_sql['lc'] = 'image_last_comment';
 }
+
 $s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
 gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
 $sql_sort_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
-$view_string = gallery_acl_album_ids('i_view', 'string');
-$view_string = ($view_string) ? 'image_album_id IN (' . $view_string . ') AND image_status = 1' : 'image_album_id = 0';
-$moderativ_string = gallery_acl_album_ids('m_status', 'string');
-$moderativ_string = ($moderativ_string) ? (($view_string) ? ' OR ' : '') . 'image_album_id IN (' . $moderativ_string . ')' : '';
-
-$sql = 'SELECT *
-	FROM ' . GALLERY_IMAGES_TABLE . '
-	WHERE image_user_id = ' . $user_id . "
-		AND ($view_string $moderativ_string)";
-$result = $db->sql_query($sql);
-
-while ($row = $db->sql_fetchrow($result))
+/**
+* Search
+*/
+if ($keywords || $username || $user_id || $search_id || $submit)
 {
-	$image_counter++;
-	$username = $row['image_username'];
-}
-$db->sql_freeresult($result);
+	// clear arrays
+	$id_ary = array();
 
-$sql = 'SELECT i.*, a.album_name
-	FROM ' . GALLERY_IMAGES_TABLE . ' i
-	LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
-		ON a.album_id = i.image_album_id
-	WHERE image_user_id = ' . $user_id . "
-		AND ($view_string $moderativ_string)
-	ORDER BY $sql_sort_order";
-$result = $db->sql_query_limit($sql, $images_per_page, $start);
-
-		$images = array();
-
-while ($row = $db->sql_fetchrow($result))
-{
-	$images[] = $row;
-}
-$db->sql_freeresult($result);
-
-for ($i = 0; $i < count($images); $i += $gallery_config['cols_per_page'])
-{
-	$template->assign_block_vars('image_row', array());
-
-	for ($j = $i; $j < ($i + $gallery_config['cols_per_page']); $j++)
+	// This is what our Search could so far
+	if ($user_id)
 	{
-		if ($j >= count($images))
-		{
-			$template->assign_block_vars('image_row.no_image', array());
-			continue;
-		}
-		$album_id = $images[$j]['image_album_id'];
+		$search_id = 'usersearch';
+	}
 
-		if (!$images[$j]['image_rates'])
+	//@todo
+	/**
+	* borrowed from phpBB3
+	* @author: phpBB Group
+
+	// egosearch is an user search
+	if ($search_id == 'egosearch')
+	{
+		$user_id = $user->data['user_id'];
+
+		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			$images[$j]['rating'] = $user->lang['NOT_RATED'];
+			login_box('', $user->lang['LOGIN_EXPLAIN_EGOSEARCH']);
+		}
+	}
+
+	// If we are looking for authors get their ids
+	$user_id_ary = array();
+	if ($user_id)
+	{
+		$user_id_ary[] = $user_id;
+	}
+	else if ($username)
+	{
+		if ((strpos($username, '*') !== false) && (utf8_strlen(str_replace(array('*', '%'), '', $username)) < $config['min_search_author_chars']))
+		{
+			trigger_error(sprintf($user->lang['TOO_FEW_AUTHOR_CHARS'], $config['min_search_author_chars']));
+		}
+
+		$sql_where = (strpos($username, '*') !== false) ? ' username_clean ' . $db->sql_like_expression(str_replace('*', $db->any_char, utf8_clean_string($username))) : " username_clean = '" . $db->sql_escape(utf8_clean_string($username)) . "'";
+
+		// Missing images and comments of guests/deleted users
+		$sql = 'SELECT user_id
+			FROM ' . USERS_TABLE . "
+			WHERE $sql_where
+				AND user_type IN (" . USER_NORMAL . ', ' . USER_FOUNDER . ')';
+		$result = $db->sql_query_limit($sql, 100);
+
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$user_id_ary[] = (int) $row['user_id'];
+		}
+		$db->sql_freeresult($result);
+
+		if (!sizeof($user_id_ary))
+		{
+			trigger_error('NO_SEARCH_RESULTS');
+		}
+	}
+
+	// if we search in an existing search result just add the additional keywords. But we need to use "all search terms"-mode
+	// so we can keep the old keywords in their old mode, but add the new ones as required words
+	if ($add_keywords)
+	{
+		if ($search_terms == 'all')
+		{
+			$keywords .= ' ' . $add_keywords;
 		}
 		else
 		{
-			$images[$j]['rating'] = sprintf((($images[$j]['image_rates'] == 1) ? $user->lang['RATE_STRING'] : $user->lang['RATES_STRING']), $images[$j]['image_rate_avg'] / 100, $images[$j]['image_rates']);
+			$search_terms = 'all';
+			$keywords = implode(' |', explode(' ', preg_replace('#\s+#u', ' ', $keywords))) . ' ' .$add_keywords;
 		}
+	}
+	**/
 
-		$perm_user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
-		$allow_edit = ((gallery_acl_check('i_edit', $album_id) && ($images[$j]['image_user_id'] == $perm_user_id)) || gallery_acl_check('m_edit', $album_id)) ? true : false;
-		$allow_delete = ((gallery_acl_check('i_delete', $album_id) && ($images[$j]['image_user_id'] == $perm_user_id)) || gallery_acl_check('m_delete', $album_id)) ? true : false;
+	// pre-made searches
+	$sql = $field = $l_search_title = $search_results = '';
 
-		$template->assign_block_vars('image_row.image', array(
-			'IMAGE_ID'		=> $images[$j]['image_id'],
-			'UC_IMAGE_NAME'	=> generate_image_link('image_name', $gallery_config['link_image_name'], $images[$j]['image_id'], $images[$j]['image_name'], $images[$j]['image_album_id']),
-			'UC_THUMBNAIL'	=> generate_image_link('thumbnail', $gallery_config['link_thumbnail'], $images[$j]['image_id'], $images[$j]['image_name'], $images[$j]['image_album_id']),
-			'U_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $images[$j]['image_album_id']),
-			'S_UNAPPROVED'	=> (gallery_acl_check('m_status', $album_id) && (!$images[$j]['image_status'])) ? true : false,
-			'S_LOCKED'		=> (gallery_acl_check('m_status', $album_id) && ($images[$j]['image_status'] == 2)) ? true : false,
-			'S_REPORTED'	=> (gallery_acl_check('m_report', $album_id) && $images[$j]['image_reported']) ? true : false,
+	$per_page = $gallery_config['rows_per_page'] * $gallery_config['cols_per_page'];
+	$total_match_count = 0;
+	$sql_limit = 0;
+	if ($search_id)
+	{
+		switch ($search_id)
+		{
+			case 'recent':
+				$l_search_title = $user->lang['SEARCH_RECENT'];
+				$search_results = 'image';
 
-			'ALBUM_NAME'	=> ((utf8_strlen(htmlspecialchars_decode($images[$j]['album_name'])) > $gallery_config['shorted_imagenames'] + 3 ) ? htmlspecialchars(utf8_substr(htmlspecialchars_decode($images[$j]['album_name']), 0, $gallery_config['shorted_imagenames']) . '...') : ($images[$j]['album_name'])),
-			'POSTER'		=> get_username_string('full', $images[$j]['image_user_id'], ($images[$j]['image_user_id'] <> ANONYMOUS) ? $images[$j]['image_username'] : $user->lang['GUEST'], $images[$j]['image_user_colour']),
-			'TIME'			=> $user->format_date($images[$j]['image_time']),
-			'VIEW'			=> $images[$j]['image_view_count'],
+				$sql_order = 'image_id DESC';
+				$sql_limit = 10 * $per_page;
+				$sql = 'SELECT image_id
+					FROM ' . GALLERY_IMAGES_TABLE . '
+					WHERE ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status = 1)
+							OR ' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
+					ORDER BY ' . $sql_order;
+			break;
 
-			'S_RATINGS'		=> (($gallery_config['rate'] == 1) && gallery_acl_check('i_rate', $album_id)) ? $images[$j]['rating'] : '',
-			'U_RATINGS'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $images[$j]['image_album_id'] . "&amp;image_id=" . $images[$j]['image_id']) . '#rating',
-			'L_COMMENTS'	=> ($images[$j]['image_comments'] == 1) ? $user->lang['COMMENT'] : $user->lang['COMMENTS'],
-			'S_COMMENTS'	=> (($gallery_config['comment'] == 1) && gallery_acl_check('c_read', $album_id)) ? (($images[$j]['image_comments']) ? $images[$j]['image_comments'] : $user->lang['NO_COMMENTS']) : '',
-			'U_COMMENTS'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $images[$j]['image_album_id'] . "&amp;image_id=" . $images[$j]['image_id']) . '#comments',
+			case 'random':
+				$l_search_title = $user->lang['SEARCH_RANDOM'];
+				$search_results = 'image';
 
-			'S_IP'		=> ($auth->acl_get('a_')) ? $images[$j]['image_user_ip'] : '',
-			'U_WHOIS'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'mode=whois&amp;ip=' . $images[$j]['image_user_ip']),
-			'U_REPORT'	=> (gallery_acl_check('m_report', $album_id) && $images[$j]['image_reported']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "mode=report_details&amp;album_id=$album_id&amp;option_id=" . $images[$j]['image_reported']) : '',
-			'U_STATUS'	=> (gallery_acl_check('m_status', $album_id) && ($images[$j]['image_status'] || ($user->data['user_id'] <> $images[$j]['image_user_id']))) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "mode=queue_details&amp;album_id=$album_id&amp;option_id=" . $images[$j]['image_id']) : '',
-			'L_STATUS'	=> (!$images[$j]['image_status']) ? $user->lang['APPROVE_IMAGE'] : (($images[$j]['image_status'] == 1) ? $user->lang['CHANGE_IMAGE_STATUS'] : $user->lang['UNLOCK_IMAGE']),
-			'U_MOVE'	=> (gallery_acl_check('m_move', $album_id)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "action=images_move&amp;album_id=$album_id&amp;image_id=" . $images[$j]['image_id'] . "&amp;redirect=redirect") : '',
-			'U_EDIT'	=> $allow_edit ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=" . $images[$j]['image_id']) : '',
-			'U_DELETE'	=> $allow_delete ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=delete&amp;album_id=$album_id&amp;image_id=" . $images[$j]['image_id']) : '',
-		));
+				switch ($db->sql_layer)
+				{
+					case 'postgres':
+						$sql_order = 'RANDOM()';
+					break;
+
+					case 'mssql':
+					case 'mssql_odbc':
+						$sql_order = 'NEWID()';
+					break;
+
+					default:
+						$sql_order = 'RAND()';
+					break;
+				}
+				$sql_limit = $per_page;
+				$sql = 'SELECT image_id
+					FROM ' . GALLERY_IMAGES_TABLE . '
+					WHERE ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status = 1)
+							OR ' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
+					ORDER BY ' . $sql_order;
+			break;
+
+			case 'commented':
+			if ($gallery_config['allow_comments'])
+			{
+				$l_search_title = $user->lang['SEARCH_RECENT_COMMENTS'];
+				$search_results = 'comment';
+
+				$sql_order = 'c.comment_id DESC';
+				$sql_limit = 10 * $per_page;
+				$sql = 'SELECT c.comment_id
+					FROM ' . GALLERY_COMMENTS_TABLE . ' c
+					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
+						ON c.comment_image_id = i.image_id
+					WHERE ((' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND i.image_status = 1)
+							OR ' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
+						AND ' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('c_read'), false, true) . '
+					ORDER BY ' . $sql_order;
+			}
+			break;
+
+			case 'toprated':
+			if ($gallery_config['allow_rates'])
+			{
+				$l_search_title = $user->lang['SEARCH_TOPRATED'];
+				$search_results = 'image';
+
+				$sql_order = 'image_rate_points DESC';
+				$sql_limit = 10 * $per_page;
+				$sql = 'SELECT image_id
+					FROM ' . GALLERY_IMAGES_TABLE . '
+					WHERE image_rate_points <> 0
+						AND ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status = 1)
+							OR ' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
+					ORDER BY ' . $sql_order;
+			}
+			break;
+
+			case 'egosearch':
+				$user_id = $user->data['user_id'];
+
+				// no break
+
+			case 'usersearch':
+				// Get username for the search-title "Images of %s"
+				$sql = 'SELECT username
+					FROM ' . USERS_TABLE . '
+					WHERE user_id = ' . $user_id;
+				$result = $db->sql_query($sql);
+				$username = $db->sql_fetchfield('username');
+				$db->sql_freeresult($result);
+
+				$l_search_title = sprintf($user->lang['SEARCH_USER_IMAGES_OF'], $username);
+				$search_results = 'image';
+
+				$sql_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
+				$sql = 'SELECT image_id
+					FROM ' . GALLERY_IMAGES_TABLE . '
+					WHERE image_user_id = ' . $user_id . '
+						AND ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status = 1)
+							OR ' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
+					ORDER BY ' . $sql_order;
+			break;
+		}
+	}
+
+	if ($search_id)
+	{
+		if ($sql)
+		{
+			if (!$sql_limit)
+			{
+				$result = $db->sql_query($sql);
+			}
+			else
+			{
+				$result = $db->sql_query_limit($sql, $sql_limit);
+			}
+
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$id_ary[] = $row[$search_results . '_id'];
+			}
+			$db->sql_freeresult($result);
+
+			$total_match_count = sizeof($id_ary);
+			$id_ary = array_slice($id_ary, $start, $per_page);
+		}
+		else
+		{
+			$search_id = '';
+		}
+	}
+
+	$l_search_matches = ($total_match_count == 1) ? sprintf($user->lang['FOUND_SEARCH_MATCH'], $total_match_count) : sprintf($user->lang['FOUND_SEARCH_MATCHES'], $total_match_count);
+
+	// For some searches we need to print out the "no results" page directly to allow re-sorting/refining the search options.
+	if (!sizeof($id_ary) && !$search_id)
+	{
+		trigger_error('NO_SEARCH_RESULTS');
+	}
+
+	$sql_where = '';
+
+	if (sizeof($id_ary))
+	{
+		$sql_where .= ($search_results == 'image') ? $db->sql_in_set('i.image_id', $id_ary) : $db->sql_in_set('c.comment_id', $id_ary);
+	}
+
+	// define some vars for urls
+	$hilit = explode(' ', preg_replace('#\s+#u', ' ', str_replace(array('+', '-', '|', '(', ')', '&quot;'), ' ', $keywords)));
+	$searchwords = implode(', ', $hilit);
+	$hilit = implode('|', $hilit);
+	// Do not allow *only* wildcard being used for hilight
+	$hilit = (strspn($hilit, '*') === strlen($hilit)) ? '' : $hilit;
+
+	$u_hilit = urlencode(htmlspecialchars_decode(str_replace('|', ' ', $hilit)));
+	$u_search_album = implode('&amp;aid%5B%5D=', $search_album);
+
+	$u_search = append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", $u_sort_param);
+	$u_search .= ($search_id) ? '&amp;search_id=' . $search_id : '';
+	//@todo: 
+	$u_search .= ($search_terms != 'all') ? '&amp;terms=' . $search_terms : '';
+	$u_search .= ($u_hilit) ? '&amp;keywords=' . urlencode(htmlspecialchars_decode($search->search_query)) : '';
+	$u_search .= ($username) ? '&amp;username=' . urlencode(htmlspecialchars_decode($username)) : '';
+	$u_search .= ($user_id) ? '&amp;user_id=' . $user_id : '';
+	$u_search .= ($u_search_album) ? '&amp;aid%5B%5D=' . $u_search_album : '';
+	$u_search .= (!$search_child) ? '&amp;sc=0' : '';
+	$u_search .= ($search_fields != 'all') ? '&amp;sf=' . $search_fields : '';
+
+	$template->assign_vars(array(
+		'SEARCH_TITLE'		=> $l_search_title,
+		'SEARCH_MATCHES'	=> $l_search_matches,
+		'SEARCH_WORDS'		=> $searchwords,
+		//@todo: 'IGNORED_WORDS'		=> (sizeof($search->common_words)) ? implode(' ', $search->common_words) : '',
+		'PAGINATION'		=> generate_pagination($u_search, $total_match_count, $per_page, $start),
+		'PAGE_NUMBER'		=> on_page($total_match_count, $per_page, $start),
+		'TOTAL_MATCHES'		=> $total_match_count,
+		'SEARCH_IN_RESULTS'	=> ($search_id) ? false : true,
+
+		'S_SELECT_SORT_DIR'		=> $s_sort_dir,
+		'S_SELECT_SORT_KEY'		=> $s_sort_key,
+		'S_SELECT_SORT_DAYS'	=> $s_limit_days,
+		'S_SEARCH_ACTION'		=> $u_search,
+
+		'U_SEARCH_WORDS'	=> $u_search,
+		'SEARCH_IMAGES'		=> ($search_results == 'image') ? true : false,
+		'S_COL_WIDTH'		=> (100 / $gallery_config['cols_per_page']),
+		'S_THUMBNAIL_SIZE'	=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? 16 : 0),
+	));
+
+	if ($sql_where)
+	{
+		// Search results are images
+		if ($search_results == 'image')
+		{
+			$sql_array = array(
+				'SELECT'		=> 'i.*, a.album_name',
+				'FROM'			=> array(GALLERY_IMAGES_TABLE => 'i'),
+
+				'LEFT_JOIN'		=> array(
+					array(
+						'FROM'		=> array(GALLERY_ALBUMS_TABLE => 'a'),
+						'ON'		=> 'a.album_id = i.image_album_id',
+					),
+				),
+
+				'WHERE'			=> $sql_where,
+				'ORDER_BY'		=> $sql_order,
+			);
+			$sql = $db->sql_build_query('SELECT', $sql_array);
+			$result = $db->sql_query($sql);
+			$rowset = array();
+
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$rowset[$row['image_id']] = $row;
+			}
+			$db->sql_freeresult($result);
+
+			if (!function_exists('assign_image_block'))
+			{
+				include($phpbb_root_path . $gallery_root_path . 'includes/functions_display.' . $phpEx);
+			}
+
+			$i = 1;
+			foreach ($rowset as $row)
+			{
+				assign_image_block('image', $row, (($i % $gallery_config['cols_per_page']) == 0));
+				$i++;
+			}
+		}
+		// Search results are comments
+		else
+		{
+			$sql_array = array(
+				'SELECT'		=> 'c.*, i.*',
+				'FROM'			=> array(GALLERY_COMMENTS_TABLE => 'c'),
+
+				'LEFT_JOIN'		=> array(
+					array(
+						'FROM'		=> array(GALLERY_IMAGES_TABLE => 'i'),
+						'ON'		=> 'c.comment_image_id = i.image_id',
+					),
+				),
+
+				'WHERE'			=> $sql_where,
+				'ORDER_BY'		=> $sql_order,
+			);
+			$sql = $db->sql_build_query('SELECT', $sql_array);
+			$result = $db->sql_query($sql);
+
+			while ($commentrow = $db->sql_fetchrow($result))
+			{
+				$image_id = $commentrow['image_id'];
+				$album_id = $commentrow['image_album_id'];
+
+				$template->assign_block_vars('commentrow', array(
+					'U_COMMENT'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id") . '#' . $commentrow['comment_id'],
+					'COMMENT_ID'	=> $commentrow['comment_id'],
+					'TIME'			=> $user->format_date($commentrow['comment_time']),
+					'TEXT'			=> generate_text_for_display($commentrow['comment'], $commentrow['comment_uid'], $commentrow['comment_bitfield'], 7),
+					'U_DELETE'		=> (gallery_acl_check('m_comments', $album_id) || (gallery_acl_check('c_delete', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=delete&amp;comment_id=" . $commentrow['comment_id']) : '',
+					'U_EDIT'		=> (gallery_acl_check('m_comments', $album_id) || (gallery_acl_check('c_edit', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=edit&amp;comment_id=" . $commentrow['comment_id']) : '',
+					'U_INFO'		=> ($auth->acl_get('a_')) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'mode=whois&amp;ip=' . $commentrow['comment_user_ip']) : '',
+
+					'UC_THUMBNAIL'			=> generate_image_link('thumbnail', $gallery_config['link_thumbnail'], $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
+					'UC_IMAGE_NAME'			=> generate_image_link('image_name', $gallery_config['link_image_name'], $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
+					'IMAGE_AUTHOR'			=> get_username_string('full', $commentrow['image_user_id'], ($commentrow['image_user_id'] <> ANONYMOUS) ? $commentrow['image_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['image_username']), $commentrow['image_user_colour']),
+					'IMAGE_TIME'			=> $user->format_date($commentrow['image_time']),
+
+					'POST_AUTHOR_FULL'		=> get_username_string('full', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['comment_user_colour']),
+					'POST_AUTHOR_COLOUR'	=> get_username_string('colour', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['comment_user_colour']),
+					'POST_AUTHOR'			=> get_username_string('username', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['comment_user_colour']),
+					'U_POST_AUTHOR'			=> get_username_string('profile', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['comment_user_colour']),
+				));
+			}
+			$db->sql_freeresult($result);
+
+			$template->assign_vars(array(
+				'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_COMMENT'),
+				'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_COMMENT'),
+				'INFO_IMG'			=> $user->img('icon_post_info', 'VIEW_INFO'),
+				'MINI_POST_IMG'		=> $user->img('icon_post_target_unread', 'COMMENT'),
+				'PROFILE_IMG'		=> $user->img('icon_user_profile', 'READ_PROFILE'),
+			));
+		}
+	}
+	unset($rowset);
+
+	page_header(($l_search_title) ? $l_search_title : $user->lang['SEARCH']);
+
+	$template->set_filenames(array(
+		'body' => 'gallery/search_results.html')
+	);
+	make_jumpbox(append_sid("{$phpbb_root_path}viewforum.$phpEx"));
+
+	page_footer();
+}
+
+$s_albums = gallery_albumbox(false, false, false, 'i_view' /*'a_search'*/);
+if (!$s_albums)
+{
+	trigger_error('NO_SEARCH');
+}
+
+// Prevent undefined variable on build_hidden_fields()
+$s_hidden_fields = array('e' => 0);
+
+if ($_SID)
+{
+	$s_hidden_fields['sid'] = $_SID;
+}
+
+if (!empty($_EXTRA_URL))
+{
+	foreach ($_EXTRA_URL as $url_param)
+	{
+		$url_param = explode('=', $url_param, 2);
+		$s_hidden_fields[$url_param[0]] = $url_param[1];
 	}
 }
 
 $template->assign_vars(array(
-	'S_THUMBNAIL_SIZE'			=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? 16 : 0),
-	'S_COLS'					=> $gallery_config['cols_per_page'],
-	'S_COL_WIDTH'				=> (100/$gallery_config['cols_per_page']) . '%',
-	'S_SEARCH_ACTION'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", "user_id=$user_id"),
-	'SEARCH_NAME'				=> sprintf($user->lang['SEARCH_USER_IMAGES_OF'], $username),
-
-	'S_SELECT_SORT_DIR'			=> $s_sort_dir,
-	'S_SELECT_SORT_KEY'			=> $s_sort_key,
-
-	'PAGINATION'				=> generate_pagination(append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", "user_id=$user_id&amp;sk=$sort_key&amp;sd=$sort_dir&amp;st=$sort_days"), $image_counter, $images_per_page, $start),
-	'TOTAL_IMAGES'				=> ($image_counter == 1) ? $user->lang['IMAGE_#'] : sprintf($user->lang['IMAGES_#'], $image_counter),
-	'PAGE_NUMBER'				=> on_page($image_counter, $images_per_page, $start),
+	'S_SEARCH_ACTION'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", false, true, 0), // We force no ?sid= appending by using 0
+	'S_HIDDEN_FIELDS'		=> build_hidden_fields($s_hidden_fields),
+	'S_ALBUM_OPTIONS'		=> $s_albums,
+	'S_SELECT_SORT_DIR'		=> $s_sort_dir,
+	'S_SELECT_SORT_KEY'		=> $s_sort_key,
+	'S_SELECT_SORT_DAYS'	=> $s_limit_days,
+	'S_IN_SEARCH'			=> true,
 ));
 
 page_header($user->lang['GALLERY'] . ' &bull; ' . $user->lang['SEARCH']);
 
 $template->set_filenames(array(
-	'body' => 'gallery_search_result_body.html')
+	'body' => 'gallery/search_body.html')
 );
 
 page_footer();

@@ -17,6 +17,22 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
+/**
+* Available functions
+*
+* load_gallery_config()
+* set_gallery_config()
+* get_album_info()
+* get_image_info()
+* check_album_user()
+* gallery_albumbox()
+* update_album_info()
+* handle_image_counter()
+* get_album_branch()
+* generate_image_link()
+*
+*/
+
 $gallery_root_path = GALLERY_ROOT_PATH;
 
 $sql = 'SELECT *

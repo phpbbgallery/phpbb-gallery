@@ -23,6 +23,15 @@ include($phpbb_root_path . $gallery_root_path . 'includes/constants.' . $phpEx);
 include($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
 $gallery_config = load_gallery_config();
 
+$template->assign_vars(array(
+	'U_GALLERY_SEARCH'				=> false,//@todo: 
+	'U_G_SEARCH_COMMENTED'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=commented'),
+	'U_G_SEARCH_RANDOM'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=random'),
+	'U_G_SEARCH_RECENT'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=recent'),
+	'U_G_SEARCH_SELF'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=egosearch'),
+	'U_G_SEARCH_TOPRATED'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=toprated'),
+));
+
 // Don't display Gallery-NavLink / activate Gallery-Tab on "recent-random-images"
 $recent_image_addon = isset($recent_image_addon);
 if (!$recent_image_addon)
