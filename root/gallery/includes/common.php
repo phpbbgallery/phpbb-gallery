@@ -24,7 +24,7 @@ include($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
 $gallery_config = load_gallery_config();
 
 $template->assign_vars(array(
-	'U_GALLERY_SEARCH'				=> false,//@todo: 
+	'U_GALLERY_SEARCH'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx"),
 	'U_G_SEARCH_COMMENTED'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=commented'),
 	'U_G_SEARCH_RANDOM'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=random'),
 	'U_G_SEARCH_RECENT'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=recent'),

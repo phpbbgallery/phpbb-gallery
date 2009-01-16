@@ -525,7 +525,7 @@ function get_album_moderators(&$album_moderators, $album_id = false)
 /**
 *
 */
-function assign_image_block($template_block, &$image_data, $br_clear)
+function assign_image_block($template_block, &$image_data, $br_clear = false)
 {
 	global $auth, $gallery_config, $template, $user;
 	global $gallery_root_path, $phpbb_root_path, $phpEx;

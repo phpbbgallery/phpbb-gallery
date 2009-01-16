@@ -48,6 +48,7 @@
         <date>YYYY-MM-DD</date>
         <rev-version>X.Y.Z</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Add] Report #313: Search]]></change>
           <change><![CDATA[[Add] Report #402: Delete personal albums in ACP]]></change>
           <change><![CDATA[[Add] Report #400: Thumbnail Image of Previous and Next images]]></change>
           <change><![CDATA[[Add] Report #403: Config for the recent-part on gallery/index.php]]></change>

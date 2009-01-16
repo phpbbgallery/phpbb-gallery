@@ -35,8 +35,7 @@ include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx
 $album_access_array = get_album_access_array();
 
 // Define initial vars
-//@todo: 
-$mode			= request_var('mode', '');
+//@todo: $mode			= request_var('mode', '');
 $search_id		= request_var('search_id', '');
 $start			= request_var('start', 0);
 $image_id		= request_var('image_id', 0);
@@ -46,16 +45,13 @@ $keywords		= utf8_normalize_nfc(request_var('keywords', '', true));
 $add_keywords	= utf8_normalize_nfc(request_var('add_keywords', '', true));
 $username		= request_var('username', '', true);
 $user_id		= request_var('user_id', 0);
-//@todo: 
 $search_terms	= request_var('terms', 'all');
 $search_album	= request_var('aid', array(0));
 $search_child	= request_var('sc', true);
 $search_fields	= request_var('sf', 'all');
-//@todo: <[[
 $sort_days		= request_var('st', 0);
 $sort_key		= request_var('sk', 't');
 $sort_dir		= request_var('sd', 'd');
-// ]]>
 
 
 // Is user able to search? Has search been disabled?
@@ -93,7 +89,7 @@ if ($gallery_config['comment'] == 1)
 
 $s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
 gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
-$sql_sort_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
+$sql_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
 /**
 * Search
@@ -109,10 +105,10 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 		$search_id = 'usersearch';
 	}
 
-	//@todo
 	/**
 	* borrowed from phpBB3
 	* @author: phpBB Group
+	*/
 
 	// egosearch is an user search
 	if ($search_id == 'egosearch')
@@ -127,11 +123,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 
 	// If we are looking for authors get their ids
 	$user_id_ary = array();
-	if ($user_id)
-	{
-		$user_id_ary[] = $user_id;
-	}
-	else if ($username)
+	if ($username)
 	{
 		if ((strpos($username, '*') !== false) && (utf8_strlen(str_replace(array('*', '%'), '', $username)) < $config['min_search_author_chars']))
 		{
@@ -152,11 +144,15 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			$user_id_ary[] = (int) $row['user_id'];
 		}
 		$db->sql_freeresult($result);
+		$user_id_ary[] = (int) ANONYMOUS;
 
+		/**
+		* Allow Search for guests/deleted users
 		if (!sizeof($user_id_ary))
 		{
 			trigger_error('NO_SEARCH_RESULTS');
 		}
+		*/
 	}
 
 	// if we search in an existing search result just add the additional keywords. But we need to use "all search terms"-mode
@@ -173,7 +169,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			$keywords = implode(' |', explode(' ', preg_replace('#\s+#u', ' ', $keywords))) . ' ' .$add_keywords;
 		}
 	}
-	**/
+	$keywords_ary = explode(' ', $keywords);
 
 	// pre-made searches
 	$sql = $field = $l_search_title = $search_results = '';
@@ -181,6 +177,8 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 	$per_page = $gallery_config['rows_per_page'] * $gallery_config['cols_per_page'];
 	$total_match_count = 0;
 	$sql_limit = 0;
+
+	// Special searches: recent, random, toprated, ...
 	if ($search_id)
 	{
 		switch ($search_id)
@@ -288,33 +286,58 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			break;
 		}
 	}
-
-	if ($search_id)
+	// "Normal" search
+	else
 	{
-		if ($sql)
+		$search_query = '';
+		$matches = array('i.image_name', 'i.image_desc');
+
+		foreach ($keywords_ary as $word)
 		{
-			if (!$sql_limit)
+			$match_search_query = '';
+			foreach ($matches as $match)
 			{
-				$result = $db->sql_query($sql);
+				$match_search_query .= (($match_search_query) ? ' OR ' : '') . $match . ' ';
+				$match_search_query .= $db->sql_like_expression(str_replace('*', $db->any_char, $word));
 			}
-			else
-			{
-				$result = $db->sql_query_limit($sql, $sql_limit);
-			}
+			$search_query .= ((!$search_query) ? '' : (($search_terms == 'all') ? ' AND ' : ' OR ')) . '(' . $match_search_query . ')';
+		}
 
-			while ($row = $db->sql_fetchrow($result))
-			{
-				$id_ary[] = $row[$search_results . '_id'];
-			}
-			$db->sql_freeresult($result);
+		$search_results = 'image';
 
-			$total_match_count = sizeof($id_ary);
-			$id_ary = array_slice($id_ary, $start, $per_page);
+		$sql_limit = 10 * $per_page;
+		$sql_match = 'i.image_name';
+		$sql_where_options = '';
+
+		$sql = 'SELECT i.image_id
+			FROM ' . GALLERY_IMAGES_TABLE . ' i
+			WHERE ((' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND i.image_status = 1)
+					OR ' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
+				AND (' . $search_query . ')
+				' . (($user_id_ary) ? ' AND ' . $db->sql_in_set('i.image_user_id', $user_id_ary) : '') . '
+				' . (($search_album) ? ' AND ' . $db->sql_in_set('i.image_album_id', $search_album) : '') . '
+			ORDER BY ' . $sql_order;
+	}
+
+	if ($sql)
+	{
+		if (!$sql_limit)
+		{
+			$result = $db->sql_query($sql);
 		}
 		else
 		{
-			$search_id = '';
+			$result = $db->sql_query_limit($sql, $sql_limit);
 		}
+
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$id_ary[] = $row[$search_results . '_id'];
+		}
+		$db->sql_freeresult($result);
+
+		$total_match_count = sizeof($id_ary);
+		$id_ary = array_slice($id_ary, $start, $per_page);
 	}
 
 	$l_search_matches = ($total_match_count == 1) ? sprintf($user->lang['FOUND_SEARCH_MATCH'], $total_match_count) : sprintf($user->lang['FOUND_SEARCH_MATCHES'], $total_match_count);
@@ -346,7 +369,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 	$u_search .= ($search_id) ? '&amp;search_id=' . $search_id : '';
 	//@todo: 
 	$u_search .= ($search_terms != 'all') ? '&amp;terms=' . $search_terms : '';
-	$u_search .= ($u_hilit) ? '&amp;keywords=' . urlencode(htmlspecialchars_decode($search->search_query)) : '';
+	$u_search .= ($u_hilit) ? '&amp;keywords=' . urlencode(htmlspecialchars_decode($keywords)) : '';
 	$u_search .= ($username) ? '&amp;username=' . urlencode(htmlspecialchars_decode($username)) : '';
 	$u_search .= ($user_id) ? '&amp;user_id=' . $user_id : '';
 	$u_search .= ($u_search_album) ? '&amp;aid%5B%5D=' . $u_search_album : '';
@@ -399,7 +422,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 
 			while ($row = $db->sql_fetchrow($result))
 			{
-				$rowset[$row['image_id']] = $row;
+				$rowset[] = $row;
 			}
 			$db->sql_freeresult($result);
 
@@ -408,11 +431,19 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				include($phpbb_root_path . $gallery_root_path . 'includes/functions_display.' . $phpEx);
 			}
 
-			$i = 1;
-			foreach ($rowset as $row)
+			for ($i = 0; $i < count($rowset); $i += $gallery_config['cols_per_page'])
 			{
-				assign_image_block('image', $row, (($i % $gallery_config['cols_per_page']) == 0));
-				$i++;
+				$template->assign_block_vars('imagerow', array());
+
+				for ($j = $i; $j < ($i + $gallery_config['cols_per_page']); $j++)
+				{
+					if ($j >= count($rowset))
+					{
+						$template->assign_block_vars('imagerow.noimage', array());
+						continue;
+					}
+					assign_image_block('imagerow.image', $rowset[$j]);
+				}
 			}
 		}
 		// Search results are comments

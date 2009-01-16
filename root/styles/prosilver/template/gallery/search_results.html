@@ -25,6 +25,7 @@ function toggleElement(oElement)
 }
 </script>
 <h2><!-- IF SEARCH_TITLE -->{SEARCH_TITLE}<!-- ELSE -->{SEARCH_MATCHES}<!-- ENDIF --><!-- IF SEARCH_WORDS -->: <a href="{U_SEARCH_WORDS}">{SEARCH_WORDS}</a><!-- ENDIF --></h2>
+<!-- IF IGNORED_WORDS --> <p>{L_IGNORED_TERMS}: <strong>{IGNORED_WORDS}</strong></p><!-- ENDIF -->
 
 <!-- IF U_GALLERY_SEARCH --><p><a class="{S_CONTENT_FLOW_BEGIN}" href="{U_GALLERY_SEARCH}" title="{L_SEARCH_ADV}">{L_RETURN_TO_SEARCH_ADV}</a></p><!-- ENDIF -->
 
@@ -50,7 +51,7 @@ function toggleElement(oElement)
 	</form>
 <!-- ENDIF -->
 
-<!-- IF SEARCH_IMAGES and .image -->
+<!-- IF SEARCH_IMAGES and .imagerow -->
 <div class="forumbg">
 	<div class="inner">
 		<span class="corners-top"><span></span></span>
@@ -63,46 +64,55 @@ function toggleElement(oElement)
 		</ul>
 		<ul class="topiclist topics">
 			<li class="bg2">
-			<!-- BEGIN image -->
-				<div style="float: left; width: {S_COL_WIDTH}%;"><div style="padding: 10px;">
-					<!-- IF S_NOT_BUGGED_ANYMORE -->
-					<div style="padding: 5px; text-align: center; height: {S_THUMBNAIL_SIZE}px; border: 1px solid #454545;"
-						class="bg1<!-- IF image.S_UNAPPROVED --> g_unapproved<!-- ENDIF --><!-- IF image.S_LOCKED --> g_locked<!-- ENDIF --><!-- IF image.S_REPORTED --> g_reported<!-- ENDIF -->">
-						<span>{image.UC_THUMBNAIL}</span>
-					</div>
-					<!-- ENDIF -->
-					<table width="100%" cellpadding="2" cellspacing="5" border="0" class="forumline">
-						<tr>
-							<td align="center" style="height: {S_THUMBNAIL_SIZE}px;" class="bg1<!-- IF image.S_UNAPPROVED --> g_unapproved<!-- ENDIF --><!-- IF image.S_LOCKED --> g_locked<!-- ENDIF --><!-- IF image.S_REPORTED --> g_reported<!-- ENDIF -->">
-								<span class="genmed">{image.UC_THUMBNAIL}</span>
-							</td>
-						</tr>
-					</table>
-					<br />
-					<div class="gensmall" style="overflow: hidden;">
-						{L_IMAGE_NAME}: {image.UC_IMAGE_NAME}<br />
-						{L_ALBUM_NAME}: <a href="{image.U_ALBUM}" style="font-weight: bold;">{image.ALBUM_NAME}</a><br />
-						{L_UPLOADED_BY_USER}: {image.POSTER}<br />
-						{L_UPLOADED_ON_DATE}: {image.TIME}<br />
-						{L_VIEWS}: {image.VIEW}<br />
-						<!-- IF image.S_RATINGS -->{L_RATING}: <a href="{image.U_RATINGS}">{image.S_RATINGS}</a><br /><!-- ENDIF -->
-						<!-- IF image.S_COMMENTS -->{image.L_COMMENTS}: <a href="{image.U_COMMENTS}">{image.S_COMMENTS}</a><br /><!-- ENDIF -->
-						<!-- IF image.S_IP -->{L_IP}: {image.S_IP} &#187; <a href="{image.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a><br /><!-- ENDIF -->
-						<!-- IF image.U_REPORT or image.U_STATUS or image.U_MOVE or  image.U_EDIT or image.U_DELETE -->
-							<a href="javascript: toggleElement( getElement('moderate_{image.IMAGE_ID}'));">{L_MODERATE}</a>
-							<div id="moderate_{image.IMAGE_ID}" style="display: none;">
-								<!-- IF image.U_REPORT -->&#187; <a href="{image.U_REPORT}" class="reported-images-number">{L_READ_REPORT}</a><br /><!-- ENDIF -->
-								<!-- IF image.U_STATUS -->&#187; <a href="{image.U_STATUS}">{image.L_STATUS}</a><br /><!-- ENDIF -->
-								<!-- IF image.U_MOVE -->&#187; <a href="{image.U_MOVE}">{L_MOVE}</a><br /><!-- ENDIF -->
-								<!-- IF image.U_EDIT -->&#187; <a href="{image.U_EDIT}">{L_EDIT_IMAGE}</a><br /><!-- ENDIF -->
-								<!-- IF image.U_DELETE -->&#187; <a href="{image.U_DELETE}">{L_DELETE_IMAGE}</a><br /><!-- ENDIF -->
-							</div>
-						<!-- ENDIF -->
-					</div>
-				</div></div>
-				<!-- IF not image.S_LAST_ROW and image.BR_CLEAR --><br style="clear: both;" /><!-- ENDIF -->
-			<!-- END image -->
 			<br style="clear: both;" />
+				<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline">
+					<!-- BEGIN imagerow -->
+					<tr>
+						<!-- BEGIN image -->
+						<td class="bg2" valign="top" style="width: {S_COL_WIDTH};">
+							<table width="100%" cellpadding="2" cellspacing="5" border="0" class="forumline">
+								<tr>
+									<td align="center" style="height: {S_THUMBNAIL_SIZE}px;" class="bg1<!-- IF imagerow.image.S_UNAPPROVED --> g_unapproved<!-- ENDIF --><!-- IF imagerow.image.S_LOCKED --> g_locked<!-- ENDIF --><!-- IF imagerow.image.S_REPORTED --> g_reported<!-- ENDIF -->">
+										<span class="genmed">{imagerow.image.UC_THUMBNAIL}</span>
+									</td>
+								</tr>
+								<tr>
+									<td class="bg2" valign="top">
+										<div class="gensmall" style="overflow: hidden;">
+											{L_IMAGE_NAME}: {imagerow.image.UC_IMAGE_NAME}<br />
+											{L_ALBUM_NAME}: <a href="{imagerow.image.U_ALBUM}" style="font-weight: bold;">{imagerow.image.ALBUM_NAME}</a><br />
+											{L_UPLOADED_BY_USER}: {imagerow.image.POSTER}<br />
+											{L_UPLOADED_ON_DATE}: {imagerow.image.TIME}<br />
+											{L_VIEWS}: {imagerow.image.VIEW}<br />
+											<!-- IF imagerow.image.S_RATINGS -->{L_RATING}: <a href="{imagerow.image.U_RATINGS}">{imagerow.image.S_RATINGS}</a><br /><!-- ENDIF -->
+											<!-- IF imagerow.image.S_COMMENTS -->{imagerow.image.L_COMMENTS}: <a href="{imagerow.image.U_COMMENTS}">{imagerow.image.S_COMMENTS}</a><br /><!-- ENDIF -->
+											<!-- IF imagerow.image.S_IP -->{L_IP}: {imagerow.image.S_IP} &#187; <a href="{imagerow.image.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a><br /><!-- ENDIF -->
+											<!-- IF imagerow.image.U_REPORT or imagerow.image.U_STATUS or imagerow.image.U_MOVE or  imagerow.image.U_EDIT or imagerow.image.U_DELETE -->
+											<a href="javascript: toggleElement( getElement('moderate_{imagerow.image.IMAGE_ID}'));">{L_MODERATE}</a>
+											<div id="moderate_{imagerow.image.IMAGE_ID}" style="display: none;">
+												<!-- IF imagerow.image.U_REPORT -->&#187; <a href="{imagerow.image.U_REPORT}" class="reported-images-number">{L_READ_REPORT}</a><br /><!-- ENDIF -->
+												<!-- IF imagerow.image.U_STATUS -->&#187; <a href="{imagerow.image.U_STATUS}">{imagerow.image.L_STATUS}</a><br /><!-- ENDIF -->
+												<!-- IF imagerow.image.U_MOVE -->&#187; <a href="{imagerow.image.U_MOVE}">{L_MOVE}</a><br /><!-- ENDIF -->
+												<!-- IF imagerow.image.U_EDIT -->&#187; <a href="{imagerow.image.U_EDIT}">{L_EDIT_IMAGE}</a><br /><!-- ENDIF -->
+												<!-- IF imagerow.image.U_DELETE -->&#187; <a href="{imagerow.image.U_DELETE}">{L_DELETE_IMAGE}</a><br /><!-- ENDIF -->
+											</div>
+											<!-- ENDIF -->
+										</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<!-- END image -->
+						<!-- BEGIN noimage --> 
+							<td class="bg2" valign="top" style="width: {S_COL_WIDTH};">
+								<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline"><tr>
+								<td style="height: {S_THUMBNAIL_SIZE}px;" class="bg1"></td>
+								</tr></table>
+							</td> 
+						<!-- END noimage -->
+					</tr>
+					<!-- END imagerow -->
+				</table>
 			</li>
 		</ul>
 		<span class="corners-bottom"><span></span></span>
