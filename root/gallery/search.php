@@ -394,6 +394,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 		'U_SEARCH_WORDS'	=> $u_search,
 		'SEARCH_IMAGES'		=> ($search_results == 'image') ? true : false,
 		'S_COL_WIDTH'		=> (100 / $gallery_config['cols_per_page']),
+		'S_COLS'			=> $gallery_config['cols_per_page'],
 		'S_THUMBNAIL_SIZE'	=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? 16 : 0),
 	));
 

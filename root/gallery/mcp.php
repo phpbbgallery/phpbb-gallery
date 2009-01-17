@@ -353,7 +353,7 @@ switch ($mode)
 page_header($user->lang['GALLERY'] . ' &bull; ' . $user->lang['MCP'] . ' &bull; ' . $page_title);
 
 $template->set_filenames(array(
-	'body' => 'gallery_mcp_body.html')
+	'body' => 'gallery/mcp_body.html')
 );
 
 page_footer();

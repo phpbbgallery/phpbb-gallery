@@ -24,14 +24,32 @@ function toggleElement(oElement)
 	}
 }
 </script>
+
+<!-- IF S_HAS_SUBALBUM -->
+	<!-- INCLUDE gallery/albumlist_body.html -->
+	<br clear="all" />
+<!-- ENDIF -->
+
+<!-- IF S_IS_POSTABLE or S_NO_READ_ACCESS -->
 	<div id="pageheader">
-		<h2><a class="titles" href="{U_GALLERY_SEARCH}">{L_SEARCH}</a></h2>
+		<h2><a class="titles" href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>
+
+		<!-- IF MODERATORS -->
+			<p class="moderators"><!-- IF S_SINGLE_MODERATOR -->{L_MODERATOR}<!-- ELSE -->{L_MODERATORS}<!-- ENDIF -->: {MODERATORS}</p>
+		<!-- ENDIF -->
+		<!-- IF U_MCP -->
+			<p class="linkmcp">[ <a href="{U_MCP}">{L_MCP}</a> ]</p>
+		<!-- ENDIF -->
+		<!-- IF U_EDIT_ALBUM --><p class="linkmcp">[ <a href="{U_EDIT_ALBUM}">{L_EDIT_ALBUM}</a> ]<!-- IF U_MCP -->&nbsp;<!-- ENDIF --></p><!-- ENDIF -->
+		<!-- IF U_CREATE_ALBUM --><p class="linkmcp">[ <a href="{U_CREATE_ALBUM}">{L_CREATE_SUBALBUM}</a> ]&nbsp;</p><!-- ENDIF -->
 	</div>
 
 	<br clear="all" /><br />
+<!-- ENDIF -->
 
 <div id="pagecontent">
 
+<!-- IF S_IS_POSTABLE -->
 	<!-- IF U_UPLOAD_IMAGE or TOTAL_IMAGES -->
 		<table width="100%" cellspacing="1">
 		<tr>
@@ -53,14 +71,14 @@ function toggleElement(oElement)
 		<td class="cat" colspan="{S_COLS}">
 				<table width="100%" cellspacing="0">
 				<tr class="nav">
-					<td valign="middle">&nbsp;<!-- IF U_WATCH_TOPIC --><a href="{U_WATCH_TOPIC}" title="{L_WATCH_TOPIC}">{L_WATCH_TOPIC}</a><!-- IF U_PRINT_TOPIC or U_EMAIL_TOPIC or U_BUMP_TOPIC or U_BOOKMARK_TOPIC --> | <!-- ENDIF --><!-- ENDIF --></td>
+					<td valign="middle"><!-- IF S_IS_POSTABLE and U_SLIDE_SHOW and not S_IS_BOT -->&nbsp;<a href="{U_SLIDE_SHOW}">{L_SLIDE_SHOW}</a>&nbsp;<!-- IF U_WATCH_TOPIC --> &bull; <!-- ENDIF --><!-- ENDIF -->&nbsp;<!-- IF U_WATCH_TOPIC --><a href="{U_WATCH_TOPIC}" title="{L_WATCH_TOPIC}">{L_WATCH_TOPIC}</a><!-- IF U_PRINT_TOPIC or U_EMAIL_TOPIC or U_BUMP_TOPIC or U_BOOKMARK_TOPIC --> | <!-- ENDIF --><!-- ENDIF --></td>
 					<td align="{S_CONTENT_FLOW_END}" valign="middle">&nbsp;</td>
 				</tr>
 				</table>
 		</td>
 	</tr>
 	<tr>
-		<th align="center" colspan="{S_COLS}" nowrap="nowrap">{SEARCH_NAME}</th>
+		<th align="center" colspan="{S_COLS}" nowrap="nowrap">{L_ALBUM} - {ALBUM_NAME}</th>
 	</tr>
 	<!-- BEGIN image_row -->
 	<tr>
@@ -78,7 +96,6 @@ function toggleElement(oElement)
 					<!-- IF (image_row.image.S_LOCKED or image_row.image.S_UNAPPROVED) and image_row.image.U_STATUS --><a style="font-weight: bold;" class="reported-images-number" href="{image_row.image.U_STATUS}">{image_row.image.L_STATUS}</a><br /><br /><!-- ENDIF -->
 					<!-- IF image_row.image.S_REPORTED and image_row.image.U_REPORT --><a style="font-weight: bold;" class="reported-images-number" href="{image_row.image.U_REPORT}">{L_READ_REPORT}</a><br /><br /><!-- ENDIF -->
 						{L_IMAGE_NAME}: {image_row.image.UC_IMAGE_NAME}<br />
-						{L_ALBUM_NAME}: <a href="{image_row.image.U_ALBUM}" style="font-weight: bold;">{image_row.image.ALBUM_NAME}</a><br />
 						{L_UPLOADED_BY_USER}: {image_row.image.POSTER}<br />
 						{L_UPLOADED_ON_DATE}: {image_row.image.TIME}<br />
 						{L_VIEWS}: {image_row.image.VIEW}<br />
@@ -136,11 +153,35 @@ function toggleElement(oElement)
 		</tr>
 		</table>
 	<!-- ENDIF -->
+<!-- ENDIF -->
 
 		<br clear="all" />
 </div>
 
 <!-- INCLUDE breadcrumbs.html -->
+
+<!-- IF S_DISPLAY_ONLINE_LIST -->
+	<br clear="all" />
+
+	<table class="tablebg" width="100%" cellspacing="1">
+	<tr>
+		<td class="cat"><h4>{L_WHO_IS_ONLINE}</h4></td>
+	</tr>
+	<tr>
+		<td class="row1"><p class="gensmall"><!-- IF CHEAT_LOGGED_IN_USER_LIST -->{CHEAT_LOGGED_IN_USER_LIST}<!-- ELSE -->{LOGGED_IN_USER_LIST}<!-- ENDIF --></p></td>
+	</tr>
+	</table>
+<!-- ENDIF -->
+<!-- IF S_IS_POSTABLE -->
+
+	<br clear="all" />
+
+	<table width="100%" cellspacing="0">
+	<tr>
+		<td align="{S_CONTENT_FLOW_END}"><span class="gensmall"><!-- BEGIN rules -->{rules.RULE}<br /><!-- END rules --></span></td>
+	</tr>
+	</table>
+<!-- ENDIF -->
 
 <br clear="all" />
 

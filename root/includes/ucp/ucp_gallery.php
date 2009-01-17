@@ -40,7 +40,7 @@ class ucp_gallery
 		$user->add_lang('mods/gallery_acp');
 		$user->add_lang('mods/gallery_mcp');
 		$user->add_lang('mods/gallery_ucp');
-		$this->tpl_name = 'ucp_gallery';
+		$this->tpl_name = 'gallery/ucp_gallery';
 		add_form_key('ucp_gallery');
 
 		$mode = request_var('mode', '');
@@ -193,7 +193,7 @@ class ucp_gallery
 	function initialise_album()
 	{
 		global $album_access_array, $cache, $db, $template, $user;
-		global $gallery_root_path, $phpbb_root_path, $phpEx;
+		global $gallery_root_path, $phpbb_root_path, $phpEx, $gallery_config;
 
 		if (!$user->gallery['personal_album_id'])
 		{

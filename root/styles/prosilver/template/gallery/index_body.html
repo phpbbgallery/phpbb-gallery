@@ -12,7 +12,7 @@
 </ul>
 <!-- ENDIF -->
 
-<!-- INCLUDE gallery_albumlist_body.html -->
+<!-- INCLUDE gallery/albumlist_body.html -->
 
 <!-- IF PAGINATION -->
 <div class="topic-actions">
@@ -26,7 +26,7 @@
 <!-- IF U_USERS_PERSONAL_GALLERIES --><h4><!-- IF S_PERSONAL_GALLERY --><a href="{U_GALLERY_MOD}">{L_GALLERY}</a>&nbsp;&lsaquo;&nbsp;{L_USERS_PERSONAL_ALBUMS}<!-- ELSE -->{L_GALLERY}&nbsp;&lsaquo;&nbsp;<a href="{U_USERS_PERSONAL_GALLERIES}">{L_USERS_PERSONAL_ALBUMS}</a><!-- ENDIF --><!-- IF U_YOUR_PERSONAL_GALLERY -->&nbsp;&raquo;&nbsp;<a href="{U_YOUR_PERSONAL_GALLERY}">{L_YOUR_PERSONAL_ALBUM}</a><!-- ENDIF --></h4><!-- ENDIF -->
 <br />
 
-<!-- INCLUDE gallery_recent_body.html -->
+<!-- INCLUDE gallery/recent_body.html -->
 
 <!-- IF not S_USER_LOGGED_IN and not S_IS_BOT -->
 	<form method="post" action="{S_LOGIN_ACTION}" class="headerspace">
@@ -43,5 +43,5 @@
 <!-- ENDIF -->
 
 <!-- Please keep this little notice visible -->
-<div class="copyright">Powered by <!-- port started by tsr: http://phpbbgallery.ph.funpic.de --><a href="http://www.flying-bits.org/">nickvergessen</a></div>
+<div class="copyright">Powered by <a href="http://www.flying-bits.org/">nickvergessen</a></div>
 <!-- INCLUDE overall_footer.html -->

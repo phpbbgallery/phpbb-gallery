@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
 <!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
-<!-- $Id$ -->
 <mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.1.xsd">
   <header>
     <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
@@ -30,17 +29,17 @@ You may install it, to be informed about future versions, as I'm not going to se
         <contributions />
       </author>
     </author-group>
-    <mod-version>0.4.1</mod-version>
+    <mod-version>X.Y.Z</mod-version>
     <installation>
       <level>intermediate</level>
       <time>1200</time>
       <target-version>3.0.4</target-version>
     </installation>
     <link-group>
-      <link type="parent" lang="en-gb" href="history.xml">History</link>
-      <link type="parent" lang="de" href="history.xml">Entwicklung</link>
-      <link type="parent" lang="en-gb" href="../install.xml">Install</link>
-      <link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
+      <link type="parent" lang="de" href="../../history.xml">Entwicklung</link>
+      <link type="parent" lang="en-gb" href="../../history.xml">History</link>
+      <link type="parent" lang="de" href="../update.xml">Update von 0.4.0 auf 0.4.1</link>
+      <link type="parent" lang="en-gb" href="../update.xml">Update from 0.4.0 to 0.4.1</link>
     </link-group>
     <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
   </header>
@@ -48,92 +47,69 @@ You may install it, to be informed about future versions, as I'm not going to se
     <copy>
       <file from="root/styles/subsilver2/imageset/en/button_upload_image.gif" to="styles/subsilver2/imageset/en/button_upload_image.gif" />
       <file from="root/styles/subsilver2/imageset/en/icon_contact_gallery.gif" to="styles/subsilver2/imageset/en/icon_contact_gallery.gif" />
-      <file from="root/styles/subsilver2/template/*.*" to="styles/subsilver2/template/*.*" />
+      <file from="root/styles/subsilver2/template/gallery/*.*" to="styles/subsilver2/template/gallery/*.*" />
       <file from="root/styles/subsilver2/theme/images/gallery_lytebox/*.*" to="styles/subsilver2/theme/images/gallery_lytebox/*.*" />
       <file from="root/styles/subsilver2/theme/images/icon_gallery.gif" to="styles/subsilver2/theme/images/icon_gallery.gif" />
     </copy>
-    <open src="styles/subsilver2/imageset/en/imageset.cfg">
-      <edit>
-        <find><![CDATA[img_button_topic_reply = button_topic_reply.gif]]></find>
-        <action type="after-add"><![CDATA[img_button_upload_image = button_upload_image.gif]]></action>
-      </edit>
-    </open>
-    <open src="styles/subsilver2/template/index_body.html">
-      <edit>
-        <find><![CDATA[<td class="row1" width="100%" valign="middle"><p class="genmed">{TOTAL_POSTS} | {TOTAL_TOPICS} | {TOTAL_USERS} | {NEWEST_USER}</p></td>]]></find>
-        <inline-edit>
-            <inline-find><![CDATA[{TOTAL_TOPICS}]]></inline-find>
-            <inline-action type="after-add"><![CDATA[<!-- IF TOTAL_IMAGES --> | {TOTAL_IMAGES}<!-- ENDIF -->]]></inline-action>
-        </inline-edit>
-      </edit>
-    </open>
-    <open src="styles/subsilver2/template/memberlist_view.html">
-      <edit>
-        <find><![CDATA[			<tr>
-				<td class="gen" align="{S_CONTENT_FLOW_END}" valign="top" nowrap="nowrap">{L_TOTAL_POSTS}: </td>
-				<td><b class="gen">{POSTS}</b><span class="genmed"><!-- IF POSTS_PCT --><br />[{POSTS_PCT} / {POSTS_DAY}]<!-- ENDIF -->
-				<!-- IF POSTS_IN_QUEUE and U_MCP_QUEUE --><br />[<a href="{U_MCP_QUEUE}">{L_POSTS_IN_QUEUE}</a>]<!-- ELSEIF POSTS_IN_QUEUE --><br />[{L_POSTS_IN_QUEUE}]<!-- ENDIF -->
-				<br /><a href="{U_SEARCH_USER}">{L_SEARCH_USER_POSTS}</a></span></td>
-			</tr>]]></find>
-        <action type="after-add"><![CDATA[			<!-- IF TOTAL_IMAGES -->
-				<tr>
-					<td class="gen" align="{S_CONTENT_FLOW_END}" valign="top" nowrap="nowrap">{L_TOTAL_IMAGES}: </td>
-					<td><b class="gen">{IMAGES}</b><span class="genmed"><!-- IF IMAGES_PCT --><br />[{IMAGES_PCT} / {IMAGES_DAY}]<!-- ENDIF --><br /><a href="{U_SEARCH_GALLERY}">{L_SEARCH_USER_IMAGES}</a></span></td>
-				</tr>
-			<!-- ENDIF -->]]></action>
-      </edit>
-      <edit>
-        <find><![CDATA[			<tr>
-				<td class="gen" align="{S_CONTENT_FLOW_END}" nowrap="nowrap">{L_WEBSITE}: </td>
-				<td><!-- IF U_WWW --><b><a class="genmed" href="{U_WWW}">{U_WWW}</a></b><!-- ENDIF --></td>
-			</tr>]]></find>
-        <action type="after-add"><![CDATA[			<!-- IF U_GALLERY -->
-			<tr>
-				<td class="gen" align="{S_CONTENT_FLOW_END}" nowrap="nowrap">{L_GALLERY}: </td>
-				<td><b><a class="genmed" href="{U_GALLERY}">{SHOW_PERSONAL_ALBUM_OF}</a></b></td>
-			</tr>
-			<!-- ENDIF -->]]></action>
-      </edit>
-    </open>
     <open src="styles/subsilver2/template/overall_header.html">
       <edit>
-        <find><![CDATA[</head>]]></find>
-        <action type="before-add"><![CDATA[<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery/lytebox.js"></script>
-<script type="text/javascript" >
-	if (window.addEventListener) {
-		window.addEventListener("load",initLytebox,false);
-	} else if (window.attachEvent) {
-		window.attachEvent("onload",initLytebox);
-	} else {
-		window.onload = function() {initLytebox();}
-	}
-	function initLytebox() {
-		var imgMaxWidth = 1280;
-		var imgWarning = '';
-		myLytebox = new LyteBox(imgMaxWidth, imgWarning);
-	}
-</script>]]></action>
-      </edit>
-      <edit>
-        <find><![CDATA[<a href="{U_FAQ}"><img src="{T_THEME_PATH}/images/icon_mini_faq.gif" width="12" height="13" alt="*" /> {L_FAQ}</a>]]></find>
-        <action type="before-add"><![CDATA[<a href="{U_GALLERY_MOD}" title="{L_GALLERY_EXPLAIN}"><img src="{T_THEME_PATH}/images/icon_mini_gallery.gif" width="12" height="13" alt="*" /> {L_GALLERY}</a>&nbsp; &nbsp;]]></action>
-      </edit>
-    </open>
-    <open src="styles/subsilver2/template/viewtopic_body.html">
-      <edit>
-        <find><![CDATA[<td><div class="gensmall" style="float: {S_CONTENT_FLOW_BEGIN};">&nbsp;<!-- IF postrow.U_PROFILE --><a href="{postrow.U_PROFILE}">{PROFILE_IMG}</a> <!-- ENDIF --> <!-- IF postrow.U_PM --><a href="{postrow.U_PM}">{PM_IMG}</a> <!-- ENDIF --> <!-- IF postrow.U_EMAIL --><a href="{postrow.U_EMAIL}">{EMAIL_IMG}</a> <!-- ENDIF --> <!-- ENDIF -->&nbsp;</div> <div class="gensmall" style="float: {S_CONTENT_FLOW_END};"><!-- IF not S_IS_BOT --><!-- IF postrow.U_EDIT --><a href="{postrow.U_EDIT}">{EDIT_IMG}</a> <!-- ENDIF --> <!-- IF postrow.U_QUOTE --><a href="{postrow.U_QUOTE}">{QUOTE_IMG}</a> <!-- ENDIF --> <!-- ENDIF -->&nbsp;</div></td>]]></find>
-        <inline-edit>
-            <inline-find><![CDATA[<!-- IF postrow.U_EMAIL --><a href="{postrow.U_EMAIL}">{EMAIL_IMG}</a> <!-- ENDIF -->]]></inline-find>
-            <inline-action type="after-add"><![CDATA[ <!-- IF postrow.U_GALLERY --><a href="{postrow.U_GALLERY}"><img src="{T_IMAGESET_LANG_PATH}/icon_contact_gallery.gif" alt="{L_PERSONAL_ALBUM}" /></a> <!-- ENDIF -->]]></inline-action>
-        </inline-edit>
+        <find><![CDATA[<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery_lytebox.js"></script>]]></find>
+        <action type="replace-with"><![CDATA[<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery/lytebox.js"></script>]]></action>
       </edit>
     </open>
     <open src="styles/subsilver2/theme/stylesheet.css">
       <edit>
-        <find><![CDATA[.username-coloured {
-	font-weight: bold;
-}]]></find>
-        <action type="after-add"><![CDATA[/**
+        <find><![CDATA[#lbOverlay { position: fixed; top: 0; left: 0; z-index: 99998; width: 100%; height: 500px; }
+#lbOverlay.grey { background-color: #000000; }
+
+#lbMain { position: absolute; left: 0; width: 100%; z-index: 99999; text-align: center; line-height: 0; }
+#lbMain a img { border: none; }
+
+#lbOuterContainer { position: relative; background-color: #fff; width: 200px; height: 200px; margin: 0 auto; }
+#lbOuterContainer.grey { border: 3px solid #888888; }
+
+#lbDetailsContainer {	font: 10px Verdana, Helvetica, sans-serif; background-color: #fff; width: 100%; line-height: 1.4em;	overflow: auto; margin: 0 auto; }
+#lbDetailsContainer.grey { border: 3px solid #888888; border-top: none; }
+
+#lbImageContainer, #lbIframeContainer { padding: 10px; }
+#lbLoading {
+	position: absolute; top: 45%; left: 0%; height: 32px; width: 100%; text-align: center; line-height: 0; background: url(./images/gallery_lytebox/loading.gif) center no-repeat;
+}
+
+#lbHoverNav { position: absolute; top: 0; left: 0; height: 100%; width: 100%; z-index: 10; }
+#lbImageContainer>#lbHoverNav { left: 0; }
+#lbHoverNav a { outline: none; }
+
+#lbPrev { width: 49%; height: 100%; background: transparent url("./images/gallery_lytebox/blank.gif") no-repeat; display: block; left: 0; float: left; }
+#lbPrev.grey:hover, #lbPrev.grey:visited:hover { background: url("./images/gallery_lytebox/prev_grey.gif") left 15% no-repeat; }
+
+#lbNext { width: 49%; height: 100%; background: transparent url("./images/gallery_lytebox/blank.gif") no-repeat; display: block; right: 0; float: right; }
+#lbNext.grey:hover, #lbNext.grey:visited:hover { background: url("./images/gallery_lytebox/next_grey.gif") right 15% no-repeat; }
+
+#lbPrev2, #lbNext2 { text-decoration: none; font-weight: bold; }
+#lbPrev2.grey, #lbNext2.grey, #lbSpacer.grey { color: #333333; }
+
+#lbPrev2_Off, #lbNext2_Off { font-weight: bold; }
+#lbPrev2_Off.grey, #lbNext2_Off.grey { color: #CCCCCC; }
+
+#lbDetailsData { padding: 0 10px; }
+#lbDetailsData.grey { color: #333333; }
+
+
+#lbDetails { width: 60%; float: left; text-align: left; }
+#lbCaption { display: block; font-weight: bold; }
+#lbNumberDisplay { float: left; display: block; padding-bottom: 1.0em; }
+#lbNavDisplay { float: left; display: block; padding-bottom: 1.0em; }
+
+#lbClose { width: 64px; height: 28px; float: right; margin-bottom: 1px; }
+#lbClose.grey { background: url("./images/gallery_lytebox/close_grey.png") no-repeat; }
+
+#lbPlay { width: 64px; height: 28px; float: right; margin-bottom: 1px; }
+#lbPlay.grey { background: url("./images/gallery_lytebox/play_grey.png") no-repeat; }
+
+#lbPause { width: 64px; height: 28px; float: right; margin-bottom: 1px; }
+#lbPause.grey { background: url("./images/gallery_lytebox/pause_grey.png") no-repeat; }]]></find>
+        <action type="replace-with"><![CDATA[/**
 * Lytebox 3.22
 */
 #lbOverlay { position: fixed; top: 0; left: 0; z-index: 99998; width: 100%; height: 500px; }
@@ -188,7 +164,7 @@ You may install it, to be informed about future versions, as I'm not going to se
 #lbPause.grey { background: url("./images/lytebox/pause_grey.png") no-repeat; }]]></action>
       </edit>
     </open>
-    <diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe den Installer aus
+    <diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
 
 Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
 
@@ -197,7 +173,7 @@ Aktualisiere deine Styles:
     "Administrations-Bereich" (ACP) > "Styles" > "Themes" > jedes > "Aktualisieren"
     "Administrations-Bereich" (ACP) > "Styles" > "Grafiksammlungen" > jedes > "Aktualisieren"
 ]]></diy-instructions>
-    <diy-instructions lang="en-gb"><![CDATA[Browse to install/ and run the installer
+    <diy-instructions lang="en-gb"><![CDATA[Browse to install/ and run the update-script
 
 Clear your cache in the "Administration Control Panel" (ACP) > "General" > "Purge the cache"
 

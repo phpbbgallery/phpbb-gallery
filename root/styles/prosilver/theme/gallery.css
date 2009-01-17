@@ -1,0 +1,109 @@
+.gallery-icon, .gallery-icon a		{ background: none top left no-repeat; }
+ul.profile-icons li.gallery-icon	{ width: 20px; height: 20px; }
+.gallery-icon, .gallery-icon a		{ background-image: url("{T_IMAGESET_PATH}/icon_contact_gallery.gif"); }
+
+.buttons div.upload-icon	{ width: {IMG_BUTTON_UPLOAD_IMAGE_WIDTH}px; height: {IMG_BUTTON_UPLOAD_IMAGE_HEIGHT}px; }
+.upload-icon span	{ background-image: url("{T_IMAGESET_LANG_PATH}/button_upload_image.gif"); }
+
+.icon-gallery {
+	background-position: 0 50%;
+	background-repeat: no-repeat;
+	padding: 1px 0 0 17px;
+	background-image: url("{T_THEME_PATH}/images/icon_gallery.gif");
+}
+
+dd.g_lastimage {
+	padding-left: 5px;
+	width: 30%;
+}
+
+dd.g_rating, dd.g_comments {
+	width: 12%;
+	text-align: center;
+	font-size: 1.1em;
+}
+
+dd.g_status {
+	width: 15%;
+	text-align: center;
+	font-size: 1.1em;
+}
+
+span.reported-images-number {
+	color: red;
+}
+
+.g_unapproved {
+	background-position: 100% 0;
+	background-repeat: no-repeat;
+	background-image: url("{T_IMAGESET_PATH}/icon_gallery_unapproved.gif");
+}
+
+.g_locked {
+	background-position: 100% 0;
+	background-repeat: no-repeat;
+	background-image: url("{T_IMAGESET_PATH}/icon_gallery_locked.gif");
+}
+
+.g_reported {
+	background-position: 100% 0;
+	background-repeat: no-repeat;
+	background-image: url("{T_IMAGESET_PATH}/icon_gallery_reported.gif");
+}
+
+/**
+* Lytebox 3.22
+*/
+#lbOverlay { position: fixed; top: 0; left: 0; z-index: 99998; width: 100%; height: 500px; }
+#lbOverlay.grey { background-color: #000000; }
+
+#lbMain { position: absolute; left: 0; width: 100%; z-index: 99999; text-align: center; line-height: 0; }
+#lbMain a img { border: none; }
+
+#lbOuterContainer { position: relative; background-color: #fff; width: 200px; height: 200px; margin: 0 auto; }
+#lbOuterContainer.grey { border: 3px solid #888888; }
+
+#lbDetailsContainer {	font: 10px Verdana, Helvetica, sans-serif; background-color: #fff; width: 100%; line-height: 1.4em;	overflow: auto; margin: 0 auto; }
+#lbDetailsContainer.grey { border: 3px solid #888888; border-top: none; }
+
+#lbImageContainer, #lbIframeContainer { padding: 10px; }
+#lbLoading {
+	position: absolute; top: 45%; left: 0%; height: 32px; width: 100%; text-align: center; line-height: 0; background: url("{T_THEME_PATH}/images/lytebox/loading.gif") center no-repeat;
+}
+
+#lbHoverNav { position: absolute; top: 0; left: 0; height: 100%; width: 100%; z-index: 10; }
+#lbImageContainer>#lbHoverNav { left: 0; }
+#lbHoverNav a { outline: none; }
+
+#lbPrev { width: 49%; height: 100%; background: transparent url("{T_THEME_PATH}/images/lytebox/blank.gif") no-repeat; display: block; left: 0; float: left; }
+#lbPrev.grey:hover, #lbPrev.grey:visited:hover { background: url("{T_THEME_PATH}/images/lytebox/prev_grey.gif") left 15% no-repeat; }
+
+#lbNext { width: 49%; height: 100%; background: transparent url("{T_THEME_PATH}/images/lytebox/blank.gif") no-repeat; display: block; right: 0; float: right; }
+#lbNext.grey:hover, #lbNext.grey:visited:hover { background: url("{T_THEME_PATH}/images/lytebox/next_grey.gif") right 15% no-repeat; }
+
+#lbPrev2, #lbNext2 { text-decoration: none; font-weight: bold; }
+#lbPrev2.grey, #lbNext2.grey, #lbSpacer.grey { color: #333333; }
+
+#lbPrev2_Off, #lbNext2_Off { font-weight: bold; }
+#lbPrev2_Off.grey, #lbNext2_Off.grey { color: #CCCCCC; }
+
+#lbDetailsData { padding: 0 10px; }
+#lbDetailsData.grey { color: #333333; }
+
+
+#lbDetails { width: 60%; float: left; text-align: left; }
+#lbCaption { display: block; font-weight: bold; }
+#lbNumberDisplay { float: left; display: block; padding-bottom: 1.0em; }
+#lbNavDisplay { float: left; display: block; padding-bottom: 1.0em; }
+
+#lbClose { width: 64px; height: 28px; float: right; margin-bottom: 1px; }
+#lbClose.grey { background: url("{T_THEME_PATH}/images/lytebox/close_grey.png") no-repeat; }
+
+#lbPlay { width: 64px; height: 28px; float: right; margin-bottom: 1px; }
+#lbPlay.grey { background: url("{T_THEME_PATH}/images/lytebox/play_grey.png") no-repeat; }
+
+#lbPause { width: 64px; height: 28px; float: right; margin-bottom: 1px; }
+#lbPause.grey { background: url("{T_THEME_PATH}/images/lytebox/pause_grey.png") no-repeat; }
+
+/*end of lightbox*/
+

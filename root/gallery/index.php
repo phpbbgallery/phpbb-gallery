@@ -144,7 +144,7 @@ $template->assign_vars(array(
 page_header($user->lang['GALLERY']);
 
 $template->set_filenames(array(
-	'body' => 'gallery_index_body.html')
+	'body' => 'gallery/index_body.html')
 );
 
 page_footer();

@@ -1219,7 +1219,7 @@ if($submit)
 page_header($page_title);
 
 $template->set_filenames(array(
-	'body' => 'gallery_posting_body.html',
+	'body' => 'gallery/posting_body.html',
 ));
 
 page_footer();

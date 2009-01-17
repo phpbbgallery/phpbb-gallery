@@ -531,7 +531,7 @@ if ($config['load_online'] && $config['load_online_time'])
 page_header($user->lang['VIEW_ALBUM'] . ' - ' . $album_data['album_name']);
 
 $template->set_filenames(array(
-	'body' => 'gallery_album_body.html')
+	'body' => 'gallery/album_body.html')
 );
 
 page_footer();
