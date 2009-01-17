@@ -304,7 +304,7 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
 	$gallery_root_path = GALLERY_ROOT_PATH;]]></action>
       </edit>
       <edit>
-        <find><![CDATA['L_ONLINE_EXPLAIN'	=> $l_online_time,]]></find>
+        <find><![CDATA['U_PRIVATEMSGS'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;folder=inbox'),]]></find>
         <action type="before-add"><![CDATA['U_GALLERY_MOD'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"),]]></action>
       </edit>
     </open>
