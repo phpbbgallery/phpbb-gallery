@@ -57,8 +57,8 @@ else if ($gallery_config['personal_album_index'] && gallery_acl_check('a_list', 
 	$result = $db->sql_query($sql);
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$images = $row['album_images'];
-		$images_real = $row['album_images_real'];
+		$images += $row['album_images'];
+		$images_real += $row['album_images_real'];
 		if ($last_image < $row['album_last_image_id'])
 		{
 			$last_image = $row['album_last_image_id'];
@@ -89,7 +89,7 @@ else if ($gallery_config['personal_album_index'] && gallery_acl_check('a_list', 
 		'L_SUBALBUM_STR'		=> (gallery_acl_check('i_upload', OWN_GALLERY_PERMISSIONS)) ? $user->lang['YOUR_PERSONAL_ALBUM'] . ': ' : '',
 		'MODERATORS'			=> '',
 		'IMAGES'				=> $images,
-		'UNAPPROVED_IMAGES'		=> $images_real,
+		'UNAPPROVED_IMAGES'		=> $images_real - $images,
 		'LAST_IMAGE_TIME'		=> $lastimage_time,
 		'LAST_USER_FULL'		=> get_username_string('full', $lastimage_user_id, $lastimage_username, $lastimage_user_colour),
 		'UC_FAKE_THUMBNAIL'		=> ($gallery_config['disp_fake_thumb']) ? generate_image_link('fake_thumbnail', $gallery_config['link_thumbnail'], $lastimage_image_id, $lastimage_name, $lastimage_album_id) : '',
