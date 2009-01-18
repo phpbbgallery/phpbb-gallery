@@ -60,6 +60,15 @@ if ($image_id)
 }
 $album_data = get_album_info($album_id);
 
+// Some other variables
+$option_id = request_var('option_id', 0);
+$submit = (isset($_POST['submit'])) ? true : false;
+$action = request_var('action', '');
+$redirect = request_var('redirect', $mode);
+$moving_target = request_var('moving_target', 0);
+$image_id = request_var('image_id', request_var('option_id', 0));
+$image_id_ary = ($image_id) ? array($image_id) : request_var('image_id_ary', array(0));
+
 
 /**
 * Check for all the requested permissions
@@ -79,7 +88,7 @@ if ((substr($mode, 0, 6) == 'queue_') && !gallery_acl_check('m_status', $album_i
 	meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"));
 	trigger_error('NOT_AUTHORISED');
 }
-if (($action == 'images_move') && !gallery_acl_check('m_move', $album_id))
+if (($action == 'images_move') && (!gallery_acl_check('m_move', $album_id) || ($moving_target && !gallery_acl_check('i_upload', $moving_target))))
 {
 	meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"));
 	trigger_error('NOT_AUTHORISED');
@@ -99,15 +108,6 @@ $template->assign_vars(array(
 	'U_VIEW_ALBUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_id),
 	'U_MOD_ALBUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'mode=album&amp;album_id=' . $album_id),
 ));
-
-// Some other variables
-$option_id = request_var('option_id', 0);
-$submit = (isset($_POST['submit'])) ? true : false;
-$action = request_var('action', '');
-$redirect = request_var('redirect', $mode);
-$moving_target = request_var('moving_target', 0);
-$image_id = request_var('image_id', request_var('option_id', 0));
-$image_id_ary = ($image_id) ? array($image_id) : request_var('image_id_ary', array(0));
 
 // Build Navigation
 $page_title = build_gallery_mcp_navigation($album_id, $mode, $option_id);

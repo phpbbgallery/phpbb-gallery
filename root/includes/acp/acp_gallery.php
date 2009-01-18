@@ -1050,10 +1050,10 @@ class acp_gallery
 		{
 			$permission_parts['i'] = array_merge($permission_parts['i'], array('i_view'));
 		}
-		$permission_parts['i'] = array_merge($permission_parts['i'], array('i_watermark'));
+		$permission_parts['i'] = array_merge($permission_parts['i'], array('i_watermark', 'i_upload'));
 		if ($perm_system != 3)
 		{
-			$permission_parts['i'] = array_merge($permission_parts['i'], array('i_upload', 'i_approve'));
+			$permission_parts['i'] = array_merge($permission_parts['i'], array('i_approve'));
 		}
 		$permission_parts['i'] = array_merge($permission_parts['i'], array('i_edit', 'i_delete', 'i_report', 'i_rate'));
 		$permission_parts['c'] = array_merge($permission_parts['c'], array('c_read', 'c_post', 'c_edit', 'c_delete'));

@@ -200,7 +200,7 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 	$album_data = $cache->obtain_album_list();
 
 	$right = $last_a_u_id = 0;
-	$access_own = $access_personal = false;
+	$access_own = $access_personal = $requested_own = $requested_personal = false;
 	$c_access_own = $c_access_personal = false;
 	$padding_store = array('0' => '');
 	$padding = $album_list = '';
@@ -264,8 +264,17 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 				{
 					$c_access_own = true;
 					$access_own = gallery_acl_check('a_list', OWN_GALLERY_PERMISSIONS);
+					if ($requested_permission)
+					{
+						$requested_own = gallery_acl_check($requested_permission, OWN_GALLERY_PERMISSIONS);
+					}
+					else
+					{
+						$requested_personal = true;
+					}
 				}
 				$list = $access_own;
+				$disabled = $requested_own;
 			}
 			else if ($row['album_user_id'])
 			{
@@ -273,8 +282,17 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 				{
 					$c_access_personal = true;
 					$access_personal = gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS);
+					if ($requested_permission)
+					{
+						$requested_personal = gallery_acl_check($requested_permission, PERSONAL_GALLERY_PERMISSIONS);
+					}
+					else
+					{
+						$requested_personal = true;
+					}
 				}
 				$list = $access_personal;
+				$disabled = !$requested_personal;
 			}
 		}
 		if (($album_user_id > 0) && ($album_user_id != $row['album_user_id']))
