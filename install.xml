@@ -280,6 +280,12 @@ $user->add_lang('mods/gallery');]]></action>
     </open>
     <open src="includes/constants.php">
       <edit>
+        <comment lang="de"><![CDATA[Wenn die 4 bereits von einem anderem MOD als Log benutzt wird, benutze einfach die nächste freie Zahl.]]></comment>
+        <comment lang="en-gb"><![CDATA[If the number 4 is already a Log of an other MOD, just use the next free number.]]></comment>
+        <find><![CDATA[define('LOG_USERS', 3);]]></find>
+        <action type="after-add"><![CDATA[define('LOG_GALLERY', 4);]]></action>
+      </edit>
+      <edit>
         <find><![CDATA[// Additional tables]]></find>
         <action type="after-add"><![CDATA[define('GALLERY_ROOT_PATH', 'gallery/');
 
@@ -299,6 +305,24 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
     </open>
     <open src="includes/functions.php">
       <edit>
+        <find><![CDATA[	$forum_id		= ($mode == 'mod') ? intval(array_shift($args)) : '';
+	$topic_id		= ($mode == 'mod') ? intval(array_shift($args)) : '';]]></find>
+        <action type="after-add"><![CDATA[	$album_id		= ($mode == 'gallery') ? intval(array_shift($args)) : '';
+	$image_id		= ($mode == 'gallery') ? intval(array_shift($args)) : '';]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[		case 'critical':
+			$sql_ary['log_type'] = LOG_CRITICAL;
+		break;]]></find>
+        <action type="after-add"><![CDATA[		case 'gallery':
+			$sql_ary += array(
+				'log_type'	=> LOG_GALLERY,
+				'forum_id'	=> $album_id,
+				'topic_id'	=> $image_id
+			);
+		break;]]></action>
+      </edit>
+      <edit>
         <find><![CDATA[// The following assigns all _common_ variables that may be used at any point in a template.]]></find>
         <action type="before-add"><![CDATA[	$user->add_lang('mods/info_acp_gallery');
 	$gallery_root_path = GALLERY_ROOT_PATH;]]></action>
@@ -306,6 +330,18 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
       <edit>
         <find><![CDATA['U_PRIVATEMSGS'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;folder=inbox'),]]></find>
         <action type="before-add"><![CDATA['U_GALLERY_MOD'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"),]]></action>
+      </edit>
+    </open>
+    <open src="includes/functions_admin.php">
+      <edit>
+        <find><![CDATA[		case 'critical':
+			$log_type = LOG_CRITICAL;
+			$sql_forum = '';
+		break;]]></find>
+        <action type="after-add"><![CDATA[		case 'gallery':
+			$log_type = LOG_GALLERY;
+			$sql_forum = '';
+		break;]]></action>
       </edit>
     </open>
     <open src="includes/functions_user.php">
@@ -414,6 +450,12 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
             <inline-find><![CDATA[ 'button_topic_reply',]]></inline-find>
             <inline-action type="after-add"><![CDATA[ 'button_upload_image',]]></inline-action>
         </inline-edit>
+      </edit>
+    </open>
+    <open src="includes/acp/info/acp_logs.php">
+      <edit>
+        <find><![CDATA['critical'	=> array('title' => 'ACP_CRITICAL_LOGS', 'auth' => 'acl_a_viewlogs', 'cat' => array('ACP_FORUM_LOGS')),]]></find>
+        <action type="after-add"><![CDATA['gallery'	=> array('title' => 'ACP_GALLERY_LOGS', 'auth' => 'acl_a_viewlogs', 'cat' => array('ACP_FORUM_LOGS')),]]></action>
       </edit>
     </open>
     <open src="styles/prosilver/imageset/en/imageset.cfg">

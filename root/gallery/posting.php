@@ -44,6 +44,17 @@ $error = $message = '';
 $error_count = array();
 $slower_redirect = false;
 
+// Check for permissions cheaters!
+if ($comment_id)
+{
+	$sql = 'SELECT *
+		FROM ' . GALLERY_COMMENTS_TABLE . '
+		WHERE comment_id = ' . $comment_id;
+	$result = $db->sql_query($sql);
+	$comment_data = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+	$image_id = $comment_data['comment_image_id'];
+}
 if ($image_id)
 {
 	$image_data = get_image_info($image_id);
@@ -674,6 +685,11 @@ switch ($mode)
 						WHERE image_id = $image_id";
 					$db->sql_query($sql);
 
+					if ($user->data['user_id'] != $image_data['image_user_id'])
+					{
+						add_log('gallery', $image_data['image_album_id'], $image_data['image_id'], 'LOG_GALLERY_EDITED', $image_name);
+					}
+
 					if ($album_data['album_last_image_id'] == $image_id)
 					{
 						$sql_ary = array(
@@ -837,14 +853,8 @@ switch ($mode)
 				if (confirm_box(true))
 				{
 
-					if (@file_exists($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_thumbnail']))
-					{
-						@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_thumbnail']);
-					}
-					if (@file_exists($phpbb_root_path . GALLERY_MEDIUM_PATH . $image_data['image_thumbnail']))
-					{
-						@unlink($phpbb_root_path . GALLERY_MEDIUM_PATH . $image_data['image_thumbnail']);
-					}
+					@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_thumbnail']);
+					@unlink($phpbb_root_path . GALLERY_MEDIUM_PATH . $image_data['image_thumbnail']);
 					@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
 					handle_image_counter($image_id, false);
 
@@ -873,6 +883,11 @@ switch ($mode)
 					$submit = true;
 					$message = $user->lang['DELETED_IMAGE'] . '<br />';
 					$image_id = false;
+
+					if ($user->data['user_id'] != $image_data['image_user_id'])
+					{
+						add_log('gallery', $image_data['image_album_id'], $image_data['image_id'], 'LOG_GALLERY_COMMENT_DELETED', $image_data['image_name']);
+					}
 				}
 				else
 				{
@@ -1124,6 +1139,10 @@ switch ($mode)
 					{
 						$db->sql_query('UPDATE ' . GALLERY_COMMENTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . ' WHERE comment_id = ' . (int) $comment_id);
 						$message .= $user->lang['COMMENT_STORED'] . '<br />';
+						if ($user->data['user_id'] != $comment_data['comment_user_id'])
+						{
+							add_log('gallery', $image_data['image_album_id'], $image_data['image_id'], 'LOG_GALLERY_COMMENT_EDITED', $image_data['image_name']);
+						}
 					}
 				}
 				else
@@ -1155,6 +1174,7 @@ switch ($mode)
 						ORDER BY comment_id";
 					$result = $db->sql_query_limit($sql, 1);
 					$last_comment_id = $db->sql_fetchfield('last_comment');
+					$last_comment_id = ($last_comment_id) ? $last_comment_id : 0;
 					$db->sql_freeresult($result);
 
 					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . "
@@ -1162,6 +1182,11 @@ switch ($mode)
 							image_last_comment = $last_comment_id
 						WHERE " . $db->sql_in_set('image_id', $image_id);
 					$db->sql_query($sql);
+
+					if ($user->data['user_id'] != $comment_data['comment_user_id'])
+					{
+						add_log('gallery', $image_data['image_album_id'], $image_data['image_id'], 'LOG_GALLERY_COMMENT_DELETED', $image_data['image_name']);
+					}
 
 					$submit = true;
 					$message = $user->lang['DELETED_COMMENT'] . '<br />';

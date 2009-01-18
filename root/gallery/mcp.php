@@ -141,6 +141,13 @@ if ($action && $image_id_ary)
 					WHERE ' . $db->sql_in_set('report_image_id', $image_id_ary);
 				$db->sql_query($sql);
 
+				$target_data = get_album_info($moving_target);
+
+				foreach ($image_id_ary as $image)
+				{
+					add_log('gallery', $moving_target, $image, 'LOG_GALLERY_MOVED', $album_data['album_name'], $target_data['album_name']);
+				}
+
 				$success = true;
 			}
 			else
@@ -164,6 +171,16 @@ if ($action && $image_id_ary)
 					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
 				$db->sql_query($sql);
 
+				$sql = 'SELECT image_id, image_name
+					FROM ' . GALLERY_IMAGES_TABLE . '
+					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					add_log('gallery', $album_id, $row['image_id'], 'LOG_GALLERY_UNAPPROVED', $row['image_name']);
+				}
+				$db->sql_freeresult($result);
+
 				$success = true;
 			}
 			else
@@ -180,6 +197,17 @@ if ($action && $image_id_ary)
 					SET image_status = 1
 					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
 				$db->sql_query($sql);
+
+				$image_names = array();
+				$sql = 'SELECT image_id, image_name
+					FROM ' . GALLERY_IMAGES_TABLE . '
+					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					add_log('gallery', $album_id, $row['image_id'], 'LOG_GALLERY_APPROVED', $row['image_name']);
+				}
+				$db->sql_freeresult($result);
 
 				$success = true;
 			}
@@ -198,6 +226,16 @@ if ($action && $image_id_ary)
 					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
 				$db->sql_query($sql);
 
+				$sql = 'SELECT image_id, image_name
+					FROM ' . GALLERY_IMAGES_TABLE . '
+					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					add_log('gallery', $album_id, $row['image_id'], 'LOG_GALLERY_LOCKED', $row['image_name']);
+				}
+				$db->sql_freeresult($result);
+
 				$success = true;
 			}
 			else
@@ -210,7 +248,19 @@ if ($action && $image_id_ary)
 			{
 				handle_image_counter($image_id_ary, false);
 
-				//@todo: Delete the files?
+				// Delete the files
+				$sql = 'SELECT image_id, image_name, image_filename, image_thumbnail
+					FROM ' . GALLERY_IMAGES_TABLE . '
+					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_thumbnail']);
+					@unlink($phpbb_root_path . GALLERY_MEDIUM_PATH . $image_data['image_thumbnail']);
+					@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
+					add_log('gallery', $album_id, $row['image_id'], 'LOG_GALLERY_DELETED', $row['image_name']);
+				}
+				$db->sql_freeresult($result);
 
 				$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . '
 					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
@@ -249,9 +299,19 @@ if ($action && $image_id_ary)
 					WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
 				$db->sql_query($sql);
 
+				$sql = 'SELECT image_id, image_name
+					FROM ' . GALLERY_IMAGES_TABLE . '
+					WHERE ' . $db->sql_in_set('image_reported', $image_id_ary);
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					add_log('gallery', $album_id, $row['image_id'], 'LOG_GALLERY_REPORT_CLOSED', $row['image_name']);
+				}
+				$db->sql_freeresult($result);
+
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 					SET image_reported = 0
-					WHERE image_id = ' . $db->sql_in_set('image_reported', $image_id_ary);
+					WHERE ' . $db->sql_in_set('image_reported', $image_id_ary);
 				$db->sql_query($sql);
 
 				$success = true;
@@ -271,6 +331,7 @@ if ($action && $image_id_ary)
 				$sql = 'UPDATE ' . GALLERY_REPORTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 					WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
 				$db->sql_query($sql);
+
 				$sql = 'SELECT report_image_id, report_id
 					FROM ' . GALLERY_REPORTS_TABLE . '
 					WHERE report_status = 1
@@ -284,6 +345,17 @@ if ($action && $image_id_ary)
 					$db->sql_query($sql);
 				}
 				$db->sql_freeresult($result);
+
+				$sql = 'SELECT image_id, image_name
+					FROM ' . GALLERY_IMAGES_TABLE . '
+					WHERE ' . $db->sql_in_set('image_reported', $image_id_ary);
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					add_log('gallery', $album_id, $row['image_id'], 'LOG_GALLERY_REPORT_OPENED', $row['image_name']);
+				}
+				$db->sql_freeresult($result);
+
 				$success = true;
 			}
 			else
@@ -298,10 +370,19 @@ if ($action && $image_id_ary)
 					WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
 				$db->sql_query($sql);
 
+				$sql = 'SELECT image_id, image_name
+					FROM ' . GALLERY_IMAGES_TABLE . '
+					WHERE ' . $db->sql_in_set('image_reported', $image_id_ary);
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					add_log('gallery', $album_id, $row['image_id'], 'LOG_GALLERY_REPORT_DELETED', $row['image_name']);
+				}
+				$db->sql_freeresult($result);
 
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 					SET image_reported = 0
-					WHERE image_id = ' . $db->sql_in_set('image_reported', $image_id_ary);
+					WHERE ' . $db->sql_in_set('image_reported', $image_id_ary);
 				$db->sql_query($sql);
 
 				$success = true;
