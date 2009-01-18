@@ -59,6 +59,7 @@
           <change><![CDATA[[Change] Unreported: Build Config-Module like acp_board.php]]></change>
           <change><![CDATA[[Change] Unreported: Author » Uploaded By]]></change>
 
+          <change><![CDATA[[Fix] Unreported: Missing module-permissions on update]]></change>
           <change><![CDATA[[Fix] Report #336: Moderator log]]></change>
           <change><![CDATA[[Fix] iUnreported: Permissions lag on comment-system]]></change>
           <change><![CDATA[[Fix] Report #423: Wrong personal images counters on index]]></change>

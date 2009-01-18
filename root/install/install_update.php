@@ -806,7 +806,8 @@ class install_update extends module
 				set_gallery_config('rrc_gindex_columns', 4);
 				set_gallery_config('rrc_gindex_comments', 0);
 
-				// Delete "confirmed deleted subalbums" #410
+				//@todo: Delete "confirmed deleted subalbums" #410
+				//@todo: Create Gallery log module #336
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
 			break;
@@ -846,9 +847,6 @@ class install_update extends module
 			case '0.3.2-RC1':
 			case '0.3.2-RC2':
 			case '0.4.0-RC1':
-				/* @todo move on bbcode-change or creating all modules */
-				$reparse_modules_bbcode = true;
-
 			case '0.4.0-RC2':
 				nv_remove_column(GROUPS_TABLE,			'personal_subalbums');
 				nv_remove_column(GROUPS_TABLE,			'allow_personal_albums');
@@ -873,6 +871,8 @@ class install_update extends module
 			case '0.4.0-RC3':
 			case '0.4.0':
 			case '0.4.1':
+				/* //@todo: Move on bbcode-change or creating all modules */
+				$reparse_modules_bbcode = true;
 			break;
 		}
 
@@ -906,51 +906,79 @@ class install_update extends module
 	{
 		global $user, $template, $phpEx, $db;
 
+		$gallery_config = load_gallery_config();
+
 		$create = request_var('create', '');
 		if ($create)
 		{
 			// Add modules
 			$choosen_acp_module = request_var('acp_module', 0);
 			$choosen_ucp_module = request_var('ucp_module', 0);
-			if ($choosen_acp_module < 0)
+			$choosen_log_module = request_var('log_module', 0);
+
+			switch ($gallery_config['phpbb_gallery_version'])
 			{
-				$acp_mods_tab = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 0,	'module_class' => 'acp',	'module_langname'=> 'ACP_CAT_DOT_MODS',	'module_mode' => '',	'module_auth' => '');
-				add_module($acp_mods_tab);
-				$choosen_acp_module = $db->sql_nextid();
+/*			case '0.1.2':
+				case '0.1.3':*/
+				case '0.2.0':
+				case '0.2.1':
+				case '0.2.2':
+				case '0.2.3':
+				case '0.3.0':
+				case '0.3.1':
+				case '0.3.2-RC1':
+				case '0.3.2-RC2':
+				case '0.4.0-RC1':
+					if ($choosen_acp_module < 0)
+					{
+						$acp_mods_tab = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 0,	'module_class' => 'acp',	'module_langname'=> 'ACP_CAT_DOT_MODS',	'module_mode' => '',	'module_auth' => '');
+						add_module($acp_mods_tab);
+						$choosen_acp_module = $db->sql_nextid();
+					}
+					// ACP
+					$acp_gallery = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_acp_module,	'module_class' => 'acp',	'module_langname'=> 'PHPBB_GALLERY',	'module_mode' => '',	'module_auth' => '');
+					add_module($acp_gallery);
+					$acp_module_id = $db->sql_nextid();
+					set_gallery_config('acp_parent_module', $acp_module_id);
+
+					$acp_gallery_overview = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_OVERVIEW',	'module_mode' => 'overview',	'module_auth' => 'acl_a_gallery_manage');
+					add_module($acp_gallery_overview);
+					$acp_configure_gallery = array('module_basename' => 'gallery_config',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_CONFIGURE_GALLERY',	'module_mode' => 'main',	'module_auth' => 'acl_a_gallery_manage');
+					add_module($acp_configure_gallery);
+					$acp_gallery_manage_albums = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_MANAGE_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => 'acl_a_gallery_albums');
+					add_module($acp_gallery_manage_albums);
+					$album_permissions = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS',	'module_mode' => 'album_permissions',	'module_auth' => 'acl_a_gallery_albums');
+					add_module($album_permissions);
+					$import_images = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_IMPORT_ALBUMS',	'module_mode' => 'import_images',	'module_auth' => 'acl_a_gallery_import');
+					add_module($import_images);
+					$cleanup = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_CLEANUP',	'module_mode' => 'cleanup',	'module_auth' => 'acl_a_gallery_cleanup');
+					add_module($cleanup);
+
+					// UCP
+					$ucp_gallery_overview = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_ucp_module,	'module_class' => 'ucp',	'module_langname'=> 'UCP_GALLERY',	'module_mode' => 'overview',	'module_auth' => '');
+					add_module($ucp_gallery_overview);
+					$ucp_module_id = $db->sql_nextid();
+					set_gallery_config('ucp_parent_module', $ucp_module_id);
+
+					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_SETTINGS',	'module_mode' => 'manage_settings',	'module_auth' => '');
+					add_module($ucp_gallery);
+					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_PERSONAL_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
+					add_module($ucp_gallery);
+					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_WATCH',	'module_mode' => 'manage_subscriptions',	'module_auth' => '');
+					add_module($ucp_gallery);
+					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_FAVORITES',	'module_mode' => 'manage_favorites',	'module_auth' => '');
+					add_module($ucp_gallery);
+
+				case '0.4.0-RC2':
+				case '0.4.0-RC3':
+				case '0.4.0':
+				case '0.4.1':
+					// Logs
+					$gallery_log = array('module_basename' => 'logs',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_log_module,	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_LOGS',	'module_mode' => 'gallery',	'module_auth' => 'acl_a_viewlogs');
+					add_module($gallery_log);
+				break;
 			}
-			// ACP
-			$acp_gallery = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_acp_module,	'module_class' => 'acp',	'module_langname'=> 'PHPBB_GALLERY',	'module_mode' => '',	'module_auth' => '');
-			add_module($acp_gallery);
-			$acp_module_id = $db->sql_nextid();
-			set_gallery_config('acp_parent_module', $acp_module_id);
 
-			$acp_gallery_overview = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_OVERVIEW',	'module_mode' => 'overview',	'module_auth' => '');
-			add_module($acp_gallery_overview);
-			$acp_configure_gallery = array('module_basename' => 'gallery_config',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_CONFIGURE_GALLERY',	'module_mode' => 'main',	'module_auth' => 'acl_a_gallery_manage');
-			add_module($acp_configure_gallery);
-			$acp_gallery_manage_albums = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_MANAGE_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
-			add_module($acp_gallery_manage_albums);
-			$album_permissions = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS',	'module_mode' => 'album_permissions',	'module_auth' => '');
-			add_module($album_permissions);
-			$import_images = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_IMPORT_ALBUMS',	'module_mode' => 'import_images',	'module_auth' => '');
-			add_module($import_images);
-			$cleanup = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_CLEANUP',	'module_mode' => 'cleanup',	'module_auth' => '');
-			add_module($cleanup);
-
-			// UCP
-			$ucp_gallery_overview = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_ucp_module,	'module_class' => 'ucp',	'module_langname'=> 'UCP_GALLERY',	'module_mode' => 'overview',	'module_auth' => '');
-			add_module($ucp_gallery_overview);
-			$ucp_module_id = $db->sql_nextid();
-			set_gallery_config('ucp_parent_module', $ucp_module_id);
-
-			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_SETTINGS',	'module_mode' => 'manage_settings',	'module_auth' => '');
-			add_module($ucp_gallery);
-			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_PERSONAL_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
-			add_module($ucp_gallery);
-			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_WATCH',	'module_mode' => 'manage_subscriptions',	'module_auth' => '');
-			add_module($ucp_gallery);
-			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_FAVORITES',	'module_mode' => 'manage_favorites',	'module_auth' => '');
-			add_module($ucp_gallery);
 
 			// Add album-BBCode
 			add_bbcode('album');
@@ -961,10 +989,35 @@ class install_update extends module
 		{
 			$data = array(
 				'acp_module'		=> 31,
+				'log_module'		=> 25,
 				'ucp_module'		=> 0,
 			);
+			$modules = $this->gallery_config_options;
+			switch ($gallery_config['phpbb_gallery_version'])
+			{
+				case '0.4.1':
+				case '0.4.0-RC3':
+				case '0.4.0-RC2':
+					unset ($modules['acp_module']);
+					unset ($modules['ucp_module']);
 
-			foreach ($this->gallery_config_options as $config_key => $vars)
+				// We need to build all modules before this version
+				case '0.4.0-RC1':
+				case '0.4.0':
+				case '0.3.2-RC2':
+				case '0.3.2-RC1':
+				case '0.3.1':
+				case '0.3.0':
+				case '0.2.3':
+				case '0.2.2':
+				case '0.2.1':
+				case '0.2.0':
+/*				case '0.1.3':
+				case '0.1.2':*/
+				break;
+			}
+
+			foreach ($modules as $config_key => $vars)
 			{
 				if (!is_array($vars) && strpos($config_key, 'legend') === false)
 				{
@@ -1013,6 +1066,7 @@ class install_update extends module
 	var $gallery_config_options = array(
 		'legend1'				=> 'MODULES_PARENT_SELECT',
 		'acp_module'			=> array('lang' => 'MODULES_SELECT_4ACP', 'type' => 'select', 'options' => 'module_select(\'acp\', 31, \'ACP_CAT_DOT_MODS\')', 'explain' => false),
+		'log_module'			=> array('lang' => 'MODULES_SELECT_4LOG', 'type' => 'select', 'options' => 'module_select(\'acp\', 25, \'ACP_FORUM_LOGS\')', 'explain' => false),
 		'ucp_module'			=> array('lang' => 'MODULES_SELECT_4UCP', 'type' => 'select', 'options' => 'module_select(\'ucp\', 0, \'\')', 'explain' => false),
 	);
 }

@@ -60,6 +60,7 @@ $lang = array_merge($lang, array(
 	'MODULES_CREATE_PARENT'		=> 'Create parent standard-module',
 	'MODULES_PARENT_SELECT'		=> 'Choose parent module',
 	'MODULES_SELECT_4ACP'		=> 'Choose parent module for "admin control panel"',
+	'MODULES_SELECT_4LOG'		=> 'Choose parent module for "Gallery log"',
 	'MODULES_SELECT_4MCP'		=> 'Choose parent module for "moderation control panel"',
 	'MODULES_SELECT_4UCP'		=> 'Choose parent module for "user control panel"',
 	'MODULES_SELECT_NONE'		=> 'no parent module',

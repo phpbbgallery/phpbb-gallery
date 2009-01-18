@@ -60,6 +60,7 @@ $lang = array_merge($lang, array(
 	'MODULES_CREATE_PARENT'		=> 'Übergeordnetes Standard-Modul erstellen',
 	'MODULES_PARENT_SELECT'		=> 'Übergeordnetes Modul auswählen',
 	'MODULES_SELECT_4ACP'		=> 'Übergeordnetes Modul für den "Administrations-Bereich"',
+	'MODULES_SELECT_4LOG'		=> 'Übergeordnetes Modul für das "Gallery-Protokoll"',
 	'MODULES_SELECT_4MCP'		=> 'Übergeordnetes Modul für den "Moderations-Bereich"',
 	'MODULES_SELECT_4UCP'		=> 'Übergeordnetes Modul für den "Persönlichen Bereich"',
 	'MODULES_SELECT_NONE'		=> 'kein übergeordnetes Modul',

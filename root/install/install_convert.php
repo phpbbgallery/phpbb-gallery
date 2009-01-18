@@ -746,6 +746,7 @@ class install_convert extends module
 		{
 			// Add modules
 			$choosen_acp_module = request_var('acp_module', 0);
+			$choosen_log_module = request_var('log_module', 0);
 			$choosen_ucp_module = request_var('ucp_module', 0);
 			if ($choosen_acp_module < 0)
 			{
@@ -786,6 +787,10 @@ class install_convert extends module
 			add_module($ucp_gallery);
 			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_FAVORITES',	'module_mode' => 'manage_favorites',	'module_auth' => '');
 			add_module($ucp_gallery);
+
+			// Logs
+			$gallery_log = array('module_basename' => 'logs',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_log_module,	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_LOGS',	'module_mode' => 'gallery',	'module_auth' => 'acl_a_viewlogs');
+			add_module($gallery_log);
 
 			// Add album-BBCode
 			add_bbcode('album');
@@ -848,6 +853,7 @@ class install_convert extends module
 	var $gallery_config_options = array(
 		'legend1'				=> 'MODULES_PARENT_SELECT',
 		'acp_module'			=> array('lang' => 'MODULES_SELECT_4ACP', 'type' => 'select', 'options' => 'module_select(\'acp\', 31, \'ACP_CAT_DOT_MODS\')', 'explain' => false),
+		'log_module'			=> array('lang' => 'MODULES_SELECT_4LOG', 'type' => 'select', 'options' => 'module_select(\'acp\', 25, \'ACP_FORUM_LOGS\')', 'explain' => false),
 		'ucp_module'			=> array('lang' => 'MODULES_SELECT_4UCP', 'type' => 'select', 'options' => 'module_select(\'ucp\', 0, \'\')', 'explain' => false),
 	);
 }
