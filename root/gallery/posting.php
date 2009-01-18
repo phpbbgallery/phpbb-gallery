@@ -477,20 +477,6 @@ switch ($mode)
 							$image_data['width'] = $image_size[0];
 							$image_data['height'] = $image_size[1];
 
-							switch ($image_data['image_type2']) 
-							{
-								case '.jpg': 
-									$read_function = 'imagecreatefromjpeg'; 
-								break; 
-								case '.png': 
-									$read_function = 'imagecreatefrompng'; 
-								break; 
-								case '.gif': 
-									$read_function = 'imagecreatefromgif'; 
-								break;
-							}
-
-							$src = $read_function($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
 							if (($image_data['width'] > $gallery_config['max_width']) || ($image_data['height'] > $gallery_config['max_height']))
 							{
 								/**
@@ -498,6 +484,20 @@ switch ($mode)
 								*/
 								if ($gallery_config['resize_images'])
 								{
+									switch ($image_data['image_type2']) 
+									{
+										case '.jpg': 
+											$read_function = 'imagecreatefromjpeg'; 
+										break; 
+										case '.png': 
+											$read_function = 'imagecreatefrompng'; 
+										break; 
+										case '.gif': 
+											$read_function = 'imagecreatefromgif'; 
+										break;
+									}
+
+									$src = $read_function($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
 									// Resize it
 									if (($image_data['width'] / $gallery_config['max_width']) > ($image_data['height'] / $gallery_config['max_height']))
 									{

@@ -29,10 +29,10 @@
 			<!-- ENDIF -->
 			<!-- IF S_IMAGE -->
 				<dl>
-					<dt><label for="title">{L_IMAGE_NAME}:</label></dt>
-					<dd id="title"><input class="inputbox autowidth" type="text" name="image_name" value="{IMAGE_NAME}" size="60" /></dd>
-					<!-- IF S_MULTI_IMAGES --><dd id="title"><input class="inputbox autowidth" type="text" name="image_num" size="5" value="1" /> {L_LOOP_EXP}</dd><!-- ENDIF -->
-					<!-- IF S_UPLOAD --><dd id="filename"><input type="checkbox" class="checkbox" name="filename" value="filename" /> {L_ORIG_FILENAME}</dd><!-- ENDIF -->
+					<dt><label for="image_name">{L_IMAGE_NAME}:</label></dt>
+					<dd><input class="inputbox autowidth" type="text" id="image_name" name="image_name" value="{IMAGE_NAME}" size="60" /></dd>
+					<!-- IF S_MULTI_IMAGES --><dd><input class="inputbox autowidth" type="text" name="image_num" size="5" value="1" /> {L_LOOP_EXP}</dd><!-- ENDIF -->
+					<!-- IF S_UPLOAD --><dd><input class="checkbox" type="checkbox" name="filename" id="filename" value="filename" /><label for="filename"> {L_ORIG_FILENAME}</label></dd><!-- ENDIF -->
 				</dl>
 			<!-- ENDIF -->
 			<!-- IF S_ALLOWED_TO_RATE -->
@@ -50,7 +50,7 @@
 			<!-- ENDIF -->
 			<!-- IF not S_REPORT -->
 			<dl>
-				<dt><label for="description"><!-- IF S_COMMENT -->{L_YOUR_COMMENT}<!-- ELSE -->{L_IMAGE_DESC}<!-- ENDIF -->:</label></dt>
+				<dt><label for="message"><!-- IF S_COMMENT -->{L_YOUR_COMMENT}<!-- ELSE -->{L_IMAGE_DESC}<!-- ENDIF -->:</label></dt>
 			</dl>
 			<!-- INCLUDE posting_buttons.html -->
 			<div id="smiley-box">
@@ -84,15 +84,9 @@
 				<hr />
 				<!-- BEGIN upload_image -->
 					<dl>
-						<dt><label for="file">{L_FILE}:</label></dt>
-						<dd id="file"><input class="inputbox autowidth" type="file" name="image[]" size="52" /></dd>
+						<dt><label for="file_{upload_image.S_ROW_COUNT}">{L_FILE}:</label></dt>
+						<dd><input class="inputbox autowidth" type="file" id="file_{upload_image.S_ROW_COUNT}" name="image[]" size="52" /></dd>
 					</dl>
-					<!-- IF not S_THUMBNAIL -->
-					<dl>
-						<dt><label for="file">{L_UPLOAD_THUMBNAIL}:</label>{L_UPLOAD_THUMBNAIL_EXPLAIN}<br />{L_THUMBNAIL_SIZE}: <strong>{S_THUMBNAIL_SIZE}</strong></dt>
-						<dd id="file"><input class="inputbox autowidth" type="file" name="thumbnail[]" size="52" /></dd>
-					</dl>
-					<!-- ENDIF -->
 				<!-- END upload_image -->
 				<!-- IF S_MULTI_IMAGES --><hr /><!-- ENDIF -->
 				<dl>
