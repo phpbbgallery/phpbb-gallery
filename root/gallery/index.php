@@ -80,6 +80,7 @@ else if ($gallery_config['personal_album_index'] && gallery_acl_check('a_list', 
 		'S_NO_CAT'				=> false,
 		'S_LIST_SUBALBUMS'		=> true,
 		'S_SUBALBUMS'			=> true,
+		'U_VIEWALBUM' 			=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal'),
 		'ALBUM_NAME' 			=> $user->lang['USERS_PERSONAL_ALBUMS'],
 	));
 	$template->assign_block_vars('albumrow', array(
