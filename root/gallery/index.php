@@ -76,8 +76,15 @@ else if ($gallery_config['personal_album_index'] && gallery_acl_check('a_list', 
 	$db->sql_freeresult($result);
 
 	$template->assign_block_vars('albumrow', array(
+		'S_IS_CAT'				=> true,
+		'S_NO_CAT'				=> false,
+		'S_LIST_SUBALBUMS'		=> true,
+		'S_SUBALBUMS'			=> true,
+		'ALBUM_NAME' 			=> $user->lang['USERS_PERSONAL_ALBUMS'],
+	));
+	$template->assign_block_vars('albumrow', array(
 		'S_IS_CAT'				=> false,
-		'S_NO_CAT'				=> true,
+		'S_NO_CAT'				=> false,
 		'S_LIST_SUBALBUMS'		=> true,
 		'S_SUBALBUMS'			=> true,
 		'U_VIEWALBUM' 			=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal'),
