@@ -249,9 +249,16 @@ class ucp_gallery
 		$parent_id = request_var('parent_id', $user->gallery['personal_album_id']);
 		check_album_user($parent_id);
 
+		$sql = 'SELECT COUNT(album_id) albums
+			FROM ' . GALLERY_ALBUMS_TABLE . '
+			WHERE album_user_id = ' . $user->data['user_id'];
+		$result = $db->sql_query($sql);
+		$albums = $db->sql_fetchfield('albums');
+		$db->sql_freeresult($result);
+
 		$template->assign_vars(array(
 			'S_MANAGE_SUBALBUMS'			=> true,
-			'U_CREATE_SUBALBUM'				=> $this->u_action . '&amp;action=create' . (($parent_id) ? '&amp;parent_id=' . $parent_id : ''),
+			'U_CREATE_SUBALBUM'				=> ((gallery_acl_check('album_count', OWN_GALLERY_PERMISSIONS) > $albums) ? ($this->u_action . '&amp;action=create' . (($parent_id) ? '&amp;parent_id=' . $parent_id : '')) : ''),
 
 			'L_TITLE'			=> $user->lang['MANAGE_SUBALBUMS'],
 			//'ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['ALBUM'],
