@@ -47,7 +47,7 @@ $lang = array_merge($lang, array(
 
 	'GOTO'							=> 'Go To',
 
-	'MANAGE_SUBALBUMS'				=> 'manage your subalbums',
+	'MANAGE_SUBALBUMS'				=> 'Manage your subalbums',
 	'MISSING_ALBUM_NAME'			=> 'Please insert a name for the album',
 
 	'NEED_INITIALISE'				=> 'You don\'t have a personal album yet.',
