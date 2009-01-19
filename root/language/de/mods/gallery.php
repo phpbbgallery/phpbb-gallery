@@ -26,7 +26,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'ALBUM'							=> 'Album',
 	'ALBUM_IS_CATEGORY'				=> 'Das Album, in welches du dich gemogelt hast, ist eine Kategorie.<br />In Kategorien können keine Bilder hochgeladen werden.',
-	'ALBUM_NAME'					=> 'Albumname',
+	'ALBUM_NAME'					=> 'Name des Albums',
 	'ALBUM_NOT_EXIST'				=> 'Dieses Album existiert nicht',
 	'ALBUM_PERMISSIONS'				=> 'Berechtigungen in diesem Album',
 	'ALBUM_REACHED_QUOTA'			=> 'Dieses Album hat das Kontingent zum hochladen von Bildern erreicht. Es können keine weiteren Bilder mehr hochgeladen werden. Für weitere Information wende dich bitte an einen Administrator',

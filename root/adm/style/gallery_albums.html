@@ -71,23 +71,42 @@
 			<dd><select id="parent_id" name="parent_id"><option value="0"<!-- IF not S_ALBUM_PARENT_ID --> selected="selected"<!-- ENDIF -->>{L_NO_PARENT_ALBUM}</option>{S_PARENT_OPTIONS}</select></dd>
 		</dl>
 		<dl>
-			<dt><label for="copy_permissions">{L_COPY_PERMISSIONS}:</label></dt>
-			<dd><select id="copy_permissions" name="copy_permissions"><option value="0" selected="selected">{L_DONT_COPY_PERMISSIONS}</option>{S_COPY_OPTIONS}</select></dd>
-		</dl>
-		<dl>
 			<dt><label for="album_name">{L_ALBUM_NAME}:</label></dt>
 			<dd><input class="text medium" type="text" id="album_name" name="album_name" value="{ALBUM_NAME}" maxlength="255" /></dd>
 		</dl>
 		<dl>
-			<dt><label for="album_desc">{L_ALBUM_DESC}:</label></dt>
+			<dt><label for="album_desc">{L_ALBUM_DESC}:</label><br /><span>{L_ALBUM_DESC_EXPLAIN}</span></dt>
 			<dd><textarea id="album_desc" name="album_desc" rows="5" cols="45">{ALBUM_DESC}</textarea></dd>
 		<dd><label><input type="checkbox" class="radio" name="desc_parse_bbcode"<!-- IF S_DESC_BBCODE_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_BBCODE}</label>
 			<label><input type="checkbox" class="radio" name="desc_parse_smilies"<!-- IF S_DESC_SMILIES_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_SMILIES}</label>
 			<label><input type="checkbox" class="radio" name="desc_parse_urls"<!-- IF S_DESC_URLS_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_URLS}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="album_image">{L_ALBUM_IMAGE}:</label></dt>
+			<dt><label for="album_image">{L_ALBUM_IMAGE}:</label><br /><span>{L_ALBUM_IMAGE_EXPLAIN}</span></dt>
 			<dd><input class="text medium" type="text" id="album_image" name="album_image" value="{ALBUM_IMAGE}" maxlength="255" /></dd>
+		<!-- IF ALBUM_IMAGE_SRC -->
+			<dd><img src="{ALBUM_IMAGE_SRC}" alt="{L_ALBUM_IMAGE}" /></dd>
+		<!-- ENDIF -->
+		</dl>
+		<!-- IF ALBUM_PASSWORD_OPTION_IS_INCLUDED -->
+		<dl>
+			<dt><label for="album_password">{L_ALBUM_PASSWORD}:</label><br /><span>{L_ALBUM_PASSWORD_EXPLAIN}</span></dt>
+			<dd><input type="password" id="album_password" name="album_password" value="<!-- IF S_ALBUM_PASSWORD_SET -->&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;<!-- ENDIF -->" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="album_password_confirm">{L_ALBUM_PASSWORD_CONFIRM}:</label><br /><span>{L_ALBUM_PASSWORD_CONFIRM_EXPLAIN}</span></dt>
+			<dd><input type="password" id="album_password_confirm" name="album_password_confirm" value="<!-- IF S_ALBUM_PASSWORD_SET -->&#x20;&#x20;&#x20;&#x20;&#x20;&#x20;<!-- ENDIF -->" /></dd>
+		</dl>
+		<!-- IF S_ALBUM_PASSWORD_SET -->
+		<dl>
+			<dt><label for="album_password_unset">{L_ALBUM_PASSWORD_UNSET}:</label><br /><span>{L_ALBUM_PASSWORD_UNSET_EXPLAIN}</span></dt>
+			<dd><input id="album_password_unset" name="album_password_unset" type="checkbox" /></dd>
+		</dl>
+		<!-- ENDIF -->
+		<!-- ENDIF -->
+		<dl>
+			<dt><label for="copy_permissions">{L_COPY_PERMISSIONS}:</label><br /><span>{L_COPY_PERMISSIONS_EXPLAIN}</span></dt>
+			<dd><select id="copy_permissions" name="copy_permissions"><option value="0" selected="selected">{L_DONT_COPY_PERMISSIONS}</option>{S_COPY_OPTIONS}</select></dd>
 		</dl>
 	</fieldset>
 	<fieldset class="submit-buttons">

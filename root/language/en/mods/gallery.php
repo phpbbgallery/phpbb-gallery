@@ -26,7 +26,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'ALBUM'							=> 'Album',
 	'ALBUM_IS_CATEGORY'				=> 'The album you cheated to, is a category-album.<br />You can\'t upload to categories.',
-	'ALBUM_NAME'					=> 'Albumname',
+	'ALBUM_NAME'					=> 'Album name',
 	'ALBUM_NOT_EXIST'				=> 'This album does not exist',
 	'ALBUM_PERMISSIONS'				=> 'Album Permissions',
 	'ALBUM_REACHED_QUOTA'			=> 'This album has reached the quota of images. You cannot upload any more. Please contact the administrator for more information.',
