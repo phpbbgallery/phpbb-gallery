@@ -103,19 +103,31 @@ $lang = array_merge($lang, array(
 	'REPORTER'						=> 'Reporting user',
 	'REPORTER_AND_ALBUM'			=> 'Reporter & Album',
 
-	'WAITING_APPROVED_IMAGE'		=> 'In total there is <span style="font-weight: bold;">%s</span> image approved..',
-	'WAITING_APPROVED_IMAGES'		=> 'In total there are <span style="font-weight: bold;">%s</span> images approved.',
-	'WAITING_APPROVED_NONE'			=> 'No images approved.',
-	'WAITING_LOCKED_IMAGE'			=> 'In total there is <span style="font-weight: bold;">%s</span> image locked.',
-	'WAITING_LOCKED_IMAGES'			=> 'In total there are <span style="font-weight: bold;">%s</span> images locked.',
-	'WAITING_LOCKED_NONE'			=> 'No images locked.',
-	'WAITING_REPORTED_DONE'			=> 'No reports reviewed.',
-	'WAITING_REPORTED_IMAGE'		=> 'In total there is <span style="font-weight: bold;">%s</span> report to review.',
-	'WAITING_REPORTED_IMAGES'		=> 'In total there are <span style="font-weight: bold;">%s</span> reports to review.',
-	'WAITING_REPORTED_NONE'			=> 'No reports to review.',
-	'WAITING_UNAPPROVED_IMAGE'		=> 'In total there is <span style="font-weight: bold;">%s</span> image waiting for approval.',
-	'WAITING_UNAPPROVED_IMAGES'		=> 'In total there are <span style="font-weight: bold;">%s</span> images waiting for approval.',
-	'WAITING_UNAPPROVED_NONE'		=> 'No images waiting for approval.',
+	'WAITING_APPROVED_IMAGE'		=> array(
+		0			=> 'No images approved.',
+		1			=> 'In total there is <span style="font-weight: bold;">1</span> image approved.',
+		2			=> 'In total there are <span style="font-weight: bold;">%s</span> images approved.',
+	),
+	'WAITING_LOCKED_IMAGE'			=> array(
+		0			=> 'No images locked.',
+		1			=> 'In total there is <span style="font-weight: bold;">1</span> image locked.',
+		2			=> 'In total there are <span style="font-weight: bold;">%s</span> images locked.',
+	),
+	'WAITING_REPORTED_DONE'			=> array(
+		0			=> 'No reports reviewed.',
+		1			=> 'In total there is <span style="font-weight: bold;">1</span> report reviewed.',
+		2			=> 'In total there are <span style="font-weight: bold;">%s</span> reports reviewed.',
+	),
+	'WAITING_REPORTED_IMAGE'		=> array(
+		0			=> 'No reports to review.',
+		1			=> 'In total there is <span style="font-weight: bold;">1</span> report to review.',
+		2			=> 'In total there are <span style="font-weight: bold;">%s</span> reports to review.',
+	),
+	'WAITING_UNAPPROVED_IMAGE'		=> array(
+		0			=> 'No images waiting for approval.',
+		1			=> 'In total there is <span style="font-weight: bold;">1</span> image waiting for approval.',
+		2			=> 'In total there are <span style="font-weight: bold;">%s</span> images waiting for approval.',
+	),
 ));
 
 ?>

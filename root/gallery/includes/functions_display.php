@@ -121,7 +121,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 
 		if (!gallery_acl_check('a_list', $album_id, $row['album_user_id']))
 		{
-			// if the user does not have permissions to list this forum, skip everything until next branch
+			// if the user does not have permissions to list this album, skip everything until next branch
 			$right_id = $row['right_id'];
 			continue;
 		}
@@ -196,7 +196,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 				'ALBUM_DESC'			=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
 				'ALBUM_FOLDER_IMG'		=> '',
 				'ALBUM_FOLDER_IMG_SRC'	=> '',
-				'ALBUM_IMAGE'			=> $row['album_image'],
+				'ALBUM_IMAGE'			=> ($row['album_image']) ? $phpbb_root_path . $row['album_image'] : '',
 				'U_VIEWALBUM'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $row['album_id']))
 			);
 
@@ -213,7 +213,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		$folder_image = $folder_alt = $l_subalbums = '';
 		$subalbums_list = array();
 
-		// Generate list of subforums if we need to
+		// Generate list of subalbums if we need to
 		if (isset($subalbums[$album_id]))
 		{
 			foreach ($subalbums[$album_id] as $subalbum_id => $subalbum_row)
@@ -291,7 +291,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			'ALBUM_FOLDER_IMG'		=> $user->img($folder_image, $folder_alt),
 			'ALBUM_FOLDER_IMG_SRC'	=> $user->img($folder_image, $folder_alt, false, '', 'src'),
 			'ALBUM_FOLDER_IMG_ALT'	=> isset($user->lang[$folder_alt]) ? $user->lang[$folder_alt] : '',
-			'ALBUM_IMAGE'			=> $row['album_image'],
+			'ALBUM_IMAGE'			=> ($row['album_image']) ? $phpbb_root_path . $row['album_image'] : '',
 			'LAST_IMAGE_TIME'		=> $lastimage_time,
 			'LAST_USER_FULL'		=> get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
 			'UC_FAKE_THUMBNAIL'		=> ($gallery_config['disp_fake_thumb']) ? $lastimage_uc_thumbnail : '',
@@ -523,9 +523,12 @@ function get_album_moderators(&$album_moderators, $album_id = false)
 }
 
 /**
+* Assigns an image with all data to the defined template-block
 *
+* @param string	$template_block	Name of the template-block
+* @param array	$image_data		Array with the image-data, all columns of GALLERY_IMAGES_TABLE are needed. album_name may be additionally assigned
 */
-function assign_image_block($template_block, &$image_data, $br_clear = false)
+function assign_image_block($template_block, &$image_data, $album_type = false, $album_status = false)
 {
 	global $auth, $gallery_config, $template, $user;
 	global $gallery_root_path, $phpbb_root_path, $phpEx;
@@ -552,15 +555,15 @@ function assign_image_block($template_block, &$image_data, $br_clear = false)
 		'S_LOCKED'		=> (gallery_acl_check('m_status', $image_data['image_album_id']) && ($image_data['image_status'] == 2)) ? true : false,
 		'S_REPORTED'	=> (gallery_acl_check('m_report', $image_data['image_album_id']) && $image_data['image_reported']) ? true : false,
 
-		'ALBUM_NAME'	=> ((utf8_strlen(htmlspecialchars_decode($image_data['album_name'])) > $gallery_config['shorted_imagenames'] + 3 ) ? htmlspecialchars(utf8_substr(htmlspecialchars_decode($image_data['album_name']), 0, $gallery_config['shorted_imagenames']) . '...') : ($image_data['album_name'])),
+		'ALBUM_NAME'	=> (isset($image_data['album_name'])) ? ((utf8_strlen(htmlspecialchars_decode($image_data['album_name'])) > $gallery_config['shorted_imagenames'] + 3 ) ? htmlspecialchars(utf8_substr(htmlspecialchars_decode($image_data['album_name']), 0, $gallery_config['shorted_imagenames']) . '...') : ($image_data['album_name'])) : '',
 		'POSTER'		=> get_username_string('full', $image_data['image_user_id'], ($image_data['image_user_id'] <> ANONYMOUS) ? $image_data['image_username'] : $user->lang['GUEST'], $image_data['image_user_colour']),
 		'TIME'			=> $user->format_date($image_data['image_time']),
 		'VIEW'			=> $image_data['image_view_count'],
 
-		'S_RATINGS'		=> (($gallery_config['rate'] == 1) && gallery_acl_check('i_rate', $image_data['image_album_id'])) ? $image_data['rating'] : '',
+		'S_RATINGS'		=> ($gallery_config['allow_rates'] && gallery_acl_check('i_rate', $image_data['image_album_id'])) ? $image_data['rating'] : '',
 		'U_RATINGS'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $image_data['image_album_id'] . "&amp;image_id=" . $image_data['image_id']) . '#rating',
 		'L_COMMENTS'	=> ($image_data['image_comments'] == 1) ? $user->lang['COMMENT'] : $user->lang['COMMENTS'],
-		'S_COMMENTS'	=> (($gallery_config['comment'] == 1) && gallery_acl_check('c_read', $image_data['image_album_id'])) ? (($image_data['image_comments']) ? $image_data['image_comments'] : $user->lang['NO_COMMENTS']) : '',
+		'S_COMMENTS'	=> ($gallery_config['allow_comments'] && gallery_acl_check('c_read', $image_data['image_album_id'])) ? (($image_data['image_comments']) ? $image_data['image_comments'] : $user->lang['NO_COMMENTS']) : '',
 		'U_COMMENTS'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $image_data['image_album_id'] . "&amp;image_id=" . $image_data['image_id']) . '#comments',
 
 		'S_IP'		=> ($auth->acl_get('a_')) ? $image_data['image_user_ip'] : '',
@@ -571,8 +574,6 @@ function assign_image_block($template_block, &$image_data, $br_clear = false)
 		'U_MOVE'	=> (gallery_acl_check('m_move', $image_data['image_album_id'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "action=images_move&amp;album_id={$image_data['image_album_id']}&amp;image_id=" . $image_data['image_id'] . "&amp;redirect=redirect") : '',
 		'U_EDIT'	=> $allow_edit ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id={$image_data['image_album_id']}&amp;image_id=" . $image_data['image_id']) : '',
 		'U_DELETE'	=> $allow_delete ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=delete&amp;album_id={$image_data['image_album_id']}&amp;image_id=" . $image_data['image_id']) : '',
-
-		'BR_CLEAR'		=> $br_clear,
 	));
 }
 

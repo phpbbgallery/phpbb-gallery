@@ -28,7 +28,7 @@ if (!in_array($sort_key, $sort_by_sql))
 	$sort_key = 'image_time';
 }
 
-$m_status = ' AND image_status = 1';
+$m_status = ' AND image_status = ' . IMAGE_APPROVED;
 if (gallery_acl_check('m_status', $album_id))
 {
 	$m_status = '';
@@ -53,8 +53,8 @@ while ($row = $db->sql_fetchrow($result))
 		'RATING'			=> ($row['image_rate_avg'] / 100),
 		'STATUS'			=> $user->lang['QUEUE_STATUS_' . $row['image_status']],
 		'IMAGE_ID'			=> $row['image_id'],
-		'S_REPORTED'		=> (isset($row['report_status']) && $row['report_status'] == 1) ? true : false,
-		'S_UNAPPROVED'		=> ($row['image_status'] == 0) ? true : false,
+		'S_REPORTED'		=> (isset($row['report_status']) && ($row['report_status'] == REPORT_OPEN)) ? true : false,
+		'S_UNAPPROVED'		=> ($row['image_status'] == IMAGE_UNAPPROVED) ? true : false,
 		'U_IMAGE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx" , "album_id=$album_id&amp;image_id=" . $row['image_id']),
 		'U_IMAGE_PAGE'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx" , "album_id=$album_id&amp;image_id=" . $row['image_id']),
 		'U_REPORT'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx" , "mode=report_details&amp;album_id=$album_id&amp;option_id=" . $row['report_id']),
@@ -84,8 +84,8 @@ $template->assign_vars(array(
 	'REPORTED_IMG'				=> $user->img('icon_topic_reported', 'IMAGE_REPORTED'),
 	'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'IMAGE_UNAPPROVED'),
 	'S_MCP_ACTION'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx" , "mode=$mode&amp;album_id=$album_id"),
-	'DISP_FAKE_THUMB'			=> (empty($gallery_config['disp_fake_thumb'])) ? 0 : $gallery_config['disp_fake_thumb'],
-	'FAKE_THUMB_SIZE'			=> (empty($gallery_config['fake_thumb_size'])) ? 50 : $gallery_config['fake_thumb_size'],
+	'DISP_FAKE_THUMB'			=> $gallery_config['disp_fake_thumb'],
+	'FAKE_THUMB_SIZE'			=> $gallery_config['fake_thumb_size'],
 ));
 
 ?>

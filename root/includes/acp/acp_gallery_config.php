@@ -274,11 +274,11 @@ class acp_gallery_config
 	*/
 	function gd_radio($value, $key)
 	{
-		$key_gd1	= ($value == 1) ? ' checked="checked"' : '';
-		$key_gd2	= ($value == 2) ? ' checked="checked"' : '';
+		$key_gd1	= ($value == GDLIB1) ? ' checked="checked"' : '';
+		$key_gd2	= ($value == GDLIB2) ? ' checked="checked"' : '';
 
-		$tpl = "<label><input type=\"radio\" name=\"config[$key]\" value=\"1\" $key_gd1 class=\"radio\" /> GD1</label>";
-		$tpl .= "<label><input type=\"radio\" id=\"$key\" name=\"config[$key]\" value=\"2\" $key_gd2  class=\"radio\" /> GD2</label>";
+		$tpl = "<label><input type=\"radio\" name=\"config[$key]\" value=\"" . GDLIB1 . "\" $key_gd1 class=\"radio\" /> GD1</label>";
+		$tpl .= "<label><input type=\"radio\" id=\"$key\" name=\"config[$key]\" value=\"" . GDLIB2 . "\" $key_gd2  class=\"radio\" /> GD2</label>";
 
 		return $tpl;
 	}

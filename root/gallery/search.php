@@ -72,14 +72,14 @@ $limit_days = array(0 => $user->lang['ALL_IMAGES'], 1 => $user->lang['1_DAY'], 7
 $sort_by_text = array('t' => $user->lang['TIME'], 'n' => $user->lang['IMAGE_NAME'], 'u' => $user->lang['SORT_USERNAME'], 'vc' => $user->lang['VIEWS']);
 $sort_by_sql = array('t' => 'image_time', 'n' => 'image_name', 'u' => 'image_username', 'vc' => 'image_view_count');
 
-if ($gallery_config['rate'] == 1)
+if ($gallery_config['allow_rates'])
 {
 	$sort_by_text['ra'] = $user->lang['RATING'];
 	$sort_by_sql['ra'] = 'image_rate_avg';
 	$sort_by_text['r'] = $user->lang['RATES_COUNT'];
 	$sort_by_sql['r'] = 'image_rates';
 }
-if ($gallery_config['comment'] == 1)
+if ($gallery_config['allow_comments'])
 {
 	$sort_by_text['c'] = $user->lang['COMMENTS'];
 	$sort_by_sql['c'] = 'image_comments';
@@ -395,7 +395,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 		'SEARCH_IMAGES'		=> ($search_results == 'image') ? true : false,
 		'S_COL_WIDTH'		=> (100 / $gallery_config['cols_per_page']),
 		'S_COLS'			=> $gallery_config['cols_per_page'],
-		'S_THUMBNAIL_SIZE'	=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? 16 : 0),
+		'S_THUMBNAIL_SIZE'	=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? THUMBNAIL_INFO_HEIGHT : 0),
 	));
 
 	if ($sql_where)
@@ -443,6 +443,8 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 						$template->assign_block_vars('imagerow.noimage', array());
 						continue;
 					}
+
+					// Assign the image to the template-block
 					assign_image_block('imagerow.image', $rowset[$j]);
 				}
 			}

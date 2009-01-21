@@ -33,7 +33,7 @@ if ($mode == 'queue_details')
 }
 if ($mode == 'report_details')
 {
-	$m_status = ' AND i.image_status = 1';
+	$m_status = ' AND i.image_status = ' . IMAGE_APPROVED;
 	if (gallery_acl_check('m_status', $album_id))
 	{
 		$m_status = '';
@@ -53,7 +53,7 @@ if ($mode == 'report_details')
 		'REPORT_TIME'		=> $user->format_date($row['report_time']),
 		'REPORT_ID'			=> $row['report_id'],
 		'REPORT_NOTE'		=> $row['report_note'],
-		'REPORT_STATUS'		=> ($row['report_status'] == 1) ? true : false,
+		'REPORT_STATUS'		=> ($row['report_status'] == REPORT_OPEN) ? true : false,
 		'STATUS'			=> $user->lang['REPORT_STATUS_' . $row['report_status']] . ' ' . $user->lang['QUEUE_STATUS_' . $row['image_status']],
 	));
 	$db->sql_freeresult($result);

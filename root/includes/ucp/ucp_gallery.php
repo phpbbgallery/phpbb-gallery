@@ -210,7 +210,7 @@ class ucp_gallery
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc(request_var('album_desc', '', true)),
 				'album_parents'					=> '',
-				'album_type'					=> 1,
+				'album_type'					=> ALBUM_UPLOAD,
 				'album_user_id'					=> $user->data['user_id'],
 				'album_last_username'			=> '',
 				'album_last_user_colour'		=> $user->data['user_colour'],
@@ -388,7 +388,7 @@ class ucp_gallery
 				'album_name'					=> request_var('album_name', '', true),
 				'parent_id'						=> request_var('parent_id', 0),
 				'album_parents'					=> '',
-				'album_type'					=> 1,
+				'album_type'					=> ALBUM_UPLOAD,
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc(request_var('album_desc', '', true)),
 				'album_user_id'					=> $user->data['user_id'],
@@ -497,7 +497,7 @@ class ucp_gallery
 				'parent_id'						=> request_var('parent_id', (($album_id == $user->gallery['personal_album_id']) ? 0 : $user->gallery['personal_album_id'])),
 				//left_id and right_id are created some lines later
 				'album_parents'					=> '',
-				'album_type'					=> 1,
+				'album_type'					=> ALBUM_UPLOAD,
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc(request_var('album_desc', '', true)),
 			);
@@ -680,24 +680,27 @@ class ucp_gallery
 			// So now drop the comments, ratings, images and albums.
 			if ($deleted_images)
 			{
-				$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . "
-					WHERE comment_image_id IN ($deleted_images)";
+				$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . '
+					WHERE ' . $db->sql_in_set('comment_image_id', $deleted_images);
 				$db->sql_query($sql);
-				$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . "
-					WHERE image_id IN ($deleted_images)";
+				$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . '
+					WHERE ' . $db->sql_in_set('rate_image_id', $deleted_images);
 				$db->sql_query($sql);
-				$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . "
-					WHERE image_id IN ($deleted_images)";
+				$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . '
+					WHERE ' . $db->sql_in_set('report_image_id', $deleted_images);
 				$db->sql_query($sql);
-				$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . "
-					WHERE rate_image_id IN ($deleted_images)";
+				$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . '
+					WHERE ' . $db->sql_in_set('image_id', $deleted_images);
 				$db->sql_query($sql);
-				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . "
-					WHERE image_id IN ($deleted_images)";
+				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . '
+					WHERE ' . $db->sql_in_set('image_id', $deleted_images);
+				$db->sql_query($sql);
+				$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . '
+					WHERE ' . $db->sql_in_set('image_id', $deleted_images);
 				$db->sql_query($sql);
 			}
-			$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . "
-				WHERE album_id IN ($deleted_albums)";
+			$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . '
+				WHERE ' . $db->sql_in_set('album_id', $deleted_albums);
 			$db->sql_query($sql);
 
 			// Maybe we deleted all, so we have to empty $user->gallery['personal_album_id']
@@ -733,6 +736,7 @@ class ucp_gallery
 			$cache->destroy('sql', GALLERY_FAVORITES_TABLE);
 			$cache->destroy('sql', GALLERY_IMAGES_TABLE);
 			$cache->destroy('sql', GALLERY_RATES_TABLE);
+			$cache->destroy('sql', GALLERY_REPORTS_TABLE);
 			$cache->destroy('sql', GALLERY_WATCH_TABLE);
 			$cache->destroy('_albums');
 
@@ -892,7 +896,7 @@ class ucp_gallery
 			WHERE image_id <> 0
 				AND user_id = ' . $user->data['user_id'];
 		$result = $db->sql_query($sql);
-		$total_images = $db->sql_fetchfield('images');
+		$total_images = (int) $db->sql_fetchfield('images');
 		$db->sql_freeresult($result);
 
 		$sql = 'SELECT *
@@ -972,7 +976,7 @@ class ucp_gallery
 			FROM ' . GALLERY_FAVORITES_TABLE . '
 			WHERE user_id = ' . $user->data['user_id'];
 		$result = $db->sql_query($sql);
-		$total_images = $db->sql_fetchfield('images');
+		$total_images = (int) $db->sql_fetchfield('images');
 		$db->sql_freeresult($result);
 
 		$sql = 'SELECT i.image_time, i.image_name, i.image_id, i.image_user_id, i.image_username, i.image_user_colour, i.image_album_id, a.album_name
@@ -1010,7 +1014,7 @@ class ucp_gallery
 			'TOTAL_IMAGES'				=> ($total_images == 1) ? $user->lang['VIEW_ALBUM_IMAGE'] : sprintf($user->lang['VIEW_ALBUM_IMAGES'], $total_images),
 
 			'DISP_FAKE_THUMB'			=> true,
-			'FAKE_THUMB_SIZE'			=> (empty($gallery_config['fake_thumb_size'])) ? 50 : $gallery_config['fake_thumb_size'],
+			'FAKE_THUMB_SIZE'			=> $gallery_config['fake_thumb_size'],
 		));
 	}
 

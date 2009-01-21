@@ -32,7 +32,7 @@ $album_access_array = get_album_access_array();
 /**
 * Check whether the requested image & album exit.
 */
-$image_id = request_var('image_id',0);
+$image_id = request_var('image_id', 0);
 $image_data = get_image_info($image_id);
 
 $album_id = $image_data['image_album_id'];
@@ -169,17 +169,17 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 				$thumbnail_width = $resize_width * (($image_width / $resize_width) / ($image_height / $resize_height));
 			}
 
-			// Create thumbnail + 16 Pixel extra for imagesize text 
+			// Create thumbnail + constant (THUMBNAIL_INFO_HEIGHT) Pixel extra for imagesize text 
 			// Create image details credits to Dr.Death
 			if ($gallery_config['thumbnail_info_line'] && $thumbnail)
 			{
-				$thumb_file = ($gallery_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height + 16) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height + 16); 
+				$thumb_file = ($gallery_config['gd_version'] == GDLIB1) ? @imagecreate($thumbnail_width, $thumbnail_height + THUMBNAIL_INFO_HEIGHT) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height + THUMBNAIL_INFO_HEIGHT); 
 			}
 			else
 			{
-				$thumb_file = ($gallery_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
+				$thumb_file = ($gallery_config['gd_version'] == GDLIB1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
 			}
-			$resize_function = ($gallery_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
+			$resize_function = ($gallery_config['gd_version'] == GDLIB1) ? 'imagecopyresized' : 'imagecopyresampled';
 			@$resize_function($thumb_file, $image_file, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $image_width, $image_height);
 
 			if ($gallery_config['thumbnail_info_line'] && $thumbnail)
@@ -191,7 +191,7 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 				$dimension_height = imagefontheight($dimension_font);
 				$dimension_width = imagefontwidth($dimension_font) * strlen($dimension_string);
 				$dimension_x = ($thumbnail_width - $dimension_width) / 2;
-				$dimension_y = $thumbnail_height + ((16 - $dimension_height) / 2);
+				$dimension_y = $thumbnail_height + ((THUMBNAIL_INFO_HEIGHT - $dimension_height) / 2);
 				imagestring($thumb_file, 1, $dimension_x, $dimension_y, $dimension_string, $dimension_colour);
 			}
 		}
@@ -309,7 +309,7 @@ else
 	/**
 	* Get a browser friendly UTF-8 encoded filename
 	*
-	* copied from phpBB3
+	* borrowed from phpBB3
 	* @author: phpBB Group
 	* @function: header_filename
 	*/

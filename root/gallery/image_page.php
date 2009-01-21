@@ -78,7 +78,7 @@ if (!gallery_acl_check('i_view', $album_id))
 		trigger_error('NOT_AUTHORISED');
 	}
 }
-if (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != 1))
+if (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != IMAGE_APPROVED))
 {
 	trigger_error('NOT_AUTHORISED');
 }
@@ -99,7 +99,7 @@ $db->sql_query($sql);
 $previous_id = $next_id = $last_id = 0;
 $previous_name = $next_name = $last_name = '';
 $do_next = false;
-$image_approval_sql = ' AND image_status = 1';
+$image_approval_sql = ' AND image_status = ' . IMAGE_APPROVED;
 if (gallery_acl_check('m_status', $album_id))
 {
 	$image_approval_sql = '';
@@ -176,7 +176,7 @@ $template->assign_vars(array(
 /**
 * Exif-Data
 */
-if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (substr($image_data['image_filename'], -3, 3) == 'jpg') && function_exists('exif_read_data'))
+if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVAILABLE) && (substr($image_data['image_filename'], -3, 3) == 'jpg') && function_exists('exif_read_data'))
 {
 	$exif = @exif_read_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename'], 0, true);
 	if (!empty($exif["EXIF"]))
@@ -191,26 +191,34 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (subs
 			$timestamp_hour = substr($exif["EXIF"]["DateTimeOriginal"], 11, 2);
 			$timestamp_minute = substr($exif["EXIF"]["DateTimeOriginal"], 14, 2);
 			$timestamp_second = substr($exif["EXIF"]["DateTimeOriginal"], 17, 2);
-			if (($timestamp = @mktime($timestamp_hour, $timestamp_minute, $timestamp_second, $timestamp_month, $timestamp_day, $timestamp_year)) === true)
+			$timestamp = (int) @mktime($timestamp_hour, $timestamp_minute, $timestamp_second, $timestamp_month, $timestamp_day, $timestamp_year);
+			if ($timestamp)
 			{
-				$exif_data['exif_date'] = $user->format_date($timestamp);
+				$exif_data['exif_date'] = $user->format_date($timestamp + EXIFTIME_OFFSET);
 			}
 		}
 		if(isset($exif["EXIF"]["FocalLength"]))
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["FocalLength"]);
-			$exif_data['exif_focal'] = sprintf($user->lang['EXIF_FOCAL_EXP'], ($num/$den));
+			$exif_data['exif_focal'] = sprintf($user->lang['EXIF_FOCAL_EXP'], ($num / $den));
 		}
 		if(isset($exif["EXIF"]["ExposureTime"]))
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["ExposureTime"]);
-			if ($num > $den) { $exif_exposure = $num/$den; } else { $exif_exposure = ' 1/' . $den/$num ; }
+			if ($num > $den)
+			{
+				$exif_exposure = $num/$den;
+			}
+			else
+			{
+				$exif_exposure = ' 1/' . $den / $num ;
+			}
 			$exif_data['exif_exposure'] = sprintf($user->lang['EXIF_EXPOSURE_EXP'], $exif_exposure);
 		}
 		if(isset($exif["EXIF"]["FNumber"]))
 		{
 			list($num,$den) = explode("/",$exif["EXIF"]["FNumber"]);
-			$exif_data['exif_aperture'] = "F/" . ($num/$den);
+			$exif_data['exif_aperture'] = "F/" . ($num / $den);
 		}
 		if(isset($exif["EXIF"]["ISOSpeedRatings"]))
 		{
@@ -240,8 +248,15 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (subs
 		}
 		if (isset($exif["EXIF"]["ExposureBiasValue"]))
 		{
-			list($num,$den) = explode("/",$exif["EXIF"]["ExposureBiasValue"]);
-			if (($num/$den) == 0) { $exif_exposure_bias = 0; } else { $exif_exposure_bias = $exif["EXIF"]["ExposureBiasValue"]; }
+			list($num,$den) = explode("/", $exif["EXIF"]["ExposureBiasValue"]);
+			if (($num / $den) == 0)
+			{
+				$exif_exposure_bias = 0;
+			}
+			else
+			{
+				$exif_exposure_bias = $exif["EXIF"]["ExposureBiasValue"];
+			}
 			$exif_data['exif_exposure_bias'] = sprintf($user->lang['EXIF_EXPOSURE_BIAS_EXP'], $exif_exposure_bias);
 		}
 		if (isset($exif["EXIF"]["MeteringMode"]))
@@ -266,10 +281,10 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (subs
 			));
 		}
 
-		if ($image_data['image_has_exif'] == 2)
+		if ($image_data['image_has_exif'] == EXIF_UNKNOWN)
 		{
 			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-				SET image_has_exif = 1
+				SET image_has_exif = ' . EXIF_AVAILABLE . '
 				WHERE image_id = ' . $image_id;
 			$db->sql_query($sql);
 		}
@@ -277,7 +292,7 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] > 0) && (subs
 	else
 	{
 		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-			SET image_has_exif = 0
+			SET image_has_exif = ' . EXIF_UNAVAILABLE . '
 			WHERE image_id = ' . $image_id;
 		$db->sql_query($sql);
 	}

@@ -81,6 +81,11 @@ if ($user->data['is_bot'])
 {
 	redirect(($image_id) ? $image_backlink : $album_backlink);
 }
+if ($album_data['album_type'] == ALBUM_CAT)
+{
+	meta_refresh(3, $album_backlink);
+	trigger_error('ALBUM_IS_CATEGORY');
+}
 switch ($mode)
 {
 	case 'album':
@@ -111,11 +116,6 @@ switch ($mode)
 		switch ($submode)
 		{
 			case 'upload':
-				if (!$album_data['album_type'])
-				{
-					meta_refresh(3, $album_backlink);
-					trigger_error('ALBUM_IS_CATEGORY');
-				}
 				if (!gallery_acl_check('i_upload', $album_id))
 				{
 					if (!$user->data['is_registered'])
@@ -142,7 +142,7 @@ switch ($mode)
 						trigger_error('NOT_AUTHORISED');
 					}
 				}
-				else if (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != 1))
+				else if (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != IMAGE_APPROVED))
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
@@ -161,7 +161,7 @@ switch ($mode)
 						trigger_error('NOT_AUTHORISED');
 					}
 				}
-				else if (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != 1))
+				else if (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != IMAGE_APPROVED))
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
@@ -180,7 +180,7 @@ switch ($mode)
 						trigger_error('NOT_AUTHORISED');
 					}
 				}
-				else if (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != 1))
+				else if (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != IMAGE_APPROVED))
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
@@ -210,16 +210,10 @@ switch ($mode)
 		}
 	break;
 	case 'comment':
-		if (($image_data['image_status'] != 1) && !gallery_acl_check('m_status', $album_id))
+		if (($image_data['image_status'] != IMAGE_APPROVED) && !gallery_acl_check('m_status', $album_id))
 		{
-			trigger_error('IMAGE_LOCKED');
+			trigger_error('NOT_AUTHORISED');
 		}
-		$sql = 'SELECT *
-			FROM ' . GALLERY_COMMENTS_TABLE . "
-			WHERE comment_id = '$comment_id'";
-		$result = $db->sql_query($sql);
-		$comment_data = $db->sql_fetchrow($result);
-
 		switch ($submode)
 		{
 			case 'add':
@@ -339,7 +333,9 @@ switch ($mode)
 			case 'unwatch':
 			if ($submode == 'unwatch')
 			{
-				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . " WHERE album_id = $album_id AND user_id = " . $user->data['user_id'];
+				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . '
+					WHERE album_id = ' . (int) $album_id . '
+						AND user_id = ' . $user->data['user_id'];
 				$db->sql_query($sql);
 				$message = $user->lang['UNWATCHED_ALBUM'] . '<br />';
 				$submit = true; // For redirect
@@ -372,7 +368,7 @@ switch ($mode)
 					WHERE image_user_id = ' . $user->data['user_id'] . '
 						AND image_album_id = ' . $album_id;
 				$result = $db->sql_query($sql);
-				$own_images = $db->sql_fetchfield('count');
+				$own_images = (int) $db->sql_fetchfield('count');
 				$db->sql_freeresult($result);
 				if ($own_images >= gallery_acl_check('i_count', $album_id))
 				{
@@ -403,13 +399,7 @@ switch ($mode)
 						{
 							$loop = $loop + 1;
 							$images = $images + 1;
-							if ($gallery_config['gd_version'] == 0)
-							{
-								$image_data['thumbnail_type']	= $_FILES['thumbnail']['type'][$i];
-								$image_data['thumbnail_size']	= $_FILES['thumbnail']['size'][$i];
-								$image_data['thumbnail_tmp']	= $_FILES['thumbnail']['tmp_name'][$i];
-							}
-							// Watch for 8-times max-file-sizewe will watch for the real size after resize, if enabled
+							// Watch for 8-times max-file-size, we will watch for the real size after resize, if enabled
 							if ((!$image_data['image_size']) || ($image_data['image_size'] > (8 * $gallery_config['max_file_size'])))
 							{
 								trigger_error('BAD_UPLOAD_FILE_SIZE');
@@ -520,8 +510,8 @@ switch ($mode)
 										$thumbnail_height	= $gallery_config['max_height'];
 										$thumbnail_width	= round($gallery_config['max_width'] * (($image_data['width'] / $gallery_config['max_width']) / ($image_data['height'] / $gallery_config['max_height'])));
 									}
-									$thumbnail = ($gallery_config['gd_version'] == 1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
-									$resize_function = ($gallery_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
+									$thumbnail = ($gallery_config['gd_version'] == GDLIB1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
+									$resize_function = ($gallery_config['gd_version'] == GDLIB1) ? 'imagecopyresized' : 'imagecopyresampled';
 									$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $image_data['width'], $image_data['height']);
 									switch ($image_data['image_type2'])
 									{
@@ -746,7 +736,7 @@ switch ($mode)
 						'reporter_id'				=> $user->data['user_id'],
 						'report_note'				=> $report_message,
 						'report_time'				=> time(),
-						'report_status'				=> 1,
+						'report_status'				=> REPORT_OPEN,
 					);
 
 					if (!$error)
@@ -796,7 +786,9 @@ switch ($mode)
 			case 'unwatch':
 			if ($submode == 'unwatch')
 			{
-				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . " WHERE image_id = $image_id AND user_id = " . $user->data['user_id'];
+				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . "
+					WHERE image_id = $image_id
+						AND user_id = " . $user->data['user_id'];
 				$db->sql_query($sql);
 				$message = $user->lang['UNWATCHED_IMAGE'] . '<br />';
 				$submit = true; // For redirect
@@ -831,7 +823,9 @@ switch ($mode)
 			case 'unfavorite':
 			if ($submode == 'unfavorite')
 			{
-				$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . " WHERE image_id = $image_id AND user_id = " . $user->data['user_id'];
+				$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . "
+					WHERE image_id = $image_id
+						AND user_id = " . $user->data['user_id'];
 				$db->sql_query($sql);
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 					SET image_favorited = image_favorited - 1
@@ -868,6 +862,10 @@ switch ($mode)
 
 					$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . "
 						WHERE rate_image_id = $image_id";
+					$db->sql_query($sql);
+
+					$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . "
+						WHERE report_image_id = $image_id";
 					$db->sql_query($sql);
 
 					$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . "
@@ -1265,7 +1263,7 @@ function upload_image(&$image_data)
 		'image_user_ip'			=> $user->ip,
 		'image_time'			=> $image_data['image_time'],
 		'image_album_id'		=> $image_data['image_album_id'],
-		'image_status'			=> (gallery_acl_check('i_approve', $album_id)) ? 1 : 0,
+		'image_status'			=> (gallery_acl_check('i_approve', $album_id)) ? IMAGE_APPROVED : IMAGE_UNAPPROVED,
 		'filesize_upload'		=> $image_data['image_filesize'],
 	);
 

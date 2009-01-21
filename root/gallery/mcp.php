@@ -167,7 +167,7 @@ if ($action && $image_id_ary)
 				handle_image_counter($image_id_ary, false);
 
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-					SET image_status = 0
+					SET image_status = ' . IMAGE_UNAPPROVED . '
 					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
 				$db->sql_query($sql);
 
@@ -194,7 +194,7 @@ if ($action && $image_id_ary)
 				handle_image_counter($image_id_ary, true, true);
 
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-					SET image_status = 1
+					SET image_status = ' . IMAGE_APPROVED . '
 					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
 				$db->sql_query($sql);
 
@@ -222,7 +222,7 @@ if ($action && $image_id_ary)
 				handle_image_counter($image_id_ary, false);
 
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-					SET image_status = 2
+					SET image_status = ' . IMAGE_LOCKED . '
 					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
 				$db->sql_query($sql);
 
@@ -293,7 +293,7 @@ if ($action && $image_id_ary)
 			{
 				$sql_ary = array(
 					'report_manager'		=> $user->data['user_id'],
-					'report_status'			=> 2,
+					'report_status'			=> REPORT_LOCKED,
 				);
 				$sql = 'UPDATE ' . GALLERY_REPORTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 					WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
@@ -310,7 +310,7 @@ if ($action && $image_id_ary)
 				$db->sql_freeresult($result);
 
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-					SET image_reported = 0
+					SET image_reported = ' . REPORT_UNREPORT . '
 					WHERE ' . $db->sql_in_set('image_reported', $image_id_ary);
 				$db->sql_query($sql);
 
@@ -326,7 +326,7 @@ if ($action && $image_id_ary)
 			{
 				$sql_ary = array(
 					'report_manager'		=> $user->data['user_id'],
-					'report_status'			=> 1,
+					'report_status'			=> REPORT_OPEN,
 				);
 				$sql = 'UPDATE ' . GALLERY_REPORTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 					WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
@@ -334,7 +334,7 @@ if ($action && $image_id_ary)
 
 				$sql = 'SELECT report_image_id, report_id
 					FROM ' . GALLERY_REPORTS_TABLE . '
-					WHERE report_status = 1
+					WHERE report_status = ' . REPORT_OPEN . '
 						AND ' . $db->sql_in_set('report_id', $image_id_ary);
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
@@ -381,7 +381,7 @@ if ($action && $image_id_ary)
 				$db->sql_freeresult($result);
 
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-					SET image_reported = 0
+					SET image_reported = ' . REPORT_UNREPORT . '
 					WHERE ' . $db->sql_in_set('image_reported', $image_id_ary);
 				$db->sql_query($sql);
 

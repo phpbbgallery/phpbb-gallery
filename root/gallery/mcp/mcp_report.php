@@ -28,7 +28,7 @@ if (!in_array($sort_key, $sort_by_sql))
 	$sort_key = 'image_time';
 }
 
-$m_status = ' AND i.image_status = 1';
+$m_status = ' AND i.image_status = ' . IMAGE_APPROVED;
 if (gallery_acl_check('m_status', $album_id))
 {
 	$m_status = '';
@@ -36,21 +36,22 @@ if (gallery_acl_check('m_status', $album_id))
 
 if ($mode == 'report_open')
 {
-	$report_status = 1;
+	$report_status = REPORT_OPEN;
 }
 else
 {
-	$report_status = 2;
+	$report_status = REPORT_LOCKED;
 }
+
 $sql = 'SELECT COUNT(i.image_id) images
-	FROM ' . GALLERY_REPORTS_TABLE . " r
-	LEFT JOIN " . GALLERY_IMAGES_TABLE . " i
+	FROM ' . GALLERY_REPORTS_TABLE . ' r
+	LEFT JOIN ' . GALLERY_IMAGES_TABLE . " i
 		ON r.report_image_id = i.image_id
 	WHERE r.report_album_id = $album_id
 		AND r.report_status = $report_status
 		$m_status";
 $result = $db->sql_query($sql);
-$count_images = $db->sql_fetchfield('images');
+$count_images = (int) $db->sql_fetchfield('images');
 $db->sql_freeresult($result);
 
 $sql = 'SELECT r.*, u.username reporter_name, u.user_colour reporter_colour, m.username mod_username, m.user_colour mod_user_colour, i.*
@@ -66,6 +67,7 @@ $sql = 'SELECT r.*, u.username reporter_name, u.user_colour reporter_colour, m.u
 		$m_status
 	ORDER BY $sort_key $sort_dir";
 $result = $db->sql_query_limit($sql, $images_per_page, $start);
+
 while ($row = $db->sql_fetchrow($result))
 {
 	$template->assign_block_vars('image_row', array(
@@ -83,24 +85,13 @@ while ($row = $db->sql_fetchrow($result))
 }
 $db->sql_freeresult($result);
 
-if ($report_status == 2)
+if ($report_status == REPORT_LOCKED)
 {
-	$desc_string = $user->lang['WAITING_REPORTED_DONE'];
+	$desc_string = $user->lang('WAITING_REPORTED_DONE', $count_images);
 }
 else
 {
-	switch ($count_images)
-	{
-		case 0:
-			$desc_string = $user->lang['WAITING_REPORTED_NONE'];
-		break;
-		case 1:
-			$desc_string = sprintf($user->lang['WAITING_REPORTED_IMAGE'], $count_images);
-		break;
-		default:
-			$desc_string = sprintf($user->lang['WAITING_REPORTED_IMAGES'], $count_images);
-		break;
-	}
+	$desc_string = $user->lang('WAITING_REPORTED_IMAGE', $count_images);
 }
 
 
@@ -123,8 +114,8 @@ $template->assign_vars(array(
 	'REPORTED_IMG'				=> $user->img('icon_topic_reported', 'IMAGE_REPORTED'),
 	'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'IMAGE_UNAPPROVED'),
 	'S_MCP_ACTION'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx" , "mode=$mode&amp;album_id=$album_id"),
-	'DISP_FAKE_THUMB'			=> (empty($gallery_config['disp_fake_thumb'])) ? 0 : $gallery_config['disp_fake_thumb'],
-	'FAKE_THUMB_SIZE'			=> (empty($gallery_config['fake_thumb_size'])) ? 50 : $gallery_config['fake_thumb_size'],
+	'DISP_FAKE_THUMB'			=> $gallery_config['disp_fake_thumb'],
+	'FAKE_THUMB_SIZE'			=> $gallery_config['fake_thumb_size'],
 ));
 
 ?>

@@ -103,19 +103,31 @@ $lang = array_merge($lang, array(
 	'REPORTER'						=> 'Meldender Benutzer',
 	'REPORTER_AND_ALBUM'			=> 'Meldender Benutzer & Album',
 
-	'WAITING_APPROVED_IMAGE'		=> 'Insgesamt ist <span style="font-weight: bold;">%s</span> Bild freigeschaltet.',
-	'WAITING_APPROVED_IMAGES'		=> 'Insgesamt sind <span style="font-weight: bold;">%s</span> Bilder freigeschaltet.',
-	'WAITING_APPROVED_NONE'			=> 'Es sind keine Bilder freigeschaltet.',
-	'WAITING_LOCKED_IMAGE'			=> 'Insgesamt ist <span style="font-weight: bold;">%s</span> Bild gesperrt.',
-	'WAITING_LOCKED_IMAGES'			=> 'Insgesamt sind <span style="font-weight: bold;">%s</span> Bilder gesperrt.',
-	'WAITING_LOCKED_NONE'			=> 'Es sind keine Bilder gesperrt.',
-	'WAITING_REPORTED_DONE'			=> 'Es sind keine Meldungen erledigt.',
-	'WAITING_REPORTED_IMAGE'		=> 'Insgesamt wartet <span style="font-weight: bold;">%s</span> Meldung auf Überprüfung.',
-	'WAITING_REPORTED_IMAGES'		=> 'Insgesamt warten <span style="font-weight: bold;">%s</span> Meldungen auf Überprüfung.',
-	'WAITING_REPORTED_NONE'			=> 'Es wurden keine Bilder gemeldet.',
-	'WAITING_UNAPPROVED_IMAGE'		=> 'Insgesamt wartet <span style="font-weight: bold;">%s</span> Bild auf Freischaltung.',
-	'WAITING_UNAPPROVED_IMAGES'		=> 'Insgesamt warten <span style="font-weight: bold;">%s</span> Bilder auf Freischaltung.',
-	'WAITING_UNAPPROVED_NONE'		=> 'Es sind keine Bilder in der Warteschlange.',
+	'WAITING_APPROVED_IMAGE'		=> array(
+		0			=> 'Es sind keine Bilder freigeschaltet.',
+		1			=> 'Insgesamt ist <span style="font-weight: bold;">1</span> Bild freigeschaltet.',
+		2			=> 'Insgesamt sind <span style="font-weight: bold;">%s</span> Bilder freigeschaltet.',
+	),
+	'WAITING_LOCKED_IMAGE'		=> array(
+		0			=> 'Es sind keine Bilder gesperrt.',
+		1			=> 'Insgesamt ist <span style="font-weight: bold;">1</span> Bild gesperrt.',
+		2			=> 'Insgesamt sind <span style="font-weight: bold;">%s</span> Bilder gesperrt.',
+	),
+	'WAITING_REPORTED_DONE'		=> array(
+		0			=> 'Es sind keine Meldungen erledigt.',
+		1			=> 'Insgesamt ist <span style="font-weight: bold;">1</span> Meldung erledigt.',
+		2			=> 'Insgesamt sind <span style="font-weight: bold;">%s</span> Meldungen erledigt.',
+	),
+	'WAITING_REPORTED_IMAGE'		=> array(
+		0			=> 'Es wurden keine Bilder gemeldet.',
+		1			=> 'Insgesamt wartet <span style="font-weight: bold;">1</span> Meldung auf Überprüfung.',
+		2			=> 'Insgesamt warten <span style="font-weight: bold;">%s</span> Meldungen auf Überprüfung.',
+	),
+	'WAITING_UNAPPROVED_IMAGE'		=> array(
+		0			=> 'Es sind keine Bilder in der Warteschlange.',
+		1			=> 'Insgesamt wartet <span style="font-weight: bold;">1</span> Bild auf Freischaltung.',
+		2			=> 'Insgesamt warten <span style="font-weight: bold;">%s</span> Bilder auf Freischaltung.',
+	),
 ));
 
 ?>

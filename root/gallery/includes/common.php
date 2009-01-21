@@ -32,7 +32,7 @@ $template->assign_vars(array(
 	'U_G_SEARCH_TOPRATED'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=toprated'),
 ));
 
-// Don't display Gallery-NavLink / activate Gallery-Tab on "recent-random-images"
+// Do not display Gallery-NavLink / activate Gallery-Tab on "recent-random-images"
 $recent_image_addon = isset($recent_image_addon);
 if (!$recent_image_addon)
 {

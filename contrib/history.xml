@@ -59,6 +59,7 @@
           <change><![CDATA[[Change] Unreported: Build Config-Module like acp_board.php]]></change>
           <change><![CDATA[[Change] Unreported: Author » Uploaded By]]></change>
 
+          <change><![CDATA[[Fix] Unreported: Not using constants]]></change>
           <change><![CDATA[[Fix] Unreported: Destroyed layout on index when only viewing Personals as album]]></change>
           <change><![CDATA[[Fix] Report #436: Create Subalbum button visible when it should not]]></change>
           <change><![CDATA[[Fix] Unreported: Missing module-permissions on update]]></change>

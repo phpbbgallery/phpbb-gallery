@@ -271,22 +271,19 @@ function gallery_acl_album_ids($permission, $mode = 'array')
 /**
 * User authorisation levels output
 *
-* @param	string	$mode			Can be forum or topic. Not in use at the moment.
-* @param	int		$forum_id		The current forum the user is in.
-* @param	int		$forum_status	The forums status bit.
+* @param	string	$mode			Can only be 'album' so far.
+* @param	int		$album_id		The current album the user is in.
+* @param	int		$album_status	The albums status bit.
 *
 * borrowed from phpBB3
 * @author: phpBB Group
 * @function: gen_forum_auth_level
 */
-function gen_album_auth_level($mode, $album_id, $album_status = 1)
+function gen_album_auth_level($mode, $album_id, $album_status)
 {
 	global $template, $user, $gallery_config, $album_access_array;
 
-	$locked = ($album_status == ITEM_LOCKED && ($album_access_array[$album_id]['a_moderate'] != 1)) ? true : false;
-	$permissions = array('i_approve', 'i_lock', 'i_report', 'i_count', 'a_moderate', 'album_count');
-	$permissions = array_merge($permissions, array('i_rate'));
-	$permissions = array_merge($permissions, array('c_post', 'c_edit', 'c_delete'));
+	$locked = ($album_status == ALBUM_LOCKED && gallery_acl_check('m_', $album_id)) ? true : false;
 
 	$rules = array(
 		(gallery_acl_check('i_view', $album_id) && !$locked) ? $user->lang['ALBUM_VIEW_CAN'] : $user->lang['ALBUM_VIEW_CANNOT'],
@@ -294,11 +291,11 @@ function gen_album_auth_level($mode, $album_id, $album_status = 1)
 		(gallery_acl_check('i_edit', $album_id) && !$locked) ? $user->lang['ALBUM_EDIT_CAN'] : $user->lang['ALBUM_EDIT_CANNOT'],
 		(gallery_acl_check('i_delete', $album_id) && !$locked) ? $user->lang['ALBUM_DELETE_CAN'] : $user->lang['ALBUM_DELETE_CANNOT'],
 	);
-	if ($gallery_config['comment'])
+	if ($gallery_config['allow_comments'] && gallery_acl_check('c_read', $album_id))
 	{
 		$rules[] = (gallery_acl_check('c_post', $album_id) && !$locked) ? $user->lang['ALBUM_COMMENT_CAN'] : $user->lang['ALBUM_COMMENT_CANNOT'];
 	}
-	if ($gallery_config['rate'])
+	if ($gallery_config['allow_rates'])
 	{
 		$rules[] = (gallery_acl_check('i_rate', $album_id) && !$locked) ? $user->lang['ALBUM_RATE_CAN'] : $user->lang['ALBUM_RATE_CANNOT'];
 	}

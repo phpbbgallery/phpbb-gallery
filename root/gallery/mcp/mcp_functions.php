@@ -52,7 +52,7 @@ function build_gallery_mcp_navigation ($album_id, $mode, $option_id = false)
 	{
 		$nav_subsections['report'][] = array('name' => 'GALLERY_MCP_REPO_DETAIL', 'mode' => 'report_details');
 	}
-	//hide tabs if permissions are denied
+	// Hide tabs if permissions are denied
 	if (!gallery_acl_check('m_report', $album_id))
 	{
 		unset($nav_tabs['report']);

@@ -31,22 +31,22 @@ if (!in_array($sort_key, $sort_by_sql))
 $where_case = '';
 if ($mode == 'queue_unapproved')
 {
-	$where_case = 'AND image_status = 0';
+	$where_case = 'AND image_status = ' . IMAGE_UNAPPROVED;
 }
 else if ($mode == 'queue_approved')
 {
-	$where_case = 'AND image_status = 1';
+	$where_case = 'AND image_status = ' . IMAGE_APPROVED;
 }
 else if ($mode == 'queue_locked')
 {
-	$where_case = 'AND image_status = 2';
+	$where_case = 'AND image_status = ' . IMAGE_LOCKED;
 }
 $sql = 'SELECT COUNT(image_id) images
 	FROM ' . GALLERY_IMAGES_TABLE . "
 	WHERE image_album_id = $album_id
 	$where_case";
 $result = $db->sql_query($sql);
-$count_images = $db->sql_fetchfield('images');
+$count_images = (int) $db->sql_fetchfield('images');
 $db->sql_freeresult($result);
 
 $sql = 'SELECT image_time, image_name, image_id, image_user_id, image_username, image_user_colour
@@ -81,18 +81,7 @@ else if ($mode == 'queue_locked')
 {
 	$case = 'LOCKED';
 }
-switch ($count_images)
-{
-	case 0:
-		$desc_string = $user->lang['WAITING_' . $case . '_NONE'];
-	break;
-	case 1:
-		$desc_string = sprintf($user->lang['WAITING_' . $case . '_IMAGE'], $count_images);
-	break;
-	default:
-		$desc_string = sprintf($user->lang['WAITING_' . $case . '_IMAGES'], $count_images);
-	break;
-}
+$desc_string = $user->lang('WAITING_' . $case . '_IMAGE', $count_images);
 
 $template->assign_vars(array(
 	'S_SORT_DESC'			=> ($sort_dir == 'DESC') ? true : false,
@@ -112,8 +101,8 @@ $template->assign_vars(array(
 	'REPORTED_IMG'				=> $user->img('icon_topic_reported', 'IMAGE_REPORTED'),
 	'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'IMAGE_UNAPPROVED'),
 	'S_MCP_ACTION'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx" , "mode=$mode&amp;album_id=$album_id"),
-	'DISP_FAKE_THUMB'			=> (empty($gallery_config['disp_fake_thumb'])) ? 0 : $gallery_config['disp_fake_thumb'],
-	'FAKE_THUMB_SIZE'			=> (empty($gallery_config['fake_thumb_size'])) ? 50 : $gallery_config['fake_thumb_size'],
+	'DISP_FAKE_THUMB'			=> $gallery_config['disp_fake_thumb'],
+	'FAKE_THUMB_SIZE'			=> $gallery_config['fake_thumb_size'],
 ));
 
 ?>
