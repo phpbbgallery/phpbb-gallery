@@ -13,7 +13,7 @@
 die ('Please read the first lines of this script for instructions on how to enable it');
 
 /**
-* The sciprt itself must be moved to GALLERY_ROOT_PATH
+* The script itself must be moved to GALLERY_ROOT_PATH
 * The images to import, must lay in
 * $phpbb_root_path/GALLERY_IMAGE_PATH/massimport/
 *                                                city_name/
