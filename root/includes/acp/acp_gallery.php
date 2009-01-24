@@ -546,17 +546,18 @@ class acp_gallery
 				$result = $db->sql_query($sql);
 				while($row = $db->sql_fetchrow($result))
 				{
-					$perm_data = array(
+					$perm_data[] = array(
 						'perm_role_id'			=> $row['perm_role_id'],
 						'perm_album_id'			=> $album_id,
 						'perm_user_id'			=> $row['perm_user_id'],
 						'perm_group_id'			=> $row['perm_group_id'],
 						'perm_system'			=> $row['perm_system'],
 					);
-					$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $perm_data));
 				}
 				$db->sql_freeresult($result);
+				$db->sql_multi_insert(GALLERY_PERMISSIONS_TABLE, $perm_data);
 
+				$sql_ary = array();
 				$sql = 'SELECT *
 					FROM ' . GALLERY_MODSCACHE_TABLE . '
 					WHERE album_id = ' . $copy_permissions;
@@ -571,9 +572,9 @@ class acp_gallery
 						'group_name'		=> $row['group_name'],
 						'display_on_index'	=> $row['display_on_index'],
 					);
-					$db->sql_query('INSERT INTO ' . GALLERY_MODSCACHE_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 				}
 				$db->sql_freeresult($result);
+				$db->sql_multi_insert(GALLERY_MODSCACHE_TABLE, $sql_ary);
 			}
 			$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
@@ -762,27 +763,28 @@ class acp_gallery
 				$result = $db->sql_query($sql);
 				while($row = $db->sql_fetchrow($result))
 				{
-					$perm_data = array(
+					$perm_data[] = array(
 						'perm_role_id'					=> $row['perm_role_id'],
 						'perm_album_id'					=> $album_id,
 						'perm_user_id'					=> $row['perm_user_id'],
 						'perm_group_id'					=> $row['perm_group_id'],
 						'perm_system'					=> $row['perm_system'],
 					);
-					$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $perm_data));
 				}
 				$db->sql_freeresult($result);
+				$db->sql_multi_insert(GALLERY_PERMISSIONS_TABLE, $perm_data);
 
 				$sql = 'DELETE FROM ' . GALLERY_MODSCACHE_TABLE . '
 					WHERE album_id = ' . $album_id;
 				$db->sql_query($sql);
 
+				$sql_ary = array();
 				$sql = 'SELECT * FROM ' . GALLERY_MODSCACHE_TABLE . '
 					WHERE album_id = ' . $copy_permissions;
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
-					$sql_ary = array(
+					$sql_ary[] = array(
 						'album_id'			=> $album_id,
 						'user_id'			=> $row['user_id'],
 						'username '			=> $row['username'],
@@ -790,9 +792,9 @@ class acp_gallery
 						'group_name'		=> $row['group_name'],
 						'display_on_index'	=> $row['display_on_index'],
 					);
-					$db->sql_query('INSERT INTO ' . GALLERY_MODSCACHE_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 				}
 				$db->sql_freeresult($result);
+				$db->sql_multi_insert(GALLERY_MODSCACHE_TABLE, $sql_ary);
 			}
 			$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);

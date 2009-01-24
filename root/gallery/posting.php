@@ -527,7 +527,6 @@ switch ($mode)
 											@imagegif($thumbnail, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
 										break;
 									}
-									@chmod($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['thumbnail'], 0777);
 								}
 								else
 								{
