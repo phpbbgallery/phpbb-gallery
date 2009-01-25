@@ -70,6 +70,7 @@ You may install it, to be informed about future versions, as I'm not going to se
       <edit>
         <find><![CDATA[$total_users	= $config['num_users'];]]></find>
         <action type="after-add"><![CDATA[$total_images	= $config['num_images'];
+$user->add_lang('mods/info_acp_gallery');
 $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OTHER';]]></action>
       </edit>
       <edit>
