@@ -13,7 +13,7 @@
 die ('Please read the first lines of this script for instructions on how to enable it');
 
 /**
-* The script itself must be moved to GALLERY_ROOT_PATH
+* The script itself must be in develop/
 * The images to import, must lay in
 * $phpbb_root_path/GALLERY_IMAGE_PATH/massimport/
 *                                                city_name/
@@ -25,7 +25,7 @@ die ('Please read the first lines of this script for instructions on how to enab
 define('IMAGE_USER_ID', 2);					// User_ID of the Bulking user
 define('IMAGE_USERNAME', 'nickvergessen');	// Name of the Bulking user
 define('IMAGE_USER_COLOUR', 'AA0000');		// Colour of the Bulking user
-define('COPY_PERMISSIONS', 0);				// Album_ID which has the permissions that are going to be copied
+define('COPY_PERMISSIONS', 2);				// Album_ID which has the permissions that are going to be copied
 
 /**
 * @ignore
@@ -305,7 +305,7 @@ foreach ($results as $image)
 		'image_user_colour'		=> IMAGE_USER_COLOUR,
 		'image_user_ip'			=> $user->ip,
 		'image_time'			=> $time,
-		'image_album_id'		=> $albums_tree [$album_path[0]] [$album_path[1]] [$album_path[2]],
+		'image_album_id'		=> (int) $albums_tree [$album_path[0]] [$album_path[1]] [$album_path[2]],
 		'image_status'			=> IMAGE_APPROVED,
 		'filesize_upload'		=> filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename),
 	);
@@ -320,7 +320,7 @@ foreach ($refresh_albums as $album)
 }
 if ($results)
 {
-	meta_refresh(1, append_sid("{$phpbb_root_path}{$gallery_root_path}massimport.$phpEx", 'time=' . $time));
+	meta_refresh(1, append_sid("{$phpbb_root_path}develop/massimport.$phpEx", 'time=' . $time));
 	trigger_error('There are still images left to import, please be patient!');
 }
 else
