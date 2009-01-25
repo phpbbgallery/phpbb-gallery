@@ -33,7 +33,7 @@ You may install it, to be informed about future versions, as I'm not going to se
     <mod-version>0.4.1</mod-version>
     <installation>
       <level>intermediate</level>
-      <time>1200</time>
+      <time>3600</time>
       <target-version>3.0.4</target-version>
     </installation>
     <link-group>
@@ -68,9 +68,8 @@ You may install it, to be informed about future versions, as I'm not going to se
     </copy>
     <open src="index.php">
       <edit>
-        <find><![CDATA[$l_total_topic_s = ($total_topics == 0) ? 'TOTAL_TOPICS_ZERO' : 'TOTAL_TOPICS_OTHER';]]></find>
-        <action type="after-add"><![CDATA[$user->add_lang('mods/info_acp_gallery');
-$total_images = $config['num_images'];
+        <find><![CDATA[$total_users	= $config['num_users'];]]></find>
+        <action type="after-add"><![CDATA[$total_images	= $config['num_images'];
 $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OTHER';]]></action>
       </edit>
       <edit>
@@ -227,7 +226,7 @@ $user->add_lang('mods/gallery');]]></action>
       </edit>
       <edit>
         <find><![CDATA['jabber'			=> '',]]></find>
-        <action type="after-add"><![CDATA['gallery_album'	=> '',]]></action>
+        <action type="after-add"><![CDATA['gallery_album'		=> '',]]></action>
       </edit>
       <edit>
         <find><![CDATA['jabber'		=> ($row['user_jabber'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=jabber&amp;u=$poster_id") : '',]]></find>

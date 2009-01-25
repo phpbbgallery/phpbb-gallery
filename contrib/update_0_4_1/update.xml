@@ -65,6 +65,19 @@ You may install it, to be informed about future versions, as I'm not going to se
       <file from="root/styles/prosilver/template/gallery/*.*" to="styles/prosilver/template/gallery/*.*" />
       <file from="root/styles/prosilver/theme/*.*" to="styles/prosilver/theme/*.*" />
     </copy>
+    <open src="index.php">
+      <edit>
+        <find><![CDATA[$total_users	= $config['num_users'];]]></find>
+        <action type="after-add"><![CDATA[$total_images	= $config['num_images'];
+$l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OTHER';]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[$user->add_lang('mods/info_acp_gallery');
+$total_images = $config['num_images'];
+$l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OTHER';]]></find>
+        <action type="replace-with"><![CDATA[]]></action>
+      </edit>
+    </open>
     <open src="includes/constants.php">
       <edit>
         <comment lang="de"><![CDATA[Wenn die 4 bereits von einem anderem MOD als Log benutzt wird, benutze einfach die nächste freie Zahl.]]></comment>
