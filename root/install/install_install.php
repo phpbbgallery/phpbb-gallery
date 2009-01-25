@@ -231,7 +231,7 @@ class install_install extends module
 		nv_add_index(SESSIONS_TABLE, 'session_aid', array('session_album_id'));
 
 		// Set default config
-		set_config('num_images', 1, true);
+		set_config('num_images', 0, true);
 		set_config('gallery_total_images', 1);
 		set_config('gallery_user_images_profil', 1);
 		set_config('gallery_personal_album_profil', 1);
