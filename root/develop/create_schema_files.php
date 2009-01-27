@@ -16,7 +16,7 @@
 
 @set_time_limit(0);
 
-$schema_path = '../install/schemas/phpbb_gallery_contests/';
+$schema_path = '../install/schemas//';
 
 if (!is_writable($schema_path))
 {
@@ -867,7 +867,7 @@ function get_schema_struct()
 		'PRIMARY_KEY'	=> 'config_name',
 	);
 //*/
-//*
+/*
 	$schema_data['phpbb_gallery_contests'] = array(
 		'COLUMNS'		=> array(
 			'contest_id'			=> array('UINT', NULL, 'auto_increment'),
