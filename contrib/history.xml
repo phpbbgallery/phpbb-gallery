@@ -2,7 +2,7 @@
 <?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
 <!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
 <!-- $Id$ -->
-<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.1.xsd">
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.2.xsd">
   <header>
     <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
     <title lang="en-gb">phpBB Gallery</title>
@@ -12,21 +12,27 @@
         <email>nickvergessen@gmx.de</email>
         <username>nickvergessen</username>
         <homepage>http://www.flying-bits.org</homepage>
-        <contributions />
+        <contributions-group>
+          <contributions status="current" from="2007-11-09" position="Main-Developer" />
+          <contributions status="past" from="2007-10-24" to="2007-11-15" position="Developer" />
+          <contributions status="past" from="2007-10-18" to="2007-10-24" position="Bug-Fixer" />
+        </contributions-group>
       </author>
       <author>
-        <realname>Bug-Fixer: Stefan Temath</realname>
+        <realname>Stefan Temath</realname>
         <email>dr.death@lpi-clan.de</email>
         <username>Dr.Death</username>
         <homepage>http://www.lpi-clan.de</homepage>
-        <contributions />
+        <contributions-group>
+          <contributions status="past" from="2007-10-24" to="2008-04-14" position="Bug-Fixer" />
+        </contributions-group>
       </author>
       <author>
-        <realname>Developer from 0.1.0 till 0.1.2</realname>
-        <email></email>
         <username>tsr</username>
         <homepage>http://phpbbgallery.ph.funpic.de</homepage>
-        <contributions />
+        <contributions-group>
+          <contributions status="past" from="2007-10-10" to="2007-11-09" position="Main-Developer" />
+        </contributions-group>
       </author>
     </author-group>
     <mod-version>0.4.1</mod-version>
