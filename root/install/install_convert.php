@@ -266,6 +266,7 @@ class install_convert extends module
 		nv_create_table('phpbb_gallery_albums', $dbms_data);
 		nv_create_table('phpbb_gallery_comments', $dbms_data);
 		nv_create_table('phpbb_gallery_config', $dbms_data);
+		nv_create_table('phpbb_gallery_contests', $dbms_data);
 		nv_create_table('phpbb_gallery_favorites', $dbms_data);
 		nv_create_table('phpbb_gallery_images', $dbms_data);
 		nv_create_table('phpbb_gallery_modscache', $dbms_data);
