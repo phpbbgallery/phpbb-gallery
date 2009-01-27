@@ -59,12 +59,54 @@
 		</form>
 
 <!-- ELSEIF S_CREATE_ALBUM || S_EDIT_ALBUM -->
+
+	<script type="text/javascript">
+	// <![CDATA[
+		/**
+		* Handle displaying/hiding several options based on the album type
+		*
+		* borrowed from phpBB3
+		* @author: phpBB Group
+		* @location: acp_forums.html
+		*/
+		function display_options(value)
+		{
+			if (value == {ALBUM_CONTEST})
+			{
+				dE('album_contest_options', 1);
+			}
+			else if (value == {ALBUM_UPLOAD})
+			{
+				dE('album_contest_options', -1);
+			}
+			else if (value == {ALBUM_CAT})
+			{
+				dE('album_contest_options', -1);
+			}
+		}
+
+		/**
+		* Init the wanted display functionality if javascript is enabled.
+		* If javascript is not available, the user is still able to properly administrate.
+		*/
+		onload = function()
+		{
+
+			<!-- IF not S_ALBUM_CONTEST -->
+				dE('album_contest_options', -1);
+			<!-- ENDIF -->
+		}
+
+	// ]]>
+	</script>
+
 <form id="acp_gallery" method="post" action="{U_ACTION}">
-	<fieldset>
-		<legend>{L_ALBUM_SETTINGS}</legend>
+	<div>
+		<fieldset>
+			<legend>{L_ALBUM_SETTINGS}</legend>
 		<dl>
 			<dt><label for="album_type">{L_ALBUM_TYPE}:</label></dt>
-			<dd><select id="album_type" name="album_type"><option value="0"<!-- IF not ALBUM_TYPE --> selected="selected"<!-- ENDIF -->>{L_ALBUM_CATEGORY}</option><option value="1"<!-- IF ALBUM_TYPE --> selected="selected"<!-- ENDIF -->>{L_ALBUM_NO_CATEGORY}</option></select></dd>
+			<dd><select id="album_type" name="album_type" onchange="display_options(this.options[this.selectedIndex].value);">{S_ALBUM_TYPE}</select></dd>
 		</dl>
 		<dl>
 			<dt><label for="parent_id">{L_ALBUM_PARENT}:</label></dt>
@@ -108,7 +150,25 @@
 			<dt><label for="copy_permissions">{L_COPY_PERMISSIONS}:</label><br /><span>{L_COPY_PERMISSIONS_EXPLAIN}</span></dt>
 			<dd><select id="copy_permissions" name="copy_permissions"><option value="0" selected="selected">{L_DONT_COPY_PERMISSIONS}</option>{S_COPY_OPTIONS}</select></dd>
 		</dl>
-	</fieldset>
+		</fieldset>
+	</div>
+	<div id="album_contest_options">
+		<fieldset>
+			<legend>{L_CONTEST_SETTINGS}</legend>
+		<dl>
+			<dt><label>{L_CONTEST_START}:</label><br/><span>{L_CONTEST_START_EXPLAIN}</span></dt>
+			<dd>{CONTEST_START}</dd>
+		</dl>
+		<dl>
+			<dt><label for="contest_rating">{L_CONTEST_RATING}:</label><br/><span>{L_CONTEST_RATING_EXPLAIN}</span></dt>
+			<dd><input class="text" type="text" id="contest_rating" name="contest_rating" value="{CONTEST_RATING}" maxlength="4" /> {L_DAYS}</dd>
+		</dl>
+		<dl>
+			<dt><label for="contest_end">{L_CONTEST_END}:</label><br /><span>{L_CONTEST_END_EXPLAIN}</span></dt>
+			<dd><input class="text" type="text" id="contest_end" name="contest_end" value="{CONTEST_END}" maxlength="4" /> {L_DAYS}</dd>
+		</dl>
+		</fieldset>
+	</div>
 	<fieldset class="submit-buttons">
 		<legend>{L_SUBMIT}</legend>
 		<p class="submit-buttons">

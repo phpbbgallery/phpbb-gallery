@@ -373,9 +373,15 @@ class install_update extends module
 
 			case '0.4.0':
 			case '0.4.1':
+				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_contest',			array('UINT', 0));
+
 				nv_add_column(GALLERY_IMAGES_TABLE,	'filesize_upload',			array('UINT:20', 0));
 				nv_add_column(GALLERY_IMAGES_TABLE,	'filesize_medium',			array('UINT:20', 0));
 				nv_add_column(GALLERY_IMAGES_TABLE,	'filesize_cache',			array('UINT:20', 0));
+				nv_add_column(GALLERY_IMAGES_TABLE,	'image_contest',			array('UINT:1', 0));
+				nv_add_column(GALLERY_IMAGES_TABLE,	'image_exif_data',			array('TEXT', ''));
+
+				nv_create_table('phpbb_gallery_contests',	$dbms_data);
 			break;
 		}
 
@@ -807,7 +813,6 @@ class install_update extends module
 				set_gallery_config('rrc_gindex_comments', 0);
 
 				//@todo: Delete "confirmed deleted subalbums" #410
-				//@todo: Create Gallery log module #336
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
 			break;

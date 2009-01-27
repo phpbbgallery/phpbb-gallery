@@ -140,10 +140,10 @@ $template->assign_vars(array(
 	'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"),
 
 	'UC_PREVIOUS_IMAGE'	=> generate_image_link('thumbnail', 'image_page', $previous_id, $previous_name, $album_id),
-	'UC_PREVIOUS'		=> generate_image_link('image_name_unbold', 'image_page_prev', $previous_id, $previous_name, $album_id),
+	'UC_PREVIOUS'		=> ($previous_id) ? generate_image_link('image_name_unbold', 'image_page_prev', $previous_id, $previous_name, $album_id) : '',
 	'UC_IMAGE'			=> generate_image_link('medium', $gallery_config['link_imagepage'], $image_id, $image_data['image_name'], $album_id, ((substr($image_data['image_filename'], 0 -3) == 'gif') ? true : false)),
 	'UC_NEXT_IMAGE'		=> generate_image_link('thumbnail', 'image_page', $next_id, $next_name, $album_id),
-	'UC_NEXT'			=> generate_image_link('image_name_unbold', 'image_page_next', $next_id, $next_name, $album_id),
+	'UC_NEXT'			=> ($next_id) ? generate_image_link('image_name_unbold', 'image_page_next', $next_id, $next_name, $album_id) : '',
 
 	'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_IMAGE'),
 	'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_IMAGE'),
@@ -156,7 +156,7 @@ $template->assign_vars(array(
 	'IMAGE_DESC'		=> generate_text_for_display($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], 7),
 	'IMAGE_BBCODE'		=> '[album]' . $image_id . '[/album]',
 	'IMAGE_URL'			=> ($gallery_config['view_image_url']) ? generate_board_url(false) . '/' . $gallery_root_path . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id" : '',
-	'POSTER'			=> get_username_string('full', $image_data['image_user_id'], ($image_data['image_username']) ? $image_data['image_username'] : $user->lang['GUEST'], $image_data['image_user_colour']),
+	'POSTER'			=> (gallery_acl_check('m_status', $album_id) || ($image_data['image_contest'] != IMAGE_CONTEST)) ? get_username_string('full', $image_data['image_user_id'], ($image_data['image_username']) ? $image_data['image_username'] : $user->lang['GUEST'], $image_data['image_user_colour']) : sprintf($user->lang['CONTEST_USERNAME_LONG'], $user->format_date(($album_data['contest_start'] + $album_data['contest_end']), false, true)),
 	'IMAGE_TIME'		=> $user->format_date($image_data['image_time']),
 	'IMAGE_VIEW'		=> $image_data['image_view_count'],
 
@@ -176,9 +176,16 @@ $template->assign_vars(array(
 /**
 * Exif-Data
 */
-if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVAILABLE) && (substr($image_data['image_filename'], -3, 3) == 'jpg') && function_exists('exif_read_data'))
+if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVAILABLE) && (substr($image_data['image_filename'], -3, 3) == 'jpg') && function_exists('exif_read_data') && (gallery_acl_check('m_status', $album_id) || ($image_data['image_contest'] != IMAGE_CONTEST)))
 {
-	$exif = @exif_read_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename'], 0, true);
+	if ($image_data['image_has_exif'] == EXIF_DBSAVED)
+	{
+		$exif = unserialize($image_data['image_exif_data']);
+	}
+	else
+	{
+		$exif = @exif_read_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename'], 0, true);
+	}
 	if (!empty($exif["EXIF"]))
 	{
 		$exif_data = array();
@@ -303,7 +310,7 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 */
 if ($gallery_config['allow_rates'])
 {
-	$allowed_to_rate = $your_rating = false;
+	$allowed_to_rate = $your_rating = $contest_rating_msg = false;
 
 	if ($user->data['is_registered'])
 	{
@@ -324,11 +331,28 @@ if ($gallery_config['allow_rates'])
 	// Check: User didn't rate yet, has permissions, it's not the users own image and the user is logged in
 	if (!$your_rating && gallery_acl_check('i_rate', $album_id) && ($user->data['user_id'] != $image_data['image_user_id']) && ($user->data['user_id'] != ANONYMOUS))
 	{
-		for ($rate_scale = 1; $rate_scale <= $gallery_config['rate_scale']; $rate_scale++)
+		$hide_rate = false;
+		if ($album_data['contest_id'])
 		{
-			$template->assign_block_vars('rate_scale', array(
-				'RATE_POINT'	=> $rate_scale,
-			));
+			if (time() < ($album_data['contest_start'] + $album_data['contest_rating']))
+			{
+				$hide_rate = true;
+				$contest_rating_msg = sprintf($user->lang['CONTEST_RATING_STARTS'], $user->format_date(($album_data['contest_start'] + $album_data['contest_rating']), false, true));
+			}
+			if (($album_data['contest_start'] + $album_data['contest_end']) < time())
+			{
+				$hide_rate = true;
+				$contest_rating_msg = sprintf($user->lang['CONTEST_RATING_ENDED'], $user->format_date(($album_data['contest_start'] + $album_data['contest_end']), false, true));
+			}
+		}
+		if (!$hide_rate)
+		{
+			for ($rate_scale = 1; $rate_scale <= $gallery_config['rate_scale']; $rate_scale++)
+			{
+				$template->assign_block_vars('rate_scale', array(
+					'RATE_POINT'	=> $rate_scale,
+				));
+			}
 		}
 		$allowed_to_rate = true;
 	}
@@ -336,7 +360,9 @@ if ($gallery_config['allow_rates'])
 		'IMAGE_RATING'		=> ($image_data['image_rates'] <> 0) ? sprintf((($image_data['image_rates'] == 1) ? $user->lang['RATE_STRING'] : $user->lang['RATES_STRING']), $image_data['image_rate_avg'] / 100, $image_data['image_rates']) : $user->lang['NOT_RATED'],
 		'S_YOUR_RATING'		=> $your_rating,
 		'S_ALLOWED_TO_RATE'	=> $allowed_to_rate,
+		'CONTEST_RATING'	=> $contest_rating_msg,
 		'S_VIEW_RATE'		=> (gallery_acl_check('i_rate', $album_id)) ? true : false,
+		'S_COMMENT_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=rate"),
 	));
 }
 

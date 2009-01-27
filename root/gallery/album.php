@@ -45,6 +45,35 @@ $sort_key	= request_var('sk', $gallery_config['sort_method']);
 $sort_dir	= request_var('sd', $gallery_config['sort_order']);
 $album_data	= get_album_info($album_id);
 
+// End contest
+if ($album_data['contest_id'] && $album_data['contest_marked'] && ($album_data['contest_end'] < time()))
+{
+	$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+		SET image_contest = ' . IMAGE_NO_CONTEST . '
+		WHERE image_album_id = ' . (int) $album_id;
+	$db->sql_query($sql);
+
+	$sql = 'SELECT image_id
+		FROM ' . GALLERY_IMAGES_TABLE . '
+		WHERE image_album_id = ' . $album_id . '
+		ORDER BY image_rate_avg DESC';
+	$result = $db->sql_query_limit($sql, 3);
+	$first = (int) $db->sql_fetchfield('image_id');
+	$second = (int) $db->sql_fetchfield('image_id');
+	$third = (int) $db->sql_fetchfield('image_id');
+	$db->sql_freeresult($result);
+
+	$sql = 'UPDATE ' . GALLERY_CONTESTS_TABLE . '
+		SET contest_marked = ' . IMAGE_NO_CONTEST . ",
+			contest_first = $first,
+			contest_second = $second,
+			contest_third = $third
+		WHERE contest_id = " . (int) $album_data['contest_id'];
+	$db->sql_query($sql);
+
+	$album_data['contest_marked'] = IMAGE_NO_CONTEST;
+}
+
 /**
 * Build auth-list
 */
@@ -104,8 +133,8 @@ if ($album_data['album_type'] != ALBUM_CAT)
 	$sort_by_text = array('t' => $user->lang['TIME'], 'n' => $user->lang['IMAGE_NAME'], 'vc' => $user->lang['VIEWS']);
 	$sort_by_sql = array('t' => 'image_time', 'n' => 'image_name', 'vc' => 'image_view_count');
 
-	// Do not sort images after upload-username on competitions
-	if ($album_data['album_type'] != ALBUM_COMPETITION)
+	// Do not sort images after upload-username on running contests
+	if ($album_data['contest_marked'] != IMAGE_CONTEST)
 	{
 		$sort_by_text['u'] = $user->lang['SORT_USERNAME'];
 		$sort_by_sql['u'] = 'image_username';
@@ -204,7 +233,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 				}
 
 				// Assign the image to the template-block
-				assign_image_block('image_row.image', $images[$j] /*, $album_data['album_type'], $album_data['album_status']*/);
+				assign_image_block('image_row.image', $images[$j] /*, $album_data['album_status']*/);
 			}
 		}
 	}

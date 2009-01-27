@@ -441,6 +441,10 @@ class acp_gallery
 		$submit = (isset($_POST['submit'])) ? true : false;
 		if (!$submit)
 		{
+			$s_album_type = '';
+			$s_album_type .= '<option value="' . ALBUM_CAT . '">' . $user->lang['ALBUM_TYPE_CAT'] . '</option>';
+			$s_album_type .= '<option value="' . ALBUM_UPLOAD . '" selected="selected">' . $user->lang['ALBUM_TYPE_UPLOAD'] . '</option>';
+			$s_album_type .= '<option value="' . ALBUM_CONTEST . '">' . $user->lang['ALBUM_TYPE_CONTEST'] . '</option>';
 			$template->assign_vars(array(
 				'S_CREATE_ALBUM'				=> true,
 				'ACP_GALLERY_TITLE'				=> $user->lang['GALLERY_ALBUMS_TITLE'],
@@ -451,9 +455,19 @@ class acp_gallery
 				'S_DESC_BBCODE_CHECKED'		=> true,
 				'S_DESC_SMILIES_CHECKED'	=> true,
 				'S_DESC_URLS_CHECKED'		=> true,
+
 				'ALBUM_TYPE'				=> ALBUM_UPLOAD,
+				'ALBUM_CAT'					=> ALBUM_CAT,
+				'ALBUM_UPLOAD'				=> ALBUM_UPLOAD,
+				'ALBUM_CONTEST'				=> ALBUM_CONTEST,
+
+				'CONTEST_START'				=> $user->format_date(time()),
+				'CONTEST_RATING'			=> 0,
+				'CONTEST_END'				=> 0,
+
+				'S_ALBUM_TYPE'				=> $s_album_type,
 				'ALBUM_IMAGE'				=> '',
-				));
+			));
 		}
 		else
 		{
@@ -532,6 +546,25 @@ class acp_gallery
 			$album_data['album_id'] = $db->sql_nextid();
 			$album_id = $album_data['album_id'];
 
+			// Add the contest...
+			if ($album_data['album_type'] == ALBUM_CONTEST)
+			{
+					$contest_data = array(
+						'contest_album_id'	=> $album_id,
+						'contest_start'		=> time(),
+						'contest_rating'	=> request_var('contest_rating', 0) * 86400,
+						'contest_end'		=> request_var('contest_end', 0) * 86400,
+						'contest_marked'	=> true,
+					);
+					$sql = 'INSERT INTO ' . GALLERY_CONTESTS_TABLE . ' ' . $db->sql_build_array('INSERT', $contest_data);
+					$db->sql_query($sql);
+					$album_data['album_contest'] = $db->sql_nextid();
+					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
+						SET album_contest = ' . $album_data['album_contest'] . '
+						WHERE album_id = ' . $album_id;
+					$db->sql_query($sql);
+			}
+
 			$copy_permissions = request_var('copy_permissions', 0);
 			if ($copy_permissions <> 0)
 			{
@@ -603,10 +636,17 @@ class acp_gallery
 			$album_data = get_album_info($album_id);
 			$album_desc_data = generate_text_for_edit($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_options']);
 
+			$s_album_type = '';
+			$s_album_type .= '<option value="' . ALBUM_CAT . (($album_data['album_type'] == ALBUM_CAT) ? '" selected="selected' : '') . '">' . $user->lang['ALBUM_TYPE_CAT'] . '</option>';
+			$s_album_type .= '<option value="' . ALBUM_UPLOAD . (($album_data['album_type'] == ALBUM_UPLOAD) ? '" selected="selected' : '') . '">' . $user->lang['ALBUM_TYPE_UPLOAD'] . '</option>';
+			$s_album_type .= '<option value="' . ALBUM_CONTEST . (($album_data['album_type'] == ALBUM_CONTEST) ? '" selected="selected' : '') . '">' . $user->lang['ALBUM_TYPE_CONTEST'] . '</option>';
 			$template->assign_vars(array(
 				'S_EDIT_ALBUM'				=> true,
 				'ACP_GALLERY_TITLE'			=> $user->lang['EDIT_ALBUM'] . ' :: ' . $album_data['album_name'],
 				'ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['ACP_EDIT_ALBUM_EXPLAIN'],
+				'ALBUM_CAT'					=> ALBUM_CAT,
+				'ALBUM_UPLOAD'				=> ALBUM_UPLOAD,
+				'ALBUM_CONTEST'				=> ALBUM_CONTEST,
 
 				'S_ALBUM_ACTION' 			=> $this->u_action . '&amp;action=edit&amp;album_id=' . $album_id,
 				'S_PARENT_OPTIONS'			=> gallery_albumbox(true, '', $album_data['parent_id'], '', $album_id),
@@ -614,9 +654,17 @@ class acp_gallery
 
 				'ALBUM_NAME' 				=> $album_data['album_name'],
 				'ALBUM_DESC'				=> $album_desc_data['text'],
-				'ALBUM_TYPE'				=> $album_data['album_type'],
+				'S_ALBUM_TYPE'				=> $s_album_type,
+				'S_ALBUM_CAT'				=> ($album_data['album_type'] == ALBUM_CAT) ? true : false,
+				'S_ALBUM_UPLOAD'			=> ($album_data['album_type'] == ALBUM_UPLOAD) ? true : false,
+				'S_ALBUM_CONTEST'			=> ($album_data['album_type'] == ALBUM_CONTEST) ? true : false,
 				'ALBUM_IMAGE'				=> $album_data['album_image'],
 				'ALBUM_IMAGE_SRC'			=> ($album_data['album_image']) ? $phpbb_root_path . $album_data['album_image'] : '',
+
+				'CONTEST_START'				=> $user->format_date((($album_data['contest_start']) ? $album_data['contest_start'] : time())),
+				'CONTEST_RATING'			=> ($album_data['contest_rating'] / 86400),
+				'CONTEST_END'				=> ($album_data['contest_end'] / 86400),
+
 				'S_DESC_BBCODE_CHECKED'		=> ($album_desc_data['allow_bbcode']) ? true : false,
 				'S_DESC_SMILIES_CHECKED'	=> ($album_desc_data['allow_smilies']) ? true : false,
 				'S_DESC_URLS_CHECKED'		=> ($album_desc_data['allow_urls']) ? true : false,
@@ -743,6 +791,66 @@ class acp_gallery
 				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 					SET album_parents = ''";
 				$db->sql_query($sql);
+			}
+
+			// Handle the contest
+			$old_album_data = get_album_info($album_id);
+			if ($album_data['album_type'] == ALBUM_CONTEST)
+			{
+				if ($old_album_data['album_type'] == ALBUM_CONTEST)
+				{
+					$contest_data = array(
+						'contest_rating'	=> request_var('contest_rating', 0) * 86400,
+						'contest_end'		=> request_var('contest_end', 0) * 86400,
+					);
+					$sql = 'UPDATE ' . GALLERY_CONTESTS_TABLE . '
+							SET ' . $db->sql_build_array('UPDATE', $contest_data) . '
+							WHERE contest_id  = ' . (int) $old_album_data['album_contest'];
+					$db->sql_query($sql);
+					if (($contest_data['contest_end'] + $old_album_data['contest_start']) < time())
+					{
+						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+							SET image_contest = ' . IMAGE_NO_CONTEST . '
+							WHERE image_album_id = ' . $album_id;
+						$db->sql_query($sql);
+					}
+					else
+					{
+						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+							SET image_contest = ' . IMAGE_CONTEST . '
+							WHERE image_album_id = ' . $album_id;
+						$db->sql_query($sql);
+					}
+				}
+				else
+				{
+					$contest_data = array(
+						'contest_album_id'	=> $album_id,
+						'contest_start'		=> time(),
+						'contest_rating'	=> request_var('contest_rating', 0) * 86400,
+						'contest_end'		=> request_var('contest_end', 0) * 86400,
+						'contest_marked'	=> true,
+					);
+					$sql = 'INSERT INTO ' . GALLERY_CONTESTS_TABLE . ' ' . $db->sql_build_array('INSERT', $contest_data);
+					$db->sql_query($sql);
+					$album_data['album_contest'] = $db->sql_nextid();
+					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+						SET image_contest = ' . IMAGE_CONTEST . '
+						WHERE image_album_id = ' . $album_id;
+					$db->sql_query($sql);
+				}
+			}
+			else if ($old_album_data['album_type'] == ALBUM_CONTEST)
+			{
+				// We had a contest, but now we delete it.
+				$sql = 'DELETE FROM ' . GALLERY_CONTESTS_TABLE . '
+					WHERE contest_id = ' . $old_album_data['album_contest'];
+				$db->sql_query($sql);
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+					SET image_contest = ' . IMAGE_NO_CONTEST . '
+					WHERE image_album_id = ' . $album_id;
+				$db->sql_query($sql);
+				$album_data['album_contest'] = 0;
 			}
 
 			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' 

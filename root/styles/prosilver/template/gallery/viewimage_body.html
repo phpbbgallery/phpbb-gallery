@@ -139,14 +139,18 @@ function toggleElement(oElement)
 				<dl>
 					<dt><label>{L_YOUR_RATING}:</label></dt>
 					<dd>
-						<select name="rate">
-						<!-- BEGIN rate_scale -->
-							<!-- IF rate_scale.RATE_POINT == 1 --><option value="0">{L_DONT_RATE_IMAGE}</option><!-- ENDIF -->
-							<option value="{rate_scale.RATE_POINT}">{rate_scale.RATE_POINT}</option>
-						<!-- END rate_scale -->
-						</select>
-						<!-- IF not S_ALLOWED_TO_COMMENT -->
-							<input type="submit" name="rate" value="{L_SUBMIT}" class="button1" />
+						<!-- IF .rate_scale -->
+							<select name="rate">
+							<!-- BEGIN rate_scale -->
+								<!-- IF rate_scale.RATE_POINT == 1 --><option value="0">{L_DONT_RATE_IMAGE}</option><!-- ENDIF -->
+								<option value="{rate_scale.RATE_POINT}">{rate_scale.RATE_POINT}</option>
+							<!-- END rate_scale -->
+							</select>
+							<!-- IF not S_ALLOWED_TO_COMMENT and .rate_scale -->
+								<input type="submit" name="submit" value="{L_SUBMIT}" class="button1" />
+							<!-- ENDIF -->
+						<!-- ELSE -->
+							{CONTEST_RATING}
 						<!-- ENDIF -->
 					</dd>
 				</dl>

@@ -71,6 +71,13 @@ $lang = array_merge($lang, array(
 	'COMMENT_STORED'				=> 'Your comment has been saved successfully.',
 	'COMMENT_TOO_LONG'				=> 'Your comment is too long.',
 	'COMMENTS'						=> 'Comments',
+	'CONTEST_RATING_STARTED'		=> 'Rating for this contest started on %s.',
+	'CONTEST_RATING_STARTS'			=> 'Rating for this contest starts on %s.',
+	'CONTEST_RATING_ENDED'			=> 'Rating for this contest ended on %s.',
+	'CONTEST_ENDED'					=> 'This contest ended on %s.',
+	'CONTEST_ENDS'					=> 'This contest ends on %s.',
+	'CONTEST_USERNAME'				=> '<strong>Contest</strong>',
+	'CONTEST_USERNAME_LONG'			=> '<strong>Contest</strong> » The username is hidden, till the end of the contest on %s.',
 
 	'DELETE_COMMENT'				=> 'Delete comment',
 	'DELETE_COMMENT2'				=> 'Delete comment?',

@@ -31,12 +31,18 @@
 		<!-- IF S_ALLOWED_TO_RATE -->
 		<tr class="row1">
 			<td class="row1" width="22%" height="28"><b class="genmed">{L_YOUR_RATING}:</b></td>
-			<td><span class="genmed"><select name="rate">
-				<!-- BEGIN rate_scale -->
-					<!-- IF rate_scale.RATE_POINT == 1 --><option value="0">{L_DONT_RATE_IMAGE}</option><!-- ENDIF -->
-					<option value="{rate_scale.RATE_POINT}">{rate_scale.RATE_POINT}</option>
-				<!-- END rate_scale -->
-				</select></span></td>
+			<td><span class="genmed">
+				<!-- IF .rate_sacle -->
+					<select name="rate">
+					<!-- BEGIN rate_scale -->
+						<!-- IF rate_scale.RATE_POINT == 1 --><option value="0">{L_DONT_RATE_IMAGE}</option><!-- ENDIF -->
+						<option value="{rate_scale.RATE_POINT}">{rate_scale.RATE_POINT}</option>
+					<!-- END rate_scale -->
+					</select>
+				<!-- ELSE -->
+					{CONTEST_RATING}
+				<!-- ENDIF -->
+				</span></td>
 		</tr>
 		<!-- ENDIF -->
 		<tr>

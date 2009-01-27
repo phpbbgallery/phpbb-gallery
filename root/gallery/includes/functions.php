@@ -109,11 +109,13 @@ function get_album_info($album_id)
 {
 	global $db, $user, $gallery_root_path, $phpbb_root_path, $phpEx;
 
-	$sql = 'SELECT a.*, w.watch_id
+	$sql = 'SELECT a.*, c.*, w.watch_id
 		FROM ' . GALLERY_ALBUMS_TABLE . ' a
 		LEFT JOIN ' . GALLERY_WATCH_TABLE . ' w
 			ON a.album_id = w.album_id
 				AND w.user_id = ' . $user->data['user_id'] . '
+		LEFT JOIN ' . GALLERY_CONTESTS_TABLE . ' c
+			ON a.album_id = c.contest_album_id
 		WHERE a.album_id = ' . (int) $album_id;
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
@@ -123,6 +125,17 @@ function get_album_info($album_id)
 	{
 		meta_refresh(3, append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"));
 		trigger_error('ALBUM_NOT_EXIST');
+	}
+
+	if (!isset($row['contest_id']))
+	{
+		$row['contest_id'] = 0;
+		$row['contest_rates_start'] = 0;
+		$row['contest_end'] = 0;
+		$row['contest_marked'] = 0;
+		$row['contest_first'] = 0;
+		$row['contest_second'] = 0;
+		$row['contest_third'] = 0;
 	}
 
 	return $row;

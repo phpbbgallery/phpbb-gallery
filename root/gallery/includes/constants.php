@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 // Album/Image states
 define('ALBUM_CAT', 0);
 define('ALBUM_UPLOAD', 1);
-define('ALBUM_COMPETITION', 2);
+define('ALBUM_CONTEST', 2);
 
 define('ALBUM_UNLOCKED', 0);
 define('ALBUM_LOCKED', 1);
@@ -28,6 +28,9 @@ define('ALBUM_LOCKED', 1);
 define('IMAGE_UNAPPROVED', 0);
 define('IMAGE_APPROVED', 1);
 define('IMAGE_LOCKED', 2);
+
+define('IMAGE_NO_CONTEST', 0);
+define('IMAGE_CONTEST', 1);
 
 define('REPORT_UNREPORT', 0);
 define('REPORT_OPEN', 1);
@@ -41,6 +44,7 @@ define('GDLIB2', 2);
 define('EXIF_UNAVAILABLE', 0);
 define('EXIF_AVAILABLE', 1);
 define('EXIF_UNKNOWN', 2);
+define('EXIF_DBSAVED', 3);
 define('EXIFTIME_OFFSET', 0); // Use this constant, to change the exif-timestamp. Offset in seconds
 
 // Permissions

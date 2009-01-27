@@ -105,11 +105,6 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 		$search_id = 'usersearch';
 	}
 
-	/**
-	* borrowed from phpBB3
-	* @author: phpBB Group
-	*/
-
 	// egosearch is an user search
 	if ($search_id == 'egosearch')
 	{
@@ -191,7 +186,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				$sql_limit = 10 * $per_page;
 				$sql = 'SELECT image_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status = 1)
+					WHERE ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status = ' . IMAGE_APPROVED . ')
 							OR ' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
 					ORDER BY ' . $sql_order;
 			break;
@@ -218,7 +213,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				$sql_limit = $per_page;
 				$sql = 'SELECT image_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status = 1)
+					WHERE ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status = ' . IMAGE_APPROVED . ')
 							OR ' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
 					ORDER BY ' . $sql_order;
 			break;
@@ -235,7 +230,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 					FROM ' . GALLERY_COMMENTS_TABLE . ' c
 					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
 						ON c.comment_image_id = i.image_id
-					WHERE ((' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND i.image_status = 1)
+					WHERE ((' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND i.image_status = ' . IMAGE_APPROVED . ')
 							OR ' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
 						AND ' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('c_read'), false, true) . '
 					ORDER BY ' . $sql_order;
@@ -253,7 +248,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				$sql = 'SELECT image_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
 					WHERE image_rate_points <> 0
-						AND ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status = 1)
+						AND ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status = ' . IMAGE_APPROVED . ')
 							OR ' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
 					ORDER BY ' . $sql_order;
 			}
@@ -280,7 +275,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				$sql = 'SELECT image_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
 					WHERE image_user_id = ' . $user_id . '
-						AND ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status = 1)
+						AND ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status = ' . IMAGE_APPROVED . ' AND image_contest = ' . IMAGE_NO_CONTEST . ')
 							OR ' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
 					ORDER BY ' . $sql_order;
 			break;
@@ -311,7 +306,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 
 		$sql = 'SELECT i.image_id
 			FROM ' . GALLERY_IMAGES_TABLE . ' i
-			WHERE ((' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND i.image_status = 1)
+			WHERE ((' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND i.image_status = ' . IMAGE_APPROVED . ')
 					OR ' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
 				AND (' . $search_query . ')
 				' . (($user_id_ary) ? ' AND ' . $db->sql_in_set('i.image_user_id', $user_id_ary) : '') . '

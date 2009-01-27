@@ -16,7 +16,7 @@
 
 @set_time_limit(0);
 
-$schema_path = '../install/schemas//';
+$schema_path = '../install/schemas/phpbb_gallery_contests/';
 
 if (!is_writable($schema_path))
 {
@@ -810,6 +810,7 @@ function get_schema_struct()
 			'right_id'				=> array('UINT', 2),
 			'album_parents'			=> array('MTEXT_UNI', ''),
 			'album_type'			=> array('UINT:3', 1),
+			'album_contest'			=> array('UINT', 0),
 			'album_name'			=> array('VCHAR:255', ''),
 			'album_desc'			=> array('MTEXT_UNI', ''),
 			'album_desc_options'	=> array('UINT:3', 7),
@@ -864,6 +865,22 @@ function get_schema_struct()
 			'config_value'		=> array('VCHAR:255', ''),
 		),
 		'PRIMARY_KEY'	=> 'config_name',
+	);
+//*/
+//*
+	$schema_data['phpbb_gallery_contests'] = array(
+		'COLUMNS'		=> array(
+			'contest_id'			=> array('UINT', NULL, 'auto_increment'),
+			'contest_album_id'		=> array('UINT', 0),
+			'contest_start'			=> array('UINT:11', 0),
+			'contest_rating'		=> array('UINT:11', 0),
+			'contest_end'			=> array('UINT:11', 0),
+			'contest_marked'		=> array('TINT:1', 0),
+			'contest_first'			=> array('UINT', 0),
+			'contest_second'		=> array('UINT', 0),
+			'contest_third'			=> array('UINT', 0),
+		),
+		'PRIMARY_KEY'	=> 'contest_id',
 	);
 //*/
 /*
@@ -921,8 +938,10 @@ function get_schema_struct()
 			'image_album_id'		=> array('UINT', 0),
 			'image_view_count'		=> array('UINT:11', 0),
 			'image_status'			=> array('UINT:3', 0),
+			'image_contest'			=> array('UINT:1', 0),
 			'image_filemissing'		=> array('UINT:3', 0),
 			'image_has_exif'		=> array('UINT:3', 2),
+			'image_exif_data'		=> array('TEXT', ''),
 			'image_rates'			=> array('UINT', 0),
 			'image_rate_points'		=> array('UINT', 0),
 			'image_rate_avg'		=> array('UINT', 0),

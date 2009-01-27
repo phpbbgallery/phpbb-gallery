@@ -10,6 +10,7 @@ CREATE TABLE phpbb_gallery_albums (
 	right_id mediumint(8) UNSIGNED DEFAULT '2' NOT NULL,
 	album_parents mediumtext NOT NULL,
 	album_type int(3) UNSIGNED DEFAULT '1' NOT NULL,
+	album_contest mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	album_name varchar(255) DEFAULT '' NOT NULL,
 	album_desc mediumtext NOT NULL,
 	album_desc_options int(3) UNSIGNED DEFAULT '7' NOT NULL,

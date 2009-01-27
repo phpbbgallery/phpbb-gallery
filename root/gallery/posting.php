@@ -214,6 +214,14 @@ switch ($mode)
 		{
 			trigger_error('NOT_AUTHORISED');
 		}
+		if (($submode != 'rate') && (!$gallery_config['allow_comments']))
+		{
+			trigger_error('NOT_AUTHORISED');
+		}
+		if (!$submit && ($submode == 'rate'))
+		{
+			trigger_error('NOT_AUTHORISED');
+		}
 		switch ($submode)
 		{
 			case 'add':
@@ -268,6 +276,21 @@ switch ($mode)
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
+				}
+			break;
+
+			case 'rate':
+				if (!gallery_acl_check('i_rate', $album_id))
+				{
+					if (!$user->data['is_registered'])
+					{
+						login_box($image_loginlink , $user->lang['LOGIN_EXPLAIN_UPLOAD']);
+					}
+					else
+					{
+						meta_refresh(3, $image_backlink);
+						trigger_error('NOT_AUTHORISED');
+					}
 				}
 			break;
 
@@ -441,6 +464,7 @@ switch ($mode)
 								'image_album_name'	=> $album_data['album_name'],
 								'image_desc'		=> str_replace('{NUM}', $loop, request_var('message', '', true)),
 								'image_time'		=> time() + $loop,
+								'image_contest'		=> ($album_data['album_contest']) ? IMAGE_CONTEST : IMAGE_NO_CONTEST,
 								'thumbnail'			=> '',
 								'username'			=> request_var('username', $user->data['username']),
 							);
@@ -477,6 +501,19 @@ switch ($mode)
 							$image_size = getimagesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
 							$image_data['width'] = $image_size[0];
 							$image_data['height'] = $image_size[1];
+
+							// Since we are able to resize the images, we loose the exif.
+							$exif = @exif_read_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename'], 0, true);
+							if (!empty($exif["EXIF"]))
+							{
+								$image_data['image_exif_data'] = serialize ($exif);
+								$image_data['image_has_exif'] = EXIF_DBSAVED;
+							}
+							else
+							{
+								$image_data['image_exif_data'] = '';
+								$image_data['image_has_exif'] = EXIF_UNAVAILABLE;
+							}
 
 							if (($image_data['width'] > $gallery_config['max_width']) || ($image_data['height'] > $gallery_config['max_height']))
 							{
@@ -535,6 +572,12 @@ switch ($mode)
 								}
 								$image_data['width'] = $thumbnail_width;
 								$image_data['height'] = $thumbnail_height;
+							}
+							else if ($image_data['image_has_exif'] == EXIF_DBSAVED)
+							{
+								// Image was not resized, so we can pull the Exif from the image to save db-memory.
+								$image_data['image_has_exif'] = EXIF_AVAILABLE;
+								$image_data['image_exif_data'] = '';
 							}
 							$image_data['image_filesize'] = filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
 							if ($image_data['image_filesize'] > $gallery_config['max_file_size'])
@@ -651,13 +694,13 @@ switch ($mode)
 					$image_desc = request_var('message', '', true);
 					$image_name = request_var('image_name', '', true);
 
-					if(empty($image_name))
+					if (empty($image_name))
 					{
 						trigger_error('MISSING_IMAGE_NAME');
 					}
 					$message_parser				= new parse_message();
 					$message_parser->message	= utf8_normalize_nfc($image_desc);
-					if($message_parser->message)
+					if ($message_parser->message)
 					{
 						$message_parser->parse(true, true, true, true, false, true, true, true);
 					}
@@ -908,8 +951,8 @@ switch ($mode)
 	if ($mode == 'comment')
 	{
 		$comment = $comment_username = '';
-		$comment_username_req = false;
-		/*
+		$comment_username_req = $contest_rating_msg = false;
+		/**
 		* Rating-System: now you can comment and rate in one form
 		*/
 		$rate_point = request_var('rate', 0);
@@ -934,8 +977,23 @@ switch ($mode)
 			// Check: User didn't rate yet, has permissions, it's not the users own image and the user is logged in
 			if (!$your_rating && gallery_acl_check('i_rate', $album_id) && ($user->data['user_id'] != $image_data['image_user_id']) && ($user->data['user_id'] != ANONYMOUS))
 			{
+				$hide_rate = false;
+				if ($album_data['contest_id'])
+				{
+					if (time() < ($album_data['contest_start'] + $album_data['contest_rating']))
+					{
+						$hide_rate = true;
+						$contest_rating_msg = sprintf($user->lang['CONTEST_RATING_STARTS'], $user->format_date(($album_data['contest_start'] + $album_data['contest_rating']), false, true));
+					}
+					if (($album_data['contest_start'] + $album_data['contest_end']) < time())
+					{
+						$hide_rate = true;
+						$contest_rating_msg = sprintf($user->lang['CONTEST_RATING_ENDED'], $user->format_date(($album_data['contest_start'] + $album_data['contest_end']), false, true));
+					}
+				}
+
 				// User just rated the image, so we store it
-				if ($rate_point > 0)
+				if (!$hide_rate && $rate_point > 0)
 				{
 					if ($rate_point > $gallery_config['rate_scale'])
 					{
@@ -969,7 +1027,7 @@ switch ($mode)
 					$message .= $user->lang['RATING_SUCCESSFUL'] . '<br />';
 				}
 				// else we show the drop down
-				else
+				else if (!$hide_rate)
 				{
 					for ($rate_scale = 1; $rate_scale <= $gallery_config['rate_scale']; $rate_scale++)
 					{
@@ -979,8 +1037,19 @@ switch ($mode)
 					}
 					$allowed_to_rate = true;
 				}
+				else
+				{
+					$allowed_to_rate = true;
+				}
 			}
-			$template->assign_var('S_ALLOWED_TO_RATE', $allowed_to_rate);
+			$template->assign_vars(array(
+				'S_ALLOWED_TO_RATE'			=> $allowed_to_rate,
+				'CONTEST_RATING'			=> $contest_rating_msg,
+			));
+			if ($submode == 'rate')
+			{
+				$s_album_action = '';
+			}
 		}
 		switch ($submode)
 		{
@@ -1071,6 +1140,7 @@ switch ($mode)
 						$comment_username_req = true;
 					}
 				}
+				$s_album_action = append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=comment&amp;submode=add&amp;album_id=$album_id&amp;image_id=$image_id");
 				$page_title = $user->lang['POST_COMMENT'];
 			break;
 
@@ -1148,6 +1218,7 @@ switch ($mode)
 					$comment = $comment_ary['text'];
 					$comment_username = $comment_data['comment_username'];
 				}
+				$s_album_action = append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=comment&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id&amp;comment_id=$comment_id");
 				$page_title = $user->lang['EDIT_COMMENT'];
 			break;
 
@@ -1216,6 +1287,7 @@ switch ($mode)
 			'U_VIEW_IMAGE'			=> ($image_id) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id") : '',
 			'IMAGE_NAME'			=> ($image_id) ? $image_data['image_name'] : '',
 
+			'S_ALBUM_ACTION'		=> $s_album_action,
 			'S_COMMENT'				=> true,
 		));
 	}
@@ -1264,6 +1336,9 @@ function upload_image(&$image_data)
 		'image_album_id'		=> $image_data['image_album_id'],
 		'image_status'			=> (gallery_acl_check('i_approve', $album_id)) ? IMAGE_APPROVED : IMAGE_UNAPPROVED,
 		'filesize_upload'		=> $image_data['image_filesize'],
+		'image_contest'			=> $image_data['image_contest'],
+		'image_exif_data'		=> $image_data['image_exif_data'],
+		'image_has_exif'		=> $image_data['image_has_exif'],
 	);
 
 	$message_parser				= new parse_message();

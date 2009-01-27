@@ -131,17 +131,29 @@ if ($action && $image_id_ary)
 		case 'images_move':
 			if ($moving_target)
 			{
-				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-					SET image_album_id = ' . $moving_target . '
-					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
-				$db->sql_query($sql);
+				$target_data = get_album_info($moving_target);
+
+				if ($target_data['contest_id'] && (time() < ($target_data['contest_start'] + $target_data['contest_end'])))
+				{
+					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+						SET image_album_id = ' . $moving_target . ',
+							image_contest = ' . IMAGE_CONTEST . '
+						WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+					$db->sql_query($sql);
+				}
+				else
+				{
+					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+						SET image_album_id = ' . $moving_target . ',
+							image_contest = ' . IMAGE_NO_CONTEST . '
+						WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+					$db->sql_query($sql);
+				}
 
 				$sql = 'UPDATE ' . GALLERY_REPORTS_TABLE . '
 					SET report_album_id = ' . $moving_target . '
 					WHERE ' . $db->sql_in_set('report_image_id', $image_id_ary);
 				$db->sql_query($sql);
-
-				$target_data = get_album_info($moving_target);
 
 				foreach ($image_id_ary as $image)
 				{

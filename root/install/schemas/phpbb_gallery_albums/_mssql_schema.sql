@@ -17,6 +17,7 @@ CREATE TABLE [phpbb_gallery_albums] (
 	[right_id] [int] DEFAULT (2) NOT NULL ,
 	[album_parents] [text] DEFAULT ('') NOT NULL ,
 	[album_type] [int] DEFAULT (1) NOT NULL ,
+	[album_contest] [int] DEFAULT (0) NOT NULL ,
 	[album_name] [varchar] (255) DEFAULT ('') NOT NULL ,
 	[album_desc] [text] DEFAULT ('') NOT NULL ,
 	[album_desc_options] [int] DEFAULT (7) NOT NULL ,
