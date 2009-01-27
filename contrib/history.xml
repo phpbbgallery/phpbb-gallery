@@ -60,6 +60,7 @@
           <change><![CDATA[[Change] Unreported: Build Config-Module like acp_board.php]]></change>
           <change><![CDATA[[Change] Unreported: Author » Uploaded By]]></change>
 
+          <change><![CDATA[[Fix] Unreported: Empty links for next/previous in IE]]></change>
           <change><![CDATA[[Fix] Unreported: Comment-form accessable when comments are disabled]]></change>
           <change><![CDATA[[Fix] Unreported: Loosing exif-data when resizing images]]></change>
           <change><![CDATA[[Fix] Unreported: Can't rate when comment system disabled]]></change>
