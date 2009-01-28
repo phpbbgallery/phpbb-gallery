@@ -340,7 +340,7 @@ class install_convert_ts extends module
 		set_gallery_config('comment', '1');
 		set_gallery_config('gd_version', '2');
 		set_gallery_config('watermark_images', 1);
-		set_gallery_config('watermark_source', GALLERY_ROOT_PATH . 'mark.png');
+		set_gallery_config('watermark_source', GALLERY_IMAGE_PATH . 'watermark.png');
 		set_gallery_config('preview_rsz_height', 600);
 		set_gallery_config('preview_rsz_width', 800);
 		set_gallery_config('upload_images', 10);

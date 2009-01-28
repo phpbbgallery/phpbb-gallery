@@ -811,6 +811,7 @@ class install_update extends module
 				set_gallery_config('rrc_gindex_rows', 1);
 				set_gallery_config('rrc_gindex_columns', 4);
 				set_gallery_config('rrc_gindex_comments', 0);
+				set_gallery_config('watermark_source', GALLERY_IMAGE_PATH . 'watermark.png');
 
 				//@todo: Delete "confirmed deleted subalbums" #410
 
