@@ -985,7 +985,7 @@ function get_schema_struct()
 			'perm_album_id'		=> array('UINT', 0),
 			'perm_user_id'		=> array('UINT', 0),
 			'perm_group_id'		=> array('UINT', 0),
-			'perm_system'		=> array('UINT:3', 0),
+			'perm_system'		=> array('INT:3', 0),
 		),
 		'PRIMARY_KEY'			=> 'perm_id',
 	);

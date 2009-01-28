@@ -381,6 +381,8 @@ class install_update extends module
 				nv_add_column(GALLERY_IMAGES_TABLE,	'image_contest',			array('UINT:1', 0));
 				nv_add_column(GALLERY_IMAGES_TABLE,	'image_exif_data',			array('TEXT', ''));
 
+				nv_change_column(GALLERY_PERMISSIONS_TABLE,	'perm_system',	array('INT:3', 0));
+
 				nv_create_table('phpbb_gallery_contests',	$dbms_data);
 			break;
 		}

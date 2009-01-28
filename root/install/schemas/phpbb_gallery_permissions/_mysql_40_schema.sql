@@ -9,7 +9,7 @@ CREATE TABLE phpbb_gallery_permissions (
 	perm_album_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	perm_user_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	perm_group_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
-	perm_system int(3) UNSIGNED DEFAULT '0' NOT NULL,
+	perm_system int(3) DEFAULT '0' NOT NULL,
 	PRIMARY KEY (perm_id)
 );
 
