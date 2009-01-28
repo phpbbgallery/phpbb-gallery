@@ -122,8 +122,8 @@ function get_album_access_array()
 				case 1:
 					foreach ($permissions as $permission)
 					{
-						// if the permission is true ($row[$permission] == 1) and global_permission is never ($album_access_array[-3][$permission] == 2) we set it to "never"
-						$album_access_array[$row['perm_album_id']][$permission] = (($row[$permission]) ? (($row[$permission] == 1 && ($album_access_array[-3][$permission] == 2)) ? $album_access_array[-3][$permission] : $row[$permission]) : 0);
+						// if the permission is true ($row[$permission] == 1) and global_permission is never ($album_access_array[PERSONAL_GALLERY_PERMISSIONS][$permission] == 2) we set it to "never"
+						$album_access_array[$row['perm_album_id']][$permission] = (($row[$permission]) ? (($row[$permission] == 1 && ($album_access_array[PERSONAL_GALLERY_PERMISSIONS][$permission] == 2)) ? $album_access_array[PERSONAL_GALLERY_PERMISSIONS][$permission] : $row[$permission]) : 0);
 						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == 1))
 						{
 							$album_access_array[$row['perm_album_id']]['m_'] = $row[$permission];
