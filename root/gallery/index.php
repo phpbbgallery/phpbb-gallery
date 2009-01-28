@@ -30,7 +30,6 @@ include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx
 include($phpbb_root_path . $gallery_root_path . 'includes/functions_display.' . $phpEx);
 $album_access_array = get_album_access_array();
 
-
 /**
 * Display albums
 */
@@ -51,6 +50,9 @@ if ($mode == 'personal')
 else if ($gallery_config['personal_album_index'] && gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS))
 {
 	$images = $images_real = $last_image = 0;
+	$last_image = $lastimage_image_id = $lastimage_user_id = $lastimage_album_id = 0;
+	$lastimage_time = $lastimage_name = $lastimage_username = $lastimage_user_colour = $last_image_page_url = $last_thumb_url = '';
+
 	$sql = 'SELECT *
 		FROM ' . GALLERY_ALBUMS_TABLE . '
 		WHERE album_user_id <> 0';

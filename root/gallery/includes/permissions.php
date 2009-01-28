@@ -97,7 +97,7 @@ function get_album_access_array()
 		{
 			switch ($row['perm_system'])
 			{
-				case 3:
+				case PERSONAL_GALLERY_PERMISSIONS:
 					foreach ($permissions as $permission)
 					{
 						$album_access_array[PERSONAL_GALLERY_PERMISSIONS][$permission] = $row[$permission];
@@ -108,7 +108,7 @@ function get_album_access_array()
 					}
 				break;
 
-				case 2:
+				case OWN_GALLERY_PERMISSIONS:
 					foreach ($permissions as $permission)
 					{
 						$album_access_array[OWN_GALLERY_PERMISSIONS][$permission] = $row[$permission];

@@ -815,6 +815,16 @@ class install_update extends module
 				set_gallery_config('rrc_gindex_comments', 0);
 				set_gallery_config('watermark_source', GALLERY_IMAGE_PATH . 'watermark.png');
 
+				// Update permission-system to the constants
+				$sql = 'UPDATE ' . GALLERY_PERMISSIONS_TABLE . '
+					SET perm_system = ' . OWN_GALLERY_PERMISSIONS . '
+					WHERE perm_system = 2';
+				$db->sql_query($sql);
+				$sql = 'UPDATE ' . GALLERY_PERMISSIONS_TABLE . '
+					SET perm_system = ' . PERSONAL_GALLERY_PERMISSIONS . '
+					WHERE perm_system = 3';
+				$db->sql_query($sql);
+
 				//@todo: Delete "confirmed deleted subalbums" #410
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
