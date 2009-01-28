@@ -33,6 +33,7 @@ $lang = array_merge($lang, array(
 	'ALBUM_UPLOAD_NEED_APPROVAL'	=> 'Dein Bild wurde erfolgreich hochgeladen.<br /><br />Aber die Funktion der Genehmigung von Bildern vor der Veröffentlichung ist aktiv. Somit muss dein Bild vor der Veröffentlichung von einem Administrator oder einem Moderator genehmigt werden.',
 	'ALBUM_UPLOAD_SUCCESSFUL'		=> 'Dein Bild wurde erfolgreich hochgeladen.',
 	'ALL_IMAGES'					=> 'Alle Bilder',
+	'ALLOWED_FILETYPES'				=> 'Erlaubte Dateitypen',
 	'APPROVE'						=> 'Freigeben',
 	'APPROVE_IMAGE'					=> 'Bild freischalten',
 
@@ -49,12 +50,6 @@ $lang = array_merge($lang, array(
 	'ALBUM_UPLOAD_CANNOT'		=> 'Du <strong>darfst keine</strong> neuen Bilder in diesem Album hochladen',
 	'ALBUM_VIEW_CAN'			=> 'Du <strong>darfst</strong> Bilder in diesem Album ansehen',
 	'ALBUM_VIEW_CANNOT'			=> 'Du <strong>darfst keine</strong> Bilder in diesem Album ansehen',
-
-
-	//@todo
-	'GIF_ALLOWED'					=> 'Es ist erlaubt GIF- Dateien hochzuladen',
-	'JPG_ALLOWED'					=> 'Es ist erlaubt JPG- Dateien hochzuladen',
-	'PNG_ALLOWED'					=> 'Es ist erlaubt PNG- Dateien hochzuladen',
 
 	'BAD_UPLOAD_FILE_SIZE'			=> 'Deine hochgeladene Datei ist entweder zu gross oder defekt',
 	'BROWSING_ALBUM'				=> 'Mitglieder in diesem Album: %1$s',
@@ -102,6 +97,9 @@ $lang = array_merge($lang, array(
 	'FAVORITE_IMAGE'				=> 'zu Lieblingsbildern hinzufügen',
 	'FAVORITED_IMAGE'				=> 'Das Bild wurde zu deinen Lieblingsbildern hinzugefügt.',
 	'FILE'							=> 'Datei',
+	'FILETYPES_GIF'					=> 'gif',
+	'FILETYPES_JPG'					=> 'jpg',
+	'FILETYPES_PNG'					=> 'png',
 
 	'IMAGE'								=> 'Bild',
 	'IMAGE_#'							=> '1 Bild',

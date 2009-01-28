@@ -468,7 +468,8 @@ switch ($mode)
 								'thumbnail'			=> '',
 								'username'			=> request_var('username', $user->data['username']),
 							);
-							$image_data_2['image_name'] = (request_var('filename', '') == 'filename') ? str_replace("_", " ", utf8_substr($image_data['image_tmp_name'], 0, -4)) : str_replace('{NUM}', $loop, request_var('image_name', '', true));
+							$image_data_2['image_name'] = str_replace('{NUM}', $loop, request_var('image_name', '', true));
+							$image_data_2['image_name'] = ((request_var('filename', '') == 'filename') || ($image_data_2['image_name'] == '')) ? str_replace("_", " ", utf8_substr($image_data['image_tmp_name'], 0, -4)) : $image_data_2['image_name'];
 							$image_data = array_merge($image_data, $image_data_2);
 
 							if (!$image_data['image_name'])
@@ -601,11 +602,6 @@ switch ($mode)
 					}
 					else
 					{
-						if ((request_var('image_name', '', true) == '') && (request_var('filename', '') != 'filename'))
-						{
-							$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_IMAGE_NAME'];
-						}
-
 						gallery_notification('album', $album_id, $image_name);
 						handle_image_counter($image_id_ary, true);
 
@@ -614,6 +610,19 @@ switch ($mode)
 							WHERE album_id = $album_id";
 						$db->sql_query($sql);
 					}
+				}
+				$allowed_filetypes = array();
+				if ($gallery_config['gif_allowed'])
+				{
+					$allowed_filetypes[] = $user->lang['FILETYPES_GIF'];
+				}
+				if ($gallery_config['jpg_allowed'])
+				{
+					$allowed_filetypes[] = $user->lang['FILETYPES_JPG'];
+				}
+				if ($gallery_config['png_allowed'])
+				{
+					$allowed_filetypes[] = $user->lang['FILETYPES_PNG'];
 				}
 
 				$template->assign_vars(array(
@@ -624,9 +633,7 @@ switch ($mode)
 					'S_MAX_WIDTH'				=> $gallery_config['max_width'],
 					'S_MAX_HEIGHT'				=> $gallery_config['max_height'],
 
-					'S_JPG'					=> ($gallery_config['jpg_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
-					'S_PNG'					=> ($gallery_config['png_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
-					'S_GIF'					=> ($gallery_config['gif_allowed'] == 1) ? $user->lang['YES'] : $user->lang['NO'],
+					'S_ALLOWED_FILE_TYPES'	=> implode(', ', $allowed_filetypes),
 					'S_THUMBNAIL_SIZE'		=> $gallery_config['thumbnail_size'],
 					'S_THUMBNAIL'			=> ($gallery_config['gd_version']) ? true : false,
 					'S_MULTI_IMAGES'		=> ($gallery_config['upload_images'] > 1) ? true : false,

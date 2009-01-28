@@ -125,6 +125,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_STATS'					=> 'Galerie Statistik',
 	'GALLERY_VERSION'				=> 'Version der phpBB Gallery',//ja mit ll und y, da es sich um den MOD-Namen handelt
 	'GD_VERSION'					=> 'GD Version optimieren',
+	'GIF_ALLOWED'					=> 'Es ist erlaubt GIF- Dateien hochzuladen',
 	'GUPLOAD_DIR_SIZE'				=> 'Größe des upload/-Ordners',
 
 	'HANDLE_IMAGES'					=> 'Was soll mit Bildern passieren',
@@ -146,6 +147,8 @@ $lang = array_merge($lang, array(
 	'IMPORT_USER'					=> 'Hochgeladen durch',
 	'IMPORT_USER_EXP'				=> 'Du kannst die Bilder auch einem anderem Mitglied zuordnen lassen.',
 	'INFO_LINE'						=> 'Dateigröße auf dem Thumbnail anzeigen',
+
+	'JPG_ALLOWED'					=> 'Es ist erlaubt JPG- Dateien hochzuladen',
 
 	'MANAGE_CRASHED_ENTRIES'		=> 'Defekte Einträge verwalten',
 	'MANAGE_CRASHED_IMAGES'			=> 'Defekte Bilder verwalten',
@@ -208,6 +211,7 @@ $lang = array_merge($lang, array(
 	'PERMISSIONS_STORED'			=> 'Berechtigungen erfolgreich gespeichert.',
 	'PERSONAL_ALBUM_INDEX'			=> 'Persönliche Alben in der Galerie-Übersicht als Album anzeigen',
 	'PERSONAL_ALBUM_INDEX_EXP'		=> 'Wenn "Nein" ausgewählt ist, wird der Link unterhalb der Alben angezeigt.',
+	'PNG_ALLOWED'					=> 'Es ist erlaubt PNG- Dateien hochzuladen',
 	'PURGED_CACHE'					=> 'Cache geleert',
 
 	'RATE_SCALE'					=> 'Bewertungsskala',

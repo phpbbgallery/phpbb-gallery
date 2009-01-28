@@ -61,6 +61,7 @@
           <change><![CDATA[[Add] Report #403: Config for the recent-part on gallery/index.php]]></change>
           <change><![CDATA[[Add] Unreported: Missing statistic-values]]></change>
 
+          <change><![CDATA[[Change] Report #440: Imagename check]]></change>
           <change><![CDATA[[Change] Unreported: move the template to template/gallery/]]></change>
           <change><![CDATA[[Change] Unreported: Renamed $album_config to $gallery_config]]></change>
           <change><![CDATA[[Change] Unreported: Build Config-Module like acp_board.php]]></change>

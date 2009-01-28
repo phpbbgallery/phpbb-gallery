@@ -33,6 +33,7 @@ $lang = array_merge($lang, array(
 	'ALBUM_UPLOAD_NEED_APPROVAL'	=> 'Your image has been uploaded successfully.<br /><br />But the feature Image Approval has been enabled so your image must be approved by a administrator or a moderator before posting',
 	'ALBUM_UPLOAD_SUCCESSFUL'		=> 'Your image has been uploaded successfully',
 	'ALL_IMAGES'					=> 'All image',
+	'ALLOWED_FILETYPES'				=> 'Allowed filetypes',
 	'APPROVE'						=> 'Approve',
 	'APPROVE_IMAGE'					=> 'Approve image',
 
@@ -49,12 +50,6 @@ $lang = array_merge($lang, array(
 	'ALBUM_UPLOAD_CANNOT'		=> 'You <strong>cannot</strong> upload new images in this album',
 	'ALBUM_VIEW_CAN'			=> 'You <strong>can</strong> view images in this album',
 	'ALBUM_VIEW_CANNOT'			=> 'You <strong>cannot</strong> view images in this album',
-
-
-	//@todo
-	'GIF_ALLOWED'					=> 'Allowed to upload GIF files',
-	'JPG_ALLOWED'					=> 'Allowed to upload JPG files',
-	'PNG_ALLOWED'					=> 'Allowed to upload PNG files',
 
 	'BAD_UPLOAD_FILE_SIZE'			=> 'Your uploaded file is too large',
 	'BROWSING_ALBUM'				=> 'Users browsing this album: %1$s',
@@ -102,6 +97,9 @@ $lang = array_merge($lang, array(
 	'FAVORITE_IMAGE'				=> 'Add to favorites',
 	'FAVORITED_IMAGE'				=> 'The image was added to your favorites.',
 	'FILE'							=> 'File',
+	'FILETYPES_GIF'					=> 'gif',
+	'FILETYPES_JPG'					=> 'jpg',
+	'FILETYPES_PNG'					=> 'png',
 
 	'IMAGE'								=> 'Image',
 	'IMAGE_#'							=> '1 image',
@@ -131,7 +129,6 @@ $lang = array_merge($lang, array(
 	'MAX_HEIGHT'					=> 'Maximum image height (pixels)',
 	'MAX_WIDTH'						=> 'Maximum image width (pixels)',
 	'MISSING_COMMENT'				=> 'No Message entered',
-	'MISSING_IMAGE_NAME'			=> 'You must enter a name for your image',
 	'MISSING_MODE'					=> 'No mode selected',
 	'MISSING_REPORT_REASON'			=> 'You need to mention a reason, to report an image.',
 	'MISSING_SUBMODE'				=> 'No submode selected',

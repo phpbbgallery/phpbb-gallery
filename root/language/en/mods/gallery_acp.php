@@ -125,6 +125,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_STATS'					=> 'Gallery statistics',
 	'GALLERY_VERSION'				=> 'Gallery version',
 	'GD_VERSION'					=> 'Optimize for GD version',
+	'GIF_ALLOWED'					=> 'Allowed to upload GIF files',
 	'GUPLOAD_DIR_SIZE'				=> 'upload/-directory size',
 
 	'HANDLE_IMAGES'					=> 'What to do with the images',
@@ -146,6 +147,8 @@ $lang = array_merge($lang, array(
 	'IMPORT_USER'					=> 'Uploaded by',
 	'IMPORT_USER_EXP'				=> 'You can add the images to another user here.',
 	'INFO_LINE'						=> 'Display file-size on thumbnail',
+
+	'JPG_ALLOWED'					=> 'Allowed to upload JPG files',
 
 	'MANAGE_CRASHED_ENTRIES'		=> 'Manage crashed entries',
 	'MANAGE_CRASHED_IMAGES'			=> 'Manage crashed images',
@@ -208,6 +211,7 @@ $lang = array_merge($lang, array(
 	'PERMISSIONS_STORED'			=> 'Permissions were stored successful.',
 	'PERSONAL_ALBUM_INDEX'			=> 'View personal albums as album on the index',
 	'PERSONAL_ALBUM_INDEX_EXP'		=> 'If choosen "No", there will be the link, right beneath.',
+	'PNG_ALLOWED'					=> 'Allowed to upload PNG files',
 	'PURGED_CACHE'					=> 'Purged the cache',
 
 	'RATE_SCALE'					=> 'Rating Scale',
