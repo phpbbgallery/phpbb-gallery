@@ -67,6 +67,7 @@
           <change><![CDATA[[Change] Unreported: Build Config-Module like acp_board.php]]></change>
           <change><![CDATA[[Change] Unreported: Author » Uploaded By]]></change>
 
+          <change><![CDATA[[Fix] Report #441: Display username on personal albums cleanup]]></change>
           <change><![CDATA[[Fix] Report #442: Description to empty permission-form]]></change>
           <change><![CDATA[[Fix] Report #447: Useless permissions for personal albums]]></change>
           <change><![CDATA[[Fix] Report #439: Bad hotlink-prevention description]]></change>

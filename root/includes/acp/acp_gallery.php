@@ -1811,6 +1811,7 @@ class acp_gallery
 					@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $row['image_filename']);
 					$deleted_images[] = $row['image_id'];
 				}
+				$db->sql_freeresult($result);
 				if ($deleted_images)
 				{
 					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . ' WHERE ' . $db->sql_in_set('comment_image_id', $deleted_images);
@@ -1877,13 +1878,32 @@ class acp_gallery
 				{
 					$user->lang['CLEAN_GALLERY_CONFIRM'] = $user->lang['CONFIRM_CLEAN_COMMENTS'] . '<br />' . $user->lang['CLEAN_GALLERY_CONFIRM'];
 				}
+				if ($personals_bad || $missing_personals)
+				{
+					$sql = 'SELECT album_name, album_user_id
+						FROM ' . GALLERY_ALBUMS_TABLE . '
+						WHERE ' . $db->sql_in_set('album_user_id', array_merge($missing_personals, $personals_bad));
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						if (in_array($row['album_user_id'], $personals_bad))
+						{
+							$personals_bad_names[] = $row['album_name'];
+						}
+						else
+						{
+							$missing_personals_names[] = $row['album_name'];
+						}
+					}
+					$db->sql_freeresult($result);
+				}
 				if ($missing_personals)
 				{
-					$user->lang['CLEAN_GALLERY_CONFIRM'] = $user->lang['CONFIRM_CLEAN_PERSONALS'] . '<br />' . $user->lang['CLEAN_GALLERY_CONFIRM'];
+					$user->lang['CLEAN_GALLERY_CONFIRM'] = sprintf($user->lang['CONFIRM_CLEAN_PERSONALS'], implode(', ', $missing_personals_names)) . '<br />' . $user->lang['CLEAN_GALLERY_CONFIRM'];
 				}
 				if ($personals_bad)
 				{
-					$user->lang['CLEAN_GALLERY_CONFIRM'] = $user->lang['CONFIRM_CLEAN_PERSONALS_BAD'] . '<br />' . $user->lang['CLEAN_GALLERY_CONFIRM'];
+					$user->lang['CLEAN_GALLERY_CONFIRM'] = sprintf($user->lang['CONFIRM_CLEAN_PERSONALS_BAD'], implode(', ', $personals_bad_names)) . '<br />' . $user->lang['CLEAN_GALLERY_CONFIRM'];
 				}
 				confirm_box(false, 'CLEAN_GALLERY', $s_hidden_fields);
 			}
