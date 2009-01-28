@@ -86,14 +86,12 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		);
 		$sql_array['ORDER_BY'] = 'u.username_clean, a.left_id';
 	}
-	else
-	{
-		$sql_array['LEFT_JOIN'][] = array(
-			'FROM'	=> array(GALLERY_CONTESTS_TABLE => 'c'),
-			'ON'	=> 'c.contest_album_id = a.album_id'
-		);
-		$sql_array['SELECT'] = $sql_array['SELECT'] . ', c.contest_marked';
-	}
+	$sql_array['LEFT_JOIN'][] = array(
+		'FROM'	=> array(GALLERY_CONTESTS_TABLE => 'c'),
+		'ON'	=> 'c.contest_album_id = a.album_id'
+	);
+	$sql_array['SELECT'] = $sql_array['SELECT'] . ', c.contest_marked';
+
 
 	$sql = $db->sql_build_query('SELECT', array(
 		'SELECT'	=> $sql_array['SELECT'],
