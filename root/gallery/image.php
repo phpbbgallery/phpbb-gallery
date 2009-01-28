@@ -58,7 +58,7 @@ if ((!gallery_acl_check('i_view', $album_id)) || (!gallery_acl_check('m_status',
 	trigger_error('NOT_AUTHORISED');
 }
 
-//@todo: Unreported: Hotlink prevention doesn't working
+// Hotlink prevention
 if ($gallery_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER']))
 {
 	$check_referer = trim($HTTP_SERVER_VARS['HTTP_REFERER']);

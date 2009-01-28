@@ -131,7 +131,7 @@ $lang = array_merge($lang, array(
 	'HANDLE_IMAGES'					=> 'Was soll mit Bildern passieren',
 	'HANDLE_SUBS'					=> 'Was soll mit angehängten Alben passieren',
 	'HOTLINK_ALLOWED'				=> 'Erlaubt Domains für Hotlink',
-	'HOTLINK_ALLOWED_EXP'			=> 'getrennt durch ein Komma',
+	'HOTLINK_ALLOWED_EXP'			=> 'Die Domains müssen mit Kommata getrennt werden (keine Leerzeichen). Beispiel: "flying-bits.org,phpbb.com"',
 	'HOTLINK_PREVENT'				=> 'Hotlink Prävention',
 
 	'IMAGE_DESC_MAX_LENGTH'			=> 'Bild Beschreibung / Kommentar Max Länge (Bytes)',
