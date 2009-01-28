@@ -1301,6 +1301,10 @@ class acp_gallery
 				));
 			}
 			$db->sql_freeresult($result);
+			$template->assign_vars(array(
+				'S_ALBUMS'			=> (sizeof($album_ary) > 1) ? true : false,
+				'S_GROUPS'			=> (sizeof($group_ary) > 1) ? true : false,
+			));
 			if ((!isset($album_ary[1])) && (!isset($group_ary[1])))
 			{
 				$where = '';
@@ -1318,12 +1322,12 @@ class acp_gallery
 						ON p.perm_role_id = pr.role_id
 					WHERE p.perm_group_id = {$group_ary[0]}
 						AND $where";
-				$result = $db->sql_query($sql);
-				$perm_ary = $db->sql_fetchrow($result, 1);
+				$result = $db->sql_query_limit($sql, 1);
+				$perm_ary = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
 			}
 
-			//Permissions
+			// Permissions
 			foreach ($permission_parts as $perm_groupname => $permission)
 			{
 				$template->assign_block_vars('perm_group', array(
@@ -1333,7 +1337,6 @@ class acp_gallery
 				$string = implode(', ', $permission);
 				foreach ($permission_parts[$perm_groupname] as $permission)
 				{
-					#echo $permission;
 					$template->assign_block_vars('perm_group.permission', array(
 						'PERMISSION'			=> $user->lang['PERMISSION_' . strtoupper($permission)],
 						'S_FIELD_NAME'			=> $permission,

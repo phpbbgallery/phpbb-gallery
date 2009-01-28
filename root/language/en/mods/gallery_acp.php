@@ -206,6 +206,8 @@ $lang = array_merge($lang, array(
 	'PERMISSION_M_REPORT'			=> 'Can manage reports',
 	'PERMISSION_M_STATUS'			=> 'Can approve and lock images',
 
+	'PERM_HIDDEN_GROUPS_EXP'		=> 'The group names can not be displayed, as you selected more than one album.',
+	'PERM_HIDDEN_PERMISSIONS_EXP'	=> 'The permission form is empty, as you selected more than one group or/and album.',
 	'PERMISSION_EMPTY'				=> 'You didn\'t set all permissions.',
 	'PERMISSION_NO_GROUP'			=> 'You didn\'t select a group to set the permissions.',
 	'PERMISSIONS_STORED'			=> 'Permissions were stored successful.',

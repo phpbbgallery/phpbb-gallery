@@ -206,6 +206,8 @@ $lang = array_merge($lang, array(
 	'PERMISSION_M_REPORT'			=> 'Kann Meldungen bearbeiten',
 	'PERMISSION_M_STATUS'			=> 'Kann Bilder freischalten und sperren',
 
+	'PERM_HIDDEN_GROUPS_EXP'		=> 'Die Gruppen werden ausgeblendet, weil du mehr als ein Album ausgewählt hast.',
+	'PERM_HIDDEN_PERMISSIONS_EXP'	=> 'Die Berechtigungen sind leer, weil du mehr als eine Gruppe oder/und ein Album ausgewählt hast.',
 	'PERMISSION_EMPTY'				=> 'Du hast nicht alle Berechtigungen gesetzt.',
 	'PERMISSION_NO_GROUP'			=> 'Du hast keine Gruppe ausgewählt, für die du Berechtigungen vergeben möchtest.',
 	'PERMISSIONS_STORED'			=> 'Berechtigungen erfolgreich gespeichert.',
