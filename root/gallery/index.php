@@ -133,6 +133,7 @@ $display = array(
 * display	array,
 * modes		string(recent|random|comment|!recent|!random|!comment|all), Exp: '!recent' means random + comment
 * collapse	bool	collapse comments
+* user_id	int		user id for user profile view of recent and random images
 */
 if ($gallery_config['rrc_gindex_mode'] != '!all')
 {

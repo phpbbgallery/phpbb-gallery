@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 /**
 * Display recent images & comments and random images
 */
-function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_comments = false)
+function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_comments = false, $user_id = 0)
 {
 	global $db, $phpEx, $user, $cache, $auth;
 	global $phpbb_root_path, $gallery_config, $config, $template;
@@ -37,6 +37,10 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 		$recent_image_addon = true;
 		include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
 		include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
+	}
+	if (!function_exists('assign_image_block'))
+	{
+		include($phpbb_root_path . $gallery_root_path . 'includes/functions_display.' . $phpEx);
 	}
 	$album_access_array = get_album_access_array();
 
@@ -104,9 +108,10 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 				FROM ' . GALLERY_IMAGES_TABLE . ' i
 				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
 					ON i.image_album_id = a.album_id
-				WHERE (' . $db->sql_in_set('i.image_album_id', $view_albums) . '
+				WHERE ((' . $db->sql_in_set('i.image_album_id', $view_albums) . '
 						AND i.image_status = 1)' . 
 					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . '
+					' . (($user_id) ? ') AND i.image_user_id = ' . $user_id : ')') . '
 				GROUP BY i.image_id
 				ORDER BY i.image_time DESC';
 			$result = $db->sql_query_limit($sql, $limit_sql);
@@ -158,11 +163,12 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 				FROM ' . GALLERY_IMAGES_TABLE . ' i
 				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
 					ON i.image_album_id = a.album_id
-				WHERE (' . $db->sql_in_set('i.image_album_id', $view_albums) . '
+				WHERE ((' . $db->sql_in_set('i.image_album_id', $view_albums) . '
 						AND i.image_status = 1)' . 
-					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . "
+					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . '
+					' . (($user_id) ? ') AND i.image_user_id = ' . $user_id : ')') . '
 				GROUP BY i.image_id
-				ORDER BY $random";
+				ORDER BY ' . $random;
 			$result = $db->sql_query_limit($sql, $limit_sql);
 
 			while ($row = $db->sql_fetchrow($result))
@@ -202,6 +208,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 			LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
 				ON c.comment_image_id = i.image_id
 			WHERE ' . $db->sql_in_set('i.image_album_id', $comment_albums) . '
+				' . (($user_id) ? ') AND i.image_user_id = ' . $user_id : ')') .'
 			ORDER BY c.comment_id DESC';
 		$result = $db->sql_query_limit($sql, $limit_sql);
 

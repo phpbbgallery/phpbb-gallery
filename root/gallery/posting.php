@@ -507,6 +507,8 @@ switch ($mode)
 							$exif = @exif_read_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename'], 0, true);
 							if (!empty($exif["EXIF"]))
 							{
+								unset($exif["EXIF"]["MakerNote"]);
+								var_dump ($exif);
 								$image_data['image_exif_data'] = serialize ($exif);
 								$image_data['image_has_exif'] = EXIF_DBSAVED;
 							}

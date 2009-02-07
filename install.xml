@@ -83,6 +83,7 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
         <find><![CDATA[			unset($module);
 		}]]></find>
         <action type="after-add"><![CDATA[		// Gallery-statistics
+		$gallery_root_path = GALLERY_ROOT_PATH;
 		$member_gallery = array('user_images' => 0, 'personal_album_id' => 0);
 		$sql = 'SELECT *
 			FROM ' . GALLERY_USERS_TABLE . '
@@ -99,7 +100,28 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
 		$user->add_lang('mods/gallery');
 
 		$images_per_day = $member['user_images'] / $memberdays;
-		$percentage_images = ($config['num_images']) ? min(100, ($member['user_images'] / $config['num_images']) * 100) : 0;]]></action>
+		$percentage_images = ($config['num_images']) ? min(100, ($member['user_images'] / $config['num_images']) * 100) : 0;
+
+		if (!function_exists('load_gallery_config'))
+		{
+			$recent_image_addon = true;
+			include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
+			include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
+			include($phpbb_root_path . $gallery_root_path . 'includes/functions_recent.' . $phpEx);
+		}
+		$display = array(
+			'name'		=> true,
+			'poster'	=> true,
+			'time'		=> true,
+			'views'		=> true,
+			'ratings'	=> true,
+			'comments'	=> true,
+			'album'		=> true,
+		);
+		//if ($gallery_config['rrc_gindex_mode'] != '!all')
+		//{
+			recent_gallery_images($gallery_config['rrc_gindex_rows'], $gallery_config['rrc_gindex_columns'], $display, '!comment', false, $member['user_id']);
+		//}]]></action>
       </edit>
       <edit>
         <find><![CDATA[			'POSTS_DAY'			=> sprintf($user->lang['POST_DAY'], $posts_per_day),
@@ -292,6 +314,7 @@ $user->add_lang('mods/gallery');]]></action>
 define('GALLERY_ALBUMS_TABLE',			$table_prefix . 'gallery_albums');
 define('GALLERY_COMMENTS_TABLE',		$table_prefix . 'gallery_comments');
 define('GALLERY_CONFIG_TABLE',			$table_prefix . 'gallery_config');
+define('GALLERY_CONTESTS_TABLE',		$table_prefix . 'gallery_contests');
 define('GALLERY_FAVORITES_TABLE',		$table_prefix . 'gallery_favorites');
 define('GALLERY_IMAGES_TABLE',			$table_prefix . 'gallery_images');
 define('GALLERY_MODSCACHE_TABLE',		$table_prefix . 'gallery_modscache');
@@ -490,6 +513,10 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
 						<!-- IF IMAGES_PCT --><br />({IMAGES_PCT} / {IMAGES_DAY})<!-- ENDIF -->
 					</dd>
 			<!-- ENDIF -->]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA[<!-- INCLUDE jumpbox.html -->]]></find>
+        <action type="before-add"><![CDATA[<!-- INCLUDE gallery/recent_body.html -->]]></action>
       </edit>
     </open>
     <open src="styles/prosilver/template/overall_header.html">
