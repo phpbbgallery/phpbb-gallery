@@ -54,7 +54,7 @@
         <date>YYYY-MM-DD</date>
         <rev-version>X.Y.Z</rev-version>
         <changelog lang="en-gb">
-          <change><![CDATA[[Add] Report #XXX: View recent/random images in user-profile]]></change>
+          <change><![CDATA[[Add] Report #395: View recent/random images in user-profile]]></change>
           <change><![CDATA[[Add] Report #432: Album-Type: Contest (hidden user while rating-time)]]></change>
           <change><![CDATA[[Add] Report #313: Search]]></change>
           <change><![CDATA[[Add] Report #402: Delete personal albums in ACP]]></change>
