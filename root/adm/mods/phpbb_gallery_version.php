@@ -1,9 +1,9 @@
 <?php
 /**
 *
-* @package acp
+* @package phpBB Gallery
 * @version $Id$
-* @copyright (c) 2005 phpBB Group
+* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -25,7 +25,7 @@ class phpbb_gallery_version
 			'author'	=> 'nickvergessen',
 			'title'		=> 'phpBB Gallery',
 			'tag'		=> 'phpbb_gallery',
-			'version'	=> '0.4.1',
+			'version'	=> '0.5.0',
 			'file'		=> array('www.flying-bits.org', 'updatecheck', 'phpbb_gallery.xml'),
 		);
 	}

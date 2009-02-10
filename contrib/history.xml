@@ -35,7 +35,7 @@
         </contributions-group>
       </author>
     </author-group>
-    <mod-version>0.4.1</mod-version>
+    <mod-version>0.5.0</mod-version>
     <installation>
       <level>intermediate</level>
       <time>1200</time>
@@ -44,15 +44,15 @@
     <link-group>
       <link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
       <link type="parent" lang="en-gb" href="../install.xml">Manual</link>
-      <link type="parent" lang="de" href="update_0_4_1_to_X_Y_Z/update.xml">Update von 0.4.1 auf X.Y.Z</link>
-      <link type="parent" lang="en-gb" href="update_0_4_1_to_X_Y_Z/update.xml">Update from 0.4.1 to X.Y.Z</link>
+      <link type="parent" lang="de" href="update_0_4_1_to_0_5_0/update.xml">Update von 0.4.1 auf 0.5.0</link>
+      <link type="parent" lang="en-gb" href="update_0_4_1_to_0_5_0/update.xml">Update from 0.4.1 to 0.5.0</link>
     </link-group>
     <author-notes lang="de">Diese Datei enthält alle Teile der History, alle Entickler, usw.</author-notes>
     <author-notes lang="en-gb">This file contains all parts of the History, all Developers, a.s.o.</author-notes>
     <history>
       <entry>
-        <date>YYYY-MM-DD</date>
-        <rev-version>X.Y.Z</rev-version>
+        <date>2009-02-10</date>
+        <rev-version>0.5.0</rev-version>
         <changelog lang="en-gb">
           <change><![CDATA[[Add] Report #395: View recent/random images in user-profile]]></change>
           <change><![CDATA[[Add] Report #432: Album-Type: Contest (hidden user while rating-time)]]></change>
