@@ -65,45 +65,13 @@ You may install it, to be informed about future versions, as I'm not going to se
       <file from="root/styles/prosilver/template/gallery/*.*" to="styles/prosilver/template/gallery/*.*" />
       <file from="root/styles/prosilver/theme/*.*" to="styles/prosilver/theme/*.*" />
     </copy>
-    <open src="index.php">
-      <edit>
-        <find><![CDATA[$total_users	= $config['num_users'];]]></find>
-        <action type="after-add"><![CDATA[$total_images	= $config['num_images'];
-$user->add_lang('mods/info_acp_gallery');
-$l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OTHER';]]></action>
-      </edit>
-      <edit>
-        <find><![CDATA[$user->add_lang('mods/info_acp_gallery');
-$total_images = $config['num_images'];
-$l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OTHER';]]></find>
-        <action type="replace-with"><![CDATA[]]></action>
-      </edit>
-    </open>
     <open src="memberlist.php">
       <edit>
-        <find><![CDATA[		// Gallery-statistics]]></find>
-        <action type="after-add"><![CDATA[$gallery_root_path = GALLERY_ROOT_PATH;]]></action>
-      </edit>
-      <edit>
-        <find><![CDATA[		$images_per_day = $member['user_images'] / $memberdays;
-		$percentage_images = ($config['num_images']) ? min(100, ($member['user_images'] / $config['num_images']) * 100) : 0;]]></find>
-        <action type="after-add"><![CDATA[		if (!function_exists('load_gallery_config'))
-		{
-			$recent_image_addon = true;
-			include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
-			include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
-			include($phpbb_root_path . $gallery_root_path . 'includes/functions_recent.' . $phpEx);
-		}
-		$display = array(
-			'name'		=> true,
-			'poster'	=> true,
-			'time'		=> true,
-			'views'		=> true,
-			'ratings'	=> true,
-			'comments'	=> true,
-			'album'		=> true,
-		);
-		if ($gallery_config['rrc_profile_mode'] != '!all')
+        <find><![CDATA[		//if ($gallery_config['rrc_gindex_mode'] != '!all')
+		//{
+			recent_gallery_images($gallery_config['rrc_gindex_rows'], $gallery_config['rrc_gindex_columns'], $display, '!comment', false, $member['user_id']);
+		//}]]></find>
+        <action type="replace-with"><![CDATA[		if ($gallery_config['rrc_profile_mode'] != '!all')
 		{
 			recent_gallery_images($gallery_config['rrc_profile_rows'], $gallery_config['rrc_profile_columns'], $display, $gallery_config['rrc_profile_mode'], false, $member['user_id']);
 		}]]></action>
@@ -123,74 +91,6 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
 			'SHOW_PERSONAL_ALBUM_OF'	=> sprintf($user->lang['SHOW_PERSONAL_ALBUM_OF'], $member['username']),
 			'U_GALLERY'			=> ($member['personal_album_id'] && $gallery_config['personal_album_profile']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=" . $member['personal_album_id']) : '',
 			'U_SEARCH_GALLERY'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", "user_id=" . $member['user_id']),]]></action>
-      </edit>
-    </open>
-    <open src="includes/constants.php">
-      <edit>
-        <comment lang="de"><![CDATA[Wenn die 4 bereits von einem anderem MOD als Log benutzt wird, benutze einfach die nächste freie Zahl.]]></comment>
-        <comment lang="en-gb"><![CDATA[If the number 4 is already a Log of an other MOD, just use the next free number.]]></comment>
-        <find><![CDATA[define('LOG_USERS', 3);]]></find>
-        <action type="after-add"><![CDATA[define('LOG_GALLERY', 4);]]></action>
-      </edit>
-      <edit>
-        <find><![CDATA[define('GALLERY_CONFIG_TABLE',			$table_prefix . 'gallery_config');]]></find>
-        <action type="after-add"><![CDATA[define('GALLERY_CONTESTS_TABLE',		$table_prefix . 'gallery_contests');]]></action>
-      </edit>
-    </open>
-    <open src="includes/functions.php">
-      <edit>
-        <find><![CDATA[	$forum_id		= ($mode == 'mod') ? intval(array_shift($args)) : '';
-	$topic_id		= ($mode == 'mod') ? intval(array_shift($args)) : '';]]></find>
-        <action type="after-add"><![CDATA[	$album_id		= ($mode == 'gallery') ? intval(array_shift($args)) : '';
-	$image_id		= ($mode == 'gallery') ? intval(array_shift($args)) : '';]]></action>
-      </edit>
-      <edit>
-        <find><![CDATA[		case 'critical':
-			$sql_ary['log_type'] = LOG_CRITICAL;
-		break;]]></find>
-        <action type="after-add"><![CDATA[		case 'gallery':
-			$sql_ary += array(
-				'log_type'	=> LOG_GALLERY,
-				'forum_id'	=> $album_id,
-				'topic_id'	=> $image_id
-			);
-		break;]]></action>
-      </edit>
-    </open>
-    <open src="includes/functions_admin.php">
-      <edit>
-        <find><![CDATA[		case 'critical':
-			$log_type = LOG_CRITICAL;
-			$sql_forum = '';
-		break;]]></find>
-        <action type="after-add"><![CDATA[		case 'gallery':
-			$log_type = LOG_GALLERY;
-			$sql_forum = '';
-		break;]]></action>
-      </edit>
-    </open>
-    <open src="includes/acp/info/acp_logs.php">
-      <edit>
-        <find><![CDATA['critical'	=> array('title' => 'ACP_CRITICAL_LOGS', 'auth' => 'acl_a_viewlogs', 'cat' => array('ACP_FORUM_LOGS')),]]></find>
-        <action type="after-add"><![CDATA['gallery'	=> array('title' => 'ACP_GALLERY_LOGS', 'auth' => 'acl_a_viewlogs', 'cat' => array('ACP_FORUM_LOGS')),]]></action>
-      </edit>
-    </open>
-    <open src="styles/prosilver/template/memberlist_view.html">
-      <edit>
-        <find><![CDATA[<!-- INCLUDE jumpbox.html -->]]></find>
-        <action type="before-add"><![CDATA[<!-- INCLUDE gallery/recent_body.html -->]]></action>
-      </edit>
-    </open>
-    <open src="styles/prosilver/template/overall_header.html">
-      <edit>
-        <find><![CDATA[<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery_lytebox.js"></script>]]></find>
-        <action type="replace-with"><![CDATA[<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery/lytebox.js"></script>]]></action>
-      </edit>
-    </open>
-    <open src="styles/prosilver/theme/stylesheet.css">
-      <edit>
-        <find><![CDATA[@import url("gallery_lytebox.css");]]></find>
-        <action type="replace-with"><![CDATA[@import url("gallery.css");]]></action>
       </edit>
     </open>
     <diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus

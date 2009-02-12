@@ -118,21 +118,21 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
 			'comments'	=> true,
 			'album'		=> true,
 		);
-		//if ($gallery_config['rrc_gindex_mode'] != '!all')
-		//{
-			recent_gallery_images($gallery_config['rrc_gindex_rows'], $gallery_config['rrc_gindex_columns'], $display, '!comment', false, $member['user_id']);
-		//}]]></action>
+		if ($gallery_config['rrc_profile_mode'] != '!all')
+		{
+			recent_gallery_images($gallery_config['rrc_profile_rows'], $gallery_config['rrc_profile_columns'], $display, $gallery_config['rrc_profile_mode'], false, $member['user_id']);
+		}]]></action>
       </edit>
       <edit>
         <find><![CDATA[			'POSTS_DAY'			=> sprintf($user->lang['POST_DAY'], $posts_per_day),
 			'POSTS_PCT'			=> sprintf($user->lang['POST_PCT'], $percentage),]]></find>
-        <action type="after-add"><![CDATA[			'TOTAL_IMAGES'		=> $config['gallery_user_images_profil'],
+        <action type="after-add"><![CDATA[			'TOTAL_IMAGES'		=> $gallery_config['user_images_profile'],
 			'IMAGES'			=> $member['user_images'],
 			'IMAGES_DAY'		=> sprintf($user->lang['IMAGE_DAY'], $images_per_day),
 			'IMAGES_PCT'		=> sprintf($user->lang['IMAGE_PCT'], $percentage_images),
 			'SHOW_PERSONAL_ALBUM_OF'	=> sprintf($user->lang['SHOW_PERSONAL_ALBUM_OF'], $member['username']),
-			'U_GALLERY'			=> ($member['personal_album_id'] && $config['gallery_personal_album_profil']) ? append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "album.$phpEx", "album_id=" . $member['personal_album_id']) : '',
-			'U_SEARCH_GALLERY'	=> append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "search.$phpEx", "user_id=" . $member['user_id']),]]></action>
+			'U_GALLERY'			=> ($member['personal_album_id'] && $gallery_config['personal_album_profile']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=" . $member['personal_album_id']) : '',
+			'U_SEARCH_GALLERY'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", "user_id=" . $member['user_id']),]]></action>
       </edit>
     </open>
     <open src="viewonline.php">

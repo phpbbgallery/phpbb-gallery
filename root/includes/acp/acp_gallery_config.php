@@ -58,9 +58,6 @@ class acp_gallery_config
 						'rate_scale'			=> array('lang' => 'RATE_SCALE',			'validate' => 'int',	'type' => 'text:7:2',		'gallery' => true,	'explain' => false),
 						'hotlink_prevent'		=> array('lang' => 'HOTLINK_PREVENT',		'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 						'hotlink_allowed'		=> array('lang' => 'HOTLINK_ALLOWED',		'validate' => 'string',	'type' => 'text:40:255',	'gallery' => true,	'explain' => true),
-						'gallery_total_images'			=> array('lang' => 'DISP_TOTAL_IMAGES',				'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => false,	'explain' => false),
-						'gallery_user_images_profil'	=> array('lang' => 'DISP_USER_IMAGES_PROFIL',		'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => false,	'explain' => false),
-						'gallery_personal_album_profil'	=> array('lang' => 'DISP_PERSONAL_ALBUM_PROFIL',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => false,	'explain' => false),
 						'personal_album_index'	=> array('lang' => 'PERSONAL_ALBUM_INDEX',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => true),
 						'shorted_imagenames'	=> array('lang' => 'SHORTED_IMAGENAMES',	'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => true),
 
@@ -109,12 +106,20 @@ class acp_gallery_config
 						'link_image_icon'		=> array('lang' => 'UC_IMAGE_ICON',			'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'uc_select'),
 
 						'legend7'				=> 'RRC_GINDEX',
-						'rrc_gindex_mode'		=> array('lang' => 'RRC_GINDEX_MODE',		'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'rrc_gindex'),
+						'rrc_gindex_mode'		=> array('lang' => 'RRC_GINDEX_MODE',		'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'rrc_modes'),
 						'rrc_gindex_rows'		=> array('lang' => 'RRC_GINDEX_ROWS',		'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 						'rrc_gindex_columns'	=> array('lang' => 'RRC_GINDEX_COLUMNS',	'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 						'rrc_gindex_comments'	=> array('lang' => 'RRC_GINDEX_COMMENTS',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 
-						'legend8'				=> '',
+						'legend8'				=> 'PHPBB_INTEGRATION',
+						'gallery_total_images'		=> array('lang' => 'DISP_TOTAL_IMAGES',				'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => false,	'explain' => false),
+						'user_images_profile'		=> array('lang' => 'DISP_USER_IMAGES_PROFILE',		'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
+						'personal_album_profile'	=> array('lang' => 'DISP_PERSONAL_ALBUM_PROFILE',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
+						'rrc_profile_mode'			=> array('lang' => 'RRC_PROFILE_MODE',		'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'rrc_modes'),
+						'rrc_profile_rows'			=> array('lang' => 'RRC_PROFILE_ROWS',		'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
+						'rrc_profile_columns'		=> array('lang' => 'RRC_PROFILE_COLUMNS',	'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
+
+						'legend9'				=> '',
 					)
 				);
 			break;
@@ -316,22 +321,32 @@ class acp_gallery_config
 	}
 
 	/**
-	* Select RRC-Config on gallery/index.php
+	* Select RRC-Config on gallery/index.php and in the profile
 	*/
-	function rrc_gindex($value, $key)
+	function rrc_modes($value, $key)
 	{
 		global $user;
 
-		$rrc_gindex_options = '<option' . (($value == 'recent') ? ' selected="selected"' : '') . " value='recent'>" . $user->lang['RRC_MODE_RECENT'] . '</option>';
-		$rrc_gindex_options .= '<option' . (($value == 'random') ? ' selected="selected"' : '') . " value='random'>" . $user->lang['RRC_MODE_RANDOM'] . '</option>';
-		$rrc_gindex_options .= '<option' . (($value == 'comment') ? ' selected="selected"' : '') . " value='comment'>" . $user->lang['RRC_MODE_COMMENTS'] . '</option>';
-		$rrc_gindex_options .= '<option' . (($value == '!recent') ? ' selected="selected"' : '') . " value='!recent'>" . $user->lang['RRC_MODE_ARECENT'] . '</option>';
-		$rrc_gindex_options .= '<option' . (($value == '!random') ? ' selected="selected"' : '') . " value='!random'>" . $user->lang['RRC_MODE_ARANDOM'] . '</option>';
-		$rrc_gindex_options .= '<option' . (($value == '!comment') ? ' selected="selected"' : '') . " value='!comment'>" . $user->lang['RRC_MODE_ACOMMENTS'] . '</option>';
-		$rrc_gindex_options .= '<option' . (($value == 'all') ? ' selected="selected"' : '') . " value='all'>" . $user->lang['RRC_MODE_ALL'] . '</option>';
-		$rrc_gindex_options .= '<option' . (($value == '!all') ? ' selected="selected"' : '') . " value='!all'>" . $user->lang['RRC_MODE_AALL'] . '</option>';
+		$rrc_mode_options = '<option' . (($value == 'recent') ? ' selected="selected"' : '') . " value='recent'>" . $user->lang['RRC_MODE_RECENT'] . '</option>';
+		$rrc_mode_options .= '<option' . (($value == 'random') ? ' selected="selected"' : '') . " value='random'>" . $user->lang['RRC_MODE_RANDOM'] . '</option>';
+		if ($key != 'rrc_profile_mode')
+		{
+			$rrc_mode_options .= '<option' . (($value == 'comment') ? ' selected="selected"' : '') . " value='comment'>" . $user->lang['RRC_MODE_COMMENTS'] . '</option>';
+			$rrc_mode_options .= '<option' . (($value == '!recent') ? ' selected="selected"' : '') . " value='!recent'>" . $user->lang['RRC_MODE_ARECENT'] . '</option>';
+			$rrc_mode_options .= '<option' . (($value == '!random') ? ' selected="selected"' : '') . " value='!random'>" . $user->lang['RRC_MODE_ARANDOM'] . '</option>';
+		}
+		if ($key != 'rrc_profile_mode')
+		{
+			$rrc_mode_options .= '<option' . (($value == '!comment') ? ' selected="selected"' : '') . " value='!comment'>" . $user->lang['RRC_MODE_ACOMMENTS'] . '</option>';
+			$rrc_mode_options .= '<option' . (($value == 'all') ? ' selected="selected"' : '') . " value='all'>" . $user->lang['RRC_MODE_ALL'] . '</option>';
+		}
+		else
+		{
+			$rrc_mode_options .= '<option' . (($value == '!comment') ? ' selected="selected"' : '') . " value='!comment'>" . $user->lang['RRC_MODE_ACOMMENTS2'] . '</option>';
+		}
+		$rrc_mode_options .= '<option' . (($value == '!all') ? ' selected="selected"' : '') . " value='!all'>" . $user->lang['RRC_MODE_AALL'] . '</option>';
 
-		return "<select name=\"config[$key]\" id=\"$key\">$rrc_gindex_options</select>";
+		return "<select name=\"config[$key]\" id=\"$key\">$rrc_mode_options</select>";
 	}
 }
 

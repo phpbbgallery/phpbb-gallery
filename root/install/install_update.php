@@ -403,7 +403,8 @@ class install_update extends module
 	*/
 	function update_db_data($mode, $sub)
 	{
-		global $user, $template, $table_prefix, $db, $phpbb_root_path, $phpEx, $cache;
+		global $cache, $config, $db, $template, $user;
+		global $phpbb_root_path, $phpEx, $table_prefix;
 		include($phpbb_root_path . 'includes/acp/auth.' . $phpEx);
 
 		$gallery_config = load_gallery_config();
@@ -824,6 +825,19 @@ class install_update extends module
 					SET perm_system = ' . PERSONAL_GALLERY_PERMISSIONS . '
 					WHERE perm_system = 3';
 				$db->sql_query($sql);
+
+			case '0.5.0':
+				// Move back two constants
+				set_gallery_config('user_images_profile', $config['gallery_user_images_profil']);
+				set_gallery_config('personal_album_profile', $config['gallery_personal_album_profil']);
+				$sql = 'DELETE FROM ' . CONFIG_TABLE . "
+					WHERE config_name = 'gallery_user_images_profil'
+						OR config_name = 'gallery_personal_album_profil'";
+				$db->sql_query($sql);
+
+				set_gallery_config('rrc_profile_mode', '!comment');
+				set_gallery_config('rrc_profile_columns', 4);
+				set_gallery_config('rrc_profile_rows', 1);
 
 				//@todo: Delete "confirmed deleted subalbums" #410
 

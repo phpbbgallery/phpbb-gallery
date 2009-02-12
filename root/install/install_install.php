@@ -234,8 +234,6 @@ class install_install extends module
 		// Set default config
 		set_config('num_images', 0, true);
 		set_config('gallery_total_images', 1);
-		set_config('gallery_user_images_profil', 1);
-		set_config('gallery_personal_album_profil', 1);
 
 		set_gallery_config('max_pics', '1024');
 		set_gallery_config('max_file_size', '128000');
@@ -294,11 +292,18 @@ class install_install extends module
 		// Added 0.4.1
 		set_gallery_config('link_imagepage', 'lytebox');
 
-		// Added //@todo
+		// Added 0.5.0
 		set_gallery_config('rrc_gindex_mode', 'all');
 		set_gallery_config('rrc_gindex_rows', 1);
 		set_gallery_config('rrc_gindex_columns', 4);
 		set_gallery_config('rrc_gindex_comments', 0);
+
+		// Added //@todo: 
+		set_gallery_config('user_images_profil', 1);
+		set_gallery_config('personal_album_profil', 1);
+		set_gallery_config('rrc_profile_mode', '!comment');
+		set_gallery_config('rrc_profile_columns', 4);
+		set_gallery_config('rrc_profile_rows', 1);
 
 		$auth_admin = new auth_admin();
 		$auth_admin->acl_add_option(array(
