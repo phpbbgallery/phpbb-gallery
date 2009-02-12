@@ -51,6 +51,13 @@
     <author-notes lang="en-gb">This file contains all parts of the History, all Developers, a.s.o.</author-notes>
     <history>
       <entry>
+        <date>2009-MM-DD</date>
+        <rev-version>X.Y.Z</rev-version>
+        <changelog lang="en-gb">
+          <change><![CDATA[[Fix] Report #442: Incorrect EXIF data results in errors]]></change>
+        </changelog>
+      </entry>
+      <entry>
         <date>2009-02-10</date>
         <rev-version>0.5.0</rev-version>
         <changelog lang="en-gb">

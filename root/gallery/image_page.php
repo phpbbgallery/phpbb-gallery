@@ -207,27 +207,36 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 		if(isset($exif["EXIF"]["FocalLength"]))
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["FocalLength"]);
-			$exif_data['exif_focal'] = sprintf($user->lang['EXIF_FOCAL_EXP'], ($num / $den));
+			if ($den)
+			{
+				$exif_data['exif_focal'] = sprintf($user->lang['EXIF_FOCAL_EXP'], ($num / $den));
+			}
 		}
 		if(isset($exif["EXIF"]["ExposureTime"]))
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["ExposureTime"]);
-			if ($num > $den)
+			if ($den)
 			{
-				$exif_exposure = $num/$den;
+				if ($num > $den)
+				{
+					$exif_exposure = $num/$den;
+				}
+				else
+				{
+					$exif_exposure = ' 1/' . $den / $num ;
+				}
+				$exif_data['exif_exposure'] = sprintf($user->lang['EXIF_EXPOSURE_EXP'], $exif_exposure);
 			}
-			else
-			{
-				$exif_exposure = ' 1/' . $den / $num ;
-			}
-			$exif_data['exif_exposure'] = sprintf($user->lang['EXIF_EXPOSURE_EXP'], $exif_exposure);
 		}
 		if(isset($exif["EXIF"]["FNumber"]))
 		{
 			list($num,$den) = explode("/",$exif["EXIF"]["FNumber"]);
-			$exif_data['exif_aperture'] = "F/" . ($num / $den);
+			if ($den)
+			{
+				$exif_data['exif_aperture'] = "F/" . ($num / $den);
+			}
 		}
-		if(isset($exif["EXIF"]["ISOSpeedRatings"]))
+		if(isset($exif["EXIF"]["ISOSpeedRatings"]) && !is_array($exif["EXIF"]["ISOSpeedRatings"]))
 		{
 			$exif_data['exif_iso'] = $exif["EXIF"]["ISOSpeedRatings"];
 		}
@@ -256,15 +265,18 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 		if (isset($exif["EXIF"]["ExposureBiasValue"]))
 		{
 			list($num,$den) = explode("/", $exif["EXIF"]["ExposureBiasValue"]);
-			if (($num / $den) == 0)
+			if ($den)
 			{
-				$exif_exposure_bias = 0;
+				if (($num / $den) == 0)
+				{
+					$exif_exposure_bias = 0;
+				}
+				else
+				{
+					$exif_exposure_bias = $exif["EXIF"]["ExposureBiasValue"];
+				}
+				$exif_data['exif_exposure_bias'] = sprintf($user->lang['EXIF_EXPOSURE_BIAS_EXP'], $exif_exposure_bias);
 			}
-			else
-			{
-				$exif_exposure_bias = $exif["EXIF"]["ExposureBiasValue"];
-			}
-			$exif_data['exif_exposure_bias'] = sprintf($user->lang['EXIF_EXPOSURE_BIAS_EXP'], $exif_exposure_bias);
 		}
 		if (isset($exif["EXIF"]["MeteringMode"]))
 		{
