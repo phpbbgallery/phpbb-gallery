@@ -384,6 +384,8 @@ class install_update extends module
 				nv_change_column(GALLERY_PERMISSIONS_TABLE,	'perm_system',	array('INT:3', 0));
 
 				nv_create_table('phpbb_gallery_contests',	$dbms_data);
+
+			case '0.5.0':
 			break;
 		}
 
@@ -814,7 +816,12 @@ class install_update extends module
 				set_gallery_config('rrc_gindex_rows', 1);
 				set_gallery_config('rrc_gindex_columns', 4);
 				set_gallery_config('rrc_gindex_comments', 0);
-				set_gallery_config('watermark_source', GALLERY_IMAGE_PATH . 'watermark.png');
+
+				// Only overwrite original watermarks
+				if ($gallery_config['watermark_source'] == GALLERY_ROOT_PATH . 'mark.png')
+				{
+					set_gallery_config('watermark_source', GALLERY_IMAGE_PATH . 'watermark.png');
+				}
 
 				// Update permission-system to the constants
 				$sql = 'UPDATE ' . GALLERY_PERMISSIONS_TABLE . '
@@ -905,6 +912,8 @@ class install_update extends module
 			case '0.4.1':
 				/* //@todo: Move on bbcode-change or creating all modules */
 				$reparse_modules_bbcode = true;
+
+			case '0.5.0':
 			break;
 		}
 
@@ -1008,6 +1017,8 @@ class install_update extends module
 					// Logs
 					$gallery_log = array('module_basename' => 'logs',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_log_module,	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_LOGS',	'module_mode' => 'gallery',	'module_auth' => 'acl_a_viewlogs');
 					add_module($gallery_log);
+
+				case '0.5.0':
 				break;
 			}
 
@@ -1027,6 +1038,7 @@ class install_update extends module
 			$modules = $this->gallery_config_options;
 			switch ($gallery_config['phpbb_gallery_version'])
 			{
+				case '0.5.0':
 				case '0.4.1':
 				case '0.4.0-RC3':
 				case '0.4.0-RC2':
