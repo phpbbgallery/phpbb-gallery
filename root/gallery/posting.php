@@ -552,6 +552,7 @@ switch ($mode)
 									$thumbnail = ($gallery_config['gd_version'] == GDLIB1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
 									$resize_function = ($gallery_config['gd_version'] == GDLIB1) ? 'imagecopyresized' : 'imagecopyresampled';
 									$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $image_data['width'], $image_data['height']);
+									imagedestroy($src);
 									switch ($image_data['image_type2'])
 									{
 										case '.jpg':
@@ -566,6 +567,7 @@ switch ($mode)
 											@imagegif($thumbnail, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
 										break;
 									}
+									imagedestroy($thumbnail);
 								}
 								else
 								{

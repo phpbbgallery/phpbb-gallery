@@ -10,7 +10,7 @@
 */
 
 // Comment this line to use the script!
-die ('Please read the first lines of this script for instructions on how to enable it');
+//die ('Please read the first lines of this script for instructions on how to enable it');
 
 /**
 * The script itself must be in develop/
@@ -277,6 +277,7 @@ foreach ($results as $image)
 		$thumbnail = ($gallery_config['gd_version'] == GDLIB1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
 		$resize_function = ($gallery_config['gd_version'] == GDLIB1) ? 'imagecopyresized' : 'imagecopyresampled';
 		$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $image_data['width'], $image_data['height']);
+		imagedestroy($src);
 		switch ($image_filetype)
 		{
 			case '.jpg':
@@ -291,6 +292,7 @@ foreach ($results as $image)
 				@imagegif($thumbnail, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
 			break;
 		}
+		imagedestroy($thumbnail);
 	}
 
 	$multi_images[] = array(
