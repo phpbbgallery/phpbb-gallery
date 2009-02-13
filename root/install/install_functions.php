@@ -461,4 +461,113 @@ function add_bbcode($album_bbcode)
 	}
 }
 
+/**
+* Recalculate Binary Tree
+*
+* borrowed from phpBB3
+* @author: phpBB Group
+* @function: recalc_btree
+* @fixed with recalc_btree_adv.diff from http://www.phpbb.com/bugs/phpbb3/41555
+*/
+function recalc_btree($sql_id, $sql_table, $where_options = array())
+{
+	global $db;
+
+	if (!$sql_id || !$sql_table)
+	{
+		return;
+	}
+
+	$sql_where = '';
+	if ($where_options)
+	{
+		$options = array();
+		foreach ($where_options as $option)
+		{
+			$options[] = "{$option['fieldname']} = '" . $db->sql_escape($option['fieldvalue']) . "'";
+		}
+		$sql_where = 'WHERE ' . implode(' AND ', $options);
+	}
+
+	$sql = "SELECT $sql_id, parent_id, left_id, right_id
+		FROM $sql_table
+		$sql_where
+		ORDER BY left_id ASC, parent_id ASC, $sql_id ASC";
+	$f_result = $db->sql_query($sql);
+
+	while ($item_data = $db->sql_fetchrow($f_result))
+	{
+		if ($item_data['parent_id'])
+		{
+			$sql = "SELECT left_id, right_id
+				FROM $sql_table
+				$sql_where " . (($sql_where) ? 'AND' : 'WHERE') . "
+					$sql_id = {$item_data['parent_id']}";
+			$result = $db->sql_query($sql);
+
+			if (!$row = $db->sql_fetchrow($result))
+			{
+				$sql = "UPDATE $sql_table
+					SET parent_id = 0
+					$sql_where " . (($sql_where) ? 'AND' : 'WHERE') . "
+						$sql_id = " . $item_data[$sql_id];
+				$db->sql_query($sql);
+			}
+			$db->sql_freeresult($result);
+
+			$sql = "UPDATE $sql_table
+				SET left_id = left_id + 2, right_id = right_id + 2
+				$sql_where " . (($sql_where) ? 'AND' : 'WHERE') . "
+					left_id > {$row['right_id']}";
+			$db->sql_query($sql);
+
+			$sql = "UPDATE $sql_table
+				SET right_id = right_id + 2
+				$sql_where " . (($sql_where) ? 'AND' : 'WHERE') . "
+					{$row['left_id']} BETWEEN left_id AND right_id";
+			$db->sql_query($sql);
+
+			$item_data['left_id'] = $row['right_id'];
+			$item_data['right_id'] = $row['right_id'] + 1;
+		}
+		else
+		{
+			$sql = "SELECT MAX(right_id) AS right_id
+				FROM $sql_table
+				$sql_where";
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+
+			$item_data['left_id'] = $row['right_id'] + 1;
+			$item_data['right_id'] = $row['right_id'] + 2;
+		}
+
+		$sql = "UPDATE $sql_table
+			SET left_id = {$item_data['left_id']}, right_id = {$item_data['right_id']}
+			$sql_where " . (($sql_where) ? 'AND' : 'WHERE') . "
+				$sql_id = " . $item_data[$sql_id];
+		$db->sql_query($sql);
+	}
+	$db->sql_freeresult($f_result);
+
+	// Reset to minimum possible left and right id
+	$sql = "SELECT MIN(left_id) min_left_id, MIN(right_id) min_right_id
+		FROM $sql_table
+		$sql_where";
+	$result = $db->sql_query($sql);
+	$row = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+
+	$substract = (int) (min($row['min_left_id'], $row['min_right_id']) - 1);
+
+	if ($substract > 0)
+	{
+		$sql = "UPDATE $sql_table
+			SET left_id = left_id - $substract, right_id = right_id - $substract
+			$sql_where";
+		$db->sql_query($sql);
+	}
+}
+
 ?>
