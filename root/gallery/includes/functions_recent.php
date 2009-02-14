@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 /**
 * Display recent images & comments and random images
 */
-function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_comments = false, $user_id = 0)
+function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_comments = false, $comments = 0, $user_id = 0)
 {
 	global $db, $phpEx, $user, $cache, $auth;
 	global $phpbb_root_path, $gallery_config, $config, $template;
@@ -210,7 +210,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 			WHERE (' . $db->sql_in_set('i.image_album_id', $comment_albums) . '
 				' . (($user_id) ? ') AND i.image_user_id = ' . $user_id : ')') .'
 			ORDER BY c.comment_id DESC';
-		$result = $db->sql_query_limit($sql, $limit_sql);
+		$result = $db->sql_query_limit($sql, $comments);
 
 		while ($commentrow = $db->sql_fetchrow($result))
 		{

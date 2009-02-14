@@ -232,78 +232,7 @@ class install_install extends module
 		nv_add_index(SESSIONS_TABLE, 'session_aid', array('session_album_id'));
 
 		// Set default config
-		set_config('num_images', 0, true);
-		set_config('gallery_total_images', 1);
-
-		set_gallery_config('max_pics', '1024');
-		set_gallery_config('max_file_size', '128000');
-		set_gallery_config('max_width', '800');
-		set_gallery_config('max_height', '600');
-		set_gallery_config('rows_per_page', '3');
-		set_gallery_config('cols_per_page', '4');
-		set_gallery_config('thumbnail_quality', '50');
-		set_gallery_config('thumbnail_size', '125');
-		set_gallery_config('thumbnail_cache', '1');
-		set_gallery_config('sort_method', 't');
-		set_gallery_config('sort_order', 'd');
-		set_gallery_config('jpg_allowed', '1');
-		set_gallery_config('png_allowed', '1');
-		set_gallery_config('gif_allowed', '0');
-		set_gallery_config('desc_length', '512');
-		set_gallery_config('hotlink_prevent', '0');
-		set_gallery_config('hotlink_allowed', 'flying-bits.org');
-		set_gallery_config('rate', '1');
-		set_gallery_config('rate_scale', '10');
-		set_gallery_config('comment', '1');
-		set_gallery_config('gd_version', '2');
-		set_gallery_config('watermark_images', 1);
-		set_gallery_config('watermark_source', GALLERY_IMAGE_PATH . 'watermark.png');
-		set_gallery_config('preview_rsz_height', 600);
-		set_gallery_config('preview_rsz_width', 800);
-		set_gallery_config('upload_images', 10);
-
-		// Added 0.3.0
-		set_gallery_config('thumbnail_info_line', 1);
-
-		// Added 0.3.2-RC1
-		set_gallery_config('fake_thumb_size', 70);
-		set_gallery_config('disp_fake_thumb', 1);
-		set_gallery_config('personal_counter', 0);
-		set_gallery_config('exif_data', 1);
-		set_gallery_config('watermark_height', 50);
-		set_gallery_config('watermark_width', 200);
-
-		// Added 0.4.0-RC3
-		set_gallery_config('shorted_imagenames', 25);
-
-		// Added 0.4.0
-		set_gallery_config('comment_length', 1024);
-		set_gallery_config('description_length', 1024);
-		set_gallery_config('allow_rates', 1);
-		set_gallery_config('allow_comments', 1);
-		set_gallery_config('link_thumbnail', 'lytebox');
-		set_gallery_config('link_image_name', 'image_page');
-		set_gallery_config('link_image_icon', 'image_page');
-		set_gallery_config('resize_images', 1);
-		set_gallery_config('personal_album_index', 0);
-		set_gallery_config('view_image_url', 1);
-		set_gallery_config('medium_cache', 1);
-
-		// Added 0.4.1
-		set_gallery_config('link_imagepage', 'lytebox');
-
-		// Added 0.5.0
-		set_gallery_config('rrc_gindex_mode', 'all');
-		set_gallery_config('rrc_gindex_rows', 1);
-		set_gallery_config('rrc_gindex_columns', 4);
-		set_gallery_config('rrc_gindex_comments', 0);
-
-		// Added //@todo: 
-		set_gallery_config('user_images_profil', 1);
-		set_gallery_config('personal_album_profil', 1);
-		set_gallery_config('rrc_profile_mode', '!comment');
-		set_gallery_config('rrc_profile_columns', 4);
-		set_gallery_config('rrc_profile_rows', 1);
+		set_default_config();
 
 		$auth_admin = new auth_admin();
 		$auth_admin->acl_add_option(array(

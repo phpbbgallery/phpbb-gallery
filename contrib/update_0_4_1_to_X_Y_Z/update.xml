@@ -105,7 +105,7 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
 		);
 		if ($gallery_config['rrc_profile_mode'] != '!all')
 		{
-			recent_gallery_images($gallery_config['rrc_profile_rows'], $gallery_config['rrc_profile_columns'], $display, $gallery_config['rrc_profile_mode'], false, $member['user_id']);
+			recent_gallery_images($gallery_config['rrc_profile_rows'], $gallery_config['rrc_profile_columns'], $display, $gallery_config['rrc_profile_mode'], false, 0, $member['user_id']);
 		}]]></action>
       </edit>
       <edit>

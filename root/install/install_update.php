@@ -846,9 +846,10 @@ class install_update extends module
 				set_gallery_config('rrc_profile_columns', 4);
 				set_gallery_config('rrc_profile_rows', 1);
 
-			case '0.5.0-dev':
+			case '0.5.1-dev':
 				// Delete "confirmed deleted subalbums" #410
 				recalc_btree('album_id', GALLERY_ALBUMS_TABLE, array(array('fieldname' => 'album_user_id', 'fieldvalue' => 0)));
+				set_gallery_config('rrc_gindex_crows', 5);
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
 			break;

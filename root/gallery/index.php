@@ -133,11 +133,12 @@ $display = array(
 * display	array,
 * modes		string(recent|random|comment|!recent|!random|!comment|all), Exp: '!recent' means random + comment
 * collapse	bool	collapse comments
+* comments	int		number of comments
 * user_id	int		user id for user profile view of recent and random images
 */
 if ($gallery_config['rrc_gindex_mode'] != '!all')
 {
-	recent_gallery_images($gallery_config['rrc_gindex_rows'], $gallery_config['rrc_gindex_columns'], $display, $gallery_config['rrc_gindex_mode'], $gallery_config['rrc_gindex_comments']);
+	recent_gallery_images($gallery_config['rrc_gindex_rows'], $gallery_config['rrc_gindex_columns'], $display, $gallery_config['rrc_gindex_mode'], $gallery_config['rrc_gindex_comments'], $gallery_config['rrc_gindex_crows']);
 }
 
 /**
