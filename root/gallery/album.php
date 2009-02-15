@@ -233,7 +233,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 				}
 
 				// Assign the image to the template-block
-				assign_image_block('image_row.image', $images[$j]);
+				assign_image_block('image_row.image', $images[$j], $album_data['album_status']);
 			}
 		}
 	}
