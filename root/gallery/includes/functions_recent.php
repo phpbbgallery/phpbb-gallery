@@ -104,7 +104,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 		if ($recent)
 		{
 			$recent_images = array();
-			$sql = 'SELECT i.*, a.album_name, a.album_id, a.album_user_id
+			$sql = 'SELECT i.*, a.album_name, a.album_status, a.album_id, a.album_user_id
 				FROM ' . GALLERY_IMAGES_TABLE . ' i
 				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
 					ON i.image_album_id = a.album_id
@@ -135,7 +135,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 					}
 
 					// Assign the image to the template-block
-					assign_image_block('recent.image', $recent_images[$j] /*, $album_data['album_type'], $album_data['album_status']*/);
+					assign_image_block('recent.image', $recent_images[$j], $recent_images[$j]['album_status']);
 				}
 			}
 		}
@@ -159,7 +159,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 			}
 
 			$random_images = array();
-			$sql = 'SELECT i.*, a.album_name, a.album_id, a.album_user_id
+			$sql = 'SELECT i.*, a.album_name, a.album_status, a.album_id, a.album_user_id
 				FROM ' . GALLERY_IMAGES_TABLE . ' i
 				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
 					ON i.image_album_id = a.album_id
@@ -190,7 +190,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 					}
 
 					// Assign the image to the template-block
-					assign_image_block('random.image', $random_images[$j] /*, $album_data['album_type'], $album_data['album_status']*/);
+					assign_image_block('random.image', $random_images[$j], $random_images[$j]['album_status']);
 				}
 			}
 		}

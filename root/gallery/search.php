@@ -399,7 +399,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 		if ($search_results == 'image')
 		{
 			$sql_array = array(
-				'SELECT'		=> 'i.*, a.album_name',
+				'SELECT'		=> 'i.*, a.album_name, a.album_status',
 				'FROM'			=> array(GALLERY_IMAGES_TABLE => 'i'),
 
 				'LEFT_JOIN'		=> array(
@@ -440,7 +440,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 					}
 
 					// Assign the image to the template-block
-					assign_image_block('imagerow.image', $rowset[$j]);
+					assign_image_block('imagerow.image', $rowset[$j], $rowset[$j]['album_status']);
 				}
 			}
 		}

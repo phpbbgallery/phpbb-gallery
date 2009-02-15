@@ -546,7 +546,7 @@ function get_album_moderators(&$album_moderators, $album_id = false)
 * @param string	$template_block	Name of the template-block
 * @param array	$image_data		Array with the image-data, all columns of GALLERY_IMAGES_TABLE are needed. album_name may be additionally assigned
 */
-function assign_image_block($template_block, &$image_data)
+function assign_image_block($template_block, &$image_data, $album_status)
 {
 	global $auth, $gallery_config, $template, $user;
 	global $gallery_root_path, $phpbb_root_path, $phpEx;
@@ -561,8 +561,8 @@ function assign_image_block($template_block, &$image_data)
 	}
 
 	$perm_user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
-	$allow_edit = ((gallery_acl_check('i_edit', $image_data['image_album_id']) && ($image_data['image_user_id'] == $perm_user_id)) || gallery_acl_check('m_edit', $image_data['image_album_id'])) ? true : false;
-	$allow_delete = ((gallery_acl_check('i_delete', $image_data['image_album_id']) && ($image_data['image_user_id'] == $perm_user_id)) || gallery_acl_check('m_delete', $image_data['image_album_id'])) ? true : false;
+	$allow_edit = ((gallery_acl_check('i_edit', $image_data['image_album_id']) && ($image_data['image_user_id'] == $perm_user_id) && ($album_status != ITEM_LOCKED)) || gallery_acl_check('m_edit', $image_data['image_album_id'])) ? true : false;
+	$allow_delete = ((gallery_acl_check('i_delete', $image_data['image_album_id']) && ($image_data['image_user_id'] == $perm_user_id) && ($album_status != ITEM_LOCKED)) || gallery_acl_check('m_delete', $image_data['image_album_id'])) ? true : false;
 
 	$template->assign_block_vars($template_block, array(
 		'IMAGE_ID'		=> $image_data['image_id'],
