@@ -26,6 +26,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'ALBUM'							=> 'Album',
 	'ALBUM_IS_CATEGORY'				=> 'Das Album, in welches du dich gemogelt hast, ist eine Kategorie.<br />In Kategorien können keine Bilder hochgeladen werden.',
+	'ALBUM_LOCKED'					=> 'Gesperrt',
 	'ALBUM_NAME'					=> 'Name des Albums',
 	'ALBUM_NOT_EXIST'				=> 'Dieses Album existiert nicht',
 	'ALBUM_PERMISSIONS'				=> 'Berechtigungen in diesem Album',
@@ -69,8 +70,8 @@ $lang = array_merge($lang, array(
 	'CONTEST_RATING_STARTED'		=> 'Die Bewertung für diesen Wettbewerb begann am %s.',
 	'CONTEST_RATING_STARTS'			=> 'Die Bewertung für diesen Wettbewerb beginnt am %s.',
 	'CONTEST_RATING_ENDED'			=> 'Die Bewertung für diesen Wettbewerb endete am %s.',
-	'CONTEST_ENDED'					=> 'Diesen Wettbewerb endete am %s.',
-	'CONTEST_ENDS'					=> 'Diesen Wettbewerb endet am %s.',
+	'CONTEST_ENDED'					=> 'Dieser Wettbewerb endete am %s.',
+	'CONTEST_ENDS'					=> 'Dieser Wettbewerb endet am %s.',
 	'CONTEST_USERNAME'				=> '<strong>Wettbewerb</strong>',
 	'CONTEST_USERNAME_LONG'			=> '<strong>Wettbewerb</strong> » Der Benutzername wird bis zum Ende des Wettbewerbs am %s versteckt.',
 
