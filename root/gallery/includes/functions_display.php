@@ -248,6 +248,10 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		{
 			$folder_image = 'forum_read';
 		}
+		if ($row['album_status'] == ITEM_LOCKED)
+		{
+			$folder_image = 'forum_read_locked';
+		}
 
 		$folder_alt = '';
 
@@ -291,7 +295,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		$template->assign_block_vars('albumrow', array(
 			'S_IS_CAT'			=> false,
 			'S_NO_CAT'			=> $catless && !$last_catless,
-			//'S_LOCKED_ALBUM'	=> ($row['album_status'] == ITEM_LOCKED) ? true : false,
+			'S_LOCKED_ALBUM'	=> ($row['album_status'] == ITEM_LOCKED) ? true : false,
 			'S_LIST_SUBALBUMS'	=> ($row['display_subalbum_list']) ? true : false,
 			'S_SUBALBUMS'		=> (sizeof($subalbums_list)) ? true : false,
 
@@ -542,7 +546,7 @@ function get_album_moderators(&$album_moderators, $album_id = false)
 * @param string	$template_block	Name of the template-block
 * @param array	$image_data		Array with the image-data, all columns of GALLERY_IMAGES_TABLE are needed. album_name may be additionally assigned
 */
-function assign_image_block($template_block, &$image_data, $album_status = false)
+function assign_image_block($template_block, &$image_data)
 {
 	global $auth, $gallery_config, $template, $user;
 	global $gallery_root_path, $phpbb_root_path, $phpEx;

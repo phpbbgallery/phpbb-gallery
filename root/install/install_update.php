@@ -386,6 +386,8 @@ class install_update extends module
 				nv_create_table('phpbb_gallery_contests',	$dbms_data);
 
 			case '0.5.0':
+			case '0.5.1-dev':
+				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_status',			array('UINT:1', 0));
 			break;
 		}
 

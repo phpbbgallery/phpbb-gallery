@@ -45,7 +45,7 @@ function toggleElement(oElement)
 
 	<!-- IF U_UPLOAD_IMAGE -->
 		<div class="buttons">
-			<div class="upload-icon"><a href="{U_UPLOAD_IMAGE}" title="{L_UPLOAD_IMAGE}"><span></span>{L_UPLOAD_IMAGE}</a></div>
+			<div class="<!-- IF S_IS_LOCKED -->locked-icon<!-- ELSE -->upload-icon<!-- ENDIF -->"><a href="{U_UPLOAD_IMAGE}" title="<!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF -->"><span></span><!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF --></a></div>
 		</div>
 	<!-- ENDIF -->
 
@@ -149,7 +149,7 @@ function toggleElement(oElement)
 	<div class="topic-actions">
 		<!-- IF U_UPLOAD_IMAGE -->
 			<div class="buttons">
-				<div class="upload-icon"><a href="{U_UPLOAD_IMAGE}" title="{L_UPLOAD_IMAGE}"><span></span>{L_UPLOAD_IMAGE}</a></div>
+				<div class="<!-- IF S_IS_LOCKED -->locked-icon<!-- ELSE -->upload-icon<!-- ENDIF -->"><a href="{U_UPLOAD_IMAGE}" title="<!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF -->"><span></span><!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF --></a></div>
 			</div>
 		<!-- ENDIF -->
 		<div class="pagination">

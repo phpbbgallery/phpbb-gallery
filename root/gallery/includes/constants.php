@@ -22,9 +22,6 @@ define('ALBUM_CAT', 0);
 define('ALBUM_UPLOAD', 1);
 define('ALBUM_CONTEST', 2);
 
-define('ALBUM_UNLOCKED', 0);
-define('ALBUM_LOCKED', 1);
-
 define('IMAGE_UNAPPROVED', 0);
 define('IMAGE_APPROVED', 1);
 define('IMAGE_LOCKED', 2);

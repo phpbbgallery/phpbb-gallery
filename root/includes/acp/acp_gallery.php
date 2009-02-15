@@ -445,6 +445,9 @@ class acp_gallery
 			$s_album_type .= '<option value="' . ALBUM_CAT . '">' . $user->lang['ALBUM_TYPE_CAT'] . '</option>';
 			$s_album_type .= '<option value="' . ALBUM_UPLOAD . '" selected="selected">' . $user->lang['ALBUM_TYPE_UPLOAD'] . '</option>';
 			$s_album_type .= '<option value="' . ALBUM_CONTEST . '">' . $user->lang['ALBUM_TYPE_CONTEST'] . '</option>';
+
+			$statuslist = '<option value="' . ITEM_UNLOCKED . '" selected="selected">' . $user->lang['UNLOCKED'] . '</option><option value="' . ITEM_LOCKED . '">' . $user->lang['LOCKED'] . '</option>';
+
 			$template->assign_vars(array(
 				'S_CREATE_ALBUM'				=> true,
 				'ACP_GALLERY_TITLE'				=> $user->lang['GALLERY_ALBUMS_TITLE'],
@@ -455,6 +458,7 @@ class acp_gallery
 				'S_DESC_BBCODE_CHECKED'		=> true,
 				'S_DESC_SMILIES_CHECKED'	=> true,
 				'S_DESC_URLS_CHECKED'		=> true,
+				'S_STATUS_OPTIONS'			=> $statuslist,
 				'S_DISPLAY_SUBALBUM_LIST'	=> true,
 				'S_DISPLAY_ON_INDEX'		=> true,
 
@@ -485,6 +489,7 @@ class acp_gallery
 				//left_id and right_id are created some lines later
 				'album_parents'					=> '',
 				'album_type'					=> request_var('album_type', 0),
+				'album_status'					=> request_var('album_status', 0),
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc(request_var('album_desc', '', true)),
 				'album_user_id'					=> 0,
@@ -677,6 +682,9 @@ class acp_gallery
 			$s_album_type .= '<option value="' . ALBUM_CAT . (($album_data['album_type'] == ALBUM_CAT) ? '" selected="selected' : '') . '">' . $user->lang['ALBUM_TYPE_CAT'] . '</option>';
 			$s_album_type .= '<option value="' . ALBUM_UPLOAD . (($album_data['album_type'] == ALBUM_UPLOAD) ? '" selected="selected' : '') . '">' . $user->lang['ALBUM_TYPE_UPLOAD'] . '</option>';
 			$s_album_type .= '<option value="' . ALBUM_CONTEST . (($album_data['album_type'] == ALBUM_CONTEST) ? '" selected="selected' : '') . '">' . $user->lang['ALBUM_TYPE_CONTEST'] . '</option>';
+
+			$statuslist = '<option value="' . ITEM_UNLOCKED . '"' . (($album_data['album_status'] == ITEM_UNLOCKED) ? ' selected="selected"' : '') . '>' . $user->lang['UNLOCKED'] . '</option><option value="' . ITEM_LOCKED . '"' . (($album_data['album_status'] == ITEM_LOCKED) ? ' selected="selected"' : '') . '>' . $user->lang['LOCKED'] . '</option>';
+
 			$template->assign_vars(array(
 				'S_EDIT_ALBUM'				=> true,
 				'ACP_GALLERY_TITLE'			=> $user->lang['EDIT_ALBUM'] . ' :: ' . $album_data['album_name'],
@@ -697,6 +705,7 @@ class acp_gallery
 				'S_ALBUM_CONTEST'			=> ($album_data['album_type'] == ALBUM_CONTEST) ? true : false,
 				'ALBUM_IMAGE'				=> $album_data['album_image'],
 				'ALBUM_IMAGE_SRC'			=> ($album_data['album_image']) ? $phpbb_root_path . $album_data['album_image'] : '',
+				'S_STATUS_OPTIONS'			=> $statuslist,
 				'S_DISPLAY_SUBALBUM_LIST'	=> ($album_data['display_subalbum_list']) ? true : false,
 				'S_DISPLAY_ON_INDEX'		=> ($album_data['display_on_index']) ? true : false,
 
@@ -723,6 +732,7 @@ class acp_gallery
 				//left_id and right_id are created some lines later
 				'album_parents'					=> '',
 				'album_type'					=> request_var('album_type', 0),
+				'album_status'					=> request_var('album_status', 0),
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc(request_var('album_desc', '', true)),
 				'album_image'					=> request_var('album_image', ''),

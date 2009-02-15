@@ -810,6 +810,7 @@ function get_schema_struct()
 			'right_id'				=> array('UINT', 2),
 			'album_parents'			=> array('MTEXT_UNI', ''),
 			'album_type'			=> array('UINT:3', 1),
+			'album_status'			=> array('UINT:1', 1),
 			'album_contest'			=> array('UINT', 0),
 			'album_name'			=> array('VCHAR:255', ''),
 			'album_desc'			=> array('MTEXT_UNI', ''),

@@ -163,6 +163,10 @@
 		</dl>
 		<!-- ENDIF -->
 		<dl>
+			<dt><label for="album_status">{L_ALBUM_STATUS}:</label></dt>
+			<dd><select id="album_status" name="album_status">{S_STATUS_OPTIONS}</select></dd>
+		</dl>
+		<dl>
 			<dt><label for="display_subalbum_list">{L_LIST_SUBALBUMS}:</label><br /><span>{L_LIST_SUBALBUMS_EXPLAIN}</span></dt>
 			<dd><label><input type="radio" class="radio" name="display_subalbum_list" value="1"<!-- IF S_DISPLAY_SUBALBUM_LIST --> id="display_subalbum_list" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 				<label><input type="radio" class="radio" name="display_subalbum_list" value="0"<!-- IF not S_DISPLAY_SUBALBUM_LIST --> id="display_subalbum_list" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>

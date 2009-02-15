@@ -15,6 +15,7 @@ CREATE TABLE phpbb_gallery_albums (
 	right_id number(8) DEFAULT '2' NOT NULL,
 	album_parents clob DEFAULT '' ,
 	album_type number(3) DEFAULT '1' NOT NULL,
+	album_status number(1) DEFAULT '1' NOT NULL,
 	album_contest number(8) DEFAULT '0' NOT NULL,
 	album_name varchar2(255) DEFAULT '' ,
 	album_desc clob DEFAULT '' ,

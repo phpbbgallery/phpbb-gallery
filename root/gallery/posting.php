@@ -116,7 +116,7 @@ switch ($mode)
 		switch ($submode)
 		{
 			case 'upload':
-				if (!gallery_acl_check('i_upload', $album_id))
+				if (!gallery_acl_check('i_upload', $album_id) && ($album_data['album_status'] != ITEM_LOCKED))
 				{
 					if (!$user->data['is_registered'])
 					{
@@ -130,7 +130,7 @@ switch ($mode)
 				}
 			break;
 			case 'edit':
-				if ((!gallery_acl_check('i_edit', $album_id)) || (($image_data['image_user_id'] <> $user->data['user_id']) && !gallery_acl_check('m_edit', $album_id)))
+				if ((!gallery_acl_check('i_edit', $album_id)) || (($image_data['image_user_id'] <> $user->data['user_id']) && (!gallery_acl_check('m_edit', $album_id))))
 				{
 					if (!$user->data['is_registered'])
 					{
@@ -142,7 +142,7 @@ switch ($mode)
 						trigger_error('NOT_AUTHORISED');
 					}
 				}
-				else if (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != IMAGE_APPROVED))
+				else if ((!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != IMAGE_APPROVED)) || (!gallery_acl_check('m_edit', $album_id) && ($album_data['album_status'] == ITEM_LOCKED)))
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
@@ -180,7 +180,7 @@ switch ($mode)
 						trigger_error('NOT_AUTHORISED');
 					}
 				}
-				else if (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != IMAGE_APPROVED))
+				else if ((!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != IMAGE_APPROVED)) || (!gallery_acl_check('m_edit', $album_id) && ($album_data['album_status'] == ITEM_LOCKED)))
 				{
 					meta_refresh(3, $image_backlink);
 					trigger_error('NOT_AUTHORISED');
@@ -225,7 +225,7 @@ switch ($mode)
 		switch ($submode)
 		{
 			case 'add':
-				if (!gallery_acl_check('c_post', $album_id))
+				if (!gallery_acl_check('c_post', $album_id) || ($album_data['album_status'] != ITEM_LOCKED))
 				{
 					if (!$user->data['is_registered'])
 					{
@@ -240,7 +240,7 @@ switch ($mode)
 			break;
 
 			case 'edit':
-				if (!gallery_acl_check('c_edit', $album_id))
+				if (!gallery_acl_check('c_edit', $album_id) || (($album_data['album_status'] == ITEM_LOCKED) && !gallery_acl_check('m_comments', $album_id)))
 				{
 					if (!$user->data['is_registered'])
 					{
@@ -260,7 +260,7 @@ switch ($mode)
 			break;
 
 			case 'delete':
-				if (!gallery_acl_check('c_delete', $album_id))
+				if (!gallery_acl_check('c_delete', $album_id) || (($album_data['album_status'] == ITEM_LOCKED) && !gallery_acl_check('m_comments', $album_id)))
 				{
 					if (!$user->data['is_registered'])
 					{
@@ -280,7 +280,7 @@ switch ($mode)
 			break;
 
 			case 'rate':
-				if (!gallery_acl_check('i_rate', $album_id))
+				if (!gallery_acl_check('i_rate', $album_id) || ($album_data['album_status'] == ITEM_LOCKED))
 				{
 					if (!$user->data['is_registered'])
 					{

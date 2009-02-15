@@ -51,6 +51,7 @@ $lang = array_merge($lang, array(
 	'ALBUM_PASSWORD_CONFIRM'		=> 'Album-Passwort bestättigen',
 	'ALBUM_PASSWORD_CONFIRM_EXPLAIN'	=> 'Muss nur ausgefüllt werden, wenn ein Album-Passwort vergeben wird.',
 	'ALBUM_SETTINGS'				=> 'Album Einstellungen',
+	'ALBUM_STATUS'					=> 'Album-Status',
 	'ALBUM_TYPE'					=> 'Album-Typ',
 	'ALBUM_TYPE_CAT'				=> 'Kategorie',
 	'ALBUM_TYPE_CONTEST'			=> 'Wettbewerb',
@@ -156,6 +157,7 @@ $lang = array_merge($lang, array(
 	'LIST_INDEX_EXPLAIN'			=> 'Zeigt einen Link zu diesem Album in der Legende des übergeordneten Albums an, wenn dort die Option „Subalben in Legende aufführen“ aktiviert ist.',
 	'LIST_SUBALBUMS'				=> 'Subalben in Legende aufführen',
 	'LIST_SUBALBUMS_EXPLAIN'		=> 'Führt die Subalben, bei denen die Option „Führe Subalben in der Legende des übergeordneten Albums auf“ aktiviert ist, in der Legende dieses Albums in der Alben-Übersicht und anderswo auf.',
+	'LOCKED'						=> 'Gesperrt',
 
 	'MANAGE_CRASHED_ENTRIES'		=> 'Defekte Einträge verwalten',
 	'MANAGE_CRASHED_IMAGES'			=> 'Defekte Bilder verwalten',
@@ -285,6 +287,7 @@ $lang = array_merge($lang, array(
 	'UC_LINK_LYTEBOX'				=> 'Lytebox-Feature öffnen',
 	'UC_LINK_NONE'					=> 'Kein Link',
 	'UC_THUMBNAIL'					=> 'Thumbnail',
+	'UNLOCKED'						=> 'Entsperrt',
 	'UPLOAD_IMAGES'					=> 'Mehrere Bilder auf einmal hochladen',
 
 	'VIEW_IMAGE_URL'				=> 'Link zum Bild auf der Imagepage anzeigen',

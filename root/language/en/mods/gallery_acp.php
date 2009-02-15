@@ -50,7 +50,8 @@ $lang = array_merge($lang, array(
 	'ALBUM_PASSWORD_EXPLAIN'		=> 'Defines a password for this album, use the permission system in preference.',
 	'ALBUM_PASSWORD_CONFIRM'		=> 'Confirm album password',
 	'ALBUM_PASSWORD_CONFIRM_EXPLAIN'	=> 'Only needs to be set if a album password is entered.',
-	'ALBUM_SETTINGS'				=> 'Album Settings',
+	'ALBUM_SETTINGS'				=> 'Album settings',
+	'ALBUM_STATUS'					=> 'Album status',
 	'ALBUM_TYPE'					=> 'Album type',
 	'ALBUM_TYPE_CAT'				=> 'Category',
 	'ALBUM_TYPE_CONTEST'			=> 'Contest',
@@ -156,6 +157,7 @@ $lang = array_merge($lang, array(
 	'LIST_INDEX_EXPLAIN'			=> 'Displays this album on the index and elsewhere as a link within the legend of its parent-album if the parent-album’s “List subalbums in legend” option is enabled.',
 	'LIST_SUBALBUMS'				=> 'List subalbums in legend',
 	'LIST_SUBALBUMS_EXPLAIN'		=> 'Displays this album’s subalbums on the index and elsewhere as a link within the legend if their “List subalbum in parent-album’s legend” option is enabled.',
+	'LOCKED'						=> 'Locked',
 
 	'MANAGE_CRASHED_ENTRIES'		=> 'Manage crashed entries',
 	'MANAGE_CRASHED_IMAGES'			=> 'Manage crashed images',
@@ -285,6 +287,7 @@ $lang = array_merge($lang, array(
 	'UC_LINK_LYTEBOX'				=> 'Open Lytebox-Feature',
 	'UC_LINK_NONE'					=> 'No Link',
 	'UC_THUMBNAIL'					=> 'Thumbnail',
+	'UNLOCKED'						=> 'Unlocked',
 	'UPLOAD_IMAGES'					=> 'Upload Multiple Images',
 
 	'VIEW_IMAGE_URL'				=> 'View Image-URL on imagepage',

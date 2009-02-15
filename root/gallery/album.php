@@ -46,7 +46,7 @@ $sort_dir	= request_var('sd', $gallery_config['sort_order']);
 $album_data	= get_album_info($album_id);
 
 // End contest
-if ($album_data['contest_id'] && $album_data['contest_marked'] && ($album_data['contest_end'] < time()))
+if ($album_data['contest_id'] && $album_data['contest_marked'] && (($album_data['contest_start'] + $album_data['contest_end']) < time()))
 {
 	$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 		SET image_contest = ' . IMAGE_NO_CONTEST . '
@@ -77,7 +77,7 @@ if ($album_data['contest_id'] && $album_data['contest_marked'] && ($album_data['
 /**
 * Build auth-list
 */
-gen_album_auth_level('album', $album_id, 0 /*$album_data['album_status']*/);
+gen_album_auth_level('album', $album_id, $album_data['album_status']);
 if (!gallery_acl_check('i_view', $album_id))
 {
 	if ($user->data['is_bot'])
@@ -233,7 +233,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 				}
 
 				// Assign the image to the template-block
-				assign_image_block('image_row.image', $images[$j] /*, $album_data['album_status']*/);
+				assign_image_block('image_row.image', $images[$j]);
 			}
 		}
 	}
@@ -260,7 +260,8 @@ if ($album_data['album_type'] != ALBUM_CAT)
 
 $template->assign_vars(array(
 	'S_IS_POSTABLE'				=> ($album_data['album_type'] != ALBUM_CAT) ? true : false,
-	'UPLOAD_IMG'				=> /*($album_data['album_status'] == ALBUM_LOCKED) ? $user->img('button_topic_locked', $post_alt) : */$user->img('button_upload_image', 'UPLOAD_IMAGE'),
+	'S_IS_LOCKED'				=> ($album_data['album_status'] == ITEM_LOCKED) ? true : false,
+	'UPLOAD_IMG'				=> ($album_data['album_status'] == ITEM_LOCKED) ? $user->img('button_topic_locked', 'ALBUM_LOCKED') : $user->img('button_upload_image', 'UPLOAD_IMAGE'),
 	'S_MODE'					=> $album_data['album_type'],
 	'L_MODERATORS'				=> $l_moderator,
 	'MODERATORS'				=> $moderators_list,

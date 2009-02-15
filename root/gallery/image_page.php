@@ -148,8 +148,8 @@ $template->assign_vars(array(
 	'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_IMAGE'),
 	'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_IMAGE'),
 	'REPORT_IMG'		=> $user->img('icon_post_report', 'REPORT_IMAGE'),
-	'U_EDIT'			=> ((gallery_acl_check('i_edit', $album_id) && ($image_data['image_user_id'] == $user->data['user_id'])) || gallery_acl_check('m_edit', $album_id)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id") : '',
-	'U_DELETE'			=> ((gallery_acl_check('i_delete', $album_id) && ($image_data['image_user_id'] == $user->data['user_id'])) || gallery_acl_check('m_delete', $album_id)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=delete&amp;album_id=$album_id&amp;image_id=$image_id") : '',
+	'U_EDIT'			=> ((gallery_acl_check('i_edit', $album_id) && ($image_data['image_user_id'] == $user->data['user_id']) && ($album_data['album_status'] != ITEM_LOCKED)) || gallery_acl_check('m_edit', $album_id)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id") : '',
+	'U_DELETE'			=> ((gallery_acl_check('i_delete', $album_id) && ($image_data['image_user_id'] == $user->data['user_id']) && ($album_data['album_status'] != ITEM_LOCKED)) || gallery_acl_check('m_delete', $album_id)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=delete&amp;album_id=$album_id&amp;image_id=$image_id") : '',
 	'U_REPORT'			=> (gallery_acl_check('i_report', $album_id) && ($image_data['image_user_id'] != $user->data['user_id'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=report&amp;album_id=$album_id&amp;image_id=$image_id") : '',
 
 	'IMAGE_NAME'		=> $image_data['image_name'],
@@ -341,7 +341,7 @@ if ($gallery_config['allow_rates'])
 	}
 
 	// Check: User didn't rate yet, has permissions, it's not the users own image and the user is logged in
-	if (!$your_rating && gallery_acl_check('i_rate', $album_id) && ($user->data['user_id'] != $image_data['image_user_id']) && ($user->data['user_id'] != ANONYMOUS))
+	if (!$your_rating && gallery_acl_check('i_rate', $album_id) && ($user->data['user_id'] != $image_data['image_user_id']) && ($user->data['user_id'] != ANONYMOUS) && ($album_data['album_status'] != ITEM_LOCKED))
 	{
 		$hide_rate = false;
 		if ($album_data['contest_id'])
@@ -381,7 +381,7 @@ if ($gallery_config['allow_rates'])
 /**
 * Posting comment
 */
-if ($gallery_config['allow_comments'] && gallery_acl_check('c_post', $album_id))
+if ($gallery_config['allow_comments'] && gallery_acl_check('c_post', $album_id) && ($album_data['album_status'] != ITEM_LOCKED))
 {
 	$user->add_lang('posting');
 	include("{$phpbb_root_path}includes/functions_posting.$phpEx");

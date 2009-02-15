@@ -283,7 +283,7 @@ function gen_album_auth_level($mode, $album_id, $album_status)
 {
 	global $template, $user, $gallery_config, $album_access_array;
 
-	$locked = ($album_status == ALBUM_LOCKED && gallery_acl_check('m_', $album_id)) ? true : false;
+	$locked = ($album_status == ITEM_LOCKED && !gallery_acl_check('m_', $album_id)) ? true : false;
 
 	$rules = array(
 		(gallery_acl_check('i_view', $album_id) && !$locked) ? $user->lang['ALBUM_VIEW_CAN'] : $user->lang['ALBUM_VIEW_CANNOT'],

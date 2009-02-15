@@ -363,7 +363,7 @@ function update_album_info($album_id)
 	// Number of approved images
 	$sql = 'SELECT COUNT(image_id) images
 		FROM ' . GALLERY_IMAGES_TABLE . '
-		WHERE image_status = 1
+		WHERE image_status = ' . IMAGE_APPROVED . '
 			AND image_album_id = ' . (int) $album_id;
 	$result = $db->sql_query($sql);
 	$images = $db->sql_fetchfield('images');
@@ -380,7 +380,7 @@ function update_album_info($album_id)
 	// Data of the last approved image
 	$sql = 'SELECT image_id, image_time, image_name, image_username, image_user_colour, image_user_id
 		FROM ' . GALLERY_IMAGES_TABLE . '
-		WHERE image_status = 1 AND
+		WHERE image_status = ' . IMAGE_APPROVED . ' AND
 			image_album_id = ' . (int) $album_id . '
 		ORDER BY image_time DESC';
 	$result = $db->sql_query($sql);
@@ -438,7 +438,7 @@ function handle_image_counter($image_id_ary, $add, $readd = false)
 	$num_images = 0;
 	$sql = 'SELECT COUNT(image_id) images, image_user_id
 		FROM ' . GALLERY_IMAGES_TABLE . '
-		WHERE image_status ' . (($readd) ? '<>' : '=') . ' 1
+		WHERE image_status ' . (($readd) ? '<>' : '=') . ' ' . IMAGE_APPROVED . '
 			AND ' . $db->sql_in_set('image_id', $image_id_ary) . '
 		GROUP BY image_user_id';
 	$result = $db->sql_query($sql);
