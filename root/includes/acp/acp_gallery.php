@@ -455,6 +455,8 @@ class acp_gallery
 				'S_DESC_BBCODE_CHECKED'		=> true,
 				'S_DESC_SMILIES_CHECKED'	=> true,
 				'S_DESC_URLS_CHECKED'		=> true,
+				'S_DISPLAY_SUBALBUM_LIST'	=> true,
+				'S_DISPLAY_ON_INDEX'		=> true,
 
 				'ALBUM_TYPE'				=> ALBUM_UPLOAD,
 				'ALBUM_CAT'					=> ALBUM_CAT,
@@ -488,6 +490,8 @@ class acp_gallery
 				'album_user_id'					=> 0,
 				'album_last_username'			=> '',
 				'album_image'					=> request_var('album_image', ''),
+				'display_subalbum_list'			=> request_var('display_subalbum_list', 0),
+				'display_on_index'				=> request_var('display_on_index', 0),
 			);
 			generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], request_var('desc_parse_bbcode', false), request_var('desc_parse_urls', false), request_var('desc_parse_smilies', false));
 
@@ -693,6 +697,8 @@ class acp_gallery
 				'S_ALBUM_CONTEST'			=> ($album_data['album_type'] == ALBUM_CONTEST) ? true : false,
 				'ALBUM_IMAGE'				=> $album_data['album_image'],
 				'ALBUM_IMAGE_SRC'			=> ($album_data['album_image']) ? $phpbb_root_path . $album_data['album_image'] : '',
+				'S_DISPLAY_SUBALBUM_LIST'	=> ($album_data['display_subalbum_list']) ? true : false,
+				'S_DISPLAY_ON_INDEX'		=> ($album_data['display_on_index']) ? true : false,
 
 				'CONTEST_START'				=> $user->format_date((($album_data['contest_start']) ? $album_data['contest_start'] : time())),
 				'CONTEST_RATING'			=> ($album_data['contest_rating'] / 86400),
@@ -720,6 +726,8 @@ class acp_gallery
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc(request_var('album_desc', '', true)),
 				'album_image'					=> request_var('album_image', ''),
+				'display_subalbum_list'			=> request_var('display_subalbum_list', 0),
+				'display_on_index'				=> request_var('display_on_index', 0),
 			);
 
 			generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], request_var('desc_parse_bbcode', false), request_var('desc_parse_urls', false), request_var('desc_parse_smilies', false));

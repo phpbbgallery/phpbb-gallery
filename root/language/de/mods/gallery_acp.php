@@ -152,6 +152,11 @@ $lang = array_merge($lang, array(
 
 	'JPG_ALLOWED'					=> 'Es ist erlaubt JPG- Dateien hochzuladen',
 
+	'LIST_INDEX'					=> 'Führe Subalbum in der Legende des übergeordneten Albums auf',
+	'LIST_INDEX_EXPLAIN'			=> 'Zeigt einen Link zu diesem Album in der Legende des übergeordneten Albums an, wenn dort die Option „Subalben in Legende aufführen“ aktiviert ist.',
+	'LIST_SUBALBUMS'				=> 'Subalben in Legende aufführen',
+	'LIST_SUBALBUMS_EXPLAIN'		=> 'Führt die Subalben, bei denen die Option „Führe Subalben in der Legende des übergeordneten Albums auf“ aktiviert ist, in der Legende dieses Albums in der Alben-Übersicht und anderswo auf.',
+
 	'MANAGE_CRASHED_ENTRIES'		=> 'Defekte Einträge verwalten',
 	'MANAGE_CRASHED_IMAGES'			=> 'Defekte Bilder verwalten',
 	'MANAGE_PERSONALS'				=> 'Persönliche Alben verwalten',

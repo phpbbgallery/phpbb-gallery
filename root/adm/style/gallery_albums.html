@@ -162,6 +162,16 @@
 				<label><input type="radio" class="radio" name="add_on_top" value="0" id="add_on_top" checked="checked" /> {L_NO}</label></dd>
 		</dl>
 		<!-- ENDIF -->
+		<dl>
+			<dt><label for="display_subalbum_list">{L_LIST_SUBALBUMS}:</label><br /><span>{L_LIST_SUBALBUMS_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" class="radio" name="display_subalbum_list" value="1"<!-- IF S_DISPLAY_SUBALBUM_LIST --> id="display_subalbum_list" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="display_subalbum_list" value="0"<!-- IF not S_DISPLAY_SUBALBUM_LIST --> id="display_subalbum_list" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
+		<dl>
+			<dt><label for="display_on_index">{L_LIST_INDEX}:</label><br /><span>{L_LIST_INDEX_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" class="radio" name="display_on_index" value="1"<!-- IF S_DISPLAY_ON_INDEX --> id="display_on_index" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="display_on_index" value="0"<!-- IF not S_DISPLAY_ON_INDEX --> id="display_on_index" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
 		</fieldset>
 	</div>
 	<div id="album_contest_options">

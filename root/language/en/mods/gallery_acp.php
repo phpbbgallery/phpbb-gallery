@@ -152,6 +152,11 @@ $lang = array_merge($lang, array(
 
 	'JPG_ALLOWED'					=> 'Allowed to upload JPG files',
 
+	'LIST_INDEX'					=> 'List subalbum in parent-album’s legend',
+	'LIST_INDEX_EXPLAIN'			=> 'Displays this album on the index and elsewhere as a link within the legend of its parent-album if the parent-album’s “List subalbums in legend” option is enabled.',
+	'LIST_SUBALBUMS'				=> 'List subalbums in legend',
+	'LIST_SUBALBUMS_EXPLAIN'		=> 'Displays this album’s subalbums on the index and elsewhere as a link within the legend if their “List subalbum in parent-album’s legend” option is enabled.',
+
 	'MANAGE_CRASHED_ENTRIES'		=> 'Manage crashed entries',
 	'MANAGE_CRASHED_IMAGES'			=> 'Manage crashed images',
 	'MANAGE_PERSONALS'				=> 'Manage personal albums',
