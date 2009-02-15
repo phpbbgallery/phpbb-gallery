@@ -495,6 +495,7 @@ class acp_gallery
 			{
 				trigger_error($user->lang['MISSING_ALBUM_NAME'] . adm_back_link(append_sid("{$phpbb_admin_path}index.$phpEx", 'i=gallery&amp;mode=manage_albums&action=create')));
 			}
+			$add_on_top = request_var('add_on_top', 0);
 
 			/**
 			* borrowed from phpBB3
@@ -514,33 +515,65 @@ class acp_gallery
 				{
 					trigger_error($user->lang['PARENT_NOT_EXIST'] . adm_back_link($this->u_action . '&amp;' . $this->parent_id), E_USER_WARNING);
 				}
+				if (!$add_on_top)
+				{
+					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
+						SET left_id = left_id + 2, right_id = right_id + 2
+						WHERE left_id > ' . $row['right_id'] . '
+							AND album_user_id = ' . $album_data['album_user_id'];
+					$db->sql_query($sql);
 
-				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
-					SET left_id = left_id + 2, right_id = right_id + 2
-					WHERE left_id > ' . $row['right_id'] . '
-						AND album_user_id = ' . $album_data['album_user_id'];
-				$db->sql_query($sql);
+					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
+						SET right_id = right_id + 2
+						WHERE ' . $row['left_id'] . ' BETWEEN left_id AND right_id
+							AND album_user_id = ' . $album_data['album_user_id'];
+					$db->sql_query($sql);
 
-				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
-					SET right_id = right_id + 2
-					WHERE ' . $row['left_id'] . ' BETWEEN left_id AND right_id
-						AND album_user_id = ' . $album_data['album_user_id'];
-				$db->sql_query($sql);
+					$album_data['left_id'] = $row['right_id'];
+					$album_data['right_id'] = $row['right_id'] + 1;
+				}
+				else
+				{
+					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
+						SET left_id = left_id + 2, right_id = right_id + 2
+						WHERE left_id > ' . $row['left_id'] . '
+							AND album_user_id = ' . $album_data['album_user_id'];
+					$db->sql_query($sql);
 
-				$album_data['left_id'] = $row['right_id'];
-				$album_data['right_id'] = $row['right_id'] + 1;
+					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
+						SET right_id = right_id + 2
+						WHERE ' . $row['left_id'] . ' BETWEEN left_id AND right_id
+							AND album_user_id = ' . $album_data['album_user_id'];
+					$db->sql_query($sql);
+
+					$album_data['left_id'] = $row['left_id'] + 1;
+					$album_data['right_id'] = $row['left_id'] + 2;
+				}
 			}
 			else
 			{
-				$sql = 'SELECT MAX(right_id) right_id
-					FROM ' . GALLERY_ALBUMS_TABLE . '
-					WHERE album_user_id = ' . $album_data['album_user_id'];
-				$result = $db->sql_query($sql);
-				$right_id = $db->sql_fetchfield('right_id');
-				$db->sql_freeresult($result);
+				if (!$add_on_top)
+				{
+					$sql = 'SELECT MAX(right_id) right_id
+						FROM ' . GALLERY_ALBUMS_TABLE . '
+						WHERE album_user_id = ' . $album_data['album_user_id'];
+					$result = $db->sql_query($sql);
+					$right_id = $db->sql_fetchfield('right_id');
+					$db->sql_freeresult($result);
 
-				$album_data['left_id'] = $right_id + 1;
-				$album_data['right_id'] = $right_id + 2;
+					$album_data['left_id'] = $right_id + 1;
+					$album_data['right_id'] = $right_id + 2;
+				}
+				else
+				{
+					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
+						SET left_id = left_id + 2, right_id = right_id + 2
+						WHERE album_user_id = ' . $album_data['album_user_id'];
+					$db->sql_query($sql);
+
+					$album_data['left_id'] = 1;
+					$album_data['right_id'] = 2;
+				}
 			}
 			$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
 			$album_data['album_id'] = $db->sql_nextid();

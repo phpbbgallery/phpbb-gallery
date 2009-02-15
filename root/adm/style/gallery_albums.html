@@ -152,6 +152,18 @@
 		</dl>
 		</fieldset>
 	</div>
+	<div>
+		<fieldset>
+			<legend>{L_GENERAL_ALBUM_SETTINGS}</legend>
+		<!-- IF S_CREATE_ALBUM -->
+		<dl>
+			<dt><label>{L_ADD_ALBUM_ON_TOP}:</label></dt>
+			<dd><label><input type="radio" class="radio" name="add_on_top" value="1" /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="add_on_top" value="0" id="add_on_top" checked="checked" /> {L_NO}</label></dd>
+		</dl>
+		<!-- ENDIF -->
+		</fieldset>
+	</div>
 	<div id="album_contest_options">
 		<fieldset>
 			<legend>{L_CONTEST_SETTINGS}</legend>

@@ -35,6 +35,7 @@ $lang = array_merge($lang, array(
 	'ACP_MANAGE_ALBUMS'				=> 'phpBB Galerie Album administration',
 	'ACP_MANAGE_ALBUMS_EXPLAIN'		=> 'Hier kannst du Deine Alben verwalten (Ehemalige Kategorien).',
 
+	'ADD_ALBUM_ON_TOP'				=> 'Album oben einfügen',
 	'ADD_PERMISSIONS'				=> 'Berechtigungen hinzufügen',
 	'ALBUM_AUTH_TITLE'				=> 'Album Berechtigungen',
 	'ALBUM_DELETE'					=> '%s löschen',
@@ -125,6 +126,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_STATS'					=> 'Galerie Statistik',
 	'GALLERY_VERSION'				=> 'Version der phpBB Gallery',//ja mit ll und y, da es sich um den MOD-Namen handelt
 	'GD_VERSION'					=> 'GD Version optimieren',
+	'GENERAL_ALBUM_SETTINGS'		=> 'Allgemeine Albumseinstellungen',
 	'GIF_ALLOWED'					=> 'Es ist erlaubt GIF- Dateien hochzuladen',
 	'GUPLOAD_DIR_SIZE'				=> 'Größe des upload/-Ordners',
 

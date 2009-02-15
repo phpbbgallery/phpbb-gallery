@@ -54,6 +54,7 @@
         <date>2009-MM-DD</date>
         <rev-version>X.Y.Z</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Add] Report #434: Add album at the top]]></change>
           <change><![CDATA[[Add] Report #433: Config-value for number of comments on rrc-Feature]]></change>
 
           <change><![CDATA[[Fix] Report #p5994: free memory after creatign images]]></change>

@@ -35,6 +35,7 @@ $lang = array_merge($lang, array(
 	'ACP_MANAGE_ALBUMS'				=> 'phpBB Gallery Album administration',
 	'ACP_MANAGE_ALBUMS_EXPLAIN'		=> 'Here you can manage your Albums (former categories).',
 
+	'ADD_ALBUM_ON_TOP'				=> 'Add album at the top',
 	'ADD_PERMISSIONS'				=> 'Add Permissions',
 	'ALBUM_AUTH_TITLE'				=> 'Album Permissions',
 	'ALBUM_DELETE'					=> 'Delete %s',
@@ -125,6 +126,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_STATS'					=> 'Gallery statistics',
 	'GALLERY_VERSION'				=> 'Gallery version',
 	'GD_VERSION'					=> 'Optimize for GD version',
+	'GENERAL_ALBUM_SETTINGS'		=> 'General album settings',
 	'GIF_ALLOWED'					=> 'Allowed to upload GIF files',
 	'GUPLOAD_DIR_SIZE'				=> 'upload/-directory size',
 
