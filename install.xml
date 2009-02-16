@@ -82,76 +82,16 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
       <edit>
         <find><![CDATA[			unset($module);
 		}]]></find>
-        <action type="after-add"><![CDATA[		// Gallery-statistics
-		$gallery_root_path = GALLERY_ROOT_PATH;
-		$member_gallery = array('user_images' => 0, 'personal_album_id' => 0);
-		$sql = 'SELECT *
-			FROM ' . GALLERY_USERS_TABLE . '
-			WHERE user_id = ' . $member['user_id'];
-		$result = $db->sql_query($sql);
-
-		while ($row = $db->sql_fetchrow($result))
+        <action type="after-add"><![CDATA[		// phpBB Gallery integration
+		if (!function_exists('integrate_memberlist_viewprofile'))
 		{
-			$member_gallery = array('user_images' => $row['user_images'], 'personal_album_id' => $row['personal_album_id']);
+			$gallery_root_path = GALLERY_ROOT_PATH;
+			include($phpbb_root_path . $gallery_root_path . 'includes/phpbb_integration.' . $phpEx);
 		}
-		$db->sql_freeresult($result);
-
-		$member = array_merge($member, $member_gallery);
-		$user->add_lang('mods/gallery');
-
-		$images_per_day = $member['user_images'] / $memberdays;
-		$percentage_images = ($config['num_images']) ? min(100, ($member['user_images'] / $config['num_images']) * 100) : 0;
-
-		if (!function_exists('load_gallery_config'))
-		{
-			$recent_image_addon = true;
-			include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
-			include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
-			include($phpbb_root_path . $gallery_root_path . 'includes/functions_recent.' . $phpEx);
-		}
-		$display = array(
-			'name'		=> true,
-			'poster'	=> true,
-			'time'		=> true,
-			'views'		=> true,
-			'ratings'	=> true,
-			'comments'	=> true,
-			'album'		=> true,
-		);
-		if ($gallery_config['rrc_profile_mode'] != '!all')
-		{
-			recent_gallery_images($gallery_config['rrc_profile_rows'], $gallery_config['rrc_profile_columns'], $display, $gallery_config['rrc_profile_mode'], false, 0, $member['user_id']);
-		}]]></action>
-      </edit>
-      <edit>
-        <find><![CDATA[			'POSTS_DAY'			=> sprintf($user->lang['POST_DAY'], $posts_per_day),
-			'POSTS_PCT'			=> sprintf($user->lang['POST_PCT'], $percentage),]]></find>
-        <action type="after-add"><![CDATA[			'TOTAL_IMAGES'		=> $gallery_config['user_images_profile'],
-			'IMAGES'			=> $member['user_images'],
-			'IMAGES_DAY'		=> sprintf($user->lang['IMAGE_DAY'], $images_per_day),
-			'IMAGES_PCT'		=> sprintf($user->lang['IMAGE_PCT'], $percentage_images),
-			'SHOW_PERSONAL_ALBUM_OF'	=> sprintf($user->lang['SHOW_PERSONAL_ALBUM_OF'], $member['username']),
-			'U_GALLERY'			=> ($member['personal_album_id'] && $gallery_config['personal_album_profile']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=" . $member['personal_album_id']) : '',
-			'U_SEARCH_GALLERY'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", "user_id=" . $member['user_id']),]]></action>
+		integrate_memberlist_viewprofile($member);]]></action>
       </edit>
     </open>
     <open src="viewonline.php">
-      <edit>
-        <find><![CDATA[$forum_data = array();
-while ($row = $db->sql_fetchrow($result))
-{
-	$forum_data[$row['forum_id']] = $row;
-}
-$db->sql_freeresult($result);]]></find>
-        <action type="after-add"><![CDATA[// Album info
-$gallery_root_path = GALLERY_ROOT_PATH;
-$recent_image_addon = false;
-include_once("{$phpbb_root_path}{$gallery_root_path}includes/common.$phpEx");
-include_once("{$phpbb_root_path}{$gallery_root_path}includes/permissions.$phpEx");
-$album_access_array = get_album_access_array();
-$album_data = $cache->obtain_album_list();
-$user->add_lang('mods/gallery');]]></action>
-      </edit>
       <edit>
         <find><![CDATA[$sql = 'SELECT u.user_id, u.username, u.username_clean, u.user_type, u.user_colour, s.session_id, s.session_time, s.session_page, s.session_ip, s.session_browser, s.session_viewonline, s.session_forum_id]]></find>
         <inline-edit>
@@ -165,11 +105,11 @@ $user->add_lang('mods/gallery');]]></action>
 	{
 		$on_page[1] = '';
 	}]]></find>
-        <action type="after-add"><![CDATA[	//check for the gallery
-	if ((utf8_substr($on_page[1], 0, utf8_strlen($gallery_root_path))) == $gallery_root_path)
+        <action type="after-add"><![CDATA[	// phpBB Gallery integration
+	if ((utf8_substr($on_page[1], 0, utf8_strlen(GALLERY_ROOT_PATH))) == GALLERY_ROOT_PATH)
 	{
-		$on_page_fake[1] = $on_page[1];
-		$on_page[1] = utf8_substr($on_page[1], 0, utf8_strlen($gallery_root_path));
+		$gallery_on_page[1] = $on_page[1];
+		$on_page[1] = utf8_substr($on_page[1], 0, utf8_strlen(GALLERY_ROOT_PATH));
 	}]]></action>
       </edit>
       <edit>
@@ -177,56 +117,15 @@ $user->add_lang('mods/gallery');]]></action>
 			$location = $user->lang['REPORTING_POST'];
 			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
 		break;]]></find>
-        <action type="after-add"><![CDATA[		case $gallery_root_path:
-			$location = $user->lang['GALLERY'];
-			$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx");
-
-			@$album_data[0]['album_name'];
-			$album_id = $row['session_album_id'];
-
-			preg_match('#^([a-z/]+)#i', $row['session_page'], $gallery_page);
-			if ($album_id && gallery_acl_check('i_view', $album_id))
+        <action type="after-add"><![CDATA[		// phpBB Gallery integration
+		case GALLERY_ROOT_PATH:
+			if (!function_exists('integrate_viewonline'))
 			{
-				switch ($gallery_page[1])
-				{
-					case $gallery_root_path . 'album':
-						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_id);
-						$location = sprintf($user->lang['VIEWING_ALBUM'], $album_data[$album_id]['album_name']);
-					break;
-					case $gallery_root_path . 'image_page':
-					case $gallery_root_path . 'image':
-						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_id);
-						$location = sprintf($user->lang['VIEWING_IMAGE'], $album_data[$album_id]['album_name']);
-					break;
-					case $gallery_root_path . 'posting':
-						preg_match('#mode=([a-z]+)#', $row['session_page'], $on_page);
-						$on_page = (sizeof($on_page)) ? $on_page[1] : '';
-
-						switch ($on_page)
-						{
-							case 'comment':
-								$location = sprintf($user->lang['COMMENT_IMAGE'], $album_data[$album_id]['album_name']);
-							break;
-
-							default:
-								$location = sprintf($user->lang['VIEWING_ALBUM'], $album_data[$album_id]['album_name']);
-
-							break;
-						}
-						$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_id);
-					break;
-				}
+				$gallery_root_path = GALLERY_ROOT_PATH;
+				include($phpbb_root_path . $gallery_root_path . 'includes/phpbb_integration.' . $phpEx);
 			}
-			else
-			{
-				preg_match('#mode=([a-z]+)#', $row['session_page'], $on_page);
-				$on_page = (sizeof($on_page)) ? $on_page[1] : '';
-				if (($on_page == 'personal') && (gallery_acl_check('i_view', '-3')))
-				{
-					$location = $user->lang['PERSONAL_ALBUMS'];
-					$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal');
-				}
-			}
+			$on_page[1] = $gallery_on_page[1];
+			integrate_viewonline ($on_page, $row['session_album_id'], $row['session_page']);
 		break;]]></action>
       </edit>
     </open>

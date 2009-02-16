@@ -27,7 +27,6 @@ $user->setup('mods/gallery');
 // Get general album information
 include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
 include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
-$album_access_array = get_album_access_array();
 
 /**
 * Check whether the requested image & album exit.

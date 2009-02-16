@@ -34,7 +34,6 @@ class ucp_gallery
 		include($phpbb_root_path . $gallery_root_path . 'includes/constants.' . $phpEx);
 		include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
 		$gallery_config = load_gallery_config();
-		$album_access_array = get_album_access_array();
 
 		$user->add_lang('mods/gallery');
 		$user->add_lang('mods/gallery_acp');

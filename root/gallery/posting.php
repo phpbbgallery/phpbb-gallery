@@ -31,7 +31,6 @@ $gallery_root_path = GALLERY_ROOT_PATH;
 include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
 include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
 include($phpbb_root_path . $gallery_root_path . 'includes/functions_display.' . $phpEx);
-$album_access_array = get_album_access_array();
 
 add_form_key('gallery');
 $submit = (isset($_POST['submit'])) ? true : false;

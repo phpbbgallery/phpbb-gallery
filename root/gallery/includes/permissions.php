@@ -17,6 +17,9 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
+// Load the permissions
+$album_access_array = get_album_access_array();
+
 function get_album_access_array()
 {
 	global $cache, $db, $user;

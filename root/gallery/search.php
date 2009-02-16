@@ -32,7 +32,6 @@ $user->add_lang('search');
 $gallery_root_path = GALLERY_ROOT_PATH;
 include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
 include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
-$album_access_array = get_album_access_array();
 
 // Define initial vars
 //@todo: $mode			= request_var('mode', '');
@@ -243,7 +242,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				$l_search_title = $user->lang['SEARCH_TOPRATED'];
 				$search_results = 'image';
 
-				$sql_order = 'image_rate_points DESC';
+				$sql_order = 'image_rate_avg DESC';
 				$sql_limit = 10 * $per_page;
 				$sql = 'SELECT image_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
@@ -338,7 +337,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 	$l_search_matches = ($total_match_count == 1) ? sprintf($user->lang['FOUND_SEARCH_MATCH'], $total_match_count) : sprintf($user->lang['FOUND_SEARCH_MATCHES'], $total_match_count);
 
 	// For some searches we need to print out the "no results" page directly to allow re-sorting/refining the search options.
-	if (!sizeof($id_ary) && !$search_id)
+	if (!sizeof($id_ary))
 	{
 		trigger_error('NO_SEARCH_RESULTS');
 	}
