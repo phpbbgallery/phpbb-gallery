@@ -5,7 +5,7 @@
 <!-- IF S_DISPLAY_SEARCH or (S_USER_LOGGED_IN and not S_IS_BOT) -->
 <ul class="linklist">
 	<!-- IF S_DISPLAY_SEARCH -->
-		<li><a href="{U_G_SEARCH_RECENT}">{L_VIEW_SEARCH_RECENT}</a> &bull; <a href="{U_G_SEARCH_RANDOM}">{L_VIEW_SEARCH_RANDOM}</a> &bull; <a href="{U_G_SEARCH_COMMENTED}">{L_VIEW_SEARCH_COMMENTED}</a> &bull; <a href="{U_G_SEARCH_TOPRATED}">{L_VIEW_SEARCH_TOPRATED}</a><!-- IF S_USER_LOGGED_IN --> &bull; <a href="{U_G_SEARCH_SELF}">{L_VIEW_SEARCH_SELF}</a><!-- ENDIF --></li>
+		<li><a href="{U_G_SEARCH_RECENT}">{L_VIEW_SEARCH_RECENT}</a> &bull; <a href="{U_G_SEARCH_RANDOM}">{L_VIEW_SEARCH_RANDOM}</a><!-- IF U_G_SEARCH_COMMENTED --> &bull; <a href="{U_G_SEARCH_COMMENTED}">{L_VIEW_SEARCH_COMMENTED}</a><!-- ENDIF --><!-- IF U_G_SEARCH_TOPRATED --> &bull; <a href="{U_G_SEARCH_TOPRATED}">{L_VIEW_SEARCH_TOPRATED}</a><!-- ENDIF --><!-- IF S_USER_LOGGED_IN --> &bull; <a href="{U_G_SEARCH_SELF}">{L_VIEW_SEARCH_SELF}</a><!-- ENDIF --></li>
 		<li class="rightside"><a href="{U_GALLERY_SEARCH}">{L_SEARCH}</a></li>
 	<!-- ENDIF -->
 	<!-- IF not S_IS_BOT and U_MARK_ALBUMS and not U_MARK_ALBUMS --><!--//@todo: missing langstring--><li class="rightside"><a href="{U_MARK_ALBUMS}" accesskey="m">{L_MARK_ALBUMS_READ}</a></li><!-- ENDIF -->
