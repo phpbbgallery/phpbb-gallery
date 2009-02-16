@@ -128,6 +128,7 @@ class acp_gallery
 		if (!confirm_box(true))
 		{
 			$confirm = false;
+			$album_id = 0;
 			switch ($action)
 			{
 				case 'images':
@@ -146,18 +147,25 @@ class acp_gallery
 					$confirm = true;
 					$confirm_lang = 'CONFIRM_OPERATION';
 				break;
+				case 'reset_rating':
+					$album_id = request_var('reset_album_id', 0);
+					$album_data = get_album_info($album_id);
+					$confirm = true;
+					$confirm_lang = sprintf($user->lang['RESET_RATING_CONFIRM'], $album_data['album_name']);
+				break;
 				case 'purge_cache':
 					$confirm = true;
-					$confirm_lang = 'GALLERY_CLEAR_CACHE_CONFIRM';
+					$confirm_lang = 'GALLERY_PURGE_CACHE_EXPLAIN';
 				break;
 			}
 
 			if ($confirm)
 			{
-				confirm_box(false, $user->lang[$confirm_lang], build_hidden_fields(array(
+				confirm_box(false, (($album_id) ? $confirm_lang : $user->lang[$confirm_lang]), build_hidden_fields(array(
 					'i'			=> $id,
 					'mode'		=> $mode,
 					'action'	=> $action,
+					'reset_album_id'	=> $album_id,
 				)));
 			}
 		}
@@ -165,7 +173,7 @@ class acp_gallery
 		{
 			switch ($action)
 			{
-					case 'images':
+				case 'images':
 					if (!$auth->acl_get('a_board'))
 					{
 						trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
@@ -283,6 +291,33 @@ class acp_gallery
 					}
 					$db->sql_freeresult($result);
 					trigger_error($user->lang['RESYNCED_LAST_IMAGES'] . adm_back_link($this->u_action));
+				break;
+
+				case 'reset_rating':
+					$album_id = request_var('reset_album_id', 0);
+					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+						SET image_rates = 0,
+							image_rate_points = 0,
+							image_rate_avg = 0
+						WHERE image_album_id = ' . $album_id;
+					$db->sql_query($sql);
+
+					$image_ids = array();
+					$sql = 'SELECT image_id
+						FROM ' . GALLERY_IMAGES_TABLE . '
+						WHERE image_album_id = ' . $album_id;
+					$result = $db->sql_query($sql);
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$image_ids[] = $row['image_id'];
+					}
+					$db->sql_freeresult($result);
+
+					$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . '
+						WHERE ' . $db->sql_in_set('rate_image_id', $image_ids);
+					$db->sql_query($sql);
+
+					trigger_error($user->lang['RESET_RATING_COMPLETED'] . adm_back_link($this->u_action));
 				break;
 
 				case 'purge_cache':
@@ -591,20 +626,20 @@ class acp_gallery
 			// Add the contest...
 			if ($album_data['album_type'] == ALBUM_CONTEST)
 			{
-					$contest_data = array(
-						'contest_album_id'	=> $album_id,
-						'contest_start'		=> time(),
-						'contest_rating'	=> request_var('contest_rating', 0) * 86400,
-						'contest_end'		=> request_var('contest_end', 0) * 86400,
-						'contest_marked'	=> true,
-					);
-					$sql = 'INSERT INTO ' . GALLERY_CONTESTS_TABLE . ' ' . $db->sql_build_array('INSERT', $contest_data);
-					$db->sql_query($sql);
-					$album_data['album_contest'] = $db->sql_nextid();
-					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
-						SET album_contest = ' . $album_data['album_contest'] . '
-						WHERE album_id = ' . $album_id;
-					$db->sql_query($sql);
+				$contest_data = array(
+					'contest_album_id'	=> $album_id,
+					'contest_start'		=> time(),
+					'contest_rating'	=> request_var('contest_rating', 0) * 86400,
+					'contest_end'		=> request_var('contest_end', 0) * 86400,
+					'contest_marked'	=> true,
+				);
+				$sql = 'INSERT INTO ' . GALLERY_CONTESTS_TABLE . ' ' . $db->sql_build_array('INSERT', $contest_data);
+				$db->sql_query($sql);
+				$album_data['album_contest'] = $db->sql_nextid();
+				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
+					SET album_contest = ' . $album_data['album_contest'] . '
+					WHERE album_id = ' . $album_id;
+				$db->sql_query($sql);
 			}
 
 			$copy_permissions = request_var('copy_permissions', 0);

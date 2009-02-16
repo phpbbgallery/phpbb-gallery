@@ -78,11 +78,20 @@
 			</dl>
 		</form>
 
+		<form id="action_reset_rating_form" method="post" action="{U_ACTION}">
+			<dl>
+				<dt><label for="action_reset_rating">{L_RESET_RATING}</label>
+					<br /><span>{L_RESET_RATING_EXPLAIN}</span></dt>
+				<dd><input class="inputbox autowidth" type="text" name="reset_album_id" size="5" value="0" />
+					<input type="hidden" name="action" value="reset_rating" /><input class="button2" type="submit" id="action_reset_rating" name="action_reset_rating" value="{L_RUN}" /></dd>
+			</dl>
+		</form>
+
 		<!-- IF S_FOUNDER -->
 		<form id="action_purge_cache_form" method="post" action="{U_ACTION}">
 			<dl>
 				<dt><label for="action_purge_cache">{L_PURGE_CACHE}</label>
-					<br /><span>{L_GALLERY_CLEAR_CACHE_CONFIRM}</span></dt>
+					<br /><span>{L_GALLERY_PURGE_CACHE_EXPLAIN}</span></dt>
 				<dd><input type="hidden" name="action" value="purge_cache" /><input class="button2" type="submit" id="action_purge_cache" name="action_purge_cache" value="{L_RUN}" /></dd>
 			</dl>
 		</form>

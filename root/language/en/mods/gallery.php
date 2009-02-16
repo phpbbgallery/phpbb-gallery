@@ -26,6 +26,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'ALBUM'							=> 'Album',
 	'ALBUM_IS_CATEGORY'				=> 'The album you cheated to, is a category-album.<br />You can\'t upload to categories.',
+	'ALBUM_LOCKED'					=> 'Locked',
 	'ALBUM_NAME'					=> 'Album name',
 	'ALBUM_NOT_EXIST'				=> 'This album does not exist',
 	'ALBUM_PERMISSIONS'				=> 'Album Permissions',
