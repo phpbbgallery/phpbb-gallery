@@ -495,6 +495,7 @@ class acp_gallery
 				'S_STATUS_OPTIONS'			=> $statuslist,
 				'S_DISPLAY_SUBALBUM_LIST'	=> true,
 				'S_DISPLAY_ON_INDEX'		=> true,
+				'S_DISPLAY_IN_RCC'			=> true,
 
 				'ALBUM_TYPE'				=> ALBUM_UPLOAD,
 				'ALBUM_CAT'					=> ALBUM_CAT,
@@ -531,6 +532,7 @@ class acp_gallery
 				'album_image'					=> request_var('album_image', ''),
 				'display_subalbum_list'			=> request_var('display_subalbum_list', 0),
 				'display_on_index'				=> request_var('display_on_index', 0),
+				'display_in_rrc'				=> request_var('display_in_rrc', 0),
 			);
 			generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], request_var('desc_parse_bbcode', false), request_var('desc_parse_urls', false), request_var('desc_parse_smilies', false));
 
@@ -699,8 +701,8 @@ class acp_gallery
 
 	function edit_album()
 	{
-		global $db, $user, $auth, $template, $cache;
-		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
+		global $auth, $cache, $config, $db, $gallery_config, $user, $template;
+		global $phpbb_admin_path, $phpbb_root_path, $phpEx;
 
 		include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
@@ -742,6 +744,7 @@ class acp_gallery
 				'S_STATUS_OPTIONS'			=> $statuslist,
 				'S_DISPLAY_SUBALBUM_LIST'	=> ($album_data['display_subalbum_list']) ? true : false,
 				'S_DISPLAY_ON_INDEX'		=> ($album_data['display_on_index']) ? true : false,
+				'S_DISPLAY_IN_RRC'			=> ($album_data['display_in_rrc']) ? true : false,
 
 				'CONTEST_START'				=> $user->format_date((($album_data['contest_start']) ? $album_data['contest_start'] : time())),
 				'CONTEST_RATING'			=> ($album_data['contest_rating'] / 86400),
@@ -772,6 +775,7 @@ class acp_gallery
 				'album_image'					=> request_var('album_image', ''),
 				'display_subalbum_list'			=> request_var('display_subalbum_list', 0),
 				'display_on_index'				=> request_var('display_on_index', 0),
+				'display_in_rrc'				=> request_var('display_in_rrc', 0),
 			);
 
 			generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], request_var('desc_parse_bbcode', false), request_var('desc_parse_urls', false), request_var('desc_parse_smilies', false));
@@ -892,12 +896,12 @@ class acp_gallery
 							SET ' . $db->sql_build_array('UPDATE', $contest_data) . '
 							WHERE contest_id  = ' . (int) $old_album_data['album_contest'];
 					$db->sql_query($sql);
-					if ($old_album_data['contest_marked'])
-					{
-						set_gallery_config('contests_ended', $gallery_config['contests_ended'] - 1);
-					}
 					if (($contest_data['contest_end'] + $old_album_data['contest_start']) < time())
 					{
+						if ($old_album_data['contest_marked'])
+						{
+							set_gallery_config('contests_ended', $gallery_config['contests_ended'] - 1);
+						}
 						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 							SET image_contest = ' . IMAGE_NO_CONTEST . '
 							WHERE image_album_id = ' . $album_id;

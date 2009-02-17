@@ -34,6 +34,7 @@ CREATE TABLE [phpbb_gallery_albums] (
 	[album_last_username] [varchar] (255) DEFAULT ('') NOT NULL ,
 	[album_last_user_colour] [varchar] (6) DEFAULT ('') NOT NULL ,
 	[album_last_user_id] [int] DEFAULT (0) NOT NULL ,
+	[display_in_rrc] [int] DEFAULT (1) NOT NULL ,
 	[display_on_index] [int] DEFAULT (1) NOT NULL ,
 	[display_subalbum_list] [int] DEFAULT (1) NOT NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]

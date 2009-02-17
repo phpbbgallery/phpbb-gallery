@@ -404,6 +404,7 @@ class install_update extends module
 			case '0.5.0':
 			case '0.5.1-dev':
 				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_status',			array('UINT:1', 0));
+				nv_add_column(GALLERY_ALBUMS_TABLE,	'display_in_rrc',		array('UINT:1', 1));
 				nv_add_column(GALLERY_IMAGES_TABLE,	'image_contest_end',	array('TIMESTAMP', 0));
 				nv_add_column(GALLERY_IMAGES_TABLE,	'image_contest_rank',	array('UINT:3', 0));
 			break;

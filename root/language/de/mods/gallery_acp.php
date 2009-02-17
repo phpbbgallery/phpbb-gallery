@@ -111,6 +111,7 @@ $lang = array_merge($lang, array(
 	'DISP_PERSONAL_ALBUM_PROFILE'	=> 'Link zum persönlichen Album im Profil anzeigen',
 	'DISP_TOTAL_IMAGES'				=> '"Bilder insgesamt" auf der index.' . $phpEx . ' anzeigen.',
 	'DISP_USER_IMAGES_PROFILE'		=> 'Statistik über hochgeladene Bilder im Profil anzeigen',
+	'DISPLAY_IN_RRC'				=> 'Bilder aus diesem Album in den "Neusten & Zufälligen"-Bildern anzeigen',
 	'DONT_COPY_PERMISSIONS'			=> 'Berechtigungen nicht kopieren',
 
 	'EDIT_ALBUM'					=> 'Album bearbeiten',

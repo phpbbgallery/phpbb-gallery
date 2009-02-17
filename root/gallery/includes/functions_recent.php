@@ -112,6 +112,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 						AND i.image_status = 1)' . 
 					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . '
 					' . (($user_id) ? ') AND i.image_user_id = ' . $user_id : ')') . '
+					AND a.display_in_rrc = 1
 				GROUP BY i.image_id
 				ORDER BY i.image_time DESC';
 			$result = $db->sql_query_limit($sql, $limit_sql);
@@ -167,6 +168,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 						AND i.image_status = 1)' . 
 					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . '
 					' . (($user_id) ? ') AND i.image_user_id = ' . $user_id : ')') . '
+					AND a.display_in_rrc = 1
 				GROUP BY i.image_id
 				ORDER BY ' . $random;
 			$result = $db->sql_query_limit($sql, $limit_sql);

@@ -827,6 +827,7 @@ function get_schema_struct()
 			'album_last_username'		=> array('VCHAR', ''),
 			'album_last_user_colour'	=> array('VCHAR:6', ''),
 			'album_last_user_id'		=> array('UINT', 0),
+			'display_in_rrc'			=> array('UINT:1', 1),
 			'display_on_index'			=> array('UINT:1', 1),
 			'display_subalbum_list'		=> array('UINT:1', 1),
 		),
