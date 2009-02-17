@@ -46,10 +46,12 @@ $lang = array_merge($lang, array(
 	'CONVERTED_RESYNC_COUNTS'	=> 'Resyncronize imagecounters.',
 	'CONVERTED_RESYNC_RATES'	=> 'Resyncronize rates.',
 
-	'FILES_EXISTS'				=> 'Files still exists',
-	'FILES_REQUIRED_EXPLAIN'	=> '<strong>Required</strong> - In order to function correctly phpBB Gallery needs to be able to access or write to certain files or directories. If you see “Unwritable” you need to change the permissions on the file or directory to allow phpBB to write to it.',
-	'FILES_OUTDATED'			=> 'Outdated Files',
-	'FILES_OUTDATED_EXPLAIN'	=> '<strong>Outdated</strong> - In order to deny hacking attempts, please remove the following files.',
+	'FILES_EXISTS'					=> 'Files still exists',
+	'FILES_REQUIRED_EXPLAIN'		=> '<strong>Required</strong> - In order to function correctly phpBB Gallery needs to be able to access or write to certain files or directories. If you see “Unwritable” you need to change the permissions on the file or directory to allow phpBB to write to it.',
+	'FILES_DELETE_OUTDATED'			=> 'Delete outdated files',
+	'FILES_DELETE_OUTDATED_EXPLAIN'	=> 'When you click to delete the files, they are completly deleted and can not be restored!<br /><br />Please note:<br />If you have more styles and languages installed, you need to delete the files by hand.',
+	'FILES_OUTDATED'				=> 'Outdated files',
+	'FILES_OUTDATED_EXPLAIN'		=> '<strong>Outdated</strong> - In order to deny hacking attempts, please remove the following files.',
 
 	'INSTALL_CONGRATS_EXPLAIN'	=> '<p>You have now successfully installed phpBB Gallery v%s.<br/><br/><strong>Please now delete, move or rename the install directory before you use your board. If this directory is still present, only the Administration Control Panel (ACP) will be accessible.</strong></p>',
 	'INSTALL_INTRO_BODY'		=> 'With this option, it is possible to install phpBB Gallery onto your board.',

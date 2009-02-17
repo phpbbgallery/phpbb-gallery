@@ -46,10 +46,12 @@ $lang = array_merge($lang, array(
 	'CONVERTED_RESYNC_COUNTS'	=> 'Die Zähler-Statistiken wurden erfolgreich resyncronisiert.',
 	'CONVERTED_RESYNC_RATES'	=> 'Die Bewertungen wurden erfolgreich resyncronisiert.',
 
-	'FILES_EXISTS'				=> 'Datei existiert noch',
-	'FILES_REQUIRED_EXPLAIN'	=> '<strong>Voraussetzung</strong> - die phpBB Gallery muss auf diverse Verzeichnisse zugreifen oder diese beschreiben können, um reibungslos zu funktionieren. Wenn „Nicht beschreibbar“ angezeigt wird, musst du die Befugnisse für die Datei oder das Verzeichnis so ändern, dass phpBB darauf schreiben kann.',
-	'FILES_OUTDATED'			=> 'Veraltete Dateien',
-	'FILES_OUTDATED_EXPLAIN'	=> '<strong>Veraltete Dateien</strong> - bitte entferne die folgenden Dateien um mögliche Sicherheitslücken zu entfernen.',
+	'FILES_EXISTS'					=> 'Datei existiert noch',
+	'FILES_REQUIRED_EXPLAIN'		=> '<strong>Voraussetzung</strong> - die phpBB Gallery muss auf diverse Verzeichnisse zugreifen oder diese beschreiben können, um reibungslos zu funktionieren. Wenn „Nicht beschreibbar“ angezeigt wird, musst du die Befugnisse für die Datei oder das Verzeichnis so ändern, dass phpBB darauf schreiben kann.',
+	'FILES_DELETE_OUTDATED'			=> 'Veraltete Dateien löschen',
+	'FILES_DELETE_OUTDATED_EXPLAIN'	=> 'Wenn du die Dateien löscht, werden sie entgülig gelöscht und können nicht wiederhergestellt werden!<br /><br />Hinweis:<br />Wenn du weitere Styles und Sprachpakete installiert hast, musst du die Dateien dort von Hand löschen.',
+	'FILES_OUTDATED'				=> 'Veraltete Dateien',
+	'FILES_OUTDATED_EXPLAIN'		=> '<strong>Veraltete Dateien</strong> - bitte entferne die folgenden Dateien um mögliche Sicherheitslücken zu entfernen.',
 
 	'INSTALL_CONGRATS_EXPLAIN'	=> '<p>Du hast die phpBB Gallery v%s nun erfolgreich installiert.<br/><br/><strong>Bitte lösche oder verschiebe nun das Installations-Verzeichnis „install“ oder nenne es nun um, bevor du dein Board benutzt. Solange dieses Verzeichnis existiert, ist nur der Administrations-Bereich zugänglich.</strong></p>',
 	'INSTALL_INTRO_BODY'		=> 'Dieser Assistent ermöglicht dir die Installation der phpBB Gallery in deinem phpBB-Board.',

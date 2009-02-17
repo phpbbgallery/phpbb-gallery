@@ -210,8 +210,13 @@ class install_update extends module
 		umask(0);
 
 		$passed['files'] = true;
+		$delete = (isset($_POST['delete'])) ? true : false;
 		foreach ($oudated_files as $file)
 		{
+			if ($delete)
+			{
+				@unlink($phpbb_root_path . $file);
+			}
 			if (@file_exists($phpbb_root_path . $file))
 			{
 				if ($passed['files'])
@@ -231,6 +236,17 @@ class install_update extends module
 				));
 				$passed['files'] = false;
 			}
+		}
+		if (!$passed['files'])
+		{
+			$template->assign_block_vars('checks', array(
+				'TITLE'			=> '<strong>' . $user->lang['FILES_DELETE_OUTDATED'] . '</strong>',
+				'TITLE_EXPLAIN'	=> $user->lang['FILES_DELETE_OUTDATED_EXPLAIN'],
+				'RESULT'		=> '<input class="button1" type="submit" id="delete" onclick="this.className = \'button1 disabled\';" name="delete" value="' . $user->lang['FILES_DELETE_OUTDATED'] . '" />',
+
+				'S_EXPLAIN'	=> true,
+				'S_LEGEND'	=> false,
+			));
 		}
 
 		$url = (!in_array(false, $passed)) ? $this->p_master->module_url . "?mode=$mode&amp;sub=update_db" : $this->p_master->module_url . "?mode=$mode&amp;sub=requirements";

@@ -54,6 +54,7 @@
         <date>2009-MM-DD</date>
         <rev-version>X.Y.Z</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Add] Report #464: Option to automatically delete outdated files]]></change>
           <change><![CDATA[[Add] Report #461: Reset rating for specific album]]></change>
           <change><![CDATA[[Add] Report #448: Album status closed: No comments, images and rates]]></change>
           <change><![CDATA[[Add] Report #462: Option to handle "List subalbums"]]></change>
