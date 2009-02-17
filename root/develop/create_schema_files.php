@@ -940,6 +940,8 @@ function get_schema_struct()
 			'image_view_count'		=> array('UINT:11', 0),
 			'image_status'			=> array('UINT:3', 0),
 			'image_contest'			=> array('UINT:1', 0),
+			'image_contest_end'		=> array('TIMESTAMP', 0),
+			'image_contest_rank'	=> array('UINT:3', 0),
 			'image_filemissing'		=> array('UINT:3', 0),
 			'image_has_exif'		=> array('UINT:3', 2),
 			'image_exif_data'		=> array('TEXT', ''),

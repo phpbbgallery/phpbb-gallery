@@ -25,6 +25,8 @@ CREATE TABLE phpbb_gallery_images (
 	image_view_count number(11) DEFAULT '0' NOT NULL,
 	image_status number(3) DEFAULT '0' NOT NULL,
 	image_contest number(1) DEFAULT '0' NOT NULL,
+	image_contest_end number(11) DEFAULT '0' NOT NULL,
+	image_contest_rank number(3) DEFAULT '0' NOT NULL,
 	image_filemissing number(3) DEFAULT '0' NOT NULL,
 	image_has_exif number(3) DEFAULT '2' NOT NULL,
 	image_exif_data clob DEFAULT '' ,

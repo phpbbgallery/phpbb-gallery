@@ -57,6 +57,7 @@ function toggleElement(oElement)
 				<tr>
 					<td class="row2" valign="top">
 					<div class="gensmall" style="overflow: hidden;">
+					<!-- IF imagerow.image.CONTEST_RANK -->{L_CONTEST_RESULT}: <strong>{imagerow.image.CONTEST_RANK}</strong><br /><!-- ENDIF -->
 					<!-- IF (imagerow.image.S_LOCKED or imagerow.image.S_UNAPPROVED) and imagerow.image.U_STATUS --><a style="font-weight: bold;" class="reported-images-number" href="{imagerow.image.U_STATUS}">{imagerow.image.L_STATUS}</a><br /><br /><!-- ENDIF -->
 					<!-- IF imagerow.image.S_REPORTED and imagerow.image.U_REPORT --><a style="font-weight: bold;" class="reported-images-number" href="{imagerow.image.U_REPORT}">{L_READ_REPORT}</a><br /><br /><!-- ENDIF -->
 						{L_IMAGE_NAME}: {imagerow.image.UC_IMAGE_NAME}<br />

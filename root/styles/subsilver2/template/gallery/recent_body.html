@@ -41,6 +41,7 @@ function toggleElement(oElement)
 				<tr>
 					<td class="row2" valign="top">
 					<div class="gensmall" style="overflow: hidden;">
+					<!-- IF recent.image.CONTEST_RANK -->{L_CONTEST_RESULT}: <strong>{recent.image.CONTEST_RANK}</strong><br /><!-- ENDIF -->
 					<!-- IF (recent.image.S_LOCKED or recent.image.S_UNAPPROVED) and recent.image.U_STATUS --><a style="font-weight: bold;" class="reported-images-number" href="{recent.image.U_STATUS}">{recent.image.L_STATUS}</a><br /><br /><!-- ENDIF -->
 					<!-- IF recent.image.S_REPORTED and recent.image.U_REPORT --><a style="font-weight: bold;" class="reported-images-number" href="{recent.image.U_REPORT}">{L_READ_REPORT}</a><br /><br /><!-- ENDIF -->
 						<!-- IF recent.image.UC_IMAGE_NAME -->{L_IMAGE_NAME}: {recent.image.UC_IMAGE_NAME}<br /><!-- ENDIF -->
@@ -110,6 +111,7 @@ function toggleElement(oElement)
 				<tr>
 					<td class="row2" valign="top">
 					<div class="gensmall" style="overflow: hidden;">
+					<!-- IF random.image.CONTEST_RANK -->{L_CONTEST_RESULT}: <strong>{random.image.CONTEST_RANK}</strong><br /><!-- ENDIF -->
 					<!-- IF (random.image.S_LOCKED or random.image.S_UNAPPROVED) and random.image.U_STATUS --><a style="font-weight: bold;" class="reported-images-number" href="{random.image.U_STATUS}">{random.image.L_STATUS}</a><br /><br /><!-- ENDIF -->
 					<!-- IF random.image.S_REPORTED and random.image.U_REPORT --><a style="font-weight: bold;" class="reported-images-number" href="{random.image.U_REPORT}">{L_READ_REPORT}</a><br /><br /><!-- ENDIF -->
 						<!-- IF random.image.UC_IMAGE_NAME -->{L_IMAGE_NAME}: {random.image.UC_IMAGE_NAME}<br /><!-- ENDIF -->

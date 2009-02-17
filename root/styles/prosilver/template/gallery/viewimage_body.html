@@ -41,6 +41,12 @@ function checkRateForm() {
 		<br style="clear: both;" />
 		<!-- ENDIF -->
 		<fieldset class="fields1">
+			<!-- IF CONTEST_RANK -->
+				<dl>
+					<dt><label>{L_CONTEST_RESULT}:</label></dt>
+					<dd>{CONTEST_RANK}</dd>
+				</dl>
+			<!-- ENDIF -->
 			<dl>
 				<dt><label>{L_UPLOADED_BY_USER}:</label></dt>
 				<dd>{POSTER}</dd>

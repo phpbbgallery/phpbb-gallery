@@ -551,11 +551,8 @@ function assign_image_block($template_block, &$image_data, $album_status)
 	global $auth, $gallery_config, $template, $user;
 	global $gallery_root_path, $phpbb_root_path, $phpEx;
 
-	if (!$image_data['image_rates'])
-	{
-		$image_data['rating'] = $user->lang['NOT_RATED'];
-	}
-	else
+	$image_data['rating'] = $user->lang['NOT_RATED'];
+	if ($image_data['image_rates'])
 	{
 		$image_data['rating'] = sprintf((($image_data['image_rates'] == 1) ? $user->lang['RATE_STRING'] : $user->lang['RATES_STRING']), $image_data['image_rate_avg'] / 100, $image_data['image_rates']);
 	}
@@ -577,6 +574,7 @@ function assign_image_block($template_block, &$image_data, $album_status)
 		'POSTER'		=> ($image_data['image_contest'] && !gallery_acl_check('m_status', $image_data['image_album_id'])) ? $user->lang['CONTEST_USERNAME'] : get_username_string('full', $image_data['image_user_id'], ($image_data['image_user_id'] <> ANONYMOUS) ? $image_data['image_username'] : $user->lang['GUEST'], $image_data['image_user_colour']),
 		'TIME'			=> $user->format_date($image_data['image_time']),
 		'VIEW'			=> $image_data['image_view_count'],
+		'CONTEST_RANK'	=> ($image_data['image_contest_rank']) ? $user->lang['CONTEST_RESULT_' . $image_data['image_contest_rank']] : '',
 
 		'S_RATINGS'		=> ($gallery_config['allow_rates'] && gallery_acl_check('i_rate', $image_data['image_album_id'])) ? $image_data['rating'] : '',
 		'U_RATINGS'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $image_data['image_album_id'] . "&amp;image_id=" . $image_data['image_id']) . '#rating',

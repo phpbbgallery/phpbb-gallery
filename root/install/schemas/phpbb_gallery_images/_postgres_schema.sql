@@ -29,6 +29,8 @@ CREATE TABLE phpbb_gallery_images (
 	image_view_count INT4 DEFAULT '0' NOT NULL CHECK (image_view_count >= 0),
 	image_status INT4 DEFAULT '0' NOT NULL CHECK (image_status >= 0),
 	image_contest INT4 DEFAULT '0' NOT NULL CHECK (image_contest >= 0),
+	image_contest_end INT4 DEFAULT '0' NOT NULL CHECK (image_contest_end >= 0),
+	image_contest_rank INT4 DEFAULT '0' NOT NULL CHECK (image_contest_rank >= 0),
 	image_filemissing INT4 DEFAULT '0' NOT NULL CHECK (image_filemissing >= 0),
 	image_has_exif INT4 DEFAULT '2' NOT NULL CHECK (image_has_exif >= 0),
 	image_exif_data varchar(8000) DEFAULT '' NOT NULL,

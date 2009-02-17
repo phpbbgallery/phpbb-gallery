@@ -253,6 +253,24 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			}
 			break;
 
+			case 'contests':
+			if ($gallery_config['allow_rates'])
+			{
+				$l_search_title = $user->lang['SEARCH_CONTEST'];
+				$search_results = 'image';
+
+				$sql_order = 'image_contest_end DESC, image_contest_rank ASC';
+				$per_page = (3 * $gallery_config['rows_per_page']);
+				$sql_limit = 100 * $per_page;
+
+				$sql = 'SELECT image_id
+					FROM ' . GALLERY_IMAGES_TABLE . '
+					WHERE ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status = ' . IMAGE_APPROVED . ')
+							OR ' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('m_status'), false, true) . ")
+						AND image_contest_rank > 0";
+			}
+			break;
+
 			case 'egosearch':
 				$user_id = $user->data['user_id'];
 
@@ -426,11 +444,12 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				include($phpbb_root_path . $gallery_root_path . 'includes/functions_display.' . $phpEx);
 			}
 
-			for ($i = 0; $i < count($rowset); $i += $gallery_config['cols_per_page'])
+			$columns_per_page = ($search_id == 'contests') ? 3 : $gallery_config['cols_per_page'];
+			for ($i = 0; $i < count($rowset); $i += $columns_per_page)
 			{
 				$template->assign_block_vars('imagerow', array());
 
-				for ($j = $i; $j < ($i + $gallery_config['cols_per_page']); $j++)
+				for ($j = $i; $j < ($i + $columns_per_page); $j++)
 				{
 					if ($j >= count($rowset))
 					{

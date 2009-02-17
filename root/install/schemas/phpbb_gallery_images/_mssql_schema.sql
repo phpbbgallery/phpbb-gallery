@@ -27,6 +27,8 @@ CREATE TABLE [phpbb_gallery_images] (
 	[image_view_count] [int] DEFAULT (0) NOT NULL ,
 	[image_status] [int] DEFAULT (0) NOT NULL ,
 	[image_contest] [int] DEFAULT (0) NOT NULL ,
+	[image_contest_end] [int] DEFAULT (0) NOT NULL ,
+	[image_contest_rank] [int] DEFAULT (0) NOT NULL ,
 	[image_filemissing] [int] DEFAULT (0) NOT NULL ,
 	[image_has_exif] [int] DEFAULT (2) NOT NULL ,
 	[image_exif_data] [varchar] (8000) DEFAULT ('') NOT NULL ,

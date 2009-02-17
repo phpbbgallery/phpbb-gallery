@@ -892,6 +892,10 @@ class acp_gallery
 							SET ' . $db->sql_build_array('UPDATE', $contest_data) . '
 							WHERE contest_id  = ' . (int) $old_album_data['album_contest'];
 					$db->sql_query($sql);
+					if ($old_album_data['contest_marked'])
+					{
+						set_gallery_config('contests_ended', $gallery_config['contests_ended'] - 1);
+					}
 					if (($contest_data['contest_end'] + $old_album_data['contest_start']) < time())
 					{
 						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
@@ -936,6 +940,10 @@ class acp_gallery
 					WHERE image_album_id = ' . $album_id;
 				$db->sql_query($sql);
 				$album_data['album_contest'] = 0;
+				if ($old_album_data['contest_marked'])
+				{
+					set_gallery_config('contests_ended', $gallery_config['contests_ended'] - 1);
+				}
 			}
 
 			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' 

@@ -404,6 +404,8 @@ class install_update extends module
 			case '0.5.0':
 			case '0.5.1-dev':
 				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_status',			array('UINT:1', 0));
+				nv_add_column(GALLERY_IMAGES_TABLE,	'image_contest_end',	array('TIMESTAMP', 0));
+				nv_add_column(GALLERY_IMAGES_TABLE,	'image_contest_rank',	array('UINT:3', 0));
 			break;
 		}
 
@@ -868,6 +870,32 @@ class install_update extends module
 				// Delete "confirmed deleted subalbums" #410
 				recalc_btree('album_id', GALLERY_ALBUMS_TABLE, array(array('fieldname' => 'album_user_id', 'fieldvalue' => 0)));
 				set_gallery_config('rrc_gindex_crows', 5);
+
+				// Fill the new columns for contest winners
+				$sql = 'SELECT *
+					FROM ' . GALLERY_CONTESTS_TABLE . '
+					WHERE contest_marked = ' . IMAGE_NO_CONTEST;
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					$contest_end_time = $row['contest_start'] + $row['contest_end'];
+					$sql_update = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+						SET image_contest_end = ' . $contest_end_time . ',
+							image_contest_rank = 1
+						WHERE image_id = ' . $row['contest_first'];
+					$db->sql_query($sql_update);
+					$sql_update = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+						SET image_contest_end = ' . $contest_end_time . ',
+							image_contest_rank = 2
+						WHERE image_id = ' . $row['contest_second'];
+					$db->sql_query($sql_update);
+					$sql_update = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+						SET image_contest_end = ' . $contest_end_time . ',
+							image_contest_rank = 3
+						WHERE image_id = ' . $row['contest_third'];
+					$db->sql_query($sql_update);
+				}
+				$db->sql_freeresult($result);
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
 			break;

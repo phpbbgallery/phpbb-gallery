@@ -69,6 +69,24 @@ if ($album_data['contest_id'] && $album_data['contest_marked'] && (($album_data[
 			contest_third = $third
 		WHERE contest_id = " . (int) $album_data['contest_id'];
 	$db->sql_query($sql);
+	$contest_end_time = $album_data['contest_start'] + $album_data['contest_end'];
+	$sql_update = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+		SET image_contest_end = ' . $contest_end_time . ',
+			image_contest_rank = 1
+		WHERE image_id = ' . $first;
+	$db->sql_query($sql_update);
+	$sql_update = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+		SET image_contest_end = ' . $contest_end_time . ',
+			image_contest_rank = 2
+		WHERE image_id = ' . $second;
+	$db->sql_query($sql_update);
+	$sql_update = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+		SET image_contest_end = ' . $contest_end_time . ',
+			image_contest_rank = 3
+		WHERE image_id = ' . $third;
+	$db->sql_query($sql_update);
+
+	set_gallery_config('contests_ended', $gallery_config['contests_ended'] + 1);
 
 	$album_data['contest_marked'] = IMAGE_NO_CONTEST;
 }
