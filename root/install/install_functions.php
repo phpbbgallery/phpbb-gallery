@@ -647,6 +647,7 @@ function set_default_config()
 	set_gallery_config('rrc_profile_columns', 4);
 	set_gallery_config('rrc_profile_rows', 1);
 	set_gallery_config('rrc_gindex_crows', 5);
+	set_gallery_config('contests_ended', 0);
 }
 
 ?>

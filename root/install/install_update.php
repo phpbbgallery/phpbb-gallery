@@ -876,6 +876,7 @@ class install_update extends module
 					FROM ' . GALLERY_CONTESTS_TABLE . '
 					WHERE contest_marked = ' . IMAGE_NO_CONTEST;
 				$result = $db->sql_query($sql);
+				$contests_ended = 0;
 				while ($row = $db->sql_fetchrow($result))
 				{
 					$contest_end_time = $row['contest_start'] + $row['contest_end'];
@@ -894,8 +895,10 @@ class install_update extends module
 							image_contest_rank = 3
 						WHERE image_id = ' . $row['contest_third'];
 					$db->sql_query($sql_update);
+					$contests_ended++;
 				}
 				$db->sql_freeresult($result);
+				set_gallery_config('contests_ended', $contests_ended);
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
 			break;
