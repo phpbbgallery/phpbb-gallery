@@ -267,11 +267,12 @@ $lang = array_merge($lang, array(
 	'RSZ_HEIGHT'					=> 'Maximum-height on viewing image',
 	'RSZ_WIDTH'						=> 'Maximum-width on viewing image',
 
-	'SELECT_ALBUMS'					=> 'Select albums',
 	'SELECT_GROUPS'					=> 'Select groups',
+	'SELECT_PERM_SYS'				=> 'Select permission-system',
 	'SELECT_PERMISSIONS'			=> 'Select permissions',
 	'SELECTED_ALBUMS'				=> 'Selected albums',
 	'SELECTED_GROUPS'				=> 'Selected groups',
+	'SELECTED_PERM_SYS'				=> 'Selected permission-system',
 	'SET_PERMISSIONS'				=> '<br />Set <a href="%s">permissions</a> now.',
 	'SHORTED_IMAGENAMES'			=> 'Shorten Imagenames',
 	'SHORTED_IMAGENAMES_EXP'		=> 'If the name of an image is to long and doesn\'t include spaces, the layout maybe destroyed.',

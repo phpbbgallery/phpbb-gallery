@@ -1203,6 +1203,12 @@ class acp_gallery
 	{
 		global $db, $template, $user, $cache;
 
+		// Send contants to the template
+		$template->assign_vars(array(
+			'C_OWN_PERSONAL_ALBUMS'	=> OWN_GALLERY_PERMISSIONS,
+			'C_PERSONAL_ALBUMS'		=> PERSONAL_GALLERY_PERMISSIONS,
+		));
+
 		$submit = (isset($_POST['submit'])) ? true : false;
 		$delete = (isset($_POST['delete'])) ? true : false;
 		$album_ary = request_var('album_ids', array(''));

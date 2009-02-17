@@ -33,21 +33,21 @@ function toggleElement(oElement)
 <form action="{S_ALBUM_ACTION}" method="post" id="gallery_acp">
 <!-- IF STEP == 1 -->
 	<fieldset>
-		<legend>{L_SELECT_ALBUMS}</legend>
+		<legend>{L_SELECT_PERM_SYS}</legend>
 			<dl><dt><input id="perm_system_0" name="perm_system" class="radio" type="radio" checked="checked" value="0" /><label for="perm_system_0">&nbsp;{L_SELECTED_ALBUMS}</label></dt>
 				<dd><select id="target" name="album_ids[]" multiple="multiple">
 				{ALBUM_LIST}
 				</select></dd>
 			</dl>
-			<dl><dt><input id="perm_system_2" name="perm_system" class="radio" type="radio" value="-2" /><label for="perm_system_2">&nbsp;{L_OWN_PERSONAL_ALBUMS}</label></dt></dl>
-			<dl><dt><input id="perm_system_3" name="perm_system" class="radio" type="radio" value="-3" /><label for="perm_system_3">&nbsp;{L_PERSONAL_ALBUMS}</label></dt></dl>
+			<dl><dt><input id="perm_system_2" name="perm_system" class="radio" type="radio" value="C_OWN_PERSONAL_ALBUMS" /><label for="perm_system_2">&nbsp;{L_OWN_PERSONAL_ALBUMS}</label></dt></dl>
+			<dl><dt><input id="perm_system_3" name="perm_system" class="radio" type="radio" value="C_PERSONAL_ALBUMS" /><label for="perm_system_3">&nbsp;{L_PERSONAL_ALBUMS}</label></dt></dl>
 	</fieldset>
 <!-- ELSEIF STEP == 2 -->
 	<fieldset>
-		<legend>{L_SELECTED_ALBUMS}</legend>
+		<legend><!-- IF .albumrow -->{L_SELECTED_ALBUMS}<!-- ELSE -->{L_SELECTED_PERM_SYS}<!-- ENDIF --></legend>
 			<dl>
-				<!-- IF PERM_SYSTEM == 2 --><dd style="font-weight: bold;">{L_OWN_PERSONAL_ALBUMS}</dd><!-- ENDIF -->
-				<!-- IF PERM_SYSTEM == 3 --><dd style="font-weight: bold;">{L_PERSONAL_ALBUMS}</dd><!-- ENDIF -->
+				<!-- IF PERM_SYSTEM == C_OWN_PERSONAL_ALBUMS --><dd style="font-weight: bold;">{L_OWN_PERSONAL_ALBUMS}</dd><!-- ENDIF -->
+				<!-- IF PERM_SYSTEM == C_PERSONAL_ALBUMS --><dd style="font-weight: bold;">{L_PERSONAL_ALBUMS}</dd><!-- ENDIF -->
 				<!-- BEGIN albumrow --><dd style="font-weight: bold;">{albumrow.ALBUM_NAME}</dd><!-- END albumrow -->
 			</dl>
 	</fieldset>
@@ -55,7 +55,7 @@ function toggleElement(oElement)
 		<legend>{L_DELETE_PERMISSIONS}</legend>
 			<dl><dt>{L_DELETE_PERMISSIONS}</dt>
 			<dd><!-- BEGIN perm_grouprow --><input id="drop_perm" name="drop_perm[]" class="radio" type="checkbox" value="{perm_grouprow.GROUP_ID}" /><!-- IF perm_grouprow.GROUP_COLOUR --><span style="color: #{perm_grouprow.GROUP_COLOUR};">{perm_grouprow.GROUP_NAME}</span><!-- ELSE -->{perm_grouprow.GROUP_NAME}<!-- ENDIF --><br /><!-- END perm_grouprow --><!-- IF .perm_grouprow --><br />
-			<a href="#" onclick="marklist('gallery_acp', 'drop_perm', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('gallery_acp', 'drop_perm', false); return false;">{L_UNMARK_ALL}</a><!-- ENDIF --></dd></dl>
+			<a href="#" onclick="marklist('gallery_acp', 'drop_perm', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('gallery_acp', 'drop_perm', false); return false;">{L_UNMARK_ALL}</a><!-- ELSE -->{L_PERM_HIDDEN_GROUPS_EXP}<!-- ENDIF --></dd></dl>
 	</fieldset>
 	<fieldset class="submit-buttons">
 		<legend>{L_SUBMIT}</legend>
@@ -71,10 +71,10 @@ function toggleElement(oElement)
 	</fieldset>
 <!-- ELSEIF STEP == 3 -->
 	<fieldset>
-		<legend>{L_SELECTED_ALBUMS}</legend>
+		<legend><!-- IF .albumrow -->{L_SELECTED_ALBUMS}<!-- ELSE -->{L_SELECTED_PERM_SYS}<!-- ENDIF --></legend>
 			<dl>
-				<!-- IF PERM_SYSTEM == 2 --><dd style="font-weight: bold;">{L_OWN_PERSONAL_ALBUMS}</dd><!-- ENDIF -->
-				<!-- IF PERM_SYSTEM == 3 --><dd style="font-weight: bold;">{L_PERSONAL_ALBUMS}</dd><!-- ENDIF -->
+				<!-- IF PERM_SYSTEM == C_OWN_PERSONAL_ALBUMS --><dd style="font-weight: bold;">{L_OWN_PERSONAL_ALBUMS}</dd><!-- ENDIF -->
+				<!-- IF PERM_SYSTEM == C_PERSONAL_ALBUMS --><dd style="font-weight: bold;">{L_PERSONAL_ALBUMS}</dd><!-- ENDIF -->
 				<!-- BEGIN albumrow --><dd style="font-weight: bold;">{albumrow.ALBUM_NAME}</dd><!-- END albumrow -->
 			</dl>
 	</fieldset>
@@ -86,6 +86,7 @@ function toggleElement(oElement)
 	</fieldset>
 	<fieldset>
 		<legend>{L_SELECT_PERMISSIONS}</legend>
+		<!-- IF S_ALBUMS or S_GROUPS --><span>{L_PERM_HIDDEN_PERMISSIONS_EXP}</span><!-- ENDIF -->
 
 		<div class="permissions-panel" id="options{grouprow.S_ROW_COUNT}{p_mask.f_mask.S_ROW_COUNT}{p_mask.f_mask.category.S_ROW_COUNT}">
 			<span class="corners-top"><span></span></span>

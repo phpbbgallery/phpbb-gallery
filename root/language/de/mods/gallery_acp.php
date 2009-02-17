@@ -267,11 +267,12 @@ $lang = array_merge($lang, array(
 	'RSZ_HEIGHT'					=> 'Maximale Höhe beim anzeigen eines Bildes',
 	'RSZ_WIDTH'						=> 'Maximale Breite beim anzeigen eines Bildes',
 
-	'SELECT_ALBUMS'					=> 'Wähle Alben',
 	'SELECT_GROUPS'					=> 'Wähle Gruppen',
+	'SELECT_PERM_SYS'				=> 'Wähle Berechtigungsart',
 	'SELECT_PERMISSIONS'			=> 'Wähle Berechtigungen',
 	'SELECTED_ALBUMS'				=> 'Ausgewählte Alben',
 	'SELECTED_GROUPS'				=> 'Ausgewählte Gruppen',
+	'SELECTED_PERM_SYS'				=> 'Ausgewählte Berechtigungsart',
 	'SET_PERMISSIONS'				=> '<br /><a href="%s">Berechtigungen</a> jetzt vergeben.',
 	'SHORTED_IMAGENAMES'			=> 'Bildernamen kürzen',
 	'SHORTED_IMAGENAMES_EXP'		=> 'Sollte der Name eines Bildes zu lange sein und kein Leerzeichen enthalten, kann es zu Problemen im Layout führen.',
