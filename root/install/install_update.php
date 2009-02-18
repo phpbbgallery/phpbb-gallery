@@ -1063,6 +1063,9 @@ class install_update extends module
 					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_FAVORITES',	'module_mode' => 'manage_favorites',	'module_auth' => '');
 					add_module($ucp_gallery);
 
+					// Add album-BBCode
+					add_bbcode('album');
+
 				case '0.4.0-RC2':
 				case '0.4.0-RC3':
 				case '0.4.0':
@@ -1075,9 +1078,6 @@ class install_update extends module
 				break;
 			}
 
-
-			// Add album-BBCode
-			add_bbcode('album');
 			$s_hidden_fields = '';
 			$url = $this->p_master->module_url . "?mode=$mode&amp;sub=final";
 		}
