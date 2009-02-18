@@ -14,13 +14,13 @@
 		<!-- ENDIF -->
 		<!-- IF not S_USER_LOGGED_IN -->
 			<tr>
-				<td class="row1" width="22%" height="28"><b class="genmed">{L_USERNAME}:</b</td>
+				<td class="row1" width="22%" height="28"><b class="genmed">{L_USERNAME}:</b></td>
 				<td class="row2"><input class="inputbox autowidth" type="text" name="username" value="{USERNAME}" size="60" maxlength="32" /></td>
 			</tr>
 		<!-- ENDIF -->
 		<!-- IF S_IMAGE -->
 			<tr>
-				<td class="row1" width="22%" height="28"<b class="genmed">{L_IMAGE_NAME}:</b></td>
+				<td class="row1" width="22%" height="28"><b class="genmed">{L_IMAGE_NAME}:</b></td>
 				<td class="row2">
 					<input class="inputbox autowidth" type="text" name="image_name" size="60" value="{IMAGE_NAME}" /><br /><br />
 					<!-- IF S_MULTI_IMAGES --><input class="inputbox autowidth" type="text" name="image_num" size="5" value="1" /> {L_LOOP_EXP}<br /><br /><!-- ENDIF -->
@@ -117,6 +117,13 @@
 			<tr>
 				<td class="row1" height="28"><span class="gen">{L_ALLOWED_FILETYPES}:</span></td>
 				<td class="row2"><span class="gen"><b>{S_ALLOWED_FILETYPES}</b></span></td>
+			</tr>
+		<!-- ENDIF -->
+		<!-- IF S_MOVE_PERSONAL -->
+			<tr>
+				<td class="row1" height="28"><b class="genmed">{L_MOVE_TO_PERSONAL}:</b><br />
+					<span class="gen"><!-- IF S_MOVE_MODERATOR -->{L_MOVE_TO_PERSONAL_MOD}<!-- ELSE -->{L_MOVE_TO_PERSONAL_EXPLAIN}<!-- ENDIF --></span></td>
+				<td class="row2"><input type="radio" name="move_to_personal" id="move_to_personal" value="1" /> <span class="gen">{L_YES}</span> <input type="radio" name="move_to_personal" id="move_to_personal" value="0" checked="checked" /> <span class="gen">{L_NO}</span></td>
 			</tr>
 		<!-- ENDIF -->
 		<tr>

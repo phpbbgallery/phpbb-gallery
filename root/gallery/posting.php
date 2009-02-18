@@ -721,24 +721,64 @@ switch ($mode)
 						'image_desc_bitfield'		=> $message_parser->bbcode_bitfield,
 					);
 
+					$move_to_personal = request_var('move_to_personal', 0);
+					if ($move_to_personal)
+					{
+						$personal_album_id = 0;
+						if ($user->data['user_id'] != $image_data['image_user_id'])
+						{
+							$sql = 'SELECT personal_album_id
+								FROM ' . GALLERY_USERS_TABLE . '
+								WHERE user_id = ' . $image_data['image_user_id'];
+							$result = $db->sql_query($sql);
+							$personal_album_id = (int) $db->sql_fetchfield('personal_album_id');
+							$db->sql_freeresult($result);
+							$user_entry_exists = ($db->sql_affectedrows()) ? true : false;
+
+							// The User has no personal album, moderators can created that without the need of permissions
+							if (!$personal_album_id)
+							{
+								$personal_album_id = generate_personal_album($image_data['image_username'], $image_data['image_user_id'], $image_data['image_user_colour'], $user_entry_exists);
+							}
+						}
+						else
+						{
+							$personal_album_id = $user->gallery['personal_album_id'];
+							if (!$personal_album_id && gallery_acl_check('i_upload', OWN_GALLERY_PERMISSIONS))
+							{
+								$user_entry_exists = ($user->gallery['exists']) ? true : false;
+								$personal_album_id = generate_personal_album($image_data['image_username'], $image_data['image_user_id'], $image_data['image_user_colour'], $user_entry_exists);
+							}
+						}
+						if ($personal_album_id)
+						{
+							$sql_ary['image_album_id'] = $personal_album_id;
+						}
+					}
+					else if ($album_data['album_last_image_id'] == $image_id)
+					{
+						$album_sql_ary = array(
+							'album_last_image_name'		=> $image_name,
+						);
+						$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $album_sql_ary) . '
+							WHERE ' . $db->sql_in_set('album_id', $image_data['image_album_id']);
+						$db->sql_query($sql);
+					}
+
 					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
-						SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
-						WHERE image_id = $image_id";
+						SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+						WHERE image_id = ' . $image_id;
 					$db->sql_query($sql);
+
+					if ($move_to_personal && $personal_album_id)
+					{
+						update_album_info($album_data['album_id']);
+						update_album_info($personal_album_id);
+					}
 
 					if ($user->data['user_id'] != $image_data['image_user_id'])
 					{
 						add_log('gallery', $image_data['image_album_id'], $image_data['image_id'], 'LOG_GALLERY_EDITED', $image_name);
-					}
-
-					if ($album_data['album_last_image_id'] == $image_id)
-					{
-						$sql_ary = array(
-							'album_last_image_name'		=> $image_name,
-						);
-						$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-							WHERE ' . $db->sql_in_set('album_id', $image_data['image_album_id']);
-						$db->sql_query($sql);
 					}
 				}
 				$message_parser				= new parse_message();
@@ -757,6 +797,8 @@ switch ($mode)
 
 					'S_IMAGE'			=> true,
 					'S_EDIT'			=> true,
+					'S_MOVE_PERSONAL'	=> ((gallery_acl_check('i_upload', OWN_GALLERY_PERMISSIONS) || $user->gallery['personal_album_id']) || ($user->data['user_id'] != $image_data['image_user_id'])) ? true : false,
+					'S_MOVE_MODERATOR'	=> ($user->data['user_id'] != $image_data['image_user_id']) ? true : false,
 					'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id"),
 				));
 				$message = $user->lang['IMAGES_UPDATED_SUCCESSFULLY'] . '<br />';
@@ -1552,4 +1594,50 @@ function gallery_notification($mode, $handle_id, $image_name)
 		$db->sql_query($sql);
 	}
 }
+
+/**
+* Generate personal album for user, when moving image into it
+*/
+function generate_personal_album($album_name, $user_id, $user_colour, $user_entry_exists)
+{
+	global $cache, $db, $gallery_config;
+
+	$album_data = array(
+		'album_name'					=> $album_name,
+		'parent_id'						=> 0,
+		//left_id and right_id default by db
+		'album_desc_options'			=> 7,
+		'album_desc'					=> '',
+		'album_parents'					=> '',
+		'album_type'					=> ALBUM_UPLOAD,
+		'album_user_id'					=> $user_id,
+		'album_last_username'			=> '',
+		'album_last_user_colour'		=> $user_colour,
+	);
+	$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
+	$personal_album_id = $db->sql_nextid();
+
+	if ($user_entry_exists)
+	{
+		$sql = 'UPDATE ' . GALLERY_USERS_TABLE . ' 
+			SET personal_album_id = ' . (int) $personal_album_id . '
+			WHERE user_id  = ' . (int) $user_id;
+		$db->sql_query($sql);
+	}
+	else
+	{
+		$gallery_settings = array(
+			'user_id'			=> $user_id,
+			'personal_album_id'	=> $personal_album_id,
+		);
+		$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $gallery_settings));
+	}
+	set_gallery_config('personal_counter', $gallery_config['personal_counter'] + 1);
+
+	$cache->destroy('_albums');
+	$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
+
+	return $personal_album_id;
+}
+
 ?>

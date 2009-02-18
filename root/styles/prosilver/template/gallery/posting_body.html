@@ -118,6 +118,14 @@
 <div class="panel bg2">
 	<div class="inner">
 		<span class="corners-top"><span></span></span>
+		<!-- IF S_MOVE_PERSONAL -->
+		<fieldset class="fields1">
+			<dl>
+				<dt><label for="move_to_personal">{L_MOVE_TO_PERSONAL}:</label><br /><span><!-- IF S_MOVE_MODERATOR -->{L_MOVE_TO_PERSONAL_MOD}<!-- ELSE -->{L_MOVE_TO_PERSONAL_EXPLAIN}<!-- ENDIF --></span></dt>
+				<dd><input type="radio" name="move_to_personal" id="move_to_personal" value="1" /> {L_YES} <input type="radio" name="move_to_personal" id="move_to_personal" value="0" checked="checked" /> {L_NO}</dd>
+			</dl>
+		</fieldset>
+		<!-- ENDIF -->
 		<fieldset class="submit-buttons">
 			{S_HIDDEN_FIELDS}
 			<input type="reset" accesskey="r" tabindex="8" value="{L_RESET}" class="button2" />&nbsp;

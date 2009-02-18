@@ -54,6 +54,8 @@
         <date>2009-MM-DD</date>
         <rev-version>X.Y.Z</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Add] Report #431: User can grab an image to their personal album]]></change>
+          <change><![CDATA[[Add] Report #430: Moderator can create personal album for user to move images]]></change>
           <change><![CDATA[[Add] Report #466: Disallow certain albums from recent/random image blocks]]></change>
           <change><![CDATA[[Add] Report #464: Option to automatically delete outdated files]]></change>
           <change><![CDATA[[Add] Report #461: Reset rating for specific album]]></change>
@@ -64,7 +66,7 @@
 
           <change><![CDATA[[Fix] Report: Result for contests missing (Reported by redbull254)]]></change>
           <change><![CDATA[[Fix] Report #463: Missing information about current editing permission-system]]></change>
-          <change><![CDATA[[Fix] Report #p5994: free memory after creatign images]]></change>
+          <change><![CDATA[[Fix] Report #p5994: free memory after creating images]]></change>
           <change><![CDATA[[Fix] Report #456: Usage of (possible) htaccess protected adm/-files]]></change>
           <change><![CDATA[[Fix] Report #442: Incorrect EXIF data results in errors]]></change>
         </changelog>

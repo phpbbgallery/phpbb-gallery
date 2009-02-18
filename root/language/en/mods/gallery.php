@@ -139,6 +139,9 @@ $lang = array_merge($lang, array(
 	'MISSING_SUBMODE'				=> 'No submode selected',
 	'MISSING_USERNAME'				=> 'No Username entered',
 	'MOVE_TO_ALBUM'					=> 'Move to album',
+	'MOVE_TO_PERSONAL'				=> 'Move to personal album',
+	'MOVE_TO_PERSONAL_MOD'			=> 'When you set this option to "yes", the image is moved into the personal album of the user. If the user does not have one yet, it is created automatically.',
+	'MOVE_TO_PERSONAL_EXPLAIN'		=> 'When you set this option to "yes", the image is moved into your personal album. If you do not have one yet, it is created automatically.',
 
 	'NEW_COMMENT'					=> 'New Comment',
 	'NO_ALBUMS'						=> 'There are no albums in this gallery.',

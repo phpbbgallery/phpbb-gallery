@@ -140,6 +140,9 @@ $lang = array_merge($lang, array(
 	'MISSING_SUBMODE'				=> 'Kein Sub-Modus ausgewählt',
 	'MISSING_USERNAME'				=> 'Kein Benutzernamen angegeben',
 	'MOVE_TO_ALBUM'					=> 'Ins Album verschieben',
+	'MOVE_TO_PERSONAL'				=> 'In persönliches Album verschieben',
+	'MOVE_TO_PERSONAL_MOD'			=> 'Wenn diese Option auf "Ja" gesetzt wird, wird das Bild in das Persönliche Abum des Benutzers verschoben. Wenn dieser noch keines angelegt hat, wird es automatisch angelegt.',
+	'MOVE_TO_PERSONAL_EXPLAIN'		=> 'Wenn diese Option auf "Ja" gesetzt wird, wird das Bild in dein Persönliche Abum verschoben. Wenn du noch keines angelegt hast, wird es automatisch angelegt.',
 
 	'NEW_COMMENT'					=> 'Neuer Kommentar',
 	'NO_ALBUMS'						=> 'In dieser Galerie gibt es keine Alben',
