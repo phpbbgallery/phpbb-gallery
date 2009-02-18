@@ -1,4 +1,27 @@
 <?php
+/**
+*
+* @package phpBB Gallery
+* @version $Id$
+* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+*/
+
+// Write your headerlines here
+$headerlines = "* @package phpBB Gallery\n";
+$headerlines .= "* @version \$Id\$\n";
+$headerlines .= "* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org\n";
+$headerlines .= "* @license http://opensource.org/licenses/gpl-license.php GNU Public License\n";
+
+/**
+* @ignore
+*/
+
+define('IN_PHPBB', true);
+$phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
+$phpEx = substr(strrchr(__FILE__, '.'), 1);
+
 $files = $trunk = array();
 function show_dir($dir, $pos = '', $files = array())
 {
@@ -18,7 +41,6 @@ function show_dir($dir, $pos = '', $files = array())
 			}
 			else
 			{
-				//echo substr($pos, strpos($pos, '/') + 1) . '/' . $file . '<br>';
 				$files[] = substr($pos, strpos($pos, '/') + 1) . '/' . $file;
 			}
 		}
@@ -49,42 +71,69 @@ $trunk = show_dir('v0_5_0/', '', $trunk);
 
 $files = array_unique($files);
 sort ($files);
-echo '&lt;?php<br />';
-echo '/**<br />';
-echo '*<br />';
-echo '* @package phpBB Gallery<br />';
-echo '* @version $Id$<br />';
-echo '* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org<br />';
-echo '* @license http://opensource.org/licenses/gpl-license.php GNU Public License<br />';
-echo '*<br />';
-echo '*/<br />';
-echo '<br />';
-echo '/**<br />';
-echo '* @ignore<br />';
-echo '*/<br />';
-echo '<br />';
-echo 'if (!defined(\'IN_PHPBB\'))<br />';
-echo '{<br />';
-echo '&nbsp;&nbsp;&nbsp;&nbsp;exit;<br />';
-echo '}<br />';
-echo 'if (!defined(\'IN_INSTALL\'))<br />';
-echo '{<br />';
-echo '&nbsp;&nbsp;&nbsp;&nbsp;exit;<br />';
-echo '}<br />';
-echo '<br />';
-echo '$oudated_files = array(<br />';
+
+// Write the file-content
+$get_outdated_files = "<?php\n";
+$get_outdated_files .= "/**\n";
+$get_outdated_files .= "*\n";
+$get_outdated_files .= $headerlines;
+$get_outdated_files .= "*\n";
+$get_outdated_files .= "*/\n";
+$get_outdated_files .= "\n";
+$get_outdated_files .= "/**\n";
+$get_outdated_files .= "* @ignore\n";
+$get_outdated_files .= "*/\n";
+$get_outdated_files .= "\n";
+$get_outdated_files .= "if (!defined('IN_PHPBB'))\n";
+$get_outdated_files .= "{\n";
+$get_outdated_files .= "	exit;\n";
+$get_outdated_files .= "}\n";
+$get_outdated_files .= "if (!defined('IN_INSTALL'))\n";
+$get_outdated_files .= "{\n";
+$get_outdated_files .= "	exit;\n";
+$get_outdated_files .= "}\n";
+$get_outdated_files .= "\n";
+$get_outdated_files .= "\$oudated_files = array(\n";
 foreach ($files as $file)
 {
 	if (!in_array($file, $trunk))
 	{
 		if ((substr($file, 0, 16) != 'install_gallery/') && (substr($file, 0, 8) != 'install/') && ($file != 'gallery/upload/e9572ef3661a7ae1c35ba09a067e57ae.jpg'))
 		{
-			echo '&nbsp;&nbsp;&nbsp;&nbsp;\'' . $file . '\',<br />';
+			$get_outdated_files .= "	'" . $file . "',\n";
 		}
 	}
 }
-echo ');<br />';
-echo '<br />';
-echo '?>';
+$get_outdated_files .= ");\n";
+$get_outdated_files .= "\n";
+$get_outdated_files .= '?' . '>';
+
+// Copied from phpBB writting config.php
+// Attempt to write out the config file directly. If it works, this is the easiest way to do it ...
+if ((file_exists($phpbb_root_path . 'install/outdated_files.' . $phpEx) && is_writable($phpbb_root_path . 'install/outdated_files.' . $phpEx)) || is_writable($phpbb_root_path . 'install/'))
+{
+	// Assume it will work ... if nothing goes wrong below
+	$written = true;
+	if (!($fp = @fopen($phpbb_root_path . 'install/outdated_files.' . $phpEx, 'w')))
+	{
+		// Something went wrong ... so let's try another method
+		$written = false;
+	}
+	if (!(@fwrite($fp, $get_outdated_files)))
+	{
+		// Something went wrong ... so let's try another method
+		$written = false;
+	}
+	@fclose($fp);
+}
+
+if ($written)
+{
+	echo 'Finished!';
+}
+else
+{
+	echo 'Failed!';
+}
 
 ?>
