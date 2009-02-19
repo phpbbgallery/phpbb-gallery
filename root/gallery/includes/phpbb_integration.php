@@ -137,8 +137,6 @@ function integrate_viewonline ($on_page, $album_id, $session_page)
 	else
 	{
 		preg_match('#mode=([a-z]+)#', $session_page, $on_page);
-		echo $on_page[1];
-		echo gallery_acl_check('i_view', PERSONAL_GALLERY_PERMISSIONS); 
 		$on_page = (sizeof($on_page)) ? $on_page[1] : '';
 		if (($on_page == 'personal') && (gallery_acl_check('i_view', PERSONAL_GALLERY_PERMISSIONS)))
 		{
