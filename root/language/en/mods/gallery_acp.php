@@ -249,6 +249,7 @@ $lang = array_merge($lang, array(
 	'RRC_GINDEX'					=> 'Recent- & Random-Images & Comment - Feature',
 	'RRC_GINDEX_COLUMNS'			=> 'Columns',
 	'RRC_GINDEX_COMMENTS'			=> 'Collapse comments',
+	'RRC_GINDEX_CONTESTS'			=> 'Number of contests',
 	'RRC_GINDEX_CROWS'				=> 'Number of comments',
 	'RRC_GINDEX_MODE'				=> 'Mode',
 	'RRC_GINDEX_ROWS'				=> 'Rows',

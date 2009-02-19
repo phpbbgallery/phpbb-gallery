@@ -30,7 +30,7 @@ function toggleElement(oElement)
 		<ul class="topiclist">
 			<li class="header">
 				<dl class="icon">
-					<dt>{L_RECENT_IMAGES}</dt>
+					<dt><!-- IF U_G_SEARCH_RECENT --><a href="{U_G_SEARCH_RECENT}">{L_RECENT_IMAGES}</a><!-- ELSE -->{L_RECENT_IMAGES}<!-- ENDIF --></dt>
 				</dl>
 			</li>
 		</ul>
@@ -107,7 +107,7 @@ function toggleElement(oElement)
 		<ul class="topiclist">
 			<li class="header">
 				<dl class="icon">
-					<dt>{L_RANDOM_IMAGES}</dt>
+					<dt><!-- IF U_G_SEARCH_RANDOM --><a href="{U_G_SEARCH_RANDOM}">{L_RANDOM_IMAGES}</a><!-- ELSE -->{L_RANDOM_IMAGES}<!-- ENDIF --></dt>
 				</dl>
 			</li>
 		</ul>
@@ -176,8 +176,86 @@ function toggleElement(oElement)
 	</div>
 </div>
 <!-- ENDIF -->
+
+<!-- IF .contest -->
+<div class="forumbg">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="icon">
+					<dt><!-- IF U_G_SEARCH_CONTESTS --><a href="{U_G_SEARCH_CONTESTS}">{L_SEARCH_CONTEST}</a><!-- ELSE -->{L_SEARCH_CONTEST}<!-- ENDIF --></dt>
+				</dl>
+			</li>
+		</ul>
+		<ul class="topiclist topics">
+			<li class="bg2">
+				<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline">
+					<!-- BEGIN contest -->
+					<tr>
+						<!-- BEGIN image -->
+						<td class="bg2" valign="top" style="width: {S_COL_WIDTH};">
+							<table width="100%" cellpadding="2" cellspacing="5" border="0" class="forumline">
+								<tr>
+									<td align="center" style="height: {S_THUMBNAIL_SIZE}px;" class="bg1<!-- IF contest.image.S_UNAPPROVED --> g_unapproved<!-- ENDIF --><!-- IF contest.image.S_LOCKED --> g_locked<!-- ENDIF --><!-- IF contest.image.S_REPORTED --> g_reported<!-- ENDIF -->">
+										<span class="genmed">{contest.image.UC_THUMBNAIL}</span>
+									</td>
+								</tr>
+								<tr>
+									<td class="bg2" valign="top">
+										<div class="gensmall" style="overflow: hidden;">
+											<!-- IF contest.image.CONTEST_RANK -->{L_CONTEST_RESULT}: <strong>{contest.image.CONTEST_RANK}</strong><br /><!-- ENDIF -->
+											<!-- IF contest.image.UC_IMAGE_NAME -->{L_IMAGE_NAME}: {contest.image.UC_IMAGE_NAME}<br /><!-- ENDIF -->
+											<!-- IF contest.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{contest.image.U_ALBUM}" style="font-weight: bold;">{contest.image.ALBUM_NAME}</a><br /><!-- ENDIF -->
+											<!-- IF contest.image.POSTER -->{L_UPLOADED_BY_USER}: {contest.image.POSTER}<br /><!-- ENDIF -->
+											<!-- IF contest.image.TIME -->{L_UPLOADED_ON_DATE}: {contest.image.TIME}<br /><!-- ENDIF -->
+											<!-- IF contest.image.VIEW > -1 -->{L_VIEWS}: {contest.image.VIEW}<br /><!-- ENDIF -->
+											<!-- IF contest.image.S_RATINGS -->{L_RATING}: <a href="{contest.image.U_RATINGS}">{contest.image.S_RATINGS}</a><br /><!-- ENDIF -->
+											<!-- IF contest.image.S_COMMENTS -->{contest.image.L_COMMENTS}: <a href="{contest.image.U_COMMENTS}">{contest.image.S_COMMENTS}</a><br /><!-- ENDIF -->
+											<!-- IF contest.image.S_IP -->{L_IP}: {contest.image.S_IP} &#187; <a href="{contest.image.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a><br /><!-- ENDIF -->
+											<!-- IF contest.image.U_REPORT or contest.image.U_STATUS or contest.image.U_MOVE or  contest.image.U_EDIT or contest.image.U_DELETE -->
+											<a href="javascript: toggleElement( getElement('moderate_{contest.image.IMAGE_ID}'));">{L_MODERATE}</a>
+											<div id="moderate_{contest.image.IMAGE_ID}" style="display: none;">
+												<!-- IF contest.image.U_REPORT -->&#187; <a href="{contest.image.U_REPORT}" class="reported-images-number">{L_READ_REPORT}</a><br /><!-- ENDIF -->
+												<!-- IF contest.image.U_STATUS -->&#187; <a href="{contest.image.U_STATUS}">{contest.image.L_STATUS}</a><br /><!-- ENDIF -->
+												<!-- IF contest.image.U_MOVE -->&#187; <a href="{contest.image.U_MOVE}">{L_MOVE}</a><br /><!-- ENDIF -->
+												<!-- IF contest.image.U_EDIT -->&#187; <a href="{contest.image.U_EDIT}">{L_EDIT_IMAGE}</a><br /><!-- ENDIF -->
+												<!-- IF contest.image.U_DELETE -->&#187; <a href="{contest.image.U_DELETE}">{L_DELETE_IMAGE}</a><br /><!-- ENDIF -->
+											</div>
+											<!-- ENDIF -->
+										</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<!-- END image -->
+						<!-- BEGIN no_image --> 
+							<td class="bg2" valign="top" style="width: {S_COL_WIDTH};">
+								<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline"><tr>
+								<td style="height: {S_THUMBNAIL_SIZE}px;" class="bg1"></td>
+								</tr></table>
+							</td> 
+						<!-- END no_image -->
+					</tr>
+					<!-- END contest -->
+				</table>
+			</li>
+		</ul>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+<!-- ELSEIF S_CONTEST -->
+<div class="panel">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+			{L_NO_IMAGES}
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+<!-- ENDIF -->
+
 <!-- IF .commentrow -->
-	<h4><a href="javascript: toggleElement( getElement('recent-comments'));">{L_RECENT_COMMENTS}</a></h4>
+	<h4><!-- IF not COLLAPSE_COMMENTS --><!-- IF U_G_SEARCH_COMMENTED --><a href="{U_G_SEARCH_COMMENTED}">{L_RECENT_COMMENTS}</a><!-- ELSE -->{L_RECENT_COMMENTS}<!-- ENDIF --><!-- ELSE --><a href="javascript: toggleElement( getElement('recent-comments'));">{L_RECENT_COMMENTS}</a><!-- ENDIF --></h4>
 	<div id="recent-comments"<!-- IF COLLAPSE_COMMENTS --> style="display: none;"<!-- ENDIF -->>
 	<!-- BEGIN commentrow -->
 	<a id="{commentrow.COMMENT_ID}"></a>

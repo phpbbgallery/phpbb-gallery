@@ -900,6 +900,7 @@ class install_update extends module
 				}
 				$db->sql_freeresult($result);
 				set_gallery_config('contests_ended', $contests_ended);
+				set_gallery_config('rrc_gindex_contests', 1);
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
 			break;

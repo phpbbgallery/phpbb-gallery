@@ -46,6 +46,12 @@ function integrate_memberlist_viewprofile (&$member)
 	$images_per_day = $member['user_images'] / $memberdays;
 	$percentage_images = ($config['num_images']) ? min(100, ($member['user_images'] / $config['num_images']) * 100) : 0;
 
+	$ints = array(
+		'rows'		=> $gallery_config['rrc_profile_rows'],
+		'columns'	=> $gallery_config['rrc_profile_columns'],
+		'comments'	=> 0,
+		'contests'	=> 0,
+	);
 	$display = array(
 		'name'		=> true,
 		'poster'	=> true,
@@ -57,7 +63,7 @@ function integrate_memberlist_viewprofile (&$member)
 	);
 	if ($gallery_config['rrc_profile_mode'] != '!all')
 	{
-		recent_gallery_images($gallery_config['rrc_profile_rows'], $gallery_config['rrc_profile_columns'], $display, $gallery_config['rrc_profile_mode'], false, 0, $user_id);
+		recent_gallery_images($ints, $display, $gallery_config['rrc_profile_mode'], false, $user_id);
 	}
 
 	$template->assign_vars(array(

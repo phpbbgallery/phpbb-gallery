@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 /**
 * Display recent images & comments and random images
 */
-function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_comments = false, $comments = 0, $user_id = 0)
+function recent_gallery_images(&$ints, &$display, $modes, $collapse_comments = false, $user_id = 0)
 {
 	global $db, $phpEx, $user, $cache, $auth;
 	global $phpbb_root_path, $gallery_config, $config, $template;
@@ -48,7 +48,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 	$view_albums = gallery_acl_album_ids('i_view', 'array');
 	$moderate_albums = gallery_acl_album_ids('m_status', 'array');
 	$comment_albums = gallery_acl_album_ids('c_read', 'array');
-	$limit_sql = $rows * $columns;
+	$limit_sql = $ints['rows'] * $ints['columns'];
 
 	switch ($modes)
 	{
@@ -99,8 +99,6 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 
 	if (($view_albums != array()) || ($moderate_albums != array()))
 	{
-		$limit_sql = $rows * $columns;
-
 		if ($recent)
 		{
 			$recent_images = array();
@@ -109,7 +107,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
 					ON i.image_album_id = a.album_id
 				WHERE ((' . $db->sql_in_set('i.image_album_id', $view_albums) . '
-						AND i.image_status = 1)' . 
+						AND i.image_status = ' . IMAGE_APPROVED . ')' . 
 					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . '
 					' . (($user_id) ? ') AND i.image_user_id = ' . $user_id : ')') . '
 					AND a.display_in_rrc = 1
@@ -123,11 +121,11 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 			}
 			$db->sql_freeresult($result);
 
-			for ($i = 0; $i < count($recent_images); $i += $columns)
+			for ($i = 0; $i < count($recent_images); $i += $ints['columns'])
 			{
 				$template->assign_block_vars('recent', array());
 
-				for ($j = $i; $j < ($i + $columns); $j++)
+				for ($j = $i; $j < ($i + $ints['columns']); $j++)
 				{
 					if ($j >= count($recent_images))
 					{
@@ -165,7 +163,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
 					ON i.image_album_id = a.album_id
 				WHERE ((' . $db->sql_in_set('i.image_album_id', $view_albums) . '
-						AND i.image_status = 1)' . 
+						AND i.image_status = ' . IMAGE_APPROVED . ')' . 
 					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . '
 					' . (($user_id) ? ') AND i.image_user_id = ' . $user_id : ')') . '
 					AND a.display_in_rrc = 1
@@ -179,11 +177,11 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 			}
 			$db->sql_freeresult($result);
 
-			for ($i = 0; $i < count($random_images); $i += $columns)
+			for ($i = 0; $i < count($random_images); $i += $ints['columns'])
 			{
 				$template->assign_block_vars('random', array());
 
-				for ($j = $i; $j < ($i + $columns); $j++)
+				for ($j = $i; $j < ($i + $ints['columns']); $j++)
 				{
 					if ($j >= count($random_images))
 					{
@@ -193,6 +191,45 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 
 					// Assign the image to the template-block
 					assign_image_block('random.image', $random_images[$j], $random_images[$j]['album_status']);
+				}
+			}
+		}
+
+		if ($ints['contests'])
+		{
+			$contest_columns = 3;
+			$contest_images = array();
+			$sql = 'SELECT i.*, a.album_name, a.album_status, a.album_id, a.album_user_id
+				FROM ' . GALLERY_IMAGES_TABLE . ' i
+				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
+					ON i.image_album_id = a.album_id
+				WHERE ((' . $db->sql_in_set('i.image_album_id', $view_albums) . ' AND i.image_status = ' . IMAGE_APPROVED . ')' . 
+					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . ')
+					AND i.image_contest_rank > 0
+				GROUP BY i.image_id
+				ORDER BY image_contest_end DESC, image_contest_rank ASC';
+			$result = $db->sql_query_limit($sql, $ints['contests'] * $contest_columns);
+
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$contest_images[] = $row;
+			}
+			$db->sql_freeresult($result);
+
+			for ($i = 0; $i < count($contest_images); $i += $contest_columns)
+			{
+				$template->assign_block_vars('contest', array());
+
+				for ($j = $i; $j < ($i + $contest_columns); $j++)
+				{
+					if ($j >= count($contest_images))
+					{
+						$template->assign_block_vars('contest.no_image', array());
+						continue;
+					}
+
+					// Assign the image to the template-block
+					assign_image_block('contest.image', $contest_images[$j], $contest_images[$j]['album_status']);
 				}
 			}
 		}
@@ -212,7 +249,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 			WHERE (' . $db->sql_in_set('i.image_album_id', $comment_albums) . '
 				' . (($user_id) ? ') AND i.image_user_id = ' . $user_id : ')') .'
 			ORDER BY c.comment_id DESC';
-		$result = $db->sql_query_limit($sql, $comments);
+		$result = $db->sql_query_limit($sql, $ints['comments']);
 
 		while ($commentrow = $db->sql_fetchrow($result))
 		{
@@ -254,7 +291,7 @@ function recent_gallery_images($rows, $columns, &$display, $modes, $collapse_com
 	$template->assign_vars(array(
 		'S_THUMBNAIL_SIZE'			=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? 16 : 0),
 		'S_COL_WIDTH'			=> (100 / $gallery_config['cols_per_page']) . '%',
-		'S_COLS'				=> $columns,
+		'S_COLS'				=> $ints['columns'],
 		'S_RANDOM'				=> $random,
 		'S_RECENT'				=> $recent,
 	));

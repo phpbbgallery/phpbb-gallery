@@ -117,6 +117,12 @@ else if ($gallery_config['personal_album_index'] && gallery_acl_check('a_list', 
 * Recent images & comments and random images
 */
 include($phpbb_root_path . $gallery_root_path . 'includes/functions_recent.' . $phpEx);
+$ints = array(
+	'rows'		=> $gallery_config['rrc_gindex_rows'],
+	'columns'	=> $gallery_config['rrc_gindex_columns'],
+	'comments'	=> $gallery_config['rrc_gindex_crows'],
+	'contests'	=> $gallery_config['rrc_gindex_contests'],
+);
 $display = array(
 	'name'		=> true,
 	'poster'	=> true,
@@ -127,17 +133,15 @@ $display = array(
 	'album'		=> true,
 );
 /**
-* rows		int		default 1,
-* columns	int		default 4,
-* display	array,
+* int		array	including all relevent numbers for rows, columns and stuff like that,
+* display	array	true/false => should the value be displayed,
 * modes		string(recent|random|comment|!recent|!random|!comment|all), Exp: '!recent' means random + comment
 * collapse	bool	collapse comments
-* comments	int		number of comments
-* user_id	int		user id for user profile view of recent and random images
+* user_id	int		user_id for user profile view of recent and random images
 */
 if ($gallery_config['rrc_gindex_mode'] != '!all')
 {
-	recent_gallery_images($gallery_config['rrc_gindex_rows'], $gallery_config['rrc_gindex_columns'], $display, $gallery_config['rrc_gindex_mode'], $gallery_config['rrc_gindex_comments'], $gallery_config['rrc_gindex_crows']);
+	recent_gallery_images($ints, $display, $gallery_config['rrc_gindex_mode'], $gallery_config['rrc_gindex_comments']);
 }
 
 /**

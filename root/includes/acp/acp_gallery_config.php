@@ -111,6 +111,7 @@ class acp_gallery_config
 						'rrc_gindex_columns'	=> array('lang' => 'RRC_GINDEX_COLUMNS',	'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 						'rrc_gindex_comments'	=> array('lang' => 'RRC_GINDEX_COMMENTS',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 						'rrc_gindex_crows'		=> array('lang' => 'RRC_GINDEX_CROWS',		'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
+						'rrc_gindex_contests'	=> array('lang' => 'RRC_GINDEX_CONTESTS',	'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 
 						'legend8'				=> 'PHPBB_INTEGRATION',
 						'gallery_total_images'		=> array('lang' => 'DISP_TOTAL_IMAGES',				'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => false,	'explain' => false),

@@ -54,6 +54,7 @@
         <date>2009-MM-DD</date>
         <rev-version>X.Y.Z</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Add] Report #467: Option to view contest winners on RRC]]></change>
           <change><![CDATA[[Add] Report #431: User can grab an image to their personal album]]></change>
           <change><![CDATA[[Add] Report #430: Moderator can create personal album for user to move images]]></change>
           <change><![CDATA[[Add] Report #466: Disallow certain albums from recent/random image blocks]]></change>
