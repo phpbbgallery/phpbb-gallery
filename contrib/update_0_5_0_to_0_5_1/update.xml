@@ -116,8 +116,8 @@ You may install it, to be informed about future versions, as I'm not going to se
 		integrate_memberlist_viewprofile($member);]]></action>
       </edit>
       <edit>
-        <comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]><comment>
-        <comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]><comment>
+        <comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+        <comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
         <find><![CDATA[			'TOTAL_IMAGES'		=> $config['gallery_user_images_profil'],
 			'IMAGES'			=> $member['user_images'],
 			'IMAGES_DAY'		=> sprintf($user->lang['IMAGE_DAY'], $images_per_day),
@@ -130,8 +130,8 @@ You may install it, to be informed about future versions, as I'm not going to se
     </open>
     <open src="viewonline.php">
       <edit>
-        <comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]><comment>
-        <comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]><comment>
+        <comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+        <comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
         <find><![CDATA[// Album info
 $gallery_root_path = GALLERY_ROOT_PATH;
 $recent_image_addon = false;

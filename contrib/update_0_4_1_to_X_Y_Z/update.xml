@@ -73,8 +73,8 @@ $user->add_lang('mods/info_acp_gallery');
 $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OTHER';]]></action>
       </edit>
       <edit>
-        <comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]><comment>
-        <comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]><comment>
+        <comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+        <comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
         <find><![CDATA[$user->add_lang('mods/info_acp_gallery');
 $total_images = $config['num_images'];
 $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OTHER';]]></find>
@@ -110,8 +110,8 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
 		integrate_memberlist_viewprofile($member);]]></action>
       </edit>
       <edit>
-        <comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]><comment>
-        <comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]><comment>
+        <comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+        <comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
         <find><![CDATA[			'TOTAL_IMAGES'		=> $config['gallery_user_images_profil'],
 			'IMAGES'			=> $member['user_images'],
 			'IMAGES_DAY'		=> sprintf($user->lang['IMAGE_DAY'], $images_per_day),
@@ -124,8 +124,8 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
     </open>
     <open src="viewonline.php">
       <edit>
-        <comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]><comment>
-        <comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]><comment>
+        <comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+        <comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
         <find><![CDATA[// Album info
 $gallery_root_path = GALLERY_ROOT_PATH;
 $recent_image_addon = false;

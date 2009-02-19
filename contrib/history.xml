@@ -44,8 +44,8 @@
     <link-group>
       <link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
       <link type="parent" lang="en-gb" href="../install.xml">Manual</link>
-      <link type="parent" lang="de" href="update_0_4_1_to_0_5_1/update.xml">Update von 0.4.1 auf 0.5.1</link>
-      <link type="parent" lang="en-gb" href="update_0_4_1_to_0_5_1/update.xml">Update from 0.4.1 to 0.5.1</link>
+      <link type="parent" lang="de" href="update_0_4_1_to_X_Y_Z/update.xml">Update von 0.4.1 auf 0.5.1</link>
+      <link type="parent" lang="en-gb" href="update_0_4_1_to_X_Y_Z/update.xml">Update from 0.4.1 to 0.5.1</link>
       <link type="parent" lang="de" href="update_0_5_0_to_0_5_1/update.xml">Update von 0.5.0 auf 0.5.1</link>
       <link type="parent" lang="en-gb" href="update_0_5_0_to_0_5_1/update.xml">Update from 0.5.0 to 0.5.1</link>
     </link-group>

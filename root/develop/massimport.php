@@ -178,7 +178,7 @@ function show_dir($dir, $pos = '', $files = array())
 			}
 			else
 			{
-				//echo substr($pos, strpos($pos, '/') + 1) . '/' . $file . '<br>';
+				//echo substr($pos, strpos($pos, '/') + 1) . '/' . $file . '<br />';
 				if (
 				((substr(strtolower($file), '-4') == '.png') && $gallery_config['png_allowed']) ||
 				((substr(strtolower($file), '-4') == '.gif') && $gallery_config['gif_allowed']) ||
