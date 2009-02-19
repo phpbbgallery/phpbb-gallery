@@ -49,7 +49,7 @@ You may install it, to be informed about future versions, as I'm not going to se
       <file from="root/styles/subsilver2/imageset/en/button_upload_image.gif" to="styles/subsilver2/imageset/en/button_upload_image.gif" />
       <file from="root/styles/subsilver2/imageset/en/icon_contact_gallery.gif" to="styles/subsilver2/imageset/en/icon_contact_gallery.gif" />
       <file from="root/styles/subsilver2/template/*.*" to="styles/subsilver2/template/*.*" />
-      <file from="root/styles/subsilver2/theme/images/gallery_lytebox/*.*" to="styles/subsilver2/theme/images/gallery_lytebox/*.*" />
+      <file from="root/styles/subsilver2/theme/images/lytebox/*.*" to="styles/subsilver2/theme/images/lytebox/*.*" />
       <file from="root/styles/subsilver2/theme/images/icon_gallery.gif" to="styles/subsilver2/theme/images/icon_gallery.gif" />
     </copy>
     <open src="styles/subsilver2/imageset/en/imageset.cfg">
