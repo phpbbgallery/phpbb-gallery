@@ -402,7 +402,6 @@ class install_update extends module
 				nv_create_table('phpbb_gallery_contests',	$dbms_data);
 
 			case '0.5.0':
-			case '0.5.1-dev':
 				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_status',			array('UINT:1', 0));
 				nv_add_column(GALLERY_ALBUMS_TABLE,	'display_in_rrc',		array('UINT:1', 1));
 				nv_add_column(GALLERY_IMAGES_TABLE,	'image_contest_end',	array('TIMESTAMP', 0));
@@ -867,7 +866,6 @@ class install_update extends module
 				set_gallery_config('rrc_profile_columns', 4);
 				set_gallery_config('rrc_profile_rows', 1);
 
-			case '0.5.1-dev':
 				// Delete "confirmed deleted subalbums" #410
 				recalc_btree('album_id', GALLERY_ALBUMS_TABLE, array(array('fieldname' => 'album_user_id', 'fieldvalue' => 0)));
 				set_gallery_config('rrc_gindex_crows', 5);

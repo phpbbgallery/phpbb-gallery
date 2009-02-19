@@ -17,7 +17,7 @@
 define('IN_PHPBB', true);
 define('IN_INSTALL', true);
 
-define('NEWEST_PG_VERSION', '0.5.0-dev');//@todo
+define('NEWEST_PG_VERSION', '0.5.1');//@todo
 
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);

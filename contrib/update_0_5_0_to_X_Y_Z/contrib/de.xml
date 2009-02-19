@@ -29,7 +29,7 @@ You may install it, to be informed about future versions, as I'm not going to se
         <contributions />
       </author>
     </author-group>
-    <mod-version>X.Y.Z</mod-version>
+    <mod-version>0.5.1</mod-version>
     <installation>
       <level>intermediate</level>
       <time>1200</time>
@@ -38,8 +38,8 @@ You may install it, to be informed about future versions, as I'm not going to se
     <link-group>
       <link type="parent" lang="de" href="../../history.xml">Entwicklung</link>
       <link type="parent" lang="en-gb" href="../../history.xml">History</link>
-      <link type="parent" lang="de" href="../update.xml">Update von 0.5.0 auf X.Y.Z</link>
-      <link type="parent" lang="en-gb" href="../update.xml">Update from 0.5.0 to X.Y.Z</link>
+      <link type="parent" lang="de" href="../update.xml">Update von 0.5.0 auf 0.5.1</link>
+      <link type="parent" lang="en-gb" href="../update.xml">Update from 0.5.0 to 0.5.1</link>
     </link-group>
     <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
   </header>
