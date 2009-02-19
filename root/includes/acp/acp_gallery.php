@@ -495,7 +495,7 @@ class acp_gallery
 				'S_STATUS_OPTIONS'			=> $statuslist,
 				'S_DISPLAY_SUBALBUM_LIST'	=> true,
 				'S_DISPLAY_ON_INDEX'		=> true,
-				'S_DISPLAY_IN_RCC'			=> true,
+				'S_DISPLAY_IN_RRC'			=> true,
 
 				'ALBUM_TYPE'				=> ALBUM_UPLOAD,
 				'ALBUM_CAT'					=> ALBUM_CAT,
