@@ -34,13 +34,16 @@ function integrate_memberlist_viewprofile (&$member)
 	$user_id = $member['user_id'];
 	$memberdays = max(1, round((time() - $member['user_regdate']) / 86400));
 
-	$member_gallery = array('user_images' => 0, 'personal_album_id' => 0);
 	$sql = 'SELECT user_images, personal_album_id
 		FROM ' . GALLERY_USERS_TABLE . '
 		WHERE user_id = ' . $user_id;
 	$result = $db->sql_query_limit($sql, 1);
 	$member_gallery = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
+	if (!$member_gallery)
+	{
+		$member_gallery = array('user_images' => 0, 'personal_album_id' => 0);
+	}
 	$member = array_merge($member, $member_gallery);
 
 	$images_per_day = $member['user_images'] / $memberdays;

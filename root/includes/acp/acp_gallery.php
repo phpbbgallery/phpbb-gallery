@@ -446,7 +446,7 @@ class acp_gallery
 		{
 			$folder_image = ($album[$i]['left_id'] + 1 != $album[$i]['right_id']) ? '<img src="images/icon_subfolder.gif" alt="' . $user->lang['SUBALBUMS'] . '" />' : '<img src="images/icon_folder.gif" alt="' . $user->lang['ALBUM'] . '" />';
 			$template->assign_block_vars('album_row', array(
-				'FOLDER_IMAGE'			=> $folder_image,
+				'FOLDER_IMAGE'			=> ($album[$i]['album_status'] == ITEM_UNLOCKED) ? $folder_image : '<img src="images/icon_folder_lock.gif" alt="' . $user->lang['ALBUM'] . '" />',
 				'U_ALBUM'				=> $this->u_action . '&amp;parent_id=' . $album[$i]['album_id'],
 				'ALBUM_NAME'			=> $album[$i]['album_name'],
 				'ALBUM_IMAGE'			=> ($album[$i]['album_image']) ? $phpbb_root_path . $album[$i]['album_image'] : '',

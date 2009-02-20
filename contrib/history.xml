@@ -67,6 +67,10 @@
           <change><![CDATA[[Add] Report #434: Add album at the top]]></change>
           <change><![CDATA[[Add] Report #433: Config-value for number of comments on rrc-Feature]]></change>
 
+          <change><![CDATA[[Fix] Report #471: Commentsystem independed to the album-locked feature]]></change>
+          <change><![CDATA[[Fix] Report #470: Missing locked-icon for locked albums in ACP]]></change>
+          <change><![CDATA[[Fix] Report #469: Missing allowed filetypes through typo in S_ALLOWED_FILETYPES]]></change>
+          <change><![CDATA[[Fix] Report #472: Argument #2 is not an array - when viewing profile of a user without gallery-entry]]></change>
           <change><![CDATA[[Fix] Report: Result for contests missing (Reported by redbull254)]]></change>
           <change><![CDATA[[Fix] Report #463: Missing information about current editing permission-system]]></change>
           <change><![CDATA[[Fix] Report #p5994: free memory after creating images]]></change>

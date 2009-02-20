@@ -262,9 +262,9 @@ $lang = array_merge($lang, array(
 	'RRC_MODE_COMMENTS'				=> 'Kommentare',
 	'RRC_MODE_RANDOM'				=> 'Zufällige Bilder',
 	'RRC_MODE_RECENT'				=> 'Neueste Bilder',
-	'RRC_PROFILE_COLUMNS'			=> 'Columns',
+	'RRC_PROFILE_COLUMNS'			=> 'Spalten',
 	'RRC_PROFILE_MODE'				=> 'Modus des "Neueste & zufällige Bilder"-Features im Profil',
-	'RRC_PROFILE_ROWS'				=> 'Rows',
+	'RRC_PROFILE_ROWS'				=> 'Zeilen',
 
 	'RSZ_HEIGHT'					=> 'Maximale Höhe beim anzeigen eines Bildes',
 	'RSZ_WIDTH'						=> 'Maximale Breite beim anzeigen eines Bildes',
