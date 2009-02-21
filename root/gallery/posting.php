@@ -180,7 +180,7 @@ switch ($mode)
 		{
 			gallery_not_authorised($image_backlink, $user, $image_loginlink);
 		}
-		if ((!$submit || !$gallery_config['allow_rates'])) && ($submode == 'rate'))
+		if (((!$submit || !$gallery_config['allow_rates'])) && ($submode == 'rate'))
 		{
 			gallery_not_authorised($image_backlink, $user, $image_loginlink);
 		}
