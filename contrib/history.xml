@@ -53,6 +53,13 @@
     <author-notes lang="en-gb">This file contains all parts of the History, all Developers, a.s.o.</author-notes>
     <history>
       <entry>
+        <date>2009-MM-DD</date>
+        <rev-version>X.Y.Z</rev-version>
+        <changelog lang="en-gb">
+          <change><![CDATA[[Fix] Unreport: Send moderatores back to work (Report #471)]]></change>
+        </changelog>
+      </entry>
+      <entry>
         <date>2009-02-19</date>
         <rev-version>0.5.1</rev-version>
         <changelog lang="en-gb">
