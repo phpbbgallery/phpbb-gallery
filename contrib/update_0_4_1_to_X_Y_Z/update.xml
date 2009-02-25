@@ -255,7 +255,26 @@ $user->add_lang('mods/gallery');]]></find>
         <action type="after-add"><![CDATA[		case 'gallery':
 			$log_type = LOG_GALLERY;
 			$sql_forum = '';
+			$gallery_root_path = GALLERY_ROOT_PATH;
 		break;]]></action>
+      </edit>
+      <edit>
+        <find><![CDATA['viewforum'			=> ($row['forum_id'] && $auth->acl_get('f_read', $row['forum_id'])) ? append_sid("{$phpbb_root_path}viewforum.$phpEx", 'f=' . $row['forum_id']) : false,]]></find>
+        <action type="after-add"><![CDATA[			'viewalbum'			=> (($row['forum_id'] && ($log_type == LOG_GALLERY)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $row['forum_id']) : false),
+			'viewimage'			=> (($row['topic_id'] && ($log_type == LOG_GALLERY)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $row['forum_id'] . '&amp;image_id=' . $row['topic_id']) : false),]]></action>
+      </edit>
+    </open>
+    <open src="includes/acp/acp_logs.php">
+      <edit>
+        <find><![CDATA[$checks = array('viewtopic', 'viewlogs', 'viewforum');]]></find>
+        <action type="replace-with"><![CDATA[			if ($mode == 'gallery')
+			{
+				$checks = array('viewimage', 'viewalbum');
+			}
+			else
+			{
+				$checks = array('viewtopic', 'viewlogs', 'viewforum');
+			}]]></action>
       </edit>
     </open>
     <open src="includes/acp/info/acp_logs.php">

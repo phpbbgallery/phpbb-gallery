@@ -35,7 +35,7 @@
         </contributions-group>
       </author>
     </author-group>
-    <mod-version>0.5.1</mod-version>
+    <mod-version>0.5.2</mod-version>
     <installation>
       <level>intermediate</level>
       <time>1200</time>
@@ -44,10 +44,10 @@
     <link-group>
       <link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
       <link type="parent" lang="en-gb" href="../install.xml">Manual</link>
-      <link type="parent" lang="de" href="update_0_4_1_to_X_Y_Z/update.xml">Update von 0.4.1 auf 0.5.1</link>
-      <link type="parent" lang="en-gb" href="update_0_4_1_to_X_Y_Z/update.xml">Update from 0.4.1 to 0.5.1</link>
-      <link type="parent" lang="de" href="update_0_5_0_to_0_5_1/update.xml">Update von 0.5.0 auf 0.5.1</link>
-      <link type="parent" lang="en-gb" href="update_0_5_0_to_0_5_1/update.xml">Update from 0.5.0 to 0.5.1</link>
+      <link type="parent" lang="de" href="update_0_4_1_to_X_Y_Z/update.xml">Update von 0.4.1 auf 0.5.2</link>
+      <link type="parent" lang="en-gb" href="update_0_4_1_to_X_Y_Z/update.xml">Update from 0.4.1 to 0.5.2</link>
+      <link type="parent" lang="de" href="update_0_5_1_to_0_5_2/update.xml">Update von 0.5.1 auf 0.5.2</link>
+      <link type="parent" lang="en-gb" href="update_0_5_1_to_0_5_2/update.xml">Update from 0.5.1 to 0.5.2</link>
     </link-group>
     <author-notes lang="de">Diese Datei enthält alle Teile der History, alle Entickler, usw.</author-notes>
     <author-notes lang="en-gb">This file contains all parts of the History, all Developers, a.s.o.</author-notes>
@@ -56,6 +56,7 @@
         <date>2009-MM-DD</date>
         <rev-version>X.Y.Z</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Fix] Report #478: Gallery-log leading with "View forum" to viewofurm.php]]></change>
           <change><![CDATA[[Fix] Unreport: Send moderatores back to work (Report #471)]]></change>
         </changelog>
       </entry>

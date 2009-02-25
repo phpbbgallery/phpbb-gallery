@@ -719,7 +719,7 @@ switch ($mode)
 
 					if ($user->data['user_id'] != $image_data['image_user_id'])
 					{
-						add_log('gallery', $image_data['image_album_id'], $image_data['image_id'], 'LOG_GALLERY_EDITED', $image_name);
+						add_log('gallery', $image_data['image_album_id'], $image_id, 'LOG_GALLERY_EDITED', $image_name);
 					}
 				}
 				$message_parser				= new parse_message();
@@ -918,7 +918,7 @@ switch ($mode)
 
 					if ($user->data['user_id'] != $image_data['image_user_id'])
 					{
-						add_log('gallery', $image_data['image_album_id'], $image_data['image_id'], 'LOG_GALLERY_COMMENT_DELETED', $image_data['image_name']);
+						add_log('gallery', $image_data['image_album_id'], $image_id, 'LOG_GALLERY_DELETED', $image_data['image_name']);
 					}
 				}
 				else

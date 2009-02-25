@@ -50,6 +50,8 @@ $lang = array_merge($lang, array(
 	'LOG_GALLERY_REPORT_DELETED'		=> '<strong>Deleted report</strong><br />» %s',
 	'LOG_GALLERY_REPORT_OPENED'			=> '<strong>Reopened report</strong><br />» %s',
 	'LOG_GALLERY_UNAPPROVED'			=> '<strong>Unapproved image</strong><br />» %s',
+	'LOGVIEW_VIEWALBUM'					=> 'View album',
+	'LOGVIEW_VIEWIMAGE'					=> 'View image',
 
 	'PERSONAL_ALBUM'					=> 'Personal album',
 	'PHPBB_GALLERY'						=> 'phpBB Gallery',
