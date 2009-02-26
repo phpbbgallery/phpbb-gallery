@@ -56,6 +56,7 @@
         <date>2009-MM-DD</date>
         <rev-version>X.Y.Z</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Fix] Report #475: Autodelete on update needs CHMOD 777]]></change>
           <change><![CDATA[[Fix] Report #478: Gallery-log leading with "View forum" to viewofurm.php]]></change>
           <change><![CDATA[[Fix] Unreport: Send moderatores back to work (Report #471)]]></change>
         </changelog>

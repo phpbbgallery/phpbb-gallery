@@ -46,7 +46,8 @@ $lang = array_merge($lang, array(
 	'CONVERTED_RESYNC_COUNTS'	=> 'Die Zähler-Statistiken wurden erfolgreich resyncronisiert.',
 	'CONVERTED_RESYNC_RATES'	=> 'Die Bewertungen wurden erfolgreich resyncronisiert.',
 
-	'FILES_EXISTS'					=> 'Datei existiert noch',
+	'FILE_DELETE_FAIL'				=> 'Datei konnte nicht gelöscht werden, du musst sie manuel löschen',
+	'FILE_STILL_EXISTS'				=> 'Datei existiert noch',
 	'FILES_REQUIRED_EXPLAIN'		=> '<strong>Voraussetzung</strong> - die phpBB Gallery muss auf diverse Verzeichnisse zugreifen oder diese beschreiben können, um reibungslos zu funktionieren. Wenn „Nicht beschreibbar“ angezeigt wird, musst du die Befugnisse für die Datei oder das Verzeichnis so ändern, dass phpBB darauf schreiben kann.',
 	'FILES_DELETE_OUTDATED'			=> 'Veraltete Dateien löschen',
 	'FILES_DELETE_OUTDATED_EXPLAIN'	=> 'Wenn du die Dateien löscht, werden sie entgülig gelöscht und können nicht wiederhergestellt werden!<br /><br />Hinweis:<br />Wenn du weitere Styles und Sprachpakete installiert hast, musst du die Dateien dort von Hand löschen.',

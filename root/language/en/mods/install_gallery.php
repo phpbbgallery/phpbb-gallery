@@ -46,7 +46,8 @@ $lang = array_merge($lang, array(
 	'CONVERTED_RESYNC_COUNTS'	=> 'Resyncronize imagecounters.',
 	'CONVERTED_RESYNC_RATES'	=> 'Resyncronize rates.',
 
-	'FILES_EXISTS'					=> 'Files still exists',
+	'FILE_DELETE_FAIL'				=> 'File could not be deleted, you need to delete it manually',
+	'FILE_STILL_EXISTS'				=> 'File still exists',
 	'FILES_REQUIRED_EXPLAIN'		=> '<strong>Required</strong> - In order to function correctly phpBB Gallery needs to be able to access or write to certain files or directories. If you see “Unwritable” you need to change the permissions on the file or directory to allow phpBB to write to it.',
 	'FILES_DELETE_OUTDATED'			=> 'Delete outdated files',
 	'FILES_DELETE_OUTDATED_EXPLAIN'	=> 'When you click to delete the files, they are completly deleted and can not be restored!<br /><br />Please note:<br />If you have more styles and languages installed, you need to delete the files by hand.',

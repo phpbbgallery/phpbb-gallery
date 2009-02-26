@@ -215,9 +215,34 @@ class install_update extends module
 		{
 			if ($delete)
 			{
-				@unlink($phpbb_root_path . $file);
+				if (@file_exists($phpbb_root_path . $file))
+				{
+					// Try to set CHMOD and then delete it
+					@chmod($phpbb_root_path . $file, 0777);
+					@unlink($phpbb_root_path . $file);
+					// Delete failed, tell the user to delete it manually
+					if (@file_exists($phpbb_root_path . $file))
+					{
+						if ($passed['files'])
+						{
+							$template->assign_block_vars('checks', array(
+								'S_LEGEND'			=> true,
+								'LEGEND'			=> $user->lang['FILES_OUTDATED'],
+								'LEGEND_EXPLAIN'	=> $user->lang['FILES_OUTDATED_EXPLAIN'],
+							));
+						}
+						$template->assign_block_vars('checks', array(
+							'TITLE'		=> $file,
+							'RESULT'	=> '<strong style="color:red">' . $user->lang['FILE_DELETE_FAIL'] . '</strong>',
+
+							'S_EXPLAIN'	=> false,
+							'S_LEGEND'	=> false,
+						));
+						$passed['files'] = false;
+					}
+				}
 			}
-			if (@file_exists($phpbb_root_path . $file))
+			elseif (@file_exists($phpbb_root_path . $file))
 			{
 				if ($passed['files'])
 				{
@@ -229,7 +254,7 @@ class install_update extends module
 				}
 				$template->assign_block_vars('checks', array(
 					'TITLE'		=> $file,
-					'RESULT'	=> '<strong style="color:red">' . $user->lang['FILES_EXISTS'] . '</strong>',
+					'RESULT'	=> '<strong style="color:red">' . $user->lang['FILE_STILL_EXISTS'] . '</strong>',
 
 					'S_EXPLAIN'	=> false,
 					'S_LEGEND'	=> false,
@@ -452,10 +477,10 @@ class install_update extends module
 			case '0.2.2':
 			case '0.2.3':
 				$sql = 'SELECT i.image_user_id, i.image_id, u.username, u.user_colour
-					FROM ' . GALLERY_IMAGES_TABLE . ' AS i
-					LEFT JOIN ' . USERS_TABLE . " AS u
+					FROM ' . GALLERY_IMAGES_TABLE . ' i
+					LEFT JOIN ' . USERS_TABLE . ' u
 						ON i.image_user_id = u.user_id
-					ORDER BY i.image_id DESC";
+					ORDER BY i.image_id DESC';
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -478,9 +503,9 @@ class install_update extends module
 				$db->sql_freeresult($result);
 
 				$sql = 'SELECT i.image_id, i.image_username, image_user_id
-					FROM ' . GALLERY_IMAGES_TABLE . " AS i
+					FROM ' . GALLERY_IMAGES_TABLE . ' i
 					WHERE image_album_id = 0
-					GROUP BY i.image_user_id DESC";
+					GROUP BY i.image_user_id DESC';
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -495,22 +520,18 @@ class install_update extends module
 						'album_user_id'					=> $row['image_user_id'],
 					);
 					$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
+					$album_id = $db->sql_nextid();
 
-					$sql2 = 'SELECT album_id FROM ' . GALLERY_ALBUMS_TABLE . ' WHERE parent_id = 0 AND album_user_id = ' . $row['image_user_id'] . ' LIMIT 1';
-					$result2 = $db->sql_query($sql2);
-					$row2 = $db->sql_fetchrow($result2);
-					$db->sql_freeresult($result2);
-
-					$sql3 = 'UPDATE ' . USERS_TABLE . ' 
-							SET album_id = ' . (int) $row2['album_id'] . '
+					$sql2 = 'UPDATE ' . USERS_TABLE . ' 
+							SET album_id = ' . (int) $album_id . '
 							WHERE user_id  = ' . (int) $row['image_user_id'];
-					$db->sql_query($sql3);
+					$db->sql_query($sql2);
 
-					$sql3 = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
-							SET image_album_id = ' . (int) $row2['album_id'] . '
+					$sql2 = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
+							SET image_album_id = ' . (int) $album_id . '
 							WHERE image_album_id = 0
 								AND image_user_id  = ' . (int) $row['image_user_id'];
-					$db->sql_query($sql3);
+					$db->sql_query($sql2);
 				}
 				$db->sql_freeresult($result);
 
@@ -522,7 +543,7 @@ class install_update extends module
 					FROM ' . USERS_TABLE . ' u
 					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
 						ON i.image_user_id = u.user_id
-						AND i.image_status = 1
+							AND i.image_status = 1
 					GROUP BY i.image_user_id';
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
@@ -536,15 +557,12 @@ class install_update extends module
 					$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . $db->sql_build_array('INSERT', $sql_ary));
 				}
 				$db->sql_freeresult($result);
-				$sql = 'SELECT COUNT(album_id) AS albums
-					FROM ' . GALLERY_ALBUMS_TABLE . "
+				$sql = 'SELECT COUNT(album_id) albums
+					FROM ' . GALLERY_ALBUMS_TABLE . '
 					WHERE parent_id = 0
-						AND album_user_id <> 0";
+						AND album_user_id <> 0';
 				$result = $db->sql_query($sql);
-				if ($row = $db->sql_fetchrow($result))
-				{
-					$total_galleries = $row['albums'];
-				}
+				$total_galleries = (int) $db->sql_fetchfield('albums');
 				$db->sql_freeresult($result);
 
 				set_config('num_images', $num_images, true);
@@ -583,9 +601,9 @@ class install_update extends module
 
 				// Add the information for the last_image to the albums part 1: last_image_id, image_count
 				$sql = 'SELECT COUNT(i.image_id) images, MAX(i.image_id) last_image_id, i.image_album_id
-					FROM ' . GALLERY_IMAGES_TABLE . " i
+					FROM ' . GALLERY_IMAGES_TABLE . ' i
 					WHERE i.image_approval = 1
-					GROUP BY i.image_album_id";
+					GROUP BY i.image_album_id';
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -602,8 +620,8 @@ class install_update extends module
 
 				// Add the information for the last_image to the albums part 2: correct album_type, images_real are all images, even unapproved
 				$sql = 'SELECT COUNT(i.image_id) images, i.image_album_id
-					FROM ' . GALLERY_IMAGES_TABLE . " i
-					GROUP BY i.image_album_id";
+					FROM ' . GALLERY_IMAGES_TABLE . ' i
+					GROUP BY i.image_album_id';
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -619,12 +637,12 @@ class install_update extends module
 
 				// Add the information for the last_image to the albums part 3: user_id, username, user_colour, time, image_name
 				$sql = 'SELECT a.album_id, a.album_last_image_id, i.image_time, i.image_name, i.image_user_id, i.image_username, i.image_user_colour, u.user_colour
-					FROM ' . GALLERY_ALBUMS_TABLE . " a
-					LEFT JOIN " . GALLERY_IMAGES_TABLE . " i
+					FROM ' . GALLERY_ALBUMS_TABLE . ' a
+					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
 						ON a.album_last_image_id = i.image_id
-					LEFT JOIN " . USERS_TABLE . " u
+					LEFT JOIN ' . USERS_TABLE . ' u
 						ON a.album_user_id = u.user_colour
-					WHERE a.album_last_image_id > 0";
+					WHERE a.album_last_image_id > 0';
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -658,8 +676,8 @@ class install_update extends module
 				$db->sql_freeresult($result);
 
 				$sql = 'SELECT COUNT(comment_id) comments, MAX(comment_id) image_last_comment, comment_image_id
-					FROM ' . GALLERY_COMMENTS_TABLE . "
-					GROUP BY comment_image_id";
+					FROM ' . GALLERY_COMMENTS_TABLE . '
+					GROUP BY comment_image_id';
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -726,8 +744,8 @@ class install_update extends module
 				set_gallery_config('sort_order', 'd');
 
 				$sql = 'SELECT report_image_id, report_id
-					FROM ' . GALLERY_REPORTS_TABLE . "
-					WHERE report_status = 1";
+					FROM ' . GALLERY_REPORTS_TABLE . '
+					WHERE report_status = 1';
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -854,9 +872,16 @@ class install_update extends module
 				$db->sql_query($sql);
 
 			case '0.5.0':
-				// Move back two constants
-				set_gallery_config('user_images_profile', $config['gallery_user_images_profil']);
-				set_gallery_config('personal_album_profile', $config['gallery_personal_album_profil']);
+			case '0.5.1-dev':
+				// Move back two constants, only if they were not moved yet
+				if (isset($config['gallery_user_images_profil']))
+				{
+					set_gallery_config('user_images_profile', $config['gallery_user_images_profil']);
+				}
+				if (isset($config['gallery_personal_album_profil']))
+				{
+					set_gallery_config('personal_album_profile', $config['gallery_personal_album_profil']);
+				}
 				$sql = 'DELETE FROM ' . CONFIG_TABLE . "
 					WHERE config_name = 'gallery_user_images_profil'
 						OR config_name = 'gallery_personal_album_profil'";
@@ -899,6 +924,9 @@ class install_update extends module
 				$db->sql_freeresult($result);
 				set_gallery_config('contests_ended', $contests_ended);
 				set_gallery_config('rrc_gindex_contests', 1);
+
+			case '0.5.1':
+			case '0.5.2-dev':
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
 			break;
