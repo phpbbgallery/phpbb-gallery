@@ -87,7 +87,7 @@ class acp_gallery_albums
 						'album_id'		=>	$album_id
 					);
 
-				// No break here
+				// No break; here
 
 				case 'add':
 
@@ -98,41 +98,15 @@ class acp_gallery_albums
 						'album_status'			=> request_var('album_status', ITEM_UNLOCKED),
 						'album_parents'			=> '',
 						'album_name'			=> utf8_normalize_nfc(request_var('album_name', '', true)),
-						/*'forum_link'			=> request_var('forum_link', ''),
-						'forum_link_track'		=> request_var('forum_link_track', false),*/
 						'album_desc'			=> utf8_normalize_nfc(request_var('album_desc', '', true)),
 						'album_desc_uid'		=> '',
 						'album_desc_options'	=> 7,
 						'album_desc_bitfield'	=> '',
-						/*'forum_rules'			=> utf8_normalize_nfc(request_var('forum_rules', '', true)),
-						'forum_rules_uid'		=> '',
-						'forum_rules_options'	=> 7,
-						'forum_rules_bitfield'	=> '',
-						'forum_rules_link'		=> request_var('forum_rules_link', ''),*/
 						'album_image'			=> request_var('album_image', ''),
-						//'forum_style'			=> request_var('forum_style', 0),
 						'display_subalbum_list'	=> request_var('display_subalbum_list', false),
 						'display_on_index'		=> request_var('display_on_index', false),
-						/*'enable_indexing'		=> request_var('enable_indexing', true),
-						'enable_icons'			=> request_var('enable_icons', false),
-						'enable_prune'			=> request_var('enable_prune', false),
-						'enable_post_review'	=> request_var('enable_post_review', true),
-						'prune_days'			=> request_var('prune_days', 7),
-						'prune_viewed'			=> request_var('prune_viewed', 7),
-						'prune_freq'			=> request_var('prune_freq', 1),
-						'prune_old_polls'		=> request_var('prune_old_polls', false),
-						'prune_announce'		=> request_var('prune_announce', false),
-						'prune_sticky'			=> request_var('prune_sticky', false),
-						'forum_password'		=> request_var('forum_password', '', true),
-						'forum_password_confirm'=> request_var('forum_password_confirm', '', true),
-						'forum_password_unset'	=> request_var('forum_password_unset', false),*/
+						'display_in_rrc'		=> request_var('display_in_rrc', false),
 					);
-
-					/*/ Use link_display_on_index setting if forum type is link
-					if ($forum_data['forum_type'] == FORUM_LINK)
-					{
-						$forum_data['display_on_index'] = request_var('link_display_on_index', false);
-					}*/
 
 					// Categories are not able to be locked...
 					if ($album_data['album_type'] == ALBUM_CAT)
@@ -140,103 +114,93 @@ class acp_gallery_albums
 						$album_data['album_status'] = ITEM_UNLOCKED;
 					}
 
-					/*/ Get data for forum rules if specified...
-					if ($forum_data['forum_rules'])
-					{
-						generate_text_for_storage($forum_data['forum_rules'], $forum_data['forum_rules_uid'], $forum_data['forum_rules_bitfield'], $forum_data['forum_rules_options'], request_var('rules_parse_bbcode', false), request_var('rules_parse_urls', false), request_var('rules_parse_smilies', false));
-					}*/
+					// Contests need contest_data, freaky...
+					//if ($album_data['album_type'] == ALBUM_CONTEST)
+					//{
+						$contest_data = array(
+							'contest_start'			=> time(),//@todo: Check before messing up edits!
+							'contest_rating'		=> request_var('contest_rating', 0) * 86400,
+							'contest_end'			=> request_var('contest_end', 0) * 86400,
+						);
+					//}
 
-					// Get data for forum description if specified
+					// Get data for album description if specified
 					if ($album_data['album_desc'])
 					{
 						generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], request_var('desc_parse_bbcode', false), request_var('desc_parse_urls', false), request_var('desc_parse_smilies', false));
 					}
 
-					$errors = $this->update_album_data($album_data);
+					$errors = $this->update_album_data($album_data, $contest_data);
 
 					if (!sizeof($errors))
 					{
 						$album_perm_from = request_var('album_perm_from', 0);
 
-						/*/ Copy permissions?
-						if ($forum_perm_from && !empty($forum_perm_from) && $forum_perm_from != $forum_data['forum_id'] &&
-							(($action != 'edit') || empty($forum_id) || ($auth->acl_get('a_fauth') && $auth->acl_get('a_authusers') && $auth->acl_get('a_authgroups') && $auth->acl_get('a_mauth'))))
+						// Copy permissions? You do not need permissions for that in the gallery
+						if ($album_perm_from && $album_perm_from != $album_data['album_id'])
 						{
-							// if we edit a forum delete current permissions first
+							// If we edit a album delete current permissions first
 							if ($action == 'edit')
 							{
-								$sql = 'DELETE FROM ' . ACL_USERS_TABLE . '
-									WHERE forum_id = ' . (int) $forum_data['forum_id'];
-								$db->sql_query($sql);
+								$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . '
+									WHERE perm_album_id = ' . $album_id;
+								$result = $db->sql_query($sql);
 
-								$sql = 'DELETE FROM ' . ACL_GROUPS_TABLE . '
-									WHERE forum_id = ' . (int) $forum_data['forum_id'];
+								$sql = 'DELETE FROM ' . GALLERY_MODSCACHE_TABLE . '
+									WHERE album_id = ' . $album_id;
 								$db->sql_query($sql);
 							}
 
-							// From the mysql documentation:
-							// Prior to MySQL 4.0.14, the target table of the INSERT statement cannot appear in the FROM clause of the SELECT part of the query. This limitation is lifted in 4.0.14.
-							// Due to this we stay on the safe side if we do the insertion "the manual way"
-
-							// Copy permisisons from/to the acl users table (only forum_id gets changed)
-							$sql = 'SELECT user_id, auth_option_id, auth_role_id, auth_setting
-								FROM ' . ACL_USERS_TABLE . '
-								WHERE forum_id = ' . $forum_perm_from;
+							$sql = 'SELECT *
+								FROM ' . GALLERY_PERMISSIONS_TABLE . '
+								WHERE perm_album_id = ' . $copy_permissions;
 							$result = $db->sql_query($sql);
-
-							$users_sql_ary = array();
-							while ($row = $db->sql_fetchrow($result))
+							while($row = $db->sql_fetchrow($result))
 							{
-								$users_sql_ary[] = array(
-									'user_id'			=> (int) $row['user_id'],
-									'forum_id'			=> (int) $forum_data['forum_id'],
-									'auth_option_id'	=> (int) $row['auth_option_id'],
-									'auth_role_id'		=> (int) $row['auth_role_id'],
-									'auth_setting'		=> (int) $row['auth_setting']
+								$perm_data[] = array(
+									'perm_role_id'					=> $row['perm_role_id'],
+									'perm_album_id'					=> $album_id,
+									'perm_user_id'					=> $row['perm_user_id'],
+									'perm_group_id'					=> $row['perm_group_id'],
+									'perm_system'					=> $row['perm_system'],
 								);
 							}
 							$db->sql_freeresult($result);
+							$db->sql_multi_insert(GALLERY_PERMISSIONS_TABLE, $perm_data);
 
-							// Copy permisisons from/to the acl groups table (only forum_id gets changed)
-							$sql = 'SELECT group_id, auth_option_id, auth_role_id, auth_setting
-								FROM ' . ACL_GROUPS_TABLE . '
-								WHERE forum_id = ' . $forum_perm_from;
+							$modscache_ary = array();
+							$sql = 'SELECT * FROM ' . GALLERY_MODSCACHE_TABLE . '
+								WHERE album_id = ' . $copy_permissions;
 							$result = $db->sql_query($sql);
-
-							$groups_sql_ary = array();
 							while ($row = $db->sql_fetchrow($result))
 							{
-								$groups_sql_ary[] = array(
-									'group_id'			=> (int) $row['group_id'],
-									'forum_id'			=> (int) $forum_data['forum_id'],
-									'auth_option_id'	=> (int) $row['auth_option_id'],
-									'auth_role_id'		=> (int) $row['auth_role_id'],
-									'auth_setting'		=> (int) $row['auth_setting']
+								$modscache_ary[] = array(
+									'album_id'			=> $album_id,
+									'user_id'			=> $row['user_id'],
+									'username '			=> $row['username'],
+									'group_id'			=> $row['group_id'],
+									'group_name'		=> $row['group_name'],
+									'display_on_index'	=> $row['display_on_index'],
 								);
 							}
 							$db->sql_freeresult($result);
-
-							// Now insert the data
-							$db->sql_multi_insert(ACL_USERS_TABLE, $users_sql_ary);
-							$db->sql_multi_insert(ACL_GROUPS_TABLE, $groups_sql_ary);
-							cache_moderators();
+							$db->sql_multi_insert(GALLERY_MODSCACHE_TABLE, $modscache_ary);
 						}
-						*/
 
-						//$auth->acl_clear_prefetch();
 						$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
+						$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);
+						$cache->destroy('sql', GALLERY_PERMISSIONS_TABLE);
+						$cache->destroy('_albums');
 
 						$acl_url = '&amp;mode=album_permissions&amp;step=1&amp;uncheck=true&amp;album_id=' . $album_data['album_id'];
 
 						$message = ($action == 'add') ? $user->lang['ALBUM_CREATED'] : $user->lang['ALBUM_UPDATED'];
-
-						// Redirect to permissions
 						$message .= '<br /><br />' . sprintf($user->lang['REDIRECT_ACL'], '<a href="' . append_sid("{$phpbb_admin_path}index.$phpEx", 'i=gallery' . $acl_url) . '">', '</a>');
 
-						// redirect directly to permission settings screen if authed
+						// Redirect directly to permission settings screen
 						if ($action == 'add' && !$album_perm_from)
 						{
-							meta_refresh(4, append_sid("{$phpbb_admin_path}index.$phpEx", 'i=gallery' . $acl_url));
+							meta_refresh(5, append_sid("{$phpbb_admin_path}index.$phpEx", 'i=gallery' . $acl_url));
 						}
 
 						trigger_error($message . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id));
@@ -272,7 +236,7 @@ class acp_gallery_albums
 
 				if ($move_album_name !== false)
 				{
-					//add_log('admin', 'LOG_ALBUM_' . strtoupper($action), $row['album_name'], $move_album_name);
+					//@todo: add_log('admin', 'LOG_ALBUM_' . strtoupper($action), $row['album_name'], $move_album_name);
 					$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 				}
 
@@ -309,17 +273,6 @@ class acp_gallery_albums
 			case 'add':
 			case 'edit':
 
-				if ($update)
-				{
-					/*$forum_data['forum_flags'] = 0;
-					$forum_data['forum_flags'] += (request_var('forum_link_track', false)) ? FORUM_FLAG_LINK_TRACK : 0;
-					$forum_data['forum_flags'] += (request_var('prune_old_polls', false)) ? FORUM_FLAG_PRUNE_POLL : 0;
-					$forum_data['forum_flags'] += (request_var('prune_announce', false)) ? FORUM_FLAG_PRUNE_ANNOUNCE : 0;
-					$forum_data['forum_flags'] += (request_var('prune_sticky', false)) ? FORUM_FLAG_PRUNE_STICKY : 0;
-					$forum_data['forum_flags'] += ($forum_data['show_active']) ? FORUM_FLAG_ACTIVE_TOPICS : 0;
-					$forum_data['forum_flags'] += (request_var('enable_post_review', true)) ? FORUM_FLAG_POST_REVIEW : 0;*/
-				}
-
 				// Show form to create/modify a album
 				if ($action == 'edit')
 				{
@@ -336,6 +289,18 @@ class acp_gallery_albums
 						$album_data['left_id'] = $row['left_id'];
 						$album_data['right_id'] = $row['right_id'];
 					}
+					if ($row['album_type'] == ALBUM_CONTEST)
+					{
+						$contest_data = $this->get_contest_info('album', $album_id);
+					}
+					else
+					{
+						$contest_data = array(
+							'contest_start'			=> time(),
+							'contest_rating'		=> 3 * 86400,
+							'contest_end'			=> 5 * 86400,
+						);
+					}
 
 					// Make sure no direct child albums are able to be selected as parents.
 					$exclude_albums = array();
@@ -346,7 +311,7 @@ class acp_gallery_albums
 
 					$parents_list = gallery_albumbox(true, '', $album_data['parent_id'], false, $exclude_albums);
 
-					//@todo: $album_data['album_password_confirm'] = $album_data['album_password'];
+					/*$album_data['album_password_confirm'] = $album_data['album_password'];*/
 				}
 				else
 				{
@@ -363,59 +328,22 @@ class acp_gallery_albums
 							'album_type'			=> ALBUM_UPLOAD,
 							'album_status'			=> ITEM_UNLOCKED,
 							'album_name'			=> utf8_normalize_nfc(request_var('album_name', '', true)),
-							/*'forum_link'			=> '',
-							'forum_link_track'		=> false,*/
 							'album_desc'			=> '',
-							/*'forum_rules'			=> '',
-							'forum_rules_link'		=> '',*/
 							'album_image'			=> '',
-							//'forum_style'			=> 0,
 							'display_subalbum_list'	=> true,
 							'display_on_index'		=> true,
-							/*'forum_topics_per_page'	=> 0,
-							'enable_indexing'		=> true,
-							'enable_icons'			=> false,
-							'enable_prune'			=> false,
-							'prune_days'			=> 7,
-							'prune_viewed'			=> 7,
-							'prune_freq'			=> 1,
-							'forum_flags'			=> FORUM_FLAG_POST_REVIEW,
-							'forum_password'		=> '',
+							'display_in_rrc'		=> true,
+							/*'forum_password'		=> '',
 							'forum_password_confirm'=> '',*/
+						);
+
+						$contest_data = array(
+							'contest_start'			=> time(),
+							'contest_rating'		=> 3 * 86400,
+							'contest_end'			=> 5 * 86400,
 						);
 					}
 				}
-
-				/*
-				$forum_rules_data = array(
-					'text'			=> $forum_data['forum_rules'],
-					'allow_bbcode'	=> true,
-					'allow_smilies'	=> true,
-					'allow_urls'	=> true
-				);
-
-				$forum_rules_preview = '';
-
-				// Parse rules if specified
-				if ($forum_data['forum_rules'])
-				{
-					if (!isset($forum_data['forum_rules_uid']))
-					{
-						// Before we are able to display the preview and plane text, we need to parse our request_var()'d value...
-						$forum_data['forum_rules_uid'] = '';
-						$forum_data['forum_rules_bitfield'] = '';
-						$forum_data['forum_rules_options'] = 0;
-
-						generate_text_for_storage($forum_data['forum_rules'], $forum_data['forum_rules_uid'], $forum_data['forum_rules_bitfield'], $forum_data['forum_rules_options'], request_var('rules_allow_bbcode', false), request_var('rules_allow_urls', false), request_var('rules_allow_smilies', false));
-					}
-
-					// Generate preview content
-					$forum_rules_preview = generate_text_for_display($forum_data['forum_rules'], $forum_data['forum_rules_uid'], $forum_data['forum_rules_bitfield'], $forum_data['forum_rules_options']);
-
-					// decode...
-					$forum_rules_data = generate_text_for_edit($forum_data['forum_rules'], $forum_data['forum_rules_uid'], $forum_data['forum_rules_options']);
-				}
-				*/
 
 				$album_desc_data = array(
 					'text'			=> $album_data['album_desc'],
@@ -449,27 +377,24 @@ class acp_gallery_albums
 					$album_type_options .= '<option value="' . $value . '"' . (($value == $album_data['album_type']) ? ' selected="selected"' : '') . '>' . $user->lang['ALBUM_TYPE_' . $lang] . '</option>';
 				}
 
-				//$styles_list = style_select($forum_data['forum_style'], true);
-
 				$statuslist = '<option value="' . ITEM_UNLOCKED . '"' . (($album_data['album_status'] == ITEM_UNLOCKED) ? ' selected="selected"' : '') . '>' . $user->lang['UNLOCKED'] . '</option><option value="' . ITEM_LOCKED . '"' . (($album_data['album_status'] == ITEM_LOCKED) ? ' selected="selected"' : '') . '>' . $user->lang['LOCKED'] . '</option>';
 
 				$sql = 'SELECT album_id
 					FROM ' . GALLERY_ALBUMS_TABLE . '
-					WHERE album_type = ' . ALBUM_UPLOAD . "
+					WHERE album_type <> ' . ALBUM_CAT . "
 						AND album_user_id = 0
 						AND album_id <> $album_id";
-				$result = $db->sql_query($sql);
+				$result = $db->sql_query_limit($sql, 1);
 
+				$uploadable_album_exists = false;
 				if ($db->sql_fetchrow($result))
 				{
-					$template->assign_vars(array(
-						'S_MOVE_ALBUM_OPTIONS'		=> gallery_albumbox(true, '', $album_data['parent_id'], false, $album_id),
-					));
+					$uploadable_album_exists = true;
 				}
 				$db->sql_freeresult($result);
 
 				// Subalbum move options
-				if ($action == 'edit' && $album_data['album_type'] == ALBUM_UPLOAD)
+				if ($action == 'edit' && in_array($album_data['album_type'], array(ALBUM_UPLOAD, ALBUM_CONTEST)))
 				{
 					$subalbums_id = array();
 					$subalbums = get_album_branch(0, $album_id, 'children');
@@ -481,51 +406,29 @@ class acp_gallery_albums
 
 					$albums_list = gallery_albumbox(true, '', $album_data['parent_id'], false, $subalbums_id);
 
-					/**
-					* //@todo: report me!!!111elf
-					* See 30 lines above :-O
-					*/
-					$sql = 'SELECT album_id
-						FROM ' . GALLERY_ALBUMS_TABLE . '
-						WHERE album_type <> ' . ALBUM_CAT . "
-							AND album_id <> $album_id
-							AND album_user_id = 0";
-					$result = $db->sql_query($sql);
-
-					if ($db->sql_fetchrow($result))
+					if ($uploadable_album_exists)
 					{
 						$template->assign_vars(array(
 							'S_MOVE_ALBUM_OPTIONS'		=> gallery_albumbox(true, '', $album_data['parent_id'], false, $subalbums_id),
 						));
 					}
-					$db->sql_freeresult($result);
 
 					$template->assign_vars(array(
 						'S_HAS_SUBALBUMS'		=> ($album_data['right_id'] - $album_data['left_id'] > 1) ? true : false,
-						'S_ALBUMS_LIST'			=> $albums_list)
-					);
+						'S_ALBUMS_LIST'			=> $albums_list,
+					));
 				}
-
-				$s_show_display_on_index = false;
-
-				if ($album_data['parent_id'] > 0)
+				elseif ($uploadable_album_exists)
 				{
-					// if this album is a subalbum put the "display on index" checkbox
-					if ($parent_info = get_album_info($album_data['parent_id']))
-					{
-						if ($parent_info['parent_id'] > 0 || $parent_info['album_type'] == ALBUM_CAT)
-						{
-							$s_show_display_on_index = true;
-						}
-					}
+					$template->assign_vars(array(
+						'S_MOVE_ALBUM_OPTIONS'		=> gallery_albumbox(true, '', $album_data['parent_id'], false, $album_id),
+					));
 				}
 
-				/*
-				if (strlen($album_data['album_password']) == 32)
+				/*if (strlen($album_data['album_password']) == 32)
 				{
 					$errors[] = $user->lang['ALBUM_PASSWORD_OLD'];
-				}
-				*/
+				}*/
 
 				$template->assign_vars(array(
 					'S_EDIT_ALBUM'		=> true,
@@ -544,21 +447,7 @@ class acp_gallery_albums
 					'ALBUM_NAME'				=> $album_data['album_name'],
 					'ALBUM_IMAGE'				=> $album_data['album_image'],
 					'ALBUM_IMAGE_SRC'			=> ($album_data['album_image']) ? $phpbb_root_path . $album_data['album_image'] : '',
-					'ALBUM_UPLOAD'				=> ALBUM_UPLOAD,
-					'ALBUM_CAT'					=> ALBUM_CAT,
-					'ALBUM_CONTEST'				=> ALBUM_CONTEST,
-					/*'PRUNE_FREQ'				=> $forum_data['prune_freq'],
-					'PRUNE_DAYS'				=> $forum_data['prune_days'],
-					'PRUNE_VIEWED'				=> $forum_data['prune_viewed'],
-					'TOPICS_PER_PAGE'			=> $forum_data['forum_topics_per_page'],
-					'FORUM_RULES_LINK'			=> $forum_data['forum_rules_link'],
-					'FORUM_RULES'				=> $forum_data['forum_rules'],
-					'FORUM_RULES_PREVIEW'		=> $forum_rules_preview,
-					'FORUM_RULES_PLAIN'			=> $forum_rules_data['text'],
-					'S_BBCODE_CHECKED'			=> ($forum_rules_data['allow_bbcode']) ? true : false,
-					'S_SMILIES_CHECKED'			=> ($forum_rules_data['allow_smilies']) ? true : false,
-					'S_URLS_CHECKED'			=> ($forum_rules_data['allow_urls']) ? true : false,
-					'S_ALBUM_PASSWORD_SET'		=> (empty($album_data['album_password'])) ? false : true,*/
+					/*'S_ALBUM_PASSWORD_SET'		=> (empty($album_data['album_password'])) ? false : true,*/
 
 					'ALBUM_DESC'				=> $album_desc_data['text'],
 					'S_DESC_BBCODE_CHECKED'		=> ($album_desc_data['allow_bbcode']) ? true : false,
@@ -568,27 +457,26 @@ class acp_gallery_albums
 					'S_ALBUM_TYPE_OPTIONS'		=> $album_type_options,
 					'S_STATUS_OPTIONS'			=> $statuslist,
 					'S_PARENT_OPTIONS'			=> $parents_list,
-					//'S_STYLES_OPTIONS'			=> $styles_list,
 					'S_ALBUM_OPTIONS'			=> gallery_albumbox(true, '', ($action == 'add') ? $album_data['parent_id'] : false, false, ($action == 'edit') ? $album_data['album_id'] : false),
-					'S_SHOW_DISPLAY_ON_INDEX'	=> $s_show_display_on_index,
-					'S_ALBUM_ORIG_POST'			=> (isset($old_album_type) && $old_album_type == ALBUM_UPLOAD) ? true : false,
+
+					'S_ALBUM_ORIG_UPLOAD'		=> (isset($old_album_type) && $old_album_type == ALBUM_UPLOAD) ? true : false,
 					'S_ALBUM_ORIG_CAT'			=> (isset($old_album_type) && $old_album_type == ALBUM_CAT) ? true : false,
-					'S_ALBUM_ORIG_LINK'			=> (isset($old_album_type) && $old_album_type == ALBUM_CONTEST) ? true : false,
+					'S_ALBUM_ORIG_CONTEST'		=> (isset($old_album_type) && $old_album_type == ALBUM_CONTEST) ? true : false,
 					'S_ALBUM_POST'				=> ($album_data['album_type'] == ALBUM_UPLOAD) ? true : false,
 					'S_ALBUM_CAT'				=> ($album_data['album_type'] == ALBUM_CAT) ? true : false,
 					'S_ALBUM_LINK'				=> ($album_data['album_type'] == ALBUM_CONTEST) ? true : false,
-					/*'S_ENABLE_INDEXING'			=> ($album_data['enable_indexing']) ? true : false,
-					'S_TOPIC_ICONS'				=> ($album_data['enable_icons']) ? true : false,*/
+					'ALBUM_UPLOAD'				=> ALBUM_UPLOAD,
+					'ALBUM_CAT'					=> ALBUM_CAT,
+					'ALBUM_CONTEST'				=> ALBUM_CONTEST,
+					'S_CAN_COPY_PERMISSIONS'	=> true,
+
 					'S_DISPLAY_SUBALBUM_LIST'	=> ($album_data['display_subalbum_list']) ? true : false,
 					'S_DISPLAY_ON_INDEX'		=> ($album_data['display_on_index']) ? true : false,
-					/*'S_PRUNE_ENABLE'			=> ($forum_data['enable_prune']) ? true : false,
-					'S_FORUM_LINK_TRACK'		=> ($forum_data['forum_flags'] & FORUM_FLAG_LINK_TRACK) ? true : false,
-					'S_PRUNE_OLD_POLLS'			=> ($forum_data['forum_flags'] & FORUM_FLAG_PRUNE_POLL) ? true : false,
-					'S_PRUNE_ANNOUNCE'			=> ($forum_data['forum_flags'] & FORUM_FLAG_PRUNE_ANNOUNCE) ? true : false,
-					'S_PRUNE_STICKY'			=> ($forum_data['forum_flags'] & FORUM_FLAG_PRUNE_STICKY) ? true : false,
-					'S_DISPLAY_ACTIVE_TOPICS'	=> ($forum_data['forum_flags'] & FORUM_FLAG_ACTIVE_TOPICS) ? true : false,
-					'S_ENABLE_POST_REVIEW'		=> ($forum_data['forum_flags'] & FORUM_FLAG_POST_REVIEW) ? true : false,*/
-					'S_CAN_COPY_PERMISSIONS'	=> true,
+					'S_DISPLAY_IN_RRC'			=> ($album_data['display_in_rrc']) ? true : false,
+
+					'S_CONTEST_START'			=> $user->format_date($contest_data['contest_start'], false, true),
+					'CONTEST_RATING'			=> ($contest_data['contest_rating'] / 86400),
+					'CONTEST_END'				=> ($contest_data['contest_end'] / 86400),
 				));
 
 				return;
@@ -619,7 +507,7 @@ class acp_gallery_albums
 					WHERE album_type <> ' . ALBUM_CAT . "
 						AND album_id <> $album_id
 						AND album_user_id = 0";
-				$result = $db->sql_query($sql);
+				$result = $db->sql_query_limit($sql, 1);
 
 				if ($db->sql_fetchrow($result))
 				{
@@ -636,7 +524,7 @@ class acp_gallery_albums
 					'U_BACK'				=> $this->u_action . '&amp;parent_id=' . $this->parent_id,
 
 					'ALBUM_NAME'			=> $album_data['album_name'],
-					'S_ALBUM_POST'			=> ($album_data['album_type'] == ALBUM_CAT) ? false : true,
+					'S_ALBUM_POST'			=> (in_array($album_data['album_type'], array(ALBUM_UPLOAD, ALBUM_CONTEST))) ? true : false,
 					'S_HAS_SUBALBUMS'		=> ($album_data['right_id'] - $album_data['left_id'] > 1) ? true : false,
 					'S_ALBUMS_LIST'			=> $albums_list,
 
@@ -775,13 +663,35 @@ class acp_gallery_albums
 	}
 
 	/**
+	* Get contest details
+	*/
+	function get_contest_info($mode = 'album', $id)
+	{
+		global $db;
+
+		$sql = 'SELECT *
+			FROM ' . GALLERY_CONTESTS_TABLE . '
+			WHERE ' . (($mode = 'album') ? 'contest_album_id' : 'contest_id') . ' = ' . (int) $id;
+		$result = $db->sql_query_limit($sql, 1);
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		if (!$row)
+		{
+			trigger_error('NO_CONTEST', E_USER_ERROR);
+		}
+
+		return $row;
+	}
+
+	/**
 	* Update album data
 	*
 	* borrowed from phpBB3
 	* @author: phpBB Group
 	* @function: update_forum_data
 	*/
-	function update_album_data(&$album_data)
+	function update_album_data(&$album_data, &$contest_data)
 	{
 		global $db, $user, $cache;
 
@@ -797,11 +707,6 @@ class acp_gallery_albums
 			$errors[] = $user->lang['ALBUM_DESC_TOO_LONG'];
 		}
 
-		/*if (utf8_strlen($album_data['album_rules']) > 4000)
-		{
-			$errors[] = $user->lang['ALBUM_RULES_TOO_LONG'];
-		}*/
-
 		/*if ($album_data['album_password'] || $album_data['album_password_confirm'])
 		{
 			if ($album_data['album_password'] != $album_data['album_password_confirm'])
@@ -811,43 +716,8 @@ class acp_gallery_albums
 			}
 		}*/
 
-		/*if ($forum_data['prune_days'] < 0 || $forum_data['prune_viewed'] < 0 || $forum_data['prune_freq'] < 0)
-		{
-			$forum_data['prune_days'] = $forum_data['prune_viewed'] = $forum_data['prune_freq'] = 0;
-			$errors[] = $user->lang['ALBUM_DATA_NEGATIVE'];
-		}
-
-		$range_test_ary = array(
-			array('lang' => 'FORUM_TOPICS_PAGE', 'value' => $forum_data['forum_topics_per_page'], 'column_type' => 'TINT:0'),
-		);
-
-		validate_range($range_test_ary, $errors);
-
-		// Set forum flags
-		// 1 = link tracking
-		// 2 = prune old polls
-		// 4 = prune announcements
-		// 8 = prune stickies
-		// 16 = show active topics
-		// 32 = enable post review
-		$album_data['album_flags'] = 0;
-		$album_data['album_flags'] += ($album_data['album_link_track']) ? FORUM_FLAG_LINK_TRACK : 0;
-		$album_data['album_flags'] += ($album_data['prune_old_polls']) ? FORUM_FLAG_PRUNE_POLL : 0;
-		$album_data['album_flags'] += ($album_data['prune_announce']) ? FORUM_FLAG_PRUNE_ANNOUNCE : 0;
-		$album_data['album_flags'] += ($album_data['prune_sticky']) ? FORUM_FLAG_PRUNE_STICKY : 0;
-		$album_data['album_flags'] += ($album_data['show_active']) ? FORUM_FLAG_ACTIVE_TOPICS : 0;
-		$album_data['album_flags'] += ($album_data['enable_post_review']) ? FORUM_FLAG_POST_REVIEW : 0;*/
-
 		// Unset data that are not database fields
 		$album_data_sql = $album_data;
-
-		/*unset($forum_data_sql['forum_link_track']);
-		unset($forum_data_sql['prune_old_polls']);
-		unset($forum_data_sql['prune_announce']);
-		unset($forum_data_sql['prune_sticky']);
-		unset($forum_data_sql['show_active']);
-		unset($forum_data_sql['enable_post_review']);*/
-
 		/*unset($album_data_sql['album_password_confirm']);*/
 
 		// What are we going to do tonight Brain? The same thing we do everynight,
@@ -892,12 +762,6 @@ class acp_gallery_albums
 					trigger_error($user->lang['PARENT_NOT_EXIST'] . adm_back_link($this->u_action . '&amp;' . $this->parent_id), E_USER_WARNING);
 				}
 
-				/*if ($row['album_type'] == FORUM_LINK)
-				{
-					$errors[] = $user->lang['PARENT_IS_LINK_FORUM'];
-					return $errors;
-				}*/
-
 				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
 					SET left_id = left_id + 2, right_id = right_id + 2
 					WHERE left_id > ' . $row['right_id'];
@@ -925,8 +789,24 @@ class acp_gallery_albums
 
 			$sql = 'INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data_sql);
 			$db->sql_query($sql);
-
 			$album_data['album_id'] = $db->sql_nextid();
+
+			// Type is contest, so create it...
+			if ($album_data['album_type'] == ALBUM_CONTEST)
+			{
+				$contest_data_sql = $contest_data;
+				$contest_data_sql['contest_album_id'] = $album_data['album_id'];
+				$contest_data_sql['contest_marked'] = IMAGE_CONTEST;
+
+				$sql = 'INSERT INTO ' . GALLERY_CONTESTS_TABLE . ' ' . $db->sql_build_array('INSERT', $contest_data_sql);
+				$db->sql_query($sql);
+				$album_data['album_contest'] = $db->sql_nextid();
+
+				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
+					SET album_contest = ' . $album_data['album_contest'] . '
+					WHERE album_id = ' . $album_data['album_id'];
+				$db->sql_query($sql);
+			}
 
 			//add_log('admin', 'LOG_ALBUM_ADD', $album_data['album_name']);
 		}
@@ -1158,19 +1038,13 @@ class acp_gallery_albums
 
 		$to_data = $moved_ids = $errors = array();
 
-		// Check if we want to move to a parent with link type
+		// Get the parent data
 		if ($to_id > 0)
 		{
 			$to_data = get_album_info($to_id);
-
-			/*if ($to_data['album_type'] == ALBUM_LINK)
-			{
-				$errors[] = $user->lang['PARENT_IS_LINK_ALBUM'];
-				return $errors;
-			}*/
 		}
 
-		$moved_albums = get_album_branch($from_id, 'children', 'descending');
+		$moved_albums = get_album_branch(0, $from_id, 'children', 'descending');
 		$from_data = $moved_albums[0];
 		$diff = sizeof($moved_albums) * 2;
 
@@ -1244,7 +1118,7 @@ class acp_gallery_albums
 		$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 			SET left_id = left_id $diff, right_id = right_id $diff, album_parents = ''
 			WHERE album_user_id = 0
-				AND " . $db->sql_in_set('forum_id', $moved_ids);
+				AND " . $db->sql_in_set('album_id', $moved_ids);
 		$db->sql_query($sql);
 
 		return $errors;
