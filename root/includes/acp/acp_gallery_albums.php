@@ -9,6 +9,11 @@
 * mostly borrowed from phpBB3
 * @author: phpBB Group
 * @location: includes/acp/acp_forums.php
+*
+* //@todo: 
+*	-> Logs get deleted on $forum_id without log-type check! BugReport?
+*	-> Use add_log('admin', ...) function
+*	-> Delete contests (correctly) when moving content
 */
 
 /**
@@ -106,6 +111,9 @@ class acp_gallery_albums
 						'display_subalbum_list'	=> request_var('display_subalbum_list', false),
 						'display_on_index'		=> request_var('display_on_index', false),
 						'display_in_rrc'		=> request_var('display_in_rrc', false),
+						/*'album_password'		=> request_var('album_password', '', true),
+						'album_password_confirm'=> request_var('album_password_confirm', '', true),
+						'album_password_unset'	=> request_var('album_password_unset', false),*/
 					);
 
 					// Categories are not able to be locked...
@@ -114,15 +122,11 @@ class acp_gallery_albums
 						$album_data['album_status'] = ITEM_UNLOCKED;
 					}
 
-					// Contests need contest_data, freaky...
-					//if ($album_data['album_type'] == ALBUM_CONTEST)
-					//{
-						$contest_data = array(
-							'contest_start'			=> time(),//@todo: Check before messing up edits!
-							'contest_rating'		=> request_var('contest_rating', 0) * 86400,
-							'contest_end'			=> request_var('contest_end', 0) * 86400,
-						);
-					//}
+					// Contests need contest_data, freaky... :-O
+					$contest_data = array(
+						'contest_rating'		=> request_var('contest_rating', 0) * 86400,
+						'contest_end'			=> request_var('contest_end', 0) * 86400,
+					);
 
 					// Get data for album description if specified
 					if ($album_data['album_desc'])
@@ -144,7 +148,7 @@ class acp_gallery_albums
 							{
 								$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . '
 									WHERE perm_album_id = ' . $album_id;
-								$result = $db->sql_query($sql);
+								$db->sql_query($sql);
 
 								$sql = 'DELETE FROM ' . GALLERY_MODSCACHE_TABLE . '
 									WHERE album_id = ' . $album_id;
@@ -153,9 +157,9 @@ class acp_gallery_albums
 
 							$sql = 'SELECT *
 								FROM ' . GALLERY_PERMISSIONS_TABLE . '
-								WHERE perm_album_id = ' . $copy_permissions;
+								WHERE perm_album_id = ' . $album_perm_from;
 							$result = $db->sql_query($sql);
-							while($row = $db->sql_fetchrow($result))
+							while ($row = $db->sql_fetchrow($result))
 							{
 								$perm_data[] = array(
 									'perm_role_id'					=> $row['perm_role_id'],
@@ -166,11 +170,10 @@ class acp_gallery_albums
 								);
 							}
 							$db->sql_freeresult($result);
-							$db->sql_multi_insert(GALLERY_PERMISSIONS_TABLE, $perm_data);
 
 							$modscache_ary = array();
 							$sql = 'SELECT * FROM ' . GALLERY_MODSCACHE_TABLE . '
-								WHERE album_id = ' . $copy_permissions;
+								WHERE album_id = ' . $album_perm_from;
 							$result = $db->sql_query($sql);
 							while ($row = $db->sql_fetchrow($result))
 							{
@@ -184,6 +187,8 @@ class acp_gallery_albums
 								);
 							}
 							$db->sql_freeresult($result);
+
+							$db->sql_multi_insert(GALLERY_PERMISSIONS_TABLE, $perm_data);
 							$db->sql_multi_insert(GALLERY_MODSCACHE_TABLE, $modscache_ary);
 						}
 
@@ -293,14 +298,6 @@ class acp_gallery_albums
 					{
 						$contest_data = $this->get_contest_info('album', $album_id);
 					}
-					else
-					{
-						$contest_data = array(
-							'contest_start'			=> time(),
-							'contest_rating'		=> 3 * 86400,
-							'contest_end'			=> 5 * 86400,
-						);
-					}
 
 					// Make sure no direct child albums are able to be selected as parents.
 					$exclude_albums = array();
@@ -333,8 +330,8 @@ class acp_gallery_albums
 							'display_subalbum_list'	=> true,
 							'display_on_index'		=> true,
 							'display_in_rrc'		=> true,
-							/*'forum_password'		=> '',
-							'forum_password_confirm'=> '',*/
+							/*'album_password'		=> '',
+							'album_password_confirm'=> '',*/
 						);
 
 						$contest_data = array(
@@ -462,9 +459,9 @@ class acp_gallery_albums
 					'S_ALBUM_ORIG_UPLOAD'		=> (isset($old_album_type) && $old_album_type == ALBUM_UPLOAD) ? true : false,
 					'S_ALBUM_ORIG_CAT'			=> (isset($old_album_type) && $old_album_type == ALBUM_CAT) ? true : false,
 					'S_ALBUM_ORIG_CONTEST'		=> (isset($old_album_type) && $old_album_type == ALBUM_CONTEST) ? true : false,
-					'S_ALBUM_POST'				=> ($album_data['album_type'] == ALBUM_UPLOAD) ? true : false,
+					'S_ALBUM_UPLOAD'			=> ($album_data['album_type'] == ALBUM_UPLOAD) ? true : false,
 					'S_ALBUM_CAT'				=> ($album_data['album_type'] == ALBUM_CAT) ? true : false,
-					'S_ALBUM_LINK'				=> ($album_data['album_type'] == ALBUM_CONTEST) ? true : false,
+					'S_ALBUM_CONTEST'			=> ($album_data['album_type'] == ALBUM_CONTEST) ? true : false,
 					'ALBUM_UPLOAD'				=> ALBUM_UPLOAD,
 					'ALBUM_CAT'					=> ALBUM_CAT,
 					'ALBUM_CONTEST'				=> ALBUM_CONTEST,
@@ -642,7 +639,6 @@ class acp_gallery_albums
 	/**
 	* Get album details
 	* We use gallery/includes/functions.php => get_album_info
-	*/
 	function get_album_info($album_id)
 	{
 		global $db;
@@ -661,6 +657,7 @@ class acp_gallery_albums
 
 		return $row;
 	}
+	*/
 
 	/**
 	* Get contest details
@@ -722,7 +719,7 @@ class acp_gallery_albums
 
 		// What are we going to do tonight Brain? The same thing we do everynight,
 		// try to take over the world ... or decide whether to continue update
-		// and if so, whether it's a new forum/cat/link or an existing one
+		// and if so, whether it's a new album/cat/contest or an existing one
 		if (sizeof($errors))
 		{
 			return $errors;
@@ -795,6 +792,7 @@ class acp_gallery_albums
 			if ($album_data['album_type'] == ALBUM_CONTEST)
 			{
 				$contest_data_sql = $contest_data;
+				$contest_data_sql['contest_start'] = time();
 				$contest_data_sql['contest_album_id'] = $album_data['album_id'];
 				$contest_data_sql['contest_marked'] = IMAGE_CONTEST;
 
@@ -813,19 +811,32 @@ class acp_gallery_albums
 		else
 		{
 			$row = get_album_info($album_data_sql['album_id']);
+			$reset_marked_images = false;
 
-			if ($row['album_type'] != ALBUM_CAT && $row['album_type'] != $album_data_sql['album_type'])
+			if ($row['album_type'] == ALBUM_CONTEST && $album_data_sql['album_type'] != ALBUM_CONTEST)
 			{
-				/*/ Has subalbums and want to change into a link?
-				if ($row['right_id'] - $row['left_id'] > 1 && $forum_data_sql['forum_type'] == FORUM_LINK)
-				{
-					$errors[] = $user->lang['FORUM_WITH_SUBFORUMS_NOT_TO_LINK'];
-					return $errors;
-				}*/
-
-				/**
-				* //@todo Delete contest!
-				*/
+				// Changing a contest to album? No!
+				// Changing a contest to category? No!
+				$errors[] = $user->lang['ALBUM_WITH_CONTEST_NO_TYPE_CHANGE'];
+				return $errors;
+			}
+			else if ($row['album_type'] != ALBUM_CONTEST && $album_data_sql['album_type'] == ALBUM_CONTEST)
+			{
+				// Changing a album to contest? No!
+				// Changing a category to contest? No!
+				$errors[] = $user->lang['ALBUM_NO_TYPE_CHANGE_TO_CONTEST'];
+				return $errors;
+			}
+			else if ($row['album_type'] == ALBUM_CAT && $album_data_sql['album_type'] == ALBUM_UPLOAD)
+			{
+				// Changing a category to a album? Yes!
+				// Reset the data (you couldn't upload directly in a cat, you must use a album)
+				$album_data_sql['album_images'] = $album_data_sql['album_images_real'] = $album_data_sql['album_last_image_id'] = $album_data_sql['album_last_user_id'] = $album_data_sql['album_last_image_time'] = $album_data_sql['album_contest'] = 0;
+				$album_data_sql['album_last_username'] = $album_data_sql['album_last_user_colour'] = $album_data_sql['album_last_image_name'] = '';
+			}
+			else if ($row['album_type'] == ALBUM_UPLOAD && $album_data_sql['album_type'] == ALBUM_CAT)
+			{
+				// Changing a album to a category? Yes!
 				// we're turning a uploadable album into a non-uploadable album
 				if ($album_data_sql['type_action'] == 'move')
 				{
@@ -848,129 +859,23 @@ class acp_gallery_albums
 				{
 					return array($user->lang['NO_ALBUM_ACTION']);
 				}
-
-				$album_data_sql['album_images'] = $album_data_sql['album_images_real'] = $album_data_sql['album_last_image_id'] = $album_data_sql['album_last_user_id'] = $album_data_sql['album_last_image_time'] = $album_data_sql['album_contest'] = 0;
-				$album_data_sql['album_last_username'] = $album_data_sql['album_last_user_colour'] = $album_data_sql['album_last_image_name'] = '';
 			}
-			/*else if ($row['forum_type'] == FORUM_CAT && $forum_data_sql['forum_type'] == FORUM_LINK)
+			else if ($row['album_type'] == ALBUM_CONTEST && $album_data_sql['album_type'] == ALBUM_CONTEST)
 			{
-				// Has subforums?
-				if ($row['right_id'] - $row['left_id'] > 1)
+				// Changing a contest to contest? Yes!
+				// We need to check for the contest_data
+				$row_contest = $this->get_contest_info('album', $album_data['album_id']);
+				$contest_data['contest_id'] = $row_contest['contest_id'];
+				if ($row_contest['contest_marked'] == IMAGE_NO_CONTEST)
 				{
-					// We are turning a category into a link - but need to decide what to do with the subforums.
-					$action_subforums = request_var('action_subforums', '');
-					$subforums_to_id = request_var('subforums_to_id', 0);
-
-					if ($action_subforums == 'delete')
+					// If the old contest is finished, but the new one isn't, we need to remark the images!
+					// If we change it the other way round, the album.php will do the end on the first visit!
+					if ($row_contest['contest_start'] + 86400 * $row_contest['contest_end'] > time())
 					{
-						$rows = get_forum_branch($row['forum_id'], 'children', 'descending', false);
-
-						foreach ($rows as $_row)
-						{
-							// Do not remove the forum id we are about to change. ;)
-							if ($_row['forum_id'] == $row['forum_id'])
-							{
-								continue;
-							}
-
-							$forum_ids[] = $_row['forum_id'];
-							$errors = array_merge($errors, $this->delete_forum_content($_row['forum_id']));
-						}
-
-						if (sizeof($errors))
-						{
-							return $errors;
-						}
-
-						if (sizeof($forum_ids))
-						{
-							$sql = 'DELETE FROM ' . FORUMS_TABLE . '
-								WHERE ' . $db->sql_in_set('forum_id', $forum_ids);
-							$db->sql_query($sql);
-
-							$sql = 'DELETE FROM ' . ACL_GROUPS_TABLE . '
-								WHERE ' . $db->sql_in_set('forum_id', $forum_ids);
-							$db->sql_query($sql);
-
-							$sql = 'DELETE FROM ' . ACL_USERS_TABLE . '
-								WHERE ' . $db->sql_in_set('forum_id', $forum_ids);
-							$db->sql_query($sql);
-
-							// Delete forum ids from extension groups table
-							$sql = 'SELECT group_id, allowed_forums
-								FROM ' . EXTENSION_GROUPS_TABLE;
-							$result = $db->sql_query($sql);
-
-							while ($_row = $db->sql_fetchrow($result))
-							{
-								if (!$_row['allowed_forums'])
-								{
-									continue;
-								}
-
-								$allowed_forums = unserialize(trim($_row['allowed_forums']));
-								$allowed_forums = array_diff($allowed_forums, $forum_ids);
-
-								$sql = 'UPDATE ' . EXTENSION_GROUPS_TABLE . "
-									SET allowed_forums = '" . ((sizeof($allowed_forums)) ? serialize($allowed_forums) : '') . "'
-									WHERE group_id = {$_row['group_id']}";
-								$db->sql_query($sql);
-							}
-							$db->sql_freeresult($result);
-
-							$cache->destroy('_extensions');
-						}
+						$contest_data['contest_marked'] = IMAGE_CONTEST;
+						$reset_marked_images = true;
 					}
-					else if ($action_subforums == 'move')
-					{
-						if (!$subforums_to_id)
-						{
-							return array($user->lang['NO_DESTINATION_FORUM']);
-						}
-
-						$sql = 'SELECT forum_name
-							FROM ' . FORUMS_TABLE . '
-							WHERE forum_id = ' . $subforums_to_id;
-						$result = $db->sql_query($sql);
-						$_row = $db->sql_fetchrow($result);
-						$db->sql_freeresult($result);
-
-						if (!$_row)
-						{
-							return array($user->lang['NO_FORUM']);
-						}
-
-						$subforums_to_name = $_row['forum_name'];
-
-						$sql = 'SELECT forum_id
-							FROM ' . FORUMS_TABLE . "
-							WHERE parent_id = {$row['forum_id']}";
-						$result = $db->sql_query($sql);
-
-						while ($_row = $db->sql_fetchrow($result))
-						{
-							$this->move_forum($_row['forum_id'], $subforums_to_id);
-						}
-						$db->sql_freeresult($result);
-
-						$sql = 'UPDATE ' . FORUMS_TABLE . "
-							SET parent_id = $subforums_to_id
-							WHERE parent_id = {$row['forum_id']}";
-						$db->sql_query($sql);
-					}
-
-					// Adjust the left/right id
-					$sql = 'UPDATE ' . FORUMS_TABLE . '
-						SET right_id = left_id + 1
-						WHERE forum_id = ' . $row['forum_id'];
-					$db->sql_query($sql);
 				}
-			}*/
-			else if ($row['album_type'] == ALBUM_CAT && $album_data_sql['album_type'] == ALBUM_UPLOAD)
-			{
-				// Changing a category to a album? Reset the data (you can't post directly in a cat, you must use a album)
-				$album_data_sql['album_images'] = $album_data_sql['album_images_real'] = $album_data_sql['album_last_image_id'] = $album_data_sql['album_last_user_id'] = $album_data_sql['album_last_image_time'] = $album_data_sql['album_contest'] = 0;
-				$album_data_sql['album_last_username'] = $album_data_sql['album_last_user_colour'] = $album_data_sql['album_last_image_name'] = '';
 			}
 
 			if (sizeof($errors))
@@ -999,7 +904,7 @@ class acp_gallery_albums
 
 			if ($row['album_name'] != $album_data_sql['album_name'])
 			{
-				// the album name has changed, clear the parents list of all albums (for safety)
+				// The album name has changed, clear the parents list of all albums (for safety)
 				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 					SET album_parents = ''";
 				$db->sql_query($sql);
@@ -1014,10 +919,35 @@ class acp_gallery_albums
 				WHERE album_id = ' . $album_id;
 			$db->sql_query($sql);
 
+			if ($album_data_sql['album_type'] == ALBUM_CONTEST)
+			{
+				// Setting the contest id to the contest id is not really received well by some dbs. ;)
+				$contest_id = $contest_data['contest_id'];
+				unset($contest_data['contest_id']);
+
+				$sql = 'UPDATE ' . GALLERY_CONTESTS_TABLE . '
+					SET ' . $db->sql_build_array('UPDATE', $contest_data) . '
+					WHERE contest_id = ' . $contest_id;
+				$db->sql_query($sql);
+				if ($reset_marked_images)
+				{
+					// If the old contest is finished, but the new one isn't, we need to remark the images!
+					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+						SET image_contest_rank = 0,
+							image_contest_end = 0,
+							image_contest = ' . IMAGE_CONTEST . '
+						WHERE image_album_id = ' . $album_id;
+					$db->sql_query($sql);
+				}
+
+				// Add it back
+				$contest_data['contest_id'] = $contest_id;
+			}
+
 			// Add it back
 			$album_data['album_id'] = $album_id;
 
-			//add_log('admin', 'LOG_ALBUM_EDIT', $album_data['album_name']);
+			//@todo: add_log('admin', 'LOG_ALBUM_EDIT', $album_data['album_name']);
 		}
 
 		return $errors;
@@ -1029,8 +959,6 @@ class acp_gallery_albums
 	* borrowed from phpBB3
 	* @author: phpBB Group
 	* @function: move_forum
-	*
-	* //@todo: Ready!!!
 	*/
 	function move_album($from_id, $to_id)
 	{
@@ -1130,19 +1058,19 @@ class acp_gallery_albums
 	* borrowed from phpBB3
 	* @author: phpBB Group
 	* @function: move_forum_content
-	*
-	* //@todo: Ready!!!
 	*/
 	function move_album_content($from_id, $to_id, $sync = true)
 	{
 		global $db;
 
 		//@todo: Are they deleting our logs?
-		$sql = 'UPDATE ' . GALLERY_CONTESTS_TABLE . "
+
+		/*$sql = 'UPDATE ' . GALLERY_CONTESTS_TABLE . "
 			SET contest_album_id = $to_id
 			WHERE contest_album_id = $from_id";
-		$db->sql_query($sql);
+		$db->sql_query($sql);*/
 
+		//@todo: Update contest information?!
 		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . "
 			SET image_album_id = $to_id
 			WHERE image_album_id = $from_id";
@@ -1168,7 +1096,8 @@ class acp_gallery_albums
 		if ($sync)
 		{
 			// Resync counters
-			update_album_info($album_id);
+			update_album_info($from_id);
+			update_album_info($to_id);
 		}
 
 		return array();
@@ -1180,8 +1109,6 @@ class acp_gallery_albums
 	* borrowed from phpBB3
 	* @author: phpBB Group
 	* @function: delete_forum
-	*
-	* //@todo: Ready!!!
 	*/
 	function delete_album($album_id, $action_images = 'delete', $action_subalbums = 'delete', $images_to_id = 0, $subalbums_to_id = 0)
 	{
@@ -1334,6 +1261,8 @@ class acp_gallery_albums
 
 		$log_action = implode('_', array($log_action_images, $log_action_albums));
 
+		/**
+		* //@todo: Log what we did
 		switch ($log_action)
 		{
 			case 'MOVE_IMAGES_MOVE_ALBUMS':
@@ -1372,14 +1301,13 @@ class acp_gallery_albums
 				add_log('admin', 'LOG_ALBUM_DEL_ALBUM', $album_data['album_name']);
 			break;
 		}
+		*/
 
 		return $errors;
 	}
 
 	/**
 	* Delete album content
-	*
-	* //@todo: Ready!!!
 	*/
 	function delete_album_content($album_id)
 	{
@@ -1491,8 +1419,6 @@ class acp_gallery_albums
 	* borrowed from phpBB3
 	* @author: phpBB Group
 	* @function: move_forum_by
-	*
-	* //@todo: Ready!!!
 	*/
 	function move_album_by($album_row, $action = 'move_up', $steps = 1)
 	{
@@ -1579,8 +1505,6 @@ class acp_gallery_albums
 	* borrowed from phpBB3
 	* @author: phpBB Group
 	* @function: display_progress_bar
-	*
-	* //@todo: Ready!!!
 	*/
 	function display_progress_bar($start, $total)
 	{

@@ -2,63 +2,7 @@
 
 <a name="maincontent"></a>
 
-<h1>{ACP_GALLERY_TITLE}</h1>
-<p>{ACP_GALLERY_TITLE_EXPLAIN}</p>
-
-<!-- IF S_MANAGE_ALBUMS -->
-	<p><strong>{NAVIGATION}<!-- IF S_ALBUM --> [<a href="{U_EDIT}">{L_EDIT}</a> | <a href="{U_DELETE}">{L_DELETE}</a>]<!-- ENDIF --></strong></p>
-		<table cellspacing="1">
-			<col class="row1" /><col class="row1" /><col class="row2" />
-		<tbody>
-		<!-- BEGIN album_row -->
-			<tr>
-				<td style="width: 5%; text-align: center;">{album_row.FOLDER_IMAGE}</td>
-				<td>
-					<!-- IF album_row.ALBUM_IMAGE --><div style="float: {S_CONTENT_FLOW_BEGIN}; margin-right: 5px;"><img src="{T_IMAGES_PATH}{album_row.ALBUM_IMAGE}" alt="{album_row.ALBUM_NAME}" /></div><!-- ENDIF -->
-					<strong><a href="{album_row.U_ALBUM}">{album_row.ALBUM_NAME}</a></strong>
-					<!-- IF album_row.ALBUM_DESCRIPTION --><br /><span>{album_row.ALBUM_DESCRIPTION}</span><!-- ENDIF -->
-					<!-- IF album_row.S_FORUM_POST --><br /><br /><span>{L_TOPICS}: <strong>{album_row.FORUM_TOPICS}</strong> / {L_POSTS}: <b>{album_row.FORUM_POSTS}</b></span><!-- ENDIF -->
-				</td>
-				<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
-					<!-- IF album_row.S_FIRST_ROW && not album_row.S_LAST_ROW -->
-						{ICON_MOVE_UP_DISABLED}
-						<a href="{album_row.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
-					<!-- ELSEIF not album_row.S_FIRST_ROW && not album_row.S_LAST_ROW-->
-						<a href="{album_row.U_MOVE_UP}">{ICON_MOVE_UP}</a>
-						<a href="{album_row.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
-					<!-- ELSEIF album_row.S_LAST_ROW && not album_row.S_FIRST_ROW -->
-						<a href="{album_row.U_MOVE_UP}">{ICON_MOVE_UP}</a>
-						{ICON_MOVE_DOWN_DISABLED}
-					<!-- ELSE -->
-						{ICON_MOVE_UP_DISABLED}
-						{ICON_MOVE_DOWN_DISABLED}
-					<!-- ENDIF -->
-					<a href="{album_row.U_EDIT}">{ICON_EDIT}</a>
-					{ICON_SYNC_DISABLED}
-					<a href="{album_row.U_DELETE}">{ICON_DELETE}</a>
-				</td>
-			</tr>
-		<!-- BEGINELSE -->
-			<tr>
-				<td style="width: 5%;"></td>
-				<td style="text-align: center;">
-					{L_NO_SUBALBUMS}
-				</td>
-				<td style="width: 100px;"></td>
-			</tr>
-		<!-- END album_row -->
-		</tbody>
-		</table>
-		<form id="albums" method="post" action="{S_ALBUM_ACTION}">
-
-			<fieldset class="quick">
-				<!--input type="hidden" name="action" value="add" /-->
-				<input class="button2" name="addforum" type="submit" value="{L_CREATE_ALBUM}" />
-			</fieldset>
-			{S_FORM_TOKEN}
-		</form>
-
-<!-- ELSEIF S_CREATE_ALBUM || S_EDIT_ALBUM -->
+<!-- IF S_EDIT_ALBUM -->
 
 	<script type="text/javascript">
 	// <![CDATA[
@@ -71,6 +15,47 @@
 		*/
 		function display_options(value)
 		{
+			<!-- IF not S_ADD_ACTION and S_ALBUM_ORIG_CAT -->
+				if (value == {ALBUM_CONTEST})
+				{
+					dE('cat_to_contest_actions', 1);
+				}
+				else
+				{
+					dE('cat_to_contest_actions', -1);
+				}
+			<!-- ENDIF -->
+
+			<!-- IF not S_ADD_ACTION and S_ALBUM_ORIG_CONTEST -->
+				if (value != {ALBUM_CONTEST})
+				{
+					dE('contest_change_type_actions', 1);
+				}
+				else
+				{
+					dE('contest_change_type_actions', -1);
+				}
+			<!-- ENDIF -->
+
+			<!-- IF not S_ADD_ACTION and S_ALBUM_ORIG_UPLOAD -->
+				if (value == {ALBUM_CAT})
+				{
+					dE('type_actions', 1);
+				}
+				else
+				{
+					dE('type_actions', -1);
+				}
+				if (value == {ALBUM_CONTEST})
+				{
+					dE('album_to_contest_actions', 1);
+				}
+				else
+				{
+					dE('album_to_contest_actions', -1);
+				}
+			<!-- ENDIF -->
+
 			if (value == {ALBUM_CONTEST})
 			{
 				dE('album_contest_options', 1);
@@ -94,8 +79,25 @@
 		*/
 		onload = function()
 		{
+			<!-- IF not S_ADD_ACTION and S_ALBUM_ORIG_CAT -->
+				<!-- IF S_ALBUM_CAT -->
+					dE('cat_to_contest_actions', -1);
+				<!-- ENDIF -->
+			<!-- ENDIF -->
+			<!-- IF not S_ADD_ACTION and S_ALBUM_ORIG_UPLOAD -->
+				<!-- IF S_ALBUM_UPLOAD -->
+					dE('type_actions', -1);
+					dE('album_to_contest_actions', -1);
+				<!-- ENDIF -->
+			<!-- ENDIF -->
+			<!-- IF not S_ADD_ACTION and S_ALBUM_ORIG_CONTEST -->
+				<!-- IF S_ALBUM_CONTEST -->
+					dE('contest_change_type_actions', -1);
+				<!-- ENDIF -->
+			<!-- ENDIF -->
 
-			<!-- IF not S_ALBUM_CONTEST -->
+
+			<!-- IF not S_ALBUM_ORIG_CONTEST -->
 				dE('album_contest_options', -1);
 			<!-- ENDIF -->
 			<!-- IF S_ALBUM_CAT -->
@@ -106,14 +108,57 @@
 	// ]]>
 	</script>
 
-<form id="acp_gallery" method="post" action="{U_ACTION}">
-	<div>
-		<fieldset>
-			<legend>{L_ALBUM_SETTINGS}</legend>
+	<a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
+
+	<h1>{L_TITLE} <!-- IF ALBUM_NAME -->:: {ALBUM_NAME}<!-- ENDIF --></h1>
+
+	<p>{L_ALBUM_EDIT_EXPLAIN}</p>
+
+	<!-- IF S_ERROR -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<!-- IF not S_ADD_ACTION -->
+		<!-- IF S_ALBUM_ORIG_CAT -->
+		<div class="errorbox" id="cat_to_contest_actions">
+			<h3>{L_WARNING}</h3>
+			<p>{L_ALBUM_NO_TYPE_CHANGE_TO_CONTEST}</p>
+		</div>
+		<!-- ENDIF -->
+		<!-- IF S_ALBUM_ORIG_UPLOAD -->
+		<div class="errorbox" id="album_to_contest_actions">
+			<h3>{L_WARNING}</h3>
+			<p>{L_ALBUM_NO_TYPE_CHANGE_TO_CONTEST}</p>
+		</div>
+		<!-- ENDIF -->
+		<!-- IF S_ALBUM_ORIG_CONTEST -->
+		<div class="errorbox" id="contest_change_type_actions">
+			<h3>{L_WARNING}</h3>
+			<p>{L_ALBUM_WITH_CONTEST_NO_TYPE_CHANGE}</p>
+		</div>
+		<!-- ENDIF -->
+	<!-- ENDIF -->
+
+	<form id="acp_gallery" method="post" action="{U_EDIT_ACTION}">
+
+	<fieldset>
+		<legend>{L_ALBUM_SETTINGS}</legend>
 		<dl>
 			<dt><label for="album_type">{L_ALBUM_TYPE}:</label></dt>
-			<dd><select id="album_type" name="album_type" onchange="display_options(this.options[this.selectedIndex].value);">{S_ALBUM_TYPE}</select></dd>
+			<dd><select id="album_type" name="album_type" onchange="display_options(this.options[this.selectedIndex].value);">{S_ALBUM_TYPE_OPTIONS}</select></dd>
 		</dl>
+	<!-- IF not S_ADD_ACTION and S_ALBUM_ORIG_UPLOAD -->
+	<div id="type_actions">
+		<dl>
+			<dt><label for="type_action">{L_DECIDE_MOVE_DELETE_CONTENT}:</label></dt>
+			<dd><label><input type="radio" class="radio" name="type_action" value="delete"<!-- IF not S_MOVE_ALBUM_OPTIONS --> checked="checked" id="type_action"<!-- ENDIF --> /> {L_DELETE_ALL_IMAGES}</label></dd>
+			<!-- IF S_MOVE_ALBUM_OPTIONS --><dd><label><input type="radio" class="radio" name="type_action" id="type_action" value="move" checked="checked" /> {L_MOVE_IMAGES_TO}</label> <select name="to_album_id">{S_MOVE_ALBUM_OPTIONS}</select></dd><!-- ENDIF -->
+		</dl>
+	</div>
+	<!-- ENDIF -->
 		<dl>
 			<dt><label for="parent_id">{L_ALBUM_PARENT}:</label></dt>
 			<dd><select id="parent_id" name="parent_id"><option value="0"<!-- IF not S_ALBUM_PARENT_ID --> selected="selected"<!-- ENDIF -->>{L_NO_PARENT_ALBUM}</option>{S_PARENT_OPTIONS}</select></dd>
@@ -153,11 +198,10 @@
 		<!-- ENDIF -->
 		<!-- ENDIF -->
 		<dl>
-			<dt><label for="copy_permissions">{L_COPY_PERMISSIONS}:</label><br /><span>{L_COPY_PERMISSIONS_EXPLAIN}</span></dt>
-			<dd><select id="copy_permissions" name="copy_permissions"><option value="0" selected="selected">{L_DONT_COPY_PERMISSIONS}</option>{S_COPY_OPTIONS}</select></dd>
+			<dt><label for="album_perm_from">{L_COPY_PERMISSIONS}:</label><br /><span>{L_COPY_PERMISSIONS_EXPLAIN}</span></dt>
+			<dd><select id="album_perm_from" name="album_perm_from"><option value="0" selected="selected">{L_DONT_COPY_PERMISSIONS}</option>{S_ALBUM_OPTIONS}</select></dd>
 		</dl>
-		</fieldset>
-	</div>
+	</fieldset>
 	<div id="album_upload_options">
 		<fieldset>
 			<legend>{L_GENERAL_ALBUM_SETTINGS}</legend>
@@ -194,7 +238,7 @@
 			<legend>{L_CONTEST_SETTINGS}</legend>
 		<dl>
 			<dt><label>{L_CONTEST_START}:</label><br/><span>{L_CONTEST_START_EXPLAIN}</span></dt>
-			<dd>{CONTEST_START}</dd>
+			<dd>{S_CONTEST_START}</dd>
 		</dl>
 		<dl>
 			<dt><label for="contest_rating">{L_CONTEST_RATING}:</label><br/><span>{L_CONTEST_RATING_EXPLAIN}</span></dt>
@@ -208,56 +252,146 @@
 	</div>
 	<fieldset class="submit-buttons">
 		<legend>{L_SUBMIT}</legend>
-		<p class="submit-buttons">
-			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
-			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
-		</p>
+		<input class="button1" type="submit" id="submit" name="update" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		{S_FORM_TOKEN}
 	</fieldset>
 	{S_FORM_TOKEN}
 </form>
 
 <!-- ELSEIF S_DELETE_ALBUM -->
-<form id="acp_gallery" method="post" action="{U_ACTION}">
-	<fieldset>
-		<legend>{ALBUM_DELETE}</legend>
+
+	<a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
+
+	<h1>{L_ALBUM_DELETE}</h1>
+
+	<p>{L_ALBUM_DELETE_EXPLAIN}</p>
+
+	<!-- IF S_ERROR -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<form id="acp_gallery" method="post" action="{U_ACTION}">
+
+		<fieldset>
+			<legend>{L_ALBUM_DELETE}</legend>
 		<dl>
-			<dt><label for="album_type">{L_ALBUM_TYPE}:</label></dt>
-			<dd><!-- IF ALBUM_TYPE == 1 -->{L_ALBUM_CATEGORY}<!-- ELSEIF ALBUM_TYPE == 2 -->{L_ALBUM_NO_CATEGORY}<!-- ENDIF --></dd>
+			<dt><label>{L_ALBUM_NAME}:</label></dt>
+			<dd><strong>{ALBUM_NAME}</strong></dd>
 		</dl>
-		<dl>
-			<dt><label for="parent_id">{L_ALBUM_PARENT}:</label></dt>
-			<dd><select id="parent_id" name="parent_id"><option value="0"<!-- IF not S_ALBUM_PARENT_ID --> selected="selected"<!-- ENDIF -->>{L_NO_PARENT_ALBUM}</option>{S_PARENT_OPTIONS}</select></dd>
-		</dl>
-		<dl>
-			<dt><label for="album_name">{L_ALBUM_NAME}:</label></dt>
-			<dd>{ALBUM_NAME}</dd>
-		</dl>
-		<!-- IF ALBUM_DESC -->
+		<!-- IF S_ALBUM_POST -->
 			<dl>
-				<dt><label for="album_desc">{L_ALBUM_DESC}:</label></dt>
-				<dd>{ALBUM_DESC}</dd>
+				<dt><label for="delete_action">{L_ACTION}:</label></dt>
+				<dd><label><input type="radio" class="radio" id="delete_action" name="action_images" value="delete" checked="checked" /> {L_DELETE_ALL_IMAGES}</label></dd>
+				<!-- IF S_MOVE_ALBUM_OPTIONS -->
+					<dd><label><input type="radio" class="radio" name="action_images" value="move" /> {L_MOVE_IMAGES_TO}</label> <select name="images_to_id">{S_MOVE_ALBUM_OPTIONS}</select></dd>
+				<!-- ENDIF -->
 			</dl>
 		<!-- ENDIF -->
-		<!-- IF ALBUM_TYPE == 1 -->
-		<dl>
-			<dt><label for="handle_subs">{L_HANDLE_SUBS}:</label></dt>
-			<dd><select id="handle_subs" name="handle_subs"><option value="-1" selected="selected">{L_DELETE_SUBS}</option><option value="0">{L_NO_PARENT_ALBUM}</option>{S_MOVE_ALBUM_OPTIONS}</select></dd>
-		</dl>
-		<!-- ELSEIF ALBUM_TYPE == 2 -->
-		<dl>
-			<dt><label for="handle_images">{L_HANDLE_IMAGES}:</label></dt>
-			<dd><select id="handle_images" name="handle_images"><option value="-1" selected="selected">{L_DELETE_IMAGES}</option>{S_MOVE_IMAGE_OPTIONS}</select></dd>
-		</dl>
+		<!-- IF S_HAS_SUBALBUMS -->
+			<dl>
+				<dt><label for="sub_delete_action">{L_ACTION}:</label></dt>
+				<dd><label><input type="radio" class="radio" id="sub_delete_action" name="action_subalbums" value="delete" checked="checked" /> {L_DELETE_SUBALBUMS}</label></dd>
+				<!-- IF S_ALBUMS_LIST -->
+					<dd><label><input type="radio" class="radio" name="action_subalbums" value="move" /> {L_MOVE_SUBALBUMS_TO}</label> <select name="subalbums_to_id">{S_ALBUMS_LIST}</select></dd>
+				<!-- ENDIF -->
+			</dl>
 		<!-- ENDIF -->
-	</fieldset>
-	<fieldset class="submit-buttons">
-		<legend>{L_SUBMIT}</legend>
-		<p class="submit-buttons">
-			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
+
+		<p class="quick">
+			<input class="button1" type="submit" name="update" value="{L_SUBMIT}" />
 		</p>
+		{S_FORM_TOKEN}
+		</fieldset>
+	</form>
+<!-- ELSE -->
+
+	<h1>{L_ALBUM_ADMIN}</h1>
+
+	<p>{L_ALBUM_ADMIN_EXPLAIN}</p>
+
+	<!-- IF ERROR_MSG -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<!-- IF S_RESYNCED -->
+		<script type="text/javascript">
+		// <![CDATA[
+			var close_waitscreen = 1;
+		// ]]>
+		</script>
+
+		<div class="successbox">
+			<h3>{L_NOTIFY}</h3>
+			<p>{L_ALBUM_RESYNCED}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<p><strong>{NAVIGATION}<!-- IF S_NO_ALBUMS --> [<a href="{U_EDIT}">{L_EDIT}</a> | <a href="{U_DELETE}">{L_DELETE}</a> | <a href="{U_SYNC}">{L_RESYNC}</a>]<!-- ENDIF --></strong></p>
+
+	<!-- IF .albums -->
+		<table cellspacing="1">
+			<col class="row1" /><col class="row1" /><col class="row2" />
+		<tbody>
+		<!-- BEGIN albums -->
+			<tr>
+				<td style="width: 5%; text-align: center;">{albums.FOLDER_IMAGE}</td>
+				<td>
+					<!-- IF albums.ALBUM_IMAGE --><div style="float: {S_CONTENT_FLOW_BEGIN}; margin-right: 5px;"><img src="{albums.ALBUM_IMAGE}" alt="{albums.ALBUM_NAME}" /></div><!-- ENDIF -->
+					<strong><a href="{albums.U_ALBUM}">{albums.ALBUM_NAME}</a></strong>
+					<!-- IF albums.ALBUM_DESCRIPTION --><br /><span>{albums.ALBUM_DESCRIPTION}</span><!-- ENDIF -->
+					<!-- IF albums.S_ALBUM_POST --><br /><br /><span>{L_IMAGES}: <strong>{albums.ALBUM_IMAGES}</strong></span><!-- ENDIF -->
+				</td>
+				<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
+					<!-- IF albums.S_FIRST_ROW && not albums.S_LAST_ROW -->
+						{ICON_MOVE_UP_DISABLED}
+						<a href="{albums.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+					<!-- ELSEIF not albums.S_FIRST_ROW && not albums.S_LAST_ROW-->
+						<a href="{albums.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+						<a href="{albums.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+					<!-- ELSEIF albums.S_LAST_ROW && not albums.S_FIRST_ROW -->
+						<a href="{albums.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+						{ICON_MOVE_DOWN_DISABLED}
+					<!-- ELSE -->
+						{ICON_MOVE_UP_DISABLED}
+						{ICON_MOVE_DOWN_DISABLED}
+					<!-- ENDIF -->
+					<a href="{albums.U_EDIT}">{ICON_EDIT}</a>
+					<a href="{albums.U_SYNC}" onclick="popup_progress_bar();">{ICON_SYNC}</a>
+					<a href="{albums.U_DELETE}">{ICON_DELETE}</a>
+				</td>
+			</tr>
+		<!-- END albums -->
+		</tbody>
+		</table>
+	<!-- ENDIF -->
+
+	<form id="aselect" method="post" action="{U_SEL_ACTION}">
+
+	<fieldset class="quick">
+		{L_SELECT_ALBUM}: <select name="parent_id" onchange="if(this.options[this.selectedIndex].value != -1){ this.form.submit(); }">{ALBUM_BOX}</select>
+
+		<input class="button2" type="submit" value="{L_GO}" />
+		{S_FORM_TOKEN}
 	</fieldset>
-	{S_FORM_TOKEN}
-</form>
+	</form>
+
+	<form id="albums" method="post" action="{U_ACTION}">
+
+	<fieldset class="quick">
+		<input type="hidden" name="action" value="add" />
+
+		<input type="text" name="album_name" value="" maxlength="255" />
+		<input class="button2" name="addalbum" type="submit" value="{L_CREATE_ALBUM}" />
+		{S_FORM_TOKEN}
+	</fieldset>
+	</form>
 <!-- ENDIF -->
 
 

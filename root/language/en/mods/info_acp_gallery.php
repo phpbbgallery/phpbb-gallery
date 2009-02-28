@@ -29,7 +29,7 @@ $lang = array_merge($lang, array(
 	'ACP_GALLERY_CONFIGURE_GALLERY'		=> 'Configure Gallery',
 	'ACP_GALLERY_LOGS'					=> 'Gallery log',
 	'ACP_GALLERY_LOGS_EXPLAIN'			=> 'This lists all moderator actions of the gallery, like approving, disapproving, locking, unlocking, closing reports and deleting images.',
-	'ACP_GALLERY_MANAGE_ALBUMS'			=> 'Manage Albums',
+	'ACP_GALLERY_MANAGE_ALBUMS'			=> 'Manage albums',
 	'ACP_GALLERY_OVERVIEW'				=> 'Overview',
 	'ACP_IMPORT_ALBUMS'					=> 'Import Images',
 
