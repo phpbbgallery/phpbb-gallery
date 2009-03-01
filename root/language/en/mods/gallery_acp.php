@@ -260,6 +260,7 @@ $lang = array_merge($lang, array(
 	'RRC_DISPLAY_IMAGENAME'			=> 'Image name',
 	'RRC_DISPLAY_IMAGETIME'			=> 'Image time',
 	'RRC_DISPLAY_IMAGEVIEWS'		=> 'Image views',
+	'RRC_DISPLAY_NONE'				=> 'None',
 	'RRC_DISPLAY_OPTIONS'			=> 'Which values should be displayed underneath the thumbnails?',
 	'RRC_DISPLAY_USERNAME'			=> 'Username',
 	'RRC_DISPLAY_RATINGS'			=> 'Ratings',
