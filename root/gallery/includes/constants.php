@@ -50,6 +50,7 @@ define('OWN_GALLERY_PERMISSIONS', -2);
 define('PERSONAL_GALLERY_PERMISSIONS', -3);
 
 // Display-options for RRC-Feature
+define('RRC_DISPLAY_NONE', 0);
 define('RRC_DISPLAY_ALBUMNAME', 1);
 define('RRC_DISPLAY_COMMENTS', 2);
 define('RRC_DISPLAY_IMAGENAME', 4);

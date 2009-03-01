@@ -67,6 +67,7 @@ $lang = array_merge($lang, array(
 	'COMMENT_STORED'				=> 'Dein Kommentar wurde erfolgreich hinzugefügt.',
 	'COMMENT_TOO_LONG'				=> 'Dein Kommentar ist zu lang',
 	'COMMENTS'						=> 'Kommentare',
+	'CONTEST_COMMENTS_STARTS'		=> 'Kommentare sind auf Grund des Wettbewerbs erst ab dem %s erlaubt.',
 	'CONTEST_RATING_STARTED'		=> 'Die Bewertung für diesen Wettbewerb begann am %s.',
 	'CONTEST_RATING_STARTS'			=> 'Die Bewertung für diesen Wettbewerb beginnt am %s.',
 	'CONTEST_RATING_ENDED'			=> 'Die Bewertung für diesen Wettbewerb endete am %s.',

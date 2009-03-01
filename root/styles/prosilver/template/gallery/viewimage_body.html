@@ -17,18 +17,15 @@ function checkRateForm() {
 <h2><a href="{S_ALBUM_ACTION}">{IMAGE_NAME}</a></h2>
 
 <div class="post bg2">
-	<div class="inner">
-		<span class="corners-top"><span></span></span>
+	<div class="inner"><span class="corners-top"><span></span></span>
 		<!-- IF UC_PREVIOUS --><p style="float: left; text-align: left;">{UC_PREVIOUS_IMAGE}<br />{UC_PREVIOUS}</p><!-- ENDIF -->
 		<!-- IF UC_NEXT --><p style="float: right; text-align: right;">{UC_NEXT_IMAGE}<br />{UC_NEXT}</p><!-- ENDIF -->
 		<div style="text-align: center; padding: 20px;">{UC_IMAGE}</div>
-		<span class="corners-bottom"><span></span></span>
-	</div>
+	<span class="corners-bottom"><span></span></span></div>
 </div>
 
 <div id="details" class="panel">
-	<div class="inner">
-		<span class="corners-top"><span></span></span>
+	<div class="inner"><span class="corners-top"><span></span></span>
 		<h3>{L_DETAILS}</h3>
 		<!-- IF U_EDIT or U_DELETE or U_REPORT -->
 		<div class="postbody">
@@ -86,8 +83,7 @@ function checkRateForm() {
 				</dl>
 			<!-- ENDIF -->
 		</fieldset>
-		<span class="corners-bottom"><span></span></span>
-	</div>
+	<span class="corners-bottom"><span></span></span></div>
 </div>
 
 <!-- IF .exif_value -->
@@ -117,8 +113,7 @@ function toggleElement(oElement)
 }
 </script>
 <div id="exif" class="panel">
-	<div class="inner">
-		<span class="corners-top"><span></span></span>
+	<div class="inner"><span class="corners-top"><span></span></span>
 		<h3>{L_EXIF-DATA} - <a href="javascript: toggleElement( getElement('exif_data_fieldset'));">{L_SHOW_EXIF}</a></h3>
 		<fieldset class="fields1" id="exif_data_fieldset" style="display: none;">
 			<!-- BEGIN exif_value -->
@@ -128,8 +123,7 @@ function toggleElement(oElement)
 				</dl>
 			<!-- END exif_value -->
 		</fieldset>
-		<span class="corners-bottom"><span></span></span>
-	</div>
+	<span class="corners-bottom"><span></span></span></div>
 </div>
 <!-- ENDIF -->
 
@@ -137,8 +131,7 @@ function toggleElement(oElement)
 <a name="rating"></a>
 <form id="postform" action="{S_COMMENT_ACTION}" method="post" onsubmit="return checkCommentForm;">
 <div id="postingbox" class="panel">
-	<div class="inner">
-		<span class="corners-top"><span></span></span>
+	<div class="inner"><span class="corners-top"><span></span></span>
 		<h3><!-- IF S_ALLOWED_TO_RATE and S_ALLOWED_TO_COMMENT -->{L_POST_COMMENT_RATE_IMAGE}<!-- ELSEIF S_ALLOWED_TO_COMMENT -->{L_POST_COMMENT}<!-- ELSE -->{L_RATE_IMAGE}<!-- ENDIF --></h3>
 		<fieldset class="fields1">
 			<!-- IF S_ALLOWED_TO_RATE -->
@@ -161,7 +154,7 @@ function toggleElement(oElement)
 					</dd>
 				</dl>
 			<!-- ENDIF -->
-			<!-- IF S_ALLOWED_TO_COMMENT -->
+			<!-- IF S_ALLOWED_TO_COMMENT and not S_HIDE_COMMENT_INPUT -->
 				<!-- IF not S_USER_LOGGED_IN -->
 					<dl>
 						<dt><label>{L_USERNAME}:</label></dt>
@@ -197,10 +190,12 @@ function toggleElement(oElement)
 				</div>
 				<input type="submit" name="submit" value="{L_SUBMIT}" class="button1" />
 			</fieldset>
+		<!-- ELSE IF S_HIDE_COMMENT_INPUT -->
+			<!-- IF S_ALLOWED_TO_RATE --><hr class="dashed" /><!-- ENDIF -->
+			{CONTEST_COMMENTS}
 		<!-- ENDIF -->
 		{S_FORM_TOKEN}
-		<span class="corners-bottom"><span></span></span>
-	</div>
+	<span class="corners-bottom"><span></span></span></div>
 </div>
 </form>
 <!-- ENDIF -->
@@ -209,8 +204,7 @@ function toggleElement(oElement)
 <a name="comments"></a>
 <!-- IF not .commentrow -->
 	<div id="comments" class="panel">
-		<div class="inner">
-			<span class="corners-top"><span></span></span>
+		<div class="inner"><span class="corners-top"><span></span></span>
 			<h3>{L_COMMENTS}</h3>
 			<fieldset class="fields1">
 				<dl>
@@ -218,8 +212,7 @@ function toggleElement(oElement)
 					<dd>{L_NO_COMMENTS}</dd>
 				</dl>
 			</fieldset>
-			<span class="corners-bottom"><span></span></span>
-		</div>
+		<span class="corners-bottom"><span></span></span></div>
 	</div>
 <!-- ELSE -->
 	<div class="topic-actions">
@@ -230,8 +223,7 @@ function toggleElement(oElement)
 	<!-- BEGIN commentrow -->
 	<a id="{commentrow.COMMENT_ID}"></a>
 	<div class="post <!-- IF commentrow.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
-		<div class="inner">
-			<span class="corners-top"><span></span></span>
+		<div class="inner"><span class="corners-top"><span></span></span>
 			<div class="postbody">
 				<!-- IF commentrow.U_DELETE or commentrow.U_EDIT or commentrow.U_INFO -->
 					<ul class="profile-icons">
@@ -255,8 +247,7 @@ function toggleElement(oElement)
 
 				<!-- IF commentrow.RANK_TITLE or commentrow.RANK_IMG --><dd>{commentrow.RANK_TITLE}<!-- IF commentrow.RANK_TITLE and commentrow.RANK_IMG --><br /><!-- ENDIF -->{commentrow.RANK_IMG}</dd><!-- ENDIF -->
 			</dl>
-			<span class="corners-bottom"><span></span></span>
-		</div>
+		<span class="corners-bottom"><span></span></span></div>
 	</div>
 	<!-- END commentrow -->
 

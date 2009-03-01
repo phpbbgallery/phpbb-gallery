@@ -58,6 +58,7 @@
         <changelog lang="en-gb">
           <change><![CDATA[[Add] Report #473: Add ACP-Control for RRC-Display-Options]]></change>
 
+          <change><![CDATA[[Change] Unreported: Conntest-system: No comments before rating start, No uploads after rating start]]></change>
           <change><![CDATA[[Change] Unreported: Rewrite album management to phpbb's forum management]]></change>
 
           <change><![CDATA[[Fix] Unreported: Hide Exif-Line, if we cant display the exif]]></change>

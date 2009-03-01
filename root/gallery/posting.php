@@ -119,6 +119,10 @@ switch ($mode)
 				{
 					gallery_not_authorised($album_backlink, $user, $album_loginlink);
 				}
+				if ($album_data['contest_id'] && (time() > ($album_data['contest_start'] + $album_data['contest_rating'])))
+				{
+					gallery_not_authorised($album_backlink, $user, $album_loginlink);
+				}
 			break;
 			case 'edit':
 				if (!gallery_acl_check('i_edit', $album_id))
@@ -177,6 +181,10 @@ switch ($mode)
 			gallery_not_authorised($image_backlink, $user, $image_loginlink);
 		}
 		if (((!$submit || !$gallery_config['allow_rates'])) && ($submode == 'rate'))
+		{
+			gallery_not_authorised($image_backlink, $user, $image_loginlink);
+		}
+		if (time() < ($album_data['contest_start'] + $album_data['contest_rating']))
 		{
 			gallery_not_authorised($image_backlink, $user, $image_loginlink);
 		}

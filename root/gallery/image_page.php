@@ -401,6 +401,8 @@ if ($gallery_config['allow_comments'] && gallery_acl_check('c_post', $album_id) 
 
 	$template->assign_vars(array(
 		'S_ALLOWED_TO_COMMENT'	=> true,
+		'S_HIDE_COMMENT_INPUT'	=> (time() < ($album_data['contest_start'] + $album_data['contest_rating'])) ? true : false,
+		'CONTEST_COMMENTS'		=> sprintf($user->lang['CONTEST_COMMENTS_STARTS'], $user->format_date(($album_data['contest_start'] + $album_data['contest_rating']), false, true)),
 
 		'BBCODE_STATUS'			=> ($bbcode_status) ? sprintf($user->lang['BBCODE_IS_ON'], '<a href="' . append_sid("{$phpbb_root_path}faq.$phpEx", 'mode=bbcode') . '">', '</a>') : sprintf($user->lang['BBCODE_IS_OFF'], '<a href="' . append_sid("{$phpbb_root_path}faq.$phpEx", 'mode=bbcode') . '">', '</a>'),
 		'IMG_STATUS'			=> ($img_status) ? $user->lang['IMAGES_ARE_ON'] : $user->lang['IMAGES_ARE_OFF'],
@@ -424,7 +426,7 @@ if ($gallery_config['allow_comments'] && gallery_acl_check('c_post', $album_id) 
 /**
 * Listing comment
 */
-if ($gallery_config['allow_comments'] && gallery_acl_check('c_read', $album_id))
+if (($gallery_config['allow_comments'] && gallery_acl_check('c_read', $album_id)) && (time() > ($album_data['contest_start'] + $album_data['contest_rating'])))
 {
 	$user->add_lang('viewtopic');
 	$start = request_var('start', 0);

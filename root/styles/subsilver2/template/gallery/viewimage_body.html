@@ -167,12 +167,11 @@ function toggleElement(oElement)
 						</span></td>
 				</tr>
 				<!-- ENDIF -->
+				<!-- IF S_ALLOWED_TO_COMMENT and not S_HIDE_COMMENT_INPUT -->
 				<!-- IF not S_USER_LOGGED_IN -->
 				<tr class="row1">
 					<td class="row1" width="22%" height="28"><b class="genmed">{L_USERNAME}:</b></td>
-					<td><span class="genmed">
-						<input class="inputbox autowidth" type="text" name="username" maxlength="32" />
-						</span></td>
+					<td><span class="genmed"><input class="inputbox autowidth" type="text" name="username" maxlength="32" /></span></td>
 				</tr>
 				<!-- ENDIF -->
 				<tr>
@@ -227,6 +226,12 @@ function toggleElement(oElement)
 				<tr class="cat" colspan="2" align="center">
 					<td colspan="2"><input type="submit" name="submit" value="{L_SUBMIT}" class="btnmain" /></td>
 				</tr>
+				<!-- ELSE IF S_HIDE_COMMENT_INPUT -->
+				<tr class="row1">
+					<td class="row1" width="22%" height="28"></td>
+					<td><span class="genmed">{CONTEST_COMMENTS}</span></td>
+				</tr>
+				<!-- ENDIF -->
 			</table>
 			{S_FORM_TOKEN}
 		</form>
