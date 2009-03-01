@@ -58,6 +58,7 @@
         <changelog lang="en-gb">
           <change><![CDATA[[Change] Unreported: Rewrite album management to phpbb's forum management]]></change>
 
+          <change><![CDATA[[Fix] Report #473: Display-Options for informations in RRC not working]]></change>
           <change><![CDATA[[Fix] Report #477: Delete images of deleted albums]]></change>
           <change><![CDATA[[Fix] Report #475: Autodelete on update needs CHMOD 777]]></change>
           <change><![CDATA[[Fix] Report #478: Gallery-log leading with "View forum" to viewofurm.php]]></change>

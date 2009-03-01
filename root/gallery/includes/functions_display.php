@@ -546,10 +546,23 @@ function get_album_moderators(&$album_moderators, $album_id = false)
 * @param string	$template_block	Name of the template-block
 * @param array	$image_data		Array with the image-data, all columns of GALLERY_IMAGES_TABLE are needed. album_name may be additionally assigned
 */
-function assign_image_block($template_block, &$image_data, $album_status)
+function assign_image_block($template_block, &$image_data, $album_status, $display = array())
 {
 	global $auth, $gallery_config, $template, $user;
 	global $gallery_root_path, $phpbb_root_path, $phpEx;
+
+	if (!$display)
+	{
+		$display = array(
+			'album'		=> true,
+			'comments'	=> true,
+			'name'		=> true,
+			'poster'	=> true,
+			'ratings'	=> true,
+			'time'		=> true,
+			'views'		=> true,
+		);
+	}
 
 	$image_data['rating'] = $user->lang['NOT_RATED'];
 	if ($image_data['image_rates'])
@@ -563,23 +576,23 @@ function assign_image_block($template_block, &$image_data, $album_status)
 
 	$template->assign_block_vars($template_block, array(
 		'IMAGE_ID'		=> $image_data['image_id'],
-		'UC_IMAGE_NAME'	=> generate_image_link('image_name', $gallery_config['link_image_name'], $image_data['image_id'], $image_data['image_name'], $image_data['image_album_id']),
+		'UC_IMAGE_NAME'	=> ($display['name']) ? generate_image_link('image_name', $gallery_config['link_image_name'], $image_data['image_id'], $image_data['image_name'], $image_data['image_album_id']) : '',
 		'UC_THUMBNAIL'	=> generate_image_link('thumbnail', $gallery_config['link_thumbnail'], $image_data['image_id'], $image_data['image_name'], $image_data['image_album_id']),
 		'U_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $image_data['image_album_id']),
 		'S_UNAPPROVED'	=> (gallery_acl_check('m_status', $image_data['image_album_id']) && (!$image_data['image_status'])) ? true : false,
 		'S_LOCKED'		=> (gallery_acl_check('m_status', $image_data['image_album_id']) && ($image_data['image_status'] == 2)) ? true : false,
 		'S_REPORTED'	=> (gallery_acl_check('m_report', $image_data['image_album_id']) && $image_data['image_reported']) ? true : false,
 
-		'ALBUM_NAME'	=> (isset($image_data['album_name'])) ? ((utf8_strlen(htmlspecialchars_decode($image_data['album_name'])) > $gallery_config['shorted_imagenames'] + 3 ) ? htmlspecialchars(utf8_substr(htmlspecialchars_decode($image_data['album_name']), 0, $gallery_config['shorted_imagenames']) . '...') : ($image_data['album_name'])) : '',
-		'POSTER'		=> ($image_data['image_contest'] && !gallery_acl_check('m_status', $image_data['image_album_id'])) ? $user->lang['CONTEST_USERNAME'] : get_username_string('full', $image_data['image_user_id'], ($image_data['image_user_id'] <> ANONYMOUS) ? $image_data['image_username'] : $user->lang['GUEST'], $image_data['image_user_colour']),
-		'TIME'			=> $user->format_date($image_data['image_time']),
-		'VIEW'			=> $image_data['image_view_count'],
+		'ALBUM_NAME'	=> ($display['album']) ? ((isset($image_data['album_name'])) ? ((utf8_strlen(htmlspecialchars_decode($image_data['album_name'])) > $gallery_config['shorted_imagenames'] + 3 ) ? htmlspecialchars(utf8_substr(htmlspecialchars_decode($image_data['album_name']), 0, $gallery_config['shorted_imagenames']) . '...') : ($image_data['album_name'])) : '') : '',
+		'POSTER'		=> ($display['poster']) ? ($image_data['image_contest'] && !gallery_acl_check('m_status', $image_data['image_album_id'])) ? $user->lang['CONTEST_USERNAME'] : get_username_string('full', $image_data['image_user_id'], ($image_data['image_user_id'] <> ANONYMOUS) ? $image_data['image_username'] : $user->lang['GUEST'], $image_data['image_user_colour']) : '',
+		'TIME'			=> ($display['time']) ? $user->format_date($image_data['image_time']) : '',
+		'VIEW'			=> ($display['views']) ? $image_data['image_view_count'] : '',
 		'CONTEST_RANK'	=> ($image_data['image_contest_rank']) ? $user->lang['CONTEST_RESULT_' . $image_data['image_contest_rank']] : '',
 
-		'S_RATINGS'		=> ($gallery_config['allow_rates'] && gallery_acl_check('i_rate', $image_data['image_album_id'])) ? $image_data['rating'] : '',
+		'S_RATINGS'		=> (($display['ratings']) ? (($gallery_config['allow_rates'] && gallery_acl_check('i_rate', $image_data['image_album_id'])) ? $image_data['rating'] : '') : ''),
 		'U_RATINGS'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $image_data['image_album_id'] . "&amp;image_id=" . $image_data['image_id']) . '#rating',
 		'L_COMMENTS'	=> ($image_data['image_comments'] == 1) ? $user->lang['COMMENT'] : $user->lang['COMMENTS'],
-		'S_COMMENTS'	=> ($gallery_config['allow_comments'] && gallery_acl_check('c_read', $image_data['image_album_id'])) ? (($image_data['image_comments']) ? $image_data['image_comments'] : $user->lang['NO_COMMENTS']) : '',
+		'S_COMMENTS'	=> (($display['comments']) ? (($gallery_config['allow_comments'] && gallery_acl_check('c_read', $image_data['image_album_id'])) ? (($image_data['image_comments']) ? $image_data['image_comments'] : $user->lang['NO_COMMENTS']) : '') : ''),
 		'U_COMMENTS'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $image_data['image_album_id'] . "&amp;image_id=" . $image_data['image_id']) . '#comments',
 
 		'S_IP'		=> ($auth->acl_get('a_')) ? $image_data['image_user_ip'] : '',

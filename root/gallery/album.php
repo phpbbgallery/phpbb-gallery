@@ -24,8 +24,8 @@ include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 // Start session management
 $user->session_begin();
 $auth->acl($user->data);
-$user->setup('mods/gallery');
 $user->setup('mods/gallery_ucp');
+$user->setup('mods/gallery');
 
 // Get general album information
 include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);

@@ -134,7 +134,7 @@ function recent_gallery_images(&$ints, &$display, $modes, $collapse_comments = f
 					}
 
 					// Assign the image to the template-block
-					assign_image_block('recent.image', $recent_images[$j], $recent_images[$j]['album_status']);
+					assign_image_block('recent.image', $recent_images[$j], $recent_images[$j]['album_status'], $display);
 				}
 			}
 		}
@@ -190,7 +190,7 @@ function recent_gallery_images(&$ints, &$display, $modes, $collapse_comments = f
 					}
 
 					// Assign the image to the template-block
-					assign_image_block('random.image', $random_images[$j], $random_images[$j]['album_status']);
+					assign_image_block('random.image', $random_images[$j], $random_images[$j]['album_status'], $display);
 				}
 			}
 		}
@@ -229,7 +229,7 @@ function recent_gallery_images(&$ints, &$display, $modes, $collapse_comments = f
 					}
 
 					// Assign the image to the template-block
-					assign_image_block('contest.image', $contest_images[$j], $contest_images[$j]['album_status']);
+					assign_image_block('contest.image', $contest_images[$j], $contest_images[$j]['album_status'], $display);
 				}
 			}
 		}
