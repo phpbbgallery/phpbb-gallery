@@ -10,10 +10,8 @@
 * @author: phpBB Group
 * @location: includes/acp/acp_forums.php
 *
-* //@todo: 
-*	-> Logs get deleted on 'forum_id' without log-type check!
-*		-> http://www.phpbb.com/bugs/phpbb3/42295 if they will not fix, we need to edit the dbms
-*	-> Use add_log('admin', ...) function
+* //@todo: Logs get deleted on 'forum_id' without log-type check!
+* -> http://www.phpbb.com/bugs/phpbb3/42295 if they will not fix, we need to edit the dbms
 */
 
 /**
@@ -241,7 +239,7 @@ class acp_gallery_albums
 
 				if ($move_album_name !== false)
 				{
-					//@todo: add_log('admin', 'LOG_ALBUM_' . strtoupper($action), $row['album_name'], $move_album_name);
+					add_log('admin', 'LOG_ALBUM_' . strtoupper($action), $row['album_name'], $move_album_name);
 					$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 				}
 
@@ -269,7 +267,7 @@ class acp_gallery_albums
 
 				update_album_info($album_id);
 
-				//@todo: add_log('admin', 'LOG_ALBUM_SYNC', $row['album_name']);
+				add_log('admin', 'LOG_ALBUM_SYNC', $row['album_name']);
 
 				$template->assign_var('L_ALBUM_RESYNCED', sprintf($user->lang['ALBUM_RESYNCED'], $row['album_name']));
 
@@ -992,7 +990,7 @@ class acp_gallery_albums
 			// Add it back
 			$album_data['album_id'] = $album_id;
 
-			//@todo: add_log('admin', 'LOG_ALBUM_EDIT', $album_data['album_name']);
+			add_log('admin', 'LOG_ALBUM_EDIT', $album_data['album_name']);
 		}
 
 		return $errors;
@@ -1326,7 +1324,8 @@ class acp_gallery_albums
 		$log_action = implode('_', array($log_action_images, $log_action_albums));
 
 		/**
-		* //@todo: Log what we did
+		* Log what we did
+		*/
 		switch ($log_action)
 		{
 			case 'MOVE_IMAGES_MOVE_ALBUMS':
@@ -1365,7 +1364,6 @@ class acp_gallery_albums
 				add_log('admin', 'LOG_ALBUM_DEL_ALBUM', $album_data['album_name']);
 			break;
 		}
-		*/
 
 		return $errors;
 	}
