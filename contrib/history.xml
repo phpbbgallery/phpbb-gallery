@@ -60,6 +60,9 @@
 
           <change><![CDATA[[Change] Unreported: Rewrite album management to phpbb's forum management]]></change>
 
+          <change><![CDATA[[Fix] Unreported: Ignoring {NUM}-offset on mass-import]]></change>
+          <change><![CDATA[[Fix] Unreported: Upload of images into categories and contest with mass-import]]></change>
+          <change><![CDATA[[Fix] Report #480: "Duplicate entry"-Error on zero-image loop with mass-import]]></change>
           <change><![CDATA[[Fix] Report #473: Display-Options for informations in RRC not working]]></change>
           <change><![CDATA[[Fix] Report #477: Delete images of deleted albums]]></change>
           <change><![CDATA[[Fix] Report #475: Autodelete on update needs CHMOD 777]]></change>

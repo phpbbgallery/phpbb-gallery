@@ -766,7 +766,7 @@ class acp_gallery
 				'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_IMPORT_ALBUMS_EXPLAIN'],
 				'L_IMPORT_DIR_EMPTY'			=> sprintf($user->lang['IMPORT_DIR_EMPTY'], GALLERY_IMPORT_PATH),
 				'S_ALBUM_IMPORT_ACTION'			=> $this->u_action,
-				'S_SELECT_IMPORT' 				=> gallery_albumbox(true, 'album_id', 0, ''),
+				'S_SELECT_IMPORT' 				=> gallery_albumbox(true, 'album_id', false, false, false, 0, ALBUM_UPLOAD),
 			));
 		}
 		else
@@ -813,6 +813,7 @@ class acp_gallery
 
 			$image_count = count($results);
 			$counter = request_var('counter', 0);
+			$image_num = request_var('image_num', 0);
 
 			foreach ($results as $image)
 			{
@@ -867,8 +868,9 @@ class acp_gallery
 					'image_time'			=> $time + $counter,
 					'image_album_id'		=> $album_id,
 					'image_status'			=> IMAGE_APPROVED,
+					'image_exif_data'		=> '',
 				);
-				$sql_ary['image_name'] = (request_var('filename', '') == 'filename') ? str_replace("_", " ", utf8_substr($image, 0, -4)) : str_replace('{NUM}', $counter + 1, request_var('image_name', '', true));
+				$sql_ary['image_name'] = (request_var('filename', '') == 'filename') ? str_replace("_", " ", utf8_substr($image, 0, -4)) : str_replace('{NUM}', $image_num + $counter + 1, request_var('image_name', '', true));
 				if ($sql_ary['image_name'] == '')
 				{
 					$sql_ary['image_name'] = str_replace("_", " ", utf8_substr($image, 0, -4));
@@ -881,20 +883,23 @@ class acp_gallery
 			}
 			$left = count($images) - count($done_images);
 
-			$sql = 'UPDATE ' . GALLERY_USERS_TABLE . "
-				SET user_images = user_images + $counter
-				WHERE user_id = " . $user_id;
-			$db->sql_query($sql);
-			if ($db->sql_affectedrows() != 1)
+			if ($counter)
 			{
-				$sql_ary = array(
-					'user_id'				=> $user_id,
-					'user_images'			=> $counter,
-				);
-				$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . "
+					SET user_images = user_images + $counter
+					WHERE user_id = " . $user_id;
 				$db->sql_query($sql);
+				if ($db->sql_affectedrows() != 1)
+				{
+					$sql_ary = array(
+						'user_id'				=> $user_id,
+						'user_images'			=> $counter,
+					);
+					$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+					$db->sql_query($sql);
+				}
+				set_config('num_images', $config['num_images'] + $counter, true);
 			}
-			set_config('num_images', $config['num_images'] + $counter, true);
 			update_album_info($album_id);
 
 			$images_string			= urlencode(implode('"', $images));
@@ -909,7 +914,7 @@ class acp_gallery
 			{
 				$imagename = request_var('image_name', '');
 				$filename = request_var('filename', '');
-				$forward_url = $this->u_action . "&amp;album_id=$album_id&amp;time=$time&amp;counter=$counter&amp;user_id=$user_id" . (($filename) ? '&amp;filename=' . request_var('filename', '') : '') . (($imagename && !$filename) ? '&amp;image_name=' . request_var('image_name', '') : '') . "&amp;images_string=$images_to_do";
+				$forward_url = $this->u_action . "&amp;album_id=$album_id&amp;time=$time&amp;image_num=$image_num&amp;counter=$counter&amp;user_id=$user_id" . (($filename) ? '&amp;filename=' . request_var('filename', '') : '') . (($imagename && !$filename) ? '&amp;image_name=' . request_var('image_name', '') : '') . "&amp;images_string=$images_to_do";
 				meta_refresh(1, $forward_url);
 				trigger_error(sprintf($user->lang['IMPORT_DEBUG_MES'], $counter, $left + 1));
 				
