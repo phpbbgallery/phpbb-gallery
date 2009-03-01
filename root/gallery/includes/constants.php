@@ -49,17 +49,26 @@ define('SETTING_PERMISSIONS', -39839);
 define('OWN_GALLERY_PERMISSIONS', -2);
 define('PERSONAL_GALLERY_PERMISSIONS', -3);
 
+// Display-options for RRC-Feature
+define('RRC_DISPLAY_ALBUMNAME', 1);
+define('RRC_DISPLAY_COMMENTS', 2);
+define('RRC_DISPLAY_IMAGENAME', 4);
+define('RRC_DISPLAY_IMAGETIME', 8);
+define('RRC_DISPLAY_IMAGEVIEWS', 16);
+define('RRC_DISPLAY_USERNAME', 32);
+define('RRC_DISPLAY_RATINGS', 64);
+
+// Additional constants
+define('THUMBNAIL_INFO_HEIGHT', 16);
+
+// Additional tables
+
 // Image directories
 define('GALLERY_IMAGE_PATH', GALLERY_ROOT_PATH . 'images/');
 define('GALLERY_UPLOAD_PATH', GALLERY_IMAGE_PATH . 'upload/');
 define('GALLERY_CACHE_PATH', GALLERY_IMAGE_PATH . 'cache/');
 define('GALLERY_MEDIUM_PATH', GALLERY_IMAGE_PATH . 'medium/');
 define('GALLERY_IMPORT_PATH', GALLERY_IMAGE_PATH . 'import/');
-
-// Additional constants
-define('THUMBNAIL_INFO_HEIGHT', 16);
-
-// Additional tables
 
 // Are they used?
 define('G_ALBUM_CAT', 0);
