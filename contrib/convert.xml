@@ -20,7 +20,7 @@ IMPORTANT: You need to complete the normal install.xml first. When doing the con
         <contributions />
       </author>
     </author-group>
-    <mod-version>0.5.1</mod-version>
+    <mod-version>0.5.2</mod-version>
     <installation>
       <level>intermediate</level>
       <time>1200</time>

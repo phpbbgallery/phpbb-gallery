@@ -77,11 +77,15 @@ class install_update extends module
 					case 0:
 						$this->update_db_schema($mode, $sub);
 					break;
+					// from 0.2.0 to 0.3.1
 					case 1:
+					// from 0.3.2-RC1 to 0.4.1
 					case 2:
+					// from 0.5.0
+					case 3:
 						$this->update_db_data($mode, $sub);
 					break;
-					case 3:
+					case 4:
 						$this->thinout_db_schema($mode, $sub);
 					break;
 				}
@@ -431,6 +435,9 @@ class install_update extends module
 				nv_add_column(GALLERY_ALBUMS_TABLE,	'display_in_rrc',		array('UINT:1', 1));
 				nv_add_column(GALLERY_IMAGES_TABLE,	'image_contest_end',	array('TIMESTAMP', 0));
 				nv_add_column(GALLERY_IMAGES_TABLE,	'image_contest_rank',	array('UINT:3', 0));
+
+			case '0.5.1':
+			case '0.5.2':
 			break;
 		}
 
@@ -462,6 +469,10 @@ class install_update extends module
 		if ($database_step == 2)
 		{
 			$gallery_config['phpbb_gallery_version'] = '0.3.2-RC1';
+		}
+		elseif ($database_step == 3)
+		{
+			$gallery_config['phpbb_gallery_version'] = '0.5.0';
 		}
 
 		switch ($gallery_config['phpbb_gallery_version'])
@@ -871,6 +882,9 @@ class install_update extends module
 					WHERE perm_system = 3';
 				$db->sql_query($sql);
 
+				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
+			break;
+
 			case '0.5.0':
 			case '0.5.1-dev':
 				// Move back two constants, only if they were not moved yet
@@ -938,7 +952,8 @@ class install_update extends module
 				set_gallery_config('rrc_profile_display', 13);
 				set_gallery_config('album_display', 126);
 
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
+			case '0.5.2':
+				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
 		}
 
@@ -1004,6 +1019,8 @@ class install_update extends module
 				$reparse_modules_bbcode = true;
 
 			case '0.5.0':
+			case '0.5.1':
+			case '0.5.2':
 			break;
 		}
 
@@ -1112,6 +1129,8 @@ class install_update extends module
 					add_module($gallery_log);
 
 				case '0.5.0':
+				case '0.5.1':
+				case '0.5.2':
 				break;
 			}
 
@@ -1128,6 +1147,8 @@ class install_update extends module
 			$modules = $this->gallery_config_options;
 			switch ($gallery_config['phpbb_gallery_version'])
 			{
+				case '0.5.2':
+				case '0.5.1':
 				case '0.5.0':
 				case '0.4.1':
 				case '0.4.0-RC3':

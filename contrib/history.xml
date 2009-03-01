@@ -53,8 +53,8 @@
     <author-notes lang="en-gb">This file contains all parts of the History, all Developers, a.s.o.</author-notes>
     <history>
       <entry>
-        <date>2009-MM-DD</date>
-        <rev-version>X.Y.Z</rev-version>
+        <date>2009-03-02</date>
+        <rev-version>0.5.2</rev-version>
         <changelog lang="en-gb">
           <change><![CDATA[[Add] Report #473: Add ACP-Control for RRC-Display-Options]]></change>
 

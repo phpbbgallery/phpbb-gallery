@@ -870,7 +870,7 @@ class acp_gallery
 					'image_status'			=> IMAGE_APPROVED,
 					'image_exif_data'		=> '',
 				);
-				$sql_ary['image_name'] = (request_var('filename', '') == 'filename') ? str_replace("_", " ", utf8_substr($image, 0, -4)) : str_replace('{NUM}', $image_num + $counter + 1, request_var('image_name', '', true));
+				$sql_ary['image_name'] = (request_var('filename', '') == 'filename') ? str_replace("_", " ", utf8_substr($image, 0, -4)) : str_replace('{NUM}', $image_num + $counter, request_var('image_name', '', true));
 				if ($sql_ary['image_name'] == '')
 				{
 					$sql_ary['image_name'] = str_replace("_", " ", utf8_substr($image, 0, -4));
