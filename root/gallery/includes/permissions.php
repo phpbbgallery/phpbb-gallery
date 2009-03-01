@@ -219,15 +219,15 @@ function gallery_acl_check($mode, $album_id, $album_user_id = -1)
 	{
 		if ($album_user_id == $user->data['user_id'])
 		{
-			$_gallery_acl_cache[$album_id][$mode] = ($album_access_array[OWN_GALLERY_PERMISSIONS][$mode] == 1) ? true : false;
+			$_gallery_acl_cache[$album_id][$mode] = (isset($album_access_array[OWN_GALLERY_PERMISSIONS][$mode]) && $album_access_array[OWN_GALLERY_PERMISSIONS][$mode] == 1) ? true : false;
 		}
 		else if ($album_user_id > 0)
 		{
-			$_gallery_acl_cache[$album_id][$mode] = ($album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode] == 1) ? true : false;
+			$_gallery_acl_cache[$album_id][$mode] = (isset($album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode]) && $album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode] == 1) ? true : false;
 		}
 		else
 		{
-			$_gallery_acl_cache[$album_id][$mode] = ($album_access_array[$album_id][$mode] == 1) ? true : false;
+			$_gallery_acl_cache[$album_id][$mode] = (isset($album_access_array[$album_id][$mode]) && $album_access_array[$album_id][$mode] == 1) ? true : false;
 		}
 	}
 

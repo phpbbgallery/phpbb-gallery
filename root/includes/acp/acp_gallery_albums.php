@@ -11,9 +11,9 @@
 * @location: includes/acp/acp_forums.php
 *
 * //@todo: 
-*	-> Logs get deleted on $forum_id without log-type check! BugReport?
+*	-> Logs get deleted on 'forum_id' without log-type check!
+*		-> http://www.phpbb.com/bugs/phpbb3/42295 if they will not fix, we need to edit the dbms
 *	-> Use add_log('admin', ...) function
-*	-> Delete contests (correctly) when moving content
 */
 
 /**
@@ -46,7 +46,7 @@ class acp_gallery_albums
 		$user->add_lang('mods/gallery_acp');
 		$user->add_lang('mods/gallery');
 		$this->tpl_name = 'gallery_albums';
-		$this->page_title = 'ACP_MANAGE_ALBUMS';
+		$this->page_title = 'ACP_GALLERY_MANAGE_ALBUMS';
 
 		$form_key = 'acp_gallery_albums';
 		add_form_key($form_key);
@@ -269,7 +269,7 @@ class acp_gallery_albums
 
 				update_album_info($album_id);
 
-				//@todo: add_log('admin', 'LOG_ALBUM_SYNC', $row['forum_name']);
+				//@todo: add_log('admin', 'LOG_ALBUM_SYNC', $row['album_name']);
 
 				$template->assign_var('L_ALBUM_RESYNCED', sprintf($user->lang['ALBUM_RESYNCED'], $row['album_name']));
 
@@ -297,6 +297,14 @@ class acp_gallery_albums
 					if ($row['album_type'] == ALBUM_CONTEST)
 					{
 						$contest_data = $this->get_contest_info('album', $album_id);
+					}
+					else
+					{
+						$contest_data = array(
+							'contest_start'			=> time(),
+							'contest_rating'		=> 3 * 86400,
+							'contest_end'			=> 5 * 86400,
+						);
 					}
 
 					// Make sure no direct child albums are able to be selected as parents.
@@ -378,7 +386,7 @@ class acp_gallery_albums
 
 				$sql = 'SELECT album_id
 					FROM ' . GALLERY_ALBUMS_TABLE . '
-					WHERE album_type <> ' . ALBUM_CAT . "
+					WHERE album_type = ' . ALBUM_UPLOAD . "
 						AND album_user_id = 0
 						AND album_id <> $album_id";
 				$result = $db->sql_query_limit($sql, 1);
@@ -406,7 +414,7 @@ class acp_gallery_albums
 					if ($uploadable_album_exists)
 					{
 						$template->assign_vars(array(
-							'S_MOVE_ALBUM_OPTIONS'		=> gallery_albumbox(true, '', $album_data['parent_id'], false, $subalbums_id),
+							'S_MOVE_ALBUM_OPTIONS'		=> gallery_albumbox(true, '', $album_data['parent_id'], false, $subalbums_id, 0, ALBUM_UPLOAD),
 						));
 					}
 
@@ -418,7 +426,7 @@ class acp_gallery_albums
 				elseif ($uploadable_album_exists)
 				{
 					$template->assign_vars(array(
-						'S_MOVE_ALBUM_OPTIONS'		=> gallery_albumbox(true, '', $album_data['parent_id'], false, $album_id),
+						'S_MOVE_ALBUM_OPTIONS'		=> gallery_albumbox(true, '', $album_data['parent_id'], false, $album_id, 0, ALBUM_UPLOAD),
 					));
 				}
 
@@ -501,7 +509,7 @@ class acp_gallery_albums
 
 				$sql = 'SELECT album_id
 					FROM ' . GALLERY_ALBUMS_TABLE . '
-					WHERE album_type <> ' . ALBUM_CAT . "
+					WHERE album_type = ' . ALBUM_UPLOAD . "
 						AND album_id <> $album_id
 						AND album_user_id = 0";
 				$result = $db->sql_query_limit($sql, 1);
@@ -509,7 +517,7 @@ class acp_gallery_albums
 				if ($db->sql_fetchrow($result))
 				{
 					$template->assign_vars(array(
-						'S_MOVE_ALBUM_OPTIONS'		=> gallery_albumbox(true, '', $album_data['parent_id'], false, $subalbums_id),
+						'S_MOVE_ALBUM_OPTIONS'		=> gallery_albumbox(true, '', $album_data['parent_id'], false, $subalbums_id, 0, ALBUM_UPLOAD),
 					));
 				}
 				$db->sql_freeresult($result);
@@ -744,6 +752,7 @@ class acp_gallery_albums
 		{
 			// no album_id means we're creating a new album
 			unset($album_data_sql['type_action']);
+			$add_on_top = request_var('add_on_top', 0);
 
 			if ($album_data_sql['parent_id'])
 			{
@@ -759,29 +768,65 @@ class acp_gallery_albums
 					trigger_error($user->lang['PARENT_NOT_EXIST'] . adm_back_link($this->u_action . '&amp;' . $this->parent_id), E_USER_WARNING);
 				}
 
-				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
-					SET left_id = left_id + 2, right_id = right_id + 2
-					WHERE left_id > ' . $row['right_id'];
-				$db->sql_query($sql);
+				if (!$add_on_top)
+				{
+					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
+						SET left_id = left_id + 2, right_id = right_id + 2
+						WHERE album_user_id = 0
+							AND left_id > ' . $row['right_id'];
+					$db->sql_query($sql);
 
-				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
-					SET right_id = right_id + 2
-					WHERE ' . $row['left_id'] . ' BETWEEN left_id AND right_id';
-				$db->sql_query($sql);
+					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
+						SET right_id = right_id + 2
+						WHERE album_user_id = 0
+							AND ' . $row['left_id'] . ' BETWEEN left_id AND right_id';
+					$db->sql_query($sql);
 
-				$album_data_sql['left_id'] = $row['right_id'];
-				$album_data_sql['right_id'] = $row['right_id'] + 1;
+					$album_data_sql['left_id'] = $row['right_id'];
+					$album_data_sql['right_id'] = $row['right_id'] + 1;
+				}
+				else
+				{
+					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
+						SET left_id = left_id + 2, right_id = right_id + 2
+						WHERE album_user_id = 0
+							AND left_id > ' . $row['left_id'];
+					$db->sql_query($sql);
+
+					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
+						SET right_id = right_id + 2
+						WHERE album_user_id = 0
+							AND ' . $row['left_id'] . ' BETWEEN left_id AND right_id';
+					$db->sql_query($sql);
+
+					$album_data_sql['left_id'] = $row['left_id'] + 1;
+					$album_data_sql['right_id'] = $row['left_id'] + 2;
+				}
 			}
 			else
 			{
-				$sql = 'SELECT MAX(right_id) AS right_id
-					FROM ' . GALLERY_ALBUMS_TABLE;
-				$result = $db->sql_query($sql);
-				$row = $db->sql_fetchrow($result);
-				$db->sql_freeresult($result);
+				if (!$add_on_top)
+				{
+					$sql = 'SELECT MAX(right_id) AS right_id
+						FROM ' . GALLERY_ALBUMS_TABLE . '
+						WHERE album_user_id = 0';
+					$result = $db->sql_query($sql);
+					$row = $db->sql_fetchrow($result);
+					$db->sql_freeresult($result);
 
-				$album_data_sql['left_id'] = $row['right_id'] + 1;
-				$album_data_sql['right_id'] = $row['right_id'] + 2;
+					$album_data_sql['left_id'] = $row['right_id'] + 1;
+					$album_data_sql['right_id'] = $row['right_id'] + 2;
+				}
+				else
+				{
+					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
+						SET left_id = left_id + 2, right_id = right_id + 2
+						WHERE album_user_id = 0';
+					$db->sql_query($sql);
+
+					$album_data_sql['left_id'] = 1;
+					$album_data_sql['right_id'] = 2;
+				}
 			}
 
 			$sql = 'INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data_sql);
@@ -954,7 +999,7 @@ class acp_gallery_albums
 	}
 
 	/**
-	* Move forum
+	* Move album
 	*
 	* borrowed from phpBB3
 	* @author: phpBB Group
@@ -1061,19 +1106,24 @@ class acp_gallery_albums
 	*/
 	function move_album_content($from_id, $to_id, $sync = true)
 	{
-		global $db;
+		global $cache, $db;
 
-		//@todo: Are they deleting our logs?
+		//@todo: Are they deleting our logs? Yes, see: http://www.phpbb.com/bugs/phpbb3/42295 for more information
+		/*!!!Yes, 'forum_id' as we use the existing columns!!!*/
+		$sql = 'UPDATE ' . LOG_TABLE . "
+			SET forum_id = $to_id
+			WHERE forum_id = $from_id
+				AND log_type = " . LOG_GALLERY;
+		$db->sql_query($sql);
+		/*!!!Yes, 'forum_id' as we use the existing columns!!!*/
 
-		/*$sql = 'UPDATE ' . GALLERY_CONTESTS_TABLE . "
-			SET contest_album_id = $to_id
-			WHERE contest_album_id = $from_id";
-		$db->sql_query($sql);*/
-
-		//@todo: Update contest information?!
-		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . "
-			SET image_album_id = $to_id
-			WHERE image_album_id = $from_id";
+		// Reset contest-information for safety.
+		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+			SET image_album_id = ' . $to_id . ',
+				image_contest_rank = 0,
+				image_contest_end = 0,
+				image_contest = ' . IMAGE_NO_CONTEST . '
+			WHERE image_album_id = ' . $from_id;
 		$db->sql_query($sql);
 
 		$sql = 'UPDATE ' . GALLERY_REPORTS_TABLE . "
@@ -1081,8 +1131,13 @@ class acp_gallery_albums
 			WHERE report_album_id = $from_id";
 		$db->sql_query($sql);
 
-		$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . "
-			WHERE perm_album_id = $from_id";
+		//@todo: merge queries into loop
+		$sql = 'DELETE FROM ' . GALLERY_CONTESTS_TABLE . '
+			WHERE contest_album_id = ' . $from_id;
+		$db->sql_query($sql);
+
+		$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . '
+			WHERE perm_album_id = ' . $from_id;
 		$db->sql_query($sql);
 
 		$table_ary = array(GALLERY_WATCH_TABLE, GALLERY_MODSCACHE_TABLE);
@@ -1092,6 +1147,15 @@ class acp_gallery_albums
 				WHERE album_id = $from_id";
 			$db->sql_query($sql);
 		}
+
+		$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
+		$cache->destroy('sql', GALLERY_COMMENTS_TABLE);
+		$cache->destroy('sql', GALLERY_FAVORITES_TABLE);
+		$cache->destroy('sql', GALLERY_IMAGES_TABLE);
+		$cache->destroy('sql', GALLERY_RATES_TABLE);
+		$cache->destroy('sql', GALLERY_REPORTS_TABLE);
+		$cache->destroy('sql', GALLERY_WATCH_TABLE);
+		$cache->destroy('_albums');
 
 		if ($sync)
 		{
@@ -1208,7 +1272,7 @@ class acp_gallery_albums
 
 					$sql = 'SELECT album_id
 						FROM ' . GALLERY_ALBUMS_TABLE . "
-						WHERE parent_id = $forum_id";
+						WHERE parent_id = $album_id";
 					$result = $db->sql_query($sql);
 
 					while ($row = $db->sql_fetchrow($result))
@@ -1311,7 +1375,7 @@ class acp_gallery_albums
 	*/
 	function delete_album_content($album_id)
 	{
-		global $db, $config;
+		global $cache, $config, $db;
 
 		// Before we remove anything we make sure we are able to adjust the image counts later. ;)
 		$sql = 'SELECT image_user_id
@@ -1369,17 +1433,28 @@ class acp_gallery_albums
 			$db->sql_query($sql);
 		}
 
-		//@todo: Are they deleting our logs?
+		//@todo: Are they deleting our logs? Yes, see: http://www.phpbb.com/bugs/phpbb3/42295 for more information
+		/*!!!Yes, 'forum_id' as we use the existing columns!!!*/
+		$sql = 'DELETE FROM ' . LOG_TABLE . "
+			WHERE forum_id = $album_id
+				AND log_type = " . LOG_GALLERY;
+		$db->sql_query($sql);
+		/*!!!Yes, 'forum_id' as we use the existing columns!!!*/
+
+		//@todo: merge queries into loop
+		$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . '
+			WHERE perm_album_id = ' . (int) $album_id;
+		$db->sql_query($sql);
+		$sql = 'DELETE FROM ' . GALLERY_CONTESTS_TABLE . '
+			WHERE contest_album_id = ' . (int) $album_id;
+		$db->sql_query($sql);
+
 		$table_ary = array(GALLERY_WATCH_TABLE, GALLERY_MODSCACHE_TABLE);
 
 		foreach ($table_ary as $table)
 		{
 			$db->sql_query("DELETE FROM $table WHERE album_id = $album_id");
 		}
-		$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . ' WHERE perm_album_id = ' . (int) $album_id;
-		$db->sql_query($sql);
-		$sql = 'DELETE FROM ' . GALLERY_CONTESTS_TABLE . ' WHERE contest_album_id = ' . (int) $album_id;
-		$db->sql_query($sql);
 
 		// Adjust users image counts
 		if (sizeof($image_counts))
@@ -1410,6 +1485,15 @@ class acp_gallery_albums
 
 		set_config('num_images', (int) $row['stat'], true);
 
+		$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
+		$cache->destroy('sql', GALLERY_COMMENTS_TABLE);
+		$cache->destroy('sql', GALLERY_FAVORITES_TABLE);
+		$cache->destroy('sql', GALLERY_IMAGES_TABLE);
+		$cache->destroy('sql', GALLERY_RATES_TABLE);
+		$cache->destroy('sql', GALLERY_REPORTS_TABLE);
+		$cache->destroy('sql', GALLERY_WATCH_TABLE);
+		$cache->destroy('_albums');
+
 		return array();
 	}
 
@@ -1433,6 +1517,7 @@ class acp_gallery_albums
 		$sql = 'SELECT album_id, album_name, left_id, right_id
 			FROM ' . GALLERY_ALBUMS_TABLE . "
 			WHERE parent_id = {$album_row['parent_id']}
+				AND album_user_id = 0
 				AND " . (($action == 'move_up') ? "right_id < {$album_row['right_id']} ORDER BY right_id DESC" : "left_id > {$album_row['left_id']} ORDER BY left_id ASC");
 		$result = $db->sql_query_limit($sql, $steps);
 

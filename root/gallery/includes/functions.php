@@ -202,10 +202,11 @@ function check_album_user($album_id)
 * @param	string				$requested_permission	Exp: for moving a image you need i_upload permissions or a_moderate
 * @param	(string || array)	$ignore_id				disabled albums, Exp: on moving: the album where the image is now
 * @param	int					$album_user_id			for the select-boxes of the ucp so you only can attach to your own albums
+* @param	int					$requested_album_type	only albums of the album_type are allowed
 *
 * @return	string				$gallery_albumbox		if ($select_name) {full select-box} else {list with options}
 */
-function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $requested_permission = false, $ignore_id = false, $album_user_id = 0)
+function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $requested_permission = false, $ignore_id = false, $album_user_id = 0, $requested_album_type = -1)
 {
 	global $db, $user, $cache, $album_access_array;
 
@@ -217,6 +218,7 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 	$c_access_own = $c_access_personal = false;
 	$padding_store = array('0' => '');
 	$padding = $album_list = '';
+	$check_album_type = ($requested_album_type >= 0) ? true : false;
 
 	// Sometimes it could happen that albums will be displayed here not be displayed within the index page
 	// This is the result of albums not displayed at index and a parent of a album with no permissions.
@@ -249,11 +251,15 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 		$disabled = false;
 
 		if (
-		//is in the ignore_id
+		// Is in the ignore_id
 		((is_array($ignore_id) && in_array($row['album_id'], $ignore_id)) || $row['album_id'] == $ignore_id)
 		||
-		//need upload permissions (for moving)
-		(($requested_permission == 'm_move') && (($row['album_type'] == G_ALBUM_CAT) || (!gallery_acl_check('i_upload', $row['album_id'], $row['album_user_id']) && !gallery_acl_check('m_move', $row['album_id'], $row['album_user_id'])))))
+		// Need upload permissions (for moving)
+		(($requested_permission == 'm_move') && (($row['album_type'] == ALBUM_CAT) || (!gallery_acl_check('i_upload', $row['album_id'], $row['album_user_id']) && !gallery_acl_check('m_move', $row['album_id'], $row['album_user_id']))))
+		||
+		// album_type does not fit
+		($check_album_type && ($row['album_type'] != $requested_album_type))
+		)
 		{
 			$disabled = true;
 		}
@@ -348,7 +354,7 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 */
 function update_album_info($album_id)
 {
-	global $db, $user;
+	global $db;
 
 	$images_real = $images = $album_user_id = 0;
 

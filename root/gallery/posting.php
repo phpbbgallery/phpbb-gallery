@@ -104,7 +104,11 @@ switch ($mode)
 		}
 	break;
 	case 'image':
-		if (!gallery_acl_check('m_status', $album_id) && (($image_data['image_status'] != IMAGE_APPROVED) || ($album_data['album_status'] == ITEM_LOCKED)))
+		if (!gallery_acl_check('m_status', $album_id) && ($album_data['album_status'] == ITEM_LOCKED))
+		{
+			gallery_not_authorised($image_backlink, $user, $image_loginlink);
+		}
+		if ($image_id && (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != IMAGE_APPROVED)))
 		{
 			gallery_not_authorised($image_backlink, $user, $image_loginlink);
 		}
