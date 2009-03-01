@@ -123,25 +123,16 @@ $ints = array(
 	'comments'	=> $gallery_config['rrc_gindex_crows'],
 	'contests'	=> $gallery_config['rrc_gindex_contests'],
 );
-$display = array(
-	'name'		=> true,
-	'poster'	=> true,
-	'time'		=> true,
-	'views'		=> true,
-	'ratings'	=> true,
-	'comments'	=> true,
-	'album'		=> true,
-);
 /**
 * int		array	including all relevent numbers for rows, columns and stuff like that,
-* display	array	true/false => should the value be displayed,
+* display	int		sum of the options which should be displayed, see gallery/includes/constants.php "// Display-options for RRC-Feature" for values
 * modes		string(recent|random|comment|!recent|!random|!comment|all), Exp: '!recent' means random + comment
 * collapse	bool	collapse comments
 * user_id	int		user_id for user profile view of recent and random images
 */
 if ($gallery_config['rrc_gindex_mode'] != '!all')
 {
-	recent_gallery_images($ints, $display, $gallery_config['rrc_gindex_mode'], $gallery_config['rrc_gindex_comments']);
+	recent_gallery_images($ints, $gallery_config['rrc_gindex_display'], $gallery_config['rrc_gindex_mode'], $gallery_config['rrc_gindex_comments']);
 }
 
 /**

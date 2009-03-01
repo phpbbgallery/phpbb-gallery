@@ -934,6 +934,10 @@ class install_update extends module
 					WHERE module_langname = 'ACP_GALLERY_MANAGE_ALBUMS'";
 				$db->sql_query($sql);
 
+				set_gallery_config('rrc_gindex_display', 45);
+				set_gallery_config('rrc_profile_display', 13);
+				set_gallery_config('album_display', 126);
+
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
 			break;
 		}

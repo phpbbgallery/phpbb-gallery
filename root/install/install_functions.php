@@ -640,7 +640,7 @@ function set_default_config()
 	set_gallery_config('rrc_gindex_columns', 4);
 	set_gallery_config('rrc_gindex_comments', 0);
 
-	// Added //@todo: 
+	// Added 0.5.1:
 	set_gallery_config('user_images_profil', 1);
 	set_gallery_config('personal_album_profil', 1);
 	set_gallery_config('rrc_profile_mode', '!comment');
@@ -649,6 +649,11 @@ function set_default_config()
 	set_gallery_config('rrc_gindex_crows', 5);
 	set_gallery_config('contests_ended', 0);
 	set_gallery_config('rrc_gindex_contests', 1);
+
+	// Added 0.5.2:
+	set_gallery_config('rrc_gindex_display', 45);
+	set_gallery_config('rrc_profile_display', 13);
+	set_gallery_config('album_display', 126);
 }
 
 ?>

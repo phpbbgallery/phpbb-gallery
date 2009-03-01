@@ -60,11 +60,11 @@ function toggleElement(oElement)
 					<!-- IF imagerow.image.CONTEST_RANK -->{L_CONTEST_RESULT}: <strong>{imagerow.image.CONTEST_RANK}</strong><br /><!-- ENDIF -->
 					<!-- IF (imagerow.image.S_LOCKED or imagerow.image.S_UNAPPROVED) and imagerow.image.U_STATUS --><a style="font-weight: bold;" class="reported-images-number" href="{imagerow.image.U_STATUS}">{imagerow.image.L_STATUS}</a><br /><br /><!-- ENDIF -->
 					<!-- IF imagerow.image.S_REPORTED and imagerow.image.U_REPORT --><a style="font-weight: bold;" class="reported-images-number" href="{imagerow.image.U_REPORT}">{L_READ_REPORT}</a><br /><br /><!-- ENDIF -->
-						{L_IMAGE_NAME}: {imagerow.image.UC_IMAGE_NAME}<br />
-						{L_ALBUM_NAME}: <a href="{imagerow.image.U_ALBUM}" style="font-weight: bold;">{imagerow.image.ALBUM_NAME}</a><br />
-						{L_UPLOADED_BY_USER}: {imagerow.image.POSTER}<br />
-						{L_UPLOADED_ON_DATE}: {imagerow.image.TIME}<br />
-						{L_VIEWS}: {imagerow.image.VIEW}<br />
+						<!-- IF imagerow.image.UC_IMAGE_NAME -->{L_IMAGE_NAME}: {imagerow.image.UC_IMAGE_NAME}<br /><!-- ENDIF -->
+						<!-- IF imagerow.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{imagerow.image.U_ALBUM}" style="font-weight: bold;">{imagerow.image.ALBUM_NAME}</a><br /><!-- ENDIF -->
+						<!-- IF imagerow.image.POSTER -->{L_UPLOADED_BY_USER}: {imagerow.image.POSTER}<br /><!-- ENDIF -->
+						<!-- IF imagerow.image.TIME -->{L_UPLOADED_ON_DATE}: {imagerow.image.TIME}<br /><!-- ENDIF -->
+						<!-- IF imagerow.image.VIEW > -1 -->{L_VIEWS}: {imagerow.image.VIEW}<br /><!-- ENDIF -->
 						<!-- IF imagerow.image.S_RATINGS -->{L_RATING}: <a href="{imagerow.image.U_RATINGS}">{imagerow.image.S_RATINGS}</a><br /><!-- ENDIF -->
 						<!-- IF imagerow.image.S_COMMENTS -->{imagerow.image.L_COMMENTS}: <a href="{imagerow.image.U_COMMENTS}">{imagerow.image.S_COMMENTS}</a><br /><!-- ENDIF -->
 						<!-- IF imagerow.image.S_IP -->{L_IP}: {imagerow.image.S_IP} &#187; <a href="{imagerow.image.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a><br /><!-- ENDIF -->

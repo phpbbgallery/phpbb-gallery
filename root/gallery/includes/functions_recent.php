@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 /**
 * Display recent images & comments and random images
 */
-function recent_gallery_images(&$ints, &$display, $modes, $collapse_comments = false, $user_id = 0)
+function recent_gallery_images(&$ints, $display, $modes, $collapse_comments = false, $user_id = 0)
 {
 	global $db, $phpEx, $user, $cache, $auth;
 	global $phpbb_root_path, $gallery_config, $config, $template;

@@ -90,10 +90,10 @@ function toggleElement(oElement)
 									<td class="bg2" valign="top">
 										<div class="gensmall" style="overflow: hidden;">
 											<!-- IF image_row.image.CONTEST_RANK -->{L_CONTEST_RESULT}: <strong>{image_row.image.CONTEST_RANK}</strong><br /><!-- ENDIF -->
-											{L_IMAGE_NAME}: {image_row.image.UC_IMAGE_NAME}<br />
-											{L_UPLOADED_BY_USER}: {image_row.image.POSTER}<br />
-											{L_UPLOADED_ON_DATE}: {image_row.image.TIME}<br />
-											{L_VIEWS}: {image_row.image.VIEW}<br />
+											<!-- IF image_row.image.UC_IMAGE_NAME -->{L_IMAGE_NAME}: {image_row.image.UC_IMAGE_NAME}<br /><!-- ENDIF -->
+											<!-- IF image_row.image.POSTER -->{L_UPLOADED_BY_USER}: {image_row.image.POSTER}<br /><!-- ENDIF -->
+											<!-- IF image_row.image.TIME -->{L_UPLOADED_ON_DATE}: {image_row.image.TIME}<br /><!-- ENDIF -->
+											<!-- IF image_row.image.VIEW > -1 -->{L_VIEWS}: {image_row.image.VIEW}<br /><!-- ENDIF -->
 											<!-- IF image_row.image.S_RATINGS -->{L_RATING}: <a href="{image_row.image.U_RATINGS}">{image_row.image.S_RATINGS}</a><br /><!-- ENDIF -->
 											<!-- IF image_row.image.S_COMMENTS -->{image_row.image.L_COMMENTS}: <a href="{image_row.image.U_COMMENTS}">{image_row.image.S_COMMENTS}</a><br /><!-- ENDIF -->
 											<!-- IF image_row.image.S_IP -->{L_IP}: {image_row.image.S_IP} &#187; <a href="{image_row.image.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a><br /><!-- ENDIF -->

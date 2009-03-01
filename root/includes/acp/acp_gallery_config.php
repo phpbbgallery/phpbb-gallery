@@ -64,6 +64,7 @@ class acp_gallery_config
 						'legend2'				=> 'ALBUM_SETTINGS',
 						'rows_per_page'			=> array('lang' => 'ROWS_PER_PAGE',			'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 						'cols_per_page'			=> array('lang' => 'COLS_PER_PAGE',			'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
+						'album_display'			=> array('lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => 'int',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'rrc_display'),
 						'sort_method'			=> array('lang' => 'DEFAULT_SORT_METHOD',	'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'sort_method_select'),
 						'sort_order'			=> array('lang' => 'DEFAULT_SORT_ORDER',	'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'sort_order_select'),
 						'max_pics'				=> array('lang' => 'MAX_IMAGES_PER_ALBUM',	'validate' => 'int',	'type' => 'text:7:7',		'gallery' => true,	'explain' => false),
@@ -112,6 +113,7 @@ class acp_gallery_config
 						'rrc_gindex_comments'	=> array('lang' => 'RRC_GINDEX_COMMENTS',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 						'rrc_gindex_crows'		=> array('lang' => 'RRC_GINDEX_CROWS',		'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 						'rrc_gindex_contests'	=> array('lang' => 'RRC_GINDEX_CONTESTS',	'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
+						'rrc_gindex_display'	=> array('lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => '',		'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'rrc_display'),
 
 						'legend8'				=> 'PHPBB_INTEGRATION',
 						'gallery_total_images'		=> array('lang' => 'DISP_TOTAL_IMAGES',				'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => false,	'explain' => false),
@@ -120,6 +122,7 @@ class acp_gallery_config
 						'rrc_profile_mode'			=> array('lang' => 'RRC_PROFILE_MODE',		'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'rrc_modes'),
 						'rrc_profile_rows'			=> array('lang' => 'RRC_PROFILE_ROWS',		'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 						'rrc_profile_columns'		=> array('lang' => 'RRC_PROFILE_COLUMNS',	'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
+						'rrc_profile_display'		=> array('lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => 'int',		'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'rrc_display'),
 
 						'legend9'				=> '',
 					)
@@ -162,6 +165,12 @@ class acp_gallery_config
 			{
 				if ($null['gallery'])
 				{
+					// Check for RRC-display-options
+					if (isset($null['method']) && ($null['method'] == 'rrc_display'))
+					{
+						// Changing the value, casted by int to not mess up anything
+						$config_value = (int) array_sum(request_var($config_name, array(0)));
+					}
 					set_gallery_config($config_name, $config_value);
 				}
 				else
@@ -252,7 +261,9 @@ class acp_gallery_config
 	{
 		global $user;
 
-		$sort_method_options = '<option' . (($value == 't') ? ' selected="selected"' : '') . " value='t'>" . $user->lang['TIME'] . '</option>';
+		$sort_method_options = '';
+
+		$sort_method_options .= '<option' . (($value == 't') ? ' selected="selected"' : '') . " value='t'>" . $user->lang['TIME'] . '</option>';
 		$sort_method_options .= '<option' . (($value == 'n') ? ' selected="selected"' : '') . " value='n'>" . $user->lang['IMAGE_NAME'] . '</option>';
 		$sort_method_options .= '<option' . (($value == 'u') ? ' selected="selected"' : '') . " value='u'>" . $user->lang['USERNAME'] . '</option>';
 		$sort_method_options .= '<option' . (($value == 'vc') ? ' selected="selected"' : '') . " value='vc'>" . $user->lang['VIEWS'] . '</option>';
@@ -260,7 +271,7 @@ class acp_gallery_config
 		$sort_method_options .= '<option' . (($value == 'c') ? ' selected="selected"' : '') . " value='c'>" . $user->lang['COMMENTS'] . '</option>';
 		$sort_method_options .= '<option' . (($value == 'lc') ? ' selected="selected"' : '') . " value='lc'>" . $user->lang['NEW_COMMENT'] . '</option>';
 
-		return "<select name=\"config[sort_method]\" id=\"sort_method\">$sort_method_options</select>";
+		return "<select name=\"config[$key]\" id=\"$key\">$sort_method_options</select>";
 	}
 
 	/**
@@ -270,10 +281,12 @@ class acp_gallery_config
 	{
 		global $user;
 
-		$sort_order_options = '<option' . (($value == 'd') ? ' selected="selected"' : '') . " value='d'>" . $user->lang['SORT_DESCENDING'] . '</option>';
+		$sort_order_options = '';
+
+		$sort_order_options .= '<option' . (($value == 'd') ? ' selected="selected"' : '') . " value='d'>" . $user->lang['SORT_DESCENDING'] . '</option>';
 		$sort_order_options .= '<option' . (($value == 'a') ? ' selected="selected"' : '') . " value='a'>" . $user->lang['SORT_ASCENDING'] . '</option>';
 
-		return "<select name=\"config[sort_order]\" id=\"sort_order\">$sort_order_options</select>";
+		return "<select name=\"config[$key]\" id=\"$key\">$sort_order_options</select>";
 	}
 
 	/**
@@ -284,7 +297,9 @@ class acp_gallery_config
 		$key_gd1	= ($value == GDLIB1) ? ' checked="checked"' : '';
 		$key_gd2	= ($value == GDLIB2) ? ' checked="checked"' : '';
 
-		$tpl = "<label><input type=\"radio\" name=\"config[$key]\" value=\"" . GDLIB1 . "\" $key_gd1 class=\"radio\" /> GD1</label>";
+		$tpl = '';
+
+		$tpl .= "<label><input type=\"radio\" name=\"config[$key]\" value=\"" . GDLIB1 . "\" $key_gd1 class=\"radio\" /> GD1</label>";
 		$tpl .= "<label><input type=\"radio\" id=\"$key\" name=\"config[$key]\" value=\"" . GDLIB2 . "\" $key_gd2  class=\"radio\" /> GD2</label>";
 
 		return $tpl;
@@ -307,7 +322,9 @@ class acp_gallery_config
 	{
 		global $phpbb_root_path, $user;
 
-		$sort_order_options = '<option' . (($value == 'lytebox') ? ' selected="selected"' : '') . " value='lytebox'>" . $user->lang['UC_LINK_LYTEBOX'] . '</option>';
+		$sort_order_options = '';
+
+		$sort_order_options .= '<option' . (($value == 'lytebox') ? ' selected="selected"' : '') . " value='lytebox'>" . $user->lang['UC_LINK_LYTEBOX'] . '</option>';
 		if (file_exists($phpbb_root_path . 'styles/' . $user->theme['template_path'] . '/theme/highslide/highslide-full.js'))
 		{
 			$sort_order_options .= '<option' . (($value == 'highslide') ? ' selected="selected"' : '') . " value='highslide'>" . $user->lang['UC_LINK_HIGHSLIDE'] . '</option>';
@@ -329,7 +346,9 @@ class acp_gallery_config
 	{
 		global $user;
 
-		$rrc_mode_options = '<option' . (($value == 'recent') ? ' selected="selected"' : '') . " value='recent'>" . $user->lang['RRC_MODE_RECENT'] . '</option>';
+		$rrc_mode_options = '';
+
+		$rrc_mode_options .= '<option' . (($value == 'recent') ? ' selected="selected"' : '') . " value='recent'>" . $user->lang['RRC_MODE_RECENT'] . '</option>';
 		$rrc_mode_options .= '<option' . (($value == 'random') ? ' selected="selected"' : '') . " value='random'>" . $user->lang['RRC_MODE_RANDOM'] . '</option>';
 		if ($key != 'rrc_profile_mode')
 		{
@@ -349,6 +368,27 @@ class acp_gallery_config
 		$rrc_mode_options .= '<option' . (($value == '!all') ? ' selected="selected"' : '') . " value='!all'>" . $user->lang['RRC_MODE_AALL'] . '</option>';
 
 		return "<select name=\"config[$key]\" id=\"$key\">$rrc_mode_options</select>";
+	}
+
+	/**
+	* Select RRC display options
+	*/
+	function rrc_display($value, $key)
+	{
+		global $user;
+
+		$rrc_display_options = '';
+
+		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_ALBUMNAME) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_ALBUMNAME . "'>" . $user->lang['RRC_DISPLAY_ALBUMNAME'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_COMMENTS) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_COMMENTS . "'>" . $user->lang['RRC_DISPLAY_COMMENTS'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_IMAGENAME) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_IMAGENAME . "'>" . $user->lang['RRC_DISPLAY_IMAGENAME'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_IMAGETIME) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_IMAGETIME . "'>" . $user->lang['RRC_DISPLAY_IMAGETIME'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_IMAGEVIEWS) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_IMAGEVIEWS . "'>" . $user->lang['RRC_DISPLAY_IMAGEVIEWS'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_USERNAME) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_USERNAME . "'>" . $user->lang['RRC_DISPLAY_USERNAME'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_RATINGS) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_RATINGS . "'>" . $user->lang['RRC_DISPLAY_RATINGS'] . '</option>';
+
+		// Cheating is an evil-thing, but most times it's successful, that's why it is used.
+		return "<input type=\"hidden\" name=\"config[$key]\" value=\"$value\" /><select name=\"" . $key . "[]\" multiple=\"multiple\" id=\"$key\">$rrc_display_options</select>";
 	}
 }
 

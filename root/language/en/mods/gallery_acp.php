@@ -24,16 +24,12 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'ACP_CREATE_ALBUM_EXPLAIN'		=> 'Create and configure a new album.',
-#	'ACP_EDIT_ALBUM_TITLE'			=> 'Edit album',
-#	'ACP_EDIT_ALBUM_EXPLAIN'		=> 'Edit an existing album.',
 	'ACP_GALLERY_CLEANUP_EXPLAIN'	=> 'Here you can delete some remains.',
 	'ACP_GALLERY_OVERVIEW'			=> 'phpBB Gallery',
 	'ACP_GALLERY_OVERVIEW_EXPLAIN'	=> 'Here are some statistics about your gallery.',
 	'ACP_IMPORT_ALBUMS'				=> 'Import Images',
 	'ACP_IMPORT_ALBUMS_EXPLAIN'		=> 'Here you can bulk import images from the file system. Before importing images, please be sure to resize them by hand.',
-#	'ACP_MANAGE_ALBUMS'				=> 'phpBB Gallery Album administration',
-#	'ACP_MANAGE_ALBUMS_EXPLAIN'		=> 'Here you can manage your Albums (former categories).',
+
 
 	'ADD_ALBUM_ON_TOP'				=> 'Add album at the top',
 	'ADD_PERMISSIONS'				=> 'Add Permissions',
@@ -50,6 +46,7 @@ $lang = array_merge($lang, array(
 	'ALBUM_ID'						=> 'Album-ID',
 	'ALBUM_IMAGE'					=> 'Album image',
 	'ALBUM_IMAGE_EXPLAIN'			=> 'Location, relative to the phpBB root directory, of an additional image to associate with this album.',
+	'ALBUM_NO_TYPE_CHANGE_TO_CONTEST'	=> 'A Non-Contest-Album can not be turned into a Contest-Albums.',
 	'ALBUM_PARENT'					=> 'Parent album',
 	'ALBUM_PASSWORD'				=> 'Album password',
 	'ALBUM_PASSWORD_EXPLAIN'		=> 'Defines a password for this album, use the permission system in preference.',
@@ -63,6 +60,7 @@ $lang = array_merge($lang, array(
 	'ALBUM_TYPE_CONTEST'			=> 'Contest',
 	'ALBUM_TYPE_UPLOAD'				=> 'Album',
 	'ALBUM_UPDATED'					=> 'Album has been updated successfully.',
+	'ALBUM_WITH_CONTEST_NO_TYPE_CHANGE'	=> 'Contest-Albums can not be turned into a Non-Contest-Album.',
 
 	'CACHE_DIR_SIZE'				=> 'cache/-directory size',
 	'CHANGE_AUTHOR'					=> 'Change author to guest',
@@ -113,7 +111,7 @@ $lang = array_merge($lang, array(
 	'DELETE_ALL_IMAGES'				=> 'Delete images',
 	'DELETE_IMAGES'					=> 'Delete images',
 	'DELETE_PERMISSIONS'			=> 'Delete permissions',
-	'DELETE_SUBALBUMS'				=> 'Delete subalbums',
+	'DELETE_SUBALBUMS'				=> 'Delete subalbums and their images',
 	'DISP_EXIF_DATA'				=> 'Display Exif-data',
 	'DISP_FAKE_THUMB'				=> 'View thumbnail in albumlist',
 	'DISP_PERSONAL_ALBUM_PROFILE'	=> 'Show link to personal album in user-profile',
@@ -257,6 +255,14 @@ $lang = array_merge($lang, array(
 	'RESYNCED_PERSONALS'			=> 'Resynchronised personal album id\'s',
 	'ROWS_PER_PAGE'					=> 'Number of rows on thumbnail page',
 
+	'RRC_DISPLAY_ALBUMNAME'			=> 'Album name',
+	'RRC_DISPLAY_COMMENTS'			=> 'Comments',
+	'RRC_DISPLAY_IMAGENAME'			=> 'Image name',
+	'RRC_DISPLAY_IMAGETIME'			=> 'Image time',
+	'RRC_DISPLAY_IMAGEVIEWS'		=> 'Image views',
+	'RRC_DISPLAY_OPTIONS'			=> 'Which values should be displayed underneath the thumbnails?',
+	'RRC_DISPLAY_USERNAME'			=> 'Username',
+	'RRC_DISPLAY_RATINGS'			=> 'Ratings',
 	'RRC_GINDEX'					=> 'Recent- & Random-Images & Comment - Feature',
 	'RRC_GINDEX_COLUMNS'			=> 'Columns',
 	'RRC_GINDEX_COMMENTS'			=> 'Collapse comments',
