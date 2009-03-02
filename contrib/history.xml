@@ -53,6 +53,13 @@
     <author-notes lang="en-gb">This file contains all parts of the History, all Developers, a.s.o.</author-notes>
     <history>
       <entry>
+        <date>2009-MM-DD</date>
+        <rev-version>0.5.3</rev-version>
+        <changelog lang="en-gb">
+          <change><![CDATA[[Sec] Report #i481: Unapproved image comments are visible (Reported by robbx)]]></change>
+        </changelog>
+      </entry>
+      <entry>
         <date>2009-03-02</date>
         <rev-version>0.5.2</rev-version>
         <changelog lang="en-gb">
@@ -69,7 +76,7 @@
           <change><![CDATA[[Fix] Report #477: Delete images of deleted albums]]></change>
           <change><![CDATA[[Fix] Report #475: Autodelete on update needs CHMOD 777]]></change>
           <change><![CDATA[[Fix] Report #478: Gallery-log leading with "View forum" to viewofurm.php]]></change>
-          <change><![CDATA[[Fix] Unreport: Send moderatores back to work (Report #471)]]></change>
+          <change><![CDATA[[Fix] Unreported: Send moderatores back to work (Report #471)]]></change>
         </changelog>
       </entry>
       <entry>
@@ -91,7 +98,7 @@
           <change><![CDATA[[Fix] Report #470: Missing locked-icon for locked albums in ACP]]></change>
           <change><![CDATA[[Fix] Report #469: Missing allowed filetypes through typo in S_ALLOWED_FILETYPES]]></change>
           <change><![CDATA[[Fix] Report #472: Argument #2 is not an array - when viewing profile of a user without gallery-entry]]></change>
-          <change><![CDATA[[Fix] Report: Result for contests missing (Reported by redbull254)]]></change>
+          <change><![CDATA[[Fix] Unreported: Result for contests missing (Reported by redbull254)]]></change>
           <change><![CDATA[[Fix] Report #463: Missing information about current editing permission-system]]></change>
           <change><![CDATA[[Fix] Report #p5994: free memory after creating images]]></change>
           <change><![CDATA[[Fix] Report #456: Usage of (possible) htaccess protected adm/-files]]></change>
@@ -129,7 +136,6 @@
           <change><![CDATA[[Fix] Report #436: Create Subalbum button visible when it should not]]></change>
           <change><![CDATA[[Fix] Unreported: Missing module-permissions on update]]></change>
           <change><![CDATA[[Fix] Report #336: Moderator log]]></change>
-          <change><![CDATA[[Fix] iUnreported: Permissions lag on comment-system]]></change>
           <change><![CDATA[[Fix] Report #423: Wrong personal images counters on index]]></change>
           <change><![CDATA[[Fix] Report #428: usage of $read_function() in gallery/posting.php]]></change>
           <change><![CDATA[[Fix] Unreported: Wrong labels on prosilver posting_body.html]]></change>
@@ -151,6 +157,8 @@
           <change><![CDATA[[Fix] Report #401: Type in German language file]]></change>
           <change><![CDATA[[Fix] Report #407: Undefined index: EXIF_WHITEBALANCE]]></change>
           <change><![CDATA[[Fix] Unreported: 'Hacking Attempt' in UCP]]></change>
+
+          <change><![CDATA[[Sec] iUnreported: Permissions lag on comment-system]]></change>
         </changelog>
       </entry>
       <entry>
@@ -250,33 +258,33 @@
           <change><![CDATA[[Fix] Topic #797: inconsistent language packages]]></change>
           <change><![CDATA[[Fix] Unreported: Exif-Data: "ExposureBiasValue", "Flash", "ExposureProgram" & "MeteringMode"]]></change>
           <change><![CDATA[[Fix] Report #341: PostgreSQL: sql_query using hard LIMIT]]></change>
-          <change><![CDATA[[Fix] Report #i337: SQL-Injection on sort-method]]></change>
           <change><![CDATA[[Fix] Unreported: Meta-Refresh after rating is phpBB2-Style]]></change>
           <change><![CDATA[[Fix] Report #332: ACP Import multiple pages loose image-name]]></change>
           <change><![CDATA[[Fix] Report #322: Long file names with _ making out of templates problem]]></change>
           <change><![CDATA[[Fix] Unreport: Wrong labels for config values in ACP]]></change>
           <change><![CDATA[[Fix] Report #319: error in SQL syntax]]></change>
           <change><![CDATA[[Fix] Report #326: uploading multiple files cheats on quota]]></change>
-          <change><![CDATA[[Fix] Report #i328: mcp.php missing check for permissions]]></change>
           <change><![CDATA[[Fix] Report #323: Slow loading page when creating albums-list]]></change>
           <change><![CDATA[[Fix] Unreported: wrong class for the MOVE-Button]]></change>
-          <change><![CDATA[[Fix] phpBB.de-p1022203: Unknown column 'username' in 'order clause']]></change>
+          <change><![CDATA[[Fix] Unreported: Unknown column 'username' in 'order clause']]></change>
           <change><![CDATA[[Fix] Report #311: Unable to Approve and Unapprove images]]></change>
           <change><![CDATA[[Fix] Report #308: Convert Smartor - Comments]]></change>
+
+          <change><![CDATA[[Sec] Report #i337: SQL-Injection on sort-method (Reported by CroneKorkN)]]></change>
+          <change><![CDATA[[Sec] Report #i328: mcp.php missing check for permissions (Reported by Stifter)]]></change>
         </changelog>
       </entry>
       <entry>
         <date>2008-08-21</date>
         <rev-version>0.4.0-RC2</rev-version>
         <changelog lang="en-gb">
-          <change><![CDATA[[Add] Exif Data: Exposure bias, Exposure program & Metering mode]]></change>
+          <change><![CDATA[[Add] Unreported: Exif Data: Exposure bias, Exposure program & Metering mode]]></change>
 
           <change><![CDATA[[Change] Report #283: After upload an image into a approval album, the redirect is too fast]]></change>
           <change><![CDATA[[Change] Report #297: Login on and redirect to gallery/index.php]]></change>
           <change><![CDATA[[Change] Unreported: Module handle on installation]]></change>
 
-          <change><![CDATA[[Debug] Unreported: Display of users online in the album]]></change>
-
+          <change><![CDATA[[Fix] Unreported: Display of users online in the album]]></change>
           <change><![CDATA[[Fix] Report #307: highslide moved to template]]></change>
           <change><![CDATA[[Fix] Report #306: user_images not updated if it was empty]]></change>
           <change><![CDATA[[Fix] Report #305: Empty posintg.php No values specified for SQL IN comparison]]></change>
@@ -289,11 +297,12 @@
           <change><![CDATA[[Fix] Report #288: Unknown column 'g.view_personal_albums' in viewonline.php]]></change>
           <change><![CDATA[[Fix] Report #301: wrong permissions used on viewing personal-gallerys link]]></change>
           <change><![CDATA[[Fix] Report #285: some language typos]]></change>
-          <change><![CDATA[[Fix] Report #i295: "NV Exif data" security risk]]></change>
           <change><![CDATA[[Fix] Report #300: [album] wrong url for thumbnail]]></change>
           <change><![CDATA[[Fix] Report #296: Posting Comment/Image: No values specified for SQL IN]]></change>
           <change><![CDATA[[Fix] Report #284: array_merge(): Argument #2 is not an array]]></change>
           <change><![CDATA[[Fix] Report #282: Undefined index: album_approval]]></change>
+
+          <change><![CDATA[[Sec] Report #i295: "NV Exif data" security risk (Reported by GoBieN)]]></change>
         </changelog>
       </entry>
       <entry>
@@ -336,7 +345,7 @@
           <change><![CDATA[[Fix] Report #128: wrong permissions on testing user-premissions]]></change>
           <change><![CDATA[[Fix] Report #191: Comment Char limit]]></change>
           <change><![CDATA[[Fix] Unreported: bbcode [list] bugged in image_page.php]]></change>
-          <change><![CDATA[[Fix] Reported: Add option to disable watermark for small images]]></change>
+          <change><![CDATA[[Fix] Unreported: Add option to disable watermark for small images]]></change>
         </changelog>
       </entry>
       <entry>

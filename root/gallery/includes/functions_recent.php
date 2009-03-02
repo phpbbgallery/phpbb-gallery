@@ -246,7 +246,9 @@ function recent_gallery_images(&$ints, $display, $modes, $collapse_comments = fa
 			FROM ' . GALLERY_COMMENTS_TABLE . ' c
 			LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
 				ON c.comment_image_id = i.image_id
-			WHERE (' . $db->sql_in_set('i.image_album_id', $comment_albums) . '
+			WHERE ((' . $db->sql_in_set('i.image_album_id', $view_albums) . ' AND i.image_status = ' . IMAGE_APPROVED . ')' . 
+					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . ')
+				AND (' . $db->sql_in_set('i.image_album_id', $comment_albums) . '
 				' . (($user_id) ? ') AND i.image_user_id = ' . $user_id : ')') .'
 			ORDER BY c.comment_id DESC';
 		$result = $db->sql_query_limit($sql, $ints['comments']);
