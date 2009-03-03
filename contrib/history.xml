@@ -56,6 +56,7 @@
         <date>2009-MM-DD</date>
         <rev-version>0.5.3</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Sec] Report #i481: Unapproved images counter of personal albums is visible on index without permissions (Reported by robbx)]]></change>
           <change><![CDATA[[Sec] Report #i481: Unapproved image comments are visible (Reported by robbx)]]></change>
         </changelog>
       </entry>
@@ -158,7 +159,7 @@
           <change><![CDATA[[Fix] Report #407: Undefined index: EXIF_WHITEBALANCE]]></change>
           <change><![CDATA[[Fix] Unreported: 'Hacking Attempt' in UCP]]></change>
 
-          <change><![CDATA[[Sec] iUnreported: Permissions lag on comment-system]]></change>
+          <change><![CDATA[[Sec] Unreported: Permissions lag on comment-system]]></change>
         </changelog>
       </entry>
       <entry>
