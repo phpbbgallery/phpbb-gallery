@@ -835,6 +835,16 @@ function get_schema_struct()
 	);
 //*/
 /*
+	$schema_data['phpbb_gallery_albums_track'] = array(
+		'COLUMNS'		=> array(
+			'user_id'				=> array('UINT', 0),
+			'album_id'				=> array('UINT', 0),
+			'mark_time'				=> array('TIMESTAMP', 0),
+		),
+		'PRIMARY_KEY'	=> array('user_id', 'album_id'),
+	);
+//*/
+/*
 	$schema_data['phpbb_gallery_comments'] = array(
 		'COLUMNS'		=> array(
 			'comment_id'			=> array('UINT', NULL, 'auto_increment'),
@@ -1065,6 +1075,7 @@ function get_schema_struct()
 			'watch_com'			=> array('UINT:3', 0),
 			'user_images'		=> array('UINT', 0),
 			'personal_album_id'	=> array('UINT', 0),
+			'user_lastmark'		=> array('TIMESTAMP', 0),
 		),
 		'PRIMARY_KEY'		=> 'user_id',
 	);

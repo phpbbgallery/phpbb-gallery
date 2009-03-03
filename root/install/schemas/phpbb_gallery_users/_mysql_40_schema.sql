@@ -10,6 +10,7 @@ CREATE TABLE phpbb_gallery_users (
 	watch_com int(3) UNSIGNED DEFAULT '0' NOT NULL,
 	user_images mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	personal_album_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
+	user_lastmark int(11) UNSIGNED DEFAULT '0' NOT NULL,
 	PRIMARY KEY (user_id)
 );
 

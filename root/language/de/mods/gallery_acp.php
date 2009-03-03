@@ -291,8 +291,8 @@ $lang = array_merge($lang, array(
 	'RRC_PROFILE_MODE'				=> 'Modus des "Neueste & zufällige Bilder"-Features im Profil',
 	'RRC_PROFILE_ROWS'				=> 'Zeilen',
 
-	'RSZ_HEIGHT'					=> 'Maximale Höhe beim anzeigen eines Bildes',
-	'RSZ_WIDTH'						=> 'Maximale Breite beim anzeigen eines Bildes',
+	'RSZ_HEIGHT'					=> 'Maximale Höhe beim Anzeigen eines Bildes',
+	'RSZ_WIDTH'						=> 'Maximale Breite beim Anzeigen eines Bildes',
 
 	'SELECT_GROUPS'					=> 'Wähle Gruppen',
 	'SELECT_ALBUM'					=> 'Wähle ein Album aus',

@@ -273,7 +273,11 @@ if ($album_data['album_type'] != ALBUM_CAT)
 			}
 		}
 	}
-}// End of "We have album_type so that there may be images ..."
+}
+// End of "We have album_type so that there may be images ..."
+
+// Page is ready loaded, mark album as "read"
+gallery_markread('album', $album_id);
 
 $template->assign_vars(array(
 	'S_IS_POSTABLE'				=> ($album_data['album_type'] != ALBUM_CAT) ? true : false,

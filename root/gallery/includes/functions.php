@@ -30,6 +30,7 @@ if (!defined('IN_PHPBB'))
 * handle_image_counter()
 * get_album_branch()
 * generate_image_link()
+* gallery_markread()
 *
 */
 
@@ -614,6 +615,127 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 	}
 
 	return str_replace(array('{IMAGE_URL}', '{IMAGE_NAME}', '{CONTENT}'), array($url, $image_name, $content), $tpl);
+}
+
+/**
+* Marks a album as read
+*
+* borrowed from phpBB3
+* @author: phpBB Group
+* @function: markread
+*/
+function gallery_markread($mode, $album_id = false)
+{
+	global $db, $user, $config;
+
+	// Sorry, no guest support!
+	if ($user->data['user_id'] == ANONYMOUS)
+	{
+		return;
+	}
+
+	if ($mode == 'all')
+	{
+		if ($forum_id === false || !sizeof($forum_id))
+		{
+			// Mark all albums read (index page)
+			$sql = 'DELETE FROM ' . GALLERY_ATRACK_TABLE . '
+				WHERE user_id = ' . $user->data['user_id'];
+			$db->sql_query($sql);
+			$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
+				SET user_lastmark = ' . time() . '
+				WHERE user_id = ' . $user->data['user_id'];
+			$db->sql_query($sql);
+			if ($db->sql_affectedrows() <= 0)
+			{
+				$sql_ary = array(
+					'user_lastmark'		=> time(),
+					'user_id'			=> $user->data['user_id'],
+				);
+				$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+				$db->sql_query($sql);
+			}
+		}
+
+		return;
+	}
+	else if ($mode == 'albums')
+	{
+		// Mark album read
+		if (!is_array($album_id))
+		{
+			$album_id = array($album_id);
+		}
+
+		$sql = 'SELECT album_id
+			FROM ' . GALLERY_ATRACK_TABLE . "
+			WHERE user_id = {$user->data['user_id']}
+				AND " . $db->sql_in_set('album_id', $album_id);
+		$result = $db->sql_query($sql);
+
+		$sql_update = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$sql_update[] = $row['album_id'];
+		}
+		$db->sql_freeresult($result);
+
+		if (sizeof($sql_update))
+		{
+			$sql = 'UPDATE ' . GALLERY_ATRACK_TABLE . '
+				SET mark_time = ' . time() . "
+				WHERE user_id = {$user->data['user_id']}
+					AND " . $db->sql_in_set('album_id', $sql_update);
+			$db->sql_query($sql);
+		}
+
+		if ($sql_insert = array_diff($album_id, $sql_update))
+		{
+			$sql_ary = array();
+			foreach ($sql_insert as $a_id)
+			{
+				$sql_ary[] = array(
+					'user_id'	=> (int) $user->data['user_id'],
+					'album_id'	=> (int) $a_id,
+					'mark_time'	=> time()
+				);
+			}
+
+			$db->sql_multi_insert(GALLERY_ATRACK_TABLE, $sql_ary);
+		}
+
+		return;
+	}
+	else if ($mode == 'album')
+	{
+		if ($album_id === false)
+		{
+			return;
+		}
+
+		$sql = 'UPDATE ' . GALLERY_ATRACK_TABLE . '
+			SET mark_time = ' . time() . "
+			WHERE user_id = {$user->data['user_id']}
+				AND album_id = $album_id";
+		$db->sql_query($sql);
+
+		if (!$db->sql_affectedrows())
+		{
+			$db->sql_return_on_error(true);
+
+			$sql_ary = array(
+				'user_id'		=> (int) $user->data['user_id'],
+				'album_id'		=> (int) $album_id,
+				'mark_time'		=> time(),
+			);
+
+			$db->sql_query('INSERT INTO ' . GALLERY_ATRACK_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+
+			$db->sql_return_on_error(false);
+		}
+
+		return;
+	}
 }
 
 ?>

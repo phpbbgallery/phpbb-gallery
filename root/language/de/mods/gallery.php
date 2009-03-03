@@ -33,6 +33,7 @@ $lang = array_merge($lang, array(
 	'ALBUM_REACHED_QUOTA'			=> 'Dieses Album hat das Kontingent zum hochladen von Bildern erreicht. Es können keine weiteren Bilder mehr hochgeladen werden. Für weitere Information wende dich bitte an einen Administrator',
 	'ALBUM_UPLOAD_NEED_APPROVAL'	=> 'Dein Bild wurde erfolgreich hochgeladen.<br /><br />Aber die Funktion der Genehmigung von Bildern vor der Veröffentlichung ist aktiv. Somit muss dein Bild vor der Veröffentlichung von einem Administrator oder einem Moderator genehmigt werden.',
 	'ALBUM_UPLOAD_SUCCESSFUL'		=> 'Dein Bild wurde erfolgreich hochgeladen.',
+	'ALBUMS_MARKED'					=> 'Alle Alben wurden als gelesen markiert.',
 	'ALL_IMAGES'					=> 'Alle Bilder',
 	'ALLOWED_FILETYPES'				=> 'Erlaubte Dateitypen',
 	'APPROVE'						=> 'Freigeben',
@@ -131,6 +132,7 @@ $lang = array_merge($lang, array(
 	'LOOP_EXP'						=> 'Wenn du mehrere Bilder auf einmal hochlädst, kannst du sie mit <span style="font-weight: bold;">{NUM}</span> in der Bildbeschreibung und im Bildname durchnummerieren.<br />
 										Der Zähler beginnt mit der Zahl, die du hier eingibst. Beispiel: "Bild {NUM}" ergibt: "Bild 1", "Bild 2", usw.',
 
+	'MARK_ALBUMS_READ'				=> 'Alle Alben als gelesen markieren',
 	'MAX_FILE_SIZE'					=> 'Maximale Dateigröße (bytes)',
 	'MAX_HEIGHT'					=> 'Maximale Bildhöhe (pixels)',
 	'MAX_WIDTH'						=> 'Maximale Bildbreite (pixels)',
@@ -146,11 +148,13 @@ $lang = array_merge($lang, array(
 	'MOVE_TO_PERSONAL_EXPLAIN'		=> 'Wenn diese Option auf "Ja" gesetzt wird, wird das Bild in dein Persönliche Album verschoben. Wenn du noch keines angelegt hast, wird es automatisch angelegt.',
 
 	'NEW_COMMENT'					=> 'Neuer Kommentar',
+	'NEW_IMAGES'					=> 'Neue Bilder',
 	'NO_ALBUMS'						=> 'In dieser Galerie gibt es keine Alben',
 	'NO_COMMENTS'					=> 'Noch keine Kommentare',
 	'NO_IMAGES'						=> 'keine Bilder',
 	'NO_IMAGES_FOUND'				=> 'Es wurden keine Bilder gefunden.',
 	'NO_IMAGES_LONG'				=> 'In diesem Album gibt es keine Bilder.',
+	'NO_NEW_IMAGES'					=> 'Keine neue Bilder',
 	'NOT_ALLOWED_FILE_TYPE'			=> 'Dieser Datei Typ ist nicht erlaubt',
 	'NOT_RATED'						=> 'Nicht bewertet',
 
@@ -174,6 +178,7 @@ $lang = array_merge($lang, array(
 	'RECENT_COMMENTS'				=> 'Neuesten Kommentare',
 	'RECENT_IMAGES'					=> 'Neuesten Bilder',
 	'REPORT_IMAGE'					=> 'Bild melden',
+	'RETURN_ALBUM'					=> '%sZurück zum zuletzt besuchten Album%s',
 
 	'SEARCH_ALBUMS'					=> 'Zu durchsuchende Alben',
 	'SEARCH_ALBUMS_EXPLAIN'			=> 'Wähle das Album oder die Alben aus, in denen gesucht werden soll. Subalben werden automatisch mit durchsucht, sofern du die Option „Subalben durchsuchen“ unten nicht deaktivierst.',

@@ -158,7 +158,7 @@ class acp_gallery
 							WHERE user_id = ' . $row['user_id'];
 						$db->sql_query($sql);
 
-						if ($db->sql_affectedrows() != 1)
+						if ($db->sql_affectedrows() <= 0)
 						{
 							$sql_ary = array(
 								'user_id'				=> $row['user_id'],
@@ -198,7 +198,7 @@ class acp_gallery
 							WHERE user_id = ' . $row['album_user_id'];
 						$db->sql_query($sql);
 
-						if ($db->sql_affectedrows() != 1)
+						if ($db->sql_affectedrows() <= 0)
 						{
 							$sql_ary = array(
 								'user_id'				=> $row['album_user_id'],
@@ -889,7 +889,7 @@ class acp_gallery
 					SET user_images = user_images + $counter
 					WHERE user_id = " . $user_id;
 				$db->sql_query($sql);
-				if ($db->sql_affectedrows() != 1)
+				if ($db->sql_affectedrows() <= 0)
 				{
 					$sql_ary = array(
 						'user_id'				=> $user_id,

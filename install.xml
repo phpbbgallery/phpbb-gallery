@@ -213,6 +213,7 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
         <action type="after-add"><![CDATA[define('GALLERY_ROOT_PATH', 'gallery/');
 
 define('GALLERY_ALBUMS_TABLE',			$table_prefix . 'gallery_albums');
+define('GALLERY_ATRACK_TABLE',			$table_prefix . 'gallery_albums_track');
 define('GALLERY_COMMENTS_TABLE',		$table_prefix . 'gallery_comments');
 define('GALLERY_CONFIG_TABLE',			$table_prefix . 'gallery_config');
 define('GALLERY_CONTESTS_TABLE',		$table_prefix . 'gallery_contests');

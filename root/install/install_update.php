@@ -364,7 +364,7 @@ class install_update extends module
 				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_images_real',		array('UINT', 0));
 				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_last_image_id',		array('UINT', 0));
 				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_image',				array('VCHAR', ''));
-				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_last_image_time',	array('INT:11', 0));
+				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_last_image_time',	array('TIMESTAMP', 0));
 				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_last_image_name',	array('VCHAR', ''));
 				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_last_username',		array('VCHAR', ''));
 				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_last_user_colour',	array('VCHAR:6', ''));
@@ -438,6 +438,9 @@ class install_update extends module
 
 			case '0.5.1':
 			case '0.5.2':
+				nv_create_table('phpbb_gallery_albums_track',	$dbms_data);
+				nv_add_column(GALLERY_USERS_TABLE,	'user_lastmark',		array('TIMESTAMP', 0));
+
 			break;
 		}
 

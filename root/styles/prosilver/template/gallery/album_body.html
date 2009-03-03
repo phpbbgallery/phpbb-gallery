@@ -39,7 +39,14 @@ function toggleElement(oElement)
 </p>
 <!-- ENDIF -->
 
-<!-- IF .albumrow --><!-- INCLUDE gallery/albumlist_body.html --><!-- ENDIF -->
+<!-- IF .albumrow -->
+	<!-- IF not S_IS_BOT and U_MARK_ALBUMS -->
+	<ul class="linklist">
+		<li class="rightside"><a href="{U_MARK_ALBUMS}">{L_MARK_ALBUMS_READ}</a></li>
+	</ul>
+	<!-- ENDIF -->
+	<!-- INCLUDE gallery/albumlist_body.html -->
+<!-- ENDIF -->
 <!-- IF S_IS_POSTABLE and (U_UPLOAD_IMAGE or PAGINATION or TOTAL_POSTS or TOTAL_TOPICS) -->
 	<div class="topic-actions" <!-- IF S_HAS_SUBALBUM -->style="margin-top: 2em;"<!-- ENDIF -->>
 
@@ -141,6 +148,8 @@ function toggleElement(oElement)
 <!-- IF S_IS_POSTABLE -->
 	<form action="{S_ALBUM_ACTION}" method="post">
 	<fieldset class="display-options">
+			<!-- IF PREVIOUS_PAGE --><a href="{PREVIOUS_PAGE}" class="left-box {S_CONTENT_FLOW_BEGIN}">{L_PREVIOUS}</a><!-- ENDIF -->
+			<!-- IF NEXT_PAGE --><a href="{NEXT_PAGE}" class="right-box {S_CONTENT_FLOW_END}">{L_NEXT}</a><!-- ENDIF -->
 		<label>{L_SORT_BY} {S_SELECT_SORT_KEY}</label>
 		<label>{S_SELECT_SORT_DIR} <input type="submit" name="sort" value="{L_GO}" class="button2" /></label>
 	</fieldset>

@@ -39,7 +39,7 @@ $lang = array_merge($lang, array(
 	'LOG_ALBUM_MOVE_UP'						=> '<strong>Moved album</strong> %1$s <strong>above</strong> %2$s',
 	'LOG_ALBUM_SYNC'						=> '<strong>Re-synchronised album</strong><br />» %s',
 
-	'LOG_CLEAR_GALLEY'					=> 'Cleared Gallery log',
+	'LOG_CLEAR_GALLERY'					=> 'Cleared Gallery log',
 
 	'LOG_GALLERY_APPROVED'				=> '<strong>Approved image</strong><br />» %s',
 	'LOG_GALLERY_COMMENT_DELETED'		=> '<strong>Deleted comment</strong><br />» %s',

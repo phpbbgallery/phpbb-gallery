@@ -45,15 +45,18 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 	$sql_from = '';
 	$mode = request_var('mode', '');
 
+	// Mark albums read?
+	$mark_read = request_var('mark', '');
+
 	if (!$root_data)
 	{
 		$root_data = array('album_id' => 0);
-		$sql_where = 'album_user_id = 0';
+		$sql_where = 'a.album_user_id = 0';
 	}
 	else if ($root_data == 'personal')
 	{
 		$root_data = array('album_id' => 0);
-		$sql_where = 'album_user_id > 0';
+		$sql_where = 'a.album_user_id > 0';
 		$mode_personal = true;
 
 		$start = request_var('start', 0);
@@ -66,15 +69,20 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 	}
 	else
 	{
-		$sql_where = 'left_id > ' . $root_data['left_id'] . ' AND left_id < ' . $root_data['right_id'] . ' AND album_user_id = ' . $root_data['album_user_id'];
+		$sql_where = 'a.left_id > ' . $root_data['left_id'] . ' AND a.left_id < ' . $root_data['right_id'] . ' AND a.album_user_id = ' . $root_data['album_user_id'];
 	}
 
 	$sql_array = array(
-		'SELECT'	=> 'a.*',
+		'SELECT'	=> 'a.*, at.mark_time',
 		'FROM'		=> array(
 			GALLERY_ALBUMS_TABLE		=> 'a',
 		),
-		'LEFT_JOIN'	=> array(),
+		'LEFT_JOIN'	=> array(
+			array(
+				'FROM'	=> array(GALLERY_ATRACK_TABLE => 'at'),
+				'ON'	=> 'a.album_id = at.album_id'
+			)
+		),
 		'ORDER_BY'	=> 'a.album_user_id, a.left_id',
 	);
 
@@ -109,6 +117,16 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 	{
 		$album_id = $row['album_id'];
 
+		// Mark albums read?
+		if ($mark_read == 'albums' || $mark_read == 'all')
+		{
+			if (gallery_acl_check('a_list', $album_id, $row['album_user_id']))
+			{
+				$album_ids[] = $album_id;
+				continue;
+			}
+		}
+
 		// Category with no members
 		if (!$row['album_type'] && ($row['left_id'] + 1 == $row['right_id']))
 		{
@@ -132,7 +150,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			continue;
 		}
 
-		$album_ids[] = $album_id;
+		$album_tracking_info[$album_id] = (!empty($row['mark_time'])) ? $row['mark_time'] : ((isset($user->gallery['user_lastmark'])) ? $user->gallery['user_lastmark'] : 0);
 
 		$row['album_images'] = $row['album_images'];
 		$row['album_images_real'] = $row['album_images_real'];
@@ -162,6 +180,12 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			$subalbums[$parent_id][$album_id]['display'] = ($row['display_on_index']) ? true : false;
 			$subalbums[$parent_id][$album_id]['name'] = $row['album_name'];
 			$subalbums[$parent_id][$album_id]['orig_album_last_image_time'] = $row['album_last_image_time'];
+			$subalbums[$parent_id][$album_id]['children'] = array();
+
+			if (isset($subalbums[$parent_id][$row['parent_id']]) && !$row['display_on_index'])
+			{
+				$subalbums[$parent_id][$row['parent_id']]['children'][] = $album_id;
+			}
 
 			$album_rows[$parent_id]['album_images'] += $row['album_images'];
 			$album_rows[$parent_id]['album_images_real'] += $row['album_images_real'];
@@ -181,6 +205,35 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		}
 	}
 	$db->sql_freeresult($result);
+
+	// Handle marking albums
+	if ($mark_read == 'albums' || $mark_read == 'all')
+	{
+		$redirect = build_url('mark', 'hash');
+		$token = request_var('hash', '');
+		if (check_link_hash($token, 'global'))
+		{
+			if ($mark_read == 'all')
+			{
+				gallery_markread('all');
+				$message = sprintf($user->lang['RETURN_INDEX'], '<a href="' . $redirect . '">', '</a>');
+			}
+			else
+			{
+				gallery_markread('albums', $album_ids);
+				$message = sprintf($user->lang['RETURN_ALBUM'], '<a href="' . $redirect . '">', '</a>');
+			}
+			meta_refresh(3, $redirect);
+			trigger_error($user->lang['ALBUMS_MARKED'] . '<br /><br />' . $message);
+		}
+		else
+		{
+			$message = sprintf($user->lang['RETURN_PAGE'], '<a href="' . $redirect . '">', '</a>');
+			meta_refresh(3, $redirect);
+			trigger_error($message);
+		}
+	}
+
 
 	// Grab moderators ... if necessary
 	if ($display_moderators)
@@ -220,6 +273,8 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		}
 
 		$album_id = $row['album_id'];
+		$album_unread = (isset($album_tracking_info[$album_id]) && $row['orig_album_last_image_time'] > $album_tracking_info[$album_id]) ? true : false;
+
 		$folder_image = $folder_alt = $l_subalbums = '';
 		$subalbums_list = array();
 
@@ -228,32 +283,53 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		{
 			foreach ($subalbums[$album_id] as $subalbum_id => $subalbum_row)
 			{
+				$subalbum_unread = (isset($album_tracking_info[$subalbum_id]) && $subalbum_row['orig_album_last_image_time'] > $album_tracking_info[$subalbum_id]) ? true : false;
+
+				if (!$subalbum_unread && !empty($subalbum_row['children']))
+				{
+					foreach ($subalbum_row['children'] as $child_id)
+					{
+						if (isset($album_tracking_info[$child_id]) && $subalbums[$album_id][$child_id]['orig_album_last_image_time'] > $album_tracking_info[$child_id])
+						{
+							// Once we found an unread child album, we can drop out of this loop
+							$subalbum_unread = true;
+							break;
+						}
+					}
+				}
+
 				if ($subalbum_row['display'] && $subalbum_row['name'])
 				{
 					$subalbums_list[] = array(
 						'link'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $subalbum_id),
 						'name'		=> $subalbum_row['name'],
+						'unread'	=> $subalbum_unread,
 					);
 				}
 				else
 				{
 					unset($subalbums[$album_id][$subalbum_id]);
 				}
+
+				if ($subalbum_unread)
+				{
+					$album_unread = true;
+				}
 			}
 
 			$l_subalbums = (sizeof($subalbums[$album_id]) == 1) ? $user->lang['SUBALBUM'] . ': ' : $user->lang['SUBALBUMS'] . ': ';
-			$folder_image = 'forum_read_subforum';
+			$folder_image = ($album_unread) ? 'forum_unread_subforum' : 'forum_read_subforum';
 		}
 		else
 		{
-			$folder_image = 'forum_read';
+			$folder_alt = ($album_unread) ? 'NEW_IMAGES' : 'NO_NEW_IMAGES';
+			$folder_image = ($album_unread) ? 'forum_unread' : 'forum_read';
 		}
 		if ($row['album_status'] == ITEM_LOCKED)
 		{
-			$folder_image = 'forum_read_locked';
+			$folder_image = ($album_unread) ? 'forum_unread_locked' : 'forum_read_locked';
+			$folder_alt = 'ALBUM_LOCKED';
 		}
-
-		$folder_alt = '';
 
 		// Create last post link information, if appropriate
 		if ($row['album_last_image_id'])
@@ -285,7 +361,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		$s_subalbums_list = array();
 		foreach ($subalbums_list as $subalbum)
 		{
-			$s_subalbums_list[] = '<a href="' . $subalbum['link'] . '" class="subforum read">' . $subalbum['name'] . '</a>';
+			$s_subalbums_list[] = '<a href="' . $subalbum['link'] . '" class="subforum ' . (($subalbum['unread']) ? 'unread' : 'read') . '" title="' . (($subalbum['unread']) ? $user->lang['NEW_IMAGES'] : $user->lang['NO_NEW_IMAGES']) . '">' . $subalbum['name'] . '</a>';
 		}
 		$s_subalbums_list = (string) implode(', ', $s_subalbums_list);
 		$catless = ($row['parent_id'] == $root_data['album_id']) ? true : false;
@@ -330,6 +406,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			$template->assign_block_vars('albumrow.subalbum', array(
 				'U_SUBALBUM'	=> $subalbum['link'],
 				'SUBALBUM_NAME'	=> $subalbum['name'],
+				'S_UNREAD'		=> $subalbum['unread'],
 			));
 		}
 
@@ -337,7 +414,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 	}
 
 	$template->assign_vars(array(
-		'U_MARK_ALBUMS'		=> ($user->data['is_registered'] || $config['load_anon_lastread']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $root_data['album_id'] . '&amp;mark=albums') : '',
+		'U_MARK_ALBUMS'		=> ($user->data['is_registered']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'hash=' . generate_link_hash('global') . '&amp;album_id=' . $root_data['album_id'] . '&amp;mark=albums') : '',
 		'S_HAS_SUBALBUM'	=> ($visible_albums) ? true : false,
 		'L_SUBFORUM'		=> ($visible_albums == 1) ? $user->lang['SUBALBUM'] : $user->lang['SUBALBUMS'],
 		'LAST_POST_IMG'		=> $user->img('icon_topic_latest', 'VIEW_LATEST_POST'),
@@ -571,7 +648,7 @@ function assign_image_block($template_block, &$image_data, $album_status, $displ
 		'S_REPORTED'	=> (gallery_acl_check('m_report', $image_data['image_album_id']) && $image_data['image_reported']) ? true : false,
 
 		'ALBUM_NAME'	=> ($display & RRC_DISPLAY_ALBUMNAME) ? ((isset($image_data['album_name'])) ? ((utf8_strlen(htmlspecialchars_decode($image_data['album_name'])) > $gallery_config['shorted_imagenames'] + 3 ) ? htmlspecialchars(utf8_substr(htmlspecialchars_decode($image_data['album_name']), 0, $gallery_config['shorted_imagenames']) . '...') : ($image_data['album_name'])) : '') : '',
-		'POSTER'		=> ($display & RRC_DISPLAY_USERNAME) ? ($image_data['image_contest'] && !gallery_acl_check('m_status', $image_data['image_album_id'])) ? $user->lang['CONTEST_USERNAME'] : get_username_string('full', $image_data['image_user_id'], ($image_data['image_user_id'] <> ANONYMOUS) ? $image_data['image_username'] : $user->lang['GUEST'], $image_data['image_user_colour']) : '',
+		'POSTER'		=> ($display & RRC_DISPLAY_USERNAME) ? (($image_data['image_contest'] && !gallery_acl_check('m_status', $image_data['image_album_id'])) ? $user->lang['CONTEST_USERNAME'] : get_username_string('full', $image_data['image_user_id'], ($image_data['image_user_id'] <> ANONYMOUS) ? $image_data['image_username'] : $user->lang['GUEST'], $image_data['image_user_colour'])) : '',
 		'TIME'			=> ($display & RRC_DISPLAY_IMAGETIME) ? $user->format_date($image_data['image_time']) : '',
 		'VIEW'			=> ($display & RRC_DISPLAY_IMAGEVIEWS) ? $image_data['image_view_count'] : -1,
 		'CONTEST_RANK'	=> ($image_data['image_contest_rank']) ? $user->lang['CONTEST_RESULT_' . $image_data['image_contest_rank']] : '',

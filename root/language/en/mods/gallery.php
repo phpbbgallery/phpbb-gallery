@@ -33,6 +33,7 @@ $lang = array_merge($lang, array(
 	'ALBUM_REACHED_QUOTA'			=> 'This album has reached the quota of images. You cannot upload any more. Please contact the administrator for more information.',
 	'ALBUM_UPLOAD_NEED_APPROVAL'	=> 'Your image has been uploaded successfully.<br /><br />But the feature Image Approval has been enabled so your image must be approved by a administrator or a moderator before posting',
 	'ALBUM_UPLOAD_SUCCESSFUL'		=> 'Your image has been uploaded successfully',
+	'ALBUMS_MARKED'					=> 'All albums have been marked read.',
 	'ALL_IMAGES'					=> 'All image',
 	'ALLOWED_FILETYPES'				=> 'Allowed filetypes',
 	'APPROVE'						=> 'Approve',
@@ -131,6 +132,7 @@ $lang = array_merge($lang, array(
 	'LOOP_EXP'						=> 'If you upload more than one file, you may include <span style="font-weight: bold;">{NUM}</span> into the imagename and imagedescription.<br />
 										It counts through the images, starting on the value you entered. Example: "Image {NUM}" addes up to "Image 1", "Image 2", etc.',
 
+	'MARK_ALBUMS_READ'				=> 'Mark albums read',
 	'MAX_FILE_SIZE'					=> 'Maximum file size (bytes)',
 	'MAX_HEIGHT'					=> 'Maximum image height (pixels)',
 	'MAX_WIDTH'						=> 'Maximum image width (pixels)',
@@ -145,10 +147,12 @@ $lang = array_merge($lang, array(
 	'MOVE_TO_PERSONAL_EXPLAIN'		=> 'When you set this option to "yes", the image is moved into your personal album. If you do not have one yet, it is created automatically.',
 
 	'NEW_COMMENT'					=> 'New Comment',
+	'NEW_IMAGES'					=> 'New images',
 	'NO_ALBUMS'						=> 'There are no albums in this gallery.',
 	'NO_COMMENTS'					=> 'No comments yet',
 	'NO_IMAGES'						=> 'No images',
 	'NO_IMAGES_FOUND'				=> 'No images found.',
+	'NO_NEW_IMAGES'					=> 'No new images',
 	'NO_IMAGES_LONG'				=> 'There are no images in this album.',
 	'NOT_ALLOWED_FILE_TYPE'			=> 'This file type is not allowed',
 	'NOT_RATED'						=> 'not rated',
@@ -173,6 +177,7 @@ $lang = array_merge($lang, array(
 	'RECENT_COMMENTS'				=> 'Recent comments',
 	'RECENT_IMAGES'					=> 'Recent Images',
 	'REPORT_IMAGE'					=> 'Report image',
+	'RETURN_ALBUM'					=> '%sReturn to the album last visited%s',
 
 	'SEARCH_ALBUMS'					=> 'Search in albums',
 	'SEARCH_ALBUMS_EXPLAIN'			=> 'Select the album or albums you wish to search in. Subalbums are searched automatically if you do not disable “search subalbums“ below.',

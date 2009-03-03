@@ -222,6 +222,10 @@ $user->add_lang('mods/gallery');]]></find>
         <action type="after-add"><![CDATA[define('LOG_GALLERY', 4);]]></action>
       </edit>
       <edit>
+        <find><![CDATA[define('GALLERY_ALBUMS_TABLE',			$table_prefix . 'gallery_albums');]]></find>
+        <action type="after-add"><![CDATA[define('GALLERY_ATRACK_TABLE',			$table_prefix . 'gallery_albums_track');]]></action>
+      </edit>
+      <edit>
         <find><![CDATA[define('GALLERY_CONFIG_TABLE',			$table_prefix . 'gallery_config');]]></find>
         <action type="after-add"><![CDATA[define('GALLERY_CONTESTS_TABLE',		$table_prefix . 'gallery_contests');]]></action>
       </edit>

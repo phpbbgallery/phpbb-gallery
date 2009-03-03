@@ -56,6 +56,8 @@
         <date>2009-MM-DD</date>
         <rev-version>0.5.3</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Add] Report #129: Read-/Unread-information for albums when new images were uploaded]]></change>
+
           <change><![CDATA[[Sec] Report #i481: Unapproved images counter of personal albums is visible on index without permissions (Reported by robbx)]]></change>
           <change><![CDATA[[Sec] Report #i481: Unapproved image comments are visible (Reported by robbx)]]></change>
         </changelog>
