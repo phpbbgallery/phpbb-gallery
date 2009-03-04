@@ -60,8 +60,8 @@ function toggleElement(oElement)
 											<!-- IF recent.image.S_COMMENTS -->{recent.image.L_COMMENTS}: <a href="{recent.image.U_COMMENTS}">{recent.image.S_COMMENTS}</a><br /><!-- ENDIF -->
 											<!-- IF recent.image.S_IP -->{L_IP}: {recent.image.S_IP} &#187; <a href="{recent.image.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a><br /><!-- ENDIF -->
 											<!-- IF recent.image.U_REPORT or recent.image.U_STATUS or recent.image.U_MOVE or  recent.image.U_EDIT or recent.image.U_DELETE -->
-											<a href="javascript: toggleElement( getElement('moderate_{recent.image.IMAGE_ID}'));">{L_MODERATE}</a>
-											<div id="moderate_{recent.image.IMAGE_ID}" style="display: none;">
+											<a href="javascript: toggleElement( getElement('moderate_recent_{recent.image.IMAGE_ID}'));">{L_MODERATE}</a>
+											<div id="moderate_recent_{recent.image.IMAGE_ID}" style="display: none;">
 												<!-- IF recent.image.U_REPORT -->&#187; <a href="{recent.image.U_REPORT}" class="reported-images-number">{L_READ_REPORT}</a><br /><!-- ENDIF -->
 												<!-- IF recent.image.U_STATUS -->&#187; <a href="{recent.image.U_STATUS}">{recent.image.L_STATUS}</a><br /><!-- ENDIF -->
 												<!-- IF recent.image.U_MOVE -->&#187; <a href="{recent.image.U_MOVE}">{L_MOVE}</a><br /><!-- ENDIF -->
@@ -137,8 +137,8 @@ function toggleElement(oElement)
 											<!-- IF random.image.S_COMMENTS -->{random.image.L_COMMENTS}: <a href="{random.image.U_COMMENTS}">{random.image.S_COMMENTS}</a><br /><!-- ENDIF -->
 											<!-- IF random.image.S_IP -->{L_IP}: {random.image.S_IP} &#187; <a href="{random.image.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a><br /><!-- ENDIF -->
 											<!-- IF random.image.U_REPORT or random.image.U_STATUS or random.image.U_MOVE or  random.image.U_EDIT or random.image.U_DELETE -->
-											<a href="javascript: toggleElement( getElement('moderate_{random.image.IMAGE_ID}'));">{L_MODERATE}</a>
-											<div id="moderate_{random.image.IMAGE_ID}" style="display: none;">
+											<a href="javascript: toggleElement( getElement('moderate_random_{random.image.IMAGE_ID}'));">{L_MODERATE}</a>
+											<div id="moderate_random_{random.image.IMAGE_ID}" style="display: none;">
 												<!-- IF random.image.U_REPORT -->&#187; <a href="{random.image.U_REPORT}" class="reported-images-number">{L_READ_REPORT}</a><br /><!-- ENDIF -->
 												<!-- IF random.image.U_STATUS -->&#187; <a href="{random.image.U_STATUS}">{random.image.L_STATUS}</a><br /><!-- ENDIF -->
 												<!-- IF random.image.U_MOVE -->&#187; <a href="{random.image.U_MOVE}">{L_MOVE}</a><br /><!-- ENDIF -->
@@ -214,8 +214,8 @@ function toggleElement(oElement)
 											<!-- IF contest.image.S_COMMENTS -->{contest.image.L_COMMENTS}: <a href="{contest.image.U_COMMENTS}">{contest.image.S_COMMENTS}</a><br /><!-- ENDIF -->
 											<!-- IF contest.image.S_IP -->{L_IP}: {contest.image.S_IP} &#187; <a href="{contest.image.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a><br /><!-- ENDIF -->
 											<!-- IF contest.image.U_REPORT or contest.image.U_STATUS or contest.image.U_MOVE or  contest.image.U_EDIT or contest.image.U_DELETE -->
-											<a href="javascript: toggleElement( getElement('moderate_{contest.image.IMAGE_ID}'));">{L_MODERATE}</a>
-											<div id="moderate_{contest.image.IMAGE_ID}" style="display: none;">
+											<a href="javascript: toggleElement( getElement('moderate_contest_{contest.image.IMAGE_ID}'));">{L_MODERATE}</a>
+											<div id="moderate_contest_{contest.image.IMAGE_ID}" style="display: none;">
 												<!-- IF contest.image.U_REPORT -->&#187; <a href="{contest.image.U_REPORT}" class="reported-images-number">{L_READ_REPORT}</a><br /><!-- ENDIF -->
 												<!-- IF contest.image.U_STATUS -->&#187; <a href="{contest.image.U_STATUS}">{contest.image.L_STATUS}</a><br /><!-- ENDIF -->
 												<!-- IF contest.image.U_MOVE -->&#187; <a href="{contest.image.U_MOVE}">{L_MOVE}</a><br /><!-- ENDIF -->
@@ -302,6 +302,17 @@ function toggleElement(oElement)
 	</div>
 <!-- ENDIF -->
 
-<!-- Please keep this little notice visible -->
-<div class="copyright"<!-- IF S_IN_GALLERY --> style="display: none;"<!-- ENDIF -->>Powered by <!-- port started by tsr: http://phpbbgallery.ph.funpic.de --><a href="http://www.flying-bits.org/">nickvergessen</a></div>
+<!-- IF (.recent or .random or .contest or .commentrow) and not S_IN_GALLERY -->
+<!--
+	I request you retain the full copyright notice below including the link to www.flying-bits.org.
+	This not only gives respect to the large amount of time given freely by the developer
+	but also helps build interest, traffic and use of phpBB Gallery. If you (honestly) cannot retain
+	the full copyright we ask you at least leave in place the "Powered by phpBB Gallery" line, with
+	"phpBB Gallery" linked to www.flying-bits.org. If you refuse to include even this then support on my
+	forums may be affected.
+
+	phpBB Gallery, nickvergessen : 2009
+//-->
+<div class="copyright">Powered by <a href="http://www.flying-bits.org/">phpBB Gallery</a> &copy; 2007, 2009 <a href="http://www.flying-bits.org/">nickvergessen</a></div>
+<!-- ENDIF -->
 <br />
