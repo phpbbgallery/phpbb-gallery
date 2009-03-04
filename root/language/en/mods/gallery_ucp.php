@@ -57,13 +57,13 @@ $lang = array_merge($lang, array(
 	'NO_PARENT_ALBUM'				=> '&laquo;-- no parent',
 	'NO_PERSALBUM_ALLOWED'			=> 'You don\'t have the permissions create your personal album',
 	'NO_PERSONAL_ALBUM'				=> 'You don\'t have a personal album yet. Here you can create your personal album, with some subalbums.<br />In personal albums only the owner can upload images.',
-	'NO_SUBALBUMS'					=> 'no subalbums',//@todo gallery_acp.php
+	'NO_SUBALBUMS'					=> 'No Albums attached',
 	'NO_SUBSCRIPTIONS'				=> 'You didn\'t subscribe to any image.',
 
-	'PARSE_BBCODE'					=> 'parse bbcodes',//@todo acp
-	'PARSE_SMILIES'					=> 'parse smiles',//@todo acp
-	'PARSE_URLS'					=> 'parse urls',//@todo acp
-	'PERSONAL_ALBUM'				=> 'personal album',//@todo acp
+	'PARSE_BBCODE'					=> 'Parse BBCode',
+	'PARSE_SMILIES'					=> 'Parse smilies',
+	'PARSE_URLS'					=> 'Parse links',
+	'PERSONAL_ALBUM'				=> 'Personal album',
 
 	'REMOVE_FROM_FAVORITES'			=> 'Remove from favorites',
 
