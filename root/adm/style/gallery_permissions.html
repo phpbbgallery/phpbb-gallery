@@ -1,5 +1,5 @@
 <!-- INCLUDE overall_header.html -->
-<script type="text/JavaScript">
+<script type="text/javascript">
 function getElement(iElementId)
 {
 	if (document.all) 
@@ -12,16 +12,19 @@ function getElement(iElementId)
 	}
 }
 
-function toggleElement(oElement)
+function toggle_permissions_panel(c_mask, v_mask, cat)
 {
-	if (oElement.style.display == "none")
-	{
-		oElement.style.display = "";
-	}
-	else
-	{
+	<!-- BEGIN c_rows -->
+		var oElement = document.getElementById('options' + c_mask + v_mask + {c_rows.S_ROW_COUNT});
 		oElement.style.display = "none";
-	}
+		var old_tab = document.getElementById('tab' + c_mask + v_mask + {c_rows.S_ROW_COUNT});
+		old_tab.className = old_tab.className.replace(/\ activetab/g, '');
+	<!-- END c_rows -->
+
+	var oElement = document.getElementById('options' + c_mask + v_mask + cat);
+	oElement.style.display = "";
+	var new_tab = document.getElementById('tab' + c_mask + v_mask + cat);
+	new_tab.className = new_tab.className + ' activetab';
 }
 </script>
 <script type="text/javascript" src="style/permissions.js"></script>
@@ -84,10 +87,90 @@ function toggleElement(oElement)
 				<!-- BEGIN grouprow --><dd style="font-weight: bold;"><!-- IF grouprow.GROUP_COLOUR --><span style="color: #{grouprow.GROUP_COLOUR};">{grouprow.GROUP_NAME}</span><!-- ELSE -->{grouprow.GROUP_NAME}<!-- ENDIF --></dd><!-- END grouprow -->
 			</dl>
 	</fieldset>
+
+
+
+
+
+<!-- BEGIN c_mask -->
+<h3>{c_mask.ALBUM_NAME}</h3>
+	<!-- BEGIN v_mask -->
+	<fieldset>
+		<legend>{c_mask.v_mask.VICTIM_NAME}</legend>
+			<!-- IF not c_mask.S_VIEW and c_mask.S_VIEW -->
+				<div class="permissions-advanced" id="advanced{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}" style="display: none;">
+			<!-- ELSE -->
+				<div class="permissions-advanced" id="advanced{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}">
+			<!-- ENDIF -->
+		<div class="permissions-category">
+			<ul>
+			<!-- BEGIN category -->
+				<li class="permissions-preset-custom<!-- IF c_mask.v_mask.category.S_FIRST_ROW --> activetab<!-- ENDIF -->" id="tab{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}">
+				<a href="#" onclick="javascript: toggle_permissions_panel({c_mask.S_ROW_COUNT}, {c_mask.v_mask.S_ROW_COUNT}, {c_mask.v_mask.category.S_ROW_COUNT}); return false;"><span class="tabbg"><span class="colour"></span>{c_mask.v_mask.category.CAT_NAME}</span></a></li>
+			<!-- END category -->
+			</ul>
+		</div>
+
+	<!-- BEGIN category -->
+		<div class="permissions-panel" id="options{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}" <!-- IF c_mask.v_mask.category.S_FIRST_ROW --><!-- ELSE --> style="display: none;"<!-- ENDIF -->>
+			<span class="corners-top"><span></span></span>
+			<div class="tablewrap">
+				<table id="table{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}" cellspacing="1">
+				<colgroup>
+					<col class="permissions-name" />
+					<col class="permissions-yes" />
+					<col class="permissions-no" />
+					<col class="permissions-never" />
+				</colgroup>
+				<thead>
+				<tr>
+					<th class="name" scope="col"><strong>{L_PERMISSION_SETTING}</strong></th>
+					<th class="value permissions-yes" scope="col" style="width: 10%;" ><a href="#" onclick="mark_options('options{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', 'y'); return false;">{L_PERMISSION_YES}</a></th>
+					<th class="value permissions-no" scope="col" style="width: 10%;"><a href="#" onclick="mark_options('options{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', 'u'); return false;">{L_PERMISSION_NO}</a></th>
+					<th class="value permissions-never" scope="col" style="width: 10%;"><a href="#" onclick="mark_options('options{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', 'n'); return false;">{L_PERMISSION_NEVER}</a></th>
+				</tr>
+				</thead>
+				<tbody>
+				<!-- BEGIN mask -->
+					<!-- IF c_mask.v_mask.category.mask.S_ROW_COUNT is even --><tr class="row4"><!-- ELSE --><tr class="row3"><!-- ENDIF -->
+					<th class="permissions-name<!-- IF c_mask.v_mask.category.mask.S_ROW_COUNT is even --> row4<!-- ELSE --> row3<!-- ENDIF -->">{c_mask.v_mask.category.mask.PERMISSION}</th>
+						<!-- IF not c_mask.v_mask.category.mask.S_COUNT_FIELD -->
+							<td class="value permissions-yes"><label for="{c_mask.v_mask.category.mask.S_FIELD_NAME}_y"><input id="{c_mask.v_mask.category.mask.S_FIELD_NAME}_y" name="{c_mask.v_mask.category.mask.S_FIELD_NAME}" class="radio" type="radio"<!-- IF c_mask.v_mask.category.mask.S_YES --> checked="checked"<!-- ENDIF --> value="1" /></label></td>
+							<td class="value permissions-no"><label for="{c_mask.v_mask.category.mask.S_FIELD_NAME}_u"><input id="{c_mask.v_mask.category.mask.S_FIELD_NAME}_u" name="{c_mask.v_mask.category.mask.S_FIELD_NAME}" class="radio" type="radio"<!-- IF c_mask.v_mask.category.mask.S_NO --> checked="checked"<!-- ENDIF --> value="-1" /></label></td>
+							<td class="value permissions-never"><label for="{c_mask.v_mask.category.mask.S_FIELD_NAME}_n"><input id="{c_mask.v_mask.category.mask.S_FIELD_NAME}_n" name="{c_mask.v_mask.category.mask.S_FIELD_NAME}" class="radio" type="radio"<!-- IF c_mask.v_mask.category.mask.S_NEVER --> checked="checked"<!-- ENDIF --> value="0" /></label></td>
+						<!-- ELSE -->
+							<td class="permissions" colspan="3"><input class="text medium" type="text" id="{c_mask.v_mask.category.mask.S_FIELD_NAME}" name="{perm_group.permission.S_FIELD_NAME}" value="{c_mask.v_mask.category.mask.S_VALUE}" maxlength="7" /></td>
+						<!-- ENDIF -->
+				</tr>
+				<!-- END mask -->
+				</tbody>
+				</table>
+			</div>
+
+			<span class="corners-bottom"><span></span></span>
+		</div>
+				<!-- END category -->
+	</div>
+			<div class="clearfix"></div>
+	</fieldset>
+	<!-- END v_mask -->
+<!-- END c_mask -->
+
+
+
+
+
+
+
+
+
+
+
+
+
 	<fieldset>
 		<legend>{L_SELECT_PERMISSIONS}</legend>
 		<!-- IF S_ALBUMS or S_GROUPS --><span>{L_PERM_HIDDEN_PERMISSIONS_EXP}</span><!-- ENDIF -->
-
 		<div class="permissions-panel" id="options{grouprow.S_ROW_COUNT}{p_mask.f_mask.S_ROW_COUNT}{p_mask.f_mask.category.S_ROW_COUNT}">
 			<span class="corners-top"><span></span></span>
 				<!-- BEGIN perm_group -->
