@@ -57,6 +57,12 @@ You may install it, to be informed about future versions, as I'm not going to se
         <action type="replace-with"><![CDATA[<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery/lytebox.js"></script>]]></action>
       </edit>
     </open>
+    <open src="styles/prosilver/template/viewtopic_body.html">
+      <edit>
+        <find><![CDATA[<!-- IF postrow.POSTER_POSTS != '' --><br /><b>{L_POSTS}:</b> {postrow.POSTER_POSTS}<!-- ENDIF -->]]></find>
+        <action type="after-add"><![CDATA[<!-- IF postrow.GALLERY_IMAGES != '' --><br /><b>{L_IMAGES}:</b> <!-- IF postrow.U_GALLERY_SEARCH --><a href="{postrow.U_GALLERY_SEARCH}">{postrow.GALLERY_IMAGES}</a><!-- ELSE -->{postrow.GALLERY_IMAGES}<!-- ENDIF --><!-- ENDIF -->]]></action>
+      </edit>
+    </open>
     <open src="styles/subsilver2/theme/stylesheet.css">
       <edit>
         <find><![CDATA[#lbOverlay { position: fixed; top: 0; left: 0; z-index: 99998; width: 100%; height: 500px; }

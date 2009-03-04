@@ -127,6 +127,10 @@ You may install it, to be informed about future versions, as I'm not going to se
             <inline-action type="after-add"><![CDATA[ <!-- IF postrow.U_GALLERY --><a href="{postrow.U_GALLERY}"><img src="{T_IMAGESET_LANG_PATH}/icon_contact_gallery.gif" alt="{L_PERSONAL_ALBUM}" /></a> <!-- ENDIF -->]]></inline-action>
         </inline-edit>
       </edit>
+      <edit>
+        <find><![CDATA[<!-- IF postrow.POSTER_POSTS != '' --><br /><b>{L_POSTS}:</b> {postrow.POSTER_POSTS}<!-- ENDIF -->]]></find>
+        <action type="after-add"><![CDATA[<!-- IF postrow.GALLERY_IMAGES != '' --><br /><b>{L_IMAGES}:</b> <!-- IF postrow.U_GALLERY_SEARCH --><a href="{postrow.U_GALLERY_SEARCH}">{postrow.GALLERY_IMAGES}</a><!-- ELSE -->{postrow.GALLERY_IMAGES}<!-- ENDIF --><!-- ENDIF -->]]></action>
+      </edit>
     </open>
     <open src="styles/subsilver2/theme/stylesheet.css">
       <edit>

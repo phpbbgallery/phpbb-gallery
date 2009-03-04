@@ -117,6 +117,9 @@ $lang = array_merge($lang, array(
 	'DISP_PERSONAL_ALBUM_PROFILE'	=> 'Show link to personal album in user-profile',
 	'DISP_TOTAL_IMAGES'				=> 'Show "Total images" on index.' . $phpEx,
 	'DISP_USER_IMAGES_PROFILE'		=> 'Show statistic with uploaded images in user-profile',
+	'DISP_VIEWTOPIC_ICON'			=> 'Show button to personal album on viewtopic.' . $phpEx,
+	'DISP_VIEWTOPIC_IMAGES'			=> 'Show image-counter on viewtopic.' . $phpEx,
+	'DISP_VIEWTOPIC_LINK'			=> 'Link image-counter to user´s images',
 	'DISPLAY_IN_RRC'				=> 'Display images of this album in "Recent-Random"-images',
 	'DONT_COPY_PERMISSIONS'			=> 'Do not copy permissions',
 

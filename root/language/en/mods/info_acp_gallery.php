@@ -37,6 +37,7 @@ $lang = array_merge($lang, array(
 	'GALLERY'							=> 'Gallery',
 	'GALLERY_EXPLAIN'					=> 'Image Gallery',
 
+	'IMAGES'							=> 'Images',
 	'IMG_BUTTON_UPLOAD_IMAGE'			=> 'Upload image',
 
 	'PERSONAL_ALBUM'					=> 'Personal album',

@@ -654,6 +654,11 @@ function set_default_config()
 	set_gallery_config('rrc_gindex_display', 45);
 	set_gallery_config('rrc_profile_display', 13);
 	set_gallery_config('album_display', 126);
+
+	// Added 0.5.3:
+	set_config('gallery_viewtopic_icon', 1);
+	set_config('gallery_viewtopic_images', 1);
+	set_config('gallery_viewtopic_link', 0);
 }
 
 ?>

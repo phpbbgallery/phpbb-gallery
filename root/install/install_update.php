@@ -956,6 +956,13 @@ class install_update extends module
 				set_gallery_config('album_display', 126);
 
 			case '0.5.2':
+			case '0.5.3-dev':
+				set_config('gallery_viewtopic_icon', 1);
+				set_config('gallery_viewtopic_images', 1);
+				set_config('gallery_viewtopic_link', 0);
+
+			case '0.5.3':
+
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
 		}

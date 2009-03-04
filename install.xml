@@ -138,7 +138,7 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
       </edit>
       <edit>
         <find><![CDATA[	'SELECT'	=> 'u.*, z.friend, z.foe, p.*',]]></find>
-        <action type="replace-with"><![CDATA[	'SELECT'	=> 'u.*, z.friend, z.foe, p.*, gu.personal_album_id',]]></action>
+        <action type="replace-with"><![CDATA[	'SELECT'	=> 'u.*, z.friend, z.foe, p.*, gu.personal_album_id, gu.user_images',]]></action>
       </edit>
       <edit>
         <find><![CDATA[			'ON'	=> 'z.user_id = ' . $user->data['user_id'] . ' AND z.zebra_id = p.poster_id'
@@ -149,16 +149,22 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
 		)]]></action>
       </edit>
       <edit>
-        <find><![CDATA['jabber'			=> '',]]></find>
-        <action type="after-add"><![CDATA['gallery_album'		=> '',]]></action>
+        <find><![CDATA['age'				=> '',]]></find>
+        <action type="after-add"><![CDATA[				'gallery_album'		=> '',
+				'gallery_images'	=> '',
+				'gallery_search'	=> '',]]></action>
       </edit>
       <edit>
-        <find><![CDATA['jabber'		=> ($row['user_jabber'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=jabber&amp;u=$poster_id") : '',]]></find>
-        <action type="after-add"><![CDATA['gallery_album'	=> ($row['personal_album_id']) ? append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "album.$phpEx", "album_id=" . $row['personal_album_id']) : '',]]></action>
+        <find><![CDATA['search'		=> ($auth->acl_get('u_search')) ? append_sid("{$phpbb_root_path}search.$phpEx", "author_id=$poster_id&amp;sr=posts") : '',]]></find>
+        <action type="after-add"><![CDATA[				'gallery_album'		=> ($row['personal_album_id'] && $config['gallery_viewtopic_icon']) ? append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "album.$phpEx", "album_id=" . $row['personal_album_id']) : '',
+				'gallery_images'	=> ($config['gallery_viewtopic_images']) ? $row['user_images'] : 0,
+				'gallery_search'	=> ($config['gallery_viewtopic_images'] && $config['gallery_viewtopic_link'] && $row['user_images']) ? append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "search.$phpEx", "user_id=$poster_id") : '',]]></action>
       </edit>
       <edit>
         <find><![CDATA['U_JABBER'		=> $user_cache[$poster_id]['jabber'],]]></find>
-        <action type="after-add"><![CDATA['U_GALLERY'		=> $user_cache[$poster_id]['gallery_album'],]]></action>
+        <action type="after-add"><![CDATA[		'U_GALLERY'			=> $user_cache[$poster_id]['gallery_album'],
+		'GALLERY_IMAGES'	=> $user_cache[$poster_id]['gallery_images'],
+		'U_GALLERY_SEARCH'	=> $user_cache[$poster_id]['gallery_search'],]]></action>
       </edit>
     </open>
     <open src="includes/cache.php">
@@ -465,6 +471,10 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
       </edit>
     </open>
     <open src="styles/prosilver/template/viewtopic_body.html">
+      <edit>
+        <find><![CDATA[<!-- IF postrow.POSTER_POSTS != '' --><dd><strong>{L_POSTS}:</strong> {postrow.POSTER_POSTS}</dd><!-- ENDIF -->]]></find>
+        <action type="after-add"><![CDATA[<!-- IF postrow.GALLERY_IMAGES != '' --><dd><strong>{L_IMAGES}:</strong> <!-- IF postrow.U_GALLERY_SEARCH --><a href="{postrow.U_GALLERY_SEARCH}">{postrow.GALLERY_IMAGES}</a><!-- ELSE -->{postrow.GALLERY_IMAGES}<!-- ENDIF --></dd><!-- ENDIF -->]]></action>
+      </edit>
       <edit>
         <find><![CDATA[<!-- IF postrow.U_JABBER --><li class="jabber-icon"><a href="{postrow.U_JABBER}" onclick="popup(this.href, 550, 320); return false;" title="{L_JABBER}"><span>{L_JABBER}</span></a></li><!-- ENDIF -->]]></find>
         <action type="after-add"><![CDATA[<!-- IF postrow.U_GALLERY --><li class="gallery-icon"><a href="{postrow.U_GALLERY}" title="{L_PERSONAL_ALBUM}"><span>{L_PERSONAL_ALBUM}</span></a></li><!-- ENDIF -->]]></action>

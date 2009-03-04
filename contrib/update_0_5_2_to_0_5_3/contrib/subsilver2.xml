@@ -51,6 +51,12 @@ You may install it, to be informed about future versions, as I'm not going to se
       <file from="root/styles/subsilver2/theme/images/lytebox/*.*" to="styles/subsilver2/theme/images/lytebox/*.*" />
       <file from="root/styles/subsilver2/theme/images/icon_gallery.gif" to="styles/subsilver2/theme/images/icon_gallery.gif" />
     </copy>
+    <open src="styles/prosilver/template/viewtopic_body.html">
+      <edit>
+        <find><![CDATA[<!-- IF postrow.POSTER_POSTS != '' --><br /><b>{L_POSTS}:</b> {postrow.POSTER_POSTS}<!-- ENDIF -->]]></find>
+        <action type="after-add"><![CDATA[<!-- IF postrow.GALLERY_IMAGES != '' --><br /><b>{L_IMAGES}:</b> <!-- IF postrow.U_GALLERY_SEARCH --><a href="{postrow.U_GALLERY_SEARCH}">{postrow.GALLERY_IMAGES}</a><!-- ELSE -->{postrow.GALLERY_IMAGES}<!-- ENDIF --><!-- ENDIF -->]]></action>
+      </edit>
+    </open>
     <diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
 
 Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
