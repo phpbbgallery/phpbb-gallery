@@ -26,6 +26,32 @@ function toggle_permissions_panel(c_mask, v_mask, cat)
 	var new_tab = document.getElementById('tab' + c_mask + v_mask + cat);
 	new_tab.className = new_tab.className + ' activetab';
 }
+
+function inherit_album(c_mask, value)
+{
+	var oElement = document.getElementById('c_mask' + c_mask);
+	if (value == 0)
+	{
+		oElement.style.display = "";
+	}
+	else
+	{
+		oElement.style.display = "none";
+	}
+}
+
+function inherit_victim(c_mask, v_mask, value)
+{
+	var oElement = document.getElementById('advanced' + c_mask + v_mask);
+	if (value == 0)
+	{
+		oElement.style.display = "";
+	}
+	else
+	{
+		oElement.style.display = "none";
+	}
+}
 </script>
 <script type="text/javascript" src="style/permissions.js"></script>
 <a name="maincontent"></a>
@@ -93,15 +119,15 @@ function toggle_permissions_panel(c_mask, v_mask, cat)
 
 
 <!-- BEGIN c_mask -->
-<h3>{c_mask.ALBUM_NAME}</h3>
+	<h3>{c_mask.ALBUM_NAME}</h3>
+	<p>{L_INHERIT_PERMISSIONS_ALBUM}: <select name="inherit[{c_mask.ALBUM_ID}][full]" id="inherit[{c_mask.ALBUM_ID}][full]" onchange="inherit_album({c_mask.S_ROW_COUNT}, this.options[this.selectedIndex].value);">{c_mask.INHERIT_ALBUMS}</select></p>
+
+	<div id="c_mask{c_mask.S_ROW_COUNT}">
 	<!-- BEGIN v_mask -->
 	<fieldset>
 		<legend>{c_mask.v_mask.VICTIM_NAME}</legend>
-			<!-- IF not c_mask.S_VIEW and c_mask.S_VIEW -->
-				<div class="permissions-advanced" id="advanced{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}" style="display: none;">
-			<!-- ELSE -->
-				<div class="permissions-advanced" id="advanced{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}">
-			<!-- ENDIF -->
+		<p>{L_INHERIT_PERMISSIONS_VICTIM}: <select name="inherit[{c_mask.ALBUM_ID}][{c_mask.v_mask.VICTIM_ID}]" id="inherit[{c_mask.ALBUM_ID}][{c_mask.v_mask.VICTIM_ID}]" onchange="inherit_victim({c_mask.S_ROW_COUNT}, {c_mask.v_mask.S_ROW_COUNT}, this.options[this.selectedIndex].value);">{c_mask.v_mask.INHERIT_VICTIMS}</select></p>
+		<div class="permissions-advanced" id="advanced{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}">
 		<div class="permissions-category">
 			<ul>
 			<!-- BEGIN category -->
@@ -136,10 +162,10 @@ function toggle_permissions_panel(c_mask, v_mask, cat)
 					<th class="permissions-name<!-- IF c_mask.v_mask.category.mask.S_ROW_COUNT is even --> row4<!-- ELSE --> row3<!-- ENDIF -->">{c_mask.v_mask.category.mask.PERMISSION}</th>
 						<!-- IF not c_mask.v_mask.category.mask.S_COUNT_FIELD -->
 							<td class="value permissions-yes"><label for="{c_mask.v_mask.category.mask.S_FIELD_NAME}_y"><input id="{c_mask.v_mask.category.mask.S_FIELD_NAME}_y" name="{c_mask.v_mask.category.mask.S_FIELD_NAME}" class="radio" type="radio"<!-- IF c_mask.v_mask.category.mask.S_YES --> checked="checked"<!-- ENDIF --> value="1" /></label></td>
-							<td class="value permissions-no"><label for="{c_mask.v_mask.category.mask.S_FIELD_NAME}_u"><input id="{c_mask.v_mask.category.mask.S_FIELD_NAME}_u" name="{c_mask.v_mask.category.mask.S_FIELD_NAME}" class="radio" type="radio"<!-- IF c_mask.v_mask.category.mask.S_NO --> checked="checked"<!-- ENDIF --> value="-1" /></label></td>
+							<td class="value permissions-no"><label for="{c_mask.v_mask.category.mask.S_FIELD_NAME}_u"><input id="{c_mask.v_mask.category.mask.S_FIELD_NAME}_u" name="{c_mask.v_mask.category.mask.S_FIELD_NAME}" class="radio" type="radio"<!-- IF not c_mask.v_mask.category.mask.S_YES and not c_mask.v_mask.category.mask.S_NEVER --> checked="checked"<!-- ENDIF --> value="-1" /></label></td>
 							<td class="value permissions-never"><label for="{c_mask.v_mask.category.mask.S_FIELD_NAME}_n"><input id="{c_mask.v_mask.category.mask.S_FIELD_NAME}_n" name="{c_mask.v_mask.category.mask.S_FIELD_NAME}" class="radio" type="radio"<!-- IF c_mask.v_mask.category.mask.S_NEVER --> checked="checked"<!-- ENDIF --> value="0" /></label></td>
 						<!-- ELSE -->
-							<td class="permissions" colspan="3"><input class="text medium" type="text" id="{c_mask.v_mask.category.mask.S_FIELD_NAME}" name="{perm_group.permission.S_FIELD_NAME}" value="{c_mask.v_mask.category.mask.S_VALUE}" maxlength="7" /></td>
+							<td class="permissions" colspan="3"><input class="text medium" type="text" id="{c_mask.v_mask.category.mask.S_FIELD_NAME}" name="{c_mask.v_mask.category.mask.S_FIELD_NAME}" value="{c_mask.v_mask.category.mask.S_VALUE}" maxlength="7" /></td>
 						<!-- ENDIF -->
 				</tr>
 				<!-- END mask -->
@@ -154,64 +180,9 @@ function toggle_permissions_panel(c_mask, v_mask, cat)
 			<div class="clearfix"></div>
 	</fieldset>
 	<!-- END v_mask -->
+	</div>
 <!-- END c_mask -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-	<fieldset>
-		<legend>{L_SELECT_PERMISSIONS}</legend>
-		<!-- IF S_ALBUMS or S_GROUPS --><span>{L_PERM_HIDDEN_PERMISSIONS_EXP}</span><!-- ENDIF -->
-		<div class="permissions-panel" id="options{grouprow.S_ROW_COUNT}{p_mask.f_mask.S_ROW_COUNT}{p_mask.f_mask.category.S_ROW_COUNT}">
-			<span class="corners-top"><span></span></span>
-				<!-- BEGIN perm_group -->
-			<div class="tablewrap">
-				<table id="table{p_mask.S_ROW_COUNT}{p_mask.f_mask.S_ROW_COUNT}{p_mask.f_mask.category.S_ROW_COUNT}" cellspacing="1">
-				<colgroup>
-					<col class="permissions-name" />
-					<col class="permissions-yes" />
-					<col class="permissions-no" />
-					<col class="permissions-never" />
-				</colgroup>
-				<thead>
-				<tr>
-					<th class="name" scope="col"><strong>{perm_group.PERMISSION_GROUP}</strong></th>
-					<th class="value permissions-yes" scope="col" style="width: 10%;">{L_PERMISSION_YES}</th>
-					<th class="value permissions-no" scope="col" style="width: 10%;">{L_PERMISSION_NO}</th>
-					<th class="value permissions-never" scope="col" style="width: 10%;">{L_PERMISSION_NEVER}</th>
-				</tr>
-				</thead>
-				<tbody>
-				<!-- BEGIN permission -->
-					<!-- IF perm_group.permission.S_ROW_COUNT is even --><tr class="row4"><!-- ELSE --><tr class="row3"><!-- ENDIF -->
-					<th class="permissions-name<!-- IF perm_group.permission.S_ROW_COUNT is even --> row4<!-- ELSE --> row3<!-- ENDIF -->">{perm_group.permission.PERMISSION}</th>
-						<!-- IF not perm_group.permission.S_COUNT_FIELD -->
-							<td class="permissions-yes"><label for="{perm_group.permission.S_FIELD_NAME}_y"><input id="{perm_group.permission.S_FIELD_NAME}_y" name="{perm_group.permission.S_FIELD_NAME}" class="radio" type="radio"<!-- IF perm_group.permission.S_YES --> checked="checked"<!-- ENDIF --> value="2" /></label></td>
-							<td class="permissions-no"><label for="{perm_group.permission.S_FIELD_NAME}_u"><input id="{perm_group.permission.S_FIELD_NAME}_u" name="{perm_group.permission.S_FIELD_NAME}" class="radio" type="radio"<!-- IF perm_group.permission.S_NO --> checked="checked"<!-- ENDIF --> value="1" /></label></td>
-							<td class="permissions-never"><label for="{perm_group.permission.S_FIELD_NAME}_n"><input id="{perm_group.permission.S_FIELD_NAME}_n" name="{perm_group.permission.S_FIELD_NAME}" class="radio" type="radio"<!-- IF perm_group.permission.S_NEVER --> checked="checked"<!-- ENDIF --> value="3" /></label></td>
-						<!-- ELSE -->
-							<td class="permissions" colspan="3"><input class="text medium" type="text" id="{perm_group.permission.S_FIELD_NAME}" name="{perm_group.permission.S_FIELD_NAME}" value="{perm_group.permission.S_VALUE}" maxlength="7" /></td>
-						<!-- ENDIF -->
-				</tr>
-				<!-- END permission -->
-				</tbody>
-				</table>
-			</div><br />
-
-				<!-- END perm_group -->
-			<span class="corners-bottom"><span></span></span>
-		</div>
-			<div class="clearfix"></div>
-	</fieldset>
 <!-- ENDIF -->
 	<fieldset class="submit-buttons">
 		<legend>{L_SUBMIT}</legend>
