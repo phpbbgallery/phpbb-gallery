@@ -539,53 +539,6 @@ class acp_gallery
 				);
 			}
 			$db->sql_freeresult($result);
-			function inherit_albums($albums, $album_ary, $album_id)
-			{
-				global $user;
-
-				$return = '';
-				$return .= '<option value="0" selected="selected">' . $user->lang['PERMISSION_YES'] . '</option>';//@todo
-				foreach ($albums as $album)
-				{
-					if (in_array($album['album_id'], $album_ary))
-					{
-						$return .= '<option value="' . $album['album_id'] . (($album['album_id'] >= $album_id) ? '" disabled="disabled" class="disabled-option' : '') . '">' . $album['album_name'] . '</option>';
-					}
-				}
-				return $return;
-			}
-			function inherit_victims($albums, $album_ary, $groups, $album_id, $group_id)
-			{
-				global $user;
-
-				$return = '';
-				$return .= '<option value="0" selected="selected">' . $user->lang['PERMISSION_YES'] . '</option>';//@todo
-				foreach ($albums as $album)
-				{
-					if (in_array($album['album_id'], $album_ary))
-					{
-						$return .= '<option value="0" disabled="disabled" class="disabled-option">' . $album['album_name'] . '</option>';
-						foreach ($groups as $group)
-						{
-							$return .= '<option value="' . $album['album_id'] . '_' . $group['group_id'] . '"';
-							if ($album['album_id'] > $album_id)
-							{
-								$return .= ' disabled="disabled" class="disabled-option"';
-							}
-							elseif (($album['album_id'] >= $album_id) && ($group['group_id'] == $group_id))
-							{
-								$return .= ' disabled="disabled" class="disabled-option"';
-							}
-							elseif (($album['album_id'] == $album_id) && ($group['group_id'] > $group_id))
-							{
-								$return .= ' disabled="disabled" class="disabled-option"';
-							}
-							$return .= '>&nbsp;&nbsp;&nbsp;' . $group['group_name'] . '</option>';
-						}
-					}
-				}
-				return $return;
-			}
 			//Album names
 			foreach ($albums as $album)
 			{
@@ -594,20 +547,20 @@ class acp_gallery
 					$template->assign_block_vars('c_mask', array(
 						'ALBUM_ID'				=> $album['album_id'],
 						'ALBUM_NAME'			=> $album['album_name'],
-						'INHERIT_ALBUMS'		=> inherit_albums($albums, $album_ary, $album['album_id']),
+						'INHERIT_ALBUMS'		=> $this->inherit_albums($albums, $album_ary, $album['album_id']),
 					));
 					foreach ($new_groups as $row)
 					{
 						$template->assign_block_vars('c_mask.v_mask', array(
 							'VICTIM_ID'				=> $row['group_id'],
 							'VICTIM_NAME'			=> '<span' . (($row['group_colour']) ? (' style="color: #' . $row['group_colour'] . '"') : '') . '>' . $row['group_name'] . '</span>',
-							'INHERIT_VICTIMS'		=> inherit_victims($albums, $album_ary, $new_groups, $album['album_id'], $row['group_id']),
+							'INHERIT_VICTIMS'		=> $this->inherit_victims($albums, $album_ary, $new_groups, $album['album_id'], $row['group_id']),
 						));
 						foreach ($permission_parts as $perm_groupname => $permission)
 						{
 							$template->assign_block_vars('c_mask.v_mask.category', array(
 								'CAT_NAME'				=> $user->lang['PERMISSION_' . strtoupper($perm_groupname)],
-								'PERM_GROUP_ID'				=> $perm_groupname,
+								'PERM_GROUP_ID'			=> $perm_groupname,
 							));
 							$string = implode(', ', $permission);
 							foreach ($permission_parts[$perm_groupname] as $permission)
@@ -700,6 +653,7 @@ class acp_gallery
 			{
 				trigger_error('FORM_INVALID', E_USER_WARNING);
 			}
+			$coal = $cache->obtain_album_list();
 
 			/**
 			* Grab the permissions
@@ -766,7 +720,7 @@ class acp_gallery
 						// Inherit all permissions of an other c_mask
 						if (isset($auth_settings[$i_mask]))
 						{
-							if ($i_mask < $c_mask)
+							if ($this->inherit_albums($coal, $c_mask_storage, $c_mask, $i_mask))
 							{
 								foreach ($auth_settings[$c_mask] as $v_mask => $p_mask)
 								{
@@ -795,22 +749,7 @@ class acp_gallery
 						$vi_mask = (int) $vi_mask;
 						if (isset($auth_settings[$ci_mask][$vi_mask]))
 						{
-							$s_hacking_attempt = false;
-							// Filter invalid inherits
-							if ($ci_mask > $c_mask)
-							{
-								$s_hacking_attempt = true;
-							}
-							elseif (($ci_mask >= $c_mask) && ($vi_mask == $v_mask))
-							{
-								$s_hacking_attempt = true;
-							}
-							elseif (($ci_mask == $c_mask) && ($vi_mask > $v_mask))
-							{
-								$s_hacking_attempt = true;
-							}
-
-							if (!$s_hacking_attempt)
+							if ($this->inherit_victims($coal, $c_mask_storage, $v_mask_storage, $c_mask, $v_mask, $ci_mask, $vi_mask))
 							{
 								// You are not able to inherit a later c_mask, so we can remove the p_mask from the storage,
 								// and just use the same p_mask
@@ -1064,6 +1003,102 @@ class acp_gallery
 			'PERM_SYSTEM'			=> $perm_system,
 			'S_ALBUM_ACTION' 		=> $this->u_action,
 		));
+	}
+
+	/**
+	* Create the drop-down-options to inherit the c_masks
+	* or check, whether the choosen option is valid
+	*/
+	function inherit_albums($cache_obtain_album_list, $allowed_albums, $album_id, $check_inherit_album = 0)
+	{
+		global $user;
+		$disabled = false;
+
+		$return = '';
+		$return .= '<option value="0" selected="selected">' . $user->lang['NO_INHERIT'] . '</option>';
+		foreach ($cache_obtain_album_list as $album)
+		{
+			if (in_array($album['album_id'], $allowed_albums))
+			{
+				// We found the requested album: return true!
+				if ($check_inherit_album && ($album['album_id'] == $check_inherit_album))
+				{
+					return true;
+				}
+				if ($album['album_id'] == $album_id)
+				{
+					$disabled = true;
+					// Could we find the requested album so far? No? Hacking attempt?!
+					if ($check_inherit_album)
+					{
+						return false;
+					}
+				}
+				$return .= '<option value="' . $album['album_id'] . '"';
+				if ($disabled)
+				{
+					$return .= ' disabled="disabled" class="disabled-option"';
+				}
+				$return .= '>' . $album['album_name'] . '</option>';
+			}
+		}
+		// Could we find the requested album even here?
+		if ($check_inherit_album)
+		{
+			// Something went really wrong here!
+			return false;
+		}
+		return $return;
+	}
+
+	/**
+	* Create the drop-down-options to inherit the v_masks
+	* or check, whether the choosen option is valid
+	*/
+	function inherit_victims($cache_obtain_album_list, $allowed_albums, $allowed_groups, $album_id, $group_id, $check_inherit_album = 0, $check_inherit_group = 0)
+	{
+		global $user;
+		$disabled = false;
+
+		$return = '';
+		$return .= '<option value="0" selected="selected">' . $user->lang['NO_INHERIT'] . '</option>';
+		foreach ($cache_obtain_album_list as $album)
+		{
+			if (in_array($album['album_id'], $allowed_albums))
+			{
+				$return .= '<option value="0" disabled="disabled" class="disabled-option">' . $album['album_name'] . '</option>';
+				foreach ($allowed_groups as $group)
+				{
+					// We found the requested album: return true!
+					if ($check_inherit_album && $check_inherit_group && (($album['album_id'] == $check_inherit_album) && ($group['group_id'] == $check_inherit_group)))
+					{
+						return true;
+					}
+					if (($album['album_id'] == $album_id) && ($group['group_id'] == $group_id))
+					{
+						$disabled = true;
+						// Could we find the requested album_group so far? No? Hacking attempt?!
+						if ($check_inherit_album && $check_inherit_group)
+						{
+							return false;
+						}
+					}
+					$return .= '<option value="' . $album['album_id'] . '_' . $group['group_id'] . '"';
+					if ($disabled)
+					{
+						$return .= ' disabled="disabled" class="disabled-option"';
+					}
+					$return .= '>&nbsp;&nbsp;&nbsp;' . $album['album_name'] . ' >>> ' . $group['group_name'] . '</option>';
+				}
+			}
+		}
+		// Could we find the requested album_group even here?
+		if ($check_inherit_album && $check_inherit_group)
+		{
+			// Something went really wrong here!
+			return false;
+		}
+		return $return;
 	}
 
 	function import()

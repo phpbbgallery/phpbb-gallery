@@ -194,6 +194,7 @@ $lang = array_merge($lang, array(
 
 	'NEW_ALBUM_CREATED'				=> 'Neues Album wurde erfolgreich erstellt',
 	'NO_ALBUM_SELECTED'				=> 'Du musst mindestens ein Album auswählen.',
+	'NO_INHERIT'					=> 'Berechtigungen nicht kopieren',
 	'NO_PARENT_ALBUM'				=> 'Kein übergeordnetes',
 	'NO_SUBALBUMS'					=> 'Keine Alben angehängt',
 	'NUMBER_ALBUMS'					=> 'Anzahl von Alben',
@@ -205,6 +206,7 @@ $lang = array_merge($lang, array(
 	'PERMISSION'					=> 'Berechtigung',
 	'PERMISSION_NEVER'				=> 'Nie',
 	'PERMISSION_NO'					=> 'Nein',
+	'PERMISSION_SETTING'			=> 'Einstellung',
 	'PERMISSION_YES'				=> 'Ja',
 
 	'PERMISSION_A_LIST'				=> 'Kann das Album sehen',
