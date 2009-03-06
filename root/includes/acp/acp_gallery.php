@@ -54,7 +54,15 @@ class acp_gallery
 				$this->tpl_name = 'gallery_permissions';
 				$this->page_title = $user->lang[$title];
 
-				$this->permissions();
+				$submode = request_var('submode', '');
+				if ($submode == 'set')
+				{
+					$this->set_permissions();
+				}
+				else
+				{
+					$this->permissions();
+				}
 			break;
 
 			case 'import_images':
@@ -356,6 +364,7 @@ class acp_gallery
 	function permissions()
 	{
 		global $db, $template, $user, $cache;
+		global $phpbb_admin_path, $phpEx;
 
 		// Send contants to the template
 		$template->assign_vars(array(
@@ -647,7 +656,77 @@ class acp_gallery
 			}
 			$step = 3;
 		}
-		else if ($step == 3)
+
+		if ($perm_system)
+		{
+			$hidden_fields = build_hidden_fields(array(
+				'album_ids'			=> $album_ary,
+				'group_ids'			=> $group_ary,
+				'step'				=> $step,
+				'perm_system'		=> $perm_system,
+			));
+		}
+		else
+		{
+			$hidden_fields = build_hidden_fields(array(
+				'album_ids'			=> $album_ary,
+				'group_ids'			=> $group_ary,
+				'step'				=> $step,
+			));
+		}
+
+		$template->assign_vars(array(
+			'S_HIDDEN_FIELDS'		=> $hidden_fields,
+			'ALBUMS'				=> implode(', ', $album_name_ary),
+			'GROUPS'				=> implode(', ', $group_ary),
+			'STEP'					=> $step,
+			'PERM_SYSTEM'			=> $perm_system,
+			'S_ALBUM_ACTION' 		=> ($step == 3) ? append_sid("{$phpbb_admin_path}index.$phpEx", 'i=gallery&amp;mode=permissions&amp;submode=set') : $this->u_action,
+		));
+	}
+
+	function set_permissions()
+	{
+		global $db, $template, $user, $cache;
+		global $phpbb_admin_path, $phpEx;
+
+		// Send contants to the template
+		$template->assign_vars(array(
+			'C_OWN_PERSONAL_ALBUMS'	=> OWN_GALLERY_PERMISSIONS,
+			'C_PERSONAL_ALBUMS'		=> PERSONAL_GALLERY_PERMISSIONS,
+		));
+
+		$submit = (isset($_POST['submit'])) ? true : false;
+		/**
+		* Can we put this away?
+		*/
+		// Build the array with some kind of order.
+		$permissions = $permission_parts['misc'] = $permission_parts['m'] = $permission_parts['c'] = $permission_parts['i'] = array();
+		if ($perm_system != OWN_GALLERY_PERMISSIONS)
+		{
+			$permission_parts['i'] = array_merge($permission_parts['i'], array('i_view'));
+		}
+		$permission_parts['i'] = array_merge($permission_parts['i'], array('i_watermark', 'i_upload'));
+		if ($perm_system != PERSONAL_GALLERY_PERMISSIONS)
+		{
+			// Note for myself, do not hide the i_upload on other personals. It's used for the moving-permissions
+			$permission_parts['i'] = array_merge($permission_parts['i'], array('i_approve', 'i_edit', 'i_delete'));
+		}
+		$permission_parts['i'] = array_merge($permission_parts['i'], array('i_report', 'i_rate'));
+		$permission_parts['c'] = array_merge($permission_parts['c'], array('c_read', 'c_post', 'c_edit', 'c_delete'));
+		$permission_parts['m'] = array_merge($permission_parts['m'], array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status'));
+		$permission_parts['misc'] = array_merge($permission_parts['misc'], array('a_list'));
+		if ($perm_system != PERSONAL_GALLERY_PERMISSIONS)
+		{
+			$permission_parts['misc'] = array_merge($permission_parts['misc'], array('i_count'));
+		}
+		if ($perm_system == OWN_GALLERY_PERMISSIONS)
+		{
+			$permission_parts['misc'] = array_merge($permission_parts['misc'], array('album_count'));
+		}
+		$permissions = array_merge($permissions, $permission_parts['i'], $permission_parts['c'], $permission_parts['m'], $permission_parts['misc']);
+
+		if ($submit)
 		{
 			if (!check_form_key('acp_gallery'))
 			{
@@ -883,126 +962,8 @@ class acp_gallery
 			$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);
 
 			trigger_error('PERMISSIONS_STORED' . adm_back_link($this->u_action));
-			// Ready!!!11eleven
-
-
-
-
-
-
-
-			$set_moderator = false;
-			foreach ($permissions as $permission)
-			{
-				// Hacked for deny empty submit
-				$submitted_valued = request_var($permission, 0);
-				if (substr($permission, -6, 6) == '_count')
-				{
-					$submitted_valued = $submitted_valued + 1;
-				}
-				else if ($submitted_valued == 0)
-				{
-					trigger_error('PERMISSION_EMPTY', E_USER_WARNING);
-				}
-				$sql_ary[$permission] = $submitted_valued - 1;
-				if ((substr($permission, 0, 2) == 'm_') && ($sql_ary[$permission] == 1))
-				{
-					$set_moderator = true;
-				}
-			}
-			// Need to set a defaults here: view your own personal albums
-			if ($perm_system == OWN_GALLERY_PERMISSIONS)
-			{
-				$sql_ary['i_view'] = 1;
-			}
-
-			$db->sql_query('INSERT INTO ' . GALLERY_ROLES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
-			$insert_role = $db->sql_nextid();
-			if ($album_ary != array())
-			{
-				foreach ($album_ary as $album)
-				{
-					foreach ($group_ary as $group)
-					{
-						$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . " WHERE perm_album_id = $album AND perm_group_id = $group AND perm_system = $perm_system";
-						$db->sql_query($sql);
-						$sql_ary = array(
-							'perm_role_id'			=> $insert_role,
-							'perm_album_id'			=> $album,
-							'perm_user_id'			=> 0,
-							'perm_group_id'			=> $group,
-							'perm_system'			=> $perm_system,
-						);
-						$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
-						$sql = 'DELETE FROM ' . GALLERY_MODSCACHE_TABLE . " WHERE album_id = $album AND group_id = $group";
-						$db->sql_query($sql);
-						if ($set_moderator)
-						{
-							$sql = 'SELECT group_name FROM ' . GROUPS_TABLE . '
-								WHERE ' . $db->sql_in_set('group_id', $group);
-							$result = $db->sql_query($sql);
-							while ($row = $db->sql_fetchrow($result))
-							{
-								$group_name = $row['group_name'];
-							}
-							$db->sql_freeresult($result);
-							$sql_ary = array(
-								'album_id'			=> $album,
-								'group_id'			=> $group,
-								'group_name'		=> $group_name,
-							);
-							$db->sql_query('INSERT INTO ' . GALLERY_MODSCACHE_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
-						}
-					}
-				}
-			}
-			else
-			{
-				foreach ($group_ary as $group)
-				{
-					$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . " WHERE perm_group_id = $group AND perm_system = $perm_system";
-					$db->sql_query($sql);
-					$sql_ary = array(
-						'perm_role_id'			=> $insert_role,
-						'perm_album_id'			=> 0,
-						'perm_user_id'			=> 0,
-						'perm_group_id'			=> $group,
-						'perm_system'			=> $perm_system,
-					);
-					$db->sql_query('INSERT INTO ' . GALLERY_PERMISSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
-				}
-			}
-			$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);
-			trigger_error('PERMISSIONS_STORED');
 		}
-
-
-		if ($perm_system)
-		{
-			$hidden_fields = build_hidden_fields(array(
-				'album_ids'			=> $album_ary,
-				'group_ids'			=> $group_ary,
-				'step'				=> $step,
-				'perm_system'		=> $perm_system,
-			));
-		}
-		else
-		{
-			$hidden_fields = build_hidden_fields(array(
-				'album_ids'			=> $album_ary,
-				'group_ids'			=> $group_ary,
-				'step'				=> $step,
-			));
-		}
-
-		$template->assign_vars(array(
-			'S_HIDDEN_FIELDS'		=> $hidden_fields,
-			'ALBUMS'				=> implode(', ', $album_name_ary),
-			'GROUPS'				=> implode(', ', $group_ary),
-			'STEP'					=> $step,
-			'PERM_SYSTEM'			=> $perm_system,
-			'S_ALBUM_ACTION' 		=> $this->u_action,
-		));
+		trigger_error('HACKING_ATTEMPT', E_USER_WARNING);
 	}
 
 	/**
@@ -1059,6 +1020,20 @@ class acp_gallery
 	{
 		global $user;
 		$disabled = false;
+		// We submit a "wrong" array on the check (to make it more easy) so we convert it here
+		if ($check_inherit_album && $check_inherit_group)
+		{
+			$converted_groups = array();
+			foreach ($allowed_groups as $group)
+			{
+				$converted_groups[] = array(
+					'group_id'		=> $group,
+					'group_name'	=> '',
+				);
+			}
+			$allowed_groups = $converted_groups;
+			unset ($converted_groups);
+		}
 
 		$return = '';
 		$return .= '<option value="0" selected="selected">' . $user->lang['NO_INHERIT'] . '</option>';
