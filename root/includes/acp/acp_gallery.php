@@ -117,9 +117,6 @@ class acp_gallery
 					default:
 						$this->permissions_c_mask();
 					break;
-					/*default:
-						$this->permissions();
-					break;*/
 				}
 			break;
 
@@ -881,6 +878,7 @@ class acp_gallery
 				{
 					if (($v_mask == 'full') && $i_mask)
 					{
+						$i_mask = (int) $i_mask;
 						// Inherit all permissions of an other c_mask
 						if (isset($auth_settings[$i_mask]))
 						{
