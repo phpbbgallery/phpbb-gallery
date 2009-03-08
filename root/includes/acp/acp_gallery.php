@@ -57,7 +57,7 @@ class acp_gallery
 			'i'		=> array('i_view', 'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate'),
 			'c'		=> array('c_read', 'c_post', 'c_edit', 'c_delete'),
 			'm'		=> array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status'),
-			'misc'	=> array('a_list', 'i_count'),
+			'misc'	=> array('a_list', 'i_count'/*, 'album_count'*/),
 		);
 		$permissions->p_masks[0] = array_merge($permissions->cats[0]['i'], $permissions->cats[0]['c'], $permissions->cats[0]['m'], $permissions->cats[0]['misc']);
 		$permissions->p_masks_anti[0] = array('album_count');
@@ -65,7 +65,7 @@ class acp_gallery
 		// Permissions for own personal albums
 		// Note: we set i_view to 1 as default on storing the permissions
 		$permissions->cats[OWN_GALLERY_PERMISSIONS] = array(
-			'i'		=> array('i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate'),
+			'i'		=> array(/*'i_view', */'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate'),
 			'c'		=> array('c_read', 'c_post', 'c_edit', 'c_delete'),
 			'm'		=> array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status'),
 			'misc'	=> array('a_list', 'i_count', 'album_count'),
@@ -76,10 +76,10 @@ class acp_gallery
 		// Permissions for personal albums of other users
 		// Note: Do !NOT! hide the i_upload. It's used for the moving-permissions
 		$permissions->cats[PERSONAL_GALLERY_PERMISSIONS] = array(
-			'i'		=> array('i_view', 'i_watermark', 'i_upload', 'i_report', 'i_rate'),
+			'i'		=> array('i_view', 'i_watermark', 'i_upload', /*'i_approve', 'i_edit', 'i_delete', */'i_report', 'i_rate'),
 			'c'		=> array('c_read', 'c_post', 'c_edit', 'c_delete'),
 			'm'		=> array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status'),
-			'misc'	=> array('a_list'),
+			'misc'	=> array('a_list'/*, 'i_count', 'album_count'*/),
 		);
 		$permissions->p_masks[PERSONAL_GALLERY_PERMISSIONS] = array_merge($permissions->cats[PERSONAL_GALLERY_PERMISSIONS]['i'], $permissions->cats[PERSONAL_GALLERY_PERMISSIONS]['c'], $permissions->cats[PERSONAL_GALLERY_PERMISSIONS]['m'], $permissions->cats[PERSONAL_GALLERY_PERMISSIONS]['misc']);
 		$permissions->p_masks_anti[PERSONAL_GALLERY_PERMISSIONS] = array('i_approve', 'i_edit', 'i_delete', 'i_count', 'album_count');
@@ -913,7 +913,8 @@ class acp_gallery
 						$vi_mask = (int) $vi_mask;
 						if (isset($auth_settings[$ci_mask][$vi_mask]))
 						{
-							if ($this->inherit_victims($coal, $c_mask_storage, $v_mask_storage, $c_mask, $v_mask, $ci_mask, $vi_mask))
+							$no_hacking_attempt = ((!$p_system) ? $this->inherit_victims($coal, $c_mask_storage, $v_mask_storage, $c_mask, $v_mask, $ci_mask, $vi_mask) : $this->p_system_inherit_victims($p_system, $v_mask_storage, $v_mask, $vi_mask));
+							if ($no_hacking_attempt)
 							{
 								// You are not able to inherit a later c_mask, so we can remove the p_mask from the storage,
 								// and just use the same p_mask
