@@ -59,6 +59,8 @@
           <change><![CDATA[[Add] Post #6321: Display user images on viewtopic.php (Patch by Christian_N and nickvergessen)]]></change>
           <change><![CDATA[[Add] Report #129: Read-/Unread-information for albums when new images were uploaded]]></change>
 
+          <change><![CDATA[[Change] Unreported: Rewrote the acp to set permissions much better]]></change>
+
           <change><![CDATA[[Sec] Report #i481: Unapproved images counter of personal albums is visible on index without permissions (Reported by robbx)]]></change>
           <change><![CDATA[[Sec] Report #i481: Unapproved image comments are visible (Reported by robbx)]]></change>
         </changelog>

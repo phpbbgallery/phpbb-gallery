@@ -962,6 +962,21 @@ class install_update extends module
 				set_config('gallery_viewtopic_link', 0);
 
 			case '0.5.3':
+				// Remove some old p_masks
+				$sql = 'SELECT perm_role_id
+					FROM ' . GALLERY_PERMISSIONS_TABLE;
+				$result = $db->sql_query($sql);
+
+				$p_masks = array();
+				while ($row = $db->sql_fetchrow($result))
+				{
+					$p_masks[] = $row['perm_role_id'];
+				}
+				$db->sql_freeresult($result);
+
+				$sql = 'DELETE FROM ' . GALLERY_ROLES_TABLE . '
+					WHERE ' . $db->sql_in_set('role_id', $p_masks, true, true);
+				$db->sql_query($sql);
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;

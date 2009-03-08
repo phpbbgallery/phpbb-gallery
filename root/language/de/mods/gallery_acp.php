@@ -24,16 +24,11 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'ACP_CREATE_ALBUM_EXPLAIN'		=> 'Neues Album erstellen und konfigurieren.',
-	'ACP_EDIT_ALBUM_TITLE'			=> 'Album bearbeiten',
-	'ACP_EDIT_ALBUM_EXPLAIN'		=> 'Ein vorhandenes Album bearbeiten.',
 	'ACP_GALLERY_CLEANUP_EXPLAIN'	=> 'Hier kannst du Überreste aus der Galerie entfernen.',
 	'ACP_GALLERY_OVERVIEW'			=> 'phpBB Galerie',
 	'ACP_GALLERY_OVERVIEW_EXPLAIN'	=> 'Hier findest du ein paar Statistiken zu deiner Galerie.',
 	'ACP_IMPORT_ALBUMS'				=> 'Neue Bilder importieren',
 	'ACP_IMPORT_ALBUMS_EXPLAIN'		=> 'Hier kannst Du die Anzahl von Bilder eingeben, die importiert werden sollen. Bevor Du die Bilder importierst, ändere die Größe von Hand mit einer Bildbearbeitungssoftware.',
-	'ACP_MANAGE_ALBUMS'				=> 'phpBB Galerie Album administration',
-	'ACP_MANAGE_ALBUMS_EXPLAIN'		=> 'Hier kannst du Deine Alben verwalten (Ehemalige Kategorien).',
 
 	'ADD_ALBUM_ON_TOP'				=> 'Album oben einfügen',
 	'ADD_PERMISSIONS'				=> 'Berechtigungen hinzufügen',
@@ -65,6 +60,7 @@ $lang = array_merge($lang, array(
 	'ALBUM_TYPE_UPLOAD'				=> 'Album',
 	'ALBUM_UPDATED'					=> 'Das Album wurde erfolgreich aktuallisiert',
 	'ALBUM_WITH_CONTEST_NO_TYPE_CHANGE'	=> 'Ein Album mit Wettbewerb kann nicht in ein Album ohne Wettbewerb geändert werden.',
+	'ALBUMS'						=> 'Alben',
 
 	'CACHE_DIR_SIZE'				=> 'Größe des cache/-Ordners',
 	'CHANGE_AUTHOR'					=> 'Autor in Gast ändern',
@@ -167,6 +163,8 @@ $lang = array_merge($lang, array(
 	'IMPORT_USER'					=> 'Hochgeladen durch',
 	'IMPORT_USER_EXP'				=> 'Du kannst die Bilder auch einem anderem Mitglied zuordnen lassen.',
 	'INFO_LINE'						=> 'Dateigröße auf dem Thumbnail anzeigen',
+	'INHERIT_PERMISSIONS_ALBUM'		=> 'Berechtigung von einem anderem Album übernehmen',
+	'INHERIT_PERMISSIONS_VICTIM'	=> 'Berechtigung aus einer anderen Einstellung übernehmen',
 
 	'JPG_ALLOWED'					=> 'Es ist erlaubt JPG- Dateien hochzuladen',
 
@@ -240,6 +238,8 @@ $lang = array_merge($lang, array(
 	'PERM_HIDDEN_PERMISSIONS_EXP'	=> 'Die Berechtigungen sind leer, weil du mehr als eine Gruppe oder/und ein Album ausgewählt hast.',
 	'PERMISSION_EMPTY'				=> 'Du hast nicht alle Berechtigungen gesetzt.',
 	'PERMISSION_NO_GROUP'			=> 'Du hast keine Gruppe ausgewählt, für die du Berechtigungen vergeben möchtest.',
+	'PERMISSIONS'					=> 'Berechtigungen',
+	'PERMISSIONS_EXPLAIN'			=> 'Hier kannst du festlegen, welche Benutzer und Gruppen Zugriff auf welches Album haben.',
 	'PERMISSIONS_STORED'			=> 'Berechtigungen erfolgreich gespeichert.',
 	'PERSONAL_ALBUM_INDEX'			=> 'Persönliche Alben in der Galerie-Übersicht als Album anzeigen',
 	'PERSONAL_ALBUM_INDEX_EXP'		=> 'Wenn "Nein" ausgewählt ist, wird der Link unterhalb der Alben angezeigt.',

@@ -56,71 +56,116 @@ function inherit_victim(c_mask, v_mask, value)
 <script type="text/javascript" src="style/permissions.js"></script>
 <a name="maincontent"></a>
 
-<h1>{ACP_GALLERY_TITLE}</h1>
-<p>{ACP_GALLERY_TITLE_EXPLAIN}</p>
+<h1>{L_PERMISSIONS}</h1>
+<p>{L_PERMISSIONS_EXPLAIN}</p>
 
-<form action="{S_ALBUM_ACTION}" method="post" id="gallery_acp">
-<!-- IF STEP == 1 -->
-	<fieldset>
-		<legend>{L_SELECT_PERM_SYS}</legend>
-			<dl><dt><input id="perm_system_0" name="perm_system" class="radio" type="radio" checked="checked" value="0" /><label for="perm_system_0">&nbsp;{L_SELECTED_ALBUMS}</label></dt>
-				<dd><select id="target" name="album_ids[]" multiple="multiple">
-				{ALBUM_LIST}
-				</select></dd>
-			</dl>
-			<dl><dt><input id="perm_system_2" name="perm_system" class="radio" type="radio" value="{C_OWN_PERSONAL_ALBUMS}" /><label for="perm_system_2">&nbsp;{L_OWN_PERSONAL_ALBUMS}</label></dt></dl>
-			<dl><dt><input id="perm_system_3" name="perm_system" class="radio" type="radio" value="{C_PERSONAL_ALBUMS}" /><label for="perm_system_3">&nbsp;{L_PERSONAL_ALBUMS}</label></dt></dl>
-	</fieldset>
-<!-- ELSEIF STEP == 2 -->
-	<fieldset>
-		<legend><!-- IF .albumrow -->{L_SELECTED_ALBUMS}<!-- ELSE -->{L_SELECTED_PERM_SYS}<!-- ENDIF --></legend>
-			<dl>
-				<!-- IF PERM_SYSTEM == C_OWN_PERSONAL_ALBUMS --><dd style="font-weight: bold;">{L_OWN_PERSONAL_ALBUMS}</dd><!-- ENDIF -->
-				<!-- IF PERM_SYSTEM == C_PERSONAL_ALBUMS --><dd style="font-weight: bold;">{L_PERSONAL_ALBUMS}</dd><!-- ENDIF -->
-				<!-- BEGIN albumrow --><dd style="font-weight: bold;">{albumrow.ALBUM_NAME}</dd><!-- END albumrow -->
-			</dl>
-	</fieldset>
-	<fieldset>
-		<legend>{L_DELETE_PERMISSIONS}</legend>
-			<dl><dt>{L_DELETE_PERMISSIONS}</dt>
-			<dd><!-- BEGIN perm_grouprow --><input id="drop_perm" name="drop_perm[]" class="radio" type="checkbox" value="{perm_grouprow.GROUP_ID}" /><!-- IF perm_grouprow.GROUP_COLOUR --><span style="color: #{perm_grouprow.GROUP_COLOUR};">{perm_grouprow.GROUP_NAME}</span><!-- ELSE -->{perm_grouprow.GROUP_NAME}<!-- ENDIF --><br /><!-- END perm_grouprow --><!-- IF .perm_grouprow --><br />
-			<a href="#" onclick="marklist('gallery_acp', 'drop_perm', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('gallery_acp', 'drop_perm', false); return false;">{L_UNMARK_ALL}</a><!-- ELSE -->{L_PERM_HIDDEN_GROUPS_EXP}<!-- ENDIF --></dd></dl>
-	</fieldset>
-	<fieldset class="submit-buttons">
-		<legend>{L_SUBMIT}</legend>
-		{S_FORM_TOKEN}{S_HIDDEN_FIELDS}
-		<input class="button1" type="submit" id="delete" name="delete" value="{L_DELETE_PERMISSIONS}" />
-	</fieldset>
-	<fieldset>
-		<legend>{L_ADD_PERMISSIONS}</legend>
-			<dl><dt>{L_ADD_PERMISSIONS}</dt>
-			<dd><select id="target" name="group_ids[]" multiple="multiple">
-				<!-- BEGIN grouprow --><option value="{grouprow.GROUP_ID}">{grouprow.GROUP_NAME}</option><!-- END grouprow -->
-			</select></dd></dl>
-	</fieldset>
-<!-- ELSEIF STEP == 3 -->
-	<fieldset>
-		<legend><!-- IF .albumrow -->{L_SELECTED_ALBUMS}<!-- ELSE -->{L_SELECTED_PERM_SYS}<!-- ENDIF --></legend>
-			<dl>
-				<!-- IF PERM_SYSTEM == C_OWN_PERSONAL_ALBUMS --><dd style="font-weight: bold;">{L_OWN_PERSONAL_ALBUMS}</dd><!-- ENDIF -->
-				<!-- IF PERM_SYSTEM == C_PERSONAL_ALBUMS --><dd style="font-weight: bold;">{L_PERSONAL_ALBUMS}</dd><!-- ENDIF -->
-				<!-- BEGIN albumrow --><dd style="font-weight: bold;">{albumrow.ALBUM_NAME}</dd><!-- END albumrow -->
-			</dl>
-	</fieldset>
-	<fieldset>
-		<legend>{L_SELECTED_GROUPS}</legend>
-			<dl>
-				<!-- BEGIN grouprow --><dd style="font-weight: bold;"><!-- IF grouprow.GROUP_COLOUR --><span style="color: #{grouprow.GROUP_COLOUR};">{grouprow.GROUP_NAME}</span><!-- ELSE -->{grouprow.GROUP_NAME}<!-- ENDIF --></dd><!-- END grouprow -->
-			</dl>
-	</fieldset>
+<!-- IF S_PERMISSION_C_MASK -->
+	<form action="{U_ACTION}" method="post" id="gallery_acp">
+		<fieldset>
+			<legend>{L_SELECT_PERM_SYS}</legend>
+				<dl><dt><input id="p_system_0" name="p_system" class="radio" type="radio" checked="checked" value="0" /><label for="p_system_0">&nbsp;{L_SELECTED_ALBUMS}</label></dt>
+					<dd><select id="target" name="album_id[]" multiple="multiple">{ALBUM_LIST}</select></dd>
+				</dl>
+				<dl><dt><input id="p_system_2" name="p_system" class="radio" type="radio" value="{C_OWN_PERSONAL_ALBUMS}" /><label for="p_system_2">&nbsp;{L_OWN_PERSONAL_ALBUMS}</label></dt></dl>
+				<dl><dt><input id="p_system_3" name="p_system" class="radio" type="radio" value="{C_PERSONAL_ALBUMS}" /><label for="p_system_3">&nbsp;{L_PERSONAL_ALBUMS}</label></dt></dl>
+		</fieldset>
+		<fieldset class="submit-buttons">
+			<legend>{L_SUBMIT}</legend>
+			{S_FORM_TOKEN}{S_HIDDEN_FIELDS}
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
+		</fieldset>
+	</form>
+<!-- ENDIF -->
 
 
+<!-- IF S_PERMISSION_V_MASK -->
+	<!-- IF C_MASKS_NAMES -->
+		<p><strong>{L_C_MASKS}:</strong> {C_MASKS_NAMES}</p>
+	<!-- ENDIF -->
 
+	<div style="float: {S_CONTENT_FLOW_BEGIN}; width: 48%;">
+	<!-- IF S_CAN_SELECT_USER -->
+		<h1>{L_USERS}</h1>
 
+		<form id="users" method="post" action="{U_ACTION}">
+			<fieldset>
+				<legend>{L_MANAGE_USERS}</legend>
+				<dl>
+					<dd class="full"><select style="width: 100%;" name="user_id[]" multiple="multiple" size="5">{S_DEFINED_USER_OPTIONS}</select></dd>
+					<!--dd class="full" style="text-align: right;"><label><input type="checkbox" class="radio" name="all_users" value="1" /> {L_ALL_USERS}</label></dd-->
+				</dl>
+			</fieldset>
+
+			<fieldset class="quick">
+				{S_HIDDEN_FIELDS}
+				{S_FORM_TOKEN}
+				<input type="submit" class="button2" name="delete" value="{L_REMOVE_PERMISSIONS}" style="width: 46% !important;" /> &nbsp; <input class="button1" type="submit" name="submit_edit_options" value="{L_EDIT_PERMISSIONS}" style="width: 46% !important;" />
+			</fieldset>
+		</form>
+
+		<form id="add_user" method="post" action="{U_ACTION}">
+
+			<fieldset>
+				<legend>{L_ADD_USERS}</legend>
+				<p>{L_USERNAMES_EXPLAIN}</p>
+				<dl>
+					<dd class="full"><textarea id="username" name="usernames" rows="5" cols="5" style="width: 100%; height: 60px;"></textarea></dd>
+					<dd class="full" style="text-align: left;"><div style="float: {S_CONTENT_FLOW_END};">[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</div><label><input type="checkbox" class="radio" id="anonymous" name="user_id[]" value="{ANONYMOUS_USER_ID}" /> {L_SELECT_ANONYMOUS}</label></dd>
+				</dl>
+			</fieldset>
+
+			<fieldset class="quick">
+				{S_HIDDEN_FIELDS}
+				{S_FORM_TOKEN}
+				<input class="button1" type="submit" name="submit_add_options" value="{L_ADD_PERMISSIONS}" />
+			</fieldset>
+		</form>
+	<!-- ENDIF -->
+	</div>
+	<div style="float: {S_CONTENT_FLOW_END}; width: 48%">
+	<!-- IF S_CAN_SELECT_GROUP -->
+		<h1>{L_USERGROUPS}</h1>
+
+		<form id="groups" method="post" action="{U_ACTION}">
+			<fieldset>
+				<legend>{L_MANAGE_GROUPS}</legend>
+				<dl>
+					<dd class="full"><select style="width: 100%;" name="group_id[]" multiple="multiple" size="5">{S_DEFINED_GROUP_OPTIONS}</select></dd>
+					<!--dd class="full" style="text-align: right;"><label><input type="checkbox" class="radio" name="all_groups" value="1" /> {L_ALL_GROUPS}</label></dd-->
+				</dl>
+			</fieldset>
+
+			<fieldset class="quick">
+				{S_HIDDEN_FIELDS}
+				{S_FORM_TOKEN}
+				<input class="button2" type="submit" name="delete" value="{L_REMOVE_PERMISSIONS}" style="width: 46% !important;" /> &nbsp; <input class="button1" type="submit" name="submit_edit_options" value="{L_EDIT_PERMISSIONS}" style="width: 46% !important;" />
+			</fieldset>
+		</form>
+
+		<form id="add_groups" method="post" action="{U_ACTION}">
+			<fieldset>
+				<legend>{L_ADD_GROUPS}</legend>
+				<dl>
+					<dd class="full"><select name="group_id[]" style="width: 100%; height: 107px;" multiple="multiple">{S_ADD_GROUP_OPTIONS}</select></dd>
+				</dl>
+			</fieldset>
+
+			<fieldset class="quick">
+				{S_HIDDEN_FIELDS}
+				{S_FORM_TOKEN}
+				<input type="submit" class="button1" name="submit_add_options" value="{L_ADD_PERMISSIONS}" />
+			</fieldset>
+		</form>
+	<!-- ENDIF -->
+	</div>
+<!-- ENDIF -->
+
+<!-- IF S_PERMISSION_P_MASK -->
+<form action="{U_ACTION}" method="post" id="gallery_acp">
 
 <!-- BEGIN c_mask -->
-	<h3>{c_mask.ALBUM_NAME}</h3>
-	<p>{L_INHERIT_PERMISSIONS_ALBUM}: <select name="inherit[{c_mask.ALBUM_ID}][full]" id="inherit[{c_mask.ALBUM_ID}][full]" onchange="inherit_album({c_mask.S_ROW_COUNT}, this.options[this.selectedIndex].value);">{c_mask.INHERIT_ALBUMS}</select></p>
+	<h3>{c_mask.C_MASK_NAME}</h3>
+	<!-- IF c_mask.INHERIT_C_MASKS --><p>{L_INHERIT_PERMISSIONS_ALBUM}: <select name="inherit[{c_mask.C_MASK_ID}][full]" id="inherit[{c_mask.C_MASK_ID}][full]" onchange="inherit_album({c_mask.S_ROW_COUNT}, this.options[this.selectedIndex].value);">{c_mask.INHERIT_C_MASKS}</select></p><!-- ENDIF -->
 
 	<div id="c_mask{c_mask.S_ROW_COUNT}">
 	<!-- BEGIN v_mask -->
@@ -182,8 +227,6 @@ function inherit_victim(c_mask, v_mask, value)
 	<!-- END v_mask -->
 	</div>
 <!-- END c_mask -->
-
-<!-- ENDIF -->
 	<fieldset class="submit-buttons">
 		<legend>{L_SUBMIT}</legend>
 		{S_FORM_TOKEN}{S_HIDDEN_FIELDS}
@@ -191,6 +234,8 @@ function inherit_victim(c_mask, v_mask, value)
 		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
 	</fieldset>
 </form>
+
+<!-- ENDIF -->
 
 <!--
 	I request you retain the full copyright notice below including the link to www.flying-bits.org.

@@ -333,7 +333,7 @@ class install_convert extends module
 					ORDER BY rate_pic_id';
 				$result = $db->sql_query($sql);
 
-				while( $row = $db->sql_fetchrow($result) )
+				while ($row = $db->sql_fetchrow($result))
 				{
 					$rate_ary[] = array(
 						'rate_image_id'					=> $row['rate_pic_id'],

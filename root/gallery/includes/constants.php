@@ -48,6 +48,10 @@ define('EXIFTIME_OFFSET', 0); // Use this constant, to change the exif-timestamp
 define('SETTING_PERMISSIONS', -39839);
 define('OWN_GALLERY_PERMISSIONS', -2);
 define('PERSONAL_GALLERY_PERMISSIONS', -3);
+// ACL - slightly different
+define('GALLERY_ACL_NEVER', 2);
+define('GALLERY_ACL_YES', 1);
+define('GALLERY_ACL_NO', 0);
 
 // Display-options for RRC-Feature
 define('RRC_DISPLAY_NONE', 0);

@@ -61,6 +61,7 @@ $lang = array_merge($lang, array(
 	'ALBUM_TYPE_UPLOAD'				=> 'Album',
 	'ALBUM_UPDATED'					=> 'Album has been updated successfully.',
 	'ALBUM_WITH_CONTEST_NO_TYPE_CHANGE'	=> 'Contest-Albums can not be turned into a Non-Contest-Album.',
+	'ALBUMS'						=> 'Albums',
 
 	'CACHE_DIR_SIZE'				=> 'cache/-directory size',
 	'CHANGE_AUTHOR'					=> 'Change author to guest',
@@ -160,6 +161,8 @@ $lang = array_merge($lang, array(
 	'IMPORT_USER'					=> 'Uploaded by',
 	'IMPORT_USER_EXP'				=> 'You can add the images to another user here.',
 	'INFO_LINE'						=> 'Display file-size on thumbnail',
+	'INHERIT_PERMISSIONS_ALBUM'		=> 'Inherit permissions of an other album',
+	'INHERIT_PERMISSIONS_VICTIM'	=> 'Inherit permissions of an other setting',
 
 	'JPG_ALLOWED'					=> 'Allowed to upload JPG files',
 
@@ -233,6 +236,8 @@ $lang = array_merge($lang, array(
 	'PERM_HIDDEN_PERMISSIONS_EXP'	=> 'The permission form is empty, as you selected more than one group or/and album.',
 	'PERMISSION_EMPTY'				=> 'You didn\'t set all permissions.',
 	'PERMISSION_NO_GROUP'			=> 'You didn\'t select a group to set the permissions.',
+	'PERMISSIONS'					=> 'Permissions',
+	'PERMISSIONS_EXPLAIN'			=> 'Here you can alter which users and groups can access which albums.',
 	'PERMISSIONS_STORED'			=> 'Permissions were stored successful.',
 	'PERSONAL_ALBUM_INDEX'			=> 'View personal albums as album on the index',
 	'PERSONAL_ALBUM_INDEX_EXP'		=> 'If choosen "No", there will be the link, right beneath.',

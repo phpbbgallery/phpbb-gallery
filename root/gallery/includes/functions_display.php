@@ -596,6 +596,7 @@ function get_album_moderators(&$album_moderators, $album_id = false)
 		),
 
 		'WHERE'		=> "m.display_on_index = 1 $album_sql",
+		'ORDER_BY'	=> "m.group_id ASC, m.user_id ASC",
 	);
 
 	$sql = $db->sql_build_query('SELECT', $sql_array);
