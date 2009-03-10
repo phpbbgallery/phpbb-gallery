@@ -800,6 +800,9 @@ class acp_gallery
 
 		// Send contants to the template
 		$submit = (isset($_POST['submit'])) ? true : false;
+		$album_id = request_var('album_id', array(0));
+		$group_id = request_var('group_id', array(0));
+		$user_id = request_var('user_id', array(0));
 		$p_system = request_var('p_system', 0);
 
 		if ($submit)
