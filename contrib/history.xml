@@ -61,6 +61,8 @@
 
           <change><![CDATA[[Change] Unreported: Rewrote the acp to set permissions much better]]></change>
 
+          <change><![CDATA[[Fix] Unreported: Add config_calue to array, after function call, to avoid "Column 'config_value' cannot be null" on multiple updates]]></change>
+
           <change><![CDATA[[Sec] Report #i481: Unapproved images counter of personal albums is visible on index without permissions (Reported by robbx)]]></change>
           <change><![CDATA[[Sec] Report #i481: Unapproved image comments are visible (Reported by robbx)]]></change>
         </changelog>

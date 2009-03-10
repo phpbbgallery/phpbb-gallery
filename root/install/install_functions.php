@@ -175,30 +175,30 @@ function nv_drop_table($table)
 /*
 * Advanced: Add/update a gallery-config value
 */
-function set_gallery_config($column, $value, $update = false)
+function set_gallery_config($config_name, $config_value, $is_dynamic = false)
 {
-	global $db;
+	global $db, $gallery_config /*, $cache*/;
 
-	$sql = 'SELECT * FROM ' . GALLERY_CONFIG_TABLE . " WHERE config_name = '$column'";
-	$result = $db->sql_query($sql);
-	$row = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
-	if (!$row)
+	$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . "
+		SET config_value = '" . $db->sql_escape($config_value) . "'
+		WHERE config_name = '" . $db->sql_escape($config_name) . "'";
+	$db->sql_query($sql);
+
+	if (!$db->sql_affectedrows() && !isset($gallery_config[$config_name]))
 	{
-		$sql_ary = array(
-			'config_name'				=> $column,
-			'config_value'				=> $value,
-		);
-		$db->sql_query('INSERT INTO ' . GALLERY_CONFIG_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+		$sql = 'INSERT INTO ' . GALLERY_CONFIG_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'config_name'	=> $config_name,
+			'config_value'	=> $config_value,
+			/*'is_dynamic'	=> ($is_dynamic) ? 1 : 0,*/));
+		$db->sql_query($sql);
 	}
-	else
+
+	$gallery_config[$config_name] = $config_value;
+
+	/*if (!$is_dynamic)
 	{
-		$sql_ary = array(
-			'config_name'				=> $column,
-			'config_value'				=> $value,
-		);
-		$db->sql_query('UPDATE ' . GALLERY_CONFIG_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . " WHERE config_name = '$column'");
-	}
+		$cache->destroy('config');
+	}*/
 }
 
 /*
