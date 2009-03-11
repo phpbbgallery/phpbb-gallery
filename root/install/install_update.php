@@ -47,7 +47,8 @@ class install_update extends module
 
 	function main($mode, $sub)
 	{
-		global $user, $template, $phpbb_root_path, $cache, $phpEx;
+		global $cache, $gallery_config, $template, $user;
+		global $phpbb_root_path, $phpEx;
 
 		$gallery_config = load_gallery_config();
 
