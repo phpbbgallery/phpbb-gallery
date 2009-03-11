@@ -322,7 +322,7 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 */
 if ($gallery_config['allow_rates'])
 {
-	$allowed_to_rate = $your_rating = $contest_rating_msg = false;
+	$allowed_to_rate = $your_rating = $contest_rating_msg = $contest_result_hidden = false;
 
 	if ($user->data['is_registered'])
 	{
@@ -338,6 +338,11 @@ if ($gallery_config['allow_rates'])
 			$your_rating = $rated['rate_point'];
 		}
 		$db->sql_freeresult($result);
+	}
+	// Hide the result, while still rating on contests
+	if ($image_data['image_contest'])
+	{
+		$contest_result_hidden = sprintf($user->lang['CONTEST_RESULT_HIDDEN'], $user->format_date(($album_data['contest_start'] + $album_data['contest_end']), false, true));
 	}
 
 	// Check: User didn't rate yet, has permissions, it's not the users own image and the user is logged in
@@ -369,12 +374,13 @@ if ($gallery_config['allow_rates'])
 		$allowed_to_rate = true;
 	}
 	$template->assign_vars(array(
-		'IMAGE_RATING'		=> ($image_data['image_rates'] <> 0) ? sprintf((($image_data['image_rates'] == 1) ? $user->lang['RATE_STRING'] : $user->lang['RATES_STRING']), $image_data['image_rate_avg'] / 100, $image_data['image_rates']) : $user->lang['NOT_RATED'],
-		'S_YOUR_RATING'		=> $your_rating,
-		'S_ALLOWED_TO_RATE'	=> $allowed_to_rate,
-		'CONTEST_RATING'	=> $contest_rating_msg,
-		'S_VIEW_RATE'		=> (gallery_acl_check('i_rate', $album_id)) ? true : false,
-		'S_COMMENT_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=rate"),
+		'IMAGE_RATING'			=> ($image_data['image_rates'] <> 0) ? sprintf((($image_data['image_rates'] == 1) ? $user->lang['RATE_STRING'] : $user->lang['RATES_STRING']), $image_data['image_rate_avg'] / 100, $image_data['image_rates']) : $user->lang['NOT_RATED'],
+		'S_YOUR_RATING'			=> $your_rating,
+		'S_ALLOWED_TO_RATE'		=> $allowed_to_rate,
+		'CONTEST_RATING'		=> $contest_rating_msg,
+		'CONTEST_RESULT_HIDDEN'	=> $contest_result_hidden,
+		'S_VIEW_RATE'			=> (gallery_acl_check('i_rate', $album_id)) ? true : false,
+		'S_COMMENT_ACTION'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=rate"),
 	));
 }
 
@@ -401,8 +407,8 @@ if ($gallery_config['allow_comments'] && gallery_acl_check('c_post', $album_id) 
 
 	$template->assign_vars(array(
 		'S_ALLOWED_TO_COMMENT'	=> true,
-		'S_HIDE_COMMENT_INPUT'	=> (time() < ($album_data['contest_start'] + $album_data['contest_rating'])) ? true : false,
-		'CONTEST_COMMENTS'		=> sprintf($user->lang['CONTEST_COMMENTS_STARTS'], $user->format_date(($album_data['contest_start'] + $album_data['contest_rating']), false, true)),
+		'S_HIDE_COMMENT_INPUT'	=> (time() < ($album_data['contest_start'] + $album_data['contest_end'])) ? true : false,
+		'CONTEST_COMMENTS'		=> sprintf($user->lang['CONTEST_COMMENTS_STARTS'], $user->format_date(($album_data['contest_start'] + $album_data['contest_end']), false, true)),
 
 		'BBCODE_STATUS'			=> ($bbcode_status) ? sprintf($user->lang['BBCODE_IS_ON'], '<a href="' . append_sid("{$phpbb_root_path}faq.$phpEx", 'mode=bbcode') . '">', '</a>') : sprintf($user->lang['BBCODE_IS_OFF'], '<a href="' . append_sid("{$phpbb_root_path}faq.$phpEx", 'mode=bbcode') . '">', '</a>'),
 		'IMG_STATUS'			=> ($img_status) ? $user->lang['IMAGES_ARE_ON'] : $user->lang['IMAGES_ARE_OFF'],
@@ -426,7 +432,7 @@ if ($gallery_config['allow_comments'] && gallery_acl_check('c_post', $album_id) 
 /**
 * Listing comment
 */
-if (($gallery_config['allow_comments'] && gallery_acl_check('c_read', $album_id)) && (time() > ($album_data['contest_start'] + $album_data['contest_rating'])))
+if (($gallery_config['allow_comments'] && gallery_acl_check('c_read', $album_id)) && (time() > ($album_data['contest_start'] + $album_data['contest_end'])))
 {
 	$user->add_lang('viewtopic');
 	$start = request_var('start', 0);

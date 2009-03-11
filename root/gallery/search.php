@@ -244,10 +244,11 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 
 				$sql_order = 'image_rate_avg DESC';
 				$sql_limit = 10 * $per_page;
+				// We need to hide contest-images on this search_id, if the contest is still running!
 				$sql = 'SELECT image_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
 					WHERE image_rate_points <> 0
-						AND ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status = ' . IMAGE_APPROVED . ')
+						AND ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status = ' . IMAGE_APPROVED . ' AND i.image_contest = ' . IMAGE_NO_CONTEST . ')
 							OR ' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
 					ORDER BY ' . $sql_order;
 			}
@@ -289,6 +290,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				$search_results = 'image';
 
 				$sql_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
+				// We need to hide contest-images on this search_id, if the contest is still running!
 				$sql = 'SELECT image_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
 					WHERE image_user_id = ' . $user_id . '

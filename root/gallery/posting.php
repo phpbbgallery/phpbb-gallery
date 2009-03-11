@@ -184,9 +184,19 @@ switch ($mode)
 		{
 			gallery_not_authorised($image_backlink, $user, $image_loginlink);
 		}
-		if (time() < ($album_data['contest_start'] + $album_data['contest_rating']))
+		if ($submode == 'rate')
 		{
-			gallery_not_authorised($image_backlink, $user, $image_loginlink);
+			if (time() < ($album_data['contest_start'] + $album_data['contest_rating']))
+			{
+				gallery_not_authorised($image_backlink, $user, $image_loginlink);
+			}
+		}
+		else
+		{
+			if (time() < ($album_data['contest_start'] + $album_data['contest_end']))
+			{
+				gallery_not_authorised($image_backlink, $user, $image_loginlink);
+			}
 		}
 		switch ($submode)
 		{

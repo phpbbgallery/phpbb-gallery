@@ -79,7 +79,7 @@ function checkRateForm() {
 			<!-- IF S_VIEW_RATE -->
 				<dl>
 					<dt><label>{L_RATING}:</label></dt>
-					<dd>{IMAGE_RATING}<!-- IF S_YOUR_RATING --> ({L_YOUR_RATING}: {S_YOUR_RATING})<!-- ENDIF --></dd>
+					<dd><!-- IF CONTEST_RESULT_HIDDEN -->{CONTEST_RESULT_HIDDEN}<!-- ELSE -->{IMAGE_RATING}<!-- ENDIF --><!-- IF S_YOUR_RATING --> ({L_YOUR_RATING}: {S_YOUR_RATING})<!-- ENDIF --></dd>
 				</dl>
 			<!-- ENDIF -->
 		</fieldset>

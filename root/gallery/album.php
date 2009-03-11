@@ -152,18 +152,19 @@ if ($album_data['album_type'] != ALBUM_CAT)
 	$sort_by_text = array('t' => $user->lang['TIME'], 'n' => $user->lang['IMAGE_NAME'], 'vc' => $user->lang['VIEWS']);
 	$sort_by_sql = array('t' => 'image_time', 'n' => 'image_name', 'vc' => 'image_view_count');
 
-	// Do not sort images after upload-username on running contests
+	// Do not sort images after upload-username on running contests, and of course ratings aswell!
 	if ($album_data['contest_marked'] != IMAGE_CONTEST)
 	{
 		$sort_by_text['u'] = $user->lang['SORT_USERNAME'];
 		$sort_by_sql['u'] = 'image_username';
-	}
-	if ($gallery_config['allow_rates'])
-	{
-		$sort_by_text['ra'] = $user->lang['RATING'];
-		$sort_by_sql['ra'] = 'image_rate_avg';
-		$sort_by_text['r'] = $user->lang['RATES_COUNT'];
-		$sort_by_sql['r'] = 'image_rates';
+		
+		if ($gallery_config['allow_rates'])
+		{
+			$sort_by_text['ra'] = $user->lang['RATING'];
+			$sort_by_sql['ra'] = 'image_rate_avg';
+			$sort_by_text['r'] = $user->lang['RATES_COUNT'];
+			$sort_by_sql['r'] = 'image_rates';
+		}
 	}
 	if ($gallery_config['allow_comments'])
 	{

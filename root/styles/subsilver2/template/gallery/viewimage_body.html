@@ -92,7 +92,7 @@ function checkRateForm() {
 	<!-- IF S_VIEW_RATE -->
 		<tr class="row1">
 			<td width="25%" align="right"><span class="genmed">{L_RATING}:</span></td>
-			<td><span class="genmed">{IMAGE_RATING}<!-- IF S_YOUR_RATING --> ({L_YOUR_RATING}: {S_YOUR_RATING})<!-- ENDIF --></span></td>
+			<td><span class="genmed"><!-- IF CONTEST_RESULT_HIDDEN -->{CONTEST_RESULT_HIDDEN}<!-- ELSE -->{IMAGE_RATING}<!-- ENDIF --><!-- IF S_YOUR_RATING --> ({L_YOUR_RATING}: {S_YOUR_RATING})<!-- ENDIF --></span></td>
 		</tr>
 	<!-- ENDIF -->
 </table>

@@ -107,7 +107,7 @@ function recent_gallery_images(&$ints, $display, $modes, $collapse_comments = fa
 				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
 					ON i.image_album_id = a.album_id
 				WHERE ((' . $db->sql_in_set('i.image_album_id', $view_albums) . '
-						AND i.image_status = ' . IMAGE_APPROVED . ')' . 
+						AND i.image_status = ' . IMAGE_APPROVED . (($user_id) ? ' AND i.image_contest = ' . IMAGE_NO_CONTEST : '') . ')' . 
 					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . '
 					' . (($user_id) ? ') AND i.image_user_id = ' . $user_id : ')') . '
 					AND a.display_in_rrc = 1
@@ -163,7 +163,7 @@ function recent_gallery_images(&$ints, $display, $modes, $collapse_comments = fa
 				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
 					ON i.image_album_id = a.album_id
 				WHERE ((' . $db->sql_in_set('i.image_album_id', $view_albums) . '
-						AND i.image_status = ' . IMAGE_APPROVED . ')' . 
+						AND i.image_status = ' . IMAGE_APPROVED . (($user_id) ? ' AND i.image_contest = ' . IMAGE_NO_CONTEST : '') . ')' . 
 					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . '
 					' . (($user_id) ? ') AND i.image_user_id = ' . $user_id : ')') . '
 					AND a.display_in_rrc = 1

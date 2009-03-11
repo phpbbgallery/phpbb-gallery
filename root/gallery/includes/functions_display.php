@@ -634,6 +634,11 @@ function assign_image_block($template_block, &$image_data, $album_status, $displ
 	{
 		$image_data['rating'] = sprintf((($image_data['image_rates'] == 1) ? $user->lang['RATE_STRING'] : $user->lang['RATES_STRING']), $image_data['image_rate_avg'] / 100, $image_data['image_rates']);
 	}
+	// Hide the result, while still rating on contests
+	if ($image_data['image_contest'])
+	{
+		$image_data['rating'] = $user->lang['CONTEST_RATING_HIDDEN'];
+	}
 
 	$perm_user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
 	$allow_edit = ((gallery_acl_check('i_edit', $image_data['image_album_id']) && ($image_data['image_user_id'] == $perm_user_id) && ($album_status != ITEM_LOCKED)) || gallery_acl_check('m_edit', $image_data['image_album_id'])) ? true : false;
