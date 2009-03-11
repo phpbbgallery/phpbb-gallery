@@ -864,6 +864,8 @@ class ucp_gallery
 			FROM ' . GALLERY_WATCH_TABLE . ' w
 			LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
 				ON w.album_id = a.album_id
+			LEFT JOIN ' . GALLERY_CONTESTS_TABLE . ' c
+				ON a.album_id = c.contest_album_id
 			WHERE w.album_id <> 0
 				AND w.user_id = ' . $user->data['user_id'];
 		$result = $db->sql_query($sql);
@@ -877,7 +879,7 @@ class ucp_gallery
 
 				'UC_IMAGE_NAME'		=> generate_image_link('image_name', $gallery_config['link_image_name'], $row['album_last_image_id'], $row['album_last_image_name'], $row['album_id']),
 				'UC_FAKE_THUMBNAIL'	=> generate_image_link('fake_thumbnail', $gallery_config['link_thumbnail'], $row['album_last_image_id'], $row['album_last_image_name'], $row['album_id']),
-				'UPLOADER'			=> get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
+				'UPLOADER'			=> (($row['album_type'] == ALBUM_CONTEST) && ($row['contest_marked'] && !gallery_acl_check('m_status', $row['album_id'], $row['album_user_id']))) ? $user->lang['CONTEST_USERNAME'] : get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
 				'LAST_IMAGE_TIME'	=> $user->format_date($row['album_last_image_time']),
 				'LAST_IMAGE'		=> $row['album_last_image_id'],
 				'U_IMAGE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx" , "album_id=" . $row['album_id'] . "&amp;image_id=" . $row['album_last_image_id']),
@@ -898,7 +900,7 @@ class ucp_gallery
 		$total_images = (int) $db->sql_fetchfield('images');
 		$db->sql_freeresult($result);
 
-		$sql = 'SELECT *
+		$sql = 'SELECT w.*, i.*, a.album_name, c.*
 			FROM ' . GALLERY_WATCH_TABLE . ' w
 			LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
 				ON w.image_id = i.image_id
@@ -913,7 +915,7 @@ class ucp_gallery
 		{
 			$template->assign_block_vars('image_row', array(
 				'THUMBNAIL'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}thumbnail.$phpEx" , 'album_id=' . $row['image_album_id'] .  '&amp;image_id=' . $row['image_id']),
-				'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
+				'UPLOADER'			=> ($row['image_contest'] && !gallery_acl_check('m_status', $row['image_album_id'])) ? $user->lang['CONTEST_USERNAME'] : get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 				'LAST_COMMENT_BY'	=> get_username_string('full', $row['comment_user_id'], $row['comment_username'], $row['comment_user_colour']),
 				'COMMENT'			=> $row['image_comments'],
 				'LAST_COMMENT_TIME'	=> $user->format_date($row['comment_time']),
@@ -978,7 +980,7 @@ class ucp_gallery
 		$total_images = (int) $db->sql_fetchfield('images');
 		$db->sql_freeresult($result);
 
-		$sql = 'SELECT i.image_time, i.image_name, i.image_id, i.image_user_id, i.image_username, i.image_user_colour, i.image_album_id, a.album_name
+		$sql = 'SELECT f.*, i.*, a.album_name
 			FROM ' . GALLERY_FAVORITES_TABLE . ' f
 			LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
 				ON f.image_id = i.image_id
@@ -991,7 +993,7 @@ class ucp_gallery
 			$template->assign_block_vars('image_row', array(
 				'UC_IMAGE_NAME'		=> generate_image_link('image_name', $gallery_config['link_image_name'], $row['image_id'], $row['image_name'], $row['image_album_id']),
 				'UC_FAKE_THUMBNAIL'	=> generate_image_link('fake_thumbnail', $gallery_config['link_thumbnail'], $row['image_id'], $row['image_name'], $row['image_album_id']),
-				'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
+				'UPLOADER'			=> ($row['image_contest'] && !gallery_acl_check('m_status', $row['image_album_id'])) ? $user->lang['CONTEST_USERNAME'] : get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
 				'ALBUM_NAME'		=> $row['album_name'],
 				'IMAGE_ID'			=> $row['image_id'],

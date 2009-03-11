@@ -17,6 +17,10 @@ dd.g_lastimage {
 	width: 30%;
 }
 
+dd.g_moderation {
+	width: 35%;
+}
+
 dd.g_rating, dd.g_comments {
 	width: 12%;
 	text-align: center;
