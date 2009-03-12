@@ -248,7 +248,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				$sql = 'SELECT image_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
 					WHERE image_rate_points <> 0
-						AND ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status = ' . IMAGE_APPROVED . ' AND i.image_contest = ' . IMAGE_NO_CONTEST . ')
+						AND ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status = ' . IMAGE_APPROVED . ' AND image_contest = ' . IMAGE_NO_CONTEST . ')
 							OR ' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
 					ORDER BY ' . $sql_order;
 			}
