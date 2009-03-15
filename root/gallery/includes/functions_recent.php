@@ -45,9 +45,9 @@ function recent_gallery_images(&$ints, $display, $modes, $collapse_comments = fa
 	$album_access_array = get_album_access_array();
 
 	$albums = $cache->obtain_album_list();
-	$view_albums = gallery_acl_album_ids('i_view', 'array');
-	$moderate_albums = gallery_acl_album_ids('m_status', 'array');
-	$comment_albums = gallery_acl_album_ids('c_read', 'array');
+	$view_albums = gallery_acl_album_ids('i_view', 'array', true);
+	$moderate_albums = gallery_acl_album_ids('m_status', 'array', true);
+	$comment_albums = gallery_acl_album_ids('c_read', 'array', true);
 	$limit_sql = $ints['rows'] * $ints['columns'];
 
 	switch ($modes)
@@ -101,17 +101,27 @@ function recent_gallery_images(&$ints, $display, $modes, $collapse_comments = fa
 	{
 		if ($recent)
 		{
-			$recent_images = array();
+			$recent_images = $recent_ids = array();
+			$sql = 'SELECT image_id
+				FROM ' . GALLERY_IMAGES_TABLE . '
+				WHERE ((' . $db->sql_in_set('image_album_id', $view_albums) . '
+						AND image_status = ' . IMAGE_APPROVED . (($user_id) ? ' AND image_contest = ' . IMAGE_NO_CONTEST : '') . ')' . 
+					(($moderate_albums) ? ' OR (' . $db->sql_in_set('image_album_id', $moderate_albums) . ')' : '') . '
+					' . (($user_id) ? ') AND image_user_id = ' . $user_id : ')') . '
+				ORDER BY image_time DESC';
+			$result = $db->sql_query_limit($sql, $limit_sql);
+
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$recent_ids[] = $row['image_id'];
+			}
+			$db->sql_freeresult($result);
+
 			$sql = 'SELECT i.*, a.album_name, a.album_status, a.album_id, a.album_user_id
 				FROM ' . GALLERY_IMAGES_TABLE . ' i
 				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
 					ON i.image_album_id = a.album_id
-				WHERE ((' . $db->sql_in_set('i.image_album_id', $view_albums) . '
-						AND i.image_status = ' . IMAGE_APPROVED . (($user_id) ? ' AND i.image_contest = ' . IMAGE_NO_CONTEST : '') . ')' . 
-					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . '
-					' . (($user_id) ? ') AND i.image_user_id = ' . $user_id : ')') . '
-					AND a.display_in_rrc = 1
-				GROUP BY i.image_id
+				WHERE ' . $db->sql_in_set('i.image_id', $recent_ids) . '
 				ORDER BY i.image_time DESC';
 			$result = $db->sql_query_limit($sql, $limit_sql);
 
@@ -157,18 +167,27 @@ function recent_gallery_images(&$ints, $display, $modes, $collapse_comments = fa
 				break;
 			}
 
-			$random_images = array();
+			$random_images = $random_ids = array();
+			$sql = 'SELECT image_id
+				FROM ' . GALLERY_IMAGES_TABLE . '
+				WHERE ((' . $db->sql_in_set('image_album_id', $view_albums) . '
+						AND image_status = ' . IMAGE_APPROVED . (($user_id) ? ' AND image_contest = ' . IMAGE_NO_CONTEST : '') . ')' . 
+					(($moderate_albums) ? ' OR (' . $db->sql_in_set('image_album_id', $moderate_albums) . ')' : '') . '
+					' . (($user_id) ? ') AND image_user_id = ' . $user_id : ')') . '
+				ORDER BY ' . $random;
+			$result = $db->sql_query_limit($sql, $limit_sql);
+
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$random_ids[] = $row['image_id'];
+			}
+			$db->sql_freeresult($result);
+
 			$sql = 'SELECT i.*, a.album_name, a.album_status, a.album_id, a.album_user_id
 				FROM ' . GALLERY_IMAGES_TABLE . ' i
 				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
 					ON i.image_album_id = a.album_id
-				WHERE ((' . $db->sql_in_set('i.image_album_id', $view_albums) . '
-						AND i.image_status = ' . IMAGE_APPROVED . (($user_id) ? ' AND i.image_contest = ' . IMAGE_NO_CONTEST : '') . ')' . 
-					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . '
-					' . (($user_id) ? ') AND i.image_user_id = ' . $user_id : ')') . '
-					AND a.display_in_rrc = 1
-				GROUP BY i.image_id
-				ORDER BY ' . $random;
+				WHERE ' . $db->sql_in_set('i.image_id', $random_ids);
 			$result = $db->sql_query_limit($sql, $limit_sql);
 
 			while ($row = $db->sql_fetchrow($result))

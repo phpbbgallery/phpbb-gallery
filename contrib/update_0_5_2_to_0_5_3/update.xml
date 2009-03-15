@@ -100,6 +100,73 @@ You may install it, to be informed about future versions, as I'm not going to se
 		'U_GALLERY_SEARCH'	=> $user_cache[$poster_id]['gallery_search'],]]></action>
       </edit>
     </open>
+    <open src="includes/cache.php">
+      <edit>
+        <find><![CDATA[	function obtain_album_list()
+	{
+		global $db;
+
+		if (($albums = $this->get('_albums')) === false)
+		{
+			$sql = 'SELECT album_id, parent_id, album_name, album_type, left_id, right_id, album_user_id
+				FROM ' . GALLERY_ALBUMS_TABLE . '
+				ORDER BY album_user_id ASC, left_id ASC';
+			$result = $db->sql_query($sql);
+
+			$albums = array();
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$albums[$row['album_id']] = array(
+					'album_id'		=> $row['album_id'],
+					'parent_id'		=> $row['parent_id'],
+					'album_name'	=> $row['album_name'],
+					'album_type'	=> $row['album_type'],
+					'left_id'		=> $row['left_id'],
+					'right_id'		=> $row['right_id'],
+					'album_user_id'	=> $row['album_user_id'],
+				);
+			}
+			$db->sql_freeresult($result);
+
+			$this->put('_albums', $albums);
+		}
+
+		return $albums;
+	}]]></find>
+        <action type="replace-with"><![CDATA[	function obtain_album_list()
+	{
+		global $db;
+
+		if (($albums = $this->get('_albums')) === false)
+		{
+			$sql = 'SELECT album_id, parent_id, album_name, album_type, left_id, right_id, album_user_id, display_in_rrc
+				FROM ' . GALLERY_ALBUMS_TABLE . '
+				ORDER BY album_user_id ASC, left_id ASC';
+			$result = $db->sql_query($sql);
+
+			$albums = array();
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$albums[$row['album_id']] = array(
+					'album_id'			=> $row['album_id'],
+					'parent_id'			=> $row['parent_id'],
+					'album_name'		=> $row['album_name'],
+					'album_type'		=> $row['album_type'],
+					'left_id'			=> $row['left_id'],
+					'right_id'			=> $row['right_id'],
+					'album_user_id'		=> $row['album_user_id'],
+					'display_in_rrc'	=> $row['display_in_rrc'],
+				);
+			}
+			$db->sql_freeresult($result);
+
+			$this->put('_albums', $albums);
+		}
+
+		return $albums;
+	}]]></action>
+      </edit>
+    </open>
     <open src="includes/constants.php">
       <edit>
         <find><![CDATA[define('GALLERY_ALBUMS_TABLE',			$table_prefix . 'gallery_albums');]]></find>

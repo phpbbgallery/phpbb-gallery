@@ -180,7 +180,7 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
 
 		if (($albums = $this->get('_albums')) === false)
 		{
-			$sql = 'SELECT album_id, parent_id, album_name, album_type, left_id, right_id, album_user_id
+			$sql = 'SELECT album_id, parent_id, album_name, album_type, left_id, right_id, album_user_id, display_in_rrc
 				FROM ' . GALLERY_ALBUMS_TABLE . '
 				ORDER BY album_user_id ASC, left_id ASC';
 			$result = $db->sql_query($sql);
@@ -189,13 +189,14 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
 			while ($row = $db->sql_fetchrow($result))
 			{
 				$albums[$row['album_id']] = array(
-					'album_id'		=> $row['album_id'],
-					'parent_id'		=> $row['parent_id'],
-					'album_name'	=> $row['album_name'],
-					'album_type'	=> $row['album_type'],
-					'left_id'		=> $row['left_id'],
-					'right_id'		=> $row['right_id'],
-					'album_user_id'	=> $row['album_user_id'],
+					'album_id'			=> $row['album_id'],
+					'parent_id'			=> $row['parent_id'],
+					'album_name'		=> $row['album_name'],
+					'album_type'		=> $row['album_type'],
+					'left_id'			=> $row['left_id'],
+					'right_id'			=> $row['right_id'],
+					'album_user_id'		=> $row['album_user_id'],
+					'display_in_rrc'	=> $row['display_in_rrc'],
 				);
 			}
 			$db->sql_freeresult($result);
