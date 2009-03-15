@@ -106,6 +106,7 @@ $lang = array_merge($lang, array(
 	'FAVORITE_IMAGE'				=> 'Add to favorites',
 	'FAVORITED_IMAGE'				=> 'The image was added to your favorites.',
 	'FILE'							=> 'File',
+	'FILETYPE_MIMETYPE_MISMATCH'	=> 'The file-type of "<strong>%1$s</strong>" does not match the mime-type (%2$s).',
 	'FILETYPES_GIF'					=> 'gif',
 	'FILETYPES_JPG'					=> 'jpg',
 	'FILETYPES_PNG'					=> 'png',
