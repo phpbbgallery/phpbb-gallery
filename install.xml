@@ -30,7 +30,7 @@ You may install it, to be informed about future versions, as I'm not going to se
         <contributions />
       </author>
     </author-group>
-    <mod-version>0.5.2</mod-version>
+    <mod-version>0.5.3</mod-version>
     <installation>
       <level>intermediate</level>
       <time>3600</time>
@@ -39,10 +39,10 @@ You may install it, to be informed about future versions, as I'm not going to se
     <link-group>
       <link type="parent" lang="de" href="contrib/history.xml">Entwicklung</link>
       <link type="parent" lang="en-gb" href="contrib/history.xml">History</link>
-      <link type="parent" lang="de" href="contrib/update_0_4_1_to_X_Y_Z/update.xml">Update von 0.4.1 auf 0.5.2</link>
-      <link type="parent" lang="en-gb" href="contrib/update_0_4_1_to_X_Y_Z/update.xml">Update from 0.4.1 to 0.5.2</link>
-      <link type="parent" lang="de" href="contrib/update_0_5_1_to_0_5_2/update.xml">Update von 0.5.1 auf 0.5.2</link>
-      <link type="parent" lang="en-gb" href="contrib/update_0_5_1_to_0_5_2/update.xml">Update from 0.5.2 to 0.5.2</link>
+      <link type="parent" lang="de" href="contrib/update_0_4_1_to_X_Y_Z/update.xml">Update von 0.4.1 auf 0.5.3</link>
+      <link type="parent" lang="en-gb" href="contrib/update_0_4_1_to_X_Y_Z/update.xml">Update from 0.4.1 to 0.5.3</link>
+      <link type="parent" lang="de" href="contrib/update_0_5_2_to_0_5_3/update.xml">Update von 0.5.2 auf 0.5.3</link>
+      <link type="parent" lang="en-gb" href="contrib/update_0_5_2_to_0_5_3/update.xml">Update from 0.5.2 to 0.5.3</link>
       <link type="language" lang="de" href="contrib/de.xml">Anleitung für das deutsche Sprachpaket</link>
       <link type="language" lang="en-gb" href="contrib/de.xml">Manual for German Language-set</link>
       <link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>

@@ -35,7 +35,7 @@
         </contributions-group>
       </author>
     </author-group>
-    <mod-version>0.5.2</mod-version>
+    <mod-version>0.5.3</mod-version>
     <installation>
       <level>intermediate</level>
       <time>1200</time>
@@ -44,16 +44,16 @@
     <link-group>
       <link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
       <link type="parent" lang="en-gb" href="../install.xml">Manual</link>
-      <link type="parent" lang="de" href="update_0_4_1_to_X_Y_Z/update.xml">Update von 0.4.1 auf 0.5.2</link>
-      <link type="parent" lang="en-gb" href="update_0_4_1_to_X_Y_Z/update.xml">Update from 0.4.1 to 0.5.2</link>
-      <link type="parent" lang="de" href="update_0_5_1_to_0_5_2/update.xml">Update von 0.5.1 auf 0.5.2</link>
-      <link type="parent" lang="en-gb" href="update_0_5_1_to_0_5_2/update.xml">Update from 0.5.1 to 0.5.2</link>
+      <link type="parent" lang="de" href="update_0_4_1_to_X_Y_Z/update.xml">Update von 0.4.1 auf 0.5.3</link>
+      <link type="parent" lang="en-gb" href="update_0_4_1_to_X_Y_Z/update.xml">Update from 0.4.1 to 0.5.3</link>
+      <link type="parent" lang="de" href="update_0_5_2_to_0_5_3/update.xml">Update von 0.5.2 auf 0.5.3</link>
+      <link type="parent" lang="en-gb" href="update_0_5_2_to_0_5_3/update.xml">Update from 0.5.2 to 0.5.3</link>
     </link-group>
     <author-notes lang="de">Diese Datei enthält alle Teile der History, alle Entickler, usw.</author-notes>
     <author-notes lang="en-gb">This file contains all parts of the History, all Developers, a.s.o.</author-notes>
     <history>
       <entry>
-        <date>2009-MM-DD</date>
+        <date>2009-03-16</date>
         <rev-version>0.5.3</rev-version>
         <changelog lang="en-gb">
           <change><![CDATA[[Add] Post #6413: Resize images on mass-import]]></change>

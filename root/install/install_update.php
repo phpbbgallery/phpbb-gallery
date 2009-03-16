@@ -442,6 +442,7 @@ class install_update extends module
 				nv_create_table('phpbb_gallery_albums_track',	$dbms_data);
 				nv_add_column(GALLERY_USERS_TABLE,	'user_lastmark',		array('TIMESTAMP', 0));
 
+			case '0.5.3':
 			break;
 		}
 
@@ -961,8 +962,6 @@ class install_update extends module
 				set_config('gallery_viewtopic_icon', 1);
 				set_config('gallery_viewtopic_images', 1);
 				set_config('gallery_viewtopic_link', 0);
-
-			case '0.5.3':
 				// Remove some old p_masks
 				$sql = 'SELECT perm_role_id
 					FROM ' . GALLERY_PERMISSIONS_TABLE;
@@ -978,6 +977,8 @@ class install_update extends module
 				$sql = 'DELETE FROM ' . GALLERY_ROLES_TABLE . '
 					WHERE ' . $db->sql_in_set('role_id', $p_masks, true, true);
 				$db->sql_query($sql);
+
+			case '0.5.3':
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
@@ -1047,6 +1048,7 @@ class install_update extends module
 			case '0.5.0':
 			case '0.5.1':
 			case '0.5.2':
+			case '0.5.3':
 			break;
 		}
 
@@ -1157,6 +1159,7 @@ class install_update extends module
 				case '0.5.0':
 				case '0.5.1':
 				case '0.5.2':
+				case '0.5.3':
 				break;
 			}
 
@@ -1173,6 +1176,7 @@ class install_update extends module
 			$modules = $this->gallery_config_options;
 			switch ($gallery_config['phpbb_gallery_version'])
 			{
+				case '0.5.3':
 				case '0.5.2':
 				case '0.5.1':
 				case '0.5.0':
