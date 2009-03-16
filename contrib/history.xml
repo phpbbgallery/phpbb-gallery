@@ -56,12 +56,14 @@
         <date>2009-MM-DD</date>
         <rev-version>0.5.3</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Add] Post #6413: Resize images on mass-import]]></change>
           <change><![CDATA[[Add] Post #6321: Display user images on viewtopic.php (Patch by Christian_N and nickvergessen)]]></change>
           <change><![CDATA[[Add] Report #129: Read-/Unread-information for albums when new images were uploaded]]></change>
 
           <change><![CDATA[[Change] Report #482: Systemical inconsequence in contests]]></change>
           <change><![CDATA[[Change] Unreported: Rewrote the acp to set permissions much better]]></change>
 
+          <change><![CDATA[[Fix] Unreported: Mime-type not checked against file-extension]]></change>
           <change><![CDATA[[Fix] Unreported: Increased sql-speed for large databases on RRC-Addon]]></change>
           <change><![CDATA[[Fix] Unreported: Viewing uploader of contest images in several ucp-parts]]></change>
           <change><![CDATA[[Fix] Unreported: Add config_calue to array, after function call, to avoid "Column 'config_value' cannot be null" on multiple updates]]></change>

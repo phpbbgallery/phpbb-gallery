@@ -398,6 +398,10 @@ switch ($mode)
 									{
 										trigger_error('NOT_ALLOWED_FILE_TYPE');
 									}
+									if ((substr(strtolower($image_data['image_tmp_name']), -4) != '.jpg') && (substr(strtolower($image_data['image_tmp_name']), -5) != '.jpeg'))
+									{
+										trigger_error(sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $image_src, $filetype['mime']), E_USER_WARNING);
+									}
 									$image_data['image_type2'] = '.jpg';
 								break;
 								case 'image/png':
@@ -406,12 +410,21 @@ switch ($mode)
 									{
 										trigger_error('NOT_ALLOWED_FILE_TYPE');
 									}
+									if (substr(strtolower($image_data['image_tmp_name']), -4) != '.png')
+									{
+										trigger_error(sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $image_data['image_tmp_name'], $image_data['image_type']), E_USER_WARNING);
+									}
 									$image_data['image_type2'] = '.png';
 								break;
 								case 'image/gif':
+								case 'image/giff':
 									if (!$gallery_config['gif_allowed'])
 									{
 										trigger_error('NOT_ALLOWED_FILE_TYPE');
+									}
+									if (substr(strtolower($image_data['image_tmp_name']), -4) != '.gif')
+									{
+										trigger_error(sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $image_data['image_tmp_name'], $image_data['image_type']), E_USER_WARNING);
 									}
 									$image_data['image_type2'] = '.gif';
 								break;
@@ -450,14 +463,7 @@ switch ($mode)
 
 							// Generate filename and upload
 							$image_data['filename'] = md5(unique_id()) . $image_data['image_type2'];
-							if (@ini_get('open_basedir') <> '')
-							{
-								$move_file = 'move_uploaded_file';
-							}
-							else
-							{
-								$move_file = 'copy';
-							}
+							$move_file = (@ini_get('open_basedir') <> '') ? 'move_uploaded_file' : 'copy';
 							$move_file($image_data['image_tmp'], $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
 							@chmod($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename'], 0777);
 
@@ -469,7 +475,24 @@ switch ($mode)
 							$exif = @exif_read_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename'], 0, true);
 							if (!empty($exif["EXIF"]))
 							{
-								unset($exif["EXIF"]["MakerNote"]);
+								// Unset invalid exifs
+								foreach ($exif as $key => $array)
+								{
+									if (!in_array($key, array('EXIF', 'IFD0')))
+									{
+										unset($exif[$key]);
+									}
+									else
+									{
+										foreach ($exif[$key] as $subkey => $array)
+										{
+											if (!in_array($subkey, array('DateTimeOriginal', 'FocalLength', 'ExposureTime', 'FNumber', 'ISOSpeedRatings', 'WhiteBalance', 'Flash', 'Model', 'ExposureProgram', 'ExposureBiasValue', 'MeteringMode')))
+											{
+												unset($exif[$key][$subkey]);
+											}
+										}
+									}
+								}
 								$image_data['image_exif_data'] = serialize ($exif);
 								$image_data['image_has_exif'] = EXIF_DBSAVED;
 							}
@@ -486,16 +509,16 @@ switch ($mode)
 								*/
 								if ($gallery_config['resize_images'])
 								{
-									switch ($image_data['image_type2']) 
+									switch ($image_data['image_type2'])
 									{
-										case '.jpg': 
-											$read_function = 'imagecreatefromjpeg'; 
-										break; 
-										case '.png': 
-											$read_function = 'imagecreatefrompng'; 
-										break; 
-										case '.gif': 
-											$read_function = 'imagecreatefromgif'; 
+										case '.jpg':
+											$read_function = 'imagecreatefromjpeg';
+										break;
+										case '.png':
+											$read_function = 'imagecreatefrompng';
+										break;
+										case '.gif':
+											$read_function = 'imagecreatefromgif';
 										break;
 									}
 
