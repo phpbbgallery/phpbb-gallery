@@ -282,9 +282,10 @@ class acp_gallery
 						trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 
-					// Hopefully this won't take to long!
+					// Hopefully this won't take to long! >> I think we must make it bunchwise
 					$sql = 'SELECT image_id, image_filename, image_thumbnail
-						FROM ' . GALLERY_IMAGES_TABLE;
+						FROM ' . GALLERY_IMAGES_TABLE . '
+						WHERE filesize_upload = 0';
 					$result = $db->sql_query($sql);
 					while ($row = $db->sql_fetchrow($result))
 					{
@@ -1409,7 +1410,7 @@ class acp_gallery
 						$sql_ary['image_has_exif'] = EXIF_AVAILABLE;
 						$sql_ary['image_exif_data'] = '';
 					}
-					$sql_ary['image_filesize'] = filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
+					$sql_ary['filesize_upload'] = filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
 
 					if ($filename || ($image_name == ''))
 					{
