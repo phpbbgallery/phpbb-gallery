@@ -254,6 +254,7 @@ class acp_gallery
 						GROUP BY album_user_id';
 					$result = $db->sql_query($sql);
 
+					$number_of_personals = 0;
 					while ($row = $db->sql_fetchrow($result))
 					{
 						$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
@@ -270,8 +271,10 @@ class acp_gallery
 							$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 							$db->sql_query($sql);
 						}
+						$number_of_personals++;
 					}
 					$db->sql_freeresult($result);
+					set_gallery_config('personal_counter', $number_of_personals);
 
 					trigger_error($user->lang['RESYNCED_PERSONALS'] . adm_back_link($this->u_action));
 				break;
@@ -1565,7 +1568,7 @@ class acp_gallery
 
 	function cleanup()
 	{
-		global $db, $template, $user, $cache, $auth, $phpbb_root_path;
+		global $auth, $cache, $db, $gallery_config, $phpbb_root_path, $template, $user;
 
 		$delete = (isset($_POST['delete'])) ? true : false;
 		$submit = (isset($_POST['submit'])) ? true : false;
@@ -1678,6 +1681,12 @@ class acp_gallery
 				$delete_albums = array_merge($missing_personals, $personals_bad);
 
 				$deleted_images = $deleted_albums = array(0);
+				$sql = 'SELECT COUNT(album_user_id) personal_counter
+					FROM ' . GALLERY_ALBUMS_TABLE . '
+					WHERE ' . $db->sql_in_set('album_user_id', $delete_albums);
+				$result = $db->sql_query($sql);
+				$remove_personal_counter = $db->sql_fetchfield('personal_counter');
+				$db->sql_freeresult($result);
 				$sql = 'SELECT album_id
 					FROM ' . GALLERY_ALBUMS_TABLE . '
 					WHERE ' . $db->sql_in_set('album_user_id', $delete_albums);
@@ -1686,6 +1695,7 @@ class acp_gallery
 				{
 					$deleted_albums[] = $row['album_id'];
 				}
+				$db->sql_freeresult($result);
 				$sql = 'SELECT image_id, image_thumbnail, image_filename
 					FROM ' . GALLERY_IMAGES_TABLE . '
 					WHERE ' . $db->sql_in_set('image_album_id', $deleted_albums);
@@ -1715,6 +1725,7 @@ class acp_gallery
 				}
 				$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . ' WHERE ' . $db->sql_in_set('album_id', $deleted_albums);
 				$db->sql_query($sql);
+				set_gallery_config('personal_counter', ($gallery_config['personal_counter'] - $remove_personal_counter));
 				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
 					SET personal_album_id = 0
 					WHERE ' . $db->sql_in_set('user_id', $delete_albums);
