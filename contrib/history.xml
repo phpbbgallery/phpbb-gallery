@@ -63,6 +63,7 @@
           <change><![CDATA[[Change] Report #482: Systemical inconsequence in contests]]></change>
           <change><![CDATA[[Change] Unreported: Rewrote the acp to set permissions much better]]></change>
 
+          <change><![CDATA[[Fix] Unreported: Mass-import missing filesize]]></change>
           <change><![CDATA[[Fix] Unreported: Mime-type not checked against file-extension]]></change>
           <change><![CDATA[[Fix] Unreported: Increased sql-speed for large databases on RRC-Addon]]></change>
           <change><![CDATA[[Fix] Unreported: Viewing uploader of contest images in several ucp-parts]]></change>

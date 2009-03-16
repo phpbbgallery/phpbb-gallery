@@ -1409,6 +1409,7 @@ class acp_gallery
 						$sql_ary['image_has_exif'] = EXIF_AVAILABLE;
 						$sql_ary['image_exif_data'] = '';
 					}
+					$sql_ary['image_filesize'] = filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
 
 					if ($filename || ($image_name == ''))
 					{
