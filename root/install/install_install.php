@@ -322,6 +322,7 @@ class install_install extends module
 		{
 			$data = array(
 				'acp_module'		=> 31,
+				'log_module'		=> 25,
 				'ucp_module'		=> 0,
 			);
 

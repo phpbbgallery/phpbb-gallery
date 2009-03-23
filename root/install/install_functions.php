@@ -641,8 +641,8 @@ function set_default_config()
 	set_gallery_config('rrc_gindex_comments', 0);
 
 	// Added 0.5.1:
-	set_gallery_config('user_images_profil', 1);
-	set_gallery_config('personal_album_profil', 1);
+	set_gallery_config('user_images_profile', 1);
+	set_gallery_config('personal_album_profile', 1);
 	set_gallery_config('rrc_profile_mode', '!comment');
 	set_gallery_config('rrc_profile_columns', 4);
 	set_gallery_config('rrc_profile_rows', 1);
