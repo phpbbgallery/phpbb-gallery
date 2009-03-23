@@ -1,4 +1,29 @@
 <!-- INCLUDE overall_header.html -->
+<script type="text/javascript">
+function getElement(iElementId)
+{
+	if (document.all) 
+	{
+		return document.all[iElementId];
+	}
+	if (document.getElementById)
+	{
+		return document.getElementById(iElementId);
+	}
+}
+
+function toggleElement(oElement)
+{
+	if (oElement.style.display == "none")
+	{
+		oElement.style.display = "";
+	}
+	else
+	{
+		oElement.style.display = "none";
+	}
+}
+</script>
 <h2><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>
 
 <form name="upload" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data" onsubmit="return checkAlbumForm()">
@@ -22,9 +47,9 @@
 			<tr>
 				<td class="row1" width="22%" height="28"><b class="genmed">{L_IMAGE_NAME}:</b></td>
 				<td class="row2">
-					<input class="inputbox autowidth" type="text" name="image_name" size="60" value="{IMAGE_NAME}" /><br /><br />
-					<!-- IF S_MULTI_IMAGES --><input class="inputbox autowidth" type="text" name="image_num" size="5" value="1" /> {L_LOOP_EXP}<br /><br /><!-- ENDIF -->
-					<!-- IF S_UPLOAD --><input type="checkbox" class="checkbox" name="filename" value="filename" /> {L_ORIG_FILENAME}<!-- ENDIF -->
+					<div id="image_name_fields"><input class="inputbox autowidth" type="text" name="image_name" size="60" value="{IMAGE_NAME}" /><br /><br />
+					<!-- IF S_MULTI_IMAGES --><input class="inputbox autowidth" type="text" name="image_num" size="5" value="1" /> {L_LOOP_EXP}<br /><br /><!-- ENDIF --></div>
+					<!-- IF S_UPLOAD --><input type="checkbox" class="checkbox" name="filename" value="filename" onclick="toggleElement(getElement('image_name_fields'));" /> {L_ORIG_FILENAME}<!-- ENDIF -->
 				</td>
 			</tr>
 		<!-- ENDIF -->

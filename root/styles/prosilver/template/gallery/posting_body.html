@@ -1,4 +1,29 @@
 <!-- INCLUDE overall_header.html -->
+<script type="text/javascript">
+function getElement(iElementId)
+{
+	if (document.all) 
+	{
+		return document.all[iElementId];
+	}
+	if (document.getElementById)
+	{
+		return document.getElementById(iElementId);
+	}
+}
+
+function toggleElement(oElement)
+{
+	if (oElement.style.display == "none")
+	{
+		oElement.style.display = "";
+	}
+	else
+	{
+		oElement.style.display = "none";
+	}
+}
+</script>
 <h2><!-- IF U_VIEW_IMAGE --><a href="{U_VIEW_IMAGE}">{IMAGE_NAME}</a><!-- ELSE --><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a><!-- ENDIF --></h2>
 
 <!-- IF U_IMAGE -->
@@ -30,9 +55,9 @@
 			<!-- IF S_IMAGE -->
 				<dl>
 					<dt><label for="image_name">{L_IMAGE_NAME}:</label></dt>
-					<dd><input class="inputbox autowidth" type="text" id="image_name" name="image_name" value="{IMAGE_NAME}" size="60" /></dd>
-					<!-- IF S_MULTI_IMAGES --><dd><input class="inputbox autowidth" type="text" name="image_num" size="5" value="1" /> {L_LOOP_EXP}</dd><!-- ENDIF -->
-					<!-- IF S_UPLOAD --><dd><input class="checkbox" type="checkbox" name="filename" id="filename" value="filename" /><label for="filename"> {L_ORIG_FILENAME}</label></dd><!-- ENDIF -->
+					<dd id="image_name_fields"><input class="inputbox autowidth" type="text" id="image_name" name="image_name" value="{IMAGE_NAME}" size="60" />
+					<!-- IF S_MULTI_IMAGES --><br /><input class="inputbox autowidth" type="text" name="image_num" size="5" value="1" /> {L_LOOP_EXP}<!-- ENDIF --></dd>
+					<!-- IF S_UPLOAD --><dd><input class="checkbox" type="checkbox" name="filename" id="filename" value="filename" onclick="toggleElement(getElement('image_name_fields'));" /><label for="filename"> {L_ORIG_FILENAME}</label></dd><!-- ENDIF -->
 				</dl>
 			<!-- ENDIF -->
 			<!-- IF S_ALLOWED_TO_RATE -->
