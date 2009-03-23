@@ -121,7 +121,7 @@ function recent_gallery_images(&$ints, $display, $modes, $collapse_comments = fa
 				FROM ' . GALLERY_IMAGES_TABLE . ' i
 				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
 					ON i.image_album_id = a.album_id
-				WHERE ' . $db->sql_in_set('i.image_id', $recent_ids) . '
+				WHERE ' . $db->sql_in_set('i.image_id', $recent_ids, false, true) . '
 				ORDER BY i.image_time DESC';
 			$result = $db->sql_query_limit($sql, $limit_sql);
 
@@ -187,7 +187,7 @@ function recent_gallery_images(&$ints, $display, $modes, $collapse_comments = fa
 				FROM ' . GALLERY_IMAGES_TABLE . ' i
 				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
 					ON i.image_album_id = a.album_id
-				WHERE ' . $db->sql_in_set('i.image_id', $random_ids);
+				WHERE ' . $db->sql_in_set('i.image_id', $random_ids, false, true);
 			$result = $db->sql_query_limit($sql, $limit_sql);
 
 			while ($row = $db->sql_fetchrow($result))
