@@ -63,6 +63,7 @@
           <change><![CDATA[[Change] Report #482: Systemical inconsequence in contests]]></change>
           <change><![CDATA[[Change] Unreported: Rewrote the acp to set permissions much better]]></change>
 
+          <change><![CDATA[[Fix] Report #495: Missing submit-Button on contest-rates]]></change>
           <change><![CDATA[[Fix] Report #496: SQL-Error on userprofile and gallery-index when no images are displayed.]]></change>
           <change><![CDATA[[Fix] Report #489: Missing resync after deleting a personal album]]></change>
           <change><![CDATA[[Fix] Unreported: Mass-import missing filesize]]></change>

@@ -145,7 +145,7 @@ function toggleElement(oElement)
 								<option value="{rate_scale.RATE_POINT}">{rate_scale.RATE_POINT}</option>
 							<!-- END rate_scale -->
 							</select>
-							<!-- IF not S_ALLOWED_TO_COMMENT and .rate_scale -->
+							<!-- IF (not S_ALLOWED_TO_COMMENT or S_HIDE_COMMENT_INPUT) and .rate_scale -->
 								<input type="submit" name="submit" value="{L_SUBMIT}" class="button1" />
 							<!-- ENDIF -->
 						<!-- ELSE -->
