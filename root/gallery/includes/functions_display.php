@@ -80,7 +80,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		'LEFT_JOIN'	=> array(
 			array(
 				'FROM'	=> array(GALLERY_ATRACK_TABLE => 'at'),
-				'ON'	=> 'a.album_id = at.album_id'
+				'ON'	=> 'at.user_id = ' . $user->data['user_id'] . ' AND a.album_id = at.album_id'
 			)
 		),
 		'ORDER_BY'	=> 'a.album_user_id, a.left_id',
