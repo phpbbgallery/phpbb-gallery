@@ -405,9 +405,11 @@ if ($gallery_config['allow_comments'] && gallery_acl_check('c_post', $album_id) 
 	// Build smilies array
 	generate_smilies('inline', 0);
 
+	$s_hide_comment_input = (time() < ($album_data['contest_start'] + $album_data['contest_end'])) ? true : false;
+
 	$template->assign_vars(array(
 		'S_ALLOWED_TO_COMMENT'	=> true,
-		'S_HIDE_COMMENT_INPUT'	=> (time() < ($album_data['contest_start'] + $album_data['contest_end'])) ? true : false,
+		'S_HIDE_COMMENT_INPUT'	=> $s_hide_comment_input,
 		'CONTEST_COMMENTS'		=> sprintf($user->lang['CONTEST_COMMENTS_STARTS'], $user->format_date(($album_data['contest_start'] + $album_data['contest_end']), false, true)),
 
 		'BBCODE_STATUS'			=> ($bbcode_status) ? sprintf($user->lang['BBCODE_IS_ON'], '<a href="' . append_sid("{$phpbb_root_path}faq.$phpEx", 'mode=bbcode') . '">', '</a>') : sprintf($user->lang['BBCODE_IS_OFF'], '<a href="' . append_sid("{$phpbb_root_path}faq.$phpEx", 'mode=bbcode') . '">', '</a>'),
@@ -424,8 +426,13 @@ if ($gallery_config['allow_comments'] && gallery_acl_check('c_post', $album_id) 
 		'S_BBCODE_FLASH'		=> $flash_status,
 		'S_BBCODE_QUOTE'		=> $quote_status,
 		'L_COMMENT_LENGTH'		=> sprintf($user->lang['COMMENT_LENGTH'], $gallery_config['comment_length']),
-		'S_COMMENT_ACTION'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=add"),
 	));
+
+	// Different link, when we rate and dont comment
+	if (!$s_hide_comment_input)
+	{
+		$template->assign_var('S_COMMENT_ACTION', append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=add"));
+	}
 }
 
 
