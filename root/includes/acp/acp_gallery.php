@@ -451,6 +451,11 @@ class acp_gallery
 		$group_id = request_var('group_id', array(0));
 		$p_system = request_var('p_system', 0);
 
+		if (!$p_system && !sizeof($album_id))
+		{
+			trigger_error('NO_PERMISSIONS_SELECTED', E_USER_WARNING);
+		}
+
 		// Delete permissions
 		if ($delete)
 		{
@@ -650,6 +655,11 @@ class acp_gallery
 		$group_id = request_var('group_id', array(0));
 		$user_id = request_var('user_id', array(0));
 		$p_system = request_var('p_system', 0);
+
+		if (!sizeof($group_id))
+		{
+			trigger_error('NO_VICTIM_SELECTED', E_USER_WARNING);
+		}
 
 		// Create the loops for the javascript
 		for ($i = 0; $i < sizeof($permissions->cats[$p_system]); $i++)
