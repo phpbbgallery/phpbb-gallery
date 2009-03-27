@@ -637,23 +637,6 @@ switch ($mode)
 					'S_UPLOAD'				=> true,
 				));
 
-				$count = 0;
-				$upload_image_files = $gallery_config['upload_images'];
-				if ((gallery_acl_check('i_count', $album_id) - $own_images) < $upload_image_files)
-				{
-					$upload_image_files = (gallery_acl_check('i_count', $album_id) - $own_images);
-					$error .= (($error) ? '<br />' : '') . sprintf($user->lang['USER_NEARLY_REACHED_QUOTA'], gallery_acl_check('i_count', $album_id), $own_images, $upload_image_files);
-					$template->assign_vars(array(
-						'ERROR'						=> $error,
-					));
-				}
-
-				while ($count < $upload_image_files)
-				{
-					$template->assign_block_vars('upload_image', array());
-					$count++;
-				}
-
 				if (!$error)
 				{
 					if (gallery_acl_check('i_approve', $album_id))
@@ -672,6 +655,24 @@ switch ($mode)
 					$submit = false;
 					$message = $user->lang['UPLOAD_NO_FILE'];
 				}
+
+				$count = 0;
+				$upload_image_files = $gallery_config['upload_images'];
+				if ((gallery_acl_check('i_count', $album_id) - $own_images) < $upload_image_files)
+				{
+					$upload_image_files = (gallery_acl_check('i_count', $album_id) - $own_images);
+					$error .= (($error) ? '<br />' : '') . sprintf($user->lang['USER_NEARLY_REACHED_QUOTA'], gallery_acl_check('i_count', $album_id), $own_images, $upload_image_files);
+					$template->assign_vars(array(
+						'ERROR'						=> $error,
+					));
+				}
+
+				while ($count < $upload_image_files)
+				{
+					$template->assign_block_vars('upload_image', array());
+					$count++;
+				}
+
 				$message .= '<br />';
 				update_album_info($album_id);
 				$page_title = $user->lang['UPLOAD_IMAGE'];
