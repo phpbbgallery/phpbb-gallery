@@ -1622,6 +1622,12 @@ function generate_personal_album($album_name, $user_id, $user_colour, $user_entr
 	}
 	set_gallery_config_count('personal_counter', 1);
 
+	// Update the config for the statistic on the index
+	set_gallery_config('newest_pgallery_user_id', $user_id);
+	set_gallery_config('newest_pgallery_username', $album_name);
+	set_gallery_config('newest_pgallery_user_colour', $user_colour);
+	set_gallery_config('newest_pgallery_album_id', $personal_album_id);
+
 	$cache->destroy('_albums');
 	$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 

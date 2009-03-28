@@ -278,6 +278,23 @@ class acp_gallery
 					$db->sql_freeresult($result);
 					set_gallery_config('personal_counter', $number_of_personals);
 
+					// Update the config for the statistic on the index
+					$sql = 'SELECT a.album_id, u.user_id, u.username, u.user_colour
+						FROM ' . GALLERY_ALBUMS_TABLE . ' a
+						LEFT JOIN ' . USERS_TABLE . ' u
+							ON u.user_id = a.album_user_id
+						WHERE a.album_user_id <> 0
+							AND a.parent_id = 0
+						ORDER BY a.album_id DESC';
+					$result = $db->sql_query_limit($sql, 1);
+					$newest_pgallery = $db->sql_fetchrow($result);
+					$db->sql_freeresult($result);
+
+					set_gallery_config('newest_pgallery_user_id', (int) $newest_pgallery['user_id']);
+					set_gallery_config('newest_pgallery_username', (string) $newest_pgallery['username']);
+					set_gallery_config('newest_pgallery_user_colour', (string) $newest_pgallery['user_colour']);
+					set_gallery_config('newest_pgallery_album_id', (int) $newest_pgallery['album_id']);
+
 					trigger_error($user->lang['RESYNCED_PERSONALS'] . adm_back_link($this->u_action));
 				break;
 
@@ -1750,6 +1767,36 @@ class acp_gallery
 				$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . ' WHERE ' . $db->sql_in_set('album_id', $deleted_albums);
 				$db->sql_query($sql);
 				set_gallery_config_count('personal_counter', 0 - $remove_personal_counter);
+
+				if (in_array($gallery_config['newest_pgallery_album_id'], $deleted_albums))
+				{
+					// Update the config for the statistic on the index
+					if ($gallery_config['personal_counter'] > 0)
+					{
+						$sql = 'SELECT a.album_id, u.user_id, u.username, u.user_colour
+							FROM ' . GALLERY_ALBUMS_TABLE . ' a
+							LEFT JOIN ' . USERS_TABLE . ' u
+								ON u.user_id = a.album_user_id
+							WHERE a.album_user_id <> 0
+								AND a.parent_id = 0
+							ORDER BY a.album_id DESC';
+						$result = $db->sql_query_limit($sql, 1);
+						$newest_pgallery = $db->sql_fetchrow($result);
+						$db->sql_freeresult($result);
+
+						set_gallery_config('newest_pgallery_user_id', (int) $newest_pgallery['user_id']);
+						set_gallery_config('newest_pgallery_username', (string) $newest_pgallery['username']);
+						set_gallery_config('newest_pgallery_user_colour', (string) $newest_pgallery['user_colour']);
+						set_gallery_config('newest_pgallery_album_id', (int) $newest_pgallery['album_id']);
+					}
+					else
+					{
+						set_gallery_config('newest_pgallery_user_id', 0);
+						set_gallery_config('newest_pgallery_username', '');
+						set_gallery_config('newest_pgallery_user_colour', '');
+						set_gallery_config('newest_pgallery_album_id', 0);
+					}
+				}
 				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
 					SET personal_album_id = 0
 					WHERE ' . $db->sql_in_set('user_id', $delete_albums);

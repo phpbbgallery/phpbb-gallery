@@ -234,6 +234,12 @@ class ucp_gallery
 			}
 			set_gallery_config_count('personal_counter', 1);
 
+			// Update the config for the statistic on the index
+			set_gallery_config('newest_pgallery_user_id', $user->data['user_id']);
+			set_gallery_config('newest_pgallery_username', $user->data['username']);
+			set_gallery_config('newest_pgallery_user_colour', $user->data['user_colour']);
+			set_gallery_config('newest_pgallery_album_id', $album_id);
+
 			$cache->destroy('_albums');
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 		}
@@ -722,6 +728,36 @@ class ucp_gallery
 				$db->sql_query($sql);
 
 				set_gallery_config_count('personal_counter', -1);
+
+				if ($gallery_config['newest_pgallery_album_id'] == $user->gallery['personal_album_id'])
+				{
+					// Update the config for the statistic on the index
+					if ($gallery_config['personal_counter'] > 0)
+					{
+						$sql = 'SELECT a.album_id, u.user_id, u.username, u.user_colour
+							FROM ' . GALLERY_ALBUMS_TABLE . ' a
+							LEFT JOIN ' . USERS_TABLE . ' u
+								ON u.user_id = a.album_user_id
+							WHERE a.album_user_id <> 0
+								AND a.parent_id = 0
+							ORDER BY a.album_id DESC';
+						$result = $db->sql_query_limit($sql, 1);
+						$newest_pgallery = $db->sql_fetchrow($result);
+						$db->sql_freeresult($result);
+
+						set_gallery_config('newest_pgallery_user_id', (int) $newest_pgallery['user_id']);
+						set_gallery_config('newest_pgallery_username', (string) $newest_pgallery['username']);
+						set_gallery_config('newest_pgallery_user_colour', (string) $newest_pgallery['user_colour']);
+						set_gallery_config('newest_pgallery_album_id', (int) $newest_pgallery['album_id']);
+					}
+					else
+					{
+						set_gallery_config('newest_pgallery_user_id', 0);
+						set_gallery_config('newest_pgallery_username', '');
+						set_gallery_config('newest_pgallery_user_colour', '');
+						set_gallery_config('newest_pgallery_album_id', 0);
+					}
+				}
 			}
 			else
 			{
