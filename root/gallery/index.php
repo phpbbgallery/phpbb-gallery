@@ -227,8 +227,6 @@ $template->assign_vars(array(
 	'U_USERS_PERSONAL_GALLERIES' 	=> (!$gallery_config['personal_album_index'] && gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal') : '',
 
 	'U_MARK_ALBUMS'					=> ($user->data['is_registered']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'hash=' . generate_link_hash('global') . '&amp;mark=albums') : '',
-	'S_COLS' 						=> $gallery_config['cols_per_page'],
-	'S_COL_WIDTH' 					=> (100 / $gallery_config['cols_per_page']) . '%',
 ));
 
 page_header($user->lang['GALLERY']);
