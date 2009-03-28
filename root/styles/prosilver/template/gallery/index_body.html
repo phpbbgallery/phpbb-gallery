@@ -14,12 +14,13 @@
 
 <!-- INCLUDE gallery/albumlist_body.html -->
 
-<div class="topic-actions">
-	<div class="pagination">{TOTAL_PGALLERIES_SHORT}<!-- IF PAGINATION --> &bull; <a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a> &bull; <span>{PAGINATION}</span><!-- ENDIF --></div>
-</div>
+<!-- IF S_PERSONAL_GALLERY -->
+	<div class="topic-actions">
+		<div class="pagination">{TOTAL_PGALLERIES_SHORT}<!-- IF PAGINATION --> &bull; <a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a> &bull; <span>{PAGINATION}</span><!-- ENDIF --></div>
+	</div>
+<!-- ENDIF -->
 
 <!-- IF U_USERS_PERSONAL_GALLERIES --><h4><!-- IF S_PERSONAL_GALLERY --><a href="{U_GALLERY_MOD}">{L_GALLERY}</a>&nbsp;&lsaquo;&nbsp;{L_USERS_PERSONAL_ALBUMS}<!-- ELSE -->{L_GALLERY}&nbsp;&lsaquo;&nbsp;<a href="{U_USERS_PERSONAL_GALLERIES}">{L_USERS_PERSONAL_ALBUMS}</a><!-- ENDIF --><!-- IF U_YOUR_PERSONAL_GALLERY -->&nbsp;&raquo;&nbsp;<a href="{U_YOUR_PERSONAL_GALLERY}">{L_YOUR_PERSONAL_ALBUM}</a><!-- ENDIF --></h4><!-- ENDIF -->
-<br />
 
 <!-- INCLUDE gallery/recent_body.html -->
 
