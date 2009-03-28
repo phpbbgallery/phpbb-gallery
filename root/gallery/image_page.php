@@ -387,7 +387,7 @@ if ($gallery_config['allow_rates'])
 /**
 * Posting comment
 */
-if ($gallery_config['allow_comments'] && gallery_acl_check('c_post', $album_id) && ($album_data['album_status'] != ITEM_LOCKED) && ($image_data['image_status'] != IMAGE_LOCKED))
+if ($gallery_config['allow_comments'] && gallery_acl_check('c_post', $album_id) && ($album_data['album_status'] != ITEM_LOCKED) && (($image_data['image_status'] != IMAGE_LOCKED) || gallery_acl_check('m_status', $album_id)))
 {
 	$user->add_lang('posting');
 	include("{$phpbb_root_path}includes/functions_posting.$phpEx");
