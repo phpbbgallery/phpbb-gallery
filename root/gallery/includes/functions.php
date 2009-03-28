@@ -104,6 +104,41 @@ function set_gallery_config($config_name, $config_value, $is_dynamic = false)
 }
 
 /**
+* Set dynamic config value with arithmetic operation.
+*
+* borrowed from phpBB3
+* @author: phpBB Group
+* @function: set_config_count
+*/
+function set_gallery_config_count($config_name, $increment, $is_dynamic = false)
+{
+	global $db /*, $cache*/;
+
+	switch ($db->sql_layer)
+	{
+		case 'firebird':
+			$sql_update = 'CAST(CAST(config_value as integer) + ' . (int) $increment . ' as CHAR)';
+		break;
+
+		case 'postgres':
+			$sql_update = 'int4(config_value) + ' . (int) $increment;
+		break;
+
+		// MySQL, SQlite, mssql, mssql_odbc, oracle
+		default:
+			$sql_update = 'config_value + ' . (int) $increment;
+		break;
+	}
+
+	$db->sql_query('UPDATE ' . GALLERY_CONFIG_TABLE . ' SET config_value = ' . $sql_update . " WHERE config_name = '" . $db->sql_escape($config_name) . "'");
+
+	/*if (!$is_dynamic)
+	{
+		$cache->destroy('config');
+	}*/
+}
+
+/**
 * Get album information
 */
 function get_album_info($album_id)
@@ -440,9 +475,18 @@ function update_album_info($album_id)
 */
 function handle_image_counter($image_id_ary, $add, $readd = false)
 {
-	global $config, $db;
+	global $config, $gallery_config, $db;
 
-	$num_images = 0;
+	$num_images = $num_comments = 0;
+	$sql = 'SELECT SUM(image_comments) comments
+		FROM ' . GALLERY_IMAGES_TABLE . '
+		WHERE image_status ' . (($readd) ? '<>' : '=') . ' ' . IMAGE_APPROVED . '
+			AND ' . $db->sql_in_set('image_id', $image_id_ary) . '
+		GROUP BY image_user_id';
+	$result = $db->sql_query($sql);
+	$num_comments = $db->sql_fetchfield('comments');
+	$db->sql_freeresult($result);
+
 	$sql = 'SELECT COUNT(image_id) images, image_user_id
 		FROM ' . GALLERY_IMAGES_TABLE . '
 		WHERE image_status ' . (($readd) ? '<>' : '=') . ' ' . IMAGE_APPROVED . '
@@ -469,7 +513,17 @@ function handle_image_counter($image_id_ary, $add, $readd = false)
 	}
 	$db->sql_freeresult($result);
 
-	set_config('num_images', (($add) ? $config['num_images'] + $num_images : $config['num_images'] - $num_images), true);
+	if (function_exists('set_config_count'))
+	{
+		// Since phpBB 3.0.5 this is the better solution
+		set_config_count('num_images', (($add) ? $num_images : 0 - $num_images), true);
+		set_gallery_config_count('num_comments', (($add) ? $num_comments : 0 - $num_comments), true);
+	}
+	else
+	{
+		set_config('num_images', (($add) ? $config['num_images'] + $num_images : $config['num_images'] - $num_images), true);
+		set_gallery_config('num_comments', (($add) ? $gallery_config['num_comments'] + $num_comments : $gallery_config['num_comments'] - $num_comments), true);
+	}
 }
 
 /**

@@ -1373,7 +1373,7 @@ class acp_gallery_albums
 	*/
 	function delete_album_content($album_id)
 	{
-		global $cache, $config, $db;
+		global $cache, $config, $gallery_config, $db;
 
 		// Before we remove anything we make sure we are able to adjust the image counts later. ;)
 		$sql = 'SELECT image_user_id
@@ -1473,15 +1473,16 @@ class acp_gallery_albums
 			}
 		}
 
-		// Make sure the overall image count is correct...
-		$sql = 'SELECT COUNT(image_id) AS stat
+		// Make sure the overall image & comment count is correct...
+		$sql = 'SELECT COUNT(image_id) AS num_images, SUM(image_comments) AS num_comments
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE image_status = ' . IMAGE_APPROVED;
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		set_config('num_images', (int) $row['stat'], true);
+		set_config('num_images', (int) $row['num_images'], true);
+		set_gallery_config('num_comments', (int) $row['num_comments'], true);
 
 		$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 		$cache->destroy('sql', GALLERY_COMMENTS_TABLE);

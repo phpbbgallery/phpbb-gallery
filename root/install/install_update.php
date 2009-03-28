@@ -554,7 +554,7 @@ class install_update extends module
 			case '0.3.0':
 			case '0.3.1':
 				// Set some configs
-				$num_images = $total_galleries = 0;
+				$total_galleries = 0;
 				$sql = 'SELECT u.album_id, u.user_id, count(i.image_id) as images
 					FROM ' . USERS_TABLE . ' u
 					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
@@ -569,7 +569,6 @@ class install_update extends module
 						'personal_album_id'		=> $row['album_id'],
 						'user_images'			=> $row['images'],
 					);
-					$num_images += $row['images'];
 					$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . $db->sql_build_array('INSERT', $sql_ary));
 				}
 				$db->sql_freeresult($result);
@@ -581,10 +580,7 @@ class install_update extends module
 				$total_galleries = (int) $db->sql_fetchfield('albums');
 				$db->sql_freeresult($result);
 
-				set_config('num_images', $num_images, true);
 				set_config('gallery_total_images', 1);
-				set_config('gallery_user_images_profil', 1);
-				set_config('gallery_personal_album_profil', 1);
 
 				set_gallery_config('thumbnail_info_line', 1);
 				set_gallery_config('fake_thumb_size', 70);
@@ -979,6 +975,16 @@ class install_update extends module
 				$db->sql_query($sql);
 
 			case '0.5.3':
+				$num_comments = 0;
+				$sql = 'SELECT SUM(image_comments) comments
+					FROM ' . GALLERY_IMAGES_TABLE . '
+					WHERE image_status ' . (($readd) ? '<>' : '=') . ' ' . IMAGE_APPROVED . '
+						AND ' . $db->sql_in_set('image_id', $image_id_ary) . '
+					GROUP BY image_user_id';
+				$result = $db->sql_query($sql);
+				$num_comments = $db->sql_fetchfield('comments');
+				$db->sql_freeresult($result);
+				set_gallery_config('num_comment', $num_comments, true);
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;

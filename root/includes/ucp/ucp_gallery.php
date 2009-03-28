@@ -232,7 +232,7 @@ class ucp_gallery
 				);
 				$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $gallery_settings));
 			}
-			set_gallery_config('personal_counter', $gallery_config['personal_counter'] + 1);
+			set_gallery_config_count('personal_counter', 1);
 
 			$cache->destroy('_albums');
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
@@ -612,7 +612,7 @@ class ucp_gallery
 
 	function delete_album()
 	{
-		global $gallery_config, $cache, $db, $template, $user;
+		global $cache, $config, $db, $gallery_config, $template, $user;
 		global $phpbb_root_path, $phpEx;
 
 		$s_hidden_fields = build_hidden_fields(array(
@@ -702,6 +702,17 @@ class ucp_gallery
 				WHERE ' . $db->sql_in_set('album_id', $deleted_albums);
 			$db->sql_query($sql);
 
+			// Make sure the overall image & comment count is correct...
+			$sql = 'SELECT COUNT(image_id) AS num_images, SUM(image_comments) AS num_comments
+				FROM ' . GALLERY_IMAGES_TABLE . '
+				WHERE image_status = ' . IMAGE_APPROVED;
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+
+			set_config('num_images', (int) $row['num_images'], true);
+			set_gallery_config('num_comments', (int) $row['num_comments'], true);
+
 			// Maybe we deleted all, so we have to empty $user->gallery['personal_album_id']
 			if (in_array($user->gallery['personal_album_id'], $deleted_albums_a))
 			{
@@ -710,7 +721,7 @@ class ucp_gallery
 					WHERE ' . $db->sql_in_set('personal_album_id', $deleted_albums);
 				$db->sql_query($sql);
 
-				set_gallery_config('personal_counter', $gallery_config['personal_counter'] - 1);
+				set_gallery_config_count('personal_counter', -1);
 			}
 			else
 			{

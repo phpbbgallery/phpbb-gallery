@@ -202,12 +202,12 @@ class acp_gallery
 						trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 
-					$total_images = 0;
+					$total_images = $total_comments = 0;
 					$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
 						SET user_images = 0';
 					$db->sql_query($sql);
 
-					$sql = 'SELECT COUNT(image_id) num_images, image_user_id user_id
+					$sql = 'SELECT COUNT(image_id) num_images, image_user_id user_id, SUM(image_comments) AS num_comments
 						FROM ' . GALLERY_IMAGES_TABLE . '
 						WHERE image_status = ' . IMAGE_APPROVED . '
 						GROUP BY image_user_id';
@@ -216,6 +216,7 @@ class acp_gallery
 					while ($row = $db->sql_fetchrow($result))
 					{
 						$total_images += $row['num_images'];
+						$total_comments += $row['num_comments'];
 						$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
 							SET user_images = ' . $row['num_images'] . '
 							WHERE user_id = ' . $row['user_id'];
@@ -234,6 +235,7 @@ class acp_gallery
 					$db->sql_freeresult($result);
 
 					set_config('num_images', $total_images, true);
+					set_gallery_config('num_comments', $total_comments, true);
 					trigger_error($user->lang['RESYNCED_IMAGECOUNTS'] . adm_back_link($this->u_action));
 				break;
 
@@ -1467,7 +1469,15 @@ class acp_gallery
 					$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 					$db->sql_query($sql);
 				}
-				set_config('num_images', $config['num_images'] + $images_loop, true);
+				if (function_exists('set_config_count'))
+				{
+					// Since phpBB 3.0.5 this is the better solution
+					set_config_count('num_images', $images_loop);
+				}
+				else
+				{
+					set_config('num_images', $config['num_images'] + $images_loop, true);
+				}
 				$todo_images = $todo_images - $images_loop;
 			}
 			update_album_info($album_id);
@@ -1739,7 +1749,7 @@ class acp_gallery
 				}
 				$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . ' WHERE ' . $db->sql_in_set('album_id', $deleted_albums);
 				$db->sql_query($sql);
-				set_gallery_config('personal_counter', ($gallery_config['personal_counter'] - $remove_personal_counter));
+				set_gallery_config_count('personal_counter', 0 - $remove_personal_counter);
 				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
 					SET personal_album_id = 0
 					WHERE ' . $db->sql_in_set('user_id', $delete_albums);
@@ -1753,6 +1763,17 @@ class acp_gallery
 					$message .= $user->lang['CLEAN_PERSONALS_BAD_DONE'];
 				}
 			}
+
+			// Make sure the overall image & comment count is correct...
+			$sql = 'SELECT COUNT(image_id) AS num_images, SUM(image_comments) AS num_comments
+				FROM ' . GALLERY_IMAGES_TABLE . '
+				WHERE image_status = ' . IMAGE_APPROVED;
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+
+			set_config('num_images', (int) $row['num_images'], true);
+			set_gallery_config('num_comments', (int) $row['num_comments'], true);
 
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 			$cache->destroy('sql', GALLERY_COMMENTS_TABLE);

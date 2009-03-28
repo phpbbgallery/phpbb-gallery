@@ -88,7 +88,7 @@ if ($album_data['contest_id'] && $album_data['contest_marked'] && (($album_data[
 		WHERE image_id = ' . $third;
 	$db->sql_query($sql_update);
 
-	set_gallery_config('contests_ended', $gallery_config['contests_ended'] + 1);
+	set_gallery_config_count('contests_ended', 1);
 
 	$album_data['contest_marked'] = IMAGE_NO_CONTEST;
 }

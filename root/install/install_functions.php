@@ -659,6 +659,9 @@ function set_default_config()
 	set_config('gallery_viewtopic_icon', 1);
 	set_config('gallery_viewtopic_images', 1);
 	set_config('gallery_viewtopic_link', 0);
+
+	// Added X.Y.Z: //@todo: 
+	set_gallery_config('num_comments', 0);
 }
 
 ?>

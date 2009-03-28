@@ -83,15 +83,6 @@ function toggleElement(oElement)
 	<!-- END recent -->
 </table>
 <br clear="all" />
-<!-- ELSEIF S_RECENT -->
-<table class="tablebg" width="100%" cellspacing="1">
-	<tr>
-		<th>{L_RECENT_IMAGES}</th>
-	</tr>
-	<tr>
-		<td class="row1" align="center">{L_NO_IMAGES}</td>
-	</tr>
-</table>
 <!-- ENDIF -->
 
 <!-- IF .random -->
@@ -154,16 +145,6 @@ function toggleElement(oElement)
 	<!-- END random -->
 </table>
 <br clear="all" />
-<!-- ELSEIF S_RANDOM -->
-<table class="tablebg" width="100%" cellspacing="1">
-	<tr>
-		<th>{L_RANDOM_IMAGES}</th>
-	</tr>
-	<tr>
-		<td class="row1" align="center">{L_NO_IMAGES}</td>
-	</tr>
-</table>
-<br clear="all" />
 <!-- ENDIF -->
 
 <!-- IF .contest -->
@@ -224,16 +205,6 @@ function toggleElement(oElement)
 		<td class="row1" align="center" height="30"><span class="gen">{L_NO_IMAGES_LONG}</span></td>
 	</tr>
 	<!-- END contest -->
-</table>
-<br clear="all" />
-<!-- ELSEIF S_RANDOM -->
-<table class="tablebg" width="100%" cellspacing="1">
-	<tr>
-		<th><!-- IF U_G_SEARCH_CONTESTS --><a href="{U_G_SEARCH_CONTESTS}">{L_SEARCH_CONTEST}</a><!-- ELSE -->{L_SEARCH_CONTEST}<!-- ENDIF --></th>
-	</tr>
-	<tr>
-		<td class="row1" align="center">{L_NO_IMAGES}</td>
-	</tr>
 </table>
 <br clear="all" />
 <!-- ENDIF -->
@@ -318,15 +289,6 @@ function toggleElement(oElement)
 		<tr>
 			<td class="spacer" colspan="2" height="1"><img src="images/spacer.gif" alt="" width="1" height="1" /></td>
 		</tr>
-	</table>
-<!-- BEGINELSE -->
-	<table class="tablebg" width="100%" cellspacing="1">
-	<tr>
-		<th>{L_RECENT_COMMENTS}</th>
-	</tr>
-	<tr> 
-		<td class="row1" align="center"><br /><p class="gen">{L_NO_COMMENTS}</p><br /></td>
-	</tr>
 	</table>
 <!-- END commentrow -->
 </div>

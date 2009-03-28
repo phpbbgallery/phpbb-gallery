@@ -150,6 +150,7 @@ $lang = array_merge($lang, array(
 
 	'NEW_COMMENT'					=> 'New Comment',
 	'NEW_IMAGES'					=> 'New images',
+	'NEWEST_PGALLERY'				=> 'Our newest personal gallery %s',
 	'NO_ALBUMS'						=> 'There are no albums in this gallery.',
 	'NO_COMMENTS'					=> 'No comments yet',
 	'NO_IMAGES'						=> 'No images',
@@ -206,7 +207,11 @@ $lang = array_merge($lang, array(
 	'SUBALBUM'						=> 'Subalbum',
 
 	'THUMBNAIL_SIZE'				=> 'Thumbnail size (pixels)',
+	'TOTAL_COMMENTS_OTHER'			=> 'Total comments <strong>%d</strong>',
+	'TOTAL_COMMENTS_ZERO'			=> 'Total comments <strong>0</strong>',
 	'TOTAL_IMAGES'					=> 'Total images',
+	'TOTAL_PGALLERIES_OTHER'		=> 'Total personal galleries <strong>%d</strong>',
+	'TOTAL_PGALLERIES_ZERO'			=> 'Total personal galleries <strong>0</strong>',
 
 	'UNFAVORITE_IMAGE'				=> 'remove from favorites',
 	'UNFAVORITED_IMAGE'				=> 'The image was removed from your favorites.',

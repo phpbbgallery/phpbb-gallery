@@ -1152,6 +1152,7 @@ switch ($mode)
 					{
 						$db->sql_query('INSERT INTO ' . GALLERY_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 						$newest_comment = $db->sql_nextid();
+						set_gallery_config_count('num_comments', 1);
 
 						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . "
 							SET image_comments = image_comments + 1,
@@ -1273,14 +1274,14 @@ switch ($mode)
 				{
 					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . " WHERE comment_id = $comment_id;";
 					$db->sql_query($sql);
+					set_gallery_config_count('num_comments', -1);
 
 					$sql = 'SELECT MAX(comment_id) last_comment
 						FROM ' . GALLERY_COMMENTS_TABLE . "
 						WHERE comment_image_id = $image_id
 						ORDER BY comment_id";
 					$result = $db->sql_query_limit($sql, 1);
-					$last_comment_id = $db->sql_fetchfield('last_comment');
-					$last_comment_id = ($last_comment_id) ? $last_comment_id : 0;
+					$last_comment_id = (int) $db->sql_fetchfield('last_comment');
 					$db->sql_freeresult($result);
 
 					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . "
@@ -1619,7 +1620,7 @@ function generate_personal_album($album_name, $user_id, $user_colour, $user_entr
 		);
 		$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $gallery_settings));
 	}
-	set_gallery_config('personal_counter', $gallery_config['personal_counter'] + 1);
+	set_gallery_config_count('personal_counter', 1);
 
 	$cache->destroy('_albums');
 	$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
