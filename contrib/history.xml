@@ -56,6 +56,7 @@
         <date>2009-MM-DD</date>
         <rev-version>X.Y.Z</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Fix] Report #499: ' in filename, imagename or username cause syntax error on massimport.]]></change>
           <change><![CDATA[[Fix] Report #503: Can not rate contest-images with hidden comment field, by wrong access-mode.]]></change>
           <change><![CDATA[[Fix] Report #501: Image-counter and unread information are incorrect, when an album was viewed by more than one user.]]></change>
           <change><![CDATA[[Fix] Report #497: Missing "Successful uploaded" when number of availbale uploads is smaller than columns count.]]></change>

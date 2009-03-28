@@ -1267,6 +1267,9 @@ class acp_gallery
 			if (file_exists($phpbb_root_path . GALLERY_IMPORT_PATH . $import_schema . '.' . $phpEx))
 			{
 				include($phpbb_root_path . GALLERY_IMPORT_PATH . $import_schema . '.' . $phpEx);
+				// Replace the md5 with the ' again and remove the space at the end to prevent \' troubles
+				$user_data['username'] = utf8_substr(str_replace("{{$import_schema}}", "'", $user_data['username']), 0, -1);
+				$image_name = utf8_substr(str_replace("{{$import_schema}}", "'", $image_name), 0, -1);
 			}
 			else
 			{
@@ -1279,6 +1282,7 @@ class acp_gallery
 				/**
 				* Import the images
 				*/
+				$image_src = str_replace("{{$import_schema}}", "'", $image_src);
 				$image_src_full = $phpbb_root_path . GALLERY_IMPORT_PATH . utf8_decode($image_src);
 				if (file_exists($image_src_full))
 				{
@@ -1958,17 +1962,19 @@ class acp_gallery
 		$import_file .= "\$num_offset = " . $num_offset . ";\n";
 		$import_file .= "\$done_images = " . $done_images . ";\n";
 		$import_file .= "\$todo_images = " . $todo_images . ";\n";
-		$import_file .= "\$image_name = '" . $image_name . "';\n";
+		// We add a space at the end of the name, to not get troubles with \';
+		$import_file .= "\$image_name = '" . str_replace("'", "{{$import_schema}}", $image_name) . " ';\n";
 		$import_file .= "\$filename = " . (($filename) ? 'true' : 'false') . ";\n";
 		$import_file .= "\$user_data = array(\n";
 		$import_file .= "	'user_id'		=> " . $user_row['user_id'] . ",\n";
-		$import_file .= "	'username'		=> '" . $user_row['username'] . "',\n";
+		// We add a space at the end of the name, to not get troubles with \',
+		$import_file .= "	'username'		=> '" . str_replace("'", "{{$import_schema}}", $user_row['username']) . " ',\n";
 		$import_file .= "	'user_colour'	=> '" . $user_row['user_colour'] . "',\n";
 		$import_file .= ");\n";
 		$import_file .= "\$images = array(\n";
 		foreach ($images as $image_src)
 		{
-			$import_file .= "	'" . $image_src . "',\n";
+			$import_file .= "	'" . str_replace("'", "{{$import_schema}}", $image_src) . "',\n";
 		}
 		$import_file .= ");\n";
 		$import_file .= "\n";
