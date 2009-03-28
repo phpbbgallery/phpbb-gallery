@@ -105,7 +105,7 @@ function recent_gallery_images(&$ints, $display, $modes, $collapse_comments = fa
 			$sql = 'SELECT image_id
 				FROM ' . GALLERY_IMAGES_TABLE . '
 				WHERE ((' . $db->sql_in_set('image_album_id', $view_albums) . '
-						AND image_status = ' . IMAGE_APPROVED . (($user_id) ? ' AND image_contest = ' . IMAGE_NO_CONTEST : '') . ')' . 
+						AND image_status <> ' . IMAGE_UNAPPROVED . (($user_id) ? ' AND image_contest = ' . IMAGE_NO_CONTEST : '') . ')' . 
 					(($moderate_albums) ? ' OR (' . $db->sql_in_set('image_album_id', $moderate_albums) . ')' : '') . '
 					' . (($user_id) ? ') AND image_user_id = ' . $user_id : ')') . '
 				ORDER BY image_time DESC';
@@ -171,7 +171,7 @@ function recent_gallery_images(&$ints, $display, $modes, $collapse_comments = fa
 			$sql = 'SELECT image_id
 				FROM ' . GALLERY_IMAGES_TABLE . '
 				WHERE ((' . $db->sql_in_set('image_album_id', $view_albums) . '
-						AND image_status = ' . IMAGE_APPROVED . (($user_id) ? ' AND image_contest = ' . IMAGE_NO_CONTEST : '') . ')' . 
+						AND image_status <> ' . IMAGE_UNAPPROVED . (($user_id) ? ' AND image_contest = ' . IMAGE_NO_CONTEST : '') . ')' . 
 					(($moderate_albums) ? ' OR (' . $db->sql_in_set('image_album_id', $moderate_albums) . ')' : '') . '
 					' . (($user_id) ? ') AND image_user_id = ' . $user_id : ')') . '
 				ORDER BY ' . $random;
@@ -222,7 +222,7 @@ function recent_gallery_images(&$ints, $display, $modes, $collapse_comments = fa
 				FROM ' . GALLERY_IMAGES_TABLE . ' i
 				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
 					ON i.image_album_id = a.album_id
-				WHERE ((' . $db->sql_in_set('i.image_album_id', $view_albums) . ' AND i.image_status = ' . IMAGE_APPROVED . ')' . 
+				WHERE ((' . $db->sql_in_set('i.image_album_id', $view_albums) . ' AND i.image_status <> ' . IMAGE_UNAPPROVED . ')' . 
 					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . ')
 					AND i.image_contest_rank > 0
 				GROUP BY i.image_id
@@ -265,7 +265,7 @@ function recent_gallery_images(&$ints, $display, $modes, $collapse_comments = fa
 			FROM ' . GALLERY_COMMENTS_TABLE . ' c
 			LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
 				ON c.comment_image_id = i.image_id
-			WHERE ((' . $db->sql_in_set('i.image_album_id', $view_albums) . ' AND i.image_status = ' . IMAGE_APPROVED . ')' . 
+			WHERE ((' . $db->sql_in_set('i.image_album_id', $view_albums) . ' AND i.image_status <> ' . IMAGE_UNAPPROVED . ')' . 
 					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . ')
 				AND (' . $db->sql_in_set('i.image_album_id', $comment_albums) . '
 				' . (($user_id) ? ') AND i.image_user_id = ' . $user_id : ')') .'

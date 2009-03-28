@@ -33,7 +33,7 @@ if ($mode == 'queue_details')
 }
 if ($mode == 'report_details')
 {
-	$m_status = ' AND i.image_status = ' . IMAGE_APPROVED;
+	$m_status = ' AND i.image_status <> ' . IMAGE_UNAPPROVED;
 	if (gallery_acl_check('m_status', $album_id))
 	{
 		$m_status = '';

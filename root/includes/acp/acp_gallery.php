@@ -209,7 +209,7 @@ class acp_gallery
 
 					$sql = 'SELECT COUNT(image_id) num_images, image_user_id user_id, SUM(image_comments) AS num_comments
 						FROM ' . GALLERY_IMAGES_TABLE . '
-						WHERE image_status = ' . IMAGE_APPROVED . '
+						WHERE image_status <> ' . IMAGE_UNAPPROVED . '
 						GROUP BY image_user_id';
 					$result = $db->sql_query($sql);
 
@@ -1814,7 +1814,7 @@ class acp_gallery
 			// Make sure the overall image & comment count is correct...
 			$sql = 'SELECT COUNT(image_id) AS num_images, SUM(image_comments) AS num_comments
 				FROM ' . GALLERY_IMAGES_TABLE . '
-				WHERE image_status = ' . IMAGE_APPROVED;
+				WHERE image_status <> ' . IMAGE_UNAPPROVED;
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);

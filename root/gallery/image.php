@@ -52,7 +52,7 @@ if (!file_exists($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_fil
 /**
 * Check permissions and hotlinking
 */
-if ((!gallery_acl_check('i_view', $album_id)) || (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != 1)))
+if ((!gallery_acl_check('i_view', $album_id)) || (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] == IMAGE_UNAPPROVED)))
 {
 	trigger_error('NOT_AUTHORISED');
 }

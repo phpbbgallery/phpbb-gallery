@@ -77,7 +77,7 @@ if (!gallery_acl_check('i_view', $album_id))
 		trigger_error('NOT_AUTHORISED');
 	}
 }
-if (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != IMAGE_APPROVED))
+if (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] == IMAGE_UNAPPROVED))
 {
 	trigger_error('NOT_AUTHORISED');
 }
@@ -98,7 +98,7 @@ $db->sql_query($sql);
 $previous_id = $next_id = $last_id = 0;
 $previous_name = $next_name = $last_name = '';
 $do_next = false;
-$image_approval_sql = ' AND image_status = ' . IMAGE_APPROVED;
+$image_approval_sql = ' AND image_status <> ' . IMAGE_UNAPPROVED;
 if (gallery_acl_check('m_status', $album_id))
 {
 	$image_approval_sql = '';
@@ -346,7 +346,7 @@ if ($gallery_config['allow_rates'])
 	}
 
 	// Check: User didn't rate yet, has permissions, it's not the users own image and the user is logged in
-	if (!$your_rating && gallery_acl_check('i_rate', $album_id) && ($user->data['user_id'] != $image_data['image_user_id']) && ($user->data['user_id'] != ANONYMOUS) && ($album_data['album_status'] != ITEM_LOCKED))
+	if (!$your_rating && gallery_acl_check('i_rate', $album_id) && ($user->data['user_id'] != $image_data['image_user_id']) && ($user->data['user_id'] != ANONYMOUS) && ($album_data['album_status'] != ITEM_LOCKED) && ($image_data['image_status'] != IMAGE_LOCKED))
 	{
 		$hide_rate = false;
 		if ($album_data['contest_id'])
@@ -387,7 +387,7 @@ if ($gallery_config['allow_rates'])
 /**
 * Posting comment
 */
-if ($gallery_config['allow_comments'] && gallery_acl_check('c_post', $album_id) && ($album_data['album_status'] != ITEM_LOCKED))
+if ($gallery_config['allow_comments'] && gallery_acl_check('c_post', $album_id) && ($album_data['album_status'] != ITEM_LOCKED) && ($image_data['image_status'] != IMAGE_LOCKED))
 {
 	$user->add_lang('posting');
 	include("{$phpbb_root_path}includes/functions_posting.$phpEx");

@@ -978,13 +978,19 @@ class install_update extends module
 				$num_comments = 0;
 				$sql = 'SELECT SUM(image_comments) comments
 					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE image_status ' . (($readd) ? '<>' : '=') . ' ' . IMAGE_APPROVED . '
-						AND ' . $db->sql_in_set('image_id', $image_id_ary) . '
-					GROUP BY image_user_id';
+					WHERE image_status <> ' . IMAGE_UNAPPROVED . '
+					GROUP BY image_id';
 				$result = $db->sql_query($sql);
 				$num_comments = $db->sql_fetchfield('comments');
 				$db->sql_freeresult($result);
 				set_gallery_config('num_comment', $num_comments, true);
+
+				// Locked images were just like unapproved.
+				// So we set their status to unapproved, when introducing the locked-status.
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+					SET image_status = ' . IMAGE_UNAPPROVED . '
+					WHERE image_status <> ' . IMAGE_APPROVED;
+				$db->sql_query($sql);
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;

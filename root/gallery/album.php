@@ -178,7 +178,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 
 	if ($album_data['album_images_real'] > 0)
 	{
-		$image_status_check = ' AND image_status = ' . IMAGE_APPROVED;
+		$image_status_check = ' AND image_status <> ' . IMAGE_UNAPPROVED;
 		$image_counter = $album_data['album_images'];
 		if (gallery_acl_check('m_status', $album_id))
 		{

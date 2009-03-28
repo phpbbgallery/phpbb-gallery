@@ -28,7 +28,7 @@ if (!in_array($sort_key, $sort_by_sql))
 	$sort_key = 'image_time';
 }
 
-$m_status = ' AND image_status = ' . IMAGE_APPROVED;
+$m_status = ' AND image_status <> ' . IMAGE_UNAPPROVED;
 if (gallery_acl_check('m_status', $album_id))
 {
 	$m_status = '';

@@ -402,10 +402,10 @@ function update_album_info($album_id)
 	$album_user_id = $db->sql_fetchfield('album_user_id');
 	$db->sql_freeresult($result);
 
-	// Number of approved images
+	// Number of not unapproved images
 	$sql = 'SELECT COUNT(image_id) images
 		FROM ' . GALLERY_IMAGES_TABLE . '
-		WHERE image_status = ' . IMAGE_APPROVED . '
+		WHERE image_status <> ' . IMAGE_UNAPPROVED . '
 			AND image_album_id = ' . (int) $album_id;
 	$result = $db->sql_query($sql);
 	$images = $db->sql_fetchfield('images');
@@ -419,10 +419,10 @@ function update_album_info($album_id)
 	$images_real = $db->sql_fetchfield('images_real');
 	$db->sql_freeresult($result);
 
-	// Data of the last approved image
+	// Data of the last not unapproved image
 	$sql = 'SELECT image_id, image_time, image_name, image_username, image_user_colour, image_user_id
 		FROM ' . GALLERY_IMAGES_TABLE . '
-		WHERE image_status = ' . IMAGE_APPROVED . ' AND
+		WHERE image_status <> ' . IMAGE_UNAPPROVED . ' AND
 			image_album_id = ' . (int) $album_id . '
 		ORDER BY image_time DESC';
 	$result = $db->sql_query($sql);
@@ -480,7 +480,7 @@ function handle_image_counter($image_id_ary, $add, $readd = false)
 	$num_images = $num_comments = 0;
 	$sql = 'SELECT SUM(image_comments) comments
 		FROM ' . GALLERY_IMAGES_TABLE . '
-		WHERE image_status ' . (($readd) ? '<>' : '=') . ' ' . IMAGE_APPROVED . '
+		WHERE image_status ' . (($readd) ? '=' : '<>') . ' ' . IMAGE_UNAPPROVED . '
 			AND ' . $db->sql_in_set('image_id', $image_id_ary) . '
 		GROUP BY image_user_id';
 	$result = $db->sql_query($sql);
@@ -489,7 +489,7 @@ function handle_image_counter($image_id_ary, $add, $readd = false)
 
 	$sql = 'SELECT COUNT(image_id) images, image_user_id
 		FROM ' . GALLERY_IMAGES_TABLE . '
-		WHERE image_status ' . (($readd) ? '<>' : '=') . ' ' . IMAGE_APPROVED . '
+		WHERE image_status ' . (($readd) ? '=' : '<>') . ' ' . IMAGE_UNAPPROVED . '
 			AND ' . $db->sql_in_set('image_id', $image_id_ary) . '
 		GROUP BY image_user_id';
 	$result = $db->sql_query($sql);
