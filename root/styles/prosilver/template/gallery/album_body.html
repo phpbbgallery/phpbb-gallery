@@ -58,7 +58,7 @@ function toggleElement(oElement)
 
 	<!-- IF PAGINATION or TOTAL_IMAGES -->
 		<div class="pagination">
-			{TOTAL_IMAGES} &bull; {PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+			{TOTAL_IMAGES}<!-- IF PAGINATION --> &bull; <a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
 		</div>
 	<!-- ENDIF -->
 
@@ -163,7 +163,7 @@ function toggleElement(oElement)
 			</div>
 		<!-- ENDIF -->
 		<div class="pagination">
-			{TOTAL_IMAGES} &bull; {PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+			{TOTAL_IMAGES}<!-- IF PAGINATION --> &bull; <a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
 		</div>
 	</div>
 	<br />

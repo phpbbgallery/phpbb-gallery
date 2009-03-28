@@ -61,10 +61,11 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 
 		$start = request_var('start', 0);
 		$limit = ceil($config['topics_per_page'] / 2);
-		$total_galleries = $gallery_config['personal_counter'];
 		$pagination = generate_pagination("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=$mode', $gallery_config['personal_counter'], $limit, $start);
 		$template->assign_vars(array(
-			'PAGINATION'			=> generate_pagination("{$phpbb_root_path}{$gallery_root_path}index.$phpEx?mode=$mode", $gallery_config['personal_counter'], $limit, $start),
+			'PAGINATION'				=> generate_pagination("{$phpbb_root_path}{$gallery_root_path}index.$phpEx?mode=$mode", $gallery_config['personal_counter'], $limit, $start),
+			'TOTAL_PGALLERIES_SHORT'	=> sprintf($user->lang['TOTAL_PGALLERIES_SHORT'], $gallery_config['personal_counter']),
+			'PAGE_NUMBER'				=> on_page($gallery_config['personal_counter'], $limit, $start),
 		));
 	}
 	else

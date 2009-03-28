@@ -212,6 +212,7 @@ $lang = array_merge($lang, array(
 	'TOTAL_COMMENTS_ZERO'			=> 'Kommentare insgesamt: <strong>0</strong>',
 	'TOTAL_IMAGES'					=> 'Bilder insgesamt',
 	'TOTAL_PGALLERIES_OTHER'		=> 'Persönliche Galerien insgesamt: <strong>%d</strong>',
+	'TOTAL_PGALLERIES_SHORT'		=> '%d persönliche Galerien',
 	'TOTAL_PGALLERIES_ZERO'			=> 'Persönliche Galerien insgesamt: <strong>0</strong>',
 
 	'UNFAVORITE_IMAGE'				=> 'aus Lieblingsbildern entfernen',
