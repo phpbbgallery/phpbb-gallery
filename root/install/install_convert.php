@@ -337,7 +337,7 @@ class install_convert extends module
 				{
 					$rate_ary[] = array(
 						'rate_image_id'					=> $row['rate_pic_id'],
-						'rate_user_id'					=> ($row['rate_user_id'] < 0) ? 1 : $row['rate_user_id'],
+						'rate_user_id'					=> ($row['rate_user_id'] < 0) ? ANONYMOUS : $row['rate_user_id'],
 						'rate_user_ip'					=> decode_ip($row['rate_user_ip']),
 						'rate_point'					=> $row['rate_point'],
 					);
@@ -366,7 +366,7 @@ class install_convert extends module
 					$comment_data = array(
 						'comment_id'			=> $row['comment_id'],
 						'comment_image_id'		=> $row['comment_pic_id'],
-						'comment_user_id'		=> ($row['comment_user_id'] < 0) ? 1 : $row['comment_user_id'],
+						'comment_user_id'		=> ($row['comment_user_id'] < 0) ? ANONYMOUS : $row['comment_user_id'],
 						'comment_username'		=> $row['comment_username'],
 						'comment_user_colour'	=> (isset($row['user_colour'])) ? $row['user_colour'] : '',
 						'comment_user_ip'		=> decode_ip($row['comment_user_ip']),
@@ -377,7 +377,7 @@ class install_convert extends module
 						'comment_options'		=> 7,
 						'comment_edit_time'		=> (isset($row['comment_edit_time']) ? $row['comment_edit_time'] : 0),
 						'comment_edit_count'	=> (isset($row['comment_edit_count']) ? $row['comment_edit_count'] : 0),
-						'comment_edit_user_id'	=> (isset($row['comment_edit_user_id']) ? ($row['comment_edit_user_id'] < 0) ? 1 : $row['comment_edit_user_id'] : 0),
+						'comment_edit_user_id'	=> (isset($row['comment_edit_user_id']) ? ($row['comment_edit_user_id'] < 0) ? ANONYMOUS : $row['comment_edit_user_id'] : 0),
 					);
 					generate_text_for_storage($comment_data['comment'], $comment_data['comment_uid'], $comment_data['comment_bitfield'], $comment_data['comment_options'], 1, 1, 1);
 					unset($comment_data['comment_options']);
@@ -418,7 +418,8 @@ class install_convert extends module
 							'left_id'						=> $left_id,
 							'right_id'						=> $left_id + 1,
 							'album_parents'					=> '',
-							'album_type'					=> 1,
+							'album_type'					=> ALBUM_CAT,
+							'album_status'					=> ITEM_UNLOCKED,
 							'album_desc'					=> $album_desc_data['text'],
 							'album_desc_uid'				=> '',
 							'album_desc_bitfield'			=> '',
@@ -457,14 +458,14 @@ class install_convert extends module
 						'image_desc_uid'		=> '',
 						'image_desc_bitfield'	=> '',
 						'image_desc_options'	=> 7,
-						'image_user_id'			=> ($row['pic_user_id'] < 0) ? 1 : $row['pic_user_id'],
+						'image_user_id'			=> ($row['pic_user_id'] < 0) ? ANONYMOUS : $row['pic_user_id'],
 						'image_username'		=> (isset($row['username'])) ? $row['username'] : $row['pic_username'],
 						'image_user_colour'		=> (isset($row['user_colour'])) ? $row['user_colour'] : '',
 						'image_user_ip'			=> decode_ip($row['pic_user_ip']),
 						'image_time'			=> $row['pic_time'],
 						'image_album_id'		=> (in_array($row['pic_cat_id'], $personal_albums) ? 0 : $row['pic_cat_id']),
 						'image_view_count'		=> $row['pic_view_count'],
-						'image_status'			=> ($row['pic_lock']) ? 2 : $row['pic_approval'],
+						'image_status'			=> ($row['pic_lock']) ? IMAGE_LOCKED : $row['pic_approval'],
 						'image_reported'		=> 0,
 					);
 					generate_text_for_storage($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], $image_data['image_desc_options'], true, true, true);
@@ -492,8 +493,9 @@ class install_convert extends module
 						'album_desc_options'			=> 7,
 						'album_desc'					=> '',
 						'album_parents'					=> '',
-						'album_type'					=> 1,
-						'album_user_id'					=> ($row['image_user_id'] < 0) ? 1 : $row['image_user_id'],
+						'album_type'					=> ALBUM_UPLOAD,
+						'album_status'					=> ITEM_UNLOCKED,
+						'album_user_id'					=> ($row['image_user_id'] < 0) ? ANONYMOUS : $row['image_user_id'],
 					);
 					$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
 					$new_personal_album_id = $db->sql_nextid();
@@ -519,16 +521,11 @@ class install_convert extends module
 			break;
 
 			case 5:
-				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET album_type = 1';
-				$db->sql_query($sql);
-				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET album_type = 0 WHERE album_user_id = 0';
-				$db->sql_query($sql);
-
 				//Step 5.1: Number of public images and last_image_id
-				$sql = 'SELECT COUNT(i.image_id) images, MAX(i.image_id) last_image_id, i.image_album_id
-					FROM ' . GALLERY_IMAGES_TABLE . " i
-					WHERE i.image_status = 1
-					GROUP BY i.image_album_id";
+				$sql = 'SELECT COUNT(image_id) images, MAX(image_id) last_image_id, image_album_id
+					FROM ' . GALLERY_IMAGES_TABLE . '
+					WHERE image_status <> ' . IMAGE_UNAPPROVED . '
+					GROUP BY image_album_id';
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -543,15 +540,15 @@ class install_convert extends module
 				$db->sql_freeresult($result);
 
 				//Step 5.2: Number of real images and album_type
-				$sql = 'SELECT COUNT(i.image_id) images, i.image_album_id
-					FROM ' . GALLERY_IMAGES_TABLE . " i
-					GROUP BY i.image_album_id";
+				$sql = 'SELECT COUNT(image_id) images, image_album_id
+					FROM ' . GALLERY_IMAGES_TABLE . '
+					GROUP BY image_album_id';
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
 					$sql_ary = array(
 						'album_images_real'	=> $row['images'],
-						'album_type'		=> 1,
+						'album_type'		=> ALBUM_UPLOAD,
 					);
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 						WHERE ' . $db->sql_in_set('album_id', $row['image_album_id']);
@@ -561,12 +558,12 @@ class install_convert extends module
 
 				//Step 5.3: Last image data
 				$sql = 'SELECT a.album_id, a.album_last_image_id, i.image_time, i.image_name, i.image_user_id, i.image_username, i.image_user_colour, u.user_colour
-					FROM ' . GALLERY_ALBUMS_TABLE . " a
-					LEFT JOIN " . GALLERY_IMAGES_TABLE . " i
+					FROM ' . GALLERY_ALBUMS_TABLE . ' a
+					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
 						ON a.album_last_image_id = i.image_id
-					LEFT JOIN " . USERS_TABLE . " u
+					LEFT JOIN ' . USERS_TABLE . ' u
 						ON a.album_user_id = u.user_colour
-					WHERE a.album_last_image_id > 0";
+					WHERE a.album_last_image_id > 0';
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -593,7 +590,7 @@ class install_convert extends module
 					FROM ' . USERS_TABLE . ' u
 					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
 						ON i.image_user_id = u.user_id
-						AND i.image_status = 1
+							AND i.image_status <> ' . IMAGE_UNAPPROVED . '
 					LEFT JOIN ' . GALLERY_USERS_TABLE . ' gu
 						ON gu.user_id = u.user_id
 					GROUP BY i.image_user_id';
@@ -738,9 +735,9 @@ class install_convert extends module
 		else
 		{
 			$data = array(
-				'acp_module'		=> 31,
-				'log_module'		=> 25,
-				'ucp_module'		=> 0,
+				'acp_module'		=> MODULE_DEFAULT_ACP,
+				'log_module'		=> MODULE_DEFAULT_LOG,
+				'ucp_module'		=> MODULE_DEFAULT_UCP,
 			);
 
 			foreach ($this->gallery_config_options as $config_key => $vars)
@@ -791,9 +788,9 @@ class install_convert extends module
 	*/
 	var $gallery_config_options = array(
 		'legend1'				=> 'MODULES_PARENT_SELECT',
-		'acp_module'			=> array('lang' => 'MODULES_SELECT_4ACP', 'type' => 'select', 'options' => 'module_select(\'acp\', 31, \'ACP_CAT_DOT_MODS\')', 'explain' => false),
-		'log_module'			=> array('lang' => 'MODULES_SELECT_4LOG', 'type' => 'select', 'options' => 'module_select(\'acp\', 25, \'ACP_FORUM_LOGS\')', 'explain' => false),
-		'ucp_module'			=> array('lang' => 'MODULES_SELECT_4UCP', 'type' => 'select', 'options' => 'module_select(\'ucp\', 0, \'\')', 'explain' => false),
+		'acp_module'			=> array('lang' => 'MODULES_SELECT_4ACP', 'type' => 'select', 'options' => 'module_select(\'acp\', ' . MODULE_DEFAULT_ACP . ', \'ACP_CAT_DOT_MODS\')', 'explain' => false),
+		'log_module'			=> array('lang' => 'MODULES_SELECT_4LOG', 'type' => 'select', 'options' => 'module_select(\'acp\', ' . MODULE_DEFAULT_LOG . ', \'ACP_FORUM_LOGS\')', 'explain' => false),
+		'ucp_module'			=> array('lang' => 'MODULES_SELECT_4UCP', 'type' => 'select', 'options' => 'module_select(\'ucp\', ' . MODULE_DEFAULT_UCP . ', \'\')', 'explain' => false),
 	);
 }
 

@@ -64,6 +64,9 @@ define('RRC_DISPLAY_USERNAME', 32);
 define('RRC_DISPLAY_RATINGS', 64);
 
 // Additional constants
+define('MODULE_DEFAULT_ACP', 31);
+define('MODULE_DEFAULT_LOG', 25);
+define('MODULE_DEFAULT_UCP', 0);
 define('THUMBNAIL_INFO_HEIGHT', 16);
 
 // Additional tables

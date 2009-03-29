@@ -980,6 +980,12 @@ class install_update extends module
 					WHERE album_user_id <> 0';
 				$db->sql_query($sql);
 
+				// Set the lastmark to the current time of update
+				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
+					SET user_lastmark = ' . time() . '
+					WHERE user_lastmark = 0';
+				$db->sql_query($sql);
+
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
 		}
@@ -1191,9 +1197,9 @@ class install_update extends module
 		else
 		{
 			$data = array(
-				'acp_module'		=> 31,
-				'log_module'		=> 25,
-				'ucp_module'		=> 0,
+				'acp_module'		=> MODULE_DEFAULT_ACP,
+				'log_module'		=> MODULE_DEFAULT_LOG,
+				'ucp_module'		=> MODULE_DEFAULT_UCP,
 			);
 			$modules = $this->gallery_config_options;
 			switch ($gallery_config['phpbb_gallery_version'])
@@ -1272,9 +1278,9 @@ class install_update extends module
 	*/
 	var $gallery_config_options = array(
 		'legend1'				=> 'MODULES_PARENT_SELECT',
-		'acp_module'			=> array('lang' => 'MODULES_SELECT_4ACP', 'type' => 'select', 'options' => 'module_select(\'acp\', 31, \'ACP_CAT_DOT_MODS\')', 'explain' => false),
-		'log_module'			=> array('lang' => 'MODULES_SELECT_4LOG', 'type' => 'select', 'options' => 'module_select(\'acp\', 25, \'ACP_FORUM_LOGS\')', 'explain' => false),
-		'ucp_module'			=> array('lang' => 'MODULES_SELECT_4UCP', 'type' => 'select', 'options' => 'module_select(\'ucp\', 0, \'\')', 'explain' => false),
+		'acp_module'			=> array('lang' => 'MODULES_SELECT_4ACP', 'type' => 'select', 'options' => 'module_select(\'acp\', ' . MODULE_DEFAULT_ACP . ', \'ACP_CAT_DOT_MODS\')', 'explain' => false),
+		'log_module'			=> array('lang' => 'MODULES_SELECT_4LOG', 'type' => 'select', 'options' => 'module_select(\'acp\', ' . MODULE_DEFAULT_LOG . ', \'ACP_FORUM_LOGS\')', 'explain' => false),
+		'ucp_module'			=> array('lang' => 'MODULES_SELECT_4UCP', 'type' => 'select', 'options' => 'module_select(\'ucp\', ' . MODULE_DEFAULT_UCP . ', \'\')', 'explain' => false),
 	);
 }
 

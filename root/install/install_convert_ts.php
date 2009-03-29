@@ -430,7 +430,8 @@ class install_convert_ts extends module
 						'left_id'						=> $row['left_id'],
 						'right_id'						=> $row['right_id'],
 						'album_parents'					=> '',
-						'album_type'					=> 1,
+						'album_type'					=> ($row['album_user_id']) ? ALBUM_UPLOAD : ALBUM_CAT,
+						'album_status'					=> ITEM_UNLOCKED,
 						'album_desc'					=> $album_desc_data['text'],
 						'album_desc_uid'				=> '',
 						'album_desc_bitfield'			=> '',
@@ -487,7 +488,7 @@ class install_convert_ts extends module
 						'image_time'			=> $row['pic_time'],
 						'image_album_id'		=> $row['pic_album_id'],
 						'image_view_count'		=> $row['pic_views'],
-						'image_status'			=> ($row['pic_lock']) ? 2 : 1,
+						'image_status'			=> ($row['pic_lock']) ? IMAGE_LOCKED : IMAGE_APPROVED,
 						'image_reported'		=> 0,
 					);
 					generate_text_for_storage($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], $image_data['image_desc_options'], true, true, true);
@@ -506,16 +507,11 @@ class install_convert_ts extends module
 				//case 4: $user->lang['CONVERTED_PERSONALS'] is already done in case 2 so we don't do it again
 
 			case 5:
-				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET album_type = 1';
-				$db->sql_query($sql);
-				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET album_type = 0 WHERE album_user_id = 0';
-				$db->sql_query($sql);
-
 				//Step 5.1: Number of public images and last_image_id
 				$sql = 'SELECT COUNT(i.image_id) images, MAX(i.image_id) last_image_id, i.image_album_id
-					FROM ' . GALLERY_IMAGES_TABLE . " i
-					WHERE i.image_status = 1
-					GROUP BY i.image_album_id";
+					FROM ' . GALLERY_IMAGES_TABLE . ' i
+					WHERE i.image_status <> ' . IMAGE_UNAPPROVED . '
+					GROUP BY i.image_album_id';
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -538,7 +534,7 @@ class install_convert_ts extends module
 				{
 					$sql_ary = array(
 						'album_images_real'	=> $row['images'],
-						'album_type'		=> 1,
+						'album_type'		=> ALBUM_UPLOAD,
 					);
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 						WHERE ' . $db->sql_in_set('album_id', $row['image_album_id']);
@@ -581,7 +577,7 @@ class install_convert_ts extends module
 					FROM ' . USERS_TABLE . ' u
 					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
 						ON i.image_user_id = u.user_id
-						AND i.image_status = 1
+							AND i.image_status <> ' . IMAGE_UNAPPROVED . '
 					LEFT JOIN ' . GALLERY_USERS_TABLE . ' gu
 						ON gu.user_id = u.user_id
 					GROUP BY i.image_user_id';
@@ -731,9 +727,9 @@ class install_convert_ts extends module
 		else
 		{
 			$data = array(
-				'acp_module'		=> 31,
-				'log_module'		=> 25,
-				'ucp_module'		=> 0,
+				'acp_module'		=> MODULE_DEFAULT_ACP,
+				'log_module'		=> MODULE_DEFAULT_LOG,
+				'ucp_module'		=> MODULE_DEFAULT_UCP,
 			);
 
 			foreach ($this->gallery_config_options as $config_key => $vars)
@@ -784,9 +780,9 @@ class install_convert_ts extends module
 	*/
 	var $gallery_config_options = array(
 		'legend1'				=> 'MODULES_PARENT_SELECT',
-		'acp_module'			=> array('lang' => 'MODULES_SELECT_4ACP', 'type' => 'select', 'options' => 'module_select(\'acp\', 31, \'ACP_CAT_DOT_MODS\')', 'explain' => false),
-		'log_module'			=> array('lang' => 'MODULES_SELECT_4LOG', 'type' => 'select', 'options' => 'module_select(\'acp\', 25, \'ACP_FORUM_LOGS\')', 'explain' => false),
-		'ucp_module'			=> array('lang' => 'MODULES_SELECT_4UCP', 'type' => 'select', 'options' => 'module_select(\'ucp\', 0, \'\')', 'explain' => false),
+		'acp_module'			=> array('lang' => 'MODULES_SELECT_4ACP', 'type' => 'select', 'options' => 'module_select(\'acp\', ' . MODULE_DEFAULT_ACP . ', \'ACP_CAT_DOT_MODS\')', 'explain' => false),
+		'log_module'			=> array('lang' => 'MODULES_SELECT_4LOG', 'type' => 'select', 'options' => 'module_select(\'acp\', ' . MODULE_DEFAULT_LOG . ', \'ACP_FORUM_LOGS\')', 'explain' => false),
+		'ucp_module'			=> array('lang' => 'MODULES_SELECT_4UCP', 'type' => 'select', 'options' => 'module_select(\'ucp\', ' . MODULE_DEFAULT_UCP . ', \'\')', 'explain' => false),
 	);
 }
 
