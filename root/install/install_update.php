@@ -532,7 +532,8 @@ class install_update extends module
 						'album_desc_options'			=> 7,
 						'album_desc'					=> '',
 						'album_parents'					=> '',
-						'album_type'					=> 2,
+						'album_type'					=> ALBUM_UPLOAD,
+						'album_status'					=> ITEM_UNLOCKED,
 						'album_user_id'					=> $row['image_user_id'],
 					);
 					$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
@@ -897,10 +898,6 @@ class install_update extends module
 				{
 					set_gallery_config('personal_album_profile', $config['gallery_personal_album_profil']);
 				}
-				$sql = 'DELETE FROM ' . CONFIG_TABLE . "
-					WHERE config_name = 'gallery_user_images_profil'
-						OR config_name = 'gallery_personal_album_profil'";
-				$db->sql_query($sql);
 
 				set_gallery_config('rrc_profile_mode', '!comment');
 				set_gallery_config('rrc_profile_columns', 4);
@@ -958,21 +955,6 @@ class install_update extends module
 				set_config('gallery_viewtopic_icon', 1);
 				set_config('gallery_viewtopic_images', 1);
 				set_config('gallery_viewtopic_link', 0);
-				// Remove some old p_masks
-				$sql = 'SELECT perm_role_id
-					FROM ' . GALLERY_PERMISSIONS_TABLE;
-				$result = $db->sql_query($sql);
-
-				$p_masks = array();
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$p_masks[] = $row['perm_role_id'];
-				}
-				$db->sql_freeresult($result);
-
-				$sql = 'DELETE FROM ' . GALLERY_ROLES_TABLE . '
-					WHERE ' . $db->sql_in_set('role_id', $p_masks, true, true);
-				$db->sql_query($sql);
 
 			case '0.5.3':
 				$num_comments = 0;
@@ -992,6 +974,12 @@ class install_update extends module
 					WHERE image_status <> ' . IMAGE_APPROVED;
 				$db->sql_query($sql);
 
+				// Unlock all pgalleries #504
+				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
+					SET album_status = ' . ITEM_UNLOCKED . '
+					WHERE album_user_id <> 0';
+				$db->sql_query($sql);
+
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
 		}
@@ -1006,7 +994,7 @@ class install_update extends module
 	}
 
 	/**
-	* Remove some old Columns
+	* Remove some old columns, config values, permission-masks
 	*/
 	function thinout_db_schema($mode, $sub)
 	{
@@ -1064,9 +1052,31 @@ class install_update extends module
 			break;
 		}
 
-		$old_configs = array('user_pics_limit', 'mod_pics_limit', 'fullpic_popup', 'personal_gallery', 'personal_gallery_private', 'personal_gallery_limit', 'personal_gallery_view', 'album_version');
-		$sql = 'DELETE FROM ' .GALLERY_CONFIG_TABLE . '
+		// Remove some old configs
+		$old_configs = array('gallery_user_images_profil', 'gallery_personal_album_profil');
+		$sql = 'DELETE FROM ' . CONFIG_TABLE . '
 			WHERE ' . $db->sql_in_set('config_name', $old_configs);
+		$db->sql_query($sql);
+
+		$old_gallery_configs = array('user_pics_limit', 'mod_pics_limit', 'fullpic_popup', 'personal_gallery', 'personal_gallery_private', 'personal_gallery_limit', 'personal_gallery_view', 'album_version');
+		$sql = 'DELETE FROM ' . GALLERY_CONFIG_TABLE . '
+			WHERE ' . $db->sql_in_set('config_name', $old_gallery_configs);
+		$db->sql_query($sql);
+
+		// Remove some old p_masks
+		$sql = 'SELECT perm_role_id
+			FROM ' . GALLERY_PERMISSIONS_TABLE;
+		$result = $db->sql_query($sql);
+
+		$p_masks = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$p_masks[] = $row['perm_role_id'];
+		}
+		$db->sql_freeresult($result);
+
+		$sql = 'DELETE FROM ' . GALLERY_ROLES_TABLE . '
+			WHERE ' . $db->sql_in_set('role_id', $p_masks, true, true);
 		$db->sql_query($sql);
 
 		if ($reparse_modules_bbcode)
