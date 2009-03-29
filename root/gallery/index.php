@@ -145,51 +145,55 @@ $l_total_comment_s = ($total_comments == 0) ? 'TOTAL_COMMENTS_ZERO' : 'TOTAL_COM
 $l_total_pgallery_s = ($total_pgalleries == 0) ? 'TOTAL_PGALLERIES_ZERO' : 'TOTAL_PGALLERIES_OTHER';
 
 // Grab group details for legend display
-if ($auth->acl_gets('a_group', 'a_groupadd', 'a_groupdel'))
+$legend = '';
+if ($gallery_config['disp_whoisonline'])
 {
-	$sql = 'SELECT group_id, group_name, group_colour, group_type
-		FROM ' . GROUPS_TABLE . '
-		WHERE group_legend = 1
-		ORDER BY group_name ASC';
-}
-else
-{
-	$sql = 'SELECT g.group_id, g.group_name, g.group_colour, g.group_type
-		FROM ' . GROUPS_TABLE . ' g
-		LEFT JOIN ' . USER_GROUP_TABLE . ' ug
-			ON (
-				g.group_id = ug.group_id
-				AND ug.user_id = ' . $user->data['user_id'] . '
-				AND ug.user_pending = 0
-			)
-		WHERE g.group_legend = 1
-			AND (g.group_type <> ' . GROUP_HIDDEN . ' OR ug.user_id = ' . $user->data['user_id'] . ')
-		ORDER BY g.group_name ASC';
-}
-$result = $db->sql_query($sql);
-
-$legend = array();
-while ($row = $db->sql_fetchrow($result))
-{
-	$colour_text = ($row['group_colour']) ? ' style="color:#' . $row['group_colour'] . '"' : '';
-	$group_name = ($row['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $row['group_name']] : $row['group_name'];
-
-	if ($row['group_name'] == 'BOTS' || ($user->data['user_id'] != ANONYMOUS && !$auth->acl_get('u_viewprofile')))
+	if ($auth->acl_gets('a_group', 'a_groupadd', 'a_groupdel'))
 	{
-		$legend[] = '<span' . $colour_text . '>' . $group_name . '</span>';
+		$sql = 'SELECT group_id, group_name, group_colour, group_type
+			FROM ' . GROUPS_TABLE . '
+			WHERE group_legend = 1
+			ORDER BY group_name ASC';
 	}
 	else
 	{
-		$legend[] = '<a' . $colour_text . ' href="' . append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=group&amp;g=' . $row['group_id']) . '">' . $group_name . '</a>';
+		$sql = 'SELECT g.group_id, g.group_name, g.group_colour, g.group_type
+			FROM ' . GROUPS_TABLE . ' g
+			LEFT JOIN ' . USER_GROUP_TABLE . ' ug
+				ON (
+					g.group_id = ug.group_id
+					AND ug.user_id = ' . $user->data['user_id'] . '
+					AND ug.user_pending = 0
+				)
+			WHERE g.group_legend = 1
+				AND (g.group_type <> ' . GROUP_HIDDEN . ' OR ug.user_id = ' . $user->data['user_id'] . ')
+			ORDER BY g.group_name ASC';
 	}
-}
-$db->sql_freeresult($result);
+	$result = $db->sql_query($sql);
 
-$legend = implode(', ', $legend);
+	$legend = array();
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$colour_text = ($row['group_colour']) ? ' style="color:#' . $row['group_colour'] . '"' : '';
+		$group_name = ($row['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $row['group_name']] : $row['group_name'];
+
+		if ($row['group_name'] == 'BOTS' || ($user->data['user_id'] != ANONYMOUS && !$auth->acl_get('u_viewprofile')))
+		{
+			$legend[] = '<span' . $colour_text . '>' . $group_name . '</span>';
+		}
+		else
+		{
+			$legend[] = '<a' . $colour_text . ' href="' . append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=group&amp;g=' . $row['group_id']) . '">' . $group_name . '</a>';
+		}
+	}
+	$db->sql_freeresult($result);
+
+	$legend = implode(', ', $legend);
+}
 
 // Generate birthday list if required ...
 $birthday_list = '';
-if ($config['load_birthdays'] && $config['allow_birthdays'])
+if ($config['load_birthdays'] && $config['allow_birthdays'] && $gallery_config['disp_birthdays'])
 {
 	$now = getdate(time() + $user->timezone + $user->dst - date('Z'));
 	$sql = 'SELECT user_id, username, user_colour, user_birthday
@@ -212,13 +216,15 @@ if ($config['load_birthdays'] && $config['allow_birthdays'])
 
 // Output page
 $template->assign_vars(array(
-	'TOTAL_IMAGES'		=> sprintf($user->lang[$l_total_image_s], $total_images),
+	'TOTAL_IMAGES'		=> ($gallery_config['disp_statistic']) ? sprintf($user->lang[$l_total_image_s], $total_images) : '',
 	'TOTAL_COMMENTS'	=> sprintf($user->lang[$l_total_comment_s], $total_comments),
 	'TOTAL_PGALLERIES'	=> (gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS)) ? sprintf($user->lang[$l_total_pgallery_s], $total_pgalleries) : '',
 	'NEWEST_PGALLERIES'	=> ($total_pgalleries) ? sprintf($user->lang['NEWEST_PGALLERY'], get_username_string('full', $gallery_config['newest_pgallery_user_id'], $gallery_config['newest_pgallery_username'], $gallery_config['newest_pgallery_user_colour'], '', append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $gallery_config['newest_pgallery_album_id']))) : '',
 
-	'LEGEND'		=> $legend,
-	'BIRTHDAY_LIST'	=> $birthday_list,
+	'S_DISP_LOGIN'			=> $gallery_config['disp_login'],
+	'S_DISP_WHOISONLINE'	=> $gallery_config['disp_whoisonline'],
+	'LEGEND'				=> $legend,
+	'BIRTHDAY_LIST'			=> $birthday_list,
 
 	'S_LOGIN_ACTION'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login&amp;redirect=' . urlencode("{$gallery_root_path}index.$phpEx" . (($mode == 'personal') ? '?mode=personal' : ''))),
 	'S_DISPLAY_BIRTHDAY_LIST'	=> ($config['load_birthdays']) ? true : false,

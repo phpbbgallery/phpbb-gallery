@@ -576,11 +576,11 @@ function recalc_btree($sql_id, $sql_table, $where_options = array())
 function set_default_config()
 {
 	// Previous configs
-	set_config('num_images', 1, true);
+	set_config('num_images', 0, true);
 	set_config('gallery_total_images', 1);
 
 	set_gallery_config('max_pics', '1024');
-	set_gallery_config('max_file_size', '128000');
+	set_gallery_config('max_file_size', '512000');
 	set_gallery_config('max_width', '800');
 	set_gallery_config('max_height', '600');
 	set_gallery_config('rows_per_page', '3');
@@ -662,6 +662,10 @@ function set_default_config()
 
 	// Added X.Y.Z: //@todo: 
 	set_gallery_config('num_comments', 0);
+	set_gallery_config('disp_login', 1);
+	set_gallery_config('disp_whoisonline', 1);
+	set_gallery_config('disp_birthdays', 0);
+	set_gallery_config('disp_statistic', 1);
 }
 
 ?>

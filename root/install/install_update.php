@@ -966,6 +966,10 @@ class install_update extends module
 				$num_comments = $db->sql_fetchfield('comments');
 				$db->sql_freeresult($result);
 				set_gallery_config('num_comment', $num_comments, true);
+				set_gallery_config('disp_login', 1);
+				set_gallery_config('disp_whoisonline', 1);
+				set_gallery_config('disp_birthdays', 0);
+				set_gallery_config('disp_statistic', 1);
 
 				// Locked images were just like unapproved.
 				// So we set their status to unapproved, when introducing the locked-status.
@@ -1278,9 +1282,9 @@ class install_update extends module
 	*/
 	var $gallery_config_options = array(
 		'legend1'				=> 'MODULES_PARENT_SELECT',
-		'acp_module'			=> array('lang' => 'MODULES_SELECT_4ACP', 'type' => 'select', 'options' => 'module_select(\'acp\', ' . MODULE_DEFAULT_ACP . ', \'ACP_CAT_DOT_MODS\')', 'explain' => false),
-		'log_module'			=> array('lang' => 'MODULES_SELECT_4LOG', 'type' => 'select', 'options' => 'module_select(\'acp\', ' . MODULE_DEFAULT_LOG . ', \'ACP_FORUM_LOGS\')', 'explain' => false),
-		'ucp_module'			=> array('lang' => 'MODULES_SELECT_4UCP', 'type' => 'select', 'options' => 'module_select(\'ucp\', ' . MODULE_DEFAULT_UCP . ', \'\')', 'explain' => false),
+		'acp_module'			=> array('lang' => 'MODULES_SELECT_4ACP', 'type' => 'select', 'options' => 'module_select(\'acp\', 31, \'ACP_CAT_DOT_MODS\')', 'explain' => false),
+		'log_module'			=> array('lang' => 'MODULES_SELECT_4LOG', 'type' => 'select', 'options' => 'module_select(\'acp\', 25, \'ACP_FORUM_LOGS\')', 'explain' => false),
+		'ucp_module'			=> array('lang' => 'MODULES_SELECT_4UCP', 'type' => 'select', 'options' => 'module_select(\'ucp\', 0, \'\')', 'explain' => false),
 	);
 }
 
