@@ -274,7 +274,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		}
 
 		$album_id = $row['album_id'];
-		$album_unread = (isset($album_tracking_info[$album_id]) && $row['orig_album_last_image_time'] > $album_tracking_info[$album_id]) ? true : false;
+		$album_unread = (isset($album_tracking_info[$album_id]) && ($row['orig_album_last_image_time'] > $album_tracking_info[$album_id]) && ($user->data['user_id'] != ANONYMOUS)) ? true : false;
 
 		$folder_image = $folder_alt = $l_subalbums = '';
 		$subalbums_list = array();
