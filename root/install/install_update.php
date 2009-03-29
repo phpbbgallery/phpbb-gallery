@@ -970,6 +970,7 @@ class install_update extends module
 				set_gallery_config('disp_whoisonline', 1);
 				set_gallery_config('disp_birthdays', 0);
 				set_gallery_config('disp_statistic', 1);
+				set_gallery_config('rrc_gindex_pgalleries', 1);
 
 				// Locked images were just like unapproved.
 				// So we set their status to unapproved, when introducing the locked-status.

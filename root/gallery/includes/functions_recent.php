@@ -45,9 +45,9 @@ function recent_gallery_images(&$ints, $display, $modes, $collapse_comments = fa
 	$album_access_array = get_album_access_array();
 
 	$albums = $cache->obtain_album_list();
-	$view_albums = gallery_acl_album_ids('i_view', 'array', true);
-	$moderate_albums = gallery_acl_album_ids('m_status', 'array', true);
-	$comment_albums = gallery_acl_album_ids('c_read', 'array', true);
+	$view_albums = gallery_acl_album_ids('i_view', 'array', true, $gallery_config['rrc_gindex_pgalleries']);
+	$moderate_albums = gallery_acl_album_ids('m_status', 'array', true, $gallery_config['rrc_gindex_pgalleries']);
+	$comment_albums = gallery_acl_album_ids('c_read', 'array', true, $gallery_config['rrc_gindex_pgalleries']);
 	$limit_sql = $ints['rows'] * $ints['columns'];
 
 	switch ($modes)

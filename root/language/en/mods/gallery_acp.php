@@ -289,6 +289,7 @@ $lang = array_merge($lang, array(
 	'RRC_GINDEX_CONTESTS'			=> 'Number of contests',
 	'RRC_GINDEX_CROWS'				=> 'Number of comments',
 	'RRC_GINDEX_MODE'				=> 'Mode',
+	'RRC_GINDEX_PGALLERIES'			=> 'View images of personal albums',
 	'RRC_GINDEX_ROWS'				=> 'Rows',
 	'RRC_MODE_AALL'					=> 'Nothing',
 	'RRC_MODE_ACOMMENTS'			=> 'No comments',

@@ -240,7 +240,7 @@ function gallery_acl_check($mode, $album_id, $album_user_id = -1)
 * @param	string	$permission		One of the permissions, Exp: i_view
 * @param	string	$mode			'array' || 'string'
 */
-function gallery_acl_album_ids($permission, $mode = 'array', $display_in_rrc = false)
+function gallery_acl_album_ids($permission, $mode = 'array', $display_in_rrc = false, $display_pgalleries = true)
 {
 	global $user, $album_access_array, $cache;
 
@@ -261,7 +261,7 @@ function gallery_acl_album_ids($permission, $mode = 'array', $display_in_rrc = f
 		{
 			$acl_case = $album['album_id'];
 		}
-		if (($album_access_array[$acl_case][$permission] == 1) && (!$display_in_rrc || ($display_in_rrc && $album['display_in_rrc'])))
+		if (($album_access_array[$acl_case][$permission] == 1) && (!$display_in_rrc || ($display_in_rrc && $album['display_in_rrc'])) && ($display_pgalleries || ($album['album_user_id'] == 0)))
 		{
 			$album_list .= (($album_list) ? ', ' : '') . $album['album_id'];
 			$album_array[] = $album['album_id'];

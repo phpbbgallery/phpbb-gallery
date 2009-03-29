@@ -666,6 +666,7 @@ function set_default_config()
 	set_gallery_config('disp_whoisonline', 1);
 	set_gallery_config('disp_birthdays', 0);
 	set_gallery_config('disp_statistic', 1);
+	set_gallery_config('rrc_gindex_pgalleries', 1);
 }
 
 ?>
