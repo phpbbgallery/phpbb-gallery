@@ -57,7 +57,7 @@ if ($album_data['contest_id'] && $album_data['contest_marked'] && (($album_data[
 	$sql = 'SELECT image_id
 		FROM ' . GALLERY_IMAGES_TABLE . '
 		WHERE image_album_id = ' . $album_id . '
-		ORDER BY image_rate_avg DESC';
+		ORDER BY image_rate_avg DESC, image_rate_points DESC, image_id ASC';
 	$result = $db->sql_query_limit($sql, 3);
 	$first = (int) $db->sql_fetchfield('image_id');
 	$second = (int) $db->sql_fetchfield('image_id');
