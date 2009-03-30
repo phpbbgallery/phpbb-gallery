@@ -56,6 +56,7 @@
         <date>2009-MM-DD</date>
         <rev-version>X.Y.Z</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Fix] Report #p6712: Call to undefined function can_load_dll() in install/]]></change>
           <change><![CDATA[[Fix] Report #504: Personal albums are locked and can not be unlocked.]]></change>
           <change><![CDATA[[Fix] Report #494: Display locked images, but prevented them from being commented, edited and rated.]]></change>
           <change><![CDATA[[Fix] Unreported: Use set_config_count after 3.0.5 and backport the usage for num_comments/num_pgalleries.]]></change>

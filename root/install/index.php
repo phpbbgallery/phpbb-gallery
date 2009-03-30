@@ -27,6 +27,7 @@ include($phpbb_root_path . 'includes/acp/acp_modules.' . $phpEx);
 include($phpbb_root_path . 'includes/acp/acp_bbcodes.' . $phpEx);
 include($phpbb_root_path . 'includes/db/db_tools.' . $phpEx);
 include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+require($phpbb_root_path . 'includes/functions_install.' . $phpEx);
 
 // Start session management
 $user->session_begin();

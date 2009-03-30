@@ -86,27 +86,6 @@ function get_dbms_infos()
 }
 
 /*
-* Needed to handle the creating of the db-tables out of the schema-files
-*/
-function split_sql_file($sql, $delimiter)
-{
-	$sql = str_replace("\r" , '', $sql);
-	$data = preg_split('/' . preg_quote($delimiter, '/') . '$/m', $sql);
-
-	$data = array_map('trim', $data);
-
-	// The empty case
-	$end_data = end($data);
-
-	if (empty($end_data))
-	{
-		unset($data[key($data)]);
-	}
-
-	return $data;
-}
-
-/*
 * Creates a new db-table
 *	Note: we don't check for it on anyother way, so it might return a SQL-Error,
 *	if you create the same table twice without this!
