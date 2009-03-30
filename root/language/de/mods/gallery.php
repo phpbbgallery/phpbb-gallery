@@ -80,6 +80,8 @@ $lang = array_merge($lang, array(
 	'CONTEST_RESULT_2'				=> 'Zweiter',
 	'CONTEST_RESULT_3'				=> 'Dritter',
 	'CONTEST_RESULT_HIDDEN'			=> 'Die Bewertung des Bildes ist bis zum Ende des Wettbewerbs am %s versteckt.',
+	'CONTEST_STARTED'				=> 'Der Wettbewerb begann am %s.',
+	'CONTEST_STARTS'				=> 'Der Wettbewerb beginnt am %s.',
 	'CONTEST_USERNAME'				=> '<strong>Wettbewerb</strong>',
 	'CONTEST_USERNAME_LONG'			=> '<strong>Wettbewerb</strong> » Der Benutzername wird bis zum Ende des Wettbewerbs am %s versteckt.',
 

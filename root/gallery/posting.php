@@ -119,7 +119,11 @@ switch ($mode)
 				{
 					gallery_not_authorised($album_backlink, $user, $album_loginlink);
 				}
-				if ($album_data['contest_id'] && (time() > ($album_data['contest_start'] + $album_data['contest_rating'])))
+				if ($album_data['contest_id'] && (time() < $album_data['contest_start']))
+				{
+					gallery_not_authorised($album_backlink, $user, $album_loginlink);
+				}
+				elseif ($album_data['contest_id'] && (time() > ($album_data['contest_start'] + $album_data['contest_rating'])))
 				{
 					gallery_not_authorised($album_backlink, $user, $album_loginlink);
 				}

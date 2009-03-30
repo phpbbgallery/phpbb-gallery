@@ -237,16 +237,16 @@
 		<fieldset>
 			<legend>{L_CONTEST_SETTINGS}</legend>
 		<dl>
-			<dt><label>{L_CONTEST_START}:</label><br/><span>{L_CONTEST_START_EXPLAIN}</span></dt>
-			<dd>{S_CONTEST_START}</dd>
+			<dt><label for="contest_start">{L_CONTEST_START}:</label><br/><span>{L_CONTEST_START_EXPLAIN}</span><br/><span>{L_CONTEST_DATE_EXPLAIN}</span></dt>
+			<dd><input class="text" type="text" id="contest_start" name="contest_start" value="{S_CONTEST_START}" /></dd>
 		</dl>
 		<dl>
-			<dt><label for="contest_rating">{L_CONTEST_RATING}:</label><br/><span>{L_CONTEST_RATING_EXPLAIN}</span></dt>
-			<dd><input class="text" type="text" id="contest_rating" name="contest_rating" value="{CONTEST_RATING}" maxlength="4" /> {L_DAYS}</dd>
+			<dt><label for="contest_rating">{L_CONTEST_RATING}:</label><br/><span>{L_CONTEST_RATING_EXPLAIN}</span><br/><span>{L_CONTEST_DATE_EXPLAIN}</span></dt>
+			<dd><input class="text" type="text" id="contest_rating" name="contest_rating" value="{CONTEST_RATING}" /></dd>
 		</dl>
 		<dl>
-			<dt><label for="contest_end">{L_CONTEST_END}:</label><br /><span>{L_CONTEST_END_EXPLAIN}</span></dt>
-			<dd><input class="text" type="text" id="contest_end" name="contest_end" value="{CONTEST_END}" maxlength="4" /> {L_DAYS}</dd>
+			<dt><label for="contest_end">{L_CONTEST_END}:</label><br /><span>{L_CONTEST_END_EXPLAIN}</span><br/><span>{L_CONTEST_DATE_EXPLAIN}</span></dt>
+			<dd><input class="text" type="text" id="contest_end" name="contest_end" value="{CONTEST_END}" /></dd>
 		</dl>
 		</fieldset>
 	</div>

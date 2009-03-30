@@ -122,8 +122,9 @@ class acp_gallery_albums
 
 					// Contests need contest_data, freaky... :-O
 					$contest_data = array(
-						'contest_rating'		=> request_var('contest_rating', 0) * 86400,
-						'contest_end'			=> request_var('contest_end', 0) * 86400,
+						'contest_start'			=> request_var('contest_start', ''),
+						'contest_rating'		=> request_var('contest_rating', ''),
+						'contest_end'			=> request_var('contest_end', ''),
 					);
 
 					// Get data for album description if specified
@@ -298,10 +299,11 @@ class acp_gallery_albums
 					}
 					else
 					{
+						// Default values, 3 days later rate and 7 for the end of the contest
 						$contest_data = array(
 							'contest_start'			=> time(),
 							'contest_rating'		=> 3 * 86400,
-							'contest_end'			=> 5 * 86400,
+							'contest_end'			=> 7 * 86400,
 						);
 					}
 
@@ -340,10 +342,11 @@ class acp_gallery_albums
 							'album_password_confirm'=> '',*/
 						);
 
+						// Default values, 3 days later rate and 7 for the end of the contest
 						$contest_data = array(
 							'contest_start'			=> time(),
 							'contest_rating'		=> 3 * 86400,
-							'contest_end'			=> 5 * 86400,
+							'contest_end'			=> 7 * 86400,
 						);
 					}
 				}
@@ -477,9 +480,9 @@ class acp_gallery_albums
 					'S_DISPLAY_ON_INDEX'		=> ($album_data['display_on_index']) ? true : false,
 					'S_DISPLAY_IN_RRC'			=> ($album_data['display_in_rrc']) ? true : false,
 
-					'S_CONTEST_START'			=> $user->format_date($contest_data['contest_start'], false, true),
-					'CONTEST_RATING'			=> ($contest_data['contest_rating'] / 86400),
-					'CONTEST_END'				=> ($contest_data['contest_end'] / 86400),
+					'S_CONTEST_START'			=> $user->format_date($contest_data['contest_start'], 'Y-m-d H:i'),
+					'CONTEST_RATING'			=> $user->format_date($contest_data['contest_start'] + $contest_data['contest_rating'], 'Y-m-d H:i'),
+					'CONTEST_END'				=> $user->format_date($contest_data['contest_start'] + $contest_data['contest_end'], 'Y-m-d H:i'),
 				));
 
 				return;
@@ -718,6 +721,53 @@ class acp_gallery_albums
 				$errors[] = $user->lang['ALBUM_PASSWORD_MISMATCH'];
 			}
 		}*/
+		// Validate the contest timestamps:
+		if ($album_data['album_type'] == ALBUM_CONTEST)
+		{
+			$start_date_error = $date_error = false;
+			if (!preg_match('#(\\d{4})-(\\d{1,2})-(\\d{1,2}) (\\d{1,2}):(\\d{2})#', $contest_data['contest_start'], $m))
+			{
+				$errors[] = sprintf($user->lang['CONTEST_START_INVALID'], $contest_data['contest_start']);
+				$start_date_error = true;
+			}
+			else
+			{
+				$contest_data['contest_start'] = gmmktime($m[4], $m[5], 0, $m[2], $m[3], $m[1]) - ($user->timezone + $user->dst);
+			}
+			if (!preg_match('#(\\d{4})-(\\d{1,2})-(\\d{1,2}) (\\d{1,2}):(\\d{2})#', $contest_data['contest_rating'], $m))
+			{
+				$errors[] = sprintf($user->lang['CONTEST_RATING_INVALID'], $contest_data['contest_rating']);
+				$date_error = true;
+			}
+			elseif (!$start_date_error)
+			{
+				$contest_data['contest_rating'] = gmmktime($m[4], $m[5], 0, $m[2], $m[3], $m[1]) - ($user->timezone + $user->dst) - $contest_data['contest_start'];
+			}
+			if (!preg_match('#(\\d{4})-(\\d{1,2})-(\\d{1,2}) (\\d{1,2}):(\\d{2})#', $contest_data['contest_end'], $m))
+			{
+				$errors[] = sprintf($user->lang['CONTEST_END_INVALID'], $contest_data['contest_end']);
+				$date_error = true;
+			}
+			elseif (!$start_date_error)
+			{
+				$contest_data['contest_end'] = gmmktime($m[4], $m[5], 0, $m[2], $m[3], $m[1]) - ($user->timezone + $user->dst) - $contest_data['contest_start'];
+			}
+			if (!$start_date_error && !$date_error)
+			{
+				if ($contest_data['contest_end'] < $contest_data['contest_rating'])
+				{
+					$errors[] = $user->lang['CONTEST_END_BEFORE_RATING'];
+				}
+				if ($contest_data['contest_rating'] < 0)
+				{
+					$errors[] = $user->lang['CONTEST_RATING_BEFORE_START'];
+				}
+				if ($contest_data['contest_end'] < 0)
+				{
+					$errors[] = $user->lang['CONTEST_END_BEFORE_START'];
+				}
+			}
+		}
 
 		// Unset data that are not database fields
 		$album_data_sql = $album_data;
@@ -835,7 +885,6 @@ class acp_gallery_albums
 			if ($album_data['album_type'] == ALBUM_CONTEST)
 			{
 				$contest_data_sql = $contest_data;
-				$contest_data_sql['contest_start'] = time();
 				$contest_data_sql['contest_album_id'] = $album_data['album_id'];
 				$contest_data_sql['contest_marked'] = IMAGE_CONTEST;
 
