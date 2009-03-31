@@ -307,8 +307,10 @@ class install_convert_ts extends module
 		nv_create_table('phpbb_gallery_users', $dbms_data);
 		nv_create_table('phpbb_gallery_watch', $dbms_data);
 
-		// Create session column
-		nv_add_column(SESSIONS_TABLE, 'session_album_id', array('UINT', 0));
+		// Create columns
+		nv_add_column(SESSIONS_TABLE,	'session_album_id',	array('UINT', 0));
+		nv_add_column(LOG_TABLE,		'album_id',			array('UINT', 0));
+		nv_add_column(LOG_TABLE,		'image_id',			array('UINT', 0));
 
 		nv_add_index(GALLERY_USERS_TABLE, 'pg_palbum_id', array('personal_album_id'));
 		nv_add_index(SESSIONS_TABLE, 'session_aid', array('session_album_id'));

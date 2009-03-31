@@ -9,9 +9,6 @@
 * mostly borrowed from phpBB3
 * @author: phpBB Group
 * @location: includes/acp/acp_forums.php
-*
-* //@todo: Logs get deleted on 'forum_id' without log-type check!
-* -> http://www.phpbb.com/bugs/phpbb3/42295 if they will not fix, we need to edit the dbms
 */
 
 /**
@@ -898,7 +895,7 @@ class acp_gallery_albums
 				$db->sql_query($sql);
 			}
 
-			//add_log('admin', 'LOG_ALBUM_ADD', $album_data['album_name']);
+			add_log('admin', 'LOG_ALBUM_ADD', $album_data['album_name']);
 		}
 		else
 		{
@@ -1155,14 +1152,11 @@ class acp_gallery_albums
 	{
 		global $cache, $db;
 
-		//@todo: Are they deleting our logs? Yes, see: http://www.phpbb.com/bugs/phpbb3/42295 for more information
-		/*!!!Yes, 'forum_id' as we use the existing columns!!!*/
 		$sql = 'UPDATE ' . LOG_TABLE . "
-			SET forum_id = $to_id
-			WHERE forum_id = $from_id
+			SET album_id = $to_id
+			WHERE album_id = $from_id
 				AND log_type = " . LOG_GALLERY;
 		$db->sql_query($sql);
-		/*!!!Yes, 'forum_id' as we use the existing columns!!!*/
 
 		// Reset contest-information for safety.
 		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
@@ -1480,13 +1474,10 @@ class acp_gallery_albums
 			$db->sql_query($sql);
 		}
 
-		//@todo: Are they deleting our logs? Yes, see: http://www.phpbb.com/bugs/phpbb3/42295 for more information
-		/*!!!Yes, 'forum_id' as we use the existing columns!!!*/
 		$sql = 'DELETE FROM ' . LOG_TABLE . "
-			WHERE forum_id = $album_id
+			WHERE album_id = $album_id
 				AND log_type = " . LOG_GALLERY;
 		$db->sql_query($sql);
-		/*!!!Yes, 'forum_id' as we use the existing columns!!!*/
 
 		//@todo: merge queries into loop
 		$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . '

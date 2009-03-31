@@ -443,6 +443,9 @@ class install_update extends module
 				nv_add_column(GALLERY_USERS_TABLE,	'user_lastmark',		array('TIMESTAMP', 0));
 
 			case '0.5.3':
+				nv_add_column(LOG_TABLE,			'album_id',				array('UINT', 0));
+				nv_add_column(LOG_TABLE,			'image_id',				array('UINT', 0));
+
 			break;
 		}
 
@@ -989,6 +992,18 @@ class install_update extends module
 				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
 					SET user_lastmark = ' . time() . '
 					WHERE user_lastmark = 0';
+				$db->sql_query($sql);
+
+				// Update the LOG_TABLE phpbb:#42295
+				$sql = 'UPDATE ' . LOG_TABLE . '
+					SET album_id = forum_id,
+						image_id = topic_id
+					WHERE log_type = ' . LOG_GALLERY;
+				$db->sql_query($sql);
+				$sql = 'UPDATE ' . LOG_TABLE . '
+					SET forum_id = 0,
+						topic_id = 0
+					WHERE log_type = ' . LOG_GALLERY;
 				$db->sql_query($sql);
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";

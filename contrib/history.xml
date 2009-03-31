@@ -56,6 +56,7 @@
         <date>2009-MM-DD</date>
         <rev-version>X.Y.Z</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Fix] Report #510: Logs get deleted by forum_id not by LOG_TYPE (phpbb:#42295)]]></change>
           <change><![CDATA[[Fix] Report #509: Copy permissions does not work on "Create album"]]></change>
           <change><![CDATA[[Fix] Report #508: Massimport skips images with "&" in filename.]]></change>
           <change><![CDATA[[Fix] Report #505: Enter custom ontest-timestamps for start, rating and end.]]></change>
@@ -112,7 +113,7 @@
           <change><![CDATA[[Fix] Report #473: Display-Options for informations in RRC not working]]></change>
           <change><![CDATA[[Fix] Report #477: Delete images of deleted albums]]></change>
           <change><![CDATA[[Fix] Report #475: Autodelete on update needs CHMOD 777]]></change>
-          <change><![CDATA[[Fix] Report #478: Gallery-log leading with "View forum" to viewofurm.php]]></change>
+          <change><![CDATA[[Fix] Report #478: Gallery-log leading with "View forum" to viewforum.php]]></change>
           <change><![CDATA[[Fix] Unreported: Send moderatores back to work (Report #471)]]></change>
         </changelog>
       </entry>
