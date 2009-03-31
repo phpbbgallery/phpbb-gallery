@@ -446,6 +446,8 @@ class install_update extends module
 				nv_add_column(LOG_TABLE,			'album_id',				array('UINT', 0));
 				nv_add_column(LOG_TABLE,			'image_id',				array('UINT', 0));
 
+			case '0.5.4':
+
 			break;
 		}
 
@@ -1006,6 +1008,8 @@ class install_update extends module
 					WHERE log_type = ' . LOG_GALLERY;
 				$db->sql_query($sql);
 
+			case '0.5.4':
+
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
 		}
@@ -1075,6 +1079,7 @@ class install_update extends module
 			case '0.5.1':
 			case '0.5.2':
 			case '0.5.3':
+			case '0.5.4':
 			break;
 		}
 
@@ -1208,6 +1213,7 @@ class install_update extends module
 				case '0.5.1':
 				case '0.5.2':
 				case '0.5.3':
+				case '0.5.4':
 				break;
 			}
 
@@ -1224,6 +1230,7 @@ class install_update extends module
 			$modules = $this->gallery_config_options;
 			switch ($gallery_config['phpbb_gallery_version'])
 			{
+				case '0.5.4':
 				case '0.5.3':
 				case '0.5.2':
 				case '0.5.1':
