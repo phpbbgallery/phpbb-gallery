@@ -146,11 +146,11 @@ class acp_gallery_albums
 							if ($action == 'edit')
 							{
 								$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . '
-									WHERE perm_album_id = ' . $album_id;
+									WHERE perm_album_id = ' . $album_data['album_id'];
 								$db->sql_query($sql);
 
 								$sql = 'DELETE FROM ' . GALLERY_MODSCACHE_TABLE . '
-									WHERE album_id = ' . $album_id;
+									WHERE album_id = ' . $album_data['album_id'];
 								$db->sql_query($sql);
 							}
 
@@ -162,7 +162,7 @@ class acp_gallery_albums
 							{
 								$perm_data[] = array(
 									'perm_role_id'					=> $row['perm_role_id'],
-									'perm_album_id'					=> $album_id,
+									'perm_album_id'					=> $album_data['album_id'],
 									'perm_user_id'					=> $row['perm_user_id'],
 									'perm_group_id'					=> $row['perm_group_id'],
 									'perm_system'					=> $row['perm_system'],
@@ -177,7 +177,7 @@ class acp_gallery_albums
 							while ($row = $db->sql_fetchrow($result))
 							{
 								$modscache_ary[] = array(
-									'album_id'			=> $album_id,
+									'album_id'			=> $album_data['album_id'],
 									'user_id'			=> $row['user_id'],
 									'username '			=> $row['username'],
 									'group_id'			=> $row['group_id'],

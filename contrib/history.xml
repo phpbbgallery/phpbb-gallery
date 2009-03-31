@@ -56,6 +56,7 @@
         <date>2009-MM-DD</date>
         <rev-version>X.Y.Z</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Fix] Report #509: Copy permissions does not work on "Create album"]]></change>
           <change><![CDATA[[Fix] Report #508: Massimport skips images with "&" in filename.]]></change>
           <change><![CDATA[[Fix] Report #505: Enter custom ontest-timestamps for start, rating and end.]]></change>
           <change><![CDATA[[Fix] Report #p6712: Call to undefined function can_load_dll() in install/]]></change>
