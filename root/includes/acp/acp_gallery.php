@@ -1501,7 +1501,7 @@ class acp_gallery
 
 			if (!$todo_images)
 			{
-				unlink($phpbb_root_path . GALLERY_IMPORT_PATH . $import_schema . '.' . $phpEx);
+				#unlink($phpbb_root_path . GALLERY_IMPORT_PATH . $import_schema . '.' . $phpEx);
 				trigger_error(sprintf($user->lang['IMPORT_FINISHED'], $done_images) . adm_back_link($this->u_action));
 			}
 			else
@@ -2040,9 +2040,14 @@ class acp_gallery
 		$import_file .= "	'user_colour'	=> '" . $user_row['user_colour'] . "',\n";
 		$import_file .= ");\n";
 		$import_file .= "\$images = array(\n";
+
+		// We need to replace some characters to find the image and not produce syntax errors
+		$replace_chars = array("'", "&amp;");
+		$replace_with = array("{{$import_schema}}", "&");
+
 		foreach ($images as $image_src)
 		{
-			$import_file .= "	'" . str_replace("'", "{{$import_schema}}", $image_src) . "',\n";
+			$import_file .= "	'" . str_replace($replace_chars, $replace_with, $image_src) . "',\n";
 		}
 		$import_file .= ");\n";
 		$import_file .= "\n";
