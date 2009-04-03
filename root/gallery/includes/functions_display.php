@@ -659,7 +659,8 @@ function assign_image_block($template_block, &$image_data, $album_status, $displ
 		'POSTER'		=> ($display & RRC_DISPLAY_USERNAME) ? (($image_data['image_contest'] && !gallery_acl_check('m_status', $image_data['image_album_id'])) ? $user->lang['CONTEST_USERNAME'] : get_username_string('full', $image_data['image_user_id'], ($image_data['image_user_id'] <> ANONYMOUS) ? $image_data['image_username'] : $user->lang['GUEST'], $image_data['image_user_colour'])) : '',
 		'TIME'			=> ($display & RRC_DISPLAY_IMAGETIME) ? $user->format_date($image_data['image_time']) : '',
 		'VIEW'			=> ($display & RRC_DISPLAY_IMAGEVIEWS) ? $image_data['image_view_count'] : -1,
-		'CONTEST_RANK'	=> ($image_data['image_contest_rank']) ? $user->lang['CONTEST_RESULT_' . $image_data['image_contest_rank']] : '',
+		'CONTEST_RANK'		=> ($image_data['image_contest_rank']) ? $user->lang['CONTEST_RESULT_' . $image_data['image_contest_rank']] : '',
+		'CONTEST_RANK_ID'	=> $image_data['image_contest_rank'],
 
 		'S_RATINGS'		=> (($display & RRC_DISPLAY_RATINGS) ? (($gallery_config['allow_rates'] && gallery_acl_check('i_rate', $image_data['image_album_id'])) ? $image_data['rating'] : '') : ''),
 		'U_RATINGS'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $image_data['image_album_id'] . "&amp;image_id=" . $image_data['image_id']) . '#rating',

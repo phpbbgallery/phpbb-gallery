@@ -56,6 +56,7 @@
         <date>2009-03-31</date>
         <rev-version>0.5.4</rev-version>
         <changelog lang="en-gb">
+          <change><![CDATA[[Fix] Report #511: Contest-information as (int) for better styling usage.]]></change>
           <change><![CDATA[[Fix] Report #510: Logs get deleted by forum_id not by LOG_TYPE (phpbb:#42295)]]></change>
           <change><![CDATA[[Fix] Report #509: Copy permissions does not work on "Create album"]]></change>
           <change><![CDATA[[Fix] Report #508: Massimport skips images with "&" in filename.]]></change>
