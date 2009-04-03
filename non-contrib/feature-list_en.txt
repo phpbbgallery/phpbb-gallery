@@ -6,12 +6,15 @@
 		[*]Resize images on upload
 		[*]Global control about comment & rating system (dis-/enable)
 		[*]Thumbnails: GD-version, quality and size
+		[*]Images available in 3 sizes (thumbnail, medium, full)
 		[*]Several options to thumbnail-displaying album.php: number of rows & columns, options to display (username, rating, comments, upload-time,...)
 		[*]RRC (recent-random-comment): little Addon displaying the recent images, random images and/or recent comments on the gallery/indey.php with full ACP-Control
 		[*]Sub-folder name adjustable (default: gallery/)
 		[*]Search function (page for Recent/Random/Top-Rated/Last comments/Own images)
 		[*]Lytebox & Highslide JS support (Highslide JS must be downloaded seperatly because of the licence)
 		[*]Diashow
+		[*]Available in more languages: http://www.flying-bits.org/go/phpbb_gallery/translations
+		[*]Available Addons: http://www.flying-bits.org/go/phpbb_gallery/addons
 	[/list]
 	[*]Integration in phpBB:
 	[list]
@@ -19,6 +22,8 @@
 		[*]Number of user-images on viewtopic (ACP-Option)
 		[*]Number of images on index (ACP-Option)
 		[*]Recent/Random images in user-profile (with full ACP-Control)
+		[*]BBcode to use gallery images in postings
+		[*]Available for prosilver-& subsilver2-based styles
 	[/list]
 	[*]Album / Permission-management:
 	[list]
@@ -32,6 +37,7 @@
 		[*]Comment-permissions: view, post, edit, delete
 		[*]Moderate-permissions: moderate comments, image: delete, edit, move, handle reports, approve/lock
 		[*]Misc-permissions: View album, Number of allowed images, albums (for personal galleries)
+		[*]Personal galleries (upload by owner only), with subalbums and management through UCP
 	[/list]
 	[*]Images / Comments:
 	[list]

@@ -6,12 +6,15 @@
 		[*]Bilder beim Hochladen verkleinern
 		[*]Globale Einstellung zu Bewertungen und Kommentaren
 		[*]Thumbnails: GD-Version, Qualität und Größe
+		[*]Bilder in 3 Größen verfügbar (Thumbnail, Mittel- und Vollgröße)
 		[*]Viele Einstellmöglichkeiten zur album.php: Anzahl der Zeilen und Spalten, Anzeigen der Werte (Benutzername, Bewertung, Kommentare, Hochlade-Zeitpunkt,...)
 		[*]RRC (recent-random-comment): kleines Addon zum Anzeigen der neusten Bilder, zufälligen Bilder und der neusten Kommentare auf der gallery/index.php mit Einstellmöglichkeiten im ACP
 		[*]Unterordner umbenennbar (Standard: gallery/)
 		[*]Suchfunktion
 		[*]Lytebox & Highslide JS Unterstützung (Highslide JS muss auf Grund der Lizenz extra heruntergeladen werden)
 		[*]Diashow
+		[*]In weiteren Sprachen verfügbar: http://www.flying-bits.org/go/phpbb_gallery/translations
+		[*]Verfügbare Addons: http://www.flying-bits.org/go/phpbb_gallery/translations
 	[/list]
 	[*]Integration in phpBB:
 	[list]
@@ -19,6 +22,8 @@
 		[*]Anzahl der Benutzerbilder auf der Themenseite (ACP-Option)
 		[*]Anzahl der Bilder auf der Index-Seite (ACP-Option)
 		[*]Neuste und Zufällige Bilder im Benutzerprofil (alle Einstellmöglichkeiten im ACP)
+		[*]BBCode für die Benutzung in Beiträgen
+		[*]Verfügbar für prosilver- und subsilver2-basierende Styles
 	[/list]
 	[*]Albenverwaltung / Berechtigungen:
 	[list]
@@ -32,6 +37,7 @@
 		[*]Berechtigungen für Kommentare: lesen, schreiben, ändern, löschen
 		[*]Moderations-Berechtigungen: Kommentare moderieren, Bilder: ändern, löschen, verschieben, Meldungen bearbeiten, Freigeben/Sperren
 		[*]Weitere Berechtigungen: Album sehen, Anzahl der Bilder, Alben (Nur für persönliche Galerien)
+		[*]Persönliche Galerien (Hochladen nur durch den Besitzer möglich), mit Subalben, Verwaltung im persönlichen Bereich (UCP)
 	[/list]
 	[*]Bilder/Kommentare:
 	[list]
