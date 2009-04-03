@@ -1,0 +1,67 @@
+[list]
+	[*]Einstellungen/Verschiedenes:
+	[list]
+		[*]Dateitypen: gif, jpeg & png
+		[*]Bildgröße: Dateigröße, Höhe und Breite
+		[*]Bilder beim Hochladen verkleinern
+		[*]Globale Einstellung zu Bewertungen und Kommentaren
+		[*]Thumbnails: GD-Version, Qualität und Größe
+		[*]Viele Einstellmöglichkeiten zur album.php: Anzahl der Zeilen und Spalten, Anzeigen der Werte (Benutzername, Bewertung, Kommentare, Hochlade-Zeitpunkt,...)
+		[*]RRC (recent-random-comment): kleines Addon zum Anzeigen der neusten Bilder, zufälligen Bilder und der neusten Kommentare auf der gallery/index.php mit Einstellmöglichkeiten im ACP
+		[*]Unterordner umbenennbar (Standard: gallery/)
+		[*]Suchfunktion
+		[*]Lytebox & Highslide JS Unterstützung (Highslide JS muss auf Grund der Lizenz extra heruntergeladen werden)
+		[*]Diashow
+	[/list]
+	[*]Integration in phpBB:
+	[list]
+		[*]Link zur persönlichen Galerie auf der Themenseite (ACP-Option)
+		[*]Anzahl der Benutzerbilder auf der Themenseite (ACP-Option)
+		[*]Anzahl der Bilder auf der Index-Seite (ACP-Option)
+		[*]Neuste und Zufällige Bilder im Benutzerprofil (alle Einstellmöglichkeiten im ACP)
+	[/list]
+	[*]Albenverwaltung / Berechtigungen:
+	[list]
+		[*]Unbegrenzt tiefer Verschachtelung der Subalben möglich
+		[*]Beim erstellen/ändern eines Albums können Berechtigungen kopiert werden
+		[*]Album-typen: Kategorie, Album & Wettbewerb (mehr Informationen weiter unten)
+		[*]"Album gesperrt"-Option
+		[*]"Berechtiungen kopieren" Funktion beim vergeben der Berechtigungen
+		[*]Gruppen- und Benutzerspezifische Rechtevergabe
+		[*]Berechtigungen für Bilder: ansehen, ansehen ohne Wasserzeichen, hochladen, hochladen mit Freigabe, ändern, löschen, melden, bewerten
+		[*]Berechtigungen für Kommentare: lesen, schreiben, ändern, löschen
+		[*]Moderations-Berechtigungen: Kommentare moderieren, Bilder: ändern, löschen, verschieben, Meldungen bearbeiten, Freigeben/Sperren
+		[*]Weitere Berechtigungen: Album sehen, Anzahl der Bilder, Alben (Nur für persönliche Galerien)
+	[/list]
+	[*]Bilder/Kommentare:
+	[list]
+		[*]Hotlink-Schutz: mit erlaubten Ausnahmen
+		[*]Anzeige der Exif-Daten
+		[*]Wasserzeichen: mit Mindestbreite/-höhe um kleine Bilder nicht völlig zu überdecken
+		[*]Meldefunktion
+		[*]Mehrere Bilder auf einmal hochladen (Anzahl kann im ACP eingestellt werden)
+		[*]Komplettes Benutzerprofil bei Kommentaren
+		[*]BBCodes, Benutzerdefinierte BBCodes und Smilies bei Kommentaren und Bild-Beschreibungen
+		[*]Benachrichtigung (Mail & Jabber) über neue Bilder/Kommentare
+		[*]Favoriten-Funktion
+		[*]Nächstes/Vorheriges Bild mit Name und Thumbnail
+	[/list]
+	[*]ACP:
+	[list]
+		[*]Statistische Übersicht
+		[*]Zurücksetzen der Bewertungen für ein Album
+		[*]Importer für viele Bilder
+		[*]Galerie reinigen: Möglichkeit zum Löschen von Bildern/Kommentaren gelöschter Benutzer (oder ändern des Autors in Gast) und von persönlichen Galerien
+	[/list]
+	[*]Wettbewerb:
+	[list]
+		[*]Erster Zeitraum: Hochladen von Bildern ist möglich, Bewertungen und Kommentare sind nicht erlaubt, der Autor ist versteckt
+		[*]Zweiter Zeitraum: Kein hochladen möglich, Bilder können bewertet werden, Kommentare sind nicht erlaubt, der Autor ist versteckt
+		[*]Ende des Wettbewerbs: Kein hochladen und bewertet möglich, Kommentare sind erlaubt und der Bild-Autor wird angezeigt
+	[/list]
+	[*]Installion:
+	[list]
+		[*]Vollständiger Support für Installation und Updates älterer Versionen
+		[*]Konvertierung von Smartor's "Album MOD" für phpBB2 und visiblethunder's "TS Gallery" für phpBB3
+	[/list]
+[/list]

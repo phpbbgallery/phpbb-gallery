@@ -3,13 +3,13 @@
 	[list]
 		[*]Filetypes: gif, jpeg & png
 		[*]Imagesize: filesize, image-height, image-width
-		[*]Resize images on Upload
+		[*]Resize images on upload
 		[*]Global control about comment & rating system (dis-/enable)
 		[*]Thumbnails: GD-version, quality and size
 		[*]Several options to thumbnail-displaying album.php: number of rows & columns, options to display (username, rating, comments, upload-time,...)
 		[*]RRC (recent-random-comment): little Addon displaying the recent images, random images and/or recent comments on the gallery/indey.php with full ACP-Control
 		[*]Sub-folder name adjustable (default: gallery/)
-		[*]Search function (page for Recent/Random/Top-Rated/Last comments/Own images
+		[*]Search function (page for Recent/Random/Top-Rated/Last comments/Own images)
 		[*]Lytebox & Highslide JS support (Highslide JS must be downloaded seperatly because of the licence)
 		[*]Diashow
 	[/list]
@@ -30,7 +30,7 @@
 		[*]Group- & User-based permissions
 		[*]Image-permissions: view, view without watermark, upload, upload with approval, edit, delete, report, rate
 		[*]Comment-permissions: view, post, edit, delete
-		[*]Moderate-permissions: moderate comments, image: delete, edit, move, handle reports, approve
+		[*]Moderate-permissions: moderate comments, image: delete, edit, move, handle reports, approve/lock
 		[*]Misc-permissions: View album, Number of allowed images, albums (for personal galleries)
 	[/list]
 	[*]Images / Comments:
