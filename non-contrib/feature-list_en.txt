@@ -1,0 +1,62 @@
+[list]
+	[*]Configurations/Misc:
+	[list]
+		[*]Filetypes: gif, jpeg & png
+		[*]Imagesize: filesize, image-height, image-width
+		[*]Resize images on Upload
+		[*]Global control about comment & rating system (dis-/enable)
+		[*]Thumbnails: GD-version, quality and size
+		[*]Several options to thumbnail-displaying album.php: number of rows & columns, options to display (username, rating, comments, upload-time,...)
+		[*]RRC (recent-random-comment): little Addon displaying the recent images, random images and/or recent comments on the gallery/indey.php with full ACP-Control
+		[*]Sub-folder name adjustable (default: gallery/)
+		[*]Search function (page for Recent/Random/Top-Rated/Last comments/Own images
+		[*]Lytebox & Highslide JS support (Highslide JS must be downloaded seperatly because of the licence)
+		[*]Diashow
+	[/list]
+	[*]Integration in phpBB:
+	[list]
+		[*]Link to personal gallery on viewtopic (ACP-Option)
+		[*]Number of user-images on viewtopic (ACP-Option)
+		[*]Recent/Random images in user-profile (with full ACP-Control)
+	[/list]
+	[*]Album / Permission-management:
+	[list]
+		[*]Unlimited sub...subalbums depth
+		[*]Copy permissions on create/edit album
+		[*]Album-types: Category, album, contest (see later for more information)
+		[*]"Album locked"-Option
+		[*]Inherit function on setting permissions
+		[*]Group-based permissions
+		[*]Image-permissions: view, view without watermark, upload, upload with approval, edit, delete, report, rate
+		[*]Comment-permissions: view, post, edit, delete
+		[*]Moderate-permissions: moderate comments, image: delete, edit, move, handle reports, approve
+		[*]Misc-permissions: View album, Number of allowed images, albums (for personal galleries)
+	[/list]
+	[*]Images / Comments:
+	[list]
+		[*]Hotlink prevention: also with whitelist
+		[*]Display exif-data
+		[*]Watermark: with min-width and min-height, to avoid little images from being fully covered
+		[*]Report function
+		[*]Upload more images at once (Number settable in the ACP)
+		[*]Full user-profile on comments
+		[*]BBCodes, Custom-BBCodes and Smilies on comments & image-description
+		[*]Notification (Mail & Jabber) on new images/comments
+		[*]Option to favorite images
+		[*]Next/Previous link (with imagename and thumbnail)
+	[/list]
+	[*]ACP:
+	[list]
+		[*]Statistical overview
+		[*]Resync-Options for several dynamic values
+		[*]Reset rating for album
+		[*]Mass-import
+		[*]CleanUp: Ability to delete images/comments of deleted users (or set to anonymous/guest), and personal albums
+	[/list]
+	[*]Contests:
+	[list]
+		[*]First timeperiod: Upload only, ratings and comments are not allowed, upload-username is hidden
+		[*]Second timeperiod: No more upload, ratings are allowed, comments are not allowed, upload-username is hidden
+		[*]End of contest: No more upload and ratings, comments are allowed, upload-username is displayed
+	[/list]
+[/list]
