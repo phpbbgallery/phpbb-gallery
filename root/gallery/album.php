@@ -242,7 +242,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 
 		for ($i = 0; $i < count($images); $i += $gallery_config['cols_per_page'])
 		{
-			$template->assign_block_vars('image_row', array());
+			$template->assign_block_vars('imagerow', array());
 
 			for ($j = $i; $j < ($i + $gallery_config['cols_per_page']); $j++)
 			{
