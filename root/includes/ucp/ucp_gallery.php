@@ -632,8 +632,7 @@ class ucp_gallery
 			$album_id = request_var('album_id', 0);
 			$left_id = $right_id = 0;
 			$deleted_images_na = '';
-			$deleted_albums = $deleted_images = '';
-			$deleted_albums_a = $deleted_images_a = array();
+			$deleted_albums = $deleted_images = array();
 
 			// Check for owner
 			$sql = 'SELECT album_id, left_id, right_id, parent_id
@@ -658,8 +657,7 @@ class ucp_gallery
 			{
 				if (($left_id <= $album[$i]['left_id']) && ($album[$i]['left_id'] <= $right_id))
 				{
-					$deleted_albums .= (($deleted_albums) ? ', ' : '') . $album[$i]['album_id'];
-					$deleted_albums_a[] = $album[$i]['album_id'];
+					$deleted_albums[] = $album[$i]['album_id'];
 				}
 			}
 
@@ -678,8 +676,7 @@ class ucp_gallery
 				@unlink($phpbb_root_path . GALLERY_MEDIUM_PATH . $row['image_filename']);
 				@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $row['image_filename']);
 
-				$deleted_images .= (($deleted_images) ? ', ' : '') . $row['image_id'];
-				$deleted_images_a[] = $row['image_id'];
+				$deleted_images[] = $row['image_id'];
 			}
 
 			// We have all image_ids in $deleted_images which are deleted.
@@ -722,7 +719,7 @@ class ucp_gallery
 			set_gallery_config('num_comments', (int) $row['num_comments'], true);
 
 			// Maybe we deleted all, so we have to empty $user->gallery['personal_album_id']
-			if (in_array($user->gallery['personal_album_id'], $deleted_albums_a))
+			if (in_array($user->gallery['personal_album_id'], $deleted_albums))
 			{
 				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
 					SET personal_album_id = 0
@@ -788,8 +785,8 @@ class ucp_gallery
 			$cache->destroy('sql', GALLERY_WATCH_TABLE);
 			$cache->destroy('_albums');
 
-			trigger_error($user->lang['DELETED_ALBUMS'] . (($parent_id) ? '<br /><br />
-				<a href="' . append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . $parent_id) . '">' . $user->lang['BACK_TO_PREV'] . '</a>' : ''));
+			trigger_error($user->lang['DELETED_ALBUMS'] . '<br /><br />
+				<a href="' . (($parent_id) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . $parent_id) : append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums')) . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
 		}
 		else
 		{

@@ -639,13 +639,17 @@ function set_default_config()
 	set_config('gallery_viewtopic_images', 1);
 	set_config('gallery_viewtopic_link', 0);
 
-	// Added X.Y.Z: //@todo: 
+	// Added 0.5.4:
 	set_gallery_config('num_comments', 0);
 	set_gallery_config('disp_login', 1);
 	set_gallery_config('disp_whoisonline', 1);
 	set_gallery_config('disp_birthdays', 0);
 	set_gallery_config('disp_statistic', 1);
 	set_gallery_config('rrc_gindex_pgalleries', 1);
+	set_gallery_config('newest_pgallery_user_id', 0);
+	set_gallery_config('newest_pgallery_username', '');
+	set_gallery_config('newest_pgallery_user_colour', '');
+	set_gallery_config('newest_pgallery_album_id', 0);
 }
 
 ?>

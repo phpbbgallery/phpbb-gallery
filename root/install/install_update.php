@@ -962,15 +962,6 @@ class install_update extends module
 				set_config('gallery_viewtopic_link', 0);
 
 			case '0.5.3':
-				$num_comments = 0;
-				$sql = 'SELECT SUM(image_comments) comments
-					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE image_status <> ' . IMAGE_UNAPPROVED . '
-					GROUP BY image_id';
-				$result = $db->sql_query($sql);
-				$num_comments = $db->sql_fetchfield('comments');
-				$db->sql_freeresult($result);
-				set_gallery_config('num_comment', $num_comments, true);
 				set_gallery_config('disp_login', 1);
 				set_gallery_config('disp_whoisonline', 1);
 				set_gallery_config('disp_birthdays', 0);
@@ -1009,6 +1000,32 @@ class install_update extends module
 				$db->sql_query($sql);
 
 			case '0.5.4':
+				$num_comments = 0;
+				$sql = 'SELECT SUM(image_comments) comments
+					FROM ' . GALLERY_IMAGES_TABLE . '
+					WHERE image_status <> ' . IMAGE_UNAPPROVED . '
+					GROUP BY image_id';
+				$result = $db->sql_query($sql);
+				$num_comments = $db->sql_fetchfield('comments');
+				$db->sql_freeresult($result);
+				set_gallery_config('num_comments', $num_comments, true);
+
+				// Update the config for the statistic on the index
+				$sql = 'SELECT a.album_id, u.user_id, u.username, u.user_colour
+					FROM ' . GALLERY_ALBUMS_TABLE . ' a
+					LEFT JOIN ' . USERS_TABLE . ' u
+						ON u.user_id = a.album_user_id
+					WHERE a.album_user_id <> 0
+						AND a.parent_id = 0
+					ORDER BY a.album_id DESC';
+				$result = $db->sql_query_limit($sql, 1);
+				$newest_pgallery = $db->sql_fetchrow($result);
+				$db->sql_freeresult($result);
+
+				set_gallery_config('newest_pgallery_user_id', (int) $newest_pgallery['user_id']);
+				set_gallery_config('newest_pgallery_username', (string) $newest_pgallery['username']);
+				set_gallery_config('newest_pgallery_user_colour', (string) $newest_pgallery['user_colour']);
+				set_gallery_config('newest_pgallery_album_id', (int) $newest_pgallery['album_id']);
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
@@ -1089,7 +1106,7 @@ class install_update extends module
 			WHERE ' . $db->sql_in_set('config_name', $old_configs);
 		$db->sql_query($sql);
 
-		$old_gallery_configs = array('user_pics_limit', 'mod_pics_limit', 'fullpic_popup', 'personal_gallery', 'personal_gallery_private', 'personal_gallery_limit', 'personal_gallery_view', 'album_version');
+		$old_gallery_configs = array('user_pics_limit', 'mod_pics_limit', 'fullpic_popup', 'personal_gallery', 'personal_gallery_private', 'personal_gallery_limit', 'personal_gallery_view', 'album_version', 'num_comment');
 		$sql = 'DELETE FROM ' . GALLERY_CONFIG_TABLE . '
 			WHERE ' . $db->sql_in_set('config_name', $old_gallery_configs);
 		$db->sql_query($sql);
