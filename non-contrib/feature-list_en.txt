@@ -17,6 +17,7 @@
 	[list]
 		[*]Link to personal gallery on viewtopic (ACP-Option)
 		[*]Number of user-images on viewtopic (ACP-Option)
+		[*]Number of images on index (ACP-Option)
 		[*]Recent/Random images in user-profile (with full ACP-Control)
 	[/list]
 	[*]Album / Permission-management:
@@ -26,7 +27,7 @@
 		[*]Album-types: Category, album, contest (see later for more information)
 		[*]"Album locked"-Option
 		[*]Inherit function on setting permissions
-		[*]Group-based permissions
+		[*]Group- & User-based permissions
 		[*]Image-permissions: view, view without watermark, upload, upload with approval, edit, delete, report, rate
 		[*]Comment-permissions: view, post, edit, delete
 		[*]Moderate-permissions: moderate comments, image: delete, edit, move, handle reports, approve
