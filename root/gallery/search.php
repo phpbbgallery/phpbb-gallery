@@ -60,6 +60,12 @@ if (!$auth->acl_get('u_search') || !$config['load_search'])
 	trigger_error('NO_SEARCH');
 }
 
+
+$template->assign_block_vars('navlinks', array(
+	'FORUM_NAME'	=> $user->lang['SEARCH'],
+	'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx"),
+));
+
 // Define some vars
 $images_per_page = $gallery_config['rows_per_page'] * $gallery_config['cols_per_page'];
 $tot_unapproved = $image_counter = 0;
@@ -178,6 +184,11 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 		switch ($search_id)
 		{
 			case 'recent':
+				$template->assign_block_vars('navlinks', array(
+					'FORUM_NAME'	=> $user->lang['SEARCH_RECENT'],
+					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=' . $search_id),
+				));
+
 				$l_search_title = $user->lang['SEARCH_RECENT'];
 				$search_results = 'image';
 
@@ -191,6 +202,11 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			break;
 
 			case 'random':
+				$template->assign_block_vars('navlinks', array(
+					'FORUM_NAME'	=> $user->lang['SEARCH_RANDOM'],
+					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=' . $search_id),
+				));
+
 				$l_search_title = $user->lang['SEARCH_RANDOM'];
 				$search_results = 'image';
 
@@ -220,6 +236,11 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			case 'commented':
 			if ($gallery_config['allow_comments'])
 			{
+				$template->assign_block_vars('navlinks', array(
+					'FORUM_NAME'	=> $user->lang['SEARCH_RECENT_COMMENTS'],
+					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=' . $search_id),
+				));
+
 				$l_search_title = $user->lang['SEARCH_RECENT_COMMENTS'];
 				$search_results = 'comment';
 
@@ -239,6 +260,11 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			case 'toprated':
 			if ($gallery_config['allow_rates'])
 			{
+				$template->assign_block_vars('navlinks', array(
+					'FORUM_NAME'	=> $user->lang['SEARCH_TOPRATED'],
+					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=' . $search_id),
+				));
+
 				$l_search_title = $user->lang['SEARCH_TOPRATED'];
 				$search_results = 'image';
 
@@ -257,6 +283,11 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			case 'contests':
 			if ($gallery_config['allow_rates'])
 			{
+				$template->assign_block_vars('navlinks', array(
+					'FORUM_NAME'	=> $user->lang['SEARCH_CONTEST'],
+					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=' . $search_id),
+				));
+
 				$l_search_title = $user->lang['SEARCH_CONTEST'];
 				$search_results = 'image';
 
@@ -407,7 +438,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 
 		'U_SEARCH_WORDS'	=> $u_search,
 		'SEARCH_IMAGES'		=> ($search_results == 'image') ? true : false,
-		'S_COL_WIDTH'		=> (100 / $gallery_config['cols_per_page']),
+		'S_COL_WIDTH'		=> (100 / $gallery_config['cols_per_page']) . '%',
 		'S_COLS'			=> $gallery_config['cols_per_page'],
 		'S_THUMBNAIL_SIZE'	=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? THUMBNAIL_INFO_HEIGHT : 0),
 	));
