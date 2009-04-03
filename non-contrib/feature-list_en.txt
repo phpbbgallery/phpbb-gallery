@@ -60,4 +60,9 @@
 		[*]Second timeperiod: No more upload, ratings are allowed, comments are not allowed, upload-username is hidden
 		[*]End of contest: No more upload and ratings, comments are allowed, upload-username is displayed
 	[/list]
+	[*]Installing:
+	[list]
+		[*]Full support on install and update
+		[*]Converters from Smartor's "Album MOD" for phpBB2 and visiblethunder's "TS Gallery" for phpBB3
+	[/list]
 [/list]
