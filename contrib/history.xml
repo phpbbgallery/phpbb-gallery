@@ -6,6 +6,67 @@
   <header>
     <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
     <title lang="en-gb">phpBB Gallery</title>
+    <description lang="de"><![CDATA[]]></description>
+    <description lang="en-gb"><![CDATA[
+Configurations/Misc:
+» Filetypes: gif, jpeg & png
+» Imagesize: filesize, image-height, image-width
+» Resize images on Upload
+» Global control about comment & rating system (dis-/enable)
+» Thumbnails: GD-version, quality and size
+» Several options to thumbnail-displaying album.php: number of rows & columns, options to display (username, rating, comments, upload-time,...)
+» RRC (recent-random-comment): little Addon displaying the recent images, random images and/or recent comments on the gallery/indey.php with full ACP-Control
+» Sub-folder name adjustable (default: gallery/)
+» Search function (page for Recent/Random/Top-Rated/Last comments/Own images
+» Lytebox & Highslide JS support (Highslide JS must be downloaded seperatly because of the licence)
+» Diashow
+
+Integration in phpBB:
+» Link to personal gallery on viewtopic (ACP-Option)
+» Number of user-images on viewtopic (ACP-Option)
+» Recent/Random images in user-profile (with full ACP-Control)
+
+Album / Permission-management:
+» Unlimited sub...subalbums depth
+» Copy permissions on create/edit album
+» Album-types: Category, album, contest (see later for more information)
+» "Album locked"-Option
+» Inherit function on setting permissions
+» Group-based permissions
+» Image-permissions: view, view without watermark, upload, upload with approval, edit, delete, report, rate
+» Comment-permissions: view, post, edit, delete
+» Moderate-permissions: moderate comments, image: delete, edit, move, handle reports, approve
+» Misc-permissions: View album, Number of allowed images, albums (for personal galleries)
+
+Images / Comments:
+» Hotlink prevention: also with whitelist
+» Display exif-data
+» Watermark: with min-width and min-height, to avoid little images from being fully covered
+» Report function
+» Upload more images at once (Number settable in the ACP)
+» Full user-profile on comments
+» BBCodes, Custom-BBCodes and Smilies on comments & image-description
+» Notification (Mail & Jabber) on new images/comments
+» Option to favorite images
+» Next/Previous link (with imagename and thumbnail)
+
+ACP:
+» Statistical overview
+» Resync-Options for several dynamic values
+» Reset rating for album
+» Mass-import
+» CleanUp: Ability to delete images/comments of deleted users (or set to anonymous/guest), and personal albums
+
+Contests:
+» First timeperiod: Upload only, ratings and comments are not allowed, upload-username is hidden
+» Second timeperiod: No more upload, ratings are allowed, comments are not allowed, upload-username is hidden
+» End of contest: No more upload and ratings, comments are allowed, upload-username is displayed
+
+Installing:
+» Full support on install and update
+» Converters from Smartor's "Album MOD" for phpBB2 and visiblethunder's "TS Gallery" for phpBB3]]></description>
+    <author-notes lang="de">Diese Datei enthält alle Teile der History, alle Entickler, usw.</author-notes>
+    <author-notes lang="en-gb">This file contains all parts of the History, all Developers, a.s.o.</author-notes>
     <author-group>
       <author>
         <realname>Joas Schilling</realname>
@@ -49,16 +110,22 @@
       <link type="parent" lang="de" href="update_0_5_3_to_0_5_4/update.xml">Update von 0.5.3 auf 0.5.4</link>
       <link type="parent" lang="en-gb" href="update_0_5_3_to_0_5_4/update.xml">Update from 0.5.3 to 0.5.4</link>
     </link-group>
-    <author-notes lang="de">Diese Datei enthält alle Teile der History, alle Entickler, usw.</author-notes>
-    <author-notes lang="en-gb">This file contains all parts of the History, all Developers, a.s.o.</author-notes>
     <history>
+      <entry>
+        <date>2009-MM-DD</date>
+        <rev-version>1.0.0</rev-version>
+        <changelog lang="en-gb">
+          <change><![CDATA[[Add] Unreported: user-based permissions]]></change>
+
+          <change><![CDATA[[Fix] Unreported: not using $db->sql_in_set correctly on delete function of personal albums.]]></change>
+          <change><![CDATA[[Fix] Report #512: Newest Personal Gallery: Guest]]></change>
+          <change><![CDATA[[Fix] Report #511: Contest-information as (int) for better styling usage.]]></change>
+        </changelog>
+      </entry>
       <entry>
         <date>2009-03-31</date>
         <rev-version>0.5.4</rev-version>
         <changelog lang="en-gb">
-          <change><![CDATA[[Fix] Unreported: not using $db->sql_in_set correctly on delete function of personal albums.]]></change>
-          <change><![CDATA[[Fix] Report #512: Newest Personal Gallery: Guest]]></change>
-          <change><![CDATA[[Fix] Report #511: Contest-information as (int) for better styling usage.]]></change>
           <change><![CDATA[[Fix] Report #510: Logs get deleted by forum_id not by LOG_TYPE (phpbb:#42295)]]></change>
           <change><![CDATA[[Fix] Report #509: Copy permissions does not work on "Create album"]]></change>
           <change><![CDATA[[Fix] Report #508: Massimport skips images with "&" in filename.]]></change>
