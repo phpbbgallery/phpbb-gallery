@@ -248,12 +248,12 @@ if ($album_data['album_type'] != ALBUM_CAT)
 			{
 				if ($j >= count($images))
 				{
-					$template->assign_block_vars('image_row.no_image', array());
+					$template->assign_block_vars('imagerow.no_image', array());
 					continue;
 				}
 
 				// Assign the image to the template-block
-				assign_image_block('image_row.image', $images[$j], $album_data['album_status'], $gallery_config['album_display']);
+				assign_image_block('imagerow.image', $images[$j], $album_data['album_status'], $gallery_config['album_display']);
 			}
 		}
 	}
