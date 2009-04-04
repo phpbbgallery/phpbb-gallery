@@ -3,42 +3,60 @@
 <!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
 <!-- $Id$ -->
 <mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.2.xsd">
-  <header>
-    <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
-    <title lang="de">phpBB Gallery / phpBB Galerie</title>
-    <title lang="en-gb">phpBB Gallery</title>
-    <description lang="de"><![CDATA[Diese Anleitung ermöglicht ein Konvertieren der Daten aus dem Album-MOD für phpBB2 von smartor
+	<header>
+		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+
+		<title lang="de">phpBB Gallery</title>
+		<title lang="en">phpBB Gallery</title>
+
+		<description lang="de"><![CDATA[
+Diese Anleitung ermöglicht eine Konvertierung von Smartor's "Album MOD" für phpBB2 und visiblethunder's "TS Gallery" für phpBB3
 WICHTIG: Du musst zuerst die install.xml durchgearbeiten. Folge danach genau den Anweisungen, der "Manuellen Vorgänge" aus dieser Datei (convert.xml)!]]></description>
-    <description lang="en-gb"><![CDATA[This manual allows you to convert your data from the album-MOD for phpBB2 by smartor
+		<description lang="en"><![CDATA[
+This manual allows you to convert your data from Smartor's "Album MOD" for phpBB2 and visiblethunder's "TS Gallery" for phpBB3
 IMPORTANT: You need to complete the normal install.xml first. When doing the convertion, make sure you follow the "DIY-Instructions" of this file (convert.xml) strictly!]]></description>
-    <author-group>
-      <author>
-        <realname>Joas Schilling</realname>
-        <email>nickvergessen@gmx.de</email>
-        <username>nickvergessen</username>
-        <homepage>http://www.flying-bits.org</homepage>
-        <contributions />
-      </author>
-    </author-group>
-    <mod-version>0.5.3</mod-version>
-    <installation>
-      <level>intermediate</level>
-      <time>1200</time>
-      <target-version>3.0.4</target-version>
-    </installation>
-    <link-group>
-      <link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
-      <link type="parent" lang="en-gb" href="../install.xml">Manual</link>
-      <link type="parent" lang="de" href="history.xml">Entwicklung</link>
-      <link type="parent" lang="en-gb" href="history.xml">History</link>
-    </link-group>
-    <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
-  </header>
-  <action-group>
-    <copy>
-      <file from="phpBB2-Installation/album_mod/upload/*.*" to="gallery/images/upload/*.*" />
-    </copy>
-    <diy-instructions lang="de"><![CDATA[Schritt für Schritt:
+
+		<author-notes lang="de"><![CDATA[
+Untersützt die "MOD Version Check"-MOD von Handymman´:
+http://www.phpbb.com/community/viewtopic.php?f=69&t=691155
+
+Untersützt die "Highslide JS"-MOD von stokerpiller:
+http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
+		<author-notes lang="en"><![CDATA[
+Supports the "MOD Version Check"-MOD by Handymman´:
+http://www.phpbb.com/community/viewtopic.php?f=69&t=691155
+
+Supports the "Highslide JS"-MOD by stokerpiller:
+http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
+
+		<author-group>
+			<author>
+				<realname>Joas Schilling</realname>
+				<email>nickvergessen@gmx.de</email>
+				<username>nickvergessen</username>
+				<homepage>http://www.flying-bits.org/</homepage>
+				<contributions />
+			</author>
+		</author-group>
+
+		<mod-version>1.0.0</mod-version>
+
+		<installation>
+			<level>intermediate</level>
+			<time>3600</time>
+			<target-version>3.0.4</target-version>
+		</installation>
+
+		<link-group>
+			<link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
+			<link type="parent" lang="en" href="../install.xml">Manual</link>
+			<link type="parent" lang="de" href="history.xml">Geschichte/Entwickler/Features</link>
+			<link type="parent" lang="en" href="history.xml">History/Developers/Features</link>
+		</link-group>
+	</header>
+
+	<action-group>
+		<diy-instructions lang="de"><![CDATA[Schritt für Schritt:
 • mache ein Datenbank-Backup deiner phpBB2 und phpBB3-Installation.
 • Stelle die Tabellen des Album-MODs (phpbb_album, phpbb_album_cat, phpbb_album_comment, phpbb_album_config, phpbb_album_rate) udn wenn du es installiert hattest die des Clowns-Packages (phpbb_album_sp_config) in deiner phpBB3-Installation wieder her.
 • gehe zur install/ > Konvertiere MOD zu "aktuelle Version"
@@ -54,9 +72,8 @@ IMPORTANT: You need to complete the normal install.xml first. When doing the con
 • Aktualisiere deine Styles:
   • "Administrations-Bereich" (ACP) > "Styles" > "Templates" > jedes > "Aktualisieren"
   • "Administrations-Bereich" (ACP) > "Styles" > "Themes" > jedes > "Aktualisieren"
-  • "Administrations-Bereich" (ACP) > "Styles" > "Grafiksammlungen" > jedes > "Aktualisieren"
-]]></diy-instructions>
-    <diy-instructions lang="en-gb"><![CDATA[Step by Step:
+  • "Administrations-Bereich" (ACP) > "Styles" > "Grafiksammlungen" > jedes > "Aktualisieren"]]></diy-instructions>
+		<diy-instructions lang="en"><![CDATA[Step by Step:
 • make a database-backup of your phpbb2-installation and phpbb3-installation.
 • take the tables of the album-MOD (phpbb_album, phpbb_album_cat, phpbb_album_comment, phpbb_album_config, phpbb_album_rate) and if you got it, the Clowns-Package (phpbb_album_sp_config) and put these tables into your phpBB3-database
 • go to install/ > Convert MOD to "current version"
@@ -72,7 +89,6 @@ IMPORTANT: You need to complete the normal install.xml first. When doing the con
 • Refresh your Styles:
   • "Administration Control Panel" (ACP) > "Styles" > "Templates" > each > "refresh"
   • "Administration Control Panel" (ACP) > "Styles" > "Themes" > each > "refresh"
-  • "Administration Control Panel" (ACP) > "Styles" > "Imagesets" > each > "refresh"
-]]></diy-instructions>
-  </action-group>
+  • "Administration Control Panel" (ACP) > "Styles" > "Imagesets" > each > "refresh"]]></diy-instructions>
+	</action-group>
 </mod>

@@ -3,28 +3,100 @@
 <!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
 <!-- $Id$ -->
 <mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.2.xsd">
-  <header>
-    <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
-    <title lang="en-gb">phpBB Gallery</title>
-    <description lang="de"><![CDATA[]]></description>
-    <description lang="en-gb"><![CDATA[
+	<header>
+		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+
+		<title lang="de">phpBB Gallery</title>
+		<title lang="en">phpBB Gallery</title>
+
+		<description lang="de"><![CDATA[
+Einstellungen/Verschiedenes:
+» Dateitypen: gif, jpeg & png
+» Bildgröße: Dateigröße, Höhe und Breite
+» Bilder beim Hochladen verkleinern
+» Globale Einstellung zu Bewertungen und Kommentaren
+» Thumbnails: GD-Version, Qualität und Größe
+» Bilder in 3 Größen verfügbar (Thumbnail, Mittel- und Vollgröße)
+» Viele Einstellmöglichkeiten zur album.php: Anzahl der Zeilen und Spalten, Anzeigen der Werte (Benutzername, Bewertung, Kommentare, Hochlade-Zeitpunkt,...)
+» RRC (recent-random-comment): kleines Addon zum Anzeigen der neusten Bilder, zufälligen Bilder und der neusten Kommentare auf der gallery/index.php mit Einstellmöglichkeiten im ACP
+» Unterordner umbenennbar (Standard: gallery/)
+» Suchfunktion
+» Lytebox & Highslide JS Unterstützung (Highslide JS muss auf Grund der Lizenz extra heruntergeladen werden)
+» Diashow
+» In weiteren Sprachen verfügbar: http://www.flying-bits.org/go/phpbb_gallery/translations
+» Verfügbare Addons: http://www.flying-bits.org/go/phpbb_gallery/translations
+
+Integration in phpBB:
+» Link zur persönlichen Galerie auf der Themenseite (ACP-Option)
+» Anzahl der Benutzerbilder auf der Themenseite (ACP-Option)
+» Anzahl der Bilder auf der Index-Seite (ACP-Option)
+» Neuste und Zufällige Bilder im Benutzerprofil (alle Einstellmöglichkeiten im ACP)
+» BBCode für die Benutzung in Beiträgen
+» Verfügbar für prosilver- und subsilver2-basierende Styles
+
+Albenverwaltung / Berechtigungen:
+» Unbegrenzt tiefer Verschachtelung der Subalben möglich
+» Beim erstellen/ändern eines Albums können Berechtigungen kopiert werden
+» Album-typen: Kategorie, Album & Wettbewerb (mehr Informationen weiter unten)
+» "Album gesperrt"-Option
+» "Berechtiungen kopieren" Funktion beim vergeben der Berechtigungen
+» Gruppen- und Benutzerspezifische Rechtevergabe
+» Berechtigungen für Bilder: ansehen, ansehen ohne Wasserzeichen, hochladen, hochladen mit Freigabe, ändern, löschen, melden, bewerten
+» Berechtigungen für Kommentare: lesen, schreiben, ändern, löschen
+» Moderations-Berechtigungen: Kommentare moderieren, Bilder: ändern, löschen, verschieben, Meldungen bearbeiten, Freigeben/Sperren
+» Weitere Berechtigungen: Album sehen, Anzahl der Bilder, Alben (Nur für persönliche Galerien)
+» Persönliche Galerien (Hochladen nur durch den Besitzer möglich), mit Subalben, Verwaltung im persönlichen Bereich (UCP)
+
+Bilder/Kommentare:
+» Hotlink-Schutz: mit erlaubten Ausnahmen
+» Anzeige der Exif-Daten
+» Wasserzeichen: mit Mindestbreite/-höhe um kleine Bilder nicht völlig zu überdecken
+» Meldefunktion
+» Mehrere Bilder auf einmal hochladen (Anzahl kann im ACP eingestellt werden)
+» Komplettes Benutzerprofil bei Kommentaren
+» BBCodes, Benutzerdefinierte BBCodes und Smilies bei Kommentaren und Bild-Beschreibungen
+» Benachrichtigung (Mail & Jabber) über neue Bilder/Kommentare
+» Favoriten-Funktion
+» Nächstes/Vorheriges Bild mit Name und Thumbnail
+
+ACP:
+» Statistische Übersicht
+» Zurücksetzen der Bewertungen für ein Album
+» Importer für viele Bilder
+» Galerie reinigen: Möglichkeit zum Löschen von Bildern/Kommentaren gelöschter Benutzer (oder ändern des Autors in Gast) und von persönlichen Galerien
+
+Wettbewerb:
+» Erster Zeitraum: Hochladen von Bildern ist möglich, Bewertungen und Kommentare sind nicht erlaubt, der Autor ist versteckt
+» Zweiter Zeitraum: Kein hochladen möglich, Bilder können bewertet werden, Kommentare sind nicht erlaubt, der Autor ist versteckt
+» Ende des Wettbewerbs: Kein hochladen und bewertet möglich, Kommentare sind erlaubt und der Bild-Autor wird angezeigt
+
+Installion:
+» Vollständiger Support für Installation und Updates älterer Versionen
+» Konvertierung von Smartor's "Album MOD" für phpBB2 und visiblethunder's "TS Gallery" für phpBB3]]></description>
+		<description lang="en"><![CDATA[
 Configurations/Misc:
 » Filetypes: gif, jpeg & png
 » Imagesize: filesize, image-height, image-width
-» Resize images on Upload
+» Resize images on upload
 » Global control about comment & rating system (dis-/enable)
 » Thumbnails: GD-version, quality and size
+» Images available in 3 sizes (thumbnail, medium, full)
 » Several options to thumbnail-displaying album.php: number of rows & columns, options to display (username, rating, comments, upload-time,...)
 » RRC (recent-random-comment): little Addon displaying the recent images, random images and/or recent comments on the gallery/indey.php with full ACP-Control
 » Sub-folder name adjustable (default: gallery/)
-» Search function (page for Recent/Random/Top-Rated/Last comments/Own images
+» Search function (page for Recent/Random/Top-Rated/Last comments/Own images)
 » Lytebox & Highslide JS support (Highslide JS must be downloaded seperatly because of the licence)
 » Diashow
+» Available in more languages: http://www.flying-bits.org/go/phpbb_gallery/translations
+» Available Addons: http://www.flying-bits.org/go/phpbb_gallery/addons
 
 Integration in phpBB:
 » Link to personal gallery on viewtopic (ACP-Option)
 » Number of user-images on viewtopic (ACP-Option)
+» Number of images on index (ACP-Option)
 » Recent/Random images in user-profile (with full ACP-Control)
+» BBcode to use gallery images in postings
+» Available for prosilver-& subsilver2-based styles
 
 Album / Permission-management:
 » Unlimited sub...subalbums depth
@@ -32,11 +104,12 @@ Album / Permission-management:
 » Album-types: Category, album, contest (see later for more information)
 » "Album locked"-Option
 » Inherit function on setting permissions
-» Group-based permissions
+» Group- & User-based permissions
 » Image-permissions: view, view without watermark, upload, upload with approval, edit, delete, report, rate
 » Comment-permissions: view, post, edit, delete
-» Moderate-permissions: moderate comments, image: delete, edit, move, handle reports, approve
+» Moderate-permissions: moderate comments, image: delete, edit, move, handle reports, approve/lock
 » Misc-permissions: View album, Number of allowed images, albums (for personal galleries)
+» Personal galleries (upload by owner only), with subalbums and management through UCP
 
 Images / Comments:
 » Hotlink prevention: also with whitelist
@@ -65,641 +138,665 @@ Contests:
 Installing:
 » Full support on install and update
 » Converters from Smartor's "Album MOD" for phpBB2 and visiblethunder's "TS Gallery" for phpBB3]]></description>
-    <author-notes lang="de">Diese Datei enthält alle Teile der History, alle Entickler, usw.</author-notes>
-    <author-notes lang="en-gb">This file contains all parts of the History, all Developers, a.s.o.</author-notes>
-    <author-group>
-      <author>
-        <realname>Joas Schilling</realname>
-        <email>nickvergessen@gmx.de</email>
-        <username>nickvergessen</username>
-        <homepage>http://www.flying-bits.org</homepage>
-        <contributions-group>
-          <contributions status="current" from="2007-11-09" position="Main-Developer" />
-          <contributions status="past" from="2007-10-24" to="2007-11-15" position="Developer" />
-          <contributions status="past" from="2007-10-18" to="2007-10-24" position="Bug-Fixer" />
-        </contributions-group>
-      </author>
-      <author>
-        <realname>Stefan Temath</realname>
-        <email>dr.death@lpi-clan.de</email>
-        <username>Dr.Death</username>
-        <homepage>http://www.lpi-clan.de</homepage>
-        <contributions-group>
-          <contributions status="past" from="2007-10-24" to="2008-04-14" position="Bug-Fixer" />
-        </contributions-group>
-      </author>
-      <author>
-        <username>tsr</username>
-        <homepage>http://phpbbgallery.ph.funpic.de</homepage>
-        <contributions-group>
-          <contributions status="past" from="2007-10-10" to="2007-11-09" position="Main-Developer" />
-        </contributions-group>
-      </author>
-    </author-group>
-    <mod-version>0.5.4</mod-version>
-    <installation>
-      <level>intermediate</level>
-      <time>1200</time>
-      <target-version>3.0.4</target-version>
-    </installation>
-    <link-group>
-      <link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
-      <link type="parent" lang="en-gb" href="../install.xml">Manual</link>
-      <link type="parent" lang="de" href="update_0_4_1_to_X_Y_Z/update.xml">Update von 0.4.1 auf 0.5.4</link>
-      <link type="parent" lang="en-gb" href="update_0_4_1_to_X_Y_Z/update.xml">Update from 0.4.1 to 0.5.4</link>
-      <link type="parent" lang="de" href="update_0_5_3_to_0_5_4/update.xml">Update von 0.5.3 auf 0.5.4</link>
-      <link type="parent" lang="en-gb" href="update_0_5_3_to_0_5_4/update.xml">Update from 0.5.3 to 0.5.4</link>
-    </link-group>
-    <history>
-      <entry>
-        <date>2009-MM-DD</date>
-        <rev-version>1.0.0</rev-version>
-        <changelog lang="en-gb">
-          <change><![CDATA[[Add] Unreported: Added some breadcrumbs to the search.php]]></change>
-          <change><![CDATA[[Add] Unreported: user-based permissions]]></change>
 
-          <change><![CDATA[[Fix] Unreported: not using $db->sql_in_set correctly on delete function of personal albums.]]></change>
-          <change><![CDATA[[Fix] Report #512: Newest Personal Gallery: Guest]]></change>
-          <change><![CDATA[[Fix] Report #511: Contest-information as (int) for better styling usage.]]></change>
-        </changelog>
-      </entry>
-      <entry>
-        <date>2009-03-31</date>
-        <rev-version>0.5.4</rev-version>
-        <changelog lang="en-gb">
-          <change><![CDATA[[Fix] Report #510: Logs get deleted by forum_id not by LOG_TYPE (phpbb:#42295)]]></change>
-          <change><![CDATA[[Fix] Report #509: Copy permissions does not work on "Create album"]]></change>
-          <change><![CDATA[[Fix] Report #508: Massimport skips images with "&" in filename.]]></change>
-          <change><![CDATA[[Fix] Report #505: Enter custom ontest-timestamps for start, rating and end.]]></change>
-          <change><![CDATA[[Fix] Report #p6712: Call to undefined function can_load_dll() in install/]]></change>
-          <change><![CDATA[[Fix] Report #504: Personal albums are locked and can not be unlocked.]]></change>
-          <change><![CDATA[[Fix] Report #494: Display locked images, but prevented them from being commented, edited and rated.]]></change>
-          <change><![CDATA[[Fix] Unreported: Use set_config_count after 3.0.5 and backport the usage for num_comments/num_pgalleries.]]></change>
-          <change><![CDATA[[Fix] Report #493: Show viewonline, birthdays and statistic on gallery/index.php.]]></change>
-          <change><![CDATA[[Fix] Report #499: ' in filename, imagename or username cause syntax error on massimport.]]></change>
-          <change><![CDATA[[Fix] Report #503: Can not rate contest-images with hidden comment field, by wrong access-mode.]]></change>
-          <change><![CDATA[[Fix] Report #501: Image-counter and unread information are incorrect, when an album was viewed by more than one user.]]></change>
-          <change><![CDATA[[Fix] Report #497: Missing "Successful uploaded" when number of availbale uploads is smaller than columns count.]]></change>
-          <change><![CDATA[[Fix] Report #498: General Errors on permissions when selecting no group/album]]></change>
-          <change><![CDATA[[Fix] Report #492: Hide image-name fields on active checkbox for file-name]]></change>
-          <change><![CDATA[[Fix] Report #495: Missing submit-Button on contest-rates]]></change>
-          <change><![CDATA[[Fix] Report #496: SQL-Error on userprofile and gallery-index when no images are displayed.]]></change>
-        </changelog>
-      </entry>
-      <entry>
-        <date>2009-03-16</date>
-        <rev-version>0.5.3</rev-version>
-        <changelog lang="en-gb">
-          <change><![CDATA[[Add] Post #6413: Resize images on mass-import]]></change>
-          <change><![CDATA[[Add] Post #6321: Display user images on viewtopic.php (Patch by Christian_N and nickvergessen)]]></change>
-          <change><![CDATA[[Add] Report #129: Read-/Unread-information for albums when new images were uploaded]]></change>
+		<author-group>
+			<author>
+				<realname>Joas Schilling</realname>
+				<email>nickvergessen@gmx.de</email>
+				<username>nickvergessen</username>
+				<homepage>http://www.flying-bits.org/</homepage>
+				<contributions-group>
+					<contributions status="current" from="2007-11-09" position="Main-Developer" />
+					<contributions status="past" from="2007-10-24" to="2007-11-15" position="Developer" />
+					<contributions status="past" from="2007-10-18" to="2007-10-24" position="Bug-Fixer" />
+				</contributions-group>
+			</author>
 
-          <change><![CDATA[[Change] Report #482: Systemical inconsequence in contests]]></change>
-          <change><![CDATA[[Change] Unreported: Rewrote the acp to set permissions much better]]></change>
+			<author>
+				<realname>Stefan Temath</realname>
+				<email>dr.death@lpi-clan.de</email>
+				<username>Dr.Death</username>
+				<homepage>http://www.lpi-clan.de/</homepage>
+				<contributions-group>
+					<contributions status="past" from="2007-10-24" to="2008-04-14" position="Bug-Fixer" />
+				</contributions-group>
+			</author>
 
-          <change><![CDATA[[Fix] Report #489: Missing resync after deleting a personal album]]></change>
-          <change><![CDATA[[Fix] Unreported: Mass-import missing filesize]]></change>
-          <change><![CDATA[[Fix] Unreported: Mime-type not checked against file-extension]]></change>
-          <change><![CDATA[[Fix] Unreported: Increased sql-speed for large databases on RRC-Addon]]></change>
-          <change><![CDATA[[Fix] Unreported: Viewing uploader of contest images in several ucp-parts]]></change>
-          <change><![CDATA[[Fix] Unreported: Add config_calue to array, after function call, to avoid "Column 'config_value' cannot be null" on multiple updates]]></change>
+			<author>
+				<username>tsr</username>
+				<homepage>http://phpbbgallery.ph.funpic.de/</homepage>
+				<contributions-group>
+					<contributions status="past" from="2007-10-10" to="2007-11-09" position="Main-Developer" />
+				</contributions-group>
+			</author>
+		</author-group>
 
-          <change><![CDATA[[Sec] Report #i481: Unapproved images counter of personal albums is visible on index without permissions (Reported by robbx)]]></change>
-          <change><![CDATA[[Sec] Report #i481: Unapproved image comments are visible (Reported by robbx)]]></change>
-        </changelog>
-      </entry>
-      <entry>
-        <date>2009-03-02</date>
-        <rev-version>0.5.2</rev-version>
-        <changelog lang="en-gb">
-          <change><![CDATA[[Add] Report #473: Add ACP-Control for RRC-Display-Options]]></change>
+		<mod-version>1.0.0</mod-version>
 
-          <change><![CDATA[[Change] Unreported: Conntest-system: No comments before rating start, No uploads after rating start]]></change>
-          <change><![CDATA[[Change] Unreported: Rewrite album management to phpbb's forum management]]></change>
+		<installation>
+			<level>intermediate</level>
+			<time>3600</time>
+			<target-version>3.0.4</target-version>
+		</installation>
 
-          <change><![CDATA[[Fix] Unreported: Hide Exif-Line, if we cant display the exif]]></change>
-          <change><![CDATA[[Fix] Unreported: Ignoring {NUM}-offset on mass-import]]></change>
-          <change><![CDATA[[Fix] Unreported: Upload of images into categories and contest with mass-import]]></change>
-          <change><![CDATA[[Fix] Report #480: "Duplicate entry"-Error on zero-image loop with mass-import]]></change>
-          <change><![CDATA[[Fix] Report #473: Display-Options for informations in RRC not working]]></change>
-          <change><![CDATA[[Fix] Report #477: Delete images of deleted albums]]></change>
-          <change><![CDATA[[Fix] Report #475: Autodelete on update needs CHMOD 777]]></change>
-          <change><![CDATA[[Fix] Report #478: Gallery-log leading with "View forum" to viewforum.php]]></change>
-          <change><![CDATA[[Fix] Unreported: Send moderatores back to work (Report #471)]]></change>
-        </changelog>
-      </entry>
-      <entry>
-        <date>2009-02-19</date>
-        <rev-version>0.5.1</rev-version>
-        <changelog lang="en-gb">
-          <change><![CDATA[[Add] Report #467: Option to view contest winners on RRC]]></change>
-          <change><![CDATA[[Add] Report #431: User can grab an image to their personal album]]></change>
-          <change><![CDATA[[Add] Report #430: Moderator can create personal album for user to move images]]></change>
-          <change><![CDATA[[Add] Report #466: Disallow certain albums from recent/random image blocks]]></change>
-          <change><![CDATA[[Add] Report #464: Option to automatically delete outdated files]]></change>
-          <change><![CDATA[[Add] Report #461: Reset rating for specific album]]></change>
-          <change><![CDATA[[Add] Report #448: Album status closed: No comments, images and rates]]></change>
-          <change><![CDATA[[Add] Report #462: Option to handle "List subalbums"]]></change>
-          <change><![CDATA[[Add] Report #434: Add album at the top]]></change>
-          <change><![CDATA[[Add] Report #433: Config-value for number of comments on rrc-Feature]]></change>
+		<history>
+			<entry>
+				<date>2009-MM-DD</date>
+				<rev-version>1.0.0</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Add] Unreported: Added some breadcrumbs to the search.php]]></change>
+					<change><![CDATA[[Add] Unreported: user-based permissions]]></change>
 
-          <change><![CDATA[[Fix] Report #471: Commentsystem independed to the album-locked feature]]></change>
-          <change><![CDATA[[Fix] Report #470: Missing locked-icon for locked albums in ACP]]></change>
-          <change><![CDATA[[Fix] Report #469: Missing allowed filetypes through typo in S_ALLOWED_FILETYPES]]></change>
-          <change><![CDATA[[Fix] Report #472: Argument #2 is not an array - when viewing profile of a user without gallery-entry]]></change>
-          <change><![CDATA[[Fix] Unreported: Result for contests missing (Reported by redbull254)]]></change>
-          <change><![CDATA[[Fix] Report #463: Missing information about current editing permission-system]]></change>
-          <change><![CDATA[[Fix] Report #p5994: free memory after creating images]]></change>
-          <change><![CDATA[[Fix] Report #456: Usage of (possible) htaccess protected adm/-files]]></change>
-          <change><![CDATA[[Fix] Report #442: Incorrect EXIF data results in errors]]></change>
-        </changelog>
-      </entry>
-      <entry>
-        <date>2009-02-10</date>
-        <rev-version>0.5.0</rev-version>
-        <changelog lang="en-gb">
-          <change><![CDATA[[Add] Report #395: View recent/random images in user-profile]]></change>
-          <change><![CDATA[[Add] Report #432: Album-Type: Contest (hidden user while rating-time)]]></change>
-          <change><![CDATA[[Add] Report #313: Search]]></change>
-          <change><![CDATA[[Add] Report #402: Delete personal albums in ACP]]></change>
-          <change><![CDATA[[Add] Report #400: Thumbnail Image of Previous and Next images]]></change>
-          <change><![CDATA[[Add] Report #403: Config for the recent-part on gallery/index.php]]></change>
-          <change><![CDATA[[Add] Unreported: Missing statistic-values]]></change>
+					<change><![CDATA[[Fix] Unreported: not using $db->sql_in_set correctly on delete function of personal albums.]]></change>
+					<change><![CDATA[[Fix] Report #512: Newest Personal Gallery: Guest]]></change>
+					<change><![CDATA[[Fix] Report #511: Contest-information as (int) for better styling usage.]]></change>
+				</changelog>
+			</entry>
 
-          <change><![CDATA[[Change] Report #440: Imagename check]]></change>
-          <change><![CDATA[[Change] Unreported: move the template to template/gallery/]]></change>
-          <change><![CDATA[[Change] Unreported: Renamed $album_config to $gallery_config]]></change>
-          <change><![CDATA[[Change] Unreported: Build Config-Module like acp_board.php]]></change>
-          <change><![CDATA[[Change] Unreported: Author » Uploaded By]]></change>
+			<entry>
+				<date>2009-03-31</date>
+				<rev-version>0.5.4</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Fix] Report #510: Logs get deleted by forum_id not by LOG_TYPE (phpbb:#42295)]]></change>
+					<change><![CDATA[[Fix] Report #509: Copy permissions does not work on "Create album"]]></change>
+					<change><![CDATA[[Fix] Report #508: Massimport skips images with "&" in filename.]]></change>
+					<change><![CDATA[[Fix] Report #505: Enter custom ontest-timestamps for start, rating and end.]]></change>
+					<change><![CDATA[[Fix] Report #p6712: Call to undefined function can_load_dll() in install/]]></change>
+					<change><![CDATA[[Fix] Report #504: Personal albums are locked and can not be unlocked.]]></change>
+					<change><![CDATA[[Fix] Report #494: Display locked images, but prevented them from being commented, edited and rated.]]></change>
+					<change><![CDATA[[Fix] Unreported: Use set_config_count after 3.0.5 and backport the usage for num_comments/num_pgalleries.]]></change>
+					<change><![CDATA[[Fix] Report #493: Show viewonline, birthdays and statistic on gallery/index.php.]]></change>
+					<change><![CDATA[[Fix] Report #499: ' in filename, imagename or username cause syntax error on massimport.]]></change>
+					<change><![CDATA[[Fix] Report #503: Can not rate contest-images with hidden comment field, by wrong access-mode.]]></change>
+					<change><![CDATA[[Fix] Report #501: Image-counter and unread information are incorrect, when an album was viewed by more than one user.]]></change>
+					<change><![CDATA[[Fix] Report #497: Missing "Successful uploaded" when number of availbale uploads is smaller than columns count.]]></change>
+					<change><![CDATA[[Fix] Report #498: General Errors on permissions when selecting no group/album]]></change>
+					<change><![CDATA[[Fix] Report #492: Hide image-name fields on active checkbox for file-name]]></change>
+					<change><![CDATA[[Fix] Report #495: Missing submit-Button on contest-rates]]></change>
+					<change><![CDATA[[Fix] Report #496: SQL-Error on userprofile and gallery-index when no images are displayed.]]></change>
+				</changelog>
+			</entry>
 
-          <change><![CDATA[[Fix] Report #441: Display username on personal albums cleanup]]></change>
-          <change><![CDATA[[Fix] Report #442: Description to empty permission-form]]></change>
-          <change><![CDATA[[Fix] Report #447: Useless permissions for personal albums]]></change>
-          <change><![CDATA[[Fix] Report #439: Bad hotlink-prevention description]]></change>
-          <change><![CDATA[[Fix] Unreported: Empty links for next/previous in IE]]></change>
-          <change><![CDATA[[Fix] Unreported: Comment-form accessable when comments are disabled]]></change>
-          <change><![CDATA[[Fix] Unreported: Loosing exif-data when resizing images]]></change>
-          <change><![CDATA[[Fix] Unreported: Can't rate when comment system disabled]]></change>
-          <change><![CDATA[[Fix] Unreported: Not using constants]]></change>
-          <change><![CDATA[[Fix] Unreported: Destroyed layout on index when only viewing Personals as album]]></change>
-          <change><![CDATA[[Fix] Report #436: Create Subalbum button visible when it should not]]></change>
-          <change><![CDATA[[Fix] Unreported: Missing module-permissions on update]]></change>
-          <change><![CDATA[[Fix] Report #336: Moderator log]]></change>
-          <change><![CDATA[[Fix] Report #423: Wrong personal images counters on index]]></change>
-          <change><![CDATA[[Fix] Report #428: usage of $read_function() in gallery/posting.php]]></change>
-          <change><![CDATA[[Fix] Unreported: Wrong labels on prosilver posting_body.html]]></change>
-          <change><![CDATA[[Fix] Report #i425: Permissions inconsistence on personal albums]]></change>
-          <change><![CDATA[[Fix] Unreported: Error when Watermark-file is missing]]></change>
-          <change><![CDATA[[Fix] Unreported: Transparency on PNG-files]]></change>
-          <change><![CDATA[[Fix] Report #419: PHP Notice: mktime() expects parameter X to be long, string given]]></change>
-          <change><![CDATA[[Fix] Unreported: Force user to delete outdated files]]></change>
-          <change><![CDATA[[Fix] Report #298: sort personal albums by username]]></change>
-          <change><![CDATA[[Fix] Report #414: Images stays reported, when report is deleted (Related to Report #393)]]></change>
-          <change><![CDATA[[Fix] Report #410: Missing error message for deleting with subalbums]]></change>
-          <change><![CDATA[[Fix] Unreported: wrong alternate text on deleting comments]]></change>
-          <change><![CDATA[[Fix] Unreported: Same page-title for all modes on posting.php]]></change>
-          <change><![CDATA[[Fix] Report #414: Slide show doesn't print the hole list on some server configuration]]></change>
-          <change><![CDATA[[Fix] Report #413: Viewing rate and comment link even if disabled]]></change>
-          <change><![CDATA[[Fix] Report #416: Install-Error on PostgreSQL and Orcale]]></change>
-          <change><![CDATA[[Fix] Report #406: Can not edit message when use subsilver2]]></change>
-          <change><![CDATA[[Fix] Report #404: No note on subsilver2 when no comments were added]]></change>
-          <change><![CDATA[[Fix] Report #401: Type in German language file]]></change>
-          <change><![CDATA[[Fix] Report #407: Undefined index: EXIF_WHITEBALANCE]]></change>
-          <change><![CDATA[[Fix] Unreported: 'Hacking Attempt' in UCP]]></change>
+			<entry>
+				<date>2009-03-16</date>
+				<rev-version>0.5.3</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Add] Post #6413: Resize images on mass-import]]></change>
+					<change><![CDATA[[Add] Post #6321: Display user images on viewtopic.php (Patch by Christian_N and nickvergessen)]]></change>
+					<change><![CDATA[[Add] Report #129: Read-/Unread-information for albums when new images were uploaded]]></change>
 
-          <change><![CDATA[[Sec] Unreported: Permissions lag on comment-system]]></change>
-        </changelog>
-      </entry>
-      <entry>
-        <date>2008-12-22</date>
-        <rev-version>0.4.1</rev-version>
-        <changelog lang="en-gb">
-          <change><![CDATA[[Add] Report #386: Display the number of ratings received]]></change>
-          <change><![CDATA[[Add] Report #383: Prev- and Next-Button on album.php (Patch by Dr.Death)]]></change>
+					<change><![CDATA[[Change] Report #482: Systemical inconsequence in contests]]></change>
+					<change><![CDATA[[Change] Unreported: Rewrote the acp to set permissions much better]]></change>
 
-          <change><![CDATA[[Change] Report #390: ACP-Option for the link-to-click on image-page]]></change>
-          <change><![CDATA[[Change] Report #371: Collapse recent comments on recent-body]]></change>
+					<change><![CDATA[[Fix] Report #489: Missing resync after deleting a personal album]]></change>
+					<change><![CDATA[[Fix] Unreported: Mass-import missing filesize]]></change>
+					<change><![CDATA[[Fix] Unreported: Mime-type not checked against file-extension]]></change>
+					<change><![CDATA[[Fix] Unreported: Increased sql-speed for large databases on RRC-Addon]]></change>
+					<change><![CDATA[[Fix] Unreported: Viewing uploader of contest images in several ucp-parts]]></change>
+					<change><![CDATA[[Fix] Unreported: Add config_calue to array, after function call, to avoid "Column 'config_value' cannot be null" on multiple updates]]></change>
 
-          <change><![CDATA[[Fix] Report #399: "Duplicate entry '1'" on resync image counter (SVN)]]></change>
-          <change><![CDATA[[Fix] Report #397: Unable to completely disable Rating and Comments - wrong variables]]></change>
-          <change><![CDATA[[Fix] Report #393: Images stays reported, when report is closed]]></change>
-          <change><![CDATA[[Fix] Report #396: Undefined index: comment_comment_username]]></change>
-          <change><![CDATA[[Fix] Report #391: Not viewing rates on own images]]></change>
-          <change><![CDATA[[Fix] Unreported: Animate and Transpate gif's unsopported on image_page]]></change>
-          <change><![CDATA[[Fix] Unreported: Timestamp-Fix for 3.0.4]]></change>
-          <change><![CDATA[[Fix] Unreported: Save files with correct name, when downloading]]></change>
-          <change><![CDATA[[Fix] Report #388: resync doens't create entry for p_g_users-table]]></change>
-          <change><![CDATA[[Fix] Report #382: invisible comments after editing comment]]></change>
-          <change><![CDATA[[Fix] Report #381: double checks for same auth => made static]]></change>
-          <change><![CDATA[[Fix] Report #369: deleted Mod-Group still shows up]]></change>
-          <change><![CDATA[[Fix] Report #376: No Info on album-page when image is locked]]></change>
-          <change><![CDATA[[Fix] Report #375: Images might have non-natural image-size]]></change>
-          <change><![CDATA[[Fix] Report #373: status of missing files not reset on clean-up]]></change>
-          <change><![CDATA[[Fix] Report #374: Reported topics show gallery-css]]></change>
-          <change><![CDATA[[Fix] Report #380: Warning: readfile() has been disabled for security reasons]]></change>
-          <change><![CDATA[[Fix] Report #379: Thumbnails on recent comments open with wrong adjustment]]></change>
-          <change><![CDATA[[Fix] Report #377: Missing lang-string for EDIT_COMMENT]]></change>
-          <change><![CDATA[[Fix] Report #384: Undefined variable: lastimage_uc_thumbnail]]></change>
-          <change><![CDATA[[Fix] Report #385: installation and conversion missing "module_auth"]]></change>
-          <change><![CDATA[[Fix] Unreported: Call to a member function bbcode_second_pass() on a non-object in gallery/image_page.php]]></change>
-          <change><![CDATA[[Fix] Unreported: Missed to use gallery_root_path on add-on]]></change>
-        </changelog>
-      </entry>
-      <entry>
-        <date>2008-11-20</date>
-        <rev-version>0.4.0</rev-version>
-        <changelog lang="en-gb">
-          <change><![CDATA[[Add] Report #252: Medium thumbnails to display on image_page.php]]></change>
-          <change><![CDATA[[Add] Report #309: Require permissions for the ACP-modules]]></change>
-          <change><![CDATA[[Add] Report #144: Show newest comments and a random picture on index page]]></change>
-          <change><![CDATA[[Add] Report #266: Image URL on gallery_page_body.html]]></change>
-          <change><![CDATA[[Add] Report #317: disable watermark by permissions]]></change>
-          <change><![CDATA[[Add] Report #142: Show "Personal galleries" as an category on index page]]></change>
-          <change><![CDATA[[Add] Report #303: Slide/Dia Show]]></change>
-          <change><![CDATA[[Add] Report #95: Automatically resize uploaded images]]></change>
-          <change><![CDATA[[Add] Report #320: New permission: "See album"]]></change>
-          <change><![CDATA[[Add] Report #346: Split moderation-permissions]]></change>
-          <change><![CDATA[[Add] Report #357: Remind users on editing the includes/constants.php]]></change>
-          <change><![CDATA[[Add] Report #345: Link configuration for thumbnails/image_names/lastimage-icon]]></change>
-          <change><![CDATA[[Add] Report #356: Add BBCode-Buttons and smilies (subsilver2)]]></change>
+					<change><![CDATA[[Sec] Report #i481: Unapproved images counter of personal albums is visible on index without permissions (Reported by robbx)]]></change>
+					<change><![CDATA[[Sec] Report #i481: Unapproved image comments are visible (Reported by robbx)]]></change>
+				</changelog>
+			</entry>
 
-          <change><![CDATA[[Change] Unreported: gallery/upload/cache/ to gallery/images/cache/ and gallery/upload/ to gallery/images/upload/]]></change>
-          <change><![CDATA[[Change] Unreported: moved import/ to images/import/]]></change>
-          <change><![CDATA[[Change] Report #252: moved thumbnail creation to image.php]]></change>
-          <change><![CDATA[[Change] Report #349: Lytebox-Update from 3.20 to 3.22]]></change>
-          <change><![CDATA[[Change] Report #356: Reorganize subsilver2 layout of image_page.php]]></change>
-          <change><![CDATA[[Change] Report #350: better convert-instructions]]></change>
-          <change><![CDATA[[Change] Unreported: better Search-Code for second session edit]]></change>
-          <change><![CDATA[[Change] Report #354: Searchcode for total-images changed]]></change>
+			<entry>
+				<date>2009-03-02</date>
+				<rev-version>0.5.2</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Add] Report #473: Add ACP-Control for RRC-Display-Options]]></change>
 
-          <change><![CDATA[[Fix] Unreported: Cut down long albumnames in recent/random and in search]]></change>
-          <change><![CDATA[[Fix] Report #363: Install-Script misses Constants like GALLERY_ROOT_PATH]]></change>
-          <change><![CDATA[[Fix] Report #359: Moderator-link visible without permissions]]></change>
-          <change><![CDATA[[Fix] Unreported: wrong headline for "manage subscription"]]></change>
-          <change><![CDATA[[Fix] Report #358: .JPG-images from conversion are not visible]]></change>
-          <change><![CDATA[[Fix] Report #361: Pagination on manage subscription leeds to favorites]]></change>
-          <change><![CDATA[[Fix] Report #356: Add Custom BBCode-Buttons (prosilver)]]></change>
-          <change><![CDATA[[Fix] Report #360: installer not working on version compare for mysql]]></change>
-          <change><![CDATA[[Fix] Report #348: SQL-Error when user is in no group => copy phpBB solution]]></change>
-          <change><![CDATA[[Fix] Report #351: BBCode colorPalette needs images/spacer.gif]]></change>
-          <change><![CDATA[[Fix] Report #355: install/install_*.php Undefined variable: exists]]></change>
-          <change><![CDATA[[Fix] Report #352: U_GALLERY_MOD not usign GALLERY_ROOT_PATH on install]]></change>
-          <change><![CDATA[[Fix] Report #353: Missing update of session, after unset($sql_ary['session_album_id']);]]></change>
-          <change><![CDATA[[Fix] Topic #883: STAGE_COPY_TABLE_EXPLAIN is german]]></change>
-        </changelog>
-      </entry>
-      <entry>
-        <date>2008-11-09</date>
-        <rev-version>0.4.0-RC3</rev-version>
-        <changelog lang="en-gb">
-          <change><![CDATA[[Add] Report #343: Upload-Link in the UCP]]></change>
-          <change><![CDATA[[Add] Unreported: Jumpbox to the image_page.php]]></change>
-          <change><![CDATA[[Add] Unreported: Display message after successful resync in the ACP]]></change>
+					<change><![CDATA[[Change] Unreported: Conntest-system: No comments before rating start, No uploads after rating start]]></change>
+					<change><![CDATA[[Change] Unreported: Rewrite album management to phpbb's forum management]]></change>
 
-          <change><![CDATA[[Change] Report #339: Problem with number of views]]></change>
-          <change><![CDATA[[Change] Report #338: Able to approve own images]]></change>
-          <change><![CDATA[[Change] Report #334: Remove file-type on image-name]]></change>
-          <change><![CDATA[[Change] Report #299: Move Images into personal albums]]></change>
+					<change><![CDATA[[Fix] Unreported: Hide Exif-Line, if we cant display the exif]]></change>
+					<change><![CDATA[[Fix] Unreported: Ignoring {NUM}-offset on mass-import]]></change>
+					<change><![CDATA[[Fix] Unreported: Upload of images into categories and contest with mass-import]]></change>
+					<change><![CDATA[[Fix] Report #480: "Duplicate entry"-Error on zero-image loop with mass-import]]></change>
+					<change><![CDATA[[Fix] Report #473: Display-Options for informations in RRC not working]]></change>
+					<change><![CDATA[[Fix] Report #477: Delete images of deleted albums]]></change>
+					<change><![CDATA[[Fix] Report #475: Autodelete on update needs CHMOD 777]]></change>
+					<change><![CDATA[[Fix] Report #478: Gallery-log leading with "View forum" to viewforum.php]]></change>
+					<change><![CDATA[[Fix] Unreported: Send moderatores back to work (Report #471)]]></change>
+				</changelog>
+			</entry>
 
-          <change><![CDATA[[Fix] Report #344: Language-Vars for Permissions]]></change>
-          <change><![CDATA[[Fix] PM #524: undefined function make_album_select]]></change>
-          <change><![CDATA[[Fix] Report #342: Missing note "waiting for approval"]]></change>
-          <change><![CDATA[[Fix] Topic #797: inconsistent language packages]]></change>
-          <change><![CDATA[[Fix] Unreported: Exif-Data: "ExposureBiasValue", "Flash", "ExposureProgram" & "MeteringMode"]]></change>
-          <change><![CDATA[[Fix] Report #341: PostgreSQL: sql_query using hard LIMIT]]></change>
-          <change><![CDATA[[Fix] Unreported: Meta-Refresh after rating is phpBB2-Style]]></change>
-          <change><![CDATA[[Fix] Report #332: ACP Import multiple pages loose image-name]]></change>
-          <change><![CDATA[[Fix] Report #322: Long file names with _ making out of templates problem]]></change>
-          <change><![CDATA[[Fix] Unreport: Wrong labels for config values in ACP]]></change>
-          <change><![CDATA[[Fix] Report #319: error in SQL syntax]]></change>
-          <change><![CDATA[[Fix] Report #326: uploading multiple files cheats on quota]]></change>
-          <change><![CDATA[[Fix] Report #323: Slow loading page when creating albums-list]]></change>
-          <change><![CDATA[[Fix] Unreported: wrong class for the MOVE-Button]]></change>
-          <change><![CDATA[[Fix] Unreported: Unknown column 'username' in 'order clause']]></change>
-          <change><![CDATA[[Fix] Report #311: Unable to Approve and Unapprove images]]></change>
-          <change><![CDATA[[Fix] Report #308: Convert Smartor - Comments]]></change>
+			<entry>
+				<date>2009-02-19</date>
+				<rev-version>0.5.1</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Add] Report #467: Option to view contest winners on RRC]]></change>
+					<change><![CDATA[[Add] Report #431: User can grab an image to their personal album]]></change>
+					<change><![CDATA[[Add] Report #430: Moderator can create personal album for user to move images]]></change>
+					<change><![CDATA[[Add] Report #466: Disallow certain albums from recent/random image blocks]]></change>
+					<change><![CDATA[[Add] Report #464: Option to automatically delete outdated files]]></change>
+					<change><![CDATA[[Add] Report #461: Reset rating for specific album]]></change>
+					<change><![CDATA[[Add] Report #448: Album status closed: No comments, images and rates]]></change>
+					<change><![CDATA[[Add] Report #462: Option to handle "List subalbums"]]></change>
+					<change><![CDATA[[Add] Report #434: Add album at the top]]></change>
+					<change><![CDATA[[Add] Report #433: Config-value for number of comments on rrc-Feature]]></change>
 
-          <change><![CDATA[[Sec] Report #i337: SQL-Injection on sort-method (Reported by CroneKorkN)]]></change>
-          <change><![CDATA[[Sec] Report #i328: mcp.php missing check for permissions (Reported by Stifter)]]></change>
-        </changelog>
-      </entry>
-      <entry>
-        <date>2008-08-21</date>
-        <rev-version>0.4.0-RC2</rev-version>
-        <changelog lang="en-gb">
-          <change><![CDATA[[Add] Unreported: Exif Data: Exposure bias, Exposure program & Metering mode]]></change>
+					<change><![CDATA[[Fix] Report #471: Commentsystem independed to the album-locked feature]]></change>
+					<change><![CDATA[[Fix] Report #470: Missing locked-icon for locked albums in ACP]]></change>
+					<change><![CDATA[[Fix] Report #469: Missing allowed filetypes through typo in S_ALLOWED_FILETYPES]]></change>
+					<change><![CDATA[[Fix] Report #472: Argument #2 is not an array - when viewing profile of a user without gallery-entry]]></change>
+					<change><![CDATA[[Fix] Unreported: Result for contests missing (Reported by redbull254)]]></change>
+					<change><![CDATA[[Fix] Report #463: Missing information about current editing permission-system]]></change>
+					<change><![CDATA[[Fix] Report #p5994: free memory after creating images]]></change>
+					<change><![CDATA[[Fix] Report #456: Usage of (possible) htaccess protected adm/-files]]></change>
+					<change><![CDATA[[Fix] Report #442: Incorrect EXIF data results in errors]]></change>
+				</changelog>
+			</entry>
 
-          <change><![CDATA[[Change] Report #283: After upload an image into a approval album, the redirect is too fast]]></change>
-          <change><![CDATA[[Change] Report #297: Login on and redirect to gallery/index.php]]></change>
-          <change><![CDATA[[Change] Unreported: Module handle on installation]]></change>
+			<entry>
+				<date>2009-02-10</date>
+				<rev-version>0.5.0</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Add] Report #395: View recent/random images in user-profile]]></change>
+					<change><![CDATA[[Add] Report #432: Album-Type: Contest (hidden user while rating-time)]]></change>
+					<change><![CDATA[[Add] Report #313: Search]]></change>
+					<change><![CDATA[[Add] Report #402: Delete personal albums in ACP]]></change>
+					<change><![CDATA[[Add] Report #400: Thumbnail Image of Previous and Next images]]></change>
+					<change><![CDATA[[Add] Report #403: Config for the recent-part on gallery/index.php]]></change>
+					<change><![CDATA[[Add] Unreported: Missing statistic-values]]></change>
 
-          <change><![CDATA[[Fix] Unreported: Display of users online in the album]]></change>
-          <change><![CDATA[[Fix] Report #307: highslide moved to template]]></change>
-          <change><![CDATA[[Fix] Report #306: user_images not updated if it was empty]]></change>
-          <change><![CDATA[[Fix] Report #305: Empty posintg.php No values specified for SQL IN comparison]]></change>
-          <change><![CDATA[[Fix] Report #290 and more: some bugs in subsilver2 only]]></change>
-          <change><![CDATA[[Fix] Report #289: Blank image_page.php page]]></change>
-          <change><![CDATA[[Fix] Report #304: [phpBB Debug] PHP Notice: in file /includes/acp/acp_gallery.php on line 296]]></change>
-          <change><![CDATA[[Fix] Unreported: view unapproved images to moderators]]></change>
-          <change><![CDATA[[Fix] Report #286: Lang missing in search]]></change>
-          <change><![CDATA[[Fix] Report #302: Missing information for new approval images]]></change>
-          <change><![CDATA[[Fix] Report #288: Unknown column 'g.view_personal_albums' in viewonline.php]]></change>
-          <change><![CDATA[[Fix] Report #301: wrong permissions used on viewing personal-gallerys link]]></change>
-          <change><![CDATA[[Fix] Report #285: some language typos]]></change>
-          <change><![CDATA[[Fix] Report #300: [album] wrong url for thumbnail]]></change>
-          <change><![CDATA[[Fix] Report #296: Posting Comment/Image: No values specified for SQL IN]]></change>
-          <change><![CDATA[[Fix] Report #284: array_merge(): Argument #2 is not an array]]></change>
-          <change><![CDATA[[Fix] Report #282: Undefined index: album_approval]]></change>
+					<change><![CDATA[[Change] Report #440: Imagename check]]></change>
+					<change><![CDATA[[Change] Unreported: move the template to template/gallery/]]></change>
+					<change><![CDATA[[Change] Unreported: Renamed $album_config to $gallery_config]]></change>
+					<change><![CDATA[[Change] Unreported: Build Config-Module like acp_board.php]]></change>
+					<change><![CDATA[[Change] Unreported: Author » Uploaded By]]></change>
 
-          <change><![CDATA[[Sec] Report #i295: "NV Exif data" security risk (Reported by GoBieN)]]></change>
-        </changelog>
-      </entry>
-      <entry>
-        <date>2008-08-09</date>
-        <rev-version>0.4.0-RC1</rev-version>
-        <changelog lang="en-gb">
-          <change><![CDATA[[Add] Report #261: Installer/Updater for older versions]]></change>
-          <change><![CDATA[[Add] Report #245: Button/Redirect after installation.]]></change>
-          <change><![CDATA[[Add] Report #189: Number of maximum images]]></change>
-          <change><![CDATA[[Add] Report #267: Limit total number of images by group.]]></change>
-          <change><![CDATA[[Add] Unreported: Display thumbnail on album-list]]></change>
-          <change><![CDATA[[Add] Report #31: album image]]></change>
-          <change><![CDATA[[Add] Report #185: Meta refresh on Moderating]]></change>
-          <change><![CDATA[[Add] Report #241: Report Image]]></change>
-          <change><![CDATA[[Add] Report #280: Display Exif-Data if available]]></change>
-          <change><![CDATA[[Add] Unreported: Red-Image-Counter for MOderators (unapproved images)]]></change>
-          <change><![CDATA[[Add] Unreported: Cleanup-Page, idea on Report #239: Cleanup DB after delete of a user]]></change>
-          <change><![CDATA[[Add] Unreported: MOD supports "MOD Version Check" by handyman´]]></change>
-          <change><![CDATA[[Add] Unreported: Filled the Statistic-Page in the ACP]]></change>
-          <change><![CDATA[[Add] Unreported: MOD supports "HighSlide Attachment & IMG" by stokerpiller]]></change>
+					<change><![CDATA[[Fix] Report #441: Display username on personal albums cleanup]]></change>
+					<change><![CDATA[[Fix] Report #442: Description to empty permission-form]]></change>
+					<change><![CDATA[[Fix] Report #447: Useless permissions for personal albums]]></change>
+					<change><![CDATA[[Fix] Report #439: Bad hotlink-prevention description]]></change>
+					<change><![CDATA[[Fix] Unreported: Empty links for next/previous in IE]]></change>
+					<change><![CDATA[[Fix] Unreported: Comment-form accessable when comments are disabled]]></change>
+					<change><![CDATA[[Fix] Unreported: Loosing exif-data when resizing images]]></change>
+					<change><![CDATA[[Fix] Unreported: Can't rate when comment system disabled]]></change>
+					<change><![CDATA[[Fix] Unreported: Not using constants]]></change>
+					<change><![CDATA[[Fix] Unreported: Destroyed layout on index when only viewing Personals as album]]></change>
+					<change><![CDATA[[Fix] Report #436: Create Subalbum button visible when it should not]]></change>
+					<change><![CDATA[[Fix] Unreported: Missing module-permissions on update]]></change>
+					<change><![CDATA[[Fix] Report #336: Moderator log]]></change>
+					<change><![CDATA[[Fix] Report #423: Wrong personal images counters on index]]></change>
+					<change><![CDATA[[Fix] Report #428: usage of $read_function() in gallery/posting.php]]></change>
+					<change><![CDATA[[Fix] Unreported: Wrong labels on prosilver posting_body.html]]></change>
+					<change><![CDATA[[Fix] Report #i425: Permissions inconsistence on personal albums]]></change>
+					<change><![CDATA[[Fix] Unreported: Error when Watermark-file is missing]]></change>
+					<change><![CDATA[[Fix] Unreported: Transparency on PNG-files]]></change>
+					<change><![CDATA[[Fix] Report #419: PHP Notice: mktime() expects parameter X to be long, string given]]></change>
+					<change><![CDATA[[Fix] Unreported: Force user to delete outdated files]]></change>
+					<change><![CDATA[[Fix] Report #298: sort personal albums by username]]></change>
+					<change><![CDATA[[Fix] Report #414: Images stays reported, when report is deleted (Related to Report #393)]]></change>
+					<change><![CDATA[[Fix] Report #410: Missing error message for deleting with subalbums]]></change>
+					<change><![CDATA[[Fix] Unreported: wrong alternate text on deleting comments]]></change>
+					<change><![CDATA[[Fix] Unreported: Same page-title for all modes on posting.php]]></change>
+					<change><![CDATA[[Fix] Report #414: Slide show doesn't print the hole list on some server configuration]]></change>
+					<change><![CDATA[[Fix] Report #413: Viewing rate and comment link even if disabled]]></change>
+					<change><![CDATA[[Fix] Report #416: Install-Error on PostgreSQL and Orcale]]></change>
+					<change><![CDATA[[Fix] Report #406: Can not edit message when use subsilver2]]></change>
+					<change><![CDATA[[Fix] Report #404: No note on subsilver2 when no comments were added]]></change>
+					<change><![CDATA[[Fix] Report #401: Type in German language file]]></change>
+					<change><![CDATA[[Fix] Report #407: Undefined index: EXIF_WHITEBALANCE]]></change>
+					<change><![CDATA[[Fix] Unreported: 'Hacking Attempt' in UCP]]></change>
 
-          <change><![CDATA[[Change] Report #246: Hide "Your Personal Album" link.]]></change>
-          <change><![CDATA[[Change] Unreported: MODx v1.2.0]]></change>
-          <change><![CDATA[[Change] Unreported: Permission-System]]></change>
-          <change><![CDATA[[Change] Unreported: Album-System (much faster now)]]></change>
-          <change><![CDATA[[Change] Report #181, Report #165 & Report #233: Rewrote ACP-Import]]></change>
-          <change><![CDATA[[Change] Unreported: Moved some Variables to _albums and -images to increase SQL-Speed and reduce number of SQLs]]></change>
-          <change><![CDATA[[Change] Report #263: Reject album deletion leads to 'empty' UserCP page]]></change>
-          <change><![CDATA[[Change] Unreported: Rewrote the hole MCP]]></change>
+					<change><![CDATA[[Sec] Unreported: Permissions lag on comment-system]]></change>
+				</changelog>
+			</entry>
 
-          <change><![CDATA[[Fix] Report #258: Repeat Bug 228: 0.2.3 to 0.3.0 upgrade won't update version]]></change>
-          <change><![CDATA[[Fix] Report #260: Call to undefined function adm_back_link()]]></change>
-          <change><![CDATA[[Fix] Report #259: viewonline broken]]></change>
-          <change><![CDATA[[Fix] Report #262: bbcode is missing GALLERY_ROOT_PATH]]></change>
-          <change><![CDATA[[Fix] Report #264: posting.php != S_IN_GALLERY]]></change>
-          <change><![CDATA[[Fix] Report #254: Anonymous comments possible at private albums]]></change>
-          <change><![CDATA[[Fix] Report #265: icon buged on rtl]]></change>
-          <change><![CDATA[[Fix] Unreported: don't create albums without names]]></change>
-          <change><![CDATA[[Fix] Report #179: utf8 in file name on Import]]></change>
-          <change><![CDATA[[Fix] Report #128: wrong permissions on testing user-premissions]]></change>
-          <change><![CDATA[[Fix] Report #191: Comment Char limit]]></change>
-          <change><![CDATA[[Fix] Unreported: bbcode [list] bugged in image_page.php]]></change>
-          <change><![CDATA[[Fix] Unreported: Add option to disable watermark for small images]]></change>
-        </changelog>
-      </entry>
-      <entry>
-        <date>2008-04-14</date>
-        <rev-version>0.3.1</rev-version>
-        <changelog lang="en-gb">
-          <change><![CDATA[[Add] Report #150: mcp "select all"]]></change>
-          <change><![CDATA[[Add] Report #166: select multiple images for delete]]></change>
+			<entry>
+				<date>2008-12-22</date>
+				<rev-version>0.4.1</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Add] Report #386: Display the number of ratings received]]></change>
+					<change><![CDATA[[Add] Report #383: Prev- and Next-Button on album.php (Patch by Dr.Death)]]></change>
 
-          <change><![CDATA[[Change] Report #257: wrong prev and next images]]></change>
-          <change><![CDATA[[Change] Report #247: KiB not KB]]></change>
+					<change><![CDATA[[Change] Report #390: ACP-Option for the link-to-click on image-page]]></change>
+					<change><![CDATA[[Change] Report #371: Collapse recent comments on recent-body]]></change>
 
-          <change><![CDATA[[Fix] Report #235: rel="lightbox" in subsilver2]]></change>
-          <change><![CDATA[[Fix] Report #251: Undefined variable: sort_new_comment_option]]></change>
-          <change><![CDATA[[Fix] Report #256: Undefined index: cat_approval]]></change>
-          <change><![CDATA[[Fix] Report #253: Sessionhandling of 3.0.1]]></change>
-          <change><![CDATA[[Fix] Report #242: Old Link in Installer Footer]]></change>
-          <change><![CDATA[[Fix] Report #243: non strict sql]]></change>
-          <change><![CDATA[[Fix] Report #244: Misspelled Information after successful Installation]]></change>
-          <change><![CDATA[[Fix] Report #248: image size on massimport when disabled]]></change>
-          <change><![CDATA[[Fix] Report #250: Potential exposure of real path when unlinking files]]></change>
-          <change><![CDATA[[Fix] Report #240: When deleting album in subsilver2, language not shown]]></change>
-          <change><![CDATA[[Fix] Report #249: When editing image 'Title' box isn't populated]]></change>
-          <change><![CDATA[[Fix] Report #237: Option when create a module for UCP]]></change>
-          <change><![CDATA[[Fix] Report #236: Undefined variable: album_config]]></change>
-          <change><![CDATA[[Fix] Report #225: [Sec] upload and move images to personal albums]]></change>
-          <change><![CDATA[[Fix] Report #223: Undefined index: IMG_BUTTON_UPLOAD_IMAGE]]></change>
-          <change><![CDATA[[Fix] Report #226: wrong permissions used on displaying moderating options]]></change>
-          <change><![CDATA[[Fix] Report #227: Gallery link on breadcrumbs in viewonline.php]]></change>
-          <change><![CDATA[[Fix] Report #230: viewing all albums in jumpbox]]></change>
-          <change><![CDATA[[Fix] Report #228: 0.2.3 to 0.3.0 upgrade won't update version]]></change>
-          <change><![CDATA[[Fix] Report #229: Can't edit or delete comment in subsilver2]]></change>
-        </changelog>
-      </entry>
-      <entry>
-        <date>2008-03-06</date>
-        <rev-version>0.3.0</rev-version>
-        <changelog lang="en-gb">
-          <change><![CDATA[[Add] Report #138: Resize image in image view page]]></change>
-          <change><![CDATA[[Add] Report #195: Reduce SQL phpbb_users left join]]></change>
-          <change><![CDATA[[Add] Report #197: Personal Gallery Index - User colour are not showing...]]></change>
-          <change><![CDATA[[Add] Report #149: members should have the ability to create an album]]></change>
-          <change><![CDATA[[Add] Report #208: permissions for creating subalbums]]></change>
-          <change><![CDATA[[Add] Report #212: Multiple Upload]]></change>
-          <change><![CDATA[[Add] Report #15: edit and delete comments]]></change>
-          <change><![CDATA[[Add] Report #168: Persönliche Galerie verlinken]]></change>
-          <change><![CDATA[[Add] Report #213: SVN: move pic from private subalbum not possible]]></change>
-          <change><![CDATA[[Add] Report #211: Seitenauflistung in der "Wer ist online?"-Liste]]></change>
-          <change><![CDATA[[Add] Report #126: Optional black info line at bottom.]]></change>
+					<change><![CDATA[[Fix] Report #399: "Duplicate entry '1'" on resync image counter (SVN)]]></change>
+					<change><![CDATA[[Fix] Report #397: Unable to completely disable Rating and Comments - wrong variables]]></change>
+					<change><![CDATA[[Fix] Report #393: Images stays reported, when report is closed]]></change>
+					<change><![CDATA[[Fix] Report #396: Undefined index: comment_comment_username]]></change>
+					<change><![CDATA[[Fix] Report #391: Not viewing rates on own images]]></change>
+					<change><![CDATA[[Fix] Unreported: Animate and Transpate gif's unsopported on image_page]]></change>
+					<change><![CDATA[[Fix] Unreported: Timestamp-Fix for 3.0.4]]></change>
+					<change><![CDATA[[Fix] Unreported: Save files with correct name, when downloading]]></change>
+					<change><![CDATA[[Fix] Report #388: resync doens't create entry for p_g_users-table]]></change>
+					<change><![CDATA[[Fix] Report #382: invisible comments after editing comment]]></change>
+					<change><![CDATA[[Fix] Report #381: double checks for same auth => made static]]></change>
+					<change><![CDATA[[Fix] Report #369: deleted Mod-Group still shows up]]></change>
+					<change><![CDATA[[Fix] Report #376: No Info on album-page when image is locked]]></change>
+					<change><![CDATA[[Fix] Report #375: Images might have non-natural image-size]]></change>
+					<change><![CDATA[[Fix] Report #373: status of missing files not reset on clean-up]]></change>
+					<change><![CDATA[[Fix] Report #374: Reported topics show gallery-css]]></change>
+					<change><![CDATA[[Fix] Report #380: Warning: readfile() has been disabled for security reasons]]></change>
+					<change><![CDATA[[Fix] Report #379: Thumbnails on recent comments open with wrong adjustment]]></change>
+					<change><![CDATA[[Fix] Report #377: Missing lang-string for EDIT_COMMENT]]></change>
+					<change><![CDATA[[Fix] Report #384: Undefined variable: lastimage_uc_thumbnail]]></change>
+					<change><![CDATA[[Fix] Report #385: installation and conversion missing "module_auth"]]></change>
+					<change><![CDATA[[Fix] Unreported: Call to a member function bbcode_second_pass() on a non-object in gallery/image_page.php]]></change>
+					<change><![CDATA[[Fix] Unreported: Missed to use gallery_root_path on add-on]]></change>
+				</changelog>
+			</entry>
 
-          <change><![CDATA[[Change] Report #173: [ACP] missing radio and checkbox classes...cosmetic.]]></change>
-          <change><![CDATA[[Change] Report #163: Deutsche Sprache: Gallery/Galerie]]></change>
-          <change><![CDATA[[Change] Report #188: MCP link 2 times]]></change>
-          <change><![CDATA[[Change] Report #143: Also show new personal images on index page]]></change>
-          <change><![CDATA[[Change] Report #215: Should not update session page on thumbnail view]]></change>
-          <change><![CDATA[[Change] Report #216: Album BBcode - mark in one click]]></change>
+			<entry>
+				<date>2008-11-20</date>
+				<rev-version>0.4.0</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Add] Report #252: Medium thumbnails to display on image_page.php]]></change>
+					<change><![CDATA[[Add] Report #309: Require permissions for the ACP-modules]]></change>
+					<change><![CDATA[[Add] Report #144: Show newest comments and a random picture on index page]]></change>
+					<change><![CDATA[[Add] Report #266: Image URL on gallery_page_body.html]]></change>
+					<change><![CDATA[[Add] Report #317: disable watermark by permissions]]></change>
+					<change><![CDATA[[Add] Report #142: Show "Personal galleries" as an category on index page]]></change>
+					<change><![CDATA[[Add] Report #303: Slide/Dia Show]]></change>
+					<change><![CDATA[[Add] Report #95: Automatically resize uploaded images]]></change>
+					<change><![CDATA[[Add] Report #320: New permission: "See album"]]></change>
+					<change><![CDATA[[Add] Report #346: Split moderation-permissions]]></change>
+					<change><![CDATA[[Add] Report #357: Remind users on editing the includes/constants.php]]></change>
+					<change><![CDATA[[Add] Report #345: Link configuration for thumbnails/image_names/lastimage-icon]]></change>
+					<change><![CDATA[[Add] Report #356: Add BBCode-Buttons and smilies (subsilver2)]]></change>
 
-          <change><![CDATA[[Fix] Report #167: Missing Lang: IMAGE_BBCODE]]></change>
-          <change><![CDATA[[Fix] Report #172: Undefined variable: sort_new_comment_option]]></change>
-          <change><![CDATA[[Fix] Report #175: SVN: Move images are not working anymore]]></change>
-          <change><![CDATA[[Fix] Report #182: View the last MESSAGE?]]></change>
-          <change><![CDATA[[Fix] Report #176: Album categorie - don't show "no pictures"]]></change>
-          <change><![CDATA[[Fix] Report #190: Commment]]></change>
-          <change><![CDATA[[Fix] Report #194: no personal images in recent images]]></change>
-          <change><![CDATA[[Fix] Report #196: MCP - Delete images are not working anymore...]]></change>
-          <change><![CDATA[[Fix] Report #198: personal gallery of xxxx - PHP Notice error]]></change>
-          <change><![CDATA[[Fix] Report #199: SVN: gallery/index.php - SQL Error]]></change>
-          <change><![CDATA[[Fix] Report #202: install.xml - Description typo]]></change>
-          <change><![CDATA[[Fix] Report #186: No more albums to move]]></change>
-          <change><![CDATA[[Fix] Report #169: {memberrow.ALBUM_FOLDER_IMG_SRC}]]></change>
-          <change><![CDATA[[Fix] Report #174: Personal Albums - Next / Previous Links]]></change>
-          <change><![CDATA[[Fix] Report #207: display nav-link when using recent_image addon]]></change>
-          <change><![CDATA[[Fix] Report #210: personal albums - ucp - move subulbums error]]></change>
-          <change><![CDATA[[Fix] Report #178: imagecreatefromjpeg(./..//gallery/upload/.jpg)]]></change>
-          <change><![CDATA[[Fix] Report #205: SQL Error on convert (guest comments)]]></change>
-          <change><![CDATA[[Fix] Report #201: wrong album link]]></change>
-          <change><![CDATA[[Fix] Report #164: Deutscher Sprachbutton (UPLOADIMAGE)]]></change>
-          <change><![CDATA[[Fix] Report #200: Truecolor+alpha channel watermark]]></change>
-          <change><![CDATA[[Fix] Report #203: root/gallery/index.htm loaded instead of index.php]]></change>
-          <change><![CDATA[[Fix] Report #209: Personal album permissions are messed up.]]></change>
-          <change><![CDATA[[Fix] Report #206: Small typo in german language]]></change>
-          <change><![CDATA[[Fix] Report #214: personal gallery: empty gallery problem.]]></change>
-          <change><![CDATA[[Fix] Report #192: upload error lang]]></change>
-          <change><![CDATA[[Fix] Report #177: categorie - last image are not shown if disapproved]]></change>
-        </changelog>
-      </entry>
-      <entry>
-        <date>2008-01-24</date>
-        <rev-version>0.2.3</rev-version>
-        <changelog lang="en-gb">
-          <change><![CDATA[Report #62: Watermark: Call to undefined function: imagecreatefromjpeg()]]></change>
-          <change><![CDATA[Report #90: Add gd_info function check into the installer]]></change>
-          <change><![CDATA[Report #100: bbcode]]></change>
-          <change><![CDATA[Report #102: Browsing Gallery while [ Test out user’s permissions ]]]></change>
-          <change><![CDATA[Report #120: styles/prosilver/imageset/icon_topic_latest.gif]]></change>
-          <change><![CDATA[Report #121: missing upload-line in subsilver2]]></change>
-          <change><![CDATA[Report #122: missing mass-upload modul]]></change>
-          <change><![CDATA[Report #124: Better remove thumbs.db]]></change>
-          <change><![CDATA[Report #125: pers. album: default sort gives error messages]]></change>
-          <change><![CDATA[Report #127: missing {S_FORM_TOKEN} in subsilver2]]></change>
-          <change><![CDATA[Report #130: missing "yes" in subsilver2 on delete-confirm]]></change>
-          <change><![CDATA[Report #131: UTF is absent]]></change>
-          <change><![CDATA[Report #132: Wrong premission to Anonymus]]></change>
-          <change><![CDATA[Report #135: Unknown column 'username' in album_personal.php]]></change>
-          <change><![CDATA[Report #137: Gallery is open when board is disabled]]></change>
-          <change><![CDATA[Report #139: not valid]]></change>
-          <change><![CDATA[Report #140: double entry for gallery index in navlinks on upload page]]></change>
-          <change><![CDATA[Report #141: language attribute in <script> tags]]></change>
-          <change><![CDATA[Report #145: confusing default: category]]></change>
-          <change><![CDATA[Report #148: Unknown column 'rating' in 'order clause' [1054]]]></change>
-          <change><![CDATA[Report #153: Missing form around rating in subsilver2]]></change>
-          <change><![CDATA[Report #157: Last image sorting not working]]></change>
-          <change><![CDATA[Report #158: colour username on personal gallery empty]]></change>
-          <change><![CDATA[Report #159: english typo: Thias file type is not allowed]]></change>
-          <change><![CDATA[Report #160: dead link on image comment]]></change>
-          <change><![CDATA[Report #161: empty error message on gallery/album.php]]></change>
-        </changelog>
-      </entry>
-      <entry>
-        <date>2008-01-08</date>
-        <rev-version>0.2.2</rev-version>
-        <changelog lang="en-gb">
-          <change><![CDATA[Report #63: Column 'comment_edit_time' cannot be null]]></change>
-          <change><![CDATA[Report #65: Zip Upload]]></change>
-          <change><![CDATA[Report #66: Unknown column 'pic_time' in 'order clause' [1054]]]></change>
-          <change><![CDATA[Report #67: Album permissions not saved]]></change>
-          <change><![CDATA[Report #68: Subalbums not visible]]></change>
-          <change><![CDATA[Report #69: Images in subalbums not counted]]></change>
-          <change><![CDATA[Report #70: modcp - old var "cat_id"]]></change>
-          <change><![CDATA[Report #71: lock / move links to modcp are using not image_id]]></change>
-          <change><![CDATA[Report #72: modcp : moving images not possible]]></change>
-          <change><![CDATA[Report #73: lang var error : MOVE_TO_CATEGORY not exists]]></change>
-          <change><![CDATA[Report #74: lang var missing: LOGIN_EXPLAIN_UPLOAD]]></change>
-          <change><![CDATA[Report #75: Update: Column 'comment_edit_time' cannot be null]]></change>
-          <change><![CDATA[Report #76: PIC_TITLE not defined]]></change>
-          <change><![CDATA[Report #77: No recent images]]></change>
-          <change><![CDATA[Report #78: Column was set to data type implicit default;]]></change>
-          <change><![CDATA[Report #79: Gäste Berechtigung wird nicht gespeichert]]></change>
-          <change><![CDATA[Report #80: value "array()" on bbcode-texts]]></change>
-          <change><![CDATA[Report #81: last edit username is not coloured]]></change>
-          <change><![CDATA[Report #82: Upload Button is not showing correct in RC8]]></change>
-          <change><![CDATA[Report #83: Remove personal gallery link when logged out]]></change>
-          <change><![CDATA[Report #84: There is no more categories which you have permisson to move images to]]></change>
-          <change><![CDATA[Report #85: Error message when deleting a image]]></change>
-          <change><![CDATA[Report #86: Album Permissions 0.2.1]]></change>
-          <change><![CDATA[Report #91: Undefined variable: tot_unapproved on album.php]]></change>
-          <change><![CDATA[Report #94: Incorrect cuting symbols in album_personal_index.php]]></change>
-          <change><![CDATA[Report #96: $sort_new_comment_option = ''; missing]]></change>
-          <change><![CDATA[Report #99: Mass-upload in ACP]]></change>
-          <change><![CDATA[Report #101: subsilver2]]></change>
-          <change><![CDATA[Report #103: album.php missing $]]></change>
-          <change><![CDATA[Report #105: last_pic in personal_album on sort]]></change>
-          <change><![CDATA[Report #106: Errormessage when trying to approve Pictures]]></change>
-          <change><![CDATA[Report #107: next and previous image]]></change>
-          <change><![CDATA[Report #108: thumbnails error if cache is deleted]]></change>
-          <change><![CDATA[Report #109: Links to Albums on Gallery Index are not shown.]]></change>
-          <change><![CDATA[Report #110: Image_page.php throws out some php notices...]]></change>
-          <change><![CDATA[Report #111: CVS: Open the latest picture of a album: php notice error.]]></change>
-          <change><![CDATA[Report #112: image_page.php : next/previous error with disapproved pics]]></change>
-          <change><![CDATA[Report #113: Undefined variable: auth_data]]></change>
-          <change><![CDATA[Report #114: Images are not counted on gallery index and sub-album index]]></change>
-          <change><![CDATA[Report #115: MCP - double breadcrumps, wrong usernames of pers. galleries]]></change>
-          <change><![CDATA[Report #116: Subalbums not included in recent pictures?]]></change>
-          <change><![CDATA[Report #117: Upload-Button shows no info text]]></change>
-          <change><![CDATA[Report #118: missing breadcrumbs on empty comment]]></change>
-          <change><![CDATA[Report #119: if ($auth->acl_get('f_list', $row['album_id']))]]></change>
-        </changelog>
-      </entry>
-      <entry>
-        <date>2007-11-27</date>
-        <rev-version>0.2.1</rev-version>
-        <changelog lang="en-gb">
-          <change><![CDATA[Report #64: wrong parse of bbcode on install.php]]></change>
-        </changelog>
-      </entry>
-      <entry>
-        <date>2007-11-26</date>
-        <rev-version>0.2.0</rev-version>
-        <changelog lang="en-gb">
-          <change><![CDATA[Report #47: which word to use]]></change>
-          <change><![CDATA[Report #48: missing constants in acp]]></change>
-          <change><![CDATA[Report #49: Cannot use a scalar value as an array]]></change>
-          <change><![CDATA[Report #50: missing german button]]></change>
-          <change><![CDATA[Report #51: Sub-Albums]]></change>
-          <change><![CDATA[Report #52: IP false on smartor]]></change>
-          <change><![CDATA[Report #54: Error from deleting L_ - Helmut]]></change>
-          <change><![CDATA[Report #55: installer wrong column_name]]></change>
-          <change><![CDATA[Report #56: includes/acp/acp_gallery.php: Cannot use a scalar value as an array]]></change>
-          <change><![CDATA[Report #57: Deleting last album error]]></change>
-          <change><![CDATA[Report #58: Personal Album - Undefined index: pic_desc_bbcode_uid]]></change>
-          <change><![CDATA[Report #59: Installer forgot to activate the new modul "personal album permission"]]></change>
-          <change><![CDATA[Report #60: MySQL-Fehler wenn man im ACP Alben managen will.]]></change>
-          <change><![CDATA[Report #61: [HARD] 'U_GALLERY']]></change>
-        </changelog>
-      </entry>
-      <entry>
-        <date>2007-11-12</date>
-        <rev-version>0.1.3</rev-version>
-        <changelog lang="en-gb">
-          <change><![CDATA[Report #1: [Security] $album_root_path]]></change>
-          <change><![CDATA[Report #3: [np] image_delete.php]]></change>
-          <change><![CDATA[Report #4: $phpbb_root_path = '../';]]></change>
-          <change><![CDATA[Report #5: Dr.Death class="row1" is no more... long live bg]]></change>
-          <change><![CDATA[Report #6: Dr.Death gallery/upload.php store ip]]></change>
-          <change><![CDATA[Report #7: Dr.Death Wenn man im persönlichen Album ist und ein Bild sperren möchte]]></change>
-          <change><![CDATA[Report #8: xhtml strict album_personal.php]]></change>
-          <change><![CDATA[Report #9: Dr.Death Problems with UTF8 --> ae ue oe --> ?? ?? ??]]></change>
-          <change><![CDATA[Report #10: xhtml strict styles\subsilver2\template\gallery_album_body.html]]></change>
-          <change><![CDATA[Report #11: gallery\includes\common.php]]></change>
-          <change><![CDATA[Report #12: BB-Codes für Kategorie-Beschreibung]]></change>
-          <change><![CDATA[Report #13: </from> in ACP]]></change>
-          <change><![CDATA[Report #14: Geisthund: edit the text on a photo]]></change>
-          <change><![CDATA[Report #16: $board_config is no more....]]></change>
-          <change><![CDATA[Report #17: Image details on thumbnails.]]></change>
-          <change><![CDATA[Report #18: wrong redirect to album_cat if image aproval enabled]]></change>
-          <change><![CDATA[Report #19: ACP permissions....]]></change>
-          <change><![CDATA[Report #20: Groupname of Special Groups are "wrong"]]></change>
-          <change><![CDATA[Report #21: UTF8 support in acp_gallery and addslashes...]]></change>
-          <change><![CDATA[Report #22: Better Coding guidelines....]]></change>
-          <change><![CDATA[Report #23: personal album not working if set permission to "privat"]]></change>
-          <change><![CDATA[Report #24: [Security] if (!defined('IN_PHPBB')) missing in languages]]></change>
-          <change><![CDATA[Report #25: Login Box on gallery index not working]]></change>
-          <change><![CDATA[Report #26: Logical error in album_personal.php]]></change>
-          <change><![CDATA[Report #27: ACP - gallery permission bug]]></change>
-          <change><![CDATA[Report #28: acp_gallery.php missing language vars.]]></change>
-          <change><![CDATA[Report #29: its the otherway round with "L_"]]></change>
-          <change><![CDATA[Report #30: Hamster: wrong links on "album_personal_index.php"]]></change>
-          <change><![CDATA[Report #32: watermark]]></change>
-          <change><![CDATA[Report #33: Manage Album - Error on submit]]></change>
-          <change><![CDATA[Report #34: Wrong navigation links in personal albums]]></change>
-          <change><![CDATA[Report #35: MCP - Missing lang vars if no cat was specified....]]></change>
-          <change><![CDATA[Report #36: Missing navigation links in several files]]></change>
-          <change><![CDATA[Report #37: BB-Codes für den Rest]]></change>
-          <change><![CDATA[Report #39: the installer]]></change>
-          <change><![CDATA[Report #40: the updater]]></change>
-          <change><![CDATA[Report #41: Missing the Keys on the Installation]]></change>
-          <change><![CDATA[Report #42: Comments and Rating of Images are not possible!]]></change>
-          <change><![CDATA[Report #43: reparse bbcodes on image edit]]></change>
-          <change><![CDATA[Report #44: smiles in pic description brakes the style on gallery/album.php]]></change>
-          <change><![CDATA[Report #45: same as Report44 but on recent pics and personal album]]></change>
-          <change><![CDATA[Report #46: colour the usernames]]></change>
-          <change><![CDATA[Report #53: UTF-8 compatible?]]></change>
-        </changelog>
-      </entry>
-    </history>
-    <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
-  </header>
+					<change><![CDATA[[Change] Unreported: gallery/upload/cache/ to gallery/images/cache/ and gallery/upload/ to gallery/images/upload/]]></change>
+					<change><![CDATA[[Change] Unreported: moved import/ to images/import/]]></change>
+					<change><![CDATA[[Change] Report #252: moved thumbnail creation to image.php]]></change>
+					<change><![CDATA[[Change] Report #349: Lytebox-Update from 3.20 to 3.22]]></change>
+					<change><![CDATA[[Change] Report #356: Reorganize subsilver2 layout of image_page.php]]></change>
+					<change><![CDATA[[Change] Report #350: better convert-instructions]]></change>
+					<change><![CDATA[[Change] Unreported: better Search-Code for second session edit]]></change>
+					<change><![CDATA[[Change] Report #354: Searchcode for total-images changed]]></change>
+
+					<change><![CDATA[[Fix] Unreported: Cut down long albumnames in recent/random and in search]]></change>
+					<change><![CDATA[[Fix] Report #363: Install-Script misses Constants like GALLERY_ROOT_PATH]]></change>
+					<change><![CDATA[[Fix] Report #359: Moderator-link visible without permissions]]></change>
+					<change><![CDATA[[Fix] Unreported: wrong headline for "manage subscription"]]></change>
+					<change><![CDATA[[Fix] Report #358: .JPG-images from conversion are not visible]]></change>
+					<change><![CDATA[[Fix] Report #361: Pagination on manage subscription leeds to favorites]]></change>
+					<change><![CDATA[[Fix] Report #356: Add Custom BBCode-Buttons (prosilver)]]></change>
+					<change><![CDATA[[Fix] Report #360: installer not working on version compare for mysql]]></change>
+					<change><![CDATA[[Fix] Report #348: SQL-Error when user is in no group => copy phpBB solution]]></change>
+					<change><![CDATA[[Fix] Report #351: BBCode colorPalette needs images/spacer.gif]]></change>
+					<change><![CDATA[[Fix] Report #355: install/install_*.php Undefined variable: exists]]></change>
+					<change><![CDATA[[Fix] Report #352: U_GALLERY_MOD not usign GALLERY_ROOT_PATH on install]]></change>
+					<change><![CDATA[[Fix] Report #353: Missing update of session, after unset($sql_ary['session_album_id']);]]></change>
+					<change><![CDATA[[Fix] Topic #883: STAGE_COPY_TABLE_EXPLAIN is german]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
+				<date>2008-11-09</date>
+				<rev-version>0.4.0-RC3</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Add] Report #343: Upload-Link in the UCP]]></change>
+					<change><![CDATA[[Add] Unreported: Jumpbox to the image_page.php]]></change>
+					<change><![CDATA[[Add] Unreported: Display message after successful resync in the ACP]]></change>
+
+					<change><![CDATA[[Change] Report #339: Problem with number of views]]></change>
+					<change><![CDATA[[Change] Report #338: Able to approve own images]]></change>
+					<change><![CDATA[[Change] Report #334: Remove file-type on image-name]]></change>
+					<change><![CDATA[[Change] Report #299: Move Images into personal albums]]></change>
+
+					<change><![CDATA[[Fix] Report #344: Language-Vars for Permissions]]></change>
+					<change><![CDATA[[Fix] PM #524: undefined function make_album_select]]></change>
+					<change><![CDATA[[Fix] Report #342: Missing note "waiting for approval"]]></change>
+					<change><![CDATA[[Fix] Topic #797: inconsistent language packages]]></change>
+					<change><![CDATA[[Fix] Unreported: Exif-Data: "ExposureBiasValue", "Flash", "ExposureProgram" & "MeteringMode"]]></change>
+					<change><![CDATA[[Fix] Report #341: PostgreSQL: sql_query using hard LIMIT]]></change>
+					<change><![CDATA[[Fix] Unreported: Meta-Refresh after rating is phpBB2-Style]]></change>
+					<change><![CDATA[[Fix] Report #332: ACP Import multiple pages loose image-name]]></change>
+					<change><![CDATA[[Fix] Report #322: Long file names with _ making out of templates problem]]></change>
+					<change><![CDATA[[Fix] Unreport: Wrong labels for config values in ACP]]></change>
+					<change><![CDATA[[Fix] Report #319: error in SQL syntax]]></change>
+					<change><![CDATA[[Fix] Report #326: uploading multiple files cheats on quota]]></change>
+					<change><![CDATA[[Fix] Report #323: Slow loading page when creating albums-list]]></change>
+					<change><![CDATA[[Fix] Unreported: wrong class for the MOVE-Button]]></change>
+					<change><![CDATA[[Fix] Unreported: Unknown column 'username' in 'order clause']]></change>
+					<change><![CDATA[[Fix] Report #311: Unable to Approve and Unapprove images]]></change>
+					<change><![CDATA[[Fix] Report #308: Convert Smartor - Comments]]></change>
+
+					<change><![CDATA[[Sec] Report #i337: SQL-Injection on sort-method (Reported by CroneKorkN)]]></change>
+					<change><![CDATA[[Sec] Report #i328: mcp.php missing check for permissions (Reported by Stifter)]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
+				<date>2008-08-21</date>
+				<rev-version>0.4.0-RC2</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Add] Unreported: Exif Data: Exposure bias, Exposure program & Metering mode]]></change>
+
+					<change><![CDATA[[Change] Report #283: After upload an image into a approval album, the redirect is too fast]]></change>
+					<change><![CDATA[[Change] Report #297: Login on and redirect to gallery/index.php]]></change>
+					<change><![CDATA[[Change] Unreported: Module handle on installation]]></change>
+
+					<change><![CDATA[[Fix] Unreported: Display of users online in the album]]></change>
+					<change><![CDATA[[Fix] Report #307: highslide moved to template]]></change>
+					<change><![CDATA[[Fix] Report #306: user_images not updated if it was empty]]></change>
+					<change><![CDATA[[Fix] Report #305: Empty posintg.php No values specified for SQL IN comparison]]></change>
+					<change><![CDATA[[Fix] Report #290 and more: some bugs in subsilver2 only]]></change>
+					<change><![CDATA[[Fix] Report #289: Blank image_page.php page]]></change>
+					<change><![CDATA[[Fix] Report #304: [phpBB Debug] PHP Notice: in file /includes/acp/acp_gallery.php on line 296]]></change>
+					<change><![CDATA[[Fix] Unreported: view unapproved images to moderators]]></change>
+					<change><![CDATA[[Fix] Report #286: Lang missing in search]]></change>
+					<change><![CDATA[[Fix] Report #302: Missing information for new approval images]]></change>
+					<change><![CDATA[[Fix] Report #288: Unknown column 'g.view_personal_albums' in viewonline.php]]></change>
+					<change><![CDATA[[Fix] Report #301: wrong permissions used on viewing personal-gallerys link]]></change>
+					<change><![CDATA[[Fix] Report #285: some language typos]]></change>
+					<change><![CDATA[[Fix] Report #300: [album] wrong url for thumbnail]]></change>
+					<change><![CDATA[[Fix] Report #296: Posting Comment/Image: No values specified for SQL IN]]></change>
+					<change><![CDATA[[Fix] Report #284: array_merge(): Argument #2 is not an array]]></change>
+					<change><![CDATA[[Fix] Report #282: Undefined index: album_approval]]></change>
+
+					<change><![CDATA[[Sec] Report #i295: "NV Exif data" security risk (Reported by GoBieN)]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
+				<date>2008-08-09</date>
+				<rev-version>0.4.0-RC1</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Add] Report #261: Installer/Updater for older versions]]></change>
+					<change><![CDATA[[Add] Report #245: Button/Redirect after installation.]]></change>
+					<change><![CDATA[[Add] Report #189: Number of maximum images]]></change>
+					<change><![CDATA[[Add] Report #267: Limit total number of images by group.]]></change>
+					<change><![CDATA[[Add] Unreported: Display thumbnail on album-list]]></change>
+					<change><![CDATA[[Add] Report #31: album image]]></change>
+					<change><![CDATA[[Add] Report #185: Meta refresh on Moderating]]></change>
+					<change><![CDATA[[Add] Report #241: Report Image]]></change>
+					<change><![CDATA[[Add] Report #280: Display Exif-Data if available]]></change>
+					<change><![CDATA[[Add] Unreported: Red-Image-Counter for MOderators (unapproved images)]]></change>
+					<change><![CDATA[[Add] Unreported: Cleanup-Page, idea on Report #239: Cleanup DB after delete of a user]]></change>
+					<change><![CDATA[[Add] Unreported: MOD supports "MOD Version Check" by handyman´]]></change>
+					<change><![CDATA[[Add] Unreported: Filled the Statistic-Page in the ACP]]></change>
+					<change><![CDATA[[Add] Unreported: MOD supports "HighSlide Attachment & IMG" by stokerpiller]]></change>
+
+					<change><![CDATA[[Change] Report #246: Hide "Your Personal Album" link.]]></change>
+					<change><![CDATA[[Change] Unreported: MODx v1.2.0]]></change>
+					<change><![CDATA[[Change] Unreported: Permission-System]]></change>
+					<change><![CDATA[[Change] Unreported: Album-System (much faster now)]]></change>
+					<change><![CDATA[[Change] Report #181, Report #165 & Report #233: Rewrote ACP-Import]]></change>
+					<change><![CDATA[[Change] Unreported: Moved some Variables to _albums and -images to increase SQL-Speed and reduce number of SQLs]]></change>
+					<change><![CDATA[[Change] Report #263: Reject album deletion leads to 'empty' UserCP page]]></change>
+					<change><![CDATA[[Change] Unreported: Rewrote the hole MCP]]></change>
+
+					<change><![CDATA[[Fix] Report #258: Repeat Bug 228: 0.2.3 to 0.3.0 upgrade won't update version]]></change>
+					<change><![CDATA[[Fix] Report #260: Call to undefined function adm_back_link()]]></change>
+					<change><![CDATA[[Fix] Report #259: viewonline broken]]></change>
+					<change><![CDATA[[Fix] Report #262: bbcode is missing GALLERY_ROOT_PATH]]></change>
+					<change><![CDATA[[Fix] Report #264: posting.php != S_IN_GALLERY]]></change>
+					<change><![CDATA[[Fix] Report #254: Anonymous comments possible at private albums]]></change>
+					<change><![CDATA[[Fix] Report #265: icon buged on rtl]]></change>
+					<change><![CDATA[[Fix] Unreported: don't create albums without names]]></change>
+					<change><![CDATA[[Fix] Report #179: utf8 in file name on Import]]></change>
+					<change><![CDATA[[Fix] Report #128: wrong permissions on testing user-premissions]]></change>
+					<change><![CDATA[[Fix] Report #191: Comment Char limit]]></change>
+					<change><![CDATA[[Fix] Unreported: bbcode [list] bugged in image_page.php]]></change>
+					<change><![CDATA[[Fix] Unreported: Add option to disable watermark for small images]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
+				<date>2008-04-14</date>
+				<rev-version>0.3.1</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Add] Report #150: mcp "select all"]]></change>
+					<change><![CDATA[[Add] Report #166: select multiple images for delete]]></change>
+
+					<change><![CDATA[[Change] Report #257: wrong prev and next images]]></change>
+					<change><![CDATA[[Change] Report #247: KiB not KB]]></change>
+
+					<change><![CDATA[[Fix] Report #235: rel="lightbox" in subsilver2]]></change>
+					<change><![CDATA[[Fix] Report #251: Undefined variable: sort_new_comment_option]]></change>
+					<change><![CDATA[[Fix] Report #256: Undefined index: cat_approval]]></change>
+					<change><![CDATA[[Fix] Report #253: Sessionhandling of 3.0.1]]></change>
+					<change><![CDATA[[Fix] Report #242: Old Link in Installer Footer]]></change>
+					<change><![CDATA[[Fix] Report #243: non strict sql]]></change>
+					<change><![CDATA[[Fix] Report #244: Misspelled Information after successful Installation]]></change>
+					<change><![CDATA[[Fix] Report #248: image size on massimport when disabled]]></change>
+					<change><![CDATA[[Fix] Report #250: Potential exposure of real path when unlinking files]]></change>
+					<change><![CDATA[[Fix] Report #240: When deleting album in subsilver2, language not shown]]></change>
+					<change><![CDATA[[Fix] Report #249: When editing image 'Title' box isn't populated]]></change>
+					<change><![CDATA[[Fix] Report #237: Option when create a module for UCP]]></change>
+					<change><![CDATA[[Fix] Report #236: Undefined variable: album_config]]></change>
+					<change><![CDATA[[Fix] Report #225: [Sec] upload and move images to personal albums]]></change>
+					<change><![CDATA[[Fix] Report #223: Undefined index: IMG_BUTTON_UPLOAD_IMAGE]]></change>
+					<change><![CDATA[[Fix] Report #226: wrong permissions used on displaying moderating options]]></change>
+					<change><![CDATA[[Fix] Report #227: Gallery link on breadcrumbs in viewonline.php]]></change>
+					<change><![CDATA[[Fix] Report #230: viewing all albums in jumpbox]]></change>
+					<change><![CDATA[[Fix] Report #228: 0.2.3 to 0.3.0 upgrade won't update version]]></change>
+					<change><![CDATA[[Fix] Report #229: Can't edit or delete comment in subsilver2]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
+				<date>2008-03-06</date>
+				<rev-version>0.3.0</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Add] Report #138: Resize image in image view page]]></change>
+					<change><![CDATA[[Add] Report #195: Reduce SQL phpbb_users left join]]></change>
+					<change><![CDATA[[Add] Report #197: Personal Gallery Index - User colour are not showing...]]></change>
+					<change><![CDATA[[Add] Report #149: members should have the ability to create an album]]></change>
+					<change><![CDATA[[Add] Report #208: permissions for creating subalbums]]></change>
+					<change><![CDATA[[Add] Report #212: Multiple Upload]]></change>
+					<change><![CDATA[[Add] Report #15: edit and delete comments]]></change>
+					<change><![CDATA[[Add] Report #168: Persönliche Galerie verlinken]]></change>
+					<change><![CDATA[[Add] Report #213: SVN: move pic from private subalbum not possible]]></change>
+					<change><![CDATA[[Add] Report #211: Seitenauflistung in der "Wer ist online?"-Liste]]></change>
+					<change><![CDATA[[Add] Report #126: Optional black info line at bottom.]]></change>
+
+					<change><![CDATA[[Change] Report #173: [ACP] missing radio and checkbox classes...cosmetic.]]></change>
+					<change><![CDATA[[Change] Report #163: Deutsche Sprache: Gallery/Galerie]]></change>
+					<change><![CDATA[[Change] Report #188: MCP link 2 times]]></change>
+					<change><![CDATA[[Change] Report #143: Also show new personal images on index page]]></change>
+					<change><![CDATA[[Change] Report #215: Should not update session page on thumbnail view]]></change>
+					<change><![CDATA[[Change] Report #216: Album BBcode - mark in one click]]></change>
+
+					<change><![CDATA[[Fix] Report #167: Missing Lang: IMAGE_BBCODE]]></change>
+					<change><![CDATA[[Fix] Report #172: Undefined variable: sort_new_comment_option]]></change>
+					<change><![CDATA[[Fix] Report #175: SVN: Move images are not working anymore]]></change>
+					<change><![CDATA[[Fix] Report #182: View the last MESSAGE?]]></change>
+					<change><![CDATA[[Fix] Report #176: Album categorie - don't show "no pictures"]]></change>
+					<change><![CDATA[[Fix] Report #190: Commment]]></change>
+					<change><![CDATA[[Fix] Report #194: no personal images in recent images]]></change>
+					<change><![CDATA[[Fix] Report #196: MCP - Delete images are not working anymore...]]></change>
+					<change><![CDATA[[Fix] Report #198: personal gallery of xxxx - PHP Notice error]]></change>
+					<change><![CDATA[[Fix] Report #199: SVN: gallery/index.php - SQL Error]]></change>
+					<change><![CDATA[[Fix] Report #202: install.xml - Description typo]]></change>
+					<change><![CDATA[[Fix] Report #186: No more albums to move]]></change>
+					<change><![CDATA[[Fix] Report #169: {memberrow.ALBUM_FOLDER_IMG_SRC}]]></change>
+					<change><![CDATA[[Fix] Report #174: Personal Albums - Next / Previous Links]]></change>
+					<change><![CDATA[[Fix] Report #207: display nav-link when using recent_image addon]]></change>
+					<change><![CDATA[[Fix] Report #210: personal albums - ucp - move subulbums error]]></change>
+					<change><![CDATA[[Fix] Report #178: imagecreatefromjpeg(./..//gallery/upload/.jpg)]]></change>
+					<change><![CDATA[[Fix] Report #205: SQL Error on convert (guest comments)]]></change>
+					<change><![CDATA[[Fix] Report #201: wrong album link]]></change>
+					<change><![CDATA[[Fix] Report #164: Deutscher Sprachbutton (UPLOADIMAGE)]]></change>
+					<change><![CDATA[[Fix] Report #200: Truecolor+alpha channel watermark]]></change>
+					<change><![CDATA[[Fix] Report #203: root/gallery/index.htm loaded instead of index.php]]></change>
+					<change><![CDATA[[Fix] Report #209: Personal album permissions are messed up.]]></change>
+					<change><![CDATA[[Fix] Report #206: Small typo in german language]]></change>
+					<change><![CDATA[[Fix] Report #214: personal gallery: empty gallery problem.]]></change>
+					<change><![CDATA[[Fix] Report #192: upload error lang]]></change>
+					<change><![CDATA[[Fix] Report #177: categorie - last image are not shown if disapproved]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
+				<date>2008-01-24</date>
+				<rev-version>0.2.3</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Report #62: Watermark: Call to undefined function: imagecreatefromjpeg()]]></change>
+					<change><![CDATA[Report #90: Add gd_info function check into the installer]]></change>
+					<change><![CDATA[Report #100: bbcode]]></change>
+					<change><![CDATA[Report #102: Browsing Gallery while [ Test out user’s permissions ]]]></change>
+					<change><![CDATA[Report #120: styles/prosilver/imageset/icon_topic_latest.gif]]></change>
+					<change><![CDATA[Report #121: missing upload-line in subsilver2]]></change>
+					<change><![CDATA[Report #122: missing mass-upload modul]]></change>
+					<change><![CDATA[Report #124: Better remove thumbs.db]]></change>
+					<change><![CDATA[Report #125: pers. album: default sort gives error messages]]></change>
+					<change><![CDATA[Report #127: missing {S_FORM_TOKEN} in subsilver2]]></change>
+					<change><![CDATA[Report #130: missing "yes" in subsilver2 on delete-confirm]]></change>
+					<change><![CDATA[Report #131: UTF is absent]]></change>
+					<change><![CDATA[Report #132: Wrong premission to Anonymus]]></change>
+					<change><![CDATA[Report #135: Unknown column 'username' in album_personal.php]]></change>
+					<change><![CDATA[Report #137: Gallery is open when board is disabled]]></change>
+					<change><![CDATA[Report #139: not valid]]></change>
+					<change><![CDATA[Report #140: double entry for gallery index in navlinks on upload page]]></change>
+					<change><![CDATA[Report #141: language attribute in <script> tags]]></change>
+					<change><![CDATA[Report #145: confusing default: category]]></change>
+					<change><![CDATA[Report #148: Unknown column 'rating' in 'order clause' [1054]]]></change>
+					<change><![CDATA[Report #153: Missing form around rating in subsilver2]]></change>
+					<change><![CDATA[Report #157: Last image sorting not working]]></change>
+					<change><![CDATA[Report #158: colour username on personal gallery empty]]></change>
+					<change><![CDATA[Report #159: english typo: Thias file type is not allowed]]></change>
+					<change><![CDATA[Report #160: dead link on image comment]]></change>
+					<change><![CDATA[Report #161: empty error message on gallery/album.php]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
+				<date>2008-01-08</date>
+				<rev-version>0.2.2</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Report #63: Column 'comment_edit_time' cannot be null]]></change>
+					<change><![CDATA[Report #65: Zip Upload]]></change>
+					<change><![CDATA[Report #66: Unknown column 'pic_time' in 'order clause' [1054]]]></change>
+					<change><![CDATA[Report #67: Album permissions not saved]]></change>
+					<change><![CDATA[Report #68: Subalbums not visible]]></change>
+					<change><![CDATA[Report #69: Images in subalbums not counted]]></change>
+					<change><![CDATA[Report #70: modcp - old var "cat_id"]]></change>
+					<change><![CDATA[Report #71: lock / move links to modcp are using not image_id]]></change>
+					<change><![CDATA[Report #72: modcp : moving images not possible]]></change>
+					<change><![CDATA[Report #73: lang var error : MOVE_TO_CATEGORY not exists]]></change>
+					<change><![CDATA[Report #74: lang var missing: LOGIN_EXPLAIN_UPLOAD]]></change>
+					<change><![CDATA[Report #75: Update: Column 'comment_edit_time' cannot be null]]></change>
+					<change><![CDATA[Report #76: PIC_TITLE not defined]]></change>
+					<change><![CDATA[Report #77: No recent images]]></change>
+					<change><![CDATA[Report #78: Column was set to data type implicit default;]]></change>
+					<change><![CDATA[Report #79: Gäste Berechtigung wird nicht gespeichert]]></change>
+					<change><![CDATA[Report #80: value "array()" on bbcode-texts]]></change>
+					<change><![CDATA[Report #81: last edit username is not coloured]]></change>
+					<change><![CDATA[Report #82: Upload Button is not showing correct in RC8]]></change>
+					<change><![CDATA[Report #83: Remove personal gallery link when logged out]]></change>
+					<change><![CDATA[Report #84: There is no more categories which you have permisson to move images to]]></change>
+					<change><![CDATA[Report #85: Error message when deleting a image]]></change>
+					<change><![CDATA[Report #86: Album Permissions 0.2.1]]></change>
+					<change><![CDATA[Report #91: Undefined variable: tot_unapproved on album.php]]></change>
+					<change><![CDATA[Report #94: Incorrect cuting symbols in album_personal_index.php]]></change>
+					<change><![CDATA[Report #96: $sort_new_comment_option = ''; missing]]></change>
+					<change><![CDATA[Report #99: Mass-upload in ACP]]></change>
+					<change><![CDATA[Report #101: subsilver2]]></change>
+					<change><![CDATA[Report #103: album.php missing $]]></change>
+					<change><![CDATA[Report #105: last_pic in personal_album on sort]]></change>
+					<change><![CDATA[Report #106: Errormessage when trying to approve Pictures]]></change>
+					<change><![CDATA[Report #107: next and previous image]]></change>
+					<change><![CDATA[Report #108: thumbnails error if cache is deleted]]></change>
+					<change><![CDATA[Report #109: Links to Albums on Gallery Index are not shown.]]></change>
+					<change><![CDATA[Report #110: Image_page.php throws out some php notices...]]></change>
+					<change><![CDATA[Report #111: CVS: Open the latest picture of a album: php notice error.]]></change>
+					<change><![CDATA[Report #112: image_page.php : next/previous error with disapproved pics]]></change>
+					<change><![CDATA[Report #113: Undefined variable: auth_data]]></change>
+					<change><![CDATA[Report #114: Images are not counted on gallery index and sub-album index]]></change>
+					<change><![CDATA[Report #115: MCP - double breadcrumps, wrong usernames of pers. galleries]]></change>
+					<change><![CDATA[Report #116: Subalbums not included in recent pictures?]]></change>
+					<change><![CDATA[Report #117: Upload-Button shows no info text]]></change>
+					<change><![CDATA[Report #118: missing breadcrumbs on empty comment]]></change>
+					<change><![CDATA[Report #119: if ($auth->acl_get('f_list', $row['album_id']))]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
+				<date>2007-11-27</date>
+				<rev-version>0.2.1</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Report #64: wrong parse of bbcode on install.php]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
+				<date>2007-11-26</date>
+				<rev-version>0.2.0</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Report #47: which word to use]]></change>
+					<change><![CDATA[Report #48: missing constants in acp]]></change>
+					<change><![CDATA[Report #49: Cannot use a scalar value as an array]]></change>
+					<change><![CDATA[Report #50: missing german button]]></change>
+					<change><![CDATA[Report #51: Sub-Albums]]></change>
+					<change><![CDATA[Report #52: IP false on smartor]]></change>
+					<change><![CDATA[Report #54: Error from deleting L_ - Helmut]]></change>
+					<change><![CDATA[Report #55: installer wrong column_name]]></change>
+					<change><![CDATA[Report #56: includes/acp/acp_gallery.php: Cannot use a scalar value as an array]]></change>
+					<change><![CDATA[Report #57: Deleting last album error]]></change>
+					<change><![CDATA[Report #58: Personal Album - Undefined index: pic_desc_bbcode_uid]]></change>
+					<change><![CDATA[Report #59: Installer forgot to activate the new modul "personal album permission"]]></change>
+					<change><![CDATA[Report #60: MySQL-Fehler wenn man im ACP Alben managen will.]]></change>
+					<change><![CDATA[Report #61: 'U_GALLERY' already used by phpBB]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
+				<date>2007-11-12</date>
+				<rev-version>0.1.3</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Sec] Report #1: $album_root_path]]></change>
+					<change><![CDATA[Report #3: [np] image_delete.php]]></change>
+					<change><![CDATA[Report #4: $phpbb_root_path = '../';]]></change>
+					<change><![CDATA[Report #5: Dr.Death class="row1" is no more... long live bg]]></change>
+					<change><![CDATA[Report #6: Dr.Death gallery/upload.php store ip]]></change>
+					<change><![CDATA[Report #7: Dr.Death Wenn man im persönlichen Album ist und ein Bild sperren möchte]]></change>
+					<change><![CDATA[Report #8: xhtml strict album_personal.php]]></change>
+					<change><![CDATA[Report #9: Dr.Death Problems with UTF8 --> ae ue oe --> ?? ?? ??]]></change>
+					<change><![CDATA[Report #10: xhtml strict styles\subsilver2\template\gallery_album_body.html]]></change>
+					<change><![CDATA[Report #11: gallery\includes\common.php]]></change>
+					<change><![CDATA[Report #12: BB-Codes für Kategorie-Beschreibung]]></change>
+					<change><![CDATA[Report #13: </from> in ACP]]></change>
+					<change><![CDATA[Report #14: Geisthund: edit the text on a photo]]></change>
+					<change><![CDATA[Report #16: $board_config is no more....]]></change>
+					<change><![CDATA[Report #17: Image details on thumbnails.]]></change>
+					<change><![CDATA[Report #18: wrong redirect to album_cat if image aproval enabled]]></change>
+					<change><![CDATA[Report #19: ACP permissions....]]></change>
+					<change><![CDATA[Report #20: Groupname of Special Groups are "wrong"]]></change>
+					<change><![CDATA[Report #21: UTF8 support in acp_gallery and addslashes...]]></change>
+					<change><![CDATA[Report #22: Better Coding guidelines....]]></change>
+					<change><![CDATA[Report #23: personal album not working if set permission to "privat"]]></change>
+					<change><![CDATA[[Sec] Report #24: if (!defined('IN_PHPBB')) missing in languages]]></change>
+					<change><![CDATA[Report #25: Login Box on gallery index not working]]></change>
+					<change><![CDATA[Report #26: Logical error in album_personal.php]]></change>
+					<change><![CDATA[Report #27: ACP - gallery permission bug]]></change>
+					<change><![CDATA[Report #28: acp_gallery.php missing language vars.]]></change>
+					<change><![CDATA[Report #29: its the otherway round with "L_"]]></change>
+					<change><![CDATA[Report #30: Hamster: wrong links on "album_personal_index.php"]]></change>
+					<change><![CDATA[Report #32: watermark]]></change>
+					<change><![CDATA[Report #33: Manage Album - Error on submit]]></change>
+					<change><![CDATA[Report #34: Wrong navigation links in personal albums]]></change>
+					<change><![CDATA[Report #35: MCP - Missing lang vars if no cat was specified....]]></change>
+					<change><![CDATA[Report #36: Missing navigation links in several files]]></change>
+					<change><![CDATA[Report #37: BB-Codes für den Rest]]></change>
+					<change><![CDATA[Report #39: the installer]]></change>
+					<change><![CDATA[Report #40: the updater]]></change>
+					<change><![CDATA[Report #41: Missing the Keys on the Installation]]></change>
+					<change><![CDATA[Report #42: Comments and Rating of Images are not possible!]]></change>
+					<change><![CDATA[Report #43: reparse bbcodes on image edit]]></change>
+					<change><![CDATA[Report #44: smiles in pic description brakes the style on gallery/album.php]]></change>
+					<change><![CDATA[Report #45: same as Report44 but on recent pics and personal album]]></change>
+					<change><![CDATA[Report #46: colour the usernames]]></change>
+					<change><![CDATA[Report #53: UTF-8 compatible?]]></change>
+				</changelog>
+			</entry>
+		</history>
+
+		<link-group>
+			<link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
+			<link type="parent" lang="en" href="../install.xml">Manual</link>
+			<link type="parent" lang="de" href="update_0_4_1_to_1_0_0/update.xml">Update von 0.4.1 auf 1.0.0</link>
+			<link type="parent" lang="en" href="update_0_4_1_to_1_0_0/update.xml">Update from 0.4.1 to 1.0.0</link>
+			<link type="parent" lang="de" href="update_0_5_4_to_1_0_0/update.xml">Update von 0.5.4 auf 1.0.0</link>
+			<link type="parent" lang="en" href="update_0_5_4_to_1_0_0/update.xml">Update from 0.5.4 to 1.0.0</link>
+		</link-group>
+
+	</header>
+	<action-group>
+	</action-group>
 </mod>

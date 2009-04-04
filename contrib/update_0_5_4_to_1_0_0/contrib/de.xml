@@ -9,8 +9,8 @@
 		<title lang="de">phpBB Gallery</title>
 		<title lang="en">phpBB Gallery</title>
 
-		<description lang="de"><![CDATA[Anleitung für das Deutsche Sprachpaket]]></description>
-		<description lang="en"><![CDATA[Manual for the german language package]]></description>
+		<description lang="de"><![CDATA[Update-Anleitung für das Deutsche Sprachpaket]]></description>
+		<description lang="en"><![CDATA[Update-Manual for the german language package]]></description>
 
 		<author-notes lang="de"><![CDATA[
 Untersützt die "MOD Version Check"-MOD von Handymman´:
@@ -39,41 +39,27 @@ http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
 
 		<installation>
 			<level>intermediate</level>
-			<time>600</time>
+			<time>1200</time>
 			<target-version>3.0.4</target-version>
 		</installation>
 
 		<link-group>
-			<link type="parent" lang="de" href="history.xml">Geschichte/Entwickler/Features</link>
-			<link type="parent" lang="en" href="history.xml">History/Developers/Features</link>
-			<link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
-			<link type="parent" lang="en" href="../install.xml">Install</link>
+			<link type="parent" lang="de" href="../../history.xml">Geschichte/Entwickler/Features</link>
+			<link type="parent" lang="en" href="../../history.xml">History/Developers/Features</link>
+			<link type="parent" lang="de" href="../update.xml">Update von 0.5.4 auf 1.0.0</link>
+			<link type="parent" lang="en" href="../update.xml">Update from 0.5.4 to 1.0.0</link>
 		</link-group>
 	</header>
 
 	<action-group>
 		<copy>
-			<file from="root/language/de/email/*.*" to="language/de/email/*.*" />
-			<file from="root/language/de/mods/*.*" to="language/de/mods/*.*" />
+			<file from="root/language/de/email/*.txt" to="language/de/email/*.txt" />
+			<file from="root/language/de/mods/*.php" to="language/de/mods/*.php" />
 			<file from="root/styles/prosilver/imageset/de/button_upload_image.gif" to="styles/prosilver/imageset/de/button_upload_image.gif" />
 			<file from="root/styles/subsilver2/imageset/de/button_upload_image.gif" to="styles/subsilver2/imageset/de/button_upload_image.gif" />
 		</copy>
 
-		<open src="styles/prosilver/imageset/de/imageset.cfg">
-			<edit>
-				<find><![CDATA[img_button_topic_reply = button_topic_reply.gif*25*102]]></find>
-				<action type="after-add"><![CDATA[img_button_upload_image = button_upload_image.gif*25*96]]></action>
-			</edit>
-		</open>
-
-		<open src="styles/subsilver2/imageset/de/imageset.cfg">
-			<edit>
-				<find><![CDATA[img_button_topic_reply = button_topic_reply.gif]]></find>
-				<action type="after-add"><![CDATA[img_button_upload_image = button_upload_image.gif]]></action>
-			</edit>
-		</open>
-
-		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe den Installer aus
+		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
 
 Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
 
@@ -81,7 +67,7 @@ Aktualisiere deine Styles:
     "Administrations-Bereich" (ACP) > "Styles" > "Templates" > jedes > "Aktualisieren"
     "Administrations-Bereich" (ACP) > "Styles" > "Themes" > jedes > "Aktualisieren"
     "Administrations-Bereich" (ACP) > "Styles" > "Grafiksammlungen" > jedes > "Aktualisieren"]]></diy-instructions>
-		<diy-instructions lang="en"><![CDATA[Browse to install/ and run the installer
+		<diy-instructions lang="en"><![CDATA[Browse to install/ and run the update-script
 
 Clear your cache in the "Administration Control Panel" (ACP) > "General" > "Purge the cache"
 

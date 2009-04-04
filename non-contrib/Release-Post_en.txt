@@ -1,18 +1,16 @@
-[b]Modification Name:[/b] phpbb gallery
+[b]Modification Name:[/b] phpBB Gallery
 [b]Author:[/b] [url=http://www.flying-bits.org][b]nickvergessen[/b][/url]
 
-[b]Modification Version:[/b] 0.5.4
+[b]Modification Version:[/b] 1.0.0
 [b]Modification Description:[/b]
-[list]This is a gallery for your phpBB3.
-When I have some more time, I'll post a feature-list in this forum:
-http://www.flying-bits.org/viewforum.php?f=38[/list]
+[list]An image-gallery integrated into your phpbb-board.[/list]
 
-[b]Features:[/b] feature list is not available yet
+[b]Features:[/b] For a (nearly) full feature list see http://www.flying-bits.org/go/phpbb_gallery/features
 
 [b]Demo URL:[/b] http://www.flying-bits.org/gallery/index.php
 [b]Supported Styles:[/b] prosilver, subsilver2
 [b]Supported Language-Packages:[/b] de, en
-[list]more languages can be found [url=http://www.flying-bits.org/viewforum.php?f=78]here[/url][/list]
+[list]more languages can be found [url=http://www.flying-bits.org/go/phpbb_gallery/translations]here[/url][/list]
 
 [b]Repositories[/b]: [list]
 [*][b]MOD Repository[/b]: http://code.bantux.org/svn/phpbb-gallery (SVN/Subversion)
@@ -23,17 +21,8 @@ http://www.flying-bits.org/viewforum.php?f=38[/list]
 (Before reporting a bug see the FAQ, whether there is something you should know about that bug)
 
 
-[b]FAQ & Known-Issues[/b]: [list][*][url=http://www.flying-bits.org/viewforum.php?f=67]FAQ[/url]
-[*][url=http://www.flying-bits.org/viewtopic.php?f=67&t=1028]Known-Issues[/url][/list]
+[b]FAQ & Known-Issues[/b]: http://www.flying-bits.org/go/phpbb_gallery/faq
 
-[b]Downloads:[/b] [size=150][b][url=http://code.bantux.org/projects/list_files/phpbb-gallery]Download v0.5.4[/url][/b][/size]
-[list][*][url=http://www.flying-bits.org/viewforum.php?f=78]Language-Packages[/url]
-[*][url=http://www.flying-bits.org/viewforum.php?f=80]Addons[/url][/list]
-
-[b][color=#FF0000]Important Notes for updates[/color]:[/b]
-[list]
-[*][b]from 0.4.0-RC3 to 0.4.0[/b]:
-	Because of some more changes on the permissions-system you need to set the moderator-permissions new, when you update from 0.4.0-RC3 to 0.4.0. Now the ACP-Modules have permissions aswell, so don't wonder when they disappear, just set the permissions in the phpBB-permissions-system.
-[*][b]from 0.3.x to 0.4.0-RC1[/b]:
-	Because of a complete change on the permissions-system you need to set all permissions new, when you update from previous versions (than 0.4.x), or convert from Smartor's Album MOD.
-[/list]
+[b]Downloads:[/b] [size=150][b][url=http://www.flying-bits.org/go/phpbb_gallery/download]Download v1.0.0[/url][/b][/size]
+[list][*][url=http://www.flying-bits.org/go/phpbb_gallery/translations]Language-Packages[/url]
+[*][url=http://www.flying-bits.org/go/phpbb_gallery/addons]Addons[/url][/list]
