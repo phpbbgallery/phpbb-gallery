@@ -51,6 +51,7 @@
 		[*]Notification (Mail & Jabber) on new images/comments
 		[*]Option to favorite images
 		[*]Next/Previous link (with imagename and thumbnail)
+		[*]Unread-markup of albums with new images
 	[/list]
 	[*]ACP:
 	[list]

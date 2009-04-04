@@ -51,6 +51,7 @@
 		[*]Benachrichtigung (Mail & Jabber) über neue Bilder/Kommentare
 		[*]Favoriten-Funktion
 		[*]Nächstes/Vorheriges Bild mit Name und Thumbnail
+		[*]Ungelesen-Markierung der Alben bei neuen Bildern
 	[/list]
 	[*]ACP:
 	[list]

@@ -58,6 +58,7 @@ Bilder/Kommentare:
 » Benachrichtigung (Mail & Jabber) über neue Bilder/Kommentare
 » Favoriten-Funktion
 » Nächstes/Vorheriges Bild mit Name und Thumbnail
+» Ungelesen-Markierung der Alben bei neuen Bildern
 
 ACP:
 » Statistische Übersicht
@@ -122,6 +123,7 @@ Images / Comments:
 » Notification (Mail & Jabber) on new images/comments
 » Option to favorite images
 » Next/Previous link (with imagename and thumbnail)
+» Unread-markup of albums with new images
 
 ACP:
 » Statistical overview
