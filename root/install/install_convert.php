@@ -428,11 +428,13 @@ class install_convert extends module
 							'album_desc_options'			=> 7,
 						);
 						generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], true, true, true);
-						$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
+						$album_ary[] = $album_data;
 						$left_id = $left_id + 2;
 					}
 				}
 				$db->sql_freeresult($result);
+
+				$db->sql_multi_insert(GALLERY_ALBUMS_TABLE, $album_ary);
 
 				$body = $user->lang['CONVERTED_ALBUMS'];
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=3&amp;personal_albums=$personal_albums";
@@ -446,7 +448,7 @@ class install_convert extends module
 						ON i.pic_user_id = u.user_id
 					ORDER BY i.pic_id';
 				$result = $db->sql_query($sql);
-				while( $row = $db->sql_fetchrow($result) )
+				while ($row = $db->sql_fetchrow($result))
 				{
 					$row['image_desc_uid'] = $row['image_desc_options'] = $row['image_desc_bitfield'] = '';
 					$row['image_desc'] = $row['pic_desc'];
@@ -473,9 +475,11 @@ class install_convert extends module
 					);
 					generate_text_for_storage($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], $image_data['image_desc_options'], true, true, true);
 					unset($image_data['image_desc_options']);
-					$db->sql_query('INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $image_data));
+					$image_ary[] = $image_data;
 				}
 				$db->sql_freeresult($result);
+
+				$db->sql_multi_insert(GALLERY_IMAGES_TABLE, $image_ary);
 
 				$body = $user->lang['CONVERTED_IMAGES'];
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=4";
@@ -508,7 +512,7 @@ class install_convert extends module
 						'personal_album_id'		=> $new_personal_album_id,
 						'user_id'				=> $row['image_user_id'],
 					);
-					$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $user_data));
+					$user_ary[] = $user_data;
 
 					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " 
 							SET image_album_id = $new_personal_album_id
@@ -517,6 +521,11 @@ class install_convert extends module
 					$db->sql_query($sql);
 				}
 				$db->sql_freeresult($result);
+
+				if (sizeof($user_ary))
+				{
+					$db->sql_multi_insert(GALLERY_USERS_TABLE, $user_ary);
+				}
 
 				// Update the config for the statistic on the index
 				$sql = 'SELECT a.album_id, u.user_id, u.username, u.user_colour
@@ -606,7 +615,8 @@ class install_convert extends module
 
 			case 6:
 				$num_images = 0;
-				$sql = 'SELECT u.user_id, COUNT(i.image_id) as images
+				$user_ary = array();
+				$sql = 'SELECT u.user_id, COUNT(i.image_id) AS images
 					FROM ' . USERS_TABLE . ' u
 					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
 						ON i.image_user_id = u.user_id
@@ -625,10 +635,14 @@ class install_convert extends module
 							'user_id'				=> $row['user_id'],
 							'user_images'			=> $row['images'],
 						);
-						$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . $db->sql_build_array('INSERT', $sql_ary));
+						$user_ary[] = $sql_ary;
 					}
 				}
 				$db->sql_freeresult($result);
+				if (sizeof($user_ary))
+				{
+					$db->sql_multi_insert(GALLERY_USERS_TABLE, $user_ary);
+				}
 				set_config('num_images', $num_images, true);
 
 				$body = $user->lang['CONVERTED_RESYNC_COUNTS'];

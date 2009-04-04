@@ -312,8 +312,8 @@ class install_convert_ts extends module
 		nv_add_column(LOG_TABLE,		'album_id',			array('UINT', 0));
 		nv_add_column(LOG_TABLE,		'image_id',			array('UINT', 0));
 
-		nv_add_index(GALLERY_USERS_TABLE, 'pg_palbum_id', array('personal_album_id'));
-		nv_add_index(SESSIONS_TABLE, 'session_aid', array('session_album_id'));
+		nv_add_index(GALLERY_USERS_TABLE,	'pg_palbum_id',	array('personal_album_id'));
+		nv_add_index(SESSIONS_TABLE,		'session_aid',	array('session_album_id'));
 
 		// Set default config
 		set_default_config();
@@ -455,6 +455,23 @@ class install_convert_ts extends module
 
 				$db->sql_multi_insert(GALLERY_ALBUMS_TABLE, $album_ary);
 				$db->sql_multi_insert(GALLERY_USERS_TABLE, $user_ary);
+
+				// Update the config for the statistic on the index
+				$sql = 'SELECT a.album_id, u.user_id, u.username, u.user_colour
+					FROM ' . GALLERY_ALBUMS_TABLE . ' a
+					LEFT JOIN ' . USERS_TABLE . ' u
+						ON u.user_id = a.album_user_id
+					WHERE a.album_user_id <> 0
+						AND a.parent_id = 0
+					ORDER BY a.album_id DESC';
+				$result = $db->sql_query_limit($sql, 1);
+				$newest_pgallery = $db->sql_fetchrow($result);
+				$db->sql_freeresult($result);
+
+				set_gallery_config('newest_pgallery_user_id', (int) $newest_pgallery['user_id']);
+				set_gallery_config('newest_pgallery_username', (string) $newest_pgallery['username']);
+				set_gallery_config('newest_pgallery_user_colour', (string) $newest_pgallery['user_colour']);
+				set_gallery_config('newest_pgallery_album_id', (int) $newest_pgallery['album_id']);
 				set_gallery_config('personal_counter', $personal_albums);
 
 				$body = $user->lang['CONVERTED_ALBUMS'] . '<br />' . $user->lang['CONVERTED_PERSONALS'];
@@ -492,6 +509,7 @@ class install_convert_ts extends module
 						'image_view_count'		=> $row['pic_views'],
 						'image_status'			=> ($row['pic_lock']) ? IMAGE_LOCKED : IMAGE_APPROVED,
 						'image_reported'		=> 0,
+						'image_exif_data'		=> '',
 					);
 					generate_text_for_storage($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], $image_data['image_desc_options'], true, true, true);
 					unset($image_data['image_desc_options']);
@@ -575,40 +593,34 @@ class install_convert_ts extends module
 			case 6:
 				$num_images = 0;
 				$user_ary = array();
-				$sql = 'SELECT u.user_id, count(i.image_id) as images, gu.personal_album_id
+				$sql = 'SELECT u.user_id, COUNT(i.image_id) AS images
 					FROM ' . USERS_TABLE . ' u
 					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
 						ON i.image_user_id = u.user_id
 							AND i.image_status <> ' . IMAGE_UNAPPROVED . '
-					LEFT JOIN ' . GALLERY_USERS_TABLE . ' gu
-						ON gu.user_id = u.user_id
 					GROUP BY i.image_user_id';
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
-					$sql_ary = array(
-						'user_id'				=> $row['user_id'],
-						'user_images'			=> $row['images'],
-					);
 					$num_images = $num_images + $row['images'];
-					if ($row['personal_album_id'])
+					$sql = 'UPDATE ' . GALLERY_USERS_TABLE . ' SET user_images = ' . (int) $row['images'] . '
+						WHERE user_id = ' . (int) $row['user_id'];
+					$db->sql_query($sql);
+					if ($db->sql_affectedrows() <= 0)
 					{
-						$sql = 'UPDATE ' . GALLERY_USERS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-							WHERE ' . $db->sql_in_set('user_id', $row['user_id']);
-						$db->sql_query($sql);
-					}
-					else
-					{
+						$sql_ary = array(
+							'user_id'				=> $row['user_id'],
+							'user_images'			=> $row['images'],
+						);
 						$user_ary[] = $sql_ary;
 					}
 				}
 				$db->sql_freeresult($result);
-
-				set_config('num_images', $num_images, true);
-				if ($user_ary)
+				if (sizeof($user_ary))
 				{
 					$db->sql_multi_insert(GALLERY_USERS_TABLE, $user_ary);
 				}
+				set_config('num_images', $num_images, true);
 
 				$body = $user->lang['CONVERTED_RESYNC_COUNTS'];
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;step=7";
@@ -648,7 +660,28 @@ class install_convert_ts extends module
 				}
 				$db->sql_freeresult($result);
 
+				$num_comments = 0;
+				$sql = 'SELECT SUM(image_comments) comments
+					FROM ' . GALLERY_IMAGES_TABLE . '
+					WHERE image_status <> ' . IMAGE_UNAPPROVED;
+				$result = $db->sql_query($sql);
+				$num_comments = (int) $db->sql_fetchfield('comments');
+				$db->sql_freeresult($result);
+				set_gallery_config('num_comments', $num_comments, true);
+
 				$body = $user->lang['CONVERTED_RESYNC_COMMENTS'];
+				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=9";
+			break;
+
+			case 9:
+				// Misc updates
+				// Set the lastmark to the current time of update
+				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
+					SET user_lastmark = ' . time() . '
+					WHERE user_lastmark = 0';
+				$db->sql_query($sql);
+
+				$body = $user->lang['CONVERTED_MISC'];
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=advanced";
 			break;
 		}
