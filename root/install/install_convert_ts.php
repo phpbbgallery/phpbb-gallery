@@ -546,12 +546,12 @@ class install_convert_ts extends module
 
 				//Step 5.3: Last image data
 				$sql = 'SELECT a.album_id, a.album_last_image_id, i.image_time, i.image_name, i.image_user_id, i.image_username, i.image_user_colour, u.user_colour
-					FROM ' . GALLERY_ALBUMS_TABLE . " a
-					LEFT JOIN " . GALLERY_IMAGES_TABLE . " i
+					FROM ' . GALLERY_ALBUMS_TABLE . ' a
+					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
 						ON a.album_last_image_id = i.image_id
-					LEFT JOIN " . USERS_TABLE . " u
-						ON a.album_user_id = u.user_colour
-					WHERE a.album_last_image_id > 0";
+					LEFT JOIN ' . USERS_TABLE . ' u
+						ON a.album_user_id = u.user_id
+					WHERE a.album_last_image_id > 0';
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{

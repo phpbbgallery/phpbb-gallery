@@ -45,6 +45,7 @@ $lang = array_merge($lang, array(
 	'CONVERTED_RESYNC_COMMENTS'	=> 'Die Kommentare wurden erfolgreich resyncronisiert.',
 	'CONVERTED_RESYNC_COUNTS'	=> 'Die Zähler-Statistiken wurden erfolgreich resyncronisiert.',
 	'CONVERTED_RESYNC_RATES'	=> 'Die Bewertungen wurden erfolgreich resyncronisiert.',
+	'CONVERTED_MISC'			=> 'Verschiedene Daten wurden konvertiert.',
 
 	'FILE_DELETE_FAIL'				=> 'Datei konnte nicht gelöscht werden, du musst sie manuel löschen',
 	'FILE_STILL_EXISTS'				=> 'Datei existiert noch',

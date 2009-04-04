@@ -659,7 +659,7 @@ class install_update extends module
 					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
 						ON a.album_last_image_id = i.image_id
 					LEFT JOIN ' . USERS_TABLE . ' u
-						ON a.album_user_id = u.user_colour
+						ON a.album_user_id = u.user_id
 					WHERE a.album_last_image_id > 0';
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
@@ -1003,10 +1003,9 @@ class install_update extends module
 				$num_comments = 0;
 				$sql = 'SELECT SUM(image_comments) comments
 					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE image_status <> ' . IMAGE_UNAPPROVED . '
-					GROUP BY image_id';
+					WHERE image_status <> ' . IMAGE_UNAPPROVED;
 				$result = $db->sql_query($sql);
-				$num_comments = $db->sql_fetchfield('comments');
+				$num_comments = (int) $db->sql_fetchfield('comments');
 				$db->sql_freeresult($result);
 				set_gallery_config('num_comments', $num_comments, true);
 

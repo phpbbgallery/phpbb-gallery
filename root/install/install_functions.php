@@ -581,8 +581,8 @@ function set_default_config()
 	set_gallery_config('gd_version', '2');
 	set_gallery_config('watermark_images', 1);
 	set_gallery_config('watermark_source', GALLERY_IMAGE_PATH . 'watermark.png');
-	set_gallery_config('preview_rsz_height', 600);
-	set_gallery_config('preview_rsz_width', 800);
+	set_gallery_config('preview_rsz_height', 768);
+	set_gallery_config('preview_rsz_width', 1024);
 	set_gallery_config('upload_images', 10);
 	set_gallery_config('thumbnail_info_line', 1);
 

@@ -45,6 +45,7 @@ $lang = array_merge($lang, array(
 	'CONVERTED_RESYNC_COMMENTS'	=> 'Resyncronize comments.',
 	'CONVERTED_RESYNC_COUNTS'	=> 'Resyncronize imagecounters.',
 	'CONVERTED_RESYNC_RATES'	=> 'Resyncronize rates.',
+	'CONVERTED_MISC'			=> 'Converted miscellanious things.',
 
 	'FILE_DELETE_FAIL'				=> 'File could not be deleted, you need to delete it manually',
 	'FILE_STILL_EXISTS'				=> 'File still exists',
