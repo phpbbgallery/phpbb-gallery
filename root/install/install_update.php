@@ -1026,6 +1026,42 @@ class install_update extends module
 				set_gallery_config('newest_pgallery_user_colour', (string) $newest_pgallery['user_colour']);
 				set_gallery_config('newest_pgallery_album_id', (int) $newest_pgallery['album_id']);
 
+				// Update RRC-Mode to newest RRC-Version
+				if (!is_int($gallery_config['rrc_gindex_mode']))
+				{
+					$rrc_gindex_mode = RRC_MODE_NONE;
+					if (in_array($gallery_config['rrc_gindex_mode'], array('recent', '!random', '!comment', 'all', 'both')))
+					{
+						$rrc_gindex_mode += RRC_MODE_RECENT;
+					}
+					if (in_array($gallery_config['rrc_gindex_mode'], array('!recent', 'random', '!comment', 'all', 'both')))
+					{
+						$rrc_gindex_mode += RRC_MODE_RANDOM;
+					}
+					if (in_array($gallery_config['rrc_gindex_mode'], array('!recent', '!random', 'comment', 'all', 'both')))
+					{
+						$rrc_gindex_mode += RRC_MODE_COMMENT;
+					}
+					set_gallery_config('rrc_gindex_mode', $rrc_gindex_mode);
+				}
+				if (!is_int($gallery_config['rrc_profile_mode']))
+				{
+					$rrc_profile_mode = RRC_MODE_NONE;
+					if (in_array($gallery_config['rrc_profile_mode'], array('recent', '!random', '!comment', 'all', 'both')))
+					{
+						$rrc_profile_mode += RRC_MODE_RECENT;
+					}
+					if (in_array($gallery_config['rrc_profile_mode'], array('!recent', 'random', '!comment', 'all', 'both')))
+					{
+						$rrc_profile_mode += RRC_MODE_RANDOM;
+					}
+					if (in_array($gallery_config['rrc_profile_mode'], array('!recent', '!random', 'comment', 'all', 'both')))
+					{
+						$rrc_profile_mode += RRC_MODE_COMMENT;
+					}
+					set_gallery_config('rrc_profile_mode', $rrc_profile_mode);
+				}
+
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
 		}

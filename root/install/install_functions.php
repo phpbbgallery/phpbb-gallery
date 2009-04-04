@@ -614,7 +614,7 @@ function set_default_config()
 	set_gallery_config('link_imagepage', 'lytebox');
 
 	// Added 0.5.0
-	set_gallery_config('rrc_gindex_mode', 'all');
+	set_gallery_config('rrc_gindex_mode', 7);
 	set_gallery_config('rrc_gindex_rows', 1);
 	set_gallery_config('rrc_gindex_columns', 4);
 	set_gallery_config('rrc_gindex_comments', 0);
@@ -622,7 +622,7 @@ function set_default_config()
 	// Added 0.5.1:
 	set_gallery_config('user_images_profile', 1);
 	set_gallery_config('personal_album_profile', 1);
-	set_gallery_config('rrc_profile_mode', '!comment');
+	set_gallery_config('rrc_profile_mode', 3);
 	set_gallery_config('rrc_profile_columns', 4);
 	set_gallery_config('rrc_profile_rows', 1);
 	set_gallery_config('rrc_gindex_crows', 5);

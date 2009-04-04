@@ -106,7 +106,7 @@ class acp_gallery_config
 						'link_image_icon'		=> array('lang' => 'UC_IMAGE_ICON',			'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'uc_select'),
 
 						'legend7'				=> 'RRC_GINDEX',
-						'rrc_gindex_mode'		=> array('lang' => 'RRC_GINDEX_MODE',		'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'rrc_modes'),
+						'rrc_gindex_mode'		=> array('lang' => 'RRC_GINDEX_MODE',		'validate' => 'int',	'type' => 'custom',			'gallery' => true,	'explain' => true,	'method' => 'rrc_modes'),
 						'rrc_gindex_rows'		=> array('lang' => 'RRC_GINDEX_ROWS',		'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 						'rrc_gindex_columns'	=> array('lang' => 'RRC_GINDEX_COLUMNS',	'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 						'rrc_gindex_comments'	=> array('lang' => 'RRC_GINDEX_COMMENTS',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
@@ -119,7 +119,7 @@ class acp_gallery_config
 						'gallery_total_images'		=> array('lang' => 'DISP_TOTAL_IMAGES',				'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => false,	'explain' => false),
 						'user_images_profile'		=> array('lang' => 'DISP_USER_IMAGES_PROFILE',		'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 						'personal_album_profile'	=> array('lang' => 'DISP_PERSONAL_ALBUM_PROFILE',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
-						'rrc_profile_mode'			=> array('lang' => 'RRC_PROFILE_MODE',		'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'rrc_modes'),
+						'rrc_profile_mode'			=> array('lang' => 'RRC_PROFILE_MODE',		'validate' => 'int',	'type' => 'custom',			'gallery' => true,	'explain' => true,	'method' => 'rrc_modes'),
 						'rrc_profile_rows'			=> array('lang' => 'RRC_PROFILE_ROWS',		'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 						'rrc_profile_columns'		=> array('lang' => 'RRC_PROFILE_COLUMNS',	'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 						'rrc_profile_display'		=> array('lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => 'int',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'rrc_display'),
@@ -358,26 +358,16 @@ class acp_gallery_config
 
 		$rrc_mode_options = '';
 
-		$rrc_mode_options .= '<option' . (($value == 'recent') ? ' selected="selected"' : '') . " value='recent'>" . $user->lang['RRC_MODE_RECENT'] . '</option>';
-		$rrc_mode_options .= '<option' . (($value == 'random') ? ' selected="selected"' : '') . " value='random'>" . $user->lang['RRC_MODE_RANDOM'] . '</option>';
+		$rrc_mode_options .= "<option value='" . RRC_MODE_NONE . "'>" . $user->lang['RRC_MODE_NONE'] . '</option>';
+		$rrc_mode_options .= '<option' . (($value & RRC_MODE_RECENT) ? ' selected="selected"' : '') . " value='" . RRC_MODE_RECENT . "'>" . $user->lang['RRC_MODE_RECENT'] . '</option>';
+		$rrc_mode_options .= '<option' . (($value & RRC_MODE_RANDOM) ? ' selected="selected"' : '') . " value='" . RRC_MODE_RANDOM . "'>" . $user->lang['RRC_MODE_RANDOM'] . '</option>';
 		if ($key != 'rrc_profile_mode')
 		{
-			$rrc_mode_options .= '<option' . (($value == 'comment') ? ' selected="selected"' : '') . " value='comment'>" . $user->lang['RRC_MODE_COMMENTS'] . '</option>';
-			$rrc_mode_options .= '<option' . (($value == '!recent') ? ' selected="selected"' : '') . " value='!recent'>" . $user->lang['RRC_MODE_ARECENT'] . '</option>';
-			$rrc_mode_options .= '<option' . (($value == '!random') ? ' selected="selected"' : '') . " value='!random'>" . $user->lang['RRC_MODE_ARANDOM'] . '</option>';
+			$rrc_mode_options .= '<option' . (($value & RRC_MODE_COMMENT) ? ' selected="selected"' : '') . " value='" . RRC_MODE_COMMENT . "'>" . $user->lang['RRC_MODE_COMMENTS'] . '</option>';
 		}
-		if ($key != 'rrc_profile_mode')
-		{
-			$rrc_mode_options .= '<option' . (($value == '!comment') ? ' selected="selected"' : '') . " value='!comment'>" . $user->lang['RRC_MODE_ACOMMENTS'] . '</option>';
-			$rrc_mode_options .= '<option' . (($value == 'all') ? ' selected="selected"' : '') . " value='all'>" . $user->lang['RRC_MODE_ALL'] . '</option>';
-		}
-		else
-		{
-			$rrc_mode_options .= '<option' . (($value == '!comment') ? ' selected="selected"' : '') . " value='!comment'>" . $user->lang['RRC_MODE_ACOMMENTS2'] . '</option>';
-		}
-		$rrc_mode_options .= '<option' . (($value == '!all') ? ' selected="selected"' : '') . " value='!all'>" . $user->lang['RRC_MODE_AALL'] . '</option>';
 
-		return "<select name=\"config[$key]\" id=\"$key\">$rrc_mode_options</select>";
+		// Cheating is an evil-thing, but most times it's successful, that's why it is used.
+		return "<input type=\"hidden\" name=\"config[$key]\" value=\"$value\" /><select name=\"" . $key . "[]\" multiple=\"multiple\" id=\"$key\">$rrc_mode_options</select>";
 	}
 
 	/**

@@ -23,7 +23,6 @@ function build_gallery_mcp_navigation ($album_id, $mode, $option_id = false)
 	global $user, $template, $phpbb_root_path, $gallery_root_path, $phpEx;
 
 	$mode_s = $mode;
-	$row_count = 0;
 	$nav_tabs = array(
 		'album'			=> array('name' => 'GALLERY_MCP_MAIN',		'mode' => 'album',				'mode_s' => 'album'),
 		'report'		=> array('name' => 'GALLERY_MCP_REPORTED',	'mode' => 'report_open',		'mode_s' => 'report'),

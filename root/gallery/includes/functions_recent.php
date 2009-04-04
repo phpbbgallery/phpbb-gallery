@@ -20,12 +20,12 @@ if (!defined('IN_PHPBB'))
 /**
 * Display recent images & comments and random images
 */
-function recent_gallery_images(&$ints, $display, $modes, $collapse_comments = false, $user_id = 0)
+function recent_gallery_images($ints, $display, $mode, $collapse_comments = false, $user_id = 0)
 {
-	global $db, $phpEx, $user, $cache, $auth;
-	global $phpbb_root_path, $gallery_config, $config, $template;
+	global $auth, $cache, $config, $db, $gallery_config, $template, $user;
+	global $gallery_root_path, $phpbb_root_path, $phpEx;
 
-	$gallery_root_path = GALLERY_ROOT_PATH;
+	$gallery_root_path = (!$gallery_root_path) ? GALLERY_ROOT_PATH : $gallery_root_path;
 	$user->add_lang('mods/gallery');
 
 	if (!function_exists('generate_text_for_display'))
@@ -44,231 +44,174 @@ function recent_gallery_images(&$ints, $display, $modes, $collapse_comments = fa
 	}
 	$album_access_array = get_album_access_array();
 
-	$albums = $cache->obtain_album_list();
-	$view_albums = gallery_acl_album_ids('i_view', 'array', true, $gallery_config['rrc_gindex_pgalleries']);
-	$moderate_albums = gallery_acl_album_ids('m_status', 'array', true, $gallery_config['rrc_gindex_pgalleries']);
-	$comment_albums = gallery_acl_album_ids('c_read', 'array', true, $gallery_config['rrc_gindex_pgalleries']);
 	$limit_sql = $ints['rows'] * $ints['columns'];
+	$albums = $cache->obtain_album_list();
 
-	switch ($modes)
-	{
-		case 'recent':
-			$recent = true;
-			$random = false;
-			$comment = false;
-		break;
+	$moderate_albums = gallery_acl_album_ids('m_status', 'array', true, $gallery_config['rrc_gindex_pgalleries']);
+	$view_albums = array_diff(gallery_acl_album_ids('i_view', 'array', true, $gallery_config['rrc_gindex_pgalleries']), $moderate_albums);
+	$comment_albums = gallery_acl_album_ids('c_read', 'array', true, $gallery_config['rrc_gindex_pgalleries']);
 
-		case 'random':
-			$recent = false;
-			$random = true;
-			$comment = false;
-		break;
-
-		case 'comment':
-			$recent = false;
-			$random = false;
-			$comment = true;
-		break;
-
-		case '!recent':
-			$recent = false;
-			$random = true;
-			$comment = true;
-		break;
-
-		case '!random':
-			$recent = true;
-			$random = false;
-			$comment = true;
-		break;
-
-		case '!comment':
-			$recent = true;
-			$random = true;
-			$comment = false;
-		break;
-
-		case 'all':
-		case 'both':
-		default:
-			$recent = true;
-			$random = true;
-			$comment = true;
-		break;
-	}
+	$sql_permission_where = '(';
+	$sql_permission_where .= ((sizeof($view_albums)) ? '(' . $db->sql_in_set('image_album_id', $view_albums) . ' AND image_status <> ' . IMAGE_UNAPPROVED . (($user_id) ? ' AND image_contest = ' . IMAGE_NO_CONTEST : '') . ') OR ' : '');
+	$sql_permission_where .= ((sizeof($moderate_albums)) ? '(' . $db->sql_in_set('image_album_id', $moderate_albums, false, true) . ')' : '');
+	$sql_permission_where .= ($user_id) ? ') AND image_user_id = ' . $user_id : ')';
 
 	if (($view_albums != array()) || ($moderate_albums != array()))
 	{
-		if ($recent)
+		$images = $recent_images = $random_images = $contest_images = array();
+		// First step: grab all the IDs we are going to display ...
+		if ($mode & RRC_MODE_RECENT)
 		{
-			$recent_images = $recent_ids = array();
 			$sql = 'SELECT image_id
-				FROM ' . GALLERY_IMAGES_TABLE . '
-				WHERE ((' . $db->sql_in_set('image_album_id', $view_albums) . '
-						AND image_status <> ' . IMAGE_UNAPPROVED . (($user_id) ? ' AND image_contest = ' . IMAGE_NO_CONTEST : '') . ')' . 
-					(($moderate_albums) ? ' OR (' . $db->sql_in_set('image_album_id', $moderate_albums) . ')' : '') . '
-					' . (($user_id) ? ') AND image_user_id = ' . $user_id : ')') . '
-				ORDER BY image_time DESC';
+				FROM ' . GALLERY_IMAGES_TABLE . "
+				WHERE $sql_permission_where
+				ORDER BY image_time DESC";
 			$result = $db->sql_query_limit($sql, $limit_sql);
 
 			while ($row = $db->sql_fetchrow($result))
 			{
-				$recent_ids[] = $row['image_id'];
+				$images[] = $row['image_id'];
+				$recent_images[] = $row['image_id'];
 			}
 			$db->sql_freeresult($result);
-
-			$sql = 'SELECT i.*, a.album_name, a.album_status, a.album_id, a.album_user_id
-				FROM ' . GALLERY_IMAGES_TABLE . ' i
-				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
-					ON i.image_album_id = a.album_id
-				WHERE ' . $db->sql_in_set('i.image_id', $recent_ids, false, true) . '
-				ORDER BY i.image_time DESC';
-			$result = $db->sql_query_limit($sql, $limit_sql);
-
-			while ($row = $db->sql_fetchrow($result))
-			{
-				$recent_images[] = $row;
-			}
-			$db->sql_freeresult($result);
-
-			for ($i = 0; $i < count($recent_images); $i += $ints['columns'])
-			{
-				$template->assign_block_vars('recent', array());
-
-				for ($j = $i; $j < ($i + $ints['columns']); $j++)
-				{
-					if ($j >= count($recent_images))
-					{
-						$template->assign_block_vars('recent.no_image', array());
-						continue;
-					}
-
-					// Assign the image to the template-block
-					assign_image_block('recent.image', $recent_images[$j], $recent_images[$j]['album_status'], $display);
-				}
-			}
 		}
-
-		if ($random)
+		if ($mode & RRC_MODE_RANDOM)
 		{
 			switch ($db->sql_layer)
 			{
 				case 'postgres':
-					$random = 'RANDOM()';
+					$random_sql = 'RANDOM()';
 				break;
-
 				case 'mssql':
 				case 'mssql_odbc':
-					$random = 'NEWID()';
+					$random_sql = 'NEWID()';
 				break;
-
 				default:
-					$random = 'RAND()';
+					$random_sql = 'RAND()';
 				break;
 			}
 
-			$random_images = $random_ids = array();
 			$sql = 'SELECT image_id
-				FROM ' . GALLERY_IMAGES_TABLE . '
-				WHERE ((' . $db->sql_in_set('image_album_id', $view_albums) . '
-						AND image_status <> ' . IMAGE_UNAPPROVED . (($user_id) ? ' AND image_contest = ' . IMAGE_NO_CONTEST : '') . ')' . 
-					(($moderate_albums) ? ' OR (' . $db->sql_in_set('image_album_id', $moderate_albums) . ')' : '') . '
-					' . (($user_id) ? ') AND image_user_id = ' . $user_id : ')') . '
-				ORDER BY ' . $random;
+				FROM ' . GALLERY_IMAGES_TABLE . "
+				WHERE $sql_permission_where
+				ORDER BY " . $random_sql;
 			$result = $db->sql_query_limit($sql, $limit_sql);
 
 			while ($row = $db->sql_fetchrow($result))
 			{
-				$random_ids[] = $row['image_id'];
+				$images[] = $row['image_id'];
+				$random_images[] = $row['image_id'];
 			}
 			$db->sql_freeresult($result);
-
-			$sql = 'SELECT i.*, a.album_name, a.album_status, a.album_id, a.album_user_id
-				FROM ' . GALLERY_IMAGES_TABLE . ' i
-				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
-					ON i.image_album_id = a.album_id
-				WHERE ' . $db->sql_in_set('i.image_id', $random_ids, false, true);
-			$result = $db->sql_query_limit($sql, $limit_sql);
-
-			while ($row = $db->sql_fetchrow($result))
-			{
-				$random_images[] = $row;
-			}
-			$db->sql_freeresult($result);
-
-			for ($i = 0; $i < count($random_images); $i += $ints['columns'])
-			{
-				$template->assign_block_vars('random', array());
-
-				for ($j = $i; $j < ($i + $ints['columns']); $j++)
-				{
-					if ($j >= count($random_images))
-					{
-						$template->assign_block_vars('random.no_image', array());
-						continue;
-					}
-
-					// Assign the image to the template-block
-					assign_image_block('random.image', $random_images[$j], $random_images[$j]['album_status'], $display);
-				}
-			}
 		}
-
 		if ($ints['contests'])
 		{
-			$contest_columns = 3;
-			$contest_images = array();
+			$sql = 'SELECT *
+				FROM ' . GALLERY_CONTESTS_TABLE . '
+				WHERE ' . $db->sql_in_set('contest_album_id', array_unique(array_merge($view_albums, $moderate_albums))) . '
+					AND contest_marked = ' . IMAGE_NO_CONTEST . '
+				ORDER BY contest_start + contest_end DESC';
+			$result = $db->sql_query_limit($sql, $ints['contests']);
+
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$images[] = $row['contest_first'];
+				$images[] = $row['contest_second'];
+				$images[] = $row['contest_third'];
+				$contest_images[$row['contest_id']] = array($row['contest_first'], $row['contest_second'], $row['contest_third']);
+			}
+			$db->sql_freeresult($result);
+		}
+
+		// Second step: grab the data ...
+		$images = array_unique($images);
+		if (sizeof($images))
+		{
 			$sql = 'SELECT i.*, a.album_name, a.album_status, a.album_id, a.album_user_id
 				FROM ' . GALLERY_IMAGES_TABLE . ' i
 				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
 					ON i.image_album_id = a.album_id
-				WHERE ((' . $db->sql_in_set('i.image_album_id', $view_albums) . ' AND i.image_status <> ' . IMAGE_UNAPPROVED . ')' . 
-					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . ')
-					AND i.image_contest_rank > 0
-				GROUP BY i.image_id
-				ORDER BY image_contest_end DESC, image_contest_rank ASC';
-			$result = $db->sql_query_limit($sql, $ints['contests'] * $contest_columns);
+				WHERE ' . $db->sql_in_set('i.image_id', $images, false, true) . '
+				ORDER BY i.image_time DESC';
+			$result = $db->sql_query($sql);
 
 			while ($row = $db->sql_fetchrow($result))
 			{
-				$contest_images[] = $row;
+				$images_data[$row['image_id']] = $row;
 			}
 			$db->sql_freeresult($result);
+		}
 
-			for ($i = 0; $i < count($contest_images); $i += $contest_columns)
+		// Third step: put the images
+		if (sizeof($recent_images))
+		{
+			$num = 0;
+			foreach ($recent_images as $recent_image)
 			{
-				$template->assign_block_vars('contest', array());
-
-				for ($j = $i; $j < ($i + $contest_columns); $j++)
+				if (($num % $ints['columns']) == 0)
 				{
-					if ($j >= count($contest_images))
+					$template->assign_block_vars('recent', array());
+				}
+				assign_image_block('recent.image', $images_data[$recent_image], $images_data[$recent_image]['album_status'], $display);
+				$num++;
+			}
+			while (($num % $ints['columns']) > 0)
+			{
+				$template->assign_block_vars('recent.no_image', array());
+				$num++;
+			}
+		}
+		if (sizeof($random_images))
+		{
+			$num = 0;
+			foreach ($random_images as $random_image)
+			{
+				if (($num % $ints['columns']) == 0)
+				{
+					$template->assign_block_vars('random', array());
+				}
+				assign_image_block('random.image', $images_data[$random_image], $images_data[$random_image]['album_status'], $display);
+				$num++;
+			}
+			while (($num % $ints['columns']) > 0)
+			{
+				$template->assign_block_vars('random.no_image', array());
+				$num++;
+			}
+		}
+		if (sizeof($contest_images))
+		{
+			foreach ($contest_images as $contest => $this_contests_images)
+			{
+				$num = 0;
+				foreach ($this_contests_images as $contest_image)
+				{
+					if (($num % 3) == 0)
 					{
-						$template->assign_block_vars('contest.no_image', array());
-						continue;
+						$template->assign_block_vars('contest', array());
 					}
-
-					// Assign the image to the template-block
-					assign_image_block('contest.image', $contest_images[$j], $contest_images[$j]['album_status'], $display);
+					assign_image_block('contest.image', $images_data[$contest_image], $images_data[$contest_image]['album_status'], $display);
+					$num++;
+				}
+				while (($num % 3) > 0)
+				{
+					$template->assign_block_vars('contest.no_image', array());
+					$num++;
 				}
 			}
 		}
 	}
 
-	if ($gallery_config['allow_comments'] && $comment && ($comment_albums != array()))
+	if ($gallery_config['allow_comments'] && ($mode & RRC_MODE_COMMENT) && ($comment_albums != array()))
 	{
 		$user->add_lang('viewtopic');
-		$template->assign_vars(array(
-			'S_COMMENTS'	=> true,
-		));
 
 		$sql = 'SELECT c.*, i.*
 			FROM ' . GALLERY_COMMENTS_TABLE . ' c
-			LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
+			LEFT JOIN ' . GALLERY_IMAGES_TABLE . " i
 				ON c.comment_image_id = i.image_id
-			WHERE ((' . $db->sql_in_set('i.image_album_id', $view_albums) . ' AND i.image_status <> ' . IMAGE_UNAPPROVED . ')' . 
-					(($moderate_albums) ? 'OR (' . $db->sql_in_set('i.image_album_id', $moderate_albums) . ')' : '') . ')
-				AND (' . $db->sql_in_set('i.image_album_id', $comment_albums) . '
-				' . (($user_id) ? ') AND i.image_user_id = ' . $user_id : ')') .'
+			WHERE $sql_permission_where
+				AND " . $db->sql_in_set('i.image_album_id', $comment_albums, false, true) . '
 			ORDER BY c.comment_id DESC';
 		$result = $db->sql_query_limit($sql, $ints['comments']);
 
@@ -300,6 +243,8 @@ function recent_gallery_images(&$ints, $display, $modes, $collapse_comments = fa
 		$db->sql_freeresult($result);
 
 		$template->assign_vars(array(
+			'S_COMMENTS'	=> true,
+
 			'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_COMMENT'),
 			'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_COMMENT'),
 			'INFO_IMG'			=> $user->img('icon_post_info', 'VIEW_INFO'),
@@ -313,8 +258,8 @@ function recent_gallery_images(&$ints, $display, $modes, $collapse_comments = fa
 		'S_THUMBNAIL_SIZE'			=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? 16 : 0),
 		'S_COL_WIDTH'			=> (100 / $ints['columns']) . '%',
 		'S_COLS'				=> $ints['columns'],
-		'S_RANDOM'				=> $random,
-		'S_RECENT'				=> $recent,
+		'S_RANDOM'				=> ($mode & RRC_MODE_RANDOM) ? true : false,
+		'S_RECENT'				=> ($mode & RRC_MODE_RECENT) ? true : false,
 	));
 }
 

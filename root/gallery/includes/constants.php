@@ -63,6 +63,12 @@ define('RRC_DISPLAY_IMAGEVIEWS', 16);
 define('RRC_DISPLAY_USERNAME', 32);
 define('RRC_DISPLAY_RATINGS', 64);
 
+// Mode-options for RRC-Feature
+define('RRC_MODE_NONE', 0);
+define('RRC_MODE_RECENT', 1);
+define('RRC_MODE_RANDOM', 2);
+define('RRC_MODE_COMMENT', 4);
+
 // Additional constants
 define('MODULE_DEFAULT_ACP', 31);
 define('MODULE_DEFAULT_LOG', 25);
