@@ -1290,6 +1290,7 @@ class acp_gallery
 	function inherit_victims($cache_obtain_album_list, $allowed_albums, $allowed_victims, $album_id, $victim_id, $check_inherit_album = 0, $check_inherit_victim = 0)
 	{
 		global $user;
+
 		$disabled = false;
 		// We submit a "wrong" array on the check (to make it more easy) so we convert it here
 		if ($check_inherit_album && $check_inherit_victim)
@@ -1351,52 +1352,53 @@ class acp_gallery
 	* Create the drop-down-options to inherit the v_masks
 	* or check, whether the choosen option is valid
 	*/
-	function p_system_inherit_victims($p_system, $allowed_groups, $group_id, $check_inherit_group = 0)
+	function p_system_inherit_victims($p_system, $allowed_victims, $victim_id, $check_inherit_victim = 0)
 	{
 		global $user;
+
 		$disabled = false;
 		// We submit a "wrong" array on the check (to make it more easy) so we convert it here
-		if ($check_inherit_group)
+		if ($check_inherit_victim)
 		{
 			$converted_groups = array();
-			foreach ($allowed_groups as $group)
+			foreach ($allowed_victims as $victim)
 			{
-				$converted_groups[] = array(
-					'group_id'		=> $group,
-					'group_name'	=> '',
+				$converted_victims[] = array(
+					'victim_id'		=> $victim,
+					'victim_name'	=> '',
 				);
 			}
-			$allowed_groups = $converted_groups;
-			unset ($converted_groups);
+			$allowed_victims = $converted_victims;
+			unset ($converted_victims);
 		}
 
 		$return = '';
 		$return .= '<option value="0" selected="selected">' . $user->lang['NO_INHERIT'] . '</option>';
-		foreach ($allowed_groups as $group)
+		foreach ($allowed_victims as $victim)
 		{
-			// We found the requested {$p_system}_group: return true!
-			if ($check_inherit_group && ($group['group_id'] == $check_inherit_group))
+			// We found the requested {$p_system}_victim: return true!
+			if ($check_inherit_victim && ($victim['victim_id'] == $check_inherit_victim))
 			{
 				return true;
 			}
-			if ($group['group_id'] == $group_id)
+			if ($victim['victim_id'] == $victim_id)
 			{
 				$disabled = true;
-				// Could we find the requested {$p_system}_group so far? No? Hacking attempt?!
-				if ($check_inherit_group)
+				// Could we find the requested {$p_system}_victim so far? No? Hacking attempt?!
+				if ($check_inherit_victim)
 				{
 					return false;
 				}
 			}
-			$return .= '<option value="' . $p_system . '_' . $group['group_id'] . '"';
+			$return .= '<option value="' . $p_system . '_' . $victim['victim_id'] . '"';
 			if ($disabled)
 			{
 				$return .= ' disabled="disabled" class="disabled-option"';
 			}
-			$return .= '>&nbsp;&nbsp;&nbsp;' . (($p_system == OWN_GALLERY_PERMISSIONS) ? $user->lang['OWN_PERSONAL_ALBUMS'] : $user->lang['PERSONAL_ALBUMS']) . ' >>> ' . $group['group_name'] . '</option>';
+			$return .= '>&nbsp;&nbsp;&nbsp;' . (($p_system == OWN_GALLERY_PERMISSIONS) ? $user->lang['OWN_PERSONAL_ALBUMS'] : $user->lang['PERSONAL_ALBUMS']) . ' >>> ' . $victim['victim_name'] . '</option>';
 		}
-		// Could we not find the requested {$p_system}_group even here?
-		if ($check_inherit_group)
+		// Could we not find the requested {$p_system}_victim even here?
+		if ($check_inherit_victim)
 		{
 			// Something went really wrong here!
 			return false;
