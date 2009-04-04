@@ -21,6 +21,7 @@ $user->add_lang('mods/info_acp_gallery');
 $gallery_root_path = GALLERY_ROOT_PATH;
 include($phpbb_root_path . $gallery_root_path . 'includes/constants.' . $phpEx);
 include($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
+include($phpbb_root_path . $gallery_root_path . 'includes/phpbb_functions.' . $phpEx);
 $gallery_config = load_gallery_config();
 
 $template->assign_vars(array(

@@ -513,17 +513,10 @@ function handle_image_counter($image_id_ary, $add, $readd = false)
 	}
 	$db->sql_freeresult($result);
 
-	if (function_exists('set_config_count'))
-	{
-		// Since phpBB 3.0.5 this is the better solution
-		set_config_count('num_images', (($add) ? $num_images : 0 - $num_images), true);
-		set_gallery_config_count('num_comments', (($add) ? $num_comments : 0 - $num_comments), true);
-	}
-	else
-	{
-		set_config('num_images', (($add) ? $config['num_images'] + $num_images : $config['num_images'] - $num_images), true);
-		set_gallery_config('num_comments', (($add) ? $gallery_config['num_comments'] + $num_comments : $gallery_config['num_comments'] - $num_comments), true);
-	}
+	// Since phpBB 3.0.5 this is the better solution
+	// If the function does not exist, we load it from gallery/includes/phpbb_functions.php
+	set_config_count('num_images', (($add) ? $num_images : 0 - $num_images), true);
+	set_gallery_config_count('num_comments', (($add) ? $num_comments : 0 - $num_comments), true);
 }
 
 /**

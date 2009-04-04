@@ -1618,15 +1618,9 @@ class acp_gallery
 					$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 					$db->sql_query($sql);
 				}
-				if (function_exists('set_config_count'))
-				{
-					// Since phpBB 3.0.5 this is the better solution
-					set_config_count('num_images', $images_loop);
-				}
-				else
-				{
-					set_config('num_images', $config['num_images'] + $images_loop, true);
-				}
+				// Since phpBB 3.0.5 this is the better solution
+				// If the function does not exist, we load it from gallery/includes/phpbb_functions.php
+				set_config_count('num_images', $images_loop);
 				$todo_images = $todo_images - $images_loop;
 			}
 			update_album_info($album_id);
