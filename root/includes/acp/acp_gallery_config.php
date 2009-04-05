@@ -176,7 +176,7 @@ class acp_gallery_config
 				if ($null['gallery'])
 				{
 					// Check for RRC-display-options
-					if (isset($null['method']) && ($null['method'] == 'rrc_display'))
+					if (isset($null['method']) && (($null['method'] == 'rrc_display') || ($null['method'] == 'rrc_modes')))
 					{
 						// Changing the value, casted by int to not mess up anything
 						$config_value = (int) array_sum(request_var($config_name, array(0)));
