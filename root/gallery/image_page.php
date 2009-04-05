@@ -95,9 +95,6 @@ $sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 	WHERE image_id = ' . (int) $image_id;
 $db->sql_query($sql);
 
-$previous_id = $next_id = $last_id = 0;
-$previous_name = $next_name = $last_name = '';
-$do_next = false;
 $image_approval_sql = ' AND image_status <> ' . IMAGE_UNAPPROVED;
 if (gallery_acl_check('m_status', $album_id))
 {
@@ -105,44 +102,51 @@ if (gallery_acl_check('m_status', $album_id))
 }
 
 $sort_by_sql = array('t' => 'image_time', 'n' => 'image_name', 'u' => 'image_username', 'vc' => 'image_view_count', 'ra' => 'image_rate_avg', 'r' => 'image_rates', 'c' => 'image_comments', 'lc' => 'image_last_comment');
-$sql_sort_order = $sort_by_sql[$gallery_config['sort_method']] . ' ' . (($gallery_config['sort_order'] == 'd') ? 'DESC' : 'ASC');
+$sql_sort_by = (isset($sort_by_sql[$gallery_config['sort_method']])) ? $sort_by_sql[$gallery_config['sort_method']] : $sort_by_sql['t'];
+if ($gallery_config['sort_order'] == 'd')
+{
+	$sql_next_condition = '<';
+	$sql_next_ordering = 'DESC';
+	$sql_previous_condition = '>';
+	$sql_previous_ordering = 'ASC';
+}
+else
+{
+	$sql_next_condition = '>';
+	$sql_next_ordering = 'ASC';
+	$sql_previous_condition = '<';
+	$sql_previous_ordering = 'DESC';
+}
+// Two sqls now, but much better performance!
+// As we do not allow to duplicate images, we can relay on the id as second sort parameter
+$sql = 'SELECT image_id, image_name
+	FROM ' . GALLERY_IMAGES_TABLE . '
+	WHERE image_album_id = ' . (int) $album_id . $image_approval_sql . "
+		AND (($sql_sort_by = {$image_data[$sql_sort_by]} AND image_id $sql_next_condition {$image_id})
+		OR $sql_sort_by $sql_next_condition {$image_data[$sql_sort_by]})
+	ORDER BY $sql_sort_by $sql_next_ordering";
+$result = $db->sql_query_limit($sql, 1);
+$next_data = $db->sql_fetchrow($result);
+$db->sql_freeresult($result);
 
 $sql = 'SELECT image_id, image_name
 	FROM ' . GALLERY_IMAGES_TABLE . '
-	WHERE image_album_id = ' . (int) $album_id . $image_approval_sql . '
-	ORDER BY ' . $sql_sort_order;
-$result = $db->sql_query($sql);
-//@todo: there should also be a way to go with a limit here, but we'll see
-while ($row = $db->sql_fetchrow($result))
-{
-	if ($do_next)
-	{
-		$next_id = $row['image_id'];
-		$next_name = $row['image_name'];
-	}
-	$do_next = false;
-	if ($row['image_id'] == $image_id)
-	{
-		$previous_name = $last_name;
-		$previous_id = $last_id;
-		$do_next = true;
-	}
-	$last_name = $row['image_name'];
-	$last_id = $row['image_id'];
-}
+	WHERE image_album_id = ' . (int) $album_id . $image_approval_sql . "
+		AND (($sql_sort_by = {$image_data[$sql_sort_by]} AND image_id $sql_previous_condition {$image_id})
+		OR $sql_sort_by $sql_previous_condition {$image_data[$sql_sort_by]})
+	ORDER BY $sql_sort_by $sql_previous_ordering";
+$result = $db->sql_query_limit($sql, 1);
+$previous_data = $db->sql_fetchrow($result);
 $db->sql_freeresult($result);
-
-//Get Watch- and Favorite-mode
-$is_watching = $image_data['watch_id'];
 
 $template->assign_vars(array(
 	'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"),
 
-	'UC_PREVIOUS_IMAGE'	=> generate_image_link('thumbnail', 'image_page', $previous_id, $previous_name, $album_id),
-	'UC_PREVIOUS'		=> ($previous_id) ? generate_image_link('image_name_unbold', 'image_page_prev', $previous_id, $previous_name, $album_id) : '',
+	'UC_PREVIOUS_IMAGE'	=> generate_image_link('thumbnail', 'image_page', $previous_data['image_id'], $previous_data['image_name'], $album_id),
+	'UC_PREVIOUS'		=> (!empty($previous_data)) ? generate_image_link('image_name_unbold', 'image_page_prev', $previous_data['image_id'], $previous_data['image_name'], $album_id) : '',
 	'UC_IMAGE'			=> generate_image_link('medium', $gallery_config['link_imagepage'], $image_id, $image_data['image_name'], $album_id, ((substr($image_data['image_filename'], 0 -3) == 'gif') ? true : false)),
-	'UC_NEXT_IMAGE'		=> generate_image_link('thumbnail', 'image_page', $next_id, $next_name, $album_id),
-	'UC_NEXT'			=> ($next_id) ? generate_image_link('image_name_unbold', 'image_page_next', $next_id, $next_name, $album_id) : '',
+	'UC_NEXT_IMAGE'		=> generate_image_link('thumbnail', 'image_page', $next_data['image_id'], $next_data['image_name'], $album_id),
+	'UC_NEXT'			=> (!empty($next_data)) ? generate_image_link('image_name_unbold', 'image_page_next', $next_data['image_id'], $next_data['image_name'], $album_id) : '',
 
 	'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_IMAGE'),
 	'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_IMAGE'),
