@@ -186,6 +186,7 @@ Installing:
 				<date>2009-MM-DD</date>
 				<rev-version>1.0.0</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Sort images on slide-show by user set parameters (Bug #513)]]></change>
 					<change><![CDATA[[Fix] Increased sql-speed for large databases on image-page]]></change>
 					<change><![CDATA[[Fix] Increased sql-speed for large databases on RRC-Addon]]></change>
 					<change><![CDATA[[Fix] Update convertors to actual version]]></change>
