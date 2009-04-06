@@ -58,9 +58,9 @@ if ((!gallery_acl_check('i_view', $album_id)) || (!gallery_acl_check('m_status',
 }
 
 // Hotlink prevention
-if ($gallery_config['hotlink_prevent'] && isset($HTTP_SERVER_VARS['HTTP_REFERER']))
+if ($gallery_config['hotlink_prevent'] && isset($_SERVER['HTTP_REFERER']))
 {
-	$check_referer = trim($HTTP_SERVER_VARS['HTTP_REFERER']);
+	$check_referer = trim($_SERVER['HTTP_REFERER']);
 	if (substr($check_referer, 0, 7) == 'http://')
 	{
 		$check_referer = substr($check_referer, 7);
