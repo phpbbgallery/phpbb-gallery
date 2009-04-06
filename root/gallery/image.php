@@ -203,13 +203,6 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 		}
 		switch ($image_filetype)
 		{
-			case '.jpg':
-				if (!$save_file)
-				{
-					header('Content-type: image/jpeg');
-				}
-				@imagejpeg($thumb_file, $wirte_source, (($thumbnail) ? $gallery_config['thumbnail_quality'] : 100));
-			break;
 			case '.gif':
 				if (!$save_file)
 				{
@@ -223,6 +216,13 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 					header('Content-type: image/png');
 				}
 				@imagepng($thumb_file, $wirte_source);
+			break;
+			default:
+				if (!$save_file)
+				{
+					header('Content-type: image/jpeg');
+				}
+				@imagejpeg($thumb_file, $wirte_source, (($thumbnail) ? $gallery_config['thumbnail_quality'] : 100));
 			break;
 		}
 		@chmod($image_source, 0777);
@@ -328,6 +328,7 @@ else
 	}
 	header('Content-Disposition: inline; ' . header_filename(htmlspecialchars_decode($image_data['image_name'])));
 
+	$image_filetype = strtolower($image_filetype);
 	switch ($image_filetype)
 	{
 		case '.png':
@@ -338,9 +339,7 @@ else
 			header('Content-type: image/gif');
 		break;
 
-		case '.jpg':
-		case '.JPG':
-			case 'jpeg':
+		default:
 			header('Content-type: image/jpeg');
 		break;
 	}

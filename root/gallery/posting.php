@@ -16,9 +16,10 @@ define('IN_PHPBB', true);
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
-include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
-include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
+include($phpbb_root_path . 'includes/functions_upload.' . $phpEx);
+include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
 // Start session management
@@ -372,84 +373,78 @@ switch ($mode)
 						trigger_error('FORM_INVALID');
 					}
 
+					$allowed_extensions = array();
+					if ($gallery_config['jpg_allowed'])
+					{
+						$allowed_extensions[] = 'jpg';
+						$allowed_extensions[] = 'jpeg';
+					}
+					if ($gallery_config['gif_allowed'])
+					{
+						$allowed_extensions[] = 'gif';
+					}
+					if ($gallery_config['png_allowed'])
+					{
+						$allowed_extensions[] = 'png';
+					}
+					$fileupload = new fileupload();
+					$fileupload->fileupload('', $allowed_extensions, (4 * $gallery_config['max_file_size']));
+
+					$upload_image_files = min((gallery_acl_check('i_count', $album_id) - $own_images), $gallery_config['upload_images']);
+
 					// Get File Upload Info
 					$image_id_ary = array();
 					$loop = request_var('image_num', 0);
 					$loop = ($loop != 0) ? $loop - 1 : $loop;
-					foreach ($_FILES['image']['type'] as $i => $type)
+					for ($i = 0; $i < $upload_image_files; $i++)
 					{
+						$image_file = $fileupload->form_upload('image_file_' . $i);
+						if (!$image_file->uploadname)
+						{
+							continue;
+						}
+						$image_file->clean_filename('unique_ext'/*, $user->data['user_id'] . '_'*/);
+						$image_file->move_file(substr(GALLERY_UPLOAD_PATH, 0, -1), false, false, CHMOD_ALL);
+						if (sizeof($image_file->error) && $image_file->uploadname)
+						{
+							$image_file->remove();
+							trigger_error(implode('<br />', $image_file->error));
+						}
+						@chmod($image_file->destination_file, 0777);
 						$image_data = array();
-
-						$image_data['image_type']		= $_FILES['image']['type'][$i];
-						$image_data['image_size']		= $_FILES['image']['size'][$i];
-						$image_data['image_tmp']		= $_FILES['image']['tmp_name'][$i];
-						$image_data['image_tmp_name']	= $_FILES['image']['name'][$i];
-						if ($image_data['image_size'])
+						if (1 == 1)
 						{
 							$loop = $loop + 1;
 							$images = $images + 1;
-							// Watch for 8-times max-file-size, we will watch for the real size after resize, if enabled
-							if ((!$image_data['image_size']) || ($image_data['image_size'] > (8 * $gallery_config['max_file_size'])))
-							{
-								trigger_error('BAD_UPLOAD_FILE_SIZE');
-							}
-							switch ($image_data['image_type'])
+
+							switch ($image_file->mimetype)
 							{
 								case 'image/jpeg':
 								case 'image/jpg':
 								case 'image/pjpeg':
-									if (!$gallery_config['jpg_allowed'])
-									{
-										trigger_error('NOT_ALLOWED_FILE_TYPE');
-									}
-									if ((substr(strtolower($image_data['image_tmp_name']), -4) != '.jpg') && (substr(strtolower($image_data['image_tmp_name']), -5) != '.jpeg'))
-									{
-										trigger_error(sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $image_src, $filetype['mime']), E_USER_WARNING);
-									}
-									$image_data['image_type2'] = '.jpg';
+									$image_type = 'jpg';
 								break;
 								case 'image/png':
 								case 'image/x-png':
-									if (!$gallery_config['png_allowed'])
-									{
-										trigger_error('NOT_ALLOWED_FILE_TYPE');
-									}
-									if (substr(strtolower($image_data['image_tmp_name']), -4) != '.png')
-									{
-										trigger_error(sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $image_data['image_tmp_name'], $image_data['image_type']), E_USER_WARNING);
-									}
-									$image_data['image_type2'] = '.png';
+									$image_type = 'png';
 								break;
 								case 'image/gif':
 								case 'image/giff':
-									if (!$gallery_config['gif_allowed'])
-									{
-										trigger_error('NOT_ALLOWED_FILE_TYPE');
-									}
-									if (substr(strtolower($image_data['image_tmp_name']), -4) != '.gif')
-									{
-										trigger_error(sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $image_data['image_tmp_name'], $image_data['image_type']), E_USER_WARNING);
-									}
-									$image_data['image_type2'] = '.gif';
-								break;
-								default:
-									trigger_error('NOT_ALLOWED_FILE_TYPE');
+									$image_type = 'gif';
 								break;
 							}
-
-							$image_data_2 = array(
-								'filename'			=> '',
+							$image_data = array(
+								'filename'			=> $image_file->realname,
 								'image_album_id'	=> $album_data['album_id'],
 								'image_album_name'	=> $album_data['album_name'],
+								'image_name'		=> str_replace('{NUM}', $loop, request_var('image_name', '', true)),
 								'image_desc'		=> str_replace('{NUM}', $loop, request_var('message', '', true)),
 								'image_time'		=> time() + $loop,
 								'image_contest'		=> ($album_data['album_contest']) ? IMAGE_CONTEST : IMAGE_NO_CONTEST,
 								'thumbnail'			=> '',
 								'username'			=> request_var('username', $user->data['username']),
 							);
-							$image_data_2['image_name'] = str_replace('{NUM}', $loop, request_var('image_name', '', true));
-							$image_data_2['image_name'] = ((request_var('filename', '') == 'filename') || ($image_data_2['image_name'] == '')) ? str_replace("_", " ", utf8_substr($image_data['image_tmp_name'], 0, -4)) : $image_data_2['image_name'];
-							$image_data = array_merge($image_data, $image_data_2);
+							$image_data['image_name'] = ((request_var('filename', '') == 'filename') || ($image_data['image_name'] == '')) ? str_replace("_", " ", utf8_substr($image_file->uploadname, 0, strrpos($image_file->uploadname, '.'))) : $image_data['image_name'];
 
 							if (!$image_data['image_name'])
 							{
@@ -465,18 +460,8 @@ switch ($mode)
 								}
 							}
 
-							// Generate filename and upload
-							$image_data['filename'] = md5(unique_id()) . $image_data['image_type2'];
-							$move_file = (@ini_get('open_basedir') <> '') ? 'move_uploaded_file' : 'copy';
-							$move_file($image_data['image_tmp'], $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
-							@chmod($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename'], 0777);
-
-							$image_size = getimagesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
-							$image_data['width'] = $image_size[0];
-							$image_data['height'] = $image_size[1];
-
 							// Since we are able to resize the images, we loose the exif.
-							$exif = @exif_read_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename'], 0, true);
+							$exif = @exif_read_data($image_file->destination_file, 0, true);
 							if (!empty($exif["EXIF"]))
 							{
 								// Unset invalid exifs
@@ -506,65 +491,65 @@ switch ($mode)
 								$image_data['image_has_exif'] = EXIF_UNAVAILABLE;
 							}
 
-							if (($image_data['width'] > $gallery_config['max_width']) || ($image_data['height'] > $gallery_config['max_height']))
+							if (($image_file->width > $gallery_config['max_width']) || ($image_file->height > $gallery_config['max_height']))
 							{
 								/**
 								* Resize overside images
 								*/
 								if ($gallery_config['resize_images'])
 								{
-									switch ($image_data['image_type2'])
+									switch ($image_type)
 									{
-										case '.jpg':
+										case 'jpg':
 											$read_function = 'imagecreatefromjpeg';
 										break;
-										case '.png':
+										case 'png':
 											$read_function = 'imagecreatefrompng';
 										break;
-										case '.gif':
+										case 'gif':
 											$read_function = 'imagecreatefromgif';
 										break;
 									}
 
-									$src = $read_function($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
+									$src = $read_function($image_file->destination_file);
 									// Resize it
-									if (($image_data['width'] / $gallery_config['max_width']) > ($image_data['height'] / $gallery_config['max_height']))
+									if (($image_file->width / $gallery_config['max_width']) > ($image_file->height / $gallery_config['max_height']))
 									{
 										$thumbnail_width	= $gallery_config['max_width'];
-										$thumbnail_height	= round($gallery_config['max_height'] * (($image_data['height'] / $gallery_config['max_height']) / ($image_data['width'] / $gallery_config['max_width'])));
+										$thumbnail_height	= round($gallery_config['max_height'] * (($image_file->height / $gallery_config['max_height']) / ($image_file->width / $gallery_config['max_width'])));
 									}
 									else
 									{
 										$thumbnail_height	= $gallery_config['max_height'];
-										$thumbnail_width	= round($gallery_config['max_width'] * (($image_data['width'] / $gallery_config['max_width']) / ($image_data['height'] / $gallery_config['max_height'])));
+										$thumbnail_width	= round($gallery_config['max_width'] * (($image_file->width / $gallery_config['max_width']) / ($image_file->height / $gallery_config['max_height'])));
 									}
 									$thumbnail = ($gallery_config['gd_version'] == GDLIB1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
 									$resize_function = ($gallery_config['gd_version'] == GDLIB1) ? 'imagecopyresized' : 'imagecopyresampled';
-									$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $image_data['width'], $image_data['height']);
+									$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $image_file->width, $image_file->height);
 									imagedestroy($src);
-									switch ($image_data['image_type2'])
+									switch ($image_type)
 									{
-										case '.jpg':
-											@imagejpeg($thumbnail, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename'], 100);
+										case 'jpg':
+											@imagejpeg($thumbnail, $image_file->destination_file, 100);
 										break;
 
-										case '.png':
-											@imagepng($thumbnail, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
+										case 'png':
+											@imagepng($thumbnail, $image_file->destination_file);
 										break;
 
-										case '.gif':
-											@imagegif($thumbnail, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
+										case 'gif':
+											@imagegif($thumbnail, $image_file->destination_file);
 										break;
 									}
 									imagedestroy($thumbnail);
 								}
 								else
 								{
-									@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
+									@unlink($image_file->destination_file);
 									trigger_error('UPLOAD_IMAGE_SIZE_TOO_BIG');
 								}
-								$image_data['width'] = $thumbnail_width;
-								$image_data['height'] = $thumbnail_height;
+								$image_file->width = $thumbnail_width;
+								$image_file->height = $thumbnail_height;
 							}
 							else if ($image_data['image_has_exif'] == EXIF_DBSAVED)
 							{
@@ -572,10 +557,10 @@ switch ($mode)
 								$image_data['image_has_exif'] = EXIF_AVAILABLE;
 								$image_data['image_exif_data'] = '';
 							}
-							$image_data['image_filesize'] = filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
-							if ($image_data['image_filesize'] > $gallery_config['max_file_size'])
+							$image_data['image_filesize'] = $image_file->filesize;
+							if ($image_data['image_filesize'] > (1.2 * $gallery_config['max_file_size']))
 							{
-								@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['filename']);
+								@unlink($image_file->destination_file);
 								trigger_error('BAD_UPLOAD_FILE_SIZE');
 							}
 
@@ -584,7 +569,7 @@ switch ($mode)
 							$image_name = $image_data['image_name'];
 							$image_id_ary[] = $image_id;
 						}
-					}// end foreach
+					}
 					$image_id = ($images > 1) ? 0 : $image_id;
 
 					// Complete... now send a message to user
