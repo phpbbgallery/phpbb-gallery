@@ -1621,13 +1621,13 @@ class acp_gallery
 					$db->sql_query($sql);
 				}
 				// Since phpBB 3.0.5 this is the better solution
-				// If the function does not exist, we load it from gallery/includes/phpbb_functions.php
+				// If the function does not exist, we load it from gallery/includes/functions_phpbb.php
 				set_config_count('num_images', $images_loop);
 				$todo_images = $todo_images - $images_loop;
 			}
 			update_album_info($album_id);
 
-			if (!$todo_images)
+			if ($todo_images >= 0)
 			{
 				unlink($phpbb_root_path . GALLERY_IMPORT_PATH . $import_schema . '.' . $phpEx);
 				trigger_error(sprintf($user->lang['IMPORT_FINISHED'], $done_images) . adm_back_link($this->u_action));
@@ -1711,9 +1711,10 @@ class acp_gallery
 		while ($file = readdir($handle))
 		{
 			if (!is_dir($phpbb_root_path . GALLERY_IMPORT_PATH . "$file") && (
-			((substr(strtolower($file), '-4') == '.png') && $gallery_config['png_allowed']) ||
-			((substr(strtolower($file), '-4') == '.gif') && $gallery_config['gif_allowed']) ||
-			((substr(strtolower($file), '-4') == '.jpg') && $gallery_config['jpg_allowed'])
+			((substr(strtolower($file), -4) == '.png') && $gallery_config['png_allowed']) ||
+			((substr(strtolower($file), -4) == '.gif') && $gallery_config['gif_allowed']) ||
+			((substr(strtolower($file), -4) == '.jpg') && $gallery_config['jpg_allowed']) ||
+			((substr(strtolower($file), -5) == '.jpeg') && $gallery_config['jpg_allowed'])
 			))
 			{
 				$template->assign_block_vars('imagerow', array(

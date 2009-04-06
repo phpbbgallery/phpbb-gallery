@@ -35,6 +35,7 @@ if (!defined('IN_PHPBB'))
 */
 
 $gallery_root_path = GALLERY_ROOT_PATH;
+include($phpbb_root_path . $gallery_root_path . 'includes/functions_phpbb.' . $phpEx);
 
 $sql = 'SELECT *
 	FROM ' . GALLERY_USERS_TABLE . '
@@ -514,7 +515,7 @@ function handle_image_counter($image_id_ary, $add, $readd = false)
 	$db->sql_freeresult($result);
 
 	// Since phpBB 3.0.5 this is the better solution
-	// If the function does not exist, we load it from gallery/includes/phpbb_functions.php
+	// If the function does not exist, we load it from gallery/includes/functions_phpbb.php
 	set_config_count('num_images', (($add) ? $num_images : 0 - $num_images), true);
 	set_gallery_config_count('num_comments', (($add) ? $num_comments : 0 - $num_comments), true);
 }
