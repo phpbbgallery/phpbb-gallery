@@ -184,6 +184,7 @@ $lang = array_merge($lang, array(
 	'REPORT_IMAGE'					=> 'Report image',
 	'RETURN_ALBUM'					=> '%sReturn to the album last visited%s',
 
+	'SEARCH_ALBUM'					=> 'Search this album…',
 	'SEARCH_ALBUMS'					=> 'Search in albums',
 	'SEARCH_ALBUMS_EXPLAIN'			=> 'Select the album or albums you wish to search in. Subalbums are searched automatically if you do not disable “search subalbums“ below.',
 	'SEARCH_COMMENTS'				=> 'Comments only',

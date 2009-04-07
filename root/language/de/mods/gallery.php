@@ -185,6 +185,7 @@ $lang = array_merge($lang, array(
 	'REPORT_IMAGE'					=> 'Bild melden',
 	'RETURN_ALBUM'					=> '%sZurück zum zuletzt besuchten Album%s',
 
+	'SEARCH_ALBUM'					=> 'Album durchsuchen…',
 	'SEARCH_ALBUMS'					=> 'Zu durchsuchende Alben',
 	'SEARCH_ALBUMS_EXPLAIN'			=> 'Wähle das Album oder die Alben aus, in denen gesucht werden soll. Subalben werden automatisch mit durchsucht, sofern du die Option „Subalben durchsuchen“ unten nicht deaktivierst.',
 	'SEARCH_COMMENTS'				=> 'Nur in den Kommentaren',

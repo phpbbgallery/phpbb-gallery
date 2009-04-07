@@ -297,6 +297,8 @@ $template->assign_vars(array(
 	'U_EDIT_ALBUM'				=> ($album_data['album_user_id'] == $user->data['user_id']) ?
 										append_sid("{$phpbb_root_path}ucp.$phpEx", "i=gallery&amp;mode=manage_albums&amp;action=edit&amp;album_id=$album_id&amp;redirect=album") : '',
 	'U_SLIDE_SHOW'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id&amp;mode=slide_show" . (($sort_key != $gallery_config['sort_method']) ? "&amp;sk=$sort_key" : '') . (($sort_dir != $gallery_config['sort_order']) ? "&amp;sd=$sort_dir" : '')),
+	'S_DISPLAY_SEARCHBOX'		=> ($auth->acl_get('u_search') && $config['load_search']) ? true : false,
+	'S_SEARCHBOX_ACTION'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'aid[]=' . $album_id),
 
 	'S_THUMBNAIL_SIZE'			=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? THUMBNAIL_INFO_HEIGHT : 0),
 	'S_COLS'					=> $gallery_config['cols_per_page'],

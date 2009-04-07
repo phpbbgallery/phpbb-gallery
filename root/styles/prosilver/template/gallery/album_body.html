@@ -48,12 +48,25 @@ function toggleElement(oElement)
 	<!-- ENDIF -->
 	<!-- INCLUDE gallery/albumlist_body.html -->
 <!-- ENDIF -->
+
 <!-- IF S_IS_POSTABLE and (U_UPLOAD_IMAGE or PAGINATION or TOTAL_IMAGES or (U_SLIDE_SHOW and not S_IS_BOT)) -->
 	<div class="topic-actions" <!-- IF S_HAS_SUBALBUM -->style="margin-top: 2em;"<!-- ENDIF -->>
 
 	<!-- IF U_UPLOAD_IMAGE -->
 		<div class="buttons">
 			<div class="<!-- IF S_IS_LOCKED -->locked-icon<!-- ELSE -->upload-icon<!-- ENDIF -->"><a href="{U_UPLOAD_IMAGE}" title="<!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF -->"><span></span><!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF --></a></div>
+		</div>
+	<!-- ENDIF -->
+
+	<!-- IF S_DISPLAY_SEARCHBOX -->
+		<div class="search-box">
+			<form method="post" id="album-search" action="{S_SEARCHBOX_ACTION}">
+			<fieldset>
+				<input class="inputbox search tiny" type="text" name="keywords" id="search_keywords" size="20" value="{L_SEARCH_ALBUM}" onclick="if (this.value == '{LA_SEARCH_ALBUM}') this.value = '';" onblur="if (this.value == '') this.value = '{LA_SEARCH_ALBUM}';" />
+				<input class="button2" type="submit" value="{L_SEARCH}" />
+				<input type="hidden" value="{ALBUM_ID}" name="aid[]" />
+			</fieldset>
+			</form>
 		</div>
 	<!-- ENDIF -->
 
