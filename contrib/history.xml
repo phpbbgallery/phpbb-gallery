@@ -186,6 +186,7 @@ Installing:
 				<date>2009-MM-DD</date>
 				<rev-version>1.0.0</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Moderate options on imagepage]]></change>
 					<change><![CDATA[[Fix] Quicksearch-Box on album.php]]></change>
 					<change><![CDATA[[Fix] Hide upload-button if user is logged in and does not have the permissions]]></change>
 					<change><![CDATA[[Fix] Do not use $HTTP_SERVER_VARS['HTTP_REFERER'] but $_SERVER['HTTP_REFERER'] instead]]></change>
