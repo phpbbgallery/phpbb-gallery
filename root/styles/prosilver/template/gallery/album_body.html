@@ -48,7 +48,7 @@ function toggleElement(oElement)
 	<!-- ENDIF -->
 	<!-- INCLUDE gallery/albumlist_body.html -->
 <!-- ENDIF -->
-<!-- IF S_IS_POSTABLE and (U_UPLOAD_IMAGE or PAGINATION or TOTAL_POSTS or TOTAL_TOPICS) -->
+<!-- IF S_IS_POSTABLE and (U_UPLOAD_IMAGE or PAGINATION or TOTAL_IMAGES or (U_SLIDE_SHOW and not S_IS_BOT)) -->
 	<div class="topic-actions" <!-- IF S_HAS_SUBALBUM -->style="margin-top: 2em;"<!-- ENDIF -->>
 
 	<!-- IF U_UPLOAD_IMAGE -->

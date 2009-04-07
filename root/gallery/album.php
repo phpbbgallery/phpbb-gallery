@@ -290,7 +290,7 @@ $template->assign_vars(array(
 	'L_MODERATORS'				=> $l_moderator,
 	'MODERATORS'				=> $moderators_list,
 
-	'U_UPLOAD_IMAGE'			=> (!$album_data['album_user_id'] || ($album_data['album_user_id'] == $user->data['user_id'])) ?
+	'U_UPLOAD_IMAGE'			=> ((!$album_data['album_user_id'] || ($album_data['album_user_id'] == $user->data['user_id'])) && (($user->data['user_id'] == ANONYMOUS) || gallery_acl_check('i_upload', $album_id))) ?
 										append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=upload&amp;album_id=$album_id") : '',
 	'U_CREATE_ALBUM'			=> (($album_data['album_user_id'] == $user->data['user_id']) && $allowed_create) ?
 										append_sid("{$phpbb_root_path}ucp.$phpEx", "i=gallery&amp;mode=manage_albums&amp;action=create&amp;parent_id=$album_id&amp;redirect=album") : '',
