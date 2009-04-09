@@ -122,8 +122,8 @@ else
 $sql = 'SELECT image_id, image_name
 	FROM ' . GALLERY_IMAGES_TABLE . '
 	WHERE image_album_id = ' . (int) $album_id . $image_approval_sql . "
-		AND (($sql_sort_by = {$image_data[$sql_sort_by]} AND image_id $sql_next_condition {$image_id})
-		OR $sql_sort_by $sql_next_condition {$image_data[$sql_sort_by]})
+		AND (($sql_sort_by = '" . $db->sql_escape($image_data[$sql_sort_by]) . "' AND image_id $sql_next_condition {$image_id})
+		OR $sql_sort_by $sql_next_condition '" . $db->sql_escape($image_data[$sql_sort_by]) . "')
 	ORDER BY $sql_sort_by $sql_next_ordering";
 $result = $db->sql_query_limit($sql, 1);
 $next_data = $db->sql_fetchrow($result);
@@ -132,8 +132,8 @@ $db->sql_freeresult($result);
 $sql = 'SELECT image_id, image_name
 	FROM ' . GALLERY_IMAGES_TABLE . '
 	WHERE image_album_id = ' . (int) $album_id . $image_approval_sql . "
-		AND (($sql_sort_by = {$image_data[$sql_sort_by]} AND image_id $sql_previous_condition {$image_id})
-		OR $sql_sort_by $sql_previous_condition {$image_data[$sql_sort_by]})
+		AND (($sql_sort_by = '" . $db->sql_escape($image_data[$sql_sort_by]) . "' AND image_id $sql_previous_condition {$image_id})
+		OR $sql_sort_by $sql_previous_condition '" . $db->sql_escape($image_data[$sql_sort_by]) . "')
 	ORDER BY $sql_sort_by $sql_previous_ordering";
 $result = $db->sql_query_limit($sql, 1);
 $previous_data = $db->sql_fetchrow($result);
