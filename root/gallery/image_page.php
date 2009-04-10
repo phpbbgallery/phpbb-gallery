@@ -458,8 +458,7 @@ if (($gallery_config['allow_comments'] && gallery_acl_check('c_read', $album_id)
 
 	if ($image_data['image_comments'] > 0)
 	{
-		$bbcode_bitfield = '' | base64_decode($row['bbcode_bitfield']);
-		$bbcode = new bbcode($bbcode_bitfield);
+		$bbcode = new bbcode();
 
 		$sql = 'SELECT c.*, u.*
 			FROM ' . GALLERY_COMMENTS_TABLE . ' c

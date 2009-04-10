@@ -41,7 +41,7 @@ $submode = request_var('submode', '');
 $album_id = request_var('album_id', 0);
 $image_id = request_var('image_id', 0);
 $comment_id = request_var('comment_id', 0);
-$error = $message = '';
+$error = $message = $s_album_action = '';
 $error_count = array();
 $slower_redirect = false;
 
