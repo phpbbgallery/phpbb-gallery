@@ -52,11 +52,11 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 	$comment_albums = gallery_acl_album_ids('c_read', 'array', true, $gallery_config['rrc_gindex_pgalleries']);
 
 	$sql_permission_where = '(';
-	$sql_permission_where .= ((sizeof($view_albums)) ? '(' . $db->sql_in_set('image_album_id', $view_albums) . ' AND image_status <> ' . IMAGE_UNAPPROVED . (($user_id) ? ' AND image_contest = ' . IMAGE_NO_CONTEST : '') . ') OR ' : '');
-	$sql_permission_where .= ((sizeof($moderate_albums)) ? '(' . $db->sql_in_set('image_album_id', $moderate_albums, false, true) . ')' : '');
+	$sql_permission_where .= ((sizeof($view_albums)) ? '(' . $db->sql_in_set('image_album_id', $view_albums) . ' AND image_status <> ' . IMAGE_UNAPPROVED . (($user_id) ? ' AND image_contest = ' . IMAGE_NO_CONTEST : '') . ')' : '');
+	$sql_permission_where .= (((sizeof($moderate_albums)) ? (sizeof($view_albums)) ? ' OR ' : '') . '(' . $db->sql_in_set('image_album_id', $moderate_albums, false, true) . ')' : '');
 	$sql_permission_where .= ($user_id) ? ') AND image_user_id = ' . $user_id : ')';
 
-	if (($view_albums != array()) || ($moderate_albums != array()))
+	if (sizeof($view_albums) || sizeof($moderate_albums))
 	{
 		$images = $recent_images = $random_images = $contest_images = array();
 		// First step: grab all the IDs we are going to display ...
@@ -202,7 +202,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 		}
 	}
 
-	if ($gallery_config['allow_comments'] && ($mode & RRC_MODE_COMMENT) && ($comment_albums != array()))
+	if ($gallery_config['allow_comments'] && ($mode & RRC_MODE_COMMENT) && sizeof($comment_albums))
 	{
 		$user->add_lang('viewtopic');
 
@@ -255,7 +255,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 	}
 
 	$template->assign_vars(array(
-		'S_THUMBNAIL_SIZE'			=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? 16 : 0),
+		'S_THUMBNAIL_SIZE'		=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? 16 : 0),
 		'S_COL_WIDTH'			=> (100 / $ints['columns']) . '%',
 		'S_COLS'				=> $ints['columns'],
 		'S_RANDOM'				=> ($mode & RRC_MODE_RANDOM) ? true : false,
