@@ -53,7 +53,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 
 	$sql_permission_where = '(';
 	$sql_permission_where .= ((sizeof($view_albums)) ? '(' . $db->sql_in_set('image_album_id', $view_albums) . ' AND image_status <> ' . IMAGE_UNAPPROVED . (($user_id) ? ' AND image_contest = ' . IMAGE_NO_CONTEST : '') . ')' : '');
-	$sql_permission_where .= (((sizeof($moderate_albums)) ? (sizeof($view_albums)) ? ' OR ' : '') . '(' . $db->sql_in_set('image_album_id', $moderate_albums, false, true) . ')' : '');
+	$sql_permission_where .= ((sizeof($moderate_albums)) ? ((sizeof($view_albums)) ? ' OR ' : '') . '(' . $db->sql_in_set('image_album_id', $moderate_albums, false, true) . ')' : '');
 	$sql_permission_where .= ($user_id) ? ') AND image_user_id = ' . $user_id : ')';
 
 	if (sizeof($view_albums) || sizeof($moderate_albums))
