@@ -752,7 +752,7 @@ class acp_gallery
 			// Get the group information
 			$sql = 'SELECT group_name, group_id, group_type, group_colour
 				FROM ' . GROUPS_TABLE . '
-				WHERE ' . $db->sql_in_set('group_id', $group_id);
+				WHERE ' . $db->sql_in_set('group_id', $victim_id);
 			$result = $db->sql_query($sql);
 
 			$victim_list = array();
@@ -773,7 +773,7 @@ class acp_gallery
 			// Get the user information
 			$sql = 'SELECT username, user_id, user_colour
 				FROM ' . USERS_TABLE . '
-				WHERE ' . $db->sql_in_set('user_id', $user_id);
+				WHERE ' . $db->sql_in_set('user_id', $victim_id);
 			$result = $db->sql_query($sql);
 
 			$victim_list = array();
@@ -869,9 +869,9 @@ class acp_gallery
 				'C_MASK_ID'				=> $p_system,
 				'C_MASK_NAME'			=> (($p_system == OWN_GALLERY_PERMISSIONS) ? $user->lang['OWN_PERSONAL_ALBUMS'] : $user->lang['PERSONAL_ALBUMS']),
 			));
-			foreach ($group_id as $group)
+			foreach ($victim_id as $victim)
 			{
-				$group_row = $victim_list[$group];
+				$victim_row = $victim_list[$victim];
 				$template->assign_block_vars('c_mask.v_mask', array(
 					'VICTIM_ID'				=> $victim_row['victim_id'],
 					'VICTIM_NAME'			=> '<span' . (($victim_row['victim_colour']) ? (' style="color: #' . $victim_row['victim_colour'] . '"') : '') . '>' . $victim_row['victim_name'] . '</span>',
