@@ -22,8 +22,8 @@ if (!defined('IN_PHPBB'))
 */
 
 /**
-* Cheat on phpBB #31975
-* Once we will get the normal function pumped up for the external use.
+* phpbb::Bug #31975
+* Queries the session table to get information about online guests
 *
 * borrowed from phpBB3
 * @author: phpBB Group
@@ -268,6 +268,8 @@ if (!function_exists('set_config_count'))
 {
 	/**
 	* Set dynamic config value with arithmetic operation.
+	*
+	* phpbb::rev9398
 	*/
 	function set_config_count($config_name, $increment, $is_dynamic = false)
 	{
