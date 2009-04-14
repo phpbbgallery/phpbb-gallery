@@ -22,8 +22,9 @@ if (!defined('IN_PHPBB'))
 */
 
 /**
-* phpbb::Bug #31975
 * Queries the session table to get information about online guests
+*
+* phpbb::Bug #31975
 *
 * borrowed from phpBB3
 * @author: phpBB Group
@@ -71,6 +72,9 @@ function cheat_obtain_guest_count($id = 0, $mode = 'forum')
 	return $guests_online;
 }
 
+/**
+* Queries the session table to get information about online users
+*/
 function cheat_obtain_users_online($id = 0, $mode = 'forum')
 {
 	global $db, $config, $user;
@@ -128,6 +132,9 @@ function cheat_obtain_users_online($id = 0, $mode = 'forum')
 	return $online_users;
 }
 
+/**
+* Uses the result of obtain_users_online to generate a localized, readable representation.
+*/
 function cheat_obtain_users_online_string($online_users, $id = 0, $mode = 'forum')
 {
 	global $config, $db, $user, $auth;
