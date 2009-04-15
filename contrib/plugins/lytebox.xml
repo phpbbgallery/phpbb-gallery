@@ -55,7 +55,6 @@ http://creativecommons.org/licenses/by/3.0/]]></author-notes>
 			<file from="lytebox.zip/lytebox.css" to="gallery/plugins/lytebox/lytebox.css" />
 			<file from="lytebox.zip/images/*.*" to="gallery/plugins/lytebox/images/*.*" />
 			<file from="root/gallery/plugins/index.htm" to="gallery/plugins/lytebox/images/index.htm" />
-			<file from="root/gallery/plugins/index.htm" to="gallery/plugins/lytebox/index.htm" />
 		</copy>
 
 		<diy-instructions lang="de"><![CDATA[Kopiere die Dateien aus dem zip-Verzeichnis, wie oben angegeben.
