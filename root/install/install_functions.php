@@ -370,7 +370,7 @@ function adm_back_link($u_action)
 */
 function add_bbcode($album_bbcode)
 {
-	global $db, $config, $phpbb_root_path, $phpEx;
+	global $cache, $config, $db, $phpbb_root_path, $phpEx;
 
 	if (!class_exists('acp_bbcodes'))
 	{
