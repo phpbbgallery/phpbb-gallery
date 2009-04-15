@@ -18,16 +18,10 @@ Features: http://www.flying-bits.org/go/phpbb_gallery/features]]></description>
 
 		<author-notes lang="de"><![CDATA[
 Untersützt die "MOD Version Check"-MOD von Handymman´:
-http://www.phpbb.com/community/viewtopic.php?f=69&t=691155
-
-Untersützt die "Highslide JS"-MOD von stokerpiller:
-http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
+http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		<author-notes lang="en"><![CDATA[
 Supports the "MOD Version Check"-MOD by Handymman´:
-http://www.phpbb.com/community/viewtopic.php?f=69&t=691155
-
-Supports the "Highslide JS"-MOD by stokerpiller:
-http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
+http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 		<author-group>
 			<author>
@@ -58,6 +52,10 @@ http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
 			<link type="language" lang="en" href="contrib/de.xml">Manual for German Language-set</link>
 			<link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>
 			<link type="template" lang="en" href="contrib/subsilver2.xml">Manual for subsilver2 Style</link>
+			<link type="parent" lang="de" href="contrib/plugins/highslide.xml">Plugin Highslide JS</link>
+			<link type="parent" lang="en" href="contrib/plugins/highslide.xml">Plugin Highslide JS</link>
+			<link type="parent" lang="de" href="contrib/plugins/lytebox.xml">Plugin Lytebox</link>
+			<link type="parent" lang="en" href="contrib/plugins/lytebox.xml">Plugin Lytebox</link>
 		</link-group>
 	</header>
 
@@ -275,7 +273,8 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
 			<edit>
 				<find><![CDATA[// The following assigns all _common_ variables that may be used at any point in a template.]]></find>
 				<action type="before-add"><![CDATA[	$user->add_lang('mods/info_acp_gallery');
-	$gallery_root_path = GALLERY_ROOT_PATH;]]></action>
+	$gallery_root_path = GALLERY_ROOT_PATH;
+	include($phpbb_root_path . $gallery_root_path . 'plugins/index.' . $phpEx);]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA['U_PRIVATEMSGS'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;folder=inbox'),]]></find>
@@ -474,21 +473,7 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
 		<open src="styles/prosilver/template/overall_header.html">
 			<edit>
 				<find><![CDATA[</head>]]></find>
-				<action type="before-add"><![CDATA[<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery/lytebox.js"></script>
-<script type="text/javascript" >
-	if (window.addEventListener) {
-		window.addEventListener("load",initLytebox,false);
-	} else if (window.attachEvent) {
-		window.attachEvent("onload",initLytebox);
-	} else {
-		window.onload = function() {initLytebox();}
-	}
-	function initLytebox() {
-		var imgMaxWidth = 1280;
-		var imgWarning = '';
-		myLytebox = new LyteBox(imgMaxWidth, imgWarning);
-	}
-</script>]]></action>
+				<action type="before-add"><![CDATA[<!-- INCLUDE gallery/plugins_header.html -->]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA[<li class="icon-faq"><a href="{U_FAQ}" title="{L_FAQ_EXPLAIN}">{L_FAQ}</a></li>]]></find>

@@ -14,16 +14,10 @@
 
 		<author-notes lang="de"><![CDATA[
 Untersützt die "MOD Version Check"-MOD von Handymman´:
-http://www.phpbb.com/community/viewtopic.php?f=69&t=691155
-
-Untersützt die "Highslide JS"-MOD von stokerpiller:
-http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
+http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		<author-notes lang="en"><![CDATA[
 Supports the "MOD Version Check"-MOD by Handymman´:
-http://www.phpbb.com/community/viewtopic.php?f=69&t=691155
-
-Supports the "Highslide JS"-MOD by stokerpiller:
-http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
+http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 		<author-group>
 			<author>
@@ -52,6 +46,10 @@ http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
 			<link type="language" lang="en" href="contrib/de.xml">Manual for German Language-set</link>
 			<link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>
 			<link type="template" lang="en" href="contrib/subsilver2.xml">Manual for subsilver2 Style</link>
+			<link type="parent" lang="de" href="../plugins/highslide.xml">Plugin Highslide JS</link>
+			<link type="parent" lang="en" href="../plugins/highslide.xml">Plugin Highslide JS</link>
+			<link type="parent" lang="de" href="../plugins/lytebox.xml">Plugin Lytebox</link>
+			<link type="parent" lang="en" href="../plugins/lytebox.xml">Plugin Lytebox</link>
 		</link-group>
 	</header>
 
@@ -113,6 +111,35 @@ http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
 			{
 				$checks = array('viewimage', 'viewalbum');
 			}]]></action>
+			</edit>
+		</open>
+
+		<open src="includes/functions.php">
+			<edit>
+				<find><![CDATA[	$user->add_lang('mods/info_acp_gallery');
+	$gallery_root_path = GALLERY_ROOT_PATH;]]></find>
+				<action type="after-add"><![CDATA[	include($phpbb_root_path . $gallery_root_path . 'plugins/index.' . $phpEx);]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/overall_header.html">
+			<edit>
+				<find><![CDATA[<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery/lytebox.js"></script>
+<script type="text/javascript" >
+	if (window.addEventListener) {
+		window.addEventListener("load",initLytebox,false);
+	} else if (window.attachEvent) {
+		window.attachEvent("onload",initLytebox);
+	} else {
+		window.onload = function() {initLytebox();}
+	}
+	function initLytebox() {
+		var imgMaxWidth = 1280;
+		var imgWarning = '';
+		myLytebox = new LyteBox(imgMaxWidth, imgWarning);
+	}
+</script>]]></find>
+				<action type="replace-with"><![CDATA[<!-- INCLUDE gallery/plugins_header.html -->]]></action>
 			</edit>
 		</open>
 

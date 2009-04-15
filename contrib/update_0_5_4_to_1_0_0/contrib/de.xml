@@ -12,19 +12,6 @@
 		<description lang="de"><![CDATA[Update-Anleitung für das Deutsche Sprachpaket]]></description>
 		<description lang="en"><![CDATA[Update-Manual for the german language package]]></description>
 
-		<author-notes lang="de"><![CDATA[
-Untersützt die "MOD Version Check"-MOD von Handymman´:
-http://www.phpbb.com/community/viewtopic.php?f=69&t=691155
-
-Untersützt die "Highslide JS"-MOD von stokerpiller:
-http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
-		<author-notes lang="en"><![CDATA[
-Supports the "MOD Version Check"-MOD by Handymman´:
-http://www.phpbb.com/community/viewtopic.php?f=69&t=691155
-
-Supports the "Highslide JS"-MOD by stokerpiller:
-http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
-
 		<author-group>
 			<author>
 				<realname>Joas Schilling</realname>

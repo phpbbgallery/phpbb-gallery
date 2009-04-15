@@ -30,12 +30,13 @@ class acp_gallery_config
 
 	function main($id, $mode)
 	{
-		global $db, $user, $auth, $cache, $template, $gallery_config;
+		global $db, $user, $auth, $cache, $template, $gallery_config, $gallery_plugins;
 		global $config, $phpbb_root_path, $phpbb_admin_path, $phpEx;
 		$gallery_root_path = GALLERY_ROOT_PATH;
 
 		include($phpbb_root_path . $gallery_root_path . 'includes/constants.' . $phpEx);
 		include($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
+		include($phpbb_root_path . $gallery_root_path . 'plugins/index.' . $phpEx);
 		$gallery_config = load_gallery_config();
 
 		$user->add_lang('mods/gallery_acp');
@@ -100,7 +101,7 @@ class acp_gallery_config
 						'watermark_width'		=> array('lang' => 'WATERMARK_WIDTH',		'validate' => 'int',	'type' => 'text:7:4',		'gallery' => true,	'explain' => true),
 
 						'legend6'				=> 'UC_LINK_CONFIG',
-						'link_thumbnail'		=> array('lang' => 'UC_THUMBNAIL',			'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'uc_select'),
+						'link_thumbnail'		=> array('lang' => 'UC_THUMBNAIL',			'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => true,	'method' => 'uc_select'),
 						'link_imagepage'		=> array('lang' => 'UC_IMAGEPAGE',			'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'uc_select'),
 						'link_image_name'		=> array('lang' => 'UC_IMAGE_NAME',			'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'uc_select'),
 						'link_image_icon'		=> array('lang' => 'UC_IMAGE_ICON',			'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'uc_select'),
@@ -180,6 +181,35 @@ class acp_gallery_config
 					{
 						// Changing the value, casted by int to not mess up anything
 						$config_value = (int) array_sum(request_var($config_name, array(0)));
+					}
+					if ($config_name == 'link_thumbnail')
+					{
+						$update_bbcode = request_var('update_bbcode', '');
+						// Update the BBCode
+						if ($update_bbcode)
+						{
+							if (!class_exists('acp_bbcodes'))
+							{
+								include($phpbb_root_path . 'includes/acp/acp_bbcodes.' . $phpEx);
+							}
+							$acp_bbcodes = new acp_bbcodes();
+							$bbcode_match = '[album]{NUMBER}[/album]';
+							$bbcode_tpl = $this->bbcode_tpl($config_value);
+
+							$sql_ary = $acp_bbcodes->build_regexp($bbcode_match, $bbcode_tpl);
+							$sql_ary = array_merge($sql_ary, array(
+								'bbcode_match'			=> $bbcode_match,
+								'bbcode_tpl'			=> $bbcode_tpl,
+								'display_on_posting'	=> true,
+								'bbcode_helpline'		=> 'GALLERY_HELPLINE_ALBUM',
+							));
+
+							$sql = 'UPDATE ' . BBCODES_TABLE . '
+								SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
+								WHERE bbcode_tag = '" . $sql_ary['bbcode_tag'] . "'";
+							$db->sql_query($sql);
+							$cache->destroy('sql', BBCODES_TABLE);
+						}
 					}
 					set_gallery_config($config_name, $config_value);
 				}
@@ -330,14 +360,17 @@ class acp_gallery_config
 	*/
 	function uc_select($value, $key)
 	{
-		global $phpbb_root_path, $user;
+		global $gallery_plugins, $user;
 
 		$sort_order_options = '';
 
-		$sort_order_options .= '<option' . (($value == 'lytebox') ? ' selected="selected"' : '') . " value='lytebox'>" . $user->lang['UC_LINK_LYTEBOX'] . '</option>';
-		if (file_exists($phpbb_root_path . 'styles/' . $user->theme['template_path'] . '/theme/highslide/highslide-full.js'))
+		if (in_array('highslide', $gallery_plugins['plugins']))
 		{
 			$sort_order_options .= '<option' . (($value == 'highslide') ? ' selected="selected"' : '') . " value='highslide'>" . $user->lang['UC_LINK_HIGHSLIDE'] . '</option>';
+		}
+		if (in_array('lytebox', $gallery_plugins['plugins']))
+		{
+			$sort_order_options .= '<option' . (($value == 'lytebox') ? ' selected="selected"' : '') . " value='lytebox'>" . $user->lang['UC_LINK_LYTEBOX'] . '</option>';
 		}
 		if ($key != 'link_imagepage')
 		{
@@ -346,7 +379,8 @@ class acp_gallery_config
 		$sort_order_options .= '<option' . (($value == 'image') ? ' selected="selected"' : '') . " value='image'>" . $user->lang['UC_LINK_IMAGE'] . '</option>';
 		$sort_order_options .= '<option' . (($value == 'none') ? ' selected="selected"' : '') . " value='none'>" . $user->lang['UC_LINK_NONE'] . '</option>';
 
-		return "<select name=\"config[$key]\" id=\"$key\">$sort_order_options</select>";
+		return "<select name=\"config[$key]\" id=\"$key\">$sort_order_options</select>"
+			. (($key == 'link_thumbnail') ? '<br /><input class="checkbox" checked="checked" type="checkbox" name="update_bbcode" id="update_bbcode" value="update_bbcode" /><label for="update_bbcode">' .  $user->lang['UPDATE_BBCODE'] . '</label>' : '');
 	}
 
 	/**
@@ -390,6 +424,30 @@ class acp_gallery_config
 
 		// Cheating is an evil-thing, but most times it's successful, that's why it is used.
 		return "<input type=\"hidden\" name=\"config[$key]\" value=\"$value\" /><select name=\"" . $key . "[]\" multiple=\"multiple\" id=\"$key\">$rrc_display_options</select>";
+	}
+
+	/**
+	* BBCode-Template
+	*/
+	function bbcode_tpl($value)
+	{
+		global $gallery_plugins, $phpEx;
+		$gallery_url = generate_board_url() . '/' . GALLERY_ROOT_PATH;
+
+		if (($value == 'highslide') && in_array('highslide', $gallery_plugins['plugins']))
+		{
+			$bbcode_tpl = '<a class="highslide" onclick="return hs.expand(this)" href="' . $gallery_url . 'image.php?image_id={NUMBER}"><img src="' . $gallery_url . 'image.php?mode=thumbnail&image_id={NUMBER}" alt="{NUMBER}" /></a>';
+		}
+		elseif (($value == 'lytebox') && in_array('lytebox', $gallery_plugins['plugins']))
+		{
+			$bbcode_tpl = '<a class="image-resize" rel="lytebox" href="' . $gallery_url . 'image.php?image_id={NUMBER}"><img src="' . $gallery_url . 'image.php?mode=thumbnail&image_id={NUMBER}" alt="{NUMBER}" /></a>';
+		}
+		else
+		{
+			$bbcode_tpl = '<a href="' . $gallery_url . 'image.php?image_id={NUMBER}"><img src="' . $gallery_url . 'image.php?mode=thumbnail&image_id={NUMBER}" alt="{NUMBER}" /></a>';
+		}
+
+		return $bbcode_tpl;
 	}
 }
 

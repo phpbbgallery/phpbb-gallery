@@ -191,16 +191,22 @@ if ($album_data['album_type'] != ALBUM_CAT)
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE image_album_id = ' . (int) $album_id . "
 				$image_status_check
-			ORDER BY $sql_sort_order";
+			ORDER BY $sql_sort_order, image_id " . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
 		if ($mode == 'slide_show')
 		{
 			/**
 			* Slideshow - Using message_body.html
 			*/
+			// No plugins means, no javascript to do a slideshow
+			if (!sizeof($gallery_plugins['plugins']) || !$gallery_plugins['slideshow'])
+			{
+				trigger_error('MISSING_SLIDESHOW_PLUGIN');
+			}
+
 			$result = $db->sql_query($sql);
 
-			if (file_exists($phpbb_root_path . 'styles/' . $user->theme['template_path'] . '/theme/highslide/highslide-full.js'))
+			if (in_array('highslide', $gallery_plugins['plugins']))
 			{
 				$trigger_message = $user->lang['SLIDE_SHOW_HIGHSLIDE'];
 				while ($row = $db->sql_fetchrow($result))
@@ -208,13 +214,17 @@ if ($album_data['album_type'] != ALBUM_CAT)
 					$images[] = generate_image_link('image_name', 'highslide', $row['image_id'], $row['image_name'], $row['image_album_id']);
 				}
 			}
-			else
+			elseif (in_array('lytebox', $gallery_plugins['plugins']))
 			{
 				$trigger_message = $user->lang['SLIDE_SHOW_START'];
 				while ($row = $db->sql_fetchrow($result))
 				{
 					$images[] = generate_image_link('image_name', 'lytebox_slide_show', $row['image_id'], $row['image_name'], $row['image_album_id']);
 				}
+			}
+			else
+			{
+				trigger_error('MISSING_SLIDESHOW_PLUGIN');
 			}
 			$db->sql_freeresult($result);
 

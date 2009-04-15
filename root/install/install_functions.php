@@ -370,74 +370,39 @@ function adm_back_link($u_action)
 */
 function add_bbcode($album_bbcode)
 {
-	global $db, $config, $phpbb_root_path;
+	global $db, $config, $phpbb_root_path, $phpEx;
 
-	$sql = 'SELECT * FROM ' . BBCODES_TABLE . " WHERE bbcode_tag = '$album_bbcode'";
-	$result = $db->sql_query($sql);
-	$row = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
-	//which bbcode template:
-	if (file_exists($phpbb_root_path . 'highslide/highslide-full.js'))
+	if (!class_exists('acp_bbcodes'))
 	{
-			$bbcode_tpl = '<a class="highslide" onclick="return hs.expand(this)" href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?image_id={NUMBER}"><img src="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?mode=thumbnail&image_id={NUMBER}" alt="{NUMBER}" /></a>'
-							. '<br /><a href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image_page.php?image_id={NUMBER}">{NUMBER}</a>';
-			$second_pass_replace = '<a class="highslide" onclick="return hs.expand(this)" href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?image_id=${1}"><img src="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?mode=thumbnail&image_id=${1}" alt="${1}" /></a>'
-							. '<br /><a href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image_page.php?image_id=${1}">${1}</a>';
+		include($phpbb_root_path . 'includes/acp/acp_bbcodes.' . $phpEx);
 	}
-	else
+	$acp_bbcodes = new acp_bbcodes();
+	$gallery_url = generate_board_url() . '/' . GALLERY_ROOT_PATH;
+
+	$bbcode_match = '[' . $album_bbcode . ']{NUMBER}[/' . $album_bbcode . ']';
+	$bbcode_tpl = '<a href="' . $gallery_url . 'image.php?image_id={NUMBER}"><img src="' . $gallery_url . 'image.php?mode=thumbnail&image_id={NUMBER}" alt="{NUMBER}" /></a>';
+
+	$sql_ary = $acp_bbcodes->build_regexp($bbcode_match, $bbcode_tpl);
+	$sql_ary = array_merge($sql_ary, array(
+		'bbcode_match'			=> $bbcode_match,
+		'bbcode_tpl'			=> $bbcode_tpl,
+		'display_on_posting'	=> true,
+		'bbcode_helpline'		=> 'GALLERY_HELPLINE_ALBUM',
+	));
+
+	$sql = 'UPDATE ' . BBCODES_TABLE . '
+		SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
+		WHERE bbcode_tag = '" . $sql_ary['bbcode_tag'] . "'";
+	$db->sql_query($sql);
+
+	if ($db->sql_affectedrows() <= 1)
 	{
-			$bbcode_tpl = '<a rel="lytebox" class="image-resize" href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?image_id={NUMBER}"><img src="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?mode=thumbnail&image_id={NUMBER}" alt="{NUMBER}" /></a>'
-							. '<br /><a href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image_page.php?image_id={NUMBER}">{NUMBER}</a>';
-			$second_pass_replace = '<a rel="lytebox" class="image-resize" href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?image_id=${1}"><img src="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image.php?mode=thumbnail&image_id=${1}" alt="${1}" /></a>'
-							. '<br /><a href="' . generate_board_url() . '/' . GALLERY_ROOT_PATH . 'image_page.php?image_id=${1}">${1}</a>';
+		$sql = 'INSERT INTO ' . BBCODES_TABLE . '
+			' . $db->sql_build_array('INSERT', $sql_ary);
+		$db->sql_query($sql);
 	}
 
-	if (!$row)
-	{
-		$sql_ary = array(
-			'bbcode_tag'				=> $album_bbcode,
-			'bbcode_match'				=> '[' . $album_bbcode . ']{NUMBER}[/' . $album_bbcode . ']',
-			'bbcode_tpl'				=> $bbcode_tpl,
-			'display_on_posting'		=> true,
-			'bbcode_helpline'			=> '',
-			'first_pass_match'			=> '!\[' . $album_bbcode . '\]([0-9]+)\[/' . $album_bbcode . '\]!i',
-			'first_pass_replace'		=> '[' . $album_bbcode . ':$uid]${1}[/' . $album_bbcode . ':$uid]',
-			'second_pass_match'			=> '!\[' . $album_bbcode . ':$uid\]([0-9]+)\[/' . $album_bbcode . ':$uid\]!s',
-			'second_pass_replace'		=> $second_pass_replace,
-		);
-
-		$sql = 'SELECT MAX(bbcode_id) as max_bbcode_id
-			FROM ' . BBCODES_TABLE;
-		$result = $db->sql_query($sql);
-		$row = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-
-		if ($row)
-		{
-			$bbcode_id = $row['max_bbcode_id'] + 1;
-
-			// Make sure it is greater than the core bbcode ids...
-			if ($bbcode_id <= NUM_CORE_BBCODES)
-			{
-				$bbcode_id = NUM_CORE_BBCODES + 1;
-			}
-		}
-		else
-		{
-			$bbcode_id = NUM_CORE_BBCODES + 1;
-		}
-		$sql_ary['bbcode_id'] = (int) $bbcode_id;
-
-		$db->sql_query('INSERT INTO ' . BBCODES_TABLE . $db->sql_build_array('INSERT', $sql_ary));
-	}
-	else
-	{
-		$sql_ary = array(
-			'bbcode_tpl'				=> $bbcode_tpl,
-			'second_pass_replace'		=> $second_pass_replace,
-		);
-		$db->sql_query('UPDATE ' . BBCODES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . ' WHERE bbcode_id = ' . (int) $row['bbcode_id']);
-	}
+	$cache->destroy('sql', BBCODES_TABLE);
 }
 
 /**
@@ -602,7 +567,7 @@ function set_default_config()
 	set_gallery_config('description_length', 1024);
 	set_gallery_config('allow_rates', 1);
 	set_gallery_config('allow_comments', 1);
-	set_gallery_config('link_thumbnail', 'lytebox');
+	set_gallery_config('link_thumbnail', 'image_page');
 	set_gallery_config('link_image_name', 'image_page');
 	set_gallery_config('link_image_icon', 'image_page');
 	set_gallery_config('resize_images', 1);
@@ -611,7 +576,7 @@ function set_default_config()
 	set_gallery_config('medium_cache', 1);
 
 	// Added 0.4.1
-	set_gallery_config('link_imagepage', 'lytebox');
+	set_gallery_config('link_imagepage', 'image_page');
 
 	// Added 0.5.0
 	set_gallery_config('rrc_gindex_mode', 7);

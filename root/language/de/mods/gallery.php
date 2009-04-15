@@ -144,6 +144,7 @@ $lang = array_merge($lang, array(
 	'MISSING_IMAGE_NAME'			=> 'Du musst einen Titel für Dein Bild angeben',
 	'MISSING_MODE'					=> 'Kein Modus ausgewählt',
 	'MISSING_REPORT_REASON'			=> 'Du musst einen Grund angeben um das Bild zu melden.',
+	'MISSING_SLIDESHOW_PLUGIN'		=> 'Es wurde kein Plugin zum darstellen einer Diashow gefunden. Bitte kontaktiere die Board-Administration für mehr Informationen.',
 	'MISSING_SUBMODE'				=> 'Kein Sub-Modus ausgewählt',
 	'MISSING_USERNAME'				=> 'Kein Benutzernamen angegeben',
 	'MOVE_TO_ALBUM'					=> 'Ins Album verschieben',

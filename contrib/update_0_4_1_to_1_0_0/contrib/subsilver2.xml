@@ -9,18 +9,6 @@
     <title lang="en-gb">phpBB Gallery</title>
     <description lang="de"><![CDATA[Update-Anleitung für einen subsilver2-basierten Style]]></description>
     <description lang="en-gb"><![CDATA[Update-Manual for a subsilver2-based style]]></description>
-    <author-notes lang="de"><![CDATA[
-Untersützt die "MOD Version Check"-MOD von Handymman´:
-http://www.phpbb.com/community/viewtopic.php?f=69&t=691155
-
-Untersützt die "Highslide JS"-MOD von stokerpiller:
-http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
-    <author-notes lang="en-gb"><![CDATA[
-Supports the "MOD Version Check"-MOD by Handymman´:
-http://www.phpbb.com/community/viewtopic.php?f=69&t=691155
-
-Supports the "Highslide JS"-MOD by stokerpiller:
-http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
     <author-group>
       <author>
         <realname>Joas Schilling</realname>
@@ -52,13 +40,29 @@ http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
       <file from="root/styles/subsilver2/theme/images/lytebox/*.*" to="styles/subsilver2/theme/images/lytebox/*.*" />
       <file from="root/styles/subsilver2/theme/images/icon_gallery.gif" to="styles/subsilver2/theme/images/icon_gallery.gif" />
     </copy>
-    <open src="styles/subsilver2/template/overall_header.html">
-      <edit>
-        <find><![CDATA[<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery_lytebox.js"></script>]]></find>
-        <action type="replace-with"><![CDATA[<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery/lytebox.js"></script>]]></action>
-      </edit>
-    </open>
-    <open src="styles/prosilver/template/viewtopic_body.html">
+
+		<open src="styles/subsilver2/template/overall_header.html">
+			<edit>
+				<find><![CDATA[<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery_lytebox.js"></script>
+<script type="text/javascript" >
+	if (window.addEventListener) {
+		window.addEventListener("load",initLytebox,false);
+	} else if (window.attachEvent) {
+		window.attachEvent("onload",initLytebox);
+	} else {
+		window.onload = function() {initLytebox();}
+	}
+	function initLytebox() {
+		var imgMaxWidth = 1280;
+		var imgWarning = '';
+		myLytebox = new LyteBox(imgMaxWidth, imgWarning);
+	}
+</script>]]></find>
+				<action type="replace-with"><![CDATA[<!-- INCLUDE gallery/plugins_header.html -->]]></action>
+			</edit>
+		</open>
+
+    <open src="styles/subsilver2/template/viewtopic_body.html">
       <edit>
         <find><![CDATA[<!-- IF postrow.POSTER_POSTS != '' --><br /><b>{L_POSTS}:</b> {postrow.POSTER_POSTS}<!-- ENDIF -->]]></find>
         <action type="after-add"><![CDATA[<!-- IF postrow.GALLERY_IMAGES != '' --><br /><b>{L_IMAGES}:</b> <!-- IF postrow.U_GALLERY_SEARCH --><a href="{postrow.U_GALLERY_SEARCH}">{postrow.GALLERY_IMAGES}</a><!-- ELSE -->{postrow.GALLERY_IMAGES}<!-- ENDIF --><!-- ENDIF -->]]></action>
@@ -66,6 +70,8 @@ http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
     </open>
     <open src="styles/subsilver2/theme/stylesheet.css">
       <edit>
+        <comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+        <comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
         <find><![CDATA[#lbOverlay { position: fixed; top: 0; left: 0; z-index: 99998; width: 100%; height: 500px; }
 #lbOverlay.grey { background-color: #000000; }
 
@@ -116,59 +122,7 @@ http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
 
 #lbPause { width: 64px; height: 28px; float: right; margin-bottom: 1px; }
 #lbPause.grey { background: url("./images/gallery_lytebox/pause_grey.png") no-repeat; }]]></find>
-        <action type="replace-with"><![CDATA[/**
-* Lytebox 3.22
-*/
-#lbOverlay { position: fixed; top: 0; left: 0; z-index: 99998; width: 100%; height: 500px; }
-#lbOverlay.grey { background-color: #000000; }
-
-#lbMain { position: absolute; left: 0; width: 100%; z-index: 99999; text-align: center; line-height: 0; }
-#lbMain a img { border: none; }
-
-#lbOuterContainer { position: relative; background-color: #fff; width: 200px; height: 200px; margin: 0 auto; }
-#lbOuterContainer.grey { border: 3px solid #888888; }
-
-#lbDetailsContainer {	font: 10px Verdana, Helvetica, sans-serif; background-color: #fff; width: 100%; line-height: 1.4em;	overflow: auto; margin: 0 auto; }
-#lbDetailsContainer.grey { border: 3px solid #888888; border-top: none; }
-
-#lbImageContainer, #lbIframeContainer { padding: 10px; }
-#lbLoading {
-	position: absolute; top: 45%; left: 0%; height: 32px; width: 100%; text-align: center; line-height: 0; background: url(./images/lytebox/loading.gif) center no-repeat;
-}
-
-#lbHoverNav { position: absolute; top: 0; left: 0; height: 100%; width: 100%; z-index: 10; }
-#lbImageContainer>#lbHoverNav { left: 0; }
-#lbHoverNav a { outline: none; }
-
-#lbPrev { width: 49%; height: 100%; background: transparent url("./images/lytebox/blank.gif") no-repeat; display: block; left: 0; float: left; }
-#lbPrev.grey:hover, #lbPrev.grey:visited:hover { background: url("./images/lytebox/prev_grey.gif") left 15% no-repeat; }
-
-#lbNext { width: 49%; height: 100%; background: transparent url("./images/lytebox/blank.gif") no-repeat; display: block; right: 0; float: right; }
-#lbNext.grey:hover, #lbNext.grey:visited:hover { background: url("./images/lytebox/next_grey.gif") right 15% no-repeat; }
-
-#lbPrev2, #lbNext2 { text-decoration: none; font-weight: bold; }
-#lbPrev2.grey, #lbNext2.grey, #lbSpacer.grey { color: #333333; }
-
-#lbPrev2_Off, #lbNext2_Off { font-weight: bold; }
-#lbPrev2_Off.grey, #lbNext2_Off.grey { color: #CCCCCC; }
-
-#lbDetailsData { padding: 0 10px; }
-#lbDetailsData.grey { color: #333333; }
-
-
-#lbDetails { width: 60%; float: left; text-align: left; }
-#lbCaption { display: block; font-weight: bold; }
-#lbNumberDisplay { float: left; display: block; padding-bottom: 1.0em; }
-#lbNavDisplay { float: left; display: block; padding-bottom: 1.0em; }
-
-#lbClose { width: 64px; height: 28px; float: right; margin-bottom: 1px; }
-#lbClose.grey { background: url("./images/lytebox/close_grey.png") no-repeat; }
-
-#lbPlay { width: 64px; height: 28px; float: right; margin-bottom: 1px; }
-#lbPlay.grey { background: url("./images/lytebox/play_grey.png") no-repeat; }
-
-#lbPause { width: 64px; height: 28px; float: right; margin-bottom: 1px; }
-#lbPause.grey { background: url("./images/lytebox/pause_grey.png") no-repeat; }]]></action>
+        <action type="replace-with"><![CDATA[]]></action>
       </edit>
     </open>
     <diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus

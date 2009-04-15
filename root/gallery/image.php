@@ -25,6 +25,7 @@ $auth->acl($user->data);
 $user->setup('mods/gallery');
 
 // Get general album information
+define('S_GALLERY_PLUGINS', false);
 include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
 include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
 

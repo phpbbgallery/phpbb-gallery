@@ -1,0 +1,44 @@
+<!-- IF S_GP_HIGHSLIDE -->
+	<script type="text/javascript" src="{S_GP_HIGHSLIDE}highslide-full.js"></script>
+	<link rel="stylesheet" type="text/css" href="{S_GP_HIGHSLIDE}highslide.css" />
+	<script type="text/javascript">
+		hs.graphicsDir = '{S_GP_HIGHSLIDE}graphics/';
+		hs.align = 'center';
+		hs.transitions = ['expand', 'crossfade'];
+		hs.fadeInOut = true;
+		hs.dimmingOpacity = 0.8;
+		hs.outlineType = 'rounded-white';
+		hs.captionEval = 'this.thumb.alt';
+
+		// Add the slideshow providing the controlbar and the thumbstrip
+		hs.addSlideshow({
+			interval: 5000,
+			repeat: false,
+			useControls: true,
+			fixedControls: 'fit',
+			overlayOptions: {
+				opacity: .75,
+				position: 'bottom center',
+				hideOnMouseOut: true
+			}
+		});
+	</script>
+<!-- ENDIF -->
+<!-- IF S_GP_LYTEBOX -->
+	<script type="text/javascript" src="{S_GP_LYTEBOX}lytebox.js"></script>
+	<link rel="stylesheet" type="text/css" href="{S_GP_LYTEBOX}lytebox.css" />
+	<script type="text/javascript" >
+		if (window.addEventListener) {
+			window.addEventListener("load",initLytebox,false);
+		} else if (window.attachEvent) {
+			window.attachEvent("onload",initLytebox);
+		} else {
+			window.onload = function() {initLytebox();}
+		}
+		function initLytebox() {
+			var imgMaxWidth = 1280;
+			var imgWarning = '';
+			myLytebox = new LyteBox(imgMaxWidth, imgWarning);
+		}
+	</script>
+<!-- ENDIF -->

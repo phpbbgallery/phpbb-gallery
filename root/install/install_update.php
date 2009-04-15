@@ -780,7 +780,7 @@ class install_update extends module
 				set_gallery_config('description_length', 1024);
 				set_gallery_config('allow_rates', 1);
 				set_gallery_config('allow_comments', 1);
-				set_gallery_config('link_thumbnail', 'lytebox');
+				set_gallery_config('link_thumbnail', 'image_page');
 				set_gallery_config('link_image_name', 'image_page');
 				set_gallery_config('link_image_icon', 'image_page');
 				set_gallery_config('resize_images', 1);
@@ -843,7 +843,7 @@ class install_update extends module
 				$db->sql_query($sql);
 
 			case '0.4.0':
-				set_gallery_config('link_imagepage', 'lytebox');
+				set_gallery_config('link_imagepage', 'image_page');
 
 			case '0.4.1':
 				// Resync the reported flags in addition to #393, #417
@@ -1124,14 +1124,14 @@ class install_update extends module
 			case '0.4.0-RC3':
 			case '0.4.0':
 			case '0.4.1':
-				/* //@todo: Move on bbcode-change or creating all modules */
-				$reparse_modules_bbcode = true;
-
 			case '0.5.0':
 			case '0.5.1':
 			case '0.5.2':
 			case '0.5.3':
 			case '0.5.4':
+				/* //@todo: Move on bbcode-change or creating all modules */
+				$reparse_modules_bbcode = true;
+
 			break;
 		}
 
@@ -1250,9 +1250,6 @@ class install_update extends module
 					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_FAVORITES',	'module_mode' => 'manage_favorites',	'module_auth' => '');
 					add_module($ucp_gallery);
 
-					// Add album-BBCode
-					add_bbcode('album');
-
 				case '0.4.0-RC2':
 				case '0.4.0-RC3':
 				case '0.4.0':
@@ -1266,6 +1263,9 @@ class install_update extends module
 				case '0.5.2':
 				case '0.5.3':
 				case '0.5.4':
+					// Add album-BBCode
+					add_bbcode('album');
+
 				break;
 			}
 
@@ -1287,6 +1287,7 @@ class install_update extends module
 				case '0.5.2':
 				case '0.5.1':
 				case '0.5.0':
+					unset ($modules['log_module']);
 				case '0.4.1':
 				case '0.4.0-RC3':
 				case '0.4.0-RC2':

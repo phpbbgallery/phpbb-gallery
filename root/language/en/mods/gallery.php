@@ -143,6 +143,7 @@ $lang = array_merge($lang, array(
 	'MISSING_COMMENT'				=> 'No Message entered',
 	'MISSING_MODE'					=> 'No mode selected',
 	'MISSING_REPORT_REASON'			=> 'You need to mention a reason, to report an image.',
+	'MISSING_SLIDESHOW_PLUGIN'		=> 'No slideshow-plugin found. Contact the board-administration for more information.',
 	'MISSING_SUBMODE'				=> 'No submode selected',
 	'MISSING_USERNAME'				=> 'No Username entered',
 	'MOVE_TO_ALBUM'					=> 'Move to album',

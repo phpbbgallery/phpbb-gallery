@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
+<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+<!-- $Id$ -->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.2.xsd">
+	<header>
+		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+
+		<title lang="de">phpBB Gallery Plugin: Highslide JS (4.1.2)</title>
+		<title lang="en">phpBB Gallery Plugin: Highslide JS (4.1.2)</title>
+
+		<description lang="de"><![CDATA[Diese Anleitung ermöglicht ein einfaches implementieren von Highslide JS (von Torstein Hønsi: http://highslide.com/) in die Gallery.]]></description>
+		<description lang="en"><![CDATA[This manual is an easy way to implement Highslide JS (by Torstein Hønsi: http://highslide.com/) into the gallery.]]></description>
+
+		<author-notes lang="de"><![CDATA[
+Du musst dir Highslide JS selbst herunterladen:
+http://highslide.com/download.php
+Bitte beachte dabei, dass Highslide JS eine andere Lizenz hat:
+http://highslide.com/#licence
+Creative Commons Attribution-NonCommercial 2.5 License
+http://creativecommons.org/licenses/by-nc/2.5/]]></author-notes>
+		<author-notes lang="en"><![CDATA[
+You need to download Highslide JS on your own:
+http://highslide.com/download.php
+Please note, that Highslide JS has a different license:
+http://highslide.com/#licence
+Creative Commons Attribution-NonCommercial 2.5 License
+http://creativecommons.org/licenses/by-nc/2.5/]]></author-notes>
+
+		<author-group>
+			<author>
+				<realname>Joas Schilling</realname>
+				<email>nickvergessen@gmx.de</email>
+				<username>nickvergessen</username>
+				<homepage>http://www.flying-bits.org/</homepage>
+				<contributions />
+			</author>
+			<author>
+				<realname>Torstein Hønsi</realname>
+				<email>torstein.hoensi@gmail.com</email>
+				<homepage>http://highslide.com/</homepage>
+				<contributions />
+			</author>
+		</author-group>
+
+		<mod-version>1.0.0</mod-version>
+
+		<installation>
+			<level>easy</level>
+			<time>60</time>
+			<target-version>3.0.4</target-version>
+		</installation>
+	</header>
+
+	<action-group>
+		<copy>
+			<file from="highslide.zip/highslide/highslide-full.js" to="gallery/plugins/highslide/highslide-full.js" />
+			<file from="highslide.zip/highslide/highslide.css" to="gallery/plugins/highslide/highslide.css" />
+			<file from="highslide.zip/highslide/graphics/*.*" to="gallery/plugins/highslide/graphics/*.*" />
+			<file from="root/gallery/plugins/index.htm" to="gallery/plugins/highslide/graphics/index.htm" />
+			<file from="root/gallery/plugins/index.htm" to="gallery/plugins/highslide/index.htm" />
+		</copy>
+
+		<diy-instructions lang="de"><![CDATA[Kopiere die Dateien aus dem zip-Verzeichnis, wie oben angegeben.
+Anschließend musst du in "Administrations-Bereich" (ACP) > "MODS" > "phpBB Galerie" > "Galerie konfigurieren"
+im Kasten "Link Konfiguration" die Optionen auf Highslide-Plugin umstellen und fertig.]]></diy-instructions>
+		<diy-instructions lang="en"><![CDATA[Copy the files from the zip as mentioned above.
+Afterwards go to "Administration Control Panel" (ACP) > ".MODs" > "phpBB Gallery" > "Configure gallery"
+and change the values of "Link configuration" to Highslide-Plugin.]]></diy-instructions>
+	</action-group>
+</mod>
