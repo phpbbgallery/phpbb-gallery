@@ -1000,6 +1000,8 @@ class install_update extends module
 				$db->sql_query($sql);
 
 			case '0.5.4':
+			case '1.0.0':
+			case '1.0.0-dev':
 				$num_comments = 0;
 				$sql = 'SELECT SUM(image_comments) comments
 					FROM ' . GALLERY_IMAGES_TABLE . '
@@ -1061,6 +1063,13 @@ class install_update extends module
 					}
 					set_gallery_config('rrc_profile_mode', $rrc_profile_mode);
 				}
+
+				// We moved the permissions management to a new file
+				$sql = 'UPDATE ' . MODULES_TABLE . "
+					SET module_basename = 'gallery_permissions',
+						module_mode = 'manage'
+					WHERE module_langname = 'ACP_GALLERY_ALBUM_PERMISSIONS'";
+				$db->sql_query($sql);
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
@@ -1228,7 +1237,7 @@ class install_update extends module
 					add_module($acp_configure_gallery);
 					$acp_gallery_manage_albums = array('module_basename' => 'gallery_albums',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_MANAGE_ALBUMS',	'module_mode' => 'manage',	'module_auth' => 'acl_a_gallery_albums');
 					add_module($acp_gallery_manage_albums);
-					$album_permissions = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS',	'module_mode' => 'album_permissions',	'module_auth' => 'acl_a_gallery_albums');
+					$album_permissions = array('module_basename' => 'gallery_permissions',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS',	'module_mode' => 'manage',	'module_auth' => 'acl_a_gallery_albums');
 					add_module($album_permissions);
 					$import_images = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_IMPORT_ALBUMS',	'module_mode' => 'import_images',	'module_auth' => 'acl_a_gallery_import');
 					add_module($import_images);

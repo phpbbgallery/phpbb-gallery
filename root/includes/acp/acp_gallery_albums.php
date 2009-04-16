@@ -193,15 +193,15 @@ class acp_gallery_albums
 						$cache->destroy('sql', GALLERY_PERMISSIONS_TABLE);
 						$cache->destroy('_albums');
 
-						$acl_url = '&amp;mode=album_permissions&amp;step=1&amp;uncheck=true&amp;album_id=' . $album_data['album_id'];
+						$acl_url = '&amp;mode=manage&amp;action=v_mask&amp;album_id[]=' . $album_data['album_id'];
 
 						$message = ($action == 'add') ? $user->lang['ALBUM_CREATED'] : $user->lang['ALBUM_UPDATED'];
-						$message .= '<br /><br />' . sprintf($user->lang['REDIRECT_ACL'], '<a href="' . append_sid("{$phpbb_admin_path}index.$phpEx", 'i=gallery' . $acl_url) . '">', '</a>');
+						$message .= '<br /><br />' . sprintf($user->lang['REDIRECT_ACL'], '<a href="' . append_sid("{$phpbb_admin_path}index.$phpEx", 'i=gallery_permissions' . $acl_url) . '">', '</a>');
 
 						// Redirect directly to permission settings screen
 						if ($action == 'add' && !$album_perm_from)
 						{
-							meta_refresh(5, append_sid("{$phpbb_admin_path}index.$phpEx", 'i=gallery' . $acl_url));
+							meta_refresh(5, append_sid("{$phpbb_admin_path}index.$phpEx", 'i=gallery_permissions' . $acl_url));
 						}
 
 						trigger_error($message . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id));
