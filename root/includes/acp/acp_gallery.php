@@ -72,7 +72,8 @@ class acp_gallery
 
 	function overview()
 	{
-		global $gallery_config, $template, $user, $db, $phpbb_root_path, $config, $auth;
+		global $auth, $config, $db, $gallery_config, $template, $user;
+		global $gallery_root_path, $phpbb_root_path, $phpEx;
 
 		$action = request_var('action', '');
 		$id = request_var('i', '');
@@ -334,6 +335,12 @@ class acp_gallery
 				break;
 			}
 		}
+
+		if (!function_exists('mod_version_check'))
+		{
+			include($phpbb_root_path . $gallery_root_path . 'includes/functions_version_check.' . $phpEx);
+		}
+		mod_version_check();
 
 		$boarddays = (time() - $config['board_startdate']) / 86400;
 		$images_per_day = sprintf('%.2f', $config['num_images'] / $boarddays);

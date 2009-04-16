@@ -359,4 +359,19 @@ $lang = array_merge($lang, array(
 	'WATERMARK_WIDTH_EXP'			=> 'To avoid small images from being covered by the watermark, you may enter a minimum-width/height here.',
 ));
 
+/**
+* A copy of Handyman` s MOD version check, to view it on the gallery overview
+*/
+$lang = array_merge($lang, array(
+	'ANNOUNCEMENT_TOPIC'	=> 'Release Announcement',
+	'CURRENT_VERSION'		=> 'Current Version',
+	'DOWNLOAD_LATEST'		=> 'Download Latest Version',
+	'LATEST_VERSION'		=> 'Latest Version',
+	'NO_INFO'					=> 'Version server could not be contacted',
+	'NOT_UP_TO_DATE'			=> '%s is not up to date',
+	'RELEASE_ANNOUNCEMENT'	=> 'Annoucement Topic',
+	'UP_TO_DATE'			=> '%s is up to date',
+	'VERSION_CHECK'			=> 'MOD Version Check',
+));
+
 ?>
