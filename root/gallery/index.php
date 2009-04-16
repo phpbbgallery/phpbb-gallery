@@ -214,6 +214,14 @@ if ($config['load_birthdays'] && $config['allow_birthdays'] && $gallery_config['
 	$db->sql_freeresult($result);
 }
 
+$first_char = request_var('first_char', '');
+$s_char_options = '<option value=""' . ((!$first_char) ? ' selected="selected"' : '') . '>' . $user->lang['ALL'] . '</option>';
+for ($i = 97; $i < 123; $i++)
+{
+	$s_char_options .= '<option value="' . chr($i) . '"' . (($first_char == chr($i)) ? ' selected="selected"' : '') . '>' . chr($i-32) . '</option>';
+}
+$s_char_options .= '<option value="other"' . (($first_char == 'other') ? ' selected="selected"' : '') . '>#</option>';
+
 // Output page
 $template->assign_vars(array(
 	'TOTAL_IMAGES'		=> ($gallery_config['disp_statistic']) ? sprintf($user->lang[$l_total_image_s], $total_images) : '',
@@ -229,8 +237,9 @@ $template->assign_vars(array(
 	'S_LOGIN_ACTION'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login&amp;redirect=' . urlencode("{$gallery_root_path}index.$phpEx" . (($mode == 'personal') ? '?mode=personal' : ''))),
 	'S_DISPLAY_BIRTHDAY_LIST'	=> ($config['load_birthdays']) ? true : false,
 
-	'U_YOUR_PERSONAL_GALLERY' 		=> (!$gallery_config['personal_album_index'] && gallery_acl_check('i_upload', OWN_GALLERY_PERMISSIONS)) ? ($user->gallery['personal_album_id'] > 0) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $user->gallery['personal_album_id']) : append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums') : '',
-	'U_USERS_PERSONAL_GALLERIES' 	=> (!$gallery_config['personal_album_index'] && gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal') : '',
+	'U_YOUR_PERSONAL_GALLERY'		=> (!$gallery_config['personal_album_index'] && gallery_acl_check('i_upload', OWN_GALLERY_PERMISSIONS)) ? ($user->gallery['personal_album_id'] > 0) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $user->gallery['personal_album_id']) : append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums') : '',
+	'U_USERS_PERSONAL_GALLERIES'	=> (!$gallery_config['personal_album_index'] && gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal') : '',
+	'S_CHAR_OPTIONS'				=> $s_char_options,
 
 	'U_MARK_ALBUMS'					=> ($user->data['is_registered']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'hash=' . generate_link_hash('global') . '&amp;mark=albums') : '',
 ));

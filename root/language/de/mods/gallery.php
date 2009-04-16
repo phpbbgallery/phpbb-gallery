@@ -34,6 +34,7 @@ $lang = array_merge($lang, array(
 	'ALBUM_UPLOAD_NEED_APPROVAL'	=> 'Dein Bild wurde erfolgreich hochgeladen.<br /><br />Aber die Funktion der Genehmigung von Bildern vor der Veröffentlichung ist aktiv. Somit muss dein Bild vor der Veröffentlichung von einem Administrator oder einem Moderator genehmigt werden.',
 	'ALBUM_UPLOAD_SUCCESSFUL'		=> 'Dein Bild wurde erfolgreich hochgeladen.',
 	'ALBUMS_MARKED'					=> 'Alle Alben wurden als gelesen markiert.',
+	'ALL'							=> 'Alle',
 	'ALL_IMAGES'					=> 'Alle Bilder',
 	'ALLOWED_FILETYPES'				=> 'Erlaubte Dateitypen',
 	'APPROVE'						=> 'Freigeben',
@@ -236,6 +237,7 @@ $lang = array_merge($lang, array(
 	'UPLOADED_ON_DATE'				=> 'Hochgeladen',
 	'USER_NEARLY_REACHED_QUOTA'		=> 'Du darfst nur %s Bilder hochladen, hast aber schon %s Bilder hochgeladen. Deswegen werden nun nur noch %s Dateifelder angezeigt.',
 	'USER_REACHED_QUOTA'			=> 'Du darfst nur %s Bilder hochladen.<br /><br />Für weitere Information wende dich bitte an einen Administrator.',
+	'USERNAME_BEGINS_WITH'			=> 'Benutzername fängt an mit',
 	'USERS_PERSONAL_ALBUMS'			=> 'Persönliche Alben der Mitglieder',
 
 	'VIEW_ALBUM'					=> 'Album ansehen',

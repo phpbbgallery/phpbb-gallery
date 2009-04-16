@@ -10,6 +10,20 @@
 
 <!-- IF U_MCP --><div style="float: right;">[<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</div><br clear="all" /><!-- ENDIF -->
 
+<!-- IF S_PERSONAL_GALLERY -->
+<form method="post" name="charsearch" action="{U_USERS_PERSONAL_GALLERIES}">
+	<table width="100%" cellspacing="1">
+		<tr>
+			<td align="{S_CONTENT_FLOW_BEGIN}"><span class="genmed">{L_USERNAME_BEGINS_WITH}: </span>
+				<select name="first_char" onchange="this.form.submit();">
+				{S_CHAR_OPTIONS}
+				</select>&nbsp;<input type="submit" name="char" value="{L_DISPLAY}" class="btnlite" /></td>
+		</tr>
+	</table>
+	{S_FORM_TOKEN}
+</form>
+<!-- ENDIF -->
+
 <!-- INCLUDE gallery/albumlist_body.html -->
 <br />
 

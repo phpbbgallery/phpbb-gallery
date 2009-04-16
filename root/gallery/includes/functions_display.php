@@ -57,6 +57,18 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 	{
 		$root_data = array('album_id' => 0);
 		$sql_where = 'a.album_user_id > 0';
+		$first_char = request_var('first_char', '');
+		if ($first_char == 'other')
+		{
+			for ($i = 97; $i < 123; $i++)
+			{
+				$sql_where .= ' AND u.username_clean NOT ' . $db->sql_like_expression(chr($i) . $db->any_char);
+			}
+		}
+		else if ($first_char)
+		{
+			$sql_where .= ' AND u.username_clean ' . $db->sql_like_expression(substr($first_char, 0, 1) . $db->any_char);
+		}
 		$mode_personal = true;
 
 		$start = request_var('start', 0);

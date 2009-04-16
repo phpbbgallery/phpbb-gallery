@@ -34,6 +34,7 @@ $lang = array_merge($lang, array(
 	'ALBUM_UPLOAD_NEED_APPROVAL'	=> 'Your image has been uploaded successfully.<br /><br />But the feature Image Approval has been enabled so your image must be approved by a administrator or a moderator before posting',
 	'ALBUM_UPLOAD_SUCCESSFUL'		=> 'Your image has been uploaded successfully',
 	'ALBUMS_MARKED'					=> 'All albums have been marked read.',
+	'ALL'							=> 'All',
 	'ALL_IMAGES'					=> 'All image',
 	'ALLOWED_FILETYPES'				=> 'Allowed filetypes',
 	'APPROVE'						=> 'Approve',
@@ -235,6 +236,7 @@ $lang = array_merge($lang, array(
 	'UPLOADED_ON_DATE'				=> 'Uploaded',
 	'USER_NEARLY_REACHED_QUOTA'		=> 'You are not allowed to upload more than %s images, but you already uploaded %s images. So there are only %s filelines displayed.',
 	'USER_REACHED_QUOTA'			=> 'You are not allowed to upload more than %s images.<br /><br />Please contact the administrator for more information.',
+	'USERNAME_BEGINS_WITH'			=> 'Username begins with',
 	'USERS_PERSONAL_ALBUMS'			=> 'Users Personal Albums',
 
 	'VIEW_ALBUM'					=> 'View album',

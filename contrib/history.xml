@@ -200,6 +200,7 @@ Installing:
 					<change><![CDATA[[Fix] Newest Personal Gallery: Guest (Bug #512)]]></change>
 					<change><![CDATA[[Fix] Contest-information as (int) for better styling usage. (Bug #511)]]></change>
 
+					<change><![CDATA[[Feature] Alphabet-bar for first character of the username on personal albums (Bug #518)]]></change>
 					<change><![CDATA[[Feature] Add Handyman`s MOD Version Check to the Gallery ACP]]></change>
 					<change><![CDATA[[Feature] Added some breadcrumbs to the search.php]]></change>
 					<change><![CDATA[[Feature] User-based permissions]]></change>
