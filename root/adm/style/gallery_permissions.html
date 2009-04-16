@@ -171,7 +171,7 @@ function inherit_victim(c_mask, v_mask, value)
 	<!-- BEGIN v_mask -->
 	<fieldset>
 		<legend>{c_mask.v_mask.VICTIM_NAME}</legend>
-		<p>{L_INHERIT_PERMISSIONS_VICTIM}: <select name="inherit[{c_mask.ALBUM_ID}][{c_mask.v_mask.VICTIM_ID}]" id="inherit[{c_mask.ALBUM_ID}][{c_mask.v_mask.VICTIM_ID}]" onchange="inherit_victim({c_mask.S_ROW_COUNT}, {c_mask.v_mask.S_ROW_COUNT}, this.options[this.selectedIndex].value);">{c_mask.v_mask.INHERIT_VICTIMS}</select></p>
+		<p>{L_INHERIT_PERMISSIONS_VICTIM}: <select name="inherit[{c_mask.C_MASK_ID}][{c_mask.v_mask.VICTIM_ID}]" id="inherit[{c_mask.C_MASK_ID}][{c_mask.v_mask.VICTIM_ID}]" onchange="inherit_victim({c_mask.S_ROW_COUNT}, {c_mask.v_mask.S_ROW_COUNT}, this.options[this.selectedIndex].value);">{c_mask.v_mask.INHERIT_VICTIMS}</select></p>
 		<div class="permissions-advanced" id="advanced{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}">
 		<div class="permissions-category">
 			<ul>
@@ -183,7 +183,7 @@ function inherit_victim(c_mask, v_mask, value)
 		</div>
 
 	<!-- BEGIN category -->
-		<div class="permissions-panel" id="options{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}" <!-- IF c_mask.v_mask.category.S_FIRST_ROW --><!-- ELSE --> style="display: none;"<!-- ENDIF -->>
+		<div class="permissions-panel" id="options{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}" <!-- IF not c_mask.v_mask.category.S_FIRST_ROW --> style="display: none;"<!-- ENDIF -->>
 			<span class="corners-top"><span></span></span>
 			<div class="tablewrap">
 				<table id="table{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}" cellspacing="1">

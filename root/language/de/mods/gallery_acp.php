@@ -158,6 +158,7 @@ $lang = array_merge($lang, array(
 	'GIF_ALLOWED'					=> 'Es ist erlaubt GIF- Dateien hochzuladen',
 	'GUPLOAD_DIR_SIZE'				=> 'Größe des upload/-Ordners',
 
+	'HACKING_ATTEMPT'				=> 'Hacking attempt!',
 	'HANDLE_IMAGES'					=> 'Was soll mit Bildern passieren',
 	'HANDLE_SUBS'					=> 'Was soll mit angehängten Alben passieren',
 	'HOTLINK_ALLOWED'				=> 'Erlaubt Domains für Hotlink',

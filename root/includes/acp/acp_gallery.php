@@ -1298,13 +1298,13 @@ class acp_gallery
 			$converted_victims = array();
 			foreach ($allowed_victims as $victim)
 			{
-				$converted_groups[] = array(
+				$converted_victims[] = array(
 					'victim_id'		=> $victim,
 					'victim_name'	=> '',
 				);
 			}
-			$allowed_groups = $converted_groups;
-			unset ($converted_groups);
+			$allowed_victims = $converted_victims;
+			unset ($converted_victims);
 		}
 
 		$return = '';

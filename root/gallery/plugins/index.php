@@ -32,8 +32,9 @@ $gallery_plugins = array(
 * Highslide JS
 *
 * Latest version tested: 4.1.2
-* License: Creative Commons Attribution-NonCommercial 2.5 License
-*          http://creativecommons.org/licenses/by-nc/2.5/
+* Download: http://highslide.com/download.php
+* License:  Creative Commons Attribution-NonCommercial 2.5 License
+*           http://creativecommons.org/licenses/by-nc/2.5/
 */
 if (file_exists($phpbb_root_path . $gallery_root_path . 'plugins/highslide/highslide-full.js'))
 {
@@ -46,8 +47,9 @@ if (file_exists($phpbb_root_path . $gallery_root_path . 'plugins/highslide/highs
 * Lytebox
 *
 * Latest version tested: 3.22
-* License: Creative Commons Attribution 3.0 License
-*          http://creativecommons.org/licenses/by/3.0/
+* Download: http://www.dolem.com/lytebox/
+* License:  Creative Commons Attribution 3.0 License
+*           http://creativecommons.org/licenses/by/3.0/
 */
 if (file_exists($phpbb_root_path . $gallery_root_path . 'plugins/lytebox/lytebox.js'))
 {
