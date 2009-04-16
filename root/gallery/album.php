@@ -191,7 +191,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE image_album_id = ' . (int) $album_id . "
 				$image_status_check
-			ORDER BY $sql_sort_order, image_id " . (($sort_dir == 'd') ? 'DESC' : 'ASC');
+			ORDER BY $sql_sort_order" . (($sort_key != 't') ? (', image_id ' . (($sort_dir == 'd') ? 'DESC' : 'ASC')) : '');
 
 		if ($mode == 'slide_show')
 		{
@@ -306,7 +306,7 @@ $template->assign_vars(array(
 										append_sid("{$phpbb_root_path}ucp.$phpEx", "i=gallery&amp;mode=manage_albums&amp;action=create&amp;parent_id=$album_id&amp;redirect=album") : '',
 	'U_EDIT_ALBUM'				=> ($album_data['album_user_id'] == $user->data['user_id']) ?
 										append_sid("{$phpbb_root_path}ucp.$phpEx", "i=gallery&amp;mode=manage_albums&amp;action=edit&amp;album_id=$album_id&amp;redirect=album") : '',
-	'U_SLIDE_SHOW'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id&amp;mode=slide_show" . (($sort_key != $gallery_config['sort_method']) ? "&amp;sk=$sort_key" : '') . (($sort_dir != $gallery_config['sort_order']) ? "&amp;sd=$sort_dir" : '')),
+	'U_SLIDE_SHOW'				=> (sizeof($gallery_plugins['plugins']) && $gallery_plugins['slideshow']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id&amp;mode=slide_show" . (($sort_key != $gallery_config['sort_method']) ? "&amp;sk=$sort_key" : '') . (($sort_dir != $gallery_config['sort_order']) ? "&amp;sd=$sort_dir" : '')) : '',
 	'S_DISPLAY_SEARCHBOX'		=> ($auth->acl_get('u_search') && $config['load_search']) ? true : false,
 	'S_SEARCHBOX_ACTION'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'aid[]=' . $album_id),
 
