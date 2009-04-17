@@ -31,7 +31,7 @@ $gallery_plugins = array(
 /**
 * Highslide JS
 *
-* Latest version tested: 4.1.3
+* Latest version tested: 4.1.4
 * Download: http://highslide.com/download.php
 * License:  Creative Commons Attribution-NonCommercial 2.5 License
 *           http://creativecommons.org/licenses/by-nc/2.5/
