@@ -261,6 +261,7 @@ function generate_personal_album($album_name, $user_id, $user_colour, $user_entr
 		'album_desc'					=> '',
 		'album_parents'					=> '',
 		'album_type'					=> ALBUM_UPLOAD,
+		'album_status'					=> ITEM_UNLOCKED,
 		'album_user_id'					=> $user_id,
 		'album_last_username'			=> '',
 		'album_last_user_colour'		=> $user_colour,
