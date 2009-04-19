@@ -615,6 +615,9 @@ function set_default_config()
 	set_gallery_config('newest_pgallery_username', '');
 	set_gallery_config('newest_pgallery_user_colour', '');
 	set_gallery_config('newest_pgallery_album_id', 0);
+
+	// Added 1.0.0-dev:
+	set_gallery_config('pgalleries_per_page', 10);
 }
 
 ?>

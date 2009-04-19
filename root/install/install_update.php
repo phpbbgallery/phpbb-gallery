@@ -1000,7 +1000,6 @@ class install_update extends module
 				$db->sql_query($sql);
 
 			case '0.5.4':
-			case '1.0.0':
 			case '1.0.0-dev':
 				$num_comments = 0;
 				$sql = 'SELECT SUM(image_comments) comments
@@ -1071,8 +1070,15 @@ class install_update extends module
 					WHERE module_langname = 'ACP_GALLERY_ALBUM_PERMISSIONS'";
 				$db->sql_query($sql);
 
+				set_gallery_config('pgalleries_per_page', 10);
+
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
+		}
+
+		if (!$next_update_url)
+		{
+			$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 		}
 
 

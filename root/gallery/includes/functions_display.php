@@ -37,8 +37,8 @@ if (!defined('IN_PHPBB'))
 */
 function display_albums($root_data = '', $display_moderators = true, $return_moderators = false)
 {
-	global $db, $auth, $user, $template, $album_access_array;
-	global $phpbb_root_path, $gallery_root_path, $phpEx, $config, $gallery_config;
+	global $auth, $db, $gallery_config, $template, $user;
+	global $phpbb_root_path, $gallery_root_path, $phpEx;
 
 	$album_rows = $subalbums = $album_ids = $album_ids_moderator = $album_moderators = $active_album_ary = array();
 	$parent_id = $visible_albums = 0;
@@ -57,6 +57,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 	{
 		$root_data = array('album_id' => 0);
 		$sql_where = 'a.album_user_id > 0';
+		$num_pgalleries = $gallery_config['personal_counter'];
 		$first_char = request_var('first_char', '');
 		if ($first_char == 'other')
 		{
@@ -69,15 +70,28 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		{
 			$sql_where .= ' AND u.username_clean ' . $db->sql_like_expression(substr($first_char, 0, 1) . $db->any_char);
 		}
-		$mode_personal = true;
 
+		if ($first_char)
+		{
+			// We dont view all personal albums, so we need to recount, for the pagination.
+			$sql = 'SELECT count(a.album_id) as pgalleries
+				FROM ' . GALLERY_ALBUMS_TABLE . ' a
+				LEFT JOIN ' . USERS_TABLE . ' u
+					ON u.user_id = a.album_user_id
+				WHERE a.parent_id = 0
+					AND ' . $sql_where;
+			$result = $db->sql_query($sql);
+			$num_pgalleries = $db->sql_fetchfield('pgalleries');
+			$db->sql_freeresult($result);
+		}
+
+		$mode_personal = true;
 		$start = request_var('start', 0);
-		$limit = ceil($config['topics_per_page'] / 2);
-		$pagination = generate_pagination("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=$mode', $gallery_config['personal_counter'], $limit, $start);
+		$limit = $gallery_config['pgalleries_per_page'];
 		$template->assign_vars(array(
-			'PAGINATION'				=> generate_pagination("{$phpbb_root_path}{$gallery_root_path}index.$phpEx?mode=$mode", $gallery_config['personal_counter'], $limit, $start),
-			'TOTAL_PGALLERIES_SHORT'	=> sprintf($user->lang['TOTAL_PGALLERIES_SHORT'], $gallery_config['personal_counter']),
-			'PAGE_NUMBER'				=> on_page($gallery_config['personal_counter'], $limit, $start),
+			'PAGINATION'				=> generate_pagination(append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=' . $mode . (($first_char) ? '&amp;first_char=' . $first_char : '')), $num_pgalleries, $limit, $start),
+			'TOTAL_PGALLERIES_SHORT'	=> sprintf($user->lang['TOTAL_PGALLERIES_SHORT'], $num_pgalleries),
+			'PAGE_NUMBER'				=> on_page($num_pgalleries, $limit, $start),
 		));
 	}
 	else
@@ -280,7 +294,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		}
 
 		$visible_albums++;
-		if (($mode == 'personal') && (($visible_albums < $start) || ($visible_albums > ($start + $limit))))
+		if (($mode == 'personal') && (($visible_albums <= $start) || ($visible_albums > ($start + $limit))))
 		{
 			continue;
 		}

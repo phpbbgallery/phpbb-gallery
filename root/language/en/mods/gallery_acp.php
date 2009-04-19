@@ -260,6 +260,7 @@ $lang = array_merge($lang, array(
 	'PERMISSIONS_STORED'			=> 'Permissions were stored successful.',
 	'PERSONAL_ALBUM_INDEX'			=> 'View personal albums as album on the index',
 	'PERSONAL_ALBUM_INDEX_EXP'		=> 'If choosen "No", there will be the link, right beneath.',
+	'PGALLERIES_PER_PAGE'			=> 'Number of personal galleries per page',
 	'PHPBB_INTEGRATION'				=> 'phpBB integration',
 	'PNG_ALLOWED'					=> 'Allowed to upload PNG files',
 	'PURGED_CACHE'					=> 'Purged the cache',

@@ -262,6 +262,7 @@ $lang = array_merge($lang, array(
 	'PERMISSIONS_STORED'			=> 'Berechtigungen erfolgreich gespeichert.',
 	'PERSONAL_ALBUM_INDEX'			=> 'Persönliche Alben in der Galerie-Übersicht als Album anzeigen',
 	'PERSONAL_ALBUM_INDEX_EXP'		=> 'Wenn "Nein" ausgewählt ist, wird der Link unterhalb der Alben angezeigt.',
+	'PGALLERIES_PER_PAGE'			=> 'Anzahl der persönlichen Galerien pro Seite',
 	'PHPBB_INTEGRATION'				=> 'Integration in phpBB',
 	'PNG_ALLOWED'					=> 'Es ist erlaubt PNG- Dateien hochzuladen',
 	'PURGED_CACHE'					=> 'Cache geleert',

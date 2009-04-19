@@ -130,6 +130,7 @@ class acp_gallery_config
 
 						'legend9'				=> 'INDEX_SETTINGS',
 						'personal_album_index'	=> array('lang' => 'PERSONAL_ALBUM_INDEX',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => true),
+						'pgalleries_per_page'	=> array('lang' => 'PGALLERIES_PER_PAGE',	'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 						'disp_login'			=> array('lang' => 'DISP_LOGIN',		'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => true),
 						'disp_whoisonline'		=> array('lang' => 'DISP_WHOISONLINE',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 						'disp_birthdays'		=> array('lang' => 'DISP_BIRTHDAYS',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
