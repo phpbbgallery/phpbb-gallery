@@ -186,6 +186,7 @@ Installing:
 				<date>2009-MM-DD</date>
 				<rev-version>1.0.0</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Undefined index on RRC, when contest-winner was deleted (Bug #524)]]></change>
 					<change><![CDATA[[Fix] Last personal gallery of previous page is the first one on the current page.]]></change>
 					<change><![CDATA[[Fix] SQL-Error when having no permissions on viewing RRC]]></change>
 					<change><![CDATA[[Fix] Moderate options on imagepage]]></change>
@@ -248,7 +249,7 @@ Installing:
 					<change><![CDATA[[Change] Rewrote the acp to set permissions much better]]></change>
 
 					<change><![CDATA[[Feature] Resize images on mass-import (Bug #p6413)]]></change>
-					<change><![CDATA[[Feature] Display user images on viewtopic.php (Patch by Christian_N and nickvergessen) (Bug #p6321)]]></change>
+					<change><![CDATA[[Feature] Display user images on viewtopic.php (Patch by Christian_N and nickvergessen - Bug #p6321)]]></change>
 					<change><![CDATA[[Feature] Read-/Unread-information for albums when new images were uploaded (Bug #129)]]></change>
 
 					<change><![CDATA[[Sec] Unapproved images counter of personal albums is visible on index without permissions (Reported by robbx)]]></change>

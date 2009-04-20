@@ -106,11 +106,13 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 		}
 		if ($ints['contests'])
 		{
-			$sql = 'SELECT *
-				FROM ' . GALLERY_CONTESTS_TABLE . '
-				WHERE ' . $db->sql_in_set('contest_album_id', array_unique(array_merge($view_albums, $moderate_albums))) . '
-					AND contest_marked = ' . IMAGE_NO_CONTEST . '
-				ORDER BY contest_start + contest_end DESC';
+			$sql = 'SELECT c.*, a.album_name
+				FROM ' . GALLERY_CONTESTS_TABLE . ' c
+				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
+					ON a.album_id = c.contest_album_id
+				WHERE ' . $db->sql_in_set('c.contest_album_id', array_unique(array_merge($view_albums, $moderate_albums))) . '
+					AND c.contest_marked = ' . IMAGE_NO_CONTEST . '
+				ORDER BY c.contest_start + c.contest_end DESC';
 			$result = $db->sql_query_limit($sql, $ints['contests']);
 
 			while ($row = $db->sql_fetchrow($result))
@@ -118,7 +120,11 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 				$images[] = $row['contest_first'];
 				$images[] = $row['contest_second'];
 				$images[] = $row['contest_third'];
-				$contest_images[$row['contest_id']] = array($row['contest_first'], $row['contest_second'], $row['contest_third']);
+				$contest_images[$row['contest_id']] = array(
+					'album_id'		=> $row['contest_album_id'],
+					'album_name'	=> $row['album_name'],
+					'images'		=> array($row['contest_first'], $row['contest_second'], $row['contest_third'])
+				);
 			}
 			$db->sql_freeresult($result);
 		}
@@ -146,56 +152,71 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 		if (sizeof($recent_images))
 		{
 			$num = 0;
+			$template->assign_block_vars('imageblock', array(
+				'U_BLOCK'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=recent'),
+				'BLOCK_NAME'		=> $user->lang['RECENT_IMAGES'],
+			));
 			foreach ($recent_images as $recent_image)
 			{
 				if (($num % $ints['columns']) == 0)
 				{
-					$template->assign_block_vars('recent', array());
+					$template->assign_block_vars('imageblock.imagerow', array());
 				}
-				assign_image_block('recent.image', $images_data[$recent_image], $images_data[$recent_image]['album_status'], $display);
+				assign_image_block('imageblock.imagerow.image', $images_data[$recent_image], $images_data[$recent_image]['album_status'], $display);
 				$num++;
 			}
 			while (($num % $ints['columns']) > 0)
 			{
-				$template->assign_block_vars('recent.no_image', array());
+				$template->assign_block_vars('imageblock.imagerow.no_image', array());
 				$num++;
 			}
 		}
 		if (sizeof($random_images))
 		{
 			$num = 0;
+			$template->assign_block_vars('imageblock', array(
+				'U_BLOCK'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=random'),
+				'BLOCK_NAME'		=> $user->lang['RANDOM_IMAGES'],
+			));
 			foreach ($random_images as $random_image)
 			{
 				if (($num % $ints['columns']) == 0)
 				{
-					$template->assign_block_vars('random', array());
+					$template->assign_block_vars('imageblock.imagerow', array());
 				}
-				assign_image_block('random.image', $images_data[$random_image], $images_data[$random_image]['album_status'], $display);
+				assign_image_block('imageblock.imagerow.image', $images_data[$random_image], $images_data[$random_image]['album_status'], $display);
 				$num++;
 			}
 			while (($num % $ints['columns']) > 0)
 			{
-				$template->assign_block_vars('random.no_image', array());
+				$template->assign_block_vars('imageblock.imagerow.no_image', array());
 				$num++;
 			}
 		}
 		if (sizeof($contest_images))
 		{
-			foreach ($contest_images as $contest => $this_contests_images)
+			foreach ($contest_images as $contest => $contest_data)
 			{
 				$num = 0;
-				foreach ($this_contests_images as $contest_image)
+				$template->assign_block_vars('imageblock', array(
+					'U_BLOCK'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $contest_data['album_id'] . '&amp;sk=ra&amp;sd=d'),
+					'BLOCK_NAME'		=> sprintf($user->lang['CONTEST_WINNERS_OF'], $contest_data['album_name']),
+				));
+				foreach ($contest_data['images'] as $contest_image)
 				{
 					if (($num % 3) == 0)
 					{
-						$template->assign_block_vars('contest', array());
+						$template->assign_block_vars('imageblock.imagerow', array());
 					}
-					assign_image_block('contest.image', $images_data[$contest_image], $images_data[$contest_image]['album_status'], $display);
-					$num++;
+					if (!empty($images_data[$contest_image]))
+					{
+						assign_image_block('imageblock.imagerow.image', $images_data[$contest_image], $images_data[$contest_image]['album_status'], $display);
+						$num++;
+					}
 				}
 				while (($num % 3) > 0)
 				{
-					$template->assign_block_vars('contest.no_image', array());
+					$template->assign_block_vars('imageblock.imagerow.no_image', array());
 					$num++;
 				}
 			}

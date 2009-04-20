@@ -85,6 +85,7 @@ $lang = array_merge($lang, array(
 	'CONTEST_STARTS'				=> 'The contest starts on %s.',
 	'CONTEST_USERNAME'				=> '<strong>Contest</strong>',
 	'CONTEST_USERNAME_LONG'			=> '<strong>Contest</strong> » The username is hidden, till the end of the contest on %s.',
+	'CONTEST_WINNERS_OF'			=> 'Contest winner of "%s"',
 
 	'DELETE_COMMENT'				=> 'Delete comment',
 	'DELETE_COMMENT2'				=> 'Delete comment?',
