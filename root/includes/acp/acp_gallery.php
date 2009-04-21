@@ -597,7 +597,7 @@ class acp_gallery
 			}
 			update_album_info($album_id);
 
-			if ($todo_images >= 0)
+			if (!$todo_images)
 			{
 				unlink($phpbb_root_path . GALLERY_IMPORT_PATH . $import_schema . '.' . $phpEx);
 				trigger_error(sprintf($user->lang['IMPORT_FINISHED'], $done_images) . adm_back_link($this->u_action));
