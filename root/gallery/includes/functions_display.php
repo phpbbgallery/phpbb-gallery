@@ -310,9 +310,9 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		{
 			foreach ($subalbums[$album_id] as $subalbum_id => $subalbum_row)
 			{
-				$subalbum_unread = (isset($album_tracking_info[$subalbum_id]) && $subalbum_row['orig_album_last_image_time'] > $album_tracking_info[$subalbum_id]) ? true : false;
+				$subalbum_unread = (isset($album_tracking_info[$subalbum_id]) && $subalbum_row['orig_album_last_image_time'] > $album_tracking_info[$subalbum_id] && ($user->data['user_id'] != ANONYMOUS)) ? true : false;
 
-				if (!$subalbum_unread && !empty($subalbum_row['children']))
+				if (!$subalbum_unread && !empty($subalbum_row['children']) && ($user->data['user_id'] != ANONYMOUS))
 				{
 					foreach ($subalbum_row['children'] as $child_id)
 					{
