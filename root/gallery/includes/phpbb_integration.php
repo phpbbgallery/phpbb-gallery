@@ -111,7 +111,7 @@ function integrate_viewonline ($on_page, $album_id, $session_page)
 			break;
 
 			case $gallery_root_path . 'posting':
-				preg_match('#mode=([a-z]+)#', $row['session_page'], $on_page);
+				preg_match('#mode=([a-z]+)#', $session_page, $on_page);
 				$on_page = (sizeof($on_page)) ? $on_page[1] : '';
 
 				switch ($on_page)
