@@ -44,7 +44,7 @@ function get_album_access_array()
 	$permission_parts['i'] = array('i_view', 'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate');
 	$permission_parts['c'] = array('c_read', 'c_post', 'c_edit', 'c_delete');
 	$permission_parts['m'] = array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status');
-	$permission_parts['misc'] = array('a_list', 'i_count', 'album_count', 'a_moderate');
+	$permission_parts['misc'] = array('a_list', 'i_count', 'i_unlimited', 'album_count', 'album_unlimited');
 	$permissions = array_merge($permissions, $permission_parts['i'], $permission_parts['c'], $permission_parts['m'], $permission_parts['misc']);
 
 	if (!$album_access_array)
@@ -177,7 +177,7 @@ function gallery_acl_check($mode, $album_id, $album_user_id = -1)
 
 	if ($album_id == OWN_GALLERY_PERMISSIONS)
 	{
-		if ($mode == 'album_count')
+		if (($mode == 'album_count') || ($mode == 'album_unlimited'))
 		{
 			$_gallery_acl_cache[$album_id][$mode] = $album_access_array[OWN_GALLERY_PERMISSIONS][$mode];
 		}
@@ -189,7 +189,7 @@ function gallery_acl_check($mode, $album_id, $album_user_id = -1)
 	}
 	if ($album_id == PERSONAL_GALLERY_PERMISSIONS)
 	{
-		if ($mode == 'album_count')
+		if (($mode == 'album_count') || ($mode == 'album_unlimited'))
 		{
 			$_gallery_acl_cache[$album_id][$mode] = $album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode];
 		}
@@ -200,7 +200,7 @@ function gallery_acl_check($mode, $album_id, $album_user_id = -1)
 		return $_gallery_acl_cache[$album_id][$mode];
 	}
 
-	if ($mode == 'i_count')
+	if (($mode == 'i_count') || ($mode == 'i_unlimited'))
 	{
 		if ($album_user_id == $user->data['user_id'])
 		{

@@ -345,25 +345,28 @@ switch ($mode)
 			if ($submode == 'upload')
 			{
 				// Upload Quota Check
-				// 1. Check Album Configuration Quota
-				if ($gallery_config['max_pics'] >= 0)
+				// 1. Check album-configuration Quota
+				if ($gallery_config['images_per_album'] >= 0)
 				{
-					if ($album_data['album_images'] >= $gallery_config['max_pics'])
+					if ($album_data['album_images'] >= $gallery_config['images_per_album'])
 					{
 						trigger_error('ALBUM_REACHED_QUOTA');
 					}
 				}
-				// 2. Check User Limit
-				$sql = 'SELECT COUNT(image_id) count
-					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE image_user_id = ' . $user->data['user_id'] . '
-						AND image_album_id = ' . $album_id;
-				$result = $db->sql_query($sql);
-				$own_images = (int) $db->sql_fetchfield('count');
-				$db->sql_freeresult($result);
-				if ($own_images >= gallery_acl_check('i_count', $album_id))
+				// 2. Check user-limit, if he is not allowed to go unlimited
+				if (!gallery_acl_check('i_unlimited', $album_id))
 				{
-					trigger_error(sprintf($user->lang['USER_REACHED_QUOTA'], gallery_acl_check('i_count', $album_id)));
+					$sql = 'SELECT COUNT(image_id) count
+						FROM ' . GALLERY_IMAGES_TABLE . '
+						WHERE image_user_id = ' . $user->data['user_id'] . '
+							AND image_album_id = ' . $album_id;
+					$result = $db->sql_query($sql);
+					$own_images = (int) $db->sql_fetchfield('count');
+					$db->sql_freeresult($result);
+					if ($own_images >= gallery_acl_check('i_count', $album_id))
+					{
+						trigger_error(sprintf($user->lang['USER_REACHED_QUOTA'], gallery_acl_check('i_count', $album_id)));
+					}
 				}
 
 				$images = 0;
@@ -391,7 +394,7 @@ switch ($mode)
 					$fileupload = new fileupload();
 					$fileupload->fileupload('', $allowed_extensions, (4 * $gallery_config['max_file_size']));
 
-					$upload_image_files = min((gallery_acl_check('i_count', $album_id) - $own_images), $gallery_config['upload_images']);
+					$upload_image_files = (gallery_acl_check('i_unlimited', $album_id)) ? $gallery_config['upload_images'] : min((gallery_acl_check('i_count', $album_id) - $own_images), $gallery_config['upload_images']);
 
 					// Get File Upload Info
 					$image_id_ary = array();
@@ -648,12 +651,12 @@ switch ($mode)
 
 				$count = 0;
 				$upload_image_files = $gallery_config['upload_images'];
-				if ((gallery_acl_check('i_count', $album_id) - $own_images) < $upload_image_files)
+				if (!gallery_acl_check('i_unlimited', $album_id) && ((gallery_acl_check('i_count', $album_id) - $own_images) < $upload_image_files))
 				{
 					$upload_image_files = (gallery_acl_check('i_count', $album_id) - $own_images);
 					$error .= (($error) ? '<br />' : '') . sprintf($user->lang['USER_NEARLY_REACHED_QUOTA'], gallery_acl_check('i_count', $album_id), $own_images, $upload_image_files);
 					$template->assign_vars(array(
-						'ERROR'						=> $error,
+						'ERROR'		=> $error,
 					));
 				}
 

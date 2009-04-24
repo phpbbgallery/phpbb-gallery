@@ -50,7 +50,7 @@ class acp_gallery_permissions
 			'i'		=> array('i_view', 'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate'),
 			'c'		=> array('c_read', 'c_post', 'c_edit', 'c_delete'),
 			'm'		=> array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status'),
-			'misc'	=> array('a_list', 'i_count', 'album_count'),
+			'misc'	=> array('a_list', 'i_count', 'i_unlimited', 'album_count', 'album_unlimited'),
 		);
 		$permissions->p_masks['full'] = array_merge($permissions->cats['full']['i'], $permissions->cats['full']['c'], $permissions->cats['full']['m'], $permissions->cats['full']['misc']);
 
@@ -59,7 +59,7 @@ class acp_gallery_permissions
 			'i'		=> array('i_view', 'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate'),
 			'c'		=> array('c_read', 'c_post', 'c_edit', 'c_delete'),
 			'm'		=> array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status'),
-			'misc'	=> array('a_list', 'i_count'/*, 'album_count'*/),
+			'misc'	=> array('a_list', 'i_count', 'i_unlimited'/*, 'album_count', 'album_unlimited'*/),
 		);
 		$permissions->p_masks[0] = array_merge($permissions->cats[0]['i'], $permissions->cats[0]['c'], $permissions->cats[0]['m'], $permissions->cats[0]['misc']);
 		$permissions->p_masks_anti[0] = array('album_count');
@@ -70,7 +70,7 @@ class acp_gallery_permissions
 			'i'		=> array(/*'i_view', */'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate'),
 			'c'		=> array('c_read', 'c_post', 'c_edit', 'c_delete'),
 			'm'		=> array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status'),
-			'misc'	=> array('a_list', 'i_count', 'album_count'),
+			'misc'	=> array('a_list', 'i_count', 'i_unlimited', 'album_count', 'album_unlimited'),
 		);
 		$permissions->p_masks[OWN_GALLERY_PERMISSIONS] = array_merge($permissions->cats[OWN_GALLERY_PERMISSIONS]['i'], $permissions->cats[OWN_GALLERY_PERMISSIONS]['c'], $permissions->cats[OWN_GALLERY_PERMISSIONS]['m'], $permissions->cats[OWN_GALLERY_PERMISSIONS]['misc']);
 		$permissions->p_masks_anti[OWN_GALLERY_PERMISSIONS] = array();// Note: we set i_view to 1 as default, so it's not needed on anti array('i_view');
@@ -81,7 +81,7 @@ class acp_gallery_permissions
 			'i'		=> array('i_view', 'i_watermark', 'i_upload', /*'i_approve', 'i_edit', 'i_delete', */'i_report', 'i_rate'),
 			'c'		=> array('c_read', 'c_post', 'c_edit', 'c_delete'),
 			'm'		=> array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status'),
-			'misc'	=> array('a_list'/*, 'i_count', 'album_count'*/),
+			'misc'	=> array('a_list'/*, 'i_count', 'i_unlimited', 'album_count', 'album_unlimited'*/),
 		);
 		$permissions->p_masks[PERSONAL_GALLERY_PERMISSIONS] = array_merge($permissions->cats[PERSONAL_GALLERY_PERMISSIONS]['i'], $permissions->cats[PERSONAL_GALLERY_PERMISSIONS]['c'], $permissions->cats[PERSONAL_GALLERY_PERMISSIONS]['m'], $permissions->cats[PERSONAL_GALLERY_PERMISSIONS]['misc']);
 		$permissions->p_masks_anti[PERSONAL_GALLERY_PERMISSIONS] = array('i_approve', 'i_edit', 'i_delete', 'i_count', 'album_count');

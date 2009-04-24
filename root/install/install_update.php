@@ -447,6 +447,9 @@ class install_update extends module
 				nv_add_column(LOG_TABLE,			'image_id',				array('UINT', 0));
 
 			case '0.5.4':
+			case '1.0.0-dev':
+				nv_add_column(GALLERY_ROLES_TABLE,	'i_unlimited',			array('UINT:3', 0));
+				nv_add_column(GALLERY_ROLES_TABLE,	'album_unlimited',		array('UINT:3', 0));
 
 			break;
 		}
@@ -1071,6 +1074,10 @@ class install_update extends module
 				$db->sql_query($sql);
 
 				set_gallery_config('pgalleries_per_page', 10);
+				if (isset($gallery_config['max_pics']))
+				{
+					set_gallery_config('images_per_album', $gallery_config['max_pics']);
+				}
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
@@ -1144,8 +1151,10 @@ class install_update extends module
 			case '0.5.2':
 			case '0.5.3':
 			case '0.5.4':
+			case '1.0.0-dev':
 				/* //@todo: Move on bbcode-change or creating all modules */
 				$reparse_modules_bbcode = true;
+				nv_remove_column(GALLERY_ROLES_TABLE,	'a_moderate');
 
 			break;
 		}
@@ -1156,7 +1165,7 @@ class install_update extends module
 			WHERE ' . $db->sql_in_set('config_name', $old_configs);
 		$db->sql_query($sql);
 
-		$old_gallery_configs = array('user_pics_limit', 'mod_pics_limit', 'fullpic_popup', 'personal_gallery', 'personal_gallery_private', 'personal_gallery_limit', 'personal_gallery_view', 'album_version', 'num_comment');
+		$old_gallery_configs = array('user_pics_limit', 'mod_pics_limit', 'fullpic_popup', 'personal_gallery', 'personal_gallery_private', 'personal_gallery_limit', 'personal_gallery_view', 'album_version', 'num_comment', 'max_pics');
 		$sql = 'DELETE FROM ' . GALLERY_CONFIG_TABLE . '
 			WHERE ' . $db->sql_in_set('config_name', $old_gallery_configs);
 		$db->sql_query($sql);
@@ -1278,6 +1287,7 @@ class install_update extends module
 				case '0.5.2':
 				case '0.5.3':
 				case '0.5.4':
+				case '1.0.0-dev':
 					// Add album-BBCode
 					add_bbcode('album');
 
@@ -1297,6 +1307,7 @@ class install_update extends module
 			$modules = $this->gallery_config_options;
 			switch ($gallery_config['phpbb_gallery_version'])
 			{
+				case '1.0.0-dev':
 				case '0.5.4':
 				case '0.5.3':
 				case '0.5.2':

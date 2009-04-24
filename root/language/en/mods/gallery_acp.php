@@ -229,6 +229,7 @@ $lang = array_merge($lang, array(
 
 	'PERMISSION_A_LIST'				=> 'Can see album',
 	'PERMISSION_ALBUM_COUNT'		=> 'Number of possible personal subalbums',
+	'PERMISSION_ALBUM_UNLIMITED'	=> 'Unlimited number of personal subalbums',
 	'PERMISSION_C'					=> 'Comments',
 	'PERMISSION_C_DELETE'			=> 'Can delete comments',
 	'PERMISSION_C_EDIT'				=> 'Can edit comments',
@@ -242,6 +243,7 @@ $lang = array_merge($lang, array(
 	'PERMISSION_I_LOCK'				=> 'Can lock images',
 	'PERMISSION_I_RATE'				=> 'Can rate images',
 	'PERMISSION_I_REPORT'			=> 'Can report images',
+	'PERMISSION_I_UNLIMITED'		=> 'Can upload unlimited images',
 	'PERMISSION_I_UPLOAD'			=> 'Can upload images',
 	'PERMISSION_I_VIEW'				=> 'Can view images',
 	'PERMISSION_I_WATERMARK'		=> 'Can view images without watermark',

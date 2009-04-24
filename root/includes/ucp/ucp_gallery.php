@@ -264,7 +264,7 @@ class ucp_gallery
 
 		$template->assign_vars(array(
 			'S_MANAGE_SUBALBUMS'			=> true,
-			'U_CREATE_SUBALBUM'				=> ((gallery_acl_check('album_count', OWN_GALLERY_PERMISSIONS) > $albums) ? ($this->u_action . '&amp;action=create' . (($parent_id) ? '&amp;parent_id=' . $parent_id : '')) : ''),
+			'U_CREATE_SUBALBUM'				=> ((gallery_acl_check('album_unlimited', OWN_GALLERY_PERMISSIONS) || (gallery_acl_check('album_count', OWN_GALLERY_PERMISSIONS) > $albums)) ? ($this->u_action . '&amp;action=create' . (($parent_id) ? '&amp;parent_id=' . $parent_id : '')) : ''),
 
 			'L_TITLE'			=> $user->lang['MANAGE_SUBALBUMS'],
 			//'ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['ALBUM'],
@@ -356,7 +356,7 @@ class ucp_gallery
 		$albums = $db->sql_fetchfield('albums');
 		$db->sql_freeresult($result);
 
-		if (gallery_acl_check('album_count', OWN_GALLERY_PERMISSIONS) <= $albums)
+		if (!gallery_acl_check('album_unlimited', OWN_GALLERY_PERMISSIONS) && (gallery_acl_check('album_count', OWN_GALLERY_PERMISSIONS) <= $albums))
 		{
 			trigger_error('NO_MORE_SUBALBUMS_ALLOWED');
 		}

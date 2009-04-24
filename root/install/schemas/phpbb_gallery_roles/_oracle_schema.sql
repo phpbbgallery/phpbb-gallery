@@ -11,7 +11,6 @@
 CREATE TABLE phpbb_gallery_roles (
 	role_id number(8) NOT NULL,
 	a_list number(3) DEFAULT '0' NOT NULL,
-	a_moderate number(3) DEFAULT '0' NOT NULL,
 	i_view number(3) DEFAULT '0' NOT NULL,
 	i_watermark number(3) DEFAULT '0' NOT NULL,
 	i_upload number(3) DEFAULT '0' NOT NULL,
@@ -22,6 +21,7 @@ CREATE TABLE phpbb_gallery_roles (
 	i_lock number(3) DEFAULT '0' NOT NULL,
 	i_report number(3) DEFAULT '0' NOT NULL,
 	i_count number(8) DEFAULT '0' NOT NULL,
+	i_unlimited number(3) DEFAULT '0' NOT NULL,
 	c_read number(3) DEFAULT '0' NOT NULL,
 	c_post number(3) DEFAULT '0' NOT NULL,
 	c_edit number(3) DEFAULT '0' NOT NULL,
@@ -33,6 +33,7 @@ CREATE TABLE phpbb_gallery_roles (
 	m_report number(3) DEFAULT '0' NOT NULL,
 	m_status number(3) DEFAULT '0' NOT NULL,
 	album_count number(8) DEFAULT '0' NOT NULL,
+	album_unlimited number(3) DEFAULT '0' NOT NULL,
 	CONSTRAINT pk_phpbb_gallery_roles PRIMARY KEY (role_id)
 )
 /

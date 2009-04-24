@@ -523,27 +523,26 @@ function set_default_config()
 	set_config('num_images', 0, true);
 	set_config('gallery_total_images', 1);
 
-	set_gallery_config('max_pics', '1024');
-	set_gallery_config('max_file_size', '512000');
-	set_gallery_config('max_width', '800');
-	set_gallery_config('max_height', '600');
-	set_gallery_config('rows_per_page', '3');
-	set_gallery_config('cols_per_page', '4');
-	set_gallery_config('thumbnail_quality', '50');
-	set_gallery_config('thumbnail_size', '125');
-	set_gallery_config('thumbnail_cache', '1');
+	set_gallery_config('max_file_size', 512000);
+	set_gallery_config('max_width', 800);
+	set_gallery_config('max_height', 600);
+	set_gallery_config('rows_per_page', 3);
+	set_gallery_config('cols_per_page', 4);
+	set_gallery_config('thumbnail_quality', 50);
+	set_gallery_config('thumbnail_size', 125);
+	set_gallery_config('thumbnail_cache', 1);
 	set_gallery_config('sort_method', 't');
 	set_gallery_config('sort_order', 'd');
-	set_gallery_config('jpg_allowed', '1');
-	set_gallery_config('png_allowed', '1');
-	set_gallery_config('gif_allowed', '0');
-	set_gallery_config('desc_length', '512');
-	set_gallery_config('hotlink_prevent', '0');
+	set_gallery_config('jpg_allowed', 1);
+	set_gallery_config('png_allowed', 1);
+	set_gallery_config('gif_allowed', 0);
+	set_gallery_config('desc_length', 512);
+	set_gallery_config('hotlink_prevent', 0);
 	set_gallery_config('hotlink_allowed', 'flying-bits.org');
-	set_gallery_config('rate', '1');
-	set_gallery_config('rate_scale', '10');
-	set_gallery_config('comment', '1');
-	set_gallery_config('gd_version', '2');
+	set_gallery_config('rate', 1);
+	set_gallery_config('rate_scale', 10);
+	set_gallery_config('comment', 1);
+	set_gallery_config('gd_version', 2);
 	set_gallery_config('watermark_images', 1);
 	set_gallery_config('watermark_source', GALLERY_IMAGE_PATH . 'watermark.png');
 	set_gallery_config('preview_rsz_height', 768);
@@ -618,6 +617,7 @@ function set_default_config()
 
 	// Added 1.0.0-dev:
 	set_gallery_config('pgalleries_per_page', 10);
+	set_gallery_config('images_per_album', 1024);
 }
 
 ?>

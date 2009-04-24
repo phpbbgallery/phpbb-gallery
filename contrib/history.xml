@@ -202,6 +202,7 @@ Installing:
 					<change><![CDATA[[Fix] Newest Personal Gallery: Guest (Bug #512)]]></change>
 					<change><![CDATA[[Fix] Contest-information as (int) for better styling usage. (Bug #511)]]></change>
 
+					<change><![CDATA[[Feature] Unlimited option for allowed images & personal subalbums]]></change>
 					<change><![CDATA[[Feature] Config-value for number of personal galleries per page]]></change>
 					<change><![CDATA[[Feature] Alphabet-bar for first character of the username on personal albums (Bug #518)]]></change>
 					<change><![CDATA[[Feature] Add Handyman`s MOD Version Check to the Gallery ACP]]></change>

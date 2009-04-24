@@ -1040,7 +1040,6 @@ function get_schema_struct()
 		'COLUMNS'		=> array(
 			'role_id'		=> array('UINT', NULL, 'auto_increment'),
 			'a_list'		=> array('UINT:3', 0),
-			'a_moderate'	=> array('UINT:3', 0),
 			'i_view'		=> array('UINT:3', 0),
 			'i_watermark'	=> array('UINT:3', 0),
 			'i_upload'		=> array('UINT:3', 0),
@@ -1051,6 +1050,7 @@ function get_schema_struct()
 			'i_lock'		=> array('UINT:3', 0),
 			'i_report'		=> array('UINT:3', 0),
 			'i_count'		=> array('UINT', 0),
+			'i_unlimited'	=> array('UINT:3', 0),
 			'c_read'		=> array('UINT:3', 0),
 			'c_post'		=> array('UINT:3', 0),
 			'c_edit'		=> array('UINT:3', 0),
@@ -1062,6 +1062,7 @@ function get_schema_struct()
 			'm_report'		=> array('UINT:3', 0),
 			'm_status'		=> array('UINT:3', 0),
 			'album_count'	=> array('UINT', 0),
+			'album_unlimited'	=> array('UINT:3', 0),
 		),
 		'PRIMARY_KEY'		=> 'role_id',
 	);

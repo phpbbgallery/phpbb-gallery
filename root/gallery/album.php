@@ -271,7 +271,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 	// Is it a personal album, and does the user have permissions to create more?
 	if ($album_data['album_user_id'] == $user->data['user_id'])
 	{
-		if (gallery_acl_check('i_upload', OWN_GALLERY_PERMISSIONS))
+		if (gallery_acl_check('i_upload', OWN_GALLERY_PERMISSIONS) && !gallery_acl_check('album_unlimited', OWN_GALLERY_PERMISSIONS))
 		{
 			$sql = 'SELECT COUNT(album_id) albums
 				FROM ' . GALLERY_ALBUMS_TABLE . '
@@ -284,6 +284,10 @@ if ($album_data['album_type'] != ALBUM_CAT)
 			{
 				$allowed_create = true;
 			}
+		}
+		elseif (gallery_acl_check('album_unlimited', OWN_GALLERY_PERMISSIONS))
+		{
+			$allowed_create = true;
 		}
 	}
 }

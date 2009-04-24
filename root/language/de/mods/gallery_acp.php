@@ -231,6 +231,7 @@ $lang = array_merge($lang, array(
 
 	'PERMISSION_A_LIST'				=> 'Kann das Album sehen',
 	'PERMISSION_ALBUM_COUNT'		=> 'Anzahl der möglichen persönlichen Subalben',
+	'PERMISSION_ALBUM_UNLIMITED'	=> 'Unbegrenzte Anzahl der persönlichen Subalben',
 	'PERMISSION_C'					=> 'Kommentare',
 	'PERMISSION_C_DELETE'			=> 'Kann Kommentare löschen',
 	'PERMISSION_C_EDIT'				=> 'Kann Kommentare editieren',
@@ -244,6 +245,7 @@ $lang = array_merge($lang, array(
 	'PERMISSION_I_LOCK'				=> 'Kann Bilder sperren',
 	'PERMISSION_I_RATE'				=> 'Kann Bilder bewerten',
 	'PERMISSION_I_REPORT'			=> 'Kann Bilder melden',
+	'PERMISSION_I_UNLIMITED'		=> 'Kann unbegrenzt Bilder hochladen',
 	'PERMISSION_I_UPLOAD'			=> 'Kann Bilder hochladen',
 	'PERMISSION_I_VIEW'				=> 'Kann Bilder sehen',
 	'PERMISSION_I_WATERMARK'		=> 'Kann Bilder ohne Wasserzeichen sehen',

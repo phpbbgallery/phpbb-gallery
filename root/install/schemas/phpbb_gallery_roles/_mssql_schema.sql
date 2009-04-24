@@ -13,7 +13,6 @@ GO
 CREATE TABLE [phpbb_gallery_roles] (
 	[role_id] [int] IDENTITY (1, 1) NOT NULL ,
 	[a_list] [int] DEFAULT (0) NOT NULL ,
-	[a_moderate] [int] DEFAULT (0) NOT NULL ,
 	[i_view] [int] DEFAULT (0) NOT NULL ,
 	[i_watermark] [int] DEFAULT (0) NOT NULL ,
 	[i_upload] [int] DEFAULT (0) NOT NULL ,
@@ -24,6 +23,7 @@ CREATE TABLE [phpbb_gallery_roles] (
 	[i_lock] [int] DEFAULT (0) NOT NULL ,
 	[i_report] [int] DEFAULT (0) NOT NULL ,
 	[i_count] [int] DEFAULT (0) NOT NULL ,
+	[i_unlimited] [int] DEFAULT (0) NOT NULL ,
 	[c_read] [int] DEFAULT (0) NOT NULL ,
 	[c_post] [int] DEFAULT (0) NOT NULL ,
 	[c_edit] [int] DEFAULT (0) NOT NULL ,
@@ -34,7 +34,8 @@ CREATE TABLE [phpbb_gallery_roles] (
 	[m_move] [int] DEFAULT (0) NOT NULL ,
 	[m_report] [int] DEFAULT (0) NOT NULL ,
 	[m_status] [int] DEFAULT (0) NOT NULL ,
-	[album_count] [int] DEFAULT (0) NOT NULL 
+	[album_count] [int] DEFAULT (0) NOT NULL ,
+	[album_unlimited] [int] DEFAULT (0) NOT NULL 
 ) ON [PRIMARY]
 GO
 
