@@ -342,8 +342,8 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			$match_search_query = '';
 			foreach ($matches as $match)
 			{
-				$match_search_query .= (($match_search_query) ? ' OR ' : '') . $match . ' ';
-				$match_search_query .= $db->sql_like_expression(str_replace('*', $db->any_char, $db->any_char . $word . $db->any_char));
+				$match_search_query .= (($match_search_query) ? ' OR ' : '') . 'LOWER('. $match . ') ';
+				$match_search_query .= $db->sql_like_expression(str_replace('*', $db->any_char, $db->any_char . strtolower($word) . $db->any_char));
 			}
 			$search_query .= ((!$search_query) ? '' : (($search_terms == 'all') ? ' AND ' : ' OR ')) . '(' . $match_search_query . ')';
 		}
