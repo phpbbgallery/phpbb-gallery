@@ -90,11 +90,6 @@ add_form_key('gallery');
 /**
 * Main work here...
 */
-$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-	SET image_view_count = image_view_count + 1
-	WHERE image_id = ' . (int) $image_id;
-$db->sql_query($sql);
-
 $image_approval_sql = ' AND image_status <> ' . IMAGE_UNAPPROVED;
 if (gallery_acl_check('m_status', $album_id))
 {

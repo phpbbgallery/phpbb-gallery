@@ -109,6 +109,12 @@ switch ($mode)
 	default:
 		$image_source = $phpbb_root_path . GALLERY_UPLOAD_PATH  . $image_data['image_filename'];
 		$possible_watermark = true;
+
+		// Increase the view count only for full images.
+		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
+			SET image_view_count = image_view_count + 1
+			WHERE image_id = ' . $image_id;
+		$db->sql_query($sql);
 	break;
 }
 

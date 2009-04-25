@@ -9,6 +9,8 @@
 		hs.dimmingOpacity = 0.8;
 		hs.outlineType = 'rounded-white';
 		hs.captionEval = 'this.thumb.alt';
+		// This value needs to be set to false, to solve the issue with the highly increasing view counts.
+		hs.continuePreloading = false;
 
 		// Add the slideshow providing the controlbar and the thumbstrip
 		hs.addSlideshow({

@@ -57,6 +57,15 @@ http://creativecommons.org/licenses/by/3.0/]]></author-notes>
 			<file from="root/gallery/plugins/index.htm" to="gallery/plugins/lytebox/images/index.htm" />
 		</copy>
 
+		<open src="gallery/plugins/lytebox/lytebox.js">
+			<edit>
+				<comment lang="de"><![CDATA[Diese Änderung muss gemacht werden, um eine falsche Erhöhung des "View count" zu verhindern.]]></comment>
+				<comment lang="en"><![CDATA[This change needs to be made, to solve the issue with the highly increasing view counts.]]></comment>
+				<find><![CDATA[this.preloadNeighborImages();]]></find>
+				<action type="replace-with"><![CDATA[//this.preloadNeighborImages();]]></action>
+			</edit>
+		</open>
+
 		<diy-instructions lang="de"><![CDATA[Kopiere die Dateien aus dem zip-Verzeichnis, wie oben angegeben.
 Anschließend musst du in "Administrations-Bereich" (ACP) > "MODS" > "phpBB Galerie" > "Galerie konfigurieren"
 im Kasten "Link Konfiguration" die Optionen auf Lytebox-Plugin umstellen und fertig.]]></diy-instructions>

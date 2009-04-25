@@ -186,6 +186,7 @@ Installing:
 				<date>2009-MM-DD</date>
 				<rev-version>1.0.0</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Correctly increase the view-count on viewing the image.php (Related to Bug #339)]]></change>
 					<change><![CDATA[[Fix] Undefined index on RRC, when contest-winner was deleted (Bug #524)]]></change>
 					<change><![CDATA[[Fix] Last personal gallery of previous page is the first one on the current page.]]></change>
 					<change><![CDATA[[Fix] SQL-Error when having no permissions on viewing RRC]]></change>
@@ -332,7 +333,7 @@ Installing:
 					<change><![CDATA[[Fix] PHP Notice: mktime() expects parameter X to be long, string given (Bug #419)]]></change>
 					<change><![CDATA[[Fix] Force user to delete outdated files]]></change>
 					<change><![CDATA[[Fix] Sort personal albums by username (Bug #298)]]></change>
-					<change><![CDATA[[Fix] Images stays reported, when report is deleted (Related to Report #393) (Bug #417)]]></change>
+					<change><![CDATA[[Fix] Images stays reported, when report is deleted (Related to Bug #393) (Bug #417)]]></change>
 					<change><![CDATA[[Fix] Missing error message for deleting with subalbums (Bug #410)]]></change>
 					<change><![CDATA[[Fix] Wrong alternate text on deleting comments]]></change>
 					<change><![CDATA[[Fix] Same page-title for all modes on posting.php]]></change>
