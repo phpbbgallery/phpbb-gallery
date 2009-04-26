@@ -132,6 +132,13 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</edit>
 		</open>
 
+		<open src="styles/prosilver/imageset/en/imageset.cfg">
+			<edit>
+				<find><![CDATA[img_button_upload_image = button_upload_image.gif*25*119]]></find>
+				<action type="replace-with"><![CDATA[img_button_upload_image = button_upload_image.gif*25*96]]></action>
+			</edit>
+		</open>
+
 		<open src="styles/prosilver/template/overall_header.html">
 			<edit>
 				<find><![CDATA[<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery/lytebox.js"></script>

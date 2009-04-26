@@ -3,7 +3,7 @@ ul.profile-icons li.gallery-icon	{ width: 20px; height: 20px; }
 .gallery-icon, .gallery-icon a		{ background-image: url("{T_IMAGESET_PATH}/icon_contact_gallery.gif"); }
 
 .buttons div.upload-icon	{ width: {IMG_BUTTON_UPLOAD_IMAGE_WIDTH}px; height: {IMG_BUTTON_UPLOAD_IMAGE_HEIGHT}px; }
-.upload-icon span	{ background-image: url("{T_IMAGESET_LANG_PATH}/button_upload_image.gif"); }
+.upload-icon span	{ background-image: url("{IMG_BUTTON_UPLOAD_IMAGE_SRC}"); }
 
 .icon-gallery {
 	background-position: 0 50%;

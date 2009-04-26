@@ -400,6 +400,14 @@ $user->add_lang('mods/gallery');]]></find>
         <action type="after-add"><![CDATA['gallery'	=> array('title' => 'ACP_GALLERY_LOGS', 'auth' => 'acl_a_viewlogs', 'cat' => array('ACP_FORUM_LOGS')),]]></action>
       </edit>
     </open>
+
+		<open src="styles/prosilver/imageset/en/imageset.cfg">
+			<edit>
+				<find><![CDATA[img_button_upload_image = button_upload_image.gif*25*119]]></find>
+				<action type="replace-with"><![CDATA[img_button_upload_image = button_upload_image.gif*25*96]]></action>
+			</edit>
+		</open>
+
     <open src="styles/prosilver/template/memberlist_view.html">
       <edit>
         <find><![CDATA[<!-- INCLUDE jumpbox.html -->]]></find>
