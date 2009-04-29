@@ -1079,6 +1079,8 @@ class install_update extends module
 					set_gallery_config('images_per_album', $gallery_config['max_pics']);
 				}
 
+				set_gallery_config('watermark_position', 20);
+
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
 		}

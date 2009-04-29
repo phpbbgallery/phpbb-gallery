@@ -294,7 +294,28 @@ if (!gallery_acl_check('i_watermark', $album_id) && $possible_watermark && $gall
 
 	$image_x = imagesx($image_file);
 	$image_y = imagesy($image_file);
-	imagecopy($image_file, $watermark_file, (($image_x * 0.5) - ($watermark_x * 0.5)), ($image_y - $watermark_y - 5), 0, 0, $watermark_x, $watermark_y);
+
+	// Where to display the watermark? up-left, down-right, ...?
+	$dst_x = (($image_x * 0.5) - ($watermark_x * 0.5));
+	$dst_y = ($image_y - $watermark_y - 5);
+	if ($gallery_config['watermark_position'] & WATERMARK_LEFT)
+	{
+		$dst_x = 5;
+	}
+	elseif ($gallery_config['watermark_position'] & WATERMARK_RIGHT)
+	{
+		$dst_x = ($image_x - $watermark_x - 5);
+	}
+	if ($gallery_config['watermark_position'] & WATERMARK_TOP)
+	{
+		$dst_y = 5;
+	}
+	elseif ($gallery_config['watermark_position'] & WATERMARK_MIDDLE)
+	{
+		$dst_y = (($image_y * 0.5) - ($watermark_y * 0.5));
+	}
+
+	imagecopy($image_file, $watermark_file, $dst_x, $dst_y, 0, 0, $watermark_x, $watermark_y);
 
 	switch ($image_filetype)
 	{

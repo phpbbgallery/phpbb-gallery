@@ -618,6 +618,7 @@ function set_default_config()
 	// Added 1.0.0-dev:
 	set_gallery_config('pgalleries_per_page', 10);
 	set_gallery_config('images_per_album', 1024);
+	set_gallery_config('watermark_position', 20);
 }
 
 ?>

@@ -48,6 +48,7 @@ define('EXIFTIME_OFFSET', 0); // Use this constant, to change the exif-timestamp
 define('SETTING_PERMISSIONS', -39839);
 define('OWN_GALLERY_PERMISSIONS', -2);
 define('PERSONAL_GALLERY_PERMISSIONS', -3);
+
 // ACL - slightly different
 define('GALLERY_ACL_NEVER', 2);
 define('GALLERY_ACL_YES', 1);
@@ -68,6 +69,14 @@ define('RRC_MODE_NONE', 0);
 define('RRC_MODE_RECENT', 1);
 define('RRC_MODE_RANDOM', 2);
 define('RRC_MODE_COMMENT', 4);
+
+// Watermark positions
+define('WATERMARK_TOP', 1);
+define('WATERMARK_MIDDLE', 2);
+define('WATERMARK_BOTTOM', 4);
+define('WATERMARK_LEFT', 8);
+define('WATERMARK_CENTER', 16);
+define('WATERMARK_RIGHT', 32);
 
 // Additional constants
 define('MODULE_DEFAULT_ACP', 31);

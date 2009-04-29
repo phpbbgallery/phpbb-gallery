@@ -99,6 +99,7 @@ class acp_gallery_config
 						'watermark_source'		=> array('lang' => 'WATERMARK_SOURCE',		'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'watermark_source'),
 						'watermark_height'		=> array('lang' => 'WATERMARK_HEIGHT',		'validate' => 'int',	'type' => 'text:7:4',		'gallery' => true,	'explain' => true),
 						'watermark_width'		=> array('lang' => 'WATERMARK_WIDTH',		'validate' => 'int',	'type' => 'text:7:4',		'gallery' => true,	'explain' => true),
+						'watermark_position'	=> array('lang' => 'WATERMARK_POSITION',	'validate' => '',		'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'watermark_position'),
 
 						'legend6'				=> 'UC_LINK_CONFIG',
 						'link_thumbnail'		=> array('lang' => 'UC_THUMBNAIL',			'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => true,	'method' => 'uc_select'),
@@ -182,6 +183,12 @@ class acp_gallery_config
 					{
 						// Changing the value, casted by int to not mess up anything
 						$config_value = (int) array_sum(request_var($config_name, array(0)));
+					}
+					// Recalculate the Watermark-position
+					if (isset($null['method']) && ($null['method'] == 'watermark_position'))
+					{
+						// Changing the value, casted by int to not mess up anything
+						$config_value = request_var('watermark_position_x', 0) + request_var('watermark_position_y', 0);
 					}
 					if ($config_name == 'link_thumbnail')
 					{
@@ -354,6 +361,27 @@ class acp_gallery_config
 		global $user;
 
 		return generate_board_url() . "<br /><input type=\"text\" name=\"config[$key]\" id=\"$key\" value=\"$value\" size =\"40\" maxlength=\"125\" /><br /><img src=\"" . generate_board_url() . "/$value\" alt=\"" . $user->lang['WATERMARK'] . "\" />";
+	}
+
+	/**
+	* Display watermark
+	*/
+	function watermark_position($value, $key)
+	{
+		global $user;
+
+		$x_position_options = $y_position_options = '';
+
+		$x_position_options .= '<option' . (($value & WATERMARK_TOP) ? ' selected="selected"' : '') . " value='" . WATERMARK_TOP . "'>" . $user->lang['WATERMARK_POSITION_TOP'] . '</option>';
+		$x_position_options .= '<option' . (($value & WATERMARK_MIDDLE) ? ' selected="selected"' : '') . " value='" . WATERMARK_MIDDLE . "'>" . $user->lang['WATERMARK_POSITION_MIDDLE'] . '</option>';
+		$x_position_options .= '<option' . (($value & WATERMARK_BOTTOM) ? ' selected="selected"' : '') . " value='" . WATERMARK_BOTTOM . "'>" . $user->lang['WATERMARK_POSITION_BOTTOM'] . '</option>';
+
+		$y_position_options .= '<option' . (($value & WATERMARK_LEFT) ? ' selected="selected"' : '') . " value='" . WATERMARK_LEFT . "'>" . $user->lang['WATERMARK_POSITION_LEFT'] . '</option>';
+		$y_position_options .= '<option' . (($value & WATERMARK_CENTER) ? ' selected="selected"' : '') . " value='" . WATERMARK_CENTER . "'>" . $user->lang['WATERMARK_POSITION_CENTER'] . '</option>';
+		$y_position_options .= '<option' . (($value & WATERMARK_RIGHT) ? ' selected="selected"' : '') . " value='" . WATERMARK_RIGHT . "'>" . $user->lang['WATERMARK_POSITION_RIGHT'] . '</option>';
+
+		// Cheating is an evil-thing, but most times it's successful, that's why it is used.
+		return "<input type=\"hidden\" name=\"config[$key]\" value=\"$value\" /><select name=\"" . $key . "_x\" id=\"" . $key . "_x\">$x_position_options</select><select name=\"" . $key . "_y\" id=\"" . $key . "_y\">$y_position_options</select>";
 	}
 
 	/**
