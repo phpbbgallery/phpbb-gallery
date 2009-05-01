@@ -38,7 +38,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		<installation>
 			<level>intermediate</level>
 			<time>3600</time>
-			<target-version>3.0.4</target-version>
+			<target-version>3.0.5</target-version>
 		</installation>
 
 		<link-group>
@@ -114,7 +114,7 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
 				</inline-edit>
 			</edit>
 			<edit>
-				<find><![CDATA[	preg_match('#^([a-z/]+)#i', $row['session_page'], $on_page);
+				<find><![CDATA[	preg_match('#^([a-z/_]+)#i', $row['session_page'], $on_page);
 	if (!sizeof($on_page))
 	{
 		$on_page[1] = '';

@@ -28,7 +28,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
     <installation>
       <level>intermediate</level>
       <time>3600</time>
-      <target-version>3.0.4</target-version>
+      <target-version>3.0.5</target-version>
     </installation>
     <link-group>
       <link type="parent" lang="de" href="../history.xml">Geschichte/Entwickler/Features</link>

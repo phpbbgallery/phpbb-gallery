@@ -17,7 +17,7 @@ Features: http://www.flying-bits.org/go/phpbb_gallery/features</description>
 			<level>easy</level>
 			<time>3600</time>
 			<target-version>
-				<target-primary>3.0.4</target-primary>
+				<target-primary>3.0.5</target-primary>
 				<target-major allow="exact">3</target-major>
 				<target-minor allow="exact">0</target-minor>
 			</target-version>
@@ -26,7 +26,7 @@ Features: http://www.flying-bits.org/go/phpbb_gallery/features</description>
 			<level>easy</level>
 			<time>1200</time>
 			<target-version>
-				<target-primary>3.0.4</target-primary>
+				<target-primary>3.0.5</target-primary>
 				<target-major allow="exact">3</target-major>
 				<target-minor allow="exact">0</target-minor>
 			</target-version>
