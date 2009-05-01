@@ -625,7 +625,21 @@ class acp_gallery
 			}
 
 			// Who is the uploader?
-			$user_id = request_var('user_id', 0);
+			$username = request_var('username', '', true);
+			$user_id = 0;
+			if ($username)
+			{
+				if (!function_exists('user_get_id_name'))
+				{
+					include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+				}
+				user_get_id_name($user_id, $username);
+			}
+			if (!$user_id)
+			{
+				$user_id = $user->data['user_id'];
+			}
+
 			$sql = 'SELECT username, user_colour, user_id
 				FROM ' . USERS_TABLE . '
 				WHERE user_id = ' . $user_id;
@@ -663,20 +677,6 @@ class acp_gallery
 			trigger_error('IMPORT_SCHEMA_CREATED');
 		}
 
-		$sql = 'SELECT username, user_id
-			FROM ' . USERS_TABLE . '
-			ORDER BY user_id ASC';
-		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result))
-		{
-			$template->assign_block_vars('userrow', array(
-				'USER_ID'				=> $row['user_id'],
-				'USERNAME'				=> $row['username'],
-				'SELECTED'				=> ($row['user_id'] == $user->data['user_id']) ? true : false,
-			));
-		}
-		$db->sql_freeresult($result);
-
 		$handle = opendir($phpbb_root_path . GALLERY_IMPORT_PATH);
 		while ($file = readdir($handle))
 		{
@@ -700,7 +700,8 @@ class acp_gallery
 			'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_IMPORT_ALBUMS_EXPLAIN'],
 			'L_IMPORT_DIR_EMPTY'			=> sprintf($user->lang['IMPORT_DIR_EMPTY'], GALLERY_IMPORT_PATH),
 			'S_ALBUM_IMPORT_ACTION'			=> $this->u_action,
-			'S_SELECT_IMPORT' 				=> gallery_albumbox(true, 'album_id', false, false, false, 0, ALBUM_UPLOAD),
+			'S_SELECT_IMPORT' 				=> gallery_albumbox(false, 'album_id', false, false, false, 0, ALBUM_UPLOAD),
+			'U_FIND_USERNAME'				=> append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=searchuser&amp;form=acp_gallery&amp;field=username&amp;select_single=true'),
 		));
 	}
 
