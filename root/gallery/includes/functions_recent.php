@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 /**
 * Display recent images & comments and random images
 */
-function recent_gallery_images($ints, $display, $mode, $collapse_comments = false, $user_id = 0)
+function recent_gallery_images($ints, $display, $mode, $collapse_comments = false, $mode_id = '', $id = 0)
 {
 	global $auth, $cache, $config, $db, $gallery_config, $template, $user;
 	global $gallery_root_path, $phpbb_root_path, $phpEx;
@@ -42,19 +42,53 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 	{
 		include($phpbb_root_path . $gallery_root_path . 'includes/functions_display.' . $phpEx);
 	}
-	$album_access_array = get_album_access_array();
+	$album_id = $user_id = 0;
+	switch ($mode_id)
+	{
+		case 'album':
+			$album_id = $id;
+		break;
+		case 'user':
+			$user_id = $id;
+		break;
+	}
 
 	$limit_sql = $ints['rows'] * $ints['columns'];
-	$albums = $cache->obtain_album_list();
 
-	$moderate_albums = gallery_acl_album_ids('m_status', 'array', true, $gallery_config['rrc_gindex_pgalleries']);
-	$view_albums = array_diff(gallery_acl_album_ids('i_view', 'array', true, $gallery_config['rrc_gindex_pgalleries']), $moderate_albums);
-	$comment_albums = gallery_acl_album_ids('c_read', 'array', true, $gallery_config['rrc_gindex_pgalleries']);
+	if ($album_id && !(gallery_acl_check('i_view', $album_id) || gallery_acl_check('m_status', $album_id)))
+	{
+		return;
+	}
 
-	$sql_permission_where = '(';
-	$sql_permission_where .= ((sizeof($view_albums)) ? '(' . $db->sql_in_set('image_album_id', $view_albums) . ' AND image_status <> ' . IMAGE_UNAPPROVED . (($user_id) ? ' AND image_contest = ' . IMAGE_NO_CONTEST : '') . ')' : '');
-	$sql_permission_where .= ((sizeof($moderate_albums)) ? ((sizeof($view_albums)) ? ' OR ' : '') . '(' . $db->sql_in_set('image_album_id', $moderate_albums, false, true) . ')' : '');
-	$sql_permission_where .= ($user_id) ? ') AND image_user_id = ' . $user_id : ')';
+	$moderate_albums = $view_albums = $comment_albums = array();
+	if ($album_id)
+	{
+		if (gallery_acl_check('i_view', $album_id))
+		{
+			$view_albums[] = $album_id;
+			$sql_permission_where = '(image_album_id = ' . $album_id . ' AND image_status <> ' . IMAGE_UNAPPROVED . ')';
+		}
+		if (gallery_acl_check('m_status', $album_id))
+		{
+			$moderate_albums[] = $album_id;
+			$sql_permission_where = '(image_album_id = ' . $album_id . ')';
+		}
+		if (gallery_acl_check('c_read', $album_id))
+		{
+			$comment_albums[] = $album_id;
+		}
+	}
+	else
+	{
+		$moderate_albums = gallery_acl_album_ids('m_status', 'array', true, $gallery_config['rrc_gindex_pgalleries']);
+		$view_albums = array_diff(gallery_acl_album_ids('i_view', 'array', true, $gallery_config['rrc_gindex_pgalleries']), $moderate_albums);
+		$comment_albums = gallery_acl_album_ids('c_read', 'array', true, $gallery_config['rrc_gindex_pgalleries']);
+
+		$sql_permission_where = '(';
+		$sql_permission_where .= ((sizeof($view_albums)) ? '(' . $db->sql_in_set('image_album_id', $view_albums) . ' AND image_status <> ' . IMAGE_UNAPPROVED . (($user_id) ? ' AND image_contest = ' . IMAGE_NO_CONTEST : '') . ')' : '');
+		$sql_permission_where .= ((sizeof($moderate_albums)) ? ((sizeof($view_albums)) ? ' OR ' : '') . '(' . $db->sql_in_set('image_album_id', $moderate_albums, false, true) . ')' : '');
+		$sql_permission_where .= ($user_id) ? ') AND image_user_id = ' . $user_id : ')';
+	}
 
 	if (sizeof($view_albums) || sizeof($moderate_albums))
 	{
