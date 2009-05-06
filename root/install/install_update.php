@@ -342,11 +342,13 @@ class install_update extends module
 			case '0.1.2':
 			case '0.1.3':
 				trigger_error('VERSION_NOT_SUPPORTED', E_USER_ERROR);
-/*				nv_create_table('phpbb_gallery_albums',		$dbms_data);
+/*
+				nv_create_table('phpbb_gallery_albums',		$dbms_data);
 				nv_create_table('phpbb_gallery_comments',	$dbms_data);
 				nv_create_table('phpbb_gallery_config',		$dbms_data);
 				nv_create_table('phpbb_gallery_images',		$dbms_data);
-				nv_create_table('phpbb_gallery_rates',		$dbms_data);*/
+				nv_create_table('phpbb_gallery_rates',		$dbms_data);
+*/
 			break;
 
 			case '0.2.0':
@@ -1081,6 +1083,12 @@ class install_update extends module
 
 				set_gallery_config('watermark_position', 20);
 
+				// We made some stupid bbcodes
+				$sql = 'DELETE FROM ' . BBCODES_TABLE . "
+					WHERE bbcode_tag = 'album'
+						AND bbcode_id = 0";
+				$db->sql_query($sql);
+
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
 		}
@@ -1310,17 +1318,25 @@ class install_update extends module
 			switch ($gallery_config['phpbb_gallery_version'])
 			{
 				case '1.0.0-dev':
+					$template->assign_block_vars('checks', array(
+						'S_LEGEND'			=> true,
+						'LEGEND'			=> '',
+						'LEGEND_EXPLAIN'	=> $user->lang['BBCODES_NEEDS_REPARSE'],
+					));
 				case '0.5.4':
 				case '0.5.3':
 				case '0.5.2':
 				case '0.5.1':
 				case '0.5.0':
+					// needs to be moved before the first unset.
+					unset ($modules['legend1']);
 					unset ($modules['log_module']);
 				case '0.4.1':
 				case '0.4.0-RC3':
 				case '0.4.0-RC2':
 					unset ($modules['acp_module']);
 					unset ($modules['ucp_module']);
+
 
 				// We need to build all modules before this version
 				case '0.4.0-RC1':

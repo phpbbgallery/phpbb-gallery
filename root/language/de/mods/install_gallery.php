@@ -24,6 +24,8 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
+	'BBCODES_NEEDS_REPARSE'		=> 'Der BBCode muss aktualisiert werden.',
+
 	'CAT_CONVERT'				=> 'phpBB2 konvertieren',
 	'CAT_CONVERT_TS'			=> 'TS Gallery konvertieren',
 

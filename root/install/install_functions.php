@@ -392,14 +392,24 @@ function add_bbcode($album_bbcode)
 
 	$sql = 'UPDATE ' . BBCODES_TABLE . '
 		SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
-		WHERE bbcode_tag = '" . $sql_ary['bbcode_tag'] . "'";
+		WHERE bbcode_tag = '" . $db->sql_escape($sql_ary['bbcode_tag']) . "'";
 	$db->sql_query($sql);
 
 	if ($db->sql_affectedrows() <= 1)
 	{
-		$sql = 'INSERT INTO ' . BBCODES_TABLE . '
-			' . $db->sql_build_array('INSERT', $sql_ary);
-		$db->sql_query($sql);
+		$sql = 'SELECT bbcode_id
+			FROM ' . BBCODES_TABLE . "
+			WHERE bbcode_tag = '" . $db->sql_escape($sql_ary['bbcode_tag']) . "'";
+		$result = $db->sql_query($sql);
+		$bbcode_id = (int) $db->sql_fetchfield('bbcode_id');
+		$db->sql_freeresult($result);
+
+		if (!$bbcode_id)
+		{
+			$sql = 'INSERT INTO ' . BBCODES_TABLE . '
+				' . $db->sql_build_array('INSERT', $sql_ary);
+			$db->sql_query($sql);
+		}
 	}
 
 	$cache->destroy('sql', BBCODES_TABLE);

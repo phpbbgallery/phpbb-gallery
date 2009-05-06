@@ -24,6 +24,8 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
+	'BBCODES_NEEDS_REPARSE'		=> 'The BBCode needs to be rebuild.',
+
 	'CAT_CONVERT'				=> 'convert phpBB2',
 	'CAT_CONVERT_TS'			=> 'convert TS Gallery',
 
