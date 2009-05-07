@@ -10,8 +10,8 @@
 		[*]Several options to thumbnail-displaying album.php: number of rows & columns, options to display (username, rating, comments, upload-time,...)
 		[*]RRC (recent-random-comment): little Addon displaying the recent images, random images and/or recent comments on the gallery/indey.php with full ACP-Control
 		[*]Sub-folder name adjustable (default: gallery/)
-		[*]Search function (page for Recent/Random/Top-Rated/Last comments/Own images)
-		[*]Lytebox & Highslide JS support (Highslide JS must be downloaded seperatly because of the licence)
+		[*]Search function (also available in the album) (page for Recent/Random/Top-Rated/Last comments/Own images)
+		[*]Lytebox & Highslide JS support (These scripts must be downloaded seperatly because of the licence)
 		[*]Diashow
 		[*]Available in more languages: http://www.flying-bits.org/go/phpbb_gallery/translations
 		[*]Available Addons: http://www.flying-bits.org/go/phpbb_gallery/addons
@@ -36,7 +36,7 @@
 		[*]Image-permissions: view, view without watermark, upload, upload with approval, edit, delete, report, rate
 		[*]Comment-permissions: view, post, edit, delete
 		[*]Moderate-permissions: moderate comments, image: delete, edit, move, handle reports, approve/lock
-		[*]Misc-permissions: View album, Number of allowed images, albums (for personal galleries)
+		[*]Misc-permissions: View album, Number of allowed images (also unlimited), albums (for personal galleries)
 		[*]Personal galleries (upload by owner only), with subalbums and management through UCP
 	[/list]
 	[*]Images / Comments:
@@ -56,6 +56,7 @@
 	[*]ACP:
 	[list]
 		[*]Statistical overview
+		[*]Error-Box with Update-notification (when update is available)
 		[*]Resync-Options for several dynamic values
 		[*]Reset rating for album
 		[*]Mass-import

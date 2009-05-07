@@ -10,8 +10,8 @@
 		[*]Viele Einstellmöglichkeiten zur album.php: Anzahl der Zeilen und Spalten, Anzeigen der Werte (Benutzername, Bewertung, Kommentare, Hochlade-Zeitpunkt,...)
 		[*]RRC (recent-random-comment): kleines Addon zum Anzeigen der neusten Bilder, zufälligen Bilder und der neusten Kommentare auf der gallery/index.php mit Einstellmöglichkeiten im ACP
 		[*]Unterordner umbenennbar (Standard: gallery/)
-		[*]Suchfunktion
-		[*]Lytebox & Highslide JS Unterstützung (Highslide JS muss auf Grund der Lizenz extra heruntergeladen werden)
+		[*]Suchfunktion (auch innerhalb des Albums möglich) (Extra Seite mti Neusten/Zufälligen/Am besten bewerteten Bildern usw.)
+		[*]Lytebox & Highslide JS Unterstützung (Die Scripte müssen auf Grund der Lizenz extra heruntergeladen werden)
 		[*]Diashow
 		[*]In weiteren Sprachen verfügbar: http://www.flying-bits.org/go/phpbb_gallery/translations
 		[*]Verfügbare Addons: http://www.flying-bits.org/go/phpbb_gallery/translations
@@ -36,7 +36,7 @@
 		[*]Berechtigungen für Bilder: ansehen, ansehen ohne Wasserzeichen, hochladen, hochladen mit Freigabe, ändern, löschen, melden, bewerten
 		[*]Berechtigungen für Kommentare: lesen, schreiben, ändern, löschen
 		[*]Moderations-Berechtigungen: Kommentare moderieren, Bilder: ändern, löschen, verschieben, Meldungen bearbeiten, Freigeben/Sperren
-		[*]Weitere Berechtigungen: Album sehen, Anzahl der Bilder, Alben (Nur für persönliche Galerien)
+		[*]Weitere Berechtigungen: Album sehen, Anzahl der Bilder (auch unbegrenzt), Alben (Nur für persönliche Galerien)
 		[*]Persönliche Galerien (Hochladen nur durch den Besitzer möglich), mit Subalben, Verwaltung im persönlichen Bereich (UCP)
 	[/list]
 	[*]Bilder/Kommentare:
@@ -56,6 +56,7 @@
 	[*]ACP:
 	[list]
 		[*]Statistische Übersicht
+		[*]Fehlerbox mit Update-Benachrichtung (falls verfügbar)
 		[*]Zurücksetzen der Bewertungen für ein Album
 		[*]Importer für viele Bilder
 		[*]Galerie reinigen: Möglichkeit zum Löschen von Bildern/Kommentaren gelöschter Benutzer (oder ändern des Autors in Gast) und von persönlichen Galerien
