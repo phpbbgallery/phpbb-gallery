@@ -506,7 +506,7 @@ class install_update extends module
 					FROM ' . GALLERY_IMAGES_TABLE . ' i
 					LEFT JOIN ' . USERS_TABLE . ' u
 						ON i.image_user_id = u.user_id
-					ORDER BY i.image_id DESC';
+					GROUP BY i.image_user_id';
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -523,7 +523,7 @@ class install_update extends module
 					);
 
 					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-						WHERE ' . $db->sql_in_set('image_id', $image_id);
+						WHERE ' . $db->sql_in_set('image_user_id', $row['image_user_id']);
 					$db->sql_query($sql);
 				}
 				$db->sql_freeresult($result);
