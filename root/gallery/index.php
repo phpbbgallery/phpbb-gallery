@@ -246,7 +246,7 @@ $template->assign_vars(array(
 	'U_MARK_ALBUMS'					=> ($user->data['is_registered']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'hash=' . generate_link_hash('global') . '&amp;mark=albums') : '',
 ));
 
-page_header($user->lang['GALLERY']);
+page_header($user->lang['GALLERY'] . (($mode == 'personal') ? ' - ' . $user->lang['PERSONAL_ALBUMS'] : ''));
 
 $template->set_filenames(array(
 	'body' => 'gallery/index_body.html')

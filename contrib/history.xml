@@ -183,8 +183,8 @@ Installing:
 
 		<history>
 			<entry>
-				<date>2009-MM-DD</date>
-				<rev-version>1.0.0</rev-version>
+				<date>2009-05-08</date>
+				<rev-version>1.0.0-RC1</rev-version>
 				<changelog lang="en">
 					<change><![CDATA[[Fix] List of users to long on mass import and unwanted bots listed. (Bug #534)]]></change>
 					<change><![CDATA[[Fix] Correctly increase the view-count on viewing the image.php (Related to Bug #339)]]></change>
