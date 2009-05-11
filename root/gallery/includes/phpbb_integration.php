@@ -55,9 +55,9 @@ function integrate_memberlist_viewprofile (&$member)
 		'comments'	=> 0,
 		'contests'	=> 0,
 	);
-	if ($gallery_config['rrc_profile_mode'] != '!all')
+	if ($gallery_config['rrc_profile_mode'])
 	{
-		recent_gallery_images($ints, $gallery_config['rrc_profile_display'], $gallery_config['rrc_profile_mode'], false, $user_id);
+		recent_gallery_images($ints, $gallery_config['rrc_profile_display'], $gallery_config['rrc_profile_mode'], false, 'user', $user_id);
 	}
 
 	$template->assign_vars(array(

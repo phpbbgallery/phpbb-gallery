@@ -132,7 +132,7 @@ $ints = array(
 * mode_id	string	'user' or 'album' to only display images of a certain user or album
 * id		int		user_id for user profile or album_id for view of recent and random images
 */
-if ($gallery_config['rrc_gindex_mode'] != '!all')
+if ($gallery_config['rrc_gindex_mode'])
 {
 	recent_gallery_images($ints, $gallery_config['rrc_gindex_display'], $gallery_config['rrc_gindex_mode'], $gallery_config['rrc_gindex_comments']);
 }
