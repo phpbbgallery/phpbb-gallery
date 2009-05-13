@@ -472,7 +472,7 @@ class install_update extends module
 	*/
 	function update_db_data($mode, $sub)
 	{
-		global $cache, $config, $db, $template, $user;
+		global $cache, $config, $db, $gallery_config, $template, $user;
 		global $phpbb_root_path, $phpEx, $table_prefix;
 		include($phpbb_root_path . 'includes/acp/auth.' . $phpEx);
 
