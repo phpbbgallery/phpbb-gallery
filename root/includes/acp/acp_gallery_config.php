@@ -125,6 +125,7 @@ class acp_gallery_config
 						'rrc_profile_rows'			=> array('lang' => 'RRC_PROFILE_ROWS',		'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 						'rrc_profile_columns'		=> array('lang' => 'RRC_PROFILE_COLUMNS',	'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 						'rrc_profile_display'		=> array('lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => 'int',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'rrc_display'),
+						'rrc_profile_pgalleries'	=> array('lang' => 'RRC_GINDEX_PGALLERIES',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 						'gallery_viewtopic_icon'	=> array('lang' => 'DISP_VIEWTOPIC_ICON',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => false,	'explain' => false),
 						'gallery_viewtopic_images'	=> array('lang' => 'DISP_VIEWTOPIC_IMAGES',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => false,	'explain' => false),
 						'gallery_viewtopic_link'	=> array('lang' => 'DISP_VIEWTOPIC_LINK',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => false,	'explain' => false),

@@ -129,12 +129,13 @@ $ints = array(
 * display	int		sum of the options which should be displayed, see gallery/includes/constants.php "// Display-options for RRC-Feature" for values
 * modes		int		sum of the modes which should be displayed, see gallery/includes/constants.php "// Mode-options for RRC-Feature" for values
 * collapse	bool	collapse comments
+* include_pgalleries	bool	include personal albums
 * mode_id	string	'user' or 'album' to only display images of a certain user or album
 * id		int		user_id for user profile or album_id for view of recent and random images
 */
 if ($gallery_config['rrc_gindex_mode'])
 {
-	recent_gallery_images($ints, $gallery_config['rrc_gindex_display'], $gallery_config['rrc_gindex_mode'], $gallery_config['rrc_gindex_comments']);
+	recent_gallery_images($ints, $gallery_config['rrc_gindex_display'], $gallery_config['rrc_gindex_mode'], $gallery_config['rrc_gindex_comments'], $gallery_config['rrc_gindex_pgalleries']);
 }
 
 // Set some stats, get posts count from forums data if we... hum... retrieve all forums data

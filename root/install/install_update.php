@@ -1089,6 +1089,8 @@ class install_update extends module
 						AND bbcode_id = 0";
 				$db->sql_query($sql);
 
+			case '1.0.0-RC1':
+				set_gallery_config('rrc_profile_pgalleries', $gallery_config['rrc_gindex_pgalleries']);
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
 		}
