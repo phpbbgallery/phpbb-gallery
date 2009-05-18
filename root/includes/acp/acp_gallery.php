@@ -635,6 +635,10 @@ class acp_gallery
 				}
 				user_get_id_name($user_id, $username);
 			}
+			if (is_array($user_id))
+			{
+				$user_id = $user_id[0];
+			}
 			if (!$user_id)
 			{
 				$user_id = $user->data['user_id'];
