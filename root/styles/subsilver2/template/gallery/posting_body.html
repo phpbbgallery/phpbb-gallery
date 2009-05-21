@@ -40,14 +40,14 @@ function toggleElement(oElement)
 		<!-- IF not S_USER_LOGGED_IN -->
 			<tr>
 				<td class="row1" width="22%" height="28"><b class="genmed">{L_USERNAME}:</b></td>
-				<td class="row2"><input class="inputbox autowidth" type="text" name="username" value="{USERNAME}" size="60" maxlength="32" /></td>
+				<td class="row2"><input class="inputbox autowidth" type="text" tabindex="1" name="username" value="{USERNAME}" size="60" maxlength="32" /></td>
 			</tr>
 		<!-- ENDIF -->
 		<!-- IF S_IMAGE -->
 			<tr>
 				<td class="row1" width="22%" height="28"><b class="genmed">{L_IMAGE_NAME}:</b></td>
 				<td class="row2">
-					<div id="image_name_fields"><input class="inputbox autowidth" type="text" name="image_name" size="60" value="{IMAGE_NAME}" /><br /><br />
+					<div id="image_name_fields"><input class="inputbox autowidth" type="text" tabindex="2" name="image_name" size="60" value="{IMAGE_NAME}" /><br /><br />
 					<!-- IF S_MULTI_IMAGES --><input class="inputbox autowidth" type="text" name="image_num" size="5" value="1" /> {L_LOOP_EXP}<br /><br /><!-- ENDIF --></div>
 					<!-- IF S_UPLOAD --><input type="checkbox" class="checkbox" name="filename" value="filename" onclick="toggleElement(getElement('image_name_fields'));" /> {L_ORIG_FILENAME}<!-- ENDIF -->
 				</td>
@@ -124,7 +124,7 @@ function toggleElement(oElement)
 			<!-- BEGIN upload_image -->
 				<tr>
 					<td class="row1" height="28"><span class="gen">{L_FILE}:</span></td>
-					<td class="row2"><input class="inputbox autowidth" type="file" name="image_file_{upload_image.S_ROW_COUNT}" size="60" /></td>
+					<td class="row2"><input class="inputbox autowidth" type="file" tabindex="20" name="image_file_{upload_image.S_ROW_COUNT}" size="60" /></td>
 				</tr>
 			<!-- END upload_image -->
 			<tr>
@@ -152,8 +152,8 @@ function toggleElement(oElement)
 			</tr>
 		<!-- ENDIF -->
 		<tr>
-			<td class="cat" align="center" height="28" colspan="2"><input type="reset" accesskey="r" tabindex="8" value="{L_RESET}" class="btnlite" />
-				&nbsp;<input type="submit" accesskey="s" tabindex="6" name="submit" value="{L_SUBMIT}" class="btnmain" /></td>
+			<td class="cat" align="center" height="28" colspan="2"><input type="reset" accesskey="r"  tabindex="200" value="{L_RESET}" class="btnlite" />
+				&nbsp;<input type="submit" accesskey="s" tabindex="201" name="submit" value="{L_SUBMIT}" class="btnmain" /></td>
 		</tr>
 	</table>
 	{S_FORM_TOKEN}

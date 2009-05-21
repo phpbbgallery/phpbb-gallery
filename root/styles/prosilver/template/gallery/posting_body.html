@@ -48,13 +48,13 @@ function toggleElement(oElement)
 			<!-- IF not S_USER_LOGGED_IN -->
 			<dl>
 				<dt><label for="username">{L_USERNAME}:</label></dt>
-				<dd id="username"><input class="inputbox autowidth" type="text" name="username" value="{USERNAME}" size="60" maxlength="32" /></dd>
+				<dd id="username"><input class="inputbox autowidth" type="text" tabindex="1" name="username" value="{USERNAME}" size="60" maxlength="32" /></dd>
 			</dl>
 			<!-- ENDIF -->
 			<!-- IF S_IMAGE -->
 				<dl>
 					<dt><label for="image_name">{L_IMAGE_NAME}:</label></dt>
-					<dd id="image_name_fields"><input class="inputbox autowidth" type="text" id="image_name" name="image_name" value="{IMAGE_NAME}" size="60" />
+					<dd id="image_name_fields"><input class="inputbox autowidth" type="text" tabindex="2" id="image_name" name="image_name" value="{IMAGE_NAME}" size="60" />
 					<!-- IF S_MULTI_IMAGES --><br /><input class="inputbox autowidth" type="text" name="image_num" size="5" value="1" /> {L_LOOP_EXP}<!-- ENDIF --></dd>
 					<!-- IF S_UPLOAD --><dd><input class="checkbox" type="checkbox" name="filename" id="filename" value="filename" onclick="toggleElement(getElement('image_name_fields'));" /><label for="filename"> {L_ORIG_FILENAME}</label></dd><!-- ENDIF -->
 				</dl>
@@ -113,7 +113,7 @@ function toggleElement(oElement)
 				<!-- BEGIN upload_image -->
 					<dl>
 						<dt><label for="image_file_{upload_image.S_ROW_COUNT}">{L_FILE}:</label></dt>
-						<dd><input class="inputbox autowidth" type="file" id="image_file_{upload_image.S_ROW_COUNT}" name="image_file_{upload_image.S_ROW_COUNT}" size="52" /></dd>
+						<dd><input class="inputbox autowidth" type="file" tabindex="1{upload_image.S_ROW_COUNT}" id="image_file_{upload_image.S_ROW_COUNT}" name="image_file_{upload_image.S_ROW_COUNT}" size="52" /></dd>
 					</dl>
 				<!-- END upload_image -->
 				<!-- IF S_MULTI_IMAGES --><hr /><!-- ENDIF -->
@@ -150,8 +150,8 @@ function toggleElement(oElement)
 		<!-- ENDIF -->
 		<fieldset class="submit-buttons">
 			{S_HIDDEN_FIELDS}
-			<input type="reset" accesskey="r" tabindex="8" value="{L_RESET}" class="button2" />&nbsp;
-			<input type="submit" accesskey="s" tabindex="6" name="submit" value="{L_SUBMIT}" class="button1" />&nbsp;
+			<input type="reset" accesskey="r" tabindex="200" value="{L_RESET}" class="button2" />&nbsp;
+			<input type="submit" accesskey="s" tabindex="201" name="submit" value="{L_SUBMIT}" class="button1" />&nbsp;
 		</fieldset>
 		{S_FORM_TOKEN}
 	<span class="corners-bottom"><span></span></span></div>
