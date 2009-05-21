@@ -186,6 +186,7 @@ Installing:
 				<date>2009-05-21</date>
 				<rev-version>1.0.0-RC2</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Permissions for moving into own personal albums are the wrong way round (Bug #542)]]></change>
 					<change><![CDATA[[Fix] Missing Tab-index for fields on gallery/posting.php (Bug #544)]]></change>
 				</changelog>
 			</entry>
