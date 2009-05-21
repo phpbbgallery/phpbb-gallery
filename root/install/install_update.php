@@ -453,6 +453,8 @@ class install_update extends module
 				nv_add_column(GALLERY_ROLES_TABLE,	'i_unlimited',			array('UINT:3', 0));
 				nv_add_column(GALLERY_ROLES_TABLE,	'album_unlimited',		array('UINT:3', 0));
 
+			case '1.0.0-RC1':
+			case '1.0.0-RC2':
 			break;
 		}
 
@@ -1091,15 +1093,14 @@ class install_update extends module
 
 			case '1.0.0-RC1':
 				set_gallery_config('rrc_profile_pgalleries', $gallery_config['rrc_gindex_pgalleries']);
+
+			case '1.0.0-RC2':
+
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
 		}
 
-		if (!$next_update_url)
-		{
-			$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
-		}
-
+		$next_update_url = (!$next_update_url) ? $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4" : $next_update_url;
 
 		$template->assign_vars(array(
 			'BODY'		=> $user->lang['UPDATING_DATA'],
@@ -1164,10 +1165,12 @@ class install_update extends module
 			case '0.5.3':
 			case '0.5.4':
 			case '1.0.0-dev':
+				nv_remove_column(GALLERY_ROLES_TABLE,	'a_moderate');
 				/* //@todo: Move on bbcode-change or creating all modules */
 				$reparse_modules_bbcode = true;
-				nv_remove_column(GALLERY_ROLES_TABLE,	'a_moderate');
 
+			case '1.0.0-RC1':
+			case '1.0.0-RC2':
 			break;
 		}
 
@@ -1303,6 +1306,9 @@ class install_update extends module
 					// Add album-BBCode
 					add_bbcode('album');
 
+
+				case '1.0.0-RC1':
+				case '1.0.0-RC2':
 				break;
 			}
 
@@ -1319,6 +1325,8 @@ class install_update extends module
 			$modules = $this->gallery_config_options;
 			switch ($gallery_config['phpbb_gallery_version'])
 			{
+				case '1.0.0-RC2':
+				case '1.0.0-RC1':
 				case '1.0.0-dev':
 					$template->assign_block_vars('checks', array(
 						'S_LEGEND'			=> true,
