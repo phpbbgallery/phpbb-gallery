@@ -186,6 +186,7 @@ Installing:
 				<date>2009-MM-DD</date>
 				<rev-version>1.0.0-RC3</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Misleading language string on (edit|delete) (comments|images) permissions (Bug #545)]]></change>
 					<change><![CDATA[[Fix] Not changing block-colour when setting to Yes/No/Never]]></change>
 					<change><![CDATA[[Fix] All Yes/All No/All Never for permissions (Bug #546)]]></change>
 				</changelog>
