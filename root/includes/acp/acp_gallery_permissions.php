@@ -522,9 +522,31 @@ class acp_gallery_permissions
 					$role_id = (isset($p_masks[$album_row['album_id']][$victim_row['victim_id']])) ? $p_masks[$album_row['album_id']][$victim_row['victim_id']] : 0;
 					foreach ($permissions->cats[$p_system] as $category => $permission_values)
 					{
+						$acl_s_never = $acl_s_no = $acl_s_yes = 0;
+						foreach ($permission_values as $permission)
+						{
+							if (substr($permission, -6, 6) != '_count')
+							{
+								if (isset($roles[$role_id][$permission]) && ($roles[$role_id][$permission] == GALLERY_ACL_YES))
+								{
+									$acl_s_yes++;
+								}
+								else if (isset($roles[$role_id][$permission]) && ($roles[$role_id][$permission] == GALLERY_ACL_NEVER))
+								{
+									$acl_s_never++;
+								}
+								else if (isset($roles[$role_id][$permission]) && ($roles[$role_id][$permission] == GALLERY_ACL_NO))
+								{
+									$acl_s_no++;
+								}
+							}
+						}
 						$template->assign_block_vars('c_mask.v_mask.category', array(
 							'CAT_NAME'				=> $user->lang['PERMISSION_' . strtoupper($category)],
 							'PERM_GROUP_ID'			=> $category,
+							'S_YES'					=> ($acl_s_yes && !$acl_s_never && !$acl_s_no) ? true : false,
+							'S_NEVER'				=> ($acl_s_never && !$acl_s_yes && !$acl_s_no) ? true : false,
+							'S_NO'					=> ($acl_s_no && !$acl_s_never && !$acl_s_yes) ? true : false,
 						));
 						foreach ($permission_values as $permission)
 						{

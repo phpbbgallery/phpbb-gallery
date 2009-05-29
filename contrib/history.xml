@@ -183,6 +183,15 @@ Installing:
 
 		<history>
 			<entry>
+				<date>2009-MM-DD</date>
+				<rev-version>1.0.0-RC3</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Fix] Not changing block-colour when setting to Yes/No/Never]]></change>
+					<change><![CDATA[[Fix] All Yes/All No/All Never for permissions (Bug #546)]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
 				<date>2009-05-21</date>
 				<rev-version>1.0.0-RC2</rev-version>
 				<changelog lang="en">

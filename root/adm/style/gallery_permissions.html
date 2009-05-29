@@ -52,6 +52,23 @@ function inherit_victim(c_mask, v_mask, value)
 		oElement.style.display = "none";
 	}
 }
+
+function gallery_init_colours(block_id)
+{	
+	var block = document.getElementById('advanced' + block_id);
+	var panels = block.getElementsByTagName('div');
+	var tab = document.getElementById('tab' + block_id);
+
+	for (var i = 0; i < panels.length; i++)
+	{
+		if(panels[i].className == 'permissions-panel')
+		{
+			set_colours(panels[i].id.replace(/options/, ''), true);
+		}
+	}
+
+	tab.className = tab.className + ' activetab';
+}
 </script>
 <script type="text/javascript" src="style/permissions.js"></script>
 <a name="maincontent"></a>
@@ -169,14 +186,32 @@ function inherit_victim(c_mask, v_mask, value)
 
 	<div id="c_mask{c_mask.S_ROW_COUNT}">
 	<!-- BEGIN v_mask -->
-	<fieldset>
+	<fieldset class="permissions" id="perm{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}">
 		<legend>{c_mask.v_mask.VICTIM_NAME}</legend>
-		<p>{L_INHERIT_PERMISSIONS_VICTIM}: <select name="inherit[{c_mask.C_MASK_ID}][{c_mask.v_mask.VICTIM_ID}]" id="inherit[{c_mask.C_MASK_ID}][{c_mask.v_mask.VICTIM_ID}]" onchange="inherit_victim({c_mask.S_ROW_COUNT}, {c_mask.v_mask.S_ROW_COUNT}, this.options[this.selectedIndex].value);">{c_mask.v_mask.INHERIT_VICTIMS}</select></p>
+		<div class="permissions-switch">
+			<div class="permissions-reset">
+				<a href="#" onclick="mark_options('perm{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}', 'y'); gallery_init_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}'); return false;">{L_ALL_YES}</a>
+				&middot; <a href="#" onclick="mark_options('perm{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}', 'u'); gallery_init_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}'); return false;">{L_ALL_NO}</a>
+				&middot; <a href="#" onclick="mark_options('perm{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}', 'n'); gallery_init_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}'); return false;">{L_ALL_NEVER}</a>
+			</div>
+		</div>
+		<dl class="permissions-simple">
+			<dt style="width: 20%"><label for="inherit[{c_mask.C_MASK_ID}][{c_mask.v_mask.VICTIM_ID}]">{L_INHERIT_PERMISSIONS_VICTIM}:</label></dt>
+			<dd><select name="inherit[{c_mask.C_MASK_ID}][{c_mask.v_mask.VICTIM_ID}]" id="inherit[{c_mask.C_MASK_ID}][{c_mask.v_mask.VICTIM_ID}]" onchange="inherit_victim({c_mask.S_ROW_COUNT}, {c_mask.v_mask.S_ROW_COUNT}, this.options[this.selectedIndex].value);">{c_mask.v_mask.INHERIT_VICTIMS}</select></dd>
+		</dl>
 		<div class="permissions-advanced" id="advanced{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}">
 		<div class="permissions-category">
 			<ul>
 			<!-- BEGIN category -->
-				<li class="permissions-preset-custom<!-- IF c_mask.v_mask.category.S_FIRST_ROW --> activetab<!-- ENDIF -->" id="tab{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}">
+				<!-- IF c_mask.v_mask.category.S_YES -->
+					<li class="permissions-preset-yes<!-- IF c_mask.S_FIRST_ROW and c_mask.v_mask.S_FIRST_ROW and c_mask.v_mask.category.S_FIRST_ROW --> activetab<!-- ENDIF -->" id="tab{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}">
+				<!-- ELSEIF c_mask.v_mask.category.S_NEVER -->
+					<li class="permissions-preset-never<!-- IF c_mask.S_FIRST_ROW and c_mask.v_mask.S_FIRST_ROW and c_mask.v_mask.category.S_FIRST_ROW --> activetab<!-- ENDIF -->" id="tab{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}">
+				<!-- ELSEIF c_mask.v_mask.category.S_NO -->
+					<li class="permissions-preset-no<!-- IF c_mask.S_FIRST_ROW and c_mask.v_mask.S_FIRST_ROW and c_mask.v_mask.category.S_FIRST_ROW --> activetab<!-- ENDIF -->" id="tab{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}">
+				<!-- ELSE -->
+					<li class="permissions-preset-custom<!-- IF c_mask.S_FIRST_ROW and c_mask.v_mask.S_FIRST_ROW and c_mask.v_mask.category.S_FIRST_ROW --> activetab<!-- ENDIF -->" id="tab{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}">
+				<!-- ENDIF -->
 				<a href="#" onclick="javascript: toggle_permissions_panel({c_mask.S_ROW_COUNT}, {c_mask.v_mask.S_ROW_COUNT}, {c_mask.v_mask.category.S_ROW_COUNT}); return false;"><span class="tabbg"><span class="colour"></span>{c_mask.v_mask.category.CAT_NAME}</span></a></li>
 			<!-- END category -->
 			</ul>
@@ -196,9 +231,9 @@ function inherit_victim(c_mask, v_mask, value)
 				<thead>
 				<tr>
 					<th class="name" scope="col"><strong>{L_PERMISSION_SETTING}</strong></th>
-					<th class="value permissions-yes" scope="col" style="width: 10%;" ><a href="#" onclick="mark_options('options{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', 'y'); return false;">{L_PERMISSION_YES}</a></th>
-					<th class="value permissions-no" scope="col" style="width: 10%;"><a href="#" onclick="mark_options('options{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', 'u'); return false;">{L_PERMISSION_NO}</a></th>
-					<th class="value permissions-never" scope="col" style="width: 10%;"><a href="#" onclick="mark_options('options{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', 'n'); return false;">{L_PERMISSION_NEVER}</a></th>
+					<th class="value permissions-yes" scope="col" style="width: 10%;" ><a href="#" onclick="mark_options('options{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', 'y');  reset_role('role{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}'); set_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', false, 'yes'); return false;">{L_PERMISSION_YES}</a></th>
+					<th class="value permissions-no" scope="col" style="width: 10%;"><a href="#" onclick="mark_options('options{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', 'u'); reset_role('role{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}'); set_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', false, 'no'); return false;">{L_PERMISSION_NO}</a></th>
+					<th class="value permissions-never" scope="col" style="width: 10%;"><a href="#" onclick="mark_options('options{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', 'n'); reset_role('role{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}'); set_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', false, 'never'); return false;">{L_PERMISSION_NEVER}</a></th>
 				</tr>
 				</thead>
 				<tbody>
@@ -206,9 +241,9 @@ function inherit_victim(c_mask, v_mask, value)
 					<!-- IF c_mask.v_mask.category.mask.S_ROW_COUNT is even --><tr class="row4"><!-- ELSE --><tr class="row3"><!-- ENDIF -->
 					<th class="permissions-name<!-- IF c_mask.v_mask.category.mask.S_ROW_COUNT is even --> row4<!-- ELSE --> row3<!-- ENDIF -->">{c_mask.v_mask.category.mask.PERMISSION}</th>
 						<!-- IF not c_mask.v_mask.category.mask.S_COUNT_FIELD -->
-							<td class="value permissions-yes"><label for="{c_mask.v_mask.category.mask.S_FIELD_NAME}_y"><input id="{c_mask.v_mask.category.mask.S_FIELD_NAME}_y" name="{c_mask.v_mask.category.mask.S_FIELD_NAME}" class="radio" type="radio"<!-- IF c_mask.v_mask.category.mask.S_YES --> checked="checked"<!-- ENDIF --> value="1" /></label></td>
-							<td class="value permissions-no"><label for="{c_mask.v_mask.category.mask.S_FIELD_NAME}_u"><input id="{c_mask.v_mask.category.mask.S_FIELD_NAME}_u" name="{c_mask.v_mask.category.mask.S_FIELD_NAME}" class="radio" type="radio"<!-- IF not c_mask.v_mask.category.mask.S_YES and not c_mask.v_mask.category.mask.S_NEVER --> checked="checked"<!-- ENDIF --> value="-1" /></label></td>
-							<td class="value permissions-never"><label for="{c_mask.v_mask.category.mask.S_FIELD_NAME}_n"><input id="{c_mask.v_mask.category.mask.S_FIELD_NAME}_n" name="{c_mask.v_mask.category.mask.S_FIELD_NAME}" class="radio" type="radio"<!-- IF c_mask.v_mask.category.mask.S_NEVER --> checked="checked"<!-- ENDIF --> value="0" /></label></td>
+							<td class="value permissions-yes"><label for="{c_mask.v_mask.category.mask.S_FIELD_NAME}_y"><input onclick="reset_role('role{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}'); set_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', false)" id="{c_mask.v_mask.category.mask.S_FIELD_NAME}_y" name="{c_mask.v_mask.category.mask.S_FIELD_NAME}" class="radio" type="radio"<!-- IF c_mask.v_mask.category.mask.S_YES --> checked="checked"<!-- ENDIF --> value="1" /></label></td>
+							<td class="value permissions-no"><label for="{c_mask.v_mask.category.mask.S_FIELD_NAME}_u"><input onclick="reset_role('role{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}'); set_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', false)" id="{c_mask.v_mask.category.mask.S_FIELD_NAME}_u" name="{c_mask.v_mask.category.mask.S_FIELD_NAME}" class="radio" type="radio"<!-- IF not c_mask.v_mask.category.mask.S_YES and not c_mask.v_mask.category.mask.S_NEVER --> checked="checked"<!-- ENDIF --> value="-1" /></label></td>
+							<td class="value permissions-never"><label for="{c_mask.v_mask.category.mask.S_FIELD_NAME}_n"><input onclick="reset_role('role{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}'); set_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', false)" id="{c_mask.v_mask.category.mask.S_FIELD_NAME}_n" name="{c_mask.v_mask.category.mask.S_FIELD_NAME}" class="radio" type="radio"<!-- IF c_mask.v_mask.category.mask.S_NEVER --> checked="checked"<!-- ENDIF --> value="0" /></label></td>
 						<!-- ELSE -->
 							<td class="permissions" colspan="3"><input class="text medium" type="text" id="{c_mask.v_mask.category.mask.S_FIELD_NAME}" name="{c_mask.v_mask.category.mask.S_FIELD_NAME}" value="{c_mask.v_mask.category.mask.S_VALUE}" maxlength="7" /></td>
 						<!-- ENDIF -->
