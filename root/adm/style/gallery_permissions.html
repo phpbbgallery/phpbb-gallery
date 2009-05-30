@@ -53,8 +53,26 @@ function inherit_victim(c_mask, v_mask, value)
 	}
 }
 
-function gallery_init_colours(block_id)
-{	
+function gallery_set_colours(id, quick)
+{
+	var tab = document.getElementById('tab' + id);
+
+	if (typeof(quick) != 'undefined') 
+	{
+		if (tab.className.indexOf("activetab") > 0)
+		{
+			tab.className = 'permissions-preset-' + quick + ' activetab';
+		}
+		else
+		{
+			tab.className = 'permissions-preset-' + quick;
+		}
+		return;
+	}
+}
+
+function gallery_init_colours(block_id, quick)
+{
 	var block = document.getElementById('advanced' + block_id);
 	var panels = block.getElementsByTagName('div');
 	var tab = document.getElementById('tab' + block_id);
@@ -63,11 +81,9 @@ function gallery_init_colours(block_id)
 	{
 		if(panels[i].className == 'permissions-panel')
 		{
-			set_colours(panels[i].id.replace(/options/, ''), true);
+			gallery_set_colours(panels[i].id.replace(/options/, ''), quick);
 		}
 	}
-
-	tab.className = tab.className + ' activetab';
 }
 </script>
 <script type="text/javascript" src="style/permissions.js"></script>
@@ -190,9 +206,9 @@ function gallery_init_colours(block_id)
 		<legend>{c_mask.v_mask.VICTIM_NAME}</legend>
 		<div class="permissions-switch">
 			<div class="permissions-reset">
-				<a href="#" onclick="mark_options('perm{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}', 'y'); gallery_init_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}'); return false;">{L_ALL_YES}</a>
-				&middot; <a href="#" onclick="mark_options('perm{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}', 'u'); gallery_init_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}'); return false;">{L_ALL_NO}</a>
-				&middot; <a href="#" onclick="mark_options('perm{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}', 'n'); gallery_init_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}'); return false;">{L_ALL_NEVER}</a>
+				<a href="#" onclick="mark_options('perm{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}', 'y'); gallery_init_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}', 'yes'); return false;">{L_ALL_YES}</a>
+				&middot; <a href="#" onclick="mark_options('perm{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}', 'u'); gallery_init_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}', 'no'); return false;">{L_ALL_NO}</a>
+				&middot; <a href="#" onclick="mark_options('perm{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}', 'n'); gallery_init_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}', 'never'); return false;">{L_ALL_NEVER}</a>
 			</div>
 		</div>
 		<dl class="permissions-simple">
@@ -204,13 +220,13 @@ function gallery_init_colours(block_id)
 			<ul>
 			<!-- BEGIN category -->
 				<!-- IF c_mask.v_mask.category.S_YES -->
-					<li class="permissions-preset-yes<!-- IF c_mask.S_FIRST_ROW and c_mask.v_mask.S_FIRST_ROW and c_mask.v_mask.category.S_FIRST_ROW --> activetab<!-- ENDIF -->" id="tab{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}">
+					<li class="permissions-preset-yes<!-- IF c_mask.v_mask.category.S_FIRST_ROW --> activetab<!-- ENDIF -->" id="tab{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}">
 				<!-- ELSEIF c_mask.v_mask.category.S_NEVER -->
-					<li class="permissions-preset-never<!-- IF c_mask.S_FIRST_ROW and c_mask.v_mask.S_FIRST_ROW and c_mask.v_mask.category.S_FIRST_ROW --> activetab<!-- ENDIF -->" id="tab{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}">
+					<li class="permissions-preset-never<!-- IF c_mask.v_mask.category.S_FIRST_ROW --> activetab<!-- ENDIF -->" id="tab{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}">
 				<!-- ELSEIF c_mask.v_mask.category.S_NO -->
-					<li class="permissions-preset-no<!-- IF c_mask.S_FIRST_ROW and c_mask.v_mask.S_FIRST_ROW and c_mask.v_mask.category.S_FIRST_ROW --> activetab<!-- ENDIF -->" id="tab{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}">
+					<li class="permissions-preset-no<!-- IF c_mask.v_mask.category.S_FIRST_ROW --> activetab<!-- ENDIF -->" id="tab{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}">
 				<!-- ELSE -->
-					<li class="permissions-preset-custom<!-- IF c_mask.S_FIRST_ROW and c_mask.v_mask.S_FIRST_ROW and c_mask.v_mask.category.S_FIRST_ROW --> activetab<!-- ENDIF -->" id="tab{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}">
+					<li class="permissions-preset-custom<!-- IF c_mask.v_mask.category.S_FIRST_ROW --> activetab<!-- ENDIF -->" id="tab{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}">
 				<!-- ENDIF -->
 				<a href="#" onclick="javascript: toggle_permissions_panel({c_mask.S_ROW_COUNT}, {c_mask.v_mask.S_ROW_COUNT}, {c_mask.v_mask.category.S_ROW_COUNT}); return false;"><span class="tabbg"><span class="colour"></span>{c_mask.v_mask.category.CAT_NAME}</span></a></li>
 			<!-- END category -->
