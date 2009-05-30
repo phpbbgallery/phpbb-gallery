@@ -1,55 +1,43 @@
 <!-- INCLUDE overall_header.html -->
 <script type="text/javascript">
-function getElement(iElementId)
-{
-	if (document.all) 
-	{
-		return document.all[iElementId];
-	}
-	if (document.getElementById)
-	{
-		return document.getElementById(iElementId);
-	}
-}
-
 function toggle_permissions_panel(c_mask, v_mask, cat)
 {
 	<!-- BEGIN c_rows -->
-		var oElement = document.getElementById('options' + c_mask + v_mask + {c_rows.S_ROW_COUNT});
-		oElement.style.display = "none";
+		var block = document.getElementById('options' + c_mask + v_mask + {c_rows.S_ROW_COUNT});
+		block.style.display = "none";
 		var old_tab = document.getElementById('tab' + c_mask + v_mask + {c_rows.S_ROW_COUNT});
 		old_tab.className = old_tab.className.replace(/\ activetab/g, '');
 	<!-- END c_rows -->
 
-	var oElement = document.getElementById('options' + c_mask + v_mask + cat);
-	oElement.style.display = "";
+	var block = document.getElementById('options' + c_mask + v_mask + cat);
+	block.style.display = "";
 	var new_tab = document.getElementById('tab' + c_mask + v_mask + cat);
 	new_tab.className = new_tab.className + ' activetab';
 }
 
 function inherit_album(c_mask, value)
 {
-	var oElement = document.getElementById('c_mask' + c_mask);
+	var block = document.getElementById('c_mask' + c_mask);
 	if (value == 0)
 	{
-		oElement.style.display = "";
+		block.style.display = "";
 	}
 	else
 	{
-		oElement.style.display = "none";
+		block.style.display = "none";
 	}
 }
 
 function inherit_victim(c_mask, v_mask, value)
 {
-	var oElement = document.getElementById('advanced' + c_mask + v_mask);
+	var block = document.getElementById('advanced' + c_mask + v_mask);
 	if (value == 0)
 	{
-		oElement.style.display = "";
+		block.style.display = "";
 	}
 	else
 	{
-		oElement.style.display = "none";
+		block.style.display = "none";
 	}
 }
 
@@ -79,7 +67,7 @@ function gallery_init_colours(block_id, quick)
 
 	for (var i = 0; i < panels.length; i++)
 	{
-		if(panels[i].className == 'permissions-panel')
+		if (panels[i].className == 'permissions-panel')
 		{
 			gallery_set_colours(panels[i].id.replace(/options/, ''), quick);
 		}
