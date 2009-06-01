@@ -90,7 +90,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 		$sql_permission_where .= ($user_id) ? ') AND image_user_id = ' . $user_id : ')';
 	}
 
-	if (sizeof($view_albums) || sizeof($moderate_albums))
+	if ((sizeof($view_albums) || sizeof($moderate_albums)) && $limit_sql)
 	{
 		$images = $recent_images = $random_images = $contest_images = array();
 		// First step: grab all the IDs we are going to display ...
@@ -257,7 +257,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 		}
 	}
 
-	if ($gallery_config['allow_comments'] && ($mode & RRC_MODE_COMMENT) && sizeof($comment_albums))
+	if ($gallery_config['allow_comments'] && ($mode & RRC_MODE_COMMENT) && sizeof($comment_albums) && $ints['comments'])
 	{
 		$user->add_lang('viewtopic');
 
