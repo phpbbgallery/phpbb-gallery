@@ -20,8 +20,8 @@ Einstellungen/Verschiedenes:
 » Viele Einstellmöglichkeiten zur album.php: Anzahl der Zeilen und Spalten, Anzeigen der Werte (Benutzername, Bewertung, Kommentare, Hochlade-Zeitpunkt,...)
 » RRC (recent-random-comment): kleines Addon zum Anzeigen der neusten Bilder, zufälligen Bilder und der neusten Kommentare auf der gallery/index.php mit Einstellmöglichkeiten im ACP
 » Unterordner umbenennbar (Standard: gallery/)
-» Suchfunktion
-» Lytebox & Highslide JS Unterstützung (Highslide JS muss auf Grund der Lizenz extra heruntergeladen werden)
+» Suchfunktion (auch innerhalb des Albums möglich) (Extra Seite mti Neusten/Zufälligen/Am besten bewerteten Bildern usw.)
+» Lytebox & Highslide JS Unterstützung (Die Scripte müssen auf Grund der Lizenz extra heruntergeladen werden)
 » Diashow
 » In weiteren Sprachen verfügbar: http://www.flying-bits.org/go/phpbb_gallery/translations
 » Verfügbare Addons: http://www.flying-bits.org/go/phpbb_gallery/translations
@@ -44,7 +44,7 @@ Albenverwaltung / Berechtigungen:
 » Berechtigungen für Bilder: ansehen, ansehen ohne Wasserzeichen, hochladen, hochladen mit Freigabe, ändern, löschen, melden, bewerten
 » Berechtigungen für Kommentare: lesen, schreiben, ändern, löschen
 » Moderations-Berechtigungen: Kommentare moderieren, Bilder: ändern, löschen, verschieben, Meldungen bearbeiten, Freigeben/Sperren
-» Weitere Berechtigungen: Album sehen, Anzahl der Bilder, Alben (Nur für persönliche Galerien)
+» Weitere Berechtigungen: Album sehen, Anzahl der Bilder (auch unbegrenzt), Alben (Nur für persönliche Galerien)
 » Persönliche Galerien (Hochladen nur durch den Besitzer möglich), mit Subalben, Verwaltung im persönlichen Bereich (UCP)
 
 Bilder/Kommentare:
@@ -62,6 +62,7 @@ Bilder/Kommentare:
 
 ACP:
 » Statistische Übersicht
+» Fehlerbox mit Update-Benachrichtung (falls verfügbar)
 » Zurücksetzen der Bewertungen für ein Album
 » Importer für viele Bilder
 » Galerie reinigen: Möglichkeit zum Löschen von Bildern/Kommentaren gelöschter Benutzer (oder ändern des Autors in Gast) und von persönlichen Galerien
@@ -85,8 +86,8 @@ Configurations/Misc:
 » Several options to thumbnail-displaying album.php: number of rows & columns, options to display (username, rating, comments, upload-time,...)
 » RRC (recent-random-comment): little Addon displaying the recent images, random images and/or recent comments on the gallery/indey.php with full ACP-Control
 » Sub-folder name adjustable (default: gallery/)
-» Search function (page for Recent/Random/Top-Rated/Last comments/Own images)
-» Lytebox & Highslide JS support (Highslide JS must be downloaded seperatly because of the licence)
+» Search function (also available in the album) (page for Recent/Random/Top-Rated/Last comments/Own images)
+» Lytebox & Highslide JS support (These scripts must be downloaded seperatly because of the licence)
 » Diashow
 » Available in more languages: http://www.flying-bits.org/go/phpbb_gallery/translations
 » Available Addons: http://www.flying-bits.org/go/phpbb_gallery/addons
@@ -109,7 +110,7 @@ Album / Permission-management:
 » Image-permissions: view, view without watermark, upload, upload with approval, edit, delete, report, rate
 » Comment-permissions: view, post, edit, delete
 » Moderate-permissions: moderate comments, image: delete, edit, move, handle reports, approve/lock
-» Misc-permissions: View album, Number of allowed images, albums (for personal galleries)
+» Misc-permissions: View album, Number of allowed images (also unlimited), albums (for personal galleries)
 » Personal galleries (upload by owner only), with subalbums and management through UCP
 
 Images / Comments:
@@ -127,6 +128,7 @@ Images / Comments:
 
 ACP:
 » Statistical overview
+» Error-Box with Update-notification (when update is available)
 » Resync-Options for several dynamic values
 » Reset rating for album
 » Mass-import
@@ -183,8 +185,8 @@ Installing:
 
 		<history>
 			<entry>
-				<date>2009-MM-DD</date>
-				<rev-version>1.0.0-RC3</rev-version>
+				<date>2009-06-02</date>
+				<rev-version>1.0.0</rev-version>
 				<changelog lang="en">
 					<change><![CDATA[[Fix] RRC zero rows/columns/comments should display nothing, not all]]></change>
 					<change><![CDATA[[Fix] Misleading language string on (edit|delete) (comments|images) permissions (Bug #545)]]></change>

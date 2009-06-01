@@ -10,7 +10,7 @@
 		[*]Viele Einstellmöglichkeiten zur album.php: Anzahl der Zeilen und Spalten, Anzeigen der Werte (Benutzername, Bewertung, Kommentare, Hochlade-Zeitpunkt,...)
 		[*]RRC (recent-random-comment): kleines Addon zum Anzeigen der neusten Bilder, zufälligen Bilder und der neusten Kommentare auf der gallery/index.php mit Einstellmöglichkeiten im ACP
 		[*]Unterordner umbenennbar (Standard: gallery/)
-		[*]Suchfunktion (auch innerhalb des Albums möglich) (Extra Seite mti Neusten/Zufälligen/Am besten bewerteten Bildern usw.)
+		[*]Suchfunktion (auch innerhalb des Albums möglich) (Extra Seite mit Neusten/Zufälligen/Am besten bewerteten Bildern usw.)
 		[*]Lytebox & Highslide JS Unterstützung (Die Scripte müssen auf Grund der Lizenz extra heruntergeladen werden)
 		[*]Diashow
 		[*]In weiteren Sprachen verfügbar: http://www.flying-bits.org/go/phpbb_gallery/translations
