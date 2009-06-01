@@ -41,6 +41,13 @@
       <file from="root/styles/subsilver2/theme/images/icon_gallery.gif" to="styles/subsilver2/theme/images/icon_gallery.gif" />
     </copy>
 
+		<open src="styles/subsilver2/template/memberlist_view.html">
+			<edit>
+				<find><![CDATA[<!-- INCLUDE breadcrumbs.html -->]]></find>
+				<action type="before-add"><![CDATA[<!-- INCLUDE gallery/recent_body.html -->]]></action>
+			</edit>
+		</open>
+
 		<open src="styles/subsilver2/template/overall_header.html">
 			<edit>
 				<find><![CDATA[<script type="text/javascript" src="{T_TEMPLATE_PATH}/gallery_lytebox.js"></script>

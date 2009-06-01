@@ -106,6 +106,10 @@ http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
 			</tr>
 			<!-- ENDIF -->]]></action>
 			</edit>
+			<edit>
+				<find><![CDATA[<!-- INCLUDE breadcrumbs.html -->]]></find>
+				<action type="before-add"><![CDATA[<!-- INCLUDE gallery/recent_body.html -->]]></action>
+			</edit>
 		</open>
 
 		<open src="styles/subsilver2/template/overall_header.html">
