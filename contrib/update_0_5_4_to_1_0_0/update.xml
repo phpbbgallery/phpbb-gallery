@@ -85,6 +85,11 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				'image_id'	=> $image_id,
 			);]]></action>
 			</edit>
+			<edit>
+				<find><![CDATA[	$user->add_lang('mods/info_acp_gallery');
+	$gallery_root_path = GALLERY_ROOT_PATH;]]></find>
+				<action type="after-add"><![CDATA[	include($phpbb_root_path . $gallery_root_path . 'plugins/index.' . $phpEx);]]></action>
+			</edit>
 		</open>
 
 		<open src="includes/functions_admin.php">
@@ -128,14 +133,6 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			{
 				$checks = array('viewimage', 'viewalbum');
 			}]]></action>
-			</edit>
-		</open>
-
-		<open src="includes/functions.php">
-			<edit>
-				<find><![CDATA[	$user->add_lang('mods/info_acp_gallery');
-	$gallery_root_path = GALLERY_ROOT_PATH;]]></find>
-				<action type="after-add"><![CDATA[	include($phpbb_root_path . $gallery_root_path . 'plugins/index.' . $phpEx);]]></action>
 			</edit>
 		</open>
 
