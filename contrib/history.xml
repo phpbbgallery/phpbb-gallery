@@ -185,7 +185,7 @@ Installing:
 
 		<history>
 			<entry>
-				<date>2009-06-02</date>
+				<date>2009-06-03</date>
 				<rev-version>1.0.0</rev-version>
 				<changelog lang="en">
 					<change><![CDATA[[Fix] RRC zero rows/columns/comments should display nothing, not all]]></change>
