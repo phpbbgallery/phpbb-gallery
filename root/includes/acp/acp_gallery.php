@@ -1135,31 +1135,61 @@ class acp_gallery
 		}
 		$db->sql_freeresult($result);
 
-		$sql = 'SELECT ga.album_id, ga.album_user_id, ga.album_name, u.user_id, SUM(ga.album_images_real) images
+		$sql = 'SELECT ga.album_id, ga.album_user_id, ga.album_name, u.user_id, ga.album_images_real
 			FROM ' . GALLERY_ALBUMS_TABLE . ' ga
 			LEFT JOIN ' . USERS_TABLE . ' u
 				ON u.user_id = ga.album_user_id
 			WHERE ga.album_user_id <> 0
-			GROUP BY ga.album_user_id';
+				AND ga.parent_id = 0';
+		$result = $db->sql_query($sql);
+		$personalrow = $personal_bad_row = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$album = array(
+				'user_id'		=> $row['album_user_id'],
+				'album_id'		=> $row['album_id'],
+				'album_name'	=> $row['album_name'],
+				'images'		=> $row['album_images_real'],
+			);
+			if (!$row['user_id'])
+			{
+				$personalrow[$row['album_user_id']] = $album;
+			}
+			$personal_bad_row[$row['album_user_id']] = $album;
+		}
+		$db->sql_freeresult($result);
+
+		$sql = 'SELECT ga.album_user_id, ga.album_images_real
+			FROM ' . GALLERY_ALBUMS_TABLE . ' ga
+			WHERE ga.album_user_id <> 0';
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
-			if (!$row['user_id'])
+			if (isset($personalrow[$row['album_user_id']]))
 			{
-				$template->assign_block_vars('personalrow', array(
-					'USER_ID'		=> $row['album_user_id'],
-					'ALBUM_ID'		=> $row['album_id'],
-					'AUTHOR_NAME'	=> $row['album_name'],
-				));
+				$personalrow[$row['album_user_id']]['images'] = $personalrow[$row['album_user_id']]['images'] + $row['album_images_real'];
 			}
+			$personal_bad_row[$row['album_user_id']]['images'] = $personal_bad_row[$row['album_user_id']]['images'] + $row['album_images_real'];
+		}
+		$db->sql_freeresult($result);
+
+		foreach ($personalrow as $key => $row)
+		{
+			$template->assign_block_vars('personalrow', array(
+				'USER_ID'		=> $row['user_id'],
+				'ALBUM_ID'		=> $row['album_id'],
+				'AUTHOR_NAME'	=> $row['album_name'],
+			));
+		}
+		foreach ($personal_bad_row as $key => $row)
+		{
 			$template->assign_block_vars('personal_bad_row', array(
-				'USER_ID'		=> $row['album_user_id'],
+				'USER_ID'		=> $row['user_id'],
 				'ALBUM_ID'		=> $row['album_id'],
 				'AUTHOR_NAME'	=> $row['album_name'],
 				'IMAGES'		=> $row['images'],
 			));
 		}
-		$db->sql_freeresult($result);
 
 		$template->assign_vars(array(
 			'S_GALLERY_MANAGE_RESTS'		=> true,
