@@ -46,6 +46,36 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 	</header>
 
 	<action-group>
+		<open src="gallery/includes/functions_recent.php">
+			<edit>
+				<find><![CDATA[				while (($num % 3) > 0)
+				{
+					$template->assign_block_vars('imageblock.imagerow.no_image', array());
+					$num++;
+				}
+			}
+		}]]></find>
+				<action type="after-add"><![CDATA[
+		$template->assign_vars(array(
+			'S_THUMBNAIL_SIZE'		=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? 16 : 0),
+			'S_COL_WIDTH'			=> (100 / $ints['columns']) . '%',
+			'S_COLS'				=> $ints['columns'],
+		));]]></action>
+			</edit>
+			<edit>
+				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+				<comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
+				<find><![CDATA[	$template->assign_vars(array(
+		'S_THUMBNAIL_SIZE'		=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? 16 : 0),
+		'S_COL_WIDTH'			=> (100 / $ints['columns']) . '%',
+		'S_COLS'				=> $ints['columns'],
+		'S_RANDOM'				=> ($mode & RRC_MODE_RANDOM) ? true : false,
+		'S_RECENT'				=> ($mode & RRC_MODE_RECENT) ? true : false,
+	));]]></find>
+				<action type="replace-with"><![CDATA[]]></action>
+			</edit>
+		</open>
+
 		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
 
 Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"

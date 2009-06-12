@@ -255,6 +255,12 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 				}
 			}
 		}
+
+		$template->assign_vars(array(
+			'S_THUMBNAIL_SIZE'		=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? 16 : 0),
+			'S_COL_WIDTH'			=> (100 / $ints['columns']) . '%',
+			'S_COLS'				=> $ints['columns'],
+		));
 	}
 
 	if ($gallery_config['allow_comments'] && ($mode & RRC_MODE_COMMENT) && sizeof($comment_albums) && $ints['comments'])
@@ -308,14 +314,6 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 			'COLLAPSE_COMMENTS'	=> $collapse_comments,
 		));
 	}
-
-	$template->assign_vars(array(
-		'S_THUMBNAIL_SIZE'		=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? 16 : 0),
-		'S_COL_WIDTH'			=> (100 / $ints['columns']) . '%',
-		'S_COLS'				=> $ints['columns'],
-		'S_RANDOM'				=> ($mode & RRC_MODE_RANDOM) ? true : false,
-		'S_RECENT'				=> ($mode & RRC_MODE_RECENT) ? true : false,
-	));
 }
 
 ?>
