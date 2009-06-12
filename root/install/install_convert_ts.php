@@ -47,7 +47,7 @@ class install_convert_ts extends module
 
 	function main($mode, $sub)
 	{
-		global $user, $template, $phpbb_root_path, $cache, $phpEx;
+		global $cache, $gallery_config, $phpbb_root_path, $phpEx, $template, $user;
 
 		switch ($sub)
 		{
@@ -60,35 +60,32 @@ class install_convert_ts extends module
 					'L_SUBMIT'		=> $user->lang['NEXT_STEP'],
 					'U_ACTION'		=> $this->p_master->module_url . "?mode=$mode&amp;sub=requirements",
 				));
-
 			break;
 
 			case 'requirements':
 				$this->check_server_requirements($mode, $sub);
-
 			break;
 
 			case 'copy_table':
 				$this->copy_schema($mode, $sub);
-
 			break;
 
 			case 'create_table':
 				$this->load_schema($mode, $sub);
-
 			break;
 
 			case 'in_progress':
+				$gallery_config = load_gallery_config();
 				$this->convert_data($mode, $sub);
-
 			break;
 
 			case 'advanced':
+				$gallery_config = load_gallery_config();
 				$this->obtain_advanced_settings($mode, $sub);
-
 			break;
 
 			case 'final':
+				$gallery_config = load_gallery_config();
 				set_gallery_config('phpbb_gallery_version', NEWEST_PG_VERSION, true);
 				$cache->purge();
 
@@ -98,8 +95,6 @@ class install_convert_ts extends module
 					'L_SUBMIT'	=> $user->lang['GOTO_GALLERY'],
 					'U_ACTION'	=> append_sid($phpbb_root_path . GALLERY_ROOT_PATH . 'index.' . $phpEx),
 				));
-
-
 			break;
 		}
 
@@ -281,7 +276,7 @@ class install_convert_ts extends module
 	*/
 	function load_schema($mode, $sub)
 	{
-		global $user, $template, $phpbb_root_path, $phpEx, $cache;
+		global $cache, $gallery_config, $phpbb_root_path, $phpEx, $template, $user;
 		include($phpbb_root_path . 'includes/acp/auth.' . $phpEx);
 
 		$this->page_title = $user->lang['STAGE_CREATE_TABLE'];
@@ -338,7 +333,7 @@ class install_convert_ts extends module
 	*/
 	function convert_data($mode, $sub)
 	{
-		global $user, $template, $db, $table_prefix;
+		global $db, $gallery_config, $table_prefix, $template, $user;
 
 		$this->page_title = $user->lang['STAGE_IN_PROGRESS'];
 
@@ -701,7 +696,7 @@ class install_convert_ts extends module
 	*/
 	function obtain_advanced_settings($mode, $sub)
 	{
-		global $user, $template, $phpEx, $db;
+		global $db, $gallery_config, $template, $user;
 
 		$create = request_var('create', '');
 		if ($create)
