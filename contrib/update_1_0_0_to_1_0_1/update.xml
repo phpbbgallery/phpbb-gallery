@@ -42,9 +42,10 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<date>2009-MM-DD</date>
 				<rev-version>1.0.1</rev-version>
 				<changelog lang="en">
-					<change><![CDATA[White page on uploading, when exif is not installed on the server (Bug #551)]]></change>
-					<change><![CDATA[Cannot redeclare user_get_id_name() when guests upload or comment (Bug #550)]]></change>
-					<change><![CDATA[PHP Notice: in file /gallery/includes/functions_recent.php on line 314: Division by zero (Bug #549)]]></change>
+					<change><![CDATA[[Fix] Image gets removed from user-favorites when only having user-permissions or when image is in a personal albums (Bug #556)]]></change>
+					<change><![CDATA[[Fix] White page on uploading, when exif is not installed on the server (Bug #551)]]></change>
+					<change><![CDATA[[Fix] Cannot redeclare user_get_id_name() when guests upload or comment (Bug #550)]]></change>
+					<change><![CDATA[[Fix] PHP Notice: in file /gallery/includes/functions_recent.php on line 314: Division by zero (Bug #549)]]></change>
 				</changelog>
 			</entry>
 		</history>
@@ -71,6 +72,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		<copy>
 			<file from="root/gallery/posting.php" to="gallery/posting.php" />
 			<file from="root/gallery/includes/functions_recent.php" to="gallery/includes/functions_recent.php" />
+			<file from="root/gallery/includes/functions_posting.php" to="gallery/includes/functions_posting.php" />
 			<file from="root/includes/acp/acp_gallery.php" to="includes/acp/acp_gallery.php" />
 		</copy>
 
