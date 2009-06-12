@@ -285,7 +285,7 @@ if (!function_exists('set_config_count'))
 		switch ($db->sql_layer)
 		{
 			case 'firebird':
-				$sql_update = 'CAST(CAST(config_value as integer) + ' . (int) $increment . ' as CHAR)';
+				$sql_update = 'CAST(CAST(config_value as integer) + ' . (int) $increment . ' as VARCHAR(255))';
 			break;
 
 			case 'postgres':
