@@ -91,6 +91,16 @@ add_form_key('gallery');
 /**
 * Main work here...
 */
+// Increase the counter, as we load the image with increment-blocker from this site it's no problem.
+// We also copy some parts from topic_views here
+if (isset($user->data['session_page']) && !$user->data['is_bot'] && (strpos($user->data['session_page'], '&image_id=' . $image_id) === false || isset($user->data['session_created'])))
+{
+	$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
+		SET image_view_count = image_view_count + 1
+		WHERE image_id = ' . $image_id;
+	$db->sql_query($sql);
+}
+
 $image_approval_sql = ' AND image_status <> ' . IMAGE_UNAPPROVED;
 if (gallery_acl_check('m_status', $album_id))
 {
@@ -140,7 +150,7 @@ $template->assign_vars(array(
 
 	'UC_PREVIOUS_IMAGE'	=> generate_image_link('thumbnail', 'image_page', $previous_data['image_id'], $previous_data['image_name'], $album_id),
 	'UC_PREVIOUS'		=> (!empty($previous_data)) ? generate_image_link('image_name_unbold', 'image_page_prev', $previous_data['image_id'], $previous_data['image_name'], $album_id) : '',
-	'UC_IMAGE'			=> generate_image_link('medium', $gallery_config['link_imagepage'], $image_id, $image_data['image_name'], $album_id, ((substr($image_data['image_filename'], 0 -3) == 'gif') ? true : false)),
+	'UC_IMAGE'			=> generate_image_link('medium', $gallery_config['link_imagepage'], $image_id, $image_data['image_name'], $album_id, ((substr($image_data['image_filename'], 0 -3) == 'gif') ? true : false), false),
 	'UC_NEXT_IMAGE'		=> generate_image_link('thumbnail', 'image_page', $next_data['image_id'], $next_data['image_name'], $album_id),
 	'UC_NEXT'			=> (!empty($next_data)) ? generate_image_link('image_name_unbold', 'image_page_next', $next_data['image_id'], $next_data['image_name'], $album_id) : '',
 

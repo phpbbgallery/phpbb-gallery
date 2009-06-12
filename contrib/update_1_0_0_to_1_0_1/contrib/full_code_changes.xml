@@ -94,6 +94,22 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		$possible_watermark = true;]]></action>
 			</edit>
 			<edit>
+				<find><![CDATA[		// Increase the view count only for full images.
+		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
+			SET image_view_count = image_view_count + 1
+			WHERE image_id = ' . $image_id;
+		$db->sql_query($sql);]]></find>
+				<action type="replace-with"><![CDATA[		// Increase the view count only for full images, if not already counted
+		$view = request_var('view', '');
+		if (!$user->data['is_bot'] && !$image_error && ($view != 'no_count'))
+		{
+			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
+				SET image_view_count = image_view_count + 1
+				WHERE image_id = ' . $image_id;
+			$db->sql_query($sql);
+		}]]></action>
+			</edit>
+			<edit>
 				<find><![CDATA[/**
 * Generate the sourcefile, if it's missing
 */]]></find>
@@ -116,6 +132,24 @@ if ($image_error)
 				<find><![CDATA[	trigger_error('IMAGE_NOT_EXIST');]]></find>
 				<action type="replace-with"><![CDATA[	// Since we display error-images, we still view this page!
 	//trigger_error('IMAGE_NOT_EXIST');]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[/**
+* Main work here...
+*/]]></find>
+				<action type="after-add"><![CDATA[// Increase the counter, as we load the image with increment-blocker from this site it's no problem.
+// We also copy some parts from topic_views here
+if (isset($user->data['session_page']) && !$user->data['is_bot'] && (strpos($user->data['session_page'], '&image_id=' . $image_id) === false || isset($user->data['session_created'])))
+{
+	$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
+		SET image_view_count = image_view_count + 1
+		WHERE image_id = ' . $image_id;
+	$db->sql_query($sql);
+}]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['UC_IMAGE'			=> generate_image_link('medium', $gallery_config['link_imagepage'], $image_id, $image_data['image_name'], $album_id, ((substr($image_data['image_filename'], 0 -3) == 'gif') ? true : false)),]]></find>
+				<action type="replace-with"><![CDATA['UC_IMAGE'			=> generate_image_link('medium', $gallery_config['link_imagepage'], $image_id, $image_data['image_name'], $album_id, ((substr($image_data['image_filename'], 0 -3) == 'gif') ? true : false), false),]]></action>
 			</edit>
 		</open>
 
@@ -145,6 +179,20 @@ if ($image_error)
 				<comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
 				<find><![CDATA[include($phpbb_root_path . 'includes/functions_user.' . $phpEx);]]></find>
 				<action type="replace-with"><![CDATA[]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/includes/functions.php">
+			<edit>
+				<find><![CDATA[*/
+function generate_image_link($content, $mode, $image_id, $image_name, $album_id, $is_gif = false)]]></find>
+				<action type="replace-with"><![CDATA[* @param	bool	$count		shall the image-link be counted as view? (Set to false from iamge_page.php to deny double increment)
+*/
+function generate_image_link($content, $mode, $image_id, $image_name, $album_id, $is_gif = false, $count = true)]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[$image_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "album_id=$album_id&amp;image_id=$image_id");]]></find>
+				<action type="replace-with"><![CDATA[$image_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "album_id=$album_id&amp;image_id=$image_id" . ((!$count) ? '&amp;view=no_count' : ''));]]></action>
 			</edit>
 		</open>
 

@@ -579,8 +579,9 @@ function get_album_branch($branch_user_id, $album_id, $type = 'all', $order = 'd
 * @param	string	$image_name
 * @param	int		$album_id
 * @param	bool	$is_gif		we need to know whether we display a gif, so we can use a better medium-image
+* @param	bool	$count		shall the image-link be counted as view? (Set to false from iamge_page.php to deny double increment)
 */
-function generate_image_link($content, $mode, $image_id, $image_name, $album_id, $is_gif = false)
+function generate_image_link($content, $mode, $image_id, $image_name, $album_id, $is_gif = false, $count = true)
 {
 	global $phpbb_root_path, $phpEx, $user, $gallery_root_path, $gallery_config;
 
@@ -590,7 +591,7 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 	}
 
 	$image_page_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id");
-	$image_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "album_id=$album_id&amp;image_id=$image_id");
+	$image_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "album_id=$album_id&amp;image_id=$image_id" . ((!$count) ? '&amp;view=no_count' : ''));
 	$thumb_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "mode=thumbnail&amp;album_id=$album_id&amp;image_id=$image_id");
 	$medium_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "mode=medium&amp;album_id=$album_id&amp;image_id=$image_id");
 	switch ($content)

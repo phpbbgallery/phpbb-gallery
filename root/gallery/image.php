@@ -117,11 +117,15 @@ switch ($mode)
 		$image_source_path = $phpbb_root_path . GALLERY_UPLOAD_PATH;
 		$possible_watermark = true;
 
-		// Increase the view count only for full images.
-		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
-			SET image_view_count = image_view_count + 1
-			WHERE image_id = ' . $image_id;
-		$db->sql_query($sql);
+		// Increase the view count only for full images, if not already counted
+		$view = request_var('view', '');
+		if (!$user->data['is_bot'] && !$image_error && ($view != 'no_count'))
+		{
+			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
+				SET image_view_count = image_view_count + 1
+				WHERE image_id = ' . $image_id;
+			$db->sql_query($sql);
+		}
 	break;
 }
 
