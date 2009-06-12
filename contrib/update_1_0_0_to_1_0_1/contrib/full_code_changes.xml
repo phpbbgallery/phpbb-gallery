@@ -49,17 +49,28 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		<open src="gallery/posting.php">
 			<edit>
 				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
-				<comment lang="en-gb"><![CDATA[include($phpbb_root_path . 'includes/functions_user.' . $phpEx);]]></find>
+				<comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></find>
+				<find><![CDATA[include($phpbb_root_path . 'includes/functions_user.' . $phpEx);]]></find>
+				<action type="replace-with"><![CDATA[]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[$exif = @exif_read_data($image_file->destination_file, 0, true);]]></find>
+				<action type="replace-with"><![CDATA[							$exif = array();
+							if (function_exists('exif_read_data'))
+							{
+								$exif = @exif_read_data($image_file->destination_file, 0, true);
+							}]]></action>
+			</edit>
+			<edit>
+				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+				<comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></find>
+				<find><![CDATA[include($phpbb_root_path . 'includes/functions_user.' . $phpEx);]]></find>
 				<action type="replace-with"><![CDATA[]]></action>
 			</edit>
 			<edit>
 				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
-				<comment lang="en-gb"><![CDATA[include($phpbb_root_path . 'includes/functions_user.' . $phpEx);]]></find>
-				<action type="replace-with"><![CDATA[]]></action>
-			</edit>
-			<edit>
-				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
-				<comment lang="en-gb"><![CDATA[include($phpbb_root_path . 'includes/functions_user.' . $phpEx);]]></find>
+				<comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></find>
+				<find><![CDATA[include($phpbb_root_path . 'includes/functions_user.' . $phpEx);]]></find>
 				<action type="replace-with"><![CDATA[]]></action>
 			</edit>
 		</open>
@@ -91,6 +102,17 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		'S_RECENT'				=> ($mode & RRC_MODE_RECENT) ? true : false,
 	));]]></find>
 				<action type="replace-with"><![CDATA[]]></action>
+			</edit>
+		</open>
+
+		<open src="includes/acp/acp_gallery.php">
+			<edit>
+				<find><![CDATA[$exif = @exif_read_data($image_file->destination_file, 0, true);]]></find>
+				<action type="replace-with"><![CDATA[					$exif = array();
+					if (function_exists('exif_read_data'))
+					{
+						$exif = @exif_read_data($image_file->destination_file, 0, true);
+					}]]></action>
 			</edit>
 		</open>
 

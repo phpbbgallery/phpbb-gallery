@@ -474,7 +474,12 @@ class acp_gallery
 						'image_status'			=> IMAGE_APPROVED,
 						'image_exif_data'		=> '',
 					);
-					$exif = @exif_read_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename, 0, true);
+
+					$exif = array();
+					if (function_exists('exif_read_data'))
+					{
+						$exif = @exif_read_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename, 0, true);
+					}
 					if (!empty($exif["EXIF"]))
 					{
 						// Unset invalid exifs

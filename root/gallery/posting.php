@@ -464,7 +464,11 @@ switch ($mode)
 							}
 
 							// Since we are able to resize the images, we loose the exif.
-							$exif = @exif_read_data($image_file->destination_file, 0, true);
+							$exif = array();
+							if (function_exists('exif_read_data'))
+							{
+								$exif = @exif_read_data($image_file->destination_file, 0, true);
+							}
 							if (!empty($exif["EXIF"]))
 							{
 								// Unset invalid exifs
