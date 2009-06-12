@@ -148,6 +148,14 @@ if ($image_error)
 			</edit>
 		</open>
 
+		<open src="gallery/includes/functions_display.php">
+			<edit>
+				<find><![CDATA['ALBUM_NAME'	=> ($display & RRC_DISPLAY_ALBUMNAME) ? ((isset($image_data['album_name'])) ? ((utf8_strlen(htmlspecialchars_decode($image_data['album_name'])) > $gallery_config['shorted_imagenames'] + 3 ) ? htmlspecialchars(utf8_substr(htmlspecialchars_decode($image_data['album_name']), 0, $gallery_config['shorted_imagenames']) . '...') : ($image_data['album_name'])) : '') : '',]]></find>
+				<action type="replace-with"><![CDATA[		'ALBUM_NAME'		=> ($display & RRC_DISPLAY_ALBUMNAME) ? ((isset($image_data['album_name'])) ? ((utf8_strlen(htmlspecialchars_decode($image_data['album_name'])) > $gallery_config['shorted_imagenames'] + 3 ) ? htmlspecialchars(utf8_substr(htmlspecialchars_decode($image_data['album_name']), 0, $gallery_config['shorted_imagenames']) . '...') : ($image_data['album_name'])) : '') : '',
+		'ALBUM_NAME_FULL'	=> ($display & RRC_DISPLAY_ALBUMNAME) ? ((isset($image_data['album_name'])) ? $image_data['album_name'] : '') : '',]]></action>
+			</edit>
+		</open>
+
 		<open src="gallery/includes/functions_posting.php">
 			<edit>
 				<find><![CDATA[	// Make sure users are allowed to view the album
@@ -301,6 +309,34 @@ if ($image_error)
 					{
 						$exif = @exif_read_data($image_file->destination_file, 0, true);
 					}]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/gallery/recent_body.html">
+			<edit>
+				<find><![CDATA[<!-- IF imageblock.imagerow.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{imageblock.imagerow.image.U_ALBUM}" style="font-weight: bold;">{imageblock.imagerow.image.ALBUM_NAME}</a><br /><!-- ENDIF -->]]></find>
+				<action type="replace-with"><![CDATA[<!-- IF imageblock.imagerow.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{imageblock.imagerow.image.U_ALBUM}" style="font-weight: bold;" title="{imageblock.imagerow.image.ALBUM_NAME_FULL}">{imageblock.imagerow.image.ALBUM_NAME}</a><br /><!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/gallery/search_results.html">
+			<edit>
+				<find><![CDATA[<!-- IF imagerow.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{imagerow.image.U_ALBUM}" style="font-weight: bold;">{imagerow.image.ALBUM_NAME}</a><br /><!-- ENDIF -->]]></find>
+				<action type="replace-with"><![CDATA[<!-- IF imagerow.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{imagerow.image.U_ALBUM}" style="font-weight: bold;" title="{imagerow.image.ALBUM_NAME_FULL}">{imagerow.image.ALBUM_NAME}</a><br /><!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/subsilver2/template/gallery/recent_body.html">
+			<edit>
+				<find><![CDATA[<!-- IF imageblock.imagerow.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{imageblock.imagerow.image.U_ALBUM}" style="font-weight: bold;">{imageblock.imagerow.image.ALBUM_NAME}</a><br /><!-- ENDIF -->]]></find>
+				<action type="replace-with"><![CDATA[<!-- IF imageblock.imagerow.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{imageblock.imagerow.image.U_ALBUM}" style="font-weight: bold;" title="{imageblock.imagerow.image.ALBUM_NAME_FULL}">{imageblock.imagerow.image.ALBUM_NAME}</a><br /><!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/subsilver2/template/gallery/search_results.html">
+			<edit>
+				<find><![CDATA[<!-- IF imagerow.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{imagerow.image.U_ALBUM}" style="font-weight: bold;">{imagerow.image.ALBUM_NAME}</a><br /><!-- ENDIF -->]]></find>
+				<action type="replace-with"><![CDATA[<!-- IF imagerow.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{imagerow.image.U_ALBUM}" style="font-weight: bold;" title="{imagerow.image.ALBUM_NAME_FULL}">{imagerow.image.ALBUM_NAME}</a><br /><!-- ENDIF -->]]></action>
 			</edit>
 		</open>
 

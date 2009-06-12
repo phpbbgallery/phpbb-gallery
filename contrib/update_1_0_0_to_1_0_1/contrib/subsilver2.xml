@@ -39,6 +39,11 @@
 	</header>
 
 	<action-group>
+		<copy>
+			<file from="root/styles/subsilver2/template/gallery/recent_body.html" to="styles/subsilver2/template/gallery/recent_body.html" />
+			<file from="root/styles/subsilver2/template/gallery/search_results.html" to="styles/subsilver2/template/gallery/search_results.html" />
+		</copy>
+
 		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
 
 Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"

@@ -45,7 +45,7 @@ function toggleElement(oElement)
 					<!-- IF (imageblock.imagerow.image.S_LOCKED or imageblock.imagerow.image.S_UNAPPROVED) and imageblock.imagerow.image.U_STATUS --><a style="font-weight: bold;" class="reported-images-number" href="{imageblock.imagerow.image.U_STATUS}">{imageblock.imagerow.image.L_STATUS}</a><br /><br /><!-- ENDIF -->
 					<!-- IF imageblock.imagerow.image.S_REPORTED and imageblock.imagerow.image.U_REPORT --><a style="font-weight: bold;" class="reported-images-number" href="{imageblock.imagerow.image.U_REPORT}">{L_READ_REPORT}</a><br /><br /><!-- ENDIF -->
 						<!-- IF imageblock.imagerow.image.UC_IMAGE_NAME -->{L_IMAGE_NAME}: {imageblock.imagerow.image.UC_IMAGE_NAME}<br /><!-- ENDIF -->
-						<!-- IF imageblock.imagerow.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{imageblock.imagerow.image.U_ALBUM}" style="font-weight: bold;">{imageblock.imagerow.image.ALBUM_NAME}</a><br /><!-- ENDIF -->
+						<!-- IF imageblock.imagerow.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{imageblock.imagerow.image.U_ALBUM}" style="font-weight: bold;" title="{imageblock.imagerow.image.ALBUM_NAME_FULL}">{imageblock.imagerow.image.ALBUM_NAME}</a><br /><!-- ENDIF -->
 						<!-- IF imageblock.imagerow.image.POSTER -->{L_UPLOADED_BY_USER}: {imageblock.imagerow.image.POSTER}<br /><!-- ENDIF -->
 						<!-- IF imageblock.imagerow.image.TIME -->{L_UPLOADED_ON_DATE}: {imageblock.imagerow.image.TIME}<br /><!-- ENDIF -->
 						<!-- IF imageblock.imagerow.image.VIEW > -1 -->{L_VIEWS}: {imageblock.imagerow.image.VIEW}<br /><!-- ENDIF -->

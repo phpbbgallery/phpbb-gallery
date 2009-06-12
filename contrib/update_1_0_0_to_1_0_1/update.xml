@@ -42,6 +42,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<date>2009-MM-DD</date>
 				<rev-version>1.0.1</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Shortend albumname is not viewed in full length on hover (Bug #555)]]></change>
 					<change><![CDATA[[Fix] "undefined index" when album was deleted and user is viewed as visiting on viewonline (Bug #553)]]></change>
 					<change><![CDATA[[Fix] Error while converting: Duplicate entry 'newest pgallery_user_color' for Key 1 (Bug #552)]]></change>
 					<change><![CDATA[[Fix] Image gets removed from user-favorites when only having user-permissions or when image is in a personal albums (Bug #556)]]></change>
@@ -80,11 +81,14 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<file from="root/gallery/images/upload/image_not_exist.jpg" to="gallery/images/upload/image_not_exist.jpg" />
 			<file from="root/gallery/images/upload/no_hotlinking.jpg" to="gallery/images/upload/no_hotlinking.jpg" />
 			<file from="root/gallery/images/upload/not_authorised.jpg" to="gallery/images/upload/not_authorised.jpg" />
+			<file from="root/gallery/includes/functions_display.php" to="gallery/includes/functions_display.php" />
 			<file from="root/gallery/includes/functions_recent.php" to="gallery/includes/functions_recent.php" />
 			<file from="root/gallery/includes/functions_posting.php" to="gallery/includes/functions_posting.php" />
 			<file from="root/gallery/includes/permissions.php" to="gallery/includes/permissions.php" />
 			<file from="root/includes/acp/acp_gallery.php" to="includes/acp/acp_gallery.php" />
 			<file from="root/install/*.*" to="install/*.*" />
+			<file from="root/styles/prosilver/template/gallery/recent_body.html" to="styles/prosilver/template/gallery/recent_body.html" />
+			<file from="root/styles/prosilver/template/gallery/search_results.html" to="styles/prosilver/template/gallery/search_results.html" />
 		</copy>
 
 		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
