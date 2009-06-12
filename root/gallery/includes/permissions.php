@@ -162,9 +162,15 @@ function gallery_acl_check($mode, $album_id, $album_user_id = -1)
 	// Do we have a function call without $album_user_id ?
 	if (($album_user_id < 0) && ($album_id > 0))
 	{
+		// Yes, from viewonline.php
 		global $cache;
 
 		$albums = $cache->obtain_album_list();
+		if (!isset($albums[$album_id]))
+		{
+			// Do not give permissions, if the album does not exist.
+			return false;
+		}
 		$album_user_id = $albums[$album_id]['album_user_id'];
 	}
 
