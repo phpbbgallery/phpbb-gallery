@@ -456,7 +456,6 @@ switch ($mode)
 							}
 							if (!$user->data['is_registered'] && $image_data['username'])
 							{
-								include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 								$result = validate_username($image_data['username']);
 								if ($result['error'])
 								{
@@ -1105,7 +1104,6 @@ switch ($mode)
 							$submit = false;
 							$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_USERNAME'];
 						}
-						include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 						$result = validate_username($comment_username);
 						if ($result['error'])
 						{
@@ -1198,7 +1196,6 @@ switch ($mode)
 							$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_USERNAME'];
 							$comment_username_req = true;
 						}
-						include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 						$result = validate_username($comment_username);
 						if ($result['error'])
 						{

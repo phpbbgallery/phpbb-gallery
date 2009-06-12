@@ -46,6 +46,24 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 	</header>
 
 	<action-group>
+		<open src="gallery/posting.php">
+			<edit>
+				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+				<comment lang="en-gb"><![CDATA[include($phpbb_root_path . 'includes/functions_user.' . $phpEx);]]></find>
+				<action type="replace-with"><![CDATA[]]></action>
+			</edit>
+			<edit>
+				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+				<comment lang="en-gb"><![CDATA[include($phpbb_root_path . 'includes/functions_user.' . $phpEx);]]></find>
+				<action type="replace-with"><![CDATA[]]></action>
+			</edit>
+			<edit>
+				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+				<comment lang="en-gb"><![CDATA[include($phpbb_root_path . 'includes/functions_user.' . $phpEx);]]></find>
+				<action type="replace-with"><![CDATA[]]></action>
+			</edit>
+		</open>
+
 		<open src="gallery/includes/functions_recent.php">
 			<edit>
 				<find><![CDATA[				while (($num % 3) > 0)

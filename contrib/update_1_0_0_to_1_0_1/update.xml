@@ -42,6 +42,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<date>2009-MM-DD</date>
 				<rev-version>1.0.1</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[Cannot redeclare user_get_id_name() when guests upload or comment (Bug #550)]]></change>
 					<change><![CDATA[PHP Notice: in file /gallery/includes/functions_recent.php on line 314: Division by zero (Bug #549)]]></change>
 				</changelog>
 			</entry>
@@ -67,6 +68,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 	<action-group>
 		<copy>
+			<file from="root/gallery/posting.php" to="gallery/posting.php" />
 			<file from="root/gallery/includes/functions_recent.php" to="gallery/includes/functions_recent.php" />
 		</copy>
 
