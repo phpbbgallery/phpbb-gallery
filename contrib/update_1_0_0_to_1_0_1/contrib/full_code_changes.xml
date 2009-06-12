@@ -122,7 +122,7 @@ if ($image_error)
 		<open src="gallery/posting.php">
 			<edit>
 				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
-				<comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></find>
+				<comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
 				<find><![CDATA[include($phpbb_root_path . 'includes/functions_user.' . $phpEx);]]></find>
 				<action type="replace-with"><![CDATA[]]></action>
 			</edit>
@@ -136,13 +136,13 @@ if ($image_error)
 			</edit>
 			<edit>
 				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
-				<comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></find>
+				<comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
 				<find><![CDATA[include($phpbb_root_path . 'includes/functions_user.' . $phpEx);]]></find>
 				<action type="replace-with"><![CDATA[]]></action>
 			</edit>
 			<edit>
 				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
-				<comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></find>
+				<comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
 				<find><![CDATA[include($phpbb_root_path . 'includes/functions_user.' . $phpEx);]]></find>
 				<action type="replace-with"><![CDATA[]]></action>
 			</edit>
