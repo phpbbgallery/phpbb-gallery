@@ -39,6 +39,7 @@ $album_id = $image_data['image_album_id'];
 $album_data = get_album_info($album_id);
 
 $user_id = $image_data['image_user_id'];
+$image_error = '';
 
 $image_filetype = utf8_substr($image_data['image_filename'], strlen($image_data['image_filename']) - 4, 4);
 if (!file_exists($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']))
@@ -47,7 +48,8 @@ if (!file_exists($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_fil
 		SET image_filemissing = 1
 		WHERE image_id = ' . $image_id;
 	$db->sql_query($sql);
-	trigger_error('IMAGE_NOT_EXIST');
+	//trigger_error('IMAGE_NOT_EXIST');
+	$image_error = 'image_not_exist.jpg';
 }
 
 /**
@@ -55,7 +57,8 @@ if (!file_exists($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_fil
 */
 if ((!gallery_acl_check('i_view', $album_id)) || (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] == IMAGE_UNAPPROVED)))
 {
-	trigger_error('NOT_AUTHORISED');
+	//trigger_error('NOT_AUTHORISED');
+	$image_error = 'not_authorised.jpg';
 }
 
 // Hotlink prevention
@@ -87,7 +90,8 @@ if ($gallery_config['hotlink_prevent'] && isset($_SERVER['HTTP_REFERER']))
 
 	if (!in_array($check_referer, $good_referers))
 	{
-		trigger_error('NOT_AUTHORISED');
+		//trigger_error('NOT_AUTHORISED');
+		$image_error = 'no_hotlinking.jpg';
 	}
 }
 
@@ -100,14 +104,17 @@ switch ($mode)
 {
 	case 'medium':
 		$image_source = $phpbb_root_path . GALLERY_MEDIUM_PATH  . $image_data['image_filename'];
+		$image_source_path = $phpbb_root_path . GALLERY_MEDIUM_PATH;
 		$possible_watermark = true;
 	break;
 	case 'thumbnail':
 		$image_source = $phpbb_root_path . GALLERY_CACHE_PATH  . $image_data['image_filename'];
+		$image_source_path = $phpbb_root_path . GALLERY_CACHE_PATH;
 		$possible_watermark = false;
 	break;
 	default:
 		$image_source = $phpbb_root_path . GALLERY_UPLOAD_PATH  . $image_data['image_filename'];
+		$image_source_path = $phpbb_root_path . GALLERY_UPLOAD_PATH;
 		$possible_watermark = true;
 
 		// Increase the view count only for full images.
@@ -116,6 +123,18 @@ switch ($mode)
 			WHERE image_id = ' . $image_id;
 		$db->sql_query($sql);
 	break;
+}
+
+// There was a reason to not display the image, so we send an error-image
+if ($image_error)
+{
+	$image_data['image_filename'] = $user->data['user_lang'] . '_' . $image_error;
+	if (!file_exists($image_source_path . $image_data['image_filename']))
+	{
+		$image_data['image_filename'] = $image_error;
+	}
+	$image_source = $image_source_path . $image_data['image_filename'];
+	$possible_watermark = false;
 }
 
 /**

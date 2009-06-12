@@ -60,7 +60,8 @@ if (!file_exists($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_fil
 		SET image_filemissing = 1
 		WHERE image_id = ' . $image_id;
 	$db->sql_query($sql);
-	trigger_error('IMAGE_NOT_EXIST');
+	// Since we display error-images, we still view this page!
+	//trigger_error('IMAGE_NOT_EXIST');
 }
 
 /**

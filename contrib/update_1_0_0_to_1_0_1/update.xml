@@ -47,6 +47,8 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 					<change><![CDATA[[Fix] White page on uploading, when exif is not installed on the server (Bug #551)]]></change>
 					<change><![CDATA[[Fix] Cannot redeclare user_get_id_name() when guests upload or comment (Bug #550)]]></change>
 					<change><![CDATA[[Fix] PHP Notice: in file /gallery/includes/functions_recent.php on line 314: Division by zero (Bug #549)]]></change>
+
+					<change><![CDATA[[Feature] View an image with the error message instead of trigger_error (Bug #554)]]></change>
 				</changelog>
 			</entry>
 		</history>
@@ -71,7 +73,12 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 	<action-group>
 		<copy>
+			<file from="root/gallery/image.php" to="gallery/image.php" />
+			<file from="root/gallery/image_page.php" to="gallery/image_page.php" />
 			<file from="root/gallery/posting.php" to="gallery/posting.php" />
+			<file from="root/gallery/images/upload/image_not_exist.jpg" to="gallery/images/upload/image_not_exist.jpg" />
+			<file from="root/gallery/images/upload/no_hotlinking.jpg" to="gallery/images/upload/no_hotlinking.jpg" />
+			<file from="root/gallery/images/upload/not_authorised.jpg" to="gallery/images/upload/not_authorised.jpg" />
 			<file from="root/gallery/includes/functions_recent.php" to="gallery/includes/functions_recent.php" />
 			<file from="root/gallery/includes/functions_posting.php" to="gallery/includes/functions_posting.php" />
 			<file from="root/includes/acp/acp_gallery.php" to="includes/acp/acp_gallery.php" />

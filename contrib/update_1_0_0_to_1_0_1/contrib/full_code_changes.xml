@@ -46,6 +46,79 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 	</header>
 
 	<action-group>
+		<open src="gallery/image.php">
+			<edit>
+				<find><![CDATA[$user_id = $image_data['image_user_id'];]]></find>
+				<action type="after-add"><![CDATA[$image_error = '';]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	trigger_error('IMAGE_NOT_EXIST');]]></find>
+				<action type="replace-with"><![CDATA[	//trigger_error('IMAGE_NOT_EXIST');
+	$image_error = 'image_not_exist.jpg';]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	trigger_error('NOT_AUTHORISED');]]></find>
+				<action type="replace-with"><![CDATA[	//trigger_error('NOT_AUTHORISED');
+	$image_error = 'not_authorised.jpg';]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[		trigger_error('NOT_AUTHORISED');]]></find>
+				<action type="replace-with"><![CDATA[		//trigger_error('NOT_AUTHORISED');
+		$image_error = 'no_hotlinking.jpg';]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	case 'medium':
+		$image_source = $phpbb_root_path . GALLERY_MEDIUM_PATH  . $image_data['image_filename'];
+		$possible_watermark = true;
+	break;
+	case 'thumbnail':
+		$image_source = $phpbb_root_path . GALLERY_CACHE_PATH  . $image_data['image_filename'];
+		$possible_watermark = false;
+	break;
+	default:
+		$image_source = $phpbb_root_path . GALLERY_UPLOAD_PATH  . $image_data['image_filename'];
+		$possible_watermark = true;]]></find>
+				<action type="replace-with"><![CDATA[	case 'medium':
+		$image_source = $phpbb_root_path . GALLERY_MEDIUM_PATH  . $image_data['image_filename'];
+		$image_source_path = $phpbb_root_path . GALLERY_MEDIUM_PATH;
+		$possible_watermark = true;
+	break;
+	case 'thumbnail':
+		$image_source = $phpbb_root_path . GALLERY_CACHE_PATH  . $image_data['image_filename'];
+		$image_source_path = $phpbb_root_path . GALLERY_CACHE_PATH;
+		$possible_watermark = false;
+	break;
+	default:
+		$image_source = $phpbb_root_path . GALLERY_UPLOAD_PATH  . $image_data['image_filename'];
+		$image_source_path = $phpbb_root_path . GALLERY_UPLOAD_PATH;
+		$possible_watermark = true;]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[/**
+* Generate the sourcefile, if it's missing
+*/]]></find>
+				<action type="before-add"><![CDATA[// There was a reason to not display the image, so we send an error-image
+if ($image_error)
+{
+	$image_data['image_filename'] = $user->data['user_lang'] . '_' . $image_error;
+	if (!file_exists($image_source_path . $image_data['image_filename']))
+	{
+		$image_data['image_filename'] = $image_error;
+	}
+	$image_source = $image_source_path . $image_data['image_filename'];
+	$possible_watermark = false;
+}]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/image_page.php">
+			<edit>
+				<find><![CDATA[	trigger_error('IMAGE_NOT_EXIST');]]></find>
+				<action type="replace-with"><![CDATA[	// Since we display error-images, we still view this page!
+	//trigger_error('IMAGE_NOT_EXIST');]]></action>
+			</edit>
+		</open>
+
 		<open src="gallery/posting.php">
 			<edit>
 				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
