@@ -167,6 +167,7 @@ $template->assign_vars(array(
 	'IMAGE_NAME'		=> $image_data['image_name'],
 	'IMAGE_DESC'		=> generate_text_for_display($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], 7),
 	'IMAGE_BBCODE'		=> '[album]' . $image_id . '[/album]',
+	'IMAGE_IMGURL_BBCODE'	=> ($gallery_config['view_image_url']) ? '[url=' . generate_board_url(false) . '/' . $gallery_root_path . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id" . '][img]' . generate_board_url(false) . '/' . $gallery_root_path . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id&amp;mode=thumbnail" . '[/img][/url]' : '',
 	'IMAGE_URL'			=> ($gallery_config['view_image_url']) ? generate_board_url(false) . '/' . $gallery_root_path . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id" : '',
 	'POSTER'			=> (gallery_acl_check('m_status', $album_id) || ($image_data['image_contest'] != IMAGE_CONTEST)) ? get_username_string('full', $image_data['image_user_id'], ($image_data['image_username']) ? $image_data['image_username'] : $user->lang['GUEST'], $image_data['image_user_colour']) : sprintf($user->lang['CONTEST_USERNAME_LONG'], $user->format_date(($album_data['contest_start'] + $album_data['contest_end']), false, true)),
 	'IMAGE_TIME'		=> $user->format_date($image_data['image_time']),

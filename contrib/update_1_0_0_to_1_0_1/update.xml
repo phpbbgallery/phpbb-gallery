@@ -51,6 +51,9 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 					<change><![CDATA[[Fix] Cannot redeclare user_get_id_name() when guests upload or comment (Bug #550)]]></change>
 					<change><![CDATA[[Fix] PHP Notice: in file /gallery/includes/functions_recent.php on line 314: Division by zero (Bug #549)]]></change>
 
+					<change><![CDATA[[Change] Move image-description into seperated block for style line.]]></change>
+
+					<change><![CDATA[[Feature] [url][img]-BBCode on image_page.php for posting in other forums]]></change>
 					<change><![CDATA[[Feature] View an image with the error message instead of trigger_error (Bug #554)]]></change>
 				</changelog>
 			</entry>
@@ -91,6 +94,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<file from="root/install/*.*" to="install/*.*" />
 			<file from="root/styles/prosilver/template/gallery/recent_body.html" to="styles/prosilver/template/gallery/recent_body.html" />
 			<file from="root/styles/prosilver/template/gallery/search_results.html" to="styles/prosilver/template/gallery/search_results.html" />
+			<file from="root/styles/prosilver/template/gallery/viewimage_body.html" to="styles/prosilver/template/gallery/viewimage_body.html" />
 		</copy>
 
 		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus

@@ -42,6 +42,7 @@
 		<copy>
 			<file from="root/styles/subsilver2/template/gallery/recent_body.html" to="styles/subsilver2/template/gallery/recent_body.html" />
 			<file from="root/styles/subsilver2/template/gallery/search_results.html" to="styles/subsilver2/template/gallery/search_results.html" />
+			<file from="root/styles/subsilver2/template/gallery/viewimage_body.html" to="styles/subsilver2/template/gallery/viewimage_body.html" />
 		</copy>
 
 		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus

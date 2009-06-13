@@ -151,6 +151,10 @@ if (isset($user->data['session_page']) && !$user->data['is_bot'] && (strpos($use
 				<find><![CDATA['UC_IMAGE'			=> generate_image_link('medium', $gallery_config['link_imagepage'], $image_id, $image_data['image_name'], $album_id, ((substr($image_data['image_filename'], 0 -3) == 'gif') ? true : false)),]]></find>
 				<action type="replace-with"><![CDATA['UC_IMAGE'			=> generate_image_link('medium', $gallery_config['link_imagepage'], $image_id, $image_data['image_name'], $album_id, ((substr($image_data['image_filename'], 0 -3) == 'gif') ? true : false), false),]]></action>
 			</edit>
+			<edit>
+				<find><![CDATA['IMAGE_BBCODE'		=> '[album]' . $image_id . '[/album]',]]></find>
+				<action type="after-add"><![CDATA['IMAGE_IMGURL_BBCODE'	=> ($gallery_config['view_image_url']) ? '[url=' . generate_board_url(false) . '/' . $gallery_root_path . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id" . '][img]' . generate_board_url(false) . '/' . $gallery_root_path . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id&amp;mode=thumbnail" . '[/img][/url]' : '',]]></action>
+			</edit>
 		</open>
 
 		<open src="gallery/posting.php">
@@ -374,6 +378,38 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 			</edit>
 		</open>
 
+		<open src="styles/prosilver/template/gallery/viewimage_body.html">
+			<edit>
+				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+				<comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
+				<find><![CDATA[			<!-- IF IMAGE_DESC -->
+				<dl>
+					<dt><label>{L_IMAGE_DESC}:</label></dt>
+					<dd><div class="postbody"><div class="content">{IMAGE_DESC}</div></div></dd>
+				</dl>
+			<!-- ENDIF -->]]></find>
+				<action type="replace-with"><![CDATA[]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[<dd><input type="text" size="28" value="{IMAGE_BBCODE}" class="inputbox autowidth" onclick="this.focus();this.select();" /></dd>]]></find>
+				<action type="after-add"><![CDATA[				<!-- IF IMAGE_IMGURL_BBCODE -->
+					<dd><input type="text" size="28" value="{IMAGE_IMGURL_BBCODE}" class="inputbox autowidth" onclick="this.focus();this.select();" /></dd>
+				<!-- ENDIF -->]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[<!-- IF .exif_value -->]]></find>
+				<action type="before-add"><![CDATA[<!-- IF IMAGE_DESC -->
+	<div id="details" class="panel">
+		<div class="inner"><span class="corners-top"><span></span></span>
+			<h3>{L_IMAGE_DESC}</h3>
+			<div class="postbody" style="width: 100%"><div class="content">{IMAGE_DESC}</div></div>
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+<!-- ENDIF -->
+]]></action>
+			</edit>
+		</open>
+
 		<open src="styles/subsilver2/template/gallery/recent_body.html">
 			<edit>
 				<find><![CDATA[<!-- IF imageblock.imagerow.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{imageblock.imagerow.image.U_ALBUM}" style="font-weight: bold;">{imageblock.imagerow.image.ALBUM_NAME}</a><br /><!-- ENDIF -->]]></find>
@@ -385,6 +421,14 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 			<edit>
 				<find><![CDATA[<!-- IF imagerow.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{imagerow.image.U_ALBUM}" style="font-weight: bold;">{imagerow.image.ALBUM_NAME}</a><br /><!-- ENDIF -->]]></find>
 				<action type="replace-with"><![CDATA[<!-- IF imagerow.image.U_ALBUM -->{L_ALBUM_NAME}: <a href="{imagerow.image.U_ALBUM}" style="font-weight: bold;" title="{imagerow.image.ALBUM_NAME_FULL}">{imagerow.image.ALBUM_NAME}</a><br /><!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/subsilver2/template/gallery/viewimage_body.html">
+			<edit>
+				<find><![CDATA[<td><span class="genmed"><input type="text" size="28" value="{IMAGE_BBCODE}" class="inputbox autowidth" onclick="this.focus();this.select();" /></span></td>]]></find>
+				<action type="replace-with"><![CDATA[		<td><span class="genmed"><input type="text" size="28" value="{IMAGE_BBCODE}" class="inputbox autowidth" onclick="this.focus();this.select();" /></span><!-- IF IMAGE_IMGURL_BBCODE --><br />
+			<span class="genmed"><input type="text" size="28" value="{IMAGE_IMGURL_BBCODE}" class="inputbox autowidth" onclick="this.focus();this.select();" /></span><!-- ENDIF --></td>]]></action>
 			</edit>
 		</open>
 

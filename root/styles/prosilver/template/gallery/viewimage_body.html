@@ -53,15 +53,12 @@ function checkRateForm() {
 				<dt><label>{L_IMAGE_NAME}:</label></dt>
 				<dd>{IMAGE_NAME}</dd>
 			</dl>
-			<!-- IF IMAGE_DESC -->
-				<dl>
-					<dt><label>{L_IMAGE_DESC}:</label></dt>
-					<dd><div class="postbody"><div class="content">{IMAGE_DESC}</div></div></dd>
-				</dl>
-			<!-- ENDIF -->
 			<dl>
 				<dt><label>{L_IMAGE_BBCODE}:</label></dt>
 				<dd><input type="text" size="28" value="{IMAGE_BBCODE}" class="inputbox autowidth" onclick="this.focus();this.select();" /></dd>
+				<!-- IF IMAGE_IMGURL_BBCODE -->
+					<dd><input type="text" size="28" value="{IMAGE_IMGURL_BBCODE}" class="inputbox autowidth" onclick="this.focus();this.select();" /></dd>
+				<!-- ENDIF -->
 			</dl>
 			<!-- IF IMAGE_URL -->
 				<dl>
@@ -86,6 +83,15 @@ function checkRateForm() {
 		</fieldset>
 	<span class="corners-bottom"><span></span></span></div>
 </div>
+
+<!-- IF IMAGE_DESC -->
+	<div id="details" class="panel">
+		<div class="inner"><span class="corners-top"><span></span></span>
+			<h3>{L_IMAGE_DESC}</h3>
+			<div class="postbody" style="width: 100%"><div class="content">{IMAGE_DESC}</div></div>
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+<!-- ENDIF -->
 
 <!-- IF .exif_value -->
 <script type="text/javascript">
