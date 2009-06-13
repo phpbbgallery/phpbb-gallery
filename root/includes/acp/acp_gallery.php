@@ -1166,7 +1166,8 @@ class acp_gallery
 
 		$sql = 'SELECT ga.album_user_id, ga.album_images_real
 			FROM ' . GALLERY_ALBUMS_TABLE . ' ga
-			WHERE ga.album_user_id <> 0';
+			WHERE ga.album_user_id <> 0
+				AND ga.parent_id <> 0';
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{

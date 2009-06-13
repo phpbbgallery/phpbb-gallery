@@ -362,6 +362,17 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 						$exif = @exif_read_data($image_file->destination_file, 0, true);
 					}]]></action>
 			</edit>
+			<edit>
+				<find><![CDATA[		$sql = 'SELECT ga.album_user_id, ga.album_images_real
+			FROM ' . GALLERY_ALBUMS_TABLE . ' ga
+			WHERE ga.album_user_id <> 0';
+		$result = $db->sql_query($sql);]]></find>
+				<action type="replace-with"><![CDATA[		$sql = 'SELECT ga.album_user_id, ga.album_images_real
+			FROM ' . GALLERY_ALBUMS_TABLE . ' ga
+			WHERE ga.album_user_id <> 0
+				AND ga.parent_id <> 0';
+		$result = $db->sql_query($sql);]]></action>
+			</edit>
 		</open>
 
 		<open src="styles/prosilver/template/gallery/recent_body.html">

@@ -42,6 +42,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<date>2009-MM-DD</date>
 				<rev-version>1.0.1</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Images of personal parent album are counted doubled on CleanUp]]></change>
 					<change><![CDATA[[Fix] Views from image_page.php are not counting correctly (Bug #548)]]></change>
 					<change><![CDATA[[Fix] Shortend albumname is not viewed in full length on hover (Bug #555)]]></change>
 					<change><![CDATA[[Fix] "undefined index" when album was deleted and user is viewed as visiting on viewonline (Bug #553)]]></change>
@@ -51,7 +52,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 					<change><![CDATA[[Fix] Cannot redeclare user_get_id_name() when guests upload or comment (Bug #550)]]></change>
 					<change><![CDATA[[Fix] PHP Notice: in file /gallery/includes/functions_recent.php on line 314: Division by zero (Bug #549)]]></change>
 
-					<change><![CDATA[[Change] Move image-description into seperated block for style line.]]></change>
+					<change><![CDATA[[Change] Move image-description into seperated block for style line]]></change>
 
 					<change><![CDATA[[Feature] [url][img]-BBCode on image_page.php for posting in other forums]]></change>
 					<change><![CDATA[[Feature] View an image with the error message instead of trigger_error (Bug #554)]]></change>
