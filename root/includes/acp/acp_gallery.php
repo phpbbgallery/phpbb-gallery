@@ -555,7 +555,8 @@ class acp_gallery
 						$sql_ary['image_has_exif'] = EXIF_AVAILABLE;
 						$sql_ary['image_exif_data'] = '';
 					}
-					$sql_ary['filesize_upload'] = filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
+					// Try to get real filesize from temporary folder (not always working) ;)
+					$sql_ary['filesize_upload'] = (@filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename)) ? @filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename) : 0;
 
 					if ($filename || ($image_name == ''))
 					{

@@ -363,6 +363,11 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 					}]]></action>
 			</edit>
 			<edit>
+				<find><![CDATA[$sql_ary['filesize_upload'] = filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);]]></find>
+				<action type="replace-with"><![CDATA[					// Try to get real filesize from temporary folder (not always working) ;)
+					$sql_ary['filesize_upload'] = (@filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename)) ? @filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename) : 0;]]></action>
+			</edit>
+			<edit>
 				<find><![CDATA[		$sql = 'SELECT ga.album_user_id, ga.album_images_real
 			FROM ' . GALLERY_ALBUMS_TABLE . ' ga
 			WHERE ga.album_user_id <> 0';
