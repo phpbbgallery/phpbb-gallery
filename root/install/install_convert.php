@@ -40,6 +40,8 @@ if (!empty($setmodules))
 */
 class install_convert extends module
 {
+	var $batch_size = 500;
+
 	function install_convert(&$p_master)
 	{
 		$this->p_master = &$p_master;
@@ -328,7 +330,10 @@ class install_convert extends module
 		switch ($step)
 		{
 			case 0:
-				$rate_ary = array();
+				$batch_ary = array();
+				$current_batch = 1;
+				$current_batch_size = 1;
+
 				$sql = 'SELECT *
 					FROM ' . $convert_prefix . 'album_rate
 					ORDER BY rate_pic_id';
@@ -336,29 +341,44 @@ class install_convert extends module
 
 				while ($row = $db->sql_fetchrow($result))
 				{
-					$rate_ary[] = array(
+					$ary = array(
 						'rate_image_id'					=> $row['rate_pic_id'],
 						'rate_user_id'					=> ($row['rate_user_id'] < 0) ? ANONYMOUS : $row['rate_user_id'],
 						'rate_user_ip'					=> decode_ip($row['rate_user_ip']),
 						'rate_point'					=> $row['rate_point'],
 					);
+					$batch_ary[$current_batch][] = $ary;
+
+					$current_batch_size++;
+					if ($current_batch_size = $this->batch_size)
+					{
+						$current_batch_size = 1;
+						$current_batch++;
+					}
 				}
 				$db->sql_freeresult($result);
 
-				$db->sql_multi_insert(GALLERY_RATES_TABLE, $rate_ary);
+				foreach ($batch_ary as $batch => $ary)
+				{
+					$db->sql_multi_insert(GALLERY_RATES_TABLE, $ary);
+				}
 
 				$body = $user->lang['CONVERTED_RATES'];
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=1";
 			break;
 
 			case 1:
-				$comment_ary = array();
+				$batch_ary = array();
+				$current_batch = 1;
+				$current_batch_size = 1;
+
 				$sql = 'SELECT c.*, u.user_colour
 					FROM ' . $convert_prefix . 'album_comment c
 					LEFT JOIN ' . USERS_TABLE . ' u
 						ON c.comment_user_id = u.user_id
 					ORDER BY c.comment_id';
 				$result = $db->sql_query($sql);
+
 				while ($row = $db->sql_fetchrow($result))
 				{
 					$row['comment_uid'] = $row['comment_options'] = $row['comment_bitfield'] = '';
@@ -383,11 +403,21 @@ class install_convert extends module
 					generate_text_for_storage($comment_data['comment'], $comment_data['comment_uid'], $comment_data['comment_bitfield'], $comment_data['comment_options'], 1, 1, 1);
 					unset($comment_data['comment_options']);
 
-					$comment_ary[] = $comment_data;
+					$batch_ary[$current_batch][] = $comment_data;
+
+					$current_batch_size++;
+					if ($current_batch_size = $this->batch_size)
+					{
+						$current_batch_size = 1;
+						$current_batch++;
+					}
 				}
 				$db->sql_freeresult($result);
 
-				$db->sql_multi_insert(GALLERY_COMMENTS_TABLE, $comment_ary);
+				foreach ($batch_ary as $batch => $ary)
+				{
+					$db->sql_multi_insert(GALLERY_COMMENTS_TABLE, $ary);
+				}
 
 				$body = $user->lang['CONVERTED_COMMENTS'];
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=2";
@@ -396,10 +426,15 @@ class install_convert extends module
 			case 2:
 				$personal_albums = '0';
 				$left_id = 1;
+				$batch_ary = array();
+				$current_batch = 1;
+				$current_batch_size = 1;
+
 				$sql = 'SELECT *
 					FROM ' . $convert_prefix . 'album_cat
 					ORDER BY cat_order';
 				$result = $db->sql_query($sql);
+
 				while ($row = $db->sql_fetchrow($result))
 				{
 					$row['cat_user_id'] = (isset($row['cat_user_id']) ? $row['cat_user_id'] : 0);
@@ -427,13 +462,24 @@ class install_convert extends module
 							'album_desc_options'			=> 7,
 						);
 						generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], true, true, true);
-						$album_ary[] = $album_data;
 						$left_id = $left_id + 2;
+
+						$batch_ary[$current_batch][] = $album_data;
+
+						$current_batch_size++;
+						if ($current_batch_size = $this->batch_size)
+						{
+							$current_batch_size = 1;
+							$current_batch++;
+						}
 					}
 				}
 				$db->sql_freeresult($result);
 
-				$db->sql_multi_insert(GALLERY_ALBUMS_TABLE, $album_ary);
+				foreach ($batch_ary as $batch => $ary)
+				{
+					$db->sql_multi_insert(GALLERY_ALBUMS_TABLE, $ary);
+				}
 
 				$body = $user->lang['CONVERTED_ALBUMS'];
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=3&amp;personal_albums=$personal_albums";
@@ -441,12 +487,17 @@ class install_convert extends module
 
 			case 3:
 				$personal_albums = explode('_', request_var('personal_albums', ''));
+				$batch_ary = array();
+				$current_batch = 1;
+				$current_batch_size = 1;
+
 				$sql = 'SELECT i.*, u.user_colour, u.username
 					FROM ' . $convert_prefix . 'album i
 					LEFT JOIN ' . USERS_TABLE . ' u
 						ON i.pic_user_id = u.user_id
 					ORDER BY i.pic_id';
 				$result = $db->sql_query($sql);
+
 				while ($row = $db->sql_fetchrow($result))
 				{
 					$row['image_desc_uid'] = $row['image_desc_options'] = $row['image_desc_bitfield'] = '';
@@ -474,11 +525,21 @@ class install_convert extends module
 					);
 					generate_text_for_storage($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], $image_data['image_desc_options'], true, true, true);
 					unset($image_data['image_desc_options']);
-					$image_ary[] = $image_data;
+					$batch_ary[$current_batch][] = $image_data;
+
+					$current_batch_size++;
+					if ($current_batch_size = $this->batch_size)
+					{
+						$current_batch_size = 1;
+						$current_batch++;
+					}
 				}
 				$db->sql_freeresult($result);
 
-				$db->sql_multi_insert(GALLERY_IMAGES_TABLE, $image_ary);
+				foreach ($batch_ary as $batch => $ary)
+				{
+					$db->sql_multi_insert(GALLERY_IMAGES_TABLE, $ary);
+				}
 
 				$body = $user->lang['CONVERTED_IMAGES'];
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=4";
@@ -486,11 +547,16 @@ class install_convert extends module
 
 			case 4:
 				$personal_albums = 0;
+				$batch_ary = array();
+				$current_batch = 1;
+				$current_batch_size = 1;
+
 				$sql = 'SELECT i.image_id, i.image_username, image_user_id
 					FROM ' . GALLERY_IMAGES_TABLE . " AS i
 					WHERE image_album_id = 0
 					GROUP BY i.image_user_id DESC";
 				$result = $db->sql_query($sql);
+
 				while ($row = $db->sql_fetchrow($result))
 				{
 					$album_data = array(
@@ -511,7 +577,14 @@ class install_convert extends module
 						'personal_album_id'		=> $new_personal_album_id,
 						'user_id'				=> $row['image_user_id'],
 					);
-					$user_ary[] = $user_data;
+					$batch_ary[$current_batch][] = $user_data;
+
+					$current_batch_size++;
+					if ($current_batch_size = $this->batch_size)
+					{
+						$current_batch_size = 1;
+						$current_batch++;
+					}
 
 					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " 
 							SET image_album_id = $new_personal_album_id
@@ -521,9 +594,12 @@ class install_convert extends module
 				}
 				$db->sql_freeresult($result);
 
-				if (sizeof($user_ary))
+				if (sizeof($batch_ary))
 				{
-					$db->sql_multi_insert(GALLERY_USERS_TABLE, $user_ary);
+					foreach ($batch_ary as $batch => $ary)
+					{
+						$db->sql_multi_insert(GALLERY_USERS_TABLE, $ary);
+					}
 				}
 
 				// Update the config for the statistic on the index
@@ -614,7 +690,10 @@ class install_convert extends module
 
 			case 6:
 				$num_images = 0;
-				$user_ary = array();
+				$batch_ary = array();
+				$current_batch = 1;
+				$current_batch_size = 1;
+
 				$sql = 'SELECT u.user_id, COUNT(i.image_id) AS images
 					FROM ' . USERS_TABLE . ' u
 					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
@@ -630,17 +709,27 @@ class install_convert extends module
 					$db->sql_query($sql);
 					if ($db->sql_affectedrows() <= 0)
 					{
-						$sql_ary = array(
+						$ary = array(
 							'user_id'				=> $row['user_id'],
 							'user_images'			=> $row['images'],
 						);
-						$user_ary[] = $sql_ary;
+						$batch_ary[$current_batch][] = $ary;
+
+						$current_batch_size++;
+						if ($current_batch_size = $this->batch_size)
+						{
+							$current_batch_size = 1;
+							$current_batch++;
+						}
 					}
 				}
 				$db->sql_freeresult($result);
-				if (sizeof($user_ary))
+				if (sizeof($batch_ary))
 				{
-					$db->sql_multi_insert(GALLERY_USERS_TABLE, $user_ary);
+					foreach ($batch_ary as $batch => $ary)
+					{
+						$db->sql_multi_insert(GALLERY_IMAGES_TABLE, $ary);
+					}
 				}
 				set_config('num_images', $num_images, true);
 
