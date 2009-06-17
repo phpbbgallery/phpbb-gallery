@@ -355,6 +355,22 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 
 		<open src="includes/acp/acp_gallery.php">
 			<edit>
+				<find><![CDATA[// Hopefully this won't take to long! >> I think we must make it bunchwise]]></find>
+				<action type="replace-with"><![CDATA[// Hopefully this won't take to long! >> I think we must make it batchwise]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					$move_file = (@ini_get('open_basedir') <> '') ? 'move_uploaded_file' : 'copy';
+					$move_file($image_src_full, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);]]></find>
+				<action type="replace-with"><![CDATA[					if (!@move_uploaded_file($image_src_full, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename))
+					{
+						if (!@copy($image_src_full, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename))
+						{
+							$user->add_lang('posting');
+							trigger_error(sprintf($user->lang['GENERAL_UPLOAD_ERROR'], $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename), E_USER_WARNING);
+						}
+					}]]></action>
+			</edit>
+			<edit>
 				<find><![CDATA[$exif = @exif_read_data($image_file->destination_file, 0, true);]]></find>
 				<action type="replace-with"><![CDATA[					$exif = array();
 					if (function_exists('exif_read_data'))

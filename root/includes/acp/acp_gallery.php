@@ -235,7 +235,7 @@ class acp_gallery
 						trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 
-					// Hopefully this won't take to long! >> I think we must make it bunchwise
+					// Hopefully this won't take to long! >> I think we must make it batchwise
 					$sql = 'SELECT image_id, image_filename, image_thumbnail
 						FROM ' . GALLERY_IMAGES_TABLE . '
 						WHERE filesize_upload = 0';
@@ -453,8 +453,14 @@ class acp_gallery
 					}
 					$image_filename = md5(unique_id()) . $filetype_ext;
 
-					$move_file = (@ini_get('open_basedir') <> '') ? 'move_uploaded_file' : 'copy';
-					$move_file($image_src_full, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
+					if (!@move_uploaded_file($image_src_full, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename))
+					{
+						if (!@copy($image_src_full, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename))
+						{
+							$user->add_lang('posting');
+							trigger_error(sprintf($user->lang['GENERAL_UPLOAD_ERROR'], $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename), E_USER_WARNING);
+						}
+					}
 					@chmod($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename, 0777);
 					// The source image is imported, so we delete it.
 					@unlink($image_src_full);
