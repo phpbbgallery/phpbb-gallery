@@ -153,7 +153,7 @@ function gallery_notification($mode, $handle_id, $image_name)
 		FROM ' . GALLERY_PERMISSIONS_TABLE . ' as p
 		LEFT JOIN ' .  GALLERY_ROLES_TABLE .  ' as pr
 			ON p.perm_role_id = pr.role_id
-		WHERE ' . (($album['album_user_id'] == 0) ? 'p.perm_album_id = ' . $album_id : 'p.perm_system <> 0') . '
+		WHERE ' . (($album['album_user_id'] == NON_PERSONAL_ALBUMS) ? 'p.perm_album_id = ' . $album_id : 'p.perm_system <> ' . NON_PERSONAL_PERMISSIONS) . '
 		ORDER BY pr.i_view ASC';
 	$result = $db->sql_query($sql);
 	while ($row = $db->sql_fetchrow($result))

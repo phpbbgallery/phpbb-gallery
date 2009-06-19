@@ -165,7 +165,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 		else
 		{
 			$search_terms = 'all';
-			$keywords = implode(' |', explode(' ', preg_replace('#\s+#u', ' ', $keywords))) . ' ' .$add_keywords;
+			$keywords = preg_replace('#\s+#u', ' |', $keywords) . ' ' .$add_keywords;
 		}
 	}
 	$keywords_ary = explode(' ', $keywords);
@@ -192,7 +192,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				$search_results = 'image';
 
 				$sql_order = 'image_id DESC';
-				$sql_limit = 10 * $per_page;
+				$sql_limit = SEARCH_PAGES_NUMBER * $per_page;
 				$sql = 'SELECT image_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
 					WHERE ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status <> ' . IMAGE_UNAPPROVED . ')
@@ -244,7 +244,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				$search_results = 'comment';
 
 				$sql_order = 'c.comment_id DESC';
-				$sql_limit = 10 * $per_page;
+				$sql_limit = SEARCH_PAGES_NUMBER * $per_page;
 				$sql = 'SELECT c.comment_id
 					FROM ' . GALLERY_COMMENTS_TABLE . ' c
 					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
@@ -268,7 +268,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				$search_results = 'image';
 
 				$sql_order = 'image_rate_avg DESC';
-				$sql_limit = 10 * $per_page;
+				$sql_limit = SEARCH_PAGES_NUMBER * $per_page;
 				// We need to hide contest-images on this search_id, if the contest is still running!
 				$sql = 'SELECT image_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
@@ -291,8 +291,8 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				$search_results = 'image';
 
 				$sql_order = 'image_contest_end DESC, image_contest_rank ASC';
-				$per_page = (3 * $gallery_config['rows_per_page']);
-				$sql_limit = 100 * $per_page;
+				$per_page = (CONTEST_IMAGES * $gallery_config['rows_per_page']);
+				$sql_limit = SEARCH_PAGES_NUMBER * $per_page;
 
 				$sql = 'SELECT image_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
@@ -349,7 +349,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 
 		$search_results = 'image';
 
-		$sql_limit = 10 * $per_page;
+		$sql_limit = SEARCH_PAGES_NUMBER * $per_page;
 		$sql_match = 'i.image_name';
 		$sql_where_options = '';
 
@@ -476,14 +476,14 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				include($phpbb_root_path . $gallery_root_path . 'includes/functions_display.' . $phpEx);
 			}
 
-			$columns_per_page = ($search_id == 'contests') ? 3 : $gallery_config['cols_per_page'];
-			for ($i = 0; $i < count($rowset); $i += $columns_per_page)
+			$columns_per_page = ($search_id == 'contests') ? CONTEST_IMAGES : $gallery_config['cols_per_page'];
+			for ($i = 0, $end = count($rowset); $i < $end; $i += $columns_per_page)
 			{
 				$template->assign_block_vars('imagerow', array());
 
-				for ($j = $i; $j < ($i + $columns_per_page); $j++)
+				for ($j = $i, $end_columns = ($i + $columns_per_page); $j < $end_columns; $j++)
 				{
-					if ($j >= count($rowset))
+					if ($j >= $end)
 					{
 						$template->assign_block_vars('imagerow.noimage', array());
 						continue;

@@ -303,7 +303,7 @@ class ucp_gallery
 		}
 		$db->sql_freeresult($result);
 
-		for ($i = 0; $i < count($album); $i++)
+		for ($i = 0, $end = count($album); $i < $end; $i++)
 		{
 			$folder_img = ($album[$i]['left_id'] + 1 != $album[$i]['right_id']) ? 'forum_read_subforum' : 'forum_read';
 			$template->assign_block_vars('album_row', array(
@@ -650,7 +650,7 @@ class ucp_gallery
 			}
 			$db->sql_freeresult($result);
 
-			for ($i = 0; $i < count($album); $i++)
+			for ($i = 0, $end = count($album); $i < $end; $i++)
 			{
 				if (($left_id <= $album[$i]['left_id']) && ($album[$i]['left_id'] <= $right_id))
 				{
@@ -734,7 +734,7 @@ class ucp_gallery
 							FROM ' . GALLERY_ALBUMS_TABLE . ' a
 							LEFT JOIN ' . USERS_TABLE . ' u
 								ON u.user_id = a.album_user_id
-							WHERE a.album_user_id <> 0
+							WHERE a.album_user_id <> ' . NON_PERSONAL_ALBUMS . '
 								AND a.parent_id = 0
 							ORDER BY a.album_id DESC';
 						$result = $db->sql_query_limit($sql, 1);

@@ -50,17 +50,18 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 
 	if (!$root_data)
 	{
-		$root_data = array('album_id' => 0);
-		$sql_where = 'a.album_user_id = 0';
+		$root_data = array('album_id' => NON_PERSONAL_ALBUMS);
+		$sql_where = 'a.album_user_id = ' . NON_PERSONAL_ALBUMS;
 	}
 	else if ($root_data == 'personal')
 	{
-		$root_data = array('album_id' => 0);
-		$sql_where = 'a.album_user_id > 0';
+		$root_data = array('album_id' => 0);//@todo: I think this is incorrect!?
+		$sql_where = 'a.album_user_id > ' . NON_PERSONAL_ALBUMS;
 		$num_pgalleries = $gallery_config['personal_counter'];
 		$first_char = request_var('first_char', '');
 		if ($first_char == 'other')
 		{
+			// Loop the ASCII: a-z
 			for ($i = 97; $i < 123; $i++)
 			{
 				$sql_where .= ' AND u.username_clean NOT ' . $db->sql_like_expression(chr($i) . $db->any_char);
@@ -473,7 +474,7 @@ function generate_album_nav(&$album_data)
 	$album_parents = get_album_parents($album_data);
 
 	// Display username for personal albums
-	if ($album_data['album_user_id'] > 0)
+	if ($album_data['album_user_id'] > NON_PERSONAL_ALBUMS)
 	{
 		$sql = 'SELECT user_id, username, user_colour
 			FROM ' . USERS_TABLE . '
@@ -681,7 +682,7 @@ function assign_image_block($template_block, &$image_data, $album_status, $displ
 		'S_LOCKED'		=> ($image_data['image_status'] == IMAGE_LOCKED) ? true : false,
 		'S_REPORTED'	=> (gallery_acl_check('m_report', $image_data['image_album_id']) && $image_data['image_reported']) ? true : false,
 
-		'ALBUM_NAME'		=> ($display & RRC_DISPLAY_ALBUMNAME) ? ((isset($image_data['album_name'])) ? ((utf8_strlen(htmlspecialchars_decode($image_data['album_name'])) > $gallery_config['shorted_imagenames'] + 3 ) ? htmlspecialchars(utf8_substr(htmlspecialchars_decode($image_data['album_name']), 0, $gallery_config['shorted_imagenames']) . '...') : ($image_data['album_name'])) : '') : '',
+		'ALBUM_NAME'		=> ($display & RRC_DISPLAY_ALBUMNAME) ? ((isset($image_data['album_name'])) ? ((utf8_strlen(htmlspecialchars_decode($image_data['album_name'])) > $gallery_config['shorted_imagenames'] + 3) ? htmlspecialchars(utf8_substr(htmlspecialchars_decode($image_data['album_name']), 0, $gallery_config['shorted_imagenames']) . '...') : ($image_data['album_name'])) : '') : '',
 		'ALBUM_NAME_FULL'	=> ($display & RRC_DISPLAY_ALBUMNAME) ? ((isset($image_data['album_name'])) ? $image_data['album_name'] : '') : '',
 		'POSTER'		=> ($display & RRC_DISPLAY_USERNAME) ? (($image_data['image_contest'] && !gallery_acl_check('m_status', $image_data['image_album_id'])) ? $user->lang['CONTEST_USERNAME'] : get_username_string('full', $image_data['image_user_id'], $image_data['image_username'], $image_data['image_user_colour'])) : '',
 		'TIME'			=> ($display & RRC_DISPLAY_IMAGETIME) ? $user->format_date($image_data['image_time']) : '',

@@ -48,8 +48,8 @@ if ($mode == 'whois' && $auth->acl_get('a_') && request_var('ip', ''))
 }
 
 //Basic-Information && Permissions
-$image_id = request_var('image_id',0);
-$album_id = request_var('album_id',0);
+$image_id = request_var('image_id', 0);
+$album_id = request_var('album_id', 0);
 if ($image_id)
 {
 	$image_data = get_image_info($image_id);

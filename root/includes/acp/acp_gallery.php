@@ -181,7 +181,7 @@ class acp_gallery
 
 					$sql = 'SELECT album_id, album_user_id
 						FROM ' . GALLERY_ALBUMS_TABLE . '
-						WHERE album_user_id <> 0
+						WHERE album_user_id <> ' . NON_PERSONAL_ALBUMS . '
 							AND parent_id = 0
 						GROUP BY album_user_id';
 					$result = $db->sql_query($sql);
@@ -213,7 +213,7 @@ class acp_gallery
 						FROM ' . GALLERY_ALBUMS_TABLE . ' a
 						LEFT JOIN ' . USERS_TABLE . ' u
 							ON u.user_id = a.album_user_id
-						WHERE a.album_user_id <> 0
+						WHERE a.album_user_id <> ' . NON_PERSONAL_ALBUMS . '
 							AND a.parent_id = 0
 						ORDER BY a.album_id DESC';
 					$result = $db->sql_query_limit($sql, 1);
@@ -724,8 +724,7 @@ class acp_gallery
 	{
 		global $phpbb_root_path, $phpEx;
 
-		$import_file = "<?php\n\n";
-		$import_file .= "if (!defined('IN_PHPBB'))\n{\n	exit;\n}\n\n";
+		$import_file = "<?php\n\nif (!defined('IN_PHPBB'))\n{\n	exit;\n}\n\n";
 		$import_file .= "\$album_id = " . $album_id . ";\n";
 		$import_file .= "\$start_time = " . $start_time . ";\n";
 		$import_file .= "\$num_offset = " . $num_offset . ";\n";
@@ -750,9 +749,7 @@ class acp_gallery
 		{
 			$import_file .= "	'" . str_replace($replace_chars, $replace_with, $image_src) . "',\n";
 		}
-		$import_file .= ");\n";
-		$import_file .= "\n";
-		$import_file .= '?' . '>';
+		$import_file .= ");\n\n?" . '>'; // Done this to prevent highlighting editors getting confused!
 
 		// Write to disc
 		if ((file_exists($phpbb_root_path . GALLERY_IMPORT_PATH . $import_schema . '.' . $phpEx) && is_writable($phpbb_root_path . GALLERY_IMPORT_PATH . $import_schema . '.' . $phpEx)) || is_writable($phpbb_root_path . GALLERY_IMPORT_PATH))
@@ -941,7 +938,7 @@ class acp_gallery
 							FROM ' . GALLERY_ALBUMS_TABLE . ' a
 							LEFT JOIN ' . USERS_TABLE . ' u
 								ON u.user_id = a.album_user_id
-							WHERE a.album_user_id <> 0
+							WHERE a.album_user_id <> ' . NON_PERSONAL_ALBUMS . '
 								AND a.parent_id = 0
 							ORDER BY a.album_id DESC';
 						$result = $db->sql_query_limit($sql, 1);
@@ -1114,9 +1111,9 @@ class acp_gallery
 			$handle = opendir($directory);
 			while ($file = readdir($handle))
 			{
-				if (!is_dir($directory . "$file") &&
-				((substr(strtolower($file), '-4') == '.png') || (substr(strtolower($file), '-4') == '.gif') || (substr(strtolower($file), '-4') == '.jpg'))
-				&& !in_array($file, $requested_source)
+				if (!is_dir($directory . $file) &&
+				 ((substr(strtolower($file), '-4') == '.png') || (substr(strtolower($file), '-4') == '.gif') || (substr(strtolower($file), '-4') == '.jpg'))
+				 && !in_array($file, $requested_source)
 				)
 				{
 					$template->assign_block_vars('entryrow', array(
@@ -1150,7 +1147,7 @@ class acp_gallery
 			FROM ' . GALLERY_ALBUMS_TABLE . ' ga
 			LEFT JOIN ' . USERS_TABLE . ' u
 				ON u.user_id = ga.album_user_id
-			WHERE ga.album_user_id <> 0
+			WHERE ga.album_user_id <> ' . NON_PERSONAL_ALBUMS . '
 				AND ga.parent_id = 0';
 		$result = $db->sql_query($sql);
 		$personalrow = $personal_bad_row = array();
@@ -1172,7 +1169,7 @@ class acp_gallery
 
 		$sql = 'SELECT ga.album_user_id, ga.album_images_real
 			FROM ' . GALLERY_ALBUMS_TABLE . ' ga
-			WHERE ga.album_user_id <> 0
+			WHERE ga.album_user_id <> ' . NON_PERSONAL_ALBUMS . '
 				AND ga.parent_id <> 0';
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))

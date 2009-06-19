@@ -272,7 +272,7 @@ function gallery_not_authorised($backlink, $user, $loginlink)
 
 
 $bbcode_status	= ($config['allow_bbcode']) ? true : false;
-$smilies_status	= ($bbcode_status && $config['allow_smilies']) ? true : false;
+$smilies_status	= ($config['allow_smilies']) ? true : false;
 $img_status		= ($bbcode_status) ? true : false;
 $url_status		= ($config['allow_post_links']) ? true : false;
 $flash_status	= false;
@@ -1326,7 +1326,7 @@ switch ($mode)
 	break;
 }
 
-if($submit)
+if ($submit)
 {
 	if ($image_id)
 	{

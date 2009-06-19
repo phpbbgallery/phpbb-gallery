@@ -238,7 +238,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 				));
 				foreach ($contest_data['images'] as $contest_image)
 				{
-					if (($num % 3) == 0)
+					if (($num % CONTEST_IMAGES) == 0)
 					{
 						$template->assign_block_vars('imageblock.imagerow', array());
 					}
@@ -248,7 +248,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 						$num++;
 					}
 				}
-				while (($num % 3) > 0)
+				while (($num % CONTEST_IMAGES) > 0)
 				{
 					$template->assign_block_vars('imageblock.imagerow.no_image', array());
 					$num++;
@@ -257,7 +257,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 		}
 
 		$template->assign_vars(array(
-			'S_THUMBNAIL_SIZE'		=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? 16 : 0),
+			'S_THUMBNAIL_SIZE'		=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? THUMBNAIL_INFO_HEIGHT : 0),
 			'S_COL_WIDTH'			=> (100 / $ints['columns']) . '%',
 			'S_COLS'				=> $ints['columns'],
 		));

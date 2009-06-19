@@ -381,7 +381,7 @@ class acp_gallery_config
 		$y_position_options .= '<option' . (($value & WATERMARK_RIGHT) ? ' selected="selected"' : '') . " value='" . WATERMARK_RIGHT . "'>" . $user->lang['WATERMARK_POSITION_RIGHT'] . '</option>';
 
 		// Cheating is an evil-thing, but most times it's successful, that's why it is used.
-		return "<input type=\"hidden\" name=\"config[$key]\" value=\"$value\" /><select name=\"" . $key . "_x\" id=\"" . $key . "_x\">$x_position_options</select><select name=\"" . $key . "_y\" id=\"" . $key . "_y\">$y_position_options</select>";
+		return "<input type='hidden' name='config[$key]' value='$value' /><select name='" . $key . "_x' id='" . $key . "_x'>$x_position_options</select><select name='" . $key . "_y' id='" . $key . "_y'>$y_position_options</select>";
 	}
 
 	/**
@@ -408,8 +408,8 @@ class acp_gallery_config
 		$sort_order_options .= '<option' . (($value == 'image') ? ' selected="selected"' : '') . " value='image'>" . $user->lang['UC_LINK_IMAGE'] . '</option>';
 		$sort_order_options .= '<option' . (($value == 'none') ? ' selected="selected"' : '') . " value='none'>" . $user->lang['UC_LINK_NONE'] . '</option>';
 
-		return "<select name=\"config[$key]\" id=\"$key\">$sort_order_options</select>"
-			. (($key == 'link_thumbnail') ? '<br /><input class="checkbox" checked="checked" type="checkbox" name="update_bbcode" id="update_bbcode" value="update_bbcode" /><label for="update_bbcode">' .  $user->lang['UPDATE_BBCODE'] . '</label>' : '');
+		return "<select name='config[$key]' id='$key'>$sort_order_options</select>"
+			. (($key == 'link_thumbnail') ? '<br /><input class="checkbox" type="checkbox" name="update_bbcode" id="update_bbcode" value="update_bbcode" /><label for="update_bbcode">' .  $user->lang['UPDATE_BBCODE'] . '</label>' : '');
 	}
 
 	/**
@@ -430,7 +430,7 @@ class acp_gallery_config
 		}
 
 		// Cheating is an evil-thing, but most times it's successful, that's why it is used.
-		return "<input type=\"hidden\" name=\"config[$key]\" value=\"$value\" /><select name=\"" . $key . "[]\" multiple=\"multiple\" id=\"$key\">$rrc_mode_options</select>";
+		return "<input type='hidden' name='config[$key]' value='$value' /><select name='" . $key . "[]' multiple='multiple' id='$key'>$rrc_mode_options</select>";
 	}
 
 	/**
@@ -452,7 +452,7 @@ class acp_gallery_config
 		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_RATINGS) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_RATINGS . "'>" . $user->lang['RRC_DISPLAY_RATINGS'] . '</option>';
 
 		// Cheating is an evil-thing, but most times it's successful, that's why it is used.
-		return "<input type=\"hidden\" name=\"config[$key]\" value=\"$value\" /><select name=\"" . $key . "[]\" multiple=\"multiple\" id=\"$key\">$rrc_display_options</select>";
+		return "<input type='hidden' name='config[$key]' value='$value' /><select name='" . $key . "[]' multiple='multiple' id='$key'>$rrc_display_options</select>";
 	}
 
 	/**

@@ -25,7 +25,7 @@ function get_album_access_array()
 	global $cache, $db, $user;
 	global $album_access_array, $gallery_config;
 
-	if ($gallery_config == array())
+	if (!isset($gallery_config['loaded']) || $gallery_config['loaded'])
 	{
 		// If we don't have the config, we don't have the function to call it aswell?
 		$sql = 'SELECT *
@@ -55,23 +55,24 @@ function get_album_access_array()
 		//set all parts of the permissions to 0 / "no"
 		foreach ($permissions as $permission)
 		{
-			$album_access_array[-1][$permission] = 0;
-			$album_access_array[OWN_GALLERY_PERMISSIONS][$permission] = 0;
-			$album_access_array[PERSONAL_GALLERY_PERMISSIONS][$permission] = 0;
+			$album_access_array[-1][$permission] = GALLERY_ACL_NO;
+			$album_access_array[OWN_GALLERY_PERMISSIONS][$permission] = GALLERY_ACL_NO;
+			$album_access_array[PERSONAL_GALLERY_PERMISSIONS][$permission] = GALLERY_ACL_NO;
 			//generate for the sql
 			$pull_data .= " MAX($permission) as $permission,";
 		}
-		$album_access_array[-1]['m_'] = 0;
-		$album_access_array[OWN_GALLERY_PERMISSIONS]['m_'] = 0;
-		$album_access_array[PERSONAL_GALLERY_PERMISSIONS]['m_'] = 0;
+		$album_access_array[-1]['m_'] = GALLERY_ACL_NO;
+		$album_access_array[OWN_GALLERY_PERMISSIONS]['m_'] = GALLERY_ACL_NO;
+		$album_access_array[PERSONAL_GALLERY_PERMISSIONS]['m_'] = GALLERY_ACL_NO;
 		foreach ($albums as $album)
 		{
 			foreach ($permissions as $permission)
 			{
-				$album_access_array[$album['album_id']][$permission] = 0;
+				$album_access_array[$album['album_id']][$permission] = GALLERY_ACL_NO;
 			}
-			$album_access_array[$album['album_id']]['m_'] = 0;
+			$album_access_array[$album['album_id']]['m_'] = GALLERY_ACL_NO;
 		}
+
 		// Testing user permissions?
 		$user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
 
@@ -104,7 +105,7 @@ function get_album_access_array()
 					foreach ($permissions as $permission)
 					{
 						$album_access_array[PERSONAL_GALLERY_PERMISSIONS][$permission] = $row[$permission];
-						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == 1))
+						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == GALLERY_ACL_YES))
 						{
 							$album_access_array[PERSONAL_GALLERY_PERMISSIONS]['m_'] = $row[$permission];
 						}
@@ -115,7 +116,7 @@ function get_album_access_array()
 					foreach ($permissions as $permission)
 					{
 						$album_access_array[OWN_GALLERY_PERMISSIONS][$permission] = $row[$permission];
-						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == 1))
+						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == GALLERY_ACL_YES))
 						{
 							$album_access_array[OWN_GALLERY_PERMISSIONS]['m_'] = $row[$permission];
 						}
@@ -126,8 +127,8 @@ function get_album_access_array()
 					foreach ($permissions as $permission)
 					{
 						// if the permission is true ($row[$permission] == 1) and global_permission is never ($album_access_array[PERSONAL_GALLERY_PERMISSIONS][$permission] == 2) we set it to "never"
-						$album_access_array[$row['perm_album_id']][$permission] = (($row[$permission]) ? (($row[$permission] == 1 && ($album_access_array[PERSONAL_GALLERY_PERMISSIONS][$permission] == 2)) ? $album_access_array[PERSONAL_GALLERY_PERMISSIONS][$permission] : $row[$permission]) : 0);
-						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == 1))
+						$album_access_array[$row['perm_album_id']][$permission] = (($row[$permission]) ? (($row[$permission] == GALLERY_ACL_YES && ($album_access_array[PERSONAL_GALLERY_PERMISSIONS][$permission] == GALLERY_ACL_NEVER)) ? $album_access_array[PERSONAL_GALLERY_PERMISSIONS][$permission] : $row[$permission]) : GALLERY_ACL_NO);
+						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == GALLERY_ACL_YES))
 						{
 							$album_access_array[$row['perm_album_id']]['m_'] = $row[$permission];
 						}
@@ -138,7 +139,7 @@ function get_album_access_array()
 					foreach ($permissions as $permission)
 					{
 						$album_access_array[$row['perm_album_id']][$permission] = $row[$permission];
-						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == 1))
+						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == GALLERY_ACL_YES))
 						{
 							$album_access_array[$row['perm_album_id']]['m_'] = $row[$permission];
 						}
@@ -160,7 +161,7 @@ function gallery_acl_check($mode, $album_id, $album_user_id = -1)
 	static $_gallery_acl_cache;
 
 	// Do we have a function call without $album_user_id ?
-	if (($album_user_id < 0) && ($album_id > 0))
+	if (($album_user_id < NON_PERSONAL_ALBUMS) && ($album_id > 0))
 	{
 		// Yes, from viewonline.php
 		global $cache;
@@ -189,7 +190,7 @@ function gallery_acl_check($mode, $album_id, $album_user_id = -1)
 		}
 		else
 		{
-			$_gallery_acl_cache[$album_id][$mode] = ($album_access_array[OWN_GALLERY_PERMISSIONS][$mode] == 1) ? true : false;
+			$_gallery_acl_cache[$album_id][$mode] = ($album_access_array[OWN_GALLERY_PERMISSIONS][$mode] == GALLERY_ACL_YES) ? true : false;
 		}
 		return $_gallery_acl_cache[$album_id][$mode];
 	}
@@ -201,7 +202,7 @@ function gallery_acl_check($mode, $album_id, $album_user_id = -1)
 		}
 		else
 		{
-			$_gallery_acl_cache[$album_id][$mode] = ($album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode] == 1) ? true : false;
+			$_gallery_acl_cache[$album_id][$mode] = ($album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode] == NON_PERSONAL_ALBUMS) ? true : false;
 		}
 		return $_gallery_acl_cache[$album_id][$mode];
 	}
@@ -212,7 +213,7 @@ function gallery_acl_check($mode, $album_id, $album_user_id = -1)
 		{
 			$_gallery_acl_cache[$album_id][$mode] = $album_access_array[OWN_GALLERY_PERMISSIONS][$mode];
 		}
-		else if ($album_user_id > 0)
+		else if ($album_user_id > NON_PERSONAL_ALBUMS)
 		{
 			$_gallery_acl_cache[$album_id][$mode] = $album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode];
 		}
@@ -225,15 +226,15 @@ function gallery_acl_check($mode, $album_id, $album_user_id = -1)
 	{
 		if ($album_user_id == $user->data['user_id'])
 		{
-			$_gallery_acl_cache[$album_id][$mode] = (isset($album_access_array[OWN_GALLERY_PERMISSIONS][$mode]) && $album_access_array[OWN_GALLERY_PERMISSIONS][$mode] == 1) ? true : false;
+			$_gallery_acl_cache[$album_id][$mode] = (isset($album_access_array[OWN_GALLERY_PERMISSIONS][$mode]) && $album_access_array[OWN_GALLERY_PERMISSIONS][$mode] == GALLERY_ACL_YES) ? true : false;
 		}
-		else if ($album_user_id > 0)
+		else if ($album_user_id > NON_PERSONAL_ALBUMS)
 		{
-			$_gallery_acl_cache[$album_id][$mode] = (isset($album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode]) && $album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode] == 1) ? true : false;
+			$_gallery_acl_cache[$album_id][$mode] = (isset($album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode]) && $album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode] == GALLERY_ACL_YES) ? true : false;
 		}
 		else
 		{
-			$_gallery_acl_cache[$album_id][$mode] = (isset($album_access_array[$album_id][$mode]) && $album_access_array[$album_id][$mode] == 1) ? true : false;
+			$_gallery_acl_cache[$album_id][$mode] = (isset($album_access_array[$album_id][$mode]) && $album_access_array[$album_id][$mode] == GALLERY_ACL_YES) ? true : false;
 		}
 	}
 
@@ -259,7 +260,7 @@ function gallery_acl_album_ids($permission, $mode = 'array', $display_in_rrc = f
 		{
 			$acl_case = OWN_GALLERY_PERMISSIONS;
 		}
-		else if ($album['album_user_id'] > 0)
+		else if ($album['album_user_id'] > NON_PERSONAL_ALBUMS)
 		{
 			$acl_case = PERSONAL_GALLERY_PERMISSIONS;
 		}
@@ -267,7 +268,7 @@ function gallery_acl_album_ids($permission, $mode = 'array', $display_in_rrc = f
 		{
 			$acl_case = $album['album_id'];
 		}
-		if (($album_access_array[$acl_case][$permission] == 1) && (!$display_in_rrc || ($display_in_rrc && $album['display_in_rrc'])) && ($display_pgalleries || ($album['album_user_id'] == 0)))
+		if (($album_access_array[$acl_case][$permission] == GALLERY_ACL_YES) && (!$display_in_rrc || ($display_in_rrc && $album['display_in_rrc'])) && ($display_pgalleries || ($album['album_user_id'] == NON_PERSONAL_ALBUMS)))
 		{
 			$album_list .= (($album_list) ? ', ' : '') . $album['album_id'];
 			$album_array[] = $album['album_id'];

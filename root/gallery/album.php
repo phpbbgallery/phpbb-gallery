@@ -50,14 +50,14 @@ if ($album_data['contest_id'] && $album_data['contest_marked'] && (($album_data[
 {
 	$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 		SET image_contest = ' . IMAGE_NO_CONTEST . '
-		WHERE image_album_id = ' . (int) $album_id;
+		WHERE image_album_id = ' . $album_id;
 	$db->sql_query($sql);
 
 	$sql = 'SELECT image_id
 		FROM ' . GALLERY_IMAGES_TABLE . '
 		WHERE image_album_id = ' . $album_id . '
 		ORDER BY image_rate_avg DESC, image_rate_points DESC, image_id ASC';
-	$result = $db->sql_query_limit($sql, 3);
+	$result = $db->sql_query_limit($sql, CONTEST_IMAGES);
 	$first = (int) $db->sql_fetchfield('image_id');
 	$second = (int) $db->sql_fetchfield('image_id');
 	$third = (int) $db->sql_fetchfield('image_id');
@@ -249,13 +249,13 @@ if ($album_data['album_type'] != ALBUM_CAT)
 		}
 		$db->sql_freeresult($result);
 
-		for ($i = 0; $i < count($images); $i += $gallery_config['cols_per_page'])
+		for ($i = 0, $end = count($images); $i < $end; $i += $gallery_config['cols_per_page'])
 		{
 			$template->assign_block_vars('imagerow', array());
 
-			for ($j = $i; $j < ($i + $gallery_config['cols_per_page']); $j++)
+			for ($j = $i, $end_columns = ($i + $gallery_config['cols_per_page']); $j < $end_columns; $j++)
 			{
-				if ($j >= count($images))
+				if ($j >= $end)
 				{
 					$template->assign_block_vars('imagerow.no_image', array());
 					continue;

@@ -62,6 +62,11 @@ function load_gallery_config()
 	$result = $db->sql_query($sql);
 	$db->sql_return_on_error(false);
 
+	if ($result === true)
+	{
+		$gallery_config['loaded'] = true;
+	}
+
 	while ($row = $db->sql_fetchrow($result))
 	{
 		$gallery_config[$row['config_name']] = $row['config_value'];
@@ -242,8 +247,10 @@ function check_album_user($album_id)
 * @param	int					$requested_album_type	only albums of the album_type are allowed
 *
 * @return	string				$gallery_albumbox		if ($select_name) {full select-box} else {list with options}
+*
+* comparable to make_forum_select (includes/functions_admin.php)
 */
-function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $requested_permission = false, $ignore_id = false, $album_user_id = 0, $requested_album_type = -1)
+function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $requested_permission = false, $ignore_id = false, $album_user_id = NON_PERSONAL_ALBUMS, $requested_album_type = -1)
 {
 	global $db, $user, $cache, $album_access_array;
 
@@ -259,7 +266,7 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 
 	// Sometimes it could happen that albums will be displayed here not be displayed within the index page
 	// This is the result of albums not displayed at index and a parent of a album with no permissions.
-	// If this happens, the padding could be "broken"
+	// If this happens, the padding could be "broken", see includes/functions_admin.php > make_forum_select
 
 	foreach ($album_data as $row)
 	{
@@ -351,11 +358,11 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 				$disabled = (!$disabled) ? $requested_personal : $disabled;
 			}
 		}
-		if (($album_user_id > 0) && ($album_user_id != $row['album_user_id']))
+		if (($album_user_id > NON_PERSONAL_ALBUMS) && ($album_user_id != $row['album_user_id']))
 		{
 			$list = false;
 		}
-		else if (($album_user_id > 0) && ($row['parent_id'] == 0))
+		else if (($album_user_id > NON_PERSONAL_ALBUMS) && ($row['parent_id'] == 0))
 		{
 			$disabled = true;
 		}
@@ -597,11 +604,11 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 	switch ($content)
 	{
 		case 'image_name':
-			$shorten_image_name = (utf8_strlen(htmlspecialchars_decode($image_name)) > $gallery_config['shorted_imagenames'] + 3 ) ? (utf8_substr(htmlspecialchars_decode($image_name), 0, $gallery_config['shorted_imagenames']) . '...') : ($image_name);
+			$shorten_image_name = (utf8_strlen(htmlspecialchars_decode($image_name)) > $gallery_config['shorted_imagenames'] + 3) ? (utf8_substr(htmlspecialchars_decode($image_name), 0, $gallery_config['shorted_imagenames']) . '...') : ($image_name);
 			$content = '<span style="font-weight: bold;">' . $shorten_image_name . '</span>';
 		break;
 		case 'image_name_unbold':
-			$shorten_image_name = (utf8_strlen(htmlspecialchars_decode($image_name)) > $gallery_config['shorted_imagenames'] + 3 ) ? (utf8_substr(htmlspecialchars_decode($image_name), 0, $gallery_config['shorted_imagenames']) . '...') : ($image_name);
+			$shorten_image_name = (utf8_strlen(htmlspecialchars_decode($image_name)) > $gallery_config['shorted_imagenames'] + 3) ? (utf8_substr(htmlspecialchars_decode($image_name), 0, $gallery_config['shorted_imagenames']) . '...') : ($image_name);
 			$content = $shorten_image_name;
 		break;
 		case 'thumbnail':

@@ -9,6 +9,9 @@
 * mostly borrowed from phpBB3
 * @author: phpBB Group
 * @location: includes/acp/acp_forums.php
+*
+* Note: There are several code parts commented out, for example the album/forum_password.
+*       I didn't remove them, to have it easier when I implement this feature one day. I hope it's okay.
 */
 
 /**
@@ -105,9 +108,11 @@ class acp_gallery_albums
 						'display_subalbum_list'	=> request_var('display_subalbum_list', false),
 						'display_on_index'		=> request_var('display_on_index', false),
 						'display_in_rrc'		=> request_var('display_in_rrc', false),
-						/*'album_password'		=> request_var('album_password', '', true),
+						/*
+						'album_password'		=> request_var('album_password', '', true),
 						'album_password_confirm'=> request_var('album_password_confirm', '', true),
-						'album_password_unset'	=> request_var('album_password_unset', false),*/
+						'album_password_unset'	=> request_var('album_password_unset', false),
+						*/
 					);
 
 					// Categories are not able to be locked...
@@ -305,14 +310,16 @@ class acp_gallery_albums
 
 					// Make sure no direct child albums are able to be selected as parents.
 					$exclude_albums = array();
-					foreach (get_album_branch(0, $album_id, 'children') as $row)
+					foreach (get_album_branch(NON_PERSONAL_ALBUMS, $album_id, 'children') as $row)
 					{
 						$exclude_albums[] = $row['album_id'];
 					}
 
 					$parents_list = gallery_albumbox(true, '', $album_data['parent_id'], false, $exclude_albums);
 
-					/*$album_data['album_password_confirm'] = $album_data['album_password'];*/
+					/*
+					$album_data['album_password_confirm'] = $album_data['album_password'];
+					*/
 				}
 				else
 				{
@@ -334,8 +341,10 @@ class acp_gallery_albums
 							'display_subalbum_list'	=> true,
 							'display_on_index'		=> true,
 							'display_in_rrc'		=> true,
-							/*'album_password'		=> '',
-							'album_password_confirm'=> '',*/
+							/*
+							'album_password'		=> '',
+							'album_password_confirm'=> '',
+							*/
 						);
 
 						// Default values, 3 days later rate and 7 for the end of the contest
@@ -399,7 +408,7 @@ class acp_gallery_albums
 				if ($action == 'edit' && in_array($album_data['album_type'], array(ALBUM_UPLOAD, ALBUM_CONTEST)))
 				{
 					$subalbums_id = array();
-					$subalbums = get_album_branch(0, $album_id, 'children');
+					$subalbums = get_album_branch(NON_PERSONAL_ALBUMS, $album_id, 'children');
 
 					foreach ($subalbums as $row)
 					{
@@ -427,10 +436,12 @@ class acp_gallery_albums
 					));
 				}
 
-				/*if (strlen($album_data['album_password']) == 32)
+				/*
+				if (strlen($album_data['album_password']) == 32)
 				{
 					$errors[] = $user->lang['ALBUM_PASSWORD_OLD'];
-				}*/
+				}
+				*/
 
 				$template->assign_vars(array(
 					'S_EDIT_ALBUM'		=> true,
@@ -449,7 +460,9 @@ class acp_gallery_albums
 					'ALBUM_NAME'				=> $album_data['album_name'],
 					'ALBUM_IMAGE'				=> $album_data['album_image'],
 					'ALBUM_IMAGE_SRC'			=> ($album_data['album_image']) ? $phpbb_root_path . $album_data['album_image'] : '',
-					/*'S_ALBUM_PASSWORD_SET'		=> (empty($album_data['album_password'])) ? false : true,*/
+					/*
+					'S_ALBUM_PASSWORD_SET'		=> (empty($album_data['album_password'])) ? false : true,
+					*/
 
 					'ALBUM_DESC'				=> $album_desc_data['text'],
 					'S_DESC_BBCODE_CHECKED'		=> ($album_desc_data['allow_bbcode']) ? true : false,
@@ -495,7 +508,7 @@ class acp_gallery_albums
 				$album_data = get_album_info($album_id);
 
 				$subalbums_id = array();
-				$subalbums = get_album_branch(0, $album_id, 'children');
+				$subalbums = get_album_branch(NON_PERSONAL_ALBUMS, $album_id, 'children');
 
 				foreach ($subalbums as $row)
 				{
@@ -547,7 +560,7 @@ class acp_gallery_albums
 		{
 			$navigation = '<a href="' . $this->u_action . '">' . $user->lang['GALLERY_INDEX'] . '</a>';
 
-			$albums_nav = get_album_branch(0, $this->parent_id, 'parents', 'descending');
+			$albums_nav = get_album_branch(NON_PERSONAL_ALBUMS, $this->parent_id, 'parents', 'descending');
 			foreach ($albums_nav as $row)
 			{
 				if ($row['album_id'] == $this->parent_id)
@@ -572,8 +585,8 @@ class acp_gallery_albums
 		$sql = 'SELECT *
 			FROM ' . GALLERY_ALBUMS_TABLE . "
 			WHERE parent_id = {$this->parent_id}
-				AND album_user_id = 0
-			ORDER BY left_id";
+				AND album_user_id = " . NON_PERSONAL_ALBUMS . '
+			ORDER BY left_id';
 		$result = $db->sql_query($sql);
 
 		if ($row = $db->sql_fetchrow($result))
@@ -640,29 +653,6 @@ class acp_gallery_albums
 			'UA_PROGRESS_BAR'	=> addslashes($this->u_action . '&amp;action=progress_bar'),
 		));
 	}
-
-	/**
-	* Get album details
-	* We use gallery/includes/functions.php => get_album_info
-	function get_album_info($album_id)
-	{
-		global $db;
-
-		$sql = 'SELECT *
-			FROM ' . GALLERY_ALBUMS_TABLE . "
-			WHERE album_id = $album_id";
-		$result = $db->sql_query($sql);
-		$row = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-
-		if (!$row)
-		{
-			trigger_error("Album #$album_id does not exist", E_USER_ERROR);
-		}
-
-		return $row;
-	}
-	*/
 
 	/**
 	* Get contest details
@@ -767,7 +757,9 @@ class acp_gallery_albums
 
 		// Unset data that are not database fields
 		$album_data_sql = $album_data;
-		/*unset($album_data_sql['album_password_confirm']);*/
+		/*
+		unset($album_data_sql['album_password_confirm']);
+		*/
 
 		// What are we going to do tonight Brain? The same thing we do everynight,
 		// try to take over the world ... or decide whether to continue update
@@ -777,7 +769,8 @@ class acp_gallery_albums
 			return $errors;
 		}
 
-		/*/ As we don't know the old password, it's kinda tricky to detect changes
+		/*
+		// As we don't know the old password, it's kinda tricky to detect changes
 		if ($album_data_sql['album_password_unset'])
 		{
 			$albumdata_sql['album_password'] = '';
@@ -790,7 +783,8 @@ class acp_gallery_albums
 		{
 			$album_data_sql['album_password'] = phpbb_hash($album_data_sql['album_password']);
 		}
-		unset($album_data_sql['album_password_unset']);*/
+		unset($album_data_sql['album_password_unset']);
+		*/
 
 		if (!isset($album_data_sql['album_id']))
 		{
@@ -1065,7 +1059,7 @@ class acp_gallery_albums
 		$diff = sizeof($moved_albums) * 2;
 
 		$moved_ids = array();
-		for ($i = 0; $i < sizeof($moved_albums); ++$i)
+		for ($i = 0, $end = sizeof($moved_albums); $i < $end; ++$i)
 		{
 			$moved_ids[] = $moved_albums[$i]['album_id'];
 		}
@@ -1073,16 +1067,16 @@ class acp_gallery_albums
 		// Resync parents
 		$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 			SET right_id = right_id - $diff, album_parents = ''
-			WHERE album_user_id = 0
-				AND left_id < " . $from_data['right_id'] . "
+			WHERE album_user_id = " . NON_PERSONAL_ALBUMS . '
+				AND left_id < ' . $from_data['right_id'] . "
 				AND right_id > " . $from_data['right_id'];
 		$db->sql_query($sql);
 
 		// Resync righthand side of tree
 		$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 			SET left_id = left_id - $diff, right_id = right_id - $diff, album_parents = ''
-			WHERE album_user_id = 0
-				AND left_id > " . $from_data['right_id'];
+			WHERE album_user_id = " . NON_PERSONAL_ALBUMS . '
+				AND left_id > ' . $from_data['right_id'];
 		$db->sql_query($sql);
 
 		if ($to_id > 0)
@@ -1093,16 +1087,16 @@ class acp_gallery_albums
 			// Resync new parents
 			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 				SET right_id = right_id + $diff, album_parents = ''
-				WHERE album_user_id = 0
-					AND " . $to_data['right_id'] . ' BETWEEN left_id AND right_id
+				WHERE album_user_id = " . NON_PERSONAL_ALBUMS . '
+					AND ' . $to_data['right_id'] . ' BETWEEN left_id AND right_id
 					AND ' . $db->sql_in_set('album_id', $moved_ids, true);
 			$db->sql_query($sql);
 
 			// Resync the righthand side of the tree
 			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 				SET left_id = left_id + $diff, right_id = right_id + $diff, album_parents = ''
-				WHERE album_user_id = 0
-					AND left_id > " . $to_data['right_id'] . '
+				WHERE album_user_id = " . NON_PERSONAL_ALBUMS . '
+					AND left_id > ' . $to_data['right_id'] . '
 					AND ' . $db->sql_in_set('album_id', $moved_ids, true);
 			$db->sql_query($sql);
 
@@ -1122,7 +1116,7 @@ class acp_gallery_albums
 		{
 			$sql = 'SELECT MAX(right_id) AS right_id
 				FROM ' . GALLERY_ALBUMS_TABLE . '
-				WHERE album_user_id = 0
+				WHERE album_user_id = ' . NON_PERSONAL_ALBUMS . '
 					AND ' . $db->sql_in_set('album_id', $moved_ids, true);
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
@@ -1133,8 +1127,8 @@ class acp_gallery_albums
 
 		$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 			SET left_id = left_id $diff, right_id = right_id $diff, album_parents = ''
-			WHERE album_user_id = 0
-				AND " . $db->sql_in_set('album_id', $moved_ids);
+			WHERE album_user_id = " . NON_PERSONAL_ALBUMS . '
+				AND ' . $db->sql_in_set('album_id', $moved_ids);
 		$db->sql_query($sql);
 
 		return $errors;
@@ -1266,7 +1260,7 @@ class acp_gallery_albums
 		if ($action_subalbums == 'delete')
 		{
 			$log_action_albums = 'ALBUMS';
-			$rows = get_album_branch(0, $album_id, 'children', 'descending', false);
+			$rows = get_album_branch(NON_PERSONAL_ALBUMS, $album_id, 'children', 'descending', false);
 
 			foreach ($rows as $row)
 			{
@@ -1327,7 +1321,7 @@ class acp_gallery_albums
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 						SET parent_id = $subalbums_to_id
 						WHERE parent_id = $album_id
-							AND album_user_id = 0";
+							AND album_user_id = " . NON_PERSONAL_ALBUMS;
 					$db->sql_query($sql);
 
 					$diff = 2;
@@ -1354,13 +1348,13 @@ class acp_gallery_albums
 		$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 			SET right_id = right_id - $diff
 			WHERE left_id < {$album_data['right_id']} AND right_id > {$album_data['right_id']}
-				AND album_user_id = 0";
+				AND album_user_id = " . NON_PERSONAL_ALBUMS;
 		$db->sql_query($sql);
 
 		$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 			SET left_id = left_id - $diff, right_id = right_id - $diff
 			WHERE left_id > {$album_data['right_id']}
-				AND album_user_id = 0";
+				AND album_user_id = " . NON_PERSONAL_ALBUMS;
 		$db->sql_query($sql);
 
 		$log_action = implode('_', array($log_action_images, $log_action_albums));
@@ -1555,8 +1549,8 @@ class acp_gallery_albums
 		$sql = 'SELECT album_id, album_name, left_id, right_id
 			FROM ' . GALLERY_ALBUMS_TABLE . "
 			WHERE parent_id = {$album_row['parent_id']}
-				AND album_user_id = 0
-				AND " . (($action == 'move_up') ? "right_id < {$album_row['right_id']} ORDER BY right_id DESC" : "left_id > {$album_row['left_id']} ORDER BY left_id ASC");
+				AND album_user_id = " . NON_PERSONAL_ALBUMS . '
+				AND ' . (($action == 'move_up') ? "right_id < {$album_row['right_id']} ORDER BY right_id DESC" : "left_id > {$album_row['left_id']} ORDER BY left_id ASC");
 		$result = $db->sql_query_limit($sql, $steps);
 
 		$target = array();
@@ -1616,7 +1610,7 @@ class acp_gallery_albums
 			WHERE
 				left_id BETWEEN {$left_id} AND {$right_id}
 				AND right_id BETWEEN {$left_id} AND {$right_id}
-				AND album_user_id = 0";
+				AND album_user_id = " . NON_PERSONAL_ALBUMS;
 		$db->sql_query($sql);
 
 		return $target['album_name'];

@@ -46,6 +46,7 @@ define('EXIFTIME_OFFSET', 0); // Use this constant, to change the exif-timestamp
 
 // Permissions
 define('SETTING_PERMISSIONS', -39839);
+define('NON_PERSONAL_PERMISSIONS', 0);
 define('OWN_GALLERY_PERMISSIONS', -2);
 define('PERSONAL_GALLERY_PERMISSIONS', -3);
 
@@ -79,9 +80,12 @@ define('WATERMARK_CENTER', 16);
 define('WATERMARK_RIGHT', 32);
 
 // Additional constants
+define('CONTEST_IMAGES', 3);
 define('MODULE_DEFAULT_ACP', 31);
 define('MODULE_DEFAULT_LOG', 25);
 define('MODULE_DEFAULT_UCP', 0);
+define('NON_PERSONAL_ALBUMS', 0);
+define('SEARCH_PAGES_NUMBER', 10);
 define('THUMBNAIL_INFO_HEIGHT', 16);
 
 // Additional tables

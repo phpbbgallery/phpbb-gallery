@@ -54,14 +54,14 @@ class acp_gallery_permissions
 		$permissions->p_masks['full'] = array_merge($permissions->cats['full']['i'], $permissions->cats['full']['c'], $permissions->cats['full']['m'], $permissions->cats['full']['misc']);
 
 		// Permissions for the normal albums
-		$permissions->cats[0] = array(
+		$permissions->cats[NON_PERSONAL_PERMISSIONS] = array(
 			'i'		=> array('i_view', 'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate'),
 			'c'		=> array('c_read', 'c_post', 'c_edit', 'c_delete'),
 			'm'		=> array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status'),
 			'misc'	=> array('a_list', 'i_count', 'i_unlimited'/*, 'album_count', 'album_unlimited'*/),
 		);
-		$permissions->p_masks[0] = array_merge($permissions->cats[0]['i'], $permissions->cats[0]['c'], $permissions->cats[0]['m'], $permissions->cats[0]['misc']);
-		$permissions->p_masks_anti[0] = array('album_count');
+		$permissions->p_masks[NON_PERSONAL_PERMISSIONS] = array_merge($permissions->cats[NON_PERSONAL_PERMISSIONS]['i'], $permissions->cats[NON_PERSONAL_PERMISSIONS]['c'], $permissions->cats[NON_PERSONAL_PERMISSIONS]['m'], $permissions->cats[NON_PERSONAL_PERMISSIONS]['misc']);
+		$permissions->p_masks_anti[NON_PERSONAL_PERMISSIONS] = array('album_count', 'album_unlimited');
 
 		// Permissions for own personal albums
 		// Note: we set i_view to 1 as default on storing the permissions
@@ -83,7 +83,7 @@ class acp_gallery_permissions
 			'misc'	=> array('a_list'/*, 'i_count', 'i_unlimited', 'album_count', 'album_unlimited'*/),
 		);
 		$permissions->p_masks[PERSONAL_GALLERY_PERMISSIONS] = array_merge($permissions->cats[PERSONAL_GALLERY_PERMISSIONS]['i'], $permissions->cats[PERSONAL_GALLERY_PERMISSIONS]['c'], $permissions->cats[PERSONAL_GALLERY_PERMISSIONS]['m'], $permissions->cats[PERSONAL_GALLERY_PERMISSIONS]['misc']);
-		$permissions->p_masks_anti[PERSONAL_GALLERY_PERMISSIONS] = array('i_approve', 'i_edit', 'i_delete', 'i_count', 'album_count');
+		$permissions->p_masks_anti[PERSONAL_GALLERY_PERMISSIONS] = array('i_approve', 'i_edit', 'i_delete', 'i_count', 'i_unlimited', 'album_count', 'album_unlimited');
 
 		switch ($mode)
 		{
@@ -625,7 +625,7 @@ class acp_gallery_permissions
 		$album_id = request_var('album_id', array(0));
 		$group_id = request_var('group_id', array(0));
 		$user_id = request_var('user_id', array(0));
-		$p_system = request_var('p_system', 0);
+		$p_system = request_var('p_system', NON_PERSONAL_PERMISSIONS);
 
 		if (!sizeof($group_id) && !sizeof($user_id))
 		{
@@ -698,7 +698,7 @@ class acp_gallery_permissions
 					// Need to set a defaults here: view your own personal album images
 					if ($p_system == OWN_GALLERY_PERMISSIONS)
 					{
-						$auth_settings[$c_mask][$v_mask]['i_view'] = 1;
+						$auth_settings[$c_mask][$v_mask]['i_view'] = GALLERY_ACL_YES;
 					}
 
 					$p_mask_storage[$p_mask_count]['p_mask'] = $auth_settings[$c_mask][$v_mask];
