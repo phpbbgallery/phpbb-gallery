@@ -39,8 +39,7 @@ class acp_gallery_config
 		include($phpbb_root_path . $gallery_root_path . 'plugins/index.' . $phpEx);
 		$gallery_config = load_gallery_config();
 
-		$user->add_lang('mods/gallery_acp');
-		$user->add_lang('mods/gallery');
+		$user->add_lang(array('mods/gallery_acp', 'mods/gallery'));
 
 		$submit = (isset($_POST['submit'])) ? true : false;
 

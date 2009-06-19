@@ -23,8 +23,7 @@ include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
 // Start session management
 $user->session_begin();
 $auth->acl($user->data);
-$user->setup('mods/gallery');
-$user->add_lang('mods/exif_data');
+$user->setup(array('mods/gallery', 'mods/exif_data'));
 
 /**
 * Filestructure:

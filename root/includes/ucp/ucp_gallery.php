@@ -35,10 +35,7 @@ class ucp_gallery
 		include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
 		$gallery_config = load_gallery_config();
 
-		$user->add_lang('mods/gallery');
-		$user->add_lang('mods/gallery_acp');
-		$user->add_lang('mods/gallery_mcp');
-		$user->add_lang('mods/gallery_ucp');
+		$user->add_lang(array('mods/gallery', 'mods/gallery_acp', 'mods/gallery_mcp', 'mods/gallery_ucp'));
 		$this->tpl_name = 'gallery/ucp_gallery';
 		add_form_key('ucp_gallery');
 

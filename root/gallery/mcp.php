@@ -21,8 +21,7 @@ include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 // Start session management
 $user->session_begin();
 $auth->acl($user->data);
-$user->setup('mods/gallery');
-$user->add_lang('mods/gallery_mcp');
+$user->setup(array('mods/gallery', 'mods/gallery_mcp'));
 
 $gallery_root_path = GALLERY_ROOT_PATH;
 include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);

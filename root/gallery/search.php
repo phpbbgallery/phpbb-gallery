@@ -25,8 +25,7 @@ include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 // Start session management
 $user->session_begin();
 $auth->acl($user->data);
-$user->setup('mods/gallery');
-$user->add_lang('search');
+$user->setup(array('mods/gallery', 'search'));
 
 // Get general gallery stuff
 $gallery_root_path = GALLERY_ROOT_PATH;

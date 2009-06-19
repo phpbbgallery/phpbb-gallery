@@ -42,6 +42,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<date>2009-MM-DD</date>
 				<rev-version>1.0.1</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] $user->setup() and $user->add_lang() should use array instead (Bug #563)]]></change>
 					<change><![CDATA[[Fix] "MySQL-Server has gone away" while converting with lots of albums/images/comments/rates]]></change>
 					<change><![CDATA[[Fix] MassImport: filesize() [function.filesize]: stat failed for file]]></change>
 					<change><![CDATA[[Fix] Images of personal parent album are counted doubled on CleanUp]]></change>

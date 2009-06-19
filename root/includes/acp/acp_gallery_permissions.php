@@ -35,8 +35,7 @@ class acp_gallery_permissions
 		include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
 		$gallery_config = load_gallery_config();
 
-		$user->add_lang('mods/gallery_acp');
-		$user->add_lang('mods/gallery');
+		$user->add_lang(array('mods/gallery_acp', 'mods/gallery'));
 		$this->tpl_name = 'gallery_permissions';
 		$this->page_title = $user->lang['ALBUM_AUTH_TITLE'];
 		add_form_key('acp_gallery');
