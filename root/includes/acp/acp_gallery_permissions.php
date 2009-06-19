@@ -287,7 +287,7 @@ class acp_gallery_permissions
 		}
 
 		// Get the groups for selected album/p_system
-		$sql_array = (
+		$sql_array = array(
 			'SELECT'		=> 'g.group_name, g.group_id, g.group_type',
 			'FROM'			=> array(GROUPS_TABLE => 'g'),
 
@@ -328,7 +328,7 @@ class acp_gallery_permissions
 		$db->sql_freeresult($result);
 
 		// Get the users for selected album/p_system
-		$sql_array = (
+		$sql_array = array(
 			'SELECT'		=> 'u.username, u.user_id',
 			'FROM'			=> array(USERS_TABLE => 'u'),
 

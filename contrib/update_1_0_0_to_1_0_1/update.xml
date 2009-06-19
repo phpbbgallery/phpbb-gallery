@@ -60,6 +60,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 					<change><![CDATA[[Change] Move image-description into seperated block for style line]]></change>
 
+					<change><![CDATA[[Feature] View full profile beside comments]]></change>
 					<change><![CDATA[[Feature] [url][img]-BBCode on image_page.php for posting in other forums]]></change>
 					<change><![CDATA[[Feature] View an image with the error message instead of trigger_error (Bug #554)]]></change>
 				</changelog>

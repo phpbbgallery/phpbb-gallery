@@ -730,7 +730,7 @@ class ucp_gallery
 					// Update the config for the statistic on the index
 					if ($gallery_config['personal_counter'] > 0)
 					{
-						$sql_array = (
+						$sql_array = array(
 							'SELECT'		=> 'a.album_id, u.user_id, u.username, u.user_colour',
 							'FROM'			=> array(GALLERY_ALBUMS_TABLE => 'a'),
 
@@ -911,7 +911,7 @@ class ucp_gallery
 		}
 
 		// Subscribed albums
-		$sql_array = (
+		$sql_array = array(
 			'SELECT'		=> '*',
 			'FROM'			=> array(GALLERY_WATCH_TABLE => 'w'),
 
@@ -961,7 +961,7 @@ class ucp_gallery
 		$total_images = (int) $db->sql_fetchfield('images');
 		$db->sql_freeresult($result);
 
-		$sql_array = (
+		$sql_array = array(
 			'SELECT'		=> 'w.*, i.*, a.album_name, c.*',
 			'FROM'			=> array(GALLERY_WATCH_TABLE => 'w'),
 
@@ -1053,7 +1053,7 @@ class ucp_gallery
 		$total_images = (int) $db->sql_fetchfield('images');
 		$db->sql_freeresult($result);
 
-		$sql_array = (
+		$sql_array = array(
 			'SELECT'		=> 'f.*, i.*, a.album_name',
 			'FROM'			=> array(GALLERY_FAVORITES_TABLE => 'f'),
 

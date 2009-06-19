@@ -209,7 +209,7 @@ class acp_gallery
 					set_gallery_config('personal_counter', $number_of_personals);
 
 					// Update the config for the statistic on the index
-					$sql_array = (
+					$sql_array = array(
 						'SELECT'		=> 'a.album_id, u.user_id, u.username, u.user_colour',
 						'FROM'			=> array(GALLERY_ALBUMS_TABLE => 'a'),
 
@@ -943,7 +943,7 @@ class acp_gallery
 					// Update the config for the statistic on the index
 					if ($gallery_config['personal_counter'] > 0)
 					{
-						$sql_array = (
+						$sql_array = array(
 							'SELECT'		=> 'a.album_id, u.user_id, u.username, u.user_colour',
 							'FROM'			=> array(GALLERY_ALBUMS_TABLE => 'a'),
 
@@ -1069,7 +1069,7 @@ class acp_gallery
 		}
 
 		$requested_source = array();
-		$sql_array = (
+		$sql_array = array(
 			'SELECT'		=> 'i.image_id, i.image_name, i.image_filemissing, i.image_filename, i.image_username, u.user_id',
 			'FROM'			=> array(GALLERY_IMAGES_TABLE => 'i'),
 
@@ -1151,7 +1151,7 @@ class acp_gallery
 		}
 
 
-		$sql_array = (
+		$sql_array = array(
 			'SELECT'		=> 'c.comment_id, c.comment_image_id, c.comment_username, u.user_id',
 			'FROM'			=> array(GALLERY_COMMENTS_TABLE => 'c'),
 
@@ -1177,7 +1177,7 @@ class acp_gallery
 		}
 		$db->sql_freeresult($result);
 
-		$sql_array = (
+		$sql_array = array(
 			'SELECT'		=> 'a.album_id, a.album_user_id, a.album_name, u.user_id, a.album_images_real',
 			'FROM'			=> array(GALLERY_ALBUMS_TABLE => 'a'),
 

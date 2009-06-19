@@ -41,6 +41,7 @@ $user->setup(array('mods/gallery', 'mods/exif_data'));
 include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
 include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
 include($phpbb_root_path . $gallery_root_path . 'includes/functions_display.' . $phpEx);
+include($phpbb_root_path . $gallery_root_path . 'includes/functions_users.' . $phpEx);
 
 /**
 * Check the request and get image_data
@@ -466,67 +467,112 @@ if (($gallery_config['allow_comments'] && gallery_acl_check('c_read', $album_id)
 	{
 		$bbcode = new bbcode();
 
-		$sql = 'SELECT c.*, u.*
-			FROM ' . GALLERY_COMMENTS_TABLE . ' c
-			LEFT JOIN ' . USERS_TABLE . " u
-				ON c.comment_user_id = u.user_id
-			WHERE c.comment_image_id = $image_id
-			ORDER BY c.comment_id $sort_order";
+		$comments = $users = $user_cache = array();
+		$sql = 'SELECT *
+			FROM ' . GALLERY_COMMENTS_TABLE . '
+			WHERE comment_image_id = ' . $image_id . '
+			ORDER BY comment_id ' . $sort_order;
 		$result = $db->sql_query_limit($sql, $config['posts_per_page'], $start);
 
-		while ($commentrow = $db->sql_fetchrow($result))
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$comments[] = $row;
+			$users[] = $row['comment_user_id'];
+			if ($row['comment_edit_count'] > 0)
+			{
+				$users[] = $row['comment_edit_user_id'];
+			}
+		}
+		$db->sql_freeresult($result);
+
+		$sql = $db->sql_build_query('SELECT', array(
+			'SELECT'	=> 'u.*, gu.personal_album_id, gu.user_images',
+			'FROM'		=> array(USERS_TABLE => 'u'),
+
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GALLERY_USERS_TABLE => 'gu'),
+					'ON'	=> 'gu.user_id = u.user_id'
+				),
+			),
+
+			'WHERE'		=> $db->sql_in_set('u.user_id', $users),
+		));
+		$result = $db->sql_query($sql);
+
+		while ($row = $db->sql_fetchrow($result))
+		{
+			add_user_to_user_cache($user_cache, $row);
+		}
+		$db->sql_freeresult($result);
+
+		foreach ($comments as $row)
 		{
 			$edit_info = '';
-			if ($commentrow['comment_edit_count'] > 0)
+			if ($row['comment_edit_count'] > 0)
 			{
-				$sql_2 = 'SELECT c.comment_id, c.comment_edit_user_id, u.user_id, u.username, u.user_colour
-					FROM ' . GALLERY_COMMENTS_TABLE . ' c
-					LEFT JOIN ' . USERS_TABLE . ' u
-						ON c.comment_edit_user_id = u.user_id
-					WHERE c.comment_id = ' . (int) $commentrow['comment_id'];
-				$result_2 = $db->sql_query($sql_2);
-				$lastedit_row = $db->sql_fetchrow($result_2);
-				$db->sql_freeresult($result_2);
-
-				$edit_info = ($commentrow['comment_edit_count'] == 1) ? $user->lang['EDITED_TIME_TOTAL'] : $user->lang['EDITED_TIMES_TOTAL'];
-				$edit_info = sprintf($edit_info, get_username_string('full', $lastedit_row['user_id'], $lastedit_row['username'], $lastedit_row['user_colour']), $user->format_date($commentrow['comment_edit_time'], false, true), $commentrow['comment_edit_count']);
+				$edit_info = ($row['comment_edit_count'] == 1) ? $user->lang['EDITED_TIME_TOTAL'] : $user->lang['EDITED_TIMES_TOTAL'];
+				$edit_info = sprintf($edit_info, get_username_string('full', $user_cache[$row['comment_edit_user_id']]['user_id'], $user_cache[$row['comment_edit_user_id']]['username'], $user_cache[$row['comment_edit_user_id']]['user_colour']), $user->format_date($row['comment_edit_time'], false, true), $row['comment_edit_count']);
 			}
 
-			// Maybe we'll cache this one day... maybe, one day!
-			get_user_rank($commentrow['user_rank'], $commentrow['user_posts'], $commentrow['rank_title'], $commentrow['rank_image'], $commentrow['rank_image_src']);
-			if ($commentrow['user_sig'] && $config['allow_sig'] && $user->optionget('viewsigs'))
+			$user_id = $row['comment_user_id'];
+			if ($user_cache[$user_id]['sig'] && empty($user_cache[$user_id]['sig_parsed']))
 			{
-				$commentrow['user_sig'] = censor_text($commentrow['user_sig']);
+				$user_cache[$user_id]['sig'] = censor_text($user_cache[$user_id]['sig']);
 
-				if ($commentrow['user_sig_bbcode_bitfield'])
+				if ($user_cache[$user_id]['sig_bbcode_bitfield'])
 				{
-					$bbcode->bbcode_second_pass($commentrow['user_sig'], $commentrow['user_sig_bbcode_uid'], $commentrow['user_sig_bbcode_bitfield']);
+					$bbcode->bbcode_second_pass($user_cache[$user_id]['sig'], $user_cache[$user_id]['sig_bbcode_uid'], $user_cache[$user_id]['sig_bbcode_bitfield']);
 				}
 
-				$commentrow['user_sig'] = bbcode_nl2br($commentrow['user_sig']);
-				$commentrow['user_sig'] = smiley_text($commentrow['user_sig']);
+				$user_cache[$user_id]['sig'] = bbcode_nl2br($user_cache[$user_id]['sig']);
+				$user_cache[$user_id]['sig'] = smiley_text($user_cache[$user_id]['sig']);
+				$user_cache[$user_id]['sig_parsed'] = true;
 			}
-
 			$template->assign_block_vars('commentrow', array(
-				'U_COMMENT'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;start=$start&amp;sort_order=$sort_order") . '#' . $commentrow['comment_id'],
-				'COMMENT_ID'	=> $commentrow['comment_id'],
-				'TIME'			=> $user->format_date($commentrow['comment_time']),
-				'TEXT'			=> generate_text_for_display($commentrow['comment'], $commentrow['comment_uid'], $commentrow['comment_bitfield'], 7),
+				'U_COMMENT'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;start=$start&amp;sort_order=$sort_order") . '#' . $row['comment_id'],
+				'COMMENT_ID'	=> $row['comment_id'],
+				'TIME'			=> $user->format_date($row['comment_time']),
+				'TEXT'			=> generate_text_for_display($row['comment'], $row['comment_uid'], $row['comment_bitfield'], 7),
 				'EDIT_INFO'		=> $edit_info,
-				'U_DELETE'		=> (gallery_acl_check('m_comments', $album_id) || (gallery_acl_check('c_delete', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=delete&amp;comment_id=" . $commentrow['comment_id']) : '',
-				'U_EDIT'		=> (gallery_acl_check('m_comments', $album_id) || (gallery_acl_check('c_edit', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=edit&amp;comment_id=" . $commentrow['comment_id']) : '',
-				'U_INFO'		=> ($auth->acl_get('a_')) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'mode=whois&amp;ip=' . $commentrow['comment_user_ip']) : '',
+				'U_DELETE'		=> (gallery_acl_check('m_comments', $album_id) || (gallery_acl_check('c_delete', $album_id) && ($row['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=delete&amp;comment_id=" . $row['comment_id']) : '',
+				'U_EDIT'		=> (gallery_acl_check('m_comments', $album_id) || (gallery_acl_check('c_edit', $album_id) && ($row['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=edit&amp;comment_id=" . $row['comment_id']) : '',
+				'U_INFO'		=> ($auth->acl_get('a_')) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'mode=whois&amp;ip=' . $row['comment_user_ip']) : '',
 
-				'POSTER_AVATAR'			=> ($user->optionget('viewavatars')) ? get_user_avatar($commentrow['user_avatar'], $commentrow['user_avatar_type'], $commentrow['user_avatar_width'], $commentrow['user_avatar_height']) : '',
-				'POST_AUTHOR_FULL'		=> get_username_string('full', $commentrow['user_id'], ($commentrow['user_id'] <> ANONYMOUS) ? $commentrow['username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['user_colour']),
-				'POST_AUTHOR_COLOUR'	=> get_username_string('colour', $commentrow['user_id'], ($commentrow['user_id'] <> ANONYMOUS) ? $commentrow['username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['user_colour']),
-				'POST_AUTHOR'			=> get_username_string('username', $commentrow['user_id'], ($commentrow['user_id'] <> ANONYMOUS) ? $commentrow['username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['user_colour']),
-				'U_POST_AUTHOR'			=> get_username_string('profile', $commentrow['user_id'], ($commentrow['user_id'] <> ANONYMOUS) ? $commentrow['username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['user_colour']),
+				'POST_AUTHOR_FULL'		=> get_username_string('full', $user_cache[$user_id]['user_id'], ($user_cache[$user_id]['user_id'] != ANONYMOUS) ? $user_cache[$user_id]['username'] : ($user->lang['GUEST'] . ': ' . $row['comment_username']), $user_cache[$user_id]['user_colour']),
+				'POST_AUTHOR_COLOUR'	=> get_username_string('colour', $user_cache[$user_id]['user_id'], ($user_cache[$user_id]['user_id'] != ANONYMOUS) ? $user_cache[$user_id]['username'] : ($user->lang['GUEST'] . ': ' . $row['comment_username']), $user_cache[$user_id]['user_colour']),
+				'POST_AUTHOR'			=> get_username_string('username', $user_cache[$user_id]['user_id'], ($user_cache[$user_id]['user_id'] != ANONYMOUS) ? $user_cache[$user_id]['username'] : ($user->lang['GUEST'] . ': ' . $row['comment_username']), $user_cache[$user_id]['user_colour']),
+				'U_POST_AUTHOR'			=> get_username_string('profile', $user_cache[$user_id]['user_id'], ($user_cache[$user_id]['user_id'] != ANONYMOUS) ? $user_cache[$user_id]['username'] : ($user->lang['GUEST'] . ': ' . $row['comment_username']), $user_cache[$user_id]['user_colour']),
 
-				'RANK_TITLE'			=> $commentrow['rank_title'],
-				'RANK_IMG'				=> $commentrow['rank_image'],
-				'RANK_IMG_SRC'			=> $commentrow['rank_image_src'],
-				'SIGNATURE'				=> $commentrow['user_sig'],
+				'SIGNATURE'			=> $user_cache[$user_id]['sig'],
+				'RANK_TITLE'		=> $user_cache[$user_id]['rank_title'],
+				'RANK_IMG'			=> $user_cache[$user_id]['rank_image'],
+				'RANK_IMG_SRC'		=> $user_cache[$user_id]['rank_image_src'],
+				'POSTER_JOINED'		=> $user_cache[$user_id]['joined'],
+				'POSTER_POSTS'		=> $user_cache[$user_id]['posts'],
+				'POSTER_FROM'		=> $user_cache[$user_id]['from'],
+				'POSTER_AVATAR'		=> $user_cache[$user_id]['avatar'],
+				'POSTER_WARNINGS'	=> $user_cache[$user_id]['warnings'],
+				'POSTER_AGE'		=> $user_cache[$user_id]['age'],
+
+				'ICQ_STATUS_IMG'	=> $user_cache[$user_id]['icq_status_img'],
+				'ONLINE_IMG'		=> ($user_id == ANONYMOUS || !$config['load_onlinetrack']) ? '' : (($user_cache[$user_id]['online']) ? $user->img('icon_user_online', 'ONLINE') : $user->img('icon_user_offline', 'OFFLINE')),
+				'S_ONLINE'			=> ($user_id == ANONYMOUS || !$config['load_onlinetrack']) ? false : (($user_cache[$user_id]['online']) ? true : false),
+
+				'U_PROFILE'		=> $user_cache[$user_id]['profile'],
+				'U_SEARCH'		=> $user_cache[$user_id]['search'],
+				'U_PM'			=> ($user_id != ANONYMOUS && $config['allow_privmsg'] && $auth->acl_get('u_sendpm') && ($user_cache[$user_id]['allow_pm'] || $auth->acl_gets('a_', 'm_'))) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;mode=compose&amp;u=' . $user_id) : '',
+				'U_EMAIL'		=> $user_cache[$user_id]['email'],
+				'U_WWW'			=> $user_cache[$user_id]['www'],
+				'U_ICQ'			=> $user_cache[$user_id]['icq'],
+				'U_AIM'			=> $user_cache[$user_id]['aim'],
+				'U_MSN'			=> $user_cache[$user_id]['msn'],
+				'U_YIM'			=> $user_cache[$user_id]['yim'],
+				'U_JABBER'		=> $user_cache[$user_id]['jabber'],
+
+				'U_GALLERY'			=> $user_cache[$user_id]['gallery_album'],
+				'GALLERY_IMAGES'	=> $user_cache[$user_id]['gallery_images'],
+				'U_GALLERY_SEARCH'	=> $user_cache[$user_id]['gallery_search'],
 			));
 		}
 		$db->sql_freeresult($result);
@@ -537,6 +583,16 @@ if (($gallery_config['allow_comments'] && gallery_acl_check('c_read', $album_id)
 			'INFO_IMG'			=> $user->img('icon_post_info', 'IP'),
 			'MINI_POST_IMG'		=> $user->img('icon_post_target_unread', 'COMMENT'),
 			'PROFILE_IMG'		=> $user->img('icon_user_profile', 'READ_PROFILE'),
+			'SEARCH_IMG' 		=> $user->img('icon_user_search', 'SEARCH_USER_POSTS'),
+			'PM_IMG' 			=> $user->img('icon_contact_pm', 'SEND_PRIVATE_MESSAGE'),
+			'EMAIL_IMG' 		=> $user->img('icon_contact_email', 'SEND_EMAIL'),
+			'WWW_IMG' 			=> $user->img('icon_contact_www', 'VISIT_WEBSITE'),
+			'ICQ_IMG' 			=> $user->img('icon_contact_icq', 'ICQ'),
+			'AIM_IMG' 			=> $user->img('icon_contact_aim', 'AIM'),
+			'MSN_IMG' 			=> $user->img('icon_contact_msnm', 'MSNM'),
+			'YIM_IMG' 			=> $user->img('icon_contact_yahoo', 'YIM'),
+			'JABBER_IMG'		=> $user->img('icon_contact_jabber', 'JABBER') ,
+			'GALLERY_IMG'		=> $user->img('icon_contact_gallery', 'PERSONAL_ALBUM'),
 			'PAGE_NUMBER'		=> sprintf($user->lang['PAGE_OF'], (floor($start / $config['posts_per_page']) + 1), ceil($image_data['image_comments'] / $config['posts_per_page'])),
 			'PAGINATION'		=> generate_pagination(append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;sort_order=$sort_order"), $image_data['image_comments'], $config['posts_per_page'], $start),
 		));

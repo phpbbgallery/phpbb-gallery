@@ -306,6 +306,21 @@ function toggleElement(oElement)
 				</tr>
 			<!-- ENDIF -->
 				</table>
+
+				<span class="postdetails">
+					<!-- IF commentrow.POSTER_JOINED --><br /><b>{L_JOINED}:</b> {commentrow.POSTER_JOINED}<!-- ENDIF -->
+					<!-- IF commentrow.POSTER_POSTS != '' --><br /><b>{L_POSTS}:</b> {commentrow.POSTER_POSTS}<!-- ENDIF -->
+					<!-- IF commentrow.POSTER_FROM --><br /><b>{L_LOCATION}:</b> {commentrow.POSTER_FROM}<!-- ENDIF -->
+
+					<!-- IF commentrow.S_PROFILE_FIELD1 -->
+						<!-- Use a construct like this to include admin defined profile fields. Replace FIELD1 with the name of your field. -->
+						<br /><b>{commentrow.PROFILE_FIELD1_NAME}:</b> {commentrow.PROFILE_FIELD1_VALUE}
+					<!-- ENDIF -->
+
+					<!-- BEGIN custom_fields -->
+						<br /><b>{commentrow.custom_fields.PROFILE_FIELD_NAME}:</b> {commentrow.custom_fields.PROFILE_FIELD_VALUE}
+					<!-- END custom_fields -->
+				</span>
 			</td>
 			<td valign="top">
 				<table width="100%" cellspacing="5">
@@ -343,7 +358,7 @@ function toggleElement(oElement)
 		<!-- IF commentrow.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 
 			<td class="profile"></td>
-			<td><div class="gensmall" style="float: {S_CONTENT_FLOW_BEGIN};">&nbsp;<!-- IF commentrow.U_POST_AUTHOR --><a href="{commentrow.U_POST_AUTHOR}">{PROFILE_IMG}</a> <!-- ENDIF --></div> <div class="gensmall" style="float: {S_CONTENT_FLOW_END};"><!-- IF not S_IS_BOT and commentrow.U_EDIT --><a href="{commentrow.U_EDIT}">{EDIT_IMG}</a><!-- ENDIF -->&nbsp;</div></td>
+			<td><div class="gensmall" style="float: {S_CONTENT_FLOW_BEGIN};">&nbsp;<!-- IF commentrow.U_PROFILE --><a href="{commentrow.U_PROFILE}">{PROFILE_IMG}</a> <!-- ENDIF --> <!-- IF commentrow.U_PM --><a href="{commentrow.U_PM}">{PM_IMG}</a> <!-- ENDIF --> <!-- IF commentrow.U_EMAIL --><a href="{commentrow.U_EMAIL}">{EMAIL_IMG}</a> <!-- ENDIF -->&nbsp;</div> <div class="gensmall" style="float: {S_CONTENT_FLOW_END};"><!-- IF not S_IS_BOT and commentrow.U_EDIT --><a href="{commentrow.U_EDIT}">{EDIT_IMG}</a> <!-- ENDIF -->&nbsp;</div></td>
 	<!-- ENDIF -->
 		</tr>
 		<tr>
