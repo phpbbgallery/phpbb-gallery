@@ -140,7 +140,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 		}
 		if ($ints['contests'])
 		{
-			$sql_array = (
+			$sql_array = array(
 				'SELECT'		=> 'c.*, a.album_name',
 				'FROM'			=> array(GALLERY_CONTESTS_TABLE => 'c'),
 
@@ -151,7 +151,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 					),
 				),
 
-				'WHERE'			=> ($db->sql_in_set('c.contest_album_id', array_unique(array_merge($view_albums, $moderate_albums))) . ' AND c.contest_marked = ' . IMAGE_NO_CONTEST,
+				'WHERE'			=> $db->sql_in_set('c.contest_album_id', array_unique(array_merge($view_albums, $moderate_albums))) . ' AND c.contest_marked = ' . IMAGE_NO_CONTEST,
 				'ORDER_BY'		=> 'c.contest_start + c.contest_end DESC',
 			);
 			$sql = $db->sql_build_query('SELECT', $sql_array);
@@ -175,7 +175,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 		$images = array_unique($images);
 		if (sizeof($images))
 		{
-			$sql_array = (
+			$sql_array = array(
 				'SELECT'		=> 'i.*, a.album_name, a.album_status, a.album_id, a.album_user_id',
 				'FROM'			=> array(GALLERY_IMAGES_TABLE => 'i'),
 
@@ -186,7 +186,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 					),
 				),
 
-				'WHERE'			=> ($db->sql_in_set('i.image_id', $images, false, true),
+				'WHERE'			=> $db->sql_in_set('i.image_id', $images, false, true),
 				'ORDER_BY'		=> 'i.image_time DESC',
 			);
 			$sql = $db->sql_build_query('SELECT', $sql_array);
@@ -284,7 +284,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 	{
 		$user->add_lang('viewtopic');
 
-		$sql_array = (
+		$sql_array = array(
 			'SELECT'		=> 'c.*, i.*',
 			'FROM'			=> array(GALLERY_COMMENTS_TABLE => 'c'),
 

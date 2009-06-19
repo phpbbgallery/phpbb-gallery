@@ -75,7 +75,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		if ($first_char)
 		{
 			// We do not view all personal albums, so we need to recount, for the pagination.
-			$sql_array = (
+			$sql_array = array(
 				'SELECT'		=> 'count(a.album_id) as pgalleries',
 				'FROM'			=> array(GALLERY_ALBUMS_TABLE => 'a'),
 

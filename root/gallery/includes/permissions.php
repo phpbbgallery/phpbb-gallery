@@ -87,7 +87,7 @@ function get_album_access_array()
 		}
 		$db->sql_freeresult($result);
 
-		$sql_array = (
+		$sql_array = array(
 			'SELECT'		=> "p.perm_album_id, $pull_data p.perm_system",
 			'FROM'			=> array(GALLERY_PERMISSIONS_TABLE => 'p'),
 

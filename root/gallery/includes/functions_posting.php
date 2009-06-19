@@ -149,7 +149,7 @@ function gallery_notification($mode, $handle_id, $image_name)
 
 	// Make sure users are allowed to view the album
 	$i_view_ary = $groups_ary = $groups_row = array();
-	$sql_array = (
+	$sql_array = array(
 		'SELECT'		=> 'pr.i_view, p.perm_system, p.perm_group_id, p.perm_user_id',
 		'FROM'			=> array(GALLERY_PERMISSIONS_TABLE => 'p'),
 

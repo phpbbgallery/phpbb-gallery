@@ -43,7 +43,7 @@ else
 	$report_status = REPORT_LOCKED;
 }
 
-$sql_array = (
+$sql_array = array(
 	'SELECT'		=> 'COUNT(i.image_id) images',
 	'FROM'			=> array(GALLERY_REPORTS_TABLE => 'r'),
 
@@ -61,7 +61,7 @@ $result = $db->sql_query($sql);
 $count_images = (int) $db->sql_fetchfield('images');
 $db->sql_freeresult($result);
 
-$sql_array = (
+$sql_array = array(
 	'SELECT'		=> 'r.*, u.username reporter_name, u.user_colour reporter_colour, m.username mod_username, m.user_colour mod_user_colour, i.*',
 	'FROM'			=> array(GALLERY_REPORTS_TABLE => 'r'),
 

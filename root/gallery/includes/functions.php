@@ -151,7 +151,7 @@ function get_album_info($album_id)
 {
 	global $db, $user;
 
-	$sql_array = (
+	$sql_array = array(
 		'SELECT'		=> 'a.*, c.*, w.watch_id',
 		'FROM'			=> array(GALLERY_ALBUMS_TABLE => 'a'),
 
@@ -203,7 +203,7 @@ function get_image_info($image_id)
 {
 	global $db, $user, $gallery_root_path, $phpbb_root_path, $phpEx;
 
-	$sql_array = (
+	$sql_array = array(
 		'SELECT'		=> '*',
 		'FROM'			=> array(GALLERY_IMAGES_TABLE => 'i'),
 

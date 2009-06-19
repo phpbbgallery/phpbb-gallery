@@ -34,7 +34,7 @@ if (gallery_acl_check('m_status', $album_id))
 	$m_status = '';
 }
 
-$sql_array = (
+$sql_array = array(
 	'SELECT'		=> 'i.*, r.report_status, r.report_id',
 	'FROM'			=> array(GALLERY_IMAGES_TABLE => 'i'),
 

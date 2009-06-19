@@ -39,7 +39,7 @@ if ($mode == 'report_details')
 		$m_status = '';
 	}
 
-	$sql_array = (
+	$sql_array = array(
 		'SELECT'		=> 'r.*, u.username reporter_name, u.user_colour reporter_colour, i.*',
 		'FROM'			=> array(GALLERY_REPORTS_TABLE => 'r'),
 

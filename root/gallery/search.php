@@ -246,7 +246,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				$sql_order = 'c.comment_id DESC';
 				$sql_limit = SEARCH_PAGES_NUMBER * $per_page;
 
-				$sql_array = (
+				$sql_array = array(
 					'SELECT'		=> 'c.comment_id',
 					'FROM'			=> array(GALLERY_COMMENTS_TABLE => 'c'),
 

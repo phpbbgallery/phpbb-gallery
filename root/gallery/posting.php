@@ -989,7 +989,7 @@ switch ($mode)
 		* Rating-System: now you can comment and rate in one form
 		*/
 		$rate_point = request_var('rate', 0);
-		if ($gallery_config['allow_rates'])
+		if ($gallery_config['allow_rates'] && ($submode != 'edit'))
 		{
 			$allowed_to_rate = $your_rating = false;
 
