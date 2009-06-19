@@ -208,7 +208,7 @@ class install_convert_ts extends module
 	*/
 	function copy_schema($mode, $sub)
 	{
-		global $user, $template, $db;
+		global $user, $template, $db, $table_prefix;
 
 		$this->page_title = $user->lang['STAGE_COPY_TABLE'];
 		$s_hidden_fields = '';
@@ -263,7 +263,7 @@ class install_convert_ts extends module
 
 		foreach ($batch_ary as $batch => $ary)
 		{
-			$db->sql_multi_insert('phpbb_gallery_copyts_albums', $ary);
+			$db->sql_multi_insert($table_prefix . 'gallery_copyts_albums', $ary);
 		}
 
 		$batch_ary = array();
@@ -293,7 +293,7 @@ class install_convert_ts extends module
 
 		foreach ($batch_ary as $batch => $ary)
 		{
-			$db->sql_multi_insert('phpbb_gallery_copyts_users', $ary);
+			$db->sql_multi_insert($table_prefix . 'gallery_copyts_users', $ary);
 		}
 
 		$template->assign_vars(array(

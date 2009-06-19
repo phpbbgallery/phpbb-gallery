@@ -10,7 +10,11 @@
 		<title lang="en">phpBB Gallery</title>
 
 		<description lang="de"><![CDATA[Update-Anleitung - volle Code-Änderungen]]></description>
-		<description lang="en"><![CDATA[Update-Manual - full Code-Changes]]></description>
+		<description lang="en"><![CDATA[INCOMPLETE up from r1192
+MUST BE DELETED FROM PACKAGE
+
+
+Update-Manual - full Code-Changes]]></description>
 
 		<author-notes lang="de"><![CDATA[
 Untersützt die "MOD Version Check"-MOD von Handymman´:

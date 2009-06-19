@@ -40,9 +40,11 @@
 
 	<action-group>
 		<copy>
-			<file from="root/styles/subsilver2/template/gallery/recent_body.html" to="styles/subsilver2/template/gallery/recent_body.html" />
-			<file from="root/styles/subsilver2/template/gallery/search_results.html" to="styles/subsilver2/template/gallery/search_results.html" />
-			<file from="root/styles/subsilver2/template/gallery/viewimage_body.html" to="styles/subsilver2/template/gallery/viewimage_body.html" />
+			<file from="root/styles/subsilver2/imageset/en/button_upload_image.gif" to="styles/subsilver2/imageset/en/button_upload_image.gif" />
+			<file from="root/styles/subsilver2/imageset/en/icon_contact_gallery.gif" to="styles/subsilver2/imageset/en/icon_contact_gallery.gif" />
+			<file from="root/styles/subsilver2/template/*.*" to="styles/subsilver2/template/*.*" />
+			<file from="root/styles/subsilver2/theme/images/lytebox/*.*" to="styles/subsilver2/theme/images/lytebox/*.*" />
+			<file from="root/styles/subsilver2/theme/images/icon_gallery.gif" to="styles/subsilver2/theme/images/icon_gallery.gif" />
 		</copy>
 
 		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus

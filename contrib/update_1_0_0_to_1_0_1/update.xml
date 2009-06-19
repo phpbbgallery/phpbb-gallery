@@ -82,22 +82,21 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 	<action-group>
 		<copy>
-			<file from="root/gallery/image.php" to="gallery/image.php" />
-			<file from="root/gallery/image_page.php" to="gallery/image_page.php" />
-			<file from="root/gallery/posting.php" to="gallery/posting.php" />
-			<file from="root/gallery/images/upload/image_not_exist.jpg" to="gallery/images/upload/image_not_exist.jpg" />
-			<file from="root/gallery/images/upload/no_hotlinking.jpg" to="gallery/images/upload/no_hotlinking.jpg" />
-			<file from="root/gallery/images/upload/not_authorised.jpg" to="gallery/images/upload/not_authorised.jpg" />
-			<file from="root/gallery/includes/functions.php" to="gallery/includes/functions.php" />
-			<file from="root/gallery/includes/functions_display.php" to="gallery/includes/functions_display.php" />
-			<file from="root/gallery/includes/functions_recent.php" to="gallery/includes/functions_recent.php" />
-			<file from="root/gallery/includes/functions_posting.php" to="gallery/includes/functions_posting.php" />
-			<file from="root/gallery/includes/permissions.php" to="gallery/includes/permissions.php" />
-			<file from="root/includes/acp/acp_gallery.php" to="includes/acp/acp_gallery.php" />
+			<file from="root/adm/mods/phpbb_gallery_version.php" to="adm/mods/phpbb_gallery_version.php" />
+			<file from="root/adm/style/*.*" to="adm/style/*.*" />
+			<file from="root/gallery/*.*" to="gallery/*.*" />
+			<file from="root/gallery/images/*.*" to="gallery/images/*.*" />
+			<file from="root/gallery/includes/*.*" to="gallery/includes/*.*" />
+			<file from="root/gallery/mcp/*.*" to="gallery/mcp/*.*" />
+			<file from="root/includes/acp/*.*" to="includes/acp/*.*" />
+			<file from="root/includes/ucp/*.*" to="includes/ucp/*.*" />
 			<file from="root/install/*.*" to="install/*.*" />
-			<file from="root/styles/prosilver/template/gallery/recent_body.html" to="styles/prosilver/template/gallery/recent_body.html" />
-			<file from="root/styles/prosilver/template/gallery/search_results.html" to="styles/prosilver/template/gallery/search_results.html" />
-			<file from="root/styles/prosilver/template/gallery/viewimage_body.html" to="styles/prosilver/template/gallery/viewimage_body.html" />
+			<file from="root/install/schemas/*.*" to="install/schemas/*.*" />
+			<file from="root/language/en/email/*.*" to="language/en/email/*.*" />
+			<file from="root/language/en/mods/*.*" to="language/en/mods/*.*" />
+			<file from="root/styles/prosilver/imageset/*.*" to="styles/prosilver/imageset/*.*" />
+			<file from="root/styles/prosilver/template/gallery/*.*" to="styles/prosilver/template/gallery/*.*" />
+			<file from="root/styles/prosilver/theme/*.*" to="styles/prosilver/theme/*.*" />
 		</copy>
 
 		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
