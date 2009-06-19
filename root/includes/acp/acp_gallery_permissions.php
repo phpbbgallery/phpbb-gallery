@@ -551,6 +551,7 @@ class acp_gallery_permissions
 						{
 							$template->assign_block_vars('c_mask.v_mask.category.mask', array(
 								'PERMISSION'			=> $user->lang['PERMISSION_' . strtoupper($permission)],
+								'PERMISSION_EXPLAIN'	=> (isset($user->lang['PERMISSION_' . strtoupper($permission) . '_EXPLAIN'])) ? $user->lang['PERMISSION_' . strtoupper($permission) . '_EXPLAIN'] : '',
 								'S_FIELD_NAME'			=> 'setting[' . $album_row['album_id'] . '][' . $victim_row['victim_id'] . '][' . $permission . ']',
 								'S_NO'					=> ((isset($roles[$role_id][$permission]) && ($roles[$role_id][$permission] == GALLERY_ACL_NO)) ? true : false),
 								'S_YES'					=> ((isset($roles[$role_id][$permission]) && ($roles[$role_id][$permission] == GALLERY_ACL_YES)) ? true : false),
@@ -588,6 +589,7 @@ class acp_gallery_permissions
 					{
 						$template->assign_block_vars('c_mask.v_mask.category.mask', array(
 							'PERMISSION'			=> $user->lang['PERMISSION_' . strtoupper($permission)],
+							'PERMISSION_EXPLAIN'	=> (isset($user->lang['PERMISSION_' . strtoupper($permission) . '_EXPLAIN'])) ? $user->lang['PERMISSION_' . strtoupper($permission) . '_EXPLAIN'] : '',
 							'S_FIELD_NAME'			=> 'setting[' . $p_system . '][' . $victim_row['victim_id'] . '][' . $permission . ']',
 							'S_NO'					=> ((isset($roles[$role_id][$permission]) && ($roles[$role_id][$permission] == GALLERY_ACL_NO)) ? true : false),
 							'S_YES'					=> ((isset($roles[$role_id][$permission]) && ($roles[$role_id][$permission] == GALLERY_ACL_YES)) ? true : false),
