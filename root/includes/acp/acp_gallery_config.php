@@ -467,9 +467,13 @@ class acp_gallery_config
 		{
 			$bbcode_tpl = '<a class="highslide" onclick="return hs.expand(this)" href="' . $gallery_url . 'image.php?image_id={NUMBER}"><img src="' . $gallery_url . 'image.php?mode=thumbnail&image_id={NUMBER}" alt="{NUMBER}" /></a>';
 		}
-		elseif (($value == 'lytebox') && in_array('lytebox', $gallery_plugins['plugins']))
+		else if (($value == 'lytebox') && in_array('lytebox', $gallery_plugins['plugins']))
 		{
 			$bbcode_tpl = '<a class="image-resize" rel="lytebox" href="' . $gallery_url . 'image.php?image_id={NUMBER}"><img src="' . $gallery_url . 'image.php?mode=thumbnail&image_id={NUMBER}" alt="{NUMBER}" /></a>';
+		}
+		else if ($value == 'image_page')
+		{
+			$bbcode_tpl = '<a href="' . $gallery_url . 'image_page.php?image_id={NUMBER}"><img src="' . $gallery_url . 'image.php?mode=thumbnail&image_id={NUMBER}" alt="{NUMBER}" /></a>';
 		}
 		else
 		{
