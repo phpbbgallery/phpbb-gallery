@@ -148,10 +148,10 @@ function gallery_notification($mode, $handle_id, $image_name)
 	}
 
 	// Make sure users are allowed to view the album
-	$i_view_ary = array();
+	$i_view_ary = $groups_ary = $groups_row = array();
 	$sql = 'SELECT pr.i_view, p.perm_system, p.perm_group_id, p.perm_user_id
-		FROM ' . GALLERY_PERMISSIONS_TABLE . ' as p
-		LEFT JOIN ' .  GALLERY_ROLES_TABLE .  ' as pr
+		FROM ' . GALLERY_PERMISSIONS_TABLE . ' p
+		LEFT JOIN ' .  GALLERY_ROLES_TABLE .  ' pr
 			ON p.perm_role_id = pr.role_id
 		WHERE ' . (($album['album_user_id'] == NON_PERSONAL_ALBUMS) ? 'p.perm_album_id = ' . $album_id : 'p.perm_system <> ' . NON_PERSONAL_PERMISSIONS) . '
 		ORDER BY pr.i_view ASC';
@@ -160,30 +160,8 @@ function gallery_notification($mode, $handle_id, $image_name)
 	{
 		if ($row['perm_group_id'])
 		{
-			$sql2 = 'SELECT ug.user_id
-				FROM ' . USER_GROUP_TABLE . " ug
-				WHERE ug.group_id = {$row['perm_group_id']}
-					AND ug.user_pending = 0";
-			$result2 = $db->sql_query($sql2);
-			while ($row2 = $db->sql_fetchrow($result2))
-			{
-				if (!isset($i_view_ary[$row2['user_id']]) || (isset($i_view_ary[$row2['user_id']]) && ($i_view_ary[$row2['user_id']] < $row['i_view'])))
-				{
-					if (!$row['perm_system'])
-					{
-						$i_view_ary[$row2['user_id']] = $row['i_view'];
-					}
-					elseif (($row['perm_system'] == OWN_GALLERY_PERMISSIONS) && ($album['album_user_id'] == $row2['user_id']))
-					{
-						$i_view_ary[$row2['user_id']] = $row['i_view'];
-					}
-					elseif (($row['perm_system'] == PERSONAL_GALLERY_PERMISSIONS) && ($album['album_user_id'] != $row2['user_id']))
-					{
-						$i_view_ary[$row2['user_id']] = $row['i_view'];
-					}
-				}
-			}
-			$db->sql_freeresult($result2);
+			$groups_ary[] = $row['perm_group_id'];
+			$groups_row[$row['perm_group_id']] = $row;
 		}
 		else
 		{
@@ -206,11 +184,40 @@ function gallery_notification($mode, $handle_id, $image_name)
 	}
 	$db->sql_freeresult($result);
 
+	if (sizeof($groups_ary))
+	{
+		// Get all users by their group permissions
+		$sql = 'SELECT user_id, group_id
+			FROM ' . USER_GROUP_TABLE . '
+			WHERE ' . $db->sql_in_set('group_id', $groups_ary) . '
+				AND user_pending = 0';
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			if (!isset($i_view_ary[$row['user_id']]) || (isset($i_view_ary[$row['user_id']]) && ($i_view_ary[$row['user_id']] < $groups_row[$row['group_id']]['i_view'])))
+			{
+				if (!$groups_row[$row['group_id']]['perm_system'])
+				{
+					$i_view_ary[$row['user_id']] = $groups_row[$row['group_id']]['i_view'];
+				}
+				else if (($groups_row[$row['group_id']]['perm_system'] == OWN_GALLERY_PERMISSIONS) && ($album['album_user_id'] == $row['user_id']))
+				{
+					$i_view_ary[$row['user_id']] = $groups_row[$row['group_id']]['i_view'];
+				}
+				else if (($groups_row[$row['group_id']]['perm_system'] == PERSONAL_GALLERY_PERMISSIONS) && ($album['album_user_id'] != $row['user_id']))
+				{
+					$i_view_ary[$row['user_id']] = $groups_row[$row['group_id']]['i_view'];
+				}
+			}
+		}
+		$db->sql_freeresult($result);
+	}
+
 	// Now, we have to do a little step before really sending, we need to distinguish our users a little bit. ;)
 	$msg_users = $delete_ids = $update_notification = array();
 	foreach ($notify_rows as $user_id => $row)
 	{
-		if (($i_view_ary[$row['user_id']] != 1) || !trim($row['user_email']))
+		if (($i_view_ary[$row['user_id']] != GALLERY_ACL_YES) || !trim($row['user_email']))
 		{
 			$delete_ids[$row['notify_type']][] = $row['user_id'];
 		}
