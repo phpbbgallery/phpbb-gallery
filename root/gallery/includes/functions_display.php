@@ -74,13 +74,21 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 
 		if ($first_char)
 		{
-			// We dont view all personal albums, so we need to recount, for the pagination.
-			$sql = 'SELECT count(a.album_id) as pgalleries
-				FROM ' . GALLERY_ALBUMS_TABLE . ' a
-				LEFT JOIN ' . USERS_TABLE . ' u
-					ON u.user_id = a.album_user_id
-				WHERE a.parent_id = 0
-					AND ' . $sql_where;
+			// We do not view all personal albums, so we need to recount, for the pagination.
+			$sql_array = (
+				'SELECT'		=> 'count(a.album_id) as pgalleries',
+				'FROM'			=> array(GALLERY_ALBUMS_TABLE => 'a'),
+
+				'LEFT_JOIN'		=> array(
+					array(
+						'FROM'		=> array(USERS_TABLE => 'u'),
+						'ON'		=> 'u.user_id = a.album_user_id',
+					),
+				),
+
+				'WHERE'			=> 'a.parent_id = 0 AND ' . $sql_where,
+			);
+			$sql = $db->sql_build_query('SELECT', $sql_array);
 			$result = $db->sql_query($sql);
 			$num_pgalleries = $db->sql_fetchfield('pgalleries');
 			$db->sql_freeresult($result);
@@ -102,15 +110,15 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 
 	$sql_array = array(
 		'SELECT'	=> 'a.*, at.mark_time',
-		'FROM'		=> array(
-			GALLERY_ALBUMS_TABLE		=> 'a',
-		),
+		'FROM'		=> array(GALLERY_ALBUMS_TABLE => 'a'),
+
 		'LEFT_JOIN'	=> array(
 			array(
 				'FROM'	=> array(GALLERY_ATRACK_TABLE => 'at'),
 				'ON'	=> 'at.user_id = ' . $user->data['user_id'] . ' AND a.album_id = at.album_id'
 			)
 		),
+
 		'ORDER_BY'	=> 'a.album_user_id, a.left_id',
 	);
 
@@ -608,10 +616,7 @@ function get_album_moderators(&$album_moderators, $album_id = false)
 
 	$sql_array = array(
 		'SELECT'	=> 'm.*, u.user_colour, g.group_colour, g.group_type',
-
-		'FROM'		=> array(
-			GALLERY_MODSCACHE_TABLE	=> 'm',
-		),
+		'FROM'		=> array(GALLERY_MODSCACHE_TABLE => 'm'),
 
 		'LEFT_JOIN'	=> array(
 			array(

@@ -76,12 +76,10 @@ function get_album_access_array()
 		// Testing user permissions?
 		$user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
 
-		$sql = 'SELECT g.group_id
-			FROM ' . GROUPS_TABLE . ' as g
-			LEFT JOIN ' . USER_GROUP_TABLE . " as ug
-				ON ug.group_id = g.group_id
-			WHERE ug.user_id = $user_id
-				AND ug.user_pending = 0";
+		$sql = 'SELECT group_id
+			FROM ' . USER_GROUP_TABLE . "
+			WHERE user_id = $user_id
+				AND user_pending = 0";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
@@ -89,13 +87,21 @@ function get_album_access_array()
 		}
 		$db->sql_freeresult($result);
 
-		$sql = "SELECT p.perm_album_id, $pull_data p.perm_system
-			FROM " . GALLERY_PERMISSIONS_TABLE . ' as p
-			LEFT JOIN ' . GALLERY_ROLES_TABLE .  ' as pr
-				ON p.perm_role_id = pr.role_id
-			WHERE ( p.perm_user_id = ' . $user_id . '
-				OR ' . $db->sql_in_set('p.perm_group_id', $user_groups_ary) . ')
-			GROUP BY p.perm_system DESC, p.perm_album_id ASC';
+		$sql_array = (
+			'SELECT'		=> "p.perm_album_id, $pull_data p.perm_system",
+			'FROM'			=> array(GALLERY_PERMISSIONS_TABLE => 'p'),
+
+			'LEFT_JOIN'		=> array(
+				array(
+					'FROM'		=> array(GALLERY_ROLES_TABLE => 'pr'),
+					'ON'		=> 'p.perm_role_id = pr.role_id',
+				),
+			),
+
+			'WHERE'			=> 'p.perm_user_id = ' . $user_id . ' OR ' . $db->sql_in_set('p.perm_group_id', $user_groups_ary),
+			'GROUP_BY'		=> 'p.perm_system DESC, p.perm_album_id ASC',
+		);
+		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{

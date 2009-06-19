@@ -38,14 +38,25 @@ if ($mode == 'report_details')
 	{
 		$m_status = '';
 	}
-	$sql = 'SELECT r.*, u.username reporter_name, u.user_colour reporter_colour, i.*
-		FROM ' . GALLERY_REPORTS_TABLE . ' r
-		LEFT JOIN ' . USERS_TABLE . ' u
-			ON r.reporter_id = u.user_id
-		LEFT JOIN ' . GALLERY_IMAGES_TABLE . " i
-			ON r.report_image_id = i.image_id
-		WHERE r.report_id = $option_id
-			$m_status";
+
+	$sql_array = (
+		'SELECT'		=> 'r.*, u.username reporter_name, u.user_colour reporter_colour, i.*',
+		'FROM'			=> array(GALLERY_REPORTS_TABLE => 'r'),
+
+		'LEFT_JOIN'		=> array(
+			array(
+				'FROM'		=> array(USERS_TABLE => 'u'),
+				'ON'		=> 'r.reporter_id = u.user_id',
+			),
+			array(
+				'FROM'		=> array(GALLERY_IMAGES_TABLE => 'i'),
+				'ON'		=> 'r.report_image_id = i.image_id',
+			),
+		),
+
+		'WHERE'			=> 'r.report_id = ' . $option_id . ' ' . $m_status,
+	);
+	$sql = $db->sql_build_query('SELECT', $sql_array);
 	$result = $db->sql_query_limit($sql, 1);
 	$row = $db->sql_fetchrow($result);
 	$template->assign_vars(array(

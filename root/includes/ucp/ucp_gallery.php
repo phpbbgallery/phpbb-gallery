@@ -730,13 +730,21 @@ class ucp_gallery
 					// Update the config for the statistic on the index
 					if ($gallery_config['personal_counter'] > 0)
 					{
-						$sql = 'SELECT a.album_id, u.user_id, u.username, u.user_colour
-							FROM ' . GALLERY_ALBUMS_TABLE . ' a
-							LEFT JOIN ' . USERS_TABLE . ' u
-								ON u.user_id = a.album_user_id
-							WHERE a.album_user_id <> ' . NON_PERSONAL_ALBUMS . '
-								AND a.parent_id = 0
-							ORDER BY a.album_id DESC';
+						$sql_array = (
+							'SELECT'		=> 'a.album_id, u.user_id, u.username, u.user_colour',
+							'FROM'			=> array(GALLERY_ALBUMS_TABLE => 'a'),
+
+							'LEFT_JOIN'		=> array(
+								array(
+									'FROM'		=> array(USERS_TABLE => 'u'),
+									'ON'		=> 'u.user_id = a.album_user_id',
+								),
+							),
+
+							'WHERE'			=> 'a.album_user_id <> ' . NON_PERSONAL_ALBUMS . ' AND a.parent_id = 0',
+							'ORDER_BY'		=> 'a.album_id DESC',
+						);
+						$sql = $db->sql_build_query('SELECT', $sql_array);
 						$result = $db->sql_query_limit($sql, 1);
 						$newest_pgallery = $db->sql_fetchrow($result);
 						$db->sql_freeresult($result);
@@ -903,14 +911,24 @@ class ucp_gallery
 		}
 
 		// Subscribed albums
-		$sql = 'SELECT *
-			FROM ' . GALLERY_WATCH_TABLE . ' w
-			LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
-				ON w.album_id = a.album_id
-			LEFT JOIN ' . GALLERY_CONTESTS_TABLE . ' c
-				ON a.album_id = c.contest_album_id
-			WHERE w.album_id <> 0
-				AND w.user_id = ' . $user->data['user_id'];
+		$sql_array = (
+			'SELECT'		=> '*',
+			'FROM'			=> array(GALLERY_WATCH_TABLE => 'w'),
+
+			'LEFT_JOIN'		=> array(
+				array(
+					'FROM'		=> array(GALLERY_ALBUMS_TABLE => 'a'),
+					'ON'		=> 'w.album_id = a.album_id',
+				),
+				array(
+					'FROM'		=> array(GALLERY_CONTESTS_TABLE => 'c'),
+					'ON'		=> 'a.album_id = c.contest_album_id',
+				),
+			),
+
+			'WHERE'			=> 'w.album_id <> 0 AND w.user_id = ' . $user->data['user_id'],
+		);
+		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
@@ -943,16 +961,28 @@ class ucp_gallery
 		$total_images = (int) $db->sql_fetchfield('images');
 		$db->sql_freeresult($result);
 
-		$sql = 'SELECT w.*, i.*, a.album_name, c.*
-			FROM ' . GALLERY_WATCH_TABLE . ' w
-			LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
-				ON w.image_id = i.image_id
-			LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
-				ON a.album_id = i.image_album_id
-			LEFT JOIN ' . GALLERY_COMMENTS_TABLE . ' c
-				ON i.image_last_comment = c.comment_id
-			WHERE w.image_id <> 0
-				AND w.user_id = ' . $user->data['user_id'];
+		$sql_array = (
+			'SELECT'		=> 'w.*, i.*, a.album_name, c.*',
+			'FROM'			=> array(GALLERY_WATCH_TABLE => 'w'),
+
+			'LEFT_JOIN'		=> array(
+				array(
+					'FROM'		=> array(GALLERY_IMAGES_TABLE => 'i'),
+					'ON'		=> 'w.image_id = i.image_id',
+				),
+				array(
+					'FROM'		=> array(GALLERY_ALBUMS_TABLE => 'a'),
+					'ON'		=> 'a.album_id = i.image_album_id',
+				),
+				array(
+					'FROM'		=> array(GALLERY_COMMENTS_TABLE => 'c'),
+					'ON'		=> 'i.image_last_comment = c.comment_id',
+				),
+			),
+
+			'WHERE'			=> 'w.image_id <> 0 AND w.user_id = ' . $user->data['user_id'],
+		);
+		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql, $images_per_page, $start);
 		while ($row = $db->sql_fetchrow($result))
 		{
@@ -1023,13 +1053,24 @@ class ucp_gallery
 		$total_images = (int) $db->sql_fetchfield('images');
 		$db->sql_freeresult($result);
 
-		$sql = 'SELECT f.*, i.*, a.album_name
-			FROM ' . GALLERY_FAVORITES_TABLE . ' f
-			LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
-				ON f.image_id = i.image_id
-			LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
-				ON a.album_id = i.image_album_id
-			WHERE f.user_id = ' . $user->data['user_id'];
+		$sql_array = (
+			'SELECT'		=> 'f.*, i.*, a.album_name',
+			'FROM'			=> array(GALLERY_FAVORITES_TABLE => 'f'),
+
+			'LEFT_JOIN'		=> array(
+				array(
+					'FROM'		=> array(GALLERY_IMAGES_TABLE => 'i'),
+					'ON'		=> 'f.image_id = i.image_id',
+				),
+				array(
+					'FROM'		=> array(GALLERY_ALBUMS_TABLE => 'a'),
+					'ON'		=> 'a.album_id = i.image_album_id',
+				),
+			),
+
+			'WHERE'			=> 'f.user_id = ' . $user->data['user_id'],
+		);
+		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query_limit($sql, $images_per_page, $start);
 		while ($row = $db->sql_fetchrow($result))
 		{

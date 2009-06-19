@@ -34,13 +34,22 @@ if (gallery_acl_check('m_status', $album_id))
 	$m_status = '';
 }
 
-$sql = 'SELECT i.*, r.report_status, r.report_id
-	FROM ' . GALLERY_IMAGES_TABLE . ' i
-	LEFT JOIN ' . GALLERY_REPORTS_TABLE . " r
-		ON r.report_image_id = i.image_id
-	WHERE image_album_id = $album_id
-		$m_status
-	ORDER BY i.$sort_key $sort_dir";
+$sql_array = (
+	'SELECT'		=> 'i.*, r.report_status, r.report_id',
+	'FROM'			=> array(GALLERY_IMAGES_TABLE => 'i'),
+
+	'LEFT_JOIN'		=> array(
+		array(
+			'FROM'		=> array(GALLERY_REPORTS_TABLE => 'r'),
+			'ON'		=> 'r.report_image_id = i.image_id',
+		),
+	),
+
+	'WHERE'			=> 'image_album_id = ' . $album_id . ' ' . $m_status,
+	'ORDER_BY'		=> "i.$sort_key $sort_dir",
+);
+$sql = $db->sql_build_query('SELECT', $sql_array);
+
 $result = $db->sql_query_limit($sql, $images_per_page, $start);
 while ($row = $db->sql_fetchrow($result))
 {

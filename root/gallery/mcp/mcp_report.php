@@ -43,29 +43,47 @@ else
 	$report_status = REPORT_LOCKED;
 }
 
-$sql = 'SELECT COUNT(i.image_id) images
-	FROM ' . GALLERY_REPORTS_TABLE . ' r
-	LEFT JOIN ' . GALLERY_IMAGES_TABLE . " i
-		ON r.report_image_id = i.image_id
-	WHERE r.report_album_id = $album_id
-		AND r.report_status = $report_status
-		$m_status";
+$sql_array = (
+	'SELECT'		=> 'COUNT(i.image_id) images',
+	'FROM'			=> array(GALLERY_REPORTS_TABLE => 'r'),
+
+	'LEFT_JOIN'		=> array(
+		array(
+			'FROM'		=> array(GALLERY_IMAGES_TABLE => 'i'),
+			'ON'		=> 'r.report_image_id = i.image_id',
+		),
+	),
+
+	'WHERE'			=> "r.report_album_id = $album_id AND r.report_status = $report_status $m_status",
+);
+$sql = $db->sql_build_query('SELECT', $sql_array);
 $result = $db->sql_query($sql);
 $count_images = (int) $db->sql_fetchfield('images');
 $db->sql_freeresult($result);
 
-$sql = 'SELECT r.*, u.username reporter_name, u.user_colour reporter_colour, m.username mod_username, m.user_colour mod_user_colour, i.*
-	FROM ' . GALLERY_REPORTS_TABLE . ' r
-	LEFT JOIN ' . USERS_TABLE . ' u
-		ON r.reporter_id = u.user_id
-	LEFT JOIN ' . USERS_TABLE . ' m
-		ON r.report_manager = m.user_id
-	LEFT JOIN ' . GALLERY_IMAGES_TABLE . " i
-		ON r.report_image_id = i.image_id
-	WHERE r.report_album_id = $album_id
-		AND r.report_status = $report_status
-		$m_status
-	ORDER BY $sort_key $sort_dir";
+$sql_array = (
+	'SELECT'		=> 'r.*, u.username reporter_name, u.user_colour reporter_colour, m.username mod_username, m.user_colour mod_user_colour, i.*',
+	'FROM'			=> array(GALLERY_REPORTS_TABLE => 'r'),
+
+	'LEFT_JOIN'		=> array(
+		array(
+			'FROM'		=> array(USERS_TABLE => 'u'),
+			'ON'		=> 'r.reporter_id = u.user_id',
+		),
+		array(
+			'FROM'		=> array(USERS_TABLE => 'm'),
+			'ON'		=> 'r.report_manager = m.user_id',
+		),
+		array(
+			'FROM'		=> array(GALLERY_IMAGES_TABLE => 'i'),
+			'ON'		=> 'r.report_image_id = i.image_id',
+		),
+	),
+
+	'WHERE'			=> "r.report_album_id = $album_id AND r.report_status = $report_status $m_status",
+	'ORDER_BY'		=> $sort_key . $sort_dir,
+);
+$sql = $db->sql_build_query('SELECT', $sql_array);
 $result = $db->sql_query_limit($sql, $images_per_page, $start);
 
 while ($row = $db->sql_fetchrow($result))

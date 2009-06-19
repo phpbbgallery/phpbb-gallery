@@ -140,13 +140,21 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 		}
 		if ($ints['contests'])
 		{
-			$sql = 'SELECT c.*, a.album_name
-				FROM ' . GALLERY_CONTESTS_TABLE . ' c
-				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
-					ON a.album_id = c.contest_album_id
-				WHERE ' . $db->sql_in_set('c.contest_album_id', array_unique(array_merge($view_albums, $moderate_albums))) . '
-					AND c.contest_marked = ' . IMAGE_NO_CONTEST . '
-				ORDER BY c.contest_start + c.contest_end DESC';
+			$sql_array = (
+				'SELECT'		=> 'c.*, a.album_name',
+				'FROM'			=> array(GALLERY_CONTESTS_TABLE => 'c'),
+
+				'LEFT_JOIN'		=> array(
+					array(
+						'FROM'		=> array(GALLERY_ALBUMS_TABLE => 'a'),
+						'ON'		=> 'a.album_id = c.contest_album_id',
+					),
+				),
+
+				'WHERE'			=> ($db->sql_in_set('c.contest_album_id', array_unique(array_merge($view_albums, $moderate_albums))) . ' AND c.contest_marked = ' . IMAGE_NO_CONTEST,
+				'ORDER_BY'		=> 'c.contest_start + c.contest_end DESC',
+			);
+			$sql = $db->sql_build_query('SELECT', $sql_array);
 			$result = $db->sql_query_limit($sql, $ints['contests']);
 
 			while ($row = $db->sql_fetchrow($result))
@@ -167,12 +175,21 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 		$images = array_unique($images);
 		if (sizeof($images))
 		{
-			$sql = 'SELECT i.*, a.album_name, a.album_status, a.album_id, a.album_user_id
-				FROM ' . GALLERY_IMAGES_TABLE . ' i
-				LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
-					ON i.image_album_id = a.album_id
-				WHERE ' . $db->sql_in_set('i.image_id', $images, false, true) . '
-				ORDER BY i.image_time DESC';
+			$sql_array = (
+				'SELECT'		=> 'i.*, a.album_name, a.album_status, a.album_id, a.album_user_id',
+				'FROM'			=> array(GALLERY_IMAGES_TABLE => 'i'),
+
+				'LEFT_JOIN'		=> array(
+					array(
+						'FROM'		=> array(GALLERY_ALBUMS_TABLE => 'a'),
+						'ON'		=> 'i.image_album_id = a.album_id',
+					),
+				),
+
+				'WHERE'			=> ($db->sql_in_set('i.image_id', $images, false, true),
+				'ORDER_BY'		=> 'i.image_time DESC',
+			);
+			$sql = $db->sql_build_query('SELECT', $sql_array);
 			$result = $db->sql_query($sql);
 
 			while ($row = $db->sql_fetchrow($result))
@@ -267,13 +284,21 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 	{
 		$user->add_lang('viewtopic');
 
-		$sql = 'SELECT c.*, i.*
-			FROM ' . GALLERY_COMMENTS_TABLE . ' c
-			LEFT JOIN ' . GALLERY_IMAGES_TABLE . " i
-				ON c.comment_image_id = i.image_id
-			WHERE $sql_permission_where
-				AND " . $db->sql_in_set('i.image_album_id', $comment_albums, false, true) . '
-			ORDER BY c.comment_id DESC';
+		$sql_array = (
+			'SELECT'		=> 'c.*, i.*',
+			'FROM'			=> array(GALLERY_COMMENTS_TABLE => 'c'),
+
+			'LEFT_JOIN'		=> array(
+				array(
+					'FROM'		=> array(GALLERY_IMAGES_TABLE => 'i'),
+					'ON'		=> 'c.comment_image_id = i.image_id',
+				),
+			),
+
+			'WHERE'			=> $sql_permission_where . ' AND ' . $db->sql_in_set('i.image_album_id', $comment_albums, false, true),
+			'ORDER_BY'		=> 'c.comment_id DESC',
+		);
+		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query_limit($sql, $ints['comments']);
 
 		while ($commentrow = $db->sql_fetchrow($result))

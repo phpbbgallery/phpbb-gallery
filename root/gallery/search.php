@@ -245,14 +245,24 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 
 				$sql_order = 'c.comment_id DESC';
 				$sql_limit = SEARCH_PAGES_NUMBER * $per_page;
-				$sql = 'SELECT c.comment_id
-					FROM ' . GALLERY_COMMENTS_TABLE . ' c
-					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
-						ON c.comment_image_id = i.image_id
-					WHERE ((' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND i.image_status <> ' . IMAGE_UNAPPROVED . ')
-							OR ' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
-						AND ' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('c_read'), false, true) . '
-					ORDER BY ' . $sql_order;
+
+				$sql_array = (
+					'SELECT'		=> 'c.comment_id',
+					'FROM'			=> array(GALLERY_COMMENTS_TABLE => 'c'),
+
+					'LEFT_JOIN'		=> array(
+						array(
+							'FROM'		=> array(GALLERY_IMAGES_TABLE => 'i'),
+							'ON'		=> 'c.comment_image_id = i.image_id',
+						),
+					),
+
+					'WHERE'			=> '((' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND i.image_status <> ' . IMAGE_UNAPPROVED . ')
+						OR ' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
+						AND ' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('c_read'), false, true),
+					'ORDER_BY'		=> $sql_order,
+				);
+				$sql = $db->sql_build_query('SELECT', $sql_array);
 			}
 			break;
 

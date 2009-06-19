@@ -149,12 +149,21 @@ function gallery_notification($mode, $handle_id, $image_name)
 
 	// Make sure users are allowed to view the album
 	$i_view_ary = $groups_ary = $groups_row = array();
-	$sql = 'SELECT pr.i_view, p.perm_system, p.perm_group_id, p.perm_user_id
-		FROM ' . GALLERY_PERMISSIONS_TABLE . ' p
-		LEFT JOIN ' .  GALLERY_ROLES_TABLE .  ' pr
-			ON p.perm_role_id = pr.role_id
-		WHERE ' . (($album['album_user_id'] == NON_PERSONAL_ALBUMS) ? 'p.perm_album_id = ' . $album_id : 'p.perm_system <> ' . NON_PERSONAL_PERMISSIONS) . '
-		ORDER BY pr.i_view ASC';
+	$sql_array = (
+		'SELECT'		=> 'pr.i_view, p.perm_system, p.perm_group_id, p.perm_user_id',
+		'FROM'			=> array(GALLERY_PERMISSIONS_TABLE => 'p'),
+
+		'LEFT_JOIN'		=> array(
+			array(
+				'FROM'		=> array(GALLERY_ROLES_TABLE => 'pr'),
+				'ON'		=> 'p.perm_role_id = pr.role_id',
+			),
+		),
+
+		'WHERE'			=> (($album['album_user_id'] == NON_PERSONAL_ALBUMS) ? 'p.perm_album_id = ' . $album_id : 'p.perm_system <> ' . NON_PERSONAL_PERMISSIONS),
+		'ORDER_BY'		=> 'pr.i_view ASC',
+	);
+	$sql = $db->sql_build_query('SELECT', $sql_array);
 	$result = $db->sql_query($sql);
 	while ($row = $db->sql_fetchrow($result))
 	{

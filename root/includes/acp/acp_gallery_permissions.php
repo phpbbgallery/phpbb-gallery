@@ -287,12 +287,21 @@ class acp_gallery_permissions
 		}
 
 		// Get the groups for selected album/p_system
-		$sql = 'SELECT g.group_name, g.group_id, g.group_type
-			FROM ' . GROUPS_TABLE . ' g
-			LEFT JOIN ' . GALLERY_PERMISSIONS_TABLE . ' gp
-				ON gp.perm_group_id = g.group_id
-			WHERE ' . ((!$p_system) ? $db->sql_in_set('gp.perm_album_id', $album_id, false, true) : $db->sql_in_set('gp.perm_system', $p_system, false, true)) . '
-			GROUP BY g.group_id';
+		$sql_array = (
+			'SELECT'		=> 'g.group_name, g.group_id, g.group_type',
+			'FROM'			=> array(GROUPS_TABLE => 'g'),
+
+			'LEFT_JOIN'		=> array(
+				array(
+					'FROM'		=> array(GALLERY_PERMISSIONS_TABLE => 'p'),
+					'ON'		=> 'p.perm_group_id = g.group_id',
+				),
+			),
+
+			'WHERE'			=> ((!$p_system) ? $db->sql_in_set('p.perm_album_id', $album_id, false, true) : $db->sql_in_set('p.perm_system', $p_system, false, true)),
+			'GROUP_BY'		=> 'g.group_id',
+		);
+		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);
 
 		$set_groups = array();
@@ -319,12 +328,21 @@ class acp_gallery_permissions
 		$db->sql_freeresult($result);
 
 		// Get the users for selected album/p_system
-		$sql = 'SELECT u.username, u.user_id
-			FROM ' . USERS_TABLE . ' u
-			LEFT JOIN ' . GALLERY_PERMISSIONS_TABLE . ' gp
-				ON gp.perm_user_id = u.user_id
-			WHERE ' . ((!$p_system) ? $db->sql_in_set('gp.perm_album_id', $album_id, false, true) : $db->sql_in_set('gp.perm_system', $p_system, false, true)) . '
-			GROUP BY u.user_id';
+		$sql_array = (
+			'SELECT'		=> 'u.username, u.user_id',
+			'FROM'			=> array(USERS_TABLE => 'u'),
+
+			'LEFT_JOIN'		=> array(
+				array(
+					'FROM'		=> array(GALLERY_PERMISSIONS_TABLE => 'p'),
+					'ON'		=> 'p.perm_user_id = u.user_id',
+				),
+			),
+
+			'WHERE'			=> ((!$p_system) ? $db->sql_in_set('p.perm_album_id', $album_id, false, true) : $db->sql_in_set('p.perm_system', $p_system, false, true)),
+			'GROUP_BY'		=> 'u.user_id',
+		);
+		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);
 
 		$set_users = array();

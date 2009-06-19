@@ -209,13 +209,22 @@ class acp_gallery
 					set_gallery_config('personal_counter', $number_of_personals);
 
 					// Update the config for the statistic on the index
-					$sql = 'SELECT a.album_id, u.user_id, u.username, u.user_colour
-						FROM ' . GALLERY_ALBUMS_TABLE . ' a
-						LEFT JOIN ' . USERS_TABLE . ' u
-							ON u.user_id = a.album_user_id
-						WHERE a.album_user_id <> ' . NON_PERSONAL_ALBUMS . '
-							AND a.parent_id = 0
-						ORDER BY a.album_id DESC';
+					$sql_array = (
+						'SELECT'		=> 'a.album_id, u.user_id, u.username, u.user_colour',
+						'FROM'			=> array(GALLERY_ALBUMS_TABLE => 'a'),
+
+						'LEFT_JOIN'		=> array(
+							array(
+								'FROM'		=> array(USERS_TABLE => 'u'),
+								'ON'		=> 'u.user_id = a.album_user_id',
+							),
+						),
+
+						'WHERE'			=> 'a.album_user_id <> ' . NON_PERSONAL_ALBUMS . ' AND a.parent_id = 0',
+						'ORDER_BY'		=> 'a.album_id DESC',
+					);
+					$sql = $db->sql_build_query('SELECT', $sql_array);
+
 					$result = $db->sql_query_limit($sql, 1);
 					$newest_pgallery = $db->sql_fetchrow($result);
 					$db->sql_freeresult($result);
@@ -934,13 +943,22 @@ class acp_gallery
 					// Update the config for the statistic on the index
 					if ($gallery_config['personal_counter'] > 0)
 					{
-						$sql = 'SELECT a.album_id, u.user_id, u.username, u.user_colour
-							FROM ' . GALLERY_ALBUMS_TABLE . ' a
-							LEFT JOIN ' . USERS_TABLE . ' u
-								ON u.user_id = a.album_user_id
-							WHERE a.album_user_id <> ' . NON_PERSONAL_ALBUMS . '
-								AND a.parent_id = 0
-							ORDER BY a.album_id DESC';
+						$sql_array = (
+							'SELECT'		=> 'a.album_id, u.user_id, u.username, u.user_colour',
+							'FROM'			=> array(GALLERY_ALBUMS_TABLE => 'a'),
+
+							'LEFT_JOIN'		=> array(
+								array(
+									'FROM'		=> array(USERS_TABLE => 'u'),
+									'ON'		=> 'u.user_id = a.album_user_id',
+								),
+							),
+
+							'WHERE'			=> 'a.album_user_id <> ' . NON_PERSONAL_ALBUMS . ' AND a.parent_id = 0',
+							'ORDER_BY'		=> 'a.album_id DESC',
+						);
+						$sql = $db->sql_build_query('SELECT', $sql_array);
+
 						$result = $db->sql_query_limit($sql, 1);
 						$newest_pgallery = $db->sql_fetchrow($result);
 						$db->sql_freeresult($result);
@@ -1051,10 +1069,18 @@ class acp_gallery
 		}
 
 		$requested_source = array();
-		$sql = 'SELECT gi.image_id, gi.image_name, gi.image_filemissing, gi.image_filename, gi.image_username, u.user_id
-			FROM ' . GALLERY_IMAGES_TABLE . ' gi
-			LEFT JOIN ' . USERS_TABLE . ' u
-				ON u.user_id = gi.image_user_id';
+		$sql_array = (
+			'SELECT'		=> 'i.image_id, i.image_name, i.image_filemissing, i.image_filename, i.image_username, u.user_id',
+			'FROM'			=> array(GALLERY_IMAGES_TABLE => 'i'),
+
+			'LEFT_JOIN'		=> array(
+				array(
+					'FROM'		=> array(USERS_TABLE => 'u'),
+					'ON'		=> 'u.user_id = i.image_user_id',
+				),
+			),
+		);
+		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
@@ -1125,10 +1151,18 @@ class acp_gallery
 		}
 
 
-		$sql = 'SELECT gc.comment_id, gc.comment_image_id, gc.comment_username, u.user_id
-			FROM ' . GALLERY_COMMENTS_TABLE . ' gc
-			LEFT JOIN ' . USERS_TABLE . ' u
-				ON u.user_id = gc.comment_user_id';
+		$sql_array = (
+			'SELECT'		=> 'c.comment_id, c.comment_image_id, c.comment_username, u.user_id',
+			'FROM'			=> array(GALLERY_COMMENTS_TABLE => 'c'),
+
+			'LEFT_JOIN'		=> array(
+				array(
+					'FROM'		=> array(USERS_TABLE => 'u'),
+					'ON'		=> 'u.user_id = c.comment_user_id',
+				),
+			),
+		);
+		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
@@ -1143,12 +1177,20 @@ class acp_gallery
 		}
 		$db->sql_freeresult($result);
 
-		$sql = 'SELECT ga.album_id, ga.album_user_id, ga.album_name, u.user_id, ga.album_images_real
-			FROM ' . GALLERY_ALBUMS_TABLE . ' ga
-			LEFT JOIN ' . USERS_TABLE . ' u
-				ON u.user_id = ga.album_user_id
-			WHERE ga.album_user_id <> ' . NON_PERSONAL_ALBUMS . '
-				AND ga.parent_id = 0';
+		$sql_array = (
+			'SELECT'		=> 'a.album_id, a.album_user_id, a.album_name, u.user_id, a.album_images_real',
+			'FROM'			=> array(GALLERY_ALBUMS_TABLE => 'a'),
+
+			'LEFT_JOIN'		=> array(
+				array(
+					'FROM'		=> array(USERS_TABLE => 'u'),
+					'ON'		=> 'u.user_id = a.album_user_id',
+				),
+			),
+
+			'WHERE'			=> 'a.album_user_id <> ' . NON_PERSONAL_ALBUMS . ' AND a.parent_id = 0',
+		);
+		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);
 		$personalrow = $personal_bad_row = array();
 		while ($row = $db->sql_fetchrow($result))

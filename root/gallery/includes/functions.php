@@ -149,22 +149,35 @@ function set_gallery_config_count($config_name, $increment, $is_dynamic = false)
 */
 function get_album_info($album_id)
 {
-	global $db, $user, $gallery_root_path, $phpbb_root_path, $phpEx;
+	global $db, $user;
 
-	$sql = 'SELECT a.*, c.*, w.watch_id
-		FROM ' . GALLERY_ALBUMS_TABLE . ' a
-		LEFT JOIN ' . GALLERY_WATCH_TABLE . ' w
-			ON a.album_id = w.album_id
-				AND w.user_id = ' . $user->data['user_id'] . '
-		LEFT JOIN ' . GALLERY_CONTESTS_TABLE . ' c
-			ON a.album_id = c.contest_album_id
-		WHERE a.album_id = ' . (int) $album_id;
+	$sql_array = (
+		'SELECT'		=> 'a.*, c.*, w.watch_id',
+		'FROM'			=> array(GALLERY_ALBUMS_TABLE => 'a'),
+
+		'LEFT_JOIN'		=> array(
+			array(
+				'FROM'		=> array(GALLERY_WATCH_TABLE => 'w'),
+				'ON'		=> 'a.album_id = w.album_id AND w.user_id = ' . $user->data['user_id'],
+			),
+			array(
+				'FROM'		=> array(GALLERY_CONTESTS_TABLE => 'c'),
+				'ON'		=> 'a.album_id = c.contest_album_id',
+			),
+		),
+
+		'WHERE'			=> 'a.album_id = ' . (int) $album_id,
+	);
+	$sql = $db->sql_build_query('SELECT', $sql_array);
+
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
 
 	if (!$row)
 	{
+		global $gallery_root_path, $phpbb_root_path, $phpEx;
+
 		meta_refresh(3, append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"));
 		trigger_error('ALBUM_NOT_EXIST');
 	}
@@ -190,15 +203,25 @@ function get_image_info($image_id)
 {
 	global $db, $user, $gallery_root_path, $phpbb_root_path, $phpEx;
 
-	$sql = 'SELECT *
-		FROM ' . GALLERY_IMAGES_TABLE . ' i
-		LEFT JOIN ' . GALLERY_WATCH_TABLE . ' w
-			ON w.image_id = i.image_id
-				AND w.user_id = ' . $user->data['user_id'] . '
-		LEFT JOIN ' . GALLERY_FAVORITES_TABLE . ' f
-			ON f.image_id = i.image_id
-				AND f.user_id = ' . $user->data['user_id'] . '
-		WHERE i.image_id = ' . (int) $image_id;
+	$sql_array = (
+		'SELECT'		=> '*',
+		'FROM'			=> array(GALLERY_IMAGES_TABLE => 'i'),
+
+		'LEFT_JOIN'		=> array(
+			array(
+				'FROM'		=> array(GALLERY_WATCH_TABLE => 'w'),
+				'ON'		=> 'i.image_id = w.image_id AND w.user_id = ' . $user->data['user_id'],
+			),
+			array(
+				'FROM'		=> array(GALLERY_FAVORITES_TABLE => 'f'),
+				'ON'		=> 'i.image_id = f.image_id AND f.user_id = ' . $user->data['user_id'],
+			),
+		),
+
+		'WHERE'			=> 'i.image_id = ' . (int) $image_id,
+	);
+	$sql = $db->sql_build_query('SELECT', $sql_array);
+
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
