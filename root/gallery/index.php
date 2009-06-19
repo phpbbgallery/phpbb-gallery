@@ -217,6 +217,7 @@ if ($config['load_birthdays'] && $config['allow_birthdays'] && $gallery_config['
 
 $first_char = request_var('first_char', '');
 $s_char_options = '<option value=""' . ((!$first_char) ? ' selected="selected"' : '') . '>' . $user->lang['ALL'] . '</option>';
+// Loop the ASCII: a-z
 for ($i = 97; $i < 123; $i++)
 {
 	$s_char_options .= '<option value="' . chr($i) . '"' . (($first_char == chr($i)) ? ' selected="selected"' : '') . '>' . chr($i-32) . '</option>';

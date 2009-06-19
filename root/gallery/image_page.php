@@ -340,7 +340,7 @@ if ($gallery_config['allow_rates'])
 	{
 		$sql = 'SELECT *
 			FROM ' . GALLERY_RATES_TABLE . '
-			WHERE rate_image_id = ' . (int) $image_id . '
+			WHERE rate_image_id = ' . $image_id . '
 				AND rate_user_id = ' . (int) $user->data['user_id'];
 		$result = $db->sql_query($sql);
 
@@ -386,7 +386,7 @@ if ($gallery_config['allow_rates'])
 		$allowed_to_rate = true;
 	}
 	$template->assign_vars(array(
-		'IMAGE_RATING'			=> ($image_data['image_rates'] <> 0) ? sprintf((($image_data['image_rates'] == 1) ? $user->lang['RATE_STRING'] : $user->lang['RATES_STRING']), $image_data['image_rate_avg'] / 100, $image_data['image_rates']) : $user->lang['NOT_RATED'],
+		'IMAGE_RATING'			=> ($image_data['image_rates'] != 0) ? sprintf((($image_data['image_rates'] == 1) ? $user->lang['RATE_STRING'] : $user->lang['RATES_STRING']), $image_data['image_rate_avg'] / 100, $image_data['image_rates']) : $user->lang['NOT_RATED'],
 		'S_YOUR_RATING'			=> $your_rating,
 		'S_ALLOWED_TO_RATE'		=> $allowed_to_rate,
 		'CONTEST_RATING'		=> $contest_rating_msg,

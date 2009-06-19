@@ -64,7 +64,7 @@ $submit = (isset($_POST['submit'])) ? true : false;
 $action = request_var('action', '');
 $redirect = request_var('redirect', $mode);
 $moving_target = request_var('moving_target', 0);
-$image_id = request_var('image_id', request_var('option_id', 0));
+$image_id = (isset($_POST['image_id'])) ? $image_id : $option_id;
 $image_id_ary = ($image_id) ? array($image_id) : request_var('image_id_ary', array(0));
 
 
@@ -122,6 +122,7 @@ if ($action && $image_id_ary)
 	$multiple = '';
 	if (isset($image_id_ary[1]))
 	{
+		// We add an S to the lang string (IMAGE), when we have more than one image, so we get IMAGES
 		$multiple = 'S';
 	}
 	switch ($action)
