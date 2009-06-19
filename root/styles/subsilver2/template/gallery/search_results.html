@@ -94,9 +94,13 @@ function toggleElement(oElement)
 	</tr>
 	<!-- END imagerow -->
 	<tr>
-		<td class="cat" colspan="{S_COLS}" align="center" height="28">
-			<form action="{S_ALBUM_ACTION}" method="post"><span class="gensmall">{L_SORT_BY}</span> {S_SELECT_SORT_KEY} {S_SELECT_SORT_DIR}&nbsp;<input class="btnlite" type="submit" name="sort" value="{L_GO}" /></form>
-		</td>
+		<!-- IF S_SELECT_SORT_KEY and SEARCH_IN_RESULTS -->
+			<td class="cat" colspan="{S_COLS}" align="center" height="28">
+				<form action="{S_ALBUM_ACTION}" method="post"><span class="gensmall">{L_SORT_BY}</span> {S_SELECT_SORT_KEY} {S_SELECT_SORT_DIR}&nbsp;<input class="btnlite" type="submit" name="sort" value="{L_GO}" /></form>
+			</td>
+		<!-- ELSE -->
+			<td class="spacer" colspan="4" height="1"><img src="images/spacer.gif" alt="" width="1" height="1" /></td>
+		<!-- ENDIF -->
 	</tr>
 </table>
 <!-- ENDIF -->
