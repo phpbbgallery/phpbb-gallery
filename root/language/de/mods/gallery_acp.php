@@ -357,7 +357,7 @@ $lang = array_merge($lang, array(
 
 	'WATERMARK'						=> 'Wasserzeichen',
 	'WATERMARK_HEIGHT'				=> 'Mindesthöhe',
-	'WATERMARK_HEIGHT_EXP'			=> 'Um zu verhindern, dass kleine Bilder vollkommen vom Wasserzeichen verdeckt werden, kannst du hier eine Mindestgröße angeben.',
+	'WATERMARK_HEIGHT_EXP'			=> 'Um zu verhindern, dass kleine Bilder vollkommen vom Wasserzeichen verdeckt werden, kannst du hier eine Mindesthöhe für das Bild angeben. Wenn das Bild kleiner ist, wird das Wasserzeichen nicht eingeblendet.',
 	'WATERMARK_IMAGES'				=> 'Wasserzeichen aktivieren',
 	'WATERMARK_OPTIONS'				=> 'Wasserzeichen-Einstellungen',
 	'WATERMARK_POSITION'			=> 'Wasserzeichen-Position',
@@ -369,7 +369,7 @@ $lang = array_merge($lang, array(
 	'WATERMARK_POSITION_TOP'		=> 'oben',
 	'WATERMARK_SOURCE'		 		=> 'Wasserzeichen Bild (Releativer Pfad zum Forums Root)',
 	'WATERMARK_WIDTH'				=> 'Mindestbreite',
-	'WATERMARK_WIDTH_EXP'			=> 'Um zu verhindern, dass kleine Bilder vollkommen vom Wasserzeichen verdeckt werden, kannst du hier eine Mindestgröße angeben.',
+	'WATERMARK_WIDTH_EXP'			=> 'Um zu verhindern, dass kleine Bilder vollkommen vom Wasserzeichen verdeckt werden, kannst du hier eine Mindestbreite für das Bild angeben. Wenn das Bild kleiner ist, wird das Wasserzeichen nicht eingeblendet.',
 ));
 
 /**

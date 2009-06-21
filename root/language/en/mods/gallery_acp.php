@@ -355,7 +355,7 @@ $lang = array_merge($lang, array(
 
 	'WATERMARK'						=> 'Watermark',
 	'WATERMARK_HEIGHT'				=> 'Minimum-height for watermark',
-	'WATERMARK_HEIGHT_EXP'			=> 'To avoid small images from being covered by the watermark, you may enter a minimum-width/height here.',
+	'WATERMARK_HEIGHT_EXP'			=> 'To avoid small images from being covered by the watermark, you may enter a minimum height of the image here. If the image is smaller, the watermark will not be viewed.',
 	'WATERMARK_IMAGES'				=> 'Watermark images',
 	'WATERMARK_OPTIONS'				=> 'Watermark options',
 	'WATERMARK_POSITION'			=> 'Watermark position',
@@ -367,7 +367,7 @@ $lang = array_merge($lang, array(
 	'WATERMARK_POSITION_TOP'		=> 'top',
 	'WATERMARK_SOURCE'		 		=> 'Watermark source file (relative to your phpbb root)',
 	'WATERMARK_WIDTH'				=> 'Minimum-width for watermark',
-	'WATERMARK_WIDTH_EXP'			=> 'To avoid small images from being covered by the watermark, you may enter a minimum-width/height here.',
+	'WATERMARK_WIDTH_EXP'			=> 'To avoid small images from being covered by the watermark, you may enter a minimum width of the image here. If the image is smaller, the watermark will not be viewed.',
 ));
 
 /**
