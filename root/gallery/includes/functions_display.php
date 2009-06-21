@@ -402,8 +402,6 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		$s_subalbums_list = (string) implode(', ', $s_subalbums_list);
 		$catless = ($row['parent_id'] == $root_data['album_id']) ? true : false;
 
-		$u_viewalbum = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $row['album_id']);
-
 		$template->assign_block_vars('albumrow', array(
 			'S_IS_CAT'			=> false,
 			'S_NO_CAT'			=> $catless && !$last_catless,
@@ -589,14 +587,7 @@ function get_album_moderators(&$album_moderators, $album_id = false)
 {
 	global $config, $template, $db, $phpbb_root_path, $phpEx, $user;
 
-	// Have we disabled the display of moderators? If so, then return
-	// from whence we came ...
-	if (!$config['load_moderators'])
-	{
-		return;
-	}
-
-	$album_sql = '';
+	$album_id_ary = array();
 
 	if ($album_id !== false)
 	{
@@ -605,13 +596,8 @@ function get_album_moderators(&$album_moderators, $album_id = false)
 			$album_id = array($album_id);
 		}
 
-		// If we don't have a forum then we can't have a moderator
-		if (!sizeof($album_id))
-		{
-			return;
-		}
-
-		$album_sql = 'AND m.' . $db->sql_in_set('album_id', $album_id);
+		// Exchange key/value pair to be able to faster check for the album id existence
+		$album_id_ary = array_flip($album_id);
 	}
 
 	$sql_array = array(
@@ -629,22 +615,37 @@ function get_album_moderators(&$album_moderators, $album_id = false)
 			),
 		),
 
-		'WHERE'		=> "m.display_on_index = 1 $album_sql",
-		'ORDER_BY'	=> "m.group_id ASC, m.user_id ASC",
+		'WHERE'		=> 'm.display_on_index = 1',
+		'ORDER_BY'	=> 'm.group_id ASC, m.user_id ASC',
 	);
 
+	// We query every album here because for caching we should not have any parameter.
 	$sql = $db->sql_build_query('SELECT', $sql_array);
 	$result = $db->sql_query($sql, 3600);
 
 	while ($row = $db->sql_fetchrow($result))
 	{
+		$a_id = (int) $row['album_id'];
+
+		if (!isset($album_id_ary[$a_id]))
+		{
+			continue;
+		}
+
 		if (!empty($row['user_id']))
 		{
-			$album_moderators[$row['album_id']][] = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']);
+			$album_moderators[$a_id][] = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']);
 		}
 		else
 		{
-			$album_moderators[$row['album_id']][] = '<a' . (($row['group_colour']) ? ' style="color:#' . $row['group_colour'] . ';"' : '') . ' href="' . append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=group&amp;g=' . $row['group_id']) . '">' . (($row['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $row['group_name']] : $row['group_name']) . '</a>';
+			if ($user->data['user_id'] != ANONYMOUS && !$auth->acl_get('u_viewprofile'))
+			{
+				$album_moderators[$a_id][] = '<span' . (($row['group_colour']) ? ' style="color:#' . $row['group_colour'] . ';"' : '') . '>' . $group_name . '</span>';
+			}
+			else
+			{
+				$album_moderators[$a_id][] = '<a' . (($row['group_colour']) ? ' style="color:#' . $row['group_colour'] . ';"' : '') . ' href="' . append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=group&amp;g=' . $row['group_id']) . '">' . $group_name . '</a>';
+			}
 		}
 	}
 	$db->sql_freeresult($result);

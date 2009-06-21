@@ -136,7 +136,10 @@ if ($album_data['album_type'] != ALBUM_CAT)
 	// When we do the slideshow, we don't need the moderators
 	if ($mode != 'slide_show')
 	{
-		get_album_moderators($album_moderators, $album_id);
+		if ($config['load_moderators'])
+		{
+			get_album_moderators($album_moderators, $album_id);
+		}
 		if (!empty($album_moderators[$album_id]))
 		{
 			$l_moderator = (sizeof($album_moderators[$album_id]) == 1) ? $user->lang['MODERATOR'] : $user->lang['MODERATORS'];
