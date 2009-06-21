@@ -42,6 +42,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<date>2009-MM-DD</date>
 				<rev-version>1.0.1</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Unlimited permissions set to YES when NEVER selected]]></change>
 					<change><![CDATA[[Fix] Correct langstrings for watermark exceptions (Bug #577)]]></change>
 					<change><![CDATA[[Fix] Hide Search-Options on special-searches (subsilver only)]]></change>
 					<change><![CDATA[[Fix] Should use $db->sql_build_query() for big queries (such with joins at least) (Bug #561 - Reported by tumba25)]]></change>
