@@ -228,16 +228,17 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 		if(isset($exif["EXIF"]["ExposureTime"]))
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["ExposureTime"]);
-			if ($den)
+			$exif_exposure = '';
+			if (($num > $den) && $den)
 			{
-				if ($num > $den)
-				{
-					$exif_exposure = $num/$den;
-				}
-				else
-				{
-					$exif_exposure = ' 1/' . $den / $num ;
-				}
+				$exif_exposure = $num / $den;
+			}
+			else if ($num)
+			{
+				$exif_exposure = ' 1/' . $den / $num ;
+			}
+			if ($exif_exposure)
+			{
 				$exif_data['exif_exposure'] = sprintf($user->lang['EXIF_EXPOSURE_EXP'], $exif_exposure);
 			}
 		}
