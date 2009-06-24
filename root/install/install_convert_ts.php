@@ -232,14 +232,14 @@ class install_convert_ts extends module
 			ORDER BY album_user_id, album_left_id ASC';
 		$result = $db->sql_query($sql);
 
-		while( $row = $db->sql_fetchrow($result) )
+		while ($row = $db->sql_fetchrow($result))
 		{
 			if ($row['album_user_id'] > $offset_id)
 			{
 				$offset_id = $row['album_user_id'];
 				$offset = $row['album_left_id'] - 1;
 			}
-			$ary[] = array(
+			$ary = array(
 				'album_id'				=> $row['album_id'],
 				'parent_id'				=> $row['album_parent_id'],
 				'left_id'				=> $row['album_left_id'] - $offset,
@@ -274,9 +274,9 @@ class install_convert_ts extends module
 			FROM ' . GALLERY_USERS_TABLE;
 		$result = $db->sql_query($sql);
 
-		while( $row = $db->sql_fetchrow($result) )
+		while ($row = $db->sql_fetchrow($result))
 		{
-			$ary[] = array(
+			$ary = array(
 				'user_id'				=> $row['user_id'],
 				'personal_album_id'		=> $row['user_album_id'],
 			);
@@ -386,9 +386,9 @@ class install_convert_ts extends module
 					ORDER BY rate_pic_id';
 				$result = $db->sql_query($sql);
 
-				while( $row = $db->sql_fetchrow($result) )
+				while ($row = $db->sql_fetchrow($result))
 				{
-					$ary[] = array(
+					$ary = array(
 						'rate_image_id'					=> $row['rate_pic_id'],
 						'rate_user_id'					=> $row['rate_user_id'],
 						'rate_user_ip'					=> $row['rate_user_ip'],
@@ -570,7 +570,7 @@ class install_convert_ts extends module
 					ORDER BY i.pic_id';
 				$result = $db->sql_query($sql);
 
-				while( $row = $db->sql_fetchrow($result) )
+				while ($row = $db->sql_fetchrow($result))
 				{
 					$row['image_desc_uid'] = $row['image_desc_options'] = $row['image_desc_bitfield'] = '';
 					$row['image_desc'] = $row['pic_desc'];
@@ -779,7 +779,7 @@ class install_convert_ts extends module
 				set_gallery_config('num_comments', $num_comments, true);
 
 				$body = $user->lang['CONVERTED_RESYNC_COMMENTS'];
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=9";
+				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;step=9";
 			break;
 
 			case 9:
