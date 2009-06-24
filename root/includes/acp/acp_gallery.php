@@ -704,6 +704,7 @@ class acp_gallery
 		}
 
 		$handle = opendir($phpbb_root_path . GALLERY_IMPORT_PATH);
+		$files = array();
 		while ($file = readdir($handle))
 		{
 			if (!is_dir($phpbb_root_path . GALLERY_IMPORT_PATH . "$file") && (
@@ -713,12 +714,19 @@ class acp_gallery
 			((substr(strtolower($file), -5) == '.jpeg') && $gallery_config['jpg_allowed'])
 			))
 			{
-				$template->assign_block_vars('imagerow', array(
-					'FILE_NAME'				=> utf8_encode($file),
-				));
+				$files[strtolower($file)] = $file;
 			}
 		}
 		closedir($handle);
+
+		// Sort the files by name again
+		ksort($files);
+		foreach ($files as $file)
+		{
+			$template->assign_block_vars('imagerow', array(
+				'FILE_NAME'				=> utf8_encode($file),
+			));
+		}
 
 		$template->assign_vars(array(
 			'S_IMPORT_IMAGES'				=> true,

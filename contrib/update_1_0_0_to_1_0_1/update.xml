@@ -42,6 +42,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<date>2009-MM-DD</date>
 				<rev-version>1.0.1</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Massimport sorting files not by image-name (Bug #581)]]></change>
 					<change><![CDATA[[Fix] Sort by imagename and usernam case/utf8-sensitive (Bug #578)]]></change>
 					<change><![CDATA[[Fix] Unlimited permissions set to YES when NEVER selected]]></change>
 					<change><![CDATA[[Fix] Correct langstrings for watermark exceptions (Bug #577)]]></change>
