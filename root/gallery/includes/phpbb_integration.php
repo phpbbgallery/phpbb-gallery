@@ -140,4 +140,61 @@ function integrate_viewonline ($on_page, $album_id, $session_page)
 	}
 }
 
+/**
+* Updates a username across all relevant tables/fields
+*
+* @param string $old_name the old/current username
+* @param string $new_name the new username
+*
+* borrowed from phpBB3
+* @author: phpBB Group
+* @function: user_update_name
+*/
+function gallery_integrate_user_update_name($old_name, $new_name)
+{
+	global $config, $db, $cache;
+
+	$update_ary = array(
+		GALLERY_ALBUMS_TABLE	=> array('album_last_username'),
+		GALLERY_COMMENTS_TABLE	=> array('comment_username'),
+		GALLERY_IMAGES_TABLE	=> array('image_username'),
+	);
+
+	foreach ($update_ary as $table => $field_ary)
+	{
+		foreach ($field_ary as $field)
+		{
+			$sql = "UPDATE $table
+				SET $field = '" . $db->sql_escape($new_name) . "'
+				WHERE $field = '" . $db->sql_escape($old_name) . "'";
+			$db->sql_query($sql);
+		}
+	}
+
+	$update_clean_ary = array(
+		GALLERY_IMAGES_TABLE	=> array('image_username_clean'),
+	);
+
+	foreach ($update_clean_ary as $table => $field_ary)
+	{
+		foreach ($field_ary as $field)
+		{
+			$sql = "UPDATE $table
+				SET $field = '" . $db->sql_escape(utf8_clean_string($new_name)) . "'
+				WHERE $field = '" . $db->sql_escape(utf8_clean_string($old_name)) . "'";
+			$db->sql_query($sql);
+		}
+	}
+
+	$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
+		SET album_name = '" . $db->sql_escape($new_name) . "'
+		WHERE album_name = '" . $db->sql_escape($old_name) . "'
+			AND album_user_id <> 0
+			AND parent_id = 0";
+	$db->sql_query($sql);
+
+	// Because some tables/caches use username-specific data we need to purge this here.
+	$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);
+}
+
 ?>

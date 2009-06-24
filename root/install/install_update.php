@@ -455,6 +455,11 @@ class install_update extends module
 
 			case '1.0.0-RC1':
 			case '1.0.0-RC2':
+
+			case '1.0.0':
+			case '1.0.1-dev':
+				nv_add_column(GALLERY_IMAGES_TABLE,	'image_name_clean',		array('VCHAR:255', ''));
+				nv_add_column(GALLERY_IMAGES_TABLE,	'image_username_clean',	array('VCHAR:255', ''));
 			break;
 		}
 
@@ -1095,6 +1100,24 @@ class install_update extends module
 				set_gallery_config('rrc_profile_pgalleries', $gallery_config['rrc_gindex_pgalleries']);
 
 			case '1.0.0-RC2':
+			case '1.0.0':
+			case '1.0.1-dev':
+				$sql = 'SELECT image_id, image_name, image_username
+					FROM ' . GALLERY_IMAGES_TABLE . "
+					WHERE image_name_clean = ''";
+				$result = $db->sql_query($sql);
+
+				while ($row = $db->sql_fetchrow($result))
+				{
+					$sql_ary = array(
+						'image_name_clean'		=> utf8_clean_string($row['image_name']),
+						'image_username_clean'	=> utf8_clean_string($row['image_username']),
+					);
+					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+						WHERE image_id = ' . $row['image_id'];
+					$db->sql_query($sql);
+				}
+				$db->sql_freeresult($result);
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
@@ -1171,6 +1194,8 @@ class install_update extends module
 
 			case '1.0.0-RC1':
 			case '1.0.0-RC2':
+			case '1.0.0':
+			case '1.0.1-dev':
 			break;
 		}
 
@@ -1309,6 +1334,8 @@ class install_update extends module
 
 				case '1.0.0-RC1':
 				case '1.0.0-RC2':
+				case '1.0.0':
+				case '1.0.1-dev':
 				break;
 			}
 
@@ -1325,6 +1352,8 @@ class install_update extends module
 			$modules = $this->gallery_config_options;
 			switch ($gallery_config['phpbb_gallery_version'])
 			{
+				case '1.0.1-dev':
+				case '1.0.0':
 				case '1.0.0-RC2':
 				case '1.0.0-RC1':
 				case '1.0.0-dev':

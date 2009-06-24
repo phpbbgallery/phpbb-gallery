@@ -42,6 +42,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<date>2009-MM-DD</date>
 				<rev-version>1.0.1</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Sort by imagename and usernam case/utf8-sensitive (Bug #578)]]></change>
 					<change><![CDATA[[Fix] Unlimited permissions set to YES when NEVER selected]]></change>
 					<change><![CDATA[[Fix] Correct langstrings for watermark exceptions (Bug #577)]]></change>
 					<change><![CDATA[[Fix] Hide Search-Options on special-searches (subsilver only)]]></change>
@@ -106,6 +107,31 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<file from="root/styles/prosilver/template/gallery/*.*" to="styles/prosilver/template/gallery/*.*" />
 			<file from="root/styles/prosilver/theme/*.*" to="styles/prosilver/theme/*.*" />
 		</copy>
+
+		<open src="includes/functions_user.php">
+			<edit>
+				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+				<comment lang="en-gb"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
+				<find><![CDATA[		GALLERY_ALBUMS_TABLE	=> array('album_last_username'),
+		GALLERY_COMMENTS_TABLE	=> array('comment_username'),
+		GALLERY_IMAGES_TABLE	=> array('image_username'),]]></find>
+				<action type="replace-with"><![CDATA[]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
+		SET album_name = '" . $db->sql_escape($new_name) . "'
+		WHERE album_name = '" . $db->sql_escape($old_name) . "'
+			AND album_user_id <> 0
+			AND parent_id = 0";
+	$db->sql_query($sql);]]></find>
+				<action type="replace-with"><![CDATA[	if (!function_exists('gallery_integrate_user_update_name'))
+	{
+		global $phpbb_root_path, $phpEx;
+		include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/phpbb_integration.' . $phpEx);
+	}
+	gallery_integrate_user_update_name($old_name, $new_name);]]></action>
+			</edit>
+		</open>
 
 		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
 

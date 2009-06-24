@@ -481,6 +481,7 @@ class acp_gallery
 						'image_desc_bitfield'	=> '',
 						'image_user_id'			=> $user_data['user_id'],
 						'image_username'		=> $user_data['username'],
+						'image_username_clean'	=> utf8_clean_string($user_data['username']),
 						'image_user_colour'		=> $user_data['user_colour'],
 						'image_user_ip'			=> $user->ip,
 						'image_time'			=> $start_time + $done_images,
@@ -580,6 +581,7 @@ class acp_gallery
 					{
 						$sql_ary['image_name'] = str_replace('{NUM}', $num_offset + $done_images, $image_name);
 					}
+					$sql_ary['image_name_clean'] = utf8_clean_string($sql_ary['image_name']);
 
 					// Put the images into the database
 					$db->sql_query('INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));

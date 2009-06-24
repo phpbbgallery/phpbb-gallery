@@ -16,7 +16,7 @@
 
 @set_time_limit(0);
 
-$schema_path = '../install/schemas//';
+$schema_path = '../install/schemas/phpbb_gallery_images/';
 
 if (!is_writable($schema_path))
 {
@@ -932,18 +932,20 @@ function get_schema_struct()
 		),
 	);
 //*/
-/*
+//*
 	$schema_data['phpbb_gallery_images'] = array(
 		'COLUMNS'		=> array(
 			'image_id'				=> array('UINT', NULL, 'auto_increment'),
 			'image_filename'		=> array('VCHAR:255', ''),
 			'image_thumbnail'		=> array('VCHAR:255', ''),
 			'image_name'			=> array('VCHAR:255', ''),
+			'image_name_clean'		=> array('VCHAR:255', ''),
 			'image_desc'			=> array('MTEXT_UNI', ''),
 			'image_desc_uid'		=> array('VCHAR:8', ''),
 			'image_desc_bitfield'	=> array('VCHAR:255', ''),
 			'image_user_id'			=> array('UINT', 0),
 			'image_username'		=> array('VCHAR:255', ''),
+			'image_username_clean'	=> array('VCHAR:255', ''),
 			'image_user_colour'		=> array('VCHAR:6', ''),
 			'image_user_ip'			=> array('VCHAR:40', ''),
 			'image_time'			=> array('UINT:11', 0),

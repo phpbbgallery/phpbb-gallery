@@ -107,7 +107,7 @@ if (gallery_acl_check('m_status', $album_id))
 	$image_approval_sql = '';
 }
 
-$sort_by_sql = array('t' => 'image_time', 'n' => 'image_name', 'u' => 'image_username', 'vc' => 'image_view_count', 'ra' => 'image_rate_avg', 'r' => 'image_rates', 'c' => 'image_comments', 'lc' => 'image_last_comment');
+$sort_by_sql = array('t' => 'image_time', 'n' => 'image_name_clean', 'u' => 'image_username_clean', 'vc' => 'image_view_count', 'ra' => 'image_rate_avg', 'r' => 'image_rates', 'c' => 'image_comments', 'lc' => 'image_last_comment');
 $sql_sort_by = (isset($sort_by_sql[$gallery_config['sort_method']])) ? $sort_by_sql[$gallery_config['sort_method']] : $sort_by_sql['t'];
 if ($gallery_config['sort_order'] == 'd')
 {

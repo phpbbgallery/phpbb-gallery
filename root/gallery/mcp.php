@@ -416,7 +416,7 @@ if ($action && $image_id_ary)
 	}
 }// end if ($action && $image_id_ary)
 
-$sort_by_sql = array('image_time', 'image_name', 'image_username', 'image_view_count', 'image_rate_avg', 'image_comments', 'image_last_comment');
+$sort_by_sql = array('image_time', 'image_name_clean', 'image_username_clean', 'image_view_count', 'image_rate_avg', 'image_comments', 'image_last_comment');
 switch ($mode)
 {
 	case 'album':

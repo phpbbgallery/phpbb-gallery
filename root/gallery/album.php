@@ -152,13 +152,13 @@ if ($album_data['album_type'] != ALBUM_CAT)
 	*/
 	$limit_days = array(0 => $user->lang['ALL_IMAGES'], 1 => $user->lang['1_DAY'], 7 => $user->lang['7_DAYS'], 14 => $user->lang['2_WEEKS'], 30 => $user->lang['1_MONTH'], 90 => $user->lang['3_MONTHS'], 180 => $user->lang['6_MONTHS'], 365 => $user->lang['1_YEAR']);
 	$sort_by_text = array('t' => $user->lang['TIME'], 'n' => $user->lang['IMAGE_NAME'], 'vc' => $user->lang['VIEWS']);
-	$sort_by_sql = array('t' => 'image_time', 'n' => 'image_name', 'vc' => 'image_view_count');
+	$sort_by_sql = array('t' => 'image_time', 'n' => 'image_name_clean', 'vc' => 'image_view_count');
 
 	// Do not sort images after upload-username on running contests, and of course ratings aswell!
 	if ($album_data['contest_marked'] != IMAGE_CONTEST)
 	{
 		$sort_by_text['u'] = $user->lang['SORT_USERNAME'];
-		$sort_by_sql['u'] = 'image_username';
+		$sort_by_sql['u'] = 'image_username_clean';
 		
 		if ($gallery_config['allow_rates'])
 		{

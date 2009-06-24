@@ -698,6 +698,7 @@ switch ($mode)
 
 					$sql_ary = array(
 						'image_name'				=> $image_name,
+						'image_name_clean'			=> utf8_clean_string($image_name),
 						'image_desc'				=> $message_parser->message,
 						'image_desc_uid'			=> $message_parser->bbcode_uid,
 						'image_desc_bitfield'		=> $message_parser->bbcode_bitfield,

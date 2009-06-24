@@ -303,19 +303,13 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
 
 		<open src="includes/functions_user.php">
 			<edit>
-				<find><![CDATA[TOPICS_TABLE			=> array('topic_first_poster_name', 'topic_last_poster_name'),]]></find>
-				<action type="after-add"><![CDATA[		GALLERY_ALBUMS_TABLE	=> array('album_last_username'),
-		GALLERY_COMMENTS_TABLE	=> array('comment_username'),
-		GALLERY_IMAGES_TABLE	=> array('image_username'),]]></action>
-			</edit>
-			<edit>
 				<find><![CDATA[	if ($config['newest_username'] == $old_name)]]></find>
-				<action type="before-add"><![CDATA[	$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
-		SET album_name = '" . $db->sql_escape($new_name) . "'
-		WHERE album_name = '" . $db->sql_escape($old_name) . "'
-			AND album_user_id <> 0
-			AND parent_id = 0";
-	$db->sql_query($sql);]]></action>
+				<action type="before-add"><![CDATA[	if (!function_exists('gallery_integrate_user_update_name'))
+	{
+		global $phpbb_root_path, $phpEx;
+		include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/phpbb_integration.' . $phpEx);
+	}
+	gallery_integrate_user_update_name($old_name, $new_name);]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA[	$table_ary = array(USERS_TABLE, USER_GROUP_TABLE, TOPICS_WATCH_TABLE, FORUMS_WATCH_TABLE, ACL_USERS_TABLE, TOPICS_TRACK_TABLE, TOPICS_POSTED_TABLE, FORUMS_TRACK_TABLE, PROFILE_FIELDS_DATA_TABLE, MODERATOR_CACHE_TABLE, DRAFTS_TABLE, BOOKMARKS_TABLE, SESSIONS_KEYS_TABLE);]]></find>
