@@ -39,7 +39,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 		<history>
 			<entry>
-				<date>2009-MM-DD</date>
+				<date>2009-06-25</date>
 				<rev-version>1.0.1</rev-version>
 				<changelog lang="en">
 					<change><![CDATA[[Fix] Massimport sorting files not by image-name (Bug #581)]]></change>

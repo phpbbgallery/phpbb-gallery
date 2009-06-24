@@ -175,7 +175,7 @@ Installing:
 			</author>
 		</author-group>
 
-		<mod-version>1.0.0</mod-version>
+		<mod-version>1.0.1</mod-version>
 
 		<installation>
 			<level>intermediate</level>
@@ -184,6 +184,39 @@ Installing:
 		</installation>
 
 		<history>
+			<entry>
+				<date>2009-06-25</date>
+				<rev-version>1.0.1</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Fix] Massimport sorting files not by image-name (Bug #581)]]></change>
+					<change><![CDATA[[Fix] Sort by imagename and usernam case/utf8-sensitive (Bug #578)]]></change>
+					<change><![CDATA[[Fix] Unlimited permissions set to YES when NEVER selected]]></change>
+					<change><![CDATA[[Fix] Correct langstrings for watermark exceptions (Bug #577)]]></change>
+					<change><![CDATA[[Fix] Hide Search-Options on special-searches (subsilver only)]]></change>
+					<change><![CDATA[[Fix] Should use $db->sql_build_query() for big queries (such with joins at least) (Bug #561 - Reported by tumba25)]]></change>
+					<change><![CDATA[[Fix] Should not SELECT group-members within a loop, but a second query (Bug #571 - Reported by tumba25)]]></change>
+					<change><![CDATA[[Fix] Comment missing that guests cannot rate image although they got permissions (Bug #560 - Reported by tumba25)]]></change>
+					<change><![CDATA[[Fix] $user->setup() and $user->add_lang() should use array instead (Bug #563 - Reported by tumba25)]]></change>
+					<change><![CDATA[[Fix] "MySQL-Server has gone away" while converting with lots of albums/images/comments/rates]]></change>
+					<change><![CDATA[[Fix] MassImport: filesize() [function.filesize]: stat failed for file]]></change>
+					<change><![CDATA[[Fix] Images of personal parent album are counted doubled on CleanUp]]></change>
+					<change><![CDATA[[Fix] Views from image_page.php are not counting correctly (Bug #548)]]></change>
+					<change><![CDATA[[Fix] Shortend albumname is not viewed in full length on hover (Bug #555)]]></change>
+					<change><![CDATA[[Fix] "undefined index" when album was deleted and user is viewed as visiting on viewonline (Bug #553)]]></change>
+					<change><![CDATA[[Fix] Error while converting: Duplicate entry 'newest pgallery_user_color' for Key 1 (Bug #552)]]></change>
+					<change><![CDATA[[Fix] Image gets removed from user-favorites when only having user-permissions or when image is in a personal albums (Bug #556)]]></change>
+					<change><![CDATA[[Fix] White page on uploading, when exif is not installed on the server (Bug #551)]]></change>
+					<change><![CDATA[[Fix] Cannot redeclare user_get_id_name() when guests upload or comment (Bug #550)]]></change>
+					<change><![CDATA[[Fix] PHP Notice: in file /gallery/includes/functions_recent.php on line 314: Division by zero (Bug #549)]]></change>
+
+					<change><![CDATA[[Change] Move image-description into seperated block for style line]]></change>
+
+					<change><![CDATA[[Feature] View full profile beside comments]]></change>
+					<change><![CDATA[[Feature] [url][img]-BBCode on image_page.php for posting in other forums]]></change>
+					<change><![CDATA[[Feature] View an image with the error message instead of trigger_error (Bug #554)]]></change>
+				</changelog>
+			</entry>
+
 			<entry>
 				<date>2009-06-03</date>
 				<rev-version>1.0.0</rev-version>

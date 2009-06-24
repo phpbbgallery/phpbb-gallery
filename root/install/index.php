@@ -17,7 +17,7 @@
 define('IN_PHPBB', true);
 define('IN_INSTALL', true);
 
-define('NEWEST_PG_VERSION', '1.0.0');//@todo
+define('NEWEST_PG_VERSION', '1.0.1');//@todo
 
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
@@ -32,10 +32,7 @@ require($phpbb_root_path . 'includes/functions_install.' . $phpEx);
 // Start session management
 $user->session_begin();
 $auth->acl($user->data);
-$user->setup();
-
-$user->add_lang('install');
-$user->add_lang('mods/install_gallery');
+$user->setup(array('install', 'mods/install_gallery'));
 
 if (!defined('GALLERY_ROOT_PATH'))
 {
@@ -44,10 +41,7 @@ if (!defined('GALLERY_ROOT_PATH'))
 include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/constants.'.$phpEx);
 
 //need some module-names
-$user->add_lang('acp/common');
-$user->add_lang('ucp');
-$user->add_lang('mods/info_acp_gallery');
-$user->add_lang('mods/info_ucp_gallery');
+$user->add_lang(array('acp/common', 'ucp', 'mods/info_acp_gallery', 'mods/info_ucp_gallery'));
 
 $template->set_custom_template('../adm/style', 'admin');
 $template->assign_var('T_TEMPLATE_PATH', '../adm/style');

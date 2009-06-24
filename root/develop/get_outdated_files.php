@@ -71,8 +71,9 @@ $files = show_dir('v0_5_1/', '', $files);
 $files = show_dir('v0_5_2/', '', $files);
 $files = show_dir('v0_5_3/', '', $files);
 $files = show_dir('v0_5_4/', '', $files);
+$files = show_dir('v1_0_0/', '', $files);
 
-$trunk = show_dir('v1_0_0/', '', $trunk);
+$trunk = show_dir('v1_0_1/', '', $trunk);
 
 $files = array_unique($files);
 sort ($files);
