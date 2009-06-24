@@ -9,8 +9,12 @@
 		<title lang="de">phpBB Gallery</title>
 		<title lang="en">phpBB Gallery</title>
 
-		<description lang="de"><![CDATA[Update-Anleitung]]></description>
-		<description lang="en"><![CDATA[Update-Manual]]></description>
+		<description lang="de"><![CDATA[Update-Anleitung
+============================
+Spezieller Dank an tumba25 (MOD Team => Validierung) und platinum_2007 (Jr MOD Validator => Tests/Vorvalidierung) von phpbb.com!]]></description>
+		<description lang="en"><![CDATA[Update-Manual
+============================
+Special thanks to tumba25 (MOD Team => Validation) and platinum_2007 (Jr MOD Validator => Tests/Prevalidation) from phpbb.com!]]></description>
 
 		<author-notes lang="de"><![CDATA[
 Untersützt die "MOD Version Check"-MOD von Handymman´:
@@ -79,8 +83,6 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<link type="parent" lang="en" href="../../install.xml">Install</link>
 			<link type="language" lang="de" href="contrib/de.xml">Anleitung für das deutsche Sprachpaket</link>
 			<link type="language" lang="en" href="contrib/de.xml">Manual for German Language-set</link>
-			<link type="contrib" lang="de" href="contrib/full_code_changes.xml">Anleitung für das Update - volle Code-Änderungen</link>
-			<link type="contrib" lang="en" href="contrib/full_code_changes.xml">Manual for update - full Code-Changes</link>
 			<link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>
 			<link type="template" lang="en" href="contrib/subsilver2.xml">Manual for subsilver2 Style</link>
 			<link type="parent" lang="de" href="../plugins/highslide.xml">Plugin Highslide JS</link>
