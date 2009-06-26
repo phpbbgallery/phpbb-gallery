@@ -25,7 +25,7 @@ function get_album_access_array()
 	global $cache, $db, $user;
 	global $album_access_array, $gallery_config;
 
-	if (!isset($gallery_config['loaded']) || $gallery_config['loaded'])
+	if (!isset($gallery_config['loaded']))
 	{
 		// If we don't have the config, we don't have the function to call it aswell?
 		$sql = 'SELECT *
@@ -37,6 +37,7 @@ function get_album_access_array()
 			$gallery_config[$row['config_name']] = $row['config_value'];
 		}
 		$db->sql_freeresult($result);
+		$gallery_config['loaded'] = true;
 	}
 	$albums = $cache->obtain_album_list();
 
@@ -190,7 +191,7 @@ function gallery_acl_check($mode, $album_id, $album_user_id = -1)
 
 	if ($album_id == OWN_GALLERY_PERMISSIONS)
 	{
-		if (($mode == 'album_count') || ($mode == 'album_unlimited'))
+		if ($mode == 'album_count')
 		{
 			$_gallery_acl_cache[$album_id][$mode] = $album_access_array[OWN_GALLERY_PERMISSIONS][$mode];
 		}
@@ -208,7 +209,7 @@ function gallery_acl_check($mode, $album_id, $album_user_id = -1)
 		}
 		else
 		{
-			$_gallery_acl_cache[$album_id][$mode] = ($album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode] == NON_PERSONAL_ALBUMS) ? true : false;
+			$_gallery_acl_cache[$album_id][$mode] = ($album_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode] == GALLERY_ACL_YES) ? true : false;
 		}
 		return $_gallery_acl_cache[$album_id][$mode];
 	}
