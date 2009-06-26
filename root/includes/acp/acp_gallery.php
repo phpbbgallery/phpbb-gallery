@@ -1133,6 +1133,7 @@ class acp_gallery
 				}
 			}
 			$db->sql_freeresult($result);
+
 			if ($source_missing)
 			{
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . "
@@ -1152,6 +1153,11 @@ class acp_gallery
 				 && !in_array($file, $requested_source)
 				)
 				{
+					if (strpos($file, 'image_not_exist') || strpos($file, 'not_authorised') || strpos($file, 'no_hotlinking'))
+					{
+						continue;
+					}
+
 					$template->assign_block_vars('entryrow', array(
 						'FILE_NAME'				=> utf8_encode($file),
 					));
