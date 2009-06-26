@@ -33,7 +33,7 @@ include($phpbb_root_path . $gallery_root_path . 'includes/functions_display.' . 
 * Display albums
 */
 $mode = request_var('mode', 'index', true);
-display_albums(($mode == 'personal') ? 'personal' : 0);
+display_albums((($mode == 'personal') ? 'personal' : 0), $config['load_moderators']);
 if ($mode == 'personal')
 {
 	$template->assign_block_vars('navlinks', array(

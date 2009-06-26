@@ -114,7 +114,7 @@ if (!gallery_acl_check('i_view', $album_id))
 
 // Build the navigation & display subalbums
 generate_album_nav($album_data);
-display_albums($album_data);
+display_albums($album_data, $config['load_moderators']);
 
 // Set some variables to their defaults
 $allowed_create = false;
