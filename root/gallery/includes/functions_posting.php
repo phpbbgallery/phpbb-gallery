@@ -31,7 +31,7 @@ function upload_image(&$image_data)
 		'image_user_id'			=> $user->data['user_id'],
 		'image_user_colour'		=> $user->data['user_colour'],
 		'image_username'		=> $image_data['username'],
-		'image_username_clean'	=> utf8_clean_string(image_data['username']),
+		'image_username_clean'	=> utf8_clean_string($image_data['username']),
 		'image_user_ip'			=> $user->ip,
 		'image_time'			=> $image_data['image_time'],
 		'image_album_id'		=> $image_data['image_album_id'],
