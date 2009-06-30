@@ -356,7 +356,7 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 					}
 					else
 					{
-						$requested_personal = true;
+						$requested_own = false; // We need the negated version of true here
 					}
 				}
 				$list = (!$list) ? $access_own : $list;
@@ -374,7 +374,7 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 					}
 					else
 					{
-						$requested_personal = true;
+						$requested_personal = false; // We need the negated version of true here
 					}
 				}
 				$list = (!$list) ? $access_personal : $list;
