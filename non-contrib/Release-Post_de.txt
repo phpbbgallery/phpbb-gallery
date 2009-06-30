@@ -22,6 +22,7 @@
 
 
 [b]FAQ & Bekannte Probleme[/b]: http://www.flying-bits.org/go/phpbb_gallery/faq
+[b]Paypal-Spende[/b]: Wenn dir die MOD gefällt, kannst du dich gerne mit einer kleinen [url=http://www.flying-bits.org/paypal.php]Paypal-Spende[/url] dafür revangieren. (nickvergessen Q gmx.de / Q=@).
 
 [b]Downloads:[/b] [size=150][b][url=http://www.flying-bits.org/go/phpbb_gallery/download]Download v1.0.1[/url][/b][/size]
 [list][*][url=http://www.flying-bits.org/go/phpbb_gallery/translations]Sprachpakete[/url]
