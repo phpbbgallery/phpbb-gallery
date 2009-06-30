@@ -81,7 +81,7 @@ $sql_array = array(
 	),
 
 	'WHERE'			=> "r.report_album_id = $album_id AND r.report_status = $report_status $m_status",
-	'ORDER_BY'		=> $sort_key . $sort_dir,
+	'ORDER_BY'		=> $sort_key . ' ' . $sort_dir,
 );
 $sql = $db->sql_build_query('SELECT', $sql_array);
 $result = $db->sql_query_limit($sql, $images_per_page, $start);
