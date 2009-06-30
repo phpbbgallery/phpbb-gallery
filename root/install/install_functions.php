@@ -380,7 +380,7 @@ function add_bbcode($album_bbcode)
 	$gallery_url = generate_board_url() . '/' . GALLERY_ROOT_PATH;
 
 	$bbcode_match = '[' . $album_bbcode . ']{NUMBER}[/' . $album_bbcode . ']';
-	$bbcode_tpl = '<a href="' . $gallery_url . 'image.php?image_id={NUMBER}"><img src="' . $gallery_url . 'image.php?mode=thumbnail&image_id={NUMBER}" alt="{NUMBER}" /></a>';
+	$bbcode_tpl = '<a href="' . $gallery_url . 'image.php?image_id={NUMBER}"><img src="' . $gallery_url . 'image.php?mode=thumbnail&amp;image_id={NUMBER}" alt="{NUMBER}" /></a>';
 
 	$sql_ary = $acp_bbcodes->build_regexp($bbcode_match, $bbcode_tpl);
 	$sql_ary = array_merge($sql_ary, array(
