@@ -299,6 +299,13 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
 			</edit>
 		</open>
 
+		<open src="includes/functions_display.php">
+			<edit>
+				<find><![CDATA[	$num_predefined_bbcodes = 22;]]></find>
+				<action type="after-add"><![CDATA[	$user->add_lang('mods/info_acp_gallery');]]></action>
+			</edit>
+		</open>
+
 		<open src="includes/functions_user.php">
 			<edit>
 				<find><![CDATA[	if ($config['newest_username'] == $old_name)]]></find>

@@ -42,6 +42,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<date>2009-MM-DD</date>
 				<rev-version>1.0.2</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Invalid [album]-BBCodes Help line (Bug #588)]]></change>
 				</changelog>
 			</entry>
 		</history>
@@ -80,6 +81,13 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<file from="root/styles/prosilver/template/gallery/*.*" to="styles/prosilver/template/gallery/*.*" />
 			<file from="root/styles/prosilver/theme/*.*" to="styles/prosilver/theme/*.*" />
 		</copy>
+
+		<open src="includes/functions_display.php">
+			<edit>
+				<find><![CDATA[	$num_predefined_bbcodes = 22;]]></find>
+				<action type="after-add"><![CDATA[	$user->add_lang('mods/info_acp_gallery');]]></action>
+			</edit>
+		</open>
 
 		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
 
