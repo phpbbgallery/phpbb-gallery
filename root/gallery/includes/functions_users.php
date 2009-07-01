@@ -146,6 +146,8 @@ function add_user_to_user_cache(&$user_cache, $row)
 
 			if ($bday_year)
 			{
+				$now = getdate(time() + $user->timezone + $user->dst - date('Z'));
+
 				$diff = $now['mon'] - $bday_month;
 				if ($diff == 0)
 				{
