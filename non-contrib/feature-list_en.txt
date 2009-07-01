@@ -12,7 +12,7 @@
 		[*]Sub-folder name adjustable (default: gallery/)
 		[*]Search function (also available in the album) (page for Recent/Random/Top-Rated/Last comments/Own images)
 		[*]Lytebox & Highslide JS support (These scripts must be downloaded seperatly because of the licence)
-		[*]Diashow
+		[*]Diashow (Requires Lytebox or Highslide JS)
 		[*]Available in more languages: http://www.flying-bits.org/go/phpbb_gallery/translations
 		[*]Available Addons: http://www.flying-bits.org/go/phpbb_gallery/addons
 	[/list]
