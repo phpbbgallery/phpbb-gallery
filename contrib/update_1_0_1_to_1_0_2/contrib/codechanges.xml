@@ -48,6 +48,15 @@
 			<file from="root/install/schemas/*.*" to="install/schemas/*.*" />
 		</copy>
 
+		<open src="includes/functions_display.php">
+			<edit>
+				<find><![CDATA[				$diff = $now['mon'] - $bday_month;]]></find>
+				<action type="before-add"><![CDATA[				$now = getdate(time() + $user->timezone + $user->dst - date('Z'));
+
+]]></action>
+			</edit>
+		</open>
+
 		<diy-instructions lang="de"><![CDATA[Siehe update.xml für weitere Anweisungen!]]></diy-instructions>
 		<diy-instructions lang="en"><![CDATA[See update.xml for further instructions!]]></diy-instructions>
 	</action-group>
