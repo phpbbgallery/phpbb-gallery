@@ -730,7 +730,7 @@ class install_convert extends module
 				{
 					foreach ($batch_ary as $batch => $ary)
 					{
-						$db->sql_multi_insert(GALLERY_IMAGES_TABLE, $ary);
+						$db->sql_multi_insert(GALLERY_USERS_TABLE, $ary);
 					}
 				}
 				set_config('num_images', $num_images, true);
