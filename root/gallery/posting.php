@@ -1179,21 +1179,24 @@ switch ($mode)
 			break;
 
 			case 'edit':
+				if ($comment_data['comment_user_id'] == ANONYMOUS)
+				{
+					$comment_username_req = true;
+				}
 				if ($submit)
 				{
 					if (!check_form_key('gallery'))
 					{
 						trigger_error('FORM_INVALID');
 					}
+					$sql_ary = array();
+
 					$comment = request_var('message', '', true);
 					$comment_text = $comment;
-					$comment_username = request_var('username', '');
-					if ($comment_data['comment_user_id'] == ANONYMOUS)
-					{
-						$comment_username_req = true;
-					}
+
 					if ($comment_username_req)
 					{
+						$comment_username = request_var('username', '');
 						if ($comment_username == '')
 						{
 							$submit = false;
@@ -1201,6 +1204,7 @@ switch ($mode)
 							$comment_username_req = true;
 						}
 						$result = validate_username($comment_username);
+
 						if ($result['error'])
 						{
 							$error .= (($error) ? '<br />' : '') . $user->lang['INVALID_USERNAME'];
@@ -1208,6 +1212,10 @@ switch ($mode)
 							$comment_username_req = true;
 							$submit = false;
 						}
+
+						$sql_ary = array(
+							'comment_username'	=> $comment_username,
+						);
 					}
 					if ($comment_text == '')
 					{
@@ -1226,15 +1234,16 @@ switch ($mode)
 					{
 						$message_parser->parse(true, true, true, true, false, true, true, true);
 					}
-					$sql_ary = array(
-						'comment_username'		=> $comment_username,
+
+					$sql_ary = array_merge($sql_ary, array(
 						'comment'				=> $message_parser->message,
 						'comment_uid'			=> $message_parser->bbcode_uid,
 						'comment_bitfield'		=> $message_parser->bbcode_bitfield,
 						'comment_edit_count'	=> $comment_data['comment_edit_count'] + 1,
 						'comment_edit_time'		=> time(),
 						'comment_edit_user_id'	=> $user->data['user_id'],
-					);
+					));
+
 					if (!$error)
 					{
 						$db->sql_query('UPDATE ' . GALLERY_COMMENTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . ' WHERE comment_id = ' . (int) $comment_id);

@@ -48,12 +48,142 @@
 			<file from="root/install/schemas/*.*" to="install/schemas/*.*" />
 		</copy>
 
-		<open src="includes/functions_display.php">
+		<open src="gallery/image_page.php">
+			<edit>
+				<find><![CDATA[				'POST_AUTHOR_FULL'		=> get_username_string('full', $user_cache[$user_id]['user_id'], ($user_cache[$user_id]['user_id'] != ANONYMOUS) ? $user_cache[$user_id]['username'] : ($user->lang['GUEST'] . ': ' . $row['comment_username']), $user_cache[$user_id]['user_colour']),
+				'POST_AUTHOR_COLOUR'	=> get_username_string('colour', $user_cache[$user_id]['user_id'], ($user_cache[$user_id]['user_id'] != ANONYMOUS) ? $user_cache[$user_id]['username'] : ($user->lang['GUEST'] . ': ' . $row['comment_username']), $user_cache[$user_id]['user_colour']),
+				'POST_AUTHOR'			=> get_username_string('username', $user_cache[$user_id]['user_id'], ($user_cache[$user_id]['user_id'] != ANONYMOUS) ? $user_cache[$user_id]['username'] : ($user->lang['GUEST'] . ': ' . $row['comment_username']), $user_cache[$user_id]['user_colour']),
+				'U_POST_AUTHOR'			=> get_username_string('profile', $user_cache[$user_id]['user_id'], ($user_cache[$user_id]['user_id'] != ANONYMOUS) ? $user_cache[$user_id]['username'] : ($user->lang['GUEST'] . ': ' . $row['comment_username']), $user_cache[$user_id]['user_colour']),]]></find>
+				<action type="replace-with"><![CDATA[				'POST_AUTHOR_FULL'		=> get_username_string('full', $user_id, $row['comment_username'], $user_cache[$user_id]['user_colour']),
+				'POST_AUTHOR_COLOUR'	=> get_username_string('colour', $user_id, $row['comment_username'], $user_cache[$user_id]['user_colour']),
+				'POST_AUTHOR'			=> get_username_string('username', $user_id, $row['comment_username'], $user_cache[$user_id]['user_colour']),
+				'U_POST_AUTHOR'			=> get_username_string('profile', $user_id, $row['comment_username'], $user_cache[$user_id]['user_colour']),]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/posting.php">
+			<edit>
+				<find><![CDATA[				if ($submit)
+				{
+					if (!check_form_key('gallery'))
+					{
+						trigger_error('FORM_INVALID');
+					}
+					$comment = request_var('message', '', true);
+					$comment_text = $comment;
+					$comment_username = request_var('username', '');
+					if ($comment_data['comment_user_id'] == ANONYMOUS)
+					{
+						$comment_username_req = true;
+					}]]></find>
+				<action type="replace-with"><![CDATA[				if ($comment_data['comment_user_id'] == ANONYMOUS)
+				{
+					$comment_username_req = true;
+				}
+				if ($submit)
+				{
+					if (!check_form_key('gallery'))
+					{
+						trigger_error('FORM_INVALID');
+					}
+					$sql_ary = array();
+
+					$comment = request_var('message', '', true);
+					$comment_text = $comment;]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					if ($comment_username_req)
+					{]]></find>
+				<action type="after-add"><![CDATA[						$comment_username = request_var('username', '');]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					}
+					if ($comment_text == '')
+					{
+						$submit = false;
+						$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_COMMENT'];
+					}]]></find>
+				<action type="before-add"><![CDATA[						$sql_ary = array(
+							'comment_username'	=> $comment_username,
+						);]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					$sql_ary = array(
+						'comment_username'		=> $comment_username,
+						'comment'				=> $message_parser->message]]></find>
+				<action type="replace-with"><![CDATA[					$sql_ary = array_merge($sql_ary, array(
+						'comment'				=> $message_parser->message,]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/search.php">
+			<edit>
+				<find><![CDATA[					'IMAGE_AUTHOR'			=> get_username_string('full', $commentrow['image_user_id'], ($commentrow['image_user_id'] <> ANONYMOUS) ? $commentrow['image_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['image_username']), $commentrow['image_user_colour']),]]></find>
+				<action type="replace-with"><![CDATA[					'IMAGE_AUTHOR'			=> get_username_string('full', $commentrow['image_user_id'], $commentrow['image_username'], $commentrow['image_user_colour']),]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					'POST_AUTHOR_FULL'		=> get_username_string('full', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['comment_user_colour']),
+					'POST_AUTHOR_COLOUR'	=> get_username_string('colour', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['comment_user_colour']),
+					'POST_AUTHOR'			=> get_username_string('username', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['comment_user_colour']),
+					'U_POST_AUTHOR'			=> get_username_string('profile', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['comment_user_colour']),]]></find>
+				<action type="replace-with"><![CDATA[					'POST_AUTHOR_FULL'		=> get_username_string('full', $commentrow['comment_user_id'], $commentrow['comment_username'], $commentrow['comment_user_colour']),
+					'POST_AUTHOR_COLOUR'	=> get_username_string('colour', $commentrow['comment_user_id'], $commentrow['comment_username'], $commentrow['comment_user_colour']),
+					'POST_AUTHOR'			=> get_username_string('username', $commentrow['comment_user_id'], $commentrow['comment_username'], $commentrow['comment_user_colour']),
+					'U_POST_AUTHOR'			=> get_username_string('profile', $commentrow['comment_user_id'], $commentrow['comment_username'], $commentrow['comment_user_colour']),]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/includes/functions.php">
+			<edit>
+				<find><![CDATA[if (gallery_acl_check('a_list', $row['album_id'], $row['album_user_id']))]]></find>
+				<action type="replace-with"><![CDATA[if (gallery_acl_check('a_list', $row['album_id'], $row['album_user_id']) || defined('IN_ADMIN'))]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/includes/functions_recent.php">
+			<edit>
+				<find><![CDATA[				'IMAGE_AUTHOR'			=> get_username_string('full', $commentrow['image_user_id'], ($commentrow['image_user_id'] <> ANONYMOUS) ? $commentrow['image_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['image_username']), $commentrow['image_user_colour']),]]></find>
+				<action type="replace-with"><![CDATA[				'IMAGE_AUTHOR'			=> get_username_string('full', $commentrow['image_user_id'], $commentrow['image_username'], $commentrow['image_user_colour']),]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[				'POST_AUTHOR_FULL'		=> get_username_string('full', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['comment_user_colour']),
+				'POST_AUTHOR_COLOUR'	=> get_username_string('colour', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['comment_user_colour']),
+				'POST_AUTHOR'			=> get_username_string('username', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['comment_user_colour']),
+				'U_POST_AUTHOR'			=> get_username_string('profile', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['comment_user_colour']),]]></find>
+				<action type="replace-with"><![CDATA[				'POST_AUTHOR_FULL'		=> get_username_string('full', $commentrow['comment_user_id'], $commentrow['comment_username'], $commentrow['comment_user_colour']),
+				'POST_AUTHOR_COLOUR'	=> get_username_string('colour', $commentrow['comment_user_id'], $commentrow['comment_username'], $commentrow['comment_user_colour']),
+				'POST_AUTHOR'			=> get_username_string('username', $commentrow['comment_user_id'], $commentrow['comment_username'], $commentrow['comment_user_colour']),
+				'U_POST_AUTHOR'			=> get_username_string('profile', $commentrow['comment_user_id'], $commentrow['comment_username'], $commentrow['comment_user_colour']),]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/includes/functions_users.php">
 			<edit>
 				<find><![CDATA[				$diff = $now['mon'] - $bday_month;]]></find>
 				<action type="before-add"><![CDATA[				$now = getdate(time() + $user->timezone + $user->dst - date('Z'));
 
 ]]></action>
+			</edit>
+		</open>
+
+		<open src="includes/acp/acp_gallery.php">
+			<edit>
+				<find><![CDATA[if (strpos($file, 'image_not_exist') || strpos($file, 'not_authorised') || strpos($file, 'no_hotlinking'))]]></find>
+				<action type="replace-with"><![CDATA[if ((strpos($file, 'image_not_exist') !== false) || (strpos($file, 'not_authorised') !== false) || (strpos($file, 'no_hotlinking') !== false))]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/gallery/plugins_header.html">
+			<edit>
+				<find><![CDATA[hs.captionEval = 'this.thumb.alt';]]></find>
+				<action type="replace-with"><![CDATA[hs.captionEval = 'this.thumb.title';]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/subsilver2/template/gallery/plugins_header.html">
+			<edit>
+				<find><![CDATA[hs.captionEval = 'this.thumb.alt';]]></find>
+				<action type="replace-with"><![CDATA[hs.captionEval = 'this.thumb.title';]]></action>
 			</edit>
 		</open>
 

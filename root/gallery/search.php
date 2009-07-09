@@ -540,13 +540,13 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 
 					'UC_THUMBNAIL'			=> generate_image_link('thumbnail', $gallery_config['link_thumbnail'], $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
 					'UC_IMAGE_NAME'			=> generate_image_link('image_name', $gallery_config['link_image_name'], $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
-					'IMAGE_AUTHOR'			=> get_username_string('full', $commentrow['image_user_id'], ($commentrow['image_user_id'] <> ANONYMOUS) ? $commentrow['image_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['image_username']), $commentrow['image_user_colour']),
+					'IMAGE_AUTHOR'			=> get_username_string('full', $commentrow['image_user_id'], $commentrow['image_username'], $commentrow['image_user_colour']),
 					'IMAGE_TIME'			=> $user->format_date($commentrow['image_time']),
 
-					'POST_AUTHOR_FULL'		=> get_username_string('full', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['comment_user_colour']),
-					'POST_AUTHOR_COLOUR'	=> get_username_string('colour', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['comment_user_colour']),
-					'POST_AUTHOR'			=> get_username_string('username', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['comment_user_colour']),
-					'U_POST_AUTHOR'			=> get_username_string('profile', $commentrow['comment_user_id'], ($commentrow['comment_user_id'] <> ANONYMOUS) ? $commentrow['comment_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['comment_username']), $commentrow['comment_user_colour']),
+					'POST_AUTHOR_FULL'		=> get_username_string('full', $commentrow['comment_user_id'], $commentrow['comment_username'], $commentrow['comment_user_colour']),
+					'POST_AUTHOR_COLOUR'	=> get_username_string('colour', $commentrow['comment_user_id'], $commentrow['comment_username'], $commentrow['comment_user_colour']),
+					'POST_AUTHOR'			=> get_username_string('username', $commentrow['comment_user_id'], $commentrow['comment_username'], $commentrow['comment_user_colour']),
+					'U_POST_AUTHOR'			=> get_username_string('profile', $commentrow['comment_user_id'], $commentrow['comment_username'], $commentrow['comment_user_colour']),
 				));
 			}
 			$db->sql_freeresult($result);

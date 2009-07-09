@@ -530,6 +530,7 @@ if (($gallery_config['allow_comments'] && gallery_acl_check('c_read', $album_id)
 				$user_cache[$user_id]['sig'] = smiley_text($user_cache[$user_id]['sig']);
 				$user_cache[$user_id]['sig_parsed'] = true;
 			}
+
 			$template->assign_block_vars('commentrow', array(
 				'U_COMMENT'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;start=$start&amp;sort_order=$sort_order") . '#' . $row['comment_id'],
 				'COMMENT_ID'	=> $row['comment_id'],
@@ -540,10 +541,10 @@ if (($gallery_config['allow_comments'] && gallery_acl_check('c_read', $album_id)
 				'U_EDIT'		=> (gallery_acl_check('m_comments', $album_id) || (gallery_acl_check('c_edit', $album_id) && ($row['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=edit&amp;comment_id=" . $row['comment_id']) : '',
 				'U_INFO'		=> ($auth->acl_get('a_')) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'mode=whois&amp;ip=' . $row['comment_user_ip']) : '',
 
-				'POST_AUTHOR_FULL'		=> get_username_string('full', $user_cache[$user_id]['user_id'], ($user_cache[$user_id]['user_id'] != ANONYMOUS) ? $user_cache[$user_id]['username'] : ($user->lang['GUEST'] . ': ' . $row['comment_username']), $user_cache[$user_id]['user_colour']),
-				'POST_AUTHOR_COLOUR'	=> get_username_string('colour', $user_cache[$user_id]['user_id'], ($user_cache[$user_id]['user_id'] != ANONYMOUS) ? $user_cache[$user_id]['username'] : ($user->lang['GUEST'] . ': ' . $row['comment_username']), $user_cache[$user_id]['user_colour']),
-				'POST_AUTHOR'			=> get_username_string('username', $user_cache[$user_id]['user_id'], ($user_cache[$user_id]['user_id'] != ANONYMOUS) ? $user_cache[$user_id]['username'] : ($user->lang['GUEST'] . ': ' . $row['comment_username']), $user_cache[$user_id]['user_colour']),
-				'U_POST_AUTHOR'			=> get_username_string('profile', $user_cache[$user_id]['user_id'], ($user_cache[$user_id]['user_id'] != ANONYMOUS) ? $user_cache[$user_id]['username'] : ($user->lang['GUEST'] . ': ' . $row['comment_username']), $user_cache[$user_id]['user_colour']),
+				'POST_AUTHOR_FULL'		=> get_username_string('full', $user_id, $row['comment_username'], $user_cache[$user_id]['user_colour']),
+				'POST_AUTHOR_COLOUR'	=> get_username_string('colour', $user_id, $row['comment_username'], $user_cache[$user_id]['user_colour']),
+				'POST_AUTHOR'			=> get_username_string('username', $user_id, $row['comment_username'], $user_cache[$user_id]['user_colour']),
+				'U_POST_AUTHOR'			=> get_username_string('profile', $user_id, $row['comment_username'], $user_cache[$user_id]['user_colour']),
 
 				'SIGNATURE'			=> $user_cache[$user_id]['sig'],
 				'RANK_TITLE'		=> $user_cache[$user_id]['rank_title'],

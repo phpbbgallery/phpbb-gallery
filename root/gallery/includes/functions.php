@@ -337,7 +337,7 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 		}
 		else if (!$row['album_user_id'])
 		{
-			if (gallery_acl_check('a_list', $row['album_id'], $row['album_user_id']))
+			if (gallery_acl_check('a_list', $row['album_id'], $row['album_user_id']) || defined('IN_ADMIN'))
 			{
 				$list = true;
 			}
