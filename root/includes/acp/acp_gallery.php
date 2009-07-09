@@ -1142,6 +1142,7 @@ class acp_gallery
 				$db->sql_query($sql);
 			}
 		}
+
 		if ($check_mode == 'entry')
 		{
 			$directory = $phpbb_root_path . GALLERY_UPLOAD_PATH;
@@ -1153,7 +1154,7 @@ class acp_gallery
 				 && !in_array($file, $requested_source)
 				)
 				{
-					if (strpos($file, 'image_not_exist') || strpos($file, 'not_authorised') || strpos($file, 'no_hotlinking'))
+					if ((strpos($file, 'image_not_exist') !== false) || (strpos($file, 'not_authorised') !== false) || (strpos($file, 'no_hotlinking') !== false))
 					{
 						continue;
 					}
