@@ -356,10 +356,52 @@ if (!function_exists('slideshow_plugins'))
 			</edit>
 		</open>
 
+		<open src="language/de/mods/gallery.php">
+			<edit>
+				<find><![CDATA[	'SLIDE_SHOW_START'				=> 'Um die Diashow zu starten, klicke auf einen der Bildnamen:',]]></find>
+				<action type="replace-with"><![CDATA[	'SLIDE_SHOW_LYTEBOX'			=> 'Um die Diashow zu starten, klicke auf einen der Bildnamen:',
+	'SLIDE_SHOW_SHADOWBOX'			=> 'Um die Diashow zu starten, klicke auf einen der Bildnamen:',]]></action>
+			</edit>
+		</open>
+
+		<open src="language/de/mods/gallery_acp.php">
+			<edit>
+				<find><![CDATA[	'UC_LINK_NONE'					=> 'Kein Link',]]></find>
+				<action type="after-add"><![CDATA[	'UC_LINK_SHADOWBOX'				=> 'Shadowbox-Plugin öffnen',]]></action>
+			</edit>
+		</open>
+
+		<open src="language/en/mods/gallery.php">
+			<edit>
+				<find><![CDATA[	'SLIDE_SHOW_START'				=> 'To start the slideshow, click on one of the image-names:',]]></find>
+				<action type="replace-with"><![CDATA[	'SLIDE_SHOW_LYTEBOX'			=> 'To start the slideshow, click on one of the image-names:',
+	'SLIDE_SHOW_SHADOWBOX'			=> 'To start the slideshow, click on one of the image-names:',]]></action>
+			</edit>
+		</open>
+
+		<open src="language/en/mods/gallery_acp.php">
+			<edit>
+				<find><![CDATA[	'UC_LINK_NONE'					=> 'No Link',]]></find>
+				<action type="after-add"><![CDATA[	'UC_LINK_SHADOWBOX'				=> 'Open Shadowbox-Plugin',]]></action>
+			</edit>
+		</open>
+
 		<open src="styles/prosilver/template/gallery/plugins_header.html">
 			<edit>
 				<find><![CDATA[hs.captionEval = 'this.thumb.alt';]]></find>
 				<action type="replace-with"><![CDATA[hs.captionEval = 'this.thumb.title';]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[			myLytebox = new LyteBox(imgMaxWidth, imgWarning);
+		}
+	</script>]]></find>
+				<action type="after-add"><![CDATA[<!-- ENDIF -->
+<!-- IF S_GP_SHADOWBOX -->
+	<link rel="stylesheet" type="text/css" href="{S_GP_SHADOWBOX}shadowbox.css">
+	<script type="text/javascript" src="{S_GP_SHADOWBOX}shadowbox.js"></script>
+	<script type="text/javascript">
+		Shadowbox.init();
+	</script>]]></action>
 			</edit>
 		</open>
 
@@ -367,6 +409,18 @@ if (!function_exists('slideshow_plugins'))
 			<edit>
 				<find><![CDATA[hs.captionEval = 'this.thumb.alt';]]></find>
 				<action type="replace-with"><![CDATA[hs.captionEval = 'this.thumb.title';]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[			myLytebox = new LyteBox(imgMaxWidth, imgWarning);
+		}
+	</script>]]></find>
+				<action type="after-add"><![CDATA[<!-- ENDIF -->
+<!-- IF S_GP_SHADOWBOX -->
+	<link rel="stylesheet" type="text/css" href="{S_GP_SHADOWBOX}shadowbox.css">
+	<script type="text/javascript" src="{S_GP_SHADOWBOX}shadowbox.js"></script>
+	<script type="text/javascript">
+		Shadowbox.init();
+	</script>]]></action>
 			</edit>
 		</open>
 

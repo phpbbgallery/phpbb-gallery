@@ -58,6 +58,21 @@ if (file_exists($phpbb_root_path . $gallery_root_path . 'plugins/lytebox/lytebox
 	$template->assign_var('S_GP_LYTEBOX', $phpbb_root_path . $gallery_root_path . 'plugins/lytebox/');
 }
 
+/**
+* Shadowbox.js
+*
+* Latest version tested: 3.0b
+* Download: http://www.shadowbox-js.com/download.html
+* License:  Shadowbox.js License version 1.0
+*           http://shadowbox-js.com/LICENSE
+*/
+if (file_exists($phpbb_root_path . $gallery_root_path . 'plugins/shadowbox/shadowbox.js'))
+{
+	$gallery_plugins['plugins'][] = 'shadowbox';
+	$gallery_plugins['slideshow'] = true;
+	$template->assign_var('S_GP_SHADOWBOX', $phpbb_root_path . $gallery_root_path . 'plugins/shadowbox/');
+}
+
 if (!function_exists('uc_select_plugins'))
 {
 	function uc_select_plugins($value, $key)
@@ -72,6 +87,10 @@ if (!function_exists('uc_select_plugins'))
 		if (in_array('lytebox', $gallery_plugins['plugins']))
 		{
 			$sort_order_options .= '<option' . (($value == 'lytebox') ? ' selected="selected"' : '') . " value='lytebox'>" . $user->lang['UC_LINK_LYTEBOX'] . '</option>';
+		}
+		if (in_array('shadowbox', $gallery_plugins['plugins']))
+		{
+			$sort_order_options .= '<option' . (($value == 'shadowbox') ? ' selected="selected"' : '') . " value='shadowbox'>" . $user->lang['UC_LINK_SHADOWBOX'] . '</option>';
 		}
 
 		return $sort_order_options;
@@ -96,6 +115,12 @@ if (!function_exists('generate_image_link_plugins'))
 			break;
 			case 'lytebox_slideshow':
 				$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" rel="lyteshow[album]" class="image-resize">{CONTENT}</a>';
+			break;
+			case 'shadowbox':
+				$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" rel="shadowbox[flying-bits]">{CONTENT}</a>';
+			break;
+			case 'shadowbox_slideshow':
+				$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" rel="shadowbox[flying-bits];options={slideshowDelay: 3}">{CONTENT}</a>';
 			break;
 			default:
 				// Plugin not found, return blank image
@@ -122,9 +147,17 @@ if (!function_exists('slideshow_plugins'))
 				$images[] = generate_image_link('image_name', 'highslide', $row['image_id'], $row['image_name'], $row['image_album_id']);
 			}
 		}
+		elseif (in_array('shadowbox', $gallery_plugins['plugins']))
+		{
+			$trigger_message = $user->lang['SLIDE_SHOW_SHADOWBOX'];
+			while ($row = $db->sql_fetchrow($query_result))
+			{
+				$images[] = generate_image_link('image_name', 'shadowbox_slideshow', $row['image_id'], $row['image_name'], $row['image_album_id']);
+			}
+		}
 		elseif (in_array('lytebox', $gallery_plugins['plugins']))
 		{
-			$trigger_message = $user->lang['SLIDE_SHOW_START'];
+			$trigger_message = $user->lang['SLIDE_SHOW_LYTEBOX'];
 			while ($row = $db->sql_fetchrow($query_result))
 			{
 				$images[] = generate_image_link('image_name', 'lytebox_slideshow', $row['image_id'], $row['image_name'], $row['image_album_id']);

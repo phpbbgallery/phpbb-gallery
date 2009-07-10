@@ -347,6 +347,7 @@ $lang = array_merge($lang, array(
 	'UC_LINK_IMAGE_PAGE'			=> 'Image-page (mit Kommentaren und Bewertungen) öffnen',
 	'UC_LINK_LYTEBOX'				=> 'Lytebox-Plugin öffnen',
 	'UC_LINK_NONE'					=> 'Kein Link',
+	'UC_LINK_SHADOWBOX'				=> 'Shadowbox-Plugin öffnen',
 	'UC_THUMBNAIL'					=> 'Thumbnail',
 	'UC_THUMBNAIL_EXP'				=> 'Wird auch für den BBCode benutzt.',
 	'UNLOCKED'						=> 'Entsperrt',

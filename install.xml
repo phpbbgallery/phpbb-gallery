@@ -54,6 +54,8 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<link type="parent" lang="en" href="contrib/plugins/highslide.xml">Plugin Highslide JS</link>
 			<link type="parent" lang="de" href="contrib/plugins/lytebox.xml">Plugin Lytebox</link>
 			<link type="parent" lang="en" href="contrib/plugins/lytebox.xml">Plugin Lytebox</link>
+			<link type="parent" lang="de" href="contrib/plugins/shadowbox.xml">Plugin Shadowbox</link>
+			<link type="parent" lang="en" href="contrib/plugins/shadowbox.xml">Plugin Shadowbox</link>
 		</link-group>
 	</header>
 

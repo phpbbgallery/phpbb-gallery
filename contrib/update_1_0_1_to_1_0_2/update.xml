@@ -50,6 +50,8 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 					<change><![CDATA[[Fix] Invalid [album]-BBCodes Help line (Bug #588)]]></change>
 
 					<change><![CDATA[[Change] Change plugin-system for better integration of new plugins]]></change>
+
+					<change><![CDATA[[Feature] New plugin: Shadowbox 3.0b]]></change>
 				</changelog>
 			</entry>
 		</history>
@@ -67,6 +69,8 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<link type="parent" lang="en" href="../plugins/highslide.xml">Plugin Highslide JS</link>
 			<link type="parent" lang="de" href="../plugins/lytebox.xml">Plugin Lytebox</link>
 			<link type="parent" lang="en" href="../plugins/lytebox.xml">Plugin Lytebox</link>
+			<link type="parent" lang="de" href="../plugins/shadowbox.xml">Plugin Shadowbox</link>
+			<link type="parent" lang="en" href="../plugins/shadowbox.xml">Plugin Shadowbox</link>
 		</link-group>
 	</header>
 

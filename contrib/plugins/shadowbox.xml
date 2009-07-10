@@ -6,26 +6,24 @@
 	<header>
 		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
 
-		<title lang="de">phpBB Gallery Plugin: Highslide JS (4.1.5)</title>
-		<title lang="en">phpBB Gallery Plugin: Highslide JS (4.1.5)</title>
+		<title lang="de">phpBB Gallery Plugin: Shadowbox 3.0b</title>
+		<title lang="en">phpBB Gallery Plugin: Shadowbox 3.0b</title>
 
-		<description lang="de"><![CDATA[Diese Anleitung ermöglicht ein einfaches implementieren von Highslide JS (von Torstein Hønsi: http://highslide.com/) in die Gallery.]]></description>
-		<description lang="en"><![CDATA[This manual is an easy way to implement Highslide JS (by Torstein Hønsi: http://highslide.com/) into the gallery.]]></description>
+		<description lang="de"><![CDATA[Diese Anleitung ermöglicht ein einfaches implementieren von Shadowbox (von Michael J. I. Jackson: http://shadowbox-js.com/) in die Gallery.]]></description>
+		<description lang="en"><![CDATA[This manual is an easy way to implement Shadowbox (by Michael J. I. Jackson: http://shadowbox-js.com/) into the gallery.]]></description>
 
 		<author-notes lang="de"><![CDATA[
-Du musst dir Highslide JS selbst herunterladen:
-http://highslide.com/download.php
-Bitte beachte dabei, dass Highslide JS eine andere Lizenz hat:
-http://highslide.com/#licence
-Creative Commons Attribution-NonCommercial 2.5 License
-http://creativecommons.org/licenses/by-nc/2.5/]]></author-notes>
+Du musst dir Shadowbox selbst herunterladen:
+http://www.shadowbox-js.com/download.html
+Bitte beachte dabei, dass Shadowbox eine andere Lizenz hat:
+Shadowbox.js License version 1.0
+http://shadowbox-js.com/LICENSE]]></author-notes>
 		<author-notes lang="en"><![CDATA[
-You need to download Highslide JS on your own:
-http://highslide.com/download.php
-Please note, that Highslide JS has a different license:
-http://highslide.com/#licence
-Creative Commons Attribution-NonCommercial 2.5 License
-http://creativecommons.org/licenses/by-nc/2.5/]]></author-notes>
+You need to download Shadowbox on your own:
+http://www.shadowbox-js.com/download.html
+Please note, that Shadowbox has a different license:
+Shadowbox.js License version 1.0
+http://shadowbox-js.com/LICENSE]]></author-notes>
 
 		<author-group>
 			<author>
@@ -36,9 +34,9 @@ http://creativecommons.org/licenses/by-nc/2.5/]]></author-notes>
 				<contributions />
 			</author>
 			<author>
-				<realname>Torstein Hønsi</realname>
-				<email>torstein.hoensi@gmail.com</email>
-				<homepage>http://highslide.com/</homepage>
+				<realname>Michael J. I. Jackson</realname>
+				<email>michael@mjijackson.com</email>
+				<homepage>ttp://shadowbox-js.com/</homepage>
 				<contributions />
 			</author>
 		</author-group>
@@ -54,16 +52,14 @@ http://creativecommons.org/licenses/by-nc/2.5/]]></author-notes>
 
 	<action-group>
 		<copy>
-			<file from="highslide.zip/highslide/highslide-full.js" to="gallery/plugins/highslide/highslide-full.js" />
-			<file from="highslide.zip/highslide/highslide.css" to="gallery/plugins/highslide/highslide.css" />
-			<file from="highslide.zip/highslide/graphics/*.*" to="gallery/plugins/highslide/graphics/*.*" />
+			<file from="shadowbox-source-3.0b.zip/shadowbox-source-3.0b/*.*" to="gallery/plugins/shadowbox/*.*" />
 		</copy>
 
 		<diy-instructions lang="de"><![CDATA[Kopiere die Dateien aus dem zip-Verzeichnis, wie oben angegeben.
 Anschließend musst du in "Administrations-Bereich" (ACP) > "MODS" > "phpBB Galerie" > "Galerie konfigurieren"
-im Kasten "Link Konfiguration" die Optionen auf Highslide-Plugin umstellen und fertig.]]></diy-instructions>
+im Kasten "Link Konfiguration" die Optionen auf Shadowbox-Plugin umstellen und fertig.]]></diy-instructions>
 		<diy-instructions lang="en"><![CDATA[Copy the files from the zip as mentioned above.
 Afterwards go to "Administration Control Panel" (ACP) > ".MODs" > "phpBB Gallery" > "Configure gallery"
-and change the values of "Link configuration" to Highslide-Plugin.]]></diy-instructions>
+and change the values of "Link configuration" to Shadowbox-Plugin.]]></diy-instructions>
 	</action-group>
 </mod>
