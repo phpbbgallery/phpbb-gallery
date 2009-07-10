@@ -55,6 +55,13 @@ http://shadowbox-js.com/LICENSE]]></author-notes>
 			<file from="shadowbox-source-3.0b.zip/shadowbox-source-3.0b/*.*" to="gallery/plugins/shadowbox/*.*" />
 		</copy>
 
+		<open src="gallery/plugins/shadowbox/shadowbox.js">
+			<edit>
+				<find><![CDATA[                img:        ['png', 'jpg', 'jpeg', 'gif', 'bmp'],]]></find>
+				<action type="replace-with"><![CDATA[                img:        ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'php'],]]></action>
+			</edit>
+		</open>
+
 		<diy-instructions lang="de"><![CDATA[Kopiere die Dateien aus dem zip-Verzeichnis, wie oben angegeben.
 Anschließend musst du in "Administrations-Bereich" (ACP) > "MODS" > "phpBB Galerie" > "Galerie konfigurieren"
 im Kasten "Link Konfiguration" die Optionen auf Shadowbox-Plugin umstellen und fertig.]]></diy-instructions>
