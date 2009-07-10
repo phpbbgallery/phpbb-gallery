@@ -138,6 +138,38 @@
 				<find><![CDATA[if (gallery_acl_check('a_list', $row['album_id'], $row['album_user_id']))]]></find>
 				<action type="replace-with"><![CDATA[if (gallery_acl_check('a_list', $row['album_id'], $row['album_user_id']) || defined('IN_ADMIN'))]]></action>
 			</edit>
+			<edit>
+				<find><![CDATA[* @param	bool	$count		shall the image-link be counted as view? (Set to false from iamge_page.php to deny double increment)]]></find>
+				<action type="replace-with"><![CDATA[* @param	bool	$count		shall the image-link be counted as view? (Set to false from image_page.php to deny double increment)]]></action>
+			</edit>
+			<edit>
+				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+				<comment lang="en"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
+				<find><![CDATA[		case 'highslide':
+			$url = $image_url;
+			$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" class="highslide" onclick="return hs.expand(this)">{CONTENT}</a>';
+		break;
+		case 'lytebox':
+			$url = $image_url;
+			// LPI is a little credit to Dr.Death =)
+			$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" rel="lytebox[LPI]" class="image-resize">{CONTENT}</a>';
+		break;
+		case 'lytebox_slide_show':
+			$url = $image_url;
+			$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" rel="lyteshow[album]" class="image-resize">{CONTENT}</a>';
+		break;]]></find>
+				<action type="replace-with"><![CDATA[]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[		case 'none':
+			$url = $image_page_url;
+			$tpl = '{CONTENT}';
+		break;]]></find>
+				<action type="after-add"><![CDATA[		default:
+			$url = $image_url;
+			$tpl = generate_image_link_plugins($mode);
+		break;]]></action>
+			</edit>
 		</open>
 
 		<open src="gallery/includes/functions_recent.php">
@@ -166,10 +198,93 @@
 			</edit>
 		</open>
 
+		<open src="gallery/plugins/index.php">
+			<edit>
+				<find><![CDATA[* Latest version tested: 4.1.4]]></find>
+				<action type="replace-with"><![CDATA[* Latest version tested: 4.1.5]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	$template->assign_var('S_GP_LYTEBOX', $phpbb_root_path . $gallery_root_path . 'plugins/lytebox/');
+}]]></find>
+				<action type="after-add"><![CDATA[if (!function_exists('uc_select_plugins'))
+{
+	function uc_select_plugins($value, $key)
+	{
+		global $gallery_plugins, $user;
+
+		$sort_order_options = '';
+		if (in_array('highslide', $gallery_plugins['plugins']))
+		{
+			$sort_order_options .= '<option' . (($value == 'highslide') ? ' selected="selected"' : '') . " value='highslide'>" . $user->lang['UC_LINK_HIGHSLIDE'] . '</option>';
+		}
+		if (in_array('lytebox', $gallery_plugins['plugins']))
+		{
+			$sort_order_options .= '<option' . (($value == 'lytebox') ? ' selected="selected"' : '') . " value='lytebox'>" . $user->lang['UC_LINK_LYTEBOX'] . '</option>';
+		}
+
+		return $sort_order_options;
+	}
+}
+
+if (!function_exists('generate_image_link_plugins'))
+{
+	function generate_image_link_plugins($mode)
+	{
+		global $gallery_plugins, $user;
+
+		$tpl = '';
+		switch ($mode)
+		{
+			case 'highslide':
+				$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" class="highslide" onclick="return hs.expand(this)">{CONTENT}</a>';
+			break;
+			case 'lytebox':
+				// LPI is a little credit to Dr.Death =)
+				$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" rel="lytebox[LPI]" class="image-resize">{CONTENT}</a>';
+			break;
+			case 'lytebox_slide_show':
+				$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" rel="lyteshow[album]" class="image-resize">{CONTENT}</a>';
+			break;
+			default:
+				// Plugin not found, return blank image
+				$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}">{CONTENT}</a>';
+		}
+
+		return $tpl;
+	}
+}]]></action>
+			</edit>
+		</open>
+
 		<open src="includes/acp/acp_gallery.php">
 			<edit>
 				<find><![CDATA[if (strpos($file, 'image_not_exist') || strpos($file, 'not_authorised') || strpos($file, 'no_hotlinking'))]]></find>
 				<action type="replace-with"><![CDATA[if ((strpos($file, 'image_not_exist') !== false) || (strpos($file, 'not_authorised') !== false) || (strpos($file, 'no_hotlinking') !== false))]]></action>
+			</edit>
+		</open>
+
+		<open src="includes/acp/acp_gallery_config.php">
+			<edit>
+				<find><![CDATA[		global $gallery_plugins, $user;
+
+		$sort_order_options = '';
+
+		if (in_array('highslide', $gallery_plugins['plugins']))
+		{
+			$sort_order_options .= '<option' . (($value == 'highslide') ? ' selected="selected"' : '') . " value='highslide'>" . $user->lang['UC_LINK_HIGHSLIDE'] . '</option>';
+		}
+		if (in_array('lytebox', $gallery_plugins['plugins']))
+		{
+			$sort_order_options .= '<option' . (($value == 'lytebox') ? ' selected="selected"' : '') . " value='lytebox'>" . $user->lang['UC_LINK_LYTEBOX'] . '</option>';
+		}]]></find>
+				<action type="replace-with"><![CDATA[		global $user;
+
+		if (!function_exists('uc_select_plugins'))
+		{
+			global $gallery_root_path, $phpbb_root_path, $phpEx;
+			include($phpbb_root_path . $gallery_root_path . 'plugins/index.' . $phpEx);
+		}
+		$sort_order_options = uc_select_plugins($value, $key);]]></action>
 			</edit>
 		</open>
 

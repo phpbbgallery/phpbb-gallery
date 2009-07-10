@@ -389,18 +389,16 @@ class acp_gallery_config
 	*/
 	function uc_select($value, $key)
 	{
-		global $gallery_plugins, $user;
+		global $user;
 
-		$sort_order_options = '';
+		if (!function_exists('uc_select_plugins'))
+		{
+			global $gallery_root_path, $phpbb_root_path, $phpEx;
+			include($phpbb_root_path . $gallery_root_path . 'plugins/index.' . $phpEx);
+		}
+		$sort_order_options = uc_select_plugins($value, $key);
 
-		if (in_array('highslide', $gallery_plugins['plugins']))
-		{
-			$sort_order_options .= '<option' . (($value == 'highslide') ? ' selected="selected"' : '') . " value='highslide'>" . $user->lang['UC_LINK_HIGHSLIDE'] . '</option>';
-		}
-		if (in_array('lytebox', $gallery_plugins['plugins']))
-		{
-			$sort_order_options .= '<option' . (($value == 'lytebox') ? ' selected="selected"' : '') . " value='lytebox'>" . $user->lang['UC_LINK_LYTEBOX'] . '</option>';
-		}
+
 		if ($key != 'link_imagepage')
 		{
 			$sort_order_options .= '<option' . (($value == 'image_page') ? ' selected="selected"' : '') . " value='image_page'>" . $user->lang['UC_LINK_IMAGE_PAGE'] . '</option>';

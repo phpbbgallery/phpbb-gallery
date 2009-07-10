@@ -609,7 +609,7 @@ function get_album_branch($branch_user_id, $album_id, $type = 'all', $order = 'd
 * @param	string	$image_name
 * @param	int		$album_id
 * @param	bool	$is_gif		we need to know whether we display a gif, so we can use a better medium-image
-* @param	bool	$count		shall the image-link be counted as view? (Set to false from iamge_page.php to deny double increment)
+* @param	bool	$count		shall the image-link be counted as view? (Set to false from image_page.php to deny double increment)
 */
 function generate_image_link($content, $mode, $image_id, $image_name, $album_id, $is_gif = false, $count = true)
 {
@@ -658,19 +658,6 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 	}
 	switch ($mode)
 	{
-		case 'highslide':
-			$url = $image_url;
-			$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" class="highslide" onclick="return hs.expand(this)">{CONTENT}</a>';
-		break;
-		case 'lytebox':
-			$url = $image_url;
-			// LPI is a little credit to Dr.Death =)
-			$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" rel="lytebox[LPI]" class="image-resize">{CONTENT}</a>';
-		break;
-		case 'lytebox_slide_show':
-			$url = $image_url;
-			$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" rel="lyteshow[album]" class="image-resize">{CONTENT}</a>';
-		break;
 		case 'image_page':
 			$url = $image_page_url;
 			$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}">{CONTENT}</a>';
@@ -690,6 +677,10 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 		case 'none':
 			$url = $image_page_url;
 			$tpl = '{CONTENT}';
+		break;
+		default:
+			$url = $image_url;
+			$tpl = generate_image_link_plugins($mode);
 		break;
 	}
 
