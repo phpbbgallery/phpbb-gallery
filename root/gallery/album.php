@@ -208,31 +208,17 @@ if ($album_data['album_type'] != ALBUM_CAT)
 
 			$result = $db->sql_query($sql);
 
-			if (in_array('highslide', $gallery_plugins['plugins']))
+			if (!function_exists('slideshow_plugins'))
 			{
-				$trigger_message = $user->lang['SLIDE_SHOW_HIGHSLIDE'];
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$images[] = generate_image_link('image_name', 'highslide', $row['image_id'], $row['image_name'], $row['image_album_id']);
-				}
+				global $gallery_root_path, $phpbb_root_path, $phpEx;
+				include($phpbb_root_path . $gallery_root_path . 'plugins/index.' . $phpEx);
 			}
-			elseif (in_array('lytebox', $gallery_plugins['plugins']))
-			{
-				$trigger_message = $user->lang['SLIDE_SHOW_START'];
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$images[] = generate_image_link('image_name', 'lytebox_slide_show', $row['image_id'], $row['image_name'], $row['image_album_id']);
-				}
-			}
-			else
-			{
-				trigger_error('MISSING_SLIDESHOW_PLUGIN');
-			}
+			$trigger_message = slideshow_plugins($result);
 			$db->sql_freeresult($result);
 
 			$template->assign_vars(array(
 				'MESSAGE_TITLE'		=> $user->lang['SLIDE_SHOW'],
-				'MESSAGE_TEXT'		=> $trigger_message . '<br /><br />' . implode(', ', $images),
+				'MESSAGE_TEXT'		=> $trigger_message,
 			));
 
 			page_header($user->lang['SLIDE_SHOW']);

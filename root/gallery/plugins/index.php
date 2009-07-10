@@ -94,7 +94,7 @@ if (!function_exists('generate_image_link_plugins'))
 				// LPI is a little credit to Dr.Death =)
 				$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" rel="lytebox[LPI]" class="image-resize">{CONTENT}</a>';
 			break;
-			case 'lytebox_slide_show':
+			case 'lytebox_slideshow':
 				$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" rel="lyteshow[album]" class="image-resize">{CONTENT}</a>';
 			break;
 			default:
@@ -103,6 +103,39 @@ if (!function_exists('generate_image_link_plugins'))
 		}
 
 		return $tpl;
+	}
+}
+
+if (!function_exists('slideshow_plugins'))
+{
+	function slideshow_plugins($query_result)
+	{
+		global $db, $gallery_plugins, $user;
+
+		$images = array();
+
+		if (in_array('highslide', $gallery_plugins['plugins']))
+		{
+			$trigger_message = $user->lang['SLIDE_SHOW_HIGHSLIDE'];
+			while ($row = $db->sql_fetchrow($query_result))
+			{
+				$images[] = generate_image_link('image_name', 'highslide', $row['image_id'], $row['image_name'], $row['image_album_id']);
+			}
+		}
+		elseif (in_array('lytebox', $gallery_plugins['plugins']))
+		{
+			$trigger_message = $user->lang['SLIDE_SHOW_START'];
+			while ($row = $db->sql_fetchrow($query_result))
+			{
+				$images[] = generate_image_link('image_name', 'lytebox_slideshow', $row['image_id'], $row['image_name'], $row['image_album_id']);
+			}
+		}
+		else
+		{
+			trigger_error('MISSING_SLIDESHOW_PLUGIN');
+		}
+
+		return $trigger_message . '<br /><br />' . implode(', ', $images);
 	}
 }
 
