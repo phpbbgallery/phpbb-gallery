@@ -96,6 +96,70 @@
 			</edit>
 		</open>
 
+		<open src="gallery/mcp.php">
+			<edit>
+				<find><![CDATA[if (!gallery_acl_check('m_', $album_id))
+{
+	meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"));
+	trigger_error('NOT_AUTHORISED');
+}
+if ((substr($mode, 0, 7) == 'report_') && !gallery_acl_check('m_report', $album_id))
+{
+	meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"));
+	trigger_error('NOT_AUTHORISED');
+}
+if ((substr($mode, 0, 6) == 'queue_') && !gallery_acl_check('m_status', $album_id))
+{
+	meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"));
+	trigger_error('NOT_AUTHORISED');
+}
+if (($action == 'images_move') && (!gallery_acl_check('m_move', $album_id) || ($moving_target && !gallery_acl_check('i_upload', $moving_target))))]]></find>
+				<action type="replace-with"><![CDATA[$access_denied = false;
+switch ($mode)
+{
+	case 'report_open':
+	case 'report_closed':
+	case 'report_details':
+		$access_denied = (!gallery_acl_check('m_report', $album_id)) ? true : false;
+	break;
+	case 'queue_unapproved':
+	case 'queue_approved':
+	case 'queue_locked':
+	case 'queue_details':
+		$access_denied = (!gallery_acl_check('m_status', $album_id)) ? true : false;
+	break;
+}
+switch ($action)
+{
+	case 'images_move':
+		$access_denied = (!gallery_acl_check('m_move', $album_id) || ($moving_target && !gallery_acl_check('i_upload', $moving_target))) ? true : false;
+	break;
+	case 'images_unapprove':
+	case 'images_approve':
+	case 'images_lock':
+		$access_denied = (!gallery_acl_check('m_status', $album_id)) ? true : false;
+	break;
+	case 'images_delete':
+		$access_denied = (!gallery_acl_check('m_delete', $album_id)) ? true : false;
+	break;
+	case 'reports_close':
+	case 'reports_open':
+	case 'reports_delete':
+		$access_denied = (!gallery_acl_check('m_report', $album_id)) ? true : false;
+	break;
+}
+
+if ($access_denied || !gallery_acl_check('m_', $album_id))]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	'EDIT_IMG'		=> $user->img('icon_post_edit', 'EDIT_IMAGE'),]]></find>
+				<action type="before-add"><![CDATA[	'S_ALLOWED_MOVE'	=> (gallery_acl_check('m_move', $album_id)) ? true : false,
+	'S_ALLOWED_STATUS'	=> (gallery_acl_check('m_status', $album_id)) ? true : false,
+	'S_ALLOWED_DELETE'	=> (gallery_acl_check('m_delete', $album_id)) ? true : false,
+	'S_ALLOWED_REPORT'	=> (gallery_acl_check('m_report', $album_id)) ? true : false,]]></action>
+			</edit>
+		</open>
+
 		<open src="gallery/posting.php">
 			<edit>
 				<find><![CDATA[				if ($submit)
@@ -386,6 +450,32 @@ if (!function_exists('slideshow_plugins'))
 			</edit>
 		</open>
 
+		<open src="styles/prosilver/template/gallery/mcp_body.html">
+			<edit>
+				<find><![CDATA[				<!-- IF not S_REPORT_LIST and not S_QUEUE_LIST -->
+					<option value="images_move">{L_QUEUES_A_MOVE}</option>
+				<!-- ENDIF -->
+				<!-- IF not S_REPORT_LIST -->
+					<option value="images_unapprove">{L_QUEUE_A_UNAPPROVE}</option>
+					<option value="images_approve">{L_QUEUE_A_APPROVE}</option>
+					<option value="images_lock">{L_QUEUE_A_LOCK}</option>
+					<option value="images_delete">{L_QUEUE_A_DELETE}</option>
+				<!-- ELSE -->]]></find>
+				<action type="replace-with"><![CDATA[				<!-- IF S_ALLOWED_MOVE and not S_REPORT_LIST and not S_QUEUE_LIST -->
+					<option value="images_move">{L_QUEUES_A_MOVE}</option>
+				<!-- ENDIF -->
+				<!-- IF S_ALLOWED_STATUS and not S_REPORT_LIST -->
+					<option value="images_unapprove">{L_QUEUE_A_UNAPPROVE}</option>
+					<option value="images_approve">{L_QUEUE_A_APPROVE}</option>
+					<option value="images_lock">{L_QUEUE_A_LOCK}</option>
+				<!-- ENDIF -->
+				<!-- IF S_ALLOWED_DELETE and not S_REPORT_LIST -->
+					<option value="images_delete">{L_QUEUE_A_DELETE}</option>
+				<!-- ENDIF -->
+				<!-- IF S_ALLOWED_REPORT and S_REPORT_LIST -->]]></action>
+			</edit>
+		</open>
+
 		<open src="styles/prosilver/template/gallery/plugins_header.html">
 			<edit>
 				<find><![CDATA[hs.captionEval = 'this.thumb.alt';]]></find>
@@ -402,6 +492,32 @@ if (!function_exists('slideshow_plugins'))
 	<script type="text/javascript">
 		Shadowbox.init();
 	</script>]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/subsilver2/template/gallery/mcp_body.html">
+			<edit>
+				<find><![CDATA[						<!-- IF not S_REPORT_LIST and not S_QUEUE_LIST -->
+							<option value="images_move">{L_QUEUES_A_MOVE}</option>
+						<!-- ENDIF -->
+						<!-- IF not S_REPORT_LIST -->
+							<option value="images_unapprove">{L_QUEUE_A_UNAPPROVE}</option>
+							<option value="images_approve">{L_QUEUE_A_APPROVE}</option>
+							<option value="images_lock">{L_QUEUE_A_LOCK}</option>
+							<option value="images_delete">{L_QUEUE_A_DELETE}</option>
+						<!-- ELSE -->]]></find>
+				<action type="replace-with"><![CDATA[						<!-- IF S_ALLOWED_MOVE and not S_REPORT_LIST and not S_QUEUE_LIST -->
+							<option value="images_move">{L_QUEUES_A_MOVE}</option>
+						<!-- ENDIF -->
+						<!-- IF S_ALLOWED_STATUS and not S_REPORT_LIST -->
+							<option value="images_unapprove">{L_QUEUE_A_UNAPPROVE}</option>
+							<option value="images_approve">{L_QUEUE_A_APPROVE}</option>
+							<option value="images_lock">{L_QUEUE_A_LOCK}</option>
+						<!-- ENDIF -->
+						<!-- IF S_ALLOWED_DELETE and not S_REPORT_LIST -->
+							<option value="images_delete">{L_QUEUE_A_DELETE}</option>
+						<!-- ENDIF -->
+						<!-- IF S_ALLOWED_REPORT and S_REPORT_LIST -->]]></action>
 			</edit>
 		</open>
 

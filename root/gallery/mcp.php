@@ -71,22 +71,42 @@ $image_id_ary = ($image_id) ? array($image_id) : request_var('image_id_ary', arr
 /**
 * Check for all the requested permissions
 */
-if (!gallery_acl_check('m_', $album_id))
+$access_denied = false;
+switch ($mode)
 {
-	meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"));
-	trigger_error('NOT_AUTHORISED');
+	case 'report_open':
+	case 'report_closed':
+	case 'report_details':
+		$access_denied = (!gallery_acl_check('m_report', $album_id)) ? true : false;
+	break;
+	case 'queue_unapproved':
+	case 'queue_approved':
+	case 'queue_locked':
+	case 'queue_details':
+		$access_denied = (!gallery_acl_check('m_status', $album_id)) ? true : false;
+	break;
 }
-if ((substr($mode, 0, 7) == 'report_') && !gallery_acl_check('m_report', $album_id))
+switch ($action)
 {
-	meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"));
-	trigger_error('NOT_AUTHORISED');
+	case 'images_move':
+		$access_denied = (!gallery_acl_check('m_move', $album_id) || ($moving_target && !gallery_acl_check('i_upload', $moving_target))) ? true : false;
+	break;
+	case 'images_unapprove':
+	case 'images_approve':
+	case 'images_lock':
+		$access_denied = (!gallery_acl_check('m_status', $album_id)) ? true : false;
+	break;
+	case 'images_delete':
+		$access_denied = (!gallery_acl_check('m_delete', $album_id)) ? true : false;
+	break;
+	case 'reports_close':
+	case 'reports_open':
+	case 'reports_delete':
+		$access_denied = (!gallery_acl_check('m_report', $album_id)) ? true : false;
+	break;
 }
-if ((substr($mode, 0, 6) == 'queue_') && !gallery_acl_check('m_status', $album_id))
-{
-	meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"));
-	trigger_error('NOT_AUTHORISED');
-}
-if (($action == 'images_move') && (!gallery_acl_check('m_move', $album_id) || ($moving_target && !gallery_acl_check('i_upload', $moving_target))))
+
+if ($access_denied || !gallery_acl_check('m_', $album_id))
 {
 	meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"));
 	trigger_error('NOT_AUTHORISED');
@@ -99,6 +119,10 @@ $template->assign_block_vars('navlinks', array(
 ));
 
 $template->assign_vars(array(
+	'S_ALLOWED_MOVE'	=> (gallery_acl_check('m_move', $album_id)) ? true : false,
+	'S_ALLOWED_STATUS'	=> (gallery_acl_check('m_status', $album_id)) ? true : false,
+	'S_ALLOWED_DELETE'	=> (gallery_acl_check('m_delete', $album_id)) ? true : false,
+	'S_ALLOWED_REPORT'	=> (gallery_acl_check('m_report', $album_id)) ? true : false,
 	'EDIT_IMG'		=> $user->img('icon_post_edit', 'EDIT_IMAGE'),
 	'DELETE_IMG'	=> $user->img('icon_post_delete', 'DELETE_IMAGE'),
 	'ALBUM_NAME'	=> $album_data['album_name'],

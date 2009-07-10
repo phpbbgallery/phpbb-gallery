@@ -111,15 +111,18 @@
 				<td class="cat" colspan="6" align="right">
 					<select name="action">
 						<option value="" selected="selected">{L_CHOOSE_ACTION}</option>
-						<!-- IF not S_REPORT_LIST and not S_QUEUE_LIST -->
+						<!-- IF S_ALLOWED_MOVE and not S_REPORT_LIST and not S_QUEUE_LIST -->
 							<option value="images_move">{L_QUEUES_A_MOVE}</option>
 						<!-- ENDIF -->
-						<!-- IF not S_REPORT_LIST -->
+						<!-- IF S_ALLOWED_STATUS and not S_REPORT_LIST -->
 							<option value="images_unapprove">{L_QUEUE_A_UNAPPROVE}</option>
 							<option value="images_approve">{L_QUEUE_A_APPROVE}</option>
 							<option value="images_lock">{L_QUEUE_A_LOCK}</option>
+						<!-- ENDIF -->
+						<!-- IF S_ALLOWED_DELETE and not S_REPORT_LIST -->
 							<option value="images_delete">{L_QUEUE_A_DELETE}</option>
-						<!-- ELSE -->
+						<!-- ENDIF -->
+						<!-- IF S_ALLOWED_REPORT and S_REPORT_LIST -->
 							<option value="reports_close">{L_REPORT_A_CLOSE}</option>
 							<option value="reports_open">{L_REPORT_A_OPEN}</option>
 							<option value="reports_delete">{L_REPORT_A_DELETE}</option>
