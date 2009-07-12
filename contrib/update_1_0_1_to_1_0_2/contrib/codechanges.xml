@@ -162,6 +162,149 @@ if ($access_denied || !gallery_acl_check('m_', $album_id))]]></action>
 
 		<open src="gallery/posting.php">
 			<edit>
+				<find><![CDATA[$loop = request_var('image_num', 0);]]></find>
+				<action type="after-add"><![CDATA[$rotate = request_var('rotate', array(0));]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[							// Since we are able to resize the images, we loose the exif.]]></find>
+				<action type="replace-with"><![CDATA[							/**
+							* Store exif-data to database
+							*/]]></action>
+			</edit>
+				<find><![CDATA[							if (($image_file->width > $gallery_config['max_width']) || ($image_file->height > $gallery_config['max_height']))
+							{
+								/**
+								* Resize overside images
+								*/
+								if ($gallery_config['resize_images'])
+								{
+									switch ($image_type)
+									{
+										case 'jpg':
+											$read_function = 'imagecreatefromjpeg';
+										break;
+										case 'png':
+											$read_function = 'imagecreatefrompng';
+										break;
+										case 'gif':
+											$read_function = 'imagecreatefromgif';
+										break;
+									}
+
+									$src = $read_function($image_file->destination_file);]]></find>
+				<action type="replace-with"><![CDATA[							$src = false;
+							switch ($image_type)
+							{
+								case 'jpg':
+									$read_function = 'imagecreatefromjpeg';
+								break;
+								case 'png':
+									$read_function = 'imagecreatefrompng';
+								break;
+								case 'gif':
+									$read_function = 'imagecreatefromgif';
+								break;
+							}
+
+							if ($gallery_config['allow_rotate_images'] && ($rotate[$i] > 0) && (($rotate[$i] % 90) == 0))
+							{
+								/**
+								* Rotate the image
+								*/
+								if (!$src)
+								{
+									$src = $read_function($image_file->destination_file);
+								}
+								$src = imagerotate($src, $rotate[$i], 0);
+								if ((($rotate[$i] / 90) % 2) == 1)
+								{
+									// Left or Right, we need to switch the height and width
+									$new_width = $image_file->height;
+									$image_file->height = $image_file->width;
+									$image_file->width = $new_width;
+								}
+
+								if (!(($image_file->width > $gallery_config['max_width']) || ($image_file->height > $gallery_config['max_height'])))
+								{
+									// We do not resize the image, so we can put the resource back to the file
+									switch ($image_type)
+									{
+										case 'jpg':
+											@imagejpeg($src, $image_file->destination_file, 100);
+										break;
+										case 'png':
+											@imagepng($src, $image_file->destination_file);
+										break;
+										case 'gif':
+											@imagegif($src, $image_file->destination_file);
+										break;
+									}
+									imagedestroy($src);
+								}
+							}
+
+							if (($image_file->width > $gallery_config['max_width']) || ($image_file->height > $gallery_config['max_height']))
+							{
+								/**
+								* Resize overside images
+								*/
+								if ($gallery_config['allow_resize_images'])
+								{
+									if (!$src)
+									{
+										$src = $read_function($image_file->destination_file);
+									}]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					'S_IMAGE'				=> true,
+					'S_UPLOAD'				=> true,]]></find>
+				<action type="after-add"><![CDATA[					'S_ALLOW_ROTATE'		=> $gallery_config['allow_rotate_images'],]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					if ($user->data['user_id'] != $image_data['image_user_id'])
+					{
+						add_log('gallery', $image_data['image_album_id'], $image_id, 'LOG_GALLERY_EDITED', $image_name);
+					}]]></find>
+				<action type="before-add"><![CDATA[					$rotate = request_var('rotate', 0);
+					if ($gallery_config['allow_rotate_images'] && ($rotate > 0) && (($rotate % 90) == 0))
+					{
+						/**
+						* Rotate the image
+						*/
+						$image_src = $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename'];
+						// We do not resize the image, so we can put the resource back to the file
+						switch (substr($image_data['image_filename'], -3))
+						{
+							case 'jpg':
+								$src = imagecreatefromjpeg($image_src);
+								$src = imagerotate($src, $rotate, 0);
+								@imagejpeg($src, $image_src, 100);
+							break;
+							case 'png':
+								$src = imagecreatefrompng($image_src);
+								$src = imagerotate($src, $rotate, 0);
+								@imagepng($src, $image_src);
+							break;
+							case 'gif':
+								$src = imagecreatefromgif($image_src);
+								$src = imagerotate($src, $rotate, 0);
+								@imagegif($src, $image_src);
+							break;
+						}
+						imagedestroy($src);
+
+						@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_thumbnail']);
+						@unlink($phpbb_root_path . GALLERY_MEDIUM_PATH . $image_data['image_filename']);
+					}
+
+]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					'S_IMAGE'			=> true,
+					'S_EDIT'			=> true,]]></find>
+				<action type="after-add"><![CDATA[					'S_ALLOW_ROTATE'	=> $gallery_config['allow_rotate_images'],]]></action>
+			</edit>
+			<edit>
 				<find><![CDATA[				if ($submit)
 				{
 					if (!check_form_key('gallery'))
@@ -397,6 +540,14 @@ if (!function_exists('slideshow_plugins'))
 
 		<open src="includes/acp/acp_gallery_config.php">
 			<edit>
+				<find><![CDATA[						'resize_images'			=> array('lang' => 'RESIZE_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),]]></find>
+				<action type="replace-with"><![CDATA[						'allow_resize_images'	=> array('lang' => 'RESIZE_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[						'view_image_url'		=> array('lang' => 'VIEW_IMAGE_URL',		'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),]]></find>
+				<action type="after-add"><![CDATA[						'allow_rotate_images'	=> array('lang' => 'ROTATE_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),]]></action>
+			</edit>
+			<edit>
 				<find><![CDATA[		global $gallery_plugins, $user;
 
 		$sort_order_options = '';
@@ -423,12 +574,24 @@ if (!function_exists('slideshow_plugins'))
 		<open src="language/de/mods/gallery.php">
 			<edit>
 				<find><![CDATA[	'SLIDE_SHOW_START'				=> 'Um die Diashow zu starten, klicke auf einen der Bildnamen:',]]></find>
+				<action type="after-add"><![CDATA[	'ROTATE_IMAGE'					=> 'Bild drehen',
+	'ROTATE_LEFT'					=> '90° links',
+	'ROTATE_NONE'					=> 'nicht drehen',
+	'ROTATE_RIGHT'					=> '90° rechts',
+	'ROTATE_UPSIDEDOWN'				=> '180° oben nach unten',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	'RETURN_ALBUM'					=> '%sZurück zum zuletzt besuchten Album%s',]]></find>
 				<action type="replace-with"><![CDATA[	'SLIDE_SHOW_LYTEBOX'			=> 'Um die Diashow zu starten, klicke auf einen der Bildnamen:',
 	'SLIDE_SHOW_SHADOWBOX'			=> 'Um die Diashow zu starten, klicke auf einen der Bildnamen:',]]></action>
 			</edit>
 		</open>
 
 		<open src="language/de/mods/gallery_acp.php">
+			<edit>
+				<find><![CDATA[	'RESYNCED_PERSONALS'			=> 'Persönliche Alben resynchronisiert',]]></find>
+				<action type="after-add"><![CDATA[	'ROTATE_IMAGES'					=> 'Option zum Drehen von Bilder anzeigen',]]></action>
+			</edit>
 			<edit>
 				<find><![CDATA[	'UC_LINK_NONE'					=> 'Kein Link',]]></find>
 				<action type="after-add"><![CDATA[	'UC_LINK_SHADOWBOX'				=> 'Shadowbox-Plugin öffnen',]]></action>
@@ -437,6 +600,14 @@ if (!function_exists('slideshow_plugins'))
 
 		<open src="language/en/mods/gallery.php">
 			<edit>
+				<find><![CDATA[	'RETURN_ALBUM'					=> '%sReturn to the album last visited%s',]]></find>
+				<action type="after-add"><![CDATA[	'ROTATE_IMAGE'					=> 'Rotate image',
+	'ROTATE_LEFT'					=> '90° left',
+	'ROTATE_NONE'					=> 'none',
+	'ROTATE_RIGHT'					=> '90° right',
+	'ROTATE_UPSIDEDOWN'				=> '180° upside-down',]]></action>
+			</edit>
+			<edit>
 				<find><![CDATA[	'SLIDE_SHOW_START'				=> 'To start the slideshow, click on one of the image-names:',]]></find>
 				<action type="replace-with"><![CDATA[	'SLIDE_SHOW_LYTEBOX'			=> 'To start the slideshow, click on one of the image-names:',
 	'SLIDE_SHOW_SHADOWBOX'			=> 'To start the slideshow, click on one of the image-names:',]]></action>
@@ -444,6 +615,10 @@ if (!function_exists('slideshow_plugins'))
 		</open>
 
 		<open src="language/en/mods/gallery_acp.php">
+			<edit>
+				<find><![CDATA[	'RESYNCED_PERSONALS'			=> 'Resynchronised personal album id\'s',]]></find>
+				<action type="after-add"><![CDATA[	'ROTATE_IMAGES'					=> 'Allow to rotate images',]]></action>
+			</edit>
 			<edit>
 				<find><![CDATA[	'UC_LINK_NONE'					=> 'No Link',]]></find>
 				<action type="after-add"><![CDATA[	'UC_LINK_SHADOWBOX'				=> 'Open Shadowbox-Plugin',]]></action>
@@ -495,6 +670,33 @@ if (!function_exists('slideshow_plugins'))
 			</edit>
 		</open>
 
+		<open src="styles/prosilver/template/gallery/posting_body.html">
+			<edit>
+				<find><![CDATA[			<!-- IF S_UPLOAD -->
+				<hr />
+				<!-- BEGIN upload_image -->]]></find>
+				<action type="before-add"><![CDATA[			<!-- IF S_EDIT and S_ALLOW_ROTATE -->
+				<dl>
+					<dt><label for="rotate">{L_ROTATE_IMAGE}:</label></dt>
+					<dd><input type="radio" name="rotate" id="rotate_0" value="0" checked="checked" /> <label for="rotate_0">{L_ROTATE_NONE}</label> &nbsp;
+						<input type="radio" name="rotate" id="rotate_270" value="270" /> <label for="rotate_270">{L_ROTATE_RIGHT}</label> &nbsp;
+						<input type="radio" name="rotate" id="rotate_180" value="180" /> <label for="rotate_180">{L_ROTATE_UPSIDEDOWN}</label> &nbsp;
+						<input type="radio" name="rotate" id="rotate_90" value="90" /> <label for="rotate_90">{L_ROTATE_LEFT}</label></dd>
+				</dl>
+			<!-- ENDIF -->]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					</dl>
+				<!-- END upload_image -->]]></find>
+				<action type="before-add"><![CDATA[						<!-- IF S_ALLOW_ROTATE -->
+							<dd><input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_0" value="0" checked="checked" /> <label for="rotate[{upload_image.S_ROW_COUNT}]_0">{L_ROTATE_NONE}</label> &nbsp;
+								<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_270" value="270" /> <label for="rotate[{upload_image.S_ROW_COUNT}]_270">{L_ROTATE_RIGHT}</label> &nbsp;
+								<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_180" value="180" /> <label for="rotate[{upload_image.S_ROW_COUNT}]_180">{L_ROTATE_UPSIDEDOWN}</label> &nbsp;
+								<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_90" value="90" /> <label for="rotate[{upload_image.S_ROW_COUNT}]_90">{L_ROTATE_LEFT}</label></dd>
+						<!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+
 		<open src="styles/subsilver2/template/gallery/mcp_body.html">
 			<edit>
 				<find><![CDATA[						<!-- IF not S_REPORT_LIST and not S_QUEUE_LIST -->
@@ -537,6 +739,38 @@ if (!function_exists('slideshow_plugins'))
 	<script type="text/javascript">
 		Shadowbox.init();
 	</script>]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/subsilver2/template/gallery/posting_body.html">
+			<edit>
+				<find><![CDATA[		<!-- IF S_UPLOAD -->
+			<!-- BEGIN upload_image -->]]></find>
+				<action type="before-add"><![CDATA[		<!-- IF S_EDIT and S_ALLOW_ROTATE -->
+			<tr>
+				<td class="row1" height="28"><span class="gen">{L_ROTATE_IMAGE}:</span></td>
+				<td class="row2">
+					<input type="radio" name="rotate" id="rotate_0" value="0" checked="checked" /> <span class="gen">{L_ROTATE_NONE}</span> &nbsp;
+					<input type="radio" name="rotate" id="rotate_270" value="270" /> <span class="gen">{L_ROTATE_RIGHT}</span> &nbsp;
+					<input type="radio" name="rotate" id="rotate_180" value="180" /> <span class="gen">{L_ROTATE_UPSIDEDOWN}</span> &nbsp;
+					<input type="radio" name="rotate" id="rotate_90" value="90" /> <span class="gen">{L_ROTATE_LEFT}</span>
+				</td>
+			</tr>
+		<!-- ENDIF -->]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[			<!-- END upload_image -->]]></find>
+				<action type="before-add"><![CDATA[				<!-- IF S_ALLOW_ROTATE -->
+					<tr>
+						<td class="row1" height="28"><span class="gen">{L_ROTATE_IMAGE}:</span></td>
+						<td class="row2">
+							<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_0" value="0" checked="checked" /> <span class="gen">{L_ROTATE_NONE}</span> &nbsp;
+							<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_270" value="270" /> <span class="gen">{L_ROTATE_RIGHT}</span> &nbsp;
+							<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_180" value="180" /> <span class="gen">{L_ROTATE_UPSIDEDOWN}</span> &nbsp;
+							<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_90" value="90" /> <span class="gen">{L_ROTATE_LEFT}</span>
+						</td>
+					</tr>
+				<!-- ENDIF -->]]></action>
 			</edit>
 		</open>
 

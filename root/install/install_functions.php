@@ -579,7 +579,6 @@ function set_default_config()
 	set_gallery_config('link_thumbnail', 'image_page');
 	set_gallery_config('link_image_name', 'image_page');
 	set_gallery_config('link_image_icon', 'image_page');
-	set_gallery_config('resize_images', 1);
 	set_gallery_config('personal_album_index', 0);
 	set_gallery_config('view_image_url', 1);
 	set_gallery_config('medium_cache', 1);
@@ -632,6 +631,10 @@ function set_default_config()
 
 	// Added 1.0.0-RC1:
 	set_gallery_config('rrc_profile_pgalleries', 1);
+
+	// Added 1.0.2:
+	set_gallery_config('allow_resize_images', 1);
+	set_gallery_config('allow_rotate_images', 1);
 }
 
 ?>

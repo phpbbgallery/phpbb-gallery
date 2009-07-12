@@ -187,6 +187,11 @@ $lang = array_merge($lang, array(
 	'RECENT_IMAGES'					=> 'Neuesten Bilder',
 	'REPORT_IMAGE'					=> 'Bild melden',
 	'RETURN_ALBUM'					=> '%sZurück zum zuletzt besuchten Album%s',
+	'ROTATE_IMAGE'					=> 'Bild drehen',
+	'ROTATE_LEFT'					=> '90° links',
+	'ROTATE_NONE'					=> 'nicht drehen',
+	'ROTATE_RIGHT'					=> '90° rechts',
+	'ROTATE_UPSIDEDOWN'				=> '180° oben nach unten',
 
 	'SEARCH_ALBUM'					=> 'Album durchsuchen…',
 	'SEARCH_ALBUMS'					=> 'Zu durchsuchende Alben',

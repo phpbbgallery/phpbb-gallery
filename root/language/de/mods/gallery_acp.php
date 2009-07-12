@@ -288,6 +288,7 @@ $lang = array_merge($lang, array(
 	'RESYNCED_IMAGECOUNTS'			=> 'Anzahl der hochgeladenen Bilder resynchronisiert',
 	'RESYNCED_LAST_IMAGES'			=> '"Letztes Bild" neu ermittelt',
 	'RESYNCED_PERSONALS'			=> 'Persönliche Alben resynchronisiert',
+	'ROTATE_IMAGES'					=> 'Option zum Drehen von Bilder anzeigen',
 	'ROWS_PER_PAGE'					=> 'Anzahl der Zeilen auf Bildvorschau-Seite',
 
 	'RRC_DISPLAY_ALBUMNAME'			=> 'Name des Albums',

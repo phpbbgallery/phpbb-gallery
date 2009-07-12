@@ -108,12 +108,27 @@ function toggleElement(oElement)
 			<div id="message-box">
 				<textarea name="message" id="message" rows="15" cols="76" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" class="inputbox">{MESSAGE}</textarea>
 			</div>
+			<!-- IF S_EDIT and S_ALLOW_ROTATE -->
+				<dl>
+					<dt><label for="rotate">{L_ROTATE_IMAGE}:</label></dt>
+					<dd><input type="radio" name="rotate" id="rotate_0" value="0" checked="checked" /> <label for="rotate_0">{L_ROTATE_NONE}</label> &nbsp;
+						<input type="radio" name="rotate" id="rotate_270" value="270" /> <label for="rotate_270">{L_ROTATE_RIGHT}</label> &nbsp;
+						<input type="radio" name="rotate" id="rotate_180" value="180" /> <label for="rotate_180">{L_ROTATE_UPSIDEDOWN}</label> &nbsp;
+						<input type="radio" name="rotate" id="rotate_90" value="90" /> <label for="rotate_90">{L_ROTATE_LEFT}</label></dd>
+				</dl>
+			<!-- ENDIF -->
 			<!-- IF S_UPLOAD -->
 				<hr />
 				<!-- BEGIN upload_image -->
 					<dl>
 						<dt><label for="image_file_{upload_image.S_ROW_COUNT}">{L_FILE}:</label></dt>
 						<dd><input class="inputbox autowidth" type="file" tabindex="1{upload_image.S_ROW_COUNT}" id="image_file_{upload_image.S_ROW_COUNT}" name="image_file_{upload_image.S_ROW_COUNT}" size="52" /></dd>
+						<!-- IF S_ALLOW_ROTATE -->
+							<dd><input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_0" value="0" checked="checked" /> <label for="rotate[{upload_image.S_ROW_COUNT}]_0">{L_ROTATE_NONE}</label> &nbsp;
+								<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_270" value="270" /> <label for="rotate[{upload_image.S_ROW_COUNT}]_270">{L_ROTATE_RIGHT}</label> &nbsp;
+								<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_180" value="180" /> <label for="rotate[{upload_image.S_ROW_COUNT}]_180">{L_ROTATE_UPSIDEDOWN}</label> &nbsp;
+								<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_90" value="90" /> <label for="rotate[{upload_image.S_ROW_COUNT}]_90">{L_ROTATE_LEFT}</label></dd>
+						<!-- ENDIF -->
 					</dl>
 				<!-- END upload_image -->
 				<!-- IF S_MULTI_IMAGES --><hr /><!-- ENDIF -->

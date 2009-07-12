@@ -186,6 +186,11 @@ $lang = array_merge($lang, array(
 	'RECENT_IMAGES'					=> 'Recent Images',
 	'REPORT_IMAGE'					=> 'Report image',
 	'RETURN_ALBUM'					=> '%sReturn to the album last visited%s',
+	'ROTATE_IMAGE'					=> 'Rotate image',
+	'ROTATE_LEFT'					=> '90° left',
+	'ROTATE_NONE'					=> 'none',
+	'ROTATE_RIGHT'					=> '90° right',
+	'ROTATE_UPSIDEDOWN'				=> '180° upside-down',
 
 	'SEARCH_ALBUM'					=> 'Search this album…',
 	'SEARCH_ALBUMS'					=> 'Search in albums',

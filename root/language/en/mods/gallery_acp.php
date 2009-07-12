@@ -286,6 +286,7 @@ $lang = array_merge($lang, array(
 	'RESYNCED_IMAGECOUNTS'			=> 'Resynchronised image counts',
 	'RESYNCED_LAST_IMAGES'			=> 'Refreshed "Last image"',
 	'RESYNCED_PERSONALS'			=> 'Resynchronised personal album id\'s',
+	'ROTATE_IMAGES'					=> 'Allow to rotate images',
 	'ROWS_PER_PAGE'					=> 'Number of rows on thumbnail page',
 
 	'RRC_DISPLAY_ALBUMNAME'			=> 'Album name',

@@ -398,6 +398,7 @@ switch ($mode)
 					// Get File Upload Info
 					$image_id_ary = array();
 					$loop = request_var('image_num', 0);
+					$rotate = request_var('rotate', array(0));
 					$loop = ($loop != 0) ? $loop - 1 : $loop;
 					for ($i = 0; $i < $upload_image_files; $i++)
 					{
@@ -462,7 +463,9 @@ switch ($mode)
 								}
 							}
 
-							// Since we are able to resize the images, we loose the exif.
+							/**
+							* Store exif-data to database
+							*/
 							$exif = array();
 							if (function_exists('exif_read_data'))
 							{
@@ -497,27 +500,68 @@ switch ($mode)
 								$image_data['image_has_exif'] = EXIF_UNAVAILABLE;
 							}
 
+							$src = false;
+							switch ($image_type)
+							{
+								case 'jpg':
+									$read_function = 'imagecreatefromjpeg';
+								break;
+								case 'png':
+									$read_function = 'imagecreatefrompng';
+								break;
+								case 'gif':
+									$read_function = 'imagecreatefromgif';
+								break;
+							}
+
+							if ($gallery_config['allow_rotate_images'] && ($rotate[$i] > 0) && (($rotate[$i] % 90) == 0))
+							{
+								/**
+								* Rotate the image
+								*/
+								if (!$src)
+								{
+									$src = $read_function($image_file->destination_file);
+								}
+								$src = imagerotate($src, $rotate[$i], 0);
+								if ((($rotate[$i] / 90) % 2) == 1)
+								{
+									// Left or Right, we need to switch the height and width
+									$new_width = $image_file->height;
+									$image_file->height = $image_file->width;
+									$image_file->width = $new_width;
+								}
+
+								if (!(($image_file->width > $gallery_config['max_width']) || ($image_file->height > $gallery_config['max_height'])))
+								{
+									// We do not resize the image, so we can put the resource back to the file
+									switch ($image_type)
+									{
+										case 'jpg':
+											@imagejpeg($src, $image_file->destination_file, 100);
+										break;
+										case 'png':
+											@imagepng($src, $image_file->destination_file);
+										break;
+										case 'gif':
+											@imagegif($src, $image_file->destination_file);
+										break;
+									}
+									imagedestroy($src);
+								}
+							}
+
 							if (($image_file->width > $gallery_config['max_width']) || ($image_file->height > $gallery_config['max_height']))
 							{
 								/**
 								* Resize overside images
 								*/
-								if ($gallery_config['resize_images'])
+								if ($gallery_config['allow_resize_images'])
 								{
-									switch ($image_type)
+									if (!$src)
 									{
-										case 'jpg':
-											$read_function = 'imagecreatefromjpeg';
-										break;
-										case 'png':
-											$read_function = 'imagecreatefrompng';
-										break;
-										case 'gif':
-											$read_function = 'imagecreatefromgif';
-										break;
+										$src = $read_function($image_file->destination_file);
 									}
-
-									$src = $read_function($image_file->destination_file);
 									// Resize it
 									if (($image_file->width / $gallery_config['max_width']) > ($image_file->height / $gallery_config['max_height']))
 									{
@@ -563,6 +607,7 @@ switch ($mode)
 								$image_data['image_has_exif'] = EXIF_AVAILABLE;
 								$image_data['image_exif_data'] = '';
 							}
+
 							$image_data['image_filesize'] = $image_file->filesize;
 							if ($image_data['image_filesize'] > (1.2 * $gallery_config['max_file_size']))
 							{
@@ -630,6 +675,7 @@ switch ($mode)
 					'MESSAGE'				=> request_var('message', '', true),
 					'S_IMAGE'				=> true,
 					'S_UPLOAD'				=> true,
+					'S_ALLOW_ROTATE'		=> $gallery_config['allow_rotate_images'],
 				));
 
 				if (!$error)
@@ -759,6 +805,38 @@ switch ($mode)
 						update_album_info($personal_album_id);
 					}
 
+					$rotate = request_var('rotate', 0);
+					if ($gallery_config['allow_rotate_images'] && ($rotate > 0) && (($rotate % 90) == 0))
+					{
+						/**
+						* Rotate the image
+						*/
+						$image_src = $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename'];
+						// We do not resize the image, so we can put the resource back to the file
+						switch (substr($image_data['image_filename'], -3))
+						{
+							case 'jpg':
+								$src = imagecreatefromjpeg($image_src);
+								$src = imagerotate($src, $rotate, 0);
+								@imagejpeg($src, $image_src, 100);
+							break;
+							case 'png':
+								$src = imagecreatefrompng($image_src);
+								$src = imagerotate($src, $rotate, 0);
+								@imagepng($src, $image_src);
+							break;
+							case 'gif':
+								$src = imagecreatefromgif($image_src);
+								$src = imagerotate($src, $rotate, 0);
+								@imagegif($src, $image_src);
+							break;
+						}
+						imagedestroy($src);
+
+						@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_thumbnail']);
+						@unlink($phpbb_root_path . GALLERY_MEDIUM_PATH . $image_data['image_filename']);
+					}
+
 					if ($user->data['user_id'] != $image_data['image_user_id'])
 					{
 						add_log('gallery', $image_data['image_album_id'], $image_id, 'LOG_GALLERY_EDITED', $image_name);
@@ -780,6 +858,7 @@ switch ($mode)
 
 					'S_IMAGE'			=> true,
 					'S_EDIT'			=> true,
+					'S_ALLOW_ROTATE'	=> $gallery_config['allow_rotate_images'],
 					'S_MOVE_PERSONAL'	=> ((gallery_acl_check('i_upload', OWN_GALLERY_PERMISSIONS) || $user->gallery['personal_album_id']) || ($user->data['user_id'] != $image_data['image_user_id'])) ? true : false,
 					'S_MOVE_MODERATOR'	=> ($user->data['user_id'] != $image_data['image_user_id']) ? true : false,
 					'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id"),

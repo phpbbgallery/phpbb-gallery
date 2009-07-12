@@ -460,6 +460,9 @@ class install_update extends module
 			case '1.0.1-dev':
 				nv_add_column(GALLERY_IMAGES_TABLE,	'image_name_clean',		array('VCHAR:255', ''));
 				nv_add_column(GALLERY_IMAGES_TABLE,	'image_username_clean',	array('VCHAR:255', ''));
+
+			case '1.0.1':
+			case '1.0.2-dev':
 			break;
 		}
 
@@ -1121,6 +1124,27 @@ class install_update extends module
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
+
+			case '1.0.1':
+			case '1.0.2-dev':
+				if (!isset($gallery_config['allow_resize_images']))
+				{
+					if (isset($gallery_config['resize_images']))
+					{
+						set_gallery_config('allow_resize_images', $gallery_config['resize_images']);
+					}
+					else
+					{
+						set_gallery_config('allow_resize_images', 1);
+					}
+				}
+				if (!isset($gallery_config['allow_rotate_images']))
+				{
+					set_gallery_config('allow_rotate_images', 1);
+				}
+
+				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
+			break;
 		}
 
 		$next_update_url = (!$next_update_url) ? $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4" : $next_update_url;
@@ -1196,6 +1220,8 @@ class install_update extends module
 			case '1.0.0-RC2':
 			case '1.0.0':
 			case '1.0.1-dev':
+			case '1.0.1':
+			case '1.0.2-dev':
 			break;
 		}
 
@@ -1205,7 +1231,7 @@ class install_update extends module
 			WHERE ' . $db->sql_in_set('config_name', $old_configs);
 		$db->sql_query($sql);
 
-		$old_gallery_configs = array('user_pics_limit', 'mod_pics_limit', 'fullpic_popup', 'personal_gallery', 'personal_gallery_private', 'personal_gallery_limit', 'personal_gallery_view', 'album_version', 'num_comment', 'max_pics');
+		$old_gallery_configs = array('user_pics_limit', 'mod_pics_limit', 'fullpic_popup', 'personal_gallery', 'personal_gallery_private', 'personal_gallery_limit', 'personal_gallery_view', 'album_version', 'num_comment', 'max_pics', 'resize_images');
 		$sql = 'DELETE FROM ' . GALLERY_CONFIG_TABLE . '
 			WHERE ' . $db->sql_in_set('config_name', $old_gallery_configs);
 		$db->sql_query($sql);
@@ -1336,6 +1362,8 @@ class install_update extends module
 				case '1.0.0-RC2':
 				case '1.0.0':
 				case '1.0.1-dev':
+				case '1.0.1':
+				case '1.0.2-dev':
 				break;
 			}
 
@@ -1352,6 +1380,8 @@ class install_update extends module
 			$modules = $this->gallery_config_options;
 			switch ($gallery_config['phpbb_gallery_version'])
 			{
+				case '1.0.2-dev':
+				case '1.0.1':
 				case '1.0.1-dev':
 				case '1.0.0':
 				case '1.0.0-RC2':

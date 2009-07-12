@@ -120,12 +120,34 @@ function toggleElement(oElement)
 				</table>
 			</td>
 		</tr>
+		<!-- IF S_EDIT and S_ALLOW_ROTATE -->
+			<tr>
+				<td class="row1" height="28"><span class="gen">{L_ROTATE_IMAGE}:</span></td>
+				<td class="row2">
+					<input type="radio" name="rotate" id="rotate_0" value="0" checked="checked" /> <span class="gen">{L_ROTATE_NONE}</span> &nbsp;
+					<input type="radio" name="rotate" id="rotate_270" value="270" /> <span class="gen">{L_ROTATE_RIGHT}</span> &nbsp;
+					<input type="radio" name="rotate" id="rotate_180" value="180" /> <span class="gen">{L_ROTATE_UPSIDEDOWN}</span> &nbsp;
+					<input type="radio" name="rotate" id="rotate_90" value="90" /> <span class="gen">{L_ROTATE_LEFT}</span>
+				</td>
+			</tr>
+		<!-- ENDIF -->
 		<!-- IF S_UPLOAD -->
 			<!-- BEGIN upload_image -->
 				<tr>
 					<td class="row1" height="28"><span class="gen">{L_FILE}:</span></td>
 					<td class="row2"><input class="inputbox autowidth" type="file" tabindex="1{upload_image.S_ROW_COUNT}" name="image_file_{upload_image.S_ROW_COUNT}" size="60" /></td>
 				</tr>
+				<!-- IF S_ALLOW_ROTATE -->
+					<tr>
+						<td class="row1" height="28"><span class="gen">{L_ROTATE_IMAGE}:</span></td>
+						<td class="row2">
+							<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_0" value="0" checked="checked" /> <span class="gen">{L_ROTATE_NONE}</span> &nbsp;
+							<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_270" value="270" /> <span class="gen">{L_ROTATE_RIGHT}</span> &nbsp;
+							<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_180" value="180" /> <span class="gen">{L_ROTATE_UPSIDEDOWN}</span> &nbsp;
+							<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_90" value="90" /> <span class="gen">{L_ROTATE_LEFT}</span>
+						</td>
+					</tr>
+				<!-- ENDIF -->
 			<!-- END upload_image -->
 			<tr>
 				<td class="row1" height="28"><span class="gen">{L_MAX_FILE_SIZE}:</span></td>

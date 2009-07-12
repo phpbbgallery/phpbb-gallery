@@ -52,6 +52,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 					<change><![CDATA[[Change] Change plugin-system for better integration of new plugins]]></change>
 
 					<change><![CDATA[[Feature] New plugin: Shadowbox 3.0b]]></change>
+					<change><![CDATA[[Feature] Ability to rotate images on upload/edit (Bug #603)]]></change>
 
 					<change><![CDATA[[Sec] Moderative permissions lack when one m_ is given to an user (Bug #i602 - Reported by robbx)]]></change>
 				</changelog>
