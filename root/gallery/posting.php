@@ -833,7 +833,7 @@ switch ($mode)
 						}
 						imagedestroy($src);
 
-						@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_thumbnail']);
+						@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_filename']);
 						@unlink($phpbb_root_path . GALLERY_MEDIUM_PATH . $image_data['image_filename']);
 					}
 

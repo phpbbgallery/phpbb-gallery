@@ -64,7 +64,7 @@ $submit = (isset($_POST['submit'])) ? true : false;
 $action = request_var('action', '');
 $redirect = request_var('redirect', $mode);
 $moving_target = request_var('moving_target', 0);
-$image_id = (isset($_POST['image_id'])) ? $image_id : $option_id;
+$image_id = ($image_id && !$option_id) ? $image_id : $option_id;
 $image_id_ary = ($image_id) ? array($image_id) : request_var('image_id_ary', array(0));
 
 
