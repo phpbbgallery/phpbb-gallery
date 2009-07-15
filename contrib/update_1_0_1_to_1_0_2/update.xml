@@ -42,6 +42,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<date>2009-MM-DD</date>
 				<rev-version>1.0.2</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] User on comments always vied as offline (Bug #606)]]></change>
 					<change><![CDATA[[Fix] Moderator option for quick-move not working anymore (Bug #605)]]></change>
 					<change><![CDATA[[Fix] Missing imagename on slideshow (Bug #596)]]></change>
 					<change><![CDATA[[Fix] Comment-author is named guest, after editing a comment of an user. (Bug #601)]]></change>

@@ -507,6 +507,24 @@ if (($gallery_config['allow_comments'] && gallery_acl_check('c_read', $album_id)
 		}
 		$db->sql_freeresult($result);
 
+		if ($config['load_onlinetrack'] && sizeof($users))
+		{
+			// Load online-information
+			$sql = 'SELECT session_user_id, MAX(session_time) as online_time, MIN(session_viewonline) AS viewonline
+				FROM ' . SESSIONS_TABLE . '
+				WHERE ' . $db->sql_in_set('session_user_id', $users) . '
+				GROUP BY session_user_id';
+			$result = $db->sql_query($sql);
+
+			$update_time = $config['load_online_time'] * 60;
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$user_cache[$row['session_user_id']]['online'] = (time() - $update_time < $row['online_time'] && (($row['viewonline']) || $auth->acl_get('u_viewonline'))) ? true : false;
+			}
+			$db->sql_freeresult($result);
+		}
+		unset($id_cache);
+
 		foreach ($comments as $row)
 		{
 			$edit_info = '';

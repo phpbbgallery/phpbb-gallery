@@ -85,6 +85,27 @@
 
 		<open src="gallery/image_page.php">
 			<edit>
+				<find><![CDATA[		foreach ($comments as $row)]]></find>
+				<action type="before-add"><![CDATA[		if ($config['load_onlinetrack'] && sizeof($users))
+		{
+			// Load online-information
+			$sql = 'SELECT session_user_id, MAX(session_time) as online_time, MIN(session_viewonline) AS viewonline
+				FROM ' . SESSIONS_TABLE . '
+				WHERE ' . $db->sql_in_set('session_user_id', $users) . '
+				GROUP BY session_user_id';
+			$result = $db->sql_query($sql);
+
+			$update_time = $config['load_online_time'] * 60;
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$user_cache[$row['session_user_id']]['online'] = (time() - $update_time < $row['online_time'] && (($row['viewonline']) || $auth->acl_get('u_viewonline'))) ? true : false;
+			}
+			$db->sql_freeresult($result);
+		}
+		unset($id_cache);
+]]></action>
+			</edit>
+			<edit>
 				<find><![CDATA[				'POST_AUTHOR_FULL'		=> get_username_string('full', $user_cache[$user_id]['user_id'], ($user_cache[$user_id]['user_id'] != ANONYMOUS) ? $user_cache[$user_id]['username'] : ($user->lang['GUEST'] . ': ' . $row['comment_username']), $user_cache[$user_id]['user_colour']),
 				'POST_AUTHOR_COLOUR'	=> get_username_string('colour', $user_cache[$user_id]['user_id'], ($user_cache[$user_id]['user_id'] != ANONYMOUS) ? $user_cache[$user_id]['username'] : ($user->lang['GUEST'] . ': ' . $row['comment_username']), $user_cache[$user_id]['user_colour']),
 				'POST_AUTHOR'			=> get_username_string('username', $user_cache[$user_id]['user_id'], ($user_cache[$user_id]['user_id'] != ANONYMOUS) ? $user_cache[$user_id]['username'] : ($user->lang['GUEST'] . ': ' . $row['comment_username']), $user_cache[$user_id]['user_colour']),
@@ -442,6 +463,12 @@ if ($access_denied || !gallery_acl_check('m_', $album_id))]]></action>
 
 ]]></action>
 			</edit>
+			<edit>
+				<find><![CDATA[			'online'		=> false,
+			'profile'		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=$user_id"),]]></find>
+				<action type="replace-with"><![CDATA[			'online'		=> $row['user_allow_viewonline'],
+			'profile'		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=$user_id"),]]></action>
+			</edit>
 		</open>
 
 		<open src="gallery/plugins/index.php">
@@ -698,6 +725,13 @@ if (!function_exists('slideshow_plugins'))
 								<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_180" value="180" /> <label for="rotate[{upload_image.S_ROW_COUNT}]_180">{L_ROTATE_UPSIDEDOWN}</label> &nbsp;
 								<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_90" value="90" /> <label for="rotate[{upload_image.S_ROW_COUNT}]_90">{L_ROTATE_LEFT}</label></dd>
 						<!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/gallery/viewimage_body.html">
+			<edit>
+				<find><![CDATA[<div class="post <!-- IF commentrow.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">]]></find>
+				<action type="replace-with"><![CDATA[<div class="post <!-- IF commentrow.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF --><!-- IF commentrow.S_ONLINE --> online<!-- ENDIF -->">]]></action>
 			</edit>
 		</open>
 

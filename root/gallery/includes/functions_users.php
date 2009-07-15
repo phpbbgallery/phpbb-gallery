@@ -104,7 +104,7 @@ function add_user_to_user_cache(&$user_cache, $row)
 			'username'			=> $row['username'],
 			'user_colour'		=> $row['user_colour'],
 
-			'online'		=> false,
+			'online'		=> $row['user_allow_viewonline'],
 			'profile'		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=$user_id"),
 			'www'			=> $row['user_website'],
 			'aim'			=> ($row['user_aim'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=aim&amp;u=$user_id") : '',
