@@ -523,7 +523,6 @@ if (($gallery_config['allow_comments'] && gallery_acl_check('c_read', $album_id)
 			}
 			$db->sql_freeresult($result);
 		}
-		unset($id_cache);
 
 		foreach ($comments as $row)
 		{

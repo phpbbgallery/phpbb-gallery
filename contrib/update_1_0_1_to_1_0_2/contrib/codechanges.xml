@@ -102,7 +102,6 @@
 			}
 			$db->sql_freeresult($result);
 		}
-		unset($id_cache);
 ]]></action>
 			</edit>
 			<edit>
