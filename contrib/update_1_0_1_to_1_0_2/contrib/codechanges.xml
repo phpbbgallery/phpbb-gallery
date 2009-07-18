@@ -384,6 +384,26 @@ if ($access_denied || !gallery_acl_check('m_', $album_id))]]></action>
 
 		<open src="gallery/search.php">
 			<edit>
+				<find><![CDATA[	$keywords_ary = explode(' ', $keywords)]]></find>
+				<action type="replace-with"><![CDATA[	$keywords_ary = ($keywords) ? explode(' ', $keywords) : array();]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	// "Normal" search
+	else
+	{
+		$search_query = '';
+		$matches = array('i.image_name', 'i.image_desc');
+]]></find>
+				<action type="after-add"><![CDATA[		if (!sizeof($keywords_ary) && !sizeof($user_id_ary))
+		{
+			trigger_error('NO_SEARCH_RESULTS');
+		}]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[				AND (' . $search_query . ')]]></find>
+				<action type="replace-with"><![CDATA[				' . (($search_query) ? 'AND (' . $search_query . ')' : '') . ']]></action>
+			</edit>
+			<edit>
 				<find><![CDATA[					'IMAGE_AUTHOR'			=> get_username_string('full', $commentrow['image_user_id'], ($commentrow['image_user_id'] <> ANONYMOUS) ? $commentrow['image_username'] : ($user->lang['GUEST'] . ': ' . $commentrow['image_username']), $commentrow['image_user_colour']),]]></find>
 				<action type="replace-with"><![CDATA[					'IMAGE_AUTHOR'			=> get_username_string('full', $commentrow['image_user_id'], $commentrow['image_username'], $commentrow['image_user_colour']),]]></action>
 			</edit>

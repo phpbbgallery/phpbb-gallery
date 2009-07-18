@@ -168,7 +168,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			$keywords = preg_replace('#\s+#u', ' |', $keywords) . ' ' .$add_keywords;
 		}
 	}
-	$keywords_ary = explode(' ', $keywords);
+	$keywords_ary = ($keywords) ? explode(' ', $keywords) : array();
 
 	// pre-made searches
 	$sql = $field = $l_search_title = $search_results = '';
@@ -346,6 +346,10 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 		$search_query = '';
 		$matches = array('i.image_name', 'i.image_desc');
 
+		if (!sizeof($keywords_ary) && !sizeof($user_id_ary))
+		{
+			trigger_error('NO_SEARCH_RESULTS');
+		}
 		foreach ($keywords_ary as $word)
 		{
 			$match_search_query = '';
@@ -367,7 +371,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			FROM ' . GALLERY_IMAGES_TABLE . ' i
 			WHERE ((' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND i.image_status <> ' . IMAGE_UNAPPROVED . ')
 					OR ' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
-				AND (' . $search_query . ')
+				' . (($search_query) ? 'AND (' . $search_query . ')' : '') . '
 				' . (($user_id_ary) ? ' AND ' . $db->sql_in_set('i.image_user_id', $user_id_ary) : '') . '
 				' . (($search_album) ? ' AND ' . $db->sql_in_set('i.image_album_id', $search_album) : '') . '
 			ORDER BY ' . $sql_order;
