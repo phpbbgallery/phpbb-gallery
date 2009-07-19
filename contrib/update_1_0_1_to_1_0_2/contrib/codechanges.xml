@@ -675,6 +675,13 @@ if (!function_exists('slideshow_plugins'))
 			</edit>
 		</open>
 
+		<open src="styles/prosilver/template/gallery/index_body.html">
+			<edit>
+				<find><![CDATA[<!-- IF S_PERSONAL_GALLERY -->]]></find>
+				<action type="replace-with"><![CDATA[<!-- IF S_PERSONAL_GALLERY and U_USERS_PERSONAL_GALLERIES -->]]></action>
+			</edit>
+		</open>
+
 		<open src="styles/prosilver/template/gallery/mcp_body.html">
 			<edit>
 				<find><![CDATA[				<!-- IF not S_REPORT_LIST and not S_QUEUE_LIST -->
@@ -751,6 +758,13 @@ if (!function_exists('slideshow_plugins'))
 			<edit>
 				<find><![CDATA[<div class="post <!-- IF commentrow.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">]]></find>
 				<action type="replace-with"><![CDATA[<div class="post <!-- IF commentrow.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF --><!-- IF commentrow.S_ONLINE --> online<!-- ENDIF -->">]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/subsilver2/template/gallery/index_body.html">
+			<edit>
+				<find><![CDATA[<!-- IF S_PERSONAL_GALLERY -->]]></find>
+				<action type="replace-with"><![CDATA[<!-- IF S_PERSONAL_GALLERY and U_USERS_PERSONAL_GALLERIES -->]]></action>
 			</edit>
 		</open>
 

@@ -42,6 +42,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<date>2009-MM-DD</date>
 				<rev-version>1.0.2</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Hide alphabet-bar for personal albums if user has no permissions (Bug #612)]]></change>
 					<change><![CDATA[[Fix] Do not search without any keywords and authors (Bug #608)]]></change>
 					<change><![CDATA[[Fix] User on comments always vied as offline (Bug #606)]]></change>
 					<change><![CDATA[[Fix] Moderator option for quick-move not working anymore (Bug #605)]]></change>
