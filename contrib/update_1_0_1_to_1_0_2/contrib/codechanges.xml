@@ -44,11 +44,19 @@
 	<action-group>
 		<copy>
 			<file from="root/adm/mods/phpbb_gallery_version.php" to="adm/mods/phpbb_gallery_version.php" />
+			<file from="root/gallery/includes/root_path.php" to="gallery/includes/root_path.php" />
 			<file from="root/install/*.*" to="install/*.*" />
 			<file from="root/install/schemas/*.*" to="install/schemas/*.*" />
 		</copy>
 
 		<open src="gallery/album.php">
+			<edit>
+				<find><![CDATA[$phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
+$phpEx = substr(strrchr(__FILE__, '.'), 1);]]></find>
+				<action type="replace-with"><![CDATA[$phpbb_root_path = $gallery_root_path = '';
+$phpEx = substr(strrchr(__FILE__, '.'), 1);
+include($phpbb_root_path . $gallery_root_path . 'includes/root_path.' . $phpEx);]]></action>
+			</edit>
 			<edit>
 				<find><![CDATA[			if (in_array('highslide', $gallery_plugins['plugins']))
 			{
@@ -83,7 +91,24 @@
 			</edit>
 		</open>
 
+		<open src="gallery/image.php">
+			<edit>
+				<find><![CDATA[$phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
+$phpEx = substr(strrchr(__FILE__, '.'), 1);]]></find>
+				<action type="replace-with"><![CDATA[$phpbb_root_path = $gallery_root_path = '';
+$phpEx = substr(strrchr(__FILE__, '.'), 1);
+include($phpbb_root_path . $gallery_root_path . 'includes/root_path.' . $phpEx);]]></action>
+			</edit>
+		</open>
+
 		<open src="gallery/image_page.php">
+			<edit>
+				<find><![CDATA[$phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
+$phpEx = substr(strrchr(__FILE__, '.'), 1);]]></find>
+				<action type="replace-with"><![CDATA[$phpbb_root_path = $gallery_root_path = '';
+$phpEx = substr(strrchr(__FILE__, '.'), 1);
+include($phpbb_root_path . $gallery_root_path . 'includes/root_path.' . $phpEx);]]></action>
+			</edit>
 			<edit>
 				<find><![CDATA[		foreach ($comments as $row)]]></find>
 				<action type="before-add"><![CDATA[		if ($config['load_onlinetrack'] && sizeof($users))
@@ -116,7 +141,24 @@
 			</edit>
 		</open>
 
+		<open src="gallery/index.php">
+			<edit>
+				<find><![CDATA[$phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
+$phpEx = substr(strrchr(__FILE__, '.'), 1);]]></find>
+				<action type="replace-with"><![CDATA[$phpbb_root_path = $gallery_root_path = '';
+$phpEx = substr(strrchr(__FILE__, '.'), 1);
+include($phpbb_root_path . $gallery_root_path . 'includes/root_path.' . $phpEx);]]></action>
+			</edit>
+		</open>
+
 		<open src="gallery/mcp.php">
+			<edit>
+				<find><![CDATA[$phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
+$phpEx = substr(strrchr(__FILE__, '.'), 1);]]></find>
+				<action type="replace-with"><![CDATA[$phpbb_root_path = $gallery_root_path = '';
+$phpEx = substr(strrchr(__FILE__, '.'), 1);
+include($phpbb_root_path . $gallery_root_path . 'includes/root_path.' . $phpEx);]]></action>
+			</edit>
 			<edit>
 				<find><![CDATA[$image_id = (isset($_POST['image_id'])) ? $image_id : $option_id;]]></find>
 				<action type="replace-with"><![CDATA[$image_id = ($image_id && !$option_id) ? $image_id : $option_id;]]></action>
@@ -185,6 +227,13 @@ if ($access_denied || !gallery_acl_check('m_', $album_id))]]></action>
 		</open>
 
 		<open src="gallery/posting.php">
+			<edit>
+				<find><![CDATA[$phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
+$phpEx = substr(strrchr(__FILE__, '.'), 1);]]></find>
+				<action type="replace-with"><![CDATA[$phpbb_root_path = $gallery_root_path = '';
+$phpEx = substr(strrchr(__FILE__, '.'), 1);
+include($phpbb_root_path . $gallery_root_path . 'includes/root_path.' . $phpEx);]]></action>
+			</edit>
 			<edit>
 				<find><![CDATA[$loop = request_var('image_num', 0);]]></find>
 				<action type="after-add"><![CDATA[$rotate = request_var('rotate', array(0));]]></action>
@@ -383,6 +432,13 @@ if ($access_denied || !gallery_acl_check('m_', $album_id))]]></action>
 		</open>
 
 		<open src="gallery/search.php">
+			<edit>
+				<find><![CDATA[$phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : '../';
+$phpEx = substr(strrchr(__FILE__, '.'), 1);]]></find>
+				<action type="replace-with"><![CDATA[$phpbb_root_path = $gallery_root_path = '';
+$phpEx = substr(strrchr(__FILE__, '.'), 1);
+include($phpbb_root_path . $gallery_root_path . 'includes/root_path.' . $phpEx);]]></action>
+			</edit>
 			<edit>
 				<find><![CDATA[	$keywords_ary = explode(' ', $keywords)]]></find>
 				<action type="replace-with"><![CDATA[	$keywords_ary = ($keywords) ? explode(' ', $keywords) : array();]]></action>

@@ -53,6 +53,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 					<change><![CDATA[[Fix] PHP Notice: in file /gallery/includes/functions_users.php: Undefined variable: now (Bug #589)]]></change>
 					<change><![CDATA[[Fix] Invalid [album]-BBCodes Help line (Bug #588)]]></change>
 
+					<change><![CDATA[[Change] Give global option to set phpbb_root_path (Requested by mreider)]]></change>
 					<change><![CDATA[[Change] Change plugin-system for better integration of new plugins]]></change>
 
 					<change><![CDATA[[Feature] New plugin: Shadowbox 3.0b]]></change>
