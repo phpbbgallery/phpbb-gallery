@@ -49,7 +49,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 					<change><![CDATA[[Fix] Missing imagename on slideshow (Bug #596)]]></change>
 					<change><![CDATA[[Fix] Comment-author is named guest, after editing a comment of an user. (Bug #601)]]></change>
 					<change><![CDATA[[Fix] Display albums in ACP without requirement of any permissions being set.]]></change>
-					<change><![CDATA[[Fix] Unknown column 'user_id' in 'field list' phpbb_gallery_images (Bug #600)]]></change>
+					<change><![CDATA[[Fix] Convert: Unknown column 'user_id' in 'field list' phpbb_gallery_images (Bug #600)]]></change>
 					<change><![CDATA[[Fix] PHP Notice: in file /gallery/includes/functions_users.php: Undefined variable: now (Bug #589)]]></change>
 					<change><![CDATA[[Fix] Invalid [album]-BBCodes Help line (Bug #588)]]></change>
 

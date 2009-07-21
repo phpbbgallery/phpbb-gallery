@@ -695,6 +695,10 @@ if (!function_exists('slideshow_plugins'))
 
 		<open src="language/de/mods/gallery_acp.php">
 			<edit>
+				<find><![CDATA[	'PERMISSION_I_RATE_EXPLAIN'		=> 'Gäste können Bilder <strong>nie</strong> bewerten.',]]></find>
+				<action type="after-add"><![CDATA[	'PERMISSION_I_RATE_EXPLAIN'		=> 'Gäste und der Bild-Autor können Bilder <samp>NIE</samp> bewerten.',]]></action>
+			</edit>
+			<edit>
 				<find><![CDATA[	'RESYNCED_PERSONALS'			=> 'Persönliche Alben resynchronisiert',]]></find>
 				<action type="after-add"><![CDATA[	'ROTATE_IMAGES'					=> 'Option zum Drehen von Bilder anzeigen',]]></action>
 			</edit>
@@ -721,6 +725,10 @@ if (!function_exists('slideshow_plugins'))
 		</open>
 
 		<open src="language/en/mods/gallery_acp.php">
+			<edit>
+				<find><![CDATA[	'PERMISSION_I_RATE_EXPLAIN'		=> 'Guests can <strong>never</strong> rate images.',]]></find>
+				<action type="after-add"><![CDATA[	'PERMISSION_I_RATE_EXPLAIN'		=> 'Guests and the image-uploader can <samp>NEVER</samp> rate images.',]]></action>
+			</edit>
 			<edit>
 				<find><![CDATA[	'RESYNCED_PERSONALS'			=> 'Resynchronised personal album id\'s',]]></find>
 				<action type="after-add"><![CDATA[	'ROTATE_IMAGES'					=> 'Allow to rotate images',]]></action>
