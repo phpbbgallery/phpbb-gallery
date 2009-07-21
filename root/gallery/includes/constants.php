@@ -107,8 +107,9 @@ define('G_ALBUM_UPLOAD', 1);
 
 /**
 * gallery/includes/hookup_gallery.php
-define('GALLERY_ADD_CASH', 0);
-define('GALLERY_DELETE_CASH', 0);
+define('GALLERY_ADD_CASH', 10);
+define('GALLERY_DELETE_CASH', 10);
+define('GALLERY_VIEW_CASH', 1);
 */
 
 ?>
