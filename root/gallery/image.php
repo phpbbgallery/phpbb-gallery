@@ -114,6 +114,17 @@ switch ($mode)
 		$possible_watermark = false;
 	break;
 	default:
+		if (!function_exists('gallery_hookup_image_view'))
+		{
+			include($phpbb_root_path . $gallery_root_path . 'includes/hookup_gallery.' . $phpEx);
+		}
+		if (!gallery_hookup_image_view($user->data['user_id']))
+		{
+			// Cash-MOD HookUp failed and denies to view the image
+			//trigger_error('NOT_AUTHORISED');
+			$image_error = 'not_authorised.jpg';
+		}
+
 		$image_source = $phpbb_root_path . GALLERY_UPLOAD_PATH  . $image_data['image_filename'];
 		$image_source_path = $phpbb_root_path . GALLERY_UPLOAD_PATH;
 		$possible_watermark = true;

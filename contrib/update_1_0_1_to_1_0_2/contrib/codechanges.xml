@@ -45,6 +45,7 @@
 		<copy>
 			<file from="root/adm/mods/phpbb_gallery_version.php" to="adm/mods/phpbb_gallery_version.php" />
 			<file from="root/gallery/includes/root_path.php" to="gallery/includes/root_path.php" />
+			<file from="root/gallery/includes/hookup_gallery.php" to="gallery/includes/hookup_gallery.php" />
 			<file from="root/install/*.*" to="install/*.*" />
 			<file from="root/install/schemas/*.*" to="install/schemas/*.*" />
 		</copy>
@@ -98,6 +99,20 @@ $phpEx = substr(strrchr(__FILE__, '.'), 1);]]></find>
 				<action type="replace-with"><![CDATA[$phpbb_root_path = $gallery_root_path = '';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . $gallery_root_path . 'includes/root_path.' . $phpEx);]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[		$image_source = $phpbb_root_path . GALLERY_UPLOAD_PATH  . $image_data['image_filename'];
+		$image_source_path = $phpbb_root_path . GALLERY_UPLOAD_PATH;]]></find>
+				<action type="before-add"><![CDATA[		if (!function_exists('gallery_hookup_image_view'))
+		{
+			include($phpbb_root_path . $gallery_root_path . 'includes/hookup_gallery.' . $phpEx);
+		}
+		if (!gallery_hookup_image_view($user->data['user_id']))
+		{
+			// Cash-MOD HookUp failed and denies to view the image
+			//trigger_error('NOT_AUTHORISED');
+			$image_error = 'not_authorised.jpg';
+		}]]></action>
 			</edit>
 		</open>
 
@@ -475,10 +490,42 @@ include($phpbb_root_path . $gallery_root_path . 'includes/root_path.' . $phpEx);
 			</edit>
 		</open>
 
+		<open src="gallery/includes/constants.php">
+			<edit>
+				<find><![CDATA[?>]]></find>
+				<action type="before-add"><![CDATA[/**
+* Constants, defined in other files:
+*/
+
+/**
+* gallery/includes/hookup_gallery.php
+define('GALLERY_ADD_CASH', 0);
+define('GALLERY_DELETE_CASH', 0);
+*/
+]]></action>
+			</edit>
+		</open>
+
 		<open src="gallery/includes/functions.php">
 			<edit>
 				<find><![CDATA[if (gallery_acl_check('a_list', $row['album_id'], $row['album_user_id']))]]></find>
 				<action type="replace-with"><![CDATA[if (gallery_acl_check('a_list', $row['album_id'], $row['album_user_id']) || defined('IN_ADMIN'))]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[function handle_image_counter($image_id_ary, $add, $readd = false)
+{
+	global $config, $gallery_config, $db;]]></find>
+				<action type="after-add"><![CDATA[
+	if (!function_exists('gallery_hookup_image_counter'))
+	{
+		global $gallery_root_path, $phpbb_root_path, $phpEx;
+		include($phpbb_root_path . $gallery_root_path . 'includes/hookup_gallery.' . $phpEx);
+	}]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[		$num_images = $num_images + $row['images'];]]></find>
+				<action type="before-add"><![CDATA[		gallery_hookup_image_counter($row['image_user_id'], (($add) ? $row['images'] : 0 - $row['images']));
+]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA[* @param	bool	$count		shall the image-link be counted as view? (Set to false from iamge_page.php to deny double increment)]]></find>

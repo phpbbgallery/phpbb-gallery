@@ -101,4 +101,14 @@ define('GALLERY_IMPORT_PATH', GALLERY_IMAGE_PATH . 'import/');
 define('G_ALBUM_CAT', 0);
 define('G_ALBUM_UPLOAD', 1);
 
+/**
+* Constants, defined in other files:
+*/
+
+/**
+* gallery/includes/hookup_gallery.php
+define('GALLERY_ADD_CASH', 0);
+define('GALLERY_DELETE_CASH', 0);
+*/
+
 ?>

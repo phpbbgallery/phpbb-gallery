@@ -508,6 +508,12 @@ function handle_image_counter($image_id_ary, $add, $readd = false)
 {
 	global $config, $gallery_config, $db;
 
+	if (!function_exists('gallery_hookup_image_counter'))
+	{
+		global $gallery_root_path, $phpbb_root_path, $phpEx;
+		include($phpbb_root_path . $gallery_root_path . 'includes/hookup_gallery.' . $phpEx);
+	}
+
 	$num_images = $num_comments = 0;
 	$sql = 'SELECT SUM(image_comments) comments
 		FROM ' . GALLERY_IMAGES_TABLE . '
@@ -531,6 +537,8 @@ function handle_image_counter($image_id_ary, $add, $readd = false)
 			'user_id'				=> $row['image_user_id'],
 			'user_images'			=> $row['images'],
 		);
+		gallery_hookup_image_counter($row['image_user_id'], (($add) ? $row['images'] : 0 - $row['images']));
+
 		$num_images = $num_images + $row['images'];
 		$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
 			SET user_images = user_images ' . (($add) ? '+ ' : '- ') . $row['images'] . '

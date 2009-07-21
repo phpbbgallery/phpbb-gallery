@@ -56,6 +56,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 					<change><![CDATA[[Change] Give global option to set phpbb_root_path (Requested by mreider)]]></change>
 					<change><![CDATA[[Change] Change plugin-system for better integration of new plugins]]></change>
 
+					<change><![CDATA[[Feature] New hookup: Ability to hook into gallery upload/delete/view image to change Cash-MOD amounts (Bug #281)]]></change>
 					<change><![CDATA[[Feature] New plugin: Shadowbox 3.0b]]></change>
 					<change><![CDATA[[Feature] Ability to rotate images on upload/edit (Bug #603)]]></change>
 
