@@ -85,6 +85,8 @@ function gallery_hookup_image_view($user_id)
 		// be removing the // in the next lines:
 		// if (get_points($user_id) < 0)
 		// {
+		// 	// readd the cash to users-cash
+		// 	add_points($user_id, GALLERY_VIEW_CASH);
 		// 	return false;
 		// }
 	}
