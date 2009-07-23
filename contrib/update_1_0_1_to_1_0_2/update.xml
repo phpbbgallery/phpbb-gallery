@@ -39,7 +39,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 		<history>
 			<entry>
-				<date>2009-MM-DD</date>
+				<date>2009-07-23</date>
 				<rev-version>1.0.2</rev-version>
 				<changelog lang="en">
 					<change><![CDATA[[Fix] Correctly substruct albums when deleting personall albums in ACP-CleanUp (Bug #613)]]></change>
@@ -75,6 +75,8 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<link type="language" lang="en" href="contrib/de.xml">Manual for German Language-set</link>
 			<link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>
 			<link type="template" lang="en" href="contrib/subsilver2.xml">Manual for subsilver2 Style</link>
+			<link type="parent" lang="de" href="../addons/rrc_on_index.xml">Neueste/Zufällige Bilder und Kommentare auf der index.php anzeigen</link>
+			<link type="parent" lang="en" href="../addons/rrc_on_index.xml">View recent/random images and comments on index.php</link>
 			<link type="parent" lang="de" href="../plugins/highslide.xml">Plugin Highslide JS</link>
 			<link type="parent" lang="en" href="../plugins/highslide.xml">Plugin Highslide JS</link>
 			<link type="parent" lang="de" href="../plugins/lytebox.xml">Plugin Lytebox</link>
@@ -87,9 +89,35 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 	<action-group>
 		<copy>
 			<file from="root/adm/mods/phpbb_gallery_version.php" to="adm/mods/phpbb_gallery_version.php" />
+			<file from="root/gallery/album.php" to="gallery/album.php" />
+			<file from="root/gallery/image.php" to="gallery/image.php" />
+			<file from="root/gallery/image_page.php" to="gallery/image_page.php" />
+			<file from="root/gallery/index.php" to="gallery/index.php" />
+			<file from="root/gallery/mcp.php" to="gallery/mcp.php" />
+			<file from="root/gallery/posting.php" to="gallery/posting.php" />
+			<file from="root/gallery/search.php" to="gallery/search.php" />
+			<file from="root/gallery/includes/constants.php" to="gallery/includes/constants.php" />
+			<file from="root/gallery/includes/functions.php" to="gallery/includes/functions.php" />
+			<file from="root/gallery/includes/functions_display.php" to="gallery/includes/functions_display.php" />
+			<file from="root/gallery/includes/functions_phpbb.php" to="gallery/includes/functions_phpbb.php" />
+			<file from="root/gallery/includes/functions_recent.php" to="gallery/includes/functions_recent.php" />
 			<file from="root/gallery/includes/functions_users.php" to="gallery/includes/functions_users.php" />
+			<file from="root/gallery/includes/hookup_gallery.php" to="gallery/includes/hookup_gallery.php" />
+			<file from="root/gallery/includes/root_path.php" to="gallery/includes/root_path.php" />
+			<file from="root/gallery/mcp/mcp_report.php" to="gallery/mcp/mcp_report.php" />
+			<file from="root/includes/acp/acp_gallery.php" to="includes/acp/acp_gallery.php" />
+			<file from="root/includes/acp/acp_gallery_albums.php" to="includes/acp/acp_gallery_albums.php" />
+			<file from="root/includes/acp/acp_gallery_config.php" to="includes/acp/acp_gallery_config.php" />
+			<file from="root/includes/acp/acp_gallery_permissions.php" to="includes/acp/acp_gallery_permissions.php" />
 			<file from="root/install/*.*" to="install/*.*" />
 			<file from="root/install/schemas/*.*" to="install/schemas/*.*" />
+			<file from="root/language/en/mods/gallery.php" to="language/en/mods/gallery.php" />
+			<file from="root/language/en/mods/gallery_acp.php" to="language/en/mods/gallery_acp.php" />
+			<file from="root/styles/prosilver/template/gallery/index_body.html" to="styles/prosilver/template/gallery/index_body.html" />
+			<file from="root/styles/prosilver/template/gallery/mcp_body.html" to="styles/prosilver/template/gallery/mcp_body.html" />
+			<file from="root/styles/prosilver/template/gallery/plugins_header.html" to="styles/prosilver/template/gallery/plugins_header.html" />
+			<file from="root/styles/prosilver/template/gallery/posting_body.html" to="styles/prosilver/template/gallery/posting_body.html" />
+			<file from="root/styles/prosilver/template/gallery/viewimage_body.html" to="styles/prosilver/template/gallery/viewimage_body.html" />
 		</copy>
 
 		<open src="includes/functions_display.php">

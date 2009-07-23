@@ -11,8 +11,8 @@
 		[*]RRC (recent-random-comment): little Addon displaying the recent images, random images and/or recent comments on the gallery/indey.php with full ACP-Control
 		[*]Sub-folder name adjustable (default: gallery/)
 		[*]Search function (also available in the album) (page for Recent/Random/Top-Rated/Last comments/Own images)
-		[*]Lytebox & Highslide JS support (These scripts must be downloaded seperatly because of the licence)
-		[*]Diashow (Requires Lytebox or Highslide JS)
+		[*]Highslide JS, Shadowbox and Lytebox support (These scripts must be downloaded seperatly because of the licence, see contrib/plugins/)
+		[*]Diashow (Requires a Plugin to be installed, see contrib/plugins/)
 		[*]Available in more languages: http://www.flying-bits.org/go/phpbb_gallery/translations
 		[*]Available Addons: http://www.flying-bits.org/go/phpbb_gallery/addons
 	[/list]
@@ -24,6 +24,7 @@
 		[*]Recent/Random images in user-profile (with full ACP-Control)
 		[*]BBcode to use gallery images in postings
 		[*]Available for prosilver-& subsilver2-based styles
+		[*]HookUp gallery with Cash-MOD (See gallery/includes/hookup_gallery.php for more Information)
 	[/list]
 	[*]Album / Permission-management:
 	[list]

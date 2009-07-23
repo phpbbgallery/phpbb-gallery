@@ -20,9 +20,9 @@ Einstellungen/Verschiedenes:
 » Viele Einstellmöglichkeiten zur album.php: Anzahl der Zeilen und Spalten, Anzeigen der Werte (Benutzername, Bewertung, Kommentare, Hochlade-Zeitpunkt,...)
 » RRC (recent-random-comment): kleines Addon zum Anzeigen der neusten Bilder, zufälligen Bilder und der neusten Kommentare auf der gallery/index.php mit Einstellmöglichkeiten im ACP
 » Unterordner umbenennbar (Standard: gallery/)
-» Suchfunktion (auch innerhalb des Albums möglich) (Extra Seite mti Neusten/Zufälligen/Am besten bewerteten Bildern usw.)
-» Lytebox & Highslide JS Unterstützung (Die Scripte müssen auf Grund der Lizenz extra heruntergeladen werden)
-» Diashow (Benötigt Lytebox oder Highslide JS)
+» Suchfunktion (auch innerhalb des Albums möglich) (Extra Seite mit Neusten/Zufälligen/Am besten bewerteten Bildern usw.)
+» Highslide JS, Shadowbox und Lytebox Unterstützung (Die Scripte müssen auf Grund der Lizenz extra heruntergeladen werden, siehe contrib/plugins/)
+» Diashow (Benötigt ein Plguin, siehe contrib/plugins/)
 » In weiteren Sprachen verfügbar: http://www.flying-bits.org/go/phpbb_gallery/translations
 » Verfügbare Addons: http://www.flying-bits.org/go/phpbb_gallery/addons
 
@@ -33,6 +33,7 @@ Integration in phpBB:
 » Neuste und Zufällige Bilder im Benutzerprofil (alle Einstellmöglichkeiten im ACP)
 » BBCode für die Benutzung in Beiträgen
 » Verfügbar für prosilver- und subsilver2-basierende Styles
+» Einbindung von Cash-MODs in die Gallery (Siehe gallery/includes/hookup_gallery.php für mehr Informationen)
 
 Albenverwaltung / Berechtigungen:
 » Unbegrenzt tiefer Verschachtelung der Subalben möglich
@@ -87,8 +88,8 @@ Configurations/Misc:
 » RRC (recent-random-comment): little Addon displaying the recent images, random images and/or recent comments on the gallery/indey.php with full ACP-Control
 » Sub-folder name adjustable (default: gallery/)
 » Search function (also available in the album) (page for Recent/Random/Top-Rated/Last comments/Own images)
-» Lytebox & Highslide JS support (These scripts must be downloaded seperatly because of the licence)
-» Diashow (Requires Lytebox or Highslide JS)
+» Highslide JS, Shadowbox and Lytebox support (These scripts must be downloaded seperatly because of the licence, see contrib/plugins/)
+» Diashow (Requires a Plugin to be installed, see contrib/plugins/)
 » Available in more languages: http://www.flying-bits.org/go/phpbb_gallery/translations
 » Available Addons: http://www.flying-bits.org/go/phpbb_gallery/addons
 
@@ -99,6 +100,7 @@ Integration in phpBB:
 » Recent/Random images in user-profile (with full ACP-Control)
 » BBcode to use gallery images in postings
 » Available for prosilver-& subsilver2-based styles
+» HookUp gallery with Cash-MOD (See gallery/includes/hookup_gallery.php for more Information)
 
 Album / Permission-management:
 » Unlimited sub...subalbums depth
@@ -184,6 +186,33 @@ Installing:
 		</installation>
 
 		<history>
+			<entry>
+				<date>2009-07-23</date>
+				<rev-version>1.0.2</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Fix] Correctly substruct albums when deleting personall albums in ACP-CleanUp (Bug #613)]]></change>
+					<change><![CDATA[[Fix] Hide alphabet-bar for personal albums if user has no permissions (Bug #612)]]></change>
+					<change><![CDATA[[Fix] Do not search without any keywords and authors (Bug #608)]]></change>
+					<change><![CDATA[[Fix] User on comments always vied as offline (Bug #606)]]></change>
+					<change><![CDATA[[Fix] Moderator option for quick-move not working anymore (Bug #605)]]></change>
+					<change><![CDATA[[Fix] Missing imagename on slideshow (Bug #596)]]></change>
+					<change><![CDATA[[Fix] Comment-author is named guest, after editing a comment of an user. (Bug #601)]]></change>
+					<change><![CDATA[[Fix] Display albums in ACP without requirement of any permissions being set.]]></change>
+					<change><![CDATA[[Fix] Convert: Unknown column 'user_id' in 'field list' phpbb_gallery_images (Bug #600)]]></change>
+					<change><![CDATA[[Fix] PHP Notice: in file /gallery/includes/functions_users.php: Undefined variable: now (Bug #589)]]></change>
+					<change><![CDATA[[Fix] Invalid [album]-BBCodes Help line (Bug #588)]]></change>
+
+					<change><![CDATA[[Change] Give global option to set phpbb_root_path (Requested by mreider)]]></change>
+					<change><![CDATA[[Change] Change plugin-system for better integration of new plugins]]></change>
+
+					<change><![CDATA[[Feature] New hookup: Ability to hook into gallery upload/delete/view image to change Cash-MOD amounts (Bug #281)]]></change>
+					<change><![CDATA[[Feature] New plugin: Shadowbox 3.0b]]></change>
+					<change><![CDATA[[Feature] Ability to rotate images on upload/edit (Bug #603)]]></change>
+
+					<change><![CDATA[[Sec] Moderative permissions lack when one m_ is given to an user (Bug #i602 - Reported by robbx)]]></change>
+				</changelog>
+			</entry>
+
 			<entry>
 				<date>2009-06-29</date>
 				<rev-version>1.0.1</rev-version>
