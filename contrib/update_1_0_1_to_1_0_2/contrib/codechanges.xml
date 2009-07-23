@@ -259,6 +259,7 @@ include($phpbb_root_path . $gallery_root_path . 'includes/root_path.' . $phpEx);
 							* Store exif-data to database
 							*/]]></action>
 			</edit>
+			<edit>
 				<find><![CDATA[							if (($image_file->width > $gallery_config['max_width']) || ($image_file->height > $gallery_config['max_height']))
 							{
 								/**
