@@ -686,6 +686,16 @@ if (!function_exists('slideshow_plugins'))
 
 		<open src="includes/acp/acp_gallery.php">
 			<edit>
+				<find><![CDATA[				$sql = 'SELECT COUNT(album_user_id) personal_counter
+					FROM ' . GALLERY_ALBUMS_TABLE . '
+					WHERE ' . $db->sql_in_set('album_user_id', $delete_albums);
+]]></find>
+				<action type="replace-with"><![CDATA[				$sql = 'SELECT COUNT(album_user_id) personal_counter
+					FROM ' . GALLERY_ALBUMS_TABLE . '
+					WHERE parent_id = 0
+						AND ' . $db->sql_in_set('album_user_id', $delete_albums);]]></action>
+			</edit>
+			<edit>
 				<find><![CDATA[if (strpos($file, 'image_not_exist') || strpos($file, 'not_authorised') || strpos($file, 'no_hotlinking'))]]></find>
 				<action type="replace-with"><![CDATA[if ((strpos($file, 'image_not_exist') !== false) || (strpos($file, 'not_authorised') !== false) || (strpos($file, 'no_hotlinking') !== false))]]></action>
 			</edit>

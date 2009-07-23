@@ -904,7 +904,8 @@ class acp_gallery
 				$deleted_images = $deleted_albums = array(0);
 				$sql = 'SELECT COUNT(album_user_id) personal_counter
 					FROM ' . GALLERY_ALBUMS_TABLE . '
-					WHERE ' . $db->sql_in_set('album_user_id', $delete_albums);
+					WHERE parent_id = 0
+						AND ' . $db->sql_in_set('album_user_id', $delete_albums);
 				$result = $db->sql_query($sql);
 				$remove_personal_counter = $db->sql_fetchfield('personal_counter');
 				$db->sql_freeresult($result);
@@ -920,7 +921,7 @@ class acp_gallery
 				$sql = 'SELECT image_id, image_thumbnail, image_filename
 					FROM ' . GALLERY_IMAGES_TABLE . '
 					WHERE ' . $db->sql_in_set('image_album_id', $deleted_albums);
-				@$result = $db->sql_query($sql);
+				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
 					@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $row['image_thumbnail']);
