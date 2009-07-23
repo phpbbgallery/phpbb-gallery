@@ -44,8 +44,8 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		<link-group>
 			<link type="parent" lang="de" href="contrib/history.xml">Geschichte/Entwickler/Features</link>
 			<link type="parent" lang="en" href="contrib/history.xml">History/Developers/Features</link>
-			<link type="parent" lang="de" href="contrib/update_1_0_0_to_1_0_1/update.xml">Update von 1.0.0 auf 1.0.1</link>
-			<link type="parent" lang="en" href="contrib/update_1_0_0_to_1_0_1/update.xml">Update from 1.0.0 to 1.0.1</link>
+			<link type="parent" lang="de" href="contrib/update_1_0_1_to_1_0_2/update.xml">Update von 1.0.1 auf 1.0.2</link>
+			<link type="parent" lang="en" href="contrib/update_1_0_1_to_1_0_2/update.xml">Update from 1.0.1 to 1.0.2</link>
 			<link type="language" lang="de" href="contrib/de.xml">Anleitung für das deutsche Sprachpaket</link>
 			<link type="language" lang="en" href="contrib/de.xml">Manual for German Language-set</link>
 			<link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>

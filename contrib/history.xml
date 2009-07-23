@@ -902,10 +902,8 @@ Installing:
 		<link-group>
 			<link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
 			<link type="parent" lang="en" href="../install.xml">Manual</link>
-			<link type="parent" lang="de" href="update_0_4_1_to_1_0_0/update.xml">Update von 0.4.1 auf 1.0.0</link>
-			<link type="parent" lang="en" href="update_0_4_1_to_1_0_0/update.xml">Update from 0.4.1 to 1.0.0</link>
-			<link type="parent" lang="de" href="update_0_5_4_to_1_0_0/update.xml">Update von 0.5.4 auf 1.0.0</link>
-			<link type="parent" lang="en" href="update_0_5_4_to_1_0_0/update.xml">Update from 0.5.4 to 1.0.0</link>
+			<link type="parent" lang="de" href="update_1_0_1_to_1_0_2/update.xml">Update von 1.0.1 auf 1.0.2</link>
+			<link type="parent" lang="en" href="update_1_0_1_to_1_0_2/update.xml">Update from 1.0.1 to 1.0.2</link>
 		</link-group>
 	</header>
 
