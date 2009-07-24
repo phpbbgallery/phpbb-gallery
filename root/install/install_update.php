@@ -1142,6 +1142,9 @@ class install_update extends module
 				{
 					set_gallery_config('allow_rotate_images', 1);
 				}
+				$sql = 'DELETE FROM ' . BBCODES_TABLE . "
+					WHERE bbcode_tag = '" . $db->sql_escape('album') . "'";
+				$db->sql_query($sql);
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
@@ -1213,8 +1216,6 @@ class install_update extends module
 			case '0.5.4':
 			case '1.0.0-dev':
 				nv_remove_column(GALLERY_ROLES_TABLE,	'a_moderate');
-				/* //@todo: Move on bbcode-change or creating all modules */
-				$reparse_modules_bbcode = true;
 
 			case '1.0.0-RC1':
 			case '1.0.0-RC2':
@@ -1222,6 +1223,8 @@ class install_update extends module
 			case '1.0.1-dev':
 			case '1.0.1':
 			case '1.0.2-dev':
+				/* //@todo: Move on bbcode-change or creating all modules */
+				$reparse_modules_bbcode = true;
 			break;
 		}
 
@@ -1289,7 +1292,7 @@ class install_update extends module
 
 			switch ($gallery_config['phpbb_gallery_version'])
 			{
-/*			case '0.1.2':
+/*				case '0.1.2':
 				case '0.1.3':*/
 				case '0.2.0':
 				case '0.2.1':
@@ -1354,8 +1357,6 @@ class install_update extends module
 				case '0.5.3':
 				case '0.5.4':
 				case '1.0.0-dev':
-					// Add album-BBCode
-					add_bbcode('album');
 
 
 				case '1.0.0-RC1':
@@ -1364,6 +1365,8 @@ class install_update extends module
 				case '1.0.1-dev':
 				case '1.0.1':
 				case '1.0.2-dev':
+					// Add album-BBCode
+					add_bbcode('album');
 				break;
 			}
 
@@ -1382,16 +1385,16 @@ class install_update extends module
 			{
 				case '1.0.2-dev':
 				case '1.0.1':
-				case '1.0.1-dev':
-				case '1.0.0':
-				case '1.0.0-RC2':
-				case '1.0.0-RC1':
-				case '1.0.0-dev':
 					$template->assign_block_vars('checks', array(
 						'S_LEGEND'			=> true,
 						'LEGEND'			=> '',
 						'LEGEND_EXPLAIN'	=> $user->lang['BBCODES_NEEDS_REPARSE'],
 					));
+				case '1.0.1-dev':
+				case '1.0.0':
+				case '1.0.0-RC2':
+				case '1.0.0-RC1':
+				case '1.0.0-dev':
 				case '0.5.4':
 				case '0.5.3':
 				case '0.5.2':

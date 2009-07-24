@@ -406,6 +406,20 @@ function add_bbcode($album_bbcode)
 
 		if (!$bbcode_id)
 		{
+			$sql = 'SELECT bbcode_id
+				FROM ' . BBCODES_TABLE . "
+				ORDER BY bbcode_id DESC";
+			$result = $db->sql_query_limit($sql, 1);
+			$max_bbcode_id = (int) $db->sql_fetchfield('bbcode_id') + 1;
+			$db->sql_freeresult($result);
+
+			if ($max_bbcode_id <= NUM_CORE_BBCODES)
+			{
+				$max_bbcode_id = NUM_CORE_BBCODES + 1;
+			}
+
+			// The table does NOT have autoincrement because of the core-bbcodes, so we need to add it here.
+			$sql_ary['bbcode_id'] = $max_bbcode_id;
 			$sql = 'INSERT INTO ' . BBCODES_TABLE . '
 				' . $db->sql_build_array('INSERT', $sql_ary);
 			$db->sql_query($sql);
