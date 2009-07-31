@@ -351,7 +351,7 @@ class install_update extends module
 
 			case '0.3.0':
 			case '0.3.1':
-/			case '0.3.2-RC1':
+			case '0.3.2-RC1':
 			case '0.3.2-RC2':
 
 			case '0.4.0-RC1':
