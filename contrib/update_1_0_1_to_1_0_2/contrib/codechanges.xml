@@ -793,6 +793,13 @@ if (!function_exists('slideshow_plugins'))
 			</edit>
 		</open>
 
+		<open src="includes/ucp/ucp_gallery.php">
+			<edit>
+				<find><![CDATA[		include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);]]></find>
+				<action type="after-add"><![CDATA[		include($phpbb_root_path . $gallery_root_path . 'plugins/index.' . $phpEx);]]></action>
+			</edit>
+		</open>
+
 		<open src="language/de/mods/gallery.php">
 			<edit>
 				<find><![CDATA[	'RETURN_ALBUM'					=> '%sZurück zum zuletzt besuchten Album%s',]]></find>
