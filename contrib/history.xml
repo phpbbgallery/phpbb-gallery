@@ -190,6 +190,8 @@ Installing:
 				<date>2009-07-23</date>
 				<rev-version>1.0.2</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Imagepage missing sort parameters for next and previous image (Bug #618)]]></change>
+					<change><![CDATA[[Fix] Missing option to disable "IP" under thumbnails (Bug #614)]]></change>
 					<change><![CDATA[[Fix] [album]-BBCode not working after installing on a board without custom-bbcode]]></change>
 					<change><![CDATA[[Fix] Correctly substruct albums when deleting personall albums in ACP-CleanUp (Bug #613)]]></change>
 					<change><![CDATA[[Fix] Hide alphabet-bar for personal albums if user has no permissions (Bug #612)]]></change>

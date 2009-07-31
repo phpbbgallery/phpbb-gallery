@@ -666,6 +666,10 @@ function assign_image_block($template_block, &$image_data, $album_status, $displ
 	global $auth, $gallery_config, $template, $user;
 	global $gallery_root_path, $phpbb_root_path, $phpEx;
 
+	$st	= request_var('st', 0);
+	$sk	= request_var('sk', $gallery_config['sort_method']);
+	$sd	= request_var('sd', $gallery_config['sort_order']);
+
 	$image_data['rating'] = $user->lang['NOT_RATED'];
 	if ($image_data['image_rates'])
 	{
@@ -683,7 +687,7 @@ function assign_image_block($template_block, &$image_data, $album_status, $displ
 
 	$template->assign_block_vars($template_block, array(
 		'IMAGE_ID'		=> $image_data['image_id'],
-		'UC_IMAGE_NAME'	=> ($display & RRC_DISPLAY_IMAGENAME) ? generate_image_link('image_name', $gallery_config['link_image_name'], $image_data['image_id'], $image_data['image_name'], $image_data['image_album_id']) : '',
+		'UC_IMAGE_NAME'	=> ($display & RRC_DISPLAY_IMAGENAME) ? generate_image_link('image_name', $gallery_config['link_image_name'], $image_data['image_id'], $image_data['image_name'], $image_data['image_album_id'], false, true, "&amp;sk={$sk}&amp;sd={$sd}&amp;st={$st}") : '',
 		'UC_THUMBNAIL'	=> generate_image_link('thumbnail', $gallery_config['link_thumbnail'], $image_data['image_id'], $image_data['image_name'], $image_data['image_album_id']),
 		'U_ALBUM'		=> ($display & RRC_DISPLAY_ALBUMNAME) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $image_data['image_album_id']) : '',
 		'S_UNAPPROVED'	=> (gallery_acl_check('m_status', $image_data['image_album_id']) && ($image_data['image_status'] == IMAGE_UNAPPROVED)) ? true : false,

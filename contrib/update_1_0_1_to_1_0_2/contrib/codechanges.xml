@@ -125,6 +125,19 @@ $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . $gallery_root_path . 'includes/root_path.' . $phpEx);]]></action>
 			</edit>
 			<edit>
+				<find><![CDATA[$sort_by_sql = array('t' => 'image_time', 'n' => 'image_name_clean', 'u' => 'image_username_clean', 'vc' => 'image_view_count', 'ra' => 'image_rate_avg', 'r' => 'image_rates', 'c' => 'image_comments', 'lc' => 'image_last_comment');
+$sql_sort_by = (isset($sort_by_sql[$gallery_config['sort_method']])) ? $sort_by_sql[$gallery_config['sort_method']] : $sort_by_sql['t'];
+if ($gallery_config['sort_order'] == 'd')]]></find>
+				<action type="replace-with"><![CDATA[//$sort_days	= request_var('st', 0);
+$sort_key	= request_var('sk', $gallery_config['sort_method']);
+$sort_dir	= request_var('sd', $gallery_config['sort_order']);
+
+$sort_by_sql = array('t' => 'image_time', 'n' => 'image_name_clean', 'u' => 'image_username_clean', 'vc' => 'image_view_count', 'ra' => 'image_rate_avg', 'r' => 'image_rates', 'c' => 'image_comments', 'lc' => 'image_last_comment');
+$sql_sort_by = (isset($sort_by_sql[$sort_key])) ? $sort_by_sql[$sort_key] : $sort_by_sql['t'];
+if ($sort_dir == 'd')
+]]></action>
+			</edit>
+			<edit>
 				<find><![CDATA[		foreach ($comments as $row)]]></find>
 				<action type="before-add"><![CDATA[		if ($config['load_onlinetrack'] && sizeof($users))
 		{
@@ -538,7 +551,22 @@ define('GALLERY_DELETE_CASH', 0);
 			</edit>
 			<edit>
 				<find><![CDATA[* @param	bool	$count		shall the image-link be counted as view? (Set to false from iamge_page.php to deny double increment)]]></find>
-				<action type="replace-with"><![CDATA[* @param	bool	$count		shall the image-link be counted as view? (Set to false from image_page.php to deny double increment)]]></action>
+				<action type="replace-with"><![CDATA[* @param	bool	$count		shall the image-link be counted as view? (Set to false from image_page.php to deny double increment)
+* @param	string	$additional_parameters		additional parameters for the url, (starting with &amp;)]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[function generate_image_link($content, $mode, $image_id, $image_name, $album_id, $is_gif = false, $count = true)]]></find>
+				<action type="after-add"><![CDATA[function generate_image_link($content, $mode, $image_id, $image_name, $album_id, $is_gif = false, $count = true, $additional_parameters = '')]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	$image_page_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id");
+	$image_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "album_id=$album_id&amp;image_id=$image_id" . ((!$count) ? '&amp;view=no_count' : ''));
+	$thumb_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "mode=thumbnail&amp;album_id=$album_id&amp;image_id=$image_id");
+	$medium_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "mode=medium&amp;album_id=$album_id&amp;image_id=$image_id");]]></find>
+				<action type="replace-with"><![CDATA[	$image_page_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id{$additional_parameters}");
+	$image_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "album_id=$album_id&amp;image_id=$image_id{$additional_parameters}" . ((!$count) ? '&amp;view=no_count' : ''));
+	$thumb_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "mode=thumbnail&amp;album_id=$album_id&amp;image_id=$image_id{$additional_parameters}");
+	$medium_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "mode=medium&amp;album_id=$album_id&amp;image_id=$image_id{$additional_parameters}");]]></action>
 			</edit>
 			<edit>
 				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
@@ -571,6 +599,17 @@ define('GALLERY_DELETE_CASH', 0);
 		</open>
 
 		<open src="gallery/includes/functions_display.php">
+			<edit>
+				<find><![CDATA[function assign_image_block($template_block, &$image_data, $album_status, $display = 126)
+{
+	global $auth, $gallery_config, $template, $user;
+	global $gallery_root_path, $phpbb_root_path, $phpEx;]]></find>
+				<action type="after-add"><![CDATA[
+
+	$st	= request_var('st', 0);
+	$sk	= request_var('sk', $gallery_config['sort_method']);
+	$sd	= request_var('sd', $gallery_config['sort_order']);]]></action>
+			</edit>
 			<edit>
 				<find><![CDATA[		'S_IP'		=> ($auth->acl_get('a_')) ? $image_data['image_user_ip'] : '',]]></find>
 				<action type="replace-with"><![CDATA[		'S_IP'		=> (($display & RRC_DISPLAY_IP) && $auth->acl_get('a_')) ? $image_data['image_user_ip'] : '',]]></action>
