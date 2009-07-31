@@ -35,7 +35,7 @@ http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
 			</author>
 		</author-group>
 
-		<mod-version>1.0.1</mod-version>
+		<mod-version>1.0.2</mod-version>
 
 		<installation>
 			<level>intermediate</level>
@@ -55,6 +55,9 @@ http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
 
 	<action-group>
 		<copy>
+			<file from="root/gallery/images/upload/de_image_not_exist.jpg" to="gallery/images/upload/de_image_not_exist.jpg" />
+			<file from="root/gallery/images/upload/de_no_hotlinking.jpg" to="gallery/images/upload/de_no_hotlinking.jpg" />
+			<file from="root/gallery/images/upload/de_not_authorised.jpg" to="gallery/images/upload/de_not_authorised.jpg" />
 			<file from="root/language/de/email/*.*" to="language/de/email/*.*" />
 			<file from="root/language/de/mods/*.*" to="language/de/mods/*.*" />
 			<file from="root/styles/prosilver/imageset/de/button_upload_image.gif" to="styles/prosilver/imageset/de/button_upload_image.gif" />
