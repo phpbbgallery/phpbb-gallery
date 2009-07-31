@@ -78,9 +78,9 @@ class install_update extends module
 					case 0:
 						$this->update_db_schema($mode, $sub);
 					break;
-					// from 0.2.0 to 0.3.1
-					case 1:
-					// from 0.3.2-RC1 to 0.4.1
+					// updates starting from 0.2.0 up to 0.3.1
+					// case 1: unsupported
+					// updates starting from 0.3.2-RC1 up to 0.4.1
 					case 2:
 					// from 0.5.0
 					case 3:
@@ -333,6 +333,8 @@ class install_update extends module
 			}
 		}
 
+		set_gallery_config('phpbb_gallery_version', $gallery_config['phpbb_gallery_version']);
+
 		$dbms_data = get_dbms_infos();
 		$db_schema = $dbms_data['db_schema'];
 		$delimiter = $dbms_data['delimiter'];
@@ -341,85 +343,24 @@ class install_update extends module
 		{
 			case '0.1.2':
 			case '0.1.3':
-				trigger_error('VERSION_NOT_SUPPORTED', E_USER_ERROR);
-/*
-				nv_create_table('phpbb_gallery_albums',		$dbms_data);
-				nv_create_table('phpbb_gallery_comments',	$dbms_data);
-				nv_create_table('phpbb_gallery_config',		$dbms_data);
-				nv_create_table('phpbb_gallery_images',		$dbms_data);
-				nv_create_table('phpbb_gallery_rates',		$dbms_data);
-*/
-			break;
 
 			case '0.2.0':
 			case '0.2.1':
 			case '0.2.2':
 			case '0.2.3':
-				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_user_id',		array('UINT', 0));
-				nv_add_column(GALLERY_IMAGES_TABLE,	'image_user_colour',	array('VCHAR:6', ''));
-				nv_add_column(USERS_TABLE,			'album_id',				array('UINT', 0));
-
-				nv_change_column(GALLERY_IMAGES_TABLE,	'image_username',	array('VCHAR_UNI', ''));
 
 			case '0.3.0':
 			case '0.3.1':
-				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_images',				array('UINT', 0));
-				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_images_real',		array('UINT', 0));
-				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_last_image_id',		array('UINT', 0));
-				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_image',				array('VCHAR', ''));
-				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_last_image_time',	array('TIMESTAMP', 0));
-				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_last_image_name',	array('VCHAR', ''));
-				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_last_username',		array('VCHAR', ''));
-				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_last_user_colour',	array('VCHAR:6', ''));
-				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_last_user_id',		array('UINT', 0));
-				nv_add_column(GALLERY_ALBUMS_TABLE,	'display_on_index',			array('UINT:3', 1));
-				nv_add_column(GALLERY_ALBUMS_TABLE,	'display_subalbum_list',	array('UINT:3', 1));
-
-				nv_add_column(GALLERY_COMMENTS_TABLE,	'comment_user_colour',	array('VCHAR:6', ''));
-
-				nv_add_column(GALLERY_IMAGES_TABLE,	'image_comments',			array('UINT', 0));
-				nv_add_column(GALLERY_IMAGES_TABLE,	'image_last_comment',		array('UINT', 0));
-				nv_add_column(GALLERY_IMAGES_TABLE,	'image_filemissing',		array('UINT:3', 0));
-				nv_add_column(GALLERY_IMAGES_TABLE,	'image_rates',				array('UINT', 0));
-				nv_add_column(GALLERY_IMAGES_TABLE,	'image_rate_points',		array('UINT', 0));
-				nv_add_column(GALLERY_IMAGES_TABLE,	'image_rate_avg',			array('UINT', 0));
-				nv_add_column(GALLERY_IMAGES_TABLE,	'image_status',				array('UINT:3', 1));
-				nv_add_column(GALLERY_IMAGES_TABLE,	'image_has_exif',			array('UINT:3', 2));
-				nv_add_column(GALLERY_IMAGES_TABLE,	'image_favorited',			array('UINT', 0));
-
-				nv_add_column(SESSIONS_TABLE,		'session_album_id',			array('UINT', 0));
-
-				nv_change_column(GALLERY_COMMENTS_TABLE,	'comment_username',	array('VCHAR', ''));
-
-				nv_create_table('phpbb_gallery_favorites',	$dbms_data);
-				nv_create_table('phpbb_gallery_modscache',	$dbms_data);
-				nv_create_table('phpbb_gallery_permissions',$dbms_data);
-				nv_create_table('phpbb_gallery_reports',	$dbms_data);
-				nv_create_table('phpbb_gallery_roles',		$dbms_data);
-				nv_create_table('phpbb_gallery_users',		$dbms_data);
-				nv_create_table('phpbb_gallery_watch',		$dbms_data);
-
-			case '0.3.2-RC1':
+/			case '0.3.2-RC1':
 			case '0.3.2-RC2':
+
 			case '0.4.0-RC1':
 			case '0.4.0-RC2':
-				nv_add_column(GALLERY_IMAGES_TABLE,	'image_reported',			array('UINT', 0));
-
-				nv_add_index(GALLERY_USERS_TABLE,	'pg_palbum_id',				array('personal_album_id'));
-				nv_add_index(SESSIONS_TABLE,		'session_aid',				array('session_album_id'));
-
 			case '0.4.0-RC3':
-				nv_add_column(GALLERY_ROLES_TABLE,	'a_list',					array('UINT:3', 0));
-				nv_add_column(GALLERY_ROLES_TABLE,	'c_read',					array('UINT:3', 0));
-				nv_add_column(GALLERY_ROLES_TABLE,	'm_comments',				array('UINT:3', 0));
-				nv_add_column(GALLERY_ROLES_TABLE,	'm_delete',					array('UINT:3', 0));
-				nv_add_column(GALLERY_ROLES_TABLE,	'm_edit',					array('UINT:3', 0));
-				nv_add_column(GALLERY_ROLES_TABLE,	'm_move',					array('UINT:3', 0));
-				nv_add_column(GALLERY_ROLES_TABLE,	'm_report',					array('UINT:3', 0));
-				nv_add_column(GALLERY_ROLES_TABLE,	'm_status',					array('UINT:3', 0));
-				nv_add_column(GALLERY_ROLES_TABLE,	'i_watermark',				array('UINT:3', 0));
-
 			case '0.4.0':
+				trigger_error('VERSION_NOT_SUPPORTED', E_USER_ERROR);
+			break;
+
 			case '0.4.1':
 				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_contest',			array('UINT', 0));
 
@@ -438,42 +379,37 @@ class install_update extends module
 				nv_add_column(GALLERY_ALBUMS_TABLE,	'display_in_rrc',		array('UINT:1', 1));
 				nv_add_column(GALLERY_IMAGES_TABLE,	'image_contest_end',	array('TIMESTAMP', 0));
 				nv_add_column(GALLERY_IMAGES_TABLE,	'image_contest_rank',	array('UINT:3', 0));
-
 			case '0.5.1':
 			case '0.5.2':
 				nv_create_table('phpbb_gallery_albums_track',	$dbms_data);
 				nv_add_column(GALLERY_USERS_TABLE,	'user_lastmark',		array('TIMESTAMP', 0));
-
 			case '0.5.3':
 				nv_add_column(LOG_TABLE,			'album_id',				array('UINT', 0));
 				nv_add_column(LOG_TABLE,			'image_id',				array('UINT', 0));
-
 			case '0.5.4':
+
 			case '1.0.0-dev':
 				nv_add_column(GALLERY_ROLES_TABLE,	'i_unlimited',			array('UINT:3', 0));
 				nv_add_column(GALLERY_ROLES_TABLE,	'album_unlimited',		array('UINT:3', 0));
-
 			case '1.0.0-RC1':
 			case '1.0.0-RC2':
-
 			case '1.0.0':
+
 			case '1.0.1-dev':
 				nv_add_column(GALLERY_IMAGES_TABLE,	'image_name_clean',		array('VCHAR:255', ''));
 				nv_add_column(GALLERY_IMAGES_TABLE,	'image_username_clean',	array('VCHAR:255', ''));
-
 			case '1.0.1':
+
 			case '1.0.2-dev':
+			case '1.0.2-RC1':
 			break;
 		}
-
-		set_gallery_config('phpbb_gallery_version', $gallery_config['phpbb_gallery_version']);
-
 
 		$template->assign_vars(array(
 			'BODY'		=> $user->lang['STAGE_CREATE_TABLE_EXPLAIN'],
 			'L_SUBMIT'	=> $user->lang['NEXT_STEP'],
 			'S_HIDDEN'	=> '',
-			'U_ACTION'	=> $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=1",
+			'U_ACTION'	=> $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=2",
 		));
 	}
 
@@ -491,11 +427,7 @@ class install_update extends module
 
 		$this->page_title = $user->lang['STAGE_UPDATE_DB'];
 		$next_update_url = '';
-		if ($database_step == 2)
-		{
-			$gallery_config['phpbb_gallery_version'] = '0.3.2-RC1';
-		}
-		elseif ($database_step == 3)
+		if ($database_step == 3)
 		{
 			$gallery_config['phpbb_gallery_version'] = '0.5.0';
 		}
@@ -504,361 +436,26 @@ class install_update extends module
 		{
 			case '0.1.2':
 			case '0.1.3':
-			// Cheating?
-				trigger_error('VERSION_NOT_SUPPORTED', E_USER_ERROR);
-			break;
 
 			case '0.2.0':
 			case '0.2.1':
 			case '0.2.2':
 			case '0.2.3':
-				$sql = 'SELECT i.image_user_id, i.image_id, u.username, u.user_colour
-					FROM ' . GALLERY_IMAGES_TABLE . ' i
-					LEFT JOIN ' . USERS_TABLE . ' u
-						ON i.image_user_id = u.user_id
-					GROUP BY i.image_user_id';
-				$result = $db->sql_query($sql);
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$image_id = $row['image_id'];
-
-					if ($row['image_user_id'] == 1 || empty($row['username']))
-					{
-						continue;
-					}
-
-					$sql_ary = array(
-						'image_username'		=> $row['username'],
-						'image_user_colour'		=> $row['user_colour'],
-					);
-
-					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-						WHERE ' . $db->sql_in_set('image_user_id', $row['image_user_id']);
-					$db->sql_query($sql);
-				}
-				$db->sql_freeresult($result);
-
-				$sql = 'SELECT i.image_id, i.image_username, image_user_id
-					FROM ' . GALLERY_IMAGES_TABLE . ' i
-					WHERE image_album_id = 0
-					GROUP BY i.image_user_id DESC';
-				$result = $db->sql_query($sql);
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$album_data = array(
-						'album_name'					=> $row['image_username'],
-						'parent_id'						=> 0,
-						//left_id and right_id are created some lines later
-						'album_desc_options'			=> 7,
-						'album_desc'					=> '',
-						'album_parents'					=> '',
-						'album_type'					=> ALBUM_UPLOAD,
-						'album_status'					=> ITEM_UNLOCKED,
-						'album_user_id'					=> $row['image_user_id'],
-					);
-					$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
-					$album_id = $db->sql_nextid();
-
-					$sql2 = 'UPDATE ' . USERS_TABLE . ' 
-							SET album_id = ' . (int) $album_id . '
-							WHERE user_id  = ' . (int) $row['image_user_id'];
-					$db->sql_query($sql2);
-
-					$sql2 = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
-							SET image_album_id = ' . (int) $album_id . '
-							WHERE image_album_id = 0
-								AND image_user_id  = ' . (int) $row['image_user_id'];
-					$db->sql_query($sql2);
-				}
-				$db->sql_freeresult($result);
 
 			case '0.3.0':
 			case '0.3.1':
-				// Set some configs
-				$total_galleries = 0;
-				$sql = 'SELECT u.album_id, u.user_id, count(i.image_id) as images
-					FROM ' . USERS_TABLE . ' u
-					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
-						ON i.image_user_id = u.user_id
-							AND i.image_status = 1
-					GROUP BY i.image_user_id';
-				$result = $db->sql_query($sql);
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$sql_ary = array(
-						'user_id'				=> $row['user_id'],
-						'personal_album_id'		=> $row['album_id'],
-						'user_images'			=> $row['images'],
-					);
-					$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . $db->sql_build_array('INSERT', $sql_ary));
-				}
-				$db->sql_freeresult($result);
-				$sql = 'SELECT COUNT(album_id) albums
-					FROM ' . GALLERY_ALBUMS_TABLE . '
-					WHERE parent_id = 0
-						AND album_user_id <> 0';
-				$result = $db->sql_query($sql);
-				$total_galleries = (int) $db->sql_fetchfield('albums');
-				$db->sql_freeresult($result);
-
-				set_config('gallery_total_images', 1);
-
-				set_gallery_config('thumbnail_info_line', 1);
-				set_gallery_config('fake_thumb_size', 70);
-				set_gallery_config('disp_fake_thumb', 1);
-				set_gallery_config('exif_data', 1);
-				set_gallery_config('watermark_height', 50);
-				set_gallery_config('watermark_width', 200);
-				set_gallery_config('personal_counter', $total_galleries);
-
-				//change the sort_method if it is sepcial
-				if ($gallery_config['sort_method'] == 'rating')
-				{
-					set_gallery_config('sort_method', 'image_rate_avg');
-				}
-				else if ($gallery_config['sort_method'] == 'comments')
-				{
-					set_gallery_config('sort_method', 'image_comments');
-				}
-				else if ($gallery_config['sort_method'] == 'new_comment')
-				{
-					set_gallery_config('sort_method', 'image_last_comment');
-				}
-
-				// Update the album_data
-				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET album_type = 1';
-				$db->sql_query($sql);
-
-				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET album_type = 0 WHERE album_user_id = 0';
-				$db->sql_query($sql);
-
-				// Add the information for the last_image to the albums part 1: last_image_id, image_count
-				$sql = 'SELECT COUNT(i.image_id) images, MAX(i.image_id) last_image_id, i.image_album_id
-					FROM ' . GALLERY_IMAGES_TABLE . ' i
-					WHERE i.image_approval = 1
-					GROUP BY i.image_album_id';
-				$result = $db->sql_query($sql);
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$sql_ary = array(
-						'album_images'			=> $row['images'],
-						'album_last_image_id'	=> $row['last_image_id'],
-					);
-					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-						WHERE ' . $db->sql_in_set('album_id', $row['image_album_id']);
-					$db->sql_query($sql);
-				}
-				$db->sql_freeresult($result);
-
-
-				// Add the information for the last_image to the albums part 2: correct album_type, images_real are all images, even unapproved
-				$sql = 'SELECT COUNT(i.image_id) images, i.image_album_id
-					FROM ' . GALLERY_IMAGES_TABLE . ' i
-					GROUP BY i.image_album_id';
-				$result = $db->sql_query($sql);
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$sql_ary = array(
-						'album_images_real'	=> $row['images'],
-						'album_type'		=> 1,
-					);
-					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-						WHERE ' . $db->sql_in_set('album_id', $row['image_album_id']);
-					$db->sql_query($sql);
-				}
-				$db->sql_freeresult($result);
-
-				// Add the information for the last_image to the albums part 3: user_id, username, user_colour, time, image_name
-				$sql = 'SELECT a.album_id, a.album_last_image_id, i.image_time, i.image_name, i.image_user_id, i.image_username, i.image_user_colour, u.user_colour
-					FROM ' . GALLERY_ALBUMS_TABLE . ' a
-					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
-						ON a.album_last_image_id = i.image_id
-					LEFT JOIN ' . USERS_TABLE . ' u
-						ON a.album_user_id = u.user_id
-					WHERE a.album_last_image_id > 0';
-				$result = $db->sql_query($sql);
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$sql_ary = array(
-						'album_last_image_time'		=> $row['image_time'],
-						'album_last_image_name'		=> $row['image_name'],
-						'album_last_username'		=> $row['image_username'],
-						'album_last_user_colour'	=> isset($row['user_colour']) ? $row['user_colour'] : '',
-						'album_last_user_id'		=> $row['image_user_id'],
-					);
-					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-						WHERE ' . $db->sql_in_set('album_id', $row['album_id']);
-					$db->sql_query($sql);
-				}
-				$db->sql_freeresult($result);
-
-				// Update the image_data
-				$sql = 'SELECT rate_image_id, COUNT(rate_user_ip) image_rates, AVG(rate_point) image_rate_avg, SUM(rate_point) image_rate_points
-					FROM ' . GALLERY_RATES_TABLE . '
-					GROUP BY rate_image_id';
-				$result = $db->sql_query($sql);
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-						SET image_rates = ' . $row['image_rates'] . ',
-							image_rate_points = ' . $row['image_rate_points'] . ',
-							image_rate_avg = ' . round($row['image_rate_avg'], 2) * 100 . '
-						WHERE image_id = ' . $row['rate_image_id'];
-					$db->sql_query($sql);
-				}
-				$db->sql_freeresult($result);
-
-				$sql = 'SELECT COUNT(comment_id) comments, MAX(comment_id) image_last_comment, comment_image_id
-					FROM ' . GALLERY_COMMENTS_TABLE . '
-					GROUP BY comment_image_id';
-				$result = $db->sql_query($sql);
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_comments = ' . $row['comments'] . ',
-						image_last_comment = ' . $row['image_last_comment'] . '
-						WHERE ' . $db->sql_in_set('image_id', $row['comment_image_id']);
-					$db->sql_query($sql);
-				}
-				$db->sql_freeresult($result);
-
-				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-					SET image_status = 2
-					WHERE image_lock = 1';
-				$db->sql_query($sql);
-
-				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-					SET image_status = 0
-					WHERE image_lock = 0
-						AND image_approval = 0';
-				$db->sql_query($sql);
-
-				// Update the comment_data
-				$sql = 'SELECT u.user_colour, c.comment_id
-					FROM ' . GALLERY_COMMENTS_TABLE . ' c
-					LEFT JOIN ' . USERS_TABLE . ' u
-						ON c.comment_user_id = u.user_id';
-				$result = $db->sql_query($sql);
-				while ($row = $db->sql_fetchrow($result))
-				{
-					if (isset($row['user_colour']))
-					{
-						$sql = 'UPDATE ' . GALLERY_COMMENTS_TABLE . "
-							SET comment_user_colour = '" . $row['user_colour'] . "'
-							WHERE comment_id = " . $row['comment_id'];
-						$db->sql_query($sql);
-					}
-				}
-				$db->sql_freeresult($result);
-
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=2";
-			break;
-
 			case '0.3.2-RC1':
 			case '0.3.2-RC2':
+
 			case '0.4.0-RC1':
-				$total_images = 0;
-				$sql = 'SELECT COUNT(gi.image_id) AS num_images, u.user_id
-					FROM ' . USERS_TABLE . ' u
-					LEFT JOIN  ' . GALLERY_IMAGES_TABLE . ' gi ON (u.user_id = gi.image_user_id AND gi.image_status = 1)
-					GROUP BY u.user_id';
-				$result = $db->sql_query($sql);
-
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$total_images += $row['num_images'];
-					$db->sql_query('UPDATE ' . GALLERY_USERS_TABLE . " SET user_images = {$row['num_images']} WHERE user_id = {$row['user_id']}");
-				}
-				$db->sql_freeresult($result);
-				set_config('num_images', $total_images, true);
-
 			case '0.4.0-RC2':
-				set_gallery_config('shorted_imagenames', 25);
-				set_gallery_config('sort_method', 't');
-				set_gallery_config('sort_order', 'd');
-
-				$sql = 'SELECT report_image_id, report_id
-					FROM ' . GALLERY_REPORTS_TABLE . '
-					WHERE report_status = 1';
-				$result = $db->sql_query($sql);
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_reported = ' . $row['report_id'] . '
-						WHERE ' . $db->sql_in_set('image_id', $row['report_image_id']);
-					$db->sql_query($sql);
-				}
-				$db->sql_freeresult($result);
-
-
 			case '0.4.0-RC3':
-				// Some new configs
-				set_gallery_config('comment_length', 1024);
-				set_gallery_config('description_length', 1024);
-				set_gallery_config('allow_rates', 1);
-				set_gallery_config('allow_comments', 1);
-				set_gallery_config('link_thumbnail', 'image_page');
-				set_gallery_config('link_image_name', 'image_page');
-				set_gallery_config('link_image_icon', 'image_page');
-				set_gallery_config('resize_images', 1);
-				set_gallery_config('personal_album_index', 0);
-				set_gallery_config('view_image_url', 1);
-				set_gallery_config('medium_cache', 1);
-
-				// Update new permissions
-				$sql = 'SELECT role_id, a_moderate, i_view, c_post
-					FROM ' . GALLERY_ROLES_TABLE;
-				$result = $db->sql_query($sql);
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$sql_ary = array(
-						'a_list'		=> $row['i_view'],
-						'c_read'		=> $row['c_post'],
-						'm_comments'	=> $row['a_moderate'],
-						'm_delete'		=> $row['a_moderate'],
-						'm_edit'		=> $row['a_moderate'],
-						'm_move'		=> $row['a_moderate'],
-						'm_report'		=> $row['a_moderate'],
-						'm_status'		=> $row['a_moderate'],
-					);
-					$sql = 'UPDATE ' . GALLERY_ROLES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-						WHERE ' . $db->sql_in_set('role_id', $row['role_id']);
-					$db->sql_query($sql);
-				}
-				$db->sql_freeresult($result);
-				$auth_admin = new auth_admin();
-				$auth_admin->acl_add_option(array(
-					'local'			=> array(),
-					'global'		=> array('a_gallery_manage', 'a_gallery_albums', 'a_gallery_import', 'a_gallery_cleanup')
-				));
-				$cache->destroy('acl_options');
-
-				// Update the ACP-Modules permissions
-				$sql = 'UPDATE ' . MODULES_TABLE . " SET
-					module_auth = 'acl_a_gallery_manage'
-					WHERE module_langname = 'ACP_GALLERY_OVERVIEW'";
-				$db->sql_query($sql);
-				$sql = 'UPDATE ' . MODULES_TABLE . " SET
-					module_auth = 'acl_a_gallery_manage'
-					WHERE module_langname = 'ACP_GALLERY_CONFIGURE_GALLERY'";
-				$db->sql_query($sql);
-				$sql = 'UPDATE ' . MODULES_TABLE . " SET
-					module_auth = 'acl_a_gallery_albums'
-					WHERE module_langname = 'ACP_GALLERY_MANAGE_ALBUMS'";
-				$db->sql_query($sql);
-				$sql = 'UPDATE ' . MODULES_TABLE . " SET
-					module_auth = 'acl_a_gallery_albums'
-					WHERE module_langname = 'ACP_GALLERY_ALBUM_PERMISSIONS'";
-				$db->sql_query($sql);
-				$sql = 'UPDATE ' . MODULES_TABLE . " SET
-					module_auth = 'acl_a_gallery_import'
-					WHERE module_langname = 'ACP_IMPORT_ALBUMS'";
-				$db->sql_query($sql);
-				$sql = 'UPDATE ' . MODULES_TABLE . " SET
-					module_auth = 'acl_a_gallery_cleanup'
-					WHERE module_langname = 'ACP_GALLERY_CLEANUP'";
-				$db->sql_query($sql);
-
 			case '0.4.0':
-				set_gallery_config('link_imagepage', 'image_page');
+				/**
+				* Cheating?
+				*/
+				trigger_error('VERSION_NOT_SUPPORTED', E_USER_ERROR);
+			break;
 
 			case '0.4.1':
 				// Resync the reported flags in addition to #393, #417
@@ -1189,7 +786,7 @@ class install_update extends module
 		switch ($gallery_config['phpbb_gallery_version'])
 		{
 /*			case '0.1.2':
-			case '0.1.3':*/
+			case '0.1.3':
 			case '0.2.0':
 			case '0.2.1':
 			case '0.2.2':
@@ -1221,7 +818,7 @@ class install_update extends module
 				nv_remove_column(GALLERY_ALBUMS_TABLE,	'album_moderator_groups');
 
 			case '0.4.0-RC3':
-			case '0.4.0':
+			case '0.4.0':*/
 			case '0.4.1':
 			case '0.5.0':
 			case '0.5.1':
@@ -1306,60 +903,26 @@ class install_update extends module
 
 			switch ($gallery_config['phpbb_gallery_version'])
 			{
-/*				case '0.1.2':
-				case '0.1.3':*/
+				case '0.1.2':
+				case '0.1.3':
+
 				case '0.2.0':
 				case '0.2.1':
 				case '0.2.2':
 				case '0.2.3':
+
 				case '0.3.0':
 				case '0.3.1':
 				case '0.3.2-RC1':
 				case '0.3.2-RC2':
+
 				case '0.4.0-RC1':
-					if ($choosen_acp_module < 0)
-					{
-						$acp_mods_tab = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 0,	'module_class' => 'acp',	'module_langname'=> 'ACP_CAT_DOT_MODS',	'module_mode' => '',	'module_auth' => '');
-						add_module($acp_mods_tab);
-						$choosen_acp_module = $db->sql_nextid();
-					}
-					// ACP
-					$acp_gallery = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_acp_module,	'module_class' => 'acp',	'module_langname'=> 'PHPBB_GALLERY',	'module_mode' => '',	'module_auth' => '');
-					add_module($acp_gallery);
-					$acp_module_id = $db->sql_nextid();
-					set_gallery_config('acp_parent_module', $acp_module_id);
-
-					$acp_gallery_overview = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_OVERVIEW',	'module_mode' => 'overview',	'module_auth' => 'acl_a_gallery_manage');
-					add_module($acp_gallery_overview);
-					$acp_configure_gallery = array('module_basename' => 'gallery_config',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_CONFIGURE_GALLERY',	'module_mode' => 'main',	'module_auth' => 'acl_a_gallery_manage');
-					add_module($acp_configure_gallery);
-					$acp_gallery_manage_albums = array('module_basename' => 'gallery_albums',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_MANAGE_ALBUMS',	'module_mode' => 'manage',	'module_auth' => 'acl_a_gallery_albums');
-					add_module($acp_gallery_manage_albums);
-					$album_permissions = array('module_basename' => 'gallery_permissions',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS',	'module_mode' => 'manage',	'module_auth' => 'acl_a_gallery_albums');
-					add_module($album_permissions);
-					$import_images = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_IMPORT_ALBUMS',	'module_mode' => 'import_images',	'module_auth' => 'acl_a_gallery_import');
-					add_module($import_images);
-					$cleanup = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_CLEANUP',	'module_mode' => 'cleanup',	'module_auth' => 'acl_a_gallery_cleanup');
-					add_module($cleanup);
-
-					// UCP
-					$ucp_gallery_overview = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_ucp_module,	'module_class' => 'ucp',	'module_langname'=> 'UCP_GALLERY',	'module_mode' => 'overview',	'module_auth' => '');
-					add_module($ucp_gallery_overview);
-					$ucp_module_id = $db->sql_nextid();
-					set_gallery_config('ucp_parent_module', $ucp_module_id);
-
-					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_SETTINGS',	'module_mode' => 'manage_settings',	'module_auth' => '');
-					add_module($ucp_gallery);
-					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_PERSONAL_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
-					add_module($ucp_gallery);
-					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_WATCH',	'module_mode' => 'manage_subscriptions',	'module_auth' => '');
-					add_module($ucp_gallery);
-					$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_FAVORITES',	'module_mode' => 'manage_favorites',	'module_auth' => '');
-					add_module($ucp_gallery);
-
 				case '0.4.0-RC2':
 				case '0.4.0-RC3':
 				case '0.4.0':
+					trigger_error('VERSION_NOT_SUPPORTED', E_USER_ERROR);
+				break;
+
 				case '0.4.1':
 					// Logs
 					$gallery_log = array('module_basename' => 'logs',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_log_module,	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_LOGS',	'module_mode' => 'gallery',	'module_auth' => 'acl_a_viewlogs');
@@ -1370,15 +933,17 @@ class install_update extends module
 				case '0.5.2':
 				case '0.5.3':
 				case '0.5.4':
+
 				case '1.0.0-dev':
-
-
 				case '1.0.0-RC1':
 				case '1.0.0-RC2':
 				case '1.0.0':
+
 				case '1.0.1-dev':
 				case '1.0.1':
+
 				case '1.0.2-dev':
+				case '1.0.2-RC1':
 					// Add album-BBCode
 					add_bbcode('album');
 				break;
@@ -1397,6 +962,7 @@ class install_update extends module
 			$modules = $this->gallery_config_options;
 			switch ($gallery_config['phpbb_gallery_version'])
 			{
+				case '1.0.2-RC1':
 				case '1.0.2-dev':
 				case '1.0.1':
 					$template->assign_block_vars('checks', array(
@@ -1415,28 +981,12 @@ class install_update extends module
 				case '0.5.1':
 				case '0.5.0':
 					// needs to be moved before the first unset.
-					unset ($modules['legend1']);
-					unset ($modules['log_module']);
+					unset($modules['legend1']);
+					unset($modules['log_module']);
 				case '0.4.1':
-				case '0.4.0-RC3':
-				case '0.4.0-RC2':
-					unset ($modules['acp_module']);
-					unset ($modules['ucp_module']);
-
-
-				// We need to build all modules before this version
-				case '0.4.0-RC1':
-				case '0.4.0':
-				case '0.3.2-RC2':
-				case '0.3.2-RC1':
-				case '0.3.1':
-				case '0.3.0':
-				case '0.2.3':
-				case '0.2.2':
-				case '0.2.1':
-				case '0.2.0':
-/*				case '0.1.3':
-				case '0.1.2':*/
+					unset($modules['acp_module']);
+					unset($modules['ucp_module']);
+					// We need to build all modules before this version
 				break;
 			}
 

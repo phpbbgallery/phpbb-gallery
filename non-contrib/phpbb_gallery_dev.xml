@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mods>
-	<phpbb_gallery>
+	<phpbb_gallery_dev>
 		<author>nickvergesssen</author>
 		<title lang="en">phpBB-Gallery</title>
 		<description lang="en">An image-gallery integrated into your phpbb-board.
 Features: http://www.flying-bits.org/go/phpbb_gallery/features</description>
 		<download>http://www.flying-bits.org/go/phpbb_gallery/download</download>
-		<announcement>http://www.flying-bits.org/go/phpbb_gallery/announcement</announcement>
+		<announcement>http://www.flying-bits.org/go/phpbb_gallery/dev_announcement</announcement>
 		<mod_version>
 			<major>1</major>
 			<minor>0</minor>
@@ -31,5 +31,5 @@ Features: http://www.flying-bits.org/go/phpbb_gallery/features</description>
 				<target-minor allow="exact">0</target-minor>
 			</target-version>
 		</upgrade>
-	</phpbb_gallery>
+	</phpbb_gallery_dev>
 </mods>
