@@ -296,6 +296,7 @@ $lang = array_merge($lang, array(
 	'RRC_DISPLAY_IMAGENAME'			=> 'Name des Bildes',
 	'RRC_DISPLAY_IMAGETIME'			=> 'Hochlade-Zeitpunkt',
 	'RRC_DISPLAY_IMAGEVIEWS'		=> 'Anzahl der Bild-Betrachtungen',
+	'RRC_DISPLAY_IP'				=> 'User IP',
 	'RRC_DISPLAY_NONE'				=> 'Nichts',
 	'RRC_DISPLAY_OPTIONS'			=> 'Welche Werte sollen unter dem Thumbnail angezeigt werden',
 	'RRC_DISPLAY_USERNAME'			=> 'Benutzername',

@@ -704,7 +704,7 @@ function assign_image_block($template_block, &$image_data, $album_status, $displ
 		'S_COMMENTS'	=> (($display & RRC_DISPLAY_COMMENTS) ? (($gallery_config['allow_comments'] && gallery_acl_check('c_read', $image_data['image_album_id'])) ? (($image_data['image_comments']) ? $image_data['image_comments'] : $user->lang['NO_COMMENTS']) : '') : ''),
 		'U_COMMENTS'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $image_data['image_album_id'] . "&amp;image_id=" . $image_data['image_id']) . '#comments',
 
-		'S_IP'		=> ($auth->acl_get('a_')) ? $image_data['image_user_ip'] : '',
+		'S_IP'		=> (($display & RRC_DISPLAY_IP) && $auth->acl_get('a_')) ? $image_data['image_user_ip'] : '',
 		'U_WHOIS'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'mode=whois&amp;ip=' . $image_data['image_user_ip']),
 		'U_REPORT'	=> (gallery_acl_check('m_report', $image_data['image_album_id']) && $image_data['image_reported']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "mode=report_details&amp;album_id={$image_data['image_album_id']}&amp;option_id=" . $image_data['image_reported']) : '',
 		'U_STATUS'	=> (gallery_acl_check('m_status', $image_data['image_album_id'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "mode=queue_details&amp;album_id={$image_data['image_album_id']}&amp;option_id=" . $image_data['image_id']) : '',

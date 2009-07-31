@@ -179,6 +179,33 @@ function set_gallery_config($config_name, $config_value, $is_dynamic = false)
 		$cache->destroy('config');
 	}*/
 }
+function set_gallery_config_count($config_name, $increment, $is_dynamic = false)
+{
+	global $db /*, $cache*/;
+
+	switch ($db->sql_layer)
+	{
+		case 'firebird':
+			$sql_update = 'CAST(CAST(config_value as integer) + ' . (int) $increment . ' as CHAR)';
+		break;
+
+		case 'postgres':
+			$sql_update = 'int4(config_value) + ' . (int) $increment;
+		break;
+
+		// MySQL, SQlite, mssql, mssql_odbc, oracle
+		default:
+			$sql_update = 'config_value + ' . (int) $increment;
+		break;
+	}
+
+	$db->sql_query('UPDATE ' . GALLERY_CONFIG_TABLE . ' SET config_value = ' . $sql_update . " WHERE config_name = '" . $db->sql_escape($config_name) . "'");
+
+	/*if (!$is_dynamic)
+	{
+		$cache->destroy('config');
+	}*/
+}
 
 /*
 * Checks whether a column exists within a table
@@ -617,9 +644,9 @@ function set_default_config()
 	set_gallery_config('rrc_gindex_contests', 1);
 
 	// Added 0.5.2:
-	set_gallery_config('rrc_gindex_display', 45);
-	set_gallery_config('rrc_profile_display', 13);
-	set_gallery_config('album_display', 126);
+	set_gallery_config('rrc_gindex_display', 173);
+	set_gallery_config('rrc_profile_display', 141);
+	set_gallery_config('album_display', 254);
 
 	// Added 0.5.3:
 	set_config('gallery_viewtopic_icon', 1);

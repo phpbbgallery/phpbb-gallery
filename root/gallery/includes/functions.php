@@ -22,6 +22,7 @@ if (!defined('IN_PHPBB'))
 *
 * load_gallery_config()
 * set_gallery_config()
+* set_gallery_config_count()
 * get_album_info()
 * get_image_info()
 * check_album_user()

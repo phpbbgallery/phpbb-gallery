@@ -64,6 +64,7 @@ define('RRC_DISPLAY_IMAGETIME', 8);
 define('RRC_DISPLAY_IMAGEVIEWS', 16);
 define('RRC_DISPLAY_USERNAME', 32);
 define('RRC_DISPLAY_RATINGS', 64);
+define('RRC_DISPLAY_IP', 128);
 
 // Mode-options for RRC-Feature
 define('RRC_MODE_NONE', 0);

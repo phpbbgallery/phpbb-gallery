@@ -449,6 +449,7 @@ class acp_gallery_config
 		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_IMAGEVIEWS) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_IMAGEVIEWS . "'>" . $user->lang['RRC_DISPLAY_IMAGEVIEWS'] . '</option>';
 		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_USERNAME) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_USERNAME . "'>" . $user->lang['RRC_DISPLAY_USERNAME'] . '</option>';
 		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_RATINGS) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_RATINGS . "'>" . $user->lang['RRC_DISPLAY_RATINGS'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_IP) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_IP . "'>" . $user->lang['RRC_DISPLAY_IP'] . '</option>';
 
 		// Cheating is an evil-thing, but most times it's successful, that's why it is used.
 		return "<input type='hidden' name='config[$key]' value='$value' /><select name='" . $key . "[]' multiple='multiple' id='$key'>$rrc_display_options</select>";

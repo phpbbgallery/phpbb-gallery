@@ -493,6 +493,10 @@ include($phpbb_root_path . $gallery_root_path . 'includes/root_path.' . $phpEx);
 
 		<open src="gallery/includes/constants.php">
 			<edit>
+				<find><![CDATA[define('RRC_DISPLAY_RATINGS', 64);]]></find>
+				<action type="after-add"><![CDATA[define('RRC_DISPLAY_IP', 128);]]></action>
+			</edit>
+			<edit>
 				<find><![CDATA[?>]]></find>
 				<action type="before-add"><![CDATA[/**
 * Constants, defined in other files:
@@ -508,6 +512,10 @@ define('GALLERY_DELETE_CASH', 0);
 		</open>
 
 		<open src="gallery/includes/functions.php">
+			<edit>
+				<find><![CDATA[* set_gallery_config()]]></find>
+				<action type="after-add"><![CDATA[* set_gallery_config_count()]]></action>
+			</edit>
 			<edit>
 				<find><![CDATA[if (gallery_acl_check('a_list', $row['album_id'], $row['album_user_id']))]]></find>
 				<action type="replace-with"><![CDATA[if (gallery_acl_check('a_list', $row['album_id'], $row['album_user_id']) || defined('IN_ADMIN'))]]></action>
@@ -559,6 +567,13 @@ define('GALLERY_DELETE_CASH', 0);
 			$url = $image_url;
 			$tpl = generate_image_link_plugins($mode);
 		break;]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/includes/functions_display.php">
+			<edit>
+				<find><![CDATA[		'S_IP'		=> ($auth->acl_get('a_')) ? $image_data['image_user_ip'] : '',]]></find>
+				<action type="replace-with"><![CDATA[		'S_IP'		=> (($display & RRC_DISPLAY_IP) && $auth->acl_get('a_')) ? $image_data['image_user_ip'] : '',]]></action>
 			</edit>
 		</open>
 
@@ -733,6 +748,10 @@ if (!function_exists('slideshow_plugins'))
 		}
 		$sort_order_options = uc_select_plugins($value, $key);]]></action>
 			</edit>
+			<edit>
+				<find><![CDATA[		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_RATINGS) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_RATINGS . "'>" . $user->lang['RRC_DISPLAY_RATINGS'] . '</option>';]]></find>
+				<action type="after-add"><![CDATA[		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_IP) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_IP . "'>" . $user->lang['RRC_DISPLAY_IP'] . '</option>';]]></action>
+			</edit>
 		</open>
 
 		<open src="language/de/mods/gallery.php">
@@ -759,6 +778,10 @@ if (!function_exists('slideshow_plugins'))
 			<edit>
 				<find><![CDATA[	'RESYNCED_PERSONALS'			=> 'Persönliche Alben resynchronisiert',]]></find>
 				<action type="after-add"><![CDATA[	'ROTATE_IMAGES'					=> 'Option zum Drehen von Bilder anzeigen',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	'RRC_DISPLAY_IMAGEVIEWS'		=> 'Anzahl der Bild-Betrachtungen',]]></find>
+				<action type="after-add"><![CDATA[	'RRC_DISPLAY_IP'				=> 'User IP',]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA[	'UC_LINK_NONE'					=> 'Kein Link',]]></find>
@@ -790,6 +813,10 @@ if (!function_exists('slideshow_plugins'))
 			<edit>
 				<find><![CDATA[	'RESYNCED_PERSONALS'			=> 'Resynchronised personal album id\'s',]]></find>
 				<action type="after-add"><![CDATA[	'ROTATE_IMAGES'					=> 'Allow to rotate images',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	'RRC_DISPLAY_IMAGEVIEWS'		=> 'Image views',]]></find>
+				<action type="after-add"><![CDATA[	'RRC_DISPLAY_IP'				=> 'User ip',]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA[	'UC_LINK_NONE'					=> 'No Link',]]></find>

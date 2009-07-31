@@ -1146,6 +1146,20 @@ class install_update extends module
 					WHERE bbcode_tag = '" . $db->sql_escape('album') . "'";
 				$db->sql_query($sql);
 
+			case '1.0.2-RC1':
+				if ($gallery_config['rrc_gindex_display'] < 128)
+				{
+					set_gallery_config_count('rrc_gindex_display', 128);
+				}
+				if ($gallery_config['rrc_profile_display'] < 128)
+				{
+					set_gallery_config_count('rrc_profile_display', 128);
+				}
+				if ($gallery_config['album_display'] < 128)
+				{
+					set_gallery_config_count('album_display', 128);
+				}
+
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
 		}

@@ -35,7 +35,7 @@
 		<open src="index.php">
 			<edit>
 				<comment lang="de"><![CDATA[Wenn du andere Bilder anzeigen möchtest, kannst du dir auf der folgenden Seite die Parameter dafür anzeigen lassen: http://www.flying-bits.org/rrc_configurator.php Benutze den Code einfach anstelle des "Davor einfügen"-Code]]></comment>
-				<comment lang="en"><![CDATA[If you want to show other images, you can get the correct parameters from http://www.flying-bits.org/rrc_configurator.php just use the code the side displayes instead of the "before-add"-code]]></comment>
+				<comment lang="en"><![CDATA[If you want to show other images, you can get the correct parameters from http://www.flying-bits.org/rrc_configurator.php just use the code the side displays instead of the "before-add"-code]]></comment>
 				<find><![CDATA[// Output page
 page_header($user->lang['INDEX']);]]></find>
 				<action type="before-add"><![CDATA[/**
@@ -51,7 +51,7 @@ $ints = array(
 	'comments'	=> 5,
 	'contests'	=> 1,
 );
-recent_gallery_images($ints, 61, 7, false, true, 'album', 0);]]></action>
+recent_gallery_images($ints, 189, 7, false, true, 'album', 0);]]></action>
 			</edit>
 		</open>
 
