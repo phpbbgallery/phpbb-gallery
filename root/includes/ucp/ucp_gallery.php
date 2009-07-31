@@ -33,6 +33,7 @@ class ucp_gallery
 		include($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
 		include($phpbb_root_path . $gallery_root_path . 'includes/constants.' . $phpEx);
 		include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
+		include($phpbb_root_path . $gallery_root_path . 'plugins/index.' . $phpEx);
 		$gallery_config = load_gallery_config();
 
 		$user->add_lang(array('mods/gallery', 'mods/gallery_acp', 'mods/gallery_mcp', 'mods/gallery_ucp'));
