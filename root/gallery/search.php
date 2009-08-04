@@ -492,20 +492,29 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			}
 
 			$columns_per_page = ($search_id == 'contests') ? CONTEST_IMAGES : $gallery_config['cols_per_page'];
+			$init_block = true;
 			for ($i = 0, $end = count($rowset); $i < $end; $i += $columns_per_page)
 			{
-				$template->assign_block_vars('imagerow', array());
+				if ($init_block)
+				{
+					$template->assign_block_vars('imageblock', array(
+						'U_BLOCK'		=> $u_search,
+						'BLOCK_NAME'	=> ($l_search_title) ? $l_search_title : $l_search_matches,
+					));
+					$init_block = false;
+				}
+				$template->assign_block_vars('imageblock.imagerow', array());
 
 				for ($j = $i, $end_columns = ($i + $columns_per_page); $j < $end_columns; $j++)
 				{
 					if ($j >= $end)
 					{
-						$template->assign_block_vars('imagerow.noimage', array());
+						$template->assign_block_vars('imageblock.imagerow.noimage', array());
 						continue;
 					}
 
 					// Assign the image to the template-block
-					assign_image_block('imagerow.image', $rowset[$j], $rowset[$j]['album_status']);
+					assign_image_block('imageblock.imagerow.image', $rowset[$j], $rowset[$j]['album_status']);
 				}
 			}
 		}

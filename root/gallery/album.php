@@ -239,20 +239,30 @@ if ($album_data['album_type'] != ALBUM_CAT)
 		}
 		$db->sql_freeresult($result);
 
+		$init_block = true;
 		for ($i = 0, $end = count($images); $i < $end; $i += $gallery_config['cols_per_page'])
 		{
-			$template->assign_block_vars('imagerow', array());
+			if ($init_block)
+			{
+				$template->assign_block_vars('imageblock', array(
+					//'U_BLOCK'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_data['album_id']),
+					'BLOCK_NAME'	=> $album_data['album_name'],
+				));
+				$init_block = false;
+			}
+
+			$template->assign_block_vars('imageblock.imagerow', array());
 
 			for ($j = $i, $end_columns = ($i + $gallery_config['cols_per_page']); $j < $end_columns; $j++)
 			{
 				if ($j >= $end)
 				{
-					$template->assign_block_vars('imagerow.no_image', array());
+					$template->assign_block_vars('imageblock.imagerow.no_image', array());
 					continue;
 				}
 
 				// Assign the image to the template-block
-				assign_image_block('imagerow.image', $images[$j], $album_data['album_status'], $gallery_config['album_display']);
+				assign_image_block('imageblock.imagerow.image', $images[$j], $album_data['album_status'], $gallery_config['album_display']);
 			}
 		}
 	}
@@ -286,6 +296,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 gallery_markread('album', $album_id);
 
 $template->assign_vars(array(
+	'S_IN_ALBUM'				=> true, // used for some templating in subsilver2
 	'S_IS_POSTABLE'				=> ($album_data['album_type'] != ALBUM_CAT) ? true : false,
 	'S_IS_LOCKED'				=> ($album_data['album_status'] == ITEM_LOCKED) ? true : false,
 	'UPLOAD_IMG'				=> ($album_data['album_status'] == ITEM_LOCKED) ? $user->img('button_topic_locked', 'ALBUM_LOCKED') : $user->img('button_upload_image', 'UPLOAD_IMAGE'),
