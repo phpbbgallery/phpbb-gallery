@@ -42,11 +42,17 @@ $sql = 'SELECT *
 	FROM ' . GALLERY_USERS_TABLE . '
 	WHERE user_id = ' . (int) $user->data['user_id'];
 $result = $db->sql_query($sql);
-$user->gallery = $db->sql_fetchrow($result);
+$array = $db->sql_fetchrow($result);
 $db->sql_freeresult($result);
+
 if ($db->sql_affectedrows())
 {
+	$user->gallery = array_map('intval', $array);
 	$user->gallery['exists'] = true;
+}
+else
+{
+	$user->gallery = $array;
 }
 
 /**
@@ -258,6 +264,7 @@ function check_album_user($album_id)
 	{
 		trigger_error('NO_ALBUM_STEALING');
 	}
+	$db->sql_freeresult($result);
 }
 
 /**
@@ -619,6 +626,7 @@ function get_album_branch($branch_user_id, $album_id, $type = 'all', $order = 'd
 * @param	int		$album_id
 * @param	bool	$is_gif		we need to know whether we display a gif, so we can use a better medium-image
 * @param	bool	$count		shall the image-link be counted as view? (Set to false from image_page.php to deny double increment)
+* @param	string	$additional_parameters		additional parameters for the url, (starting with &amp;)
 */
 function generate_image_link($content, $mode, $image_id, $image_name, $album_id, $is_gif = false, $count = true, $additional_parameters = '')
 {
