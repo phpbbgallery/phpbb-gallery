@@ -52,7 +52,7 @@ function gallery_hookup_image_counter($user_id, $num_images)
 		else
 		{
 			// Substract cash for deleting
-			substract_points($user_id, $num_images * GALLERY_DELETE_CASH);
+			substract_points($user_id, abs($num_images) * GALLERY_DELETE_CASH);
 		}
 	}
 	* </code>

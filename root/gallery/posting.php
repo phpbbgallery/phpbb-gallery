@@ -500,6 +500,7 @@ switch ($mode)
 								$image_data['image_exif_data'] = '';
 								$image_data['image_has_exif'] = EXIF_UNAVAILABLE;
 							}
+							$save_exif_in_db = false;
 
 							$src = false;
 							switch ($image_type)
@@ -550,6 +551,8 @@ switch ($mode)
 									}
 									imagedestroy($src);
 								}
+
+								$save_exif_in_db = true;
 							}
 
 							if (($image_file->width > $gallery_config['max_width']) || ($image_file->height > $gallery_config['max_height']))
@@ -601,8 +604,11 @@ switch ($mode)
 								}
 								$image_file->width = $thumbnail_width;
 								$image_file->height = $thumbnail_height;
+
+								$save_exif_in_db = true;
 							}
-							else if ($image_data['image_has_exif'] == EXIF_DBSAVED)
+
+							if (!$save_exif_in_db && ($image_data['image_has_exif'] == EXIF_DBSAVED))
 							{
 								// Image was not resized, so we can pull the Exif from the image to save db-memory.
 								$image_data['image_has_exif'] = EXIF_AVAILABLE;
@@ -795,24 +801,52 @@ switch ($mode)
 						$db->sql_query($sql);
 					}
 
-					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
-						SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-						WHERE image_id = ' . $image_id;
-					$db->sql_query($sql);
-
-					if ($move_to_personal && $personal_album_id)
-					{
-						update_album_info($album_data['album_id']);
-						update_album_info($personal_album_id);
-					}
-
 					$rotate = request_var('rotate', 0);
 					if ($gallery_config['allow_rotate_images'] && ($rotate > 0) && (($rotate % 90) == 0))
 					{
+						$image_src = $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename'];
+						if (($image_data['image_has_exif'] != EXIF_UNAVAILABLE) && ($image_data['image_has_exif'] != EXIF_DBSAVED))
+						{
+							/**
+							* Store exif-data to database if there are any and we didn't already do that.
+							*/
+							$exif = array();
+							if (function_exists('exif_read_data'))
+							{
+								$exif = @exif_read_data($image_src, 0, true);
+							}
+							if (!empty($exif["EXIF"]))
+							{
+								// Unset invalid exifs
+								foreach ($exif as $key => $array)
+								{
+									if (!in_array($key, array('EXIF', 'IFD0')))
+									{
+										unset($exif[$key]);
+									}
+									else
+									{
+										foreach ($exif[$key] as $subkey => $array)
+										{
+											if (!in_array($subkey, array('DateTimeOriginal', 'FocalLength', 'ExposureTime', 'FNumber', 'ISOSpeedRatings', 'WhiteBalance', 'Flash', 'Model', 'ExposureProgram', 'ExposureBiasValue', 'MeteringMode')))
+											{
+												unset($exif[$key][$subkey]);
+											}
+										}
+									}
+								}
+								$sql_ary['image_exif_data'] = serialize ($exif);
+								$sql_ary['image_has_exif'] = EXIF_DBSAVED;
+							}
+							else
+							{
+								$sql_ary['image_exif_data'] = '';
+								$sql_ary['image_has_exif'] = EXIF_UNAVAILABLE;
+							}
+						}
 						/**
 						* Rotate the image
 						*/
-						$image_src = $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename'];
 						// We do not resize the image, so we can put the resource back to the file
 						switch (substr($image_data['image_filename'], -3))
 						{
@@ -836,6 +870,17 @@ switch ($mode)
 
 						@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_filename']);
 						@unlink($phpbb_root_path . GALLERY_MEDIUM_PATH . $image_data['image_filename']);
+					}
+
+					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
+						SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+						WHERE image_id = ' . $image_id;
+					$db->sql_query($sql);
+
+					if ($move_to_personal && $personal_album_id)
+					{
+						update_album_info($album_data['album_id']);
+						update_album_info($personal_album_id);
 					}
 
 					if ($user->data['user_id'] != $image_data['image_user_id'])
