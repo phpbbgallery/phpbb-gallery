@@ -32,6 +32,8 @@ $template->assign_vars(array(
 	'U_G_SEARCH_RECENT'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=recent'),
 	'U_G_SEARCH_SELF'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=egosearch'),
 	'U_G_SEARCH_TOPRATED'			=> ($gallery_config['allow_rates']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=toprated') : '',
+
+	'GALLERY_TRANSLATION_INFO'		=> (!empty($user->lang['GALLERY_TRANSLATION_INFO'])) ? $user->lang['GALLERY_TRANSLATION_INFO'] : '',
 ));
 
 // Do not display Gallery-NavLink / activate Gallery-Tab on "recent-random-images"
