@@ -42,7 +42,8 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<date>2009-MM-DD</date>
 				<rev-version>1.0.3</rev-version>
 				<changelog lang="en">
-					<change><![CDATA[[Fix] Do not loose exif-data while rotating an image]]></change>
+					<change><![CDATA[[Fix] View album name of contest-winners (Bug #630)]]></change>
+					<change><![CDATA[[Fix] Do not loose exif-data while rotating an image (Bug #633)]]></change>
 
 					<change><![CDATA[[Change] One file for the image-block for easier styling]]></change>
 				</changelog>
