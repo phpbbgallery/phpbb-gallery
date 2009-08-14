@@ -48,10 +48,10 @@ http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
 		</installation>
 
 		<link-group>
+			<link type="contrib" lang="de" href="history.xml">Geschichte/Entwickler/Features</link>
+			<link type="contrib" lang="en" href="history.xml">History/Developers/Features</link>
 			<link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
 			<link type="parent" lang="en" href="../install.xml">Manual</link>
-			<link type="parent" lang="de" href="history.xml">Geschichte/Entwickler/Features</link>
-			<link type="parent" lang="en" href="history.xml">History/Developers/Features</link>
 		</link-group>
 	</header>
 

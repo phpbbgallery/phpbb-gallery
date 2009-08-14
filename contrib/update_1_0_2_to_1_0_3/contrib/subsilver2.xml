@@ -31,8 +31,8 @@
 		</installation>
 
 		<link-group>
-			<link type="parent" lang="de" href="../../history.xml">Geschichte/Entwickler/Features</link>
-			<link type="parent" lang="en" href="../../history.xml">History/Developers/Features</link>
+			<link type="contrib" lang="de" href="../../history.xml">Geschichte/Entwickler/Features</link>
+			<link type="contrib" lang="en" href="../../history.xml">History/Developers/Features</link>
 			<link type="parent" lang="de" href="../update.xml">Update Anleitung</link>
 			<link type="parent" lang="en" href="../update.xml">Update manual</link>
 		</link-group>

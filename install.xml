@@ -42,22 +42,22 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		</installation>
 
 		<link-group>
-			<link type="parent" lang="de" href="contrib/history.xml">Geschichte/Entwickler/Features</link>
-			<link type="parent" lang="en" href="contrib/history.xml">History/Developers/Features</link>
-			<link type="parent" lang="de" href="contrib/update_1_0_1_to_1_0_2/update.xml">Update von 1.0.1 auf 1.0.2</link>
-			<link type="parent" lang="en" href="contrib/update_1_0_1_to_1_0_2/update.xml">Update from 1.0.1 to 1.0.2</link>
+			<link type="contrib" lang="de" href="contrib/history.xml">Geschichte/Entwickler/Features</link>
+			<link type="contrib" lang="en" href="contrib/history.xml">History/Developers/Features</link>
+			<link type="contrib" lang="de" href="contrib/update_1_0_1_to_1_0_2/update.xml">Update von 1.0.1 auf 1.0.2</link>
+			<link type="contrib" lang="en" href="contrib/update_1_0_1_to_1_0_2/update.xml">Update from 1.0.1 to 1.0.2</link>
 			<link type="language" lang="de" href="contrib/de.xml">Anleitung für das deutsche Sprachpaket</link>
 			<link type="language" lang="en" href="contrib/de.xml">Manual for German Language-set</link>
 			<link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>
 			<link type="template" lang="en" href="contrib/subsilver2.xml">Manual for subsilver2 Style</link>
-			<link type="parent" lang="de" href="contrib/addons/rrc_on_index.xml">Neueste/Zufällige Bilder und Kommentare auf der index.php anzeigen</link>
-			<link type="parent" lang="en" href="contrib/addons/rrc_on_index.xml">View recent/random images and comments on index.php</link>
-			<link type="parent" lang="de" href="contrib/plugins/highslide.xml">Plugin Highslide JS</link>
-			<link type="parent" lang="en" href="contrib/plugins/highslide.xml">Plugin Highslide JS</link>
-			<link type="parent" lang="de" href="contrib/plugins/lytebox.xml">Plugin Lytebox</link>
-			<link type="parent" lang="en" href="contrib/plugins/lytebox.xml">Plugin Lytebox</link>
-			<link type="parent" lang="de" href="contrib/plugins/shadowbox.xml">Plugin Shadowbox</link>
-			<link type="parent" lang="en" href="contrib/plugins/shadowbox.xml">Plugin Shadowbox</link>
+			<link type="contrib" lang="de" href="contrib/addons/rrc_on_index.xml">Neueste/Zufällige Bilder und Kommentare auf der index.php anzeigen</link>
+			<link type="contrib" lang="en" href="contrib/addons/rrc_on_index.xml">View recent/random images and comments on index.php</link>
+			<link type="contrib" lang="de" href="contrib/plugins/highslide.xml">Plugin Highslide JS</link>
+			<link type="contrib" lang="en" href="contrib/plugins/highslide.xml">Plugin Highslide JS</link>
+			<link type="contrib" lang="de" href="contrib/plugins/lytebox.xml">Plugin Lytebox</link>
+			<link type="contrib" lang="en" href="contrib/plugins/lytebox.xml">Plugin Lytebox</link>
+			<link type="contrib" lang="de" href="contrib/plugins/shadowbox.xml">Plugin Shadowbox</link>
+			<link type="contrib" lang="en" href="contrib/plugins/shadowbox.xml">Plugin Shadowbox</link>
 		</link-group>
 	</header>
 

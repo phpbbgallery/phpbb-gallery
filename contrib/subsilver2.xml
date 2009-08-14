@@ -44,8 +44,8 @@ http://www.phpbb.com/community/viewtopic.php?t=830965]]></author-notes>
 		</installation>
 
 		<link-group>
-			<link type="parent" lang="de" href="history.xml">Geschichte/Entwickler/Features</link>
-			<link type="parent" lang="en" href="history.xml">History/Developers/Features</link>
+			<link type="contrib" lang="de" href="history.xml">Geschichte/Entwickler/Features</link>
+			<link type="contrib" lang="en" href="history.xml">History/Developers/Features</link>
 			<link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
 			<link type="parent" lang="en" href="../install.xml">Install</link>
 			<link type="language" lang="de" href="de_subsilver2.xml">Anleitung für das deutsche Sprachpaket für subsilver2</link>
