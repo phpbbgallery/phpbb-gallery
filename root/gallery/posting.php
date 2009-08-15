@@ -19,7 +19,6 @@ include($phpbb_root_path . $gallery_root_path . 'includes/root_path.' . $phpEx);
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
-include($phpbb_root_path . 'includes/functions_upload.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
@@ -391,6 +390,11 @@ switch ($mode)
 					{
 						$allowed_extensions[] = 'png';
 					}
+
+					if (!class_exists('fileupload'))
+					{
+						include($phpbb_root_path . 'includes/functions_upload.' . $phpEx);
+					}
 					$fileupload = new fileupload();
 					$fileupload->fileupload('', $allowed_extensions, (4 * $gallery_config['max_file_size']));
 
@@ -464,151 +468,58 @@ switch ($mode)
 								}
 							}
 
-							/**
-							* Store exif-data to database
-							*/
-							$exif = array();
-							if (function_exists('exif_read_data'))
+							if (!class_exists('nv_image_tools'))
 							{
-								$exif = @exif_read_data($image_file->destination_file, 0, true);
+								include($phpbb_root_path . $gallery_root_path . 'includes/functions_image.' . $phpEx);
 							}
-							if (!empty($exif["EXIF"]))
+
+							$image_tools = new nv_image_tools();
+							$image_tools->set_image_options($gallery_config['max_file_size'], $gallery_config['max_height'], $gallery_config['max_width']);
+							$image_tools->set_image_data($image_file->destination_file, $image_data['image_name'], $image_file->filesize);
+
+							// Read exif data from file
+							$image_tools->read_exif_data();
+							$image_data['image_exif_data'] = $image_tools->exif_data_serialized;
+							$image_data['image_has_exif'] = $image_tools->exif_data_exist;
+
+							/// Rotate the image
+							if ($gallery_config['allow_rotate_images'])
 							{
-								// Unset invalid exifs
-								foreach ($exif as $key => $array)
+								$image_tools->rotate_image($rotate[$i], $gallery_config['allow_resize_images']);
+								if ($image_tools->rotated)
 								{
-									if (!in_array($key, array('EXIF', 'IFD0')))
-									{
-										unset($exif[$key]);
-									}
-									else
-									{
-										foreach ($exif[$key] as $subkey => $array)
-										{
-											if (!in_array($subkey, array('DateTimeOriginal', 'FocalLength', 'ExposureTime', 'FNumber', 'ISOSpeedRatings', 'WhiteBalance', 'Flash', 'Model', 'ExposureProgram', 'ExposureBiasValue', 'MeteringMode')))
-											{
-												unset($exif[$key][$subkey]);
-											}
-										}
-									}
+									$image_file->height = $image_tools->image_size['height'];
+									$image_file->width = $image_tools->image_size['width'];
 								}
-								$image_data['image_exif_data'] = serialize ($exif);
-								$image_data['image_has_exif'] = EXIF_DBSAVED;
-							}
-							else
-							{
-								$image_data['image_exif_data'] = '';
-								$image_data['image_has_exif'] = EXIF_UNAVAILABLE;
-							}
-							$save_exif_in_db = false;
-
-							$src = false;
-							switch ($image_type)
-							{
-								case 'jpg':
-									$read_function = 'imagecreatefromjpeg';
-								break;
-								case 'png':
-									$read_function = 'imagecreatefrompng';
-								break;
-								case 'gif':
-									$read_function = 'imagecreatefromgif';
-								break;
 							}
 
-							if ($gallery_config['allow_rotate_images'] && ($rotate[$i] > 0) && (($rotate[$i] % 90) == 0))
-							{
-								/**
-								* Rotate the image
-								*/
-								if (!$src)
-								{
-									$src = $read_function($image_file->destination_file);
-								}
-								$src = imagerotate($src, $rotate[$i], 0);
-								if ((($rotate[$i] / 90) % 2) == 1)
-								{
-									// Left or Right, we need to switch the height and width
-									$new_width = $image_file->height;
-									$image_file->height = $image_file->width;
-									$image_file->width = $new_width;
-								}
-
-								if (!(($image_file->width > $gallery_config['max_width']) || ($image_file->height > $gallery_config['max_height'])))
-								{
-									// We do not resize the image, so we can put the resource back to the file
-									switch ($image_type)
-									{
-										case 'jpg':
-											@imagejpeg($src, $image_file->destination_file, 100);
-										break;
-										case 'png':
-											@imagepng($src, $image_file->destination_file);
-										break;
-										case 'gif':
-											@imagegif($src, $image_file->destination_file);
-										break;
-									}
-									imagedestroy($src);
-								}
-
-								$save_exif_in_db = true;
-							}
-
+							// Resize overside images
 							if (($image_file->width > $gallery_config['max_width']) || ($image_file->height > $gallery_config['max_height']))
 							{
-								/**
-								* Resize overside images
-								*/
 								if ($gallery_config['allow_resize_images'])
 								{
-									if (!$src)
+									$image_tools->resize_image($gallery_config['max_width'], $gallery_config['max_height']);
+									if ($image_tools->resized)
 									{
-										$src = $read_function($image_file->destination_file);
+										$image_file->height = $image_tools->image_size['height'];
+										$image_file->width = $image_tools->image_size['width'];
 									}
-									// Resize it
-									if (($image_file->width / $gallery_config['max_width']) > ($image_file->height / $gallery_config['max_height']))
-									{
-										$thumbnail_width	= $gallery_config['max_width'];
-										$thumbnail_height	= round($gallery_config['max_height'] * (($image_file->height / $gallery_config['max_height']) / ($image_file->width / $gallery_config['max_width'])));
-									}
-									else
-									{
-										$thumbnail_height	= $gallery_config['max_height'];
-										$thumbnail_width	= round($gallery_config['max_width'] * (($image_file->width / $gallery_config['max_width']) / ($image_file->height / $gallery_config['max_height'])));
-									}
-									$thumbnail = ($gallery_config['gd_version'] == GDLIB1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
-									$resize_function = ($gallery_config['gd_version'] == GDLIB1) ? 'imagecopyresized' : 'imagecopyresampled';
-									$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $image_file->width, $image_file->height);
-									imagedestroy($src);
-									switch ($image_type)
-									{
-										case 'jpg':
-											@imagejpeg($thumbnail, $image_file->destination_file, 100);
-										break;
-
-										case 'png':
-											@imagepng($thumbnail, $image_file->destination_file);
-										break;
-
-										case 'gif':
-											@imagegif($thumbnail, $image_file->destination_file);
-										break;
-									}
-									imagedestroy($thumbnail);
 								}
 								else
 								{
 									@unlink($image_file->destination_file);
 									trigger_error('UPLOAD_IMAGE_SIZE_TOO_BIG');
 								}
-								$image_file->width = $thumbnail_width;
-								$image_file->height = $thumbnail_height;
-
-								$save_exif_in_db = true;
 							}
 
-							if (!$save_exif_in_db && ($image_data['image_has_exif'] == EXIF_DBSAVED))
+							if ($image_tools->resized || $image_tools->rotated)
+							{
+								//$image_tools->write_image($image_file->destination_file, $gallery_config['jpg_quality'], true);
+								$image_tools->write_image($image_file->destination_file, 100, true);
+								$image_file->filesize = $image_tools->image_size['file'];
+							}
+
+							if (!$image_tools->exif_data_force_db && ($image_data['image_has_exif'] == EXIF_DBSAVED))
 							{
 								// Image was not resized, so we can pull the Exif from the image to save db-memory.
 								$image_data['image_has_exif'] = EXIF_AVAILABLE;
@@ -669,8 +580,8 @@ switch ($mode)
 					'S_MAX_HEIGHT'				=> $gallery_config['max_height'],
 
 					'S_ALLOWED_FILETYPES'	=> implode(', ', $allowed_filetypes),
-					'S_THUMBNAIL_SIZE'		=> $gallery_config['thumbnail_size'],
-					'S_THUMBNAIL'			=> ($gallery_config['gd_version']) ? true : false,
+					'S_THUMBNAIL_SIZE'		=> $gallery_config['thumbnail_size'],//@todo
+					'S_THUMBNAIL'			=> ($gallery_config['gd_version']) ? true : false,//@todo
 					'S_MULTI_IMAGES'		=> ($gallery_config['upload_images'] > 1) ? true : false,
 					'S_ALBUM_ACTION'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=upload&amp;album_id=$album_id"),
 
@@ -804,69 +715,29 @@ switch ($mode)
 					$rotate = request_var('rotate', 0);
 					if ($gallery_config['allow_rotate_images'] && ($rotate > 0) && (($rotate % 90) == 0))
 					{
-						$image_src = $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename'];
+						if (!class_exists('nv_image_tools'))
+						{
+							include($phpbb_root_path . $gallery_root_path . 'includes/functions_image.' . $phpEx);
+						}
+
+						$image_tools = new nv_image_tools();
+
+						$image_tools->set_image_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
 						if (($image_data['image_has_exif'] != EXIF_UNAVAILABLE) && ($image_data['image_has_exif'] != EXIF_DBSAVED))
 						{
-							/**
-							* Store exif-data to database if there are any and we didn't already do that.
-							*/
-							$exif = array();
-							if (function_exists('exif_read_data'))
-							{
-								$exif = @exif_read_data($image_src, 0, true);
-							}
-							if (!empty($exif["EXIF"]))
-							{
-								// Unset invalid exifs
-								foreach ($exif as $key => $array)
-								{
-									if (!in_array($key, array('EXIF', 'IFD0')))
-									{
-										unset($exif[$key]);
-									}
-									else
-									{
-										foreach ($exif[$key] as $subkey => $array)
-										{
-											if (!in_array($subkey, array('DateTimeOriginal', 'FocalLength', 'ExposureTime', 'FNumber', 'ISOSpeedRatings', 'WhiteBalance', 'Flash', 'Model', 'ExposureProgram', 'ExposureBiasValue', 'MeteringMode')))
-											{
-												unset($exif[$key][$subkey]);
-											}
-										}
-									}
-								}
-								$sql_ary['image_exif_data'] = serialize ($exif);
-								$sql_ary['image_has_exif'] = EXIF_DBSAVED;
-							}
-							else
-							{
-								$sql_ary['image_exif_data'] = '';
-								$sql_ary['image_has_exif'] = EXIF_UNAVAILABLE;
-							}
+							// Store exif-data to database if there are any and we didn't already do that.
+							$image_tools->read_exif_data();
+							$sql_ary['image_exif_data'] = $image_tools->exif_data_serialized;
+							$sql_ary['image_has_exif'] = $image_tools->exif_data_exist;
 						}
-						/**
-						* Rotate the image
-						*/
-						// We do not resize the image, so we can put the resource back to the file
-						switch (substr($image_data['image_filename'], -3))
+
+						// Rotate the image
+						$image_tools->rotate_image($rotate, $gallery_config['allow_resize_images']);
+						if ($image_tools->rotated)
 						{
-							case 'jpg':
-								$src = imagecreatefromjpeg($image_src);
-								$src = imagerotate($src, $rotate, 0);
-								@imagejpeg($src, $image_src, 100);
-							break;
-							case 'png':
-								$src = imagecreatefrompng($image_src);
-								$src = imagerotate($src, $rotate, 0);
-								@imagepng($src, $image_src);
-							break;
-							case 'gif':
-								$src = imagecreatefromgif($image_src);
-								$src = imagerotate($src, $rotate, 0);
-								@imagegif($src, $image_src);
-							break;
+							//$image_tools->write_image($image_file->destination_file, $gallery_config['jpg_quality'], true);
+							$image_tools->write_image($image_tools->image_source, 100, true);
 						}
-						imagedestroy($src);
 
 						@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_filename']);
 						@unlink($phpbb_root_path . GALLERY_MEDIUM_PATH . $image_data['image_filename']);

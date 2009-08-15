@@ -418,10 +418,8 @@ class acp_gallery
 				if (file_exists($image_src_full))
 				{
 					$filetype = getimagesize($image_src_full);
-					$image_width = $filetype[0];
-					$image_height = $filetype[1];
-
 					$filetype_ext = '';
+
 					switch ($filetype['mime'])
 					{
 						case 'image/jpeg':
@@ -490,86 +488,43 @@ class acp_gallery
 						'image_exif_data'		=> '',
 					);
 
-					$exif = array();
-					if (function_exists('exif_read_data'))
+					if (!class_exists('nv_image_tools'))
 					{
-						$exif = @exif_read_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename, 0, true);
-					}
-					if (!empty($exif["EXIF"]))
-					{
-						// Unset invalid exifs
-						foreach ($exif as $key => $array)
-						{
-							if (!in_array($key, array('EXIF', 'IFD0')))
-							{
-								unset($exif[$key]);
-							}
-							else
-							{
-								foreach ($exif[$key] as $subkey => $array)
-								{
-									if (!in_array($subkey, array('DateTimeOriginal', 'FocalLength', 'ExposureTime', 'FNumber', 'ISOSpeedRatings', 'WhiteBalance', 'Flash', 'Model', 'ExposureProgram', 'ExposureBiasValue', 'MeteringMode')))
-									{
-										unset($exif[$key][$subkey]);
-									}
-								}
-							}
-						}
-						$sql_ary['image_exif_data'] = serialize ($exif);
-						$sql_ary['image_has_exif'] = EXIF_DBSAVED;
-					}
-					else
-					{
-						$sql_ary['image_exif_data'] = '';
-						$sql_ary['image_has_exif'] = EXIF_UNAVAILABLE;
+						include($phpbb_root_path . $gallery_root_path . 'includes/functions_image.' . $phpEx);
 					}
 
-					if (($image_width > $gallery_config['max_width']) || ($image_height > $gallery_config['max_height']))
+					$image_tools = new nv_image_tools();
+					$image_tools->set_image_options($gallery_config['max_file_size'], $gallery_config['max_height'], $gallery_config['max_width']);
+					$image_tools->set_image_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
+
+					// Read exif data from file
+					$image_tools->read_exif_data();
+					$sql_ary['image_exif_data'] = $image_tools->exif_data_serialized;
+					$sql_ary['image_has_exif'] = $image_tools->exif_data_exist;
+
+					if (($filetype[0] > $gallery_config['max_width']) || ($filetype[1] > $gallery_config['max_height']))
 					{
 						/**
 						* Resize overside images
 						*/
-						if ($gallery_config['resize_images'])
+						if ($gallery_config['allow_resize_images'])
 						{
-							$src = $read_function($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
-							// Resize it
-							if (($image_width / $gallery_config['max_width']) > ($image_height / $gallery_config['max_height']))
+							$image_tools->resize_image($gallery_config['max_width'], $gallery_config['max_height']);
+							if ($image_tools->resized)
 							{
-								$thumbnail_width	= $gallery_config['max_width'];
-								$thumbnail_height	= round($gallery_config['max_height'] * (($image_height / $gallery_config['max_height']) / ($image_width / $gallery_config['max_width'])));
+								//$image_tools->write_image($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename, $gallery_config['jpg_quality'], true);
+								$image_tools->write_image($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename, 100, true);
 							}
-							else
-							{
-								$thumbnail_height	= $gallery_config['max_height'];
-								$thumbnail_width	= round($gallery_config['max_width'] * (($image_width / $gallery_config['max_width']) / ($image_height / $gallery_config['max_height'])));
-							}
-							$thumbnail = ($gallery_config['gd_version'] == GDLIB1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
-							$resize_function = ($gallery_config['gd_version'] == GDLIB1) ? 'imagecopyresized' : 'imagecopyresampled';
-							$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $image_width, $image_height);
-							imagedestroy($src);
-							switch ($filetype_ext)
-							{
-								case '.jpg':
-									@imagejpeg($thumbnail, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename, 100);
-								break;
-
-								case '.png':
-									@imagepng($thumbnail, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
-								break;
-
-								case '.gif':
-									@imagegif($thumbnail, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
-								break;
-							}
-							imagedestroy($thumbnail);
 						}
 					}
-					else if ($sql_ary['image_has_exif'] == EXIF_DBSAVED)
+
+					if (!$image_tools->exif_data_force_db && ($sql_ary['image_has_exif'] == EXIF_DBSAVED))
 					{
 						// Image was not resized, so we can pull the Exif from the image to save db-memory.
 						$sql_ary['image_has_exif'] = EXIF_AVAILABLE;
 						$sql_ary['image_exif_data'] = '';
 					}
+
 					// Try to get real filesize from temporary folder (not always working) ;)
 					$sql_ary['filesize_upload'] = (@filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename)) ? @filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename) : 0;
 
@@ -714,7 +669,7 @@ class acp_gallery
 			((substr(strtolower($file), -5) == '.jpeg') && $gallery_config['jpg_allowed'])
 			))
 			{
-				$files[strtolower($file)] = $file;
+				$files[utf8_strtolower($file)] = $file;
 			}
 		}
 		closedir($handle);

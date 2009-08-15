@@ -104,16 +104,17 @@ $mode = request_var('mode', '');
 switch ($mode)
 {
 	case 'medium':
-		$image_source = $phpbb_root_path . GALLERY_MEDIUM_PATH  . $image_data['image_filename'];
+		$filesize_var = 'filesize_medium';
 		$image_source_path = $phpbb_root_path . GALLERY_MEDIUM_PATH;
 		$possible_watermark = true;
 	break;
 	case 'thumbnail':
-		$image_source = $phpbb_root_path . GALLERY_CACHE_PATH  . $image_data['image_filename'];
+		$filesize_var = 'filesize_cache';
 		$image_source_path = $phpbb_root_path . GALLERY_CACHE_PATH;
 		$possible_watermark = false;
 	break;
 	default:
+		$filesize_var = 'filesize_upload';
 		if (!function_exists('gallery_hookup_image_view'))
 		{
 			include($phpbb_root_path . $gallery_root_path . 'includes/hookup_gallery.' . $phpEx);
@@ -125,7 +126,6 @@ switch ($mode)
 			$image_error = 'not_authorised.jpg';
 		}
 
-		$image_source = $phpbb_root_path . GALLERY_UPLOAD_PATH  . $image_data['image_filename'];
 		$image_source_path = $phpbb_root_path . GALLERY_UPLOAD_PATH;
 		$possible_watermark = true;
 
@@ -140,6 +140,7 @@ switch ($mode)
 		}
 	break;
 }
+$image_source = $image_source_path  . $image_data['image_filename'];
 
 // There was a reason to not display the image, so we send an error-image
 if ($image_error)
@@ -153,134 +154,60 @@ if ($image_error)
 	$possible_watermark = false;
 }
 
-/**
-* Generate the sourcefile, if it's missing
-*/
+if (!class_exists('nv_image_tools'))
+{
+	include($phpbb_root_path . $gallery_root_path . 'includes/functions_image.' . $phpEx);
+}
+$image_tools = new nv_image_tools($gallery_config['gd_version']);
+$image_tools->set_image_options($gallery_config['max_file_size'], $gallery_config['max_height'], $gallery_config['max_width']);
+$image_tools->set_image_data($image_source, $image_data['image_name']);
+
+// Generate the sourcefile, if it's missing
 if (($mode == 'medium') || ($mode == 'thumbnail'))
 {
+	$filesize_var = '';
 	if ($mode == 'thumbnail')
 	{
 		$resize_width = $gallery_config['thumbnail_size'];
 		$resize_height = $gallery_config['thumbnail_size'];
-		$thumbnail = true;
 	}
 	else
 	{
 		$resize_width = $gallery_config['preview_rsz_width'];
 		$resize_height = $gallery_config['preview_rsz_height'];
-		$thumbnail = false;
 	}
+
 	if (!file_exists($image_source))
 	{
-		// Regenerate and write to images/$mode/
-		switch (utf8_substr($image_source, utf8_strlen($image_source) - 4, 4))
+		$image_tools->set_image_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
+		$image_tools->read_image(true);
+
+		$image_size['file'] = $image_tools->image_size['file'];
+		$image_size['width'] = $image_tools->image_size['width'];
+		$image_size['height'] = $image_tools->image_size['height'];
+
+		$image_tools->set_image_data($image_source);
+
+		if (($image_size['width'] > $resize_width) || ($image_size['height'] > $resize_height))
 		{
-			case '.png':
-				$create_function = 'imagecreatefrompng';
-			break;
-			case '.gif':
-				$create_function = 'imagecreatefromgif';
-			break;
-			default:
-				$create_function = 'imagecreatefromjpeg';
-			break;
-		}
-		$image_file = $create_function($phpbb_root_path . GALLERY_UPLOAD_PATH  . $image_data['image_filename']);
-
-		// Make them transparent again
-		imagealphablending($image_file, true);
-		imagesavealpha($image_file, true);
-
-		$image_size = getimagesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
-		$image_width = $image_size[0];
-		$image_height = $image_size[1];
-		$thumb_file = $image_file;
-
-		if (($image_width > $resize_width) || ($image_height > $resize_height))
-		{
-			// Resize it
-			if (($image_width / $resize_width) > ($image_height / $resize_height))
-			{
-				$thumbnail_height =$resize_height * (($image_height / $resize_height) / ($image_width / $resize_width));
-				$thumbnail_width = $resize_width;
-			}
-			else
-			{
-				$thumbnail_height = $resize_height;
-				$thumbnail_width = $resize_width * (($image_width / $resize_width) / ($image_height / $resize_height));
-			}
-
-			// Create thumbnail + constant (THUMBNAIL_INFO_HEIGHT) Pixel extra for imagesize text 
-			// Create image details credits to Dr.Death
-			if ($gallery_config['thumbnail_info_line'] && $thumbnail)
-			{
-				$thumb_file = ($gallery_config['gd_version'] == GDLIB1) ? @imagecreate($thumbnail_width, $thumbnail_height + THUMBNAIL_INFO_HEIGHT) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height + THUMBNAIL_INFO_HEIGHT); 
-			}
-			else
-			{
-				$thumb_file = ($gallery_config['gd_version'] == GDLIB1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
-			}
-			$resize_function = ($gallery_config['gd_version'] == GDLIB1) ? 'imagecopyresized' : 'imagecopyresampled';
-			@$resize_function($thumb_file, $image_file, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $image_width, $image_height);
-
-			if ($gallery_config['thumbnail_info_line'] && $thumbnail)
-			{
-				$dimension_font = 1;
-				$dimension_filesize = filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
-				$dimension_string = $image_width . "x" . $image_height . "(" . intval($dimension_filesize / 1024) . "KiB)";
-				$dimension_colour = ImageColorAllocate($thumb_file, 255, 255, 255);
-				$dimension_height = imagefontheight($dimension_font);
-				$dimension_width = imagefontwidth($dimension_font) * strlen($dimension_string);
-				$dimension_x = ($thumbnail_width - $dimension_width) / 2;
-				$dimension_y = $thumbnail_height + ((THUMBNAIL_INFO_HEIGHT - $dimension_height) / 2);
-				imagestring($thumb_file, 1, $dimension_x, $dimension_y, $dimension_string, $dimension_colour);
-			}
+			$put_details = ($gallery_config['thumbnail_info_line'] && ($mode == 'thumbnail')) ? true : false;
+			$image_tools->create_thumbnail($resize_width, $resize_height, $put_details, THUMBNAIL_INFO_HEIGHT, $image_size);
 		}
 
-		$save_file = (($mode == 'thumbnail') && $gallery_config['thumbnail_cache']) ? true : (($mode == 'medium') && $gallery_config['medium_cache']) ? true : false;
-		$wirte_source = '';
-		if ($save_file)
+		if ((($mode == 'thumbnail') && $gallery_config['thumbnail_cache']) || (($mode == 'medium') && $gallery_config['medium_cache']))
 		{
-			$wirte_source = $phpbb_root_path . (($mode == 'thumbnail') ? GALLERY_CACHE_PATH : GALLERY_MEDIUM_PATH) . $image_data['image_filename'];
-		}
-		switch ($image_filetype)
-		{
-			case '.gif':
-				if (!$save_file)
-				{
-					header('Content-type: image/gif');
-				}
-				@imagegif($thumb_file, $wirte_source);
-			break;
-			case '.png':
-				if (!$save_file)
-				{
-					header('Content-type: image/png');
-				}
-				@imagepng($thumb_file, $wirte_source);
-			break;
-			default:
-				if (!$save_file)
-				{
-					header('Content-type: image/jpeg');
-				}
-				@imagejpeg($thumb_file, $wirte_source, (($thumbnail) ? $gallery_config['thumbnail_quality'] : 100));
-			break;
-		}
-		@chmod($image_source, 0777);
-		if (!$save_file)
-		{
-			exit;
-		}
-		else
-		{
+			//$image_tools->write_image($image_source, (($mode == 'thumbnail') ? $gallery_config['thumbnail_quality'] : $gallery_config['jpg_quality']), false);
+			$image_tools->write_image($image_source, (($mode == 'thumbnail') ? $gallery_config['thumbnail_quality'] : 100), false);
+
 			if ($mode == 'thumbnail')
 			{
-				$sql_ary = array('filesize_cache' => @filesize($wirte_source));
+				$image_data['filesize_cache'] = @filesize($image_source);
+				$sql_ary = array('filesize_cache' => $image_data['filesize_cache']);
 			}
 			else
 			{
-				$sql_ary = array('filesize_medium' => @filesize($wirte_source));
+				$image_data['filesize_medium'] = @filesize($image_source);
+				$sql_ary = array('filesize_medium' => $image_data['filesize_medium']);
 			}
 			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 				WHERE ' . $db->sql_in_set('image_id', $image_id);
@@ -289,137 +216,13 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 	}
 }
 
-/**
-* Watermark
-*/
-$file_size = getimagesize($image_source);
-if (!gallery_acl_check('i_watermark', $album_id) && $possible_watermark && $gallery_config['watermark_images'] &&
-	file_exists($phpbb_root_path . $gallery_config['watermark_source']) &&
-	($gallery_config['watermark_height'] < $file_size[0]) && ($gallery_config['watermark_width'] < $file_size[1]))
+// Watermark
+if (!gallery_acl_check('i_watermark', $album_id) && $possible_watermark)
 {
-	$watermark_source = $phpbb_root_path . $gallery_config['watermark_source'];
-	switch (substr($watermark_source, (strlen($watermark_source) - 4), 4))
-	{
-		case '.png':
-			$watermark_file = imagecreatefrompng($watermark_source);
-		break;
-		case '.gif':
-			$watermark_file = imagecreatefromgif($watermark_source);
-		break;
-		default:
-			$watermark_file = imagecreatefromjpeg($watermark_source);
-		break;
-	}
-
-	$watermark_x = imagesx($watermark_file);
-	$watermark_y = imagesy($watermark_file);
-
-	switch (utf8_substr($image_source, utf8_strlen($image_source) - 4, 4))
-	{
-		case '.png':
-			$image_file = imagecreatefrompng($image_source);
-		break;
-		case '.gif':
-			$image_file = imagecreatefromgif($image_source);
-		break;
-		default:
-			$image_file = imagecreatefromjpeg($image_source);
-		break;
-	}
-
-	$image_x = imagesx($image_file);
-	$image_y = imagesy($image_file);
-
-	// Where to display the watermark? up-left, down-right, ...?
-	$dst_x = (($image_x * 0.5) - ($watermark_x * 0.5));
-	$dst_y = ($image_y - $watermark_y - 5);
-	if ($gallery_config['watermark_position'] & WATERMARK_LEFT)
-	{
-		$dst_x = 5;
-	}
-	elseif ($gallery_config['watermark_position'] & WATERMARK_RIGHT)
-	{
-		$dst_x = ($image_x - $watermark_x - 5);
-	}
-	if ($gallery_config['watermark_position'] & WATERMARK_TOP)
-	{
-		$dst_y = 5;
-	}
-	elseif ($gallery_config['watermark_position'] & WATERMARK_MIDDLE)
-	{
-		$dst_y = (($image_y * 0.5) - ($watermark_y * 0.5));
-	}
-
-	imagecopy($image_file, $watermark_file, $dst_x, $dst_y, 0, 0, $watermark_x, $watermark_y);
-
-	switch ($image_filetype)
-	{
-		case '.png':
-		case '.gif':
-			header('Content-type: image/png');
-			imagepng($image_file);
-		break;
-
-		default:
-			header('Content-type: image/jpeg');
-			imagejpeg($image_file);
-		break;
-	}
+	$filesize_var = '';
+	$image_tools->watermark_image($phpbb_root_path . $gallery_config['watermark_source'], $gallery_config['watermark_position'], $gallery_config['watermark_height'], $gallery_config['watermark_width']);
 }
-else
-{
-	/**
-	* Get a browser friendly UTF-8 encoded filename
-	*
-	* borrowed from phpBB3
-	* @author: phpBB Group
-	* @function: header_filename
-	*/
-	function header_filename($file)
-	{
-		$user_agent = (!empty($_SERVER['HTTP_USER_AGENT'])) ? htmlspecialchars((string) $_SERVER['HTTP_USER_AGENT']) : '';
 
-		// There be dragons here.
-		// Not many follows the RFC...
-		if (strpos($user_agent, 'MSIE') !== false || strpos($user_agent, 'Safari') !== false || strpos($user_agent, 'Konqueror') !== false)
-		{
-			return "filename=" . rawurlencode($file);
-		}
-
-		// follow the RFC for extended filename for the rest
-		return "filename*=UTF-8''" . rawurlencode($file);
-	}
-	header('Content-Disposition: inline; ' . header_filename(htmlspecialchars_decode($image_data['image_name'])));
-
-	$image_filetype = strtolower($image_filetype);
-	switch ($image_filetype)
-	{
-		case '.png':
-			header('Content-type: image/png');
-		break;
-
-		case '.gif':
-			header('Content-type: image/gif');
-		break;
-
-		default:
-			header('Content-type: image/jpeg');
-		break;
-	}
-
-	if (@readfile($image_source) == false)
-	{
-		$fp = @fopen($image_source, 'rb');
-			if ($fp !== false)
-			{
-				while (!feof($fp))
-				{
-					echo fread($fp, 8192);
-				}
-				fclose($fp);
-			}
-	}
-	flush();
-}
+$image_tools->send_image_to_browser((isset($image_data[$filesize_var])) ? $image_data[$filesize_var] : 0);
 
 ?>

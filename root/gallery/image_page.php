@@ -194,7 +194,7 @@ $template->assign_vars(array(
 /**
 * Exif-Data
 */
-if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVAILABLE) && (substr($image_data['image_filename'], -3, 3) == 'jpg') && function_exists('exif_read_data') && (gallery_acl_check('m_status', $album_id) || ($image_data['image_contest'] != IMAGE_CONTEST)))
+if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVAILABLE) && (substr($image_data['image_filename'], -4) == '.jpg') && function_exists('exif_read_data') && (gallery_acl_check('m_status', $album_id) || ($image_data['image_contest'] != IMAGE_CONTEST)))
 {
 	if ($image_data['image_has_exif'] == EXIF_DBSAVED)
 	{
@@ -202,13 +202,20 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 	}
 	else
 	{
-		$exif = @exif_read_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename'], 0, true);
+		if (!class_exists('nv_image_tools'))
+		{
+			include($phpbb_root_path . $gallery_root_path . 'includes/functions_image.' . $phpEx);
+		}
+		$image_tools = new nv_image_tools();
+		$image_tools->set_image_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
+		$image_tools->read_exif_data();
+		$exif = $image_tools->exif_data;
 	}
 	if (!empty($exif["EXIF"]))
 	{
 		$exif_data = array();
 
-		if(isset($exif["EXIF"]["DateTimeOriginal"]))
+		if (isset($exif["EXIF"]["DateTimeOriginal"]))
 		{
 			$timestamp_year = substr($exif["EXIF"]["DateTimeOriginal"], 0, 4);
 			$timestamp_month = substr($exif["EXIF"]["DateTimeOriginal"], 5, 2);
@@ -222,7 +229,7 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 				$exif_data['exif_date'] = $user->format_date($timestamp + EXIFTIME_OFFSET);
 			}
 		}
-		if(isset($exif["EXIF"]["FocalLength"]))
+		if (isset($exif["EXIF"]["FocalLength"]))
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["FocalLength"]);
 			if ($den)
@@ -230,7 +237,7 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 				$exif_data['exif_focal'] = sprintf($user->lang['EXIF_FOCAL_EXP'], ($num / $den));
 			}
 		}
-		if(isset($exif["EXIF"]["ExposureTime"]))
+		if (isset($exif["EXIF"]["ExposureTime"]))
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["ExposureTime"]);
 			$exif_exposure = '';
@@ -247,7 +254,7 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 				$exif_data['exif_exposure'] = sprintf($user->lang['EXIF_EXPOSURE_EXP'], $exif_exposure);
 			}
 		}
-		if(isset($exif["EXIF"]["FNumber"]))
+		if (isset($exif["EXIF"]["FNumber"]))
 		{
 			list($num,$den) = explode("/",$exif["EXIF"]["FNumber"]);
 			if ($den)
@@ -255,7 +262,7 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 				$exif_data['exif_aperture'] = "F/" . ($num / $den);
 			}
 		}
-		if(isset($exif["EXIF"]["ISOSpeedRatings"]) && !is_array($exif["EXIF"]["ISOSpeedRatings"]))
+		if (isset($exif["EXIF"]["ISOSpeedRatings"]) && !is_array($exif["EXIF"]["ISOSpeedRatings"]))
 		{
 			$exif_data['exif_iso'] = $exif["EXIF"]["ISOSpeedRatings"];
 		}
@@ -263,7 +270,7 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 		{
 			$exif_data['exif_whiteb'] = $user->lang['EXIF_WHITEB_' . (($exif["EXIF"]["WhiteBalance"]) ? 'MANU' : 'AUTO')];
 		}
-		if(isset($exif["EXIF"]["Flash"]))
+		if (isset($exif["EXIF"]["Flash"]))
 		{
 			if (isset($user->lang['EXIF_FLASH_CASE_' . $exif["EXIF"]["Flash"]]))
 			{
@@ -305,7 +312,7 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 			}
 		}
 
-		if ($exif_data != '')
+		if (sizeof($exif_data))
 		{
 			foreach ($exif_data as $exif => $value)
 			{
@@ -317,14 +324,14 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 			$template->assign_vars(array(
 				'S_EXIF_DATA'	=> true,
 			));
-		}
 
-		if ($image_data['image_has_exif'] == EXIF_UNKNOWN)
-		{
-			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-				SET image_has_exif = ' . EXIF_AVAILABLE . '
-				WHERE image_id = ' . $image_id;
-			$db->sql_query($sql);
+			if ($image_data['image_has_exif'] == EXIF_UNKNOWN)
+			{
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+					SET image_has_exif = ' . EXIF_AVAILABLE . '
+					WHERE image_id = ' . $image_id;
+				$db->sql_query($sql);
+			}
 		}
 	}
 	else
