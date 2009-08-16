@@ -418,11 +418,17 @@ class install_convert_ts extends module
 				$batch_ary = array();
 				$current_batch = 1;
 				$current_batch_size = 1;
-				$sql = 'SELECT c.*, u.user_colour
-					FROM ' . $table_prefix . 'gallery_comment c
-					LEFT JOIN ' . USERS_TABLE . ' u
-						ON c.comment_user_id = u.user_id
-					ORDER BY c.comment_id';
+				$sql = $db->sql_build_query('SELECT', array(
+					'SELECT'	=> 'c.*, u.user_colour',
+					'FROM'		=> array($table_prefix . 'gallery_comment' => 'c'),
+					'LEFT_JOIN'	=> array(
+						array(
+							'FROM'	=> array(USERS_TABLE => 'u'),
+							'ON'	=> 'c.comment_user_id = u.user_id',
+						),
+					),
+					'ORDER_BY'	=> 'c.comment_id ASC',
+				));
 				$result = $db->sql_query($sql);
 
 				while ($row = $db->sql_fetchrow($result))
@@ -537,13 +543,18 @@ class install_convert_ts extends module
 				}
 
 				// Update the config for the statistic on the index
-				$sql = 'SELECT a.album_id, u.user_id, u.username, u.user_colour
-					FROM ' . GALLERY_ALBUMS_TABLE . ' a
-					LEFT JOIN ' . USERS_TABLE . ' u
-						ON u.user_id = a.album_user_id
-					WHERE a.album_user_id <> 0
-						AND a.parent_id = 0
-					ORDER BY a.album_id DESC';
+				$sql = $db->sql_build_query('SELECT', array(
+					'SELECT'	=> 'a.album_id, u.user_id, u.username, u.user_colour',
+					'FROM'		=> array(GALLERY_ALBUMS_TABLE => 'a'),
+					'LEFT_JOIN'	=> array(
+						array(
+							'FROM'	=> array(USERS_TABLE => 'u'),
+							'ON'	=> 'u.user_id = a.album_user_id',
+						),
+					),
+					'WHERE'		=> 'a.album_user_id <> 0 AND a.parent_id = 0',
+					'ORDER_BY'	=> 'a.album_id DESC',
+				));
 				$result = $db->sql_query_limit($sql, 1);
 				$newest_pgallery = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
@@ -563,11 +574,17 @@ class install_convert_ts extends module
 				$current_batch = 1;
 				$current_batch_size = 1;
 
-				$sql = 'SELECT i.*, u.user_colour, u.username
-					FROM ' . $table_prefix . 'gallery_pics i
-					LEFT JOIN ' . USERS_TABLE . ' u
-						ON i.pic_user_id = u.user_id
-					ORDER BY i.pic_id';
+				$sql = $db->sql_build_query('SELECT', array(
+					'SELECT'	=> 'i.*, u.user_colour, u.username',
+					'FROM'		=> array($table_prefix . 'gallery_pics' => 'i'),
+					'LEFT_JOIN'	=> array(
+						array(
+							'FROM'	=> array(USERS_TABLE => 'u'),
+							'ON'	=> 'i.pic_user_id = u.user_id',
+						),
+					),
+					'ORDER_BY'	=> 'i.pic_id ASC',
+				));
 				$result = $db->sql_query($sql);
 
 				while ($row = $db->sql_fetchrow($result))
@@ -659,13 +676,21 @@ class install_convert_ts extends module
 				$db->sql_freeresult($result);
 
 				//Step 5.3: Last image data
-				$sql = 'SELECT a.album_id, a.album_last_image_id, i.image_time, i.image_name, i.image_user_id, i.image_username, i.image_user_colour, u.user_colour
-					FROM ' . GALLERY_ALBUMS_TABLE . ' a
-					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
-						ON a.album_last_image_id = i.image_id
-					LEFT JOIN ' . USERS_TABLE . ' u
-						ON a.album_user_id = u.user_id
-					WHERE a.album_last_image_id > 0';
+				$sql = $db->sql_build_query('SELECT', array(
+					'SELECT'	=> 'a.album_id, a.album_last_image_id, i.image_time, i.image_name, i.image_user_id, i.image_username, i.image_user_colour, u.user_colour',
+					'FROM'		=> array(GALLERY_ALBUMS_TABLE => 'a'),
+					'LEFT_JOIN'	=> array(
+						array(
+							'FROM'	=> array(GALLERY_IMAGES_TABLE => 'i'),
+							'ON'	=> 'a.album_last_image_id = i.image_id',
+						),
+						array(
+							'FROM'	=> array(USERS_TABLE => 'u'),
+							'ON'	=> 'a.album_user_id = u.user_id',
+						),
+					),
+					'WHERE'		=> 'a.album_last_image_id > 0',
+				));
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -692,12 +717,17 @@ class install_convert_ts extends module
 				$current_batch = 1;
 				$current_batch_size = 1;
 
-				$sql = 'SELECT u.user_id, COUNT(i.image_id) AS images
-					FROM ' . USERS_TABLE . ' u
-					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
-						ON i.image_user_id = u.user_id
-							AND i.image_status <> ' . IMAGE_UNAPPROVED . '
-					GROUP BY i.image_user_id';
+				$sql = $db->sql_build_query('SELECT', array(
+					'SELECT'	=> 'u.user_id, COUNT(i.image_id) AS images',
+					'FROM'		=> array(USERS_TABLE => 'u'),
+					'LEFT_JOIN'	=> array(
+						array(
+							'FROM'	=> array(GALLERY_IMAGES_TABLE => 'i'),
+							'ON'	=> 'i.image_user_id = u.user_id AND i.image_status <> ' . IMAGE_UNAPPROVED,
+						),
+					),
+					'GROUP_BY'		=> 'i.image_user_id',
+				));
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{

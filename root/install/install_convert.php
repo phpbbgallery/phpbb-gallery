@@ -10,6 +10,8 @@
 
 /**
 * @ignore
+*
+* NOTE: This is only used for MySQL, as phpbb2 Album MOD by Smartor only was available for MySQL, so I do not stirctly care about the DBAL (e.g.: $db->sql_build_query).
 */
 
 if (!defined('IN_PHPBB'))
