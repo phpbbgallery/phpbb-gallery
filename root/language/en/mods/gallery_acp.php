@@ -209,6 +209,7 @@ $lang = array_merge($lang, array(
 
 	'NEW_ALBUM_CREATED'				=> 'New album has been created successfully',
 	'NO_ALBUM_SELECTED'				=> 'You need to select atleast one album.',
+	'NO_DESTINATION_ALBUM'			=> 'You have not specified a album to move content to.',
 	'NO_FILE_SELECTED'				=> 'You need to select atleast one file.',
 	'NO_PERMISSIONS_SELECTED'		=> 'You need to select atleast one album or a special permission-system.',
 	'NO_VICTIM_SELECTED'			=> 'You need to select atleast one user or group.',
