@@ -467,7 +467,7 @@ switch ($mode)
 	break;
 }
 
-page_header($user->lang['GALLERY'] . ' &bull; ' . $user->lang['MCP'] . ' &bull; ' . $page_title);
+page_header($user->lang['GALLERY'] . ' &bull; ' . $user->lang['MCP'] . ' &bull; ' . $page_title, false);
 
 $template->set_filenames(array(
 	'body' => 'gallery/mcp_body.html')

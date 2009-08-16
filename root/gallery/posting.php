@@ -1348,7 +1348,7 @@ if ($submit)
 	trigger_error($message);
 }
 
-page_header($page_title);
+page_header($page_title, false);
 
 $template->set_filenames(array(
 	'body' => 'gallery/posting_body.html',

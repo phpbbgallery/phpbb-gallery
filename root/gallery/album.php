@@ -336,13 +336,17 @@ $template->assign_vars(array(
 	'S_WATCHING_TOPIC'			=> ($album_data['watch_id']) ? true : false,
 ));
 
-/**
-* Cheat on phpBB #31975
-* Once we will get the normal function pumped up for the external use.
-*/
-cheat_phpbb_31975();
 
-page_header($user->lang['VIEW_ALBUM'] . ' - ' . $album_data['album_name']);
+if (version_compare($config['version'], '3.0.5', '>'))
+{
+	page_header($user->lang['VIEW_ALBUM'] . ' - ' . $album_data['album_name'], true, $album_id, 'album');
+}
+else
+{
+	// Backwards compatible
+	cheat_phpbb_31975();
+	page_header($user->lang['VIEW_ALBUM'] . ' - ' . $album_data['album_name']);
+}
 
 $template->set_filenames(array(
 	'body' => 'gallery/album_body.html')

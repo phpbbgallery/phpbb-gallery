@@ -630,7 +630,7 @@ if (($gallery_config['allow_comments'] && gallery_acl_check('c_read', $album_id)
 	}
 }
 
-page_header($user->lang['VIEW_IMAGE'] . ' - ' . $image_data['image_name']);
+page_header($user->lang['VIEW_IMAGE'] . ' - ' . $image_data['image_name'], false);
 
 $template->set_filenames(array(
 	'body' => 'gallery/viewimage_body.html')

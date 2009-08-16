@@ -680,7 +680,7 @@ $template->assign_vars(array(
 	'S_IN_SEARCH'			=> true,
 ));
 
-page_header($user->lang['GALLERY'] . ' &bull; ' . $user->lang['SEARCH']);
+page_header($user->lang['GALLERY'] . ' &bull; ' . $user->lang['SEARCH'], false);
 
 $template->set_filenames(array(
 	'body' => 'gallery/search_body.html')
