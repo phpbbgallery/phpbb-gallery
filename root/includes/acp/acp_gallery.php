@@ -512,8 +512,7 @@ class acp_gallery
 							$image_tools->resize_image($gallery_config['max_width'], $gallery_config['max_height']);
 							if ($image_tools->resized)
 							{
-								//$image_tools->write_image($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename, $gallery_config['jpg_quality'], true);
-								$image_tools->write_image($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename, 100, true);
+								$image_tools->write_image($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename, $gallery_config['jpg_quality'], true);
 							}
 						}
 					}

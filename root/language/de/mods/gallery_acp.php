@@ -184,6 +184,8 @@ $lang = array_merge($lang, array(
 	'INHERIT_PERMISSIONS_VICTIM'	=> 'Berechtigung aus einer anderen Einstellung übernehmen',
 
 	'JPG_ALLOWED'					=> 'Es ist erlaubt JPG- Dateien hochzuladen',
+	'JPG_QUALITY'					=> 'JPG-Qualtität',
+	'JPG_QUALITY_EXP'				=> 'Wenn Bilder gedreht oder verkleinert werden, kann ihre Dateigröße danach größer sein als davor. Mit dieser Option kann die Qualtität verringert werden, um Speicherplatz zu sparen.',
 
 	'LIST_INDEX'					=> 'Führe Subalbum in der Legende des übergeordneten Albums auf',
 	'LIST_INDEX_EXPLAIN'			=> 'Zeigt einen Link zu diesem Album in der Legende des übergeordneten Albums an, wenn dort die Option „Subalben in Legende aufführen“ aktiviert ist.',

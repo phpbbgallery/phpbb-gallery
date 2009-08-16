@@ -196,8 +196,7 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 
 		if ((($mode == 'thumbnail') && $gallery_config['thumbnail_cache']) || (($mode == 'medium') && $gallery_config['medium_cache']))
 		{
-			//$image_tools->write_image($image_source, (($mode == 'thumbnail') ? $gallery_config['thumbnail_quality'] : $gallery_config['jpg_quality']), false);
-			$image_tools->write_image($image_source, (($mode == 'thumbnail') ? $gallery_config['thumbnail_quality'] : 100), false);
+			$image_tools->write_image($image_source, (($mode == 'thumbnail') ? $gallery_config['thumbnail_quality'] : $gallery_config['jpg_quality']), false);
 
 			if ($mode == 'thumbnail')
 			{

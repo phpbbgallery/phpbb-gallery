@@ -76,6 +76,8 @@ class acp_gallery_config
 						'max_width'				=> array('lang' => 'MAX_WIDTH',				'validate' => 'int',	'type' => 'text:7:5',		'gallery' => true,	'explain' => false),
 						'max_height'			=> array('lang' => 'MAX_HEIGHT',			'validate' => 'int',	'type' => 'text:7:5',		'gallery' => true,	'explain' => false),
 						'allow_resize_images'	=> array('lang' => 'RESIZE_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
+						'allow_rotate_images'	=> array('lang' => 'ROTATE_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
+						'jpg_quality'			=> array('lang' => 'JPG_QUALITY',			'validate' => 'int',	'type' => 'text:7:5',		'gallery' => true,	'explain' => true),
 						'medium_cache'			=> array('lang' => 'MEDIUM_CACHE',			'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 						'preview_rsz_width'		=> array('lang' => 'RSZ_WIDTH',				'validate' => 'int',	'type' => 'text:7:4',		'gallery' => true,	'explain' => false),
 						'preview_rsz_height'	=> array('lang' => 'RSZ_HEIGHT',			'validate' => 'int',	'type' => 'text:7:4',		'gallery' => true,	'explain' => false),
@@ -85,7 +87,6 @@ class acp_gallery_config
 						'desc_length'			=> array('lang' => 'IMAGE_DESC_MAX_LENGTH',	'validate' => 'int',	'type' => 'text:7:5',		'gallery' => true,	'explain' => false),
 						'exif_data'				=> array('lang' => 'DISP_EXIF_DATA',		'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 						'view_image_url'		=> array('lang' => 'VIEW_IMAGE_URL',		'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
-						'allow_rotate_images'	=> array('lang' => 'ROTATE_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 
 						'legend4'				=> 'THUMBNAIL_SETTINGS',
 						'thumbnail_cache'		=> array('lang' => 'THUMBNAIL_CACHE',		'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),

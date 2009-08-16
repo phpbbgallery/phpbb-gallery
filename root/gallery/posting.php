@@ -514,8 +514,7 @@ switch ($mode)
 
 							if ($image_tools->resized || $image_tools->rotated)
 							{
-								//$image_tools->write_image($image_file->destination_file, $gallery_config['jpg_quality'], true);
-								$image_tools->write_image($image_file->destination_file, 100, true);
+								$image_tools->write_image($image_file->destination_file, $gallery_config['jpg_quality'], true);
 								$image_file->filesize = $image_tools->image_size['file'];
 							}
 
@@ -735,8 +734,7 @@ switch ($mode)
 						$image_tools->rotate_image($rotate, $gallery_config['allow_resize_images']);
 						if ($image_tools->rotated)
 						{
-							//$image_tools->write_image($image_file->destination_file, $gallery_config['jpg_quality'], true);
-							$image_tools->write_image($image_tools->image_source, 100, true);
+							$image_tools->write_image($image_file->destination_file, $gallery_config['jpg_quality'], true);
 						}
 
 						@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_filename']);
