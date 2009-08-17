@@ -234,7 +234,7 @@ $s_char_options .= '<option value="other"' . (($first_char == 'other') ? ' selec
 // Output page
 $template->assign_vars(array(
 	'TOTAL_IMAGES'		=> ($gallery_config['disp_statistic']) ? sprintf($user->lang[$l_total_image_s], $total_images) : '',
-	'TOTAL_COMMENTS'	=> sprintf($user->lang[$l_total_comment_s], $total_comments),
+	'TOTAL_COMMENTS'	=> ($gallery_config['allow_comments']) ? sprintf($user->lang[$l_total_comment_s], $total_comments) : '',
 	'TOTAL_PGALLERIES'	=> (gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS)) ? sprintf($user->lang[$l_total_pgallery_s], $total_pgalleries) : '',
 	'NEWEST_PGALLERIES'	=> ($total_pgalleries) ? sprintf($user->lang['NEWEST_PGALLERY'], get_username_string('full', $gallery_config['newest_pgallery_user_id'], $gallery_config['newest_pgallery_username'], $gallery_config['newest_pgallery_user_colour'], '', append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $gallery_config['newest_pgallery_album_id']))) : '',
 
