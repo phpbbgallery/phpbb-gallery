@@ -78,36 +78,36 @@ switch ($mode)
 	case 'report_open':
 	case 'report_closed':
 	case 'report_details':
-		$access_denied = (!gallery_acl_check('m_report', $album_id)) ? true : false;
+		$access_denied = (!gallery_acl_check('m_report', $album_id, $album_data['album_user_id'])) ? true : false;
 	break;
 	case 'queue_unapproved':
 	case 'queue_approved':
 	case 'queue_locked':
 	case 'queue_details':
-		$access_denied = (!gallery_acl_check('m_status', $album_id)) ? true : false;
+		$access_denied = (!gallery_acl_check('m_status', $album_id, $album_data['album_user_id'])) ? true : false;
 	break;
 }
 switch ($action)
 {
 	case 'images_move':
-		$access_denied = (!gallery_acl_check('m_move', $album_id) || ($moving_target && !gallery_acl_check('i_upload', $moving_target))) ? true : false;
+		$access_denied = (!gallery_acl_check('m_move', $album_id, $album_data['album_user_id']) || ($moving_target && !gallery_acl_check('i_upload', $moving_target))) ? true : false;
 	break;
 	case 'images_unapprove':
 	case 'images_approve':
 	case 'images_lock':
-		$access_denied = (!gallery_acl_check('m_status', $album_id)) ? true : false;
+		$access_denied = (!gallery_acl_check('m_status', $album_id, $album_data['album_user_id'])) ? true : false;
 	break;
 	case 'images_delete':
-		$access_denied = (!gallery_acl_check('m_delete', $album_id)) ? true : false;
+		$access_denied = (!gallery_acl_check('m_delete', $album_id, $album_data['album_user_id'])) ? true : false;
 	break;
 	case 'reports_close':
 	case 'reports_open':
 	case 'reports_delete':
-		$access_denied = (!gallery_acl_check('m_report', $album_id)) ? true : false;
+		$access_denied = (!gallery_acl_check('m_report', $album_id, $album_data['album_user_id'])) ? true : false;
 	break;
 }
 
-if ($access_denied || !gallery_acl_check('m_', $album_id))
+if ($access_denied || !gallery_acl_check('m_', $album_id, $album_data['album_user_id']))
 {
 	meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"));
 	trigger_error('NOT_AUTHORISED');
@@ -120,10 +120,10 @@ $template->assign_block_vars('navlinks', array(
 ));
 
 $template->assign_vars(array(
-	'S_ALLOWED_MOVE'	=> (gallery_acl_check('m_move', $album_id)) ? true : false,
-	'S_ALLOWED_STATUS'	=> (gallery_acl_check('m_status', $album_id)) ? true : false,
-	'S_ALLOWED_DELETE'	=> (gallery_acl_check('m_delete', $album_id)) ? true : false,
-	'S_ALLOWED_REPORT'	=> (gallery_acl_check('m_report', $album_id)) ? true : false,
+	'S_ALLOWED_MOVE'	=> (gallery_acl_check('m_move', $album_id, $album_data['album_user_id'])) ? true : false,
+	'S_ALLOWED_STATUS'	=> (gallery_acl_check('m_status', $album_id, $album_data['album_user_id'])) ? true : false,
+	'S_ALLOWED_DELETE'	=> (gallery_acl_check('m_delete', $album_id, $album_data['album_user_id'])) ? true : false,
+	'S_ALLOWED_REPORT'	=> (gallery_acl_check('m_report', $album_id, $album_data['album_user_id'])) ? true : false,
 	'EDIT_IMG'		=> $user->img('icon_post_edit', 'EDIT_IMAGE'),
 	'DELETE_IMG'	=> $user->img('icon_post_delete', 'DELETE_IMAGE'),
 	'ALBUM_NAME'	=> $album_data['album_name'],

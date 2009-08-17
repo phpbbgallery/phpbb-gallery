@@ -29,7 +29,7 @@ if (!in_array($sort_key, $sort_by_sql))
 }
 
 $m_status = ' AND i.image_status <> ' . IMAGE_UNAPPROVED;
-if (gallery_acl_check('m_status', $album_id))
+if (gallery_acl_check('m_status', $album_id, $album_data['album_user_id']))
 {
 	$m_status = '';
 }

@@ -115,6 +115,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<file from="root/gallery/includes/hookup_gallery.php" to="gallery/includes/hookup_gallery.php" />
 			<file from="root/gallery/includes/root_path.php" to="gallery/includes/root_path.php" />
 			<file from="root/gallery/mcp/mcp_report.php" to="gallery/mcp/mcp_report.php" />
+			<file from="root/gallery/plugins/index.php" to="gallery/plugins/index.php" />
 			<file from="root/includes/acp/acp_gallery.php" to="includes/acp/acp_gallery.php" />
 			<file from="root/includes/acp/acp_gallery_albums.php" to="includes/acp/acp_gallery_albums.php" />
 			<file from="root/includes/acp/acp_gallery_config.php" to="includes/acp/acp_gallery_config.php" />

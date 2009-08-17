@@ -402,6 +402,9 @@ class install_update extends module
 
 			case '1.0.2-dev':
 			case '1.0.2-RC1':
+			case '1.0.2':
+
+			case '1.0.3-RC1':
 			break;
 		}
 
@@ -719,9 +722,6 @@ class install_update extends module
 				}
 				$db->sql_freeresult($result);
 
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
-			break;
-
 			case '1.0.1':
 			case '1.0.2-dev':
 				if (!isset($gallery_config['allow_resize_images']))
@@ -756,6 +756,11 @@ class install_update extends module
 				{
 					set_gallery_config_count('album_display', 128);
 				}
+
+			case '1.0.2':
+			case '1.0.3-RC1':
+				set_gallery_config('jpg_quality', 100);
+				set_gallery_config('search_display', 45);
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
@@ -820,22 +825,30 @@ class install_update extends module
 			case '0.4.0-RC3':
 			case '0.4.0':*/
 			case '0.4.1':
+
 			case '0.5.0':
 			case '0.5.1':
 			case '0.5.2':
 			case '0.5.3':
 			case '0.5.4':
+
 			case '1.0.0-dev':
 				nv_remove_column(GALLERY_ROLES_TABLE,	'a_moderate');
 
 			case '1.0.0-RC1':
 			case '1.0.0-RC2':
 			case '1.0.0':
+
 			case '1.0.1-dev':
 			case '1.0.1':
+
 			case '1.0.2-dev':
 				/* //@todo: Move on bbcode-change or creating all modules */
 				$reparse_modules_bbcode = true;
+			case '1.0.2-RC1':
+			case '1.0.2':
+
+			case '1.0.3-RC1':
 			break;
 		}
 
@@ -946,6 +959,10 @@ class install_update extends module
 				case '1.0.2-RC1':
 					// Add album-BBCode
 					add_bbcode('album');
+
+				case '1.0.2':
+
+				case '1.0.3-RC1':
 				break;
 			}
 
@@ -962,8 +979,12 @@ class install_update extends module
 			$modules = $this->gallery_config_options;
 			switch ($gallery_config['phpbb_gallery_version'])
 			{
+				case '1.0.3-RC1':
+
+				case '1.0.2':
 				case '1.0.2-RC1':
 				case '1.0.2-dev':
+
 				case '1.0.1':
 					$template->assign_block_vars('checks', array(
 						'S_LEGEND'			=> true,
@@ -971,10 +992,12 @@ class install_update extends module
 						'LEGEND_EXPLAIN'	=> $user->lang['BBCODES_NEEDS_REPARSE'],
 					));
 				case '1.0.1-dev':
+
 				case '1.0.0':
 				case '1.0.0-RC2':
 				case '1.0.0-RC1':
 				case '1.0.0-dev':
+
 				case '0.5.4':
 				case '0.5.3':
 				case '0.5.2':
@@ -983,6 +1006,7 @@ class install_update extends module
 					// needs to be moved before the first unset.
 					unset($modules['legend1']);
 					unset($modules['log_module']);
+
 				case '0.4.1':
 					unset($modules['acp_module']);
 					unset($modules['ucp_module']);

@@ -93,7 +93,7 @@ switch ($mode)
 		{
 			case 'watch':
 			case 'unwatch':
-				if (!gallery_acl_check('i_view', $album_id))
+				if (!gallery_acl_check('i_view', $album_id, $album_data['album_user_id']))
 				{
 					gallery_not_authorised($image_backlink, $user, $image_loginlink);
 				}
@@ -105,18 +105,18 @@ switch ($mode)
 		}
 	break;
 	case 'image':
-		if (!gallery_acl_check('m_status', $album_id) && ($album_data['album_status'] == ITEM_LOCKED))
+		if (!gallery_acl_check('m_status', $album_id, $album_data['album_user_id']) && ($album_data['album_status'] == ITEM_LOCKED))
 		{
 			gallery_not_authorised($image_backlink, $user, $image_loginlink);
 		}
-		if ($image_id && (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != IMAGE_APPROVED)))
+		if ($image_id && (!gallery_acl_check('m_status', $album_id, $album_data['album_user_id']) && ($image_data['image_status'] != IMAGE_APPROVED)))
 		{
 			gallery_not_authorised($image_backlink, $user, $image_loginlink);
 		}
 		switch ($submode)
 		{
 			case 'upload':
-				if (!gallery_acl_check('i_upload', $album_id) || ($album_data['album_status'] == ITEM_LOCKED))
+				if (!gallery_acl_check('i_upload', $album_id, $album_data['album_user_id']) || ($album_data['album_status'] == ITEM_LOCKED))
 				{
 					gallery_not_authorised($album_backlink, $user, $album_loginlink);
 				}
@@ -130,33 +130,33 @@ switch ($mode)
 				}
 			break;
 			case 'edit':
-				if (!gallery_acl_check('i_edit', $album_id))
+				if (!gallery_acl_check('i_edit', $album_id, $album_data['album_user_id']))
 				{
-					if (!gallery_acl_check('m_edit', $album_id))
+					if (!gallery_acl_check('m_edit', $album_id, $album_data['album_user_id']))
 					{
 						gallery_not_authorised($image_backlink, $user, $image_loginlink);
 					}
 				}
-				else if (($image_data['image_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_edit', $album_id))
+				else if (($image_data['image_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_edit', $album_id, $album_data['album_user_id']))
 				{
 					gallery_not_authorised($image_backlink, $user, $image_loginlink);
 				}
 			break;
 			case 'report':
-				if (!gallery_acl_check('i_report', $album_id) || ($image_data['image_user_id'] == $user->data['user_id']))
+				if (!gallery_acl_check('i_report', $album_id, $album_data['album_user_id']) || ($image_data['image_user_id'] == $user->data['user_id']))
 				{
 					gallery_not_authorised($image_backlink, $user, $image_loginlink);
 				}
 			break;
 			case 'delete':
-				if (!gallery_acl_check('i_delete', $album_id))
+				if (!gallery_acl_check('i_delete', $album_id, $album_data['album_user_id']))
 				{
-					if (!gallery_acl_check('m_delete', $album_id))
+					if (!gallery_acl_check('m_delete', $album_id, $album_data['album_user_id']))
 					{
 						gallery_not_authorised($image_backlink, $user, $image_loginlink);
 					}
 				}
-				else if (($image_data['image_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_delete', $album_id))
+				else if (($image_data['image_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_delete', $album_id, $album_data['album_user_id']))
 				{
 					gallery_not_authorised($image_backlink, $user, $image_loginlink);
 				}
@@ -165,7 +165,7 @@ switch ($mode)
 			case 'unwatch':
 			case 'favorite':
 			case 'unfavorite':
-				if (!gallery_acl_check('i_view', $album_id))
+				if (!gallery_acl_check('i_view', $album_id, $album_data['album_user_id']))
 				{
 					gallery_not_authorised($image_backlink, $user, $image_loginlink);
 				}
@@ -177,7 +177,7 @@ switch ($mode)
 		}
 	break;
 	case 'comment':
-		if (!gallery_acl_check('m_status', $album_id) && (($image_data['image_status'] != IMAGE_APPROVED) || ($album_data['album_status'] == ITEM_LOCKED)))
+		if (!gallery_acl_check('m_status', $album_id, $album_data['album_user_id']) && (($image_data['image_status'] != IMAGE_APPROVED) || ($album_data['album_status'] == ITEM_LOCKED)))
 		{
 			gallery_not_authorised($image_backlink, $user, $image_loginlink);
 		}
@@ -206,42 +206,42 @@ switch ($mode)
 		switch ($submode)
 		{
 			case 'add':
-				if (!gallery_acl_check('c_post', $album_id))
+				if (!gallery_acl_check('c_post', $album_id, $album_data['album_user_id']))
 				{
 					gallery_not_authorised($image_backlink, $user, $image_loginlink);
 				}
 			break;
 
 			case 'edit':
-				if (!gallery_acl_check('c_edit', $album_id))
+				if (!gallery_acl_check('c_edit', $album_id, $album_data['album_user_id']))
 				{
-					if (!gallery_acl_check('m_comments', $album_id))
+					if (!gallery_acl_check('m_comments', $album_id, $album_data['album_user_id']))
 					{
 						gallery_not_authorised($image_backlink, $user, $image_loginlink);
 					}
 				}
-				else if (($comment_data['comment_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_comments', $album_id))
+				else if (($comment_data['comment_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_comments', $album_id, $album_data['album_user_id']))
 				{
 					gallery_not_authorised($image_backlink, $user, $image_loginlink);
 				}
 			break;
 
 			case 'delete':
-				if (!gallery_acl_check('c_delete', $album_id))
+				if (!gallery_acl_check('c_delete', $album_id, $album_data['album_user_id']))
 				{
-					if (!gallery_acl_check('m_comments', $album_id))
+					if (!gallery_acl_check('m_comments', $album_id, $album_data['album_user_id']))
 					{
 						gallery_not_authorised($image_backlink, $user, $image_loginlink);
 					}
 				}
-				else if (($comment_data['comment_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_comments', $album_id))
+				else if (($comment_data['comment_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_comments', $album_id, $album_data['album_user_id']))
 				{
 					gallery_not_authorised($image_backlink, $user, $image_loginlink);
 				}
 			break;
 
 			case 'rate':
-				if (!gallery_acl_check('i_rate', $album_id) || ($image_data['image_user_id'] == $user->data['user_id']))
+				if (!gallery_acl_check('i_rate', $album_id, $album_data['album_user_id']) || ($image_data['image_user_id'] == $user->data['user_id']))
 				{
 					gallery_not_authorised($image_backlink, $user, $image_loginlink);
 				}
@@ -353,7 +353,7 @@ switch ($mode)
 					}
 				}
 				// 2. Check user-limit, if he is not allowed to go unlimited
-				if (!gallery_acl_check('i_unlimited', $album_id))
+				if (!gallery_acl_check('i_unlimited', $album_id, $album_data['album_user_id']))
 				{
 					$sql = 'SELECT COUNT(image_id) count
 						FROM ' . GALLERY_IMAGES_TABLE . '
@@ -362,9 +362,9 @@ switch ($mode)
 					$result = $db->sql_query($sql);
 					$own_images = (int) $db->sql_fetchfield('count');
 					$db->sql_freeresult($result);
-					if ($own_images >= gallery_acl_check('i_count', $album_id))
+					if ($own_images >= gallery_acl_check('i_count', $album_id, $album_data['album_user_id']))
 					{
-						trigger_error(sprintf($user->lang['USER_REACHED_QUOTA'], gallery_acl_check('i_count', $album_id)));
+						trigger_error(sprintf($user->lang['USER_REACHED_QUOTA'], gallery_acl_check('i_count', $album_id, $album_data['album_user_id'])));
 					}
 				}
 
@@ -398,7 +398,7 @@ switch ($mode)
 					$fileupload = new fileupload();
 					$fileupload->fileupload('', $allowed_extensions, (4 * $gallery_config['max_file_size']));
 
-					$upload_image_files = (gallery_acl_check('i_unlimited', $album_id)) ? $gallery_config['upload_images'] : min((gallery_acl_check('i_count', $album_id) - $own_images), $gallery_config['upload_images']);
+					$upload_image_files = (gallery_acl_check('i_unlimited', $album_id, $album_data['album_user_id'])) ? $gallery_config['upload_images'] : min((gallery_acl_check('i_count', $album_id, $album_data['album_user_id']) - $own_images), $gallery_config['upload_images']);
 
 					// Get File Upload Info
 					$image_id_ary = array();
@@ -597,7 +597,7 @@ switch ($mode)
 
 				if (!$error)
 				{
-					if (gallery_acl_check('i_approve', $album_id))
+					if (gallery_acl_check('i_approve', $album_id, $album_data['album_user_id']))
 					{
 						$message = $user->lang['ALBUM_UPLOAD_SUCCESSFUL'];
 					}
@@ -616,10 +616,10 @@ switch ($mode)
 
 				$count = 0;
 				$upload_image_files = $gallery_config['upload_images'];
-				if (!gallery_acl_check('i_unlimited', $album_id) && ((gallery_acl_check('i_count', $album_id) - $own_images) < $upload_image_files))
+				if (!gallery_acl_check('i_unlimited', $album_id, $album_data['album_user_id']) && ((gallery_acl_check('i_count', $album_id, $album_data['album_user_id']) - $own_images) < $upload_image_files))
 				{
-					$upload_image_files = (gallery_acl_check('i_count', $album_id) - $own_images);
-					$error .= (($error) ? '<br />' : '') . sprintf($user->lang['USER_NEARLY_REACHED_QUOTA'], gallery_acl_check('i_count', $album_id), $own_images, $upload_image_files);
+					$upload_image_files = (gallery_acl_check('i_count', $album_id, $album_data['album_user_id']) - $own_images);
+					$error .= (($error) ? '<br />' : '') . sprintf($user->lang['USER_NEARLY_REACHED_QUOTA'], gallery_acl_check('i_count', $album_id, $album_data['album_user_id']), $own_images, $upload_image_files);
 					$template->assign_vars(array(
 						'ERROR'		=> $error,
 					));
@@ -1003,7 +1003,7 @@ switch ($mode)
 			}
 
 			// Check: User didn't rate yet, has permissions, it's not the users own image and the user is logged in
-			if (!$your_rating && gallery_acl_check('i_rate', $album_id) && ($user->data['user_id'] != $image_data['image_user_id']) && ($user->data['user_id'] != ANONYMOUS))
+			if (!$your_rating && gallery_acl_check('i_rate', $album_id, $album_data['album_user_id']) && ($user->data['user_id'] != $image_data['image_user_id']) && ($user->data['user_id'] != ANONYMOUS))
 			{
 				$hide_rate = false;
 				if ($album_data['contest_id'])

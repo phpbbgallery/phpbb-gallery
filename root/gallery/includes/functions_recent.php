@@ -213,7 +213,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 				{
 					$template->assign_block_vars('imageblock.imagerow', array());
 				}
-				assign_image_block('imageblock.imagerow.image', $images_data[$recent_image], $images_data[$recent_image]['album_status'], $display);
+				assign_image_block('imageblock.imagerow.image', $images_data[$recent_image], $images_data[$recent_image]['album_status'], $display, $images_data[$recent_image]['album_user_id']);
 				$num++;
 			}
 			while (($num % $ints['columns']) > 0)
@@ -235,7 +235,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 				{
 					$template->assign_block_vars('imageblock.imagerow', array());
 				}
-				assign_image_block('imageblock.imagerow.image', $images_data[$random_image], $images_data[$random_image]['album_status'], $display);
+				assign_image_block('imageblock.imagerow.image', $images_data[$random_image], $images_data[$random_image]['album_status'], $display, $images_data[$random_image]['album_user_id']);
 				$num++;
 			}
 			while (($num % $ints['columns']) > 0)
@@ -261,7 +261,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 					}
 					if (!empty($images_data[$contest_image]))
 					{
-						assign_image_block('imageblock.imagerow.image', $images_data[$contest_image], $images_data[$contest_image]['album_status'], $display);
+						assign_image_block('imageblock.imagerow.image', $images_data[$contest_image], $images_data[$contest_image]['album_status'], $display, $images_data[$contest_image]['album_user_id']);
 						$num++;
 					}
 				}

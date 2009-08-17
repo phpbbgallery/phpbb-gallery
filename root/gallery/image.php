@@ -39,7 +39,6 @@ $image_data = get_image_info($image_id);
 $album_id = $image_data['image_album_id'];
 $album_data = get_album_info($album_id);
 
-$user_id = $image_data['image_user_id'];
 $image_error = '';
 
 $image_filetype = utf8_substr($image_data['image_filename'], strlen($image_data['image_filename']) - 4, 4);
@@ -56,7 +55,7 @@ if (!file_exists($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_fil
 /**
 * Check permissions and hotlinking
 */
-if ((!gallery_acl_check('i_view', $album_id)) || (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] == IMAGE_UNAPPROVED)))
+if ((!gallery_acl_check('i_view', $album_id, $album_data['album_user_id'])) || (!gallery_acl_check('m_status', $album_id, $album_data['album_user_id']) && ($image_data['image_status'] == IMAGE_UNAPPROVED)))
 {
 	//trigger_error('NOT_AUTHORISED');
 	$image_error = 'not_authorised.jpg';
@@ -216,7 +215,7 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 }
 
 // Watermark
-if (!gallery_acl_check('i_watermark', $album_id) && $possible_watermark)
+if (!gallery_acl_check('i_watermark', $album_id, $album_data['album_user_id']) && $possible_watermark)
 {
 	$filesize_var = '';
 	$image_tools->watermark_image($phpbb_root_path . $gallery_config['watermark_source'], $gallery_config['watermark_position'], $gallery_config['watermark_height'], $gallery_config['watermark_width']);

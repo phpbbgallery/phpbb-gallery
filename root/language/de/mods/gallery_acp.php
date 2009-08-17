@@ -325,8 +325,9 @@ $lang = array_merge($lang, array(
 	'RSZ_HEIGHT'					=> 'Maximale Höhe beim Anzeigen eines Bildes',
 	'RSZ_WIDTH'						=> 'Maximale Breite beim Anzeigen eines Bildes',
 
-	'SELECT_GROUPS'					=> 'Wähle Gruppen',
+	'SEARCH_SETTINGS'				=> 'Such-Einstellungen',
 	'SELECT_ALBUM'					=> 'Wähle ein Album aus',
+	'SELECT_GROUPS'					=> 'Wähle Gruppen',
 	'SELECT_PERM_SYS'				=> 'Wähle Berechtigungsart',
 	'SELECT_PERMISSIONS'			=> 'Wähle Berechtigungen',
 	'SELECTED_ALBUMS'				=> 'Ausgewählte Alben',

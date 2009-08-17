@@ -323,6 +323,7 @@ $lang = array_merge($lang, array(
 	'RSZ_HEIGHT'					=> 'Maximum-height on viewing image',
 	'RSZ_WIDTH'						=> 'Maximum-width on viewing image',
 
+	'SEARCH_SETTINGS'				=> 'Search settings',
 	'SELECT_ALBUM'					=> 'Select album',
 	'SELECT_GROUPS'					=> 'Select groups',
 	'SELECT_PERM_SYS'				=> 'Select permission-system',

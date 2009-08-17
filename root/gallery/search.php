@@ -486,7 +486,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 		if ($search_results == 'image')
 		{
 			$sql_array = array(
-				'SELECT'		=> 'i.*, a.album_name, a.album_status',
+				'SELECT'		=> 'i.*, a.album_name, a.album_status, a.album_user_id',
 				'FROM'			=> array(GALLERY_IMAGES_TABLE => 'i'),
 
 				'LEFT_JOIN'		=> array(
@@ -540,7 +540,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 						}
 						if (!empty($rowset[$contest_image]))
 						{
-							assign_image_block('imageblock.imagerow.image', $rowset[$contest_image], $rowset[$contest_image]['album_status']);
+							assign_image_block('imageblock.imagerow.image', $rowset[$contest_image], $rowset[$contest_image]['album_status'], $gallery_config['search_display'], $rowset[$contest_image]['album_user_id']);
 							$num++;
 						}
 					}
@@ -574,7 +574,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 						}
 
 						// Assign the image to the template-block
-						assign_image_block('imageblock.imagerow.image', $rowset[$j], $rowset[$j]['album_status']);
+						assign_image_block('imageblock.imagerow.image', $rowset[$j], $rowset[$j]['album_status'], $gallery_config['search_display'], $rowset[$j]['album_user_id']);
 					}
 				}
 			}

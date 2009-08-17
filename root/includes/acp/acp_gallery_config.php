@@ -70,7 +70,10 @@ class acp_gallery_config
 						'disp_fake_thumb'		=> array('lang' => 'DISP_FAKE_THUMB',		'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 						'fake_thumb_size'		=> array('lang' => 'FAKE_THUMB_SIZE',		'validate' => 'int',	'type' => 'text:7:4',		'gallery' => true,	'explain' => true),
 
-						'legend3'				=> 'IMAGE_SETTINGS',
+						'legend3'				=> 'SEARCH_SETTINGS',
+						'search_display'		=> array('lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => 'int',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'rrc_display'),
+
+						'legend4'				=> 'IMAGE_SETTINGS',
 						'upload_images'			=> array('lang' => 'UPLOAD_IMAGES',			'validate' => 'int',	'type' => 'text:7:2',		'gallery' => true,	'explain' => false),
 						'max_file_size'			=> array('lang' => 'MAX_FILE_SIZE',			'validate' => 'int',	'type' => 'text:12:9',		'gallery' => true,	'explain' => false),
 						'max_width'				=> array('lang' => 'MAX_WIDTH',				'validate' => 'int',	'type' => 'text:7:5',		'gallery' => true,	'explain' => false),
@@ -88,27 +91,27 @@ class acp_gallery_config
 						'exif_data'				=> array('lang' => 'DISP_EXIF_DATA',		'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 						'view_image_url'		=> array('lang' => 'VIEW_IMAGE_URL',		'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 
-						'legend4'				=> 'THUMBNAIL_SETTINGS',
+						'legend5'				=> 'THUMBNAIL_SETTINGS',
 						'thumbnail_cache'		=> array('lang' => 'THUMBNAIL_CACHE',		'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 						'gd_version'			=> array('lang' => 'GD_VERSION',			'validate' => 'int',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'gd_radio'),
 						'thumbnail_size'		=> array('lang' => 'THUMBNAIL_SIZE',		'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 						'thumbnail_quality'		=> array('lang' => 'THUMBNAIL_QUALITY',		'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 						'thumbnail_info_line'	=> array('lang' => 'INFO_LINE',				'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 
-						'legend5'				=> 'WATERMARK_OPTIONS',
+						'legend6'				=> 'WATERMARK_OPTIONS',
 						'watermark_images'		=> array('lang' => 'WATERMARK_IMAGES',		'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 						'watermark_source'		=> array('lang' => 'WATERMARK_SOURCE',		'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'watermark_source'),
 						'watermark_height'		=> array('lang' => 'WATERMARK_HEIGHT',		'validate' => 'int',	'type' => 'text:7:4',		'gallery' => true,	'explain' => true),
 						'watermark_width'		=> array('lang' => 'WATERMARK_WIDTH',		'validate' => 'int',	'type' => 'text:7:4',		'gallery' => true,	'explain' => true),
 						'watermark_position'	=> array('lang' => 'WATERMARK_POSITION',	'validate' => '',		'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'watermark_position'),
 
-						'legend6'				=> 'UC_LINK_CONFIG',
+						'legend7'				=> 'UC_LINK_CONFIG',
 						'link_thumbnail'		=> array('lang' => 'UC_THUMBNAIL',			'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => true,	'method' => 'uc_select'),
 						'link_imagepage'		=> array('lang' => 'UC_IMAGEPAGE',			'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'uc_select'),
 						'link_image_name'		=> array('lang' => 'UC_IMAGE_NAME',			'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'uc_select'),
 						'link_image_icon'		=> array('lang' => 'UC_IMAGE_ICON',			'validate' => 'string',	'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'uc_select'),
 
-						'legend7'				=> 'RRC_GINDEX',
+						'legend8'				=> 'RRC_GINDEX',
 						'rrc_gindex_mode'		=> array('lang' => 'RRC_GINDEX_MODE',		'validate' => 'int',	'type' => 'custom',			'gallery' => true,	'explain' => true,	'method' => 'rrc_modes'),
 						'rrc_gindex_rows'		=> array('lang' => 'RRC_GINDEX_ROWS',		'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 						'rrc_gindex_columns'	=> array('lang' => 'RRC_GINDEX_COLUMNS',	'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
@@ -118,7 +121,7 @@ class acp_gallery_config
 						'rrc_gindex_display'	=> array('lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => '',		'type' => 'custom',			'gallery' => true,	'explain' => false,	'method' => 'rrc_display'),
 						'rrc_gindex_pgalleries'	=> array('lang' => 'RRC_GINDEX_PGALLERIES',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 
-						'legend8'				=> 'PHPBB_INTEGRATION',
+						'legend9'				=> 'PHPBB_INTEGRATION',
 						'gallery_total_images'		=> array('lang' => 'DISP_TOTAL_IMAGES',				'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => false,	'explain' => false),
 						'user_images_profile'		=> array('lang' => 'DISP_USER_IMAGES_PROFILE',		'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 						'personal_album_profile'	=> array('lang' => 'DISP_PERSONAL_ALBUM_PROFILE',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
@@ -131,7 +134,7 @@ class acp_gallery_config
 						'gallery_viewtopic_images'	=> array('lang' => 'DISP_VIEWTOPIC_IMAGES',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => false,	'explain' => false),
 						'gallery_viewtopic_link'	=> array('lang' => 'DISP_VIEWTOPIC_LINK',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => false,	'explain' => false),
 
-						'legend9'				=> 'INDEX_SETTINGS',
+						'legend10'				=> 'INDEX_SETTINGS',
 						'personal_album_index'	=> array('lang' => 'PERSONAL_ALBUM_INDEX',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => true),
 						'pgalleries_per_page'	=> array('lang' => 'PGALLERIES_PER_PAGE',	'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
 						'disp_login'			=> array('lang' => 'DISP_LOGIN',		'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => true),
@@ -139,7 +142,7 @@ class acp_gallery_config
 						'disp_birthdays'		=> array('lang' => 'DISP_BIRTHDAYS',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 						'disp_statistic'		=> array('lang' => 'DISP_STATISTIC',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 
-						'legend10'				=> '',
+						'legend11'				=> '',
 					)
 				);
 			break;

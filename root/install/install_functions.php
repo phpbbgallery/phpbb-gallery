@@ -676,6 +676,10 @@ function set_default_config()
 	// Added 1.0.2:
 	set_gallery_config('allow_resize_images', 1);
 	set_gallery_config('allow_rotate_images', 1);
+
+	// Added 1.0.3:
+	set_gallery_config('jpg_quality', 100);
+	set_gallery_config('search_display', 45);
 }
 
 ?>
