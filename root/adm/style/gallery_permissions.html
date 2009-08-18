@@ -96,10 +96,9 @@ function gallery_init_colours(block_id, quick)
 			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
 		</fieldset>
 	</form>
-<!-- ENDIF -->
 
+<!-- ELSEIF S_PERMISSION_V_MASK -->
 
-<!-- IF S_PERMISSION_V_MASK -->
 	<!-- IF C_MASKS_NAMES -->
 		<p><strong>{L_C_MASKS}:</strong> {C_MASKS_NAMES}</p>
 	<!-- ENDIF -->
@@ -179,9 +178,9 @@ function gallery_init_colours(block_id, quick)
 		</form>
 	<!-- ENDIF -->
 	</div>
-<!-- ENDIF -->
 
-<!-- IF S_PERMISSION_P_MASK -->
+<!-- ELSEIF S_PERMISSION_P_MASK -->
+
 <form action="{U_ACTION}" method="post" id="gallery_acp">
 
 <!-- BEGIN c_mask -->
@@ -273,6 +272,39 @@ function gallery_init_colours(block_id, quick)
 		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
 	</fieldset>
 </form>
+
+<!-- ELSEIF S_COPY_PERMISSIONS -->
+
+	<form action="{U_ACTION}" method="post" id="gallery_acp">
+
+	<fieldset>
+		<legend>{L_LOOK_UP_ALBUM}</legend>
+
+		<dl>
+			<dt><label for="src_album">{L_COPY_PERMISSIONS_FROM}:</label><br /><span>{L_COPY_PERMISSIONS_ALBUM_FROM_EXPLAIN}</span></dt>
+			<dd><select id="src_album" name="src_album_id"><option value="0">{L_SELECT_ALBUM}</option><option value="-1">------------------</option>{S_ALBUM_OPTIONS}</select></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{L_LOOK_UP_ALBUM}</legend>
+		<p>{L_LOOK_UP_ALBUMS_EXPLAIN}</p>
+
+		<dl>
+			<dt><label for="dest_albums">{L_COPY_PERMISSIONS_TO}:</label><br /><span>{L_COPY_PERMISSIONS_ALBUM_TO_EXPLAIN}</span></dt>
+			<dd><select id="dest_albums" name="dest_album_ids[]" multiple="multiple" size="10">{S_ALBUM_OPTIONS}</select></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		{S_HIDDEN_FIELDS}
+		{S_FORM_TOKEN}
+	</fieldset>
+
+	</form>
 
 <!-- ENDIF -->
 

@@ -39,6 +39,10 @@
 	</header>
 
 	<action-group>
+		<copy>
+			<file from="root/language/de/*.*" to="language/de/*.*" />
+		</copy>
+
 		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
 
 Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"

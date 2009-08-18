@@ -26,6 +26,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'ACP_GALLERY_ALBUM_MANAGEMENT'		=> 'Album management',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'		=> 'Permissions',
+	'ACP_GALLERY_ALBUM_PERMISSIONS_COPY'=> 'Copy permissions',
 	'ACP_GALLERY_CLEANUP'				=> 'Cleanup gallery',
 	'ACP_GALLERY_CONFIGURE_GALLERY'		=> 'Configure gallery',
 	'ACP_GALLERY_LOGS'					=> 'Gallery log',

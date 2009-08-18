@@ -762,6 +762,22 @@ class install_update extends module
 				set_gallery_config('jpg_quality', 100);
 				set_gallery_config('search_display', 45);
 
+				$sql = 'SELECT module_id
+					FROM ' . MODULES_TABLE . '
+					WHERE (module_id = ' . (int) $gallery_config['acp_parent_module'] . "
+							OR module_langname = 'PHPBB_GALLERY')
+						AND module_class = 'acp'
+						AND module_enabled = 1";
+				$result = $db->sql_query($sql);
+				$acp_module_id = (int) $db->sql_fetchfield('module_id');
+				$db->sql_freeresult($result);
+
+				if ($acp_module_id)
+				{
+					$album_permissions_copy = array('module_basename' => 'gallery_permissions',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS_COPY',	'module_mode' => 'copy',	'module_auth' => 'acl_a_gallery_albums');
+					add_module($album_permissions_copy);
+				}
+
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
 		}

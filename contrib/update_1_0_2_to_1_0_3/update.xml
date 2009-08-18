@@ -40,12 +40,22 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		<history>
 			<entry>
 				<date>2009-MM-DD</date>
-				<rev-version>1.0.3</rev-version>
+				<rev-version>1.0.3-RC1</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Do not view comment-stats if comments are disabled]]></change>
+					<change><![CDATA[[Fix] Increase performance for calls to gallery_acl_check (Contributions to Derky)]]></change>
+					<change><![CDATA[[Fix] ACP Option for JPG-Quality when rotating and resizing images. (Bug #634)]]></change>
+					<change><![CDATA[[Fix] Missing language string NO_DESTINATION_ALBUM (Bug #635)]]></change>
+					<change><![CDATA[[Fix] Several templating issues (subsilver2 only)]]></change>
+					<change><![CDATA[[Fix] Typo in mail template]]></change>
+					<change><![CDATA[[Fix] phpbb-Bug::#46315: "Fix dynamic config update routine error if firebird is used"]]></change>
 					<change><![CDATA[[Fix] View album name of contest-winners (Bug #630)]]></change>
 					<change><![CDATA[[Fix] Do not loose exif-data while rotating an image (Bug #633)]]></change>
 
 					<change><![CDATA[[Change] One file for the image-block for easier styling]]></change>
+
+					<change><![CDATA[[Feature] Copy permissions from one to other albums]]></change>
+					<change><![CDATA[[Feature] Option for display-int on search.php]]></change>
 				</changelog>
 			</entry>
 		</history>
@@ -73,9 +83,11 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 	<action-group>
 		<copy>
 			<file from="root/adm/mods/phpbb_gallery_version.php" to="adm/mods/phpbb_gallery_version.php" />
+			<file from="root/adm/style/*.*" to="adm/style/*.*" />
 			<file from="root/gallery/*.*" to="gallery/*.*" />
 			<file from="root/includes/*.*" to="includes/*.*" />
 			<file from="root/install/*.*" to="install/*.*" />
+			<file from="root/language/en/*.*" to="language/en/*.*" />
 			<file from="root/styles/prosilver/template/*.*" to="styles/prosilver/template/*.*" />
 		</copy>
 

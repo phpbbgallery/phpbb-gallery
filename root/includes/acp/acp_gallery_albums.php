@@ -180,7 +180,7 @@ class acp_gallery_albums
 								$modscache_ary[] = array(
 									'album_id'			=> $album_data['album_id'],
 									'user_id'			=> $row['user_id'],
-									'username '			=> $row['username'],
+									'username'			=> $row['username'],
 									'group_id'			=> $row['group_id'],
 									'group_name'		=> $row['group_name'],
 									'display_on_index'	=> $row['display_on_index'],
