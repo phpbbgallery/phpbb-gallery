@@ -42,6 +42,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<date>2009-MM-DD</date>
 				<rev-version>1.0.3-RC1</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] "Force to delete Outdated files" does not work with other PHP filename extensions and GALLERY_ROOT_PATH (Bug #643)]]></change>
 					<change><![CDATA[[Fix] Do not view comment-stats if comments are disabled]]></change>
 					<change><![CDATA[[Fix] Increase performance for calls to gallery_acl_check (Contributions to Derky)]]></change>
 					<change><![CDATA[[Fix] ACP Option for JPG-Quality when rotating and resizing images. (Bug #634)]]></change>

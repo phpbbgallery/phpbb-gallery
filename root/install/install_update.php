@@ -218,6 +218,13 @@ class install_update extends module
 		$delete = (isset($_POST['delete'])) ? true : false;
 		foreach ($oudated_files as $file)
 		{
+			// Replace gallery root path with the constant.
+			if (strpos($file, 'gallery/') == 0)
+			{
+				$file = substr_replace($file, GALLERY_ROOT_PATH, 0, 8);
+			}
+			$file = preg_replace('/\.php$/i', ".$phpEx", $file);
+
 			if ($delete)
 			{
 				if (@file_exists($phpbb_root_path . $file))
