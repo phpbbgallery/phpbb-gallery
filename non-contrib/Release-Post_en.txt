@@ -1,7 +1,7 @@
 [b]Modification Name:[/b] phpBB Gallery
 [b]Author:[/b] [url=http://www.flying-bits.org][b]nickvergessen[/b][/url]
 
-[b]Modification Version:[/b] 1.0.2
+[b]Modification Version:[/b] 1.0.3
 [b]Modification Description:[/b]
 [list]An image-gallery integrated into your phpbb-board.[/list]
 
@@ -24,6 +24,6 @@
 [b]FAQ & Known-Issues[/b]: http://www.flying-bits.org/go/phpbb_gallery/faq
 [b]Paypal-Donation[/b]: If you like the MOD, you may return the favor with a little [url=http://www.flying-bits.org/paypal.php]Paypal-Donation[/url] (nickvergessen Q gmx.de / Q=@).
 
-[b]Downloads:[/b] [size=150][b][url=http://www.flying-bits.org/go/phpbb_gallery/download]Download v1.0.2[/url][/b][/size]
+[b]Downloads:[/b] [size=150][b][url=http://www.flying-bits.org/go/phpbb_gallery/download]Download v1.0.3[/url][/b][/size]
 [list][*][url=http://www.flying-bits.org/go/phpbb_gallery/translations]Language-Packages[/url]
 [*][url=http://www.flying-bits.org/go/phpbb_gallery/addons]Addons[/url][/list]

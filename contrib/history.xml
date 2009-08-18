@@ -177,7 +177,7 @@ Installing:
 			</author>
 		</author-group>
 
-		<mod-version>1.0.2</mod-version>
+		<mod-version>1.0.3</mod-version>
 
 		<installation>
 			<level>intermediate</level>
@@ -186,6 +186,29 @@ Installing:
 		</installation>
 
 		<history>
+			<entry>
+				<date>2009-08-18</date>
+				<rev-version>1.0.3</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Fix] imagerotate() only available in "bundled version of the GD library" (Bug #642)]]></change>
+					<change><![CDATA[[Fix] "Force to delete Outdated files" does not work with other PHP filename extensions and GALLERY_ROOT_PATH (Bug #643)]]></change>
+					<change><![CDATA[[Fix] Do not view comment-stats if comments are disabled]]></change>
+					<change><![CDATA[[Fix] Increase performance for calls to gallery_acl_check (Contributions to Derky)]]></change>
+					<change><![CDATA[[Fix] ACP Option for JPG-Quality when rotating and resizing images. (Bug #634)]]></change>
+					<change><![CDATA[[Fix] Missing language string NO_DESTINATION_ALBUM (Bug #635)]]></change>
+					<change><![CDATA[[Fix] Several templating issues (subsilver2 only)]]></change>
+					<change><![CDATA[[Fix] Typo in mail template]]></change>
+					<change><![CDATA[[Fix] phpbb-Bug::#46315: "Fix dynamic config update routine error if firebird is used"]]></change>
+					<change><![CDATA[[Fix] View album name of contest-winners (Bug #630)]]></change>
+					<change><![CDATA[[Fix] Do not loose exif-data while rotating an image (Bug #633)]]></change>
+
+					<change><![CDATA[[Change] One file for the image-block for easier styling]]></change>
+
+					<change><![CDATA[[Feature] Copy permissions from one to other albums]]></change>
+					<change><![CDATA[[Feature] Option for display-int on search.php]]></change>
+				</changelog>
+			</entry>
+
 			<entry>
 				<date>2009-07-31</date>
 				<rev-version>1.0.2</rev-version>
@@ -260,23 +283,9 @@ Installing:
 					<change><![CDATA[[Fix] Misleading language string on (edit|delete) (comments|images) permissions (Bug #545)]]></change>
 					<change><![CDATA[[Fix] Not changing block-colour when setting to Yes/No/Never]]></change>
 					<change><![CDATA[[Fix] All Yes/All No/All Never for permissions (Bug #546)]]></change>
-				</changelog>
-			</entry>
-
-			<entry>
-				<date>2009-05-21</date>
-				<rev-version>1.0.0-RC2</rev-version>
-				<changelog lang="en">
 					<change><![CDATA[[Fix] Locked-Icon only viewed if user has moderative permissions (Bug #543)]]></change>
 					<change><![CDATA[[Fix] Permissions for moving into own personal albums are the wrong way round (Bug #542)]]></change>
 					<change><![CDATA[[Fix] Missing Tab-index for fields on gallery/posting.php (Bug #544)]]></change>
-				</changelog>
-			</entry>
-
-			<entry>
-				<date>2009-05-08</date>
-				<rev-version>1.0.0-RC1</rev-version>
-				<changelog lang="en">
 					<change><![CDATA[[Fix] List of users to long on mass import and unwanted bots listed. (Bug #534)]]></change>
 					<change><![CDATA[[Fix] Correctly increase the view-count on viewing the image.php (Related to Bug #339)]]></change>
 					<change><![CDATA[[Fix] Undefined index on RRC, when contest-winner was deleted (Bug #524)]]></change>
