@@ -334,6 +334,12 @@ class nv_image_tools
 	*/
 	function rotate_image($angle, $ignore_dimensions)
 	{
+		if (!function_exists('imagerotate'))
+		{
+			$this->errors[] = array('ROTATE_IMAGE_FUNCTION', $angle);
+			return;
+		}
+
 		if (($angle <= 0) || (($angle % 90) != 0))
 		{
 			$this->errors[] = array('ROTATE_IMAGE_ANGLE', $angle);
