@@ -188,7 +188,7 @@ $lang = array_merge($lang, array(
 	'INHERIT_PERMISSIONS_VICTIM'	=> 'Inherit permissions of an other setting',
 
 	'JPG_ALLOWED'					=> 'Allowed to upload JPG files',
-	'JPG_QUALITY'					=> 'JPG-Qualtity',
+	'JPG_QUALITY'					=> 'JPG-Quality',
 	'JPG_QUALITY_EXP'				=> 'When rotating or resizing image, the filesize might get bigger than it was before the action. With this option you can reduce the quality, to save disk space.',
 
 	'LIST_INDEX'					=> 'List subalbum in parent-album’s legend',
