@@ -692,13 +692,18 @@ class install_update extends module
 					WHERE module_langname = 'ACP_GALLERY_ALBUM_PERMISSIONS'";
 				$db->sql_query($sql);
 
-				set_gallery_config('pgalleries_per_page', 10);
+				if (!isset($gallery_config['pgalleries_per_page']))
+				{
+					set_gallery_config('pgalleries_per_page', 10);
+				}
 				if (isset($gallery_config['max_pics']))
 				{
 					set_gallery_config('images_per_album', $gallery_config['max_pics']);
 				}
-
-				set_gallery_config('watermark_position', 20);
+				if (!isset($gallery_config['watermark_position']))
+				{
+					set_gallery_config('watermark_position', 20);
+				}
 
 				// We made some stupid bbcodes
 				$sql = 'DELETE FROM ' . BBCODES_TABLE . "
@@ -707,7 +712,10 @@ class install_update extends module
 				$db->sql_query($sql);
 
 			case '1.0.0-RC1':
-				set_gallery_config('rrc_profile_pgalleries', $gallery_config['rrc_gindex_pgalleries']);
+				if (!isset($gallery_config['rrc_profile_pgalleries']))
+				{
+					set_gallery_config('rrc_profile_pgalleries', $gallery_config['rrc_gindex_pgalleries']);
+				}
 
 			case '1.0.0-RC2':
 			case '1.0.0':
@@ -766,23 +774,41 @@ class install_update extends module
 
 			case '1.0.2':
 			case '1.0.3-RC1':
-				set_gallery_config('jpg_quality', 100);
-				set_gallery_config('search_display', 45);
+				if (!isset($gallery_config['jpg_quality']))
+				{
+					set_gallery_config('jpg_quality', 100);
+				}
+				if (!isset($gallery_config['search_display']))
+				{
+					set_gallery_config('search_display', 45);
+				}
 
 				$sql = 'SELECT module_id
-					FROM ' . MODULES_TABLE . '
-					WHERE (module_id = ' . (int) $gallery_config['acp_parent_module'] . "
-							OR module_langname = 'PHPBB_GALLERY')
+					FROM ' . MODULES_TABLE . "
+					WHERE module_langname = 'ACP_GALLERY_ALBUM_PERMISSIONS_COPY'
 						AND module_class = 'acp'
 						AND module_enabled = 1";
 				$result = $db->sql_query($sql);
-				$acp_module_id = (int) $db->sql_fetchfield('module_id');
+				$copy_permissions_module_id = (int) $db->sql_fetchfield('module_id');
 				$db->sql_freeresult($result);
 
-				if ($acp_module_id)
+				if (!$copy_permissions_module_id)
 				{
-					$album_permissions_copy = array('module_basename' => 'gallery_permissions',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS_COPY',	'module_mode' => 'copy',	'module_auth' => 'acl_a_gallery_albums');
-					add_module($album_permissions_copy);
+					$sql = 'SELECT module_id
+						FROM ' . MODULES_TABLE . '
+						WHERE (module_id = ' . (int) $gallery_config['acp_parent_module'] . "
+								OR module_langname = 'PHPBB_GALLERY')
+							AND module_class = 'acp'
+							AND module_enabled = 1";
+					$result = $db->sql_query($sql);
+					$acp_module_id = (int) $db->sql_fetchfield('module_id');
+					$db->sql_freeresult($result);
+
+					if ($acp_module_id)
+					{
+						$album_permissions_copy = array('module_basename' => 'gallery_permissions',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS_COPY',	'module_mode' => 'copy',	'module_auth' => 'acl_a_gallery_albums');
+						add_module($album_permissions_copy);
+					}
 				}
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
