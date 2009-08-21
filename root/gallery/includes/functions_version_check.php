@@ -33,16 +33,8 @@ function mod_version_check($return_version = false)
 
 	// load version files
 	$class_functions = array();
-	if (file_exists($phpbb_admin_path . 'mods/phpbb_gallery_dev_version.' . $phpEx))
-	{
-		include($phpbb_admin_path . 'mods/phpbb_gallery_dev_version.' . $phpEx);
-		$class_name = 'phpbb_gallery_dev_version';
-	}
-	else
-	{
-		include($phpbb_admin_path . 'mods/phpbb_gallery_version.' . $phpEx);
-		$class_name = 'phpbb_gallery_version';
-	}
+	include($phpbb_admin_path . 'mods/phpbb_gallery_version.' . $phpEx);
+	$class_name = 'phpbb_gallery_version';
 
 	$var = call_user_func(array($class_name, 'version'));
 
