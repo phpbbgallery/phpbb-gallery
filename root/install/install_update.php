@@ -810,6 +810,8 @@ class install_update extends module
 						add_module($album_permissions_copy);
 					}
 				}
+				set_gallery_config('version_check_version', '0.0.0');
+				set_gallery_config('version_check_time', 0);
 
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;

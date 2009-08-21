@@ -20,29 +20,46 @@ if (!defined('IN_PHPBB'))
 /**
 * A copy of Handyman` s MOD version check, to view it on the gallery overview
 */
-function mod_version_check()
+function mod_version_check($return_version = false)
 {
 	global $user, $template;
 	global $phpbb_admin_path, $phpEx;
 
+	if (!function_exists('get_remote_file'))
+	{
+		global $phpbb_root_path;
+		include($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
+	}
+
 	// load version files
 	$class_functions = array();
-	include($phpbb_admin_path . 'mods/phpbb_gallery_version.' . $phpEx);
+	if (file_exists($phpbb_admin_path . 'mods/phpbb_gallery_dev_version.' . $phpEx))
+	{
+		include($phpbb_admin_path . 'mods/phpbb_gallery_dev_version.' . $phpEx);
+		$class_name = 'phpbb_gallery_dev_version';
+	}
+	else
+	{
+		include($phpbb_admin_path . 'mods/phpbb_gallery_version.' . $phpEx);
+		$class_name = 'phpbb_gallery_version';
+	}
 
-	$class_name = 'phpbb_gallery_version';
 	$var = call_user_func(array($class_name, 'version'));
 
 	// Get current and latest version
 	$errstr = '';
 	$errno = 0;
 
-	$mod_version = $user->lang['NO_INFO'];
-	$data = array(
-		'title'			=> $var['title'],
-		'description'	=> $user->lang['NO_INFO'],
-		'download'		=> $user->lang['NO_INFO'],
-		'announcement'	=> $user->lang['NO_INFO'],
-	);
+	if (!$return_version)
+	{
+		$mod_version = $user->lang['NO_INFO'];
+		$data = array(
+			'title'			=> $var['title'],
+			'description'	=> $user->lang['NO_INFO'],
+			'download'		=> $user->lang['NO_INFO'],
+			'announcement'	=> $user->lang['NO_INFO'],
+		);
+	}
 	$file = get_remote_file($var['file'][0], '/' . $var['file'][1], $var['file'][2], $errstr, $errno);
 
 	if ($file)
@@ -85,6 +102,11 @@ function mod_version_check()
 
 	// remove spaces from the version in the mod file stored locally
 	$version = str_replace(' ', '', $var['version']);
+	if ($return_version)
+	{
+		return $version;
+	}
+
 	$version_compare = (version_compare($version, $mod_version, '<')) ? false : true;
 
 	$template->assign_block_vars('mods', array(
