@@ -570,6 +570,8 @@ function recalc_btree($sql_id, $sql_table, $where_options = array())
 */
 function set_default_config()
 {
+	global $config, $gallery_config;
+
 	// Previous configs
 	set_config('num_images', 0, true);
 	set_config('gallery_total_images', 1);
