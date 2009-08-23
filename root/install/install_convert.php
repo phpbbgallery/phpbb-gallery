@@ -122,6 +122,7 @@ class install_convert extends module
 		$template->assign_block_vars('checks', array(
 			'S_LEGEND'			=> true,
 			'LEGEND'			=> $user->lang['PHP_SETTINGS'],
+			'LEGEND_EXPLAIN'	=> $user->lang['PHP_SETTINGS_EXP'],
 		));
 
 		// Check for GD-Library
@@ -140,6 +141,50 @@ class install_convert extends module
 			'RESULT'		=> $result,
 
 			'S_EXPLAIN'		=> false,
+			'S_LEGEND'		=> false,
+		));
+
+		// Test for optional PHP settings
+		$template->assign_block_vars('checks', array(
+			'S_LEGEND'			=> true,
+			'LEGEND'			=> $user->lang['PHP_SETTINGS_OPTIONAL'],
+			'LEGEND_EXPLAIN'	=> $user->lang['PHP_SETTINGS_OPTIONAL_EXP'],
+		));
+
+		// Image rotate
+		if (function_exists('imagerotate'))
+		{
+			$result = '<strong style="color:green">' . $user->lang['YES'] . '</strong>';
+		}
+		else
+		{
+			$gd_info = gd_info();
+			$result = '<strong style="color:red">' . $user->lang['NO'] . '</strong><br />' . sprintf($user->lang['OPTIONAL_IMAGEROTATE_EXP'], $gd_info['GD Version']);
+		}
+		$template->assign_block_vars('checks', array(
+			'TITLE'			=> $user->lang['OPTIONAL_IMAGEROTATE'],
+			'TITLE_EXPLAIN'	=> $user->lang['OPTIONAL_IMAGEROTATE_EXPLAIN'],
+			'RESULT'		=> $result,
+
+			'S_EXPLAIN'		=> true,
+			'S_LEGEND'		=> false,
+		));
+
+		// Exif data
+		if (function_exists('exif_read_data'))
+		{
+			$result = '<strong style="color:green">' . $user->lang['YES'] . '</strong>';
+		}
+		else
+		{
+			$result = '<strong style="color:red">' . $user->lang['NO'] . '</strong><br />' . $user->lang['OPTIONAL_EXIFDATA_EXP'];
+		}
+		$template->assign_block_vars('checks', array(
+			'TITLE'			=> $user->lang['OPTIONAL_EXIFDATA'],
+			'TITLE_EXPLAIN'	=> $user->lang['OPTIONAL_EXIFDATA_EXPLAIN'],
+			'RESULT'		=> $result,
+
+			'S_EXPLAIN'		=> true,
 			'S_LEGEND'		=> false,
 		));
 

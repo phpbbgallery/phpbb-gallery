@@ -130,6 +130,7 @@ $lang = array_merge($lang, array(
 	'DELETE_SUBALBUMS'				=> 'Delete subalbums and their images',
 	'DISP_BIRTHDAYS'				=> 'Show birthdays',
 	'DISP_EXIF_DATA'				=> 'Display Exif-data',
+	'DISP_EXIF_DATA_EXP'			=> 'This feature can not be used at the moment, as the need function "exif_read_data" is not included in your PHP Installation.',
 	'DISP_FAKE_THUMB'				=> 'View thumbnail in albumlist',
 	'DISP_LOGIN'					=> 'Show login-field',
 	'DISP_LOGIN_EXP'				=> 'Guest only',
@@ -298,6 +299,7 @@ $lang = array_merge($lang, array(
 	'RESYNCED_LAST_IMAGES'			=> 'Refreshed "Last image"',
 	'RESYNCED_PERSONALS'			=> 'Resynchronised personal album id\'s',
 	'ROTATE_IMAGES'					=> 'Allow to rotate images',
+	'ROTATE_IMAGES_EXP'				=> 'This feature can not be used at the moment, as the need function "imagerotate" is not included in your GD Version.',
 	'ROWS_PER_PAGE'					=> 'Number of rows on thumbnail page',
 
 	'RRC_DISPLAY_ALBUMNAME'			=> 'Album name',

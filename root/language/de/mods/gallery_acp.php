@@ -132,6 +132,7 @@ $lang = array_merge($lang, array(
 	'DELETE_SUBS'					=> 'Angehängte Alben löschen',
 	'DISP_BIRTHDAYS'				=> 'Geburtstage anzeigen',
 	'DISP_EXIF_DATA'				=> 'Exif-Daten anzeigen',
+	'DISP_EXIF_DATA_EXP'			=> 'Das Feature steht derzeit nicht zur Verfügung, da die benötigte Funktion "exif_read_data" nicht in deiner PHP Installation enthalten ist.',
 	'DISP_FAKE_THUMB'				=> 'Thumbnail in der Album-Liste anzeigen',
 	'DISP_LOGIN'					=> 'Login-Feld anzeigen',
 	'DISP_LOGIN_EXP'				=> 'Nur für Gäste',
@@ -300,6 +301,7 @@ $lang = array_merge($lang, array(
 	'RESYNCED_LAST_IMAGES'			=> '"Letztes Bild" neu ermittelt',
 	'RESYNCED_PERSONALS'			=> 'Persönliche Alben resynchronisiert',
 	'ROTATE_IMAGES'					=> 'Option zum Drehen von Bilder anzeigen',
+	'ROTATE_IMAGES_EXP'				=> 'Das Feature steht derzeit nicht zur Verfügung, da die benötigte Funktion "imagerotate" nicht in deiner GD Version enthalten ist.',
 	'ROWS_PER_PAGE'					=> 'Anzahl der Zeilen auf Bildvorschau-Seite',
 
 	'RRC_DISPLAY_ALBUMNAME'			=> 'Name des Albums',

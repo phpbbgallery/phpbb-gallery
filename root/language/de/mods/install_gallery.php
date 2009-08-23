@@ -71,6 +71,18 @@ $lang = array_merge($lang, array(
 	'MODULES_SELECT_4UCP'		=> 'Übergeordnetes Modul für den "Persönlichen Bereich"',
 	'MODULES_SELECT_NONE'		=> 'kein übergeordnetes Modul',
 
+	'OPTIONAL_EXIFDATA'				=> 'Funktion "exif_read_data" existiert',
+	'OPTIONAL_EXIFDATA_EXP'			=> 'Das Exif-Modul ist nicht installiert oder geladen.',
+	'OPTIONAL_EXIFDATA_EXPLAIN'		=> 'Wenn die Funktion existiert, werden auf der imagepage die Exif Daten zu den Bildern mit angezeigt.',
+	'OPTIONAL_IMAGEROTATE'			=> 'Funktion "imagerotate" existiert',
+	'OPTIONAL_IMAGEROTATE_EXP'		=> 'Du musst deine GD Version, derzeit "%s", aktualisieren.',
+	'OPTIONAL_IMAGEROTATE_EXPLAIN'	=> 'Wenn die Funktion existiert, können Bilder während dem Hochladen und Bearbeiten gedreht werden.',
+
+	'PHP_SETTINGS'				=> 'PHP Einstellungen',
+	'PHP_SETTINGS_EXP'			=> 'Diese PHP Einstellungen und Konfigurationen werden benötigt um die Gallery zu installieren und korrekt benutzen zu können.',
+	'PHP_SETTINGS_OPTIONAL'		=> 'Optionale PHP Einstellungen',
+	'PHP_SETTINGS_OPTIONAL_EXP'	=> 'Diese PHP Einstellungen werden <strong>NICHT</strong> zwingend benötigt, aber ermöglichen einige Extra-Features.',
+
 	'REQ_GD_LIBRARY'			=> 'GD Library ist installiert',
 	'REQUIREMENTS_EXPLAIN'		=> 'Bevor die Installation fortgesetzt werden kann, wird phpBB einige Tests zu deiner Server-Konfiguration und deinen Dateien durchführen, um sicherzustellen, dass du die phpBB Gallery installieren und benutzen kannst. Bitte lies die Ergebnisse aufmerksam durch und fahre nicht weiter fort, bevor alle erforderlichen Tests bestanden sind.',
 
