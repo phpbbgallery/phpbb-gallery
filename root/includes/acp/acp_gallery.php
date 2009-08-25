@@ -786,7 +786,7 @@ class acp_gallery
 
 		if (confirm_box(true))
 		{
-			$message = '';
+			$message = array();
 			if ($missing_sources)
 			{
 				$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $missing_sources);
@@ -801,7 +801,7 @@ class acp_gallery
 				$db->sql_query($sql);
 				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $missing_sources);
 				$db->sql_query($sql);
-				$message .= $user->lang['CLEAN_SOURCES_DONE'];
+				$message[] = $user->lang['CLEAN_SOURCES_DONE'];
 			}
 			if ($missing_entries)
 			{
@@ -809,7 +809,7 @@ class acp_gallery
 				{
 					@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . utf8_decode($missing_image));
 				}
-				$message .= $user->lang['CLEAN_ENTRIES_DONE'];
+				$message[] = $user->lang['CLEAN_ENTRIES_DONE'];
 			}
 			if ($missing_authors)
 			{
@@ -843,13 +843,13 @@ class acp_gallery
 					$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $deleted_images);
 					$db->sql_query($sql);
 				}
-				$message .= $user->lang['CLEAN_AUTHORS_DONE'];
+				$message[] = $user->lang['CLEAN_AUTHORS_DONE'];
 			}
 			if ($missing_comments)
 			{
 				$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . ' WHERE ' . $db->sql_in_set('comment_id', $missing_comments);
 				$db->sql_query($sql);
-				$message .= $user->lang['CLEAN_COMMENTS_DONE'];
+				$message[] = $user->lang['CLEAN_COMMENTS_DONE'];
 			}
 			if ($missing_personals || $personals_bad)
 			{
@@ -863,6 +863,7 @@ class acp_gallery
 				$result = $db->sql_query($sql);
 				$remove_personal_counter = $db->sql_fetchfield('personal_counter');
 				$db->sql_freeresult($result);
+
 				$sql = 'SELECT album_id
 					FROM ' . GALLERY_ALBUMS_TABLE . '
 					WHERE ' . $db->sql_in_set('album_user_id', $delete_albums);
@@ -872,7 +873,8 @@ class acp_gallery
 					$deleted_albums[] = $row['album_id'];
 				}
 				$db->sql_freeresult($result);
-				$sql = 'SELECT image_id, image_thumbnail, image_filename
+
+				$sql = 'SELECT image_id, image_thumbnail, image_filename, image_user_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
 					WHERE ' . $db->sql_in_set('image_album_id', $deleted_albums);
 				$result = $db->sql_query($sql);
@@ -882,8 +884,18 @@ class acp_gallery
 					@unlink($phpbb_root_path . GALLERY_MEDIUM_PATH . $row['image_filename']);
 					@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $row['image_filename']);
 					$deleted_images[] = $row['image_id'];
+
+					if (isset($user_image_count[$row['image_user_id']]))
+					{
+						$user_image_count[$row['image_user_id']]++;
+					}
+					else
+					{
+						$user_image_count[(int) $row['image_user_id']] = 1;
+					}
 				}
 				$db->sql_freeresult($result);
+
 				if ($deleted_images)
 				{
 					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . ' WHERE ' . $db->sql_in_set('comment_image_id', $deleted_images);
@@ -899,6 +911,7 @@ class acp_gallery
 					$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $deleted_images);
 					$db->sql_query($sql);
 				}
+
 				$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . ' WHERE ' . $db->sql_in_set('album_id', $deleted_albums);
 				$db->sql_query($sql);
 				set_gallery_config_count('personal_counter', 0 - $remove_personal_counter);
@@ -941,17 +954,43 @@ class acp_gallery
 						set_gallery_config('newest_pgallery_album_id', 0);
 					}
 				}
-				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
-					SET personal_album_id = 0
-					WHERE ' . $db->sql_in_set('user_id', $delete_albums);
-				$db->sql_query($sql);
+
+				// No errors, if the image_count would be lower than 0
+				$db->sql_return_on_error(true);
+				foreach ($user_image_count as $user_id => $images)
+				{
+					if (!function_exists('gallery_hookup_image_counter'))
+					{
+						global $gallery_root_path, $phpbb_root_path, $phpEx;
+						include($phpbb_root_path . $gallery_root_path . 'includes/hookup_gallery.' . $phpEx);
+					}
+					gallery_hookup_image_counter($user_id, (0 - $images));
+
+					$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
+						SET personal_album_id = 0,
+							user_images = user_images - ' . $images . '
+						WHERE user_id = ' . $user_id;
+					$result = $db->sql_query($sql);
+
+					if ($result === false)
+					{
+						$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
+							SET personal_album_id = 0,
+								user_images = 0
+							WHERE user_id = ' . $user_id;
+						$db->sql_query($sql);
+					}
+					$db->sql_freeresult($result);
+				}
+				$db->sql_return_on_error(false);
+
 				if ($missing_personals)
 				{
-					$message .= $user->lang['CLEAN_PERSONALS_DONE'];
+					$message[] = $user->lang['CLEAN_PERSONALS_DONE'];
 				}
 				if ($personals_bad)
 				{
-					$message .= $user->lang['CLEAN_PERSONALS_BAD_DONE'];
+					$message[] = $user->lang['CLEAN_PERSONALS_BAD_DONE'];
 				}
 			}
 
@@ -975,7 +1014,7 @@ class acp_gallery
 			$cache->destroy('sql', GALLERY_WATCH_TABLE);
 			$cache->destroy('_albums');
 
-			trigger_error($message . adm_back_link($this->u_action));
+			trigger_error(implode('<br />', $message) . adm_back_link($this->u_action));
 		}
 		else if (($delete) || (isset($_POST['cancel'])))
 		{
