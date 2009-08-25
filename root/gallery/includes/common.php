@@ -36,6 +36,12 @@ if ($gallery_config['version_check_time'] + 86400 < time())
 	set_gallery_config('version_check_version', mod_version_check(true));
 }
 
+if (!isset($auth))
+{
+	// Quite hackish, sometimes from memberlist.php this is the case.
+	global $auth;
+}
+
 if ($auth->acl_get('a_') && version_compare($gallery_config['phpbb_gallery_version'], $gallery_config['version_check_version'], '<'))
 {
 	$user->add_lang('mods/gallery_acp');
