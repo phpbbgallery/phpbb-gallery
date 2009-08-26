@@ -724,7 +724,7 @@ class ucp_gallery
 					global $gallery_root_path, $phpbb_root_path, $phpEx;
 					include($phpbb_root_path . $gallery_root_path . 'includes/hookup_gallery.' . $phpEx);
 				}
-				gallery_hookup_image_counter($user->data['user_id'], 0 - $num_images));
+				gallery_hookup_image_counter($user->data['user_id'], 0 - $num_images);
 
 				// No errors, if the image_count would be lower than 0
 				$db->sql_return_on_error(true);
