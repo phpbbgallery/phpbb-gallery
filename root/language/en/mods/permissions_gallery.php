@@ -29,7 +29,7 @@ $lang['permission_cat']['gallery'] = 'phpBB Gallery';
 $lang = array_merge($lang, array(
 	'acl_a_gallery_manage'		=> array('lang' => 'Can manage the phpBB Gallery adjustments',	'cat' => 'gallery'),
 	'acl_a_gallery_albums'		=> array('lang' => 'Can add/edit albums and permissions',		'cat' => 'gallery'),
-	'acl_a_gallery_import'		=> array('lang' => 'Can use the import-funtion',				'cat' => 'gallery'),
+	'acl_a_gallery_import'		=> array('lang' => 'Can use the import-function',				'cat' => 'gallery'),
 	'acl_a_gallery_cleanup'		=> array('lang' => 'Can clean up the phpBB Gallery',			'cat' => 'gallery'),
 ));
 ?>
