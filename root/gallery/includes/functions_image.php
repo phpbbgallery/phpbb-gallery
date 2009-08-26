@@ -200,7 +200,9 @@ class nv_image_tools
 
 		if ($is_ie8)
 		{
-			header('X-Content-Type-Options: nosniff');
+			// We got some problems with images, which did not appear correctly.
+			// Tested with failure in Windows XP 5.1.2600 SP3 - IE 8.0.6001.18702
+			// header('X-Content-Type-Options: nosniff');
 		}
 
 		/**
@@ -232,6 +234,10 @@ class nv_image_tools
 		else
 		{
 			header('Content-Disposition: inline; ' . header_filename(htmlspecialchars_decode($this->image_name)));
+			if ($is_ie8)
+			{
+				header('X-Download-Options: noopen');
+			}
 		}
 
 		if ($content_length)
@@ -387,7 +393,7 @@ class nv_image_tools
 	function watermark_image($watermark_source, $watermark_position = 20, $min_height = 0, $min_width = 0)
 	{
 		$this->watermark_source = $watermark_source;
-		if (!$this->watermark_source)
+		if (!$this->watermark_source || !file_exists($this->watermark_source))
 		{
 			$this->errors[] = array('WATERMARK_IMAGE_SOURCE');
 			return;
