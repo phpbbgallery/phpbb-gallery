@@ -117,6 +117,30 @@ class nv_image_tools
 	}
 
 	/**
+	* Get image mimetype by filename
+	*
+	* Only use this, if the image is secure. As we created all these images, they should be...
+	*/
+	function mimetype_by_filename($filename)
+	{
+		switch (utf8_substr(strtolower($filename), -4))
+		{
+			case '.png':
+				return 'image/png';
+			break;
+			case '.gif':
+				return 'image/gif';
+			break;
+			case 'jpeg':
+			case '.jpg':
+				return 'image/jpeg';
+			break;
+		}
+
+		return '';
+	}
+
+	/**
 	* Read image
 	*/
 	function read_image($force_filesize = false)
@@ -194,15 +218,23 @@ class nv_image_tools
 	{
 		global $db, $user;
 
+		if (!$this->image_content_type)
+		{
+			// We don't have the image, so we guess the mime_type by filename
+			$this->image_content_type = $this->mimetype_by_filename($this->image_source);
+			if (!$this->image_content_type)
+			{
+				trigger_error('NO_MIMETYPE_MATCHED');
+			}
+		}
+
 		header('Pragma: public');
 		$is_ie8 = (strpos(strtolower($user->browser), 'msie 8.0') !== false);
 		header('Content-Type: ' . $this->image_content_type);
 
 		if ($is_ie8)
 		{
-			// We got some problems with images, which did not appear correctly.
-			// Tested with failure in Windows XP 5.1.2600 SP3 - IE 8.0.6001.18702
-			// header('X-Content-Type-Options: nosniff');
+			header('X-Content-Type-Options: nosniff');
 		}
 
 		/**
