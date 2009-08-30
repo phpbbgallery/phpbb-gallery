@@ -39,10 +39,13 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 		<history>
 			<entry>
-				<date>2009-MM-DD</date>
+				<date>2009-08-30</date>
 				<rev-version>1.0.3</rev-version>
 				<changelog lang="en">
 					<change><![CDATA[[Fix] Deleting personal albums does not decrease user_images (Bug #645)]]></change>
+					<change><![CDATA[[Fix] Do not allow image_rotate and exif_data Option when the functions are missing.]]></change>
+
+					<change><![CDATA[[Feature] Inform admin fpr new updates on gallery/index]]></change>
 				</changelog>
 			</entry>
 

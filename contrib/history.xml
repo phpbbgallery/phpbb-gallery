@@ -187,9 +187,11 @@ Installing:
 
 		<history>
 			<entry>
-				<date>2009-08-18</date>
+				<date>2009-08-30</date>
 				<rev-version>1.0.3</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Deleting personal albums does not decrease user_images (Bug #645)]]></change>
+					<change><![CDATA[[Fix] Do not allow image_rotate and exif_data Option when the functions are missing.]]></change>
 					<change><![CDATA[[Fix] imagerotate() only available in "bundled version of the GD library" (Bug #642)]]></change>
 					<change><![CDATA[[Fix] "Force to delete Outdated files" does not work with other PHP filename extensions and GALLERY_ROOT_PATH (Bug #643)]]></change>
 					<change><![CDATA[[Fix] Do not view comment-stats if comments are disabled]]></change>
@@ -204,6 +206,7 @@ Installing:
 
 					<change><![CDATA[[Change] One file for the image-block for easier styling]]></change>
 
+					<change><![CDATA[[Feature] Inform admin fpr new updates on gallery/index]]></change>
 					<change><![CDATA[[Feature] Copy permissions from one to other albums]]></change>
 					<change><![CDATA[[Feature] Option for display-int on search.php]]></change>
 				</changelog>
