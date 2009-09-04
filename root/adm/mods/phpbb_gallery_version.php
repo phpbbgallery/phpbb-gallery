@@ -24,8 +24,8 @@ class phpbb_gallery_version
 		return array(
 			'author'	=> 'nickvergessen',
 			'title'		=> 'phpBB Gallery',
-			'tag'		=> 'phpbb_gallery_dev',
-			'version'	=> '1.0.3-RC2',
+			'tag'		=> 'phpbb_gallery',
+			'version'	=> '1.0.3',
 			'file'		=> array('www.flying-bits.org', 'updatecheck', 'phpbb_gallery.xml'),
 		);
 	}
