@@ -28,7 +28,7 @@ function toggleElement(oElement)
 <h2><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>
 
 <!-- IF ALBUM_DESC or MODERATORS or U_MCP -->
-<p>
+<div>
 	<!-- NOTE: remove the style="display: none !important;" when you want to have the album description on the album body -->
 	<!-- IF ALBUM_DESC --><div style="display: none !important;">{ALBUM_DESC}<br /></div><!-- ENDIF -->
 	<!-- IF ALBUM_CONTEST_START --><span>{ALBUM_CONTEST_START}<br /></span><!-- ENDIF -->
@@ -37,7 +37,7 @@ function toggleElement(oElement)
 	<!-- IF MODERATORS --><strong>{L_MODERATORS}:</strong> {MODERATORS}<br /><!-- ENDIF -->
 	<!-- IF U_EDIT_ALBUM --><br /><strong><a href="{U_EDIT_ALBUM}">{L_EDIT_ALBUM}</a></strong><!-- ENDIF -->
 	<!-- IF U_CREATE_ALBUM --><br /><strong><a href="{U_CREATE_ALBUM}">{L_CREATE_SUBALBUM}</a></strong><!-- ENDIF -->
-</p>
+</div>
 <!-- ENDIF -->
 
 <!-- IF .albumrow -->
