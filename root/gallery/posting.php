@@ -592,7 +592,7 @@ switch ($mode)
 					'MESSAGE'				=> request_var('message', '', true),
 					'S_IMAGE'				=> true,
 					'S_UPLOAD'				=> true,
-					'S_ALLOW_ROTATE'		=> $gallery_config['allow_rotate_images'],
+					'S_ALLOW_ROTATE'		=> ($gallery_config['allow_rotate_images'] && function_exists('imagerotate')),
 				));
 
 				if (!$error)
@@ -773,7 +773,7 @@ switch ($mode)
 
 					'S_IMAGE'			=> true,
 					'S_EDIT'			=> true,
-					'S_ALLOW_ROTATE'	=> $gallery_config['allow_rotate_images'],
+					'S_ALLOW_ROTATE'	=> ($gallery_config['allow_rotate_images'] && function_exists('imagerotate')),
 					'S_MOVE_PERSONAL'	=> ((gallery_acl_check('i_upload', OWN_GALLERY_PERMISSIONS) || $user->gallery['personal_album_id']) || ($user->data['user_id'] != $image_data['image_user_id'])) ? true : false,
 					'S_MOVE_MODERATOR'	=> ($user->data['user_id'] != $image_data['image_user_id']) ? true : false,
 					'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id"),
