@@ -25,7 +25,7 @@ include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 // Start session management
 $user->session_begin();
 $auth->acl($user->data);
-$user->setup(array('mods/gallery', 'mods/gallery_ucp'));
+$user->setup(array('mods/gallery_ucp', 'mods/gallery'));
 
 // Get general album information
 include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
@@ -262,6 +262,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 				}
 
 				// Assign the image to the template-block
+				$images[$j]['album_name'] = $album_data['album_name'];
 				assign_image_block('imageblock.imagerow.image', $images[$j], $album_data['album_status'], $gallery_config['album_display'], $album_data['album_user_id']);
 			}
 		}
