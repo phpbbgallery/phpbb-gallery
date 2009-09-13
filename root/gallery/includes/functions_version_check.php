@@ -42,6 +42,7 @@ function mod_version_check($return_version = false)
 	$errstr = '';
 	$errno = 0;
 
+	$mod_version = '0.0.0';
 	if (!$return_version)
 	{
 		$mod_version = $user->lang['NO_INFO'];
