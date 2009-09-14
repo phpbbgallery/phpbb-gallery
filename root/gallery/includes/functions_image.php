@@ -471,7 +471,7 @@ class nv_image_tools
 		}
 		elseif ($watermark_position & WATERMARK_RIGHT)
 		{
-			$dst_x = ($this->image_size['height'] - $this->watermark_size[1] - 5);
+			$dst_x = ($this->image_size['width'] - $this->watermark_size[0] - 5);
 		}
 		if ($watermark_position & WATERMARK_TOP)
 		{
@@ -479,7 +479,7 @@ class nv_image_tools
 		}
 		elseif ($watermark_position & WATERMARK_MIDDLE)
 		{
-			$dst_y = (($this->image_size['width'] * 0.5) - ($this->watermark_size[0] * 0.5));
+			$dst_y = (($this->image_size['height'] * 0.5) - ($this->watermark_size[1] * 0.5));
 		}
 		imagecopy($this->image, $this->watermark, $dst_x, $dst_y, 0, 0, $this->watermark_size[0], $this->watermark_size[1]);
 		imagedestroy($this->watermark);
