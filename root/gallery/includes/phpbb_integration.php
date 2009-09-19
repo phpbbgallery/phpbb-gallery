@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
-function integrate_memberlist_viewprofile (&$member)
+function integrate_memberlist_viewprofile(&$member)
 {
 	global $config, $db, $template, $user;
 	global $gallery_root_path, $phpbb_root_path, $phpEx;
@@ -72,7 +72,7 @@ function integrate_memberlist_viewprofile (&$member)
 	));
 }
 
-function integrate_viewonline ($on_page, $album_id, $session_page)
+function integrate_viewonline($on_page, $album_id, $session_page)
 {
 	global $album_data, $config, $cache, $db, $template, $user;
 	global $gallery_root_path, $phpbb_root_path, $phpEx;
@@ -193,7 +193,13 @@ function gallery_integrate_user_update_name($old_name, $new_name)
 			AND parent_id = 0";
 	$db->sql_query($sql);
 
+	$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
+		SET album_parents = ''";
+	$db->sql_query($sql);
+
 	// Because some tables/caches use username-specific data we need to purge this here.
+	$cache->destroy('_albums');
+	$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 	$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);
 }
 
