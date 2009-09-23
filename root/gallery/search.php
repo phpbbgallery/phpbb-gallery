@@ -367,7 +367,6 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 	// "Normal" search
 	else
 	{
-		$template->assign_var('S_IN_GSEARCH', true);
 		$search_query = '';
 		$matches = array('i.image_name', 'i.image_desc');
 
