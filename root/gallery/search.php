@@ -184,7 +184,6 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 		switch ($search_id)
 		{
 			case 'recent':
-				$template->assign_var('S_IN_GSEARCH_RECENT', true);
 				$template->assign_block_vars('navlinks', array(
 					'FORUM_NAME'	=> $user->lang['SEARCH_RECENT'],
 					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=' . $search_id),
@@ -203,7 +202,6 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			break;
 
 			case 'random':
-				$template->assign_var('S_IN_GSEARCH_RANDOM', true);
 				$template->assign_block_vars('navlinks', array(
 					'FORUM_NAME'	=> $user->lang['SEARCH_RANDOM'],
 					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=' . $search_id),
@@ -238,7 +236,6 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			case 'commented':
 			if ($gallery_config['allow_comments'])
 			{
-				$template->assign_var('S_IN_GSEARCH_COMMENTED', true);
 				$template->assign_block_vars('navlinks', array(
 					'FORUM_NAME'	=> $user->lang['SEARCH_RECENT_COMMENTS'],
 					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=' . $search_id),
@@ -273,7 +270,6 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			case 'toprated':
 			if ($gallery_config['allow_rates'])
 			{
-				$template->assign_var('S_IN_GSEARCH_TOPRATED', true);
 				$template->assign_block_vars('navlinks', array(
 					'FORUM_NAME'	=> $user->lang['SEARCH_TOPRATED'],
 					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=' . $search_id),
@@ -297,7 +293,6 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			case 'contests':
 			if ($gallery_config['allow_rates'])
 			{
-				$template->assign_var('S_IN_GSEARCH_CONTEST', true);
 				$template->assign_block_vars('navlinks', array(
 					'FORUM_NAME'	=> $user->lang['SEARCH_CONTEST'],
 					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=' . $search_id),
@@ -347,7 +342,6 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				// no break
 
 			case 'usersearch':
-				$template->assign_var('S_IN_GSEARCH_USERSEARCH', true);
 				// Get username for the search-title "Images of %s"
 				$sql = 'SELECT username
 					FROM ' . USERS_TABLE . '
@@ -538,6 +532,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 					$template->assign_block_vars('imageblock', array(
 						'U_BLOCK'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $contest_data['album_id'] . '&amp;sk=ra&amp;sd=d'),
 						'BLOCK_NAME'		=> sprintf($user->lang['CONTEST_WINNERS_OF'], $contest_data['album_name']),
+						'S_CONTEST_BLOCK'	=> true,
 					));
 					foreach ($contest_data['images'] as $contest_image)
 					{

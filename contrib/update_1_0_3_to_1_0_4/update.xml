@@ -48,6 +48,8 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 					<change><![CDATA[[Fix] Use correct width/height for watermark position (Bug #657)]]></change>
 					<change><![CDATA[[Fix] album_name for imageblock not set on album.php (Bug #655)]]></change>
 					<change><![CDATA[[Fix] Missing some global vars from integrate_memberlist_viewprofile (Bug #653)]]></change>
+
+					<change><![CDATA[[Change] Give better styling-option on contest-imageblocks (Bug #650)]]></change>
 				</changelog>
 			</entry>
 		</history>

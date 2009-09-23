@@ -252,6 +252,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 				$template->assign_block_vars('imageblock', array(
 					'U_BLOCK'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $contest_data['album_id'] . '&amp;sk=ra&amp;sd=d'),
 					'BLOCK_NAME'		=> sprintf($user->lang['CONTEST_WINNERS_OF'], $contest_data['album_name']),
+					'S_CONTEST_BLOCK'	=> true,
 				));
 				foreach ($contest_data['images'] as $contest_image)
 				{
