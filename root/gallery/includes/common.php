@@ -29,22 +29,11 @@ if ($gallery_config['version_check_time'] + 86400 < time())
 	// Scare the user of outdated versions
 	if (!function_exists('mod_version_check'))
 	{
-		if (!isset($phpbb_admin_path))
-		{
-			// Quite hackish, sometimes from memberlist.php this is the case.
-			global $phpbb_admin_path;
-		}
 		$phpbb_admin_path = $phpbb_root_path . 'adm/';
 		include($phpbb_root_path . $gallery_root_path . 'includes/functions_version_check.' . $phpEx);
 	}
 	set_gallery_config('version_check_time', time());
 	set_gallery_config('version_check_version', mod_version_check(true));
-}
-
-if (!isset($auth))
-{
-	// Quite hackish, sometimes from memberlist.php this is the case.
-	global $auth;
 }
 
 if ($auth->acl_get('a_') && version_compare($gallery_config['phpbb_gallery_version'], $gallery_config['version_check_version'], '<'))

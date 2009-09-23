@@ -19,8 +19,9 @@ if (!defined('IN_PHPBB'))
 
 function integrate_memberlist_viewprofile(&$member)
 {
-	global $config, $db, $template, $user;
-	global $gallery_root_path, $phpbb_root_path, $phpEx;
+	// Some of the globals may not be used here, but in the included files
+	global $auth, $config, $db, $gallery_config, $template, $user;
+	global $gallery_root_path, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 	$user->add_lang('mods/gallery');
 
 	if (!function_exists('load_gallery_config'))
