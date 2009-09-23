@@ -129,7 +129,7 @@ function toggleElement(oElement)
 
 <!-- IF not S_IS_BOT and (S_ALLOWED_TO_RATE or S_ALLOWED_TO_COMMENT) -->
 		<a name="rating"></a>
-		<form name="postform" action="{S_COMMENT_ACTION}" method="post" onsubmit="return checkCommentForm;">
+		<form name="postform" action="{S_COMMENT_ACTION}" method="post">
 			<table class="tablebg" cellspacing="1" width="100%">
 				<tr>
 					<th colspan="2" style="align: center;"><!-- IF S_ALLOWED_TO_RATE and S_ALLOWED_TO_COMMENT -->{L_POST_COMMENT_RATE_IMAGE}<!-- ELSEIF S_ALLOWED_TO_COMMENT -->{L_POST_COMMENT}<!-- ELSE -->{L_RATE_IMAGE}<!-- ENDIF --></th>

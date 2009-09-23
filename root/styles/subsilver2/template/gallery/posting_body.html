@@ -26,7 +26,7 @@ function toggleElement(oElement)
 </script>
 <h2><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>
 
-<form name="upload" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data" onsubmit="return checkAlbumForm()">
+<form name="upload" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data">
 	<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
 		<tr>
 			<th colspan="2"><!-- IF S_COMMENT -->{L_POST_COMMENT}<!-- ELSEIF S_UPLOAD -->{L_UPLOAD_IMAGE}<!-- ELSEIF S_EDIT -->{L_EDIT_IMAGE}<!-- ELSEIF S_REPORT -->{L_REPORT_IMAGE}<!-- ENDIF --></th>
