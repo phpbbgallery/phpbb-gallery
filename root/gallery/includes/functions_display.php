@@ -48,13 +48,26 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 	// Mark albums read?
 	$mark_read = request_var('mark', '');
 
+	if ($mark_read == 'all')
+	{
+		$mark_read = '';
+	}
+
 	if (!$root_data)
 	{
+		if ($mark_read == 'albums')
+		{
+			$mark_read = 'all';
+		}
 		$root_data = array('album_id' => NON_PERSONAL_ALBUMS);
 		$sql_where = 'a.album_user_id = ' . NON_PERSONAL_ALBUMS;
 	}
 	else if ($root_data == 'personal')
 	{
+		if ($mark_read == 'albums')
+		{
+			$mark_read = 'all';
+		}
 		$root_data = array('album_id' => 0);//@todo: I think this is incorrect!?
 		$sql_where = 'a.album_user_id > ' . NON_PERSONAL_ALBUMS;
 		$num_pgalleries = $gallery_config['personal_counter'];

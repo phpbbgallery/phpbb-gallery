@@ -723,12 +723,13 @@ function gallery_markread($mode, $album_id = false)
 
 	if ($mode == 'all')
 	{
-		if ($forum_id === false || !sizeof($forum_id))
+		if ($album_id === false || !sizeof($album_id))
 		{
 			// Mark all albums read (index page)
 			$sql = 'DELETE FROM ' . GALLERY_ATRACK_TABLE . '
 				WHERE user_id = ' . $user->data['user_id'];
 			$db->sql_query($sql);
+
 			$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
 				SET user_lastmark = ' . time() . '
 				WHERE user_id = ' . $user->data['user_id'];
