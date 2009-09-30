@@ -457,6 +457,10 @@ class install_update extends module
 			case '1.0.2':
 
 			case '1.0.3-RC1':
+			case '1.0.3-RC2':
+			case '1.0.3':
+
+			case '1.0.4':
 			break;
 		}
 
@@ -858,6 +862,12 @@ class install_update extends module
 				set_gallery_config('version_check_version', '0.0.0');
 				set_gallery_config('version_check_time', 0);
 
+			case '1.0.3-RC2':
+			case '1.0.3':
+			case '1.0.4':
+				// Set allow_rotate_images only if possible
+				set_gallery_config('allow_rotate_images', ((function_exists('imagerotate') && $gallery_config['allow_rotate_images']) ? 1 : 0));
+
 				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
 			break;
 		}
@@ -945,6 +955,10 @@ class install_update extends module
 			case '1.0.2':
 
 			case '1.0.3-RC1':
+			case '1.0.3-RC2':
+			case '1.0.3':
+
+			case '1.0.4':
 			break;
 		}
 
@@ -1059,6 +1073,10 @@ class install_update extends module
 				case '1.0.2':
 
 				case '1.0.3-RC1':
+				case '1.0.3-RC2':
+				case '1.0.3':
+
+				case '1.0.4':
 				break;
 			}
 
@@ -1075,6 +1093,10 @@ class install_update extends module
 			$modules = $this->gallery_config_options;
 			switch ($gallery_config['phpbb_gallery_version'])
 			{
+				case '1.0.4':
+
+				case '1.0.3':
+				case '1.0.3-RC2':
 				case '1.0.3-RC1':
 
 				case '1.0.2':
