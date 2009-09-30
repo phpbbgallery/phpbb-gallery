@@ -856,6 +856,7 @@ class acp_gallery
 				$delete_albums = array_merge($missing_personals, $personals_bad);
 
 				$deleted_images = $deleted_albums = array(0);
+				$user_image_count = array();
 				$sql = 'SELECT COUNT(album_user_id) personal_counter
 					FROM ' . GALLERY_ALBUMS_TABLE . '
 					WHERE parent_id = 0
