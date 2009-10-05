@@ -118,7 +118,7 @@ switch ($mode)
 			case 'upload':
 				if (!gallery_acl_check('i_upload', $album_id, $album_data['album_user_id']) || ($album_data['album_status'] == ITEM_LOCKED))
 				{
-					gallery_not_authorised($album_backlink, $user, $album_loginlink);
+					gallery_not_authorised($album_backlink, $user, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
 				}
 				if ($album_data['contest_id'] && (time() < $album_data['contest_start']))
 				{
@@ -257,11 +257,19 @@ switch ($mode)
 	break;
 }
 
-function gallery_not_authorised($backlink, $user, $loginlink)
+function gallery_not_authorised($backlink, $user, $loginlink, $login_explain = '')
 {
 	if (!$user->data['is_registered'])
 	{
-		login_box($loginlink , $user->lang['LOGIN_INFO']);
+		if ($login_explain && isset($user->lang[$login_explain]))
+		{
+			$login_explain = $user->lang[$login_explain];
+		}
+		else
+		{
+			$login_explain = '';
+		}
+		login_box($loginlink, $login_explain);
 	}
 	else
 	{
