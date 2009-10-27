@@ -69,7 +69,8 @@ function load_gallery_config()
 	$result = $db->sql_query($sql);
 	$db->sql_return_on_error(false);
 
-	if ($result === true)
+	$gallery_config = array();
+	if ($result !== false)
 	{
 		$gallery_config['loaded'] = true;
 	}
