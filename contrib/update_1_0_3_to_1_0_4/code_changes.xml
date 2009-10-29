@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
 <!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
-<!-- $Id$ -->
+<!-- $Id: update.xml 1333 2009-10-27 23:45:09Z nickvergessen $ -->
 <mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.3.xsd">
 	<header>
 		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
@@ -37,35 +37,11 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<target-version>3.0.6</target-version>
 		</installation>
 
-		<history>
-			<entry>
-				<date>2009-10-30</date>
-				<rev-version>1.0.4</rev-version>
-				<changelog lang="en">
-					<change><![CDATA[[Fix] Caption on Login-Box viewing wrong messages (Bug #667)]]></change>
-					<change><![CDATA[[Fix] Fix some problems with images not viewing full]]></change>
-					<change><![CDATA[[Fix] Fix xHTML valid when ShadowBox is used (Bug #666)]]></change>
-					<change><![CDATA[[Fix] Do not try to use $rotate_image when the function is not available (Bug #665)]]></change>
-					<change><![CDATA[[Fix] View birthdays only with gallery-config, independent from phpbb]]></change>
-					<change><![CDATA[[Fix] Remove calls to Check*Form from old rate-system (Bug #664)]]></change>
-					<change><![CDATA[[Fix] Global mark albums read did not work correctly]]></change>
-					<change><![CDATA[[Fix] Clear album_parents when albumname changes on renaming a user (Bug #651)]]></change>
-					<change><![CDATA[[Fix] Use correct width/height for watermark position (Bug #657)]]></change>
-					<change><![CDATA[[Fix] album_name for imageblock not set on album.php (Bug #655)]]></change>
-					<change><![CDATA[[Fix] Missing some global vars from integrate_memberlist_viewprofile (Bug #653)]]></change>
-
-					<change><![CDATA[[Change] Give better styling-option on contest-imageblocks (Bug #650)]]></change>
-				</changelog>
-			</entry>
-		</history>
-
 		<link-group>
 			<link type="contrib" lang="de" href="../history.xml">Geschichte/Entwickler/Features</link>
 			<link type="contrib" lang="en" href="../history.xml">History/Developers/Features</link>
-			<link type="parent" lang="de" href="../../install.xml">Installations-Anleitung</link>
-			<link type="parent" lang="en" href="../../install.xml">Install</link>
-			<link type="contrib" lang="de" href="code_changes.xml">Code-Changes</link>
-			<link type="contrib" lang="en" href="code_changes.xml">Code-Changes</link>
+			<link type="parent" lang="de" href="update.xml">Update Anleitung</link>
+			<link type="parent" lang="en" href="update.xml">Update manual</link>
 			<link type="language" lang="de" href="contrib/de.xml">Anleitung für das deutsche Sprachpaket</link>
 			<link type="language" lang="en" href="contrib/de.xml">Manual for German Language-set</link>
 			<link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>
@@ -82,16 +58,6 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 	</header>
 
 	<action-group>
-		<copy>
-			<file from="root/adm/mods/phpbb_gallery_version.php" to="adm/mods/phpbb_gallery_version.php" />
-			<file from="root/adm/style/*.*" to="adm/style/*.*" />
-			<file from="root/gallery/*.*" to="gallery/*.*" />
-			<file from="root/includes/*.*" to="includes/*.*" />
-			<file from="root/install/*.*" to="install/*.*" />
-			<file from="root/language/en/*.*" to="language/en/*.*" />
-			<file from="root/styles/prosilver/template/*.*" to="styles/prosilver/template/*.*" />
-		</copy>
-
 		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
 
 Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
