@@ -58,6 +58,392 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 	</header>
 
 	<action-group>
+		<copy>
+			<file from="root/install/*.*" to="install/*.*" />
+		</copy>
+
+		<open src="adm/mods/phpbb_gallery_version.php">
+			<edit>
+				<find><![CDATA[* @version $Id: phpbb_gallery_version.php 1313 2009-09-04 08:02:26Z nickvergessen $]]></find>
+				<action type="replace-with"><![CDATA[* @version $Id: phpbb_gallery_version.php 1334 2009-10-29 21:24:59Z nickvergessen $]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[			'version'	=> '1.0.3',]]></find>
+				<action type="replace-with"><![CDATA[			'version'	=> '1.0.4',]]></action>
+			</edit>
+		</open>
+
+		<open src="adm/style/gallery_albums.html">
+			<edit>
+				<find><![CDATA[		{S_FORM_TOKEN}
+	</fieldset>
+	{S_FORM_TOKEN}
+</form>]]></find>
+				<action type="replace-with"><![CDATA[		{S_FORM_TOKEN}
+	</fieldset>
+</form>]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/includes/common.php">
+			<edit>
+				<find><![CDATA[* @version $Id: common.php 1300 2009-08-25 18:40:29Z nickvergessen $]]></find>
+				<action type="replace-with"><![CDATA[* @version $Id: common.php 1320 2009-09-23 21:47:44Z nickvergessen $]]></action>
+			</edit>
+			<edit>
+				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+				<comment lang="en"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
+				<find><![CDATA[if (!isset($auth))
+{
+	// Quite hackish, sometimes from memberlist.php this is the case.
+	global $auth;
+}
+]]></find>
+				<action type="replace-with"><![CDATA[]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/includes/functions.php">
+			<edit>
+				<find><![CDATA[* @version $Id: functions.php 1276 2009-08-14 09:29:19Z nickvergessen $]]></find>
+				<action type="replace-with"><![CDATA[* @version $Id: functions.php 1333 2009-10-27 23:45:09Z nickvergessen $]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	if ($result === true)
+	{
+		$gallery_config['loaded'] = true;
+	}]]></find>
+				<action type="replace-with"><![CDATA[	$gallery_config = array();
+	if ($result !== false)
+	{
+		$gallery_config['loaded'] = true;
+	}]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[		if ($forum_id === false || !sizeof($forum_id))
+		{
+			// Mark all albums read (index page)
+			$sql = 'DELETE FROM ' . GALLERY_ATRACK_TABLE . '
+				WHERE user_id = ' . $user->data['user_id'];
+			$db->sql_query($sql);
+			$sql = 'UPDATE ' . GALLERY_USERS_TABLE . ']]></find>
+				<action type="replace-with"><![CDATA[		if ($album_id === false || !sizeof($album_id))
+		{
+			// Mark all albums read (index page)
+			$sql = 'DELETE FROM ' . GALLERY_ATRACK_TABLE . '
+				WHERE user_id = ' . $user->data['user_id'];
+			$db->sql_query($sql);
+
+			$sql = 'UPDATE ' . GALLERY_USERS_TABLE . ']]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/includes/functions_display.php">
+			<edit>
+				<find><![CDATA[* @version $Id: functions_display.php 1285 2009-08-17 08:55:36Z nickvergessen $]]></find>
+				<action type="replace-with"><![CDATA[* @version $Id: functions_display.php 1321 2009-09-23 21:54:45Z nickvergessen $]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	$mark_read = request_var('mark', '');
+
+	if (!$root_data)
+	{
+		$root_data = array('album_id' => NON_PERSONAL_ALBUMS);
+		$sql_where = 'a.album_user_id = ' . NON_PERSONAL_ALBUMS;
+	}
+	else if ($root_data == 'personal')
+	{]]></find>
+				<action type="replace-with"><![CDATA[	$mark_read = request_var('mark', '');
+
+	if ($mark_read == 'all')
+	{
+		$mark_read = '';
+	}
+
+	if (!$root_data)
+	{
+		if ($mark_read == 'albums')
+		{
+			$mark_read = 'all';
+		}
+		$root_data = array('album_id' => NON_PERSONAL_ALBUMS);
+		$sql_where = 'a.album_user_id = ' . NON_PERSONAL_ALBUMS;
+	}
+	else if ($root_data == 'personal')
+	{
+		if ($mark_read == 'albums')
+		{
+			$mark_read = 'all';
+		}]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/includes/functions_image.php">
+			<edit>
+				<find><![CDATA[* @version $Id: functions_image.php 1305 2009-08-27 15:59:44Z nickvergessen $]]></find>
+				<action type="replace-with"><![CDATA[* @version $Id: functions_image.php 1318 2009-09-14 16:56:53Z nickvergessen $]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[			$dst_x = ($this->image_size['height'] - $this->watermark_size[1] - 5);]]></find>
+				<action type="replace-with"><![CDATA[			$dst_x = ($this->image_size['width'] - $this->watermark_size[0] - 5);]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[			$dst_y = (($this->image_size['width'] * 0.5) - ($this->watermark_size[0] * 0.5));]]></find>
+				<action type="replace-with"><![CDATA[			$dst_y = (($this->image_size['height'] * 0.5) - ($this->watermark_size[1] * 0.5));]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/includes/functions_recent.php">
+			<edit>
+				<find><![CDATA[* @version $Id: functions_recent.php 1285 2009-08-17 08:55:36Z nickvergessen $]]></find>
+				<action type="replace-with"><![CDATA[* @version $Id: functions_recent.php 1324 2009-09-23 22:17:54Z nickvergessen $]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					'BLOCK_NAME'		=> sprintf($user->lang['CONTEST_WINNERS_OF'], $contest_data['album_name']),]]></find>
+				<action type="replace-with"><![CDATA[					'S_CONTEST_BLOCK'	=> true,]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/includes/functions_version_check.php">
+			<edit>
+				<find><![CDATA[* @version $Id: functions_version_check.php 1307 2009-08-30 15:43:51Z nickvergessen $]]></find>
+				<action type="replace-with"><![CDATA[* @version $Id: functions_version_check.php 1316 2009-09-13 12:55:06Z nickvergessen $]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	if (!$return_version)
+	{]]></find>
+				<action type="before-add"><![CDATA[	$mod_version = '0.0.0';]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/includes/phpbb_integration.php">
+			<edit>
+				<find><![CDATA[* @version $Id: phpbb_integration.php 1209 2009-06-24 12:12:01Z nickvergessen $]]></find>
+				<action type="replace-with"><![CDATA[* @version $Id: phpbb_integration.php 1320 2009-09-23 21:47:44Z nickvergessen $]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	global $config, $db, $template, $user;
+	global $gallery_root_path, $phpbb_root_path, $phpEx;]]></find>
+				<action type="replace-with"><![CDATA[	// Some of the globals may not be used here, but in the included files
+	global $auth, $config, $db, $gallery_config, $template, $user;
+	global $gallery_root_path, $phpbb_admin_path, $phpbb_root_path, $phpEx;]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	// Because some tables/caches use username-specific data we need to purge this here.
+	$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);]]></find>
+				<action type="replace-with"><![CDATA[	$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
+		SET album_parents = ''";
+	$db->sql_query($sql);
+
+	// Because some tables/caches use username-specific data we need to purge this here.
+	$cache->destroy('_albums');
+	$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
+	$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/plugins/index.php">
+			<edit>
+				<find><![CDATA[* @version $Id: index.php 1239 2009-07-10 10:03:56Z nickvergessen $]]></find>
+				<action type="replace-with"><![CDATA[* @version $Id: index.php 1334 2009-10-29 21:24:59Z nickvergessen $]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[* Latest version tested: 4.1.5]]></find>
+				<action type="replace-with"><![CDATA[* Latest version tested: 4.1.8]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/album.php">
+			<edit>
+				<find><![CDATA[* @version $Id: album.php 1285 2009-08-17 08:55:36Z nickvergessen $]]></find>
+				<action type="replace-with"><![CDATA[* @version $Id: album.php 1317 2009-09-13 22:46:02Z nickvergessen $]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[$user->setup(array('mods/gallery', 'mods/gallery_ucp'));]]></find>
+				<action type="replace-with"><![CDATA[$user->setup(array('mods/gallery_ucp', 'mods/gallery'));]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[				// Assign the image to the template-block]]></find>
+				<action type="after-add"><![CDATA[				$images[$j]['album_name'] = $album_data['album_name'];]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/image.php">
+			<edit>
+				<find><![CDATA[* @version $Id: image.php 1314 2009-09-04 10:52:51Z nickvergessen $]]></find>
+				<action type="replace-with"><![CDATA[* @version $Id: image.php 1329 2009-09-30 13:08:25Z nickvergessen $]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[$image_tools->send_image_to_browser((isset($image_data[$filesize_var])) ? $image_data[$filesize_var] : 0);]]></find>
+				<action type="replace-with"><![CDATA[//$image_tools->send_image_to_browser((isset($image_data[$filesize_var])) ? $image_data[$filesize_var] : 0);
+$image_tools->send_image_to_browser();]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/index.php">
+			<edit>
+				<find><![CDATA[* @version $Id: index.php 1286 2009-08-17 09:29:33Z nickvergessen $]]></find>
+				<action type="replace-with"><![CDATA[* @version $Id: index.php 1326 2009-09-30 08:53:43Z nickvergessen $]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[if ($config['load_birthdays'] && $config['allow_birthdays'] && $gallery_config['disp_birthdays'])]]></find>
+				<action type="replace-with"><![CDATA[if ($config['allow_birthdays'] && $gallery_config['disp_birthdays'])]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	'S_DISPLAY_BIRTHDAY_LIST'	=> ($config['load_birthdays']) ? true : false,]]></find>
+				<action type="replace-with"><![CDATA[	'S_DISPLAY_BIRTHDAY_LIST'	=> ($gallery_config['disp_birthdays']) ? true : false,]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/posting.php">
+			<edit>
+				<find><![CDATA[* @version $Id: posting.php 1310 2009-09-04 07:41:46Z nickvergessen $]]></find>
+				<action type="replace-with"><![CDATA[* @version $Id: posting.php 1332 2009-10-05 10:58:43Z nickvergessen $]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[				if (!gallery_acl_check('i_upload', $album_id, $album_data['album_user_id']) || ($album_data['album_status'] == ITEM_LOCKED))
+				{
+					gallery_not_authorised($album_backlink, $user, $album_loginlink);]]></find>
+				<action type="replace-with"><![CDATA[				if (!gallery_acl_check('i_upload', $album_id, $album_data['album_user_id']) || ($album_data['album_status'] == ITEM_LOCKED))
+				{
+					gallery_not_authorised($album_backlink, $user, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[function gallery_not_authorised($backlink, $user, $loginlink)
+{
+	if (!$user->data['is_registered'])
+	{
+		login_box($loginlink , $user->lang['LOGIN_INFO']);]]></find>
+				<action type="replace-with"><![CDATA[function gallery_not_authorised($backlink, $user, $loginlink, $login_explain = '')
+{
+	if (!$user->data['is_registered'])
+	{
+		if ($login_explain && isset($user->lang[$login_explain]))
+		{
+			$login_explain = $user->lang[$login_explain];
+		}
+		else
+		{
+			$login_explain = '';
+		}
+		login_box($loginlink, $login_explain);]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/search.php">
+			<edit>
+				<find><![CDATA[* @version $Id: search.php 1312 2009-09-04 07:56:20Z nickvergessen $]]></find>
+				<action type="replace-with"><![CDATA[* @version $Id: search.php 1325 2009-09-23 22:19:53Z nickvergessen $]]></action>
+			</edit>
+			<edit>
+				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+				<comment lang="en"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
+				<find><![CDATA[				$template->assign_var('S_IN_GSEARCH_RECENT', true);]]></find>
+				<action type="replace-with"><![CDATA[]]></action>
+			</edit>
+			<edit>
+				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+				<comment lang="en"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
+				<find><![CDATA[				$template->assign_var('S_IN_GSEARCH_RANDOM', true);]]></find>
+				<action type="replace-with"><![CDATA[]]></action>
+			</edit>
+			<edit>
+				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+				<comment lang="en"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
+				<find><![CDATA[				$template->assign_var('S_IN_GSEARCH_COMMENTED', true);]]></find>
+				<action type="replace-with"><![CDATA[]]></action>
+			</edit>
+			<edit>
+				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+				<comment lang="en"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
+				<find><![CDATA[				$template->assign_var('S_IN_GSEARCH_TOPRATED', true);]]></find>
+				<action type="replace-with"><![CDATA[]]></action>
+			</edit>
+			<edit>
+				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+				<comment lang="en"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
+				<find><![CDATA[				$template->assign_var('S_IN_GSEARCH_CONTEST', true);]]></find>
+				<action type="replace-with"><![CDATA[]]></action>
+			</edit>
+			<edit>
+				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+				<comment lang="en"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
+				<find><![CDATA[				$template->assign_var('S_IN_GSEARCH_USERSEARCH', true);]]></find>
+				<action type="replace-with"><![CDATA[]]></action>
+			</edit>
+			<edit>
+				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+				<comment lang="en"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
+				<find><![CDATA[				$template->assign_var('S_IN_GSEARCH', true);]]></find>
+				<action type="replace-with"><![CDATA[]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[						'BLOCK_NAME'		=> sprintf($user->lang['CONTEST_WINNERS_OF'], $contest_data['album_name']),]]></find>
+				<action type="after-add"><![CDATA[						'S_CONTEST_BLOCK'	=> true,]]></action>
+			</edit>
+		</open>
+
+		<open src="includes/acp/acp_gallery.php">
+			<edit>
+				<find><![CDATA[* @version $Id: acp_gallery.php 1301 2009-08-25 19:23:53Z nickvergessen $]]></find>
+				<action type="replace-with"><![CDATA[* @version $Id: acp_gallery.php 1328 2009-09-30 11:22:36Z nickvergessen $]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[				$deleted_images = $deleted_albums = array(0);]]></find>
+				<action type="after-add"><![CDATA[				$user_image_count = array();]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/gallery/plugins_header.html">
+			<edit>
+				<find><![CDATA[<!-- IF S_GP_SHADOWBOX -->
+	<link rel="stylesheet" type="text/css" href="{S_GP_SHADOWBOX}shadowbox.css">
+	<script type="text/javascript" src="{S_GP_SHADOWBOX}shadowbox.js"></script>]]></find>
+				<action type="replace-with"><![CDATA[<!-- IF S_GP_SHADOWBOX -->
+	<script type="text/javascript" src="{S_GP_SHADOWBOX}shadowbox.js"></script>
+	<link rel="stylesheet" type="text/css" href="{S_GP_SHADOWBOX}shadowbox.css" />]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/gallery/posting_body.html">
+			<edit>
+				<find><![CDATA[<form id="postform" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data" onsubmit="return checkAlbumForm()">]]></find>
+				<action type="replace-with"><![CDATA[<form id="postform" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data">]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/gallery/viewimage_body.html">
+			<edit>
+				<find><![CDATA[<form id="postform" action="{S_COMMENT_ACTION}" method="post" onsubmit="return checkCommentForm;">]]></find>
+				<action type="replace-with"><![CDATA[<form id="postform" action="{S_COMMENT_ACTION}" method="post">]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/subsilver2/template/gallery/plugins_header.html">
+			<edit>
+				<find><![CDATA[<!-- IF S_GP_SHADOWBOX -->
+	<link rel="stylesheet" type="text/css" href="{S_GP_SHADOWBOX}shadowbox.css">
+	<script type="text/javascript" src="{S_GP_SHADOWBOX}shadowbox.js"></script>]]></find>
+				<action type="replace-with"><![CDATA[<!-- IF S_GP_SHADOWBOX -->
+	<script type="text/javascript" src="{S_GP_SHADOWBOX}shadowbox.js"></script>
+	<link rel="stylesheet" type="text/css" href="{S_GP_SHADOWBOX}shadowbox.css" />]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/subsilver2/template/gallery/posting_body.html">
+			<edit>
+				<find><![CDATA[<form name="upload" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data" onsubmit="return checkAlbumForm()">]]></find>
+				<action type="replace-with"><![CDATA[<form name="upload" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data">]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/subsilver2/template/gallery/viewimage_body.html">
+			<edit>
+				<find><![CDATA[<form name="postform" action="{S_COMMENT_ACTION}" method="post" onsubmit="return checkCommentForm;">]]></find>
+				<action type="replace-with"><![CDATA[<form name="postform" action="{S_COMMENT_ACTION}" method="post">]]></action>
+			</edit>
+		</open>
+
 		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
 
 Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
