@@ -469,10 +469,9 @@ switch ($mode)
 							}
 							if (!$user->data['is_registered'] && $image_data['username'])
 							{
-								$result = validate_username($image_data['username']);
-								if ($result['error'])
+								if (validate_username($image_data['username']))
 								{
-									trigger_error($result['error_msg']);
+									trigger_error('INVALID_USERNAME');
 								}
 							}
 
@@ -1110,8 +1109,7 @@ switch ($mode)
 							$submit = false;
 							$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_USERNAME'];
 						}
-						$result = validate_username($comment_username);
-						if ($result['error'])
+						if (validate_username($comment_username))
 						{
 							$error .= (($error) ? '<br />' : '') . $user->lang['INVALID_USERNAME'];
 							$submit = false;
@@ -1205,9 +1203,8 @@ switch ($mode)
 							$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_USERNAME'];
 							$comment_username_req = true;
 						}
-						$result = validate_username($comment_username);
 
-						if ($result['error'])
+						if (validate_username($comment_username))
 						{
 							$error .= (($error) ? '<br />' : '') . $user->lang['INVALID_USERNAME'];
 							$comment_username = '';

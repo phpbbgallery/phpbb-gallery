@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
 <!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
-<!-- $Id: update.xml 1333 2009-10-27 23:45:09Z nickvergessen $ -->
 <mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.3.xsd">
 	<header>
 		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
@@ -193,6 +192,54 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</edit>
 		</open>
 
+		<open src="gallery/includes/functions_phpbb.php">
+			<edit>
+				<find><![CDATA[		if (!$is_dynamic)
+		{
+			$cache->destroy('config');
+		}
+	}
+}]]></find>
+				<action type="after-add"><![CDATA[if (!function_exists('generate_link_hash'))
+{
+	/**
+	* Add a secret hash   for use in links/GET requests
+	* @param string  $link_name The name of the link; has to match the name used in check_link_hash, otherwise no restrictions apply
+	* @return string the hash
+	*
+	* phpbb::rev10172
+	*/
+	function generate_link_hash($link_name)
+	{
+		global $user;
+
+		if (!isset($user->data["hash_$link_name"]))
+		{
+			$user->data["hash_$link_name"] = substr(sha1($user->data['user_form_salt'] . $link_name), 0, 8);
+		}
+
+		return $user->data["hash_$link_name"];
+	}
+}
+
+if (!function_exists('check_link_hash'))
+{
+	/**
+	* checks a link hash - for GET requests
+	* @param string $token the submitted token
+	* @param string $link_name The name of the link
+	* @return boolean true if all is fine
+	*
+	* phpbb::rev10172
+	*/
+	function check_link_hash($token, $link_name)
+	{
+		return $token === generate_link_hash($link_name);
+	}
+}]]></action>
+			</edit>
+		</open>
+
 		<open src="gallery/includes/functions_recent.php">
 			<edit>
 				<find><![CDATA[* @version $Id: functions_recent.php 1285 2009-08-17 08:55:36Z nickvergessen $]]></find>
@@ -328,6 +375,29 @@ $image_tools->send_image_to_browser();]]></action>
 		}
 		login_box($loginlink, $login_explain);]]></action>
 			</edit>
+			<edit>
+				<find><![CDATA[								$result = validate_username($image_data['username']);
+								if ($result['error'])
+								{
+									trigger_error($result['error_msg']);
+								}]]></find>
+				<action type="replace-with"><![CDATA[								if (validate_username($image_data['username']))
+								{
+									trigger_error('INVALID_USERNAME');
+								}]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[						$result = validate_username($comment_username);
+						if ($result['error'])]]></find>
+				<action type="replace-with"><![CDATA[						if (validate_username($comment_username))]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[						$result = validate_username($comment_username);
+
+						if ($result['error'])]]></find>
+				<action type="replace-with"><![CDATA[
+						if (validate_username($comment_username))]]></action>
+			</edit>
 		</open>
 
 		<open src="gallery/search.php">
@@ -391,6 +461,13 @@ $image_tools->send_image_to_browser();]]></action>
 			<edit>
 				<find><![CDATA[				$deleted_images = $deleted_albums = array(0);]]></find>
 				<action type="after-add"><![CDATA[				$user_image_count = array();]]></action>
+			</edit>
+		</open>
+
+		<open src="language/de/email/newcomment_notify.txt">
+			<edit>
+				<find><![CDATA[Wenn du das Bild nicht länger beobachten möchtest, verwende entweder den Link „Bild nicht mehr beobachten“ beim dem entsprechendem Bild oder besuche folgenden Link:]]></find>
+				<action type="replace-with"><![CDATA[Wenn du das Bild nicht länger beobachten möchtest, verwende entweder den Link „Bild nicht mehr beobachten“ beim entsprechenden Bild oder besuche folgenden Link:]]></action>
 			</edit>
 		</open>
 

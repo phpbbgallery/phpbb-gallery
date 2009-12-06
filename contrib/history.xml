@@ -187,6 +187,26 @@ Installing:
 
 		<history>
 			<entry>
+				<date>2009-12-06</date>
+				<rev-version>1.0.4</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Fix] Caption on Login-Box viewing wrong messages (Bug #667)]]></change>
+					<change><![CDATA[[Fix] Fix some problems with images not viewing full]]></change>
+					<change><![CDATA[[Fix] Fix xHTML valid when ShadowBox is used (Bug #666)]]></change>
+					<change><![CDATA[[Fix] Do not try to use $rotate_image when the function is not available (Bug #665)]]></change>
+					<change><![CDATA[[Fix] View birthdays only with gallery-config, independent from phpbb]]></change>
+					<change><![CDATA[[Fix] Remove calls to Check*Form from old rate-system (Bug #664)]]></change>
+					<change><![CDATA[[Fix] Global mark albums read did not work correctly]]></change>
+					<change><![CDATA[[Fix] Clear album_parents when albumname changes on renaming a user (Bug #651)]]></change>
+					<change><![CDATA[[Fix] Use correct width/height for watermark position (Bug #657)]]></change>
+					<change><![CDATA[[Fix] album_name for imageblock not set on album.php (Bug #655)]]></change>
+					<change><![CDATA[[Fix] Missing some global vars from integrate_memberlist_viewprofile (Bug #653)]]></change>
+
+					<change><![CDATA[[Change] Give better styling-option on contest-imageblocks (Bug #650)]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
 				<date>2009-08-30</date>
 				<rev-version>1.0.3</rev-version>
 				<changelog lang="en">

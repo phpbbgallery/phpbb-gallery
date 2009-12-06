@@ -6,7 +6,7 @@ du erhältst diese Benachrichtigung, weil du das Bild „{IMAGE_NAME}“ auf „
 
 {U_IMAGE}
 
-Wenn du das Bild nicht länger beobachten möchtest, verwende entweder den Link „Bild nicht mehr beobachten“ beim dem entsprechendem Bild oder besuche folgenden Link:
+Wenn du das Bild nicht länger beobachten möchtest, verwende entweder den Link „Bild nicht mehr beobachten“ beim entsprechenden Bild oder besuche folgenden Link:
 
 {U_STOP_WATCHING_IMAGE}
 
