@@ -75,7 +75,8 @@ function integrate_memberlist_viewprofile(&$member)
 
 function integrate_viewonline($on_page, $album_id, $session_page)
 {
-	global $album_data, $config, $cache, $db, $template, $user;
+	// Some of the globals may not be used here, but in the included files
+	global $auth, $album_data, $config, $cache, $db, $template, $user;
 	global $gallery_root_path, $phpbb_root_path, $phpEx;
 	global $location, $location_url;
 

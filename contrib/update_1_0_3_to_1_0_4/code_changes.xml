@@ -276,6 +276,12 @@ if (!function_exists('check_link_hash'))
 	global $gallery_root_path, $phpbb_admin_path, $phpbb_root_path, $phpEx;]]></action>
 			</edit>
 			<edit>
+				<find><![CDATA[global $album_data, $config, $cache, $db, $template, $user;]]></find>
+				<action type="replace-with"><![CDATA[
+	// Some of the globals may not be used here, but in the included files
+	global $auth, $album_data, $config, $cache, $db, $template, $user;]]></action>
+			</edit>
+			<edit>
 				<find><![CDATA[	// Because some tables/caches use username-specific data we need to purge this here.
 	$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);]]></find>
 				<action type="replace-with"><![CDATA[	$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
