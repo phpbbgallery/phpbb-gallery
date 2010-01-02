@@ -76,6 +76,17 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</edit>
 		</open>
 
+		<open src="gallery/posting.php">
+			<edit>
+				<find><![CDATA[						if ($image_tools->rotated)
+						{
+							$image_tools->write_image($image_file->destination_file, $gallery_config['jpg_quality'], true);]]></find>
+				<action type="replace-with"><![CDATA[						if ($image_tools->rotated)
+						{
+							$image_tools->write_image($image_tools->image_source, $gallery_config['jpg_quality'], true);]]></action>
+			</edit>
+		</open>
+
 		<open src="language/de/mods/gallery_acp.php">
 			<edit>
 				<find><![CDATA['PERMISSIONS'					=> 'Berechtigungen',]]></find>

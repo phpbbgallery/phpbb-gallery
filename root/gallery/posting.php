@@ -741,7 +741,7 @@ switch ($mode)
 						$image_tools->rotate_image($rotate, $gallery_config['allow_resize_images']);
 						if ($image_tools->rotated)
 						{
-							$image_tools->write_image($image_file->destination_file, $gallery_config['jpg_quality'], true);
+							$image_tools->write_image($image_tools->image_source, $gallery_config['jpg_quality'], true);
 						}
 
 						@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_filename']);
