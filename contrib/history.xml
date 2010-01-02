@@ -177,7 +177,7 @@ Installing:
 			</author>
 		</author-group>
 
-		<mod-version>1.0.4</mod-version>
+		<mod-version>1.0.5</mod-version>
 
 		<installation>
 			<level>intermediate</level>
@@ -186,6 +186,13 @@ Installing:
 		</installation>
 
 		<history>
+			<entry>
+				<date>2010-MM-DD</date>
+				<rev-version>1.0.5</rev-version>
+				<changelog lang="en">
+				</changelog>
+			</entry>
+
 			<entry>
 				<date>2009-12-06</date>
 				<rev-version>1.0.4</rev-version>
@@ -937,8 +944,8 @@ Installing:
 		<link-group>
 			<link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
 			<link type="parent" lang="en" href="../install.xml">Manual</link>
-			<link type="parent" lang="de" href="update_1_0_1_to_1_0_2/update.xml">Update von 1.0.1 auf 1.0.2</link>
-			<link type="parent" lang="en" href="update_1_0_1_to_1_0_2/update.xml">Update from 1.0.1 to 1.0.2</link>
+			<link type="parent" lang="de" href="update_1_0_4_to_1_0_5/update.xml">Update von 1.0.4 auf 1.0.5</link>
+			<link type="parent" lang="en" href="update_1_0_4_to_1_0_5/update.xml">Update from 1.0.4 to 1.0.5</link>
 		</link-group>
 	</header>
 
