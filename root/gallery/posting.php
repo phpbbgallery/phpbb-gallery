@@ -728,6 +728,7 @@ switch ($mode)
 
 						$image_tools = new nv_image_tools();
 
+						$image_tools->set_image_options($gallery_config['max_file_size'], $gallery_config['max_height'], $gallery_config['max_width']);
 						$image_tools->set_image_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
 						if (($image_data['image_has_exif'] != EXIF_UNAVAILABLE) && ($image_data['image_has_exif'] != EXIF_DBSAVED))
 						{

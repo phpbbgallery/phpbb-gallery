@@ -78,6 +78,10 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 		<open src="gallery/posting.php">
 			<edit>
+				<find><![CDATA[$image_tools->set_image_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);]]></find>
+				<action type="before-add"><![CDATA[$image_tools->set_image_options($gallery_config['max_file_size'], $gallery_config['max_height'], $gallery_config['max_width']);]]></action>
+			</edit>
+			<edit>
 				<find><![CDATA[						if ($image_tools->rotated)
 						{
 							$image_tools->write_image($image_file->destination_file, $gallery_config['jpg_quality'], true);]]></find>
