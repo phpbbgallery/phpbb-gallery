@@ -62,6 +62,13 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<file from="root/install/*.*" to="install/*.*" />
 		</copy>
 
+		<open src="language/de/mods/gallery.php">
+			<edit>
+				<find><![CDATA['NEWEST_PGALLERY'				=> 'Unsere neueste persönliche Galerie %s',]]></find>
+				<action type="replace-with"><![CDATA['NEWEST_PGALLERY'				=> 'Unsere neueste persönliche Galerie: %s',]]></action>
+			</edit>
+		</open>
+
 		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
 
 Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
