@@ -273,6 +273,8 @@ $lang = array_merge($lang, array(
 
 	'PERMISSION_EMPTY'				=> 'Du hast nicht alle Berechtigungen gesetzt.',
 	'PERMISSIONS'					=> 'Berechtigungen',
+	'PERMISSIONS_COPY'				=> 'Albenrechte kopieren',
+	'PERMISSIONS_COPY_EXPLAIN'		=> 'Hier kannst du die Berechtigungen von einem Album zu einem oder mehreren anderen Alben kopieren.',
 	'PERMISSIONS_EXPLAIN'			=> 'Hier kannst du festlegen, welche Benutzer und Gruppen Zugriff auf welches Album haben.',
 	'PERMISSIONS_STORED'			=> 'Berechtigungen erfolgreich gespeichert.',
 	'PERSONAL_ALBUM_INDEX'			=> 'Persönliche Alben in der Galerie-Übersicht als Album anzeigen',

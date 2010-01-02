@@ -62,10 +62,40 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<file from="root/install/*.*" to="install/*.*" />
 		</copy>
 
+		<open src="adm/style/gallery_permissions.html">
+			<edit>
+				<find><![CDATA[<h1>{L_PERMISSIONS}</h1>
+<p>{L_PERMISSIONS_EXPLAIN}</p>]]></find>
+				<action type="replace-with"><![CDATA[<!-- IF not S_COPY_PERMISSIONS -->
+	<h1>{L_PERMISSIONS}</h1>
+	<p>{L_PERMISSIONS_EXPLAIN}</p>
+<!-- ELSE -->
+	<h1>{L_PERMISSIONS_COPY}</h1>
+	<p>{L_PERMISSIONS_COPY_EXPLAIN}</p>
+<!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+
+		<open src="language/de/mods/gallery_acp.php">
+			<edit>
+				<find><![CDATA['PERMISSIONS'					=> 'Berechtigungen',]]></find>
+				<action type="after-add"><![CDATA[	'PERMISSIONS_COPY'				=> 'Albenrechte kopieren',
+	'PERMISSIONS_COPY_EXPLAIN'		=> 'Hier kannst du die Berechtigungen von einem Album zu einem oder mehreren anderen Alben kopieren.',]]></action>
+			</edit>
+		</open>
+
 		<open src="language/de/mods/gallery.php">
 			<edit>
 				<find><![CDATA['NEWEST_PGALLERY'				=> 'Unsere neueste persönliche Galerie %s',]]></find>
 				<action type="replace-with"><![CDATA['NEWEST_PGALLERY'				=> 'Unsere neueste persönliche Galerie: %s',]]></action>
+			</edit>
+		</open>
+
+		<open src="language/en/mods/gallery_acp.php">
+			<edit>
+				<find><![CDATA['PERMISSIONS'					=> 'Permissions',]]></find>
+				<action type="after-add"><![CDATA[	'PERMISSIONS_COPY'				=> 'Copy album permissions',
+	'PERMISSIONS_COPY_EXPLAIN'		=> 'Here you can copy album permissions from one album to one or more other albums.',]]></action>
 			</edit>
 		</open>
 

@@ -76,9 +76,13 @@ function gallery_init_colours(block_id, quick)
 </script>
 <script type="text/javascript" src="style/permissions.js"></script>
 <a name="maincontent"></a>
-
-<h1>{L_PERMISSIONS}</h1>
-<p>{L_PERMISSIONS_EXPLAIN}</p>
+<!-- IF not S_COPY_PERMISSIONS -->
+	<h1>{L_PERMISSIONS}</h1>
+	<p>{L_PERMISSIONS_EXPLAIN}</p>
+<!-- ELSE -->
+	<h1>{L_PERMISSIONS_COPY}</h1>
+	<p>{L_PERMISSIONS_COPY_EXPLAIN}</p>
+<!-- ENDIF -->
 
 <!-- IF S_PERMISSION_C_MASK -->
 	<form action="{U_ACTION}" method="post" id="gallery_acp">

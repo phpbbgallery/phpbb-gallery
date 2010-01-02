@@ -271,6 +271,8 @@ $lang = array_merge($lang, array(
 
 	'PERMISSION_EMPTY'				=> 'You didn\'t set all permissions.',
 	'PERMISSIONS'					=> 'Permissions',
+	'PERMISSIONS_COPY'				=> 'Copy album permissions',
+	'PERMISSIONS_COPY_EXPLAIN'		=> 'Here you can copy album permissions from one album to one or more other albums.',
 	'PERMISSIONS_EXPLAIN'			=> 'Here you can alter which users and groups can access which albums.',
 	'PERMISSIONS_STORED'			=> 'Permissions were stored successful.',
 	'PERSONAL_ALBUM_INDEX'			=> 'View personal albums as album on the index',
