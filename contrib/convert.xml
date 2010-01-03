@@ -56,9 +56,9 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 		<diy-instructions lang="de"><![CDATA[Schritt für Schritt:
 • mache ein Datenbank-Backup deiner phpBB2 und phpBB3-Installation.
-• Stelle die Tabellen des Album-MODs (phpbb_album, phpbb_album_cat, phpbb_album_comment, phpbb_album_config, phpbb_album_rate) udn wenn du es installiert hattest die des Clowns-Packages (phpbb_album_sp_config) in deiner phpBB3-Installation wieder her.
-• gehe zur install/ > Konvertiere MOD zu "aktuelle Version"
-• gebe nun das Präfix deiner phpBB2-Installation ein (Das Präfix ist der kurze Teil am Anfang der Datenbank-Tabellen-Namen in diesem Beispiel "phpbb_")
+• Stelle die Tabellen des Album-MODs (phpbb_album, phpbb_album_cat, phpbb_album_comment, phpbb_album_config, phpbb_album_rate) und wenn du es installiert hattest die des Clowns-Packages (phpbb_album_sp_config) in deiner phpBB3-Installation wieder her.
+• Rufe das install/-Verzeichnis auf und gehe direkt zum Tab "phpBB2 Konvertieren"/"TS Gallery Konvertieren" >>OHNE<< davor die Gallery zu installieren!
+• Smartor-Album MOD: gebe nun das Präfix deiner phpBB2-Installation ein (Das Präfix ist der kurze Teil am Anfang der Datenbank-Tabellen-Namen in diesem Beispiel "phpbb_")
 • Konvertiere.
 
 • Nach dem erfolgreichen Abschluss der Konvertierung kannst du einige Datenbank-Tabellen aus deiner Datenbank löschen:
@@ -74,8 +74,8 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		<diy-instructions lang="en"><![CDATA[Step by Step:
 • make a database-backup of your phpbb2-installation and phpbb3-installation.
 • take the tables of the album-MOD (phpbb_album, phpbb_album_cat, phpbb_album_comment, phpbb_album_config, phpbb_album_rate) and if you got it, the Clowns-Package (phpbb_album_sp_config) and put these tables into your phpBB3-database
-• go to install/ > Convert MOD to "current version"
-• enter the Prefix of your phpBB2-Installation (Prefix is the short-part in front of the database-table-names (in this example "phpbb_")
+• Access the install/-folder and go directly to the "Convert phpBB2"/"Convert TS Gallery" Tab, >>WITHOUT<< installing the Gallery before!
+• Smartor-Album MOD: enter the Prefix of your phpBB2-Installation (Prefix is the short-part in front of the database-table-names (in this example "phpbb_")
 • and convert.
 
 • After successful conversion, you can delete some tables from your database:
