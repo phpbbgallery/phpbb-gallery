@@ -91,6 +91,24 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</edit>
 		</open>
 
+		<open src="gallery/search.php">
+			<edit>
+				<find><![CDATA['INFO_IMG'			=> $user->img('icon_post_info', 'VIEW_INFO'),]]></find>
+				<action type="replace-with"><![CDATA['INFO_IMG'			=> $user->img('icon_post_info', 'IP'),]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/includes/functions_recent.php">
+			<edit>
+				<find><![CDATA[global $gallery_root_path, $phpbb_root_path, $phpEx;]]></find>
+				<action type="replace-with"><![CDATA[global $gallery_root_path, $phpbb_root_path, $phpbb_admin_path, $phpEx;]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['INFO_IMG'			=> $user->img('icon_post_info', 'VIEW_INFO'),]]></find>
+				<action type="replace-with"><![CDATA['INFO_IMG'			=> $user->img('icon_post_info', 'IP'),]]></action>
+			</edit>
+		</open>
+
 		<open src="language/de/mods/gallery_acp.php">
 			<edit>
 				<find><![CDATA['PERMISSIONS'					=> 'Berechtigungen',]]></find>
@@ -111,6 +129,24 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<find><![CDATA['PERMISSIONS'					=> 'Permissions',]]></find>
 				<action type="after-add"><![CDATA[	'PERMISSIONS_COPY'				=> 'Copy album permissions',
 	'PERMISSIONS_COPY_EXPLAIN'		=> 'Here you can copy album permissions from one album to one or more other albums.',]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/gallery/recent_body.html">
+			<edit>
+				<find><![CDATA[						<!-- IF commentrow.U_DELETE --><li class="delete-icon"><a href="{commentrow.U_DELETE}" title="{L_DELETE_POST}"><span>{L_DELETE_POST}</span></a></li><!-- ENDIF -->
+						<!-- IF commentrow.U_INFO --><li class="info-icon"><a href="{commentrow.U_INFO}" title="{L_VIEW_INFO}" onclick="popup(this.href, 750, 500); return false;"><span>{L_VIEW_INFO}</span></a></li><!-- ENDIF -->]]></find>
+				<action type="after-add"><![CDATA[						<!-- IF commentrow.U_DELETE --><li class="delete-icon"><a href="{commentrow.U_DELETE}" title="{L_DELETE_COMMENT}"><span>{L_DELETE_COMMENT}</span></a></li><!-- ENDIF -->
+						<!-- IF commentrow.U_INFO --><li class="info-icon"><a href="{commentrow.U_INFO}" title="{L_IP}" onclick="popup(this.href, 750, 500); return false;"><span>{L_IP}</span></a></li><!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/gallery/search_results.html">
+			<edit>
+				<find><![CDATA[						<!-- IF commentrow.U_DELETE --><li class="delete-icon"><a href="{commentrow.U_DELETE}" title="{L_DELETE_POST}"><span>{L_DELETE_POST}</span></a></li><!-- ENDIF -->
+						<!-- IF commentrow.U_INFO --><li class="info-icon"><a href="{commentrow.U_INFO}" title="{L_VIEW_INFO}" onclick="popup(this.href, 750, 500); return false;"><span>{L_VIEW_INFO}</span></a></li><!-- ENDIF -->]]></find>
+				<action type="after-add"><![CDATA[						<!-- IF commentrow.U_DELETE --><li class="delete-icon"><a href="{commentrow.U_DELETE}" title="{L_DELETE_COMMENT}"><span>{L_DELETE_COMMENT}</span></a></li><!-- ENDIF -->
+						<!-- IF commentrow.U_INFO --><li class="info-icon"><a href="{commentrow.U_INFO}" title="{L_IP}" onclick="popup(this.href, 750, 500); return false;"><span>{L_IP}</span></a></li><!-- ENDIF -->]]></action>
 			</edit>
 		</open>
 

@@ -630,7 +630,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			$template->assign_vars(array(
 				'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_COMMENT'),
 				'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_COMMENT'),
-				'INFO_IMG'			=> $user->img('icon_post_info', 'VIEW_INFO'),
+				'INFO_IMG'			=> $user->img('icon_post_info', 'IP'),
 				'MINI_POST_IMG'		=> $user->img('icon_post_target_unread', 'COMMENT'),
 				'PROFILE_IMG'		=> $user->img('icon_user_profile', 'READ_PROFILE'),
 			));

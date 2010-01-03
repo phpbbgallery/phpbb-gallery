@@ -23,7 +23,7 @@ if (!defined('IN_PHPBB'))
 function recent_gallery_images($ints, $display, $mode, $collapse_comments = false, $include_pgalleries = true, $mode_id = '', $id = 0)
 {
 	global $auth, $cache, $config, $db, $gallery_config, $template, $user;
-	global $gallery_root_path, $phpbb_root_path, $phpEx;
+	global $gallery_root_path, $phpbb_root_path, $phpbb_admin_path, $phpEx;
 
 	$gallery_root_path = (!$gallery_root_path) ? GALLERY_ROOT_PATH : $gallery_root_path;
 	$user->add_lang('mods/gallery');
@@ -334,7 +334,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 
 			'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_COMMENT'),
 			'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_COMMENT'),
-			'INFO_IMG'			=> $user->img('icon_post_info', 'VIEW_INFO'),
+			'INFO_IMG'			=> $user->img('icon_post_info', 'IP'),
 			'MINI_POST_IMG'		=> $user->img('icon_post_target_unread', 'COMMENT'),
 			'PROFILE_IMG'		=> $user->img('icon_user_profile', 'READ_PROFILE'),
 			'COLLAPSE_COMMENTS'	=> $collapse_comments,

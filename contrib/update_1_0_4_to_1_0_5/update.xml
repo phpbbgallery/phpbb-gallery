@@ -42,6 +42,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<date>2010-MM-DD</date>
 				<rev-version>1.0.5</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Incorrect label for "IP/Whois" and "Edit Comment" Buttons (Bug #701)]]></change>
 					<change><![CDATA[[Fix] Can not rotate images by 90°/270° when resize is deactivated.]]></change>
 					<change><![CDATA[[Fix] "Undefined variable"-Error on rotating while editing image. (Bug #690)]]></change>
 					<change><![CDATA[[Fix] Wrong language-strings on "copy permissions"-feature (Bug #689)]]></change>
