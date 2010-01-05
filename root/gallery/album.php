@@ -189,12 +189,21 @@ if ($album_data['album_type'] != ALBUM_CAT)
 			$image_counter = $album_data['album_images_real'];
 		}
 
+		if (in_array($sort_key, array('r', 'ra')))
+		{
+			$sql_help_sort = ', image_id ' . (($sort_dir == 'd') ? 'ASC' : 'DESC');
+		}
+		else
+		{
+			$sql_help_sort = ', image_id ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
+		}
+
 		$images = array();
 		$sql = 'SELECT *
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE image_album_id = ' . (int) $album_id . "
 				$image_status_check
-			ORDER BY $sql_sort_order" . (($sort_key != 't') ? (', image_id ' . (($sort_dir == 'd') ? 'DESC' : 'ASC')) : '');
+			ORDER BY $sql_sort_order" . $sql_help_sort;
 
 		if ($mode == 'slide_show')
 		{
