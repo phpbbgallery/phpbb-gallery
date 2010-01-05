@@ -111,20 +111,32 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 		<open src="gallery/includes/permissions.php">
 			<edit>
-				<find><![CDATA[		// Testing user permissions?
-		$user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];]]></find>
-				<action type="after-add"><![CDATA[
-				$skip_auth_306 = '';
-		// Only available in >= 3.0.6
-		if (version_compare($config['version'], '3.0.5', '>'))
-		{
-			$skip_auth_306 = ' AND group_skip_auth = 0';
-		}
-]]></action>
+				<find><![CDATA[global $cache, $db, $user;]]></find>
+				<action type="replace-with"><![CDATA[global $cache, $config, $db, $user;]]></action>
 			</edit>
 			<edit>
-				<find><![CDATA[AND user_pending = 0";]]></find>
-				<action type="replace-with"><![CDATA[AND user_pending = 0" . $skip_auth_306;]]></action>
+				<find><![CDATA[		$sql = 'SELECT group_id
+			FROM ' . USER_GROUP_TABLE . "
+			WHERE user_id = $user_id
+				AND user_pending = 0";]]></find>
+				<action type="replace-with"><![CDATA[		// Only available in >= 3.0.6
+		if (version_compare($config['version'], '3.0.5', '>'))
+		{
+			$sql = 'SELECT ug.group_id
+				FROM ' . USER_GROUP_TABLE . ' ug
+				LEFT JOIN ' . GROUPS_TABLE . " g
+					ON (ug.group_id = g.group_id)
+				WHERE ug.user_id = $user_id
+					AND ug.user_pending = 0
+					AND g.group_skip_auth = 0";
+		}
+		else
+		{
+			$sql = 'SELECT group_id
+				FROM ' . USER_GROUP_TABLE . "
+				WHERE user_id = $user_id
+					AND user_pending = 0";
+		}]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA['WHERE'			=> 'p.perm_user_id = ' . $user_id . ' OR ' . $db->sql_in_set('p.perm_group_id', $user_groups_ary),]]></find>
