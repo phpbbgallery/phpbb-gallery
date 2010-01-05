@@ -77,10 +77,17 @@ function get_album_access_array()
 		// Testing user permissions?
 		$user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
 
+		$skip_auth_306 = '';
+		// Only available in >= 3.0.6
+		if (version_compare($config['version'], '3.0.5', '>'))
+		{
+			$skip_auth_306 = ' AND group_skip_auth = 0';
+		}
+
 		$sql = 'SELECT group_id
 			FROM ' . USER_GROUP_TABLE . "
 			WHERE user_id = $user_id
-				AND user_pending = 0";
+				AND user_pending = 0" . $skip_auth_306;
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
@@ -99,7 +106,7 @@ function get_album_access_array()
 				),
 			),
 
-			'WHERE'			=> 'p.perm_user_id = ' . $user_id . ' OR ' . $db->sql_in_set('p.perm_group_id', $user_groups_ary),
+			'WHERE'			=> 'p.perm_user_id = ' . $user_id . ' OR ' . $db->sql_in_set('p.perm_group_id', $user_groups_ary, false, true),
 			'GROUP_BY'		=> 'p.perm_system DESC, p.perm_album_id ASC',
 		);
 		$sql = $db->sql_build_query('SELECT', $sql_array);
