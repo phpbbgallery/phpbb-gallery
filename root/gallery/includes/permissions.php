@@ -22,7 +22,7 @@ $album_access_array = get_album_access_array();
 
 function get_album_access_array()
 {
-	global $cache, $db, $user;
+	global $cache, $config, $db, $user;
 	global $album_access_array, $gallery_config;
 
 	if (!isset($gallery_config['loaded']))
@@ -77,17 +77,24 @@ function get_album_access_array()
 		// Testing user permissions?
 		$user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
 
-		$skip_auth_306 = '';
 		// Only available in >= 3.0.6
 		if (version_compare($config['version'], '3.0.5', '>'))
 		{
-			$skip_auth_306 = ' AND group_skip_auth = 0';
+			$sql = 'SELECT ug.group_id
+				FROM ' . USER_GROUP_TABLE . ' ug
+				LEFT JOIN ' . GROUPS_TABLE . " g
+					ON (ug.group_id = g.group_id)
+				WHERE ug.user_id = $user_id
+					AND ug.user_pending = 0
+					AND g.group_skip_auth = 0";
 		}
-
-		$sql = 'SELECT group_id
-			FROM ' . USER_GROUP_TABLE . "
-			WHERE user_id = $user_id
-				AND user_pending = 0" . $skip_auth_306;
+		else
+		{
+			$sql = 'SELECT group_id
+				FROM ' . USER_GROUP_TABLE . "
+				WHERE user_id = $user_id
+					AND user_pending = 0";
+		}
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
