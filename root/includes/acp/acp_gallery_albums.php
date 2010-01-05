@@ -869,7 +869,7 @@ class acp_gallery_albums
 
 			$sql = 'INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data_sql);
 			$db->sql_query($sql);
-			$album_data['album_id'] = $db->sql_nextid();
+			$album_data['album_id'] = (int) $db->sql_nextid();
 
 			// Type is contest, so create it...
 			if ($album_data['album_type'] == ALBUM_CONTEST)
@@ -880,7 +880,7 @@ class acp_gallery_albums
 
 				$sql = 'INSERT INTO ' . GALLERY_CONTESTS_TABLE . ' ' . $db->sql_build_array('INSERT', $contest_data_sql);
 				$db->sql_query($sql);
-				$album_data['album_contest'] = $db->sql_nextid();
+				$album_data['album_contest'] = (int) $db->sql_nextid();
 
 				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
 					SET album_contest = ' . $album_data['album_contest'] . '
@@ -952,7 +952,7 @@ class acp_gallery_albums
 				{
 					// If the old contest is finished, but the new one isn't, we need to remark the images!
 					// If we change it the other way round, the album.php will do the end on the first visit!
-					if ($row_contest['contest_start'] + 86400 * $row_contest['contest_end'] > time())
+					if (($row_contest['contest_start'] + $row_contest['contest_end']) > time())
 					{
 						$contest_data['contest_marked'] = IMAGE_CONTEST;
 						$reset_marked_images = true;

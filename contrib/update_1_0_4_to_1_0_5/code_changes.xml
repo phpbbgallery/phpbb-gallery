@@ -132,6 +132,21 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</edit>
 		</open>
 
+		<open src="includes/acp/acp_gallery_albums.php">
+			<edit>
+				<find><![CDATA[$album_data['album_id'] = $db->sql_nextid();]]></find>
+				<action type="replace-with"><![CDATA[$album_data['album_id'] = (int) $db->sql_nextid();]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[$album_data['album_contest'] = $db->sql_nextid();]]></find>
+				<action type="replace-with"><![CDATA[$album_data['album_contest'] = (int) $db->sql_nextid();]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[if ($row_contest['contest_start'] + 86400 * $row_contest['contest_end'] > time())]]></find>
+				<action type="replace-with"><![CDATA[if (($row_contest['contest_start'] + $row_contest['contest_end']) > time())]]></action>
+			</edit>
+		</open>
+
 		<open src="language/de/mods/gallery_acp.php">
 			<edit>
 				<find><![CDATA['PERMISSIONS'					=> 'Berechtigungen',]]></find>
