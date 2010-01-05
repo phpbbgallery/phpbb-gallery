@@ -76,6 +76,26 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</edit>
 		</open>
 
+		<open src="gallery/album.php">
+			<edit>
+				<find><![CDATA[$images = array();]]></find>
+				<action type="before-add"><![CDATA[		if (in_array($sort_key, array('r', 'ra')))
+		{
+			$sql_help_sort = ', image_id ' . (($sort_dir == 'd') ? 'ASC' : 'DESC');
+		}
+		else
+		{
+			$sql_help_sort = ', image_id ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
+		}
+
+]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	ORDER BY $sql_sort_order" . (($sort_key != 't') ? (', image_id ' . (($sort_dir == 'd') ? 'DESC' : 'ASC')) : '');]]></find>
+				<action type="replace-with"><![CDATA[ORDER BY $sql_sort_order" . $sql_help_sort;]]></action>
+			</edit>
+		</open>
+
 		<open src="gallery/posting.php">
 			<edit>
 				<find><![CDATA[$image_tools->set_image_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);]]></find>
