@@ -53,6 +53,11 @@ class install_convert extends module
 	{
 		global $cache, $gallery_config, $phpbb_root_path, $phpEx, $template, $user;
 
+		if ($user->data['user_type'] != USER_FOUNDER)
+		{
+			trigger_error('FOUNDER_NEEDED', E_USER_ERROR);
+		}
+
 		switch ($sub)
 		{
 			case 'intro':
@@ -62,7 +67,7 @@ class install_convert extends module
 					'TITLE'			=> $user->lang['CONVERT_SMARTOR_INTRO'],
 					'BODY'			=> $user->lang['CONVERT_SMARTOR_INTRO_BODY'],
 					'L_SUBMIT'		=> $user->lang['NEXT_STEP'],
-					'U_ACTION'		=> $this->p_master->module_url . "?mode=$mode&amp;sub=requirements",
+					'U_ACTION'		=> append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=requirements"),
 				));
 			break;
 
@@ -284,7 +289,7 @@ class install_convert extends module
 			}
 		}
 
-		$url = (!in_array(false, $passed) && $convert_prefix) ? $this->p_master->module_url . "?mode=$mode&amp;convert_prefix=$convert_prefix&amp;sub=create_table" : $this->p_master->module_url . "?mode=$mode&amp;sub=requirements";
+		$url = (!in_array(false, $passed) && $convert_prefix) ? append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;convert_prefix=$convert_prefix&amp;sub=create_table") : append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=requirements");
 		$submit = (!in_array(false, $passed) && $convert_prefix) ? $user->lang['INSTALL_START'] : $user->lang['INSTALL_TEST'];
 
 		$template->assign_vars(array(
@@ -349,7 +354,7 @@ class install_convert extends module
 			'BODY'		=> $user->lang['STAGE_CREATE_TABLE_EXPLAIN'],
 			'L_SUBMIT'	=> $user->lang['NEXT_STEP'],
 			'S_HIDDEN'	=> '',
-			'U_ACTION'	=> $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix",
+			'U_ACTION'	=> append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix"),
 		));
 	}
 
@@ -358,7 +363,7 @@ class install_convert extends module
 	*/
 	function convert_data($mode, $sub)
 	{
-		global $db, $gallery_config, $template, $user;
+		global $db, $gallery_config, $template, $user, $phpbb_root_path, $phpEx;
 
 		function decode_ip($int_ip)
 		{
@@ -411,7 +416,7 @@ class install_convert extends module
 				}
 
 				$body = $user->lang['CONVERTED_RATES'];
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=1";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=1");
 			break;
 
 			case 1:
@@ -467,7 +472,7 @@ class install_convert extends module
 				}
 
 				$body = $user->lang['CONVERTED_COMMENTS'];
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=2";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=2");
 			break;
 
 			case 2:
@@ -529,7 +534,7 @@ class install_convert extends module
 				}
 
 				$body = $user->lang['CONVERTED_ALBUMS'];
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=3&amp;personal_albums=$personal_albums";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=3&amp;personal_albums=$personal_albums");
 			break;
 
 			case 3:
@@ -591,7 +596,7 @@ class install_convert extends module
 				}
 
 				$body = $user->lang['CONVERTED_IMAGES'];
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=4";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=4");
 			break;
 
 			case 4:
@@ -670,7 +675,7 @@ class install_convert extends module
 				set_gallery_config('personal_counter', $personal_albums);
 
 				$body = $user->lang['CONVERTED_PERSONALS'];
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=5";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=5");
 			break;
 
 			case 5:
@@ -734,7 +739,7 @@ class install_convert extends module
 				$db->sql_freeresult($result);
 
 				$body = $user->lang['CONVERTED_RESYNC_ALBUMS'];
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=6";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=6");
 			break;
 
 			case 6:
@@ -783,7 +788,7 @@ class install_convert extends module
 				set_config('num_images', $num_images, true);
 
 				$body = $user->lang['CONVERTED_RESYNC_COUNTS'];
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=7";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=7");
 			break;
 
 			case 7:
@@ -803,7 +808,7 @@ class install_convert extends module
 				$db->sql_freeresult($result);
 
 				$body = $user->lang['CONVERTED_RESYNC_RATES'];
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=8";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=8");
 			break;
 
 			case 8:
@@ -830,7 +835,7 @@ class install_convert extends module
 				set_gallery_config('num_comments', $num_comments, true);
 
 				$body = $user->lang['CONVERTED_RESYNC_COMMENTS'];
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=9";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=9");
 			break;
 
 			case 9:
@@ -842,7 +847,7 @@ class install_convert extends module
 				$db->sql_query($sql);
 
 				$body = $user->lang['CONVERTED_MISC'];
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=advanced&amp;convert_prefix=$convert_prefix";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=advanced&amp;convert_prefix=$convert_prefix");
 			break;
 		}
 
@@ -861,7 +866,7 @@ class install_convert extends module
 	*/
 	function obtain_advanced_settings($mode, $sub)
 	{
-		global $db, $gallery_config, $template, $user;
+		global $db, $gallery_config, $template, $user, $phpbb_root_path, $phpEx;
 
 		$create = request_var('create', '');
 		if ($create)
@@ -919,7 +924,7 @@ class install_convert extends module
 			// Add album-BBCode
 			add_bbcode('album');
 			$s_hidden_fields = '';
-			$url = $this->p_master->module_url . "?mode=$mode&amp;sub=final";
+			$url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=final");
 		}
 		else
 		{
@@ -958,7 +963,7 @@ class install_convert extends module
 				);
 			}
 			$s_hidden_fields = '<input type="hidden" name="create" value="true" />';
-			$url = $this->p_master->module_url . "?mode=$mode&amp;sub=advanced";
+			$url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=advanced");
 		}
 
 		$submit = $user->lang['NEXT_STEP'];

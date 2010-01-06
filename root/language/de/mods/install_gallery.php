@@ -28,6 +28,7 @@ $lang = array_merge($lang, array(
 
 	'CAT_CONVERT'				=> 'phpBB2 konvertieren',
 	'CAT_CONVERT_TS'			=> 'TS Gallery konvertieren',
+	'CAT_UNINSTALL'				=> 'phpBB Gallery deinstallieren',
 
 	'CHECK_TABLES'				=> 'Tabellen überprüfung',
 	'CHECK_TABLES_EXPLAIN'		=> 'Die folgenden Tabellen müssten existieren, damit sie auch übernommen werden können.',
@@ -56,11 +57,17 @@ $lang = array_merge($lang, array(
 	'FILES_DELETE_OUTDATED_EXPLAIN'	=> 'Wenn du die Dateien löscht, werden sie entgülig gelöscht und können nicht wiederhergestellt werden!<br /><br />Hinweis:<br />Wenn du weitere Styles und Sprachpakete installiert hast, musst du die Dateien dort von Hand löschen.',
 	'FILES_OUTDATED'				=> 'Veraltete Dateien',
 	'FILES_OUTDATED_EXPLAIN'		=> '<strong>Veraltete Dateien</strong> - bitte entferne die folgenden Dateien um mögliche Sicherheitslücken zu entfernen.',
+	'FOUND_INSTALL'					=> 'Doppelte Installation',
+	'FOUND_INSTALL_EXPLAIN'			=> '<strong>Doppelte Installation</strong> - Es wurde eine Gallery Installation gefunden! Wenn du hier fortfährst, überschreibst du die bereits vorhandenen Daten. Alle Alben, Bilder und Kommentare werden dabei gelöscht! <strong>Es wird daher empfohlen nur ein %1$sUpdate%2$s zu machen.</strong>',
+	'FOUND_VERSION'					=> 'Es wurde folgende Version gefunden',
+	'FOUNDER_CHECK'					=> 'Du bist Gründer des Forums',
+	'FOUNDER_NEEDED'				=> 'Du musst Gründer des Forums sein!',
 
 	'INSTALL_CONGRATS_EXPLAIN'	=> '<p>Du hast die phpBB Gallery v%s nun erfolgreich installiert.<br/><br/><strong>Bitte lösche oder verschiebe nun das Installations-Verzeichnis „install“ oder nenne es nun um, bevor du dein Board benutzt. Solange dieses Verzeichnis existiert, ist nur der Administrations-Bereich zugänglich.</strong></p>',
 	'INSTALL_INTRO_BODY'		=> 'Dieser Assistent ermöglicht dir die Installation der phpBB Gallery in deinem phpBB-Board.',
 
 	'GOTO_GALLERY'				=> 'Gehe zur phpBB Gallery',
+	'GOTO_INDEX'				=> 'Gehe zum Forum-Index',
 
 	'MISSING_CONSTANTS'			=> 'Bevor du das Installations-Skript aufrufen kannst, musst du deine geänderten Dateien hochladen, insbesondere die includes/constants.php.',
 	'MODULES_CREATE_PARENT'		=> 'Übergeordnetes Standard-Modul erstellen',
@@ -70,6 +77,8 @@ $lang = array_merge($lang, array(
 	'MODULES_SELECT_4MCP'		=> 'Übergeordnetes Modul für den "Moderations-Bereich"',
 	'MODULES_SELECT_4UCP'		=> 'Übergeordnetes Modul für den "Persönlichen Bereich"',
 	'MODULES_SELECT_NONE'		=> 'kein übergeordnetes Modul',
+
+	'NO_INSTALL_FOUND'			=> 'Es wurde keine installierte Version gefunden!',
 
 	'OPTIONAL_EXIFDATA'				=> 'Funktion "exif_read_data" existiert',
 	'OPTIONAL_EXIFDATA_EXP'			=> 'Das Exif-Modul ist nicht installiert oder geladen.',
@@ -90,6 +99,8 @@ $lang = array_merge($lang, array(
 	'STAGE_COPY_TABLE'				=> 'Datenbank-Tabellen kopieren',
 	'STAGE_COPY_TABLE_EXPLAIN'		=> 'Die Datenbank-Tabellen mit den Alben und Benutzer-Informationen der TS Gallery haben die gleichen Namen wie die der phpBB Gallery. Es wurde daher eine Kopie angelegt, um die Daten trotzdem importieren zu können.',
 	'STAGE_CREATE_TABLE_EXPLAIN'	=> 'Die von der phpBB Gallery genutzten Datenbank-Tabellen wurden nun erstellt und mit einigen Ausgangswerten gefüllt. Geh weiter zum nächsten Schritt, um die Installation der phpBB Gallery abzuschließen.',
+	'STAGE_DELETE_TABLES'			=> 'Datenbank reinigen',
+	'STAGE_DELETE_TABLES_EXPLAIN'	=> 'Die von der phpBB Gallery genutzten Datenbank-Inhalte wurden gelöscht. Geh weiter zum nächsten Schritt, um die Deinstallation der phpBB Gallery abzuschließen.',
 	'SUPPORT_BODY'					=> 'Für die aktuelle, stabile Version der "phpBB Gallery" wird kostenloser Support gewährt. Dies umfasst:</p><ul><li>Installation</li><li>Konfiguration</li><li>Technische Fragen</li><li>Probleme durch eventuelle Fehler in der Software</li><li>Aktualisierung von Release Candidates (RC) oder stabilen Versionen zur aktuellen stabilen Version</li><li>Konvertierungen von smartor\'s Album MOD für phpBB 2.0.x zur phpBB Gallery für phpBB3</li><li>Konvertierungen von der TS Gallery zur phpBB Gallery</li></ul><p>Die Verwendung der Beta-Versionen wird nur beschränkt empfohlen. Sollte ein neues Update erscheinen, wird empfohlen das Update schnell durchzuführen.</p><p>Support gibt es in folgenden Foren:</p><ul><li><a href="http://www.flying-bits.org/">flying-bits.org - Homepage des MOD-Autor\'s nickvergessen</a></li><li><a href="http://www.phpbb.de/">phpbb.de</a></li><li><a href="http://www.phpbb.com/">phpbb.com</a></li></ul><p>',
 
 	'TABLE_ALBUM'				=> 'Tabelle mit den Bildern',
@@ -100,6 +111,14 @@ $lang = array_merge($lang, array(
 	'TABLE_EXISTS'				=> 'vorhanden',
 	'TABLE_MISSING'				=> 'fehlt',
 	'TABLE_PREFIX_EXPLAIN'		=> 'Präfix der phpBB2-Installation',
+
+	'UNINSTALL_INTRO'					=> 'Willkommen bei der Deinstallation',
+	'UNINSTALL_INTRO_BODY'				=> 'Dieser Assistent ermöglicht dir die Deinstallation der phpBB Gallery aus deinem phpBB-Board.<br /><br /><strong>ACHTUNG: Dabei werden alle Alben, Bilder und Kommentare unwiderruflich gelöscht!</strong>',
+	'UNINSTALL_REQUIREMENTS'			=> 'Vorraussetzungen',
+	'UNINSTALL_REQUIREMENTS_EXPLAIN'	=> 'Bevor die Deinstallation fortgesetzt werden kann, wird phpBB ein paar Tests durchgeführt, um sicherzustellen, dass du die phpBB Gallery deinstallieren darfst.',
+	'UNINSTALL_START'					=> 'Deinstallieren',
+	'UNINSTALL_FINISHED'				=> 'Deinstallation fast abgeschlossen',
+	'UNINSTALL_FINISHED_EXPLAIN'		=> '<p>Du hast die phpBB Gallery erfolgreich deinstalliert.<br/><br/><strong>Du musst nun nur noch die Schritte aus der install.xml rückgäng machen und die Dateien der Gallery löschen, danach ist dein Forum komplett von der Gallery bereinigt.</strong></p>',
 
 	'UPDATE_INSTALLATION_EXPLAIN'	=> 'Mit dieser Option kannst du deine phpBB Gallery-Version auf den neuesten Stand bringen.',
 

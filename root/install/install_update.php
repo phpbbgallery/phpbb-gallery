@@ -50,7 +50,20 @@ class install_update extends module
 		global $cache, $gallery_config, $template, $user;
 		global $phpbb_root_path, $phpEx;
 
-		$gallery_config = load_gallery_config();
+		if ($user->data['user_type'] != USER_FOUNDER)
+		{
+			trigger_error('FOUNDER_NEEDED', E_USER_ERROR);
+		}
+
+		$gallery_version = get_gallery_version();
+		if (version_compare($gallery_version, '0.0.0', '>'))
+		{
+			$gallery_config = load_gallery_config();
+		}
+		else
+		{
+			trigger_error('NO_INSTALL_FOUND', E_USER_ERROR);
+		}
 
 		switch ($sub)
 		{
@@ -61,7 +74,7 @@ class install_update extends module
 					'TITLE'			=> $user->lang['UPDATE_INSTALLATION'],
 					'BODY'			=> $user->lang['UPDATE_INSTALLATION_EXPLAIN'],
 					'L_SUBMIT'		=> $user->lang['NEXT_STEP'],
-					'U_ACTION'		=> $this->p_master->module_url . "?mode=$mode&amp;sub=requirements",
+					'U_ACTION'		=> append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=requirements"),
 				));
 
 			break;
@@ -331,7 +344,7 @@ class install_update extends module
 			));
 		}
 
-		$url = (!in_array(false, $passed)) ? $this->p_master->module_url . "?mode=$mode&amp;sub=update_db" : $this->p_master->module_url . "?mode=$mode&amp;sub=requirements";
+		$url = (!in_array(false, $passed)) ? append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db") : append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=requirements");
 		$submit = (!in_array(false, $passed)) ? $user->lang['INSTALL_START'] : $user->lang['INSTALL_TEST'];
 
 		$template->assign_vars(array(
@@ -353,36 +366,7 @@ class install_update extends module
 
 		if (!isset($gallery_config['phpbb_gallery_version']))
 		{
-			$gallery_config['phpbb_gallery_version'] = (isset($gallery_config['album_version'])) ? $gallery_config['album_version'] : '0.0.0';
-			if (in_array($gallery_config['phpbb_gallery_version'], array('0.1.2', '0.1.3', '0.2.0', '0.2.1', '0.2.2', '0.2.3', '0.3.0', '0.3.1')))
-			{
-				$sql = 'SELECT * FROM ' . GALLERY_ALBUMS_TABLE;
-				if (@$db->sql_query_limit($sql, 1) == false)
-				{
-					// DB-Table missing
-					$gallery_config['phpbb_gallery_version'] = '0.1.2';
-					$check_succeed = true;
-				}
-				else
-				{
-					// No Schema Changes between 0.1.3 and 0.2.2
-					$gallery_config['phpbb_gallery_version'] = '0.2.2';
-					if (nv_check_column(GALLERY_ALBUMS_TABLE, 'album_user_id'))
-					{
-						$gallery_config['phpbb_gallery_version'] = '0.2.3';
-						$sql = 'SELECT * FROM ' . GALLERY_FAVORITES_TABLE;
-						if (@$db->sql_query_limit($sql, 1) == true)
-						{
-							$gallery_config['phpbb_gallery_version'] = '0.3.1';
-						}
-					}
-				}
-			}
-			else
-			{
-				// No version-number problems since 0.4.0-RC1
-				$gallery_config['phpbb_gallery_version'] = $gallery_config['album_version'];
-			}
+			$gallery_config['phpbb_gallery_version'] = get_gallery_version();
 		}
 
 		set_gallery_config('phpbb_gallery_version', $gallery_config['phpbb_gallery_version']);
@@ -468,7 +452,7 @@ class install_update extends module
 			'BODY'		=> $user->lang['STAGE_CREATE_TABLE_EXPLAIN'],
 			'L_SUBMIT'	=> $user->lang['NEXT_STEP'],
 			'S_HIDDEN'	=> '',
-			'U_ACTION'	=> $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=2",
+			'U_ACTION'	=> append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=2"),
 		));
 	}
 
@@ -560,7 +544,7 @@ class install_update extends module
 					WHERE perm_system = 3';
 				$db->sql_query($sql);
 
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=3");
 			break;
 
 			case '0.5.0':
@@ -868,11 +852,11 @@ class install_update extends module
 				// Set allow_rotate_images only if possible
 				set_gallery_config('allow_rotate_images', ((function_exists('imagerotate') && $gallery_config['allow_rotate_images']) ? 1 : 0));
 
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=4");
 			break;
 		}
 
-		$next_update_url = (!$next_update_url) ? $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4" : $next_update_url;
+		$next_update_url = (!$next_update_url) ? append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=4") : $next_update_url;
 
 		$template->assign_vars(array(
 			'BODY'		=> $user->lang['UPDATING_DATA'],
@@ -991,11 +975,11 @@ class install_update extends module
 
 		if ($reparse_modules_bbcode)
 		{
-			$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=advanced";
+			$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=advanced");
 		}
 		else
 		{
-			$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=final";
+			$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=final");
 		}
 
 		$template->assign_vars(array(
@@ -1081,7 +1065,7 @@ class install_update extends module
 			}
 
 			$s_hidden_fields = '';
-			$url = $this->p_master->module_url . "?mode=$mode&amp;sub=final";
+			$url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=final");
 		}
 		else
 		{
@@ -1161,7 +1145,7 @@ class install_update extends module
 				);
 			}
 			$s_hidden_fields = '<input type="hidden" name="create" value="true" />';
-			$url = $this->p_master->module_url . "?mode=$mode&amp;sub=advanced";
+			$url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=advanced");
 		}
 
 		$submit = $user->lang['NEXT_STEP'];

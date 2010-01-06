@@ -275,7 +275,7 @@ class module
 	*/
 	function generate_navigation()
 	{
-		global $user, $template, $phpEx, $language;
+		global $user, $template, $phpbb_root_path, $phpEx, $language;
 
 		if (is_array($this->module_ary))
 		{
@@ -285,7 +285,7 @@ class module
 				$cat = $cat_ary['name'];
 				$l_cat = (!empty($user->lang['CAT_' . $cat])) ? $user->lang['CAT_' . $cat] : preg_replace('#_#', ' ', $cat);
 				$cat = strtolower($cat);
-				$url = $this->module_url . "?mode=$cat";
+				$url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$cat");
 
 				if ($this->mode == $cat)
 				{
@@ -302,7 +302,7 @@ class module
 						{
 							$l_option = (!empty($user->lang['SUB_' . $option])) ? $user->lang['SUB_' . $option] : preg_replace('#_#', ' ', $option);
 							$option = strtolower($option);
-							$url = $this->module_url . '?mode=' . $this->mode . "&amp;sub=$option";
+							$url = append_sid("{$phpbb_root_path}install/index.$phpEx", 'mode=' . $this->mode . "&amp;sub=$option");
 
 							$template->assign_block_vars('l_block1', array(
 								'L_TITLE'		=> $l_option,
