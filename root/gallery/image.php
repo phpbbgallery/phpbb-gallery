@@ -215,13 +215,12 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 }
 
 // Watermark
-if ($gallery_config['watermark_images'] && !gallery_acl_check('i_watermark', $album_id, $album_data['album_user_id']) && $possible_watermark)
+if ($gallery_config['watermark_images'] && $album_data['album_watermark'] && !gallery_acl_check('i_watermark', $album_id, $album_data['album_user_id']) && $possible_watermark)
 {
 	$filesize_var = '';
 	$image_tools->watermark_image($phpbb_root_path . $gallery_config['watermark_source'], $gallery_config['watermark_position'], $gallery_config['watermark_height'], $gallery_config['watermark_width']);
 }
 
-//$image_tools->send_image_to_browser((isset($image_data[$filesize_var])) ? $image_data[$filesize_var] : 0);
 $image_tools->send_image_to_browser();
 
 ?>

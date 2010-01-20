@@ -61,6 +61,8 @@ $lang = array_merge($lang, array(
 	'ALBUM_TYPE_CONTEST'			=> 'Wettbewerb',
 	'ALBUM_TYPE_UPLOAD'				=> 'Album',
 	'ALBUM_UPDATED'					=> 'Das Album wurde erfolgreich aktuallisiert',
+	'ALBUM_WATERMARK'				=> 'Wasserzeichen in diesem Album anzeigen',
+	'ALBUM_WATERMARK_EXPLAIN'		=> 'Wenn hier <samp>Nein</samp> ausgewählt ist, wird das Wasserzeichen ohne Rücksicht auf die Berechtigungen nicht angezeigt!',
 	'ALBUM_WITH_CONTEST_NO_TYPE_CHANGE'	=> 'Ein Album mit Wettbewerb kann nicht in ein Album ohne Wettbewerb geändert werden.',
 	'ALBUMS'						=> 'Alben',
 

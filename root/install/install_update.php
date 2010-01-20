@@ -445,6 +445,7 @@ class install_update extends module
 			case '1.0.3':
 
 			case '1.0.4':
+				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_watermark',	array('UINT:1', 1));
 			break;
 		}
 

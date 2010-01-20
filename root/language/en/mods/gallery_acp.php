@@ -62,6 +62,8 @@ $lang = array_merge($lang, array(
 	'ALBUM_TYPE_CONTEST'			=> 'Contest',
 	'ALBUM_TYPE_UPLOAD'				=> 'Album',
 	'ALBUM_UPDATED'					=> 'Album has been updated successfully.',
+	'ALBUM_WATERMARK'				=> 'Display watermark',
+	'ALBUM_WATERMARK_EXPLAIN'		=> 'If this option is set to <samp>No</samp>, the watermark is never displayed, independent from the permissions!',
 	'ALBUM_WITH_CONTEST_NO_TYPE_CHANGE'	=> 'Contest-Albums can not be turned into a Non-Contest-Album.',
 	'ALBUMS'						=> 'Albums',
 

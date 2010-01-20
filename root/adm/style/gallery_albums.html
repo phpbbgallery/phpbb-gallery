@@ -217,6 +217,11 @@
 			<dd><select id="album_status" name="album_status">{S_STATUS_OPTIONS}</select></dd>
 		</dl>
 		<dl>
+			<dt><label for="album_watermark">{L_ALBUM_WATERMARK}:</label><br /><span>{L_ALBUM_WATERMARK_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" class="radio" name="album_watermark" value="1"<!-- IF S_ALBUM_WATERMARK --> id="album_watermark" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="album_watermark" value="0"<!-- IF not S_ALBUM_WATERMARK --> id="album_watermark" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
+		<dl>
 			<dt><label for="display_in_rrc">{L_DISPLAY_IN_RRC}:</label></dt>
 			<dd><label><input type="radio" class="radio" name="display_in_rrc" value="1"<!-- IF S_DISPLAY_IN_RRC --> id="display_in_rrc" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 				<label><input type="radio" class="radio" name="display_in_rrc" value="0"<!-- IF not S_DISPLAY_IN_RRC --> id="display_in_rrc" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>

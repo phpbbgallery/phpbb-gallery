@@ -105,6 +105,7 @@ class acp_gallery_albums
 						'album_desc_options'	=> 7,
 						'album_desc_bitfield'	=> '',
 						'album_image'			=> request_var('album_image', ''),
+						'album_watermark'		=> request_var('album_watermark', false),
 						'display_subalbum_list'	=> request_var('display_subalbum_list', false),
 						'display_on_index'		=> request_var('display_on_index', false),
 						'display_in_rrc'		=> request_var('display_in_rrc', false),
@@ -338,6 +339,7 @@ class acp_gallery_albums
 							'album_name'			=> utf8_normalize_nfc(request_var('album_name', '', true)),
 							'album_desc'			=> '',
 							'album_image'			=> '',
+							'album_watermark'		=> true,
 							'display_subalbum_list'	=> true,
 							'display_on_index'		=> true,
 							'display_in_rrc'		=> true,
@@ -485,6 +487,7 @@ class acp_gallery_albums
 					'ALBUM_CONTEST'				=> ALBUM_CONTEST,
 					'S_CAN_COPY_PERMISSIONS'	=> true,
 
+					'S_ALBUM_WATERMARK'			=> ($album_data['album_watermark']) ? true : false,
 					'S_DISPLAY_SUBALBUM_LIST'	=> ($album_data['display_subalbum_list']) ? true : false,
 					'S_DISPLAY_ON_INDEX'		=> ($album_data['display_on_index']) ? true : false,
 					'S_DISPLAY_IN_RRC'			=> ($album_data['display_in_rrc']) ? true : false,

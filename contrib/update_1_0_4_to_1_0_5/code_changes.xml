@@ -62,6 +62,19 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<file from="root/install/*.*" to="install/*.*" />
 		</copy>
 
+		<open src="adm/style/gallery_albums.html">
+			<edit>
+				<find><![CDATA[			<dd><select id="album_status" name="album_status">{S_STATUS_OPTIONS}</select></dd>
+		</dl>
+		<dl>]]></find>
+				<action type="after-add"><![CDATA[			<dt><label for="album_watermark">{L_ALBUM_WATERMARK}:</label><br /><span>{L_ALBUM_WATERMARK_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" class="radio" name="album_watermark" value="1"<!-- IF S_ALBUM_WATERMARK --> id="album_watermark" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="album_watermark" value="0"<!-- IF not S_ALBUM_WATERMARK --> id="album_watermark" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
+		<dl>]]></action>
+			</edit>
+		</open>
+
 		<open src="adm/style/gallery_permissions.html">
 			<edit>
 				<find><![CDATA[<h1>{L_PERMISSIONS}</h1>
@@ -93,6 +106,13 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<edit>
 				<find><![CDATA[	ORDER BY $sql_sort_order" . (($sort_key != 't') ? (', image_id ' . (($sort_dir == 'd') ? 'DESC' : 'ASC')) : '');]]></find>
 				<action type="replace-with"><![CDATA[ORDER BY $sql_sort_order" . $sql_help_sort;]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/image.php">
+			<edit>
+				<find><![CDATA[if ($gallery_config['watermark_images'] && !gallery_acl_check('i_watermark', $album_id, $album_data['album_user_id']) && $possible_watermark)]]></find>
+				<action type="replace-with"><![CDATA[if ($gallery_config['watermark_images'] && $album_data['album_watermark'] && !gallery_acl_check('i_watermark', $album_id, $album_data['album_user_id']) && $possible_watermark)]]></action>
 			</edit>
 		</open>
 
@@ -166,6 +186,19 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 		<open src="includes/acp/acp_gallery_albums.php">
 			<edit>
+				<find><![CDATA[						'album_image'			=> request_var('album_image', ''),]]></find>
+				<action type="after-add"><![CDATA[						'album_watermark'		=> request_var('album_watermark', false),]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[							'album_image'			=> '',]]></find>
+				<action type="after-add"><![CDATA[							'album_watermark'		=> true,]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					'S_CAN_COPY_PERMISSIONS'	=> true,
+]]></find>
+				<action type="after-add"><![CDATA[					'S_ALBUM_WATERMARK'			=> ($album_data['album_watermark']) ? true : false,]]></action>
+			</edit>
+			<edit>
 				<find><![CDATA[$album_data['album_id'] = $db->sql_nextid();]]></find>
 				<action type="replace-with"><![CDATA[$album_data['album_id'] = (int) $db->sql_nextid();]]></action>
 			</edit>
@@ -181,6 +214,11 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 		<open src="language/de/mods/gallery_acp.php">
 			<edit>
+				<find><![CDATA[	'ALBUM_UPDATED'					=> 'Das Album wurde erfolgreich aktuallisiert',]]></find>
+				<action type="after-add"><![CDATA[	'ALBUM_WATERMARK'				=> 'Wasserzeichen in diesem Album anzeigen',
+	'ALBUM_WATERMARK_EXPLAIN'		=> 'Wenn hier <samp>Nein</samp> ausgewählt ist, wird das Wasserzeichen ohne Rücksicht auf die Berechtigungen nicht angezeigt!',]]></action>
+			</edit>
+			<edit>
 				<find><![CDATA['PERMISSIONS'					=> 'Berechtigungen',]]></find>
 				<action type="after-add"><![CDATA[	'PERMISSIONS_COPY'				=> 'Albenrechte kopieren',
 	'PERMISSIONS_COPY_EXPLAIN'		=> 'Hier kannst du die Berechtigungen von einem Album zu einem oder mehreren anderen Alben kopieren.',]]></action>
@@ -195,6 +233,11 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		</open>
 
 		<open src="language/en/mods/gallery_acp.php">
+			<edit>
+				<find><![CDATA[	'ALBUM_UPDATED'					=> 'Album has been updated successfully.',]]></find>
+				<action type="after-add"><![CDATA[	'ALBUM_WATERMARK'				=> 'Display watermark',
+	'ALBUM_WATERMARK_EXPLAIN'		=> 'If this option is set to <samp>No</samp>, the watermark is never displayed, independent from the permissions!',]]></action>
+			</edit>
 			<edit>
 				<find><![CDATA['PERMISSIONS'					=> 'Permissions',]]></find>
 				<action type="after-add"><![CDATA[	'PERMISSIONS_COPY'				=> 'Copy album permissions',
