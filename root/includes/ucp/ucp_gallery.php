@@ -133,6 +133,7 @@ class ucp_gallery
 				'watch_own'		=> request_var('watch_own', 0),
 				'watch_com'		=> request_var('watch_com', 0),
 				'watch_favo'	=> request_var('watch_favo', 0),
+				'user_viewexif'	=> request_var('viewexifs', 0),
 			);
 
 
@@ -163,6 +164,7 @@ class ucp_gallery
 			'S_WATCH_OWN'		=> $user->gallery['watch_own'],
 			'S_WATCH_COM'		=> $user->gallery['watch_com'],
 			'S_WATCH_FAVO'		=> $user->gallery['watch_favo'],
+			'S_VIEWEXIFS'		=> $user->gallery['user_viewexif'],
 		));
 	}
 

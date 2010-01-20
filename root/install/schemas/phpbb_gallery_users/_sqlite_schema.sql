@@ -13,6 +13,7 @@ CREATE TABLE phpbb_gallery_users (
 	user_images INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	personal_album_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	user_lastmark INTEGER UNSIGNED NOT NULL DEFAULT '0',
+	user_viewexif INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	PRIMARY KEY (user_id)
 );
 

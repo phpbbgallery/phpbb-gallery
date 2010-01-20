@@ -108,7 +108,7 @@ function toggleElement(oElement)
 <div id="exif" class="panel">
 	<div class="inner"><span class="corners-top"><span></span></span>
 		<h3>{L_EXIF-DATA} - <a href="javascript: toggleElement( getElement('exif_data_fieldset'));">{L_SHOW_EXIF}</a></h3>
-		<fieldset class="fields1" id="exif_data_fieldset" style="display: none;">
+		<fieldset class="fields1" id="exif_data_fieldset"<!-- IF not S_VIEWEXIF --> style="display: none;"<!-- ENDIF -->>
 			<!-- BEGIN exif_value -->
 				<dl>
 					<dt><label>{exif_value.EXIF_NAME}:</label></dt>

@@ -323,6 +323,7 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 			}
 			$template->assign_vars(array(
 				'S_EXIF_DATA'	=> true,
+				'S_VIEWEXIF'	=> $user->gallery['user_viewexif'],
 			));
 
 			if ($image_data['image_has_exif'] == EXIF_UNKNOWN)

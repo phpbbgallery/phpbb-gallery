@@ -116,6 +116,13 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</edit>
 		</open>
 
+		<open src="gallery/image_page.php">
+			<edit>
+				<find><![CDATA[				'S_EXIF_DATA'	=> true,]]></find>
+				<action type="add-after"><![CDATA[				'S_VIEWEXIF'	=> $user->gallery['user_viewexif'],]]></action>
+			</edit>
+		</open>
+
 		<open src="gallery/posting.php">
 			<edit>
 				<find><![CDATA[$image_tools->set_image_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);]]></find>
@@ -212,6 +219,17 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</edit>
 		</open>
 
+		<open src="includes/ucp/ucp_gallery.php">
+			<edit>
+				<find><![CDATA[				'watch_favo'	=> request_var('watch_favo', 0),]]></find>
+				<action type="after-add"><![CDATA[				'user_viewexif'	=> request_var('viewexifs', 0),]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[			'S_WATCH_FAVO'		=> $user->gallery['watch_favo'],]]></find>
+				<action type="after-add"><![CDATA[			'S_VIEWEXIFS'		=> $user->gallery['user_viewexif'],]]></action>
+			</edit>
+		</open>
+
 		<open src="language/de/mods/gallery_acp.php">
 			<edit>
 				<find><![CDATA[	'ALBUM_UPDATED'					=> 'Das Album wurde erfolgreich aktuallisiert',]]></find>
@@ -222,6 +240,14 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<find><![CDATA['PERMISSIONS'					=> 'Berechtigungen',]]></find>
 				<action type="after-add"><![CDATA[	'PERMISSIONS_COPY'				=> 'Albenrechte kopieren',
 	'PERMISSIONS_COPY_EXPLAIN'		=> 'Hier kannst du die Berechtigungen von einem Album zu einem oder mehreren anderen Alben kopieren.',]]></action>
+			</edit>
+		</open>
+
+		<open src="language/de/mods/gallery_ucp.php">
+			<edit>
+				<find><![CDATA[	'YOUR_SUBSCRIPTIONS'			=> 'Hier siehst du die Bilder und Alben, bei denen du benachrichtigt wirst.',]]></find>
+				<action type="after-add"><![CDATA[
+	'VIEWEXIFS_DEFAULT'				=> 'Exif-Daten standardmässig anzeigen',]]></action>
 			</edit>
 		</open>
 
@@ -245,6 +271,14 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</edit>
 		</open>
 
+		<open src="language/en/mods/gallery_ucp.php">
+			<edit>
+				<find><![CDATA[	'YOUR_SUBSCRIPTIONS'			=> 'Here you see albums and images you get notified on.',]]></find>
+				<action type="after-add"><![CDATA[
+	'VIEWEXIFS_DEFAULT'				=> 'View Exif-Data by default',]]></action>
+			</edit>
+		</open>
+
 		<open src="styles/prosilver/template/gallery/recent_body.html">
 			<edit>
 				<find><![CDATA[						<!-- IF commentrow.U_DELETE --><li class="delete-icon"><a href="{commentrow.U_DELETE}" title="{L_DELETE_POST}"><span>{L_DELETE_POST}</span></a></li><!-- ENDIF -->
@@ -260,6 +294,29 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 						<!-- IF commentrow.U_INFO --><li class="info-icon"><a href="{commentrow.U_INFO}" title="{L_VIEW_INFO}" onclick="popup(this.href, 750, 500); return false;"><span>{L_VIEW_INFO}</span></a></li><!-- ENDIF -->]]></find>
 				<action type="after-add"><![CDATA[						<!-- IF commentrow.U_DELETE --><li class="delete-icon"><a href="{commentrow.U_DELETE}" title="{L_DELETE_COMMENT}"><span>{L_DELETE_COMMENT}</span></a></li><!-- ENDIF -->
 						<!-- IF commentrow.U_INFO --><li class="info-icon"><a href="{commentrow.U_INFO}" title="{L_IP}" onclick="popup(this.href, 750, 500); return false;"><span>{L_IP}</span></a></li><!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/gallery/ucp_gallery.html">
+			<edit>
+				<find><![CDATA[			<label for="watch_favo0"><input type="radio" name="watch_favo" id="watch_favo0" value="0"<!-- IF not S_WATCH_FAVO --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+		</dd>
+	</dl>]]></find>
+				<action type="after-add"><![CDATA[	<hr />
+	<dl>
+		<dt><label for="viewexifs1">{L_VIEWEXIFS_DEFAULT}:</label></dt>
+		<dd>
+			<label for="viewexifs1"><input type="radio" name="viewexifs" id="viewexifs1" value="1"<!-- IF S_VIEWEXIFS --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
+			<label for="viewexifs0"><input type="radio" name="viewexifs" id="viewexifs0" value="0"<!-- IF not S_VIEWEXIFS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+		</dd>
+	</dl>]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/gallery/viewimage_body.html">
+			<edit>
+				<find><![CDATA[<fieldset class="fields1" id="exif_data_fieldset" style="display: none;">]]></find>
+				<action type="replace-with"><![CDATA[<fieldset class="fields1" id="exif_data_fieldset"<!-- IF not S_VIEWEXIF --> style="display: none;"<!-- ENDIF -->>]]></action>
 			</edit>
 		</open>
 
@@ -283,6 +340,25 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 <br />
 <!-- ENDIF -->
 ]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/subsilver2/template/gallery/ucp_gallery.html">
+			<edit>
+				<find><![CDATA[			<td class="row2"><input type="radio" class="radio" name="watch_favo" value="1"<!-- IF S_WATCH_FAVO --> checked="checked"<!-- ENDIF --> /><span class="gen">{L_YES}</span>&nbsp; &nbsp;<input type="radio" class="radio" name="watch_favo" value="0"<!-- IF not S_WATCH_FAVO --> checked="checked"<!-- ENDIF --> /><span class="gen">{L_NO}</span></td>
+		</tr>
+		<tr>]]></find>
+				<action type="after-add"><![CDATA[			<td class="row1" width="50%"><b class="genmed">{L_VIEWEXIFS_DEFAULT}:</b></td>
+			<td class="row2"><input type="radio" class="radio" name="viewexifs" value="1"<!-- IF S_VIEWEXIFS --> checked="checked"<!-- ENDIF --> /><span class="gen">{L_YES}</span>&nbsp; &nbsp;<input type="radio" class="radio" name="viewexifs" value="0"<!-- IF not S_VIEWEXIFS --> checked="checked"<!-- ENDIF --> /><span class="gen">{L_NO}</span></td>
+		</tr>
+		<tr>]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/subsilver2/template/gallery/viewimage_body.html">
+			<edit>
+				<find><![CDATA[<table class="tablebg" cellspacing="1" width="100%" id="exif_data_fieldset" style="display: none;">]]></find>
+				<action type="replace-with"><![CDATA[<table class="tablebg" cellspacing="1" width="100%" id="exif_data_fieldset"<!-- IF not S_VIEWEXIF --> style="display: none;"<!-- ENDIF -->>]]></action>
 			</edit>
 		</open>
 

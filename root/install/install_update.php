@@ -360,6 +360,7 @@ class install_update extends module
 	function update_db_schema($mode, $sub)
 	{
 		global $db, $user, $template, $gallery_config, $table_prefix;
+		global $phpbb_root_path, $phpEx;
 
 		$gallery_config = load_gallery_config();
 		$this->page_title = $user->lang['STAGE_UPDATE_DB'];
@@ -446,6 +447,7 @@ class install_update extends module
 
 			case '1.0.4':
 				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_watermark',	array('UINT:1', 1));
+				nv_add_column(GALLERY_USERS_TABLE,	'user_viewexif',	array('UINT:1', 0));
 			break;
 		}
 
@@ -872,7 +874,7 @@ class install_update extends module
 	*/
 	function thinout_db_schema($mode, $sub)
 	{
-		global $user, $template, $db;
+		global $user, $template, $db, $phpbb_root_path, $phpEx;
 
 		$gallery_config = load_gallery_config();
 

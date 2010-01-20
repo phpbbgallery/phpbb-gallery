@@ -17,7 +17,8 @@ CREATE TABLE [phpbb_gallery_users] (
 	[watch_com] [int] DEFAULT (0) NOT NULL ,
 	[user_images] [int] DEFAULT (0) NOT NULL ,
 	[personal_album_id] [int] DEFAULT (0) NOT NULL ,
-	[user_lastmark] [int] DEFAULT (0) NOT NULL 
+	[user_lastmark] [int] DEFAULT (0) NOT NULL ,
+	[user_viewexif] [int] DEFAULT (0) NOT NULL 
 ) ON [PRIMARY]
 GO
 

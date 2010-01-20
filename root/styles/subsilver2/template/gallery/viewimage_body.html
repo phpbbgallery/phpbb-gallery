@@ -116,7 +116,7 @@ function toggleElement(oElement)
 		<th colspan="2">{L_EXIF-DATA} - <a href="javascript: toggleElement( getElement('exif_data_fieldset'));">{L_SHOW_EXIF}</a></th>
 	</tr>
 </table>
-<table class="tablebg" cellspacing="1" width="100%" id="exif_data_fieldset" style="display: none;">
+<table class="tablebg" cellspacing="1" width="100%" id="exif_data_fieldset"<!-- IF not S_VIEWEXIF --> style="display: none;"<!-- ENDIF -->>
 	<!-- BEGIN exif_value -->
 		<tr class="row1">
 			<td width="25%" align="right"><span class="genmed">{exif_value.EXIF_NAME}:</span></td>
