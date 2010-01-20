@@ -220,6 +220,29 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</edit>
 		</open>
 
+		<open src="styles/subsilver2/template/gallery/posting_body.html">
+			<edit>
+				<find><![CDATA[<h2><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>]]></find>
+				<action type="replace-with"><![CDATA[
+<h2><!-- IF U_VIEW_IMAGE --><a href="{U_VIEW_IMAGE}">{IMAGE_NAME}</a><!-- ELSE --><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a><!-- ENDIF --></h2>
+
+<!-- IF U_IMAGE -->
+<table class="tablebg" cellspacing="1" width="100%">
+	<tr>
+		<th colspan="2">{L_DETAILS}</th>
+	</tr>
+	<tr>
+		<td class="row1" style="align: center;">
+			<div style="text-align: center; padding: 20px;"><a href="{U_IMAGE}"<!-- IF S_GP_HIGHSLIDE --> class="highslide" onclick="return hs.expand(this)"<!-- ELSEIF S_GP_LYTEBOX --> rel="lytebox" class="image-resize"<!-- ENDIF -->><img src="{U_IMAGE}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-height: {IMAGE_RSZ_HEIGHT}px; max-width: {IMAGE_RSZ_WIDTH}px;" /></a></div>
+		</td>
+	</tr>
+</table>
+<br />
+<!-- ENDIF -->
+]]></action>
+			</edit>
+		</open>
+
 		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
 
 Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
