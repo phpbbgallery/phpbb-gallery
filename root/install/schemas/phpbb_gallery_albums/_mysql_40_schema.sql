@@ -28,6 +28,8 @@ CREATE TABLE phpbb_gallery_albums (
 	album_last_user_colour varbinary(6) DEFAULT '' NOT NULL,
 	album_last_user_id mediumint(8) UNSIGNED DEFAULT '0' NOT NULL,
 	album_watermark int(1) UNSIGNED DEFAULT '1' NOT NULL,
+	album_sort_key varbinary(8) DEFAULT '' NOT NULL,
+	album_sort_dir varbinary(8) DEFAULT '' NOT NULL,
 	display_in_rrc int(1) UNSIGNED DEFAULT '1' NOT NULL,
 	display_on_index int(1) UNSIGNED DEFAULT '1' NOT NULL,
 	display_subalbum_list int(1) UNSIGNED DEFAULT '1' NOT NULL,

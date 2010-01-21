@@ -39,10 +39,10 @@ $user_id	= request_var('user_id', 0);
 $album_id	= request_var('album_id', 0);
 $start		= request_var('start', 0);
 $mode		= request_var('mode', '');
-$sort_days	= request_var('st', 0);
-$sort_key	= request_var('sk', $gallery_config['sort_method']);
-$sort_dir	= request_var('sd', $gallery_config['sort_order']);
 $album_data	= get_album_info($album_id);
+$sort_days	= request_var('st', 0);
+$sort_key	= request_var('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $gallery_config['sort_method']);
+$sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : $gallery_config['sort_order']);
 
 /**
 * Did the contest end?

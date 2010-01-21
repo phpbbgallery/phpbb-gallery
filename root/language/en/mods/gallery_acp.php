@@ -123,6 +123,7 @@ $lang = array_merge($lang, array(
 
 	'DECIDE_MOVE_DELETE_CONTENT'	=> 'Delete content or move to album',
 	'DECIDE_MOVE_DELETE_SUBALBUMS'	=> 'Delete subalbums or move to album',
+	'DEFAULT_SORT_EXPLAIN'			=> 'If you select <samp>Default</samp> here, the default-sort from the configuration is taken.',
 	'DEFAULT_SORT_METHOD'			=> 'Default Sort Method',
 	'DEFAULT_SORT_ORDER'			=> 'Default Sort Order',
 	'DELETE_ALBUM_SUBS'				=> 'Please remove the subalbums first',

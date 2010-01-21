@@ -214,6 +214,7 @@ $lang = array_merge($lang, array(
 	'SLIDE_SHOW_LYTEBOX'			=> 'Um die Diashow zu starten, klicke auf einen der Bildnamen:',
 	'SLIDE_SHOW_SHADOWBOX'			=> 'Um die Diashow zu starten, klicke auf einen der Bildnamen:',
 	'SORT_ASCENDING'				=> 'Aufsteigend',
+	'SORT_DEFAULT'					=> 'Standard',
 	'SORT_DESCENDING'				=> 'Absteigend',
 	'STATUS'						=> 'Status',
 	'SUBALBUMS'						=> 'Subalben',

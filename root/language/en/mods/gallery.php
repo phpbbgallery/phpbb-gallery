@@ -213,6 +213,7 @@ $lang = array_merge($lang, array(
 	'SLIDE_SHOW_LYTEBOX'			=> 'To start the slideshow, click on one of the image-names:',
 	'SLIDE_SHOW_SHADOWBOX'			=> 'To start the slideshow, click on one of the image-names:',
 	'SORT_ASCENDING'				=> 'Ascending',
+	'SORT_DEFAULT'					=> 'Default',
 	'SORT_DESCENDING'				=> 'Descending',
 	'STATUS'						=> 'Status',
 	'SUBALBUMS'						=> 'Subalbums',

@@ -33,6 +33,8 @@ CREATE TABLE phpbb_gallery_albums (
 	album_last_user_colour varchar2(6) DEFAULT '' ,
 	album_last_user_id number(8) DEFAULT '0' NOT NULL,
 	album_watermark number(1) DEFAULT '1' NOT NULL,
+	album_sort_key varchar2(8) DEFAULT '' ,
+	album_sort_dir varchar2(8) DEFAULT '' ,
 	display_in_rrc number(1) DEFAULT '1' NOT NULL,
 	display_on_index number(1) DEFAULT '1' NOT NULL,
 	display_subalbum_list number(1) DEFAULT '1' NOT NULL,

@@ -828,6 +828,8 @@ function get_schema_struct()
 			'album_last_user_colour'	=> array('VCHAR:6', ''),
 			'album_last_user_id'		=> array('UINT', 0),
 			'album_watermark'			=> array('UINT:1', 1),
+			'album_sort_key'			=> array('VCHAR:8', ''),
+			'album_sort_dir'			=> array('VCHAR:8', ''),
 			'display_in_rrc'			=> array('UINT:1', 1),
 			'display_on_index'			=> array('UINT:1', 1),
 			'display_subalbum_list'		=> array('UINT:1', 1),

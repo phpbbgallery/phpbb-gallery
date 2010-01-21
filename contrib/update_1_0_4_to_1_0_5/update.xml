@@ -42,6 +42,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<date>2010-MM-DD</date>
 				<rev-version>1.0.5</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Configuration is missing number of rates as sort-key-option]]></change>
 					<change><![CDATA[[Fix] View image on editing and commeting images in subsilver2 (Bug #660)]]></change>
 					<change><![CDATA[[Fix] install/ not using append_sid() and not checking for User-Status (Bug #699, thanks to Desdenova)]]></change>
 					<change><![CDATA[[Fix] Sort images by upload-time on albums, when rating is the same. (Bug #702)]]></change>
@@ -54,6 +55,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 					<change><![CDATA[[Fix] "Undefined variable"-Error on rotating while editing image (Bug #690)]]></change>
 					<change><![CDATA[[Fix] Wrong language-strings on "copy permissions"-feature (Bug #689)]]></change>
 					<change><![CDATA[[Fix] Type in german language-pack (Bug #687)]]></change>
+					<change><![CDATA[[Feature] Option to sort albums with other default value (Bug #692)]]></change>
 					<change><![CDATA[[Feature] User-Option to view exif data by default (Bug #681)]]></change>
 					<change><![CDATA[[Feature] Option to disable the watermark for certain albums completly (Bug #684)]]></change>
 				</changelog>

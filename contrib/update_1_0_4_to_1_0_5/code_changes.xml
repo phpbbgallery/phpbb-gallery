@@ -71,6 +71,14 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<dd><label><input type="radio" class="radio" name="album_watermark" value="1"<!-- IF S_ALBUM_WATERMARK --> id="album_watermark" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 				<label><input type="radio" class="radio" name="album_watermark" value="0"<!-- IF not S_ALBUM_WATERMARK --> id="album_watermark" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
+		<dl>
+			<dt><label for="album_sort_key">{L_DEFAULT_SORT_METHOD}:</label><br /><span>{L_DEFAULT_SORT_EXPLAIN}</span></dt>
+			<dd><select name="album_sort_key" id="album_sort_key">{ALBUM_SORT_KEY_OPTIONS}</select></dd>
+		</dl>
+		<dl>
+			<dt><label for="album_sort_dir">{L_DEFAULT_SORT_ORDER}:</label><br /><span>{L_DEFAULT_SORT_EXPLAIN}</span></dt>
+			<dd><select name="album_sort_dir" id="album_sort_dir">{ALBUM_SORT_DIR_OPTIONS}</select></dd>
+		</dl>
 		<dl>]]></action>
 			</edit>
 		</open>
@@ -90,6 +98,16 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		</open>
 
 		<open src="gallery/album.php">
+			<edit>
+				<find><![CDATA[$sort_days	= request_var('st', 0);
+$sort_key	= request_var('sk', $gallery_config['sort_method']);
+$sort_dir	= request_var('sd', $gallery_config['sort_order']);
+$album_data	= get_album_info($album_id);]]></find>
+				<action type="replace-with"><![CDATA[$album_data	= get_album_info($album_id);
+$sort_days	= request_var('st', 0);
+$sort_key	= request_var('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $gallery_config['sort_method']);
+$sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : $gallery_config['sort_order']);]]></action>
+			</edit>
 			<edit>
 				<find><![CDATA[$images = array();]]></find>
 				<action type="before-add"><![CDATA[		if (in_array($sort_key, array('r', 'ra')))
@@ -194,16 +212,42 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		<open src="includes/acp/acp_gallery_albums.php">
 			<edit>
 				<find><![CDATA[						'album_image'			=> request_var('album_image', ''),]]></find>
-				<action type="after-add"><![CDATA[						'album_watermark'		=> request_var('album_watermark', false),]]></action>
+				<action type="after-add"><![CDATA[						'album_watermark'		=> request_var('album_watermark', false),
+						'album_sort_key'		=> request_var('album_sort_key', ''),
+						'album_sort_dir'		=> request_var('album_sort_dir', ''),]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA[							'album_image'			=> '',]]></find>
-				<action type="after-add"><![CDATA[							'album_watermark'		=> true,]]></action>
+				<action type="after-add"><![CDATA[							'album_watermark'		=> true,
+							'album_sort_key'		=> '',
+							'album_sort_dir'		=> '',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					$album_type_options .= '<option value="' . $value . '"' . (($value == $album_data['album_type']) ? ' selected="selected"' : '') . '>' . $user->lang['ALBUM_TYPE_' . $lang] . '</option>';
+				}]]></find>
+				<action type="after-add"><![CDATA[				$album_sort_key_options = '';
+				$album_sort_key_options .= '<option' . ((!in_array($album_data['album_sort_key'], array('t', 'n', 'vc', 'u', 'ra', 'r', 'c', 'lc'))) ? ' selected="selected"' : '') . " value=''>" . $user->lang['SORT_DEFAULT'] . '</option>';
+				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 't') ? ' selected="selected"' : '') . " value='t'>" . $user->lang['TIME'] . '</option>';
+				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'n') ? ' selected="selected"' : '') . " value='n'>" . $user->lang['IMAGE_NAME'] . '</option>';
+				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'vc') ? ' selected="selected"' : '') . " value='vc'>" . $user->lang['VIEWS'] . '</option>';
+				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'u') ? ' selected="selected"' : '') . " value='u'>" . $user->lang['USERNAME'] . '</option>';
+				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'ra') ? ' selected="selected"' : '') . " value='ra'>" . $user->lang['RATING'] . '</option>';
+				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'r') ? ' selected="selected"' : '') . " value='r'>" . $user->lang['RATES_COUNT'] . '</option>';
+				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'c') ? ' selected="selected"' : '') . " value='c'>" . $user->lang['COMMENTS'] . '</option>';
+				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'lc') ? ' selected="selected"' : '') . " value='lc'>" . $user->lang['NEW_COMMENT'] . '</option>';
+
+				$album_sort_dir_options = '';
+				$album_sort_dir_options .= '<option' . ((($album_data['album_sort_dir'] != 'd') && ($album_data['album_sort_dir'] != 'a')) ? ' selected="selected"' : '') . " value=''>" . $user->lang['SORT_DEFAULT'] . '</option>';
+				$album_sort_dir_options .= '<option' . (($album_data['album_sort_dir'] == 'd') ? ' selected="selected"' : '') . " value='d'>" . $user->lang['SORT_DESCENDING'] . '</option>';
+				$album_sort_dir_options .= '<option' . (($album_data['album_sort_dir'] == 'a') ? ' selected="selected"' : '') . " value='a'>" . $user->lang['SORT_ASCENDING'] . '</option>';
+]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA[					'S_CAN_COPY_PERMISSIONS'	=> true,
 ]]></find>
-				<action type="after-add"><![CDATA[					'S_ALBUM_WATERMARK'			=> ($album_data['album_watermark']) ? true : false,]]></action>
+				<action type="after-add"><![CDATA[					'S_ALBUM_WATERMARK'			=> ($album_data['album_watermark']) ? true : false,
+					'ALBUM_SORT_KEY_OPTIONS'	=> $album_sort_key_options,
+					'ALBUM_SORT_DIR_OPTIONS'	=> $album_sort_dir_options,]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA[$album_data['album_id'] = $db->sql_nextid();]]></find>
@@ -219,6 +263,18 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</edit>
 		</open>
 
+		<open src="includes/acp/acp_gallery_config.php">
+			<edit>
+				<find><![CDATA[		$sort_method_options .= '<option' . (($value == 'u') ? ' selected="selected"' : '') . " value='u'>" . $user->lang['USERNAME'] . '</option>';
+		$sort_method_options .= '<option' . (($value == 'vc') ? ' selected="selected"' : '') . " value='vc'>" . $user->lang['VIEWS'] . '</option>';
+		$sort_method_options .= '<option' . (($value == 'r') ? ' selected="selected"' : '') . " value='r'>" . $user->lang['RATING'] . '</option>';]]></find>
+				<action type="replace-with"><![CDATA[		$sort_method_options .= '<option' . (($value == 'vc') ? ' selected="selected"' : '') . " value='vc'>" . $user->lang['VIEWS'] . '</option>';
+		$sort_method_options .= '<option' . (($value == 'u') ? ' selected="selected"' : '') . " value='u'>" . $user->lang['USERNAME'] . '</option>';
+		$sort_method_options .= '<option' . (($value == 'ra') ? ' selected="selected"' : '') . " value='ra'>" . $user->lang['RATING'] . '</option>';
+		$sort_method_options .= '<option' . (($value == 'r') ? ' selected="selected"' : '') . " value='r'>" . $user->lang['RATES_COUNT'] . '</option>';]]></action>
+			</edit>
+		</open>
+
 		<open src="includes/ucp/ucp_gallery.php">
 			<edit>
 				<find><![CDATA[				'watch_favo'	=> request_var('watch_favo', 0),]]></find>
@@ -230,11 +286,26 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</edit>
 		</open>
 
+		<open src="language/de/mods/gallery.php">
+			<edit>
+				<find><![CDATA['NEWEST_PGALLERY'				=> 'Unsere neueste persönliche Galerie %s',]]></find>
+				<action type="replace-with"><![CDATA['NEWEST_PGALLERY'				=> 'Unsere neueste persönliche Galerie: %s',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	'SORT_ASCENDING'				=> 'Aufsteigend',]]></find>
+				<action type="after-add"><![CDATA[	'SORT_DEFAULT'					=> 'Standard',]]></action>
+			</edit>
+		</open>
+
 		<open src="language/de/mods/gallery_acp.php">
 			<edit>
 				<find><![CDATA[	'ALBUM_UPDATED'					=> 'Das Album wurde erfolgreich aktuallisiert',]]></find>
 				<action type="after-add"><![CDATA[	'ALBUM_WATERMARK'				=> 'Wasserzeichen in diesem Album anzeigen',
 	'ALBUM_WATERMARK_EXPLAIN'		=> 'Wenn hier <samp>Nein</samp> ausgewählt ist, wird das Wasserzeichen ohne Rücksicht auf die Berechtigungen nicht angezeigt!',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	'DECIDE_MOVE_DELETE_SUBALBUMS'	=> 'Lösche die Subalben oder verschiebe sie in ein anderes Album',]]></find>
+				<action type="after-add"><![CDATA[	'DEFAULT_SORT_EXPLAIN'			=> 'Wenn du hier <samp>Standard</samp> auswählst, wird die Standard-Sortierung aus der Konfiguration übernommen.',]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA['PERMISSIONS'					=> 'Berechtigungen',]]></find>
@@ -251,10 +322,10 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</edit>
 		</open>
 
-		<open src="language/de/mods/gallery.php">
+		<open src="language/en/mods/gallery.php">
 			<edit>
-				<find><![CDATA['NEWEST_PGALLERY'				=> 'Unsere neueste persönliche Galerie %s',]]></find>
-				<action type="replace-with"><![CDATA['NEWEST_PGALLERY'				=> 'Unsere neueste persönliche Galerie: %s',]]></action>
+				<find><![CDATA[	'SORT_ASCENDING'				=> 'Ascending',]]></find>
+				<action type="after-add"><![CDATA[	'SORT_DEFAULT'					=> 'Default',]]></action>
 			</edit>
 		</open>
 
@@ -263,6 +334,10 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<find><![CDATA[	'ALBUM_UPDATED'					=> 'Album has been updated successfully.',]]></find>
 				<action type="after-add"><![CDATA[	'ALBUM_WATERMARK'				=> 'Display watermark',
 	'ALBUM_WATERMARK_EXPLAIN'		=> 'If this option is set to <samp>No</samp>, the watermark is never displayed, independent from the permissions!',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	'DECIDE_MOVE_DELETE_SUBALBUMS'	=> 'Delete subalbums or move to album',]]></find>
+				<action type="after-add"><![CDATA[	'DEFAULT_SORT_EXPLAIN'			=> 'If you select <samp>Default</samp> here, the default-sort from the configuration is taken.',]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA['PERMISSIONS'					=> 'Permissions',]]></find>

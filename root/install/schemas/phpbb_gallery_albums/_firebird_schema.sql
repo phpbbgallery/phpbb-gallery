@@ -29,6 +29,8 @@ CREATE TABLE phpbb_gallery_albums (
 	album_last_user_colour VARCHAR(6) CHARACTER SET NONE DEFAULT '' NOT NULL,
 	album_last_user_id INTEGER DEFAULT 0 NOT NULL,
 	album_watermark INTEGER DEFAULT 1 NOT NULL,
+	album_sort_key VARCHAR(8) CHARACTER SET NONE DEFAULT '' NOT NULL,
+	album_sort_dir VARCHAR(8) CHARACTER SET NONE DEFAULT '' NOT NULL,
 	display_in_rrc INTEGER DEFAULT 1 NOT NULL,
 	display_on_index INTEGER DEFAULT 1 NOT NULL,
 	display_subalbum_list INTEGER DEFAULT 1 NOT NULL

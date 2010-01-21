@@ -447,6 +447,8 @@ class install_update extends module
 
 			case '1.0.4':
 				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_watermark',	array('UINT:1', 1));
+				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_sort_key',	array('VCHAR:8', ''));
+				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_sort_dir',	array('VCHAR:8', ''));
 				nv_add_column(GALLERY_USERS_TABLE,	'user_viewexif',	array('UINT:1', 0));
 			break;
 		}

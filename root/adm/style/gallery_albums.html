@@ -222,6 +222,14 @@
 				<label><input type="radio" class="radio" name="album_watermark" value="0"<!-- IF not S_ALBUM_WATERMARK --> id="album_watermark" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
+			<dt><label for="album_sort_key">{L_DEFAULT_SORT_METHOD}:</label><br /><span>{L_DEFAULT_SORT_EXPLAIN}</span></dt>
+			<dd><select name="album_sort_key" id="album_sort_key">{ALBUM_SORT_KEY_OPTIONS}</select></dd>
+		</dl>
+		<dl>
+			<dt><label for="album_sort_dir">{L_DEFAULT_SORT_ORDER}:</label><br /><span>{L_DEFAULT_SORT_EXPLAIN}</span></dt>
+			<dd><select name="album_sort_dir" id="album_sort_dir">{ALBUM_SORT_DIR_OPTIONS}</select></dd>
+		</dl>
+		<dl>
 			<dt><label for="display_in_rrc">{L_DISPLAY_IN_RRC}:</label></dt>
 			<dd><label><input type="radio" class="radio" name="display_in_rrc" value="1"<!-- IF S_DISPLAY_IN_RRC --> id="display_in_rrc" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 				<label><input type="radio" class="radio" name="display_in_rrc" value="0"<!-- IF not S_DISPLAY_IN_RRC --> id="display_in_rrc" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>

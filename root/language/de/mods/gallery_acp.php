@@ -122,6 +122,7 @@ $lang = array_merge($lang, array(
 
 	'DECIDE_MOVE_DELETE_CONTENT'	=> 'Lösche die Inhalte oder verschieb sie in ein anderes Album',
 	'DECIDE_MOVE_DELETE_SUBALBUMS'	=> 'Lösche die Subalben oder verschiebe sie in ein anderes Album',
+	'DEFAULT_SORT_EXPLAIN'			=> 'Wenn du hier <samp>Standard</samp> auswählst, wird die Standard-Sortierung aus der Konfiguration übernommen.',
 	'DEFAULT_SORT_METHOD'			=> 'Voreingestellte Sortiermethode',
 	'DEFAULT_SORT_ORDER'			=> 'Voreingestellte Sortierreihenfolge',
 	'DELETE_ALL_IMAGES'				=> 'Lösche Bilder',
