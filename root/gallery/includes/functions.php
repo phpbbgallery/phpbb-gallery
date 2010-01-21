@@ -827,4 +827,20 @@ function gallery_markread($mode, $album_id = false)
 	}
 }
 
+function gallery_display_captcha($mode)
+{
+	static $gallery_display_captcha;
+
+	if ($gallery_display_captcha !== null)
+	{
+		return $gallery_display_captcha;
+	}
+
+	global $config, $gallery_config, $user;
+
+	$gallery_display_captcha = ($user->data['user_id'] == ANONYMOUS) && $gallery_config['captcha_' . $mode] && (version_compare($config['version'], '3.0.5', '>'));
+
+	return $gallery_display_captcha;
+}
+
 ?>

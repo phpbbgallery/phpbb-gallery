@@ -319,6 +319,28 @@ $sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['alb
 			</edit>
 		</open>
 
+		<open src="gallery/includes/functions.php">
+			<edit>
+				<find><![CDATA[?>]]></find>
+				<action type="before-add"><![CDATA[function gallery_display_captcha($mode)
+{
+	static $gallery_display_captcha;
+
+	if ($gallery_display_captcha !== null)
+	{
+		return $gallery_display_captcha;
+	}
+
+	global $config, $gallery_config, $user;
+
+	$gallery_display_captcha = ($user->data['user_id'] == ANONYMOUS) && $gallery_config['captcha_' . $mode] && (version_compare($config['version'], '3.0.5', '>'));
+
+	return $gallery_display_captcha;
+}
+]]></action>
+			</edit>
+		</open>
+
 		<open src="gallery/includes/functions_recent.php">
 			<edit>
 				<find><![CDATA[global $gallery_root_path, $phpbb_root_path, $phpEx;]]></find>
