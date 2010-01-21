@@ -161,6 +161,9 @@ function toggleElement(oElement)
 					<td><span class="genmed"><input class="inputbox autowidth" type="text" name="username" maxlength="32" /></span></td>
 				</tr>
 				<!-- ENDIF -->
+				<!-- IF CAPTCHA_TEMPLATE -->
+				<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+				<!-- ENDIF -->
 				<tr>
 					<td class="row1" width="22%" valign="top"><b class="genmed">{L_YOUR_COMMENT}:</b><br /><span class="gensmall">{L_COMMENT_LENGTH}</span><br /><br />
 					<!-- IF S_SMILIES_ALLOWED -->

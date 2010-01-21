@@ -154,6 +154,9 @@ function toggleElement(oElement)
 						<dd><input class="inputbox autowidth" type="text" name="username" maxlength="32" /></dd>
 					</dl>
 				<!-- ENDIF -->
+				<!-- IF CAPTCHA_TEMPLATE -->
+				<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+				<!-- ENDIF -->
 				<!-- INCLUDE posting_buttons.html -->
 				<div id="smiley-box">
 					<!-- IF S_SMILIES_ALLOWED and .smiley -->

@@ -455,6 +455,19 @@ if ($gallery_config['allow_comments'] && gallery_acl_check('c_post', $album_id, 
 		'L_COMMENT_LENGTH'		=> sprintf($user->lang['COMMENT_LENGTH'], $gallery_config['comment_length']),
 	));
 
+	if (gallery_display_captcha('comment'))
+	{
+		// Get the captcha instance
+		include($phpbb_root_path . 'includes/captcha/captcha_factory.' . $phpEx);
+		$captcha =& phpbb_captcha_factory::get_instance($config['captcha_plugin']);
+		$captcha->init(CONFIRM_POST);
+
+		$template->assign_vars(array(
+			'S_CONFIRM_CODE'		=> true,
+			'CAPTCHA_TEMPLATE'		=> $captcha->get_template(),
+		));
+	}
+
 	// Different link, when we rate and dont comment
 	if (!$s_hide_comment_input)
 	{

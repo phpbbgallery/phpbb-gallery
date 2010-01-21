@@ -139,9 +139,90 @@ $sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['alb
 				<find><![CDATA[				'S_EXIF_DATA'	=> true,]]></find>
 				<action type="add-after"><![CDATA[				'S_VIEWEXIF'	=> $user->gallery['user_viewexif'],]]></action>
 			</edit>
+			<edit>
+				<find><![CDATA[		'L_COMMENT_LENGTH'		=> sprintf($user->lang['COMMENT_LENGTH'], $gallery_config['comment_length']),
+	));]]></find>
+				<action type="add-after"><![CDATA[	if (gallery_display_captcha('comment'))
+	{
+		// Get the captcha instance
+		include($phpbb_root_path . 'includes/captcha/captcha_factory.' . $phpEx);
+		$captcha =& phpbb_captcha_factory::get_instance($config['captcha_plugin']);
+		$captcha->init(CONFIRM_POST);
+
+		$template->assign_vars(array(
+			'S_CONFIRM_CODE'		=> true,
+			'CAPTCHA_TEMPLATE'		=> $captcha->get_template(),
+		));
+	}
+]]></action>
+			</edit>
 		</open>
 
 		<open src="gallery/posting.php">
+			<edit>
+				<find><![CDATA[						trigger_error(sprintf($user->lang['USER_REACHED_QUOTA'], gallery_acl_check('i_count', $album_id, $album_data['album_user_id'])));
+					}
+				}
+]]></find>
+				<action type="after-add"><![CDATA[				if (gallery_display_captcha('upload'))
+				{
+					include($phpbb_root_path . 'includes/captcha/captcha_factory.' . $phpEx);
+					$captcha =& phpbb_captcha_factory::get_instance($config['captcha_plugin']);
+					$captcha->init(CONFIRM_POST);
+					$s_captcha_hidden_fields = '';
+				}
+
+]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					$allowed_extensions = array();
+					if ($gallery_config['jpg_allowed'])
+]]></find>
+				<action type="before-add"><![CDATA[					if (gallery_display_captcha('upload'))
+					{
+						$captcha_error = $captcha->validate();
+						if ($captcha_error)
+						{
+							trigger_error($captcha_error);
+						}
+					}
+
+]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[				}
+				$allowed_filetypes = array();
+				if ($gallery_config['gif_allowed'])
+				{
+					$allowed_filetypes[] = $user->lang['FILETYPES_GIF'];
+]]></find>
+				<action type="before-add"><![CDATA[
+					if (gallery_display_captcha('upload'))
+					{
+						$captcha->reset();
+					}]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[				if (!$error)
+				{
+					if (gallery_acl_check('i_approve', $album_id, $album_data['album_user_id']))
+					{
+						$message = $user->lang['ALBUM_UPLOAD_SUCCESSFUL'];]]></find>
+				<action type="before-add"><![CDATA[				if (gallery_display_captcha('upload'))
+				{
+					if (!$submit || !$captcha->is_solved())
+					{
+						$template->assign_vars(array(
+							'S_CONFIRM_CODE'			=> true,
+							'CAPTCHA_TEMPLATE'			=> $captcha->get_template(),
+						));
+					}
+					$template->assign_vars(array(
+						'S_CAPTCHA_HIDDEN_FIELDS'	=> $s_captcha_hidden_fields,
+					));
+				}
+]]></action>
+			</edit>
 			<edit>
 				<find><![CDATA[$image_tools->set_image_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);]]></find>
 				<action type="before-add"><![CDATA[$image_tools->set_image_options($gallery_config['max_file_size'], $gallery_config['max_height'], $gallery_config['max_width']);]]></action>
@@ -153,6 +234,81 @@ $sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['alb
 				<action type="replace-with"><![CDATA[						if ($image_tools->rotated)
 						{
 							$image_tools->write_image($image_tools->image_source, $gallery_config['jpg_quality'], true);]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[		$comment = $comment_username = '';]]></find>
+				<action type="replace-with"><![CDATA[		$comment = $comment_username = $s_captcha_hidden_fields = '';]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[			if ($submode == 'rate')
+			{
+				$s_album_action = '';
+			}
+		}
+		switch ($submode)
+		{
+			case 'add':]]></find>
+				<action type="after-add"><![CDATA[				if (gallery_display_captcha('comment'))
+				{
+					include($phpbb_root_path . 'includes/captcha/captcha_factory.' . $phpEx);
+					$captcha =& phpbb_captcha_factory::get_instance($config['captcha_plugin']);
+					$captcha->init(CONFIRM_POST);
+				}]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					$comment = request_var('message', '', true);
+					$comment_text = $comment;
+					$comment_username = request_var('username', '', true);]]></find>
+				<action type="before-add"><![CDATA[					if (gallery_display_captcha('comment'))
+					{
+						$captcha_error = $captcha->validate();
+						if ($captcha_error)
+						{
+							$error .= (($error) ? '<br />' : '') . $captcha_error;
+							$submit = false;
+						}
+					}
+]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . "
+							SET image_comments = image_comments + 1,
+								image_last_comment = $newest_comment
+							WHERE " . $db->sql_in_set('image_id', $image_id);
+						$db->sql_query($sql);
+]]></find>
+				<action type="before-add"><![CDATA[						if (gallery_display_captcha('comment'))
+						{
+							$captcha->reset();
+						}
+]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[						gallery_notification('image', $image_id, $image_data['image_name']);
+						$message .= $user->lang['COMMENT_STORED'] . '<br />';
+					}]]></find>
+				<action type="after-add"><![CDATA[					else if (gallery_display_captcha('comment'))
+					{
+						$s_captcha_hidden_fields = ($captcha->is_solved()) ? build_hidden_fields($captcha->get_hidden_fields()) : '';
+					}]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[				$s_album_action = append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=comment&amp;submode=add&amp;album_id=$album_id&amp;image_id=$image_id");
+				$page_title = $user->lang['POST_COMMENT'];]]></find>
+				<action type="before-add"><![CDATA[				if (gallery_display_captcha('comment'))
+				{
+					if (!$submit || !$captcha->is_solved())
+					{
+						$template->assign_vars(array(
+							'S_CONFIRM_CODE'			=> true,
+							'CAPTCHA_TEMPLATE'			=> $captcha->get_template(),
+						));
+					}
+					$template->assign_vars(array(
+						'S_CAPTCHA_HIDDEN_FIELDS'	=> $s_captcha_hidden_fields,
+					));
+				}
+]]></action>
 			</edit>
 		</open>
 
@@ -354,6 +510,21 @@ $sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['alb
 			</edit>
 		</open>
 
+		<open src="styles/prosilver/template/gallery/posting_body.html">
+			<edit>
+				<find><![CDATA[			<dl>
+				<dt><label for="message"><!-- IF S_COMMENT -->{L_YOUR_COMMENT}<!-- ELSE -->{L_IMAGE_DESC}<!-- ENDIF -->:</label></dt>
+			</dl>]]></find>
+				<action type="before-add"><![CDATA[			<!-- IF CAPTCHA_TEMPLATE -->
+			<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+			<!-- ENDIF -->]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[			{S_HIDDEN_FIELDS}]]></find>
+				<action type="replace-with"><![CDATA[			{S_HIDDEN_FIELDS}{S_CAPTCHA_HIDDEN_FIELDS}]]></action>
+			</edit>
+		</open>
+
 		<open src="styles/prosilver/template/gallery/recent_body.html">
 			<edit>
 				<find><![CDATA[						<!-- IF commentrow.U_DELETE --><li class="delete-icon"><a href="{commentrow.U_DELETE}" title="{L_DELETE_POST}"><span>{L_DELETE_POST}</span></a></li><!-- ENDIF -->
@@ -393,6 +564,12 @@ $sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['alb
 				<find><![CDATA[<fieldset class="fields1" id="exif_data_fieldset" style="display: none;">]]></find>
 				<action type="replace-with"><![CDATA[<fieldset class="fields1" id="exif_data_fieldset"<!-- IF not S_VIEWEXIF --> style="display: none;"<!-- ENDIF -->>]]></action>
 			</edit>
+			<edit>
+				<find><![CDATA[				<!-- INCLUDE posting_buttons.html -->]]></find>
+				<action type="before-add"><![CDATA[				<!-- IF CAPTCHA_TEMPLATE -->
+				<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+				<!-- ENDIF -->]]></action>
+			</edit>
 		</open>
 
 		<open src="styles/subsilver2/template/gallery/posting_body.html">
@@ -416,6 +593,18 @@ $sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['alb
 <!-- ENDIF -->
 ]]></action>
 			</edit>
+			<edit>
+				<find><![CDATA[		<!-- IF S_IMAGE -->
+			<tr>
+				<td class="row1" width="22%" height="28"><b class="genmed">{L_IMAGE_NAME}:</b></td>]]></find>
+				<action type="before-add"><![CDATA[		<!-- IF CAPTCHA_TEMPLATE -->
+			<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+		<!-- ENDIF -->]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	{S_FORM_TOKEN}]]></find>
+				<action type="before-add"><![CDATA[	{S_HIDDEN_FIELDS}{S_CAPTCHA_HIDDEN_FIELDS}]]></action>
+			</edit>
 		</open>
 
 		<open src="styles/subsilver2/template/gallery/ucp_gallery.html">
@@ -434,6 +623,14 @@ $sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['alb
 			<edit>
 				<find><![CDATA[<table class="tablebg" cellspacing="1" width="100%" id="exif_data_fieldset" style="display: none;">]]></find>
 				<action type="replace-with"><![CDATA[<table class="tablebg" cellspacing="1" width="100%" id="exif_data_fieldset"<!-- IF not S_VIEWEXIF --> style="display: none;"<!-- ENDIF -->>]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[				<tr>
+					<td class="row1" width="22%" valign="top"><b class="genmed">{L_YOUR_COMMENT}:</b><br /><span class="gensmall">{L_COMMENT_LENGTH}</span><br /><br />
+					<!-- IF S_SMILIES_ALLOWED -->]]></find>
+				<action type="before-add"><![CDATA[				<!-- IF CAPTCHA_TEMPLATE -->
+				<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+				<!-- ENDIF -->]]></action>
 			</edit>
 		</open>
 

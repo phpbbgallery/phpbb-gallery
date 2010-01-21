@@ -58,6 +58,9 @@ function toggleElement(oElement)
 				<td class="row2"><input class="inputbox autowidth" type="text" tabindex="1" name="username" value="{USERNAME}" size="60" maxlength="32" /></td>
 			</tr>
 		<!-- ENDIF -->
+		<!-- IF CAPTCHA_TEMPLATE -->
+			<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+		<!-- ENDIF -->
 		<!-- IF S_IMAGE -->
 			<tr>
 				<td class="row1" width="22%" height="28"><b class="genmed">{L_IMAGE_NAME}:</b></td>
@@ -193,6 +196,7 @@ function toggleElement(oElement)
 				&nbsp;<input type="submit" accesskey="s" tabindex="201" name="submit" value="{L_SUBMIT}" class="btnmain" /></td>
 		</tr>
 	</table>
+	{S_HIDDEN_FIELDS}{S_CAPTCHA_HIDDEN_FIELDS}
 	{S_FORM_TOKEN}
 </form>
 <br clear="all" />

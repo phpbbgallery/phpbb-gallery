@@ -857,6 +857,8 @@ class install_update extends module
 				// Set allow_rotate_images only if possible
 				set_gallery_config('allow_rotate_images', ((function_exists('imagerotate') && $gallery_config['allow_rotate_images']) ? 1 : 0));
 
+				set_gallery_config('captcha_comment', 1);
+				set_gallery_config('captcha_upload', 1);
 				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=4");
 			break;
 		}

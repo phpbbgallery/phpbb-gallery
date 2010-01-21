@@ -763,6 +763,10 @@ function set_default_config()
 	set_gallery_config('search_display', 45);
 	set_gallery_config('version_check_version', '0.0.0');
 	set_gallery_config('version_check_time', 0);
+
+	// Added 1.0.5:
+	set_gallery_config('captcha_comment', 1);
+	set_gallery_config('captcha_upload', 1);
 }
 
 ?>

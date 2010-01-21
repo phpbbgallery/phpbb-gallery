@@ -55,6 +55,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 					<change><![CDATA[[Fix] "Undefined variable"-Error on rotating while editing image (Bug #690)]]></change>
 					<change><![CDATA[[Fix] Wrong language-strings on "copy permissions"-feature (Bug #689)]]></change>
 					<change><![CDATA[[Fix] Type in german language-pack (Bug #687)]]></change>
+					<change><![CDATA[[Feature] View captcha for guests when uploading images and posting comments (Bug #705)]]></change>
 					<change><![CDATA[[Feature] Option to sort albums with other default value (Bug #692)]]></change>
 					<change><![CDATA[[Feature] User-Option to view exif data by default (Bug #681)]]></change>
 					<change><![CDATA[[Feature] Option to disable the watermark for certain albums completly (Bug #684)]]></change>

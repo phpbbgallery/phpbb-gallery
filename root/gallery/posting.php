@@ -376,12 +376,29 @@ switch ($mode)
 					}
 				}
 
+				if (gallery_display_captcha('upload'))
+				{
+					include($phpbb_root_path . 'includes/captcha/captcha_factory.' . $phpEx);
+					$captcha =& phpbb_captcha_factory::get_instance($config['captcha_plugin']);
+					$captcha->init(CONFIRM_POST);
+					$s_captcha_hidden_fields = '';
+				}
+
 				$images = 0;
 				if($submit)
 				{
 					if (!check_form_key('gallery'))
 					{
 						trigger_error('FORM_INVALID');
+					}
+
+					if (gallery_display_captcha('upload'))
+					{
+						$captcha_error = $captcha->validate();
+						if ($captcha_error)
+						{
+							trigger_error($captcha_error);
+						}
 					}
 
 					$allowed_extensions = array();
@@ -562,6 +579,11 @@ switch ($mode)
 							WHERE album_id = $album_id";
 						$db->sql_query($sql);
 					}
+
+					if (gallery_display_captcha('upload'))
+					{
+						$captcha->reset();
+					}
 				}
 				$allowed_filetypes = array();
 				if ($gallery_config['gif_allowed'])
@@ -601,6 +623,20 @@ switch ($mode)
 					'S_UPLOAD'				=> true,
 					'S_ALLOW_ROTATE'		=> ($gallery_config['allow_rotate_images'] && function_exists('imagerotate')),
 				));
+
+				if (gallery_display_captcha('upload'))
+				{
+					if (!$submit || !$captcha->is_solved())
+					{
+						$template->assign_vars(array(
+							'S_CONFIRM_CODE'			=> true,
+							'CAPTCHA_TEMPLATE'			=> $captcha->get_template(),
+						));
+					}
+					$template->assign_vars(array(
+						'S_CAPTCHA_HIDDEN_FIELDS'	=> $s_captcha_hidden_fields,
+					));
+				}
 
 				if (!$error)
 				{
@@ -986,7 +1022,7 @@ switch ($mode)
 	case 'comment':
 	if ($mode == 'comment')
 	{
-		$comment = $comment_username = '';
+		$comment = $comment_username = $s_captcha_hidden_fields = '';
 		$comment_username_req = $contest_rating_msg = false;
 		/**
 		* Rating-System: now you can comment and rate in one form
@@ -1090,12 +1126,28 @@ switch ($mode)
 		switch ($submode)
 		{
 			case 'add':
+				if (gallery_display_captcha('comment'))
+				{
+					include($phpbb_root_path . 'includes/captcha/captcha_factory.' . $phpEx);
+					$captcha =& phpbb_captcha_factory::get_instance($config['captcha_plugin']);
+					$captcha->init(CONFIRM_POST);
+				}
 				if ($submit)
 				{
 					if (!check_form_key('gallery'))
 					{
 						trigger_error('FORM_INVALID');
 					}
+					if (gallery_display_captcha('comment'))
+					{
+						$captcha_error = $captcha->validate();
+						if ($captcha_error)
+						{
+							$error .= (($error) ? '<br />' : '') . $captcha_error;
+							$submit = false;
+						}
+					}
+
 					$comment = request_var('message', '', true);
 					$comment_text = $comment;
 					$comment_username = request_var('username', '', true);
@@ -1150,6 +1202,11 @@ switch ($mode)
 						$newest_comment = $db->sql_nextid();
 						set_gallery_config_count('num_comments', 1);
 
+						if (gallery_display_captcha('comment'))
+						{
+							$captcha->reset();
+						}
+
 						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . "
 							SET image_comments = image_comments + 1,
 								image_last_comment = $newest_comment
@@ -1167,6 +1224,10 @@ switch ($mode)
 						gallery_notification('image', $image_id, $image_data['image_name']);
 						$message .= $user->lang['COMMENT_STORED'] . '<br />';
 					}
+					else if (gallery_display_captcha('comment'))
+					{
+						$s_captcha_hidden_fields = ($captcha->is_solved()) ? build_hidden_fields($captcha->get_hidden_fields()) : '';
+					}
 				}
 				else
 				{
@@ -1175,6 +1236,21 @@ switch ($mode)
 						$comment_username_req = true;
 					}
 				}
+
+				if (gallery_display_captcha('comment'))
+				{
+					if (!$submit || !$captcha->is_solved())
+					{
+						$template->assign_vars(array(
+							'S_CONFIRM_CODE'			=> true,
+							'CAPTCHA_TEMPLATE'			=> $captcha->get_template(),
+						));
+					}
+					$template->assign_vars(array(
+						'S_CAPTCHA_HIDDEN_FIELDS'	=> $s_captcha_hidden_fields,
+					));
+				}
+
 				$s_album_action = append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=comment&amp;submode=add&amp;album_id=$album_id&amp;image_id=$image_id");
 				$page_title = $user->lang['POST_COMMENT'];
 			break;
