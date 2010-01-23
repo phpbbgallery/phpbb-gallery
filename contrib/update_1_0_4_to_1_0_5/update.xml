@@ -42,6 +42,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<date>2010-MM-DD</date>
 				<rev-version>1.0.5</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Fix SQL-Error when viewing search_id=contests and having no permissions at all. (Bug #710)]]></change>
 					<change><![CDATA[[Fix] Configuration is missing number of rates as sort-key-option]]></change>
 					<change><![CDATA[[Fix] View image on editing and commeting images in subsilver2 (Bug #660)]]></change>
 					<change><![CDATA[[Fix] install/ not using append_sid() and not checking for User-Status (Bug #699, thanks to Desdenova)]]></change>

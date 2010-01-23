@@ -314,6 +314,10 @@ $sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['alb
 
 		<open src="gallery/search.php">
 			<edit>
+				<find><![CDATA[					'WHERE'			=> $db->sql_in_set('c.contest_album_id', array_unique(array_merge(gallery_acl_album_ids('i_view'), gallery_acl_album_ids('m_status')))) . ' AND c.contest_marked = ' . IMAGE_NO_CONTEST,]]></find>
+				<action type="replace-with"><![CDATA[					'WHERE'			=> $db->sql_in_set('c.contest_album_id', array_unique(array_merge(gallery_acl_album_ids('i_view'), gallery_acl_album_ids('m_status'))), false, true) . ' AND c.contest_marked = ' . IMAGE_NO_CONTEST,]]></action>
+			</edit>
+			<edit>
 				<find><![CDATA['INFO_IMG'			=> $user->img('icon_post_info', 'VIEW_INFO'),]]></find>
 				<action type="replace-with"><![CDATA['INFO_IMG'			=> $user->img('icon_post_info', 'IP'),]]></action>
 			</edit>

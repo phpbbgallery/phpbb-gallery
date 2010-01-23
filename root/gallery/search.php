@@ -312,7 +312,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 						),
 					),
 
-					'WHERE'			=> $db->sql_in_set('c.contest_album_id', array_unique(array_merge(gallery_acl_album_ids('i_view'), gallery_acl_album_ids('m_status')))) . ' AND c.contest_marked = ' . IMAGE_NO_CONTEST,
+					'WHERE'			=> $db->sql_in_set('c.contest_album_id', array_unique(array_merge(gallery_acl_album_ids('i_view'), gallery_acl_album_ids('m_status'))), false, true) . ' AND c.contest_marked = ' . IMAGE_NO_CONTEST,
 					'ORDER_BY'		=> 'c.contest_start + c.contest_end DESC',
 				);
 				$sql = $db->sql_build_query('SELECT', $sql_array);
