@@ -450,6 +450,9 @@ class install_update extends module
 				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_sort_key',	array('VCHAR:8', ''));
 				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_sort_dir',	array('VCHAR:8', ''));
 				nv_add_column(GALLERY_USERS_TABLE,	'user_viewexif',	array('UINT:1', 0));
+
+			case '1.0.5-RC1':
+			case '1.0.5':
 			break;
 		}
 
@@ -859,6 +862,9 @@ class install_update extends module
 
 				set_gallery_config('captcha_comment', 1);
 				set_gallery_config('captcha_upload', 1);
+
+			case '1.0.5-RC1':
+			case '1.0.5':
 				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=4");
 			break;
 		}
@@ -950,6 +956,9 @@ class install_update extends module
 			case '1.0.3':
 
 			case '1.0.4':
+
+			case '1.0.5-RC1':
+			case '1.0.5':
 			break;
 		}
 
@@ -1068,6 +1077,9 @@ class install_update extends module
 				case '1.0.3':
 
 				case '1.0.4':
+
+				case '1.0.5-RC1':
+				case '1.0.5':
 				break;
 			}
 
@@ -1084,6 +1096,9 @@ class install_update extends module
 			$modules = $this->gallery_config_options;
 			switch ($gallery_config['phpbb_gallery_version'])
 			{
+				case '1.0.5-RC1':
+				case '1.0.5':
+
 				case '1.0.4':
 
 				case '1.0.3':
