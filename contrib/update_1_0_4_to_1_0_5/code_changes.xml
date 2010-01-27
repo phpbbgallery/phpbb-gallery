@@ -136,6 +136,12 @@ $sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['alb
 
 		<open src="gallery/image_page.php">
 			<edit>
+				<find><![CDATA[$sort_key	= request_var('sk', $gallery_config['sort_method']);
+$sort_dir	= request_var('sd', $gallery_config['sort_order']);]]></find>
+				<action type="add-after"><![CDATA[$sort_key	= request_var('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $gallery_config['sort_method']);
+$sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : $gallery_config['sort_order']);]]></action>
+			</edit>
+			<edit>
 				<find><![CDATA[				'S_EXIF_DATA'	=> true,]]></find>
 				<action type="add-after"><![CDATA[				'S_VIEWEXIF'	=> $user->gallery['user_viewexif'],]]></action>
 			</edit>

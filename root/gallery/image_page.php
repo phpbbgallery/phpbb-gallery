@@ -109,8 +109,8 @@ if (gallery_acl_check('m_status', $album_id, $album_data['album_user_id']))
 }
 
 //$sort_days	= request_var('st', 0);
-$sort_key	= request_var('sk', $gallery_config['sort_method']);
-$sort_dir	= request_var('sd', $gallery_config['sort_order']);
+$sort_key	= request_var('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $gallery_config['sort_method']);
+$sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : $gallery_config['sort_order']);
 
 $sort_by_sql = array('t' => 'image_time', 'n' => 'image_name_clean', 'u' => 'image_username_clean', 'vc' => 'image_view_count', 'ra' => 'image_rate_avg', 'r' => 'image_rates', 'c' => 'image_comments', 'lc' => 'image_last_comment');
 $sql_sort_by = (isset($sort_by_sql[$sort_key])) ? $sort_by_sql[$sort_key] : $sort_by_sql['t'];
