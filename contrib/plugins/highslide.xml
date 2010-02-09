@@ -6,8 +6,8 @@
 	<header>
 		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
 
-		<title lang="de">phpBB Gallery Plugin: Highslide JS (4.1.7)</title>
-		<title lang="en">phpBB Gallery Plugin: Highslide JS (4.1.7)</title>
+		<title lang="de">phpBB Gallery Plugin: Highslide JS (4.1.8)</title>
+		<title lang="en">phpBB Gallery Plugin: Highslide JS (4.1.8)</title>
 
 		<description lang="de"><![CDATA[Diese Anleitung ermöglicht ein einfaches implementieren von Highslide JS (von Torstein Hønsi: http://highslide.com/) in die Gallery.]]></description>
 		<description lang="en"><![CDATA[This manual is an easy way to implement Highslide JS (by Torstein Hønsi: http://highslide.com/) into the gallery.]]></description>
@@ -43,12 +43,12 @@ http://creativecommons.org/licenses/by-nc/2.5/]]></author-notes>
 			</author>
 		</author-group>
 
-		<mod-version>1.0.4</mod-version>
+		<mod-version>1.0.5</mod-version>
 
 		<installation>
 			<level>easy</level>
 			<time>60</time>
-			<target-version>3.0.6</target-version>
+			<target-version>3.0.7</target-version>
 		</installation>
 	</header>
 

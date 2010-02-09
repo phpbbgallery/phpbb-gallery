@@ -61,7 +61,7 @@ if (file_exists($phpbb_root_path . $gallery_root_path . 'plugins/lytebox/lytebox
 /**
 * Shadowbox.js
 *
-* Latest version tested: 3.0b
+* Latest version tested: 3.0rc1
 * Download: http://www.shadowbox-js.com/download.html
 * License:  Shadowbox.js License version 1.0
 *           http://shadowbox-js.com/LICENSE

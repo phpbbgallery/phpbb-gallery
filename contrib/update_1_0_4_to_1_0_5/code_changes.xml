@@ -34,7 +34,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		<installation>
 			<level>intermediate</level>
 			<time>1200</time>
-			<target-version>3.0.6</target-version>
+			<target-version>3.0.7</target-version>
 		</installation>
 
 		<link-group>
@@ -138,17 +138,17 @@ $sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['alb
 			<edit>
 				<find><![CDATA[$sort_key	= request_var('sk', $gallery_config['sort_method']);
 $sort_dir	= request_var('sd', $gallery_config['sort_order']);]]></find>
-				<action type="add-after"><![CDATA[$sort_key	= request_var('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $gallery_config['sort_method']);
+				<action type="after-add"><![CDATA[$sort_key	= request_var('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $gallery_config['sort_method']);
 $sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : $gallery_config['sort_order']);]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA[				'S_EXIF_DATA'	=> true,]]></find>
-				<action type="add-after"><![CDATA[				'S_VIEWEXIF'	=> $user->gallery['user_viewexif'],]]></action>
+				<action type="after-add"><![CDATA[				'S_VIEWEXIF'	=> $user->gallery['user_viewexif'],]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA[		'L_COMMENT_LENGTH'		=> sprintf($user->lang['COMMENT_LENGTH'], $gallery_config['comment_length']),
 	));]]></find>
-				<action type="add-after"><![CDATA[	if (gallery_display_captcha('comment'))
+				<action type="after-add"><![CDATA[	if (gallery_display_captcha('comment'))
 	{
 		// Get the captcha instance
 		include($phpbb_root_path . 'includes/captcha/captcha_factory.' . $phpEx);

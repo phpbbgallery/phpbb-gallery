@@ -182,7 +182,7 @@ Installing:
 		<installation>
 			<level>intermediate</level>
 			<time>3600</time>
-			<target-version>3.0.6</target-version>
+			<target-version>3.0.7</target-version>
 		</installation>
 
 		<history>

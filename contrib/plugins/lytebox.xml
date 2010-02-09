@@ -40,12 +40,12 @@ http://creativecommons.org/licenses/by/3.0/]]></author-notes>
 			</author>
 		</author-group>
 
-		<mod-version>1.0.4</mod-version>
+		<mod-version>1.0.5</mod-version>
 
 		<installation>
 			<level>easy</level>
 			<time>60</time>
-			<target-version>3.0.6</target-version>
+			<target-version>3.0.7</target-version>
 		</installation>
 	</header>
 
