@@ -63,7 +63,7 @@ $lang = array_merge($lang, array(
 	'FOUNDER_CHECK'					=> 'Du bist Gründer des Forums',
 	'FOUNDER_NEEDED'				=> 'Du musst Gründer des Forums sein!',
 
-	'INSTALL_CONGRATS_EXPLAIN'	=> '<p>Du hast die phpBB Gallery v%s nun erfolgreich installiert.<br/><br/><strong>Bitte lösche oder verschiebe nun das Installations-Verzeichnis „install“ oder nenne es nun um, bevor du dein Board benutzt. Solange dieses Verzeichnis existiert, ist nur der Administrations-Bereich zugänglich.</strong></p>',
+	'INSTALL_CONGRATS_EXPLAIN'	=> 'Du hast die phpBB Gallery v%s nun erfolgreich installiert.<br/><br/><strong>Bitte lösche oder verschiebe nun das Installations-Verzeichnis „install“ oder nenne es nun um, bevor du dein Board benutzt. Solange dieses Verzeichnis existiert, ist nur der Administrations-Bereich zugänglich.</strong>',
 	'INSTALL_INTRO_BODY'		=> 'Dieser Assistent ermöglicht dir die Installation der phpBB Gallery in deinem phpBB-Board.',
 
 	'GOTO_GALLERY'				=> 'Gehe zur phpBB Gallery',
@@ -86,6 +86,12 @@ $lang = array_merge($lang, array(
 	'OPTIONAL_IMAGEROTATE'			=> 'Funktion "imagerotate" existiert',
 	'OPTIONAL_IMAGEROTATE_EXP'		=> 'Du musst deine GD Version, derzeit "%s", aktualisieren.',
 	'OPTIONAL_IMAGEROTATE_EXPLAIN'	=> 'Wenn die Funktion existiert, können Bilder während dem Hochladen und Bearbeiten gedreht werden.',
+
+	'PAYPAL_DEV_SUPPORT'				=> '</p><div class="errorbox">
+	<h3>Hinweise des Autors</h3>
+	<p>Das Erstellen, Warten und Aktualisieren dieser MOD hat viel Zeit und Mühe in Anspruch genommen und das wird auch in Zukunft so bleiben. Wenn dir die MOD gefällt und du dies gerne mit einer Spende zeigen möchtest, würde mich das sehr freuen. Meine Paypal ID ist nickvergessen@gmx.de, oder kontaktiere mich per Email.<br /><br />Die empfohlene Spendenhöhe für diese MOD beträgt 25,00€ (aber jeder Betrag hilft).</p><br />
+	<a href="http://www.flying-bits.org/go/paypal"><input type="submit" value="Make PayPal-Donation" name="paypal" id="paypal" class="button1" /></a>
+</div><p>',
 
 	'PHP_SETTINGS'				=> 'PHP Einstellungen',
 	'PHP_SETTINGS_EXP'			=> 'Diese PHP Einstellungen und Konfigurationen werden benötigt um die Gallery zu installieren und korrekt benutzen zu können.',
@@ -118,7 +124,7 @@ $lang = array_merge($lang, array(
 	'UNINSTALL_REQUIREMENTS_EXPLAIN'	=> 'Bevor die Deinstallation fortgesetzt werden kann, wird phpBB ein paar Tests durchgeführt, um sicherzustellen, dass du die phpBB Gallery deinstallieren darfst.',
 	'UNINSTALL_START'					=> 'Deinstallieren',
 	'UNINSTALL_FINISHED'				=> 'Deinstallation fast abgeschlossen',
-	'UNINSTALL_FINISHED_EXPLAIN'		=> '<p>Du hast die phpBB Gallery erfolgreich deinstalliert.<br/><br/><strong>Du musst nun nur noch die Schritte aus der install.xml rückgäng machen und die Dateien der Gallery löschen, danach ist dein Forum komplett von der Gallery bereinigt.</strong></p>',
+	'UNINSTALL_FINISHED_EXPLAIN'		=> 'Du hast die phpBB Gallery erfolgreich deinstalliert.<br/><br/><strong>Du musst nun nur noch die Schritte aus der install.xml rückgäng machen und die Dateien der Gallery löschen, danach ist dein Forum komplett von der Gallery bereinigt.</strong>',
 
 	'UPDATE_INSTALLATION_EXPLAIN'	=> 'Mit dieser Option kannst du deine phpBB Gallery-Version auf den neuesten Stand bringen.',
 
