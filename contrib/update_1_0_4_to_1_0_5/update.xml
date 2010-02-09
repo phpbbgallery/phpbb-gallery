@@ -44,7 +44,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<changelog lang="en">
 					<change><![CDATA[[Fix] Fix SQL-Error when viewing search_id=contests and having no permissions at all. (Bug #710)]]></change>
 					<change><![CDATA[[Fix] Configuration is missing number of rates as sort-key-option]]></change>
-					<change><![CDATA[[Fix] View image on editing and commeting images in subsilver2 (Bug #660)]]></change>
+					<change><![CDATA[[Fix] View image on editing and commenting images in subsilver2 (Bug #660)]]></change>
 					<change><![CDATA[[Fix] install/ not using append_sid() and not checking for User-Status (Bug #699, thanks to Desdenova)]]></change>
 					<change><![CDATA[[Fix] Sort images by upload-time on albums, when rating is the same. (Bug #702)]]></change>
 					<change><![CDATA[[Fix] Do not activate already finished contests, while editing the album. (Bug #688)]]></change>
@@ -55,7 +55,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 					<change><![CDATA[[Fix] Can not rotate images by 90°/270° when resize is deactivated.]]></change>
 					<change><![CDATA[[Fix] "Undefined variable"-Error on rotating while editing image (Bug #690)]]></change>
 					<change><![CDATA[[Fix] Wrong language-strings on "copy permissions"-feature (Bug #689)]]></change>
-					<change><![CDATA[[Fix] Type in german language-pack (Bug #687)]]></change>
+					<change><![CDATA[[Fix] Typo in german language-pack (Bug #687)]]></change>
 					<change><![CDATA[[Feature] View captcha for guests when uploading images and posting comments (Bug #705)]]></change>
 					<change><![CDATA[[Feature] Option to sort albums with other default value (Bug #692)]]></change>
 					<change><![CDATA[[Feature] User-Option to view exif data by default (Bug #681)]]></change>
