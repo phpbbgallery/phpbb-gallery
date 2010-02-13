@@ -31,6 +31,12 @@ function mod_version_check($return_version = false)
 		include($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
 	}
 
+	if (!$phpbb_admin_path || !is_dir($phpbb_admin_path))
+	{
+		global $phpbb_root_path;
+		$phpbb_admin_path = $phpbb_root_path . 'adm/';
+	}
+
 	// load version files
 	$class_functions = array();
 	include($phpbb_admin_path . 'mods/phpbb_gallery_version.' . $phpEx);

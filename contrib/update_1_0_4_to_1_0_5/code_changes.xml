@@ -362,6 +362,23 @@ $sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['alb
 			</edit>
 		</open>
 
+		<open src="gallery/includes/functions_version_check.php">
+			<edit>
+				<find><![CDATA[	if (!function_exists('get_remote_file'))
+	{
+		global $phpbb_root_path;
+		include($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
+	}]]></find>
+				<action type="after-add"><![CDATA[
+
+	if (!$phpbb_admin_path || !is_dir($phpbb_admin_path))
+	{
+		global $phpbb_root_path;
+		$phpbb_admin_path = $phpbb_root_path . 'adm/';
+	}]]></action>
+			</edit>
+		</open>
+
 		<open src="gallery/includes/permissions.php">
 			<edit>
 				<find><![CDATA[global $cache, $db, $user;]]></find>
