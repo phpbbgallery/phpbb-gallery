@@ -263,6 +263,7 @@ $lang = array_merge($lang, array(
 	'PERMISSION_I_REPORT'			=> 'Kann Bilder melden',
 	'PERMISSION_I_UNLIMITED'		=> 'Kann unbegrenzt Bilder hochladen',
 	'PERMISSION_I_UPLOAD'			=> 'Kann Bilder hochladen',
+	'PERMISSION_I_UPLOAD_EXPLAIN'	=> 'Diese Berechtigung ist auch dafür verantwortlich, um festzustellen ob ein Benutzer Bilder in das Album verschieben darf, wenn er Moderator-Berechtigungen in einem anderem Album hat.',
 	'PERMISSION_I_VIEW'				=> 'Kann Bilder sehen',
 	'PERMISSION_I_WATERMARK'		=> 'Kann Bilder ohne Wasserzeichen sehen',
 	'PERMISSION_M'					=> 'Moderation',

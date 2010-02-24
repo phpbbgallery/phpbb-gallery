@@ -261,6 +261,7 @@ $lang = array_merge($lang, array(
 	'PERMISSION_I_REPORT'			=> 'Can report images',
 	'PERMISSION_I_UNLIMITED'		=> 'Can upload unlimited images',
 	'PERMISSION_I_UPLOAD'			=> 'Can upload images',
+	'PERMISSION_I_UPLOAD_EXPLAIN'	=> 'This permission is also used, to determinate whether the user can move images to the album, when having moderator permissions in other forums.',
 	'PERMISSION_I_VIEW'				=> 'Can view images',
 	'PERMISSION_I_WATERMARK'		=> 'Can view images without watermark',
 	'PERMISSION_M'					=> 'Moderation',

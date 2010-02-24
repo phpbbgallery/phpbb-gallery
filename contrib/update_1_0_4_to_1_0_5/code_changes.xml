@@ -585,6 +585,10 @@ function gallery_integrate_group_set_user_default($user_id_ary, $sql_ary)
 				<action type="after-add"><![CDATA[	'DEFAULT_SORT_EXPLAIN'			=> 'Wenn du hier <samp>Standard</samp> auswählst, wird die Standard-Sortierung aus der Konfiguration übernommen.',]]></action>
 			</edit>
 			<edit>
+				<find><![CDATA[	'PERMISSION_I_UPLOAD'			=> 'Kann Bilder hochladen',]]></find>
+				<action type="after-add"><![CDATA[	'PERMISSION_I_UPLOAD_EXPLAIN'	=> 'Diese Berechtigung ist auch dafür verantwortlich, um festzustellen ob ein Benutzer Bilder in das Album verschieben darf, wenn er Moderator-Berechtigungen in einem anderem Album hat.',]]></action>
+			</edit>
+			<edit>
 				<find><![CDATA['PERMISSIONS'					=> 'Berechtigungen',]]></find>
 				<action type="after-add"><![CDATA[	'PERMISSIONS_COPY'				=> 'Albenrechte kopieren',
 	'PERMISSIONS_COPY_EXPLAIN'		=> 'Hier kannst du die Berechtigungen von einem Album zu einem oder mehreren anderen Alben kopieren.',]]></action>
@@ -615,6 +619,10 @@ function gallery_integrate_group_set_user_default($user_id_ary, $sql_ary)
 			<edit>
 				<find><![CDATA[	'DECIDE_MOVE_DELETE_SUBALBUMS'	=> 'Delete subalbums or move to album',]]></find>
 				<action type="after-add"><![CDATA[	'DEFAULT_SORT_EXPLAIN'			=> 'If you select <samp>Default</samp> here, the default-sort from the configuration is taken.',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	'PERMISSION_I_UPLOAD'			=> 'Can upload images',]]></find>
+				<action type="after-add"><![CDATA[	'PERMISSION_I_UPLOAD_EXPLAIN'	=> 'This permission is also used, to determinate whether the user can move images to the album, when having moderator permissions in other forums.',]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA['PERMISSIONS'					=> 'Permissions',]]></find>
