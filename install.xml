@@ -336,20 +336,18 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
 	$db->sql_query($sql);]]></action>
 			</edit>
 			<edit>
-				<find><![CDATA[		$sql = 'UPDATE ' . TOPICS_TABLE . " SET topic_last_poster_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
-			WHERE " . $db->sql_in_set('topic_last_poster_id', $user_id_ary);
-		$db->sql_query($sql);]]></find>
-				<action type="after-add"><![CDATA[		$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . " SET album_last_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
-			WHERE " . $db->sql_in_set('album_last_user_id', $user_id_ary);
-		$db->sql_query($sql);
-
-		$sql = 'UPDATE ' . GALLERY_COMMENTS_TABLE . " SET comment_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
-			WHERE " . $db->sql_in_set('comment_user_id', $user_id_ary);
-		$db->sql_query($sql);
-
-		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " SET image_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
-			WHERE " . $db->sql_in_set('image_user_id', $user_id_ary);
-		$db->sql_query($sql);]]></action>
+				<find><![CDATA[		if (in_array($config['newest_user_id'], $user_id_ary))
+		{
+			set_config('newest_user_colour', $sql_ary['user_colour'], true);
+		}
+	}]]></find>
+				<action type="after-add"><![CDATA[
+	if (!function_exists('gallery_integrate_group_set_user_default'))
+	{
+		global $phpbb_root_path, $phpEx;
+		include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/phpbb_integration.' . $phpEx);
+	}
+	gallery_integrate_group_set_user_default($user_id_ary, $sql_ary);]]></action>
 			</edit>
 		</open>
 

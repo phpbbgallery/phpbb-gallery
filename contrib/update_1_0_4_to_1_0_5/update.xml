@@ -42,6 +42,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<date>2010-MM-DD</date>
 				<rev-version>1.0.5</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Change user-colour on newest-pgallery-entry in config (Bug #716)]]></change>
 					<change><![CDATA[[Fix] Add a last check to avoid the adm/mods/-file issue]]></change>
 					<change><![CDATA[[Fix] Fix SQL-Error when viewing search_id=contests and having no permissions at all. (Bug #710)]]></change>
 					<change><![CDATA[[Fix] Configuration is missing number of rates as sort-key-option]]></change>
@@ -97,6 +98,39 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<file from="root/language/en/*.*" to="language/en/*.*" />
 			<file from="root/styles/prosilver/template/*.*" to="styles/prosilver/template/*.*" />
 		</copy>
+
+		<open src="includes/functions_user.php">
+			<edit>
+				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+				<comment lang="en"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
+				<find><![CDATA[		$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . " SET album_last_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('album_last_user_id', $user_id_ary);
+		$db->sql_query($sql);
+
+		$sql = 'UPDATE ' . GALLERY_COMMENTS_TABLE . " SET comment_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('comment_user_id', $user_id_ary);
+		$db->sql_query($sql);
+
+		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " SET image_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('image_user_id', $user_id_ary);
+		$db->sql_query($sql);]]></find>
+				<action type="replace-with"><![CDATA[]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[		if (in_array($config['newest_user_id'], $user_id_ary))
+		{
+			set_config('newest_user_colour', $sql_ary['user_colour'], true);
+		}
+	}]]></find>
+				<action type="after-add"><![CDATA[
+	if (!function_exists('gallery_integrate_group_set_user_default'))
+	{
+		global $phpbb_root_path, $phpEx;
+		include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/phpbb_integration.' . $phpEx);
+	}
+	gallery_integrate_group_set_user_default($user_id_ary, $sql_ary);]]></action>
+			</edit>
+		</open>
 
 		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
 

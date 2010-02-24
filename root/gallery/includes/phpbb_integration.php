@@ -205,4 +205,68 @@ function gallery_integrate_user_update_name($old_name, $new_name)
 	$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);
 }
 
+/**
+* Set users default group
+*
+* @access private
+*
+* borrowed from phpBB3
+* @author: phpBB Group
+* @function: group_set_user_default
+*/
+function gallery_integrate_group_set_user_default($user_id_ary, $sql_ary)
+{
+	global $db;
+
+	if (empty($user_id_ary))
+	{
+		return;
+	}
+
+	if (isset($sql_ary['user_colour']))
+	{
+		// Update any cached colour information for these users
+		$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . " SET album_last_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('album_last_user_id', $user_id_ary);
+		$db->sql_query($sql);
+
+		$sql = 'UPDATE ' . GALLERY_COMMENTS_TABLE . " SET comment_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('comment_user_id', $user_id_ary);
+		$db->sql_query($sql);
+
+		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " SET image_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('image_user_id', $user_id_ary);
+		$db->sql_query($sql);
+
+		global $gallery_config;
+
+		if ($gallery_config === null)
+		{
+			$db->sql_return_on_error(true);
+			$sql = 'SELECT *
+				FROM ' . GALLERY_CONFIG_TABLE;
+			$result = $db->sql_query($sql);
+
+			$gallery_config = array();
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$gallery_config[$row['config_name']] = $row['config_value'];
+			}
+			$db->sql_freeresult($result);
+
+			$db->sql_return_on_error(false);
+		}
+
+		if (isset($gallery_config['newest_pgallery_user_id']) && in_array($gallery_config['newest_pgallery_user_id'], $user_id_ary))
+		{
+			if (!function_exists('set_gallery_config'))
+			{
+				global $phpbb_root_path, $phpEx, $user;
+				include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/functions.' . $phpEx);
+			}
+			set_gallery_config('newest_pgallery_user_colour', $sql_ary['user_colour'], true);
+		}
+	}
+}
+
 ?>
