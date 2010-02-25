@@ -595,6 +595,26 @@ function gallery_integrate_group_set_user_default($user_id_ary, $sql_ary)
 			</edit>
 		</open>
 
+		<open src="language/de/mods/install_gallery.php">
+			<edit>
+				<find><![CDATA['INSTALL_CONGRATS_EXPLAIN'	=> '<p>Du hast die phpBB Gallery v%s nun erfolgreich installiert.<br/><br/><strong>Bitte lösche oder verschiebe nun das Installations-Verzeichnis „install“ oder nenne es nun um, bevor du dein Board benutzt. Solange dieses Verzeichnis existiert, ist nur der Administrations-Bereich zugänglich.</strong></p>',]]></find>
+				<action type="replace-with"><![CDATA['INSTALL_CONGRATS_EXPLAIN'	=> 'Du hast die phpBB Gallery v%s nun erfolgreich installiert.<br/><br/><strong>Bitte lösche oder verschiebe nun das Installations-Verzeichnis „install“ oder nenne es nun um, bevor du dein Board benutzt. Solange dieses Verzeichnis existiert, ist nur der Administrations-Bereich zugänglich.</strong>',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['OPTIONAL_IMAGEROTATE_EXPLAIN'	=> 'Wenn die Funktion existiert, können Bilder während dem Hochladen und Bearbeiten gedreht werden.',]]></find>
+				<action type="after-add"><![CDATA[
+	'PAYPAL_DEV_SUPPORT'				=> '</p><div class="errorbox">
+	<h3>Hinweise des Autors</h3>
+	<p>Das Erstellen, Warten und Aktualisieren dieser MOD hat viel Zeit und Mühe in Anspruch genommen und das wird auch in Zukunft so bleiben. Wenn dir die MOD gefällt und du dies gerne mit einer Spende zeigen möchtest, würde mich das sehr freuen. Meine Paypal ID ist nickvergessen@gmx.de, oder kontaktiere mich per Email.<br /><br />Die empfohlene Spendenhöhe für diese MOD beträgt 25,00€ (aber jeder Betrag hilft).</p><br />
+	<a href="http://www.flying-bits.org/go/paypal"><input type="submit" value="Make PayPal-Donation" name="paypal" id="paypal" class="button1" /></a>
+</div><p>',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['UNINSTALL_FINISHED_EXPLAIN'		=> '<p>Du hast die phpBB Gallery erfolgreich deinstalliert.<br/><br/><strong>Du musst nun nur noch die Schritte aus der install.xml rückgäng machen und die Dateien der Gallery löschen, danach ist dein Forum komplett von der Gallery bereinigt.</strong></p>',]]></find>
+				<action type="replace-with"><![CDATA['UNINSTALL_FINISHED_EXPLAIN'		=> 'Du hast die phpBB Gallery erfolgreich deinstalliert.<br/><br/><strong>Du musst nun nur noch die Schritte aus der install.xml rückgäng machen und die Dateien der Gallery löschen, danach ist dein Forum komplett von der Gallery bereinigt.</strong>',]]></action>
+			</edit>
+		</open>
+
 		<open src="language/de/mods/gallery_ucp.php">
 			<edit>
 				<find><![CDATA[	'YOUR_SUBSCRIPTIONS'			=> 'Hier siehst du die Bilder und Alben, bei denen du benachrichtigt wirst.',]]></find>
@@ -628,6 +648,26 @@ function gallery_integrate_group_set_user_default($user_id_ary, $sql_ary)
 				<find><![CDATA['PERMISSIONS'					=> 'Permissions',]]></find>
 				<action type="after-add"><![CDATA[	'PERMISSIONS_COPY'				=> 'Copy album permissions',
 	'PERMISSIONS_COPY_EXPLAIN'		=> 'Here you can copy album permissions from one album to one or more other albums.',]]></action>
+			</edit>
+		</open>
+
+		<open src="language/en/mods/install_gallery.php">
+			<edit>
+				<find><![CDATA['INSTALL_CONGRATS_EXPLAIN'	=> '<p>You have now successfully installed phpBB Gallery v%s.<br/><br/><strong>Please now delete, move or rename the install directory before you use your board. If this directory is still present, only the Administration Control Panel (ACP) will be accessible.</strong></p>',]]></find>
+				<action type="replace-with"><![CDATA['INSTALL_CONGRATS_EXPLAIN'	=> 'You have now successfully installed phpBB Gallery v%s.<br/><br/><strong>Please now delete, move or rename the install directory before you use your board. If this directory is still present, only the Administration Control Panel (ACP) will be accessible.</strong>',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	'OPTIONAL_IMAGEROTATE_EXPLAIN'	=> 'If the function exists, you can rotate images while uploading and editing them.',]]></find>
+				<action type="after-add"><![CDATA[
+	'PAYPAL_DEV_SUPPORT'				=> '</p><div class="errorbox">
+	<h3>Author Notes</h3>
+	<p>Creating, maintaining and updating this MOD required/requires a lot of time and effort, so if you like this MOD and have the desire to express your thanks through a donation, that would be greatly appreciated. My Paypal ID is <strong>nickvergessen@gmx.de</strong>, or contact me for my mailing address.<br /><br />The suggested donation amount for this MOD is 25,00€ (but any amount will help).</p><br />
+	<a href="http://www.flying-bits.org/go/paypal"><input type="submit" value="Make PayPal-Donation" name="paypal" id="paypal" class="button1" /></a>
+</div><p>',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['UNINSTALL_FINISHED_EXPLAIN'		=> '<p>You uninstalled the phpBB Gallery successfully.<br/><br/><strong>Now you only need to undo the steps of the install.xml and delete the files of the gallery. Afterwards your board is completly free from the gallery.</strong></p>',]]></find>
+				<action type="replace-with"><![CDATA['UNINSTALL_FINISHED_EXPLAIN'		=> 'You uninstalled the phpBB Gallery successfully.<br/><br/><strong>Now you only need to undo the steps of the install.xml and delete the files of the gallery. Afterwards your board is completly free from the gallery.</strong>',]]></action>
 			</edit>
 		</open>
 
