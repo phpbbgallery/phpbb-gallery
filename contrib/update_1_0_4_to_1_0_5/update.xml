@@ -39,7 +39,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 		<history>
 			<entry>
-				<date>2010-MM-DD</date>
+				<date>2010-02-28</date>
 				<rev-version>1.0.5</rev-version>
 				<changelog lang="en">
 					<change><![CDATA[[Fix] Correctly describe existance of "Can upload image" in "Personal Galleries"-permissions (Bug #715)]]></change>
