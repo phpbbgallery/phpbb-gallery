@@ -78,11 +78,90 @@ function get_dbms_infos()
 		break;
 
 		default:
-			trigger_error('Sorry, unsupportet Databases found.');
+			trigger_error('Sorry, unsupported Databases found.');
 		break;
 	}
 
 	return $return;
+}
+
+function get_gallery_version()
+{
+	global $db;
+
+	$db->sql_return_on_error(true);
+
+	$sql = 'SELECT config_value
+		FROM ' . GALLERY_CONFIG_TABLE . "
+		WHERE config_name = 'phpbb_gallery_version'";
+	$result = $db->sql_query($sql);
+	$config_data = $db->sql_fetchfield('config_value');
+	$db->sql_freeresult($result);
+
+	if ($config_data)
+	{
+		$db->sql_return_on_error(false);
+		return $config_data;
+	}
+
+	$sql = 'SELECT config_value
+		FROM ' . GALLERY_CONFIG_TABLE . "
+		WHERE config_name = 'album_version'";
+	$result = $db->sql_query($sql);
+	$config_data = $db->sql_fetchfield('config_value');
+	$db->sql_freeresult($result);
+
+	$config_data = (isset($config_data)) ? $config_data : '0.0.0';
+
+	if (in_array($config_data, array('0.1.2', '0.1.3', '0.2.0', '0.2.1', '0.2.2', '0.2.3', '0.3.0', '0.3.1')))
+	{
+		$sql = 'SELECT *
+			FROM ' . GALLERY_ALBUMS_TABLE;
+		$result = $db->sql_query_limit($sql, 1);
+		$test = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		if ($test === false)
+		{
+			// DB-Table missing
+			$config_data = '0.1.2';
+		}
+		else
+		{
+			// No Schema Changes between 0.1.3 and 0.2.2
+			$config_data = '0.1.3';
+			if (defined('GALLERY_ALBUMS_TABLE'))
+			{
+				$config_data = '0.2.1';
+
+				global $phpbb_root_path, $phpEx;
+
+				$gallery_folder_name = (defined('ALBUM_DIR_NAME')) ? ALBUM_DIR_NAME : ((defined('GALLERY_ROOT_PATH')) ? GALLERY_ROOT_PATH : 'gallery/');
+				include($phpbb_root_path . $gallery_folder_name . 'includes/functions.' . $phpEx);
+
+				if (function_exists('make_album_jumpbox'))
+				{
+					$config_data = '0.2.2';
+				}
+				if (isset($test['album_user_id']))
+				{
+					$config_data = '0.2.3';
+					if (function_exists('personal_album_access'))
+					{
+						$config_data = '0.3.0';
+					}
+					if (nv_check_column(SESSIONS_TABLE, 'session_album_id'))
+					{
+						$config_data = '0.3.1';
+					}
+				}
+			}
+		}
+	}
+
+	$db->sql_return_on_error(false);
+
+	return $config_data;
 }
 
 /*
@@ -570,6 +649,8 @@ function recalc_btree($sql_id, $sql_table, $where_options = array())
 */
 function set_default_config()
 {
+	global $config, $gallery_config;
+
 	// Previous configs
 	set_config('num_images', 0, true);
 	set_config('gallery_total_images', 1);
@@ -676,6 +757,16 @@ function set_default_config()
 	// Added 1.0.2:
 	set_gallery_config('allow_resize_images', 1);
 	set_gallery_config('allow_rotate_images', 1);
+
+	// Added 1.0.3:
+	set_gallery_config('jpg_quality', 100);
+	set_gallery_config('search_display', 45);
+	set_gallery_config('version_check_version', '0.0.0');
+	set_gallery_config('version_check_time', 0);
+
+	// Added 1.0.5:
+	set_gallery_config('captcha_comment', 1);
+	set_gallery_config('captcha_upload', 1);
 }
 
 ?>

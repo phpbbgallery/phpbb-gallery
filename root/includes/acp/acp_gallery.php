@@ -418,10 +418,8 @@ class acp_gallery
 				if (file_exists($image_src_full))
 				{
 					$filetype = getimagesize($image_src_full);
-					$image_width = $filetype[0];
-					$image_height = $filetype[1];
-
 					$filetype_ext = '';
+
 					switch ($filetype['mime'])
 					{
 						case 'image/jpeg':
@@ -490,86 +488,42 @@ class acp_gallery
 						'image_exif_data'		=> '',
 					);
 
-					$exif = array();
-					if (function_exists('exif_read_data'))
+					if (!class_exists('nv_image_tools'))
 					{
-						$exif = @exif_read_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename, 0, true);
-					}
-					if (!empty($exif["EXIF"]))
-					{
-						// Unset invalid exifs
-						foreach ($exif as $key => $array)
-						{
-							if (!in_array($key, array('EXIF', 'IFD0')))
-							{
-								unset($exif[$key]);
-							}
-							else
-							{
-								foreach ($exif[$key] as $subkey => $array)
-								{
-									if (!in_array($subkey, array('DateTimeOriginal', 'FocalLength', 'ExposureTime', 'FNumber', 'ISOSpeedRatings', 'WhiteBalance', 'Flash', 'Model', 'ExposureProgram', 'ExposureBiasValue', 'MeteringMode')))
-									{
-										unset($exif[$key][$subkey]);
-									}
-								}
-							}
-						}
-						$sql_ary['image_exif_data'] = serialize ($exif);
-						$sql_ary['image_has_exif'] = EXIF_DBSAVED;
-					}
-					else
-					{
-						$sql_ary['image_exif_data'] = '';
-						$sql_ary['image_has_exif'] = EXIF_UNAVAILABLE;
+						include($phpbb_root_path . $gallery_root_path . 'includes/functions_image.' . $phpEx);
 					}
 
-					if (($image_width > $gallery_config['max_width']) || ($image_height > $gallery_config['max_height']))
+					$image_tools = new nv_image_tools();
+					$image_tools->set_image_options($gallery_config['max_file_size'], $gallery_config['max_height'], $gallery_config['max_width']);
+					$image_tools->set_image_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
+
+					// Read exif data from file
+					$image_tools->read_exif_data();
+					$sql_ary['image_exif_data'] = $image_tools->exif_data_serialized;
+					$sql_ary['image_has_exif'] = $image_tools->exif_data_exist;
+
+					if (($filetype[0] > $gallery_config['max_width']) || ($filetype[1] > $gallery_config['max_height']))
 					{
 						/**
 						* Resize overside images
 						*/
-						if ($gallery_config['resize_images'])
+						if ($gallery_config['allow_resize_images'])
 						{
-							$src = $read_function($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
-							// Resize it
-							if (($image_width / $gallery_config['max_width']) > ($image_height / $gallery_config['max_height']))
+							$image_tools->resize_image($gallery_config['max_width'], $gallery_config['max_height']);
+							if ($image_tools->resized)
 							{
-								$thumbnail_width	= $gallery_config['max_width'];
-								$thumbnail_height	= round($gallery_config['max_height'] * (($image_height / $gallery_config['max_height']) / ($image_width / $gallery_config['max_width'])));
+								$image_tools->write_image($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename, $gallery_config['jpg_quality'], true);
 							}
-							else
-							{
-								$thumbnail_height	= $gallery_config['max_height'];
-								$thumbnail_width	= round($gallery_config['max_width'] * (($image_width / $gallery_config['max_width']) / ($image_height / $gallery_config['max_height'])));
-							}
-							$thumbnail = ($gallery_config['gd_version'] == GDLIB1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
-							$resize_function = ($gallery_config['gd_version'] == GDLIB1) ? 'imagecopyresized' : 'imagecopyresampled';
-							$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $image_width, $image_height);
-							imagedestroy($src);
-							switch ($filetype_ext)
-							{
-								case '.jpg':
-									@imagejpeg($thumbnail, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename, 100);
-								break;
-
-								case '.png':
-									@imagepng($thumbnail, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
-								break;
-
-								case '.gif':
-									@imagegif($thumbnail, $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename);
-								break;
-							}
-							imagedestroy($thumbnail);
 						}
 					}
-					else if ($sql_ary['image_has_exif'] == EXIF_DBSAVED)
+
+					if (!$image_tools->exif_data_force_db && ($sql_ary['image_has_exif'] == EXIF_DBSAVED))
 					{
 						// Image was not resized, so we can pull the Exif from the image to save db-memory.
 						$sql_ary['image_has_exif'] = EXIF_AVAILABLE;
 						$sql_ary['image_exif_data'] = '';
 					}
+
 					// Try to get real filesize from temporary folder (not always working) ;)
 					$sql_ary['filesize_upload'] = (@filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename)) ? @filesize($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_filename) : 0;
 
@@ -714,7 +668,7 @@ class acp_gallery
 			((substr(strtolower($file), -5) == '.jpeg') && $gallery_config['jpg_allowed'])
 			))
 			{
-				$files[strtolower($file)] = $file;
+				$files[utf8_strtolower($file)] = $file;
 			}
 		}
 		closedir($handle);
@@ -832,7 +786,7 @@ class acp_gallery
 
 		if (confirm_box(true))
 		{
-			$message = '';
+			$message = array();
 			if ($missing_sources)
 			{
 				$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $missing_sources);
@@ -847,7 +801,7 @@ class acp_gallery
 				$db->sql_query($sql);
 				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $missing_sources);
 				$db->sql_query($sql);
-				$message .= $user->lang['CLEAN_SOURCES_DONE'];
+				$message[] = $user->lang['CLEAN_SOURCES_DONE'];
 			}
 			if ($missing_entries)
 			{
@@ -855,7 +809,7 @@ class acp_gallery
 				{
 					@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . utf8_decode($missing_image));
 				}
-				$message .= $user->lang['CLEAN_ENTRIES_DONE'];
+				$message[] = $user->lang['CLEAN_ENTRIES_DONE'];
 			}
 			if ($missing_authors)
 			{
@@ -889,19 +843,20 @@ class acp_gallery
 					$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $deleted_images);
 					$db->sql_query($sql);
 				}
-				$message .= $user->lang['CLEAN_AUTHORS_DONE'];
+				$message[] = $user->lang['CLEAN_AUTHORS_DONE'];
 			}
 			if ($missing_comments)
 			{
 				$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . ' WHERE ' . $db->sql_in_set('comment_id', $missing_comments);
 				$db->sql_query($sql);
-				$message .= $user->lang['CLEAN_COMMENTS_DONE'];
+				$message[] = $user->lang['CLEAN_COMMENTS_DONE'];
 			}
 			if ($missing_personals || $personals_bad)
 			{
 				$delete_albums = array_merge($missing_personals, $personals_bad);
 
 				$deleted_images = $deleted_albums = array(0);
+				$user_image_count = array();
 				$sql = 'SELECT COUNT(album_user_id) personal_counter
 					FROM ' . GALLERY_ALBUMS_TABLE . '
 					WHERE parent_id = 0
@@ -909,6 +864,7 @@ class acp_gallery
 				$result = $db->sql_query($sql);
 				$remove_personal_counter = $db->sql_fetchfield('personal_counter');
 				$db->sql_freeresult($result);
+
 				$sql = 'SELECT album_id
 					FROM ' . GALLERY_ALBUMS_TABLE . '
 					WHERE ' . $db->sql_in_set('album_user_id', $delete_albums);
@@ -918,7 +874,8 @@ class acp_gallery
 					$deleted_albums[] = $row['album_id'];
 				}
 				$db->sql_freeresult($result);
-				$sql = 'SELECT image_id, image_thumbnail, image_filename
+
+				$sql = 'SELECT image_id, image_thumbnail, image_filename, image_user_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
 					WHERE ' . $db->sql_in_set('image_album_id', $deleted_albums);
 				$result = $db->sql_query($sql);
@@ -928,8 +885,18 @@ class acp_gallery
 					@unlink($phpbb_root_path . GALLERY_MEDIUM_PATH . $row['image_filename']);
 					@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $row['image_filename']);
 					$deleted_images[] = $row['image_id'];
+
+					if (isset($user_image_count[$row['image_user_id']]))
+					{
+						$user_image_count[$row['image_user_id']]++;
+					}
+					else
+					{
+						$user_image_count[(int) $row['image_user_id']] = 1;
+					}
 				}
 				$db->sql_freeresult($result);
+
 				if ($deleted_images)
 				{
 					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . ' WHERE ' . $db->sql_in_set('comment_image_id', $deleted_images);
@@ -945,6 +912,7 @@ class acp_gallery
 					$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $deleted_images);
 					$db->sql_query($sql);
 				}
+
 				$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . ' WHERE ' . $db->sql_in_set('album_id', $deleted_albums);
 				$db->sql_query($sql);
 				set_gallery_config_count('personal_counter', 0 - $remove_personal_counter);
@@ -987,17 +955,43 @@ class acp_gallery
 						set_gallery_config('newest_pgallery_album_id', 0);
 					}
 				}
-				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
-					SET personal_album_id = 0
-					WHERE ' . $db->sql_in_set('user_id', $delete_albums);
-				$db->sql_query($sql);
+
+				// No errors, if the image_count would be lower than 0
+				$db->sql_return_on_error(true);
+				foreach ($user_image_count as $user_id => $images)
+				{
+					if (!function_exists('gallery_hookup_image_counter'))
+					{
+						global $gallery_root_path, $phpbb_root_path, $phpEx;
+						include($phpbb_root_path . $gallery_root_path . 'includes/hookup_gallery.' . $phpEx);
+					}
+					gallery_hookup_image_counter($user_id, (0 - $images));
+
+					$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
+						SET personal_album_id = 0,
+							user_images = user_images - ' . $images . '
+						WHERE user_id = ' . $user_id;
+					$result = $db->sql_query($sql);
+
+					if ($result === false)
+					{
+						$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
+							SET personal_album_id = 0,
+								user_images = 0
+							WHERE user_id = ' . $user_id;
+						$db->sql_query($sql);
+					}
+					$db->sql_freeresult($result);
+				}
+				$db->sql_return_on_error(false);
+
 				if ($missing_personals)
 				{
-					$message .= $user->lang['CLEAN_PERSONALS_DONE'];
+					$message[] = $user->lang['CLEAN_PERSONALS_DONE'];
 				}
 				if ($personals_bad)
 				{
-					$message .= $user->lang['CLEAN_PERSONALS_BAD_DONE'];
+					$message[] = $user->lang['CLEAN_PERSONALS_BAD_DONE'];
 				}
 			}
 
@@ -1021,7 +1015,7 @@ class acp_gallery
 			$cache->destroy('sql', GALLERY_WATCH_TABLE);
 			$cache->destroy('_albums');
 
-			trigger_error($message . adm_back_link($this->u_action));
+			trigger_error(implode('<br />', $message) . adm_back_link($this->u_action));
 		}
 		else if (($delete) || (isset($_POST['cancel'])))
 		{

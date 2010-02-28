@@ -69,7 +69,8 @@ function load_gallery_config()
 	$result = $db->sql_query($sql);
 	$db->sql_return_on_error(false);
 
-	if ($result === true)
+	$gallery_config = array();
+	if ($result !== false)
 	{
 		$gallery_config['loaded'] = true;
 	}
@@ -130,7 +131,7 @@ function set_gallery_config_count($config_name, $increment, $is_dynamic = false)
 	switch ($db->sql_layer)
 	{
 		case 'firebird':
-			$sql_update = 'CAST(CAST(config_value as integer) + ' . (int) $increment . ' as CHAR)';
+			$sql_update = 'CAST(CAST(config_value as integer) + ' . (int) $increment . ' as VARCHAR(255))';
 		break;
 
 		case 'postgres':
@@ -723,12 +724,13 @@ function gallery_markread($mode, $album_id = false)
 
 	if ($mode == 'all')
 	{
-		if ($forum_id === false || !sizeof($forum_id))
+		if ($album_id === false || !sizeof($album_id))
 		{
 			// Mark all albums read (index page)
 			$sql = 'DELETE FROM ' . GALLERY_ATRACK_TABLE . '
 				WHERE user_id = ' . $user->data['user_id'];
 			$db->sql_query($sql);
+
 			$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
 				SET user_lastmark = ' . time() . '
 				WHERE user_id = ' . $user->data['user_id'];
@@ -823,6 +825,22 @@ function gallery_markread($mode, $album_id = false)
 
 		return;
 	}
+}
+
+function gallery_display_captcha($mode)
+{
+	static $gallery_display_captcha;
+
+	if ($gallery_display_captcha !== null)
+	{
+		return $gallery_display_captcha;
+	}
+
+	global $config, $gallery_config, $user;
+
+	$gallery_display_captcha = ($user->data['user_id'] == ANONYMOUS) && $gallery_config['captcha_' . $mode] && (version_compare($config['version'], '3.0.5', '>'));
+
+	return $gallery_display_captcha;
 }
 
 ?>

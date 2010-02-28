@@ -133,6 +133,7 @@ class ucp_gallery
 				'watch_own'		=> request_var('watch_own', 0),
 				'watch_com'		=> request_var('watch_com', 0),
 				'watch_favo'	=> request_var('watch_favo', 0),
+				'user_viewexif'	=> request_var('viewexifs', 0),
 			);
 
 
@@ -163,6 +164,7 @@ class ucp_gallery
 			'S_WATCH_OWN'		=> $user->gallery['watch_own'],
 			'S_WATCH_COM'		=> $user->gallery['watch_com'],
 			'S_WATCH_FAVO'		=> $user->gallery['watch_favo'],
+			'S_VIEWEXIFS'		=> $user->gallery['user_viewexif'],
 		));
 	}
 
@@ -680,7 +682,7 @@ class ucp_gallery
 			// We have all image_ids in $deleted_images which are deleted.
 			// Aswell as the album_ids in $deleted_albums.
 			// So now drop the comments, ratings, images and albums.
-			if ($deleted_images)
+			if (sizeof($deleted_images))
 			{
 				$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . '
 					WHERE ' . $db->sql_in_set('comment_image_id', $deleted_images);
@@ -715,6 +717,33 @@ class ucp_gallery
 
 			set_config('num_images', (int) $row['num_images'], true);
 			set_gallery_config('num_comments', (int) $row['num_comments'], true);
+
+			$num_images = sizeof($deleted_images);
+			if ($num_images)
+			{
+				if (!function_exists('gallery_hookup_image_counter'))
+				{
+					global $gallery_root_path, $phpbb_root_path, $phpEx;
+					include($phpbb_root_path . $gallery_root_path . 'includes/hookup_gallery.' . $phpEx);
+				}
+				gallery_hookup_image_counter($user->data['user_id'], 0 - $num_images);
+
+				// No errors, if the image_count would be lower than 0
+				$db->sql_return_on_error(true);
+				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
+					SET user_images = user_images - ' . $num_images . '
+					WHERE user_id = ' . $user_data['user_id'];
+				$result = $db->sql_query($sql);
+				if ($result === false)
+				{
+					$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
+						SET user_images = 0
+						WHERE user_id = ' . $user->data['user_id'];
+					$db->sql_query($sql);
+				}
+				$db->sql_freeresult($result);
+				$db->sql_return_on_error(false);
+			}
 
 			// Maybe we deleted all, so we have to empty $user->gallery['personal_album_id']
 			if (in_array($user->gallery['personal_album_id'], $deleted_albums))

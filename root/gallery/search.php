@@ -301,15 +301,38 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				$l_search_title = $user->lang['SEARCH_CONTEST'];
 				$search_results = 'image';
 
-				$sql_order = 'image_contest_end DESC, image_contest_rank ASC';
-				$per_page = (CONTEST_IMAGES * $gallery_config['rows_per_page']);
-				$sql_limit = SEARCH_PAGES_NUMBER * $per_page;
+				$sql_array = array(
+					'SELECT'		=> 'c.*, a.album_name',
+					'FROM'			=> array(GALLERY_CONTESTS_TABLE => 'c'),
 
-				$sql = 'SELECT image_id
-					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status <> ' . IMAGE_UNAPPROVED . ')
-							OR ' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('m_status'), false, true) . ")
-						AND image_contest_rank > 0";
+					'LEFT_JOIN'		=> array(
+						array(
+							'FROM'		=> array(GALLERY_ALBUMS_TABLE => 'a'),
+							'ON'		=> 'a.album_id = c.contest_album_id',
+						),
+					),
+
+					'WHERE'			=> $db->sql_in_set('c.contest_album_id', array_unique(array_merge(gallery_acl_album_ids('i_view'), gallery_acl_album_ids('m_status'))), false, true) . ' AND c.contest_marked = ' . IMAGE_NO_CONTEST,
+					'ORDER_BY'		=> 'c.contest_start + c.contest_end DESC',
+				);
+				$sql = $db->sql_build_query('SELECT', $sql_array);
+				$result = $db->sql_query_limit($sql, $gallery_config['rows_per_page'] * SEARCH_PAGES_NUMBER);
+
+				while ($row = $db->sql_fetchrow($result))
+				{
+					$id_ary[] = $row['contest_first'];
+					$id_ary[] = $row['contest_second'];
+					$id_ary[] = $row['contest_third'];
+					$contest_images[$row['contest_id']] = array(
+						'album_id'		=> $row['contest_album_id'],
+						'album_name'	=> $row['album_name'],
+						'images'		=> array($row['contest_first'], $row['contest_second'], $row['contest_third'])
+					);
+				}
+				$db->sql_freeresult($result);
+
+				// Clear $sql, so we do not execute it again.
+				$sql = '';
 			}
 			break;
 
@@ -463,7 +486,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 		if ($search_results == 'image')
 		{
 			$sql_array = array(
-				'SELECT'		=> 'i.*, a.album_name, a.album_status',
+				'SELECT'		=> 'i.*, a.album_name, a.album_status, a.album_user_id',
 				'FROM'			=> array(GALLERY_IMAGES_TABLE => 'i'),
 
 				'LEFT_JOIN'		=> array(
@@ -482,7 +505,14 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 
 			while ($row = $db->sql_fetchrow($result))
 			{
-				$rowset[] = $row;
+				if ($search_id == 'contests')
+				{
+					$rowset[$row['image_id']] = $row;
+				}
+				else
+				{
+					$rowset[] = $row;
+				}
 			}
 			$db->sql_freeresult($result);
 
@@ -492,20 +522,61 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			}
 
 			$columns_per_page = ($search_id == 'contests') ? CONTEST_IMAGES : $gallery_config['cols_per_page'];
-			for ($i = 0, $end = count($rowset); $i < $end; $i += $columns_per_page)
+			$init_block = true;
+			if ($search_id == 'contests')
 			{
-				$template->assign_block_vars('imagerow', array());
-
-				for ($j = $i, $end_columns = ($i + $columns_per_page); $j < $end_columns; $j++)
+				foreach ($contest_images as $contest => $contest_data)
 				{
-					if ($j >= $end)
+					$num = 0;
+					$template->assign_block_vars('imageblock', array(
+						'U_BLOCK'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $contest_data['album_id'] . '&amp;sk=ra&amp;sd=d'),
+						'BLOCK_NAME'		=> sprintf($user->lang['CONTEST_WINNERS_OF'], $contest_data['album_name']),
+						'S_CONTEST_BLOCK'	=> true,
+					));
+					foreach ($contest_data['images'] as $contest_image)
 					{
-						$template->assign_block_vars('imagerow.noimage', array());
-						continue;
+						if (($num % CONTEST_IMAGES) == 0)
+						{
+							$template->assign_block_vars('imageblock.imagerow', array());
+						}
+						if (!empty($rowset[$contest_image]))
+						{
+							assign_image_block('imageblock.imagerow.image', $rowset[$contest_image], $rowset[$contest_image]['album_status'], $gallery_config['search_display'], $rowset[$contest_image]['album_user_id']);
+							$num++;
+						}
 					}
+					while (($num % CONTEST_IMAGES) > 0)
+					{
+						$template->assign_block_vars('imageblock.imagerow.no_image', array());
+						$num++;
+					}
+				}
+			}
+			else
+			{
+				for ($i = 0, $end = count($rowset); $i < $end; $i += $columns_per_page)
+				{
+					if ($init_block)
+					{
+						$template->assign_block_vars('imageblock', array(
+							'U_BLOCK'		=> $u_search,
+							'BLOCK_NAME'	=> ($l_search_title) ? $l_search_title : $l_search_matches,
+						));
+						$init_block = false;
+					}
+					$template->assign_block_vars('imageblock.imagerow', array());
 
-					// Assign the image to the template-block
-					assign_image_block('imagerow.image', $rowset[$j], $rowset[$j]['album_status']);
+					for ($j = $i, $end_columns = ($i + $columns_per_page); $j < $end_columns; $j++)
+					{
+						if ($j >= $end)
+						{
+							$template->assign_block_vars('imageblock.imagerow.noimage', array());
+							continue;
+						}
+
+						// Assign the image to the template-block
+						assign_image_block('imageblock.imagerow.image', $rowset[$j], $rowset[$j]['album_status'], $gallery_config['search_display'], $rowset[$j]['album_user_id']);
+					}
 				}
 			}
 		}
@@ -559,7 +630,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			$template->assign_vars(array(
 				'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_COMMENT'),
 				'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_COMMENT'),
-				'INFO_IMG'			=> $user->img('icon_post_info', 'VIEW_INFO'),
+				'INFO_IMG'			=> $user->img('icon_post_info', 'IP'),
 				'MINI_POST_IMG'		=> $user->img('icon_post_target_unread', 'COMMENT'),
 				'PROFILE_IMG'		=> $user->img('icon_user_profile', 'READ_PROFILE'),
 			));
@@ -610,7 +681,7 @@ $template->assign_vars(array(
 	'S_IN_SEARCH'			=> true,
 ));
 
-page_header($user->lang['GALLERY'] . ' &bull; ' . $user->lang['SEARCH']);
+page_header($user->lang['GALLERY'] . ' &bull; ' . $user->lang['SEARCH'], false);
 
 $template->set_filenames(array(
 	'body' => 'gallery/search_body.html')

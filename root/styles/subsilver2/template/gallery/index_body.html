@@ -1,4 +1,4 @@
-<!-- INCLUDE overall_header.html -->
+<!-- INCLUDE gallery/gallery_header.html -->
 
 <!-- IF S_DISPLAY_SEARCH -->
 	<p class="searchbar">
@@ -87,7 +87,7 @@
 	</tr>
 	<tr>
 		<td class="row1"><img src="{T_THEME_PATH}/images/whosonline.gif" alt="{L_STATISTICS}" /></td>
-		<td class="row1" width="100%" valign="middle"><p class="genmed">{TOTAL_IMAGES} | {TOTAL_COMMENTS}<!-- IF TOTAL_PGALLERIES --> | {TOTAL_PGALLERIES}<!-- IF NEWEST_PGALLERIES --> | {NEWEST_PGALLERIES}<!-- ENDIF --><!-- ENDIF --></p></td>
+		<td class="row1" width="100%" valign="middle"><p class="genmed">{TOTAL_IMAGES}<!-- IF TOTAL_COMMENTS --> | {TOTAL_COMMENTS}<!-- ENDIF --><!-- IF TOTAL_PGALLERIES --> | {TOTAL_PGALLERIES}<!-- IF NEWEST_PGALLERIES --> | {NEWEST_PGALLERIES}<!-- ENDIF --><!-- ENDIF --></p></td>
 	</tr>
 	</table>
 <!-- ENDIF -->
@@ -111,16 +111,4 @@
 
 <br clear="all" />
 
-<!--
-	I request you retain the full copyright notice below including the link to www.flying-bits.org.
-	This not only gives respect to the large amount of time given freely by the developer
-	but also helps build interest, traffic and use of phpBB Gallery. If you (honestly) cannot retain
-	the full copyright I ask you at least leave in place the "Powered by phpBB Gallery" line, with
-	"phpBB Gallery" linked to www.flying-bits.org. If you refuse to include even this then support on my
-	forums may be affected.
-
-	phpBB Gallery, nickvergessen : 2009
-//-->
-<div style="text-align: center; clear: both;"><span class="copyright">Powered by <a href="http://www.flying-bits.org/">phpBB Gallery</a> &copy; 2007, 2009 <a href="http://www.flying-bits.org/">nickvergessen</a></span></div>
-<br clear="all" />
-<!-- INCLUDE overall_footer.html -->
+<!-- INCLUDE gallery/gallery_footer.html -->

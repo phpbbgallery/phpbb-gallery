@@ -1,0 +1,823 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
+<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+<!-- $Id$ -->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.3.xsd">
+	<header>
+		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+
+		<title lang="de">phpBB Gallery</title>
+		<title lang="en">phpBB Gallery</title>
+
+		<description lang="de"><![CDATA[Update-Anleitung]]></description>
+		<description lang="en"><![CDATA[Update-Manual]]></description>
+
+		<author-notes lang="de"><![CDATA[
+Untersützt die "MOD Version Check"-MOD von Handyman´:
+http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
+		<author-notes lang="en"><![CDATA[
+Supports the "MOD Version Check"-MOD by Handyman´:
+http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
+
+		<author-group>
+			<author>
+				<realname>Joas Schilling</realname>
+				<email>nickvergessen@gmx.de</email>
+				<username>nickvergessen</username>
+				<homepage>http://www.flying-bits.org/</homepage>
+				<contributions />
+			</author>
+		</author-group>
+
+		<mod-version>1.0.5</mod-version>
+
+		<installation>
+			<level>intermediate</level>
+			<time>1200</time>
+			<target-version>3.0.7</target-version>
+		</installation>
+
+		<link-group>
+			<link type="contrib" lang="de" href="../history.xml">Geschichte/Entwickler/Features</link>
+			<link type="contrib" lang="en" href="../history.xml">History/Developers/Features</link>
+			<link type="parent" lang="de" href="update.xml">Update Anleitung</link>
+			<link type="parent" lang="en" href="update.xml">Update manual</link>
+			<link type="language" lang="de" href="contrib/de.xml">Anleitung für das deutsche Sprachpaket</link>
+			<link type="language" lang="en" href="contrib/de.xml">Manual for German Language-set</link>
+			<link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>
+			<link type="template" lang="en" href="contrib/subsilver2.xml">Manual for subsilver2 Style</link>
+			<link type="contrib" lang="de" href="../addons/rrc_on_index.xml">Neueste/Zufällige Bilder und Kommentare auf der index.php anzeigen</link>
+			<link type="contrib" lang="en" href="../addons/rrc_on_index.xml">View recent/random images and comments on index.php</link>
+			<link type="contrib" lang="de" href="../plugins/highslide.xml">Plugin Highslide JS</link>
+			<link type="contrib" lang="en" href="../plugins/highslide.xml">Plugin Highslide JS</link>
+			<link type="contrib" lang="de" href="../plugins/lytebox.xml">Plugin Lytebox</link>
+			<link type="contrib" lang="en" href="../plugins/lytebox.xml">Plugin Lytebox</link>
+			<link type="contrib" lang="de" href="../plugins/shadowbox.xml">Plugin Shadowbox</link>
+			<link type="contrib" lang="en" href="../plugins/shadowbox.xml">Plugin Shadowbox</link>
+		</link-group>
+	</header>
+
+	<action-group>
+		<copy>
+			<file from="root/install/*.*" to="install/*.*" />
+		</copy>
+
+		<open src="adm/style/gallery_albums.html">
+			<edit>
+				<find><![CDATA[			<dd><select id="album_status" name="album_status">{S_STATUS_OPTIONS}</select></dd>
+		</dl>
+		<dl>]]></find>
+				<action type="after-add"><![CDATA[			<dt><label for="album_watermark">{L_ALBUM_WATERMARK}:</label><br /><span>{L_ALBUM_WATERMARK_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" class="radio" name="album_watermark" value="1"<!-- IF S_ALBUM_WATERMARK --> id="album_watermark" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="album_watermark" value="0"<!-- IF not S_ALBUM_WATERMARK --> id="album_watermark" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
+		<dl>
+			<dt><label for="album_sort_key">{L_DEFAULT_SORT_METHOD}:</label><br /><span>{L_DEFAULT_SORT_EXPLAIN}</span></dt>
+			<dd><select name="album_sort_key" id="album_sort_key">{ALBUM_SORT_KEY_OPTIONS}</select></dd>
+		</dl>
+		<dl>
+			<dt><label for="album_sort_dir">{L_DEFAULT_SORT_ORDER}:</label><br /><span>{L_DEFAULT_SORT_EXPLAIN}</span></dt>
+			<dd><select name="album_sort_dir" id="album_sort_dir">{ALBUM_SORT_DIR_OPTIONS}</select></dd>
+		</dl>
+		<dl>]]></action>
+			</edit>
+		</open>
+
+		<open src="adm/style/gallery_permissions.html">
+			<edit>
+				<find><![CDATA[<h1>{L_PERMISSIONS}</h1>
+<p>{L_PERMISSIONS_EXPLAIN}</p>]]></find>
+				<action type="replace-with"><![CDATA[<!-- IF not S_COPY_PERMISSIONS -->
+	<h1>{L_PERMISSIONS}</h1>
+	<p>{L_PERMISSIONS_EXPLAIN}</p>
+<!-- ELSE -->
+	<h1>{L_PERMISSIONS_COPY}</h1>
+	<p>{L_PERMISSIONS_COPY_EXPLAIN}</p>
+<!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/album.php">
+			<edit>
+				<find><![CDATA[$sort_days	= request_var('st', 0);
+$sort_key	= request_var('sk', $gallery_config['sort_method']);
+$sort_dir	= request_var('sd', $gallery_config['sort_order']);
+$album_data	= get_album_info($album_id);]]></find>
+				<action type="replace-with"><![CDATA[$album_data	= get_album_info($album_id);
+$sort_days	= request_var('st', 0);
+$sort_key	= request_var('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $gallery_config['sort_method']);
+$sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : $gallery_config['sort_order']);]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[$images = array();]]></find>
+				<action type="before-add"><![CDATA[		if (in_array($sort_key, array('r', 'ra')))
+		{
+			$sql_help_sort = ', image_id ' . (($sort_dir == 'd') ? 'ASC' : 'DESC');
+		}
+		else
+		{
+			$sql_help_sort = ', image_id ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
+		}
+
+]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	ORDER BY $sql_sort_order" . (($sort_key != 't') ? (', image_id ' . (($sort_dir == 'd') ? 'DESC' : 'ASC')) : '');]]></find>
+				<action type="replace-with"><![CDATA[ORDER BY $sql_sort_order" . $sql_help_sort;]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/image.php">
+			<edit>
+				<find><![CDATA[if ($gallery_config['watermark_images'] && !gallery_acl_check('i_watermark', $album_id, $album_data['album_user_id']) && $possible_watermark)]]></find>
+				<action type="replace-with"><![CDATA[if ($gallery_config['watermark_images'] && $album_data['album_watermark'] && !gallery_acl_check('i_watermark', $album_id, $album_data['album_user_id']) && $possible_watermark)]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/image_page.php">
+			<edit>
+				<find><![CDATA[$sort_key	= request_var('sk', $gallery_config['sort_method']);
+$sort_dir	= request_var('sd', $gallery_config['sort_order']);]]></find>
+				<action type="after-add"><![CDATA[$sort_key	= request_var('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $gallery_config['sort_method']);
+$sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : $gallery_config['sort_order']);]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[				'S_EXIF_DATA'	=> true,]]></find>
+				<action type="after-add"><![CDATA[				'S_VIEWEXIF'	=> $user->gallery['user_viewexif'],]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[		'L_COMMENT_LENGTH'		=> sprintf($user->lang['COMMENT_LENGTH'], $gallery_config['comment_length']),
+	));]]></find>
+				<action type="after-add"><![CDATA[	if (gallery_display_captcha('comment'))
+	{
+		// Get the captcha instance
+		include($phpbb_root_path . 'includes/captcha/captcha_factory.' . $phpEx);
+		$captcha =& phpbb_captcha_factory::get_instance($config['captcha_plugin']);
+		$captcha->init(CONFIRM_POST);
+
+		$template->assign_vars(array(
+			'S_CONFIRM_CODE'		=> true,
+			'CAPTCHA_TEMPLATE'		=> $captcha->get_template(),
+		));
+	}
+]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/posting.php">
+			<edit>
+				<find><![CDATA[						trigger_error(sprintf($user->lang['USER_REACHED_QUOTA'], gallery_acl_check('i_count', $album_id, $album_data['album_user_id'])));
+					}
+				}
+]]></find>
+				<action type="after-add"><![CDATA[				if (gallery_display_captcha('upload'))
+				{
+					include($phpbb_root_path . 'includes/captcha/captcha_factory.' . $phpEx);
+					$captcha =& phpbb_captcha_factory::get_instance($config['captcha_plugin']);
+					$captcha->init(CONFIRM_POST);
+					$s_captcha_hidden_fields = '';
+				}
+
+]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					$allowed_extensions = array();
+					if ($gallery_config['jpg_allowed'])
+]]></find>
+				<action type="before-add"><![CDATA[					if (gallery_display_captcha('upload'))
+					{
+						$captcha_error = $captcha->validate();
+						if ($captcha_error)
+						{
+							trigger_error($captcha_error);
+						}
+					}
+
+]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[				}
+				$allowed_filetypes = array();
+				if ($gallery_config['gif_allowed'])
+				{
+					$allowed_filetypes[] = $user->lang['FILETYPES_GIF'];
+]]></find>
+				<action type="before-add"><![CDATA[
+					if (gallery_display_captcha('upload'))
+					{
+						$captcha->reset();
+					}]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[				if (!$error)
+				{
+					if (gallery_acl_check('i_approve', $album_id, $album_data['album_user_id']))
+					{
+						$message = $user->lang['ALBUM_UPLOAD_SUCCESSFUL'];]]></find>
+				<action type="before-add"><![CDATA[				if (gallery_display_captcha('upload'))
+				{
+					if (!$submit || !$captcha->is_solved())
+					{
+						$template->assign_vars(array(
+							'S_CONFIRM_CODE'			=> true,
+							'CAPTCHA_TEMPLATE'			=> $captcha->get_template(),
+						));
+					}
+					$template->assign_vars(array(
+						'S_CAPTCHA_HIDDEN_FIELDS'	=> $s_captcha_hidden_fields,
+					));
+				}
+]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[$image_tools->set_image_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);]]></find>
+				<action type="before-add"><![CDATA[$image_tools->set_image_options($gallery_config['max_file_size'], $gallery_config['max_height'], $gallery_config['max_width']);]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[						if ($image_tools->rotated)
+						{
+							$image_tools->write_image($image_file->destination_file, $gallery_config['jpg_quality'], true);]]></find>
+				<action type="replace-with"><![CDATA[						if ($image_tools->rotated)
+						{
+							$image_tools->write_image($image_tools->image_source, $gallery_config['jpg_quality'], true);]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[		$comment = $comment_username = '';]]></find>
+				<action type="replace-with"><![CDATA[		$comment = $comment_username = $s_captcha_hidden_fields = '';]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[			if ($submode == 'rate')
+			{
+				$s_album_action = '';
+			}
+		}
+		switch ($submode)
+		{
+			case 'add':]]></find>
+				<action type="after-add"><![CDATA[				if (gallery_display_captcha('comment'))
+				{
+					include($phpbb_root_path . 'includes/captcha/captcha_factory.' . $phpEx);
+					$captcha =& phpbb_captcha_factory::get_instance($config['captcha_plugin']);
+					$captcha->init(CONFIRM_POST);
+				}]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					$comment = request_var('message', '', true);
+					$comment_text = $comment;
+					$comment_username = request_var('username', '', true);]]></find>
+				<action type="before-add"><![CDATA[					if (gallery_display_captcha('comment'))
+					{
+						$captcha_error = $captcha->validate();
+						if ($captcha_error)
+						{
+							$error .= (($error) ? '<br />' : '') . $captcha_error;
+							$submit = false;
+						}
+					}
+]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . "
+							SET image_comments = image_comments + 1,
+								image_last_comment = $newest_comment
+							WHERE " . $db->sql_in_set('image_id', $image_id);
+						$db->sql_query($sql);
+]]></find>
+				<action type="before-add"><![CDATA[						if (gallery_display_captcha('comment'))
+						{
+							$captcha->reset();
+						}
+]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[						gallery_notification('image', $image_id, $image_data['image_name']);
+						$message .= $user->lang['COMMENT_STORED'] . '<br />';
+					}]]></find>
+				<action type="after-add"><![CDATA[					else if (gallery_display_captcha('comment'))
+					{
+						$s_captcha_hidden_fields = ($captcha->is_solved()) ? build_hidden_fields($captcha->get_hidden_fields()) : '';
+					}]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[				$s_album_action = append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=comment&amp;submode=add&amp;album_id=$album_id&amp;image_id=$image_id");
+				$page_title = $user->lang['POST_COMMENT'];]]></find>
+				<action type="before-add"><![CDATA[				if (gallery_display_captcha('comment'))
+				{
+					if (!$submit || !$captcha->is_solved())
+					{
+						$template->assign_vars(array(
+							'S_CONFIRM_CODE'			=> true,
+							'CAPTCHA_TEMPLATE'			=> $captcha->get_template(),
+						));
+					}
+					$template->assign_vars(array(
+						'S_CAPTCHA_HIDDEN_FIELDS'	=> $s_captcha_hidden_fields,
+					));
+				}
+]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/search.php">
+			<edit>
+				<find><![CDATA[					'WHERE'			=> $db->sql_in_set('c.contest_album_id', array_unique(array_merge(gallery_acl_album_ids('i_view'), gallery_acl_album_ids('m_status')))) . ' AND c.contest_marked = ' . IMAGE_NO_CONTEST,]]></find>
+				<action type="replace-with"><![CDATA[					'WHERE'			=> $db->sql_in_set('c.contest_album_id', array_unique(array_merge(gallery_acl_album_ids('i_view'), gallery_acl_album_ids('m_status'))), false, true) . ' AND c.contest_marked = ' . IMAGE_NO_CONTEST,]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['INFO_IMG'			=> $user->img('icon_post_info', 'VIEW_INFO'),]]></find>
+				<action type="replace-with"><![CDATA['INFO_IMG'			=> $user->img('icon_post_info', 'IP'),]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/includes/functions.php">
+			<edit>
+				<find><![CDATA[?>]]></find>
+				<action type="before-add"><![CDATA[function gallery_display_captcha($mode)
+{
+	static $gallery_display_captcha;
+
+	if ($gallery_display_captcha !== null)
+	{
+		return $gallery_display_captcha;
+	}
+
+	global $config, $gallery_config, $user;
+
+	$gallery_display_captcha = ($user->data['user_id'] == ANONYMOUS) && $gallery_config['captcha_' . $mode] && (version_compare($config['version'], '3.0.5', '>'));
+
+	return $gallery_display_captcha;
+}
+]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/includes/functions_recent.php">
+			<edit>
+				<find><![CDATA[global $gallery_root_path, $phpbb_root_path, $phpEx;]]></find>
+				<action type="replace-with"><![CDATA[global $gallery_root_path, $phpbb_root_path, $phpbb_admin_path, $phpEx;]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['INFO_IMG'			=> $user->img('icon_post_info', 'VIEW_INFO'),]]></find>
+				<action type="replace-with"><![CDATA['INFO_IMG'			=> $user->img('icon_post_info', 'IP'),]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/includes/functions_version_check.php">
+			<edit>
+				<find><![CDATA[	if (!function_exists('get_remote_file'))
+	{
+		global $phpbb_root_path;
+		include($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
+	}]]></find>
+				<action type="after-add"><![CDATA[
+
+	if (!$phpbb_admin_path || !is_dir($phpbb_admin_path))
+	{
+		global $phpbb_root_path;
+		$phpbb_admin_path = $phpbb_root_path . 'adm/';
+	}]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/includes/permissions.php">
+			<edit>
+				<find><![CDATA[global $cache, $db, $user;]]></find>
+				<action type="replace-with"><![CDATA[global $cache, $config, $db, $user;]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[		$sql = 'SELECT group_id
+			FROM ' . USER_GROUP_TABLE . "
+			WHERE user_id = $user_id
+				AND user_pending = 0";]]></find>
+				<action type="replace-with"><![CDATA[		// Only available in >= 3.0.6
+		if (version_compare($config['version'], '3.0.5', '>'))
+		{
+			$sql = 'SELECT ug.group_id
+				FROM ' . USER_GROUP_TABLE . ' ug
+				LEFT JOIN ' . GROUPS_TABLE . " g
+					ON (ug.group_id = g.group_id)
+				WHERE ug.user_id = $user_id
+					AND ug.user_pending = 0
+					AND g.group_skip_auth = 0";
+		}
+		else
+		{
+			$sql = 'SELECT group_id
+				FROM ' . USER_GROUP_TABLE . "
+				WHERE user_id = $user_id
+					AND user_pending = 0";
+		}]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['WHERE'			=> 'p.perm_user_id = ' . $user_id . ' OR ' . $db->sql_in_set('p.perm_group_id', $user_groups_ary),]]></find>
+				<action type="replace-with"><![CDATA['WHERE'			=> 'p.perm_user_id = ' . $user_id . ' OR ' . $db->sql_in_set('p.perm_group_id', $user_groups_ary, false, true),]]></action>
+			</edit>
+		</open>
+
+		<open src="gallery/includes/phpbb_integration.php">
+			<edit>
+				<find><![CDATA[	$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
+	$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);
+}]]></find>
+				<action type="after-add"><![CDATA[
+/**
+* Set users default group
+*
+* @access private
+*
+* borrowed from phpBB3
+* @author: phpBB Group
+* @function: group_set_user_default
+*/
+function gallery_integrate_group_set_user_default($user_id_ary, $sql_ary)
+{
+	global $db;
+
+	if (empty($user_id_ary))
+	{
+		return;
+	}
+
+	if (isset($sql_ary['user_colour']))
+	{
+		// Update any cached colour information for these users
+		$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . " SET album_last_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('album_last_user_id', $user_id_ary);
+		$db->sql_query($sql);
+
+		$sql = 'UPDATE ' . GALLERY_COMMENTS_TABLE . " SET comment_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('comment_user_id', $user_id_ary);
+		$db->sql_query($sql);
+
+		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " SET image_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('image_user_id', $user_id_ary);
+		$db->sql_query($sql);
+
+		global $gallery_config;
+
+		if ($gallery_config === null)
+		{
+			$db->sql_return_on_error(true);
+			$sql = 'SELECT *
+				FROM ' . GALLERY_CONFIG_TABLE;
+			$result = $db->sql_query($sql);
+
+			$gallery_config = array();
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$gallery_config[$row['config_name']] = $row['config_value'];
+			}
+			$db->sql_freeresult($result);
+
+			$db->sql_return_on_error(false);
+		}
+
+		if (isset($gallery_config['newest_pgallery_user_id']) && in_array($gallery_config['newest_pgallery_user_id'], $user_id_ary))
+		{
+			if (!function_exists('set_gallery_config'))
+			{
+				global $phpbb_root_path, $phpEx, $user;
+				include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/functions.' . $phpEx);
+			}
+			set_gallery_config('newest_pgallery_user_colour', $sql_ary['user_colour'], true);
+		}
+	}
+}]]></action>
+			</edit>
+		</open>
+
+		<open src="includes/acp/acp_gallery_albums.php">
+			<edit>
+				<find><![CDATA[						'album_image'			=> request_var('album_image', ''),]]></find>
+				<action type="after-add"><![CDATA[						'album_watermark'		=> request_var('album_watermark', false),
+						'album_sort_key'		=> request_var('album_sort_key', ''),
+						'album_sort_dir'		=> request_var('album_sort_dir', ''),]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[							'album_image'			=> '',]]></find>
+				<action type="after-add"><![CDATA[							'album_watermark'		=> true,
+							'album_sort_key'		=> '',
+							'album_sort_dir'		=> '',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					$album_type_options .= '<option value="' . $value . '"' . (($value == $album_data['album_type']) ? ' selected="selected"' : '') . '>' . $user->lang['ALBUM_TYPE_' . $lang] . '</option>';
+				}]]></find>
+				<action type="after-add"><![CDATA[				$album_sort_key_options = '';
+				$album_sort_key_options .= '<option' . ((!in_array($album_data['album_sort_key'], array('t', 'n', 'vc', 'u', 'ra', 'r', 'c', 'lc'))) ? ' selected="selected"' : '') . " value=''>" . $user->lang['SORT_DEFAULT'] . '</option>';
+				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 't') ? ' selected="selected"' : '') . " value='t'>" . $user->lang['TIME'] . '</option>';
+				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'n') ? ' selected="selected"' : '') . " value='n'>" . $user->lang['IMAGE_NAME'] . '</option>';
+				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'vc') ? ' selected="selected"' : '') . " value='vc'>" . $user->lang['VIEWS'] . '</option>';
+				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'u') ? ' selected="selected"' : '') . " value='u'>" . $user->lang['USERNAME'] . '</option>';
+				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'ra') ? ' selected="selected"' : '') . " value='ra'>" . $user->lang['RATING'] . '</option>';
+				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'r') ? ' selected="selected"' : '') . " value='r'>" . $user->lang['RATES_COUNT'] . '</option>';
+				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'c') ? ' selected="selected"' : '') . " value='c'>" . $user->lang['COMMENTS'] . '</option>';
+				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'lc') ? ' selected="selected"' : '') . " value='lc'>" . $user->lang['NEW_COMMENT'] . '</option>';
+
+				$album_sort_dir_options = '';
+				$album_sort_dir_options .= '<option' . ((($album_data['album_sort_dir'] != 'd') && ($album_data['album_sort_dir'] != 'a')) ? ' selected="selected"' : '') . " value=''>" . $user->lang['SORT_DEFAULT'] . '</option>';
+				$album_sort_dir_options .= '<option' . (($album_data['album_sort_dir'] == 'd') ? ' selected="selected"' : '') . " value='d'>" . $user->lang['SORT_DESCENDING'] . '</option>';
+				$album_sort_dir_options .= '<option' . (($album_data['album_sort_dir'] == 'a') ? ' selected="selected"' : '') . " value='a'>" . $user->lang['SORT_ASCENDING'] . '</option>';
+]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					'S_CAN_COPY_PERMISSIONS'	=> true,
+]]></find>
+				<action type="after-add"><![CDATA[					'S_ALBUM_WATERMARK'			=> ($album_data['album_watermark']) ? true : false,
+					'ALBUM_SORT_KEY_OPTIONS'	=> $album_sort_key_options,
+					'ALBUM_SORT_DIR_OPTIONS'	=> $album_sort_dir_options,]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[$album_data['album_id'] = $db->sql_nextid();]]></find>
+				<action type="replace-with"><![CDATA[$album_data['album_id'] = (int) $db->sql_nextid();]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[$album_data['album_contest'] = $db->sql_nextid();]]></find>
+				<action type="replace-with"><![CDATA[$album_data['album_contest'] = (int) $db->sql_nextid();]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[if ($row_contest['contest_start'] + 86400 * $row_contest['contest_end'] > time())]]></find>
+				<action type="replace-with"><![CDATA[if (($row_contest['contest_start'] + $row_contest['contest_end']) > time())]]></action>
+			</edit>
+		</open>
+
+		<open src="includes/acp/acp_gallery_config.php">
+			<edit>
+				<find><![CDATA[		$sort_method_options .= '<option' . (($value == 'u') ? ' selected="selected"' : '') . " value='u'>" . $user->lang['USERNAME'] . '</option>';
+		$sort_method_options .= '<option' . (($value == 'vc') ? ' selected="selected"' : '') . " value='vc'>" . $user->lang['VIEWS'] . '</option>';
+		$sort_method_options .= '<option' . (($value == 'r') ? ' selected="selected"' : '') . " value='r'>" . $user->lang['RATING'] . '</option>';]]></find>
+				<action type="replace-with"><![CDATA[		$sort_method_options .= '<option' . (($value == 'vc') ? ' selected="selected"' : '') . " value='vc'>" . $user->lang['VIEWS'] . '</option>';
+		$sort_method_options .= '<option' . (($value == 'u') ? ' selected="selected"' : '') . " value='u'>" . $user->lang['USERNAME'] . '</option>';
+		$sort_method_options .= '<option' . (($value == 'ra') ? ' selected="selected"' : '') . " value='ra'>" . $user->lang['RATING'] . '</option>';
+		$sort_method_options .= '<option' . (($value == 'r') ? ' selected="selected"' : '') . " value='r'>" . $user->lang['RATES_COUNT'] . '</option>';]]></action>
+			</edit>
+		</open>
+
+		<open src="includes/ucp/ucp_gallery.php">
+			<edit>
+				<find><![CDATA[				'watch_favo'	=> request_var('watch_favo', 0),]]></find>
+				<action type="after-add"><![CDATA[				'user_viewexif'	=> request_var('viewexifs', 0),]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[			'S_WATCH_FAVO'		=> $user->gallery['watch_favo'],]]></find>
+				<action type="after-add"><![CDATA[			'S_VIEWEXIFS'		=> $user->gallery['user_viewexif'],]]></action>
+			</edit>
+		</open>
+
+		<open src="language/de/mods/gallery.php">
+			<edit>
+				<find><![CDATA['NEWEST_PGALLERY'				=> 'Unsere neueste persönliche Galerie %s',]]></find>
+				<action type="replace-with"><![CDATA['NEWEST_PGALLERY'				=> 'Unsere neueste persönliche Galerie: %s',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	'SORT_ASCENDING'				=> 'Aufsteigend',]]></find>
+				<action type="after-add"><![CDATA[	'SORT_DEFAULT'					=> 'Standard',]]></action>
+			</edit>
+		</open>
+
+		<open src="language/de/mods/gallery_acp.php">
+			<edit>
+				<find><![CDATA[	'ALBUM_UPDATED'					=> 'Das Album wurde erfolgreich aktuallisiert',]]></find>
+				<action type="after-add"><![CDATA[	'ALBUM_WATERMARK'				=> 'Wasserzeichen in diesem Album anzeigen',
+	'ALBUM_WATERMARK_EXPLAIN'		=> 'Wenn hier <samp>Nein</samp> ausgewählt ist, wird das Wasserzeichen ohne Rücksicht auf die Berechtigungen nicht angezeigt!',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	'DECIDE_MOVE_DELETE_SUBALBUMS'	=> 'Lösche die Subalben oder verschiebe sie in ein anderes Album',]]></find>
+				<action type="after-add"><![CDATA[	'DEFAULT_SORT_EXPLAIN'			=> 'Wenn du hier <samp>Standard</samp> auswählst, wird die Standard-Sortierung aus der Konfiguration übernommen.',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	'PERMISSION_I_UPLOAD'			=> 'Kann Bilder hochladen',]]></find>
+				<action type="after-add"><![CDATA[	'PERMISSION_I_UPLOAD_EXPLAIN'	=> 'Diese Berechtigung ist auch dafür verantwortlich, um festzustellen ob ein Benutzer Bilder in das Album verschieben darf, wenn er Moderator-Berechtigungen in einem anderem Album hat.',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['PERMISSIONS'					=> 'Berechtigungen',]]></find>
+				<action type="after-add"><![CDATA[	'PERMISSIONS_COPY'				=> 'Albenrechte kopieren',
+	'PERMISSIONS_COPY_EXPLAIN'		=> 'Hier kannst du die Berechtigungen von einem Album zu einem oder mehreren anderen Alben kopieren.',]]></action>
+			</edit>
+		</open>
+
+		<open src="language/de/mods/install_gallery.php">
+			<edit>
+				<find><![CDATA['INSTALL_CONGRATS_EXPLAIN'	=> '<p>Du hast die phpBB Gallery v%s nun erfolgreich installiert.<br/><br/><strong>Bitte lösche oder verschiebe nun das Installations-Verzeichnis „install“ oder nenne es nun um, bevor du dein Board benutzt. Solange dieses Verzeichnis existiert, ist nur der Administrations-Bereich zugänglich.</strong></p>',]]></find>
+				<action type="replace-with"><![CDATA['INSTALL_CONGRATS_EXPLAIN'	=> 'Du hast die phpBB Gallery v%s nun erfolgreich installiert.<br/><br/><strong>Bitte lösche oder verschiebe nun das Installations-Verzeichnis „install“ oder nenne es nun um, bevor du dein Board benutzt. Solange dieses Verzeichnis existiert, ist nur der Administrations-Bereich zugänglich.</strong>',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['OPTIONAL_IMAGEROTATE_EXPLAIN'	=> 'Wenn die Funktion existiert, können Bilder während dem Hochladen und Bearbeiten gedreht werden.',]]></find>
+				<action type="after-add"><![CDATA[
+	'PAYPAL_DEV_SUPPORT'				=> '</p><div class="errorbox">
+	<h3>Hinweise des Autors</h3>
+	<p>Das Erstellen, Warten und Aktualisieren dieser MOD hat viel Zeit und Mühe in Anspruch genommen und das wird auch in Zukunft so bleiben. Wenn dir die MOD gefällt und du dies gerne mit einer Spende zeigen möchtest, würde mich das sehr freuen. Meine Paypal ID ist nickvergessen@gmx.de, oder kontaktiere mich per Email.<br /><br />Die empfohlene Spendenhöhe für diese MOD beträgt 25,00€ (aber jeder Betrag hilft).</p><br />
+	<a href="http://www.flying-bits.org/go/paypal"><input type="submit" value="Make PayPal-Donation" name="paypal" id="paypal" class="button1" /></a>
+</div><p>',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['UNINSTALL_FINISHED_EXPLAIN'		=> '<p>Du hast die phpBB Gallery erfolgreich deinstalliert.<br/><br/><strong>Du musst nun nur noch die Schritte aus der install.xml rückgäng machen und die Dateien der Gallery löschen, danach ist dein Forum komplett von der Gallery bereinigt.</strong></p>',]]></find>
+				<action type="replace-with"><![CDATA['UNINSTALL_FINISHED_EXPLAIN'		=> 'Du hast die phpBB Gallery erfolgreich deinstalliert.<br/><br/><strong>Du musst nun nur noch die Schritte aus der install.xml rückgäng machen und die Dateien der Gallery löschen, danach ist dein Forum komplett von der Gallery bereinigt.</strong>',]]></action>
+			</edit>
+		</open>
+
+		<open src="language/de/mods/gallery_ucp.php">
+			<edit>
+				<find><![CDATA[	'YOUR_SUBSCRIPTIONS'			=> 'Hier siehst du die Bilder und Alben, bei denen du benachrichtigt wirst.',]]></find>
+				<action type="after-add"><![CDATA[
+	'VIEWEXIFS_DEFAULT'				=> 'Exif-Daten standardmässig anzeigen',]]></action>
+			</edit>
+		</open>
+
+		<open src="language/en/mods/gallery.php">
+			<edit>
+				<find><![CDATA[	'SORT_ASCENDING'				=> 'Ascending',]]></find>
+				<action type="after-add"><![CDATA[	'SORT_DEFAULT'					=> 'Default',]]></action>
+			</edit>
+		</open>
+
+		<open src="language/en/mods/gallery_acp.php">
+			<edit>
+				<find><![CDATA[	'ALBUM_UPDATED'					=> 'Album has been updated successfully.',]]></find>
+				<action type="after-add"><![CDATA[	'ALBUM_WATERMARK'				=> 'Display watermark',
+	'ALBUM_WATERMARK_EXPLAIN'		=> 'If this option is set to <samp>No</samp>, the watermark is never displayed, independent from the permissions!',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	'DECIDE_MOVE_DELETE_SUBALBUMS'	=> 'Delete subalbums or move to album',]]></find>
+				<action type="after-add"><![CDATA[	'DEFAULT_SORT_EXPLAIN'			=> 'If you select <samp>Default</samp> here, the default-sort from the configuration is taken.',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	'PERMISSION_I_UPLOAD'			=> 'Can upload images',]]></find>
+				<action type="after-add"><![CDATA[	'PERMISSION_I_UPLOAD_EXPLAIN'	=> 'This permission is also used, to determinate whether the user can move images to the album, when having moderator permissions in other forums.',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['PERMISSIONS'					=> 'Permissions',]]></find>
+				<action type="after-add"><![CDATA[	'PERMISSIONS_COPY'				=> 'Copy album permissions',
+	'PERMISSIONS_COPY_EXPLAIN'		=> 'Here you can copy album permissions from one album to one or more other albums.',]]></action>
+			</edit>
+		</open>
+
+		<open src="language/en/mods/install_gallery.php">
+			<edit>
+				<find><![CDATA['INSTALL_CONGRATS_EXPLAIN'	=> '<p>You have now successfully installed phpBB Gallery v%s.<br/><br/><strong>Please now delete, move or rename the install directory before you use your board. If this directory is still present, only the Administration Control Panel (ACP) will be accessible.</strong></p>',]]></find>
+				<action type="replace-with"><![CDATA['INSTALL_CONGRATS_EXPLAIN'	=> 'You have now successfully installed phpBB Gallery v%s.<br/><br/><strong>Please now delete, move or rename the install directory before you use your board. If this directory is still present, only the Administration Control Panel (ACP) will be accessible.</strong>',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	'OPTIONAL_IMAGEROTATE_EXPLAIN'	=> 'If the function exists, you can rotate images while uploading and editing them.',]]></find>
+				<action type="after-add"><![CDATA[
+	'PAYPAL_DEV_SUPPORT'				=> '</p><div class="errorbox">
+	<h3>Author Notes</h3>
+	<p>Creating, maintaining and updating this MOD required/requires a lot of time and effort, so if you like this MOD and have the desire to express your thanks through a donation, that would be greatly appreciated. My Paypal ID is <strong>nickvergessen@gmx.de</strong>, or contact me for my mailing address.<br /><br />The suggested donation amount for this MOD is 25,00€ (but any amount will help).</p><br />
+	<a href="http://www.flying-bits.org/go/paypal"><input type="submit" value="Make PayPal-Donation" name="paypal" id="paypal" class="button1" /></a>
+</div><p>',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['UNINSTALL_FINISHED_EXPLAIN'		=> '<p>You uninstalled the phpBB Gallery successfully.<br/><br/><strong>Now you only need to undo the steps of the install.xml and delete the files of the gallery. Afterwards your board is completly free from the gallery.</strong></p>',]]></find>
+				<action type="replace-with"><![CDATA['UNINSTALL_FINISHED_EXPLAIN'		=> 'You uninstalled the phpBB Gallery successfully.<br/><br/><strong>Now you only need to undo the steps of the install.xml and delete the files of the gallery. Afterwards your board is completly free from the gallery.</strong>',]]></action>
+			</edit>
+		</open>
+
+		<open src="language/en/mods/gallery_ucp.php">
+			<edit>
+				<find><![CDATA[	'YOUR_SUBSCRIPTIONS'			=> 'Here you see albums and images you get notified on.',]]></find>
+				<action type="after-add"><![CDATA[
+	'VIEWEXIFS_DEFAULT'				=> 'View Exif-Data by default',]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/gallery/posting_body.html">
+			<edit>
+				<find><![CDATA[			<dl>
+				<dt><label for="message"><!-- IF S_COMMENT -->{L_YOUR_COMMENT}<!-- ELSE -->{L_IMAGE_DESC}<!-- ENDIF -->:</label></dt>
+			</dl>]]></find>
+				<action type="before-add"><![CDATA[			<!-- IF CAPTCHA_TEMPLATE -->
+			<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+			<!-- ENDIF -->]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[			{S_HIDDEN_FIELDS}]]></find>
+				<action type="replace-with"><![CDATA[			{S_HIDDEN_FIELDS}{S_CAPTCHA_HIDDEN_FIELDS}]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/gallery/recent_body.html">
+			<edit>
+				<find><![CDATA[						<!-- IF commentrow.U_DELETE --><li class="delete-icon"><a href="{commentrow.U_DELETE}" title="{L_DELETE_POST}"><span>{L_DELETE_POST}</span></a></li><!-- ENDIF -->
+						<!-- IF commentrow.U_INFO --><li class="info-icon"><a href="{commentrow.U_INFO}" title="{L_VIEW_INFO}" onclick="popup(this.href, 750, 500); return false;"><span>{L_VIEW_INFO}</span></a></li><!-- ENDIF -->]]></find>
+				<action type="after-add"><![CDATA[						<!-- IF commentrow.U_DELETE --><li class="delete-icon"><a href="{commentrow.U_DELETE}" title="{L_DELETE_COMMENT}"><span>{L_DELETE_COMMENT}</span></a></li><!-- ENDIF -->
+						<!-- IF commentrow.U_INFO --><li class="info-icon"><a href="{commentrow.U_INFO}" title="{L_IP}" onclick="popup(this.href, 750, 500); return false;"><span>{L_IP}</span></a></li><!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/gallery/search_results.html">
+			<edit>
+				<find><![CDATA[						<!-- IF commentrow.U_DELETE --><li class="delete-icon"><a href="{commentrow.U_DELETE}" title="{L_DELETE_POST}"><span>{L_DELETE_POST}</span></a></li><!-- ENDIF -->
+						<!-- IF commentrow.U_INFO --><li class="info-icon"><a href="{commentrow.U_INFO}" title="{L_VIEW_INFO}" onclick="popup(this.href, 750, 500); return false;"><span>{L_VIEW_INFO}</span></a></li><!-- ENDIF -->]]></find>
+				<action type="after-add"><![CDATA[						<!-- IF commentrow.U_DELETE --><li class="delete-icon"><a href="{commentrow.U_DELETE}" title="{L_DELETE_COMMENT}"><span>{L_DELETE_COMMENT}</span></a></li><!-- ENDIF -->
+						<!-- IF commentrow.U_INFO --><li class="info-icon"><a href="{commentrow.U_INFO}" title="{L_IP}" onclick="popup(this.href, 750, 500); return false;"><span>{L_IP}</span></a></li><!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/gallery/ucp_gallery.html">
+			<edit>
+				<find><![CDATA[			<label for="watch_favo0"><input type="radio" name="watch_favo" id="watch_favo0" value="0"<!-- IF not S_WATCH_FAVO --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+		</dd>
+	</dl>]]></find>
+				<action type="after-add"><![CDATA[	<hr />
+	<dl>
+		<dt><label for="viewexifs1">{L_VIEWEXIFS_DEFAULT}:</label></dt>
+		<dd>
+			<label for="viewexifs1"><input type="radio" name="viewexifs" id="viewexifs1" value="1"<!-- IF S_VIEWEXIFS --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
+			<label for="viewexifs0"><input type="radio" name="viewexifs" id="viewexifs0" value="0"<!-- IF not S_VIEWEXIFS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+		</dd>
+	</dl>]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/gallery/viewimage_body.html">
+			<edit>
+				<find><![CDATA[<fieldset class="fields1" id="exif_data_fieldset" style="display: none;">]]></find>
+				<action type="replace-with"><![CDATA[<fieldset class="fields1" id="exif_data_fieldset"<!-- IF not S_VIEWEXIF --> style="display: none;"<!-- ENDIF -->>]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[				<!-- INCLUDE posting_buttons.html -->]]></find>
+				<action type="before-add"><![CDATA[				<!-- IF CAPTCHA_TEMPLATE -->
+				<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+				<!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/subsilver2/template/gallery/posting_body.html">
+			<edit>
+				<find><![CDATA[<h2><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>]]></find>
+				<action type="replace-with"><![CDATA[
+<h2><!-- IF U_VIEW_IMAGE --><a href="{U_VIEW_IMAGE}">{IMAGE_NAME}</a><!-- ELSE --><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a><!-- ENDIF --></h2>
+
+<!-- IF U_IMAGE -->
+<table class="tablebg" cellspacing="1" width="100%">
+	<tr>
+		<th colspan="2">{L_DETAILS}</th>
+	</tr>
+	<tr>
+		<td class="row1" style="align: center;">
+			<div style="text-align: center; padding: 20px;"><a href="{U_IMAGE}"<!-- IF S_GP_HIGHSLIDE --> class="highslide" onclick="return hs.expand(this)"<!-- ELSEIF S_GP_LYTEBOX --> rel="lytebox" class="image-resize"<!-- ENDIF -->><img src="{U_IMAGE}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-height: {IMAGE_RSZ_HEIGHT}px; max-width: {IMAGE_RSZ_WIDTH}px;" /></a></div>
+		</td>
+	</tr>
+</table>
+<br />
+<!-- ENDIF -->
+]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[		<!-- IF S_IMAGE -->
+			<tr>
+				<td class="row1" width="22%" height="28"><b class="genmed">{L_IMAGE_NAME}:</b></td>]]></find>
+				<action type="before-add"><![CDATA[		<!-- IF CAPTCHA_TEMPLATE -->
+			<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+		<!-- ENDIF -->]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	{S_FORM_TOKEN}]]></find>
+				<action type="before-add"><![CDATA[	{S_HIDDEN_FIELDS}{S_CAPTCHA_HIDDEN_FIELDS}]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/subsilver2/template/gallery/ucp_gallery.html">
+			<edit>
+				<find><![CDATA[			<td class="row2"><input type="radio" class="radio" name="watch_favo" value="1"<!-- IF S_WATCH_FAVO --> checked="checked"<!-- ENDIF --> /><span class="gen">{L_YES}</span>&nbsp; &nbsp;<input type="radio" class="radio" name="watch_favo" value="0"<!-- IF not S_WATCH_FAVO --> checked="checked"<!-- ENDIF --> /><span class="gen">{L_NO}</span></td>
+		</tr>
+		<tr>]]></find>
+				<action type="after-add"><![CDATA[			<td class="row1" width="50%"><b class="genmed">{L_VIEWEXIFS_DEFAULT}:</b></td>
+			<td class="row2"><input type="radio" class="radio" name="viewexifs" value="1"<!-- IF S_VIEWEXIFS --> checked="checked"<!-- ENDIF --> /><span class="gen">{L_YES}</span>&nbsp; &nbsp;<input type="radio" class="radio" name="viewexifs" value="0"<!-- IF not S_VIEWEXIFS --> checked="checked"<!-- ENDIF --> /><span class="gen">{L_NO}</span></td>
+		</tr>
+		<tr>]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/subsilver2/template/gallery/viewimage_body.html">
+			<edit>
+				<find><![CDATA[<table class="tablebg" cellspacing="1" width="100%" id="exif_data_fieldset" style="display: none;">]]></find>
+				<action type="replace-with"><![CDATA[<table class="tablebg" cellspacing="1" width="100%" id="exif_data_fieldset"<!-- IF not S_VIEWEXIF --> style="display: none;"<!-- ENDIF -->>]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[				<tr>
+					<td class="row1" width="22%" valign="top"><b class="genmed">{L_YOUR_COMMENT}:</b><br /><span class="gensmall">{L_COMMENT_LENGTH}</span><br /><br />
+					<!-- IF S_SMILIES_ALLOWED -->]]></find>
+				<action type="before-add"><![CDATA[				<!-- IF CAPTCHA_TEMPLATE -->
+				<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+				<!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+
+		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
+
+Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
+
+Aktualisiere deine Styles:
+    "Administrations-Bereich" (ACP) > "Styles" > "Templates" > jedes > "Aktualisieren"
+    "Administrations-Bereich" (ACP) > "Styles" > "Themes" > jedes > "Aktualisieren"
+    "Administrations-Bereich" (ACP) > "Styles" > "Grafiksammlungen" > jedes > "Aktualisieren"]]></diy-instructions>
+		<diy-instructions lang="en"><![CDATA[Browse to install/ and run the update-script
+
+Clear your cache in the "Administration Control Panel" (ACP) > "General" > "Purge the cache"
+
+Refresh your Styles:
+    "Administration Control Panel" (ACP) > "Styles" > "Templates" > each > "refresh"
+    "Administration Control Panel" (ACP) > "Styles" > "Themes" > each > "refresh"
+    "Administration Control Panel" (ACP) > "Styles" > "Imagesets" > each > "refresh"]]></diy-instructions>
+	</action-group>
+</mod>

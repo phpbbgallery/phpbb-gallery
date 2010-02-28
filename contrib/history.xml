@@ -2,7 +2,7 @@
 <?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
 <!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
 <!-- $Id$ -->
-<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.2.xsd">
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.3.xsd">
 	<header>
 		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
 
@@ -177,15 +177,89 @@ Installing:
 			</author>
 		</author-group>
 
-		<mod-version>1.0.2</mod-version>
+		<mod-version>1.0.5</mod-version>
 
 		<installation>
 			<level>intermediate</level>
 			<time>3600</time>
-			<target-version>3.0.5</target-version>
+			<target-version>3.0.7</target-version>
 		</installation>
 
 		<history>
+			<entry>
+				<date>2010-02-28</date>
+				<rev-version>1.0.5</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Fix] Correctly describe existance of "Can upload image" in "Personal Galleries"-permissions (Bug #715)]]></change>
+					<change><![CDATA[[Fix] Change user-colour on newest-pgallery-entry in config (Bug #716)]]></change>
+					<change><![CDATA[[Fix] Add a last check to avoid the adm/mods/-file issue]]></change>
+					<change><![CDATA[[Fix] Fix SQL-Error when viewing search_id=contests and having no permissions at all. (Bug #710)]]></change>
+					<change><![CDATA[[Fix] Configuration is missing number of rates as sort-key-option]]></change>
+					<change><![CDATA[[Fix] View image on editing and commenting images in subsilver2 (Bug #660)]]></change>
+					<change><![CDATA[[Fix] install/ not using append_sid() and not checking for User-Status (Bug #699, thanks to Desdenova)]]></change>
+					<change><![CDATA[[Fix] Sort images by upload-time on albums, when rating is the same. (Bug #702)]]></change>
+					<change><![CDATA[[Fix] Do not activate already finished contests, while editing the album. (Bug #688)]]></change>
+					<change><![CDATA[[Fix] Allow users to be member of no group]]></change>
+					<change><![CDATA[[Fix] Support phpBB::3.0.6 "New groups option to excempt group leaders from group permissions" (Bug #703)]]></change>
+					<change><![CDATA[[Fix] Correctly describe what to do on converting (Bug #700)]]></change>
+					<change><![CDATA[[Fix] Incorrect label for "IP/Whois" and "Edit Comment" Buttons (Bug #701)]]></change>
+					<change><![CDATA[[Fix] Can not rotate images by 90°/270° when resize is deactivated.]]></change>
+					<change><![CDATA[[Fix] "Undefined variable"-Error on rotating while editing image (Bug #690)]]></change>
+					<change><![CDATA[[Fix] Wrong language-strings on "copy permissions"-feature (Bug #689)]]></change>
+					<change><![CDATA[[Fix] Typo in german language-pack (Bug #687)]]></change>
+					<change><![CDATA[[Feature] View captcha for guests when uploading images and posting comments (Bug #705)]]></change>
+					<change><![CDATA[[Feature] Option to sort albums with other default value (Bug #692)]]></change>
+					<change><![CDATA[[Feature] User-Option to view exif data by default (Bug #681)]]></change>
+					<change><![CDATA[[Feature] Option to disable the watermark for certain albums completly (Bug #684)]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
+				<date>2009-12-06</date>
+				<rev-version>1.0.4</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Fix] Caption on Login-Box viewing wrong messages (Bug #667)]]></change>
+					<change><![CDATA[[Fix] Fix some problems with images not viewing full]]></change>
+					<change><![CDATA[[Fix] Fix xHTML valid when ShadowBox is used (Bug #666)]]></change>
+					<change><![CDATA[[Fix] Do not try to use $rotate_image when the function is not available (Bug #665)]]></change>
+					<change><![CDATA[[Fix] View birthdays only with gallery-config, independent from phpbb]]></change>
+					<change><![CDATA[[Fix] Remove calls to Check*Form from old rate-system (Bug #664)]]></change>
+					<change><![CDATA[[Fix] Global mark albums read did not work correctly]]></change>
+					<change><![CDATA[[Fix] Clear album_parents when albumname changes on renaming a user (Bug #651)]]></change>
+					<change><![CDATA[[Fix] Use correct width/height for watermark position (Bug #657)]]></change>
+					<change><![CDATA[[Fix] album_name for imageblock not set on album.php (Bug #655)]]></change>
+					<change><![CDATA[[Fix] Missing some global vars from integrate_memberlist_viewprofile (Bug #653)]]></change>
+
+					<change><![CDATA[[Change] Give better styling-option on contest-imageblocks (Bug #650)]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
+				<date>2009-08-30</date>
+				<rev-version>1.0.3</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Fix] Deleting personal albums does not decrease user_images (Bug #645)]]></change>
+					<change><![CDATA[[Fix] Do not allow image_rotate and exif_data Option when the functions are missing.]]></change>
+					<change><![CDATA[[Fix] imagerotate() only available in "bundled version of the GD library" (Bug #642)]]></change>
+					<change><![CDATA[[Fix] "Force to delete Outdated files" does not work with other PHP filename extensions and GALLERY_ROOT_PATH (Bug #643)]]></change>
+					<change><![CDATA[[Fix] Do not view comment-stats if comments are disabled]]></change>
+					<change><![CDATA[[Fix] Increase performance for calls to gallery_acl_check (Contributions to Derky)]]></change>
+					<change><![CDATA[[Fix] ACP Option for JPG-Quality when rotating and resizing images. (Bug #634)]]></change>
+					<change><![CDATA[[Fix] Missing language string NO_DESTINATION_ALBUM (Bug #635)]]></change>
+					<change><![CDATA[[Fix] Several templating issues (subsilver2 only)]]></change>
+					<change><![CDATA[[Fix] Typo in mail template]]></change>
+					<change><![CDATA[[Fix] phpbb-Bug::#46315: "Fix dynamic config update routine error if firebird is used"]]></change>
+					<change><![CDATA[[Fix] View album name of contest-winners (Bug #630)]]></change>
+					<change><![CDATA[[Fix] Do not loose exif-data while rotating an image (Bug #633)]]></change>
+
+					<change><![CDATA[[Change] One file for the image-block for easier styling]]></change>
+
+					<change><![CDATA[[Feature] Inform admin fpr new updates on gallery/index]]></change>
+					<change><![CDATA[[Feature] Copy permissions from one to other albums]]></change>
+					<change><![CDATA[[Feature] Option for display-int on search.php]]></change>
+				</changelog>
+			</entry>
+
 			<entry>
 				<date>2009-07-31</date>
 				<rev-version>1.0.2</rev-version>
@@ -260,23 +334,9 @@ Installing:
 					<change><![CDATA[[Fix] Misleading language string on (edit|delete) (comments|images) permissions (Bug #545)]]></change>
 					<change><![CDATA[[Fix] Not changing block-colour when setting to Yes/No/Never]]></change>
 					<change><![CDATA[[Fix] All Yes/All No/All Never for permissions (Bug #546)]]></change>
-				</changelog>
-			</entry>
-
-			<entry>
-				<date>2009-05-21</date>
-				<rev-version>1.0.0-RC2</rev-version>
-				<changelog lang="en">
 					<change><![CDATA[[Fix] Locked-Icon only viewed if user has moderative permissions (Bug #543)]]></change>
 					<change><![CDATA[[Fix] Permissions for moving into own personal albums are the wrong way round (Bug #542)]]></change>
 					<change><![CDATA[[Fix] Missing Tab-index for fields on gallery/posting.php (Bug #544)]]></change>
-				</changelog>
-			</entry>
-
-			<entry>
-				<date>2009-05-08</date>
-				<rev-version>1.0.0-RC1</rev-version>
-				<changelog lang="en">
 					<change><![CDATA[[Fix] List of users to long on mass import and unwanted bots listed. (Bug #534)]]></change>
 					<change><![CDATA[[Fix] Correctly increase the view-count on viewing the image.php (Related to Bug #339)]]></change>
 					<change><![CDATA[[Fix] Undefined index on RRC, when contest-winner was deleted (Bug #524)]]></change>
@@ -645,7 +705,7 @@ Installing:
 					<change><![CDATA[[Feature] Display Exif-Data if available (Bug #280)]]></change>
 					<change><![CDATA[[Feature] Red-Image-Counter for MOderators (unapproved images)]]></change>
 					<change><![CDATA[[Feature] Cleanup-Page: Cleanup DB after delete of an user (Idea on Report #239)]]></change>
-					<change><![CDATA[[Feature] MOD supports "MOD Version Check" by handyman´]]></change>
+					<change><![CDATA[[Feature] MOD supports "MOD Version Check" by Handyman´]]></change>
 					<change><![CDATA[[Feature] Filled the Statistic-Page in the ACP]]></change>
 					<change><![CDATA[[Feature] MOD supports "HighSlide Attachment & IMG" by stokerpiller]]></change>
 				</changelog>
@@ -905,8 +965,8 @@ Installing:
 		<link-group>
 			<link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
 			<link type="parent" lang="en" href="../install.xml">Manual</link>
-			<link type="parent" lang="de" href="update_1_0_1_to_1_0_2/update.xml">Update von 1.0.1 auf 1.0.2</link>
-			<link type="parent" lang="en" href="update_1_0_1_to_1_0_2/update.xml">Update from 1.0.1 to 1.0.2</link>
+			<link type="parent" lang="de" href="update_1_0_4_to_1_0_5/update.xml">Update von 1.0.4 auf 1.0.5</link>
+			<link type="parent" lang="en" href="update_1_0_4_to_1_0_5/update.xml">Update from 1.0.4 to 1.0.5</link>
 		</link-group>
 	</header>
 

@@ -31,7 +31,7 @@ $gallery_plugins = array(
 /**
 * Highslide JS
 *
-* Latest version tested: 4.1.5
+* Latest version tested: 4.1.8
 * Download: http://highslide.com/download.php
 * License:  Creative Commons Attribution-NonCommercial 2.5 License
 *           http://creativecommons.org/licenses/by-nc/2.5/
@@ -61,7 +61,7 @@ if (file_exists($phpbb_root_path . $gallery_root_path . 'plugins/lytebox/lytebox
 /**
 * Shadowbox.js
 *
-* Latest version tested: 3.0b
+* Latest version tested: 3.0rc1
 * Download: http://www.shadowbox-js.com/download.html
 * License:  Shadowbox.js License version 1.0
 *           http://shadowbox-js.com/LICENSE

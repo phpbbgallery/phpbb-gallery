@@ -19,7 +19,6 @@ include($phpbb_root_path . $gallery_root_path . 'includes/root_path.' . $phpEx);
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
-include($phpbb_root_path . 'includes/functions_upload.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
@@ -94,7 +93,7 @@ switch ($mode)
 		{
 			case 'watch':
 			case 'unwatch':
-				if (!gallery_acl_check('i_view', $album_id))
+				if (!gallery_acl_check('i_view', $album_id, $album_data['album_user_id']))
 				{
 					gallery_not_authorised($image_backlink, $user, $image_loginlink);
 				}
@@ -106,20 +105,20 @@ switch ($mode)
 		}
 	break;
 	case 'image':
-		if (!gallery_acl_check('m_status', $album_id) && ($album_data['album_status'] == ITEM_LOCKED))
+		if (!gallery_acl_check('m_status', $album_id, $album_data['album_user_id']) && ($album_data['album_status'] == ITEM_LOCKED))
 		{
 			gallery_not_authorised($image_backlink, $user, $image_loginlink);
 		}
-		if ($image_id && (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] != IMAGE_APPROVED)))
+		if ($image_id && (!gallery_acl_check('m_status', $album_id, $album_data['album_user_id']) && ($image_data['image_status'] != IMAGE_APPROVED)))
 		{
 			gallery_not_authorised($image_backlink, $user, $image_loginlink);
 		}
 		switch ($submode)
 		{
 			case 'upload':
-				if (!gallery_acl_check('i_upload', $album_id) || ($album_data['album_status'] == ITEM_LOCKED))
+				if (!gallery_acl_check('i_upload', $album_id, $album_data['album_user_id']) || ($album_data['album_status'] == ITEM_LOCKED))
 				{
-					gallery_not_authorised($album_backlink, $user, $album_loginlink);
+					gallery_not_authorised($album_backlink, $user, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
 				}
 				if ($album_data['contest_id'] && (time() < $album_data['contest_start']))
 				{
@@ -131,33 +130,33 @@ switch ($mode)
 				}
 			break;
 			case 'edit':
-				if (!gallery_acl_check('i_edit', $album_id))
+				if (!gallery_acl_check('i_edit', $album_id, $album_data['album_user_id']))
 				{
-					if (!gallery_acl_check('m_edit', $album_id))
+					if (!gallery_acl_check('m_edit', $album_id, $album_data['album_user_id']))
 					{
 						gallery_not_authorised($image_backlink, $user, $image_loginlink);
 					}
 				}
-				else if (($image_data['image_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_edit', $album_id))
+				else if (($image_data['image_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_edit', $album_id, $album_data['album_user_id']))
 				{
 					gallery_not_authorised($image_backlink, $user, $image_loginlink);
 				}
 			break;
 			case 'report':
-				if (!gallery_acl_check('i_report', $album_id) || ($image_data['image_user_id'] == $user->data['user_id']))
+				if (!gallery_acl_check('i_report', $album_id, $album_data['album_user_id']) || ($image_data['image_user_id'] == $user->data['user_id']))
 				{
 					gallery_not_authorised($image_backlink, $user, $image_loginlink);
 				}
 			break;
 			case 'delete':
-				if (!gallery_acl_check('i_delete', $album_id))
+				if (!gallery_acl_check('i_delete', $album_id, $album_data['album_user_id']))
 				{
-					if (!gallery_acl_check('m_delete', $album_id))
+					if (!gallery_acl_check('m_delete', $album_id, $album_data['album_user_id']))
 					{
 						gallery_not_authorised($image_backlink, $user, $image_loginlink);
 					}
 				}
-				else if (($image_data['image_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_delete', $album_id))
+				else if (($image_data['image_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_delete', $album_id, $album_data['album_user_id']))
 				{
 					gallery_not_authorised($image_backlink, $user, $image_loginlink);
 				}
@@ -166,7 +165,7 @@ switch ($mode)
 			case 'unwatch':
 			case 'favorite':
 			case 'unfavorite':
-				if (!gallery_acl_check('i_view', $album_id))
+				if (!gallery_acl_check('i_view', $album_id, $album_data['album_user_id']))
 				{
 					gallery_not_authorised($image_backlink, $user, $image_loginlink);
 				}
@@ -178,7 +177,7 @@ switch ($mode)
 		}
 	break;
 	case 'comment':
-		if (!gallery_acl_check('m_status', $album_id) && (($image_data['image_status'] != IMAGE_APPROVED) || ($album_data['album_status'] == ITEM_LOCKED)))
+		if (!gallery_acl_check('m_status', $album_id, $album_data['album_user_id']) && (($image_data['image_status'] != IMAGE_APPROVED) || ($album_data['album_status'] == ITEM_LOCKED)))
 		{
 			gallery_not_authorised($image_backlink, $user, $image_loginlink);
 		}
@@ -207,42 +206,42 @@ switch ($mode)
 		switch ($submode)
 		{
 			case 'add':
-				if (!gallery_acl_check('c_post', $album_id))
+				if (!gallery_acl_check('c_post', $album_id, $album_data['album_user_id']))
 				{
 					gallery_not_authorised($image_backlink, $user, $image_loginlink);
 				}
 			break;
 
 			case 'edit':
-				if (!gallery_acl_check('c_edit', $album_id))
+				if (!gallery_acl_check('c_edit', $album_id, $album_data['album_user_id']))
 				{
-					if (!gallery_acl_check('m_comments', $album_id))
+					if (!gallery_acl_check('m_comments', $album_id, $album_data['album_user_id']))
 					{
 						gallery_not_authorised($image_backlink, $user, $image_loginlink);
 					}
 				}
-				else if (($comment_data['comment_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_comments', $album_id))
+				else if (($comment_data['comment_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_comments', $album_id, $album_data['album_user_id']))
 				{
 					gallery_not_authorised($image_backlink, $user, $image_loginlink);
 				}
 			break;
 
 			case 'delete':
-				if (!gallery_acl_check('c_delete', $album_id))
+				if (!gallery_acl_check('c_delete', $album_id, $album_data['album_user_id']))
 				{
-					if (!gallery_acl_check('m_comments', $album_id))
+					if (!gallery_acl_check('m_comments', $album_id, $album_data['album_user_id']))
 					{
 						gallery_not_authorised($image_backlink, $user, $image_loginlink);
 					}
 				}
-				else if (($comment_data['comment_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_comments', $album_id))
+				else if (($comment_data['comment_user_id'] != $user->data['user_id']) && !gallery_acl_check('m_comments', $album_id, $album_data['album_user_id']))
 				{
 					gallery_not_authorised($image_backlink, $user, $image_loginlink);
 				}
 			break;
 
 			case 'rate':
-				if (!gallery_acl_check('i_rate', $album_id) || ($image_data['image_user_id'] == $user->data['user_id']))
+				if (!gallery_acl_check('i_rate', $album_id, $album_data['album_user_id']) || ($image_data['image_user_id'] == $user->data['user_id']))
 				{
 					gallery_not_authorised($image_backlink, $user, $image_loginlink);
 				}
@@ -258,11 +257,19 @@ switch ($mode)
 	break;
 }
 
-function gallery_not_authorised($backlink, $user, $loginlink)
+function gallery_not_authorised($backlink, $user, $loginlink, $login_explain = '')
 {
 	if (!$user->data['is_registered'])
 	{
-		login_box($loginlink , $user->lang['LOGIN_INFO']);
+		if ($login_explain && isset($user->lang[$login_explain]))
+		{
+			$login_explain = $user->lang[$login_explain];
+		}
+		else
+		{
+			$login_explain = '';
+		}
+		login_box($loginlink, $login_explain);
 	}
 	else
 	{
@@ -354,7 +361,7 @@ switch ($mode)
 					}
 				}
 				// 2. Check user-limit, if he is not allowed to go unlimited
-				if (!gallery_acl_check('i_unlimited', $album_id))
+				if (!gallery_acl_check('i_unlimited', $album_id, $album_data['album_user_id']))
 				{
 					$sql = 'SELECT COUNT(image_id) count
 						FROM ' . GALLERY_IMAGES_TABLE . '
@@ -363,10 +370,18 @@ switch ($mode)
 					$result = $db->sql_query($sql);
 					$own_images = (int) $db->sql_fetchfield('count');
 					$db->sql_freeresult($result);
-					if ($own_images >= gallery_acl_check('i_count', $album_id))
+					if ($own_images >= gallery_acl_check('i_count', $album_id, $album_data['album_user_id']))
 					{
-						trigger_error(sprintf($user->lang['USER_REACHED_QUOTA'], gallery_acl_check('i_count', $album_id)));
+						trigger_error(sprintf($user->lang['USER_REACHED_QUOTA'], gallery_acl_check('i_count', $album_id, $album_data['album_user_id'])));
 					}
+				}
+
+				if (gallery_display_captcha('upload'))
+				{
+					include($phpbb_root_path . 'includes/captcha/captcha_factory.' . $phpEx);
+					$captcha =& phpbb_captcha_factory::get_instance($config['captcha_plugin']);
+					$captcha->init(CONFIRM_POST);
+					$s_captcha_hidden_fields = '';
 				}
 
 				$images = 0;
@@ -375,6 +390,15 @@ switch ($mode)
 					if (!check_form_key('gallery'))
 					{
 						trigger_error('FORM_INVALID');
+					}
+
+					if (gallery_display_captcha('upload'))
+					{
+						$captcha_error = $captcha->validate();
+						if ($captcha_error)
+						{
+							trigger_error($captcha_error);
+						}
 					}
 
 					$allowed_extensions = array();
@@ -391,10 +415,15 @@ switch ($mode)
 					{
 						$allowed_extensions[] = 'png';
 					}
+
+					if (!class_exists('fileupload'))
+					{
+						include($phpbb_root_path . 'includes/functions_upload.' . $phpEx);
+					}
 					$fileupload = new fileupload();
 					$fileupload->fileupload('', $allowed_extensions, (4 * $gallery_config['max_file_size']));
 
-					$upload_image_files = (gallery_acl_check('i_unlimited', $album_id)) ? $gallery_config['upload_images'] : min((gallery_acl_check('i_count', $album_id) - $own_images), $gallery_config['upload_images']);
+					$upload_image_files = (gallery_acl_check('i_unlimited', $album_id, $album_data['album_user_id'])) ? $gallery_config['upload_images'] : min((gallery_acl_check('i_count', $album_id, $album_data['album_user_id']) - $own_images), $gallery_config['upload_images']);
 
 					// Get File Upload Info
 					$image_id_ary = array();
@@ -457,158 +486,63 @@ switch ($mode)
 							}
 							if (!$user->data['is_registered'] && $image_data['username'])
 							{
-								$result = validate_username($image_data['username']);
-								if ($result['error'])
+								if (validate_username($image_data['username']))
 								{
-									trigger_error($result['error_msg']);
+									trigger_error('INVALID_USERNAME');
 								}
 							}
 
-							/**
-							* Store exif-data to database
-							*/
-							$exif = array();
-							if (function_exists('exif_read_data'))
+							if (!class_exists('nv_image_tools'))
 							{
-								$exif = @exif_read_data($image_file->destination_file, 0, true);
+								include($phpbb_root_path . $gallery_root_path . 'includes/functions_image.' . $phpEx);
 							}
-							if (!empty($exif["EXIF"]))
+
+							$image_tools = new nv_image_tools();
+							$image_tools->set_image_options($gallery_config['max_file_size'], $gallery_config['max_height'], $gallery_config['max_width']);
+							$image_tools->set_image_data($image_file->destination_file, $image_data['image_name'], $image_file->filesize);
+
+							// Read exif data from file
+							$image_tools->read_exif_data();
+							$image_data['image_exif_data'] = $image_tools->exif_data_serialized;
+							$image_data['image_has_exif'] = $image_tools->exif_data_exist;
+
+							/// Rotate the image
+							if ($gallery_config['allow_rotate_images'])
 							{
-								// Unset invalid exifs
-								foreach ($exif as $key => $array)
+								$image_tools->rotate_image($rotate[$i], $gallery_config['allow_resize_images']);
+								if ($image_tools->rotated)
 								{
-									if (!in_array($key, array('EXIF', 'IFD0')))
-									{
-										unset($exif[$key]);
-									}
-									else
-									{
-										foreach ($exif[$key] as $subkey => $array)
-										{
-											if (!in_array($subkey, array('DateTimeOriginal', 'FocalLength', 'ExposureTime', 'FNumber', 'ISOSpeedRatings', 'WhiteBalance', 'Flash', 'Model', 'ExposureProgram', 'ExposureBiasValue', 'MeteringMode')))
-											{
-												unset($exif[$key][$subkey]);
-											}
-										}
-									}
+									$image_file->height = $image_tools->image_size['height'];
+									$image_file->width = $image_tools->image_size['width'];
 								}
-								$image_data['image_exif_data'] = serialize ($exif);
-								$image_data['image_has_exif'] = EXIF_DBSAVED;
-							}
-							else
-							{
-								$image_data['image_exif_data'] = '';
-								$image_data['image_has_exif'] = EXIF_UNAVAILABLE;
-							}
-							$save_exif_in_db = false;
-
-							$src = false;
-							switch ($image_type)
-							{
-								case 'jpg':
-									$read_function = 'imagecreatefromjpeg';
-								break;
-								case 'png':
-									$read_function = 'imagecreatefrompng';
-								break;
-								case 'gif':
-									$read_function = 'imagecreatefromgif';
-								break;
 							}
 
-							if ($gallery_config['allow_rotate_images'] && ($rotate[$i] > 0) && (($rotate[$i] % 90) == 0))
-							{
-								/**
-								* Rotate the image
-								*/
-								if (!$src)
-								{
-									$src = $read_function($image_file->destination_file);
-								}
-								$src = imagerotate($src, $rotate[$i], 0);
-								if ((($rotate[$i] / 90) % 2) == 1)
-								{
-									// Left or Right, we need to switch the height and width
-									$new_width = $image_file->height;
-									$image_file->height = $image_file->width;
-									$image_file->width = $new_width;
-								}
-
-								if (!(($image_file->width > $gallery_config['max_width']) || ($image_file->height > $gallery_config['max_height'])))
-								{
-									// We do not resize the image, so we can put the resource back to the file
-									switch ($image_type)
-									{
-										case 'jpg':
-											@imagejpeg($src, $image_file->destination_file, 100);
-										break;
-										case 'png':
-											@imagepng($src, $image_file->destination_file);
-										break;
-										case 'gif':
-											@imagegif($src, $image_file->destination_file);
-										break;
-									}
-									imagedestroy($src);
-								}
-
-								$save_exif_in_db = true;
-							}
-
+							// Resize overside images
 							if (($image_file->width > $gallery_config['max_width']) || ($image_file->height > $gallery_config['max_height']))
 							{
-								/**
-								* Resize overside images
-								*/
 								if ($gallery_config['allow_resize_images'])
 								{
-									if (!$src)
+									$image_tools->resize_image($gallery_config['max_width'], $gallery_config['max_height']);
+									if ($image_tools->resized)
 									{
-										$src = $read_function($image_file->destination_file);
+										$image_file->height = $image_tools->image_size['height'];
+										$image_file->width = $image_tools->image_size['width'];
 									}
-									// Resize it
-									if (($image_file->width / $gallery_config['max_width']) > ($image_file->height / $gallery_config['max_height']))
-									{
-										$thumbnail_width	= $gallery_config['max_width'];
-										$thumbnail_height	= round($gallery_config['max_height'] * (($image_file->height / $gallery_config['max_height']) / ($image_file->width / $gallery_config['max_width'])));
-									}
-									else
-									{
-										$thumbnail_height	= $gallery_config['max_height'];
-										$thumbnail_width	= round($gallery_config['max_width'] * (($image_file->width / $gallery_config['max_width']) / ($image_file->height / $gallery_config['max_height'])));
-									}
-									$thumbnail = ($gallery_config['gd_version'] == GDLIB1) ? @imagecreate($thumbnail_width, $thumbnail_height) : @imagecreatetruecolor($thumbnail_width, $thumbnail_height);
-									$resize_function = ($gallery_config['gd_version'] == GDLIB1) ? 'imagecopyresized' : 'imagecopyresampled';
-									$resize_function($thumbnail, $src, 0, 0, 0, 0, $thumbnail_width, $thumbnail_height, $image_file->width, $image_file->height);
-									imagedestroy($src);
-									switch ($image_type)
-									{
-										case 'jpg':
-											@imagejpeg($thumbnail, $image_file->destination_file, 100);
-										break;
-
-										case 'png':
-											@imagepng($thumbnail, $image_file->destination_file);
-										break;
-
-										case 'gif':
-											@imagegif($thumbnail, $image_file->destination_file);
-										break;
-									}
-									imagedestroy($thumbnail);
 								}
 								else
 								{
 									@unlink($image_file->destination_file);
 									trigger_error('UPLOAD_IMAGE_SIZE_TOO_BIG');
 								}
-								$image_file->width = $thumbnail_width;
-								$image_file->height = $thumbnail_height;
-
-								$save_exif_in_db = true;
 							}
 
-							if (!$save_exif_in_db && ($image_data['image_has_exif'] == EXIF_DBSAVED))
+							if ($image_tools->resized || $image_tools->rotated)
+							{
+								$image_tools->write_image($image_file->destination_file, $gallery_config['jpg_quality'], true);
+								$image_file->filesize = $image_tools->image_size['file'];
+							}
+
+							if (!$image_tools->exif_data_force_db && ($image_data['image_has_exif'] == EXIF_DBSAVED))
 							{
 								// Image was not resized, so we can pull the Exif from the image to save db-memory.
 								$image_data['image_has_exif'] = EXIF_AVAILABLE;
@@ -645,6 +579,11 @@ switch ($mode)
 							WHERE album_id = $album_id";
 						$db->sql_query($sql);
 					}
+
+					if (gallery_display_captcha('upload'))
+					{
+						$captcha->reset();
+					}
 				}
 				$allowed_filetypes = array();
 				if ($gallery_config['gif_allowed'])
@@ -669,8 +608,8 @@ switch ($mode)
 					'S_MAX_HEIGHT'				=> $gallery_config['max_height'],
 
 					'S_ALLOWED_FILETYPES'	=> implode(', ', $allowed_filetypes),
-					'S_THUMBNAIL_SIZE'		=> $gallery_config['thumbnail_size'],
-					'S_THUMBNAIL'			=> ($gallery_config['gd_version']) ? true : false,
+					'S_THUMBNAIL_SIZE'		=> $gallery_config['thumbnail_size'],//@todo
+					'S_THUMBNAIL'			=> ($gallery_config['gd_version']) ? true : false,//@todo
 					'S_MULTI_IMAGES'		=> ($gallery_config['upload_images'] > 1) ? true : false,
 					'S_ALBUM_ACTION'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=upload&amp;album_id=$album_id"),
 
@@ -682,12 +621,26 @@ switch ($mode)
 					'MESSAGE'				=> request_var('message', '', true),
 					'S_IMAGE'				=> true,
 					'S_UPLOAD'				=> true,
-					'S_ALLOW_ROTATE'		=> $gallery_config['allow_rotate_images'],
+					'S_ALLOW_ROTATE'		=> ($gallery_config['allow_rotate_images'] && function_exists('imagerotate')),
 				));
+
+				if (gallery_display_captcha('upload'))
+				{
+					if (!$submit || !$captcha->is_solved())
+					{
+						$template->assign_vars(array(
+							'S_CONFIRM_CODE'			=> true,
+							'CAPTCHA_TEMPLATE'			=> $captcha->get_template(),
+						));
+					}
+					$template->assign_vars(array(
+						'S_CAPTCHA_HIDDEN_FIELDS'	=> $s_captcha_hidden_fields,
+					));
+				}
 
 				if (!$error)
 				{
-					if (gallery_acl_check('i_approve', $album_id))
+					if (gallery_acl_check('i_approve', $album_id, $album_data['album_user_id']))
 					{
 						$message = $user->lang['ALBUM_UPLOAD_SUCCESSFUL'];
 					}
@@ -706,10 +659,10 @@ switch ($mode)
 
 				$count = 0;
 				$upload_image_files = $gallery_config['upload_images'];
-				if (!gallery_acl_check('i_unlimited', $album_id) && ((gallery_acl_check('i_count', $album_id) - $own_images) < $upload_image_files))
+				if (!gallery_acl_check('i_unlimited', $album_id, $album_data['album_user_id']) && ((gallery_acl_check('i_count', $album_id, $album_data['album_user_id']) - $own_images) < $upload_image_files))
 				{
-					$upload_image_files = (gallery_acl_check('i_count', $album_id) - $own_images);
-					$error .= (($error) ? '<br />' : '') . sprintf($user->lang['USER_NEARLY_REACHED_QUOTA'], gallery_acl_check('i_count', $album_id), $own_images, $upload_image_files);
+					$upload_image_files = (gallery_acl_check('i_count', $album_id, $album_data['album_user_id']) - $own_images);
+					$error .= (($error) ? '<br />' : '') . sprintf($user->lang['USER_NEARLY_REACHED_QUOTA'], gallery_acl_check('i_count', $album_id, $album_data['album_user_id']), $own_images, $upload_image_files);
 					$template->assign_vars(array(
 						'ERROR'		=> $error,
 					));
@@ -804,69 +757,29 @@ switch ($mode)
 					$rotate = request_var('rotate', 0);
 					if ($gallery_config['allow_rotate_images'] && ($rotate > 0) && (($rotate % 90) == 0))
 					{
-						$image_src = $phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename'];
+						if (!class_exists('nv_image_tools'))
+						{
+							include($phpbb_root_path . $gallery_root_path . 'includes/functions_image.' . $phpEx);
+						}
+
+						$image_tools = new nv_image_tools();
+
+						$image_tools->set_image_options($gallery_config['max_file_size'], $gallery_config['max_height'], $gallery_config['max_width']);
+						$image_tools->set_image_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
 						if (($image_data['image_has_exif'] != EXIF_UNAVAILABLE) && ($image_data['image_has_exif'] != EXIF_DBSAVED))
 						{
-							/**
-							* Store exif-data to database if there are any and we didn't already do that.
-							*/
-							$exif = array();
-							if (function_exists('exif_read_data'))
-							{
-								$exif = @exif_read_data($image_src, 0, true);
-							}
-							if (!empty($exif["EXIF"]))
-							{
-								// Unset invalid exifs
-								foreach ($exif as $key => $array)
-								{
-									if (!in_array($key, array('EXIF', 'IFD0')))
-									{
-										unset($exif[$key]);
-									}
-									else
-									{
-										foreach ($exif[$key] as $subkey => $array)
-										{
-											if (!in_array($subkey, array('DateTimeOriginal', 'FocalLength', 'ExposureTime', 'FNumber', 'ISOSpeedRatings', 'WhiteBalance', 'Flash', 'Model', 'ExposureProgram', 'ExposureBiasValue', 'MeteringMode')))
-											{
-												unset($exif[$key][$subkey]);
-											}
-										}
-									}
-								}
-								$sql_ary['image_exif_data'] = serialize ($exif);
-								$sql_ary['image_has_exif'] = EXIF_DBSAVED;
-							}
-							else
-							{
-								$sql_ary['image_exif_data'] = '';
-								$sql_ary['image_has_exif'] = EXIF_UNAVAILABLE;
-							}
+							// Store exif-data to database if there are any and we didn't already do that.
+							$image_tools->read_exif_data();
+							$sql_ary['image_exif_data'] = $image_tools->exif_data_serialized;
+							$sql_ary['image_has_exif'] = $image_tools->exif_data_exist;
 						}
-						/**
-						* Rotate the image
-						*/
-						// We do not resize the image, so we can put the resource back to the file
-						switch (substr($image_data['image_filename'], -3))
+
+						// Rotate the image
+						$image_tools->rotate_image($rotate, $gallery_config['allow_resize_images']);
+						if ($image_tools->rotated)
 						{
-							case 'jpg':
-								$src = imagecreatefromjpeg($image_src);
-								$src = imagerotate($src, $rotate, 0);
-								@imagejpeg($src, $image_src, 100);
-							break;
-							case 'png':
-								$src = imagecreatefrompng($image_src);
-								$src = imagerotate($src, $rotate, 0);
-								@imagepng($src, $image_src);
-							break;
-							case 'gif':
-								$src = imagecreatefromgif($image_src);
-								$src = imagerotate($src, $rotate, 0);
-								@imagegif($src, $image_src);
-							break;
+							$image_tools->write_image($image_tools->image_source, $gallery_config['jpg_quality'], true);
 						}
-						imagedestroy($src);
 
 						@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_filename']);
 						@unlink($phpbb_root_path . GALLERY_MEDIUM_PATH . $image_data['image_filename']);
@@ -904,7 +817,7 @@ switch ($mode)
 
 					'S_IMAGE'			=> true,
 					'S_EDIT'			=> true,
-					'S_ALLOW_ROTATE'	=> $gallery_config['allow_rotate_images'],
+					'S_ALLOW_ROTATE'	=> ($gallery_config['allow_rotate_images'] && function_exists('imagerotate')),
 					'S_MOVE_PERSONAL'	=> ((gallery_acl_check('i_upload', OWN_GALLERY_PERMISSIONS) || $user->gallery['personal_album_id']) || ($user->data['user_id'] != $image_data['image_user_id'])) ? true : false,
 					'S_MOVE_MODERATOR'	=> ($user->data['user_id'] != $image_data['image_user_id']) ? true : false,
 					'S_ALBUM_ACTION'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id"),
@@ -1109,7 +1022,7 @@ switch ($mode)
 	case 'comment':
 	if ($mode == 'comment')
 	{
-		$comment = $comment_username = '';
+		$comment = $comment_username = $s_captcha_hidden_fields = '';
 		$comment_username_req = $contest_rating_msg = false;
 		/**
 		* Rating-System: now you can comment and rate in one form
@@ -1134,7 +1047,7 @@ switch ($mode)
 			}
 
 			// Check: User didn't rate yet, has permissions, it's not the users own image and the user is logged in
-			if (!$your_rating && gallery_acl_check('i_rate', $album_id) && ($user->data['user_id'] != $image_data['image_user_id']) && ($user->data['user_id'] != ANONYMOUS))
+			if (!$your_rating && gallery_acl_check('i_rate', $album_id, $album_data['album_user_id']) && ($user->data['user_id'] != $image_data['image_user_id']) && ($user->data['user_id'] != ANONYMOUS))
 			{
 				$hide_rate = false;
 				if ($album_data['contest_id'])
@@ -1213,12 +1126,28 @@ switch ($mode)
 		switch ($submode)
 		{
 			case 'add':
+				if (gallery_display_captcha('comment'))
+				{
+					include($phpbb_root_path . 'includes/captcha/captcha_factory.' . $phpEx);
+					$captcha =& phpbb_captcha_factory::get_instance($config['captcha_plugin']);
+					$captcha->init(CONFIRM_POST);
+				}
 				if ($submit)
 				{
 					if (!check_form_key('gallery'))
 					{
 						trigger_error('FORM_INVALID');
 					}
+					if (gallery_display_captcha('comment'))
+					{
+						$captcha_error = $captcha->validate();
+						if ($captcha_error)
+						{
+							$error .= (($error) ? '<br />' : '') . $captcha_error;
+							$submit = false;
+						}
+					}
+
 					$comment = request_var('message', '', true);
 					$comment_text = $comment;
 					$comment_username = request_var('username', '', true);
@@ -1233,8 +1162,7 @@ switch ($mode)
 							$submit = false;
 							$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_USERNAME'];
 						}
-						$result = validate_username($comment_username);
-						if ($result['error'])
+						if (validate_username($comment_username))
 						{
 							$error .= (($error) ? '<br />' : '') . $user->lang['INVALID_USERNAME'];
 							$submit = false;
@@ -1274,6 +1202,11 @@ switch ($mode)
 						$newest_comment = $db->sql_nextid();
 						set_gallery_config_count('num_comments', 1);
 
+						if (gallery_display_captcha('comment'))
+						{
+							$captcha->reset();
+						}
+
 						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . "
 							SET image_comments = image_comments + 1,
 								image_last_comment = $newest_comment
@@ -1291,6 +1224,10 @@ switch ($mode)
 						gallery_notification('image', $image_id, $image_data['image_name']);
 						$message .= $user->lang['COMMENT_STORED'] . '<br />';
 					}
+					else if (gallery_display_captcha('comment'))
+					{
+						$s_captcha_hidden_fields = ($captcha->is_solved()) ? build_hidden_fields($captcha->get_hidden_fields()) : '';
+					}
 				}
 				else
 				{
@@ -1299,6 +1236,21 @@ switch ($mode)
 						$comment_username_req = true;
 					}
 				}
+
+				if (gallery_display_captcha('comment'))
+				{
+					if (!$submit || !$captcha->is_solved())
+					{
+						$template->assign_vars(array(
+							'S_CONFIRM_CODE'			=> true,
+							'CAPTCHA_TEMPLATE'			=> $captcha->get_template(),
+						));
+					}
+					$template->assign_vars(array(
+						'S_CAPTCHA_HIDDEN_FIELDS'	=> $s_captcha_hidden_fields,
+					));
+				}
+
 				$s_album_action = append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=comment&amp;submode=add&amp;album_id=$album_id&amp;image_id=$image_id");
 				$page_title = $user->lang['POST_COMMENT'];
 			break;
@@ -1328,9 +1280,8 @@ switch ($mode)
 							$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_USERNAME'];
 							$comment_username_req = true;
 						}
-						$result = validate_username($comment_username);
 
-						if ($result['error'])
+						if (validate_username($comment_username))
 						{
 							$error .= (($error) ? '<br />' : '') . $user->lang['INVALID_USERNAME'];
 							$comment_username = '';
@@ -1477,7 +1428,7 @@ if ($submit)
 	trigger_error($message);
 }
 
-page_header($page_title);
+page_header($page_title, false);
 
 $template->set_filenames(array(
 	'body' => 'gallery/posting_body.html',

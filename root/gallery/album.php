@@ -25,7 +25,7 @@ include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 // Start session management
 $user->session_begin();
 $auth->acl($user->data);
-$user->setup(array('mods/gallery', 'mods/gallery_ucp'));
+$user->setup(array('mods/gallery_ucp', 'mods/gallery'));
 
 // Get general album information
 include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
@@ -39,10 +39,10 @@ $user_id	= request_var('user_id', 0);
 $album_id	= request_var('album_id', 0);
 $start		= request_var('start', 0);
 $mode		= request_var('mode', '');
-$sort_days	= request_var('st', 0);
-$sort_key	= request_var('sk', $gallery_config['sort_method']);
-$sort_dir	= request_var('sd', $gallery_config['sort_order']);
 $album_data	= get_album_info($album_id);
+$sort_days	= request_var('st', 0);
+$sort_key	= request_var('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $gallery_config['sort_method']);
+$sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : $gallery_config['sort_order']);
 
 /**
 * Did the contest end?
@@ -96,8 +96,8 @@ if ($album_data['contest_id'] && $album_data['contest_marked'] && (($album_data[
 /**
 * Build auth-list
 */
-gen_album_auth_level('album', $album_id, $album_data['album_status']);
-if (!gallery_acl_check('i_view', $album_id))
+gen_album_auth_level('album', $album_id, $album_data['album_status'], $album_data['album_user_id']);
+if (!gallery_acl_check('i_view', $album_id, $album_data['album_user_id']))
 {
 	if ($user->data['is_bot'])
 	{
@@ -129,7 +129,7 @@ $images_per_page = $gallery_config['rows_per_page'] * $gallery_config['cols_per_
 */
 if ($album_data['album_type'] != ALBUM_CAT)
 {
-	if (gallery_acl_check('m_', $album_id))
+	if (gallery_acl_check('m_', $album_id, $album_data['album_user_id']))
 	{
 		$template->assign_var('U_MCP', append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "album_id=$album_id"));
 	}
@@ -183,10 +183,19 @@ if ($album_data['album_type'] != ALBUM_CAT)
 	{
 		$image_status_check = ' AND image_status <> ' . IMAGE_UNAPPROVED;
 		$image_counter = $album_data['album_images'];
-		if (gallery_acl_check('m_status', $album_id))
+		if (gallery_acl_check('m_status', $album_id, $album_data['album_user_id']))
 		{
 			$image_status_check = '';
 			$image_counter = $album_data['album_images_real'];
+		}
+
+		if (in_array($sort_key, array('r', 'ra')))
+		{
+			$sql_help_sort = ', image_id ' . (($sort_dir == 'd') ? 'ASC' : 'DESC');
+		}
+		else
+		{
+			$sql_help_sort = ', image_id ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 		}
 
 		$images = array();
@@ -194,7 +203,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE image_album_id = ' . (int) $album_id . "
 				$image_status_check
-			ORDER BY $sql_sort_order" . (($sort_key != 't') ? (', image_id ' . (($sort_dir == 'd') ? 'DESC' : 'ASC')) : '');
+			ORDER BY $sql_sort_order" . $sql_help_sort;
 
 		if ($mode == 'slide_show')
 		{
@@ -239,20 +248,31 @@ if ($album_data['album_type'] != ALBUM_CAT)
 		}
 		$db->sql_freeresult($result);
 
+		$init_block = true;
 		for ($i = 0, $end = count($images); $i < $end; $i += $gallery_config['cols_per_page'])
 		{
-			$template->assign_block_vars('imagerow', array());
+			if ($init_block)
+			{
+				$template->assign_block_vars('imageblock', array(
+					//'U_BLOCK'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_data['album_id']),
+					'BLOCK_NAME'	=> $album_data['album_name'],
+				));
+				$init_block = false;
+			}
+
+			$template->assign_block_vars('imageblock.imagerow', array());
 
 			for ($j = $i, $end_columns = ($i + $gallery_config['cols_per_page']); $j < $end_columns; $j++)
 			{
 				if ($j >= $end)
 				{
-					$template->assign_block_vars('imagerow.no_image', array());
+					$template->assign_block_vars('imageblock.imagerow.no_image', array());
 					continue;
 				}
 
 				// Assign the image to the template-block
-				assign_image_block('imagerow.image', $images[$j], $album_data['album_status'], $gallery_config['album_display']);
+				$images[$j]['album_name'] = $album_data['album_name'];
+				assign_image_block('imageblock.imagerow.image', $images[$j], $album_data['album_status'], $gallery_config['album_display'], $album_data['album_user_id']);
 			}
 		}
 	}
@@ -286,6 +306,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 gallery_markread('album', $album_id);
 
 $template->assign_vars(array(
+	'S_IN_ALBUM'				=> true, // used for some templating in subsilver2
 	'S_IS_POSTABLE'				=> ($album_data['album_type'] != ALBUM_CAT) ? true : false,
 	'S_IS_LOCKED'				=> ($album_data['album_status'] == ITEM_LOCKED) ? true : false,
 	'UPLOAD_IMG'				=> ($album_data['album_status'] == ITEM_LOCKED) ? $user->img('button_topic_locked', 'ALBUM_LOCKED') : $user->img('button_upload_image', 'UPLOAD_IMAGE'),
@@ -293,7 +314,7 @@ $template->assign_vars(array(
 	'L_MODERATORS'				=> $l_moderator,
 	'MODERATORS'				=> $moderators_list,
 
-	'U_UPLOAD_IMAGE'			=> ((!$album_data['album_user_id'] || ($album_data['album_user_id'] == $user->data['user_id'])) && (($user->data['user_id'] == ANONYMOUS) || gallery_acl_check('i_upload', $album_id))) ?
+	'U_UPLOAD_IMAGE'			=> ((!$album_data['album_user_id'] || ($album_data['album_user_id'] == $user->data['user_id'])) && (($user->data['user_id'] == ANONYMOUS) || gallery_acl_check('i_upload', $album_id, $album_data['album_user_id']))) ?
 										append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=upload&amp;album_id=$album_id") : '',
 	'U_CREATE_ALBUM'			=> (($album_data['album_user_id'] == $user->data['user_id']) && $allowed_create) ?
 										append_sid("{$phpbb_root_path}ucp.$phpEx", "i=gallery&amp;mode=manage_albums&amp;action=create&amp;parent_id=$album_id&amp;redirect=album") : '',
@@ -325,13 +346,17 @@ $template->assign_vars(array(
 	'S_WATCHING_TOPIC'			=> ($album_data['watch_id']) ? true : false,
 ));
 
-/**
-* Cheat on phpBB #31975
-* Once we will get the normal function pumped up for the external use.
-*/
-cheat_phpbb_31975();
 
-page_header($user->lang['VIEW_ALBUM'] . ' - ' . $album_data['album_name']);
+if (version_compare($config['version'], '3.0.5', '>'))
+{
+	page_header($user->lang['VIEW_ALBUM'] . ' - ' . $album_data['album_name'], true, $album_id, 'album');
+}
+else
+{
+	// Backwards compatible
+	cheat_phpbb_31975();
+	page_header($user->lang['VIEW_ALBUM'] . ' - ' . $album_data['album_name']);
+}
 
 $template->set_filenames(array(
 	'body' => 'gallery/album_body.html')

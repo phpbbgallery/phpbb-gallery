@@ -6,7 +6,7 @@ You are receiving this notification because you are watching the image, "{IMAGE_
 
 {U_IMAGE}
 
-If you no longer wish to watch this forum you can either click the "Unsubscribe image" link found in the forum above, or by clicking the following link:
+If you no longer wish to watch this album you can either click the "Unsubscribe image" link found in the album above, or by clicking the following link:
 
 {U_STOP_WATCHING_IMAGE}
 

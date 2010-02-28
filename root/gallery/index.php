@@ -92,6 +92,7 @@ else if ($gallery_config['personal_album_index'] && gallery_acl_check('a_list', 
 		'S_SUBALBUMS'			=> true,
 		'U_VIEWALBUM' 			=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal'),
 		'ALBUM_NAME' 			=> $user->lang['USERS_PERSONAL_ALBUMS'],
+		'ALBUM_FOLDER_IMG'		=> $user->img('forum_read_subforum', 'no'),
 		'ALBUM_FOLDER_IMG_SRC'	=> $user->img('forum_read_subforum', 'no', false, '', 'src'),
 		'SUBALBUMS'				=> ((gallery_acl_check('i_upload', OWN_GALLERY_PERMISSIONS) || $user->gallery['personal_album_id']) ? '<a href="' . (($user->gallery['personal_album_id']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $user->gallery['personal_album_id']) : append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums')) . '">' . $user->data['username'] . '</a>' : ''),
 		'ALBUM_DESC'			=> '',
@@ -196,7 +197,7 @@ if ($gallery_config['disp_whoisonline'])
 
 // Generate birthday list if required ...
 $birthday_list = '';
-if ($config['load_birthdays'] && $config['allow_birthdays'] && $gallery_config['disp_birthdays'])
+if ($config['allow_birthdays'] && $gallery_config['disp_birthdays'])
 {
 	// Copied from phpbb::index.php
 	$now = getdate(time() + $user->timezone + $user->dst - date('Z'));
@@ -233,7 +234,7 @@ $s_char_options .= '<option value="other"' . (($first_char == 'other') ? ' selec
 // Output page
 $template->assign_vars(array(
 	'TOTAL_IMAGES'		=> ($gallery_config['disp_statistic']) ? sprintf($user->lang[$l_total_image_s], $total_images) : '',
-	'TOTAL_COMMENTS'	=> sprintf($user->lang[$l_total_comment_s], $total_comments),
+	'TOTAL_COMMENTS'	=> ($gallery_config['allow_comments']) ? sprintf($user->lang[$l_total_comment_s], $total_comments) : '',
 	'TOTAL_PGALLERIES'	=> (gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS)) ? sprintf($user->lang[$l_total_pgallery_s], $total_pgalleries) : '',
 	'NEWEST_PGALLERIES'	=> ($total_pgalleries) ? sprintf($user->lang['NEWEST_PGALLERY'], get_username_string('full', $gallery_config['newest_pgallery_user_id'], $gallery_config['newest_pgallery_username'], $gallery_config['newest_pgallery_user_colour'], '', append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $gallery_config['newest_pgallery_album_id']))) : '',
 
@@ -243,7 +244,7 @@ $template->assign_vars(array(
 	'BIRTHDAY_LIST'			=> $birthday_list,
 
 	'S_LOGIN_ACTION'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login&amp;redirect=' . urlencode("{$gallery_root_path}index.$phpEx" . (($mode == 'personal') ? '?mode=personal' : ''))),
-	'S_DISPLAY_BIRTHDAY_LIST'	=> ($config['load_birthdays']) ? true : false,
+	'S_DISPLAY_BIRTHDAY_LIST'	=> ($gallery_config['disp_birthdays']) ? true : false,
 
 	'U_YOUR_PERSONAL_GALLERY'		=> (gallery_acl_check('i_upload', OWN_GALLERY_PERMISSIONS)) ? ($user->gallery['personal_album_id'] > 0) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $user->gallery['personal_album_id']) : append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums') : '',
 	'U_USERS_PERSONAL_GALLERIES'	=> (gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal') : '',

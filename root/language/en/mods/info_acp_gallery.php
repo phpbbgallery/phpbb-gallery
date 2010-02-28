@@ -26,6 +26,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'ACP_GALLERY_ALBUM_MANAGEMENT'		=> 'Album management',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'		=> 'Permissions',
+	'ACP_GALLERY_ALBUM_PERMISSIONS_COPY'=> 'Copy permissions',
 	'ACP_GALLERY_CLEANUP'				=> 'Cleanup gallery',
 	'ACP_GALLERY_CONFIGURE_GALLERY'		=> 'Configure gallery',
 	'ACP_GALLERY_LOGS'					=> 'Gallery log',
@@ -37,6 +38,10 @@ $lang = array_merge($lang, array(
 	'GALLERY'							=> 'Gallery',
 	'GALLERY_EXPLAIN'					=> 'Image Gallery',
 	'GALLERY_HELPLINE_ALBUM'			=> 'Gallery image: [album]image_id[/album], with this BBCode you can add an image from the gallery into your post.',
+
+	// A little line where you can give yourself some credits on the translation.
+	//'GALLERY_TRANSLATION_INFO'			=> 'English "phpBB Gallery"-Translation by <a href="http://www.flying-bits.org/">nickvergessen</a>',
+	'GALLERY_TRANSLATION_INFO'			=> '',
 
 	'IMAGES'							=> 'Images',
 	'IMG_BUTTON_UPLOAD_IMAGE'			=> 'Upload image',

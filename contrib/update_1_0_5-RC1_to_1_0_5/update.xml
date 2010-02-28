@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
+<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+<!-- $Id: update.xml 1368 2010-02-24 16:24:36Z nickvergessen $ -->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.3.xsd">
+	<header>
+		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+
+		<title lang="de">phpBB Gallery</title>
+		<title lang="en">phpBB Gallery</title>
+
+		<description lang="de"><![CDATA[Update-Anleitung]]></description>
+		<description lang="en"><![CDATA[Update-Manual]]></description>
+
+		<author-notes lang="de"><![CDATA[
+Untersützt die "MOD Version Check"-MOD von Handyman´:
+http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
+		<author-notes lang="en"><![CDATA[
+Supports the "MOD Version Check"-MOD by Handyman´:
+http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
+
+		<author-group>
+			<author>
+				<realname>Joas Schilling</realname>
+				<email>nickvergessen@gmx.de</email>
+				<username>nickvergessen</username>
+				<homepage>http://www.flying-bits.org/</homepage>
+				<contributions />
+			</author>
+		</author-group>
+
+		<mod-version>1.0.5</mod-version>
+
+		<installation>
+			<level>intermediate</level>
+			<time>1200</time>
+			<target-version>3.0.7</target-version>
+		</installation>
+
+		<link-group>
+			<link type="contrib" lang="de" href="../history.xml">Geschichte/Entwickler/Features</link>
+			<link type="contrib" lang="en" href="../history.xml">History/Developers/Features</link>
+			<link type="parent" lang="de" href="../../install.xml">Installations-Anleitung</link>
+			<link type="parent" lang="en" href="../../install.xml">Install</link>
+			<link type="contrib" lang="de" href="code_changes.xml">Code-Changes</link>
+			<link type="contrib" lang="en" href="code_changes.xml">Code-Changes</link>
+			<link type="contrib" lang="de" href="../addons/rrc_on_index.xml">Neueste/Zufällige Bilder und Kommentare auf der index.php anzeigen</link>
+			<link type="contrib" lang="en" href="../addons/rrc_on_index.xml">View recent/random images and comments on index.php</link>
+			<link type="contrib" lang="de" href="../plugins/highslide.xml">Plugin Highslide JS</link>
+			<link type="contrib" lang="en" href="../plugins/highslide.xml">Plugin Highslide JS</link>
+			<link type="contrib" lang="de" href="../plugins/lytebox.xml">Plugin Lytebox</link>
+			<link type="contrib" lang="en" href="../plugins/lytebox.xml">Plugin Lytebox</link>
+			<link type="contrib" lang="de" href="../plugins/shadowbox.xml">Plugin Shadowbox</link>
+			<link type="contrib" lang="en" href="../plugins/shadowbox.xml">Plugin Shadowbox</link>
+		</link-group>
+	</header>
+
+	<action-group>
+		<copy>
+			<file from="root/adm/mods/phpbb_gallery_version.php" to="adm/mods/phpbb_gallery_version.php" />
+			<file from="root/adm/style/*.*" to="adm/style/*.*" />
+			<file from="root/gallery/*.*" to="gallery/*.*" />
+			<file from="root/includes/*.*" to="includes/*.*" />
+			<file from="root/install/*.*" to="install/*.*" />
+			<file from="root/language/en/*.*" to="language/en/*.*" />
+			<file from="root/styles/prosilver/template/*.*" to="styles/prosilver/template/*.*" />
+		</copy>
+
+		<open src="includes/functions_user.php">
+			<edit>
+				<comment lang="de"><![CDATA[Es gibt keinen "Ersetze mit"-Code, da der Code gelöscht werden soll.]]></comment>
+				<comment lang="en"><![CDATA[There is no "replace-with"-code as you need to delete the code.]]></comment>
+				<find><![CDATA[		$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . " SET album_last_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('album_last_user_id', $user_id_ary);
+		$db->sql_query($sql);
+
+		$sql = 'UPDATE ' . GALLERY_COMMENTS_TABLE . " SET comment_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('comment_user_id', $user_id_ary);
+		$db->sql_query($sql);
+
+		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . " SET image_user_colour = '" . $db->sql_escape($sql_ary['user_colour']) . "'
+			WHERE " . $db->sql_in_set('image_user_id', $user_id_ary);
+		$db->sql_query($sql);]]></find>
+				<action type="replace-with"><![CDATA[]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[		if (in_array($config['newest_user_id'], $user_id_ary))
+		{
+			set_config('newest_user_colour', $sql_ary['user_colour'], true);
+		}
+	}]]></find>
+				<action type="after-add"><![CDATA[
+	if (!function_exists('gallery_integrate_group_set_user_default'))
+	{
+		global $phpbb_root_path, $phpEx;
+		include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/phpbb_integration.' . $phpEx);
+	}
+	gallery_integrate_group_set_user_default($user_id_ary, $sql_ary);]]></action>
+			</edit>
+		</open>
+
+		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
+
+Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
+
+Aktualisiere deine Styles:
+    "Administrations-Bereich" (ACP) > "Styles" > "Templates" > jedes > "Aktualisieren"
+    "Administrations-Bereich" (ACP) > "Styles" > "Themes" > jedes > "Aktualisieren"
+    "Administrations-Bereich" (ACP) > "Styles" > "Grafiksammlungen" > jedes > "Aktualisieren"]]></diy-instructions>
+		<diy-instructions lang="en"><![CDATA[Browse to install/ and run the update-script
+
+Clear your cache in the "Administration Control Panel" (ACP) > "General" > "Purge the cache"
+
+Refresh your Styles:
+    "Administration Control Panel" (ACP) > "Styles" > "Templates" > each > "refresh"
+    "Administration Control Panel" (ACP) > "Styles" > "Themes" > each > "refresh"
+    "Administration Control Panel" (ACP) > "Styles" > "Imagesets" > each > "refresh"]]></diy-instructions>
+	</action-group>
+</mod>

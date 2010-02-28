@@ -50,7 +50,20 @@ class install_update extends module
 		global $cache, $gallery_config, $template, $user;
 		global $phpbb_root_path, $phpEx;
 
-		$gallery_config = load_gallery_config();
+		if ($user->data['user_type'] != USER_FOUNDER)
+		{
+			trigger_error('FOUNDER_NEEDED', E_USER_ERROR);
+		}
+
+		$gallery_version = get_gallery_version();
+		if (version_compare($gallery_version, '0.0.0', '>'))
+		{
+			$gallery_config = load_gallery_config();
+		}
+		else
+		{
+			trigger_error('NO_INSTALL_FOUND', E_USER_ERROR);
+		}
 
 		switch ($sub)
 		{
@@ -61,7 +74,7 @@ class install_update extends module
 					'TITLE'			=> $user->lang['UPDATE_INSTALLATION'],
 					'BODY'			=> $user->lang['UPDATE_INSTALLATION_EXPLAIN'],
 					'L_SUBMIT'		=> $user->lang['NEXT_STEP'],
-					'U_ACTION'		=> $this->p_master->module_url . "?mode=$mode&amp;sub=requirements",
+					'U_ACTION'		=> append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=requirements"),
 				));
 
 			break;
@@ -103,7 +116,7 @@ class install_update extends module
 
 				$template->assign_vars(array(
 					'TITLE'		=> $user->lang['INSTALL_CONGRATS'],
-					'BODY'		=> sprintf($user->lang['INSTALL_CONGRATS_EXPLAIN'], NEWEST_PG_VERSION),
+					'BODY'		=> sprintf($user->lang['INSTALL_CONGRATS_EXPLAIN'], NEWEST_PG_VERSION) . $user->lang['PAYPAL_DEV_SUPPORT'],
 					'L_SUBMIT'	=> $user->lang['GOTO_GALLERY'],
 					'U_ACTION'	=> append_sid($phpbb_root_path . GALLERY_ROOT_PATH . 'index.' . $phpEx),
 				));
@@ -135,6 +148,7 @@ class install_update extends module
 		$template->assign_block_vars('checks', array(
 			'S_LEGEND'			=> true,
 			'LEGEND'			=> $user->lang['PHP_SETTINGS'],
+			'LEGEND_EXPLAIN'	=> $user->lang['PHP_SETTINGS_EXP'],
 		));
 
 		// Check for GD-Library
@@ -153,6 +167,50 @@ class install_update extends module
 			'RESULT'		=> $result,
 
 			'S_EXPLAIN'		=> false,
+			'S_LEGEND'		=> false,
+		));
+
+		// Test for optional PHP settings
+		$template->assign_block_vars('checks', array(
+			'S_LEGEND'			=> true,
+			'LEGEND'			=> $user->lang['PHP_SETTINGS_OPTIONAL'],
+			'LEGEND_EXPLAIN'	=> $user->lang['PHP_SETTINGS_OPTIONAL_EXP'],
+		));
+
+		// Image rotate
+		if (function_exists('imagerotate'))
+		{
+			$result = '<strong style="color:green">' . $user->lang['YES'] . '</strong>';
+		}
+		else
+		{
+			$gd_info = gd_info();
+			$result = '<strong style="color:red">' . $user->lang['NO'] . '</strong><br />' . sprintf($user->lang['OPTIONAL_IMAGEROTATE_EXP'], $gd_info['GD Version']);
+		}
+		$template->assign_block_vars('checks', array(
+			'TITLE'			=> $user->lang['OPTIONAL_IMAGEROTATE'],
+			'TITLE_EXPLAIN'	=> $user->lang['OPTIONAL_IMAGEROTATE_EXPLAIN'],
+			'RESULT'		=> $result,
+
+			'S_EXPLAIN'		=> true,
+			'S_LEGEND'		=> false,
+		));
+
+		// Exif data
+		if (function_exists('exif_read_data'))
+		{
+			$result = '<strong style="color:green">' . $user->lang['YES'] . '</strong>';
+		}
+		else
+		{
+			$result = '<strong style="color:red">' . $user->lang['NO'] . '</strong><br />' . $user->lang['OPTIONAL_EXIFDATA_EXP'];
+		}
+		$template->assign_block_vars('checks', array(
+			'TITLE'			=> $user->lang['OPTIONAL_EXIFDATA'],
+			'TITLE_EXPLAIN'	=> $user->lang['OPTIONAL_EXIFDATA_EXPLAIN'],
+			'RESULT'		=> $result,
+
+			'S_EXPLAIN'		=> true,
 			'S_LEGEND'		=> false,
 		));
 
@@ -218,6 +276,13 @@ class install_update extends module
 		$delete = (isset($_POST['delete'])) ? true : false;
 		foreach ($oudated_files as $file)
 		{
+			// Replace gallery root path with the constant.
+			if (strpos($file, 'gallery/') == 0)
+			{
+				$file = substr_replace($file, GALLERY_ROOT_PATH, 0, 8);
+			}
+			$file = preg_replace('/\.php$/i', ".$phpEx", $file);
+
 			if ($delete)
 			{
 				if (@file_exists($phpbb_root_path . $file))
@@ -279,7 +344,7 @@ class install_update extends module
 			));
 		}
 
-		$url = (!in_array(false, $passed)) ? $this->p_master->module_url . "?mode=$mode&amp;sub=update_db" : $this->p_master->module_url . "?mode=$mode&amp;sub=requirements";
+		$url = (!in_array(false, $passed)) ? append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db") : append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=requirements");
 		$submit = (!in_array(false, $passed)) ? $user->lang['INSTALL_START'] : $user->lang['INSTALL_TEST'];
 
 		$template->assign_vars(array(
@@ -295,42 +360,14 @@ class install_update extends module
 	function update_db_schema($mode, $sub)
 	{
 		global $db, $user, $template, $gallery_config, $table_prefix;
+		global $phpbb_root_path, $phpEx;
 
 		$gallery_config = load_gallery_config();
 		$this->page_title = $user->lang['STAGE_UPDATE_DB'];
 
 		if (!isset($gallery_config['phpbb_gallery_version']))
 		{
-			$gallery_config['phpbb_gallery_version'] = (isset($gallery_config['album_version'])) ? $gallery_config['album_version'] : '0.0.0';
-			if (in_array($gallery_config['phpbb_gallery_version'], array('0.1.2', '0.1.3', '0.2.0', '0.2.1', '0.2.2', '0.2.3', '0.3.0', '0.3.1')))
-			{
-				$sql = 'SELECT * FROM ' . GALLERY_ALBUMS_TABLE;
-				if (@$db->sql_query_limit($sql, 1) == false)
-				{
-					// DB-Table missing
-					$gallery_config['phpbb_gallery_version'] = '0.1.2';
-					$check_succeed = true;
-				}
-				else
-				{
-					// No Schema Changes between 0.1.3 and 0.2.2
-					$gallery_config['phpbb_gallery_version'] = '0.2.2';
-					if (nv_check_column(GALLERY_ALBUMS_TABLE, 'album_user_id'))
-					{
-						$gallery_config['phpbb_gallery_version'] = '0.2.3';
-						$sql = 'SELECT * FROM ' . GALLERY_FAVORITES_TABLE;
-						if (@$db->sql_query_limit($sql, 1) == true)
-						{
-							$gallery_config['phpbb_gallery_version'] = '0.3.1';
-						}
-					}
-				}
-			}
-			else
-			{
-				// No version-number problems since 0.4.0-RC1
-				$gallery_config['phpbb_gallery_version'] = $gallery_config['album_version'];
-			}
+			$gallery_config['phpbb_gallery_version'] = get_gallery_version();
 		}
 
 		set_gallery_config('phpbb_gallery_version', $gallery_config['phpbb_gallery_version']);
@@ -402,6 +439,20 @@ class install_update extends module
 
 			case '1.0.2-dev':
 			case '1.0.2-RC1':
+			case '1.0.2':
+
+			case '1.0.3-RC1':
+			case '1.0.3-RC2':
+			case '1.0.3':
+
+			case '1.0.4':
+				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_watermark',	array('UINT:1', 1));
+				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_sort_key',	array('VCHAR:8', ''));
+				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_sort_dir',	array('VCHAR:8', ''));
+				nv_add_column(GALLERY_USERS_TABLE,	'user_viewexif',	array('UINT:1', 0));
+
+			case '1.0.5-RC1':
+			case '1.0.5':
 			break;
 		}
 
@@ -409,7 +460,7 @@ class install_update extends module
 			'BODY'		=> $user->lang['STAGE_CREATE_TABLE_EXPLAIN'],
 			'L_SUBMIT'	=> $user->lang['NEXT_STEP'],
 			'S_HIDDEN'	=> '',
-			'U_ACTION'	=> $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=2",
+			'U_ACTION'	=> append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=2"),
 		));
 	}
 
@@ -501,7 +552,7 @@ class install_update extends module
 					WHERE perm_system = 3';
 				$db->sql_query($sql);
 
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=3";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=3");
 			break;
 
 			case '0.5.0':
@@ -682,13 +733,18 @@ class install_update extends module
 					WHERE module_langname = 'ACP_GALLERY_ALBUM_PERMISSIONS'";
 				$db->sql_query($sql);
 
-				set_gallery_config('pgalleries_per_page', 10);
+				if (!isset($gallery_config['pgalleries_per_page']))
+				{
+					set_gallery_config('pgalleries_per_page', 10);
+				}
 				if (isset($gallery_config['max_pics']))
 				{
 					set_gallery_config('images_per_album', $gallery_config['max_pics']);
 				}
-
-				set_gallery_config('watermark_position', 20);
+				if (!isset($gallery_config['watermark_position']))
+				{
+					set_gallery_config('watermark_position', 20);
+				}
 
 				// We made some stupid bbcodes
 				$sql = 'DELETE FROM ' . BBCODES_TABLE . "
@@ -697,7 +753,10 @@ class install_update extends module
 				$db->sql_query($sql);
 
 			case '1.0.0-RC1':
-				set_gallery_config('rrc_profile_pgalleries', $gallery_config['rrc_gindex_pgalleries']);
+				if (!isset($gallery_config['rrc_profile_pgalleries']))
+				{
+					set_gallery_config('rrc_profile_pgalleries', $gallery_config['rrc_gindex_pgalleries']);
+				}
 
 			case '1.0.0-RC2':
 			case '1.0.0':
@@ -718,9 +777,6 @@ class install_update extends module
 					$db->sql_query($sql);
 				}
 				$db->sql_freeresult($result);
-
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
-			break;
 
 			case '1.0.1':
 			case '1.0.2-dev':
@@ -757,11 +813,63 @@ class install_update extends module
 					set_gallery_config_count('album_display', 128);
 				}
 
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4";
+			case '1.0.2':
+			case '1.0.3-RC1':
+				if (!isset($gallery_config['jpg_quality']))
+				{
+					set_gallery_config('jpg_quality', 100);
+				}
+				if (!isset($gallery_config['search_display']))
+				{
+					set_gallery_config('search_display', 45);
+				}
+
+				$sql = 'SELECT module_id
+					FROM ' . MODULES_TABLE . "
+					WHERE module_langname = 'ACP_GALLERY_ALBUM_PERMISSIONS_COPY'
+						AND module_class = 'acp'
+						AND module_enabled = 1";
+				$result = $db->sql_query($sql);
+				$copy_permissions_module_id = (int) $db->sql_fetchfield('module_id');
+				$db->sql_freeresult($result);
+
+				if (!$copy_permissions_module_id)
+				{
+					$sql = 'SELECT module_id
+						FROM ' . MODULES_TABLE . '
+						WHERE (module_id = ' . (int) $gallery_config['acp_parent_module'] . "
+								OR module_langname = 'PHPBB_GALLERY')
+							AND module_class = 'acp'
+							AND module_enabled = 1";
+					$result = $db->sql_query($sql);
+					$acp_module_id = (int) $db->sql_fetchfield('module_id');
+					$db->sql_freeresult($result);
+
+					if ($acp_module_id)
+					{
+						$album_permissions_copy = array('module_basename' => 'gallery_permissions',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS_COPY',	'module_mode' => 'copy',	'module_auth' => 'acl_a_gallery_albums');
+						add_module($album_permissions_copy);
+					}
+				}
+				set_gallery_config('version_check_version', '0.0.0');
+				set_gallery_config('version_check_time', 0);
+
+			case '1.0.3-RC2':
+			case '1.0.3':
+			case '1.0.4':
+				// Set allow_rotate_images only if possible
+				set_gallery_config('allow_rotate_images', ((function_exists('imagerotate') && $gallery_config['allow_rotate_images']) ? 1 : 0));
+
+				set_gallery_config('captcha_comment', 1);
+				set_gallery_config('captcha_upload', 1);
+
+			case '1.0.5-RC1':
+			case '1.0.5':
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=4");
 			break;
 		}
 
-		$next_update_url = (!$next_update_url) ? $this->p_master->module_url . "?mode=$mode&amp;sub=update_db&amp;step=4" : $next_update_url;
+		$next_update_url = (!$next_update_url) ? append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=4") : $next_update_url;
 
 		$template->assign_vars(array(
 			'BODY'		=> $user->lang['UPDATING_DATA'],
@@ -776,7 +884,7 @@ class install_update extends module
 	*/
 	function thinout_db_schema($mode, $sub)
 	{
-		global $user, $template, $db;
+		global $user, $template, $db, $phpbb_root_path, $phpEx;
 
 		$gallery_config = load_gallery_config();
 
@@ -820,22 +928,37 @@ class install_update extends module
 			case '0.4.0-RC3':
 			case '0.4.0':*/
 			case '0.4.1':
+
 			case '0.5.0':
 			case '0.5.1':
 			case '0.5.2':
 			case '0.5.3':
 			case '0.5.4':
+
 			case '1.0.0-dev':
 				nv_remove_column(GALLERY_ROLES_TABLE,	'a_moderate');
 
 			case '1.0.0-RC1':
 			case '1.0.0-RC2':
 			case '1.0.0':
+
 			case '1.0.1-dev':
 			case '1.0.1':
+
 			case '1.0.2-dev':
 				/* //@todo: Move on bbcode-change or creating all modules */
 				$reparse_modules_bbcode = true;
+			case '1.0.2-RC1':
+			case '1.0.2':
+
+			case '1.0.3-RC1':
+			case '1.0.3-RC2':
+			case '1.0.3':
+
+			case '1.0.4':
+
+			case '1.0.5-RC1':
+			case '1.0.5':
 			break;
 		}
 
@@ -868,11 +991,11 @@ class install_update extends module
 
 		if ($reparse_modules_bbcode)
 		{
-			$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=advanced";
+			$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=advanced");
 		}
 		else
 		{
-			$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=final";
+			$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=final");
 		}
 
 		$template->assign_vars(array(
@@ -946,11 +1069,22 @@ class install_update extends module
 				case '1.0.2-RC1':
 					// Add album-BBCode
 					add_bbcode('album');
+
+				case '1.0.2':
+
+				case '1.0.3-RC1':
+				case '1.0.3-RC2':
+				case '1.0.3':
+
+				case '1.0.4':
+
+				case '1.0.5-RC1':
+				case '1.0.5':
 				break;
 			}
 
 			$s_hidden_fields = '';
-			$url = $this->p_master->module_url . "?mode=$mode&amp;sub=final";
+			$url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=final");
 		}
 		else
 		{
@@ -962,8 +1096,19 @@ class install_update extends module
 			$modules = $this->gallery_config_options;
 			switch ($gallery_config['phpbb_gallery_version'])
 			{
+				case '1.0.5-RC1':
+				case '1.0.5':
+
+				case '1.0.4':
+
+				case '1.0.3':
+				case '1.0.3-RC2':
+				case '1.0.3-RC1':
+
+				case '1.0.2':
 				case '1.0.2-RC1':
 				case '1.0.2-dev':
+
 				case '1.0.1':
 					$template->assign_block_vars('checks', array(
 						'S_LEGEND'			=> true,
@@ -971,10 +1116,12 @@ class install_update extends module
 						'LEGEND_EXPLAIN'	=> $user->lang['BBCODES_NEEDS_REPARSE'],
 					));
 				case '1.0.1-dev':
+
 				case '1.0.0':
 				case '1.0.0-RC2':
 				case '1.0.0-RC1':
 				case '1.0.0-dev':
+
 				case '0.5.4':
 				case '0.5.3':
 				case '0.5.2':
@@ -983,6 +1130,7 @@ class install_update extends module
 					// needs to be moved before the first unset.
 					unset($modules['legend1']);
 					unset($modules['log_module']);
+
 				case '0.4.1':
 					unset($modules['acp_module']);
 					unset($modules['ucp_module']);
@@ -1019,7 +1167,7 @@ class install_update extends module
 				);
 			}
 			$s_hidden_fields = '<input type="hidden" name="create" value="true" />';
-			$url = $this->p_master->module_url . "?mode=$mode&amp;sub=advanced";
+			$url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=advanced");
 		}
 
 		$submit = $user->lang['NEXT_STEP'];

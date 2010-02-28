@@ -1,4 +1,4 @@
-<!-- INCLUDE overall_header.html -->
+<!-- INCLUDE gallery/gallery_header.html -->
 <script type="text/javascript">
 function getElement(iElementId)
 {
@@ -37,7 +37,7 @@ function toggleElement(oElement)
 </div>
 <!-- ENDIF -->
 
-<form id="postform" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data" onsubmit="return checkAlbumForm()">
+<form id="postform" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data">
 
 <div class="panel" id="postingbox">
 	<div class="inner"><span class="corners-top"><span></span></span>
@@ -77,6 +77,9 @@ function toggleElement(oElement)
 				</dl>
 			<!-- ENDIF -->
 			<!-- IF not S_REPORT -->
+			<!-- IF CAPTCHA_TEMPLATE -->
+			<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+			<!-- ENDIF -->
 			<dl>
 				<dt><label for="message"><!-- IF S_COMMENT -->{L_YOUR_COMMENT}<!-- ELSE -->{L_IMAGE_DESC}<!-- ENDIF -->:</label></dt>
 			</dl>
@@ -164,7 +167,7 @@ function toggleElement(oElement)
 		</fieldset>
 		<!-- ENDIF -->
 		<fieldset class="submit-buttons">
-			{S_HIDDEN_FIELDS}
+			{S_HIDDEN_FIELDS}{S_CAPTCHA_HIDDEN_FIELDS}
 			<input type="reset" accesskey="r" tabindex="200" value="{L_RESET}" class="button2" />&nbsp;
 			<input type="submit" accesskey="s" tabindex="201" name="submit" value="{L_SUBMIT}" class="button1" />&nbsp;
 		</fieldset>
@@ -173,15 +176,4 @@ function toggleElement(oElement)
 </div>
 </form>
 
-<!--
-	I request you retain the full copyright notice below including the link to www.flying-bits.org.
-	This not only gives respect to the large amount of time given freely by the developer
-	but also helps build interest, traffic and use of phpBB Gallery. If you (honestly) cannot retain
-	the full copyright I ask you at least leave in place the "Powered by phpBB Gallery" line, with
-	"phpBB Gallery" linked to www.flying-bits.org. If you refuse to include even this then support on my
-	forums may be affected.
-
-	phpBB Gallery, nickvergessen : 2009
-//-->
-<div class="copyright">Powered by <a href="http://www.flying-bits.org/">phpBB Gallery</a> &copy; 2007, 2009 <a href="http://www.flying-bits.org/">nickvergessen</a></div>
-<!-- INCLUDE overall_footer.html -->
+<!-- INCLUDE gallery/gallery_footer.html -->

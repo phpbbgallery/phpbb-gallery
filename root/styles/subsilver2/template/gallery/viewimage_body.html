@@ -1,19 +1,4 @@
-<!-- INCLUDE overall_header.html -->
-
-<script type="text/javascript">
-<!--
-function checkRateForm() {
-	if (document.rateform.rate.value == -1)
-	{
-		return false;
-	}
-	else
-	{
-		return true;
-	}
-}
-// -->
-</script>
+<!-- INCLUDE gallery/gallery_header.html -->
 
 <h2><a href="#">{IMAGE_NAME}</a></h2>
 
@@ -131,7 +116,7 @@ function toggleElement(oElement)
 		<th colspan="2">{L_EXIF-DATA} - <a href="javascript: toggleElement( getElement('exif_data_fieldset'));">{L_SHOW_EXIF}</a></th>
 	</tr>
 </table>
-<table class="tablebg" cellspacing="1" width="100%" id="exif_data_fieldset" style="display: none;">
+<table class="tablebg" cellspacing="1" width="100%" id="exif_data_fieldset"<!-- IF not S_VIEWEXIF --> style="display: none;"<!-- ENDIF -->>
 	<!-- BEGIN exif_value -->
 		<tr class="row1">
 			<td width="25%" align="right"><span class="genmed">{exif_value.EXIF_NAME}:</span></td>
@@ -144,7 +129,7 @@ function toggleElement(oElement)
 
 <!-- IF not S_IS_BOT and (S_ALLOWED_TO_RATE or S_ALLOWED_TO_COMMENT) -->
 		<a name="rating"></a>
-		<form name="postform" action="{S_COMMENT_ACTION}" method="post" onsubmit="return checkCommentForm;">
+		<form name="postform" action="{S_COMMENT_ACTION}" method="post">
 			<table class="tablebg" cellspacing="1" width="100%">
 				<tr>
 					<th colspan="2" style="align: center;"><!-- IF S_ALLOWED_TO_RATE and S_ALLOWED_TO_COMMENT -->{L_POST_COMMENT_RATE_IMAGE}<!-- ELSEIF S_ALLOWED_TO_COMMENT -->{L_POST_COMMENT}<!-- ELSE -->{L_RATE_IMAGE}<!-- ENDIF --></th>
@@ -175,6 +160,9 @@ function toggleElement(oElement)
 					<td class="row1" width="22%" height="28"><b class="genmed">{L_USERNAME}:</b></td>
 					<td><span class="genmed"><input class="inputbox autowidth" type="text" name="username" maxlength="32" /></span></td>
 				</tr>
+				<!-- ENDIF -->
+				<!-- IF CAPTCHA_TEMPLATE -->
+				<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
 				<!-- ENDIF -->
 				<tr>
 					<td class="row1" width="22%" valign="top"><b class="genmed">{L_YOUR_COMMENT}:</b><br /><span class="gensmall">{L_COMMENT_LENGTH}</span><br /><br />
@@ -404,16 +392,4 @@ function toggleElement(oElement)
 </table>
 <br clear="all" />
 
-<!--
-	I request you retain the full copyright notice below including the link to www.flying-bits.org.
-	This not only gives respect to the large amount of time given freely by the developer
-	but also helps build interest, traffic and use of phpBB Gallery. If you (honestly) cannot retain
-	the full copyright I ask you at least leave in place the "Powered by phpBB Gallery" line, with
-	"phpBB Gallery" linked to www.flying-bits.org. If you refuse to include even this then support on my
-	forums may be affected.
-
-	phpBB Gallery, nickvergessen : 2009
-//-->
-<div style="text-align: center; clear: both;"><span class="copyright">Powered by <a href="http://www.flying-bits.org/">phpBB Gallery</a> &copy; 2007, 2009 <a href="http://www.flying-bits.org/">nickvergessen</a></span></div>
-<br clear="all" />
-<!-- INCLUDE overall_footer.html -->
+<!-- INCLUDE gallery/gallery_footer.html -->

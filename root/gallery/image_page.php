@@ -68,7 +68,7 @@ if (!file_exists($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_fil
 /**
 * Check the permissions and approval
 */
-if (!gallery_acl_check('i_view', $album_id))
+if (!gallery_acl_check('i_view', $album_id, $album_data['album_user_id']))
 {
 	if (!$user->data['is_registered'])
 	{
@@ -79,7 +79,7 @@ if (!gallery_acl_check('i_view', $album_id))
 		trigger_error('NOT_AUTHORISED');
 	}
 }
-if (!gallery_acl_check('m_status', $album_id) && ($image_data['image_status'] == IMAGE_UNAPPROVED))
+if (!gallery_acl_check('m_status', $album_id, $album_data['album_user_id']) && ($image_data['image_status'] == IMAGE_UNAPPROVED))
 {
 	trigger_error('NOT_AUTHORISED');
 }
@@ -103,14 +103,14 @@ if (isset($user->data['session_page']) && !$user->data['is_bot'] && (strpos($use
 }
 
 $image_approval_sql = ' AND image_status <> ' . IMAGE_UNAPPROVED;
-if (gallery_acl_check('m_status', $album_id))
+if (gallery_acl_check('m_status', $album_id, $album_data['album_user_id']))
 {
 	$image_approval_sql = '';
 }
 
 //$sort_days	= request_var('st', 0);
-$sort_key	= request_var('sk', $gallery_config['sort_method']);
-$sort_dir	= request_var('sd', $gallery_config['sort_order']);
+$sort_key	= request_var('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $gallery_config['sort_method']);
+$sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : $gallery_config['sort_order']);
 
 $sort_by_sql = array('t' => 'image_time', 'n' => 'image_name_clean', 'u' => 'image_username_clean', 'vc' => 'image_view_count', 'ra' => 'image_rate_avg', 'r' => 'image_rates', 'c' => 'image_comments', 'lc' => 'image_last_comment');
 $sql_sort_by = (isset($sort_by_sql[$sort_key])) ? $sort_by_sql[$sort_key] : $sort_by_sql['t'];
@@ -163,10 +163,10 @@ $template->assign_vars(array(
 	'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_IMAGE'),
 	'REPORT_IMG'		=> $user->img('icon_post_report', 'REPORT_IMAGE'),
 	'STATUS_IMG'		=> $user->img('icon_post_info', 'STATUS_IMAGE'),
-	'U_DELETE'			=> ((gallery_acl_check('i_delete', $album_id) && ($image_data['image_user_id'] == $user->data['user_id']) && ($album_data['album_status'] != ITEM_LOCKED)) || gallery_acl_check('m_delete', $album_id)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=delete&amp;album_id=$album_id&amp;image_id=$image_id") : '',
-	'U_EDIT'			=> ((gallery_acl_check('i_edit', $album_id) && ($image_data['image_user_id'] == $user->data['user_id']) && ($album_data['album_status'] != ITEM_LOCKED)) || gallery_acl_check('m_edit', $album_id)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id") : '',
-	'U_REPORT'			=> (gallery_acl_check('i_report', $album_id) && ($image_data['image_user_id'] != $user->data['user_id'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=report&amp;album_id=$album_id&amp;image_id=$image_id") : '',
-	'U_STATUS'			=> (gallery_acl_check('m_status', $album_id)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "mode=queue_details&amp;album_id=$album_id&amp;option_id=$image_id") : '',
+	'U_DELETE'			=> ((gallery_acl_check('i_delete', $album_id, $album_data['album_user_id']) && ($image_data['image_user_id'] == $user->data['user_id']) && ($album_data['album_status'] != ITEM_LOCKED)) || gallery_acl_check('m_delete', $album_id, $album_data['album_user_id'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=delete&amp;album_id=$album_id&amp;image_id=$image_id") : '',
+	'U_EDIT'			=> ((gallery_acl_check('i_edit', $album_id, $album_data['album_user_id']) && ($image_data['image_user_id'] == $user->data['user_id']) && ($album_data['album_status'] != ITEM_LOCKED)) || gallery_acl_check('m_edit', $album_id, $album_data['album_user_id'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id") : '',
+	'U_REPORT'			=> (gallery_acl_check('i_report', $album_id, $album_data['album_user_id']) && ($image_data['image_user_id'] != $user->data['user_id'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "mode=image&amp;submode=report&amp;album_id=$album_id&amp;image_id=$image_id") : '',
+	'U_STATUS'			=> (gallery_acl_check('m_status', $album_id, $album_data['album_user_id'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", "mode=queue_details&amp;album_id=$album_id&amp;option_id=$image_id") : '',
 
 	'CONTEST_RANK'		=> ($image_data['image_contest_rank']) ? $user->lang['CONTEST_RESULT_' . $image_data['image_contest_rank']] : '',
 	'IMAGE_NAME'		=> $image_data['image_name'],
@@ -174,7 +174,7 @@ $template->assign_vars(array(
 	'IMAGE_BBCODE'		=> '[album]' . $image_id . '[/album]',
 	'IMAGE_IMGURL_BBCODE'	=> ($gallery_config['view_image_url']) ? '[url=' . generate_board_url(false) . '/' . $gallery_root_path . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id" . '][img]' . generate_board_url(false) . '/' . $gallery_root_path . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id&amp;mode=thumbnail" . '[/img][/url]' : '',
 	'IMAGE_URL'			=> ($gallery_config['view_image_url']) ? generate_board_url(false) . '/' . $gallery_root_path . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id" : '',
-	'POSTER'			=> (gallery_acl_check('m_status', $album_id) || ($image_data['image_contest'] != IMAGE_CONTEST)) ? get_username_string('full', $image_data['image_user_id'], ($image_data['image_username']) ? $image_data['image_username'] : $user->lang['GUEST'], $image_data['image_user_colour']) : sprintf($user->lang['CONTEST_USERNAME_LONG'], $user->format_date(($album_data['contest_start'] + $album_data['contest_end']), false, true)),
+	'POSTER'			=> (gallery_acl_check('m_status', $album_id, $album_data['album_user_id']) || ($image_data['image_contest'] != IMAGE_CONTEST)) ? get_username_string('full', $image_data['image_user_id'], ($image_data['image_username']) ? $image_data['image_username'] : $user->lang['GUEST'], $image_data['image_user_colour']) : sprintf($user->lang['CONTEST_USERNAME_LONG'], $user->format_date(($album_data['contest_start'] + $album_data['contest_end']), false, true)),
 	'IMAGE_TIME'		=> $user->format_date($image_data['image_time']),
 	'IMAGE_VIEW'		=> $image_data['image_view_count'],
 
@@ -194,7 +194,7 @@ $template->assign_vars(array(
 /**
 * Exif-Data
 */
-if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVAILABLE) && (substr($image_data['image_filename'], -3, 3) == 'jpg') && function_exists('exif_read_data') && (gallery_acl_check('m_status', $album_id) || ($image_data['image_contest'] != IMAGE_CONTEST)))
+if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVAILABLE) && (substr($image_data['image_filename'], -4) == '.jpg') && function_exists('exif_read_data') && (gallery_acl_check('m_status', $album_id, $album_data['album_user_id']) || ($image_data['image_contest'] != IMAGE_CONTEST)))
 {
 	if ($image_data['image_has_exif'] == EXIF_DBSAVED)
 	{
@@ -202,13 +202,20 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 	}
 	else
 	{
-		$exif = @exif_read_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename'], 0, true);
+		if (!class_exists('nv_image_tools'))
+		{
+			include($phpbb_root_path . $gallery_root_path . 'includes/functions_image.' . $phpEx);
+		}
+		$image_tools = new nv_image_tools();
+		$image_tools->set_image_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
+		$image_tools->read_exif_data();
+		$exif = $image_tools->exif_data;
 	}
 	if (!empty($exif["EXIF"]))
 	{
 		$exif_data = array();
 
-		if(isset($exif["EXIF"]["DateTimeOriginal"]))
+		if (isset($exif["EXIF"]["DateTimeOriginal"]))
 		{
 			$timestamp_year = substr($exif["EXIF"]["DateTimeOriginal"], 0, 4);
 			$timestamp_month = substr($exif["EXIF"]["DateTimeOriginal"], 5, 2);
@@ -222,7 +229,7 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 				$exif_data['exif_date'] = $user->format_date($timestamp + EXIFTIME_OFFSET);
 			}
 		}
-		if(isset($exif["EXIF"]["FocalLength"]))
+		if (isset($exif["EXIF"]["FocalLength"]))
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["FocalLength"]);
 			if ($den)
@@ -230,7 +237,7 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 				$exif_data['exif_focal'] = sprintf($user->lang['EXIF_FOCAL_EXP'], ($num / $den));
 			}
 		}
-		if(isset($exif["EXIF"]["ExposureTime"]))
+		if (isset($exif["EXIF"]["ExposureTime"]))
 		{
 			list($num, $den) = explode("/", $exif["EXIF"]["ExposureTime"]);
 			$exif_exposure = '';
@@ -247,7 +254,7 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 				$exif_data['exif_exposure'] = sprintf($user->lang['EXIF_EXPOSURE_EXP'], $exif_exposure);
 			}
 		}
-		if(isset($exif["EXIF"]["FNumber"]))
+		if (isset($exif["EXIF"]["FNumber"]))
 		{
 			list($num,$den) = explode("/",$exif["EXIF"]["FNumber"]);
 			if ($den)
@@ -255,7 +262,7 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 				$exif_data['exif_aperture'] = "F/" . ($num / $den);
 			}
 		}
-		if(isset($exif["EXIF"]["ISOSpeedRatings"]) && !is_array($exif["EXIF"]["ISOSpeedRatings"]))
+		if (isset($exif["EXIF"]["ISOSpeedRatings"]) && !is_array($exif["EXIF"]["ISOSpeedRatings"]))
 		{
 			$exif_data['exif_iso'] = $exif["EXIF"]["ISOSpeedRatings"];
 		}
@@ -263,7 +270,7 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 		{
 			$exif_data['exif_whiteb'] = $user->lang['EXIF_WHITEB_' . (($exif["EXIF"]["WhiteBalance"]) ? 'MANU' : 'AUTO')];
 		}
-		if(isset($exif["EXIF"]["Flash"]))
+		if (isset($exif["EXIF"]["Flash"]))
 		{
 			if (isset($user->lang['EXIF_FLASH_CASE_' . $exif["EXIF"]["Flash"]]))
 			{
@@ -305,7 +312,7 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 			}
 		}
 
-		if ($exif_data != '')
+		if (sizeof($exif_data))
 		{
 			foreach ($exif_data as $exif => $value)
 			{
@@ -316,15 +323,16 @@ if ($gallery_config['exif_data'] && ($image_data['image_has_exif'] != EXIF_UNAVA
 			}
 			$template->assign_vars(array(
 				'S_EXIF_DATA'	=> true,
+				'S_VIEWEXIF'	=> $user->gallery['user_viewexif'],
 			));
-		}
 
-		if ($image_data['image_has_exif'] == EXIF_UNKNOWN)
-		{
-			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-				SET image_has_exif = ' . EXIF_AVAILABLE . '
-				WHERE image_id = ' . $image_id;
-			$db->sql_query($sql);
+			if ($image_data['image_has_exif'] == EXIF_UNKNOWN)
+			{
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+					SET image_has_exif = ' . EXIF_AVAILABLE . '
+					WHERE image_id = ' . $image_id;
+				$db->sql_query($sql);
+			}
 		}
 	}
 	else
@@ -365,7 +373,7 @@ if ($gallery_config['allow_rates'])
 	}
 
 	// Check: User didn't rate yet, has permissions, it's not the users own image and the user is logged in
-	if (!$your_rating && gallery_acl_check('i_rate', $album_id) && ($user->data['user_id'] != $image_data['image_user_id']) && ($user->data['user_id'] != ANONYMOUS) && ($album_data['album_status'] != ITEM_LOCKED) && ($image_data['image_status'] != IMAGE_LOCKED))
+	if (!$your_rating && gallery_acl_check('i_rate', $album_id, $album_data['album_user_id']) && ($user->data['user_id'] != $image_data['image_user_id']) && ($user->data['user_id'] != ANONYMOUS) && ($album_data['album_status'] != ITEM_LOCKED) && ($image_data['image_status'] != IMAGE_LOCKED))
 	{
 		$hide_rate = false;
 		if ($album_data['contest_id'])
@@ -398,7 +406,7 @@ if ($gallery_config['allow_rates'])
 		'S_ALLOWED_TO_RATE'		=> $allowed_to_rate,
 		'CONTEST_RATING'		=> $contest_rating_msg,
 		'CONTEST_RESULT_HIDDEN'	=> $contest_result_hidden,
-		'S_VIEW_RATE'			=> (gallery_acl_check('i_rate', $album_id)) ? true : false,
+		'S_VIEW_RATE'			=> (gallery_acl_check('i_rate', $album_id, $album_data['album_user_id'])) ? true : false,
 		'S_COMMENT_ACTION'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=rate"),
 	));
 }
@@ -406,7 +414,7 @@ if ($gallery_config['allow_rates'])
 /**
 * Posting comment
 */
-if ($gallery_config['allow_comments'] && gallery_acl_check('c_post', $album_id) && ($album_data['album_status'] != ITEM_LOCKED) && (($image_data['image_status'] != IMAGE_LOCKED) || gallery_acl_check('m_status', $album_id)))
+if ($gallery_config['allow_comments'] && gallery_acl_check('c_post', $album_id, $album_data['album_user_id']) && ($album_data['album_status'] != ITEM_LOCKED) && (($image_data['image_status'] != IMAGE_LOCKED) || gallery_acl_check('m_status', $album_id, $album_data['album_user_id'])))
 {
 	$user->add_lang('posting');
 	include("{$phpbb_root_path}includes/functions_posting.$phpEx");
@@ -447,6 +455,19 @@ if ($gallery_config['allow_comments'] && gallery_acl_check('c_post', $album_id) 
 		'L_COMMENT_LENGTH'		=> sprintf($user->lang['COMMENT_LENGTH'], $gallery_config['comment_length']),
 	));
 
+	if (gallery_display_captcha('comment'))
+	{
+		// Get the captcha instance
+		include($phpbb_root_path . 'includes/captcha/captcha_factory.' . $phpEx);
+		$captcha =& phpbb_captcha_factory::get_instance($config['captcha_plugin']);
+		$captcha->init(CONFIRM_POST);
+
+		$template->assign_vars(array(
+			'S_CONFIRM_CODE'		=> true,
+			'CAPTCHA_TEMPLATE'		=> $captcha->get_template(),
+		));
+	}
+
 	// Different link, when we rate and dont comment
 	if (!$s_hide_comment_input)
 	{
@@ -458,7 +479,7 @@ if ($gallery_config['allow_comments'] && gallery_acl_check('c_post', $album_id) 
 /**
 * Listing comment
 */
-if (($gallery_config['allow_comments'] && gallery_acl_check('c_read', $album_id)) && (time() > ($album_data['contest_start'] + $album_data['contest_end'])))
+if (($gallery_config['allow_comments'] && gallery_acl_check('c_read', $album_id, $album_data['album_user_id'])) && (time() > ($album_data['contest_start'] + $album_data['contest_end'])))
 {
 	$user->add_lang('viewtopic');
 	$start = request_var('start', 0);
@@ -559,8 +580,8 @@ if (($gallery_config['allow_comments'] && gallery_acl_check('c_read', $album_id)
 				'TIME'			=> $user->format_date($row['comment_time']),
 				'TEXT'			=> generate_text_for_display($row['comment'], $row['comment_uid'], $row['comment_bitfield'], 7),
 				'EDIT_INFO'		=> $edit_info,
-				'U_DELETE'		=> (gallery_acl_check('m_comments', $album_id) || (gallery_acl_check('c_delete', $album_id) && ($row['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=delete&amp;comment_id=" . $row['comment_id']) : '',
-				'U_EDIT'		=> (gallery_acl_check('m_comments', $album_id) || (gallery_acl_check('c_edit', $album_id) && ($row['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=edit&amp;comment_id=" . $row['comment_id']) : '',
+				'U_DELETE'		=> (gallery_acl_check('m_comments', $album_id, $album_data['album_user_id']) || (gallery_acl_check('c_delete', $album_id, $album_data['album_user_id']) && ($row['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=delete&amp;comment_id=" . $row['comment_id']) : '',
+				'U_EDIT'		=> (gallery_acl_check('m_comments', $album_id, $album_data['album_user_id']) || (gallery_acl_check('c_edit', $album_id, $album_data['album_user_id']) && ($row['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=edit&amp;comment_id=" . $row['comment_id']) : '',
 				'U_INFO'		=> ($auth->acl_get('a_')) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'mode=whois&amp;ip=' . $row['comment_user_ip']) : '',
 
 				'POST_AUTHOR_FULL'		=> get_username_string('full', $user_id, $row['comment_username'], $user_cache[$user_id]['user_colour']),
@@ -623,7 +644,7 @@ if (($gallery_config['allow_comments'] && gallery_acl_check('c_read', $album_id)
 	}
 }
 
-page_header($user->lang['VIEW_IMAGE'] . ' - ' . $image_data['image_name']);
+page_header($user->lang['VIEW_IMAGE'] . ' - ' . $image_data['image_name'], false);
 
 $template->set_filenames(array(
 	'body' => 'gallery/viewimage_body.html')

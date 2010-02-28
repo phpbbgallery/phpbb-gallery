@@ -26,6 +26,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'ACP_GALLERY_ALBUM_MANAGEMENT'		=> 'Album-Verwaltung',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'		=> 'Berechtigungen',
+	'ACP_GALLERY_ALBUM_PERMISSIONS_COPY'=> 'Berechtigungen kopieren',
 	'ACP_GALLERY_CLEANUP'				=> 'Galerie reinigen',
 	'ACP_GALLERY_CONFIGURE_GALLERY'		=> 'Galerie konfigurieren',
 	'ACP_GALLERY_LOGS'					=> 'Gallery-Protokoll',
@@ -37,6 +38,8 @@ $lang = array_merge($lang, array(
 	'GALLERY'							=> 'Galerie',
 	'GALLERY_EXPLAIN'					=> 'Bilder Galerie',
 	'GALLERY_HELPLINE_ALBUM'			=> 'Galerie-Bild: [album]image_id[/album], mit diesem BBCode kannst du Bilder aus der Galerie in deinen Beitrag einfügen.',
+
+	'GALLERY_TRANSLATION_INFO'			=> '',
 
 	'IMAGES'							=> 'Bilder',
 	'IMG_BUTTON_UPLOAD_IMAGE'			=> 'Bild hochladen',

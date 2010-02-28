@@ -111,6 +111,10 @@ class acp_gallery_permissions
 				}
 			break;
 
+			case 'copy':
+				$this->copy_album_permissions();
+			break;
+
 			default:
 				trigger_error('NO_MODE', E_USER_ERROR);
 			break;
@@ -955,6 +959,114 @@ class acp_gallery_permissions
 			trigger_error($user->lang['PERMISSIONS_STORED'] . adm_back_link($this->u_action));
 		}
 		trigger_error('HACKING_ATTEMPT', E_USER_WARNING);
+	}
+
+	/**
+	* Handles copying permissions from one album to others
+	*/
+	function copy_album_permissions()
+	{
+		global $cache, $db, $template, $user;
+
+		$submit = isset($_POST['submit']) ? true : false;
+
+		if ($submit)
+		{
+			$src = request_var('src_album_id', 0);
+			$dest = request_var('dest_album_ids', array(0));
+
+			$sql = 'SELECT album_id
+				FROM ' . GALLERY_ALBUMS_TABLE . '
+				WHERE album_id = ' . $src;
+			$result = $db->sql_query($sql);
+			$src = (int) $db->sql_fetchfield('album_id');
+			$db->sql_freeresult($result);
+
+			if (!$src)
+			{
+				trigger_error($user->lang['SELECTED_ALBUM_NOT_EXIST'] . adm_back_link($this->u_action), E_USER_WARNING);
+			}
+
+			if (!sizeof($dest))
+			{
+				trigger_error($user->lang['SELECTED_ALBUM_NOT_EXIST'] . adm_back_link($this->u_action), E_USER_WARNING);
+			}
+
+			if (confirm_box(true))
+			{
+				$sql = 'SELECT *
+					FROM ' . GALLERY_PERMISSIONS_TABLE . '
+					WHERE perm_album_id = ' . $src;
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					foreach ($dest as $album_id)
+					{
+						$perm_data[] = array(
+							'perm_role_id'					=> $row['perm_role_id'],
+							'perm_album_id'					=> $album_id,
+							'perm_user_id'					=> $row['perm_user_id'],
+							'perm_group_id'					=> $row['perm_group_id'],
+							'perm_system'					=> $row['perm_system'],
+						);
+					}
+				}
+				$db->sql_freeresult($result);
+
+				$modscache_ary = array();
+				$sql = 'SELECT * FROM ' . GALLERY_MODSCACHE_TABLE . '
+					WHERE album_id = ' . $src;
+				$result = $db->sql_query($sql);
+				while ($row = $db->sql_fetchrow($result))
+				{
+					foreach ($dest as $album_id)
+					{
+						$modscache_ary[] = array(
+							'album_id'			=> $album_id,
+							'user_id'			=> $row['user_id'],
+							'username'			=> $row['username'],
+							'group_id'			=> $row['group_id'],
+							'group_name'		=> $row['group_name'],
+							'display_on_index'	=> $row['display_on_index'],
+						);
+					}
+				}
+				$db->sql_freeresult($result);
+
+				$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . '
+					WHERE ' . $db->sql_in_set('perm_album_id', $dest);
+				$db->sql_query($sql);
+
+				$sql = 'DELETE FROM ' . GALLERY_MODSCACHE_TABLE . '
+					WHERE ' . $db->sql_in_set('album_id', $dest);
+				$db->sql_query($sql);
+
+				$db->sql_multi_insert(GALLERY_PERMISSIONS_TABLE, $perm_data);
+				$db->sql_multi_insert(GALLERY_MODSCACHE_TABLE, $modscache_ary);
+
+				$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);
+				$cache->destroy('sql', GALLERY_PERMISSIONS_TABLE);
+
+				trigger_error($user->lang['COPY_PERMISSIONS_SUCCESSFUL'] . adm_back_link($this->u_action));
+			}
+			else
+			{
+				$s_hidden_fields = array(
+					'submit'			=> $submit,
+					'src_album_id'		=> $src,
+					'dest_album_ids'	=> $dest,
+				);
+
+				$s_hidden_fields = build_hidden_fields($s_hidden_fields);
+
+				confirm_box(false, $user->lang['COPY_PERMISSIONS_CONFIRM'], $s_hidden_fields);
+			}
+		}
+
+		$template->assign_vars(array(
+			'S_ALBUM_OPTIONS'		=> gallery_albumbox(true, ''),
+			'S_COPY_PERMISSIONS'	=> true,
+		));
 	}
 
 	/**

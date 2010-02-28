@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
+<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+<!-- $Id$ -->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.3.xsd">
+	<header>
+		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+
+		<title lang="de">phpBB Gallery</title>
+		<title lang="en">phpBB Gallery</title>
+
+		<description lang="de"><![CDATA[Update-Anleitung]]></description>
+		<description lang="en"><![CDATA[Update-Manual]]></description>
+
+		<author-notes lang="de"><![CDATA[
+Untersützt die "MOD Version Check"-MOD von Handymman´:
+http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
+		<author-notes lang="en"><![CDATA[
+Supports the "MOD Version Check"-MOD by Handymman´:
+http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
+
+		<author-group>
+			<author>
+				<realname>Joas Schilling</realname>
+				<email>nickvergessen@gmx.de</email>
+				<username>nickvergessen</username>
+				<homepage>http://www.flying-bits.org/</homepage>
+				<contributions />
+			</author>
+		</author-group>
+
+		<mod-version>1.0.3</mod-version>
+
+		<installation>
+			<level>intermediate</level>
+			<time>1200</time>
+			<target-version>3.0.5</target-version>
+		</installation>
+
+		<history>
+			<entry>
+				<date>2009-08-30</date>
+				<rev-version>1.0.3</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Fix] Deleting personal albums does not decrease user_images (Bug #645)]]></change>
+					<change><![CDATA[[Fix] Do not allow image_rotate and exif_data Option when the functions are missing.]]></change>
+
+					<change><![CDATA[[Feature] Inform admin fpr new updates on gallery/index]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
+				<date>2009-08-18</date>
+				<rev-version>1.0.3-RC1</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Fix] imagerotate() only available in "bundled version of the GD library" (Bug #642)]]></change>
+					<change><![CDATA[[Fix] "Force to delete Outdated files" does not work with other PHP filename extensions and GALLERY_ROOT_PATH (Bug #643)]]></change>
+					<change><![CDATA[[Fix] Do not view comment-stats if comments are disabled]]></change>
+					<change><![CDATA[[Fix] Increase performance for calls to gallery_acl_check (Contributions to Derky)]]></change>
+					<change><![CDATA[[Fix] ACP Option for JPG-Quality when rotating and resizing images. (Bug #634)]]></change>
+					<change><![CDATA[[Fix] Missing language string NO_DESTINATION_ALBUM (Bug #635)]]></change>
+					<change><![CDATA[[Fix] Several templating issues (subsilver2 only)]]></change>
+					<change><![CDATA[[Fix] Typo in mail template]]></change>
+					<change><![CDATA[[Fix] phpbb-Bug::#46315: "Fix dynamic config update routine error if firebird is used"]]></change>
+					<change><![CDATA[[Fix] View album name of contest-winners (Bug #630)]]></change>
+					<change><![CDATA[[Fix] Do not loose exif-data while rotating an image (Bug #633)]]></change>
+
+					<change><![CDATA[[Change] One file for the image-block for easier styling]]></change>
+
+					<change><![CDATA[[Feature] Copy permissions from one to other albums]]></change>
+					<change><![CDATA[[Feature] Option for display-int on search.php]]></change>
+				</changelog>
+			</entry>
+		</history>
+
+		<link-group>
+			<link type="contrib" lang="de" href="../history.xml">Geschichte/Entwickler/Features</link>
+			<link type="contrib" lang="en" href="../history.xml">History/Developers/Features</link>
+			<link type="parent" lang="de" href="../../install.xml">Installations-Anleitung</link>
+			<link type="parent" lang="en" href="../../install.xml">Install</link>
+			<link type="language" lang="de" href="contrib/de.xml">Anleitung für das deutsche Sprachpaket</link>
+			<link type="language" lang="en" href="contrib/de.xml">Manual for German Language-set</link>
+			<link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>
+			<link type="template" lang="en" href="contrib/subsilver2.xml">Manual for subsilver2 Style</link>
+			<link type="contrib" lang="de" href="../addons/rrc_on_index.xml">Neueste/Zufällige Bilder und Kommentare auf der index.php anzeigen</link>
+			<link type="contrib" lang="en" href="../addons/rrc_on_index.xml">View recent/random images and comments on index.php</link>
+			<link type="contrib" lang="de" href="../plugins/highslide.xml">Plugin Highslide JS</link>
+			<link type="contrib" lang="en" href="../plugins/highslide.xml">Plugin Highslide JS</link>
+			<link type="contrib" lang="de" href="../plugins/lytebox.xml">Plugin Lytebox</link>
+			<link type="contrib" lang="en" href="../plugins/lytebox.xml">Plugin Lytebox</link>
+			<link type="contrib" lang="de" href="../plugins/shadowbox.xml">Plugin Shadowbox</link>
+			<link type="contrib" lang="en" href="../plugins/shadowbox.xml">Plugin Shadowbox</link>
+		</link-group>
+	</header>
+
+	<action-group>
+		<copy>
+			<file from="root/adm/mods/phpbb_gallery_version.php" to="adm/mods/phpbb_gallery_version.php" />
+			<file from="root/adm/style/*.*" to="adm/style/*.*" />
+			<file from="root/gallery/*.*" to="gallery/*.*" />
+			<file from="root/includes/*.*" to="includes/*.*" />
+			<file from="root/install/*.*" to="install/*.*" />
+			<file from="root/language/en/*.*" to="language/en/*.*" />
+			<file from="root/styles/prosilver/template/*.*" to="styles/prosilver/template/*.*" />
+		</copy>
+
+		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
+
+Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
+
+Aktualisiere deine Styles:
+    "Administrations-Bereich" (ACP) > "Styles" > "Templates" > jedes > "Aktualisieren"
+    "Administrations-Bereich" (ACP) > "Styles" > "Themes" > jedes > "Aktualisieren"
+    "Administrations-Bereich" (ACP) > "Styles" > "Grafiksammlungen" > jedes > "Aktualisieren"]]></diy-instructions>
+		<diy-instructions lang="en"><![CDATA[Browse to install/ and run the update-script
+
+Clear your cache in the "Administration Control Panel" (ACP) > "General" > "Purge the cache"
+
+Refresh your Styles:
+    "Administration Control Panel" (ACP) > "Styles" > "Templates" > each > "refresh"
+    "Administration Control Panel" (ACP) > "Styles" > "Themes" > each > "refresh"
+    "Administration Control Panel" (ACP) > "Styles" > "Imagesets" > each > "refresh"]]></diy-instructions>
+	</action-group>
+</mod>

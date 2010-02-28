@@ -51,6 +51,11 @@ class install_convert_ts extends module
 	{
 		global $cache, $gallery_config, $phpbb_root_path, $phpEx, $template, $user;
 
+		if ($user->data['user_type'] != USER_FOUNDER)
+		{
+			trigger_error('FOUNDER_NEEDED', E_USER_ERROR);
+		}
+
 		switch ($sub)
 		{
 			case 'intro':
@@ -60,7 +65,7 @@ class install_convert_ts extends module
 					'TITLE'			=> $user->lang['CONVERT_TS_INTRO'],
 					'BODY'			=> $user->lang['CONVERT_TS_INTRO_BODY'],
 					'L_SUBMIT'		=> $user->lang['NEXT_STEP'],
-					'U_ACTION'		=> $this->p_master->module_url . "?mode=$mode&amp;sub=requirements",
+					'U_ACTION'		=> append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=requirements"),
 				));
 			break;
 
@@ -93,7 +98,7 @@ class install_convert_ts extends module
 
 				$template->assign_vars(array(
 					'TITLE'		=> $user->lang['INSTALL_CONGRATS'],
-					'BODY'		=> sprintf($user->lang['CONVERT_COMPLETE_EXPLAIN'], NEWEST_PG_VERSION),
+					'BODY'		=> sprintf($user->lang['CONVERT_COMPLETE_EXPLAIN'], NEWEST_PG_VERSION) . $user->lang['PAYPAL_DEV_SUPPORT'],
 					'L_SUBMIT'	=> $user->lang['GOTO_GALLERY'],
 					'U_ACTION'	=> append_sid($phpbb_root_path . GALLERY_ROOT_PATH . 'index.' . $phpEx),
 				));
@@ -123,6 +128,7 @@ class install_convert_ts extends module
 		$template->assign_block_vars('checks', array(
 			'S_LEGEND'			=> true,
 			'LEGEND'			=> $user->lang['PHP_SETTINGS'],
+			'LEGEND_EXPLAIN'	=> $user->lang['PHP_SETTINGS_EXP'],
 		));
 
 		// Check for GD-Library
@@ -141,6 +147,50 @@ class install_convert_ts extends module
 			'RESULT'		=> $result,
 
 			'S_EXPLAIN'		=> false,
+			'S_LEGEND'		=> false,
+		));
+
+		// Test for optional PHP settings
+		$template->assign_block_vars('checks', array(
+			'S_LEGEND'			=> true,
+			'LEGEND'			=> $user->lang['PHP_SETTINGS_OPTIONAL'],
+			'LEGEND_EXPLAIN'	=> $user->lang['PHP_SETTINGS_OPTIONAL_EXP'],
+		));
+
+		// Image rotate
+		if (function_exists('imagerotate'))
+		{
+			$result = '<strong style="color:green">' . $user->lang['YES'] . '</strong>';
+		}
+		else
+		{
+			$gd_info = gd_info();
+			$result = '<strong style="color:red">' . $user->lang['NO'] . '</strong><br />' . sprintf($user->lang['OPTIONAL_IMAGEROTATE_EXP'], $gd_info['GD Version']);
+		}
+		$template->assign_block_vars('checks', array(
+			'TITLE'			=> $user->lang['OPTIONAL_IMAGEROTATE'],
+			'TITLE_EXPLAIN'	=> $user->lang['OPTIONAL_IMAGEROTATE_EXPLAIN'],
+			'RESULT'		=> $result,
+
+			'S_EXPLAIN'		=> true,
+			'S_LEGEND'		=> false,
+		));
+
+		// Exif data
+		if (function_exists('exif_read_data'))
+		{
+			$result = '<strong style="color:green">' . $user->lang['YES'] . '</strong>';
+		}
+		else
+		{
+			$result = '<strong style="color:red">' . $user->lang['NO'] . '</strong><br />' . $user->lang['OPTIONAL_EXIFDATA_EXP'];
+		}
+		$template->assign_block_vars('checks', array(
+			'TITLE'			=> $user->lang['OPTIONAL_EXIFDATA'],
+			'TITLE_EXPLAIN'	=> $user->lang['OPTIONAL_EXIFDATA_EXPLAIN'],
+			'RESULT'		=> $result,
+
+			'S_EXPLAIN'		=> true,
 			'S_LEGEND'		=> false,
 		));
 
@@ -192,7 +242,7 @@ class install_convert_ts extends module
 			));
 		}
 
-		$url = (!in_array(false, $passed)) ? $this->p_master->module_url . "?mode=$mode&amp;sub=copy_table" : $this->p_master->module_url . "?mode=$mode&amp;sub=requirements";
+		$url = (!in_array(false, $passed)) ? append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=copy_table") : append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=requirements");
 		$submit = (!in_array(false, $passed)) ? $user->lang['INSTALL_START'] : $user->lang['INSTALL_TEST'];
 
 		$template->assign_vars(array(
@@ -208,7 +258,7 @@ class install_convert_ts extends module
 	*/
 	function copy_schema($mode, $sub)
 	{
-		global $user, $template, $db, $table_prefix;
+		global $user, $template, $db, $table_prefix, $phpbb_root_path, $phpEx;
 
 		$this->page_title = $user->lang['STAGE_COPY_TABLE'];
 		$s_hidden_fields = '';
@@ -300,7 +350,7 @@ class install_convert_ts extends module
 			'BODY'		=> $user->lang['STAGE_COPY_TABLE_EXPLAIN'],
 			'L_SUBMIT'	=> $user->lang['NEXT_STEP'],
 			'S_HIDDEN'	=> '',
-			'U_ACTION'	=> $this->p_master->module_url . "?mode=$mode&amp;sub=create_table",
+			'U_ACTION'	=> append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=create_table"),
 		));
 	}
 
@@ -358,7 +408,7 @@ class install_convert_ts extends module
 			'BODY'		=> $user->lang['STAGE_CREATE_TABLE_EXPLAIN'],
 			'L_SUBMIT'	=> $user->lang['NEXT_STEP'],
 			'S_HIDDEN'	=> '',
-			'U_ACTION'	=> $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress",
+			'U_ACTION'	=> append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress"),
 		));
 	}
 
@@ -367,7 +417,7 @@ class install_convert_ts extends module
 	*/
 	function convert_data($mode, $sub)
 	{
-		global $db, $gallery_config, $table_prefix, $template, $user;
+		global $db, $gallery_config, $table_prefix, $template, $user, $phpbb_root_path, $phpEx;
 
 		$this->page_title = $user->lang['STAGE_IN_PROGRESS'];
 
@@ -411,18 +461,24 @@ class install_convert_ts extends module
 				}
 
 				$body = $user->lang['CONVERTED_RATES'];
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;step=1";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;step=1");
 			break;
 
 			case 1:
 				$batch_ary = array();
 				$current_batch = 1;
 				$current_batch_size = 1;
-				$sql = 'SELECT c.*, u.user_colour
-					FROM ' . $table_prefix . 'gallery_comment c
-					LEFT JOIN ' . USERS_TABLE . ' u
-						ON c.comment_user_id = u.user_id
-					ORDER BY c.comment_id';
+				$sql = $db->sql_build_query('SELECT', array(
+					'SELECT'	=> 'c.*, u.user_colour',
+					'FROM'		=> array($table_prefix . 'gallery_comment' => 'c'),
+					'LEFT_JOIN'	=> array(
+						array(
+							'FROM'	=> array(USERS_TABLE => 'u'),
+							'ON'	=> 'c.comment_user_id = u.user_id',
+						),
+					),
+					'ORDER_BY'	=> 'c.comment_id ASC',
+				));
 				$result = $db->sql_query($sql);
 
 				while ($row = $db->sql_fetchrow($result))
@@ -466,7 +522,7 @@ class install_convert_ts extends module
 				}
 
 				$body = $user->lang['CONVERTED_COMMENTS'];
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;step=2";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;step=2");
 			break;
 
 			case 2:
@@ -537,13 +593,18 @@ class install_convert_ts extends module
 				}
 
 				// Update the config for the statistic on the index
-				$sql = 'SELECT a.album_id, u.user_id, u.username, u.user_colour
-					FROM ' . GALLERY_ALBUMS_TABLE . ' a
-					LEFT JOIN ' . USERS_TABLE . ' u
-						ON u.user_id = a.album_user_id
-					WHERE a.album_user_id <> 0
-						AND a.parent_id = 0
-					ORDER BY a.album_id DESC';
+				$sql = $db->sql_build_query('SELECT', array(
+					'SELECT'	=> 'a.album_id, u.user_id, u.username, u.user_colour',
+					'FROM'		=> array(GALLERY_ALBUMS_TABLE => 'a'),
+					'LEFT_JOIN'	=> array(
+						array(
+							'FROM'	=> array(USERS_TABLE => 'u'),
+							'ON'	=> 'u.user_id = a.album_user_id',
+						),
+					),
+					'WHERE'		=> 'a.album_user_id <> 0 AND a.parent_id = 0',
+					'ORDER_BY'	=> 'a.album_id DESC',
+				));
 				$result = $db->sql_query_limit($sql, 1);
 				$newest_pgallery = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
@@ -555,7 +616,7 @@ class install_convert_ts extends module
 				set_gallery_config('personal_counter', $personal_albums);
 
 				$body = $user->lang['CONVERTED_ALBUMS'] . '<br />' . $user->lang['CONVERTED_PERSONALS'];
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;step=3";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;step=3");
 			break;
 
 			case 3:
@@ -563,11 +624,17 @@ class install_convert_ts extends module
 				$current_batch = 1;
 				$current_batch_size = 1;
 
-				$sql = 'SELECT i.*, u.user_colour, u.username
-					FROM ' . $table_prefix . 'gallery_pics i
-					LEFT JOIN ' . USERS_TABLE . ' u
-						ON i.pic_user_id = u.user_id
-					ORDER BY i.pic_id';
+				$sql = $db->sql_build_query('SELECT', array(
+					'SELECT'	=> 'i.*, u.user_colour, u.username',
+					'FROM'		=> array($table_prefix . 'gallery_pics' => 'i'),
+					'LEFT_JOIN'	=> array(
+						array(
+							'FROM'	=> array(USERS_TABLE => 'u'),
+							'ON'	=> 'i.pic_user_id = u.user_id',
+						),
+					),
+					'ORDER_BY'	=> 'i.pic_id ASC',
+				));
 				$result = $db->sql_query($sql);
 
 				while ($row = $db->sql_fetchrow($result))
@@ -616,7 +683,7 @@ class install_convert_ts extends module
 				}
 
 				$body = $user->lang['CONVERTED_IMAGES'];
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;step=4";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;step=4");
 			break;
 
 			case 4:
@@ -659,13 +726,21 @@ class install_convert_ts extends module
 				$db->sql_freeresult($result);
 
 				//Step 5.3: Last image data
-				$sql = 'SELECT a.album_id, a.album_last_image_id, i.image_time, i.image_name, i.image_user_id, i.image_username, i.image_user_colour, u.user_colour
-					FROM ' . GALLERY_ALBUMS_TABLE . ' a
-					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
-						ON a.album_last_image_id = i.image_id
-					LEFT JOIN ' . USERS_TABLE . ' u
-						ON a.album_user_id = u.user_id
-					WHERE a.album_last_image_id > 0';
+				$sql = $db->sql_build_query('SELECT', array(
+					'SELECT'	=> 'a.album_id, a.album_last_image_id, i.image_time, i.image_name, i.image_user_id, i.image_username, i.image_user_colour, u.user_colour',
+					'FROM'		=> array(GALLERY_ALBUMS_TABLE => 'a'),
+					'LEFT_JOIN'	=> array(
+						array(
+							'FROM'	=> array(GALLERY_IMAGES_TABLE => 'i'),
+							'ON'	=> 'a.album_last_image_id = i.image_id',
+						),
+						array(
+							'FROM'	=> array(USERS_TABLE => 'u'),
+							'ON'	=> 'a.album_user_id = u.user_id',
+						),
+					),
+					'WHERE'		=> 'a.album_last_image_id > 0',
+				));
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -683,7 +758,7 @@ class install_convert_ts extends module
 				$db->sql_freeresult($result);
 
 				$body = $user->lang['CONVERTED_RESYNC_ALBUMS'];
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;step=6";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;step=6");
 			break;
 
 			case 6:
@@ -692,12 +767,17 @@ class install_convert_ts extends module
 				$current_batch = 1;
 				$current_batch_size = 1;
 
-				$sql = 'SELECT u.user_id, COUNT(i.image_id) AS images
-					FROM ' . USERS_TABLE . ' u
-					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
-						ON i.image_user_id = u.user_id
-							AND i.image_status <> ' . IMAGE_UNAPPROVED . '
-					GROUP BY i.image_user_id';
+				$sql = $db->sql_build_query('SELECT', array(
+					'SELECT'	=> 'u.user_id, COUNT(i.image_id) AS images',
+					'FROM'		=> array(USERS_TABLE => 'u'),
+					'LEFT_JOIN'	=> array(
+						array(
+							'FROM'	=> array(GALLERY_IMAGES_TABLE => 'i'),
+							'ON'	=> 'i.image_user_id = u.user_id AND i.image_status <> ' . IMAGE_UNAPPROVED,
+						),
+					),
+					'GROUP_BY'		=> 'i.image_user_id',
+				));
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -732,7 +812,7 @@ class install_convert_ts extends module
 				set_config('num_images', $num_images, true);
 
 				$body = $user->lang['CONVERTED_RESYNC_COUNTS'];
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;step=7";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;step=7");
 			break;
 
 			case 7:
@@ -752,7 +832,7 @@ class install_convert_ts extends module
 				$db->sql_freeresult($result);
 
 				$body = $user->lang['CONVERTED_RESYNC_RATES'];
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;step=8";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;step=8");
 			break;
 
 			case 8:
@@ -779,7 +859,7 @@ class install_convert_ts extends module
 				set_gallery_config('num_comments', $num_comments, true);
 
 				$body = $user->lang['CONVERTED_RESYNC_COMMENTS'];
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=in_progress&amp;step=9";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;step=9");
 			break;
 
 			case 9:
@@ -791,7 +871,7 @@ class install_convert_ts extends module
 				$db->sql_query($sql);
 
 				$body = $user->lang['CONVERTED_MISC'];
-				$next_update_url = $this->p_master->module_url . "?mode=$mode&amp;sub=advanced";
+				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=advanced");
 			break;
 		}
 
@@ -810,7 +890,7 @@ class install_convert_ts extends module
 	*/
 	function obtain_advanced_settings($mode, $sub)
 	{
-		global $db, $gallery_config, $template, $user;
+		global $db, $gallery_config, $template, $user, $phpbb_root_path, $phpEx;
 
 		$create = request_var('create', '');
 		if ($create)
@@ -839,6 +919,8 @@ class install_convert_ts extends module
 			add_module($acp_gallery_manage_albums);
 			$album_permissions = array('module_basename' => 'gallery_permissions',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS',	'module_mode' => 'manage',	'module_auth' => 'acl_a_gallery_albums');
 			add_module($album_permissions);
+			$album_permissions_copy = array('module_basename' => 'gallery_permissions',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS_COPY',	'module_mode' => 'copy',	'module_auth' => 'acl_a_gallery_albums');
+			add_module($album_permissions_copy);
 			$import_images = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_IMPORT_ALBUMS',	'module_mode' => 'import_images',	'module_auth' => 'acl_a_gallery_import');
 			add_module($import_images);
 			$cleanup = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_CLEANUP',	'module_mode' => 'cleanup',	'module_auth' => 'acl_a_gallery_cleanup');
@@ -866,7 +948,7 @@ class install_convert_ts extends module
 			// Add album-BBCode
 			add_bbcode('album');
 			$s_hidden_fields = '';
-			$url = $this->p_master->module_url . "?mode=$mode&amp;sub=final";
+			$url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=final");
 		}
 		else
 		{
@@ -905,7 +987,7 @@ class install_convert_ts extends module
 				);
 			}
 			$s_hidden_fields = '<input type="hidden" name="create" value="true" />';
-			$url = $this->p_master->module_url . "?mode=$mode&amp;sub=advanced";
+			$url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=advanced");
 		}
 
 		$submit = $user->lang['NEXT_STEP'];

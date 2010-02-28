@@ -28,6 +28,14 @@
 			<label for="watch_favo0"><input type="radio" name="watch_favo" id="watch_favo0" value="0"<!-- IF not S_WATCH_FAVO --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
 		</dd>
 	</dl>
+	<hr />
+	<dl>
+		<dt><label for="viewexifs1">{L_VIEWEXIFS_DEFAULT}:</label></dt>
+		<dd>
+			<label for="viewexifs1"><input type="radio" name="viewexifs" id="viewexifs1" value="1"<!-- IF S_VIEWEXIFS --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
+			<label for="viewexifs0"><input type="radio" name="viewexifs" id="viewexifs0" value="0"<!-- IF not S_VIEWEXIFS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+		</dd>
+	</dl>
 		</fieldset>
 		<fieldset class="submit-buttons">
 			<p class="submit-buttons">
@@ -271,5 +279,8 @@
 
 	phpBB Gallery, nickvergessen : 2009
 //-->
-<div class="copyright">Powered by <a href="http://www.flying-bits.org/">phpBB Gallery</a> &copy; 2007, 2009 <a href="http://www.flying-bits.org/">nickvergessen</a></div>
+<div class="copyright">
+	Powered by <a href="http://www.flying-bits.org/">phpBB Gallery</a> &copy; 2007, 2009 <a href="http://www.flying-bits.org/">nickvergessen</a>
+	<!-- IF GALLERY_TRANSLATION_INFO --><br />{GALLERY_TRANSLATION_INFO}<!-- ENDIF -->
+</div>
 <!-- INCLUDE ucp_footer.html -->

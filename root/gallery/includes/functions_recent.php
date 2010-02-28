@@ -23,7 +23,7 @@ if (!defined('IN_PHPBB'))
 function recent_gallery_images($ints, $display, $mode, $collapse_comments = false, $include_pgalleries = true, $mode_id = '', $id = 0)
 {
 	global $auth, $cache, $config, $db, $gallery_config, $template, $user;
-	global $gallery_root_path, $phpbb_root_path, $phpEx;
+	global $gallery_root_path, $phpbb_root_path, $phpbb_admin_path, $phpEx;
 
 	$gallery_root_path = (!$gallery_root_path) ? GALLERY_ROOT_PATH : $gallery_root_path;
 	$user->add_lang('mods/gallery');
@@ -213,7 +213,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 				{
 					$template->assign_block_vars('imageblock.imagerow', array());
 				}
-				assign_image_block('imageblock.imagerow.image', $images_data[$recent_image], $images_data[$recent_image]['album_status'], $display);
+				assign_image_block('imageblock.imagerow.image', $images_data[$recent_image], $images_data[$recent_image]['album_status'], $display, $images_data[$recent_image]['album_user_id']);
 				$num++;
 			}
 			while (($num % $ints['columns']) > 0)
@@ -235,7 +235,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 				{
 					$template->assign_block_vars('imageblock.imagerow', array());
 				}
-				assign_image_block('imageblock.imagerow.image', $images_data[$random_image], $images_data[$random_image]['album_status'], $display);
+				assign_image_block('imageblock.imagerow.image', $images_data[$random_image], $images_data[$random_image]['album_status'], $display, $images_data[$random_image]['album_user_id']);
 				$num++;
 			}
 			while (($num % $ints['columns']) > 0)
@@ -252,6 +252,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 				$template->assign_block_vars('imageblock', array(
 					'U_BLOCK'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $contest_data['album_id'] . '&amp;sk=ra&amp;sd=d'),
 					'BLOCK_NAME'		=> sprintf($user->lang['CONTEST_WINNERS_OF'], $contest_data['album_name']),
+					'S_CONTEST_BLOCK'	=> true,
 				));
 				foreach ($contest_data['images'] as $contest_image)
 				{
@@ -261,7 +262,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 					}
 					if (!empty($images_data[$contest_image]))
 					{
-						assign_image_block('imageblock.imagerow.image', $images_data[$contest_image], $images_data[$contest_image]['album_status'], $display);
+						assign_image_block('imageblock.imagerow.image', $images_data[$contest_image], $images_data[$contest_image]['album_status'], $display, $images_data[$contest_image]['album_user_id']);
 						$num++;
 					}
 				}
@@ -333,7 +334,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 
 			'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_COMMENT'),
 			'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_COMMENT'),
-			'INFO_IMG'			=> $user->img('icon_post_info', 'VIEW_INFO'),
+			'INFO_IMG'			=> $user->img('icon_post_info', 'IP'),
 			'MINI_POST_IMG'		=> $user->img('icon_post_target_unread', 'COMMENT'),
 			'PROFILE_IMG'		=> $user->img('icon_user_profile', 'READ_PROFILE'),
 			'COLLAPSE_COMMENTS'	=> $collapse_comments,

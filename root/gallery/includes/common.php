@@ -24,6 +24,26 @@ include($phpbb_root_path . $gallery_root_path . 'includes/constants.' . $phpEx);
 include($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
 $gallery_config = load_gallery_config();
 
+if ($gallery_config['version_check_time'] + 86400 < time())
+{
+	// Scare the user of outdated versions
+	if (!function_exists('mod_version_check'))
+	{
+		$phpbb_admin_path = $phpbb_root_path . 'adm/';
+		include($phpbb_root_path . $gallery_root_path . 'includes/functions_version_check.' . $phpEx);
+	}
+	set_gallery_config('version_check_time', time());
+	set_gallery_config('version_check_version', mod_version_check(true));
+}
+
+if ($auth->acl_get('a_') && version_compare($gallery_config['phpbb_gallery_version'], $gallery_config['version_check_version'], '<'))
+{
+	$user->add_lang('mods/gallery_acp');
+	$template->assign_vars(array(
+		'GALLERY_VERSION_CHECK'			=> sprintf($user->lang['NOT_UP_TO_DATE'], $user->lang['GALLERY']),
+	));
+}
+
 $template->assign_vars(array(
 	'U_GALLERY_SEARCH'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx"),
 	'U_G_SEARCH_COMMENTED'			=> ($gallery_config['allow_comments']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=commented') : '',
@@ -32,6 +52,8 @@ $template->assign_vars(array(
 	'U_G_SEARCH_RECENT'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=recent'),
 	'U_G_SEARCH_SELF'				=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=egosearch'),
 	'U_G_SEARCH_TOPRATED'			=> ($gallery_config['allow_rates']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=toprated') : '',
+
+	'GALLERY_TRANSLATION_INFO'		=> (!empty($user->lang['GALLERY_TRANSLATION_INFO'])) ? $user->lang['GALLERY_TRANSLATION_INFO'] : '',
 ));
 
 // Do not display Gallery-NavLink / activate Gallery-Tab on "recent-random-images"

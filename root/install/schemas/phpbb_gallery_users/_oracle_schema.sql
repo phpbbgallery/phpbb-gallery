@@ -16,6 +16,7 @@ CREATE TABLE phpbb_gallery_users (
 	user_images number(8) DEFAULT '0' NOT NULL,
 	personal_album_id number(8) DEFAULT '0' NOT NULL,
 	user_lastmark number(11) DEFAULT '0' NOT NULL,
+	user_viewexif number(1) DEFAULT '0' NOT NULL,
 	CONSTRAINT pk_phpbb_gallery_users PRIMARY KEY (user_id)
 )
 /

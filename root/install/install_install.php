@@ -49,6 +49,11 @@ class install_install extends module
 	{
 		global $cache, $gallery_config, $phpbb_root_path, $phpEx, $template, $user;
 
+		if ($user->data['user_type'] != USER_FOUNDER)
+		{
+			trigger_error('FOUNDER_NEEDED', E_USER_ERROR);
+		}
+
 		switch ($sub)
 		{
 			case 'intro':
@@ -58,7 +63,7 @@ class install_install extends module
 					'TITLE'			=> $user->lang['INSTALL_INTRO'],
 					'BODY'			=> $user->lang['INSTALL_INTRO_BODY'],
 					'L_SUBMIT'		=> $user->lang['NEXT_STEP'],
-					'U_ACTION'		=> $this->p_master->module_url . "?mode=$mode&amp;sub=requirements",
+					'U_ACTION'		=> append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=requirements"),
 				));
 			break;
 
@@ -82,7 +87,7 @@ class install_install extends module
 
 				$template->assign_vars(array(
 					'TITLE'		=> $user->lang['INSTALL_CONGRATS'],
-					'BODY'		=> sprintf($user->lang['INSTALL_CONGRATS_EXPLAIN'], NEWEST_PG_VERSION),
+					'BODY'		=> sprintf($user->lang['INSTALL_CONGRATS_EXPLAIN'], NEWEST_PG_VERSION) . $user->lang['PAYPAL_DEV_SUPPORT'],
 					'L_SUBMIT'	=> $user->lang['GOTO_GALLERY'],
 					'U_ACTION'	=> append_sid($phpbb_root_path . GALLERY_ROOT_PATH . 'index.' . $phpEx),
 				));
@@ -112,6 +117,7 @@ class install_install extends module
 		$template->assign_block_vars('checks', array(
 			'S_LEGEND'			=> true,
 			'LEGEND'			=> $user->lang['PHP_SETTINGS'],
+			'LEGEND_EXPLAIN'	=> $user->lang['PHP_SETTINGS_EXP'],
 		));
 
 		// Check for GD-Library
@@ -130,6 +136,50 @@ class install_install extends module
 			'RESULT'		=> $result,
 
 			'S_EXPLAIN'		=> false,
+			'S_LEGEND'		=> false,
+		));
+
+		// Test for optional PHP settings
+		$template->assign_block_vars('checks', array(
+			'S_LEGEND'			=> true,
+			'LEGEND'			=> $user->lang['PHP_SETTINGS_OPTIONAL'],
+			'LEGEND_EXPLAIN'	=> $user->lang['PHP_SETTINGS_OPTIONAL_EXP'],
+		));
+
+		// Image rotate
+		if (function_exists('imagerotate'))
+		{
+			$result = '<strong style="color:green">' . $user->lang['YES'] . '</strong>';
+		}
+		else
+		{
+			$gd_info = gd_info();
+			$result = '<strong style="color:red">' . $user->lang['NO'] . '</strong><br />' . sprintf($user->lang['OPTIONAL_IMAGEROTATE_EXP'], $gd_info['GD Version']);
+		}
+		$template->assign_block_vars('checks', array(
+			'TITLE'			=> $user->lang['OPTIONAL_IMAGEROTATE'],
+			'TITLE_EXPLAIN'	=> $user->lang['OPTIONAL_IMAGEROTATE_EXPLAIN'],
+			'RESULT'		=> $result,
+
+			'S_EXPLAIN'		=> true,
+			'S_LEGEND'		=> false,
+		));
+
+		// Exif data
+		if (function_exists('exif_read_data'))
+		{
+			$result = '<strong style="color:green">' . $user->lang['YES'] . '</strong>';
+		}
+		else
+		{
+			$result = '<strong style="color:red">' . $user->lang['NO'] . '</strong><br />' . $user->lang['OPTIONAL_EXIFDATA_EXP'];
+		}
+		$template->assign_block_vars('checks', array(
+			'TITLE'			=> $user->lang['OPTIONAL_EXIFDATA'],
+			'TITLE_EXPLAIN'	=> $user->lang['OPTIONAL_EXIFDATA_EXPLAIN'],
+			'RESULT'		=> $result,
+
+			'S_EXPLAIN'		=> true,
 			'S_LEGEND'		=> false,
 		));
 
@@ -181,7 +231,25 @@ class install_install extends module
 			));
 		}
 
-		$url = (!in_array(false, $passed)) ? $this->p_master->module_url . "?mode=$mode&amp;sub=create_table" : $this->p_master->module_url . "?mode=$mode&amp;sub=requirements";
+		// Check whether the gallery is already installed
+		$gallery_version = get_gallery_version();
+		if (version_compare($gallery_version, '0.0.0', '>'))
+		{
+			$template->assign_block_vars('checks', array(
+				'S_LEGEND'			=> true,
+				'LEGEND'			=> $user->lang['FOUND_INSTALL'],
+				'LEGEND_EXPLAIN'	=> sprintf($user->lang['FOUND_INSTALL_EXPLAIN'], '<a href="' . append_sid("{$phpbb_root_path}install/index.$phpEx", 'mode=update') . '">', '</a>'),
+			));
+			$template->assign_block_vars('checks', array(
+				'TITLE'		=> $user->lang['FOUND_VERSION'],
+				'RESULT'	=> '<strong style="color:red">' . $gallery_version . '</strong>',
+
+				'S_EXPLAIN'	=> false,
+				'S_LEGEND'	=> false,
+			));
+		}
+
+		$url = (!in_array(false, $passed)) ? append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=create_table") : append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=requirements");
 		$submit = (!in_array(false, $passed)) ? $user->lang['INSTALL_START'] : $user->lang['INSTALL_TEST'];
 
 		$template->assign_vars(array(
@@ -243,7 +311,7 @@ class install_install extends module
 
 		$submit = $user->lang['NEXT_STEP'];
 
-		$url = $this->p_master->module_url . "?mode=$mode&amp;sub=advanced";
+		$url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=advanced");
 
 		$template->assign_vars(array(
 			'BODY'		=> $user->lang['STAGE_CREATE_TABLE_EXPLAIN'],
@@ -259,7 +327,7 @@ class install_install extends module
 	*/
 	function obtain_advanced_settings($mode, $sub)
 	{
-		global $db, $gallery_config, $template, $user;
+		global $db, $gallery_config, $template, $user, $phpbb_root_path, $phpEx;
 
 		$create = request_var('create', '');
 		if ($create)
@@ -288,6 +356,8 @@ class install_install extends module
 			add_module($acp_gallery_manage_albums);
 			$album_permissions = array('module_basename' => 'gallery_permissions',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS',	'module_mode' => 'manage',	'module_auth' => 'acl_a_gallery_albums');
 			add_module($album_permissions);
+			$album_permissions_copy = array('module_basename' => 'gallery_permissions',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS_COPY',	'module_mode' => 'copy',	'module_auth' => 'acl_a_gallery_albums');
+			add_module($album_permissions_copy);
 			$import_images = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_IMPORT_ALBUMS',	'module_mode' => 'import_images',	'module_auth' => 'acl_a_gallery_import');
 			add_module($import_images);
 			$cleanup = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_CLEANUP',	'module_mode' => 'cleanup',	'module_auth' => 'acl_a_gallery_cleanup');
@@ -315,7 +385,7 @@ class install_install extends module
 			// Add album-BBCode
 			add_bbcode('album');
 			$s_hidden_fields = '';
-			$url = $this->p_master->module_url . "?mode=$mode&amp;sub=final";
+			$url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=final");
 		}
 		else
 		{
@@ -354,7 +424,7 @@ class install_install extends module
 				);
 			}
 			$s_hidden_fields = '<input type="hidden" name="create" value="true" />';
-			$url = $this->p_master->module_url . "?mode=$mode&amp;sub=advanced";
+			$url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=advanced");
 		}
 
 		$submit = $user->lang['NEXT_STEP'];

@@ -307,4 +307,42 @@ if (!function_exists('set_config_count'))
 	}
 }
 
+if (!function_exists('generate_link_hash'))
+{
+	/**
+	* Add a secret hash   for use in links/GET requests
+	* @param string  $link_name The name of the link; has to match the name used in check_link_hash, otherwise no restrictions apply
+	* @return string the hash
+	*
+	* phpbb::rev10172
+	*/
+	function generate_link_hash($link_name)
+	{
+		global $user;
+
+		if (!isset($user->data["hash_$link_name"]))
+		{
+			$user->data["hash_$link_name"] = substr(sha1($user->data['user_form_salt'] . $link_name), 0, 8);
+		}
+
+		return $user->data["hash_$link_name"];
+	}
+}
+
+if (!function_exists('check_link_hash'))
+{
+	/**
+	* checks a link hash - for GET requests
+	* @param string $token the submitted token
+	* @param string $link_name The name of the link
+	* @return boolean true if all is fine
+	*
+	* phpbb::rev10172
+	*/
+	function check_link_hash($token, $link_name)
+	{
+		return $token === generate_link_hash($link_name);
+	}
+}
+
 ?>

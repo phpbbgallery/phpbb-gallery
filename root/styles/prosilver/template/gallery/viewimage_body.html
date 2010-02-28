@@ -1,19 +1,5 @@
-<!-- INCLUDE overall_header.html -->
+<!-- INCLUDE gallery/gallery_header.html -->
 
-<script type="text/javascript">
-<!--
-function checkRateForm() {
-	if (document.rateform.rate.value == -1)
-	{
-		return false;
-	}
-	else
-	{
-		return true;
-	}
-}
-// -->
-</script>
 <h2><a href="{S_ALBUM_ACTION}">{IMAGE_NAME}</a></h2>
 
 <div class="post bg2">
@@ -122,7 +108,7 @@ function toggleElement(oElement)
 <div id="exif" class="panel">
 	<div class="inner"><span class="corners-top"><span></span></span>
 		<h3>{L_EXIF-DATA} - <a href="javascript: toggleElement( getElement('exif_data_fieldset'));">{L_SHOW_EXIF}</a></h3>
-		<fieldset class="fields1" id="exif_data_fieldset" style="display: none;">
+		<fieldset class="fields1" id="exif_data_fieldset"<!-- IF not S_VIEWEXIF --> style="display: none;"<!-- ENDIF -->>
 			<!-- BEGIN exif_value -->
 				<dl>
 					<dt><label>{exif_value.EXIF_NAME}:</label></dt>
@@ -136,7 +122,7 @@ function toggleElement(oElement)
 
 <!-- IF not S_IS_BOT and (S_ALLOWED_TO_RATE or S_ALLOWED_TO_COMMENT) -->
 <a name="rating"></a>
-<form id="postform" action="{S_COMMENT_ACTION}" method="post" onsubmit="return checkCommentForm;">
+<form id="postform" action="{S_COMMENT_ACTION}" method="post">
 <div id="postingbox" class="panel">
 	<div class="inner"><span class="corners-top"><span></span></span>
 		<h3><!-- IF S_ALLOWED_TO_RATE and S_ALLOWED_TO_COMMENT -->{L_POST_COMMENT_RATE_IMAGE}<!-- ELSEIF S_ALLOWED_TO_COMMENT -->{L_POST_COMMENT}<!-- ELSE -->{L_RATE_IMAGE}<!-- ENDIF --></h3>
@@ -167,6 +153,9 @@ function toggleElement(oElement)
 						<dt><label>{L_USERNAME}:</label></dt>
 						<dd><input class="inputbox autowidth" type="text" name="username" maxlength="32" /></dd>
 					</dl>
+				<!-- ENDIF -->
+				<!-- IF CAPTCHA_TEMPLATE -->
+				<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
 				<!-- ENDIF -->
 				<!-- INCLUDE posting_buttons.html -->
 				<div id="smiley-box">
@@ -318,15 +307,4 @@ function toggleElement(oElement)
 	</fieldset>
 </form>
 
-<!--
-	I request you retain the full copyright notice below including the link to www.flying-bits.org.
-	This not only gives respect to the large amount of time given freely by the developer
-	but also helps build interest, traffic and use of phpBB Gallery. If you (honestly) cannot retain
-	the full copyright I ask you at least leave in place the "Powered by phpBB Gallery" line, with
-	"phpBB Gallery" linked to www.flying-bits.org. If you refuse to include even this then support on my
-	forums may be affected.
-
-	phpBB Gallery, nickvergessen : 2009
-//-->
-<div class="copyright">Powered by <a href="http://www.flying-bits.org/">phpBB Gallery</a> &copy; 2007, 2009 <a href="http://www.flying-bits.org/">nickvergessen</a></div>
-<!-- INCLUDE overall_footer.html -->
+<!-- INCLUDE gallery/gallery_footer.html -->

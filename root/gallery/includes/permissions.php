@@ -22,7 +22,7 @@ $album_access_array = get_album_access_array();
 
 function get_album_access_array()
 {
-	global $cache, $db, $user;
+	global $cache, $config, $db, $user;
 	global $album_access_array, $gallery_config;
 
 	if (!isset($gallery_config['loaded']))
@@ -77,10 +77,24 @@ function get_album_access_array()
 		// Testing user permissions?
 		$user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
 
-		$sql = 'SELECT group_id
-			FROM ' . USER_GROUP_TABLE . "
-			WHERE user_id = $user_id
-				AND user_pending = 0";
+		// Only available in >= 3.0.6
+		if (version_compare($config['version'], '3.0.5', '>'))
+		{
+			$sql = 'SELECT ug.group_id
+				FROM ' . USER_GROUP_TABLE . ' ug
+				LEFT JOIN ' . GROUPS_TABLE . " g
+					ON (ug.group_id = g.group_id)
+				WHERE ug.user_id = $user_id
+					AND ug.user_pending = 0
+					AND g.group_skip_auth = 0";
+		}
+		else
+		{
+			$sql = 'SELECT group_id
+				FROM ' . USER_GROUP_TABLE . "
+				WHERE user_id = $user_id
+					AND user_pending = 0";
+		}
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
@@ -99,7 +113,7 @@ function get_album_access_array()
 				),
 			),
 
-			'WHERE'			=> 'p.perm_user_id = ' . $user_id . ' OR ' . $db->sql_in_set('p.perm_group_id', $user_groups_ary),
+			'WHERE'			=> 'p.perm_user_id = ' . $user_id . ' OR ' . $db->sql_in_set('p.perm_group_id', $user_groups_ary, false, true),
 			'GROUP_BY'		=> 'p.perm_system DESC, p.perm_album_id ASC',
 		);
 		$sql = $db->sql_build_query('SELECT', $sql_array);
@@ -167,24 +181,27 @@ function gallery_acl_check($mode, $album_id, $album_user_id = -1)
 {
 	static $_gallery_acl_cache;
 
+	if (isset($_gallery_acl_cache[$album_id][$mode]))
+	{
+		return $_gallery_acl_cache[$album_id][$mode];
+	}
+
 	// Do we have a function call without $album_user_id ?
 	if (($album_user_id < NON_PERSONAL_ALBUMS) && ($album_id > 0))
 	{
+		static $_album_list;
 		// Yes, from viewonline.php
-		global $cache;
-
-		$albums = $cache->obtain_album_list();
-		if (!isset($albums[$album_id]))
+		if (!$_album_list)
+		{
+			global $cache;
+			$_album_list = $cache->obtain_album_list();
+		}
+		if (!isset($_album_list[$album_id]))
 		{
 			// Do not give permissions, if the album does not exist.
 			return false;
 		}
-		$album_user_id = $albums[$album_id]['album_user_id'];
-	}
-
-	if (isset($_gallery_acl_cache[$album_id][$mode]))
-	{
-		return $_gallery_acl_cache[$album_id][$mode];
+		$album_user_id = $_album_list[$album_id]['album_user_id'];
 	}
 
 	global $user, $album_access_array;
@@ -296,25 +313,25 @@ function gallery_acl_album_ids($permission, $mode = 'array', $display_in_rrc = f
 * @author: phpBB Group
 * @function: gen_forum_auth_level
 */
-function gen_album_auth_level($mode, $album_id, $album_status)
+function gen_album_auth_level($mode, $album_id, $album_status, $album_user_id = -1)
 {
 	global $template, $user, $gallery_config, $album_access_array;
 
-	$locked = ($album_status == ITEM_LOCKED && !gallery_acl_check('m_', $album_id)) ? true : false;
+	$locked = ($album_status == ITEM_LOCKED && !gallery_acl_check('m_', $album_id, $album_user_id)) ? true : false;
 
 	$rules = array(
-		(gallery_acl_check('i_view', $album_id) && !$locked) ? $user->lang['ALBUM_VIEW_CAN'] : $user->lang['ALBUM_VIEW_CANNOT'],
-		(gallery_acl_check('i_upload', $album_id) && !$locked) ? $user->lang['ALBUM_UPLOAD_CAN'] : $user->lang['ALBUM_UPLOAD_CANNOT'],
-		(gallery_acl_check('i_edit', $album_id) && !$locked) ? $user->lang['ALBUM_EDIT_CAN'] : $user->lang['ALBUM_EDIT_CANNOT'],
-		(gallery_acl_check('i_delete', $album_id) && !$locked) ? $user->lang['ALBUM_DELETE_CAN'] : $user->lang['ALBUM_DELETE_CANNOT'],
+		(gallery_acl_check('i_view', $album_id, $album_user_id) && !$locked) ? $user->lang['ALBUM_VIEW_CAN'] : $user->lang['ALBUM_VIEW_CANNOT'],
+		(gallery_acl_check('i_upload', $album_id, $album_user_id) && !$locked) ? $user->lang['ALBUM_UPLOAD_CAN'] : $user->lang['ALBUM_UPLOAD_CANNOT'],
+		(gallery_acl_check('i_edit', $album_id, $album_user_id) && !$locked) ? $user->lang['ALBUM_EDIT_CAN'] : $user->lang['ALBUM_EDIT_CANNOT'],
+		(gallery_acl_check('i_delete', $album_id, $album_user_id) && !$locked) ? $user->lang['ALBUM_DELETE_CAN'] : $user->lang['ALBUM_DELETE_CANNOT'],
 	);
-	if ($gallery_config['allow_comments'] && gallery_acl_check('c_read', $album_id))
+	if ($gallery_config['allow_comments'] && gallery_acl_check('c_read', $album_id, $album_user_id))
 	{
-		$rules[] = (gallery_acl_check('c_post', $album_id) && !$locked) ? $user->lang['ALBUM_COMMENT_CAN'] : $user->lang['ALBUM_COMMENT_CANNOT'];
+		$rules[] = (gallery_acl_check('c_post', $album_id, $album_user_id) && !$locked) ? $user->lang['ALBUM_COMMENT_CAN'] : $user->lang['ALBUM_COMMENT_CANNOT'];
 	}
 	if ($gallery_config['allow_rates'])
 	{
-		$rules[] = (gallery_acl_check('i_rate', $album_id) && !$locked) ? $user->lang['ALBUM_RATE_CAN'] : $user->lang['ALBUM_RATE_CANNOT'];
+		$rules[] = (gallery_acl_check('i_rate', $album_id, $album_user_id) && !$locked) ? $user->lang['ALBUM_RATE_CAN'] : $user->lang['ALBUM_RATE_CANNOT'];
 	}
 
 	foreach ($rules as $rule)

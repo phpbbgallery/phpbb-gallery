@@ -1,4 +1,4 @@
-<!-- INCLUDE overall_header.html -->
+<!-- INCLUDE gallery/gallery_header.html -->
 <script type="text/javascript">
 function getElement(iElementId)
 {
@@ -28,16 +28,16 @@ function toggleElement(oElement)
 <h2><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>
 
 <!-- IF ALBUM_DESC or MODERATORS or U_MCP -->
-<p>
-	<!-- NOTE: remove the style="display: none" when you want to have the album description on the album body -->
-	<!-- IF ALBUM_DESC --><span style="display: none">{ALBUM_DESC}<br /></span><!-- ENDIF -->
+<div>
+	<!-- NOTE: remove the style="display: none !important;" when you want to have the album description on the album body -->
+	<!-- IF ALBUM_DESC --><div style="display: none !important;">{ALBUM_DESC}<br /></div><!-- ENDIF -->
 	<!-- IF ALBUM_CONTEST_START --><span>{ALBUM_CONTEST_START}<br /></span><!-- ENDIF -->
 	<!-- IF ALBUM_CONTEST_RATING --><span>{ALBUM_CONTEST_RATING}<br /></span><!-- ENDIF -->
 	<!-- IF ALBUM_CONTEST_END --><span>{ALBUM_CONTEST_END}<br /><br /></span><!-- ENDIF -->
 	<!-- IF MODERATORS --><strong>{L_MODERATORS}:</strong> {MODERATORS}<br /><!-- ENDIF -->
 	<!-- IF U_EDIT_ALBUM --><br /><strong><a href="{U_EDIT_ALBUM}">{L_EDIT_ALBUM}</a></strong><!-- ENDIF -->
 	<!-- IF U_CREATE_ALBUM --><br /><strong><a href="{U_CREATE_ALBUM}">{L_CREATE_SUBALBUM}</a></strong><!-- ENDIF -->
-</p>
+</div>
 <!-- ENDIF -->
 
 <!-- IF .albumrow -->
@@ -83,72 +83,8 @@ function toggleElement(oElement)
 	</div>
 <!-- ENDIF -->
 
-<!-- IF .imagerow -->
-<div class="forumbg">
-	<div class="inner">
-		<span class="corners-top"><span></span></span>
-		<ul class="topiclist">
-			<li class="header">
-				<dl class="icon">
-					<dt>{L_ALBUM} - {ALBUM_NAME}</dt>
-				</dl>
-			</li>
-		</ul>
-		<ul class="topiclist topics">
-			<li class="bg2">
-				<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline">
-					<!-- BEGIN imagerow -->
-					<tr>
-						<!-- BEGIN image -->
-						<td class="bg2" valign="top" style="width: {S_COL_WIDTH};">
-							<table width="100%" cellpadding="2" cellspacing="5" border="0" class="forumline">
-								<tr>
-									<td align="center" style="height: {S_THUMBNAIL_SIZE}px;" class="bg1<!-- IF imagerow.image.S_UNAPPROVED --> g_unapproved<!-- ENDIF --><!-- IF imagerow.image.S_LOCKED --> g_locked<!-- ENDIF --><!-- IF imagerow.image.S_REPORTED --> g_reported<!-- ENDIF -->">
-										<span class="genmed">{imagerow.image.UC_THUMBNAIL}</span>
-									</td>
-								</tr>
-								<tr>
-									<td class="bg2" valign="top">
-										<div class="gensmall" style="overflow: hidden;">
-											<!-- IF imagerow.image.CONTEST_RANK -->{L_CONTEST_RESULT}: <strong>{imagerow.image.CONTEST_RANK}</strong><br /><!-- ENDIF -->
-											<!-- IF imagerow.image.UC_IMAGE_NAME -->{L_IMAGE_NAME}: {imagerow.image.UC_IMAGE_NAME}<br /><!-- ENDIF -->
-											<!-- IF imagerow.image.POSTER -->{L_UPLOADED_BY_USER}: {imagerow.image.POSTER}<br /><!-- ENDIF -->
-											<!-- IF imagerow.image.TIME -->{L_UPLOADED_ON_DATE}: {imagerow.image.TIME}<br /><!-- ENDIF -->
-											<!-- IF imagerow.image.VIEW > -1 -->{L_VIEWS}: {imagerow.image.VIEW}<br /><!-- ENDIF -->
-											<!-- IF imagerow.image.S_RATINGS -->{L_RATING}: <a href="{imagerow.image.U_RATINGS}">{imagerow.image.S_RATINGS}</a><br /><!-- ENDIF -->
-											<!-- IF imagerow.image.S_COMMENTS -->{imagerow.image.L_COMMENTS}: <a href="{imagerow.image.U_COMMENTS}">{imagerow.image.S_COMMENTS}</a><br /><!-- ENDIF -->
-											<!-- IF imagerow.image.S_IP -->{L_IP}: {imagerow.image.S_IP} &#187; <a href="{imagerow.image.U_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a><br /><!-- ENDIF -->
-											<!-- IF imagerow.image.U_REPORT or imagerow.image.U_STATUS or imagerow.image.U_MOVE or  imagerow.image.U_EDIT or imagerow.image.U_DELETE -->
-											<a href="javascript: toggleElement( getElement('moderate_{imagerow.image.IMAGE_ID}'));">{L_MODERATE}</a>
-											<div id="moderate_{imagerow.image.IMAGE_ID}" style="display: none;">
-												<!-- IF imagerow.image.U_REPORT -->&#187; <a href="{imagerow.image.U_REPORT}" class="reported-images-number">{L_READ_REPORT}</a><br /><!-- ENDIF -->
-												<!-- IF imagerow.image.U_STATUS -->&#187; <a href="{imagerow.image.U_STATUS}">{imagerow.image.L_STATUS}</a><br /><!-- ENDIF -->
-												<!-- IF imagerow.image.U_MOVE -->&#187; <a href="{imagerow.image.U_MOVE}">{L_MOVE}</a><br /><!-- ENDIF -->
-												<!-- IF imagerow.image.U_EDIT -->&#187; <a href="{imagerow.image.U_EDIT}">{L_EDIT_IMAGE}</a><br /><!-- ENDIF -->
-												<!-- IF imagerow.image.U_DELETE -->&#187; <a href="{imagerow.image.U_DELETE}">{L_DELETE_IMAGE}</a><br /><!-- ENDIF -->
-											</div>
-											<!-- ENDIF -->
-										</div>
-									</td>
-								</tr>
-							</table>
-						</td>
-						<!-- END image -->
-						<!-- BEGIN no_image --> 
-							<td class="bg2" valign="top" style="width: {S_COL_WIDTH};">
-								<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline"><tr>
-								<td style="height: {S_THUMBNAIL_SIZE}px;" class="bg1"></td>
-								</tr></table>
-							</td> 
-						<!-- END no_image -->
-					</tr>
-					<!-- END imagerow -->
-				</table>
-			</li>
-		</ul>
-		<span class="corners-bottom"><span></span></span>
-	</div>
-</div>
+<!-- IF .imageblock -->
+	<!-- INCLUDE gallery/imageblock_body.html -->
 <!-- ELSE -->
 	<!-- IF S_IS_POSTABLE -->
 	<div class="panel">
@@ -204,15 +140,4 @@ function toggleElement(oElement)
 	<p><!-- BEGIN rules -->{rules.RULE}<br /><!-- END rules --></p>
 <!-- ENDIF -->
 
-<!--
-	I request you retain the full copyright notice below including the link to www.flying-bits.org.
-	This not only gives respect to the large amount of time given freely by the developer
-	but also helps build interest, traffic and use of phpBB Gallery. If you (honestly) cannot retain
-	the full copyright I ask you at least leave in place the "Powered by phpBB Gallery" line, with
-	"phpBB Gallery" linked to www.flying-bits.org. If you refuse to include even this then support on my
-	forums may be affected.
-
-	phpBB Gallery, nickvergessen : 2009
-//-->
-<div class="copyright">Powered by <a href="http://www.flying-bits.org/">phpBB Gallery</a> &copy; 2007, 2009 <a href="http://www.flying-bits.org/">nickvergessen</a></div>
-<!-- INCLUDE overall_footer.html -->
+<!-- INCLUDE gallery/gallery_footer.html -->
