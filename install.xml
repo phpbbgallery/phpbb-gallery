@@ -152,8 +152,11 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
 				<action type="before-add"><![CDATA['GALLERY_IMG'		=> $user->img('icon_contact_gallery', 'PERSONAL_ALBUM'),]]></action>
 			</edit>
 			<edit>
-				<find><![CDATA[	'SELECT'	=> 'u.*, z.friend, z.foe, p.*',]]></find>
-				<action type="replace-with"><![CDATA[	'SELECT'	=> 'u.*, z.friend, z.foe, p.*, gu.personal_album_id, gu.user_images',]]></action>
+				<find><![CDATA[	'SELECT'	=> 'u.*, z.friend, z.foe, p.*]]></find>
+				<inline-edit>
+						<inline-find><![CDATA[, p.*]]></inline-find>
+						<inline-action type="after-add"><![CDATA[, gu.personal_album_id, gu.user_images]]></inline-action>
+				</inline-edit>
 			</edit>
 			<edit>
 				<find><![CDATA[			'ON'	=> 'z.user_id = ' . $user->data['user_id'] . ' AND z.zebra_id = p.poster_id'
