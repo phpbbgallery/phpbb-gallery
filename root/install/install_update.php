@@ -1012,7 +1012,7 @@ class install_update extends module
 	*/
 	function obtain_advanced_settings($mode, $sub)
 	{
-		global $user, $template, $phpEx, $db;
+		global $user, $template, $phpEx, $db, $phpbb_root_path;
 
 		$gallery_config = load_gallery_config();
 
