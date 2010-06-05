@@ -241,7 +241,7 @@ function cheat_obtain_users_online_string($online_users, $id = 0, $mode = 'forum
 	);
 }
 
-function cheat_phpbb_31975 ()
+function cheat_phpbb_31975()
 {
 	global $config, $template, $user;
 
@@ -276,7 +276,7 @@ if (!function_exists('set_config_count'))
 	/**
 	* Set dynamic config value with arithmetic operation.
 	*
-	* phpbb::rev9398
+	* phpbb::rev10614
 	*/
 	function set_config_count($config_name, $increment, $is_dynamic = false)
 	{
@@ -285,11 +285,8 @@ if (!function_exists('set_config_count'))
 		switch ($db->sql_layer)
 		{
 			case 'firebird':
-				$sql_update = 'CAST(CAST(config_value as integer) + ' . (int) $increment . ' as VARCHAR(255))';
-			break;
-
 			case 'postgres':
-				$sql_update = 'int4(config_value) + ' . (int) $increment;
+				$sql_update = 'CAST(CAST(config_value as DECIMAL(255, 0)) + ' . (int) $increment . ' as VARCHAR(255))';
 			break;
 
 			// MySQL, SQlite, mssql, mssql_odbc, oracle

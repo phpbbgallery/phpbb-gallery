@@ -13,29 +13,18 @@
 */
 
 define('IN_PHPBB', true);
-$phpbb_root_path = $gallery_root_path = '';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
-include($phpbb_root_path . $gallery_root_path . 'includes/root_path.' . $phpEx);
-include($phpbb_root_path . 'common.' . $phpEx);
-include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
-
-// Start session management
-$user->session_begin();
-$auth->acl($user->data);
-$user->setup(array('mods/gallery', 'mods/gallery_mcp'));
-
-$gallery_root_path = GALLERY_ROOT_PATH;
-include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
-include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
-include($phpbb_root_path . $gallery_root_path . 'includes/functions_display.' . $phpEx);
-include($phpbb_root_path . $gallery_root_path . 'mcp/mcp_functions.' . $phpEx);
+include('includes/core.' . $phpEx);
+phpbb_gallery::init(array('mods/gallery', 'mods/gallery_mcp'));
+phpbb_gallery::_include(array('functions_mcp', 'functions_display'));
+phpbb_gallery::_include(array('functions_display'), 'phpbb');
 
 $mode = request_var('mode', 'album');
 $action = request_var('action', '');
 
 if ($mode == 'whois' && $auth->acl_get('a_') && request_var('ip', ''))
 {
-	include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+	phpbb_gallery::_include(array('functions_user'), 'phpbb');
 
 	$template->assign_var('WHOIS', user_ipwhois(request_var('ip', '')));
 
@@ -78,62 +67,62 @@ switch ($mode)
 	case 'report_open':
 	case 'report_closed':
 	case 'report_details':
-		$access_denied = (!gallery_acl_check('m_report', $album_id, $album_data['album_user_id'])) ? true : false;
+		$access_denied = (!phpbb_gallery::$auth->acl_check('m_report', $album_id, $album_data['album_user_id'])) ? true : false;
 	break;
 	case 'queue_unapproved':
 	case 'queue_approved':
 	case 'queue_locked':
 	case 'queue_details':
-		$access_denied = (!gallery_acl_check('m_status', $album_id, $album_data['album_user_id'])) ? true : false;
+		$access_denied = (!phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id'])) ? true : false;
 	break;
 }
 switch ($action)
 {
 	case 'images_move':
-		$access_denied = (!gallery_acl_check('m_move', $album_id, $album_data['album_user_id']) || ($moving_target && !gallery_acl_check('i_upload', $moving_target))) ? true : false;
+		$access_denied = (!phpbb_gallery::$auth->acl_check('m_move', $album_id, $album_data['album_user_id']) || ($moving_target && !phpbb_gallery::$auth->acl_check('i_upload', $moving_target))) ? true : false;
 	break;
 	case 'images_unapprove':
 	case 'images_approve':
 	case 'images_lock':
-		$access_denied = (!gallery_acl_check('m_status', $album_id, $album_data['album_user_id'])) ? true : false;
+		$access_denied = (!phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id'])) ? true : false;
 	break;
 	case 'images_delete':
-		$access_denied = (!gallery_acl_check('m_delete', $album_id, $album_data['album_user_id'])) ? true : false;
+		$access_denied = (!phpbb_gallery::$auth->acl_check('m_delete', $album_id, $album_data['album_user_id'])) ? true : false;
 	break;
 	case 'reports_close':
 	case 'reports_open':
 	case 'reports_delete':
-		$access_denied = (!gallery_acl_check('m_report', $album_id, $album_data['album_user_id'])) ? true : false;
+		$access_denied = (!phpbb_gallery::$auth->acl_check('m_report', $album_id, $album_data['album_user_id'])) ? true : false;
 	break;
 }
 
-if ($access_denied || !gallery_acl_check('m_', $album_id, $album_data['album_user_id']))
+if ($access_denied || !phpbb_gallery::$auth->acl_check('m_', $album_id, $album_data['album_user_id']))
 {
-	meta_refresh(5, append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id"));
+	meta_refresh(5, phpbb_gallery::append_sid('album', "album_id=$album_id"));
 	trigger_error('NOT_AUTHORISED');
 }
 
 generate_album_nav($album_data);
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> $user->lang['MCP'],
-	'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'album_id=' . $album_data['album_id']),
+	'U_VIEW_FORUM'	=> phpbb_gallery::append_sid('mcp', 'album_id=' . $album_data['album_id']),
 ));
 
 $template->assign_vars(array(
-	'S_ALLOWED_MOVE'	=> (gallery_acl_check('m_move', $album_id, $album_data['album_user_id'])) ? true : false,
-	'S_ALLOWED_STATUS'	=> (gallery_acl_check('m_status', $album_id, $album_data['album_user_id'])) ? true : false,
-	'S_ALLOWED_DELETE'	=> (gallery_acl_check('m_delete', $album_id, $album_data['album_user_id'])) ? true : false,
-	'S_ALLOWED_REPORT'	=> (gallery_acl_check('m_report', $album_id, $album_data['album_user_id'])) ? true : false,
+	'S_ALLOWED_MOVE'	=> (phpbb_gallery::$auth->acl_check('m_move', $album_id, $album_data['album_user_id'])) ? true : false,
+	'S_ALLOWED_STATUS'	=> (phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id'])) ? true : false,
+	'S_ALLOWED_DELETE'	=> (phpbb_gallery::$auth->acl_check('m_delete', $album_id, $album_data['album_user_id'])) ? true : false,
+	'S_ALLOWED_REPORT'	=> (phpbb_gallery::$auth->acl_check('m_report', $album_id, $album_data['album_user_id'])) ? true : false,
 	'EDIT_IMG'		=> $user->img('icon_post_edit', 'EDIT_IMAGE'),
 	'DELETE_IMG'	=> $user->img('icon_post_delete', 'DELETE_IMAGE'),
 	'ALBUM_NAME'	=> $album_data['album_name'],
 	'ALBUM_IMAGES'	=> $album_data['album_images'] . ' ' . (($album_data['album_images'] == 1) ? $user->lang['IMAGE'] : $user->lang['IMAGES']),
-	'U_VIEW_ALBUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_id),
-	'U_MOD_ALBUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'mode=album&amp;album_id=' . $album_id),
+	'U_VIEW_ALBUM'	=> phpbb_gallery::append_sid('album', 'album_id=' . $album_id),
+	'U_MOD_ALBUM'	=> phpbb_gallery::append_sid('mcp', 'mode=album&amp;album_id=' . $album_id),
 ));
 
 // Build Navigation
-$page_title = build_gallery_mcp_navigation($album_id, $mode, $option_id);
+$page_title = phpbb_gallery_mcp::build_navigation($album_id, $mode, $option_id);
 
 if ($action && $image_id_ary)
 {
@@ -291,9 +280,9 @@ if ($action && $image_id_ary)
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
-					@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $image_data['image_thumbnail']);
-					@unlink($phpbb_root_path . GALLERY_MEDIUM_PATH . $image_data['image_thumbnail']);
-					@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
+					@unlink(phpbb_gallery::path('phpbb') . GALLERY_CACHE_PATH . $image_data['image_thumbnail']);
+					@unlink(phpbb_gallery::path('phpbb') . GALLERY_MEDIUM_PATH . $image_data['image_thumbnail']);
+					@unlink(phpbb_gallery::path('phpbb') . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
 					add_log('gallery', $album_id, $row['image_id'], 'LOG_GALLERY_DELETED', $row['image_name']);
 				}
 				$db->sql_freeresult($result);
@@ -437,33 +426,32 @@ if ($action && $image_id_ary)
 		{
 			update_album_info($moving_target);
 		}
-		redirect(($redirect == 'redirect') ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx" , "album_id=$album_id") : append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx" , "mode=$mode&amp;album_id=$album_id"));
+		redirect(($redirect == 'redirect') ? phpbb_gallery::append_sid('album', "album_id=$album_id") : phpbb_gallery::append_sid('mcp', "mode=$mode&amp;album_id=$album_id"));
 	}
 }// end if ($action && $image_id_ary)
 
-$sort_by_sql = array('image_time', 'image_name_clean', 'image_username_clean', 'image_view_count', 'image_rate_avg', 'image_comments', 'image_last_comment');
 switch ($mode)
 {
 	case 'album':
-		include($phpbb_root_path . $gallery_root_path . 'mcp/mcp_album.' . $phpEx);
+		phpbb_gallery_mcp::album($mode, $album_id, $album_data);
 	break;
 
 	case 'report_open':
 	case 'report_closed':
-		include($phpbb_root_path . $gallery_root_path . 'mcp/mcp_report.' . $phpEx);
+		phpbb_gallery_mcp::report($mode, $album_id, $album_data);
 	break;
 
 	case 'queue_unapproved':
 	case 'queue_approved':
 	case 'queue_locked':
-		include($phpbb_root_path . $gallery_root_path . 'mcp/mcp_queue.' . $phpEx);
+		phpbb_gallery_mcp::queue($mode, $album_id, $album_data);
 	break;
 
 	break;
 
 	case 'report_details':
 	case 'queue_details':
-		include($phpbb_root_path . $gallery_root_path . 'mcp/mcp_details.' . $phpEx);
+		phpbb_gallery_mcp::details($mode, $option_id, $album_id, $album_data);
 	break;
 }
 

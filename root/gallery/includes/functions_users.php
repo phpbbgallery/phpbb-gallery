@@ -22,7 +22,7 @@ if (!defined('IN_PHPBB'))
 */
 function add_user_to_user_cache(&$user_cache, $row)
 {
-	global $auth, $config, $phpbb_root_path, $phpEx, $user;
+	global $auth, $config, $user;
 
 	$user_id = $row['user_id'];
 
@@ -105,24 +105,24 @@ function add_user_to_user_cache(&$user_cache, $row)
 			'user_colour'		=> $row['user_colour'],
 
 			'online'		=> false,
-			'profile'		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=$user_id"),
+			'profile'		=> phpbb_gallery::append_sid('phpbb', 'memberlist', "mode=viewprofile&amp;u=$user_id"),
 			'www'			=> $row['user_website'],
-			'aim'			=> ($row['user_aim'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=aim&amp;u=$user_id") : '',
-			'msn'			=> ($row['user_msnm'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=msnm&amp;u=$user_id") : '',
+			'aim'			=> ($row['user_aim'] && $auth->acl_get('u_sendim')) ? phpbb_gallery::append_sid('phpbb', 'memberlist', "mode=contact&amp;action=aim&amp;u=$user_id") : '',
+			'msn'			=> ($row['user_msnm'] && $auth->acl_get('u_sendim')) ? phpbb_gallery::append_sid('phpbb', 'memberlist', "mode=contact&amp;action=msnm&amp;u=$user_id") : '',
 			'yim'			=> ($row['user_yim']) ? 'http://edit.yahoo.com/config/send_webmesg?.target=' . urlencode($row['user_yim']) . '&amp;.src=pg' : '',
-			'jabber'		=> ($row['user_jabber'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=jabber&amp;u=$user_id") : '',
-			'search'		=> ($auth->acl_get('u_search')) ? append_sid("{$phpbb_root_path}search.$phpEx", "author_id=$user_id&amp;sr=posts") : '',
+			'jabber'		=> ($row['user_jabber'] && $auth->acl_get('u_sendim')) ? phpbb_gallery::append_sid('phpbb', 'memberlist', "mode=contact&amp;action=jabber&amp;u=$user_id") : '',
+			'search'		=> ($auth->acl_get('u_search')) ? phpbb_gallery::append_sid('phpbb', 'search', "author_id=$user_id&amp;sr=posts") : '',
 
-			'gallery_album'		=> ($row['personal_album_id'] && $config['gallery_viewtopic_icon']) ? append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "album.$phpEx", "album_id=" . $row['personal_album_id']) : '',
+			'gallery_album'		=> ($row['personal_album_id'] && $config['gallery_viewtopic_icon']) ? phpbb_gallery::append_sid('album', "album_id=" . $row['personal_album_id']) : '',
 			'gallery_images'	=> ($config['gallery_viewtopic_images']) ? $row['user_images'] : 0,
-			'gallery_search'	=> ($config['gallery_viewtopic_images'] && $config['gallery_viewtopic_link'] && $row['user_images']) ? append_sid("{$phpbb_root_path}" . GALLERY_ROOT_PATH . "search.$phpEx", "user_id=$user_id") : '',
+			'gallery_search'	=> ($config['gallery_viewtopic_images'] && $config['gallery_viewtopic_link'] && $row['user_images']) ? phpbb_gallery::append_sid('search', "user_id=$user_id") : '',
 		);
 
 		get_user_rank($row['user_rank'], $row['user_posts'], $user_cache[$user_id]['rank_title'], $user_cache[$user_id]['rank_image'], $user_cache[$user_id]['rank_image_src']);
 
 		if (!empty($row['user_allow_viewemail']) || $auth->acl_get('a_email'))
 		{
-			$user_cache[$user_id]['email'] = ($config['board_email_form'] && $config['email_enable']) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=email&amp;u=$user_id") : (($config['board_hide_emails'] && !$auth->acl_get('a_email')) ? '' : 'mailto:' . $row['user_email']);
+			$user_cache[$user_id]['email'] = ($config['board_email_form'] && $config['email_enable']) ? phpbb_gallery::append_sid('phpbb', 'memberlist', "mode=email&amp;u=$user_id") : (($config['board_hide_emails'] && !$auth->acl_get('a_email')) ? '' : 'mailto:' . $row['user_email']);
 		}
 		else
 		{

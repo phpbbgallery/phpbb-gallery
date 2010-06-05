@@ -20,17 +20,16 @@ if (!defined('IN_PHPBB'))
 function integrate_memberlist_viewprofile(&$member)
 {
 	// Some of the globals may not be used here, but in the included files
-	global $auth, $config, $db, $gallery_config, $template, $user;
-	global $gallery_root_path, $phpbb_admin_path, $phpbb_root_path, $phpEx;
+	global $auth, $config, $db, $template, $user;
 	$user->add_lang('mods/gallery');
 
-	if (!function_exists('load_gallery_config'))
+	if (!class_exists('phpbb_gallery'))
 	{
-		$recent_image_addon = true;
-		include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
-		include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
-		include($phpbb_root_path . $gallery_root_path . 'includes/functions_recent.' . $phpEx);
+		global $phpbb_root_path, $phpEx;
+		include('core.' . $phpEx);
+		phpbb_gallery::init('no_setup', $phpbb_root_path);
 	}
+	phpbb_gallery::_include('functions_recent');
 
 	$user_id = $member['user_id'];
 	$memberdays = max(1, round((time() - $member['user_regdate']) / 86400));
@@ -51,25 +50,25 @@ function integrate_memberlist_viewprofile(&$member)
 	$percentage_images = ($config['num_images']) ? min(100, ($member['user_images'] / $config['num_images']) * 100) : 0;
 
 	$ints = array(
-		'rows'		=> $gallery_config['rrc_profile_rows'],
-		'columns'	=> $gallery_config['rrc_profile_columns'],
+		'rows'		=> phpbb_gallery::config('rrc_profile_rows'),
+		'columns'	=> phpbb_gallery::config('rrc_profile_columns'),
 		'comments'	=> 0,
 		'contests'	=> 0,
 	);
-	if ($gallery_config['rrc_profile_mode'])
+	if (phpbb_gallery::config('rrc_profile_mode'))
 	{
-		recent_gallery_images($ints, $gallery_config['rrc_profile_display'], $gallery_config['rrc_profile_mode'], false, $gallery_config['rrc_profile_pgalleries'], 'user', $user_id);
+		recent_gallery_images($ints, phpbb_gallery::config('rrc_profile_display'), phpbb_gallery::config('rrc_profile_mode'), false, phpbb_gallery::config('rrc_profile_pgalleries'), 'user', $user_id);
 	}
 
 	$template->assign_vars(array(
-		'TOTAL_IMAGES'		=> $gallery_config['user_images_profile'],
+		'TOTAL_IMAGES'		=> phpbb_gallery::config('user_images_profile'),
 		'IMAGES'			=> $member['user_images'],
 		'IMAGES_DAY'		=> sprintf($user->lang['IMAGE_DAY'], $images_per_day),
 		'IMAGES_PCT'		=> sprintf($user->lang['IMAGE_PCT'], $percentage_images),
 
 		'SHOW_PERSONAL_ALBUM_OF'	=> sprintf($user->lang['SHOW_PERSONAL_ALBUM_OF'], $member['username']),
-		'U_GALLERY'			=> ($member['personal_album_id'] && $gallery_config['personal_album_profile']) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $member['personal_album_id']) : '',
-		'U_SEARCH_GALLERY'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'user_id=' . $user_id),
+		'U_GALLERY'			=> ($member['personal_album_id'] && phpbb_gallery::config('personal_album_profile')) ? phpbb_gallery::append_sid('album', 'album_id=' . $member['personal_album_id']) : '',
+		'U_SEARCH_GALLERY'	=> phpbb_gallery::append_sid('search', 'user_id=' . $user_id),
 	));
 }
 
@@ -77,42 +76,41 @@ function integrate_viewonline($on_page, $album_id, $session_page)
 {
 	// Some of the globals may not be used here, but in the included files
 	global $auth, $album_data, $config, $cache, $db, $template, $user;
-	global $gallery_root_path, $phpbb_root_path, $phpEx;
 	global $location, $location_url;
 
 	// Initial load of some needed stuff, like permissions, album data, ...
-	if (!function_exists('load_gallery_config'))
+	if (!class_exists('phpbb_gallery'))
 	{
-		$recent_image_addon = true;
-		include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
-		include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
+		global $phpbb_root_path, $phpEx;
+		include('core.' . $phpEx);
+		phpbb_gallery::init('no_setup', $phpbb_root_path);
 	}
 	if (!isset($album_data))
 	{
-		$user->add_lang('mods/gallery');
+		$user->add_lang(array('mods/info_acp_gallery', 'mods/gallery'));
 		$album_data = $cache->obtain_album_list();
 	}
 
 	// Handle user location
 	$location = $user->lang['GALLERY'];
-	$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx");
+	$location_url = phpbb_gallery::append_sid('index');
 
-	if ($album_id && gallery_acl_check('i_view', $album_id))
+	if ($album_id && phpbb_gallery::$auth->acl_check('i_view', $album_id))
 	{
 		switch ($on_page[1])
 		{
-			case $gallery_root_path . 'album':
+			case phpbb_gallery::path('relative') . 'album':
 				$location = sprintf($user->lang['VIEWING_ALBUM'], $album_data[$album_id]['album_name']);
-				$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_id);
+				$location_url = phpbb_gallery::append_sid('album', 'album_id=' . $album_id);
 			break;
 
-			case $gallery_root_path . 'image_page':
-			case $gallery_root_path . 'image':
+			case phpbb_gallery::path('relative') . 'image_page':
+			case phpbb_gallery::path('relative') . 'image':
 				$location = sprintf($user->lang['VIEWING_IMAGE'], $album_data[$album_id]['album_name']);
-				$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_id);
+				$location_url = phpbb_gallery::append_sid('album', 'album_id=' . $album_id);
 			break;
 
-			case $gallery_root_path . 'posting':
+			case phpbb_gallery::path('relative') . 'posting':
 				preg_match('#mode=([a-z]+)#', $session_page, $on_page);
 				$on_page = (sizeof($on_page)) ? $on_page[1] : '';
 
@@ -126,7 +124,7 @@ function integrate_viewonline($on_page, $album_id, $session_page)
 						$location = sprintf($user->lang['VIEWING_ALBUM'], $album_data[$album_id]['album_name']);
 					break;
 				}
-				$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $album_id);
+				$location_url = phpbb_gallery::append_sid('album', 'album_id=' . $album_id);
 			break;
 		}
 	}
@@ -134,10 +132,10 @@ function integrate_viewonline($on_page, $album_id, $session_page)
 	{
 		preg_match('#mode=([a-z]+)#', $session_page, $on_page);
 		$on_page = (sizeof($on_page)) ? $on_page[1] : '';
-		if (($on_page == 'personal') && (gallery_acl_check('i_view', PERSONAL_GALLERY_PERMISSIONS)))
+		if (($on_page == 'personal') && (phpbb_gallery::$auth->acl_check('i_view', PERSONAL_GALLERY_PERMISSIONS)))
 		{
 			$location = $user->lang['PERSONAL_ALBUMS'];
-			$location_url = append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx", 'mode=personal');
+			$location_url = phpbb_gallery::append_sid('index', 'mode=personal');
 		}
 	}
 }
@@ -238,33 +236,16 @@ function gallery_integrate_group_set_user_default($user_id_ary, $sql_ary)
 			WHERE " . $db->sql_in_set('image_user_id', $user_id_ary);
 		$db->sql_query($sql);
 
-		global $gallery_config;
-
-		if ($gallery_config === null)
+		if (!class_exists('phpbb_gallery'))
 		{
-			$db->sql_return_on_error(true);
-			$sql = 'SELECT *
-				FROM ' . GALLERY_CONFIG_TABLE;
-			$result = $db->sql_query($sql);
-
-			$gallery_config = array();
-			while ($row = $db->sql_fetchrow($result))
-			{
-				$gallery_config[$row['config_name']] = $row['config_value'];
-			}
-			$db->sql_freeresult($result);
-
-			$db->sql_return_on_error(false);
+			global $phpbb_root_path, $phpEx;
+			include('core.' . $phpEx);
+			//phpbb_gallery::init('no_setup', $phpbb_root_path);
 		}
 
-		if (isset($gallery_config['newest_pgallery_user_id']) && in_array($gallery_config['newest_pgallery_user_id'], $user_id_ary))
+		if (in_array(phpbb_gallery::config('newest_pgallery_user_id'), $user_id_ary))
 		{
-			if (!function_exists('set_gallery_config'))
-			{
-				global $phpbb_root_path, $phpEx, $user;
-				include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/functions.' . $phpEx);
-			}
-			set_gallery_config('newest_pgallery_user_colour', $sql_ary['user_colour'], true);
+			phpbb_gallery::set_config('newest_pgallery_user_colour', $sql_ary['user_colour'], true);
 		}
 	}
 }

@@ -20,9 +20,6 @@ if (!defined('IN_PHPBB'))
 /**
 * Available functions
 *
-* load_gallery_config()
-* set_gallery_config()
-* set_gallery_config_count()
 * get_album_info()
 * get_image_info()
 * check_album_user()
@@ -34,123 +31,6 @@ if (!defined('IN_PHPBB'))
 * gallery_markread()
 *
 */
-
-$gallery_root_path = GALLERY_ROOT_PATH;
-include($phpbb_root_path . $gallery_root_path . 'includes/functions_phpbb.' . $phpEx);
-
-$sql = 'SELECT *
-	FROM ' . GALLERY_USERS_TABLE . '
-	WHERE user_id = ' . (int) $user->data['user_id'];
-$result = $db->sql_query($sql);
-$array = $db->sql_fetchrow($result);
-$db->sql_freeresult($result);
-
-if ($db->sql_affectedrows())
-{
-	$user->gallery = array_map('intval', $array);
-	$user->gallery['exists'] = true;
-}
-else
-{
-	$user->gallery = $array;
-}
-
-/**
-* Loading the gallery_config
-*/
-function load_gallery_config()
-{
-	global $db;
-
-	// When addons are installed, before the install script is run, this would through an error.
-	$db->sql_return_on_error(true);
-	$sql = 'SELECT *
-		FROM ' . GALLERY_CONFIG_TABLE;
-	$result = $db->sql_query($sql);
-	$db->sql_return_on_error(false);
-
-	$gallery_config = array();
-	if ($result !== false)
-	{
-		$gallery_config['loaded'] = true;
-	}
-
-	while ($row = $db->sql_fetchrow($result))
-	{
-		$gallery_config[$row['config_name']] = $row['config_value'];
-	}
-	$db->sql_freeresult($result);
-
-	return $gallery_config;
-}
-
-/**
-* Set config value. Creates missing album_config entry.
-*
-* borrowed from phpBB3
-* @author: phpBB Group
-* @function: set_config
-*/
-function set_gallery_config($config_name, $config_value, $is_dynamic = false)
-{
-	global $db, $gallery_config /*, $cache*/;
-
-	$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . "
-		SET config_value = '" . $db->sql_escape($config_value) . "'
-		WHERE config_name = '" . $db->sql_escape($config_name) . "'";
-	$db->sql_query($sql);
-
-	if (!$db->sql_affectedrows() && !isset($gallery_config[$config_name]))
-	{
-		$sql = 'INSERT INTO ' . GALLERY_CONFIG_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'config_name'	=> $config_name,
-			'config_value'	=> $config_value,
-			/*'is_dynamic'	=> ($is_dynamic) ? 1 : 0,*/));
-		$db->sql_query($sql);
-	}
-
-	$gallery_config[$config_name] = $config_value;
-
-	/*if (!$is_dynamic)
-	{
-		$cache->destroy('config');
-	}*/
-}
-
-/**
-* Set dynamic config value with arithmetic operation.
-*
-* borrowed from phpBB3
-* @author: phpBB Group
-* @function: set_config_count
-*/
-function set_gallery_config_count($config_name, $increment, $is_dynamic = false)
-{
-	global $db /*, $cache*/;
-
-	switch ($db->sql_layer)
-	{
-		case 'firebird':
-			$sql_update = 'CAST(CAST(config_value as integer) + ' . (int) $increment . ' as VARCHAR(255))';
-		break;
-
-		case 'postgres':
-			$sql_update = 'int4(config_value) + ' . (int) $increment;
-		break;
-
-		// MySQL, SQlite, mssql, mssql_odbc, oracle
-		default:
-			$sql_update = 'config_value + ' . (int) $increment;
-		break;
-	}
-
-	$db->sql_query('UPDATE ' . GALLERY_CONFIG_TABLE . ' SET config_value = ' . $sql_update . " WHERE config_name = '" . $db->sql_escape($config_name) . "'");
-
-	/*if (!$is_dynamic)
-	{
-		$cache->destroy('config');
-	}*/
-}
 
 /**
 * Get album information
@@ -184,9 +64,7 @@ function get_album_info($album_id)
 
 	if (!$row)
 	{
-		global $gallery_root_path, $phpbb_root_path, $phpEx;
-
-		meta_refresh(3, append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"));
+		meta_refresh(3, phpbb_gallery::append_sid('index'));
 		trigger_error('ALBUM_NOT_EXIST');
 	}
 
@@ -209,7 +87,7 @@ function get_album_info($album_id)
 */
 function get_image_info($image_id)
 {
-	global $db, $user, $gallery_root_path, $phpbb_root_path, $phpEx;
+	global $db, $user;
 
 	$sql_array = array(
 		'SELECT'		=> '*',
@@ -236,7 +114,7 @@ function get_image_info($image_id)
 
 	if (!$row)
 	{
-		meta_refresh(3, append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"));
+		meta_refresh(3, phpbb_gallery::append_sid('index'));
 		trigger_error('IMAGE_NOT_EXIST');
 	}
 
@@ -284,7 +162,7 @@ function check_album_user($album_id)
 */
 function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $requested_permission = false, $ignore_id = false, $album_user_id = NON_PERSONAL_ALBUMS, $requested_album_type = -1)
 {
-	global $db, $user, $cache, $album_access_array;
+	global $db, $user, $cache;
 
 	// Instead of the query we use the cache
 	$album_data = $cache->obtain_album_list();
@@ -305,7 +183,7 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 		$list = false;
 		if ($row['album_user_id'] != $last_a_u_id)
 		{
-			if (!$last_a_u_id && gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS) && !$ignore_personals)
+			if (!$last_a_u_id && phpbb_gallery::$auth->acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS) && !$ignore_personals)
 			{
 				$album_list .= '<option disabled="disabled" class="disabled-option">' . $user->lang['PERSONAL_ALBUMS'] . '</option>';
 			}
@@ -331,7 +209,7 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 		((is_array($ignore_id) && in_array($row['album_id'], $ignore_id)) || $row['album_id'] == $ignore_id)
 		||
 		// Need upload permissions (for moving)
-		(($requested_permission == 'm_move') && (($row['album_type'] == ALBUM_CAT) || (!gallery_acl_check('i_upload', $row['album_id'], $row['album_user_id']) && !gallery_acl_check('m_move', $row['album_id'], $row['album_user_id']))))
+		(($requested_permission == 'm_move') && (($row['album_type'] == ALBUM_CAT) || (!phpbb_gallery::$auth->acl_check('i_upload', $row['album_id'], $row['album_user_id']) && !phpbb_gallery::$auth->acl_check('m_move', $row['album_id'], $row['album_user_id']))))
 		||
 		// album_type does not fit
 		($check_album_type && ($row['album_type'] != $requested_album_type))
@@ -346,7 +224,7 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 		}
 		else if (!$row['album_user_id'])
 		{
-			if (gallery_acl_check('a_list', $row['album_id'], $row['album_user_id']) || defined('IN_ADMIN'))
+			if (phpbb_gallery::$auth->acl_check('a_list', $row['album_id'], $row['album_user_id']) || defined('IN_ADMIN'))
 			{
 				$list = true;
 			}
@@ -358,10 +236,10 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 				if (!$c_access_own)
 				{
 					$c_access_own = true;
-					$access_own = gallery_acl_check('a_list', OWN_GALLERY_PERMISSIONS);
+					$access_own = phpbb_gallery::$auth->acl_check('a_list', OWN_GALLERY_PERMISSIONS);
 					if ($requested_permission)
 					{
-						$requested_own = !gallery_acl_check($requested_permission, OWN_GALLERY_PERMISSIONS);
+						$requested_own = !phpbb_gallery::$auth->acl_check($requested_permission, OWN_GALLERY_PERMISSIONS);
 					}
 					else
 					{
@@ -376,10 +254,10 @@ function gallery_albumbox($ignore_personals, $select_name, $select_id = false, $
 				if (!$c_access_personal)
 				{
 					$c_access_personal = true;
-					$access_personal = gallery_acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS);
+					$access_personal = phpbb_gallery::$auth->acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS);
 					if ($requested_permission)
 					{
-						$requested_personal = !gallery_acl_check($requested_permission, PERSONAL_GALLERY_PERMISSIONS);
+						$requested_personal = !phpbb_gallery::$auth->acl_check($requested_permission, PERSONAL_GALLERY_PERMISSIONS);
 					}
 					else
 					{
@@ -515,12 +393,11 @@ function update_album_info($album_id)
 */
 function handle_image_counter($image_id_ary, $add, $readd = false)
 {
-	global $config, $gallery_config, $db;
+	global $db;
 
 	if (!function_exists('gallery_hookup_image_counter'))
 	{
-		global $gallery_root_path, $phpbb_root_path, $phpEx;
-		include($phpbb_root_path . $gallery_root_path . 'includes/hookup_gallery.' . $phpEx);
+		phpbb_gallery::_include('hookup_gallery');
 	}
 
 	$num_images = $num_comments = 0;
@@ -563,8 +440,8 @@ function handle_image_counter($image_id_ary, $add, $readd = false)
 
 	// Since phpBB 3.0.5 this is the better solution
 	// If the function does not exist, we load it from gallery/includes/functions_phpbb.php
-	set_config_count('num_images', (($add) ? $num_images : 0 - $num_images), true);
-	set_gallery_config_count('num_comments', (($add) ? $num_comments : 0 - $num_comments), true);
+	phpbb_gallery::set_config_count('num_images', (($add) ? $num_images : 0 - $num_images), true);
+	phpbb_gallery::set_config_count('num_comments', (($add) ? $num_comments : 0 - $num_comments), true);
 }
 
 /**
@@ -631,17 +508,12 @@ function get_album_branch($branch_user_id, $album_id, $type = 'all', $order = 'd
 */
 function generate_image_link($content, $mode, $image_id, $image_name, $album_id, $is_gif = false, $count = true, $additional_parameters = '')
 {
-	global $phpbb_root_path, $phpEx, $user, $gallery_root_path, $gallery_config;
+	global $phpEx, $user, $gallery_config;
 
-	if (!$gallery_config)
-	{
-		$gallery_config = load_gallery_config();
-	}
-
-	$image_page_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id{$additional_parameters}");
-	$image_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "album_id=$album_id&amp;image_id=$image_id{$additional_parameters}" . ((!$count) ? '&amp;view=no_count' : ''));
-	$thumb_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "mode=thumbnail&amp;album_id=$album_id&amp;image_id=$image_id{$additional_parameters}");
-	$medium_url = append_sid("{$phpbb_root_path}{$gallery_root_path}image.$phpEx", "mode=medium&amp;album_id=$album_id&amp;image_id=$image_id{$additional_parameters}");
+	$image_page_url = phpbb_gallery::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id{$additional_parameters}");
+	$image_url = phpbb_gallery::append_sid('image', "album_id=$album_id&amp;image_id=$image_id{$additional_parameters}" . ((!$count) ? '&amp;view=no_count' : ''));
+	$thumb_url = phpbb_gallery::append_sid('image', "mode=thumbnail&amp;album_id=$album_id&amp;image_id=$image_id{$additional_parameters}");
+	$medium_url = phpbb_gallery::append_sid('image', "mode=medium&amp;album_id=$album_id&amp;image_id=$image_id{$additional_parameters}");
 	switch ($content)
 	{
 		case 'image_name':
@@ -698,7 +570,7 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 		break;
 		default:
 			$url = $image_url;
-			$tpl = generate_image_link_plugins($mode);
+			$tpl = gallery_plugins::generate_image_link_plugins($mode);
 		break;
 	}
 
@@ -831,16 +703,16 @@ function gallery_display_captcha($mode)
 {
 	static $gallery_display_captcha;
 
-	if ($gallery_display_captcha !== null)
+	if (isset($gallery_display_captcha[$mode]))
 	{
-		return $gallery_display_captcha;
+		return $gallery_display_captcha[$mode];
 	}
 
-	global $config, $gallery_config, $user;
+	global $config, $user;
 
-	$gallery_display_captcha = ($user->data['user_id'] == ANONYMOUS) && $gallery_config['captcha_' . $mode] && (version_compare($config['version'], '3.0.5', '>'));
+	$gallery_display_captcha[$mode] = ($user->data['user_id'] == ANONYMOUS) && phpbb_gallery::config('captcha_' . $mode) && (version_compare($config['version'], '3.0.5', '>'));
 
-	return $gallery_display_captcha;
+	return $gallery_display_captcha[$mode];
 }
 
 ?>

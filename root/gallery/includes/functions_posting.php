@@ -20,9 +20,9 @@ if (!defined('IN_PHPBB'))
 /**
 * Insert the image into the database
 */
-function upload_image(&$image_data)
+function upload_image(&$image_data, $album_id)
 {
-	global $user, $db, $album_id;
+	global $user, $db;
 
 	$sql_ary = array(
 		'image_filename' 		=> $image_data['filename'],
@@ -35,12 +35,17 @@ function upload_image(&$image_data)
 		'image_user_ip'			=> $user->ip,
 		'image_time'			=> $image_data['image_time'],
 		'image_album_id'		=> $image_data['image_album_id'],
-		'image_status'			=> (gallery_acl_check('i_approve', $album_id)) ? IMAGE_APPROVED : IMAGE_UNAPPROVED,
+		'image_status'			=> (phpbb_gallery::$auth->acl_check('i_approve', $album_id)) ? IMAGE_APPROVED : IMAGE_UNAPPROVED,
 		'filesize_upload'		=> $image_data['image_filesize'],
 		'image_contest'			=> $image_data['image_contest'],
 		'image_exif_data'		=> $image_data['image_exif_data'],
 		'image_has_exif'		=> $image_data['image_has_exif'],
 	);
+
+	if (!class_exists('parse_message'))
+	{
+		phpbb_gallery::_include('message_parser', 'phpbb');
+	}
 
 	$message_parser				= new parse_message();
 	$message_parser->message	= utf8_normalize_nfc($image_data['image_desc']);
@@ -84,7 +89,6 @@ function upload_image(&$image_data)
 */
 function gallery_notification($mode, $handle_id, $image_name)
 {
-	global $phpbb_root_path, $gallery_root_path, $phpEx;
 	global $user, $db, $album_id, $image_id, $image_data, $album_data;
 
 	$help_mode = $mode . '_id';
@@ -245,7 +249,7 @@ function gallery_notification($mode, $handle_id, $image_name)
 	{
 		if (!class_exists('messenger'))
 		{
-			include($phpbb_root_path . 'includes/functions_messenger.' . $phpEx);
+			phpbb_gallery::_include('functions_messenger', 'phpbb');
 		}
 		$messenger = new messenger();
 
@@ -276,11 +280,11 @@ function gallery_notification($mode, $handle_id, $image_name)
 					'IMAGE_NAME'	=> htmlspecialchars_decode($image_name),
 					'ALBUM_NAME'	=> htmlspecialchars_decode($album_data['album_name']),
 
-					'U_ALBUM'				=> generate_board_url() . '/' . $gallery_root_path . "album.$phpEx?album_id=$album_id",
-					'U_IMAGE'				=> generate_board_url() . '/' . $gallery_root_path . "image_page.$phpEx?album_id=$album_id&image_id=$image_id",
-					'U_NEWEST_POST'			=> generate_board_url() . '/' . $gallery_root_path . "viewtopic.$phpEx?album_id=$album_id&image_id=$image_id",
-					'U_STOP_WATCHING_IMAGE'	=> generate_board_url() . '/' . $gallery_root_path . "posting.$phpEx?mode=image&submode=unwatch&album_id=$album_id&image_id=$image_id",
-					'U_STOP_WATCHING_ALBUM'	=> generate_board_url() . '/' . $gallery_root_path . "posting.$phpEx?mode=album&submode=unwatch&album_id=$album_id",
+					'U_ALBUM'				=> phpbb_gallery::create_link('full', 'album', "album_id=$album_id"),
+					'U_IMAGE'				=> phpbb_gallery::create_link('full', 'image_page', "album_id=$album_id&amp;image_id=$image_id"),
+					'U_NEWEST_POST'			=> phpbb_gallery::create_link('full', 'viewtopic', "album_id=$album_id&amp;image_id=$image_id"),
+					'U_STOP_WATCHING_IMAGE'	=> phpbb_gallery::create_link('full', 'posting', "mode=image&amp;submode=unwatch&amp;album_id=$album_id&amp;image_id=$image_id"),
+					'U_STOP_WATCHING_ALBUM'	=> phpbb_gallery::create_link('full', 'posting', "mode=album&amp;submode=unwatch&amp;album_id=$album_id"),
 				));
 
 				$messenger->send($addr['method']);
@@ -314,7 +318,7 @@ function gallery_notification($mode, $handle_id, $image_name)
 */
 function generate_personal_album($album_name, $user_id, $user_colour, $user_entry_exists)
 {
-	global $cache, $db, $gallery_config;
+	global $cache, $db;
 
 	$album_data = array(
 		'album_name'					=> $album_name,
@@ -347,13 +351,13 @@ function generate_personal_album($album_name, $user_id, $user_colour, $user_entr
 		);
 		$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $gallery_settings));
 	}
-	set_gallery_config_count('personal_counter', 1);
+	phpbb_gallery::set_config_count('personal_counter', 1);
 
 	// Update the config for the statistic on the index
-	set_gallery_config('newest_pgallery_user_id', $user_id);
-	set_gallery_config('newest_pgallery_username', $album_name);
-	set_gallery_config('newest_pgallery_user_colour', $user_colour);
-	set_gallery_config('newest_pgallery_album_id', $personal_album_id);
+	phpbb_gallery::set_config('newest_pgallery_user_id', $user_id);
+	phpbb_gallery::set_config('newest_pgallery_username', $album_name);
+	phpbb_gallery::set_config('newest_pgallery_user_colour', $user_colour);
+	phpbb_gallery::set_config('newest_pgallery_album_id', $personal_album_id);
 
 	$cache->destroy('_albums');
 	$cache->destroy('sql', GALLERY_ALBUMS_TABLE);

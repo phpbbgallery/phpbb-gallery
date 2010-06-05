@@ -33,7 +33,7 @@ define('GALLERY_VIEW_CASH', 1);
 */
 function gallery_hookup_image_counter($user_id, $num_images)
 {
-	global $config, $db, $user, $phpbb_root_path, $phpEx;
+	global $config, $db, $user;
 
 	/**
 	* Example code:
@@ -42,7 +42,8 @@ function gallery_hookup_image_counter($user_id, $num_images)
 	{
 		if (!function_exists('add_points') || !function_exists('substract_points'))
 		{
-			includes($phpbb_root_path . 'includes/points/functions_points.' . $phpEx);
+			// If your file is in $phpbb_root_path/includes/points/functions_points.php use:
+			phpbb_gallery::_include('phpbb', 'functions_points', 'includes/points/');
 		}
 		if ($num_images > 0)
 		{
@@ -69,7 +70,7 @@ function gallery_hookup_image_counter($user_id, $num_images)
 */
 function gallery_hookup_image_view($user_id)
 {
-	global $config, $db, $user, $phpbb_root_path, $phpEx;
+	global $config, $db, $user;
 
 	/**
 	* Example code:
@@ -78,7 +79,7 @@ function gallery_hookup_image_view($user_id)
 	{
 		if (!function_exists('substract_points'))
 		{
-			includes($phpbb_root_path . 'includes/points/functions_points.' . $phpEx);
+			phpbb_gallery::_include('phpbb', 'functions_points', 'includes/points/');
 		}
 		substract_points($user_id, GALLERY_VIEW_CASH);
 		// If the user has negative cash now (would be needed on return from the cash-mods function, you can deny to view the image at all,

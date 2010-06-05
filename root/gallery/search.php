@@ -16,22 +16,10 @@
 */
 
 define('IN_PHPBB', true);
-$phpbb_root_path = $gallery_root_path = '';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
-include($phpbb_root_path . $gallery_root_path . 'includes/root_path.' . $phpEx);
-include($phpbb_root_path . 'common.' . $phpEx);
-include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
-include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
-
-// Start session management
-$user->session_begin();
-$auth->acl($user->data);
-$user->setup(array('mods/gallery', 'search'));
-
-// Get general gallery stuff
-$gallery_root_path = GALLERY_ROOT_PATH;
-include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
-include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
+include('includes/core.' . $phpEx);
+phpbb_gallery::init(array('mods/gallery', 'search'));
+phpbb_gallery::_include(array('functions_display', 'message_parser'), 'phpbb');
 
 // Define initial vars
 //@todo: $mode			= request_var('mode', '');
@@ -63,11 +51,11 @@ if (!$auth->acl_get('u_search') || !$config['load_search'])
 
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> $user->lang['SEARCH'],
-	'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx"),
+	'U_VIEW_FORUM'	=> phpbb_gallery::append_sid('search'),
 ));
 
 // Define some vars
-$images_per_page = $gallery_config['rows_per_page'] * $gallery_config['cols_per_page'];
+$images_per_page = phpbb_gallery::config('rows_per_page') * phpbb_gallery::config('cols_per_page');
 $tot_unapproved = $image_counter = 0;
 
 /**
@@ -77,14 +65,14 @@ $limit_days = array(0 => $user->lang['ALL_IMAGES'], 1 => $user->lang['1_DAY'], 7
 $sort_by_text = array('t' => $user->lang['TIME'], 'n' => $user->lang['IMAGE_NAME'], 'u' => $user->lang['SORT_USERNAME'], 'vc' => $user->lang['VIEWS']);
 $sort_by_sql = array('t' => 'image_time', 'n' => 'image_name_clean', 'u' => 'image_username_clean', 'vc' => 'image_view_count');
 
-if ($gallery_config['allow_rates'])
+if (phpbb_gallery::config('allow_rates'))
 {
 	$sort_by_text['ra'] = $user->lang['RATING'];
 	$sort_by_sql['ra'] = 'image_rate_avg';
 	$sort_by_text['r'] = $user->lang['RATES_COUNT'];
 	$sort_by_sql['r'] = 'image_rates';
 }
-if ($gallery_config['allow_comments'])
+if (phpbb_gallery::config('allow_comments'))
 {
 	$sort_by_text['c'] = $user->lang['COMMENTS'];
 	$sort_by_sql['c'] = 'image_comments';
@@ -174,7 +162,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 	// pre-made searches
 	$sql = $field = $l_search_title = $search_results = '';
 
-	$per_page = $gallery_config['rows_per_page'] * $gallery_config['cols_per_page'];
+	$per_page = phpbb_gallery::config('rows_per_page') * phpbb_gallery::config('cols_per_page');
 	$total_match_count = 0;
 	$sql_limit = 0;
 
@@ -186,7 +174,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			case 'recent':
 				$template->assign_block_vars('navlinks', array(
 					'FORUM_NAME'	=> $user->lang['SEARCH_RECENT'],
-					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=' . $search_id),
+					'U_VIEW_FORUM'	=> phpbb_gallery::append_sid('search', 'search_id=' . $search_id),
 				));
 
 				$l_search_title = $user->lang['SEARCH_RECENT'];
@@ -196,15 +184,15 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				$sql_limit = SEARCH_PAGES_NUMBER * $per_page;
 				$sql = 'SELECT image_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status <> ' . IMAGE_UNAPPROVED . ')
-							OR ' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
+					WHERE ((' . $db->sql_in_set('image_album_id', phpbb_gallery::$auth->acl_album_ids('i_view'), false, true) . ' AND image_status <> ' . IMAGE_UNAPPROVED . ')
+							OR ' . $db->sql_in_set('image_album_id', phpbb_gallery::$auth->acl_album_ids('m_status'), false, true) . ')
 					ORDER BY ' . $sql_order;
 			break;
 
 			case 'random':
 				$template->assign_block_vars('navlinks', array(
 					'FORUM_NAME'	=> $user->lang['SEARCH_RANDOM'],
-					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=' . $search_id),
+					'U_VIEW_FORUM'	=> phpbb_gallery::append_sid('search', 'search_id=' . $search_id),
 				));
 
 				$l_search_title = $user->lang['SEARCH_RANDOM'];
@@ -228,17 +216,17 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				$sql_limit = $per_page;
 				$sql = 'SELECT image_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status <> ' . IMAGE_UNAPPROVED . ')
-							OR ' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
+					WHERE ((' . $db->sql_in_set('image_album_id', phpbb_gallery::$auth->acl_album_ids('i_view'), false, true) . ' AND image_status <> ' . IMAGE_UNAPPROVED . ')
+							OR ' . $db->sql_in_set('image_album_id', phpbb_gallery::$auth->acl_album_ids('m_status'), false, true) . ')
 					ORDER BY ' . $sql_order;
 			break;
 
 			case 'commented':
-			if ($gallery_config['allow_comments'])
+			if (phpbb_gallery::config('allow_comments'))
 			{
 				$template->assign_block_vars('navlinks', array(
 					'FORUM_NAME'	=> $user->lang['SEARCH_RECENT_COMMENTS'],
-					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=' . $search_id),
+					'U_VIEW_FORUM'	=> phpbb_gallery::append_sid('search', 'search_id=' . $search_id),
 				));
 
 				$l_search_title = $user->lang['SEARCH_RECENT_COMMENTS'];
@@ -258,9 +246,9 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 						),
 					),
 
-					'WHERE'			=> '((' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND i.image_status <> ' . IMAGE_UNAPPROVED . ')
-						OR ' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
-						AND ' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('c_read'), false, true),
+					'WHERE'			=> '((' . $db->sql_in_set('i.image_album_id', phpbb_gallery::$auth->acl_album_ids('i_view'), false, true) . ' AND i.image_status <> ' . IMAGE_UNAPPROVED . ')
+						OR ' . $db->sql_in_set('i.image_album_id', phpbb_gallery::$auth->acl_album_ids('m_status'), false, true) . ')
+						AND ' . $db->sql_in_set('i.image_album_id', phpbb_gallery::$auth->acl_album_ids('c_read'), false, true),
 					'ORDER_BY'		=> $sql_order,
 				);
 				$sql = $db->sql_build_query('SELECT', $sql_array);
@@ -268,11 +256,11 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			break;
 
 			case 'toprated':
-			if ($gallery_config['allow_rates'])
+			if (phpbb_gallery::config('allow_rates'))
 			{
 				$template->assign_block_vars('navlinks', array(
 					'FORUM_NAME'	=> $user->lang['SEARCH_TOPRATED'],
-					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=' . $search_id),
+					'U_VIEW_FORUM'	=> phpbb_gallery::append_sid('search', 'search_id=' . $search_id),
 				));
 
 				$l_search_title = $user->lang['SEARCH_TOPRATED'];
@@ -284,18 +272,18 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				$sql = 'SELECT image_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
 					WHERE image_rate_points <> 0
-						AND ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status <> ' . IMAGE_UNAPPROVED . ' AND image_contest = ' . IMAGE_NO_CONTEST . ')
-							OR ' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
+						AND ((' . $db->sql_in_set('image_album_id', phpbb_gallery::$auth->acl_album_ids('i_view'), false, true) . ' AND image_status <> ' . IMAGE_UNAPPROVED . ' AND image_contest = ' . IMAGE_NO_CONTEST . ')
+							OR ' . $db->sql_in_set('image_album_id', phpbb_gallery::$auth->acl_album_ids('m_status'), false, true) . ')
 					ORDER BY ' . $sql_order;
 			}
 			break;
 
 			case 'contests':
-			if ($gallery_config['allow_rates'])
+			if (phpbb_gallery::config('allow_rates'))
 			{
 				$template->assign_block_vars('navlinks', array(
 					'FORUM_NAME'	=> $user->lang['SEARCH_CONTEST'],
-					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", 'search_id=' . $search_id),
+					'U_VIEW_FORUM'	=> phpbb_gallery::append_sid('search', 'search_id=' . $search_id),
 				));
 
 				$l_search_title = $user->lang['SEARCH_CONTEST'];
@@ -312,11 +300,11 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 						),
 					),
 
-					'WHERE'			=> $db->sql_in_set('c.contest_album_id', array_unique(array_merge(gallery_acl_album_ids('i_view'), gallery_acl_album_ids('m_status'))), false, true) . ' AND c.contest_marked = ' . IMAGE_NO_CONTEST,
+					'WHERE'			=> $db->sql_in_set('c.contest_album_id', array_unique(array_merge(phpbb_gallery::$auth->acl_album_ids('i_view'), phpbb_gallery::$auth->acl_album_ids('m_status'))), false, true) . ' AND c.contest_marked = ' . IMAGE_NO_CONTEST,
 					'ORDER_BY'		=> 'c.contest_start + c.contest_end DESC',
 				);
 				$sql = $db->sql_build_query('SELECT', $sql_array);
-				$result = $db->sql_query_limit($sql, $gallery_config['rows_per_page'] * SEARCH_PAGES_NUMBER);
+				$result = $db->sql_query_limit($sql, phpbb_gallery::config('rows_per_page') * SEARCH_PAGES_NUMBER);
 
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -358,8 +346,8 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				$sql = 'SELECT image_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
 					WHERE image_user_id = ' . $user_id . '
-						AND ((' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND image_status <> ' . IMAGE_UNAPPROVED . ' AND image_contest = ' . IMAGE_NO_CONTEST . ')
-							OR ' . $db->sql_in_set('image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
+						AND ((' . $db->sql_in_set('image_album_id', phpbb_gallery::$auth->acl_album_ids('i_view'), false, true) . ' AND image_status <> ' . IMAGE_UNAPPROVED . ' AND image_contest = ' . IMAGE_NO_CONTEST . ')
+							OR ' . $db->sql_in_set('image_album_id', phpbb_gallery::$auth->acl_album_ids('m_status'), false, true) . ')
 					ORDER BY ' . $sql_order;
 			break;
 		}
@@ -393,8 +381,8 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 
 		$sql = 'SELECT i.image_id
 			FROM ' . GALLERY_IMAGES_TABLE . ' i
-			WHERE ((' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('i_view'), false, true) . ' AND i.image_status <> ' . IMAGE_UNAPPROVED . ')
-					OR ' . $db->sql_in_set('i.image_album_id', gallery_acl_album_ids('m_status'), false, true) . ')
+			WHERE ((' . $db->sql_in_set('i.image_album_id', phpbb_gallery::$auth->acl_album_ids('i_view'), false, true) . ' AND i.image_status <> ' . IMAGE_UNAPPROVED . ')
+					OR ' . $db->sql_in_set('i.image_album_id', phpbb_gallery::$auth->acl_album_ids('m_status'), false, true) . ')
 				' . (($search_query) ? 'AND (' . $search_query . ')' : '') . '
 				' . (($user_id_ary) ? ' AND ' . $db->sql_in_set('i.image_user_id', $user_id_ary) : '') . '
 				' . (($search_album) ? ' AND ' . $db->sql_in_set('i.image_album_id', $search_album) : '') . '
@@ -447,7 +435,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 	$u_hilit = urlencode(htmlspecialchars_decode(str_replace('|', ' ', $hilit)));
 	$u_search_album = implode('&amp;aid%5B%5D=', $search_album);
 
-	$u_search = append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", $u_sort_param);
+	$u_search = phpbb_gallery::append_sid('search', $u_sort_param);
 	$u_search .= ($search_id) ? '&amp;search_id=' . $search_id : '';
 	//@todo: 
 	$u_search .= ($search_terms != 'all') ? '&amp;terms=' . $search_terms : '';
@@ -475,9 +463,9 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 
 		'U_SEARCH_WORDS'	=> $u_search,
 		'SEARCH_IMAGES'		=> ($search_results == 'image') ? true : false,
-		'S_COL_WIDTH'		=> (100 / $gallery_config['cols_per_page']) . '%',
-		'S_COLS'			=> $gallery_config['cols_per_page'],
-		'S_THUMBNAIL_SIZE'	=> $gallery_config['thumbnail_size'] + 20 + (($gallery_config['thumbnail_info_line']) ? THUMBNAIL_INFO_HEIGHT : 0),
+		'S_COL_WIDTH'		=> (100 / phpbb_gallery::config('cols_per_page')) . '%',
+		'S_COLS'			=> phpbb_gallery::config('cols_per_page'),
+		'S_THUMBNAIL_SIZE'	=> phpbb_gallery::config('thumbnail_size') + 20 + ((phpbb_gallery::config('thumbnail_info_line')) ? THUMBNAIL_INFO_HEIGHT : 0),
 	));
 
 	if ($sql_where)
@@ -518,10 +506,10 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 
 			if (!function_exists('assign_image_block'))
 			{
-				include($phpbb_root_path . $gallery_root_path . 'includes/functions_display.' . $phpEx);
+				phpbb_gallery::_include('functions_display');
 			}
 
-			$columns_per_page = ($search_id == 'contests') ? CONTEST_IMAGES : $gallery_config['cols_per_page'];
+			$columns_per_page = ($search_id == 'contests') ? CONTEST_IMAGES : phpbb_gallery::config('cols_per_page');
 			$init_block = true;
 			if ($search_id == 'contests')
 			{
@@ -529,7 +517,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				{
 					$num = 0;
 					$template->assign_block_vars('imageblock', array(
-						'U_BLOCK'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $contest_data['album_id'] . '&amp;sk=ra&amp;sd=d'),
+						'U_BLOCK'			=> phpbb_gallery::append_sid('album', 'album_id=' . $contest_data['album_id'] . '&amp;sk=ra&amp;sd=d'),
 						'BLOCK_NAME'		=> sprintf($user->lang['CONTEST_WINNERS_OF'], $contest_data['album_name']),
 						'S_CONTEST_BLOCK'	=> true,
 					));
@@ -541,7 +529,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 						}
 						if (!empty($rowset[$contest_image]))
 						{
-							assign_image_block('imageblock.imagerow.image', $rowset[$contest_image], $rowset[$contest_image]['album_status'], $gallery_config['search_display'], $rowset[$contest_image]['album_user_id']);
+							assign_image_block('imageblock.imagerow.image', $rowset[$contest_image], $rowset[$contest_image]['album_status'], phpbb_gallery::config('search_display'), $rowset[$contest_image]['album_user_id']);
 							$num++;
 						}
 					}
@@ -575,7 +563,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 						}
 
 						// Assign the image to the template-block
-						assign_image_block('imageblock.imagerow.image', $rowset[$j], $rowset[$j]['album_status'], $gallery_config['search_display'], $rowset[$j]['album_user_id']);
+						assign_image_block('imageblock.imagerow.image', $rowset[$j], $rowset[$j]['album_status'], phpbb_gallery::config('search_display'), $rowset[$j]['album_user_id']);
 					}
 				}
 			}
@@ -606,16 +594,16 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				$album_id = $commentrow['image_album_id'];
 
 				$template->assign_block_vars('commentrow', array(
-					'U_COMMENT'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id") . '#' . $commentrow['comment_id'],
+					'U_COMMENT'		=> phpbb_gallery::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id") . '#' . $commentrow['comment_id'],
 					'COMMENT_ID'	=> $commentrow['comment_id'],
 					'TIME'			=> $user->format_date($commentrow['comment_time']),
 					'TEXT'			=> generate_text_for_display($commentrow['comment'], $commentrow['comment_uid'], $commentrow['comment_bitfield'], 7),
-					'U_DELETE'		=> (gallery_acl_check('m_comments', $album_id) || (gallery_acl_check('c_delete', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=delete&amp;comment_id=" . $commentrow['comment_id']) : '',
-					'U_EDIT'		=> (gallery_acl_check('m_comments', $album_id) || (gallery_acl_check('c_edit', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=edit&amp;comment_id=" . $commentrow['comment_id']) : '',
-					'U_INFO'		=> ($auth->acl_get('a_')) ? append_sid("{$phpbb_root_path}{$gallery_root_path}mcp.$phpEx", 'mode=whois&amp;ip=' . $commentrow['comment_user_ip']) : '',
+					'U_DELETE'		=> (phpbb_gallery::$auth->acl_check('m_comments', $album_id) || (phpbb_gallery::$auth->acl_check('c_delete', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? phpbb_gallery::append_sid('posting', "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=delete&amp;comment_id=" . $commentrow['comment_id']) : '',
+					'U_EDIT'		=> (phpbb_gallery::$auth->acl_check('m_comments', $album_id) || (phpbb_gallery::$auth->acl_check('c_edit', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? phpbb_gallery::append_sid('posting', "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=edit&amp;comment_id=" . $commentrow['comment_id']) : '',
+					'U_INFO'		=> ($auth->acl_get('a_')) ? phpbb_gallery::append_sid('mcp', 'mode=whois&amp;ip=' . $commentrow['comment_user_ip']) : '',
 
-					'UC_THUMBNAIL'			=> generate_image_link('thumbnail', $gallery_config['link_thumbnail'], $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
-					'UC_IMAGE_NAME'			=> generate_image_link('image_name', $gallery_config['link_image_name'], $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
+					'UC_THUMBNAIL'			=> generate_image_link('thumbnail', phpbb_gallery::config('link_thumbnail'), $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
+					'UC_IMAGE_NAME'			=> generate_image_link('image_name', phpbb_gallery::config('link_image_name'), $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
 					'IMAGE_AUTHOR'			=> get_username_string('full', $commentrow['image_user_id'], $commentrow['image_username'], $commentrow['image_user_colour']),
 					'IMAGE_TIME'			=> $user->format_date($commentrow['image_time']),
 
@@ -643,7 +631,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 	$template->set_filenames(array(
 		'body' => 'gallery/search_results.html')
 	);
-	make_jumpbox(append_sid("{$phpbb_root_path}viewforum.$phpEx"));
+	make_jumpbox(phpbb_gallery::append_sid('phpbb', 'viewforum'));
 
 	page_footer();
 }
@@ -672,7 +660,7 @@ if (!empty($_EXTRA_URL))
 }
 
 $template->assign_vars(array(
-	'S_SEARCH_ACTION'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}search.$phpEx", false, true, 0), // We force no ?sid= appending by using 0
+	'S_SEARCH_ACTION'		=> phpbb_gallery::append_sid('search', false, true, 0), // We force no ?sid= appending by using 0
 	'S_HIDDEN_FIELDS'		=> build_hidden_fields($s_hidden_fields),
 	'S_ALBUM_OPTIONS'		=> $s_albums,
 	'S_SELECT_SORT_DIR'		=> $s_sort_dir,

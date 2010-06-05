@@ -13,22 +13,13 @@
 */
 
 define('IN_PHPBB', true);
-$phpbb_root_path = $gallery_root_path = '';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
-include($phpbb_root_path . $gallery_root_path . 'includes/root_path.' . $phpEx);
-include($phpbb_root_path . 'common.' . $phpEx);
-$gallery_root_path = GALLERY_ROOT_PATH;
-include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
-
-// Start session management
-$user->session_begin(false);
-$auth->acl($user->data);
-$user->setup('mods/gallery');
+include('includes/core.' . $phpEx);
+phpbb_gallery::init(array('mods/gallery'));
+phpbb_gallery::_include('functions_display', 'phpbb');
 
 // Get general album information
 define('S_GALLERY_PLUGINS', false);
-include($phpbb_root_path . $gallery_root_path . 'includes/common.' . $phpEx);
-include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
 
 /**
 * Check whether the requested image & album exit.
@@ -42,7 +33,7 @@ $album_data = get_album_info($album_id);
 $image_error = '';
 
 $image_filetype = utf8_substr($image_data['image_filename'], strlen($image_data['image_filename']) - 4, 4);
-if (!file_exists($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']))
+if (!file_exists(phpbb_gallery::path('phpbb') . GALLERY_UPLOAD_PATH . $image_data['image_filename']))
 {
 	$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
 		SET image_filemissing = 1
@@ -55,14 +46,14 @@ if (!file_exists($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_fil
 /**
 * Check permissions and hotlinking
 */
-if ((!gallery_acl_check('i_view', $album_id, $album_data['album_user_id'])) || (!gallery_acl_check('m_status', $album_id, $album_data['album_user_id']) && ($image_data['image_status'] == IMAGE_UNAPPROVED)))
+if ((!phpbb_gallery::$auth->acl_check('i_view', $album_id, $album_data['album_user_id'])) || (!phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id']) && ($image_data['image_status'] == IMAGE_UNAPPROVED)))
 {
 	//trigger_error('NOT_AUTHORISED');
 	$image_error = 'not_authorised.jpg';
 }
 
 // Hotlink prevention
-if ($gallery_config['hotlink_prevent'] && isset($_SERVER['HTTP_REFERER']))
+if (phpbb_gallery::config('hotlink_prevent') && isset($_SERVER['HTTP_REFERER']))
 {
 	$check_referer = trim($_SERVER['HTTP_REFERER']);
 	if (substr($check_referer, 0, 7) == 'http://')
@@ -83,9 +74,9 @@ if ($gallery_config['hotlink_prevent'] && isset($_SERVER['HTTP_REFERER']))
 	}
 
 	$good_referers = array($config['server_name']);
-	if ($gallery_config['hotlink_allowed'] != '')
+	if (phpbb_gallery::config('hotlink_allowed') != '')
 	{
-		$good_referers = array_merge($good_referers, explode(',', $gallery_config['hotlink_allowed']));
+		$good_referers = array_merge($good_referers, explode(',', phpbb_gallery::config('hotlink_allowed')));
 	}
 
 	if (!in_array($check_referer, $good_referers))
@@ -104,19 +95,19 @@ switch ($mode)
 {
 	case 'medium':
 		$filesize_var = 'filesize_medium';
-		$image_source_path = $phpbb_root_path . GALLERY_MEDIUM_PATH;
+		$image_source_path = phpbb_gallery::path('phpbb') . GALLERY_MEDIUM_PATH;
 		$possible_watermark = true;
 	break;
 	case 'thumbnail':
 		$filesize_var = 'filesize_cache';
-		$image_source_path = $phpbb_root_path . GALLERY_CACHE_PATH;
+		$image_source_path = phpbb_gallery::path('phpbb') . GALLERY_CACHE_PATH;
 		$possible_watermark = false;
 	break;
 	default:
 		$filesize_var = 'filesize_upload';
 		if (!function_exists('gallery_hookup_image_view'))
 		{
-			include($phpbb_root_path . $gallery_root_path . 'includes/hookup_gallery.' . $phpEx);
+			phpbb_gallery::_include('hookup_gallery');
 		}
 		if (!gallery_hookup_image_view($user->data['user_id']))
 		{
@@ -125,7 +116,7 @@ switch ($mode)
 			$image_error = 'not_authorised.jpg';
 		}
 
-		$image_source_path = $phpbb_root_path . GALLERY_UPLOAD_PATH;
+		$image_source_path = phpbb_gallery::path('phpbb') . GALLERY_UPLOAD_PATH;
 		$possible_watermark = true;
 
 		// Increase the view count only for full images, if not already counted
@@ -155,10 +146,10 @@ if ($image_error)
 
 if (!class_exists('nv_image_tools'))
 {
-	include($phpbb_root_path . $gallery_root_path . 'includes/functions_image.' . $phpEx);
+	phpbb_gallery::_include('functions_image');
 }
-$image_tools = new nv_image_tools($gallery_config['gd_version']);
-$image_tools->set_image_options($gallery_config['max_file_size'], $gallery_config['max_height'], $gallery_config['max_width']);
+$image_tools = new nv_image_tools(phpbb_gallery::config('gd_version'));
+$image_tools->set_image_options(phpbb_gallery::config('max_file_size'), phpbb_gallery::config('max_height'), phpbb_gallery::config('max_width'));
 $image_tools->set_image_data($image_source, $image_data['image_name']);
 
 // Generate the sourcefile, if it's missing
@@ -167,18 +158,18 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 	$filesize_var = '';
 	if ($mode == 'thumbnail')
 	{
-		$resize_width = $gallery_config['thumbnail_size'];
-		$resize_height = $gallery_config['thumbnail_size'];
+		$resize_width = phpbb_gallery::config('thumbnail_max_width');
+		$resize_height = phpbb_gallery::config('thumbnail_max_height');
 	}
 	else
 	{
-		$resize_width = $gallery_config['preview_rsz_width'];
-		$resize_height = $gallery_config['preview_rsz_height'];
+		$resize_width = phpbb_gallery::config('preview_rsz_width');
+		$resize_height = phpbb_gallery::config('preview_rsz_height');
 	}
 
 	if (!file_exists($image_source))
 	{
-		$image_tools->set_image_data($phpbb_root_path . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
+		$image_tools->set_image_data(phpbb_gallery::path('phpbb') . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
 		$image_tools->read_image(true);
 
 		$image_size['file'] = $image_tools->image_size['file'];
@@ -189,13 +180,13 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 
 		if (($image_size['width'] > $resize_width) || ($image_size['height'] > $resize_height))
 		{
-			$put_details = ($gallery_config['thumbnail_info_line'] && ($mode == 'thumbnail')) ? true : false;
+			$put_details = (phpbb_gallery::config('thumbnail_info_line') && ($mode == 'thumbnail')) ? true : false;
 			$image_tools->create_thumbnail($resize_width, $resize_height, $put_details, THUMBNAIL_INFO_HEIGHT, $image_size);
 		}
 
-		if ((($mode == 'thumbnail') && $gallery_config['thumbnail_cache']) || (($mode == 'medium') && $gallery_config['medium_cache']))
+		if ((($mode == 'thumbnail') && phpbb_gallery::config('thumbnail_cache')) || (($mode == 'medium') && phpbb_gallery::config('medium_cache')))
 		{
-			$image_tools->write_image($image_source, (($mode == 'thumbnail') ? $gallery_config['thumbnail_quality'] : $gallery_config['jpg_quality']), false);
+			$image_tools->write_image($image_source, (($mode == 'thumbnail') ? phpbb_gallery::config('thumbnail_quality') : phpbb_gallery::config('jpg_quality')), false);
 
 			if ($mode == 'thumbnail')
 			{
@@ -215,10 +206,10 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 }
 
 // Watermark
-if ($gallery_config['watermark_images'] && $album_data['album_watermark'] && !gallery_acl_check('i_watermark', $album_id, $album_data['album_user_id']) && $possible_watermark)
+if (phpbb_gallery::config('watermark_images') && $album_data['album_watermark'] && !phpbb_gallery::$auth->acl_check('i_watermark', $album_id, $album_data['album_user_id']) && $possible_watermark)
 {
 	$filesize_var = '';
-	$image_tools->watermark_image($phpbb_root_path . $gallery_config['watermark_source'], $gallery_config['watermark_position'], $gallery_config['watermark_height'], $gallery_config['watermark_width']);
+	$image_tools->watermark_image(phpbb_gallery::path('phpbb') . phpbb_gallery::config('watermark_source'), phpbb_gallery::config('watermark_position'), phpbb_gallery::config('watermark_height'), phpbb_gallery::config('watermark_width'));
 }
 
 $image_tools->send_image_to_browser();
