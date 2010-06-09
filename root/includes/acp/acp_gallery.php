@@ -694,8 +694,6 @@ class acp_gallery
 
 	function create_import_schema($import_schema, $album_id, $user_row, $start_time, $num_offset, $done_images, $todo_images, $image_name, $filename, $images)
 	{
-		global $phpbb_root_path, $phpEx;
-
 		$import_file = "<?php\n\nif (!defined('IN_PHPBB'))\n{\n	exit;\n}\n\n";
 		$import_file .= "\$album_id = " . $album_id . ";\n";
 		$import_file .= "\$start_time = " . $start_time . ";\n";
@@ -724,10 +722,10 @@ class acp_gallery
 		$import_file .= ");\n\n?" . '>'; // Done this to prevent highlighting editors getting confused!
 
 		// Write to disc
-		if ((phpbb_gallery::_file_exists($import_schema, 'phpbb', GALLERY_IMPORT_PATH)  && is_writable($phpbb_root_path . GALLERY_IMPORT_PATH . $import_schema . '.' . $phpEx)) || is_writable($phpbb_root_path . GALLERY_IMPORT_PATH))
+		if ((phpbb_gallery::_file_exists($import_schema, 'phpbb', GALLERY_IMPORT_PATH) && phpbb_gallery::_is_writable($import_schema, 'phpbb', GALLERY_IMPORT_PATH)) || phpbb_gallery::_is_writable(GALLERY_IMPORT_PATH, 'phpbb', ''))
 		{
 			$written = true;
-			if (!($fp = @fopen($phpbb_root_path . GALLERY_IMPORT_PATH . $import_schema . '.' . $phpEx, 'w')))
+			if (!($fp = @fopen(phpbb_gallery::_return_file($import_schema, 'phpbb', GALLERY_IMPORT_PATH), 'w')))
 			{
 				$written = false;
 			}
