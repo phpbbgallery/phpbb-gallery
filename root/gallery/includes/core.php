@@ -116,6 +116,9 @@ class phpbb_gallery
 			case 'phpbb':
 				global $phpbb_root_path;
 				return $phpbb_root_path;
+			case 'admin':
+				global $phpbb_admin_path;
+				return $phpbb_admin_path;
 			case 'relative':
 				return GALLERY_ROOT_PATH;
 			case 'full':
@@ -129,7 +132,7 @@ class phpbb_gallery
 	{
 		if (!is_array($file))
 		{
-			global $phpbb_root_path, $phpEx;
+			global $phpEx;
 			include(self::path($path) . $sub_directory . $file . '.' . $phpEx);
 		}
 		else
@@ -141,16 +144,38 @@ class phpbb_gallery
 		}
 	}
 
+	public static function _file_exists($file, $path = 'gallery', $sub_directory = 'includes/')
+	{
+		global $phpEx;
+		return file_exists(self::path($path) . $sub_directory . $file . '.' . $phpEx);
+	}
+
+	public static function _return_file($file, $path = 'gallery', $sub_directory = 'includes/')
+	{
+		global $phpEx;
+		return self::path($path) . $sub_directory . $file . '.' . $phpEx;
+	}
+
 	public static function append_sid()
 	{
 		global $phpEx;
 
 		$args = func_get_args();
+		if (is_array($args[0]))
+		{
+			// Little problem from the duplicated call to func_get_args();
+			$args = $args[0];
+		}
 
 		if ($args[0] == 'phpbb')
 		{
 			$mode = array_shift($args);
 			$args[0] = self::path('phpbb') . $args[0] . '.' . $phpEx;
+		}
+		else if ($args[0] == 'admin')
+		{
+			$mode = array_shift($args);
+			$args[0] = self::path('admin') . $args[0] . '.' . $phpEx;
 		}
 		else if ($args[0] == 'relative')
 		{

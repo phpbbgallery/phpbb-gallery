@@ -33,13 +33,13 @@ class acp_gallery_albums
 	function main($id, $mode)
 	{
 		global $cache, $config, $db, $user, $auth, $template;
-		global $phpbb_admin_path, $gallery_root_path, $phpbb_root_path, $phpEx;
-		$gallery_root_path = GALLERY_ROOT_PATH;
 
-		include($phpbb_root_path . $gallery_root_path . 'includes/constants.' . $phpEx);
-		include($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
-		include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
-		$gallery_config = load_gallery_config();
+		if (!class_exists('phpbb_gallery'))
+		{
+			global $phpbb_root_path, $phpEx;
+			include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/core.' . $phpEx);
+			phpbb_gallery::init('no_setup', $phpbb_root_path);
+		}
 
 		$user->add_lang(array('mods/gallery_acp', 'mods/gallery'));
 		$this->tpl_name = 'gallery_albums';
@@ -208,7 +208,7 @@ class acp_gallery_albums
 						// Redirect directly to permission settings screen
 						if ($action == 'add' && !$album_perm_from)
 						{
-							meta_refresh(5, append_sid("{$phpbb_admin_path}index.$phpEx", 'i=gallery_permissions' . $acl_url));
+							meta_refresh(5, phpbb_gallery::append_sid('admin' , 'index', 'i=gallery_permissions' . $acl_url));
 						}
 
 						trigger_error($message . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id));
@@ -481,7 +481,7 @@ class acp_gallery_albums
 
 					'ALBUM_NAME'				=> $album_data['album_name'],
 					'ALBUM_IMAGE'				=> $album_data['album_image'],
-					'ALBUM_IMAGE_SRC'			=> ($album_data['album_image']) ? $phpbb_root_path . $album_data['album_image'] : '',
+					'ALBUM_IMAGE_SRC'			=> ($album_data['album_image']) ? phpbb_gallery::path('phpbb') . $album_data['album_image'] : '',
 					/*
 					'S_ALBUM_PASSWORD_SET'		=> (empty($album_data['album_password'])) ? false : true,
 					*/
@@ -633,8 +633,8 @@ class acp_gallery_albums
 
 				$template->assign_block_vars('albums', array(
 					'FOLDER_IMAGE'		=> $folder_image,
-					'ALBUM_IMAGE'		=> ($row['album_image']) ? '<img src="' . $phpbb_root_path . $row['album_image'] . '" alt="" />' : '',
-					'ALBUM_IMAGE_SRC'	=> ($row['album_image']) ? $phpbb_root_path . $row['album_image'] : '',
+					'ALBUM_IMAGE'		=> ($row['album_image']) ? '<img src="' . phpbb_gallery::path('phpbb') . $row['album_image'] . '" alt="" />' : '',
+					'ALBUM_IMAGE_SRC'	=> ($row['album_image']) ? phpbb_gallery::path('phpbb') . $row['album_image'] : '',
 					'ALBUM_NAME'		=> $row['album_name'],
 					'ALBUM_DESCRIPTION'	=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
 					'ALBUM_IMAGES'		=> $row['album_images'],
@@ -1468,9 +1468,9 @@ class acp_gallery_albums
 			// Delete the files themselves.
 			foreach ($images as $row)
 			{
-				@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $row['image_thumbnail']);
-				@unlink($phpbb_root_path . GALLERY_MEDIUM_PATH . $row['image_filename']);
-				@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $row['image_filename']);
+				@unlink(phpbb_gallery::path('phpbb') . GALLERY_CACHE_PATH . $row['image_thumbnail']);
+				@unlink(phpbb_gallery::path('phpbb') . GALLERY_MEDIUM_PATH . $row['image_filename']);
+				@unlink(phpbb_gallery::path('phpbb') . GALLERY_UPLOAD_PATH . $row['image_filename']);
 			}
 			$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . '
 				WHERE ' . $db->sql_in_set('comment_image_id', $deleted_images);
@@ -1539,8 +1539,8 @@ class acp_gallery_albums
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		set_config('num_images', (int) $row['num_images'], true);
-		set_gallery_config('num_comments', (int) $row['num_comments'], true);
+		phpbb_gallery::set_config('num_images', (int) $row['num_images'], true);
+		phpbb_gallery::set_config('num_comments', (int) $row['num_comments'], true);
 
 		$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 		$cache->destroy('sql', GALLERY_COMMENTS_TABLE);

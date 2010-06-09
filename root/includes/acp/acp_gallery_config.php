@@ -30,14 +30,14 @@ class acp_gallery_config
 
 	function main($id, $mode)
 	{
-		global $db, $user, $auth, $cache, $template, $gallery_config, $gallery_plugins;
-		global $config, $phpbb_root_path, $phpbb_admin_path, $phpEx;
-		$gallery_root_path = GALLERY_ROOT_PATH;
+		global $db, $user, $auth, $cache, $template, $config;
 
-		include($phpbb_root_path . $gallery_root_path . 'includes/constants.' . $phpEx);
-		include($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
-		include($phpbb_root_path . $gallery_root_path . 'plugins/index.' . $phpEx);
-		$gallery_config = load_gallery_config();
+		if (!class_exists('phpbb_gallery'))
+		{
+			global $phpbb_root_path, $phpEx;
+			include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/core.' . $phpEx);
+			phpbb_gallery::init('no_setup', $phpbb_root_path);
+		}
 
 		$user->add_lang(array('mods/gallery_acp', 'mods/gallery'));
 
@@ -216,7 +216,7 @@ class acp_gallery_config
 						{
 							if (!class_exists('acp_bbcodes'))
 							{
-								include($phpbb_root_path . 'includes/acp/acp_bbcodes.' . $phpEx);
+								phpbb_gallery::_include('acp/acp_bbcodes', 'phpbb');
 							}
 							$acp_bbcodes = new acp_bbcodes();
 							$bbcode_match = '[album]{NUMBER}[/album]';
@@ -237,11 +237,11 @@ class acp_gallery_config
 							$cache->destroy('sql', BBCODES_TABLE);
 						}
 					}
-					set_gallery_config($config_name, $config_value);
+					phpbb_gallery::set_config($config_name, $config_value);
 				}
 				else
 				{
-					set_config($config_name, $config_value);
+					phpbb_gallery::set_config($config_name, $config_value);
 				}
 			}
 		}
@@ -286,7 +286,7 @@ class acp_gallery_config
 
 			if ($vars['gallery'])
 			{
-				$this->new_config[$config_key] = $gallery_config[$config_key];
+				$this->new_config[$config_key] = phpbb_gallery::config($config_key);
 			}
 			else
 			{
@@ -425,12 +425,7 @@ class acp_gallery_config
 	{
 		global $user;
 
-		if (!function_exists('uc_select_plugins'))
-		{
-			global $gallery_root_path, $phpbb_root_path, $phpEx;
-			include($phpbb_root_path . $gallery_root_path . 'plugins/index.' . $phpEx);
-		}
-		$sort_order_options = uc_select_plugins($value, $key);
+		$sort_order_options = gallery_plugins::uc_select_plugins($value, $key);
 
 
 		if ($key != 'link_imagepage')
@@ -493,14 +488,13 @@ class acp_gallery_config
 	*/
 	function bbcode_tpl($value)
 	{
-		global $gallery_plugins, $phpEx;
-		$gallery_url = generate_board_url() . '/' . GALLERY_ROOT_PATH;
+		$gallery_url = phpbb_gallery::path('full');
 
-		if (($value == 'highslide') && in_array('highslide', $gallery_plugins['plugins']))
+		if (($value == 'highslide') && in_array('highslide', gallery_plugins::$plugins))
 		{
 			$bbcode_tpl = '<a class="highslide" onclick="return hs.expand(this)" href="' . $gallery_url . 'image.php?image_id={NUMBER}"><img src="' . $gallery_url . 'image.php?mode=thumbnail&amp;image_id={NUMBER}" alt="{NUMBER}" /></a>';
 		}
-		else if (($value == 'lytebox') && in_array('lytebox', $gallery_plugins['plugins']))
+		else if (($value == 'lytebox') && in_array('lytebox', gallery_plugins::$plugins))
 		{
 			$bbcode_tpl = '<a class="image-resize" rel="lytebox" href="' . $gallery_url . 'image.php?image_id={NUMBER}"><img src="' . $gallery_url . 'image.php?mode=thumbnail&amp;image_id={NUMBER}" alt="{NUMBER}" /></a>';
 		}

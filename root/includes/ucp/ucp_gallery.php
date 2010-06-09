@@ -26,15 +26,14 @@ class ucp_gallery
 
 	function main($id, $mode)
 	{
-		global $album_access_array, $gallery_config, $db, $template, $user;
-		global $gallery_root_path, $phpbb_root_path, $phpEx;
-		$gallery_root_path = GALLERY_ROOT_PATH;
+		global $db, $template, $user;
 
-		include($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
-		include($phpbb_root_path . $gallery_root_path . 'includes/constants.' . $phpEx);
-		include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
-		include($phpbb_root_path . $gallery_root_path . 'plugins/index.' . $phpEx);
-		$gallery_config = load_gallery_config();
+		if (!class_exists('phpbb_gallery'))
+		{
+			global $phpbb_root_path, $phpEx;
+			include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/core.' . $phpEx);
+			phpbb_gallery::init('no_setup', $phpbb_root_path);
+		}
 
 		$user->add_lang(array('mods/gallery', 'mods/gallery_acp', 'mods/gallery_mcp', 'mods/gallery_ucp'));
 		$this->tpl_name = 'gallery/ucp_gallery';
@@ -170,7 +169,7 @@ class ucp_gallery
 
 	function info()
 	{
-		global $phpbb_root_path, $phpEx, $template, $user;
+		global $template, $user;
 
 		if (!$user->gallery['personal_album_id'])
 		{
@@ -185,14 +184,13 @@ class ucp_gallery
 		}
 		else
 		{
-			redirect("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums');
+			phpbb_gallery::redirect('phpbb', 'ucp', 'i=gallery&amp;mode=manage_albums');
 		}
 	}
 
 	function initialise_album()
 	{
-		global $album_access_array, $cache, $db, $template, $user;
-		global $gallery_root_path, $phpbb_root_path, $phpEx, $gallery_config;
+		global $cache, $db, $template, $user;
 
 		if (!$user->gallery['personal_album_id'])
 		{
@@ -233,13 +231,13 @@ class ucp_gallery
 				);
 				$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $gallery_settings));
 			}
-			set_gallery_config_count('personal_counter', 1);
+			phpbb_gallery::set_config_count('personal_counter', 1);
 
 			// Update the config for the statistic on the index
-			set_gallery_config('newest_pgallery_user_id', $user->data['user_id']);
-			set_gallery_config('newest_pgallery_username', $user->data['username']);
-			set_gallery_config('newest_pgallery_user_colour', $user->data['user_colour']);
-			set_gallery_config('newest_pgallery_album_id', $album_id);
+			phpbb_gallery::set_config('newest_pgallery_user_id', $user->data['user_id']);
+			phpbb_gallery::set_config('newest_pgallery_username', $user->data['username']);
+			phpbb_gallery::set_config('newest_pgallery_user_colour', $user->data['user_colour']);
+			phpbb_gallery::set_config('newest_pgallery_album_id', $album_id);
 
 			$cache->destroy('_albums');
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
@@ -250,7 +248,6 @@ class ucp_gallery
 	function manage_albums()
 	{
 		global $cache, $db, $template, $user;
-		global $gallery_root_path, $phpbb_root_path, $phpEx;
 
 		$parent_id = request_var('parent_id', $user->gallery['personal_album_id']);
 		check_album_user($parent_id);
@@ -264,7 +261,7 @@ class ucp_gallery
 
 		$template->assign_vars(array(
 			'S_MANAGE_SUBALBUMS'			=> true,
-			'U_CREATE_SUBALBUM'				=> ((gallery_acl_check('album_unlimited', OWN_GALLERY_PERMISSIONS) || (gallery_acl_check('album_count', OWN_GALLERY_PERMISSIONS) > $albums)) ? ($this->u_action . '&amp;action=create' . (($parent_id) ? '&amp;parent_id=' . $parent_id : '')) : ''),
+			'U_CREATE_SUBALBUM'				=> ((phpbb_gallery::$auth->acl_check('album_unlimited', OWN_GALLERY_PERMISSIONS) || (phpbb_gallery::$auth->acl_check('album_count', OWN_GALLERY_PERMISSIONS) > $albums)) ? ($this->u_action . '&amp;action=create' . (($parent_id) ? '&amp;parent_id=' . $parent_id : '')) : ''),
 
 			'L_TITLE'			=> $user->lang['MANAGE_SUBALBUMS'],
 			//'ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['ALBUM'],
@@ -323,28 +320,27 @@ class ucp_gallery
 		$template->assign_vars(array(
 			'NAVIGATION'		=> $navigation,
 			'S_ALBUM'			=> $parent_id,
-			'U_GOTO'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $parent_id),
+			'U_GOTO'			=> phpbb_gallery::append_sid('album', 'album_id=' . $parent_id),
 			'U_EDIT'			=> $this->u_action . '&amp;action=edit&amp;album_id=' . $parent_id,
 			'U_DELETE'			=> $this->u_action . '&amp;action=delete&amp;album_id=' . $parent_id,
-			'U_UPLOAD'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}posting.$phpEx", 'mode=image&amp;submode=upload&amp;album_id=' . $parent_id),
-			'ICON_MOVE_DOWN'			=> '<img src="' . $phpbb_root_path . GALLERY_IMAGE_PATH . 'icon_down.gif" alt="" />',
-			'ICON_MOVE_DOWN_DISABLED'	=> '<img src="' . $phpbb_root_path . GALLERY_IMAGE_PATH . 'icon_down_disabled.gif" alt="" />',
-			'ICON_MOVE_UP'				=> '<img src="' . $phpbb_root_path . GALLERY_IMAGE_PATH . 'icon_up.gif" alt="" />',
-			'ICON_MOVE_UP_DISABLED'		=> '<img src="' . $phpbb_root_path . GALLERY_IMAGE_PATH . 'icon_up_disabled.gif" alt="" />',
-			'ICON_EDIT'					=> '<img src="' . $phpbb_root_path . GALLERY_IMAGE_PATH . 'icon_edit.gif" alt="" />',
-			'ICON_DELETE'				=> '<img src="' . $phpbb_root_path . GALLERY_IMAGE_PATH . 'icon_delete.gif" alt="" />',
+			'U_UPLOAD'			=> phpbb_gallery::append_sid('posting', 'mode=image&amp;submode=upload&amp;album_id=' . $parent_id),
+			'ICON_MOVE_DOWN'			=> '<img src="' . phpbb_gallery::path('phpbb') . GALLERY_IMAGE_PATH . 'icon_down.gif" alt="" />',
+			'ICON_MOVE_DOWN_DISABLED'	=> '<img src="' . phpbb_gallery::path('phpbb') . GALLERY_IMAGE_PATH . 'icon_down_disabled.gif" alt="" />',
+			'ICON_MOVE_UP'				=> '<img src="' . phpbb_gallery::path('phpbb') . GALLERY_IMAGE_PATH . 'icon_up.gif" alt="" />',
+			'ICON_MOVE_UP_DISABLED'		=> '<img src="' . phpbb_gallery::path('phpbb') . GALLERY_IMAGE_PATH . 'icon_up_disabled.gif" alt="" />',
+			'ICON_EDIT'					=> '<img src="' . phpbb_gallery::path('phpbb') . GALLERY_IMAGE_PATH . 'icon_edit.gif" alt="" />',
+			'ICON_DELETE'				=> '<img src="' . phpbb_gallery::path('phpbb') . GALLERY_IMAGE_PATH . 'icon_delete.gif" alt="" />',
 		));
 	}
 
 	function create_album()
 	{
-		global $album_access_array, $cache, $db, $template, $user;
-		global $gallery_root_path, $phpbb_root_path, $phpEx;
+		global $cache, $db, $template, $user;
 
-		include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+		phpbb_gallery::_include(array('bbcode', 'message_parser'), 'phpbb');
 
 		// Check if the user has already reached his limit
-		if (!gallery_acl_check('i_upload', OWN_GALLERY_PERMISSIONS))
+		if (!phpbb_gallery::$auth->acl_check('i_upload', OWN_GALLERY_PERMISSIONS))
 		{
 			trigger_error('NO_PERSALBUM_ALLOWED');
 		}
@@ -356,7 +352,7 @@ class ucp_gallery
 		$albums = $db->sql_fetchfield('albums');
 		$db->sql_freeresult($result);
 
-		if (!gallery_acl_check('album_unlimited', OWN_GALLERY_PERMISSIONS) && (gallery_acl_check('album_count', OWN_GALLERY_PERMISSIONS) <= $albums))
+		if (!phpbb_gallery::$auth->acl_check('album_unlimited', OWN_GALLERY_PERMISSIONS) && (phpbb_gallery::$auth->acl_check('album_count', OWN_GALLERY_PERMISSIONS) <= $albums))
 		{
 			trigger_error('NO_MORE_SUBALBUMS_ALLOWED');
 		}
@@ -449,16 +445,15 @@ class ucp_gallery
 			$cache->destroy('_albums');
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 
-			trigger_error($user->lang['CREATED_SUBALBUM'] . '<br /><br /><a href="' . (($redirect) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$redirect_album_id") : $this->u_action) . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
+			trigger_error($user->lang['CREATED_SUBALBUM'] . '<br /><br /><a href="' . (($redirect) ? phpbb_gallery::append_sid('album', "album_id=$redirect_album_id") : $this->u_action) . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
 		}
 	}
 
 	function edit_album()
 	{
-		global $album_access_array, $cache, $db, $template, $user;
-		global $gallery_root_path, $phpbb_root_path, $phpEx;
+		global $cache, $db, $template, $user;
 
-		include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+		phpbb_gallery::_include(array('bbcode','message_parser'), 'phpbb');
 
 		$album_id = request_var('album_id', 0);
 		check_album_user($album_id);
@@ -614,14 +609,13 @@ class ucp_gallery
 			$cache->destroy('_albums');
 
 			trigger_error($user->lang['EDITED_SUBALBUM'] . '<br /><br />
-				<a href="' . (($redirect) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", "album_id=$album_id") : append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . (($album_data['parent_id']) ? $album_data['parent_id'] : $user->gallery['personal_album_id']))) . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
+				<a href="' . (($redirect) ? phpbb_gallery::append_sid('album', "album_id=$album_id") : phpbb_gallery::append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . (($album_data['parent_id']) ? $album_data['parent_id'] : $user->gallery['personal_album_id']))) . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
 		}
 	}
 
 	function delete_album()
 	{
-		global $cache, $config, $db, $gallery_config, $template, $user;
-		global $phpbb_root_path, $phpEx;
+		global $cache, $config, $db, $template, $user;
 
 		$s_hidden_fields = build_hidden_fields(array(
 			'album_id'		=> request_var('album_id', 0),
@@ -672,9 +666,9 @@ class ucp_gallery
 			while ($row = $db->sql_fetchrow($result))
 			{
 				// Delete the files themselves.
-				@unlink($phpbb_root_path . GALLERY_CACHE_PATH . $row['image_thumbnail']);
-				@unlink($phpbb_root_path . GALLERY_MEDIUM_PATH . $row['image_filename']);
-				@unlink($phpbb_root_path . GALLERY_UPLOAD_PATH . $row['image_filename']);
+				@unlink(phpbb_gallery::path('phpbb') . GALLERY_CACHE_PATH . $row['image_thumbnail']);
+				@unlink(phpbb_gallery::path('phpbb') . GALLERY_MEDIUM_PATH . $row['image_filename']);
+				@unlink(phpbb_gallery::path('phpbb') . GALLERY_UPLOAD_PATH . $row['image_filename']);
 
 				$deleted_images[] = $row['image_id'];
 			}
@@ -715,16 +709,15 @@ class ucp_gallery
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
 
-			set_config('num_images', (int) $row['num_images'], true);
-			set_gallery_config('num_comments', (int) $row['num_comments'], true);
+			phpbb_gallery::set_config('num_images', (int) $row['num_images'], true);
+			phpbb_gallery::set_config('num_comments', (int) $row['num_comments'], true);
 
 			$num_images = sizeof($deleted_images);
 			if ($num_images)
 			{
 				if (!function_exists('gallery_hookup_image_counter'))
 				{
-					global $gallery_root_path, $phpbb_root_path, $phpEx;
-					include($phpbb_root_path . $gallery_root_path . 'includes/hookup_gallery.' . $phpEx);
+					phpbb_gallery::_include('hookup_gallery');
 				}
 				gallery_hookup_image_counter($user->data['user_id'], 0 - $num_images);
 
@@ -753,12 +746,12 @@ class ucp_gallery
 					WHERE ' . $db->sql_in_set('personal_album_id', $deleted_albums);
 				$db->sql_query($sql);
 
-				set_gallery_config_count('personal_counter', -1);
+				phpbb_gallery::set_config_count('personal_counter', -1);
 
-				if ($gallery_config['newest_pgallery_album_id'] == $user->gallery['personal_album_id'])
+				if (phpbb_gallery::config('newest_pgallery_album_id') == $user->gallery['personal_album_id'])
 				{
 					// Update the config for the statistic on the index
-					if ($gallery_config['personal_counter'] > 0)
+					if (phpbb_gallery::config('personal_counter') > 0)
 					{
 						$sql_array = array(
 							'SELECT'		=> 'a.album_id, u.user_id, u.username, u.user_colour',
@@ -779,17 +772,17 @@ class ucp_gallery
 						$newest_pgallery = $db->sql_fetchrow($result);
 						$db->sql_freeresult($result);
 
-						set_gallery_config('newest_pgallery_user_id', (int) $newest_pgallery['user_id']);
-						set_gallery_config('newest_pgallery_username', (string) $newest_pgallery['username']);
-						set_gallery_config('newest_pgallery_user_colour', (string) $newest_pgallery['user_colour']);
-						set_gallery_config('newest_pgallery_album_id', (int) $newest_pgallery['album_id']);
+						phpbb_gallery::set_config('newest_pgallery_user_id', (int) $newest_pgallery['user_id']);
+						phpbb_gallery::set_config('newest_pgallery_username', (string) $newest_pgallery['username']);
+						phpbb_gallery::set_config('newest_pgallery_user_colour', (string) $newest_pgallery['user_colour']);
+						phpbb_gallery::set_config('newest_pgallery_album_id', (int) $newest_pgallery['album_id']);
 					}
 					else
 					{
-						set_gallery_config('newest_pgallery_user_id', 0);
-						set_gallery_config('newest_pgallery_username', '');
-						set_gallery_config('newest_pgallery_user_colour', '');
-						set_gallery_config('newest_pgallery_album_id', 0);
+						phpbb_gallery::set_config('newest_pgallery_user_id', 0);
+						phpbb_gallery::set_config('newest_pgallery_username', '');
+						phpbb_gallery::set_config('newest_pgallery_user_colour', '');
+						phpbb_gallery::set_config('newest_pgallery_album_id', 0);
 					}
 				}
 			}
@@ -821,7 +814,7 @@ class ucp_gallery
 			$cache->destroy('_albums');
 
 			trigger_error($user->lang['DELETED_ALBUMS'] . '<br /><br />
-				<a href="' . (($parent_id) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . $parent_id) : append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums')) . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
+				<a href="' . (($parent_id) ? phpbb_gallery::append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . $parent_id) : append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_albums')) . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
 		}
 		else
 		{
@@ -833,7 +826,7 @@ class ucp_gallery
 
 	function move_album()
 	{
-		global $cache, $db, $phpbb_root_path, $phpEx, $user;
+		global $cache, $db, $user;
 
 		$album_id = request_var('album_id', 0);
 		check_album_user($album_id);
@@ -898,13 +891,12 @@ class ucp_gallery
 
 		$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 		$cache->destroy('_albums');
-		redirect(append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . $moving['parent_id']));
+		phpbb_gallery::redirect('phpbb', 'ucp', 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . $moving['parent_id']);
 	}
 
 	function manage_subscriptions()
 	{
-		global $gallery_config, $db, $template, $user;
-		global $gallery_root_path, $phpbb_root_path, $phpEx;
+		global $db, $template, $user;
 
 		$action = request_var('action', '');
 		$image_id_ary = request_var('image_id_ary', array(0));
@@ -965,22 +957,22 @@ class ucp_gallery
 			$template->assign_block_vars('album_row', array(
 				'ALBUM_ID'			=> $row['album_id'],
 				'ALBUM_NAME'		=> $row['album_name'],
-				'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx" , "album_id=" . $row['album_id']),
+				'U_VIEW_ALBUM'		=> phpbb_gallery::append_sid('album', 'album_id=' . $row['album_id']),
 				'ALBUM_DESC'		=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
 
-				'UC_IMAGE_NAME'		=> generate_image_link('image_name', $gallery_config['link_image_name'], $row['album_last_image_id'], $row['album_last_image_name'], $row['album_id']),
-				'UC_FAKE_THUMBNAIL'	=> generate_image_link('fake_thumbnail', $gallery_config['link_thumbnail'], $row['album_last_image_id'], $row['album_last_image_name'], $row['album_id']),
-				'UPLOADER'			=> (($row['album_type'] == ALBUM_CONTEST) && ($row['contest_marked'] && !gallery_acl_check('m_status', $row['album_id'], $row['album_user_id']))) ? $user->lang['CONTEST_USERNAME'] : get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
+				'UC_IMAGE_NAME'		=> generate_image_link('image_name', phpbb_gallery::config('link_image_name'), $row['album_last_image_id'], $row['album_last_image_name'], $row['album_id']),
+				'UC_FAKE_THUMBNAIL'	=> generate_image_link('fake_thumbnail', phpbb_gallery::config('link_thumbnail'), $row['album_last_image_id'], $row['album_last_image_name'], $row['album_id']),
+				'UPLOADER'			=> (($row['album_type'] == ALBUM_CONTEST) && ($row['contest_marked'] && !phpbb_gallery::$auth->acl_check('m_status', $row['album_id'], $row['album_user_id']))) ? $user->lang['CONTEST_USERNAME'] : get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
 				'LAST_IMAGE_TIME'	=> $user->format_date($row['album_last_image_time']),
 				'LAST_IMAGE'		=> $row['album_last_image_id'],
-				'U_IMAGE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx" , "album_id=" . $row['album_id'] . "&amp;image_id=" . $row['album_last_image_id']),
+				'U_IMAGE'			=> phpbb_gallery::append_sid('image_page', 'album_id=' . $row['album_id'] . '&amp;image_id=' . $row['album_last_image_id']),
 			));
 		}
 		$db->sql_freeresult($result);
 
 		// Subscribed images
 		$start				= request_var('start', 0);
-		$images_per_page	= $gallery_config['rows_per_page'] * $gallery_config['cols_per_page'];
+		$images_per_page	= phpbb_gallery::config('rows_per_page') * phpbb_gallery::config('cols_per_page');
 		$total_images		= 0;
 
 		$sql = 'SELECT COUNT(image_id) as images
@@ -1017,18 +1009,17 @@ class ucp_gallery
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$template->assign_block_vars('image_row', array(
-				'THUMBNAIL'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}thumbnail.$phpEx" , 'album_id=' . $row['image_album_id'] .  '&amp;image_id=' . $row['image_id']),
-				'UPLOADER'			=> ($row['image_contest'] && !gallery_acl_check('m_status', $row['image_album_id'])) ? $user->lang['CONTEST_USERNAME'] : get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
+				'UPLOADER'			=> ($row['image_contest'] && !phpbb_gallery::$auth->acl_check('m_status', $row['image_album_id'])) ? $user->lang['CONTEST_USERNAME'] : get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 				'LAST_COMMENT_BY'	=> get_username_string('full', $row['comment_user_id'], $row['comment_username'], $row['comment_user_colour']),
 				'COMMENT'			=> $row['image_comments'],
 				'LAST_COMMENT_TIME'	=> $user->format_date($row['comment_time']),
 				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
-				'UC_IMAGE_NAME'		=> generate_image_link('image_name', $gallery_config['link_image_name'], $row['image_id'], $row['image_name'], $row['album_id']),
-				'UC_FAKE_THUMBNAIL'	=> generate_image_link('fake_thumbnail', $gallery_config['link_thumbnail'], $row['image_id'], $row['image_name'], $row['album_id']),
+				'UC_IMAGE_NAME'		=> generate_image_link('image_name', phpbb_gallery::config('link_image_name'), $row['image_id'], $row['image_name'], $row['album_id']),
+				'UC_FAKE_THUMBNAIL'	=> generate_image_link('fake_thumbnail', phpbb_gallery::config('link_thumbnail'), $row['image_id'], $row['image_name'], $row['album_id']),
 				'ALBUM_NAME'		=> $row['album_name'],
 				'IMAGE_ID'			=> $row['image_id'],
-				'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx" , "album_id=" . $row['image_album_id']),
-				'U_IMAGE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx" , "album_id=" . $row['image_album_id'] . "&amp;image_id=" . $row['image_id']),
+				'U_VIEW_ALBUM'		=> phpbb_gallery::append_sid('album', 'album_id=' . $row['image_album_id']),
+				'U_IMAGE'			=> phpbb_gallery::append_sid('image_page', 'album_id=' . $row['image_album_id'] . '&amp;image_id=' . $row['image_id']),
 			));
 		}
 		$db->sql_freeresult($result);
@@ -1040,19 +1031,18 @@ class ucp_gallery
 			'L_TITLE'					=> $user->lang['UCP_GALLERY_WATCH'],
 			'L_TITLE_EXPLAIN'			=> $user->lang['YOUR_SUBSCRIPTIONS'],
 
-			'PAGINATION'				=> generate_pagination(append_sid("{$phpbb_root_path}ucp.$phpEx", "i=gallery&amp;mode=manage_subscriptions"), $total_images, $images_per_page, $start),
+			'PAGINATION'				=> generate_pagination(phpbb_gallery::append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_subscriptions'), $total_images, $images_per_page, $start),
 			'PAGE_NUMBER'				=> on_page($total_images, $images_per_page, $start),
 			'TOTAL_IMAGES'				=> ($total_images == 1) ? $user->lang['VIEW_ALBUM_IMAGE'] : sprintf($user->lang['VIEW_ALBUM_IMAGES'], $total_images),
 
 			'DISP_FAKE_THUMB'			=> true,
-			'FAKE_THUMB_SIZE'			=> $gallery_config['fake_thumb_size'],
+			'FAKE_THUMB_SIZE'			=> phpbb_gallery::config('fake_thumb_size'),
 		));
 	}
 
 	function manage_favorites()
 	{
-		global $gallery_config, $db, $template, $user;
-		global $gallery_root_path, $phpbb_root_path, $phpEx;
+		global $db, $template, $user;
 
 		$action = request_var('action', '');
 		$image_id_ary = request_var('image_id_ary', array(0));
@@ -1073,7 +1063,7 @@ class ucp_gallery
 		}
 
 		$start				= request_var('start', 0);
-		$images_per_page	= $gallery_config['rows_per_page'] * $gallery_config['cols_per_page'];
+		$images_per_page	= phpbb_gallery::config('rows_per_page') * phpbb_gallery::config('cols_per_page');
 		$total_images		= 0;
 
 		$sql = 'SELECT COUNT(image_id) as images
@@ -1107,12 +1097,12 @@ class ucp_gallery
 			$template->assign_block_vars('image_row', array(
 				'UC_IMAGE_NAME'		=> generate_image_link('image_name', $gallery_config['link_image_name'], $row['image_id'], $row['image_name'], $row['image_album_id']),
 				'UC_FAKE_THUMBNAIL'	=> generate_image_link('fake_thumbnail', $gallery_config['link_thumbnail'], $row['image_id'], $row['image_name'], $row['image_album_id']),
-				'UPLOADER'			=> ($row['image_contest'] && !gallery_acl_check('m_status', $row['image_album_id'])) ? $user->lang['CONTEST_USERNAME'] : get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
+				'UPLOADER'			=> ($row['image_contest'] && !phpbb_gallery::$auth->acl_check('m_status', $row['image_album_id'])) ? $user->lang['CONTEST_USERNAME'] : get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
 				'ALBUM_NAME'		=> $row['album_name'],
 				'IMAGE_ID'			=> $row['image_id'],
-				'U_VIEW_ALBUM'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx" , "album_id=" . $row['image_album_id']),
-				'U_IMAGE'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx" , "album_id=" . $row['image_album_id'] . "&amp;image_id=" . $row['image_id']),
+				'U_VIEW_ALBUM'		=> phpbb_gallery::append_sid('album', 'album_id=' . $row['image_album_id']),
+				'U_IMAGE'			=> phpbb_gallery::append_sid('image_page', 'album_id=' . $row['image_album_id'] . '&amp;image_id=' . $row['image_id']),
 			));
 		}
 		$db->sql_freeresult($result);
@@ -1124,12 +1114,12 @@ class ucp_gallery
 			'L_TITLE'				=> $user->lang['UCP_GALLERY_FAVORITES'],
 			'L_TITLE_EXPLAIN'		=> $user->lang['YOUR_FAVORITE_IMAGES'],
 
-			'PAGINATION'				=> generate_pagination(append_sid("{$phpbb_root_path}ucp.$phpEx", "i=gallery&amp;mode=manage_favorites"), $total_images, $images_per_page, $start),
+			'PAGINATION'				=> generate_pagination(phpbb_gallery::append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_favorites'), $total_images, $images_per_page, $start),
 			'PAGE_NUMBER'				=> on_page($total_images, $images_per_page, $start),
 			'TOTAL_IMAGES'				=> ($total_images == 1) ? $user->lang['VIEW_ALBUM_IMAGE'] : sprintf($user->lang['VIEW_ALBUM_IMAGES'], $total_images),
 
 			'DISP_FAKE_THUMB'			=> true,
-			'FAKE_THUMB_SIZE'			=> $gallery_config['fake_thumb_size'],
+			'FAKE_THUMB_SIZE'			=> phpbb_gallery::config('fake_thumb_size'),
 		));
 	}
 

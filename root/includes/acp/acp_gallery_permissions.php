@@ -26,14 +26,14 @@ class acp_gallery_permissions
 
 	function main($id, $mode)
 	{
-		global $gallery_config, $db, $template, $user, $permissions;
-		global $gallery_root_path, $phpbb_root_path, $phpEx;
-		$gallery_root_path = GALLERY_ROOT_PATH;
+		global $db, $template, $user, $permissions;
 
-		include($phpbb_root_path . $gallery_root_path . 'includes/constants.' . $phpEx);
-		include($phpbb_root_path . $gallery_root_path . 'includes/functions.' . $phpEx);
-		include($phpbb_root_path . $gallery_root_path . 'includes/permissions.' . $phpEx);
-		$gallery_config = load_gallery_config();
+		if (!class_exists('phpbb_gallery'))
+		{
+			global $phpbb_root_path, $phpEx;
+			include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/core.' . $phpEx);
+			phpbb_gallery::init('no_setup', $phpbb_root_path);
+		}
 
 		$user->add_lang(array('mods/gallery_acp', 'mods/gallery'));
 		$this->tpl_name = 'gallery_permissions';
@@ -144,7 +144,6 @@ class acp_gallery_permissions
 	function permissions_v_mask()
 	{
 		global $cache, $db, $template, $user;
-		global $phpbb_root_path, $phpEx;
 		$user->add_lang('acp/permissions');
 
 		$submit = (isset($_POST['submit'])) ? true : false;
@@ -386,7 +385,6 @@ class acp_gallery_permissions
 	function permissions_p_mask()
 	{
 		global $cache, $db, $permissions, $template, $user;
-		global $phpbb_root_path, $phpEx;
 		$user->add_lang('acp/permissions');
 
 		if (!check_form_key('acp_gallery'))
@@ -414,7 +412,7 @@ class acp_gallery_permissions
 		{
 			if (!function_exists('user_get_id_name'))
 			{
-				include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+				phpbb_gallery::_include('functions_user', 'phpbb');
 			}
 			user_get_id_name($user_id, $username);
 
@@ -642,7 +640,6 @@ class acp_gallery_permissions
 	function permissions_set()
 	{
 		global $cache, $db, $permissions, $template, $user;
-		global $phpbb_admin_path, $phpEx;
 
 		// Send contants to the template
 		$submit = (isset($_POST['submit'])) ? true : false;
