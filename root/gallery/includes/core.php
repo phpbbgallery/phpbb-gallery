@@ -29,11 +29,6 @@ class phpbb_gallery
 	*/
 	static $phpbb_admin_path = 'adm/';
 
-	/**
-	* Prefix which is prepend to the configs before they are stored in the config table.
-	*/
-	static $gallery_config_prefix = 'phpbb_gallery_';
-
 	static $config = false;
 	static $auth = false;
 
@@ -57,7 +52,7 @@ class phpbb_gallery
 			global $starttime;
 			include($phpbb_root_path . 'common.' . $phpEx);
 		}
-		self::_include(array('auth', 'constants', 'functions', 'functions_phpbb', 'plugins'));
+		self::_include(array('auth', 'config', 'constants', 'functions', 'functions_phpbb', 'plugins'));
 		gallery_plugins::init(self::path());
 
 		if ($lang_set != 'no_setup')
@@ -88,18 +83,18 @@ class phpbb_gallery
 
 		if ($lang_set != 'no_setup')
 		{
-			if (self::config('version_check_time') + 86400 < time())
+			if (phpbb_gallery_config::get('mvc_version') + 86400 < time())
 			{
 				// Scare the user of outdated versions
 				if (!function_exists('mod_version_check'))
 				{
 					self::_include('functions_version_check');
 				}
-				self::set_config('version_check_time', time());
-				self::set_config('version_check_version', mod_version_check(true));
+				phpbb_gallery_config::set('mvc_time', time());
+				phpbb_gallery_config::set('mvc_version', mod_version_check(true));
 			}
 
-			if ($auth->acl_get('a_') && version_compare(self::config('phpbb_gallery_version'), self::config('version_check_version'), '<'))
+			if ($auth->acl_get('a_') && version_compare(phpbb_gallery_config::get('version'), phpbb_gallery_config::get('mvc_version'), '<'))
 			{
 				$user->add_lang('mods/gallery_acp');
 				$template->assign_var('GALLERY_VERSION_CHECK', sprintf($user->lang['NOT_UP_TO_DATE'], $user->lang['GALLERY']));
@@ -174,7 +169,7 @@ class phpbb_gallery
 
 	public static function _is_writable($file, $path = 'gallery', $sub_directory = 'includes/')
 	{
-		return is_writable(self::path($path) . $sub_directory . self::phpEx_file($file));
+		return phpbb_is_writable(self::path($path) . $sub_directory . self::phpEx_file($file));
 	}
 
 	public static function _return_file($file, $path = 'gallery', $sub_directory = 'includes/')
@@ -229,64 +224,6 @@ class phpbb_gallery
 	public static function redirect()
 	{
 		redirect(self::append_sid(func_get_args()));
-	}
-
-	public static function config($key)
-	{
-		if (self::$config === false)
-		{
-			self::load_config();
-		}
-
-		return self::$config[$key];
-	}
-
-	public static function load_config()
-	{
-		global $config;
-
-		foreach ($config as $config_name => $config_value)
-		{
-			// Load all config values of the gallery
-			if (strpos($config_name, self::$gallery_config_prefix) === 0)
-			{
-				self::$config[substr($config_name, strlen(self::$gallery_config_prefix))] = $config_value;
-			}
-		}
-
-		// Drop when the config is moved:
-		global $db;
-
-		// When addons are installed, before the install script is run, this would through an error.
-		$db->sql_return_on_error(true);
-		$sql = 'SELECT *
-			FROM ' . GALLERY_CONFIG_TABLE;
-		$result = $db->sql_query($sql);
-		$db->sql_return_on_error(false);
-
-		if ($result === false)
-		{
-			trigger_error('INVALID_CONFIG_CALL');
-		}
-
-		self::$config = array();
-		while ($row = $db->sql_fetchrow($result))
-		{
-			self::$config[$row['config_name']] = $row['config_value'];
-		}
-		$db->sql_freeresult($result);
-	}
-
-	public static function set_config($config_name, $config_value, $is_dynamic = false)
-	{
-		set_config(self::$gallery_config_prefix . $config_name, $config_value, $is_dynamic);
-		self::$config[$config_name] = $config_value;
-	}
-
-	public static function set_config_count($config_name, $increment, $is_dynamic = false)
-	{
-		set_config_count(self::$gallery_config_prefix . $config_name, $increment, $is_dynamic);
-		self::$config[$config_name] += $config_value;
 	}
 
 	public static function load_user($user_id)
