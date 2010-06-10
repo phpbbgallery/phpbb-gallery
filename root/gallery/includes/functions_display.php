@@ -69,7 +69,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		}
 		$root_data = array('album_id' => 0);//@todo: I think this is incorrect!?
 		$sql_where = 'a.album_user_id > ' . NON_PERSONAL_ALBUMS;
-		$num_pgalleries = phpbb_gallery::config('personal_counter');
+		$num_pegas = phpbb_gallery_config::get('num_pegas');
 		$first_char = request_var('first_char', '');
 		if ($first_char == 'other')
 		{
@@ -102,17 +102,17 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			);
 			$sql = $db->sql_build_query('SELECT', $sql_array);
 			$result = $db->sql_query($sql);
-			$num_pgalleries = $db->sql_fetchfield('pgalleries');
+			$num_pegas = $db->sql_fetchfield('pgalleries');
 			$db->sql_freeresult($result);
 		}
 
 		$mode_personal = true;
 		$start = request_var('start', 0);
-		$limit = phpbb_gallery::config('pgalleries_per_page');
+		$limit = phpbb_gallery_config::get('pegas_per_page');
 		$template->assign_vars(array(
-			'PAGINATION'				=> generate_pagination(phpbb_gallery::append_sid('index', 'mode=' . $mode . (($first_char) ? '&amp;first_char=' . $first_char : '')), $num_pgalleries, $limit, $start),
-			'TOTAL_PGALLERIES_SHORT'	=> sprintf($user->lang['TOTAL_PGALLERIES_SHORT'], $num_pgalleries),
-			'PAGE_NUMBER'				=> on_page($num_pgalleries, $limit, $start),
+			'PAGINATION'				=> generate_pagination(phpbb_gallery::append_sid('index', 'mode=' . $mode . (($first_char) ? '&amp;first_char=' . $first_char : '')), $num_pegas, $limit, $start),
+			'TOTAL_PGALLERIES_SHORT'	=> sprintf($user->lang['TOTAL_PGALLERIES_SHORT'], $num_pegas),
+			'PAGE_NUMBER'				=> on_page($num_pegas, $limit, $start),
 		));
 	}
 	else
@@ -388,9 +388,9 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			$lastimage_album_id = $row['album_id_last_image'];
 			$lastimage_album_type = $row['album_type_last_image'];
 			$lastimage_contest_marked = $row['album_contest_marked'];
-			$lastimage_uc_thumbnail = generate_image_link('fake_thumbnail', phpbb_gallery::config('link_thumbnail'), $lastimage_image_id, $lastimage_name, $lastimage_album_id);
-			$lastimage_uc_name = generate_image_link('image_name', phpbb_gallery::config('link_image_name'), $lastimage_image_id, $lastimage_name, $lastimage_album_id);
-			$lastimage_uc_icon = generate_image_link('lastimage_icon', phpbb_gallery::config('link_image_icon'), $lastimage_image_id, $lastimage_name, $lastimage_album_id);
+			$lastimage_uc_thumbnail = generate_image_link('fake_thumbnail', phpbb_gallery_config::get('link_thumbnail'), $lastimage_image_id, $lastimage_name, $lastimage_album_id);
+			$lastimage_uc_name = generate_image_link('image_name', phpbb_gallery_config::get('link_image_name'), $lastimage_image_id, $lastimage_name, $lastimage_album_id);
+			$lastimage_uc_icon = generate_image_link('lastimage_icon', phpbb_gallery_config::get('link_image_icon'), $lastimage_image_id, $lastimage_name, $lastimage_album_id);
 		}
 		else
 		{
@@ -432,7 +432,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 			'ALBUM_IMAGE'			=> ($row['album_image']) ? phpbb_gallery::path('phpbb') . $row['album_image'] : '',
 			'LAST_IMAGE_TIME'		=> $lastimage_time,
 			'LAST_USER_FULL'		=> (($lastimage_album_type == ALBUM_CONTEST) && ($lastimage_contest_marked && !phpbb_gallery::$auth->acl_check('m_status', $album_id, $row['album_user_id']))) ? $user->lang['CONTEST_USERNAME'] : get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
-			'UC_FAKE_THUMBNAIL'		=> (phpbb_gallery::config('disp_fake_thumb')) ? $lastimage_uc_thumbnail : '',
+			'UC_FAKE_THUMBNAIL'		=> (phpbb_gallery_config::get('mini_thumbnail_disp')) ? $lastimage_uc_thumbnail : '',
 			'UC_IMAGE_NAME'			=> $lastimage_uc_name,
 			'UC_LASTIMAGE_ICON'		=> $lastimage_uc_icon,
 			'ALBUM_COLOUR'			=> get_username_string('colour', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
@@ -464,7 +464,7 @@ function display_albums($root_data = '', $display_moderators = true, $return_mod
 		'S_HAS_SUBALBUM'	=> ($visible_albums) ? true : false,
 		'L_SUBFORUM'		=> ($visible_albums == 1) ? $user->lang['SUBALBUM'] : $user->lang['SUBALBUMS'],
 		'LAST_POST_IMG'		=> $user->img('icon_topic_latest', 'VIEW_LATEST_POST'),
-		'FAKE_THUMB_SIZE'	=> phpbb_gallery::config('fake_thumb_size'),
+		'FAKE_THUMB_SIZE'	=> phpbb_gallery_config::get('mini_thumbnail_size'),
 	));
 
 	if ($return_moderators)
@@ -596,7 +596,7 @@ function get_album_parents(&$album_data)
 */
 function get_album_moderators(&$album_moderators, $album_id = false)
 {
-	global $auth, $config, $db, $template, $user;
+	global $auth, $db, $template, $user;
 
 	$album_id_ary = array();
 
@@ -677,8 +677,8 @@ function assign_image_block($template_block, &$image_data, $album_status, $displ
 	global $auth, $template, $user;
 
 	$st	= request_var('st', 0);
-	$sk	= request_var('sk', phpbb_gallery::config('sort_method'));
-	$sd	= request_var('sd', phpbb_gallery::config('sort_order'));
+	$sk	= request_var('sk', phpbb_gallery_config::get('default_sort_key'));
+	$sd	= request_var('sd', phpbb_gallery_config::get('default_sort_dir'));
 
 	$image_data['rating'] = $user->lang['NOT_RATED'];
 	if ($image_data['image_rates'])
@@ -697,14 +697,14 @@ function assign_image_block($template_block, &$image_data, $album_status, $displ
 
 	$template->assign_block_vars($template_block, array(
 		'IMAGE_ID'		=> $image_data['image_id'],
-		'UC_IMAGE_NAME'	=> ($display & RRC_DISPLAY_IMAGENAME) ? generate_image_link('image_name', phpbb_gallery::config('link_image_name'), $image_data['image_id'], $image_data['image_name'], $image_data['image_album_id'], false, true, "&amp;sk={$sk}&amp;sd={$sd}&amp;st={$st}") : '',
-		'UC_THUMBNAIL'	=> generate_image_link('thumbnail', phpbb_gallery::config('link_thumbnail'), $image_data['image_id'], $image_data['image_name'], $image_data['image_album_id']),
+		'UC_IMAGE_NAME'	=> ($display & RRC_DISPLAY_IMAGENAME) ? generate_image_link('image_name', phpbb_gallery_config::get('link_image_name'), $image_data['image_id'], $image_data['image_name'], $image_data['image_album_id'], false, true, "&amp;sk={$sk}&amp;sd={$sd}&amp;st={$st}") : '',
+		'UC_THUMBNAIL'	=> generate_image_link('thumbnail', phpbb_gallery_config::get('link_thumbnail'), $image_data['image_id'], $image_data['image_name'], $image_data['image_album_id']),
 		'U_ALBUM'		=> ($display & RRC_DISPLAY_ALBUMNAME) ? phpbb_gallery::append_sid('album', 'album_id=' . $image_data['image_album_id']) : '',
 		'S_UNAPPROVED'	=> (phpbb_gallery::$auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id) && ($image_data['image_status'] == IMAGE_UNAPPROVED)) ? true : false,
 		'S_LOCKED'		=> ($image_data['image_status'] == IMAGE_LOCKED) ? true : false,
 		'S_REPORTED'	=> (phpbb_gallery::$auth->acl_check('m_report', $image_data['image_album_id'], $album_user_id) && $image_data['image_reported']) ? true : false,
 
-		'ALBUM_NAME'		=> ($display & RRC_DISPLAY_ALBUMNAME) ? ((isset($image_data['album_name'])) ? ((utf8_strlen(htmlspecialchars_decode($image_data['album_name'])) > phpbb_gallery::config('shorted_imagenames') + 3) ? htmlspecialchars(utf8_substr(htmlspecialchars_decode($image_data['album_name']), 0, phpbb_gallery::config('shorted_imagenames')) . '...') : ($image_data['album_name'])) : '') : '',
+		'ALBUM_NAME'		=> ($display & RRC_DISPLAY_ALBUMNAME) ? ((isset($image_data['album_name'])) ? ((utf8_strlen(htmlspecialchars_decode($image_data['album_name'])) > phpbb_gallery_config::get('shortnames') + 3) ? htmlspecialchars(utf8_substr(htmlspecialchars_decode($image_data['album_name']), 0, phpbb_gallery_config::get('shortnames')) . '...') : ($image_data['album_name'])) : '') : '',
 		'ALBUM_NAME_FULL'	=> ($display & RRC_DISPLAY_ALBUMNAME) ? ((isset($image_data['album_name'])) ? $image_data['album_name'] : '') : '',
 		'POSTER'		=> ($display & RRC_DISPLAY_USERNAME) ? (($image_data['image_contest'] && !phpbb_gallery::$auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id)) ? $user->lang['CONTEST_USERNAME'] : get_username_string('full', $image_data['image_user_id'], $image_data['image_username'], $image_data['image_user_colour'])) : '',
 		'TIME'			=> ($display & RRC_DISPLAY_IMAGETIME) ? $user->format_date($image_data['image_time']) : '',
@@ -712,10 +712,10 @@ function assign_image_block($template_block, &$image_data, $album_status, $displ
 		'CONTEST_RANK'		=> ($image_data['image_contest_rank']) ? $user->lang['CONTEST_RESULT_' . $image_data['image_contest_rank']] : '',
 		'CONTEST_RANK_ID'	=> $image_data['image_contest_rank'],
 
-		'S_RATINGS'		=> (($display & RRC_DISPLAY_RATINGS) ? ((phpbb_gallery::config('allow_rates') && phpbb_gallery::$auth->acl_check('i_rate', $image_data['image_album_id'], $album_user_id)) ? $image_data['rating'] : '') : ''),
+		'S_RATINGS'		=> (($display & RRC_DISPLAY_RATINGS) ? ((phpbb_gallery_config::get('allow_rates') && phpbb_gallery::$auth->acl_check('i_rate', $image_data['image_album_id'], $album_user_id)) ? $image_data['rating'] : '') : ''),
 		'U_RATINGS'		=> phpbb_gallery::append_sid('image_page', 'album_id=' . $image_data['image_album_id'] . "&amp;image_id=" . $image_data['image_id']) . '#rating',
 		'L_COMMENTS'	=> ($image_data['image_comments'] == 1) ? $user->lang['COMMENT'] : $user->lang['COMMENTS'],
-		'S_COMMENTS'	=> (($display & RRC_DISPLAY_COMMENTS) ? ((phpbb_gallery::config('allow_comments') && phpbb_gallery::$auth->acl_check('c_read', $image_data['image_album_id'], $album_user_id)) ? (($image_data['image_comments']) ? $image_data['image_comments'] : $user->lang['NO_COMMENTS']) : '') : ''),
+		'S_COMMENTS'	=> (($display & RRC_DISPLAY_COMMENTS) ? ((phpbb_gallery_config::get('allow_comments') && phpbb_gallery::$auth->acl_check('c_read', $image_data['image_album_id'], $album_user_id)) ? (($image_data['image_comments']) ? $image_data['image_comments'] : $user->lang['NO_COMMENTS']) : '') : ''),
 		'U_COMMENTS'	=> phpbb_gallery::append_sid('image_page', 'album_id=' . $image_data['image_album_id'] . "&amp;image_id=" . $image_data['image_id']) . '#comments',
 
 		'S_IP'		=> (($display & RRC_DISPLAY_IP) && $auth->acl_get('a_')) ? $image_data['image_user_ip'] : '',

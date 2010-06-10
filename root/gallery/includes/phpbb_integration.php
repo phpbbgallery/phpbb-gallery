@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 function integrate_memberlist_viewprofile(&$member)
 {
 	// Some of the globals may not be used here, but in the included files
-	global $auth, $config, $db, $template, $user;
+	global $auth, $db, $template, $user;
 	$user->add_lang('mods/gallery');
 
 	if (!class_exists('phpbb_gallery'))
@@ -47,27 +47,27 @@ function integrate_memberlist_viewprofile(&$member)
 	$member = array_merge($member, $member_gallery);
 
 	$images_per_day = $member['user_images'] / $memberdays;
-	$percentage_images = ($config['num_images']) ? min(100, ($member['user_images'] / $config['num_images']) * 100) : 0;
+	$percentage_images = (phpbb_gallery_config::get('num_images')) ? min(100, ($member['user_images'] / phpbb_gallery_config::get('num_images')) * 100) : 0;
 
 	$ints = array(
-		'rows'		=> phpbb_gallery::config('rrc_profile_rows'),
-		'columns'	=> phpbb_gallery::config('rrc_profile_columns'),
+		'rows'		=> phpbb_gallery_config::get('rrc_profile_rows'),
+		'columns'	=> phpbb_gallery_config::get('rrc_profile_columns'),
 		'comments'	=> 0,
 		'contests'	=> 0,
 	);
-	if (phpbb_gallery::config('rrc_profile_mode'))
+	if (phpbb_gallery_config::get('rrc_profile_mode'))
 	{
-		recent_gallery_images($ints, phpbb_gallery::config('rrc_profile_display'), phpbb_gallery::config('rrc_profile_mode'), false, phpbb_gallery::config('rrc_profile_pgalleries'), 'user', $user_id);
+		recent_gallery_images($ints, phpbb_gallery_config::get('rrc_profile_display'), phpbb_gallery_config::get('rrc_profile_mode'), false, phpbb_gallery_config::get('rrc_profile_pegas'), 'user', $user_id);
 	}
 
 	$template->assign_vars(array(
-		'TOTAL_IMAGES'		=> phpbb_gallery::config('user_images_profile'),
+		'TOTAL_IMAGES'		=> phpbb_gallery_config::get('profile_user_images'),
 		'IMAGES'			=> $member['user_images'],
 		'IMAGES_DAY'		=> sprintf($user->lang['IMAGE_DAY'], $images_per_day),
 		'IMAGES_PCT'		=> sprintf($user->lang['IMAGE_PCT'], $percentage_images),
 
 		'SHOW_PERSONAL_ALBUM_OF'	=> sprintf($user->lang['SHOW_PERSONAL_ALBUM_OF'], $member['username']),
-		'U_GALLERY'			=> ($member['personal_album_id'] && phpbb_gallery::config('personal_album_profile')) ? phpbb_gallery::append_sid('album', 'album_id=' . $member['personal_album_id']) : '',
+		'U_GALLERY'			=> ($member['personal_album_id'] && phpbb_gallery_config::get('profile_pega')) ? phpbb_gallery::append_sid('album', 'album_id=' . $member['personal_album_id']) : '',
 		'U_SEARCH_GALLERY'	=> phpbb_gallery::append_sid('search', 'user_id=' . $user_id),
 	));
 }
@@ -75,7 +75,7 @@ function integrate_memberlist_viewprofile(&$member)
 function integrate_viewonline($on_page, $album_id, $session_page)
 {
 	// Some of the globals may not be used here, but in the included files
-	global $auth, $album_data, $config, $cache, $db, $template, $user;
+	global $auth, $album_data, $cache, $db, $template, $user;
 	global $location, $location_url;
 
 	// Initial load of some needed stuff, like permissions, album data, ...
@@ -152,7 +152,7 @@ function integrate_viewonline($on_page, $album_id, $session_page)
 */
 function gallery_integrate_user_update_name($old_name, $new_name)
 {
-	global $config, $db, $cache;
+	global $db, $cache;
 
 	$update_ary = array(
 		GALLERY_ALBUMS_TABLE	=> array('album_last_username'),
@@ -243,9 +243,9 @@ function gallery_integrate_group_set_user_default($user_id_ary, $sql_ary)
 			//phpbb_gallery::init('no_setup', $phpbb_root_path);
 		}
 
-		if (in_array(phpbb_gallery::config('newest_pgallery_user_id'), $user_id_ary))
+		if (in_array(phpbb_gallery_config::get('newest_pega_user_id'), $user_id_ary))
 		{
-			phpbb_gallery::set_config('newest_pgallery_user_colour', $sql_ary['user_colour'], true);
+			phpbb_gallery_config::set('newest_pega_user_colour', $sql_ary['user_colour']);
 		}
 	}
 }

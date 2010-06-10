@@ -17,7 +17,7 @@ $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include('includes/core.' . $phpEx);
 phpbb_gallery::init(array('mods/gallery_ucp', 'mods/gallery'));
 phpbb_gallery::_include(array('functions_display'));
-phpbb_gallery::_include(array('message_parser', 'functions_display'), 'phpbb');
+phpbb_gallery::_include(array('bbcode', 'message_parser', 'functions_display'), 'phpbb');
 
 /**
 * Check the request
@@ -28,8 +28,8 @@ $start		= request_var('start', 0);
 $mode		= request_var('mode', '');
 $album_data	= get_album_info($album_id);
 $sort_days	= request_var('st', 0);
-$sort_key	= request_var('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : phpbb_gallery::config('sort_method'));
-$sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : phpbb_gallery::config('sort_order'));
+$sort_key	= request_var('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : phpbb_gallery_config::get('default_sort_key'));
+$sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : phpbb_gallery_config::get('default_sort_dir'));
 
 /**
 * Did the contest end?
@@ -75,7 +75,7 @@ if ($album_data['contest_id'] && $album_data['contest_marked'] && (($album_data[
 		WHERE image_id = ' . $third;
 	$db->sql_query($sql_update);
 
-	set_gallery_config_count('contests_ended', 1);
+	phpbb_gallery_config::inc('contests_ended', 1);
 
 	$album_data['contest_marked'] = IMAGE_NO_CONTEST;
 }
@@ -110,7 +110,7 @@ $allowed_create = false;
 $image_counter = 0;
 $l_moderator = $moderators_list = $s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
 $grouprows = $album_moderators = array();
-$images_per_page = phpbb_gallery::config('rows_per_page') * phpbb_gallery::config('cols_per_page');
+$images_per_page = phpbb_gallery_config::get('album_rows') * phpbb_gallery_config::get('album_columns');
 
 /**
 * We have album_type so that there may be images ...
@@ -149,7 +149,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 		$sort_by_text['u'] = $user->lang['SORT_USERNAME'];
 		$sort_by_sql['u'] = 'image_username_clean';
 		
-		if (phpbb_gallery::config('allow_rates'))
+		if (phpbb_gallery_config::get('allow_rates'))
 		{
 			$sort_by_text['ra'] = $user->lang['RATING'];
 			$sort_by_sql['ra'] = 'image_rate_avg';
@@ -157,7 +157,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 			$sort_by_sql['r'] = 'image_rates';
 		}
 	}
-	if (phpbb_gallery::config('allow_comments'))
+	if (phpbb_gallery_config::get('allow_comments'))
 	{
 		$sort_by_text['c'] = $user->lang['COMMENTS'];
 		$sort_by_sql['c'] = 'image_comments';
@@ -233,7 +233,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 
 		$init_block = true;
 
-		for ($i = 0, $end = count($images); $i < $end; $i += phpbb_gallery::config('cols_per_page'))
+		for ($i = 0, $end = count($images); $i < $end; $i += phpbb_gallery_config::get('album_columns'))
 		{
 			if ($init_block)
 			{
@@ -246,7 +246,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 
 			$template->assign_block_vars('imageblock.imagerow', array());
 
-			for ($j = $i, $end_columns = ($i + phpbb_gallery::config('cols_per_page')); $j < $end_columns; $j++)
+			for ($j = $i, $end_columns = ($i + phpbb_gallery_config::get('album_columns')); $j < $end_columns; $j++)
 			{
 				if ($j >= $end)
 				{
@@ -256,7 +256,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 
 				// Assign the image to the template-block
 				$images[$j]['album_name'] = $album_data['album_name'];
-				assign_image_block('imageblock.imagerow.image', $images[$j], $album_data['album_status'], phpbb_gallery::config('album_display'), $album_data['album_user_id']);
+				assign_image_block('imageblock.imagerow.image', $images[$j], $album_data['album_status'], phpbb_gallery_config::get('album_display'), $album_data['album_user_id']);
 			}
 		}
 	}
@@ -303,13 +303,13 @@ $template->assign_vars(array(
 										phpbb_gallery::append_sid('phpbb', 'ucp', "i=gallery&amp;mode=manage_albums&amp;action=create&amp;parent_id=$album_id&amp;redirect=album") : '',
 	'U_EDIT_ALBUM'				=> ($album_data['album_user_id'] == $user->data['user_id']) ?
 										phpbb_gallery::append_sid('phpbb', 'ucp', "i=gallery&amp;mode=manage_albums&amp;action=edit&amp;album_id=$album_id&amp;redirect=album") : '',
-	'U_SLIDE_SHOW'				=> (sizeof(gallery_plugins::$plugins) && gallery_plugins::$slideshow) ? phpbb_gallery::append_sid('album', "album_id=$album_id&amp;mode=slide_show" . (($sort_key != phpbb_gallery::config('sort_method')) ? "&amp;sk=$sort_key" : '') . (($sort_dir != phpbb_gallery::config('sort_order')) ? "&amp;sd=$sort_dir" : '')) : '',
+	'U_SLIDE_SHOW'				=> (sizeof(gallery_plugins::$plugins) && gallery_plugins::$slideshow) ? phpbb_gallery::append_sid('album', "album_id=$album_id&amp;mode=slide_show" . (($sort_key != phpbb_gallery_config::get('default_sort_key')) ? "&amp;sk=$sort_key" : '') . (($sort_dir != phpbb_gallery_config::get('default_sort_dir')) ? "&amp;sd=$sort_dir" : '')) : '',
 	'S_DISPLAY_SEARCHBOX'		=> ($auth->acl_get('u_search') && $config['load_search']) ? true : false,
 	'S_SEARCHBOX_ACTION'		=> phpbb_gallery::append_sid('search', 'aid[]=' . $album_id),
 
-	'S_THUMBNAIL_SIZE'			=> phpbb_gallery::config('thumbnail_size') + 20 + ((phpbb_gallery::config('thumbnail_info_line')) ? THUMBNAIL_INFO_HEIGHT : 0),
-	'S_COLS'					=> phpbb_gallery::config('cols_per_page'),
-	'S_COL_WIDTH'				=> (100 / phpbb_gallery::config('cols_per_page')) . '%',
+	'S_THUMBNAIL_SIZE'			=> phpbb_gallery_config::get('thumbnail_height') + 20 + ((phpbb_gallery_config::get('thumbnail_infoline')) ? THUMBNAIL_INFO_HEIGHT : 0),
+	'S_COLS'					=> phpbb_gallery_config::get('album_columns'),
+	'S_COL_WIDTH'				=> (100 / phpbb_gallery_config::get('album_columns')) . '%',
 	'S_JUMPBOX_ACTION'			=> phpbb_gallery::append_sid('album'),
 	'S_ALBUM_ACTION'			=> phpbb_gallery::append_sid('album', "album_id=$album_id"),
 

@@ -113,9 +113,9 @@ function add_user_to_user_cache(&$user_cache, $row)
 			'jabber'		=> ($row['user_jabber'] && $auth->acl_get('u_sendim')) ? phpbb_gallery::append_sid('phpbb', 'memberlist', "mode=contact&amp;action=jabber&amp;u=$user_id") : '',
 			'search'		=> ($auth->acl_get('u_search')) ? phpbb_gallery::append_sid('phpbb', 'search', "author_id=$user_id&amp;sr=posts") : '',
 
-			'gallery_album'		=> ($row['personal_album_id'] && $config['gallery_viewtopic_icon']) ? phpbb_gallery::append_sid('album', "album_id=" . $row['personal_album_id']) : '',
-			'gallery_images'	=> ($config['gallery_viewtopic_images']) ? $row['user_images'] : 0,
-			'gallery_search'	=> ($config['gallery_viewtopic_images'] && $config['gallery_viewtopic_link'] && $row['user_images']) ? phpbb_gallery::append_sid('search', "user_id=$user_id") : '',
+			'gallery_album'		=> ($row['personal_album_id'] && phpbb_gallery_config::get('viewtopic_icon')) ? phpbb_gallery::append_sid('album', "album_id=" . $row['personal_album_id']) : '',
+			'gallery_images'	=> (phpbb_gallery_config::get('viewtopic_images')) ? $row['user_images'] : 0,
+			'gallery_search'	=> (phpbb_gallery_config::get('viewtopic_images') && phpbb_gallery_config::get('viewtopic_link') && $row['user_images']) ? phpbb_gallery::append_sid('search', "user_id=$user_id") : '',
 		);
 
 		get_user_rank($row['user_rank'], $row['user_posts'], $user_cache[$user_id]['rank_title'], $user_cache[$user_id]['rank_image'], $user_cache[$user_id]['rank_image_src']);

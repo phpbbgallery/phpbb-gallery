@@ -24,7 +24,6 @@ class phpbb_gallery_auth
 	public function init($user_id)
 	{
 		global $cache, $config, $db, $user;
-		global $gallery_config;
 
 		$albums = $cache->obtain_album_list();
 
@@ -294,7 +293,7 @@ class phpbb_gallery_auth
 	*/
 	function gen_auth_level($mode, $album_id, $album_status, $album_user_id = -1)
 	{
-		global $template, $user, $gallery_config;
+		global $template, $user;
 
 		$locked = ($album_status == ITEM_LOCKED && !gallery_acl_check('m_', $album_id, $album_user_id)) ? true : false;
 
@@ -304,11 +303,11 @@ class phpbb_gallery_auth
 			($this->acl_check('i_edit', $album_id, $album_user_id) && !$locked) ? $user->lang['ALBUM_EDIT_CAN'] : $user->lang['ALBUM_EDIT_CANNOT'],
 			($this->acl_check('i_delete', $album_id, $album_user_id) && !$locked) ? $user->lang['ALBUM_DELETE_CAN'] : $user->lang['ALBUM_DELETE_CANNOT'],
 		);
-		if ($gallery_config['allow_comments'] && $this->acl_check('c_read', $album_id, $album_user_id))
+		if (phpbb_gallery_config::get('allow_comments') && $this->acl_check('c_read', $album_id, $album_user_id))
 		{
 			$rules[] = ($this->acl_check('c_post', $album_id, $album_user_id) && !$locked) ? $user->lang['ALBUM_COMMENT_CAN'] : $user->lang['ALBUM_COMMENT_CANNOT'];
 		}
-		if ($gallery_config['allow_rates'])
+		if (phpbb_gallery_config::get('allow_rates'))
 		{
 			$rules[] = ($this->acl_check('i_rate', $album_id, $album_user_id) && !$locked) ? $user->lang['ALBUM_RATE_CAN'] : $user->lang['ALBUM_RATE_CANNOT'];
 		}

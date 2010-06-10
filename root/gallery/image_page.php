@@ -97,8 +97,8 @@ if (phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_us
 }
 
 //$sort_days	= request_var('st', 0);
-$sort_key	= request_var('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : phpbb_gallery::config('sort_method'));
-$sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : phpbb_gallery::config('sort_order'));
+$sort_key	= request_var('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : phpbb_gallery_config::get('default_sort_key'));
+$sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : phpbb_gallery_config::get('default_sort_dir'));
 
 $sort_by_sql = array('t' => 'image_time', 'n' => 'image_name_clean', 'u' => 'image_username_clean', 'vc' => 'image_view_count', 'ra' => 'image_rate_avg', 'r' => 'image_rates', 'c' => 'image_comments', 'lc' => 'image_last_comment');
 $sql_sort_by = (isset($sort_by_sql[$sort_key])) ? $sort_by_sql[$sort_key] : $sort_by_sql['t'];
@@ -141,10 +141,10 @@ $db->sql_freeresult($result);
 $template->assign_vars(array(
 	'U_VIEW_ALBUM'		=> phpbb_gallery::append_sid("album.$phpEx", "album_id=$album_id"),
 
-	'UC_PREVIOUS_IMAGE'	=> (!empty($previous_data) && false /*phpbb_gallery::config('view_nextprev_thumb')*/) ? generate_image_link('thumbnail', 'image_page', $previous_data['image_id'], $previous_data['image_name'], $album_id) : '',
+	'UC_PREVIOUS_IMAGE'	=> (!empty($previous_data) && phpbb_gallery_config::get('disp_nextprev_thumbnail')) ? generate_image_link('thumbnail', 'image_page', $previous_data['image_id'], $previous_data['image_name'], $album_id) : '',
 	'UC_PREVIOUS'		=> (!empty($previous_data)) ? generate_image_link('image_name_unbold', 'image_page_prev', $previous_data['image_id'], $previous_data['image_name'], $album_id) : '',
-	'UC_IMAGE'			=> generate_image_link('medium', phpbb_gallery::config('link_imagepage'), $image_id, $image_data['image_name'], $album_id, ((substr($image_data['image_filename'], 0 -3) == 'gif') ? true : false), false),
-	'UC_NEXT_IMAGE'		=> (!empty($next_data) && false /*phpbb_gallery::config('view_nextprev_thumb')*/) ? generate_image_link('thumbnail', 'image_page', $next_data['image_id'], $next_data['image_name'], $album_id) : '',
+	'UC_IMAGE'			=> generate_image_link('medium', phpbb_gallery_config::get('link_imagepage'), $image_id, $image_data['image_name'], $album_id, ((substr($image_data['image_filename'], 0 -3) == 'gif') ? true : false), false),
+	'UC_NEXT_IMAGE'		=> (!empty($next_data) && phpbb_gallery_config::get('disp_nextprev_thumbnail')) ? generate_image_link('thumbnail', 'image_page', $next_data['image_id'], $next_data['image_name'], $album_id) : '',
 	'UC_NEXT'			=> (!empty($next_data)) ? generate_image_link('image_name_unbold', 'image_page_next', $next_data['image_id'], $next_data['image_name'], $album_id) : '',
 
 	'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_IMAGE'),
@@ -160,8 +160,8 @@ $template->assign_vars(array(
 	'IMAGE_NAME'		=> $image_data['image_name'],
 	'IMAGE_DESC'		=> generate_text_for_display($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], 7),
 	'IMAGE_BBCODE'		=> '[album]' . $image_id . '[/album]',
-	'IMAGE_IMGURL_BBCODE'	=> (phpbb_gallery::config('view_image_url')) ? '[url=' . generate_board_url(false) . '/' . phpbb_gallery::path('relative') . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id" . '][img]' . generate_board_url(false) . '/' . phpbb_gallery::path('relative') . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id&amp;mode=thumbnail" . '[/img][/url]' : '',
-	'IMAGE_URL'			=> (phpbb_gallery::config('view_image_url')) ? generate_board_url(false) . '/' .phpbb_gallery::path('relative') . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id" : '',
+	'IMAGE_IMGURL_BBCODE'	=> (phpbb_gallery_config::get('disp_image_url')) ? '[url=' . phpbb_gallery::path('full') . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id" . '][img]' . generate_board_url(false) . '/' . phpbb_gallery::path('relative') . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id&amp;mode=thumbnail" . '[/img][/url]' : '',
+	'IMAGE_URL'			=> (phpbb_gallery_config::get('disp_image_url')) ? phpbb_gallery::path('full') . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id" : '',
 	'POSTER'			=> (phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id']) || ($image_data['image_contest'] != IMAGE_CONTEST)) ? get_username_string('full', $image_data['image_user_id'], ($image_data['image_username']) ? $image_data['image_username'] : $user->lang['GUEST'], $image_data['image_user_colour']) : sprintf($user->lang['CONTEST_USERNAME_LONG'], $user->format_date(($album_data['contest_start'] + $album_data['contest_end']), false, true)),
 	'IMAGE_TIME'		=> $user->format_date($image_data['image_time']),
 	'IMAGE_VIEW'		=> $image_data['image_view_count'],
@@ -182,7 +182,7 @@ $template->assign_vars(array(
 /**
 * Exif-Data
 */
-if (phpbb_gallery::config('exif_data') && ($image_data['image_has_exif'] != EXIF_UNAVAILABLE) && (substr($image_data['image_filename'], -4) == '.jpg') && function_exists('exif_read_data') && (phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id']) || ($image_data['image_contest'] != IMAGE_CONTEST)))
+if (phpbb_gallery_config::get('disp_exifdata') && ($image_data['image_has_exif'] != EXIF_UNAVAILABLE) && (substr($image_data['image_filename'], -4) == '.jpg') && function_exists('exif_read_data') && (phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id']) || ($image_data['image_contest'] != IMAGE_CONTEST)))
 {
 	if ($image_data['image_has_exif'] == EXIF_DBSAVED)
 	{
@@ -335,7 +335,7 @@ if (phpbb_gallery::config('exif_data') && ($image_data['image_has_exif'] != EXIF
 /**
 * Rating
 */
-if (phpbb_gallery::config('allow_rates'))
+if (phpbb_gallery_config::get('allow_rates'))
 {
 	$allowed_to_rate = $your_rating = $contest_rating_msg = $contest_result_hidden = false;
 
@@ -379,7 +379,7 @@ if (phpbb_gallery::config('allow_rates'))
 		}
 		if (!$hide_rate)
 		{
-			for ($rate_scale = 1; $rate_scale <= phpbb_gallery::config('rate_scale'); $rate_scale++)
+			for ($rate_scale = 1; $rate_scale <= phpbb_gallery_config::get('max_rating'); $rate_scale++)
 			{
 				$template->assign_block_vars('rate_scale', array(
 					'RATE_POINT'	=> $rate_scale,
@@ -402,7 +402,7 @@ if (phpbb_gallery::config('allow_rates'))
 /**
 * Posting comment
 */
-if (phpbb_gallery::config('allow_comments') && phpbb_gallery::$auth->acl_check('c_post', $album_id, $album_data['album_user_id']) && ($album_data['album_status'] != ITEM_LOCKED) && (($image_data['image_status'] != IMAGE_LOCKED) || phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id'])))
+if (phpbb_gallery_config::get('allow_comments') && phpbb_gallery::$auth->acl_check('c_post', $album_id, $album_data['album_user_id']) && ($album_data['album_status'] != ITEM_LOCKED) && (($image_data['image_status'] != IMAGE_LOCKED) || phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id'])))
 {
 	$user->add_lang('posting');
 	phpbb_gallery::_include('functions_posting', 'phpbb');
@@ -440,7 +440,7 @@ if (phpbb_gallery::config('allow_comments') && phpbb_gallery::$auth->acl_check('
 		'S_BBCODE_URL'			=> $url_status,
 		'S_BBCODE_FLASH'		=> $flash_status,
 		'S_BBCODE_QUOTE'		=> $quote_status,
-		'L_COMMENT_LENGTH'		=> sprintf($user->lang['COMMENT_LENGTH'], phpbb_gallery::config('comment_length')),
+		'L_COMMENT_LENGTH'		=> sprintf($user->lang['COMMENT_LENGTH'], phpbb_gallery_config::get('comment_length')),
 	));
 
 	if (gallery_display_captcha('comment'))
@@ -467,7 +467,7 @@ if (phpbb_gallery::config('allow_comments') && phpbb_gallery::$auth->acl_check('
 /**
 * Listing comment
 */
-if ((phpbb_gallery::config('allow_comments') && phpbb_gallery::$auth->acl_check('c_read', $album_id, $album_data['album_user_id'])) && (time() > ($album_data['contest_start'] + $album_data['contest_end'])))
+if ((phpbb_gallery_config::get('allow_comments') && phpbb_gallery::$auth->acl_check('c_read', $album_id, $album_data['album_user_id'])) && (time() > ($album_data['contest_start'] + $album_data['contest_end'])))
 {
 	$user->add_lang('viewtopic');
 	$start = request_var('start', 0);

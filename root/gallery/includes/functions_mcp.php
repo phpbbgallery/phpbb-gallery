@@ -136,7 +136,7 @@ class phpbb_gallery_mcp
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$template->assign_block_vars('image_row', array(
-				'THUMBNAIL'			=> generate_image_link('fake_thumbnail', phpbb_gallery::config('link_thumbnail'), $row['image_id'], $row['image_name'], $album_id),
+				'THUMBNAIL'			=> generate_image_link('fake_thumbnail', phpbb_gallery_config::get('link_thumbnail'), $row['image_id'], $row['image_name'], $album_id),
 				'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
 				'IMAGE_NAME'		=> $row['image_name'],
@@ -165,8 +165,8 @@ class phpbb_gallery_mcp
 			'PAGE_NUMBER'			=> on_page($count_images, $images_per_page, $start),
 			'TOTAL_IMAGES'			=> ($count_images == 1) ? $user->lang['VIEW_ALBUM_IMAGE'] : sprintf($user->lang['VIEW_ALBUM_IMAGES'], $count_images),
 
-			'S_COMMENTS'			=> phpbb_gallery::config('allow_comments'),
-			'S_RATINGS'				=> phpbb_gallery::config('allow_rates'),
+			'S_COMMENTS'			=> phpbb_gallery_config::get('allow_comments'),
+			'S_RATINGS'				=> phpbb_gallery_config::get('allow_rates'),
 			'S_STATUS'				=> true,
 			'S_MARK'				=> true,
 		));
@@ -175,14 +175,14 @@ class phpbb_gallery_mcp
 			'REPORTED_IMG'				=> $user->img('icon_topic_reported', 'IMAGE_REPORTED'),
 			'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'IMAGE_UNAPPROVED'),
 			'S_MCP_ACTION'				=> phpbb_gallery::append_sid('mcp', "mode=$mode&amp;album_id=$album_id"),
-			'DISP_FAKE_THUMB'			=> phpbb_gallery::config('disp_fake_thumb'),
-			'FAKE_THUMB_SIZE'			=> phpbb_gallery::config('fake_thumb_size'),
+			'DISP_FAKE_THUMB'			=> phpbb_gallery_config::get('mini_thumbnail_disp'),
+			'FAKE_THUMB_SIZE'			=> phpbb_gallery_config::get('mini_thumbnail_size'),
 		));
 	}
 
 	static function details($mode, $option_id, $album_id, $album_data)
 	{
-		global $config, $db, $template, $user;
+		global $db, $template, $user;
 
 		if ($mode == 'queue_details')
 		{
@@ -242,7 +242,7 @@ class phpbb_gallery_mcp
 			'IMAGE_DESC'		=> generate_text_for_display($row['image_desc'], $row['image_desc_uid'], $row['image_desc_bitfield'], 7),
 			'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 			'IMAGE_TIME'		=> $user->format_date($row['image_time']),
-			'UC_IMAGE'			=> generate_image_link('medium', phpbb_gallery::config('link_thumbnail'), $row['image_id'], $row['image_name'], $album_id),
+			'UC_IMAGE'			=> generate_image_link('medium', phpbb_gallery_config::get('link_thumbnail'), $row['image_id'], $row['image_name'], $album_id),
 			'U_EDIT_IMAGE'		=> phpbb_gallery::append_sid('posting', 'album_id=' . $album_id . '&amp;image_id=' . $row['image_id'] . '&amp;mode=image&amp;submode=edit'),
 			'U_DELETE_IMAGE'	=> phpbb_gallery::append_sid('posting', 'album_id=' . $album_id . '&amp;image_id=' . $row['image_id'] . '&amp;mode=image&amp;submode=delete'),
 			'S_MCP_ACTION'		=> phpbb_gallery::append_sid('mcp', "mode=" . (($mode == 'report_details') ? 'report_open' : 'queue_unapproved') . "&amp;album_id=$album_id"),
@@ -294,7 +294,7 @@ class phpbb_gallery_mcp
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$template->assign_block_vars('image_row', array(
-				'THUMBNAIL'			=> generate_image_link('fake_thumbnail', phpbb_gallery::config('link_thumbnail'), $row['image_id'], $row['image_name'], $album_id),
+				'THUMBNAIL'			=> generate_image_link('fake_thumbnail', phpbb_gallery_config::get('link_thumbnail'), $row['image_id'], $row['image_name'], $album_id),
 				'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
 				'IMAGE_NAME'		=> $row['image_name'],
@@ -337,8 +337,8 @@ class phpbb_gallery_mcp
 			'REPORTED_IMG'				=> $user->img('icon_topic_reported', 'IMAGE_REPORTED'),
 			'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'IMAGE_UNAPPROVED'),
 			'S_MCP_ACTION'				=> phpbb_gallery::append_sid('mcp', "mode=$mode&amp;album_id=$album_id"),
-			'DISP_FAKE_THUMB'			=> phpbb_gallery::config('disp_fake_thumb'),
-			'FAKE_THUMB_SIZE'			=> phpbb_gallery::config('fake_thumb_size'),
+			'DISP_FAKE_THUMB'			=> phpbb_gallery_config::get('mini_thumbnail_disp'),
+			'FAKE_THUMB_SIZE'			=> phpbb_gallery_config::get('mini_thumbnail_size'),
 		));
 	}
 
@@ -418,7 +418,7 @@ class phpbb_gallery_mcp
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$template->assign_block_vars('image_row', array(
-				'THUMBNAIL'			=> generate_image_link('fake_thumbnail', phpbb_gallery::config('link_thumbnail'), $row['image_id'], $row['image_name'], $album_id),
+				'THUMBNAIL'			=> generate_image_link('fake_thumbnail', phpbb_gallery_config::get('link_thumbnail'), $row['image_id'], $row['image_name'], $album_id),
 				'REPORTER'			=> get_username_string('full', $row['reporter_id'], $row['reporter_name'], $row['reporter_colour']),
 				'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 				'REPORT_ID'			=> $row['report_id'],
@@ -461,8 +461,8 @@ class phpbb_gallery_mcp
 			'REPORTED_IMG'				=> $user->img('icon_topic_reported', 'IMAGE_REPORTED'),
 			'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'IMAGE_UNAPPROVED'),
 			'S_MCP_ACTION'				=> phpbb_gallery::append_sid('mcp', "mode=$mode&amp;album_id=$album_id"),
-			'DISP_FAKE_THUMB'			=> phpbb_gallery::config('disp_fake_thumb'),
-			'FAKE_THUMB_SIZE'			=> phpbb_gallery::config('fake_thumb_size'),
+			'DISP_FAKE_THUMB'			=> phpbb_gallery_config::get('mini_thumbnail_disp'),
+			'FAKE_THUMB_SIZE'			=> phpbb_gallery_config::get('mini_thumbnail_size'),
 		));
 	}
 }

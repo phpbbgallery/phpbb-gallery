@@ -438,10 +438,16 @@ function handle_image_counter($image_id_ary, $add, $readd = false)
 	}
 	$db->sql_freeresult($result);
 
-	// Since phpBB 3.0.5 this is the better solution
-	// If the function does not exist, we load it from gallery/includes/functions_phpbb.php
-	phpbb_gallery::set_config_count('num_images', (($add) ? $num_images : 0 - $num_images), true);
-	phpbb_gallery::set_config_count('num_comments', (($add) ? $num_comments : 0 - $num_comments), true);
+	if ($add)
+	{
+		phpbb_gallery_config::inc('num_images', $num_images);
+		phpbb_gallery_config::inc('num_comments', $num_comments);
+	}
+	else
+	{
+		phpbb_gallery_config::dec('num_images', $num_images);
+		phpbb_gallery_config::dec('num_comments', $num_comments);
+	}
 }
 
 /**
@@ -508,7 +514,7 @@ function get_album_branch($branch_user_id, $album_id, $type = 'all', $order = 'd
 */
 function generate_image_link($content, $mode, $image_id, $image_name, $album_id, $is_gif = false, $count = true, $additional_parameters = '')
 {
-	global $phpEx, $user, $gallery_config;
+	global $phpEx, $user;
 
 	$image_page_url = phpbb_gallery::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id{$additional_parameters}");
 	$image_url = phpbb_gallery::append_sid('image', "album_id=$album_id&amp;image_id=$image_id{$additional_parameters}" . ((!$count) ? '&amp;view=no_count' : ''));
@@ -517,11 +523,11 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 	switch ($content)
 	{
 		case 'image_name':
-			$shorten_image_name = (utf8_strlen(htmlspecialchars_decode($image_name)) > $gallery_config['shorted_imagenames'] + 3) ? (utf8_substr(htmlspecialchars_decode($image_name), 0, $gallery_config['shorted_imagenames']) . '...') : ($image_name);
+			$shorten_image_name = (utf8_strlen(htmlspecialchars_decode($image_name)) > phpbb_gallery_config::get('shortnames') + 3) ? (utf8_substr(htmlspecialchars_decode($image_name), 0, phpbb_gallery_config::get('shortnames')) . '...') : ($image_name);
 			$content = '<span style="font-weight: bold;">' . $shorten_image_name . '</span>';
 		break;
 		case 'image_name_unbold':
-			$shorten_image_name = (utf8_strlen(htmlspecialchars_decode($image_name)) > $gallery_config['shorted_imagenames'] + 3) ? (utf8_substr(htmlspecialchars_decode($image_name), 0, $gallery_config['shorted_imagenames']) . '...') : ($image_name);
+			$shorten_image_name = (utf8_strlen(htmlspecialchars_decode($image_name)) > phpbb_gallery_config::get('shortnames') + 3) ? (utf8_substr(htmlspecialchars_decode($image_name), 0, phpbb_gallery_config::get('shortnames')) . '...') : ($image_name);
 			$content = $shorten_image_name;
 		break;
 		case 'thumbnail':
@@ -530,7 +536,7 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 		break;
 		case 'fake_thumbnail':
 			$content = '<img src="{U_THUMBNAIL}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-width: {FAKE_THUMB_SIZE}px; max-height: {FAKE_THUMB_SIZE}px;" />';
-			$content = str_replace(array('{U_THUMBNAIL}', '{IMAGE_NAME}', '{FAKE_THUMB_SIZE}'), array($thumb_url, $image_name, $gallery_config['fake_thumb_size']), $content);
+			$content = str_replace(array('{U_THUMBNAIL}', '{IMAGE_NAME}', '{FAKE_THUMB_SIZE}'), array($thumb_url, $image_name, phpbb_gallery_config::get('mini_thumbnail_size')), $content);
 		break;
 		case 'medium':
 			$content = '<img src="{U_MEDIUM}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" />';
@@ -539,7 +545,7 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 			if ($is_gif)
 			{
 				$content = '<img src="{U_MEDIUM}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-width: {MEDIUM_WIDTH_SIZE}px; max-height: {MEDIUM_HEIGHT_SIZE}px;" />';
-				$content = str_replace(array('{U_MEDIUM}', '{IMAGE_NAME}', '{MEDIUM_HEIGHT_SIZE}', '{MEDIUM_WIDTH_SIZE}'), array($image_url, $image_name, $gallery_config['preview_rsz_height'], $gallery_config['preview_rsz_width']), $content);
+				$content = str_replace(array('{U_MEDIUM}', '{IMAGE_NAME}', '{MEDIUM_HEIGHT_SIZE}', '{MEDIUM_WIDTH_SIZE}'), array($image_url, $image_name, phpbb_gallery_config::get('medium_height'), phpbb_gallery_config::get('medium_width')), $content);
 			}
 		break;
 		case 'lastimage_icon':
@@ -586,7 +592,7 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 */
 function gallery_markread($mode, $album_id = false)
 {
-	global $db, $user, $config;
+	global $db, $user;
 
 	// Sorry, no guest support!
 	if ($user->data['user_id'] == ANONYMOUS)
@@ -710,7 +716,7 @@ function gallery_display_captcha($mode)
 
 	global $config, $user;
 
-	$gallery_display_captcha[$mode] = ($user->data['user_id'] == ANONYMOUS) && phpbb_gallery::config('captcha_' . $mode) && (version_compare($config['version'], '3.0.5', '>'));
+	$gallery_display_captcha[$mode] = ($user->data['user_id'] == ANONYMOUS) && phpbb_gallery_config::get('captcha_' . $mode) && (version_compare($config['version'], '3.0.5', '>'));
 
 	return $gallery_display_captcha[$mode];
 }

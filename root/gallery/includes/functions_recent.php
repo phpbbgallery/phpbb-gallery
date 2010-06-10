@@ -22,7 +22,7 @@ if (!defined('IN_PHPBB'))
 */
 function recent_gallery_images($ints, $display, $mode, $collapse_comments = false, $include_pgalleries = true, $mode_id = '', $id = 0)
 {
-	global $auth, $cache, $config, $db, $template, $user;
+	global $auth, $cache, $db, $template, $user;
 
 	if (!class_exists('phpbb_gallery'))
 	{
@@ -275,13 +275,13 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 		}
 
 		$template->assign_vars(array(
-			'S_THUMBNAIL_SIZE'		=> phpbb_gallery::config('thumbnail_size') + 20 + ((phpbb_gallery::config('thumbnail_info_line')) ? THUMBNAIL_INFO_HEIGHT : 0),
+			'S_THUMBNAIL_SIZE'		=> phpbb_gallery_config::get('thumbnail_height') + 20 + ((phpbb_gallery_config::get('thumbnail_infoline')) ? THUMBNAIL_INFO_HEIGHT : 0),
 			'S_COL_WIDTH'			=> (100 / $ints['columns']) . '%',
 			'S_COLS'				=> $ints['columns'],
 		));
 	}
 
-	if (phpbb_gallery::config('allow_comments') && ($mode & RRC_MODE_COMMENT) && sizeof($comment_albums) && $ints['comments'])
+	if (phpbb_gallery_config::get('allow_comments') && ($mode & RRC_MODE_COMMENT) && sizeof($comment_albums) && $ints['comments'])
 	{
 		$user->add_lang('viewtopic');
 
@@ -316,8 +316,8 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 				'U_EDIT'		=> (phpbb_gallery::$auth->acl_check('m_comments', $album_id) || (phpbb_gallery::$auth->acl_check('c_edit', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? phpbb_gallery::append_sid('posting', "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=edit&amp;comment_id=" . $commentrow['comment_id']) : '',
 				'U_INFO'		=> ($auth->acl_get('a_')) ? phpbb_gallery::append_sid('mcp', 'mode=whois&amp;ip=' . $commentrow['comment_user_ip']) : '',
 
-				'UC_THUMBNAIL'			=> generate_image_link('thumbnail', phpbb_gallery::config('link_thumbnail'), $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
-				'UC_IMAGE_NAME'			=> generate_image_link('image_name', phpbb_gallery::config('link_image_name'), $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
+				'UC_THUMBNAIL'			=> generate_image_link('thumbnail', phpbb_gallery_config::get('link_thumbnail'), $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
+				'UC_IMAGE_NAME'			=> generate_image_link('image_name', phpbb_gallery_config::get('link_image_name'), $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
 				'IMAGE_AUTHOR'			=> get_username_string('full', $commentrow['image_user_id'], $commentrow['image_username'], $commentrow['image_user_colour']),
 				'IMAGE_TIME'			=> $user->format_date($commentrow['image_time']),
 
