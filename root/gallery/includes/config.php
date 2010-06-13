@@ -22,9 +22,9 @@ class phpbb_gallery_config
 	/**
 	* Prefix which is prepend to the configs before they are stored in the config table.
 	*/
-	static $prefix = 'phpbb_gallery_';
+	static protected $prefix = 'phpbb_gallery_';
 
-	static $config = false;
+	static protected $config = false;
 
 	public static function get($key)
 	{
@@ -36,7 +36,61 @@ class phpbb_gallery_config
 		return self::$config[$key];
 	}
 
-	public static function load()
+	public static function get_array()
+	{
+		if (self::$config === false)
+		{
+			self::load();
+		}
+
+		return self::$config;
+	}
+
+	public static function get_default()
+	{
+		return self::$default_config;
+	}
+
+	public static function set($config_name, $config_value)
+	{
+		self::$config[$config_name] = settype($config_value, gettype(self::$default_config[$config_name]));
+		set_config(self::$prefix . $config_name, $config_value, self::is_dynamic($config_name));
+	}
+
+	public static function inc($config_name, $increment)
+	{
+		if (gettype(self::$default_config[$config_name]) != 'int')
+		{
+			return false;
+		}
+
+		set_config_count(self::$prefix . $config_name, (int) $increment, self::is_dynamic($config_name));
+		self::$config[$config_name] += (int) $increment;
+		return true;
+	}
+
+	public static function dec($config_name, $decrement)
+	{
+		if (gettype(self::$default_config[$config_name]) != 'int')
+		{
+			return false;
+		}
+
+		set_config_count(self::$prefix . $config_name, 0 - (int) $increment, self::is_dynamic($config_name));
+		self::$config[$config_name] -= (int) $decrement;
+		return true;
+	}
+
+	public static function is_dynamic($config_name)
+	{
+		if (isset(self::$is_dynamic[$config_name]))
+		{
+			return true;
+		}
+		return false;
+	}
+
+	public static function load($load_default = false)
 	{
 		global $config;
 
@@ -50,50 +104,51 @@ class phpbb_gallery_config
 			}
 		}
 
-		// Should we load the default-config?
-		self::$config = self::$config + self::$default_config;
+		if ($load_default)
+		{
+			// Should we load the default-config?
+			self::$config = self::$config + self::$default_config;
+		}
 	}
 
-	public static function set($config_name, $config_value, $is_dynamic = false)
-	{
-		set_config(self::$prefix . $config_name, $config_value, $is_dynamic);
-		self::$config[$config_name] = settype($config_value, gettype(self::$default_config[$config_name]));
-	}
+	protected static $is_dynamic = array(
+		'mvc_time',
+		'mvc_version',
 
-	public static function inc($config_name, $increment, $is_dynamic = false)
-	{
-		set_config_count(self::$prefix . $config_name, (int) $increment, $is_dynamic);
-		self::$config[$config_name] += (int) $increment;
-	}
+		'num_comments',
+		'num_images',
+		'num_pegas',
+	);
 
-	public static function dec($config_name, $increment, $is_dynamic = false)
-	{
-		set_config_count(self::$prefix . $config_name, 0 - (int) $increment, $is_dynamic);
-		self::$config[$config_name] -= (int) $increment;
-	}
-
-	static $default_config = array(
+	protected static $default_config = array(
 		'album_columns'		=> 3,
 		'album_display'		=> 254,
+		'album_images'		=> 2500,
 		'album_rows'		=> 4,
 		'allow_comments'	=> true,
+		'allow_gif'			=> true,
 		'allow_hotlinking'	=> true,
+		'allow_jpg'			=> true,
+		'allow_png'			=> true,
 		'allow_rates'		=> true,
+		'allow_resize'		=> true,
+		'allow_rotate'		=> true,
 
 		'captcha_comment'	=> true,
 		'captcha_upload'	=> true,
-		'comment_length'	=> 1024,
+		'comment_length'	=> 2000,
 		'contests_ended'	=> 0,
 
 		'default_sort_dir'	=> 'd',
 		'default_sort_key'	=> 't',
-
+		'description_length'=> 2000,
 		'disp_birthdays'			=> false,
 		'disp_exifdata'				=> true,
 		'disp_image_url'			=> true,
 		'disp_login'				=> true,
 		'disp_nextprev_thumbnail'	=> false,
 		'disp_statistic'			=> true,
+		'disp_total_images'			=> true,
 		'disp_whoisonline'			=> true,
 
 		'gdlib_version'		=> 2,
@@ -126,6 +181,7 @@ class phpbb_gallery_config
 		'num_comments'			=> 0,
 		'num_images'			=> 0,
 		'num_pegas'				=> 0,
+		'num_uploads'			=> 10,
 
 		'pegas_index_album'		=> false,
 		'pegas_per_page'		=> 15,

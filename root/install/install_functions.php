@@ -769,4 +769,109 @@ function set_default_config()
 	set_gallery_config('captcha_upload', 1);
 }
 
+function config_mapping()
+{
+	return array(
+		'gallery_total_images'		=> 'disp_total_images',
+		'gallery_viewtopic_icon'	=> 'viewtopic_icon',
+		'gallery_viewtopic_images'	=> 'viewtopic_images',
+		'gallery_viewtopic_link'	=> 'viewtopic_link',
+
+		'num_comments'				=> 'num_comments',
+		'num_images'				=> 'num_images',
+		'personal_counter'			=> 'num_pegas',
+
+		'watermark_images'			=> 'watermark_enabled',
+		'watermark_source'			=> 'watermark_source',
+		'watermark_height'			=> 'watermark_height',
+		'watermark_width'			=> 'watermark_width',
+		'watermark_position'		=> 'watermark_position',
+
+		'jpg_allowed'				=> 'allow_jpg',
+		'png_allowed'				=> 'allow_png',
+		'gif_allowed'				=> 'allow_gif',
+		'jpg_quality'				=> 'jpg_quality',
+
+		'allow_comments'			=> 'allow_comments',
+		'allow_rates'				=> 'allow_rates',
+		'allow_resize_images'		=> 'allow_resize',
+		'allow_rotate_images'		=> 'allow_rotate',
+
+		'captcha_comment'			=> 'captcha_comment',
+		'captcha_upload'			=> 'captcha_upload',
+
+		'version_check_version'		=> 'mvc_version',
+		'version_check_time'		=> 'mvc_time',
+
+		'link_thumbnail'			=> 'link_thumbnail',
+		'link_image_name'			=> 'link_image_name',
+		'link_image_icon'			=> 'link_image_icon',
+
+		'disp_fake_thumb'			=> 'mini_thumbnail_disp',
+		'fake_thumb_size'			=> 'mini_thumbnail_size',
+		'contests_ended'			=> 'contests_ended',
+
+		'rrc_gindex_mode'			=> 'rrc_gindex_mode',
+		'rrc_gindex_rows'			=> 'rrc_gindex_rows',
+		'rrc_gindex_columns'		=> 'rrc_gindex_columns',
+		'rrc_gindex_comments'		=> 'rrc_gindex_comments',
+		'rrc_gindex_crows'			=> 'rrc_gindex_crows',
+		'rrc_gindex_contests'		=> 'rrc_gindex_contests',
+		'rrc_gindex_display'		=> 'rrc_gindex_display',
+		'rrc_gindex_pgalleries'		=> 'rrc_gindex_pgalleries',
+
+		'disp_whoisonline'			=> 'disp_whoisonline',
+		'disp_birthdays'			=> 'disp_birthdays',
+		'disp_statistic'			=> 'disp_statistic',
+		'disp_login'				=> 'disp_login',
+
+		'personal_album_index'		=> 'pegas_index_album',
+		'pgalleries_per_page'		=> 'pegas_per_page',
+		'sort_method'				=> 'default_sort_key',
+		'sort_order'				=> 'default_sort_dir',
+		'shorted_imagenames'		=> 'shortnames',
+
+		'thumbnail_info_line'	=> 'thumbnail_infoline',
+		'thumbnail_quality'		=> 'thumbnail_quality',
+		'thumbnail_cache'		=> 'thumbnail_cache',
+
+		'hotlink_prevent'		=> 'allow_hotlinking',
+		'hotlink_allowed'		=> 'hotlinking_domains',
+		'gd_version'			=> 'gdlib_version',
+
+		'max_file_size'			=> 'max_filesize',
+		'max_width'				=> 'max_width',
+		'max_height'			=> 'max_height',
+		'medium_cache'			=> 'medium_cache',
+		'preview_rsz_height'	=> 'medium_height',
+		'preview_rsz_width'		=> 'medium_width',
+
+		'rows_per_page'			=> 'album_rows',
+		'cols_per_page'			=> 'album_columns',
+		'album_display'			=> 'album_display',
+		'view_image_url'		=> 'disp_image_url',
+		'exif_data'				=> 'disp_exifdata',
+		'rate_scale'			=> 'max_rating',
+		'comment_length'		=> 'comment_length',
+		'search_display'		=> 'search_display',
+		'link_imagepage'		=> 'link_imagepage',
+
+		'rrc_profile_mode'		=> 'rrc_profile_mode',
+		'rrc_profile_columns'	=> 'rrc_profile_columns',
+		'rrc_profile_rows'		=> 'rrc_profile_rows',
+		'rrc_profile_display'	=> 'rrc_profile_display',
+		'rrc_profile_pgalleries'=> 'rrc_profile_pegas',
+		'user_images_profile'		=> 'profile_user_images',
+		'personal_album_profile'	=> 'profile_pega',
+		'newest_pgallery_user_id'		=> 'newest_pega_user_id',
+		'newest_pgallery_username'		=> 'newest_pega_username',
+		'newest_pgallery_user_colour'	=> 'newest_pega_user_colour',
+		'newest_pgallery_album_id'		=> 'newest_pega_album_id',
+
+		'images_per_album'		=> 'album_images',
+		'upload_images'			=> 'num_uploads',
+		'description_length'	=> 'description_length',
+	);
+}
+
 ?>

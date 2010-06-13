@@ -32,7 +32,7 @@ class acp_gallery_albums
 
 	function main($id, $mode)
 	{
-		global $cache, $config, $db, $user, $auth, $template;
+		global $cache, $db, $user, $auth, $template;
 
 		if (!class_exists('phpbb_gallery'))
 		{
@@ -1434,7 +1434,7 @@ class acp_gallery_albums
 	*/
 	function delete_album_content($album_id)
 	{
-		global $cache, $config, $gallery_config, $db;
+		global $cache, $db;
 
 		// Before we remove anything we make sure we are able to adjust the image counts later. ;)
 		$sql = 'SELECT image_user_id
@@ -1539,8 +1539,8 @@ class acp_gallery_albums
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		phpbb_gallery::set_config('num_images', (int) $row['num_images'], true);
-		phpbb_gallery::set_config('num_comments', (int) $row['num_comments'], true);
+		phpbb_gallery_config::set('num_images', $row['num_images']);
+		phpbb_gallery_config::set('num_comments', $row['num_comments']);
 
 		$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 		$cache->destroy('sql', GALLERY_COMMENTS_TABLE);

@@ -26,7 +26,7 @@ class acp_gallery
 
 	function main($id, $mode)
 	{
-		global $gallery_config, $db, $template, $user;
+		global $db, $template, $user;
 
 		if (!class_exists('phpbb_gallery'))
 		{
@@ -163,8 +163,8 @@ class acp_gallery
 					}
 					$db->sql_freeresult($result);
 
-					phpbb_gallery::set_config('num_images', $total_images, true);
-					phpbb_gallery::set_config('num_comments', $total_comments, true);
+					phpbb_gallery_config::set('num_images', $total_images);
+					phpbb_gallery_config::set('num_comments', $total_comments);
 					trigger_error($user->lang['RESYNCED_IMAGECOUNTS'] . adm_back_link($this->u_action));
 				break;
 
@@ -205,7 +205,7 @@ class acp_gallery
 						$number_of_personals++;
 					}
 					$db->sql_freeresult($result);
-					phpbb_gallery::set_config('personal_counter', $number_of_personals);
+					phpbb_gallery_config::set('personal_counter', $number_of_personals);
 
 					// Update the config for the statistic on the index
 					$sql_array = array(
@@ -228,10 +228,10 @@ class acp_gallery
 					$newest_pgallery = $db->sql_fetchrow($result);
 					$db->sql_freeresult($result);
 
-					phpbb_gallery::set_config('newest_pgallery_user_id', (int) $newest_pgallery['user_id']);
-					phpbb_gallery::set_config('newest_pgallery_username', (string) $newest_pgallery['username']);
-					phpbb_gallery::set_config('newest_pgallery_user_colour', (string) $newest_pgallery['user_colour']);
-					phpbb_gallery::set_config('newest_pgallery_album_id', (int) $newest_pgallery['album_id']);
+					phpbb_gallery_config::set('newest_pega_user_id', $newest_pgallery['user_id']);
+					phpbb_gallery_config::set('newest_pega_username', $newest_pgallery['username']);
+					phpbb_gallery_config::set('newest_pega_user_colour', $newest_pgallery['user_colour']);
+					phpbb_gallery_config::set('newest_pega_album_id', $newest_pgallery['album_id']);
 
 					trigger_error($user->lang['RESYNCED_PERSONALS'] . adm_back_link($this->u_action));
 				break;
@@ -350,7 +350,7 @@ class acp_gallery
 		mod_version_check();
 
 		$boarddays = (time() - $config['board_startdate']) / 86400;
-		$images_per_day = sprintf('%.2f', $config['num_images'] / $boarddays);
+		$images_per_day = sprintf('%.2f', phpbb_gallery_config::get('num_images') / $boarddays);
 
 		$sql = 'SELECT COUNT(album_user_id) num_albums
 			FROM ' . GALLERY_ALBUMS_TABLE . '
@@ -370,14 +370,14 @@ class acp_gallery
 			'ACP_GALLERY_TITLE'				=> $user->lang['ACP_GALLERY_OVERVIEW'],
 			'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_GALLERY_OVERVIEW_EXPLAIN'],
 
-			'TOTAL_IMAGES'			=> $config['num_images'],
+			'TOTAL_IMAGES'			=> phpbb_gallery_config::get('num_images'),
 			'IMAGES_PER_DAY'		=> $images_per_day,
 			'TOTAL_ALBUMS'			=> $num_albums,
-			'TOTAL_PERSONALS'		=> phpbb_gallery::config('personal_counter'),
+			'TOTAL_PERSONALS'		=> phpbb_gallery_config::get('num_pegas'),
 			'GUPLOAD_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat']),
 			'MEDIUM_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat_medium']),
 			'CACHE_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat_cache']),
-			'GALLERY_VERSION'		=> phpbb_gallery::config('phpbb_gallery_version'),
+			'GALLERY_VERSION'		=> phpbb_gallery_config::get('version'),
 
 			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
 		));
@@ -385,7 +385,7 @@ class acp_gallery
 
 	function import()
 	{
-		global $config, $db, $template, $user;
+		global $db, $template, $user;
 
 		$import_schema = request_var('import_schema', '');
 		$images = request_var('images', array(''), true);
@@ -493,7 +493,7 @@ class acp_gallery
 					}
 
 					$image_tools = new nv_image_tools();
-					$image_tools->set_image_options(phpbb_gallery::config('max_file_size'), phpbb_gallery::config('max_height'), phpbb_gallery::config('max_width'));
+					$image_tools->set_image_options(phpbb_gallery_config::get('max_filesize'), phpbb_gallery_config::get('max_height'), phpbb_gallery_config::get('max_width'));
 					$image_tools->set_image_data(phpbb_gallery::path('phpbb') . GALLERY_UPLOAD_PATH . $image_filename);
 
 					// Read exif data from file
@@ -501,17 +501,17 @@ class acp_gallery
 					$sql_ary['image_exif_data'] = $image_tools->exif_data_serialized;
 					$sql_ary['image_has_exif'] = $image_tools->exif_data_exist;
 
-					if (($filetype[0] > phpbb_gallery::config('max_width')) || ($filetype[1] > phpbb_gallery::config('max_height')))
+					if (($filetype[0] > phpbb_gallery_config::get('max_width')) || ($filetype[1] > phpbb_gallery_config::get('max_height')))
 					{
 						/**
 						* Resize overside images
 						*/
-						if (phpbb_gallery::config('allow_resize_images'))
+						if (phpbb_gallery_config::get('allow_resize'))
 						{
-							$image_tools->resize_image(phpbb_gallery::config('max_width'), phpbb_gallery::config('max_height'));
+							$image_tools->resize_image(phpbb_gallery_config::get('max_width'), phpbb_gallery_config::get('max_height'));
 							if ($image_tools->resized)
 							{
-								$image_tools->write_image(phpbb_gallery::path('phpbb') . GALLERY_UPLOAD_PATH . $image_filename, phpbb_gallery::config('jpg_quality'), true);
+								$image_tools->write_image(phpbb_gallery::path('phpbb') . GALLERY_UPLOAD_PATH . $image_filename, phpbb_gallery_config::get('jpg_quality'), true);
 							}
 						}
 					}
@@ -567,7 +567,7 @@ class acp_gallery
 				}
 				// Since phpBB 3.0.5 this is the better solution
 				// If the function does not exist, we load it from gallery/includes/functions_phpbb.php
-				set_config_count('num_images', $images_loop);
+				phpbb_gallery_config::inc('num_images', $images_loop);
 				$todo_images = $todo_images - $images_loop;
 			}
 			update_album_info($album_id);
@@ -661,10 +661,10 @@ class acp_gallery
 		while ($file = readdir($handle))
 		{
 			if (!is_dir(phpbb_gallery::path('phpbb') . GALLERY_IMPORT_PATH . $file) && (
-			((substr(strtolower($file), -4) == '.png') && phpbb_gallery::config('png_allowed')) ||
-			((substr(strtolower($file), -4) == '.gif') && phpbb_gallery::config('gif_allowed')) ||
-			((substr(strtolower($file), -4) == '.jpg') && phpbb_gallery::config('jpg_allowed')) ||
-			((substr(strtolower($file), -5) == '.jpeg') && phpbb_gallery::config('jpg_allowed'))
+			((substr(strtolower($file), -4) == '.png') && phpbb_gallery_config::get('allow_png')) ||
+			((substr(strtolower($file), -4) == '.gif') && phpbb_gallery_config::get('allow_gif')) ||
+			((substr(strtolower($file), -4) == '.jpg') && phpbb_gallery_config::get('allow_jpg')) ||
+			((substr(strtolower($file), -5) == '.jpeg') && phpbb_gallery_config::get('allow_jpg'))
 			))
 			{
 				$files[utf8_strtolower($file)] = $file;
@@ -912,12 +912,12 @@ class acp_gallery
 
 				$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . ' WHERE ' . $db->sql_in_set('album_id', $deleted_albums);
 				$db->sql_query($sql);
-				phpbb_gallery::set_config_count('personal_counter', 0 - $remove_personal_counter);
+				phpbb_gallery_config::get('num_pegas', $remove_personal_counter);
 
-				if (in_array(phpbb_gallery::config('newest_pgallery_album_id'), $deleted_albums))
+				if (in_array(phpbb_gallery_config::get('newest_pega_album_id'), $deleted_albums))
 				{
 					// Update the config for the statistic on the index
-					if (phpbb_gallery::config('personal_counter') > 0)
+					if (phpbb_gallery_config::get('num_pegas') > 0)
 					{
 						$sql_array = array(
 							'SELECT'		=> 'a.album_id, u.user_id, u.username, u.user_colour',
@@ -939,17 +939,17 @@ class acp_gallery
 						$newest_pgallery = $db->sql_fetchrow($result);
 						$db->sql_freeresult($result);
 
-						phpbb_gallery::set_config('newest_pgallery_user_id', (int) $newest_pgallery['user_id']);
-						phpbb_gallery::set_config('newest_pgallery_username', (string) $newest_pgallery['username']);
-						phpbb_gallery::set_config('newest_pgallery_user_colour', (string) $newest_pgallery['user_colour']);
-						phpbb_gallery::set_config('newest_pgallery_album_id', (int) $newest_pgallery['album_id']);
+						phpbb_gallery_config::set('newest_pega_user_id', $newest_pgallery['user_id']);
+						phpbb_gallery_config::set('newest_pega_username', $newest_pgallery['username']);
+						phpbb_gallery_config::set('newest_pega_user_colour', $newest_pgallery['user_colour']);
+						phpbb_gallery_config::set('newest_pega_album_id', $newest_pgallery['album_id']);
 					}
 					else
 					{
-						phpbb_gallery::set_config('newest_pgallery_user_id', 0);
-						phpbb_gallery::set_config('newest_pgallery_username', '');
-						phpbb_gallery::set_config('newest_pgallery_user_colour', '');
-						phpbb_gallery::set_config('newest_pgallery_album_id', 0);
+						phpbb_gallery_config::set('newest_pega_user_id', 0);
+						phpbb_gallery_config::set('newest_pega_username', '');
+						phpbb_gallery_config::set('newest_pega_user_colour', '');
+						phpbb_gallery_config::set('newest_pega_album_id', 0);
 					}
 				}
 
@@ -999,8 +999,8 @@ class acp_gallery
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
 
-			phpbb_gallery::set_config('num_images', (int) $row['num_images'], true);
-			phpbb_gallery::set_config('num_comments', (int) $row['num_comments'], true);
+			phpbb_gallery_config::set('num_images', $row['num_images']);
+			phpbb_gallery_config::set('num_comments', $row['num_comments']);
 
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 			$cache->destroy('sql', GALLERY_COMMENTS_TABLE);

@@ -351,13 +351,13 @@ function generate_personal_album($album_name, $user_id, $user_colour, $user_entr
 		);
 		$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $gallery_settings));
 	}
-	phpbb_gallery::set_config_count('personal_counter', 1);
+	phpbb_gallery_config::inc('num_pegas', 1);
 
 	// Update the config for the statistic on the index
-	phpbb_gallery::set_config('newest_pgallery_user_id', $user_id);
-	phpbb_gallery::set_config('newest_pgallery_username', $album_name);
-	phpbb_gallery::set_config('newest_pgallery_user_colour', $user_colour);
-	phpbb_gallery::set_config('newest_pgallery_album_id', $personal_album_id);
+	phpbb_gallery_config::set('newest_pega_user_id', $user_id);
+	phpbb_gallery_config::set('newest_pega_username', $album_name);
+	phpbb_gallery_config::set('newest_pega_user_colour', $user_colour);
+	phpbb_gallery_config::set('newest_pega_album_id', $personal_album_id);
 
 	$cache->destroy('_albums');
 	$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
