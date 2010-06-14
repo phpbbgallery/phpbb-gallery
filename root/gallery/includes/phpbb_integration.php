@@ -17,6 +17,30 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
+class phpbb_gallery_integration
+{
+	public static function index_total_images()
+	{
+		if (!class_exists('phpbb_gallery_config'))
+		{
+			global $phpbb_root_path, $phpEx;
+			include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/config.' . $phpEx);
+		}
+		if (!phpbb_gallery_config::get('disp_total_images'))
+		{
+			return;
+		}
+
+		global $user, $template;
+
+		$user->add_lang('mods/info_acp_gallery');
+
+		$total_images = phpbb_gallery_config::get('num_images');
+		$l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OTHER';
+		$template->assign_var('TOTAL_IMAGES', sprintf($user->lang[$l_total_image_s], $total_images));
+	}
+}
+
 function integrate_memberlist_viewprofile(&$member)
 {
 	// Some of the globals may not be used here, but in the included files

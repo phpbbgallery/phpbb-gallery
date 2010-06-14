@@ -47,7 +47,7 @@ class install_update extends module
 
 	function main($mode, $sub)
 	{
-		global $cache, $gallery_config, $template, $user;
+		global $cache, $template, $user;
 		global $phpbb_root_path, $phpEx;
 
 		if ($user->data['user_type'] != USER_FOUNDER)
@@ -58,7 +58,10 @@ class install_update extends module
 		$gallery_version = get_gallery_version();
 		if (version_compare($gallery_version, '0.0.0', '>'))
 		{
-			$gallery_config = load_gallery_config();
+			if (!class_exists('phpbb_gallery_config'))
+			{
+				include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/config.' . $phpEx);
+			}
 		}
 		else
 		{
@@ -111,7 +114,7 @@ class install_update extends module
 			break;
 
 			case 'final':
-				set_gallery_config('phpbb_gallery_version', NEWEST_PG_VERSION);
+				phpbb_gallery_config::set('version', NEWEST_PG_VERSION);
 				$cache->purge();
 
 				$template->assign_vars(array(
@@ -359,24 +362,20 @@ class install_update extends module
 	*/
 	function update_db_schema($mode, $sub)
 	{
-		global $db, $user, $template, $gallery_config, $table_prefix;
+		global $db, $user, $template, $table_prefix;
 		global $phpbb_root_path, $phpEx;
 
-		$gallery_config = load_gallery_config();
 		$this->page_title = $user->lang['STAGE_UPDATE_DB'];
 
-		if (!isset($gallery_config['phpbb_gallery_version']))
-		{
-			$gallery_config['phpbb_gallery_version'] = get_gallery_version();
-		}
+		$phpbb_gallery_version = get_gallery_version();
 
-		set_gallery_config('phpbb_gallery_version', $gallery_config['phpbb_gallery_version']);
+		phpbb_gallery_config::set('version', $phpbb_gallery_version);
 
 		$dbms_data = get_dbms_infos();
 		$db_schema = $dbms_data['db_schema'];
 		$delimiter = $dbms_data['delimiter'];
 
-		switch ($gallery_config['phpbb_gallery_version'])
+		switch (phpbb_gallery_config::get('version'))
 		{
 			case '0.1.2':
 			case '0.1.3':
@@ -452,6 +451,11 @@ class install_update extends module
 				nv_add_column(GALLERY_USERS_TABLE,	'user_viewexif',	array('UINT:1', 0));
 
 			case '1.0.5-RC1':
+				// Only allow update from 1.0.5
+				trigger_error('VERSION_NOT_SUPPORTED', E_USER_ERROR);
+			break;
+
+
 			case '1.0.5':
 			break;
 		}
@@ -469,21 +473,16 @@ class install_update extends module
 	*/
 	function update_db_data($mode, $sub)
 	{
-		global $cache, $config, $db, $gallery_config, $template, $user;
+		global $cache, $db, $template, $user;
 		global $phpbb_root_path, $phpEx, $table_prefix;
 		include($phpbb_root_path . 'includes/acp/auth.' . $phpEx);
 
-		$gallery_config = load_gallery_config();
 		$database_step = request_var('step', 0);
 
 		$this->page_title = $user->lang['STAGE_UPDATE_DB'];
 		$next_update_url = '';
-		if ($database_step == 3)
-		{
-			$gallery_config['phpbb_gallery_version'] = '0.5.0';
-		}
 
-		switch ($gallery_config['phpbb_gallery_version'])
+		switch (phpbb_gallery_config::get('version'))
 		{
 			case '0.1.2':
 			case '0.1.3':
@@ -502,369 +501,76 @@ class install_update extends module
 			case '0.4.0-RC2':
 			case '0.4.0-RC3':
 			case '0.4.0':
+			case '0.4.1':
+			case '0.5.0':
+			case '0.5.1-dev':
+			case '0.5.1':
+			case '0.5.2-dev':
+			case '0.5.2':
+			case '0.5.3-dev':
+			case '0.5.3':
+			case '0.5.4':
+			case '1.0.0-dev':
+			case '1.0.0-RC1':
+			case '1.0.0-RC2':
+			case '1.0.0':
+			case '1.0.1-dev':
+			case '1.0.1':
+			case '1.0.2-dev':
+			case '1.0.2-RC1':
+			case '1.0.2':
+			case '1.0.3-RC1':
+			case '1.0.3-RC2':
+			case '1.0.3':
+			case '1.0.4':
+			case '1.0.5-RC1':
 				/**
 				* Cheating?
 				*/
 				trigger_error('VERSION_NOT_SUPPORTED', E_USER_ERROR);
 			break;
 
-			case '0.4.1':
-				// Resync the reported flags in addition to #393, #417
-				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_reported = 0';
-				$db->sql_query($sql);
-				$sql = 'SELECT report_image_id, report_id
-					FROM ' . GALLERY_REPORTS_TABLE . '
-					WHERE report_status = 1';
-				$result = $db->sql_query($sql);
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET image_reported = ' . $row['report_id'] . '
-						WHERE image_id = ' . $row['report_image_id'];
-					$db->sql_query($sql);
-				}
-				$db->sql_freeresult($result);
-
-				// We moved the configurations-panel to a new file
-				$sql = 'UPDATE ' . MODULES_TABLE . "
-					SET module_basename = 'gallery_config',
-						module_mode = 'main'
-					WHERE module_langname = 'ACP_GALLERY_CONFIGURE_GALLERY'";
-				$db->sql_query($sql);
-
-				set_gallery_config('rrc_gindex_mode', 'all');
-				set_gallery_config('rrc_gindex_rows', 1);
-				set_gallery_config('rrc_gindex_columns', 4);
-				set_gallery_config('rrc_gindex_comments', 0);
-
-				// Only overwrite original watermarks
-				if ($gallery_config['watermark_source'] == GALLERY_ROOT_PATH . 'mark.png')
-				{
-					set_gallery_config('watermark_source', GALLERY_IMAGE_PATH . 'watermark.png');
-				}
-
-				// Update permission-system to the constants
-				$sql = 'UPDATE ' . GALLERY_PERMISSIONS_TABLE . '
-					SET perm_system = ' . OWN_GALLERY_PERMISSIONS . '
-					WHERE perm_system = 2';
-				$db->sql_query($sql);
-				$sql = 'UPDATE ' . GALLERY_PERMISSIONS_TABLE . '
-					SET perm_system = ' . PERSONAL_GALLERY_PERMISSIONS . '
-					WHERE perm_system = 3';
-				$db->sql_query($sql);
-
-				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=3");
-			break;
-
-			case '0.5.0':
-			case '0.5.1-dev':
-				// Move back two constants, only if they were not moved yet
-				if (isset($config['gallery_user_images_profil']))
-				{
-					set_gallery_config('user_images_profile', $config['gallery_user_images_profil']);
-				}
-				if (isset($config['gallery_personal_album_profil']))
-				{
-					set_gallery_config('personal_album_profile', $config['gallery_personal_album_profil']);
-				}
-
-				set_gallery_config('rrc_profile_mode', '!comment');
-				set_gallery_config('rrc_profile_columns', 4);
-				set_gallery_config('rrc_profile_rows', 1);
-
-				// Delete "confirmed deleted subalbums" #410
-				recalc_btree('album_id', GALLERY_ALBUMS_TABLE, array(array('fieldname' => 'album_user_id', 'fieldvalue' => 0)));
-				set_gallery_config('rrc_gindex_crows', 5);
-
-				// Fill the new columns for contest winners
-				$sql = 'SELECT *
-					FROM ' . GALLERY_CONTESTS_TABLE . '
-					WHERE contest_marked = ' . IMAGE_NO_CONTEST;
-				$result = $db->sql_query($sql);
-				$contests_ended = 0;
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$contest_end_time = $row['contest_start'] + $row['contest_end'];
-					$sql_update = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-						SET image_contest_end = ' . $contest_end_time . ',
-							image_contest_rank = 1
-						WHERE image_id = ' . $row['contest_first'];
-					$db->sql_query($sql_update);
-					$sql_update = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-						SET image_contest_end = ' . $contest_end_time . ',
-							image_contest_rank = 2
-						WHERE image_id = ' . $row['contest_second'];
-					$db->sql_query($sql_update);
-					$sql_update = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-						SET image_contest_end = ' . $contest_end_time . ',
-							image_contest_rank = 3
-						WHERE image_id = ' . $row['contest_third'];
-					$db->sql_query($sql_update);
-					$contests_ended++;
-				}
-				$db->sql_freeresult($result);
-				set_gallery_config('contests_ended', $contests_ended);
-				set_gallery_config('rrc_gindex_contests', 1);
-
-			case '0.5.1':
-			case '0.5.2-dev':
-				// We moved the album management to a new file
-				$sql = 'UPDATE ' . MODULES_TABLE . "
-					SET module_basename = 'gallery_albums',
-						module_mode = 'manage'
-					WHERE module_langname = 'ACP_GALLERY_MANAGE_ALBUMS'";
-				$db->sql_query($sql);
-
-				set_gallery_config('rrc_gindex_display', 45);
-				set_gallery_config('rrc_profile_display', 13);
-				set_gallery_config('album_display', 126);
-
-			case '0.5.2':
-			case '0.5.3-dev':
-				set_config('gallery_viewtopic_icon', 1);
-				set_config('gallery_viewtopic_images', 1);
-				set_config('gallery_viewtopic_link', 0);
-
-			case '0.5.3':
-				set_gallery_config('disp_login', 1);
-				set_gallery_config('disp_whoisonline', 1);
-				set_gallery_config('disp_birthdays', 0);
-				set_gallery_config('disp_statistic', 1);
-				set_gallery_config('rrc_gindex_pgalleries', 1);
-
-				// Locked images were just like unapproved.
-				// So we set their status to unapproved, when introducing the locked-status.
-				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-					SET image_status = ' . IMAGE_UNAPPROVED . '
-					WHERE image_status <> ' . IMAGE_APPROVED;
-				$db->sql_query($sql);
-
-				// Unlock all pgalleries #504
-				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
-					SET album_status = ' . ITEM_UNLOCKED . '
-					WHERE album_user_id <> 0';
-				$db->sql_query($sql);
-
-				// Set the lastmark to the current time of update
-				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
-					SET user_lastmark = ' . time() . '
-					WHERE user_lastmark = 0';
-				$db->sql_query($sql);
-
-				// Update the LOG_TABLE phpbb:#42295
-				$sql = 'UPDATE ' . LOG_TABLE . '
-					SET album_id = forum_id,
-						image_id = topic_id
-					WHERE log_type = ' . LOG_GALLERY;
-				$db->sql_query($sql);
-				$sql = 'UPDATE ' . LOG_TABLE . '
-					SET forum_id = 0,
-						topic_id = 0
-					WHERE log_type = ' . LOG_GALLERY;
-				$db->sql_query($sql);
-
-			case '0.5.4':
-			case '1.0.0-dev':
-				$num_comments = 0;
-				$sql = 'SELECT SUM(image_comments) comments
-					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE image_status <> ' . IMAGE_UNAPPROVED;
-				$result = $db->sql_query($sql);
-				$num_comments = (int) $db->sql_fetchfield('comments');
-				$db->sql_freeresult($result);
-				set_gallery_config('num_comments', $num_comments, true);
-
-				// Update the config for the statistic on the index
-				$sql = 'SELECT a.album_id, u.user_id, u.username, u.user_colour
-					FROM ' . GALLERY_ALBUMS_TABLE . ' a
-					LEFT JOIN ' . USERS_TABLE . ' u
-						ON u.user_id = a.album_user_id
-					WHERE a.album_user_id <> 0
-						AND a.parent_id = 0
-					ORDER BY a.album_id DESC';
-				$result = $db->sql_query_limit($sql, 1);
-				$newest_pgallery = $db->sql_fetchrow($result);
-				$db->sql_freeresult($result);
-
-				set_gallery_config('newest_pgallery_user_id', (int) $newest_pgallery['user_id']);
-				set_gallery_config('newest_pgallery_username', (string) $newest_pgallery['username']);
-				set_gallery_config('newest_pgallery_user_colour', (string) $newest_pgallery['user_colour']);
-				set_gallery_config('newest_pgallery_album_id', (int) $newest_pgallery['album_id']);
-
-				// Update RRC-Mode to newest RRC-Version
-				if (!is_int($gallery_config['rrc_gindex_mode']))
-				{
-					$rrc_gindex_mode = RRC_MODE_NONE;
-					if (in_array($gallery_config['rrc_gindex_mode'], array('recent', '!random', '!comment', 'all', 'both')))
-					{
-						$rrc_gindex_mode += RRC_MODE_RECENT;
-					}
-					if (in_array($gallery_config['rrc_gindex_mode'], array('!recent', 'random', '!comment', 'all', 'both')))
-					{
-						$rrc_gindex_mode += RRC_MODE_RANDOM;
-					}
-					if (in_array($gallery_config['rrc_gindex_mode'], array('!recent', '!random', 'comment', 'all', 'both')))
-					{
-						$rrc_gindex_mode += RRC_MODE_COMMENT;
-					}
-					set_gallery_config('rrc_gindex_mode', $rrc_gindex_mode);
-				}
-				if (!is_int($gallery_config['rrc_profile_mode']))
-				{
-					$rrc_profile_mode = RRC_MODE_NONE;
-					if (in_array($gallery_config['rrc_profile_mode'], array('recent', '!random', '!comment', 'all', 'both')))
-					{
-						$rrc_profile_mode += RRC_MODE_RECENT;
-					}
-					if (in_array($gallery_config['rrc_profile_mode'], array('!recent', 'random', '!comment', 'all', 'both')))
-					{
-						$rrc_profile_mode += RRC_MODE_RANDOM;
-					}
-					if (in_array($gallery_config['rrc_profile_mode'], array('!recent', '!random', 'comment', 'all', 'both')))
-					{
-						$rrc_profile_mode += RRC_MODE_COMMENT;
-					}
-					set_gallery_config('rrc_profile_mode', $rrc_profile_mode);
-				}
-
-				// We moved the permissions management to a new file
-				$sql = 'UPDATE ' . MODULES_TABLE . "
-					SET module_basename = 'gallery_permissions',
-						module_mode = 'manage'
-					WHERE module_langname = 'ACP_GALLERY_ALBUM_PERMISSIONS'";
-				$db->sql_query($sql);
-
-				if (!isset($gallery_config['pgalleries_per_page']))
-				{
-					set_gallery_config('pgalleries_per_page', 10);
-				}
-				if (isset($gallery_config['max_pics']))
-				{
-					set_gallery_config('images_per_album', $gallery_config['max_pics']);
-				}
-				if (!isset($gallery_config['watermark_position']))
-				{
-					set_gallery_config('watermark_position', 20);
-				}
-
-				// We made some stupid bbcodes
-				$sql = 'DELETE FROM ' . BBCODES_TABLE . "
-					WHERE bbcode_tag = 'album'
-						AND bbcode_id = 0";
-				$db->sql_query($sql);
-
-			case '1.0.0-RC1':
-				if (!isset($gallery_config['rrc_profile_pgalleries']))
-				{
-					set_gallery_config('rrc_profile_pgalleries', $gallery_config['rrc_gindex_pgalleries']);
-				}
-
-			case '1.0.0-RC2':
-			case '1.0.0':
-			case '1.0.1-dev':
-				$sql = 'SELECT image_id, image_name, image_username
-					FROM ' . GALLERY_IMAGES_TABLE . "
-					WHERE image_name_clean = ''";
-				$result = $db->sql_query($sql);
-
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$sql_ary = array(
-						'image_name_clean'		=> utf8_clean_string($row['image_name']),
-						'image_username_clean'	=> utf8_clean_string($row['image_username']),
-					);
-					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-						WHERE image_id = ' . $row['image_id'];
-					$db->sql_query($sql);
-				}
-				$db->sql_freeresult($result);
-
-			case '1.0.1':
-			case '1.0.2-dev':
-				if (!isset($gallery_config['allow_resize_images']))
-				{
-					if (isset($gallery_config['resize_images']))
-					{
-						set_gallery_config('allow_resize_images', $gallery_config['resize_images']);
-					}
-					else
-					{
-						set_gallery_config('allow_resize_images', 1);
-					}
-				}
-				if (!isset($gallery_config['allow_rotate_images']))
-				{
-					set_gallery_config('allow_rotate_images', 1);
-				}
-				$sql = 'DELETE FROM ' . BBCODES_TABLE . "
-					WHERE bbcode_tag = '" . $db->sql_escape('album') . "'";
-				$db->sql_query($sql);
-
-			case '1.0.2-RC1':
-				if ($gallery_config['rrc_gindex_display'] < 128)
-				{
-					set_gallery_config_count('rrc_gindex_display', 128);
-				}
-				if ($gallery_config['rrc_profile_display'] < 128)
-				{
-					set_gallery_config_count('rrc_profile_display', 128);
-				}
-				if ($gallery_config['album_display'] < 128)
-				{
-					set_gallery_config_count('album_display', 128);
-				}
-
-			case '1.0.2':
-			case '1.0.3-RC1':
-				if (!isset($gallery_config['jpg_quality']))
-				{
-					set_gallery_config('jpg_quality', 100);
-				}
-				if (!isset($gallery_config['search_display']))
-				{
-					set_gallery_config('search_display', 45);
-				}
-
-				$sql = 'SELECT module_id
-					FROM ' . MODULES_TABLE . "
-					WHERE module_langname = 'ACP_GALLERY_ALBUM_PERMISSIONS_COPY'
-						AND module_class = 'acp'
-						AND module_enabled = 1";
-				$result = $db->sql_query($sql);
-				$copy_permissions_module_id = (int) $db->sql_fetchfield('module_id');
-				$db->sql_freeresult($result);
-
-				if (!$copy_permissions_module_id)
-				{
-					$sql = 'SELECT module_id
-						FROM ' . MODULES_TABLE . '
-						WHERE (module_id = ' . (int) $gallery_config['acp_parent_module'] . "
-								OR module_langname = 'PHPBB_GALLERY')
-							AND module_class = 'acp'
-							AND module_enabled = 1";
-					$result = $db->sql_query($sql);
-					$acp_module_id = (int) $db->sql_fetchfield('module_id');
-					$db->sql_freeresult($result);
-
-					if ($acp_module_id)
-					{
-						$album_permissions_copy = array('module_basename' => 'gallery_permissions',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS_COPY',	'module_mode' => 'copy',	'module_auth' => 'acl_a_gallery_albums');
-						add_module($album_permissions_copy);
-					}
-				}
-				set_gallery_config('version_check_version', '0.0.0');
-				set_gallery_config('version_check_time', 0);
-
-			case '1.0.3-RC2':
-			case '1.0.3':
-			case '1.0.4':
-				// Set allow_rotate_images only if possible
-				set_gallery_config('allow_rotate_images', ((function_exists('imagerotate') && $gallery_config['allow_rotate_images']) ? 1 : 0));
-
-				set_gallery_config('captcha_comment', 1);
-				set_gallery_config('captcha_upload', 1);
-
-			case '1.0.5-RC1':
 			case '1.0.5':
+				$sql = 'SELECT *
+					FROM ' . GALLERY_CONFIG_TABLE;
+				$result = $db->sql_query($sql);
+				$old_config = array();
+				while ($row = $db->sql_fetchrow($result))
+				{
+					$old_config[$row['config_name']] = $row['config_value'];
+				}
+				$db->sql_freeresult($result);
+
+				$others = array('gallery_total_images', 'gallery_viewtopic_icon', 'gallery_viewtopic_images', 'gallery_viewtopic_link');
+				foreach ($others as $config_name)
+				{
+					if (isset($config[$config_name]))
+					{
+						$old_config[$config_name] = $config[$config_name];
+					}
+				}
+				$db->sql_freeresult($result);
+
+
+				$config_map = config_mapping();
+				foreach ($config_map as $old_name => $new_name)
+				{
+					if (isset($old_config[$old_name]))
+					{
+						phpbb_gallery_config::set($new_name, $old_config[$old_name]);
+					}
+				}
+
+				// Add new configs:
+				$default_config = phpbb_gallery_config::get_default();
+				foreach ($default_config as $name => $value)
+				{
+					if (!phpbb_gallery_config::exists($name))
+					{
+						phpbb_gallery_config::set($name, $value);
+					}
+				}
+
 				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=4");
 			break;
 		}
@@ -886,12 +592,10 @@ class install_update extends module
 	{
 		global $user, $template, $db, $phpbb_root_path, $phpEx;
 
-		$gallery_config = load_gallery_config();
-
 		$this->page_title = $user->lang['STAGE_UPDATE_DB'];
 		$reparse_modules_bbcode = false;
 
-		switch ($gallery_config['phpbb_gallery_version'])
+		switch (phpbb_gallery_config::get('version'))
 		{
 /*			case '0.1.2':
 			case '0.1.3':
@@ -926,7 +630,7 @@ class install_update extends module
 				nv_remove_column(GALLERY_ALBUMS_TABLE,	'album_moderator_groups');
 
 			case '0.4.0-RC3':
-			case '0.4.0':*/
+			case '0.4.0':
 			case '0.4.1':
 
 			case '0.5.0':
@@ -946,8 +650,6 @@ class install_update extends module
 			case '1.0.1':
 
 			case '1.0.2-dev':
-				/* //@todo: Move on bbcode-change or creating all modules */
-				$reparse_modules_bbcode = true;
 			case '1.0.2-RC1':
 			case '1.0.2':
 
@@ -957,7 +659,10 @@ class install_update extends module
 
 			case '1.0.4':
 
-			case '1.0.5-RC1':
+			case '1.0.5-RC1':*/
+
+				//@todo: Move on bbcode-change or creating all modules
+				//$reparse_modules_bbcode = true;
 			case '1.0.5':
 			break;
 		}
@@ -966,11 +671,6 @@ class install_update extends module
 		$old_configs = array('gallery_user_images_profil', 'gallery_personal_album_profil');
 		$sql = 'DELETE FROM ' . CONFIG_TABLE . '
 			WHERE ' . $db->sql_in_set('config_name', $old_configs);
-		$db->sql_query($sql);
-
-		$old_gallery_configs = array('user_pics_limit', 'mod_pics_limit', 'fullpic_popup', 'personal_gallery', 'personal_gallery_private', 'personal_gallery_limit', 'personal_gallery_view', 'album_version', 'num_comment', 'max_pics', 'resize_images');
-		$sql = 'DELETE FROM ' . GALLERY_CONFIG_TABLE . '
-			WHERE ' . $db->sql_in_set('config_name', $old_gallery_configs);
 		$db->sql_query($sql);
 
 		// Remove some old p_masks
@@ -1012,7 +712,7 @@ class install_update extends module
 	*/
 	function obtain_advanced_settings($mode, $sub)
 	{
-		global $user, $template, $phpEx, $db, $phpbb_root_path;
+		global $user, $template, $phpbb_root_path, $phpEx, $db;
 
 		$gallery_config = load_gallery_config();
 
@@ -1024,7 +724,7 @@ class install_update extends module
 			$choosen_ucp_module = request_var('ucp_module', 0);
 			$choosen_log_module = request_var('log_module', 0);
 
-			switch ($gallery_config['phpbb_gallery_version'])
+			switch (phpbb_gallery_config::get('version'))
 			{
 				case '0.1.2':
 				case '0.1.3':
@@ -1043,7 +743,6 @@ class install_update extends module
 				case '0.4.0-RC2':
 				case '0.4.0-RC3':
 				case '0.4.0':
-					trigger_error('VERSION_NOT_SUPPORTED', E_USER_ERROR);
 				break;
 
 				case '0.4.1':
@@ -1079,6 +778,7 @@ class install_update extends module
 				case '1.0.4':
 
 				case '1.0.5-RC1':
+					trigger_error('VERSION_NOT_SUPPORTED', E_USER_ERROR);
 				case '1.0.5':
 				break;
 			}
@@ -1094,7 +794,7 @@ class install_update extends module
 				'ucp_module'		=> MODULE_DEFAULT_UCP,
 			);
 			$modules = $this->gallery_config_options;
-			switch ($gallery_config['phpbb_gallery_version'])
+			switch (phpbb_gallery_config::get('version'))
 			{
 				case '1.0.5-RC1':
 				case '1.0.5':

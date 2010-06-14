@@ -22,13 +22,15 @@ class phpbb_gallery_config
 	/**
 	* Prefix which is prepend to the configs before they are stored in the config table.
 	*/
-	static protected $prefix = 'phpbb_gallery_';
+	protected static $prefix = 'phpbb_gallery_';
 
-	static protected $config = false;
+	protected static $config = false;
+
+	protected static $loaded = false;
 
 	public static function get($key)
 	{
-		if (self::$config === false)
+		if (self::$loaded === false)
 		{
 			self::load();
 		}
@@ -38,7 +40,7 @@ class phpbb_gallery_config
 
 	public static function get_array()
 	{
-		if (self::$config === false)
+		if (self::$loaded === false)
 		{
 			self::load();
 		}
@@ -53,13 +55,23 @@ class phpbb_gallery_config
 
 	public static function set($config_name, $config_value)
 	{
-		self::$config[$config_name] = settype($config_value, gettype(self::$default_config[$config_name]));
-		set_config(self::$prefix . $config_name, $config_value, self::is_dynamic($config_name));
+		settype($config_value, gettype(self::$default_config[$config_name]));
+		self::$config[$config_name] = $config_value;
+
+		if ((gettype(self::$default_config[$config_name]) == 'bool') || (gettype(self::$default_config[$config_name]) == 'boolean'))
+		{
+			$update_config = (self::$config[$config_name]) ? '1' : '0';
+			set_config(self::$prefix . $config_name, $update_config, self::is_dynamic($config_name));
+		}
+		else
+		{
+			set_config(self::$prefix . $config_name, self::$config[$config_name], self::is_dynamic($config_name));
+		}
 	}
 
 	public static function inc($config_name, $increment)
 	{
-		if (gettype(self::$default_config[$config_name]) != 'int')
+		if ((gettype(self::$default_config[$config_name]) != 'int') && (gettype(self::$default_config[$config_name]) != 'integer'))
 		{
 			return false;
 		}
@@ -71,7 +83,7 @@ class phpbb_gallery_config
 
 	public static function dec($config_name, $decrement)
 	{
-		if (gettype(self::$default_config[$config_name]) != 'int')
+		if ((gettype(self::$default_config[$config_name]) != 'int') && (gettype(self::$default_config[$config_name]) != 'integer'))
 		{
 			return false;
 		}
@@ -100,7 +112,8 @@ class phpbb_gallery_config
 			if (strpos($config_name, self::$prefix) === 0)
 			{
 				$config_name = substr($config_name, strlen(self::$prefix));
-				self::$config[$config_name] = settype($config_value, gettype(self::$default_config[$config_name]));
+				settype($config_value, gettype(self::$default_config[$config_name]));
+				self::$config[$config_name] = $config_value;
 			}
 		}
 
@@ -109,6 +122,16 @@ class phpbb_gallery_config
 			// Should we load the default-config?
 			self::$config = self::$config + self::$default_config;
 		}
+	}
+
+	public static function exists($key)
+	{
+		if (self::$loaded === false)
+		{
+			self::load();
+		}
+
+		return !empty(self::$config[$key]);
 	}
 
 	protected static $is_dynamic = array(
@@ -206,10 +229,10 @@ class phpbb_gallery_config
 		'shortnames'			=> 25,
 
 		'thumbnail_cache'		=> true,
-		'thumbnail_height'		=> 125,
+		'thumbnail_height'		=> 160,
 		'thumbnail_infoline'	=> false,
 		'thumbnail_quality'		=> 50,
-		'thumbnail_width'		=> 125,
+		'thumbnail_width'		=> 240,
 
 		'version'				=> '',
 		'viewtopic_icon'		=> true,
