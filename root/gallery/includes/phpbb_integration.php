@@ -24,8 +24,9 @@ class phpbb_gallery_integration
 		if (!class_exists('phpbb_gallery_config'))
 		{
 			global $phpbb_root_path, $phpEx;
-			include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/config.' . $phpEx);
+			include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/core/config.' . $phpEx);
 		}
+
 		if (!phpbb_gallery_config::get('disp_total_images'))
 		{
 			return;

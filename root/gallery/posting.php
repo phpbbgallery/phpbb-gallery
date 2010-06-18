@@ -15,9 +15,9 @@
 define('IN_PHPBB', true);
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include('includes/core.' . $phpEx);
-phpbb_gallery::init(array('mods/gallery', 'posting'));
-phpbb_gallery::_include(array('functions_display', 'functions_posting'));
-phpbb_gallery::_include(array('bbcode', 'message_parser', 'functions_display', 'functions_posting', 'functions_user'), 'phpbb');
+phpbb_gallery::setup(array('mods/gallery', 'posting'));
+phpbb_gallery_url::_include(array('functions_display', 'functions_posting'));
+phpbb_gallery_url::_include(array('bbcode', 'message_parser', 'functions_display', 'functions_posting', 'functions_user'), 'phpbb');
 
 add_form_key('gallery');
 $submit = (isset($_POST['submit'])) ? true : false;
@@ -52,15 +52,15 @@ generate_album_nav($album_data);
 
 if ($image_id)
 {
-	$image_backlink = phpbb_gallery::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id");
-	$image_loginlink = phpbb_gallery::append_sid('relative', 'image_page', "album_id=$album_id&amp;image_id=$image_id");
+	$image_backlink = phpbb_gallery_url::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id");
+	$image_loginlink = phpbb_gallery_url::append_sid('relative', 'image_page', "album_id=$album_id&amp;image_id=$image_id");
 }
 if ($album_id)
 {
-	$album_backlink = phpbb_gallery::append_sid('album', "album_id=$album_id");
-	$album_loginlink = phpbb_gallery::append_sid('relative', 'album', "album_id=$album_id");
+	$album_backlink = phpbb_gallery_url::append_sid('album', "album_id=$album_id");
+	$album_loginlink = phpbb_gallery_url::append_sid('relative', 'album', "album_id=$album_id");
 }
-$index_backlink = phpbb_gallery::append_sid('index');
+$index_backlink = phpbb_gallery_url::append_sid('index');
 
 // Send some cheaters back
 if ($user->data['is_bot'])
@@ -273,7 +273,7 @@ $flash_status	= false;
 $quote_status	= true;
 
 $template->assign_vars(array(
-	'BBCODE_STATUS'			=> ($bbcode_status) ? sprintf($user->lang['BBCODE_IS_ON'], '<a href="' . phpbb_gallery::append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>') : sprintf($user->lang['BBCODE_IS_OFF'], '<a href="' . phpbb_gallery::append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>'),
+	'BBCODE_STATUS'			=> ($bbcode_status) ? sprintf($user->lang['BBCODE_IS_ON'], '<a href="' . phpbb_gallery_url::append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>') : sprintf($user->lang['BBCODE_IS_OFF'], '<a href="' . phpbb_gallery_url::append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>'),
 	'IMG_STATUS'			=> ($img_status) ? $user->lang['IMAGES_ARE_ON'] : $user->lang['IMAGES_ARE_OFF'],
 	'FLASH_STATUS'			=> ($flash_status) ? $user->lang['FLASH_IS_ON'] : $user->lang['FLASH_IS_OFF'],
 	'SMILIES_STATUS'		=> ($smilies_status) ? $user->lang['SMILIES_ARE_ON'] : $user->lang['SMILIES_ARE_OFF'],
@@ -364,7 +364,7 @@ switch ($mode)
 
 				if (gallery_display_captcha('upload'))
 				{
-					phpbb_gallery::_include('captcha/captcha_factory', 'phpbb');
+					phpbb_gallery_url::_include('captcha/captcha_factory', 'phpbb');
 					$captcha =& phpbb_captcha_factory::get_instance($config['captcha_plugin']);
 					$captcha->init(CONFIRM_POST);
 					$s_captcha_hidden_fields = '';
@@ -404,7 +404,7 @@ switch ($mode)
 
 					if (!class_exists('fileupload'))
 					{
-						phpbb_gallery::_include('functions_upload', 'phpbb');
+						phpbb_gallery_url::_include('functions_upload', 'phpbb');
 					}
 					$fileupload = new fileupload();
 					$fileupload->fileupload('', $allowed_extensions, (4 * phpbb_gallery_config::get('max_filesize')));
@@ -480,7 +480,7 @@ switch ($mode)
 
 							if (!class_exists('nv_image_tools'))
 							{
-								phpbb_gallery::_include('functions_image');
+								phpbb_gallery_url::_include('functions_image');
 							}
 
 							$image_tools = new nv_image_tools();
@@ -587,7 +587,7 @@ switch ($mode)
 
 				$template->assign_vars(array(
 					'ERROR'						=> $error,
-					'U_VIEW_ALBUM'				=> phpbb_gallery::append_sid('album', "album_id=$album_id"),
+					'U_VIEW_ALBUM'				=> phpbb_gallery_url::append_sid('album', "album_id=$album_id"),
 					'CAT_TITLE'					=> $album_data['album_name'],
 					'S_MAX_FILESIZE'			=> phpbb_gallery_config::get('max_filesize'),
 					'S_MAX_WIDTH'				=> phpbb_gallery_config::get('max_width'),
@@ -595,7 +595,7 @@ switch ($mode)
 
 					'S_ALLOWED_FILETYPES'	=> implode(', ', $allowed_filetypes),
 					'S_MULTI_IMAGES'		=> (phpbb_gallery_config::get('num_uploads') > 1) ? true : false,
-					'S_ALBUM_ACTION'		=> phpbb_gallery::append_sid('posting', "mode=image&amp;submode=upload&amp;album_id=$album_id"),
+					'S_ALBUM_ACTION'		=> phpbb_gallery_url::append_sid('posting', "mode=image&amp;submode=upload&amp;album_id=$album_id"),
 
 					'IMAGE_RSZ_WIDTH'		=> phpbb_gallery_config::get('medium_width'),
 					'IMAGE_RSZ_HEIGHT'		=> phpbb_gallery_config::get('medium_height'),
@@ -743,13 +743,13 @@ switch ($mode)
 					{
 						if (!class_exists('nv_image_tools'))
 						{
-							phpbb_gallery::_include('functions_image');
+							phpbb_gallery_url::_include('functions_image');
 						}
 
 						$image_tools = new nv_image_tools();
 
 						$image_tools->set_image_options(phpbb_gallery_config::get('max_filesize'), phpbb_gallery_config::get('max_height'), phpbb_gallery_config::get('max_width'));
-						$image_tools->set_image_data(phpbb_gallery::path('phpbb') . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
+						$image_tools->set_image_data(phpbb_gallery_url::path('phpbb') . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
 						if (($image_data['image_has_exif'] != EXIF_UNAVAILABLE) && ($image_data['image_has_exif'] != EXIF_DBSAVED))
 						{
 							// Store exif-data to database if there are any and we didn't already do that.
@@ -765,8 +765,8 @@ switch ($mode)
 							$image_tools->write_image($image_tools->image_source, phpbb_gallery_config::get('jpg_quality'), true);
 						}
 
-						@unlink(phpbb_gallery::path('phpbb') . GALLERY_CACHE_PATH . $image_data['image_filename']);
-						@unlink(phpbb_gallery::path('phpbb') . GALLERY_MEDIUM_PATH . $image_data['image_filename']);
+						@unlink(phpbb_gallery_url::path('phpbb') . GALLERY_CACHE_PATH . $image_data['image_filename']);
+						@unlink(phpbb_gallery_url::path('phpbb') . GALLERY_MEDIUM_PATH . $image_data['image_filename']);
 					}
 
 					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
@@ -794,8 +794,8 @@ switch ($mode)
 					'MESSAGE'			=> $message_parser->message,
 					'L_DESCRIPTION_LENGTH'	=> sprintf($user->lang['DESCRIPTION_LENGTH'], phpbb_gallery_config::get('description_length')),
 
-					'U_IMAGE'			=> ($image_id) ? phpbb_gallery::append_sid('image', "album_id=$album_id&amp;image_id=$image_id") : '',
-					'U_VIEW_IMAGE'		=> ($image_id) ? phpbb_gallery::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id") : '',
+					'U_IMAGE'			=> ($image_id) ? phpbb_gallery_url::append_sid('image', "album_id=$album_id&amp;image_id=$image_id") : '',
+					'U_VIEW_IMAGE'		=> ($image_id) ? phpbb_gallery_url::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id") : '',
 					'IMAGE_RSZ_WIDTH'	=> phpbb_gallery_config::get('medium_width'),
 					'IMAGE_RSZ_HEIGHT'	=> phpbb_gallery_config::get('medium_height'),
 
@@ -804,7 +804,7 @@ switch ($mode)
 					'S_ALLOW_ROTATE'	=> (phpbb_gallery_config::get('allow_rotate') && function_exists('imagerotate')),
 					'S_MOVE_PERSONAL'	=> ((phpbb_gallery::$auth->acl_check('i_upload', OWN_GALLERY_PERMISSIONS) || $user->gallery['personal_album_id']) || ($user->data['user_id'] != $image_data['image_user_id'])) ? true : false,
 					'S_MOVE_MODERATOR'	=> ($user->data['user_id'] != $image_data['image_user_id']) ? true : false,
-					'S_ALBUM_ACTION'	=> phpbb_gallery::append_sid('posting', "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id"),
+					'S_ALBUM_ACTION'	=> phpbb_gallery_url::append_sid('posting', "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id"),
 				));
 				$message = $user->lang['IMAGES_UPDATED_SUCCESSFULLY'] . '<br />';
 				$page_title = $user->lang['EDIT_IMAGE'];
@@ -856,13 +856,13 @@ switch ($mode)
 
 				$template->assign_vars(array(
 					'ERROR'				=> $error,
-					'U_IMAGE'			=> ($image_id) ? phpbb_gallery::append_sid('image', "album_id=$album_id&amp;image_id=$image_id") : '',
-					'U_VIEW_IMAGE'		=> ($image_id) ? phpbb_gallery::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id") : '',
+					'U_IMAGE'			=> ($image_id) ? phpbb_gallery_url::append_sid('image', "album_id=$album_id&amp;image_id=$image_id") : '',
+					'U_VIEW_IMAGE'		=> ($image_id) ? phpbb_gallery_url::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id") : '',
 					'IMAGE_RSZ_WIDTH'	=> phpbb_gallery_config::get('medium_width'),
 					'IMAGE_RSZ_HEIGHT'	=> phpbb_gallery_config::get('medium_height'),
 
 					'S_REPORT'			=> true,
-					'S_ALBUM_ACTION'	=> phpbb_gallery::append_sid('posting', "mode=image&amp;submode=report&amp;album_id=$album_id&amp;image_id=$image_id"),
+					'S_ALBUM_ACTION'	=> phpbb_gallery_url::append_sid('posting', "mode=image&amp;submode=report&amp;album_id=$album_id&amp;image_id=$image_id"),
 				));
 				$message = $user->lang['IMAGES_REPORTED_SUCCESSFULLY'] . '<br />';
 				$page_title = $user->lang['REPORT_IMAGE'];
@@ -945,9 +945,9 @@ switch ($mode)
 				if (confirm_box(true))
 				{
 
-					@unlink(phpbb_gallery::path('phpbb') . GALLERY_CACHE_PATH . $image_data['image_thumbnail']);
-					@unlink(phpbb_gallery::path('phpbb') . GALLERY_MEDIUM_PATH . $image_data['image_thumbnail']);
-					@unlink(phpbb_gallery::path('phpbb') . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
+					@unlink(phpbb_gallery_url::path('phpbb') . GALLERY_CACHE_PATH . $image_data['image_thumbnail']);
+					@unlink(phpbb_gallery_url::path('phpbb') . GALLERY_MEDIUM_PATH . $image_data['image_thumbnail']);
+					@unlink(phpbb_gallery_url::path('phpbb') . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
 					handle_image_counter($image_id, false);
 
 					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . "
@@ -1112,7 +1112,7 @@ switch ($mode)
 			case 'add':
 				if (gallery_display_captcha('comment'))
 				{
-					phpbb_gallery::_include('captcha/captcha_factory', 'phpbb');
+					phpbb_gallery_url::_include('captcha/captcha_factory', 'phpbb');
 					$captcha =& phpbb_captcha_factory::get_instance($config['captcha_plugin']);
 					$captcha->init(CONFIRM_POST);
 				}
@@ -1235,7 +1235,7 @@ switch ($mode)
 					));
 				}
 
-				$s_album_action = phpbb_gallery::append_sid('posting', "mode=comment&amp;submode=add&amp;album_id=$album_id&amp;image_id=$image_id");
+				$s_album_action = phpbb_gallery_url::append_sid('posting', "mode=comment&amp;submode=add&amp;album_id=$album_id&amp;image_id=$image_id");
 				$page_title = $user->lang['POST_COMMENT'];
 			break;
 
@@ -1320,7 +1320,7 @@ switch ($mode)
 					$comment = $comment_ary['text'];
 					$comment_username = $comment_data['comment_username'];
 				}
-				$s_album_action = phpbb_gallery::append_sid('posting', "mode=comment&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id&amp;comment_id=$comment_id");
+				$s_album_action = phpbb_gallery_url::append_sid('posting', "mode=comment&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id&amp;comment_id=$comment_id");
 				$page_title = $user->lang['EDIT_COMMENT'];
 			break;
 
@@ -1385,8 +1385,8 @@ switch ($mode)
 
 			'IMAGE_RSZ_WIDTH'		=> phpbb_gallery_config::get('medium_width'),
 			'IMAGE_RSZ_HEIGHT'		=> phpbb_gallery_config::get('medium_height'),
-			'U_IMAGE'				=> ($image_id) ? phpbb_gallery::append_sid('image', "album_id=$album_id&amp;image_id=$image_id") : '',
-			'U_VIEW_IMAGE'			=> ($image_id) ? phpbb_gallery::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id") : '',
+			'U_IMAGE'				=> ($image_id) ? phpbb_gallery_url::append_sid('image', "album_id=$album_id&amp;image_id=$image_id") : '',
+			'U_VIEW_IMAGE'			=> ($image_id) ? phpbb_gallery_url::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id") : '',
 			'IMAGE_NAME'			=> ($image_id) ? $image_data['image_name'] : '',
 
 			'S_ALBUM_ACTION'		=> $s_album_action,
@@ -1400,12 +1400,12 @@ if ($submit)
 {
 	if ($image_id)
 	{
-		$image_backlink = phpbb_gallery::append_sid('image_page', (($album_id) ? "album_id=$album_id&amp;" : '') . "image_id=$image_id");
+		$image_backlink = phpbb_gallery_url::append_sid('image_page', (($album_id) ? "album_id=$album_id&amp;" : '') . "image_id=$image_id");
 		$message .= '<br />' . sprintf($user->lang['CLICK_RETURN_IMAGE'], '<a href="' . $image_backlink . '">', '</a>');
 	}
 	if ($album_id)
 	{
-		$album_backlink = phpbb_gallery::append_sid('album', "album_id=$album_id");
+		$album_backlink = phpbb_gallery_url::append_sid('album', "album_id=$album_id");
 		$message .= '<br />' . sprintf($user->lang['CLICK_RETURN_ALBUM'], '<a href="' . $album_backlink . '">', '</a>');
 	}
 	meta_refresh((($slower_redirect) ? 10 : 3), ($image_id) ? $image_backlink : $album_backlink);

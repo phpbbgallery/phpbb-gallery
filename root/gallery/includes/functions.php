@@ -64,7 +64,7 @@ function get_album_info($album_id)
 
 	if (!$row)
 	{
-		meta_refresh(3, phpbb_gallery::append_sid('index'));
+		meta_refresh(3, phpbb_gallery_url::append_sid('index'));
 		trigger_error('ALBUM_NOT_EXIST');
 	}
 
@@ -114,7 +114,7 @@ function get_image_info($image_id)
 
 	if (!$row)
 	{
-		meta_refresh(3, phpbb_gallery::append_sid('index'));
+		meta_refresh(3, phpbb_gallery_url::append_sid('index'));
 		trigger_error('IMAGE_NOT_EXIST');
 	}
 
@@ -397,7 +397,7 @@ function handle_image_counter($image_id_ary, $add, $readd = false)
 
 	if (!function_exists('gallery_hookup_image_counter'))
 	{
-		phpbb_gallery::_include('hookup_gallery');
+		phpbb_gallery_url::_include('hookup_gallery');
 	}
 
 	$num_images = $num_comments = 0;
@@ -516,10 +516,10 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 {
 	global $phpEx, $user;
 
-	$image_page_url = phpbb_gallery::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id{$additional_parameters}");
-	$image_url = phpbb_gallery::append_sid('image', "album_id=$album_id&amp;image_id=$image_id{$additional_parameters}" . ((!$count) ? '&amp;view=no_count' : ''));
-	$thumb_url = phpbb_gallery::append_sid('image', "mode=thumbnail&amp;album_id=$album_id&amp;image_id=$image_id{$additional_parameters}");
-	$medium_url = phpbb_gallery::append_sid('image', "mode=medium&amp;album_id=$album_id&amp;image_id=$image_id{$additional_parameters}");
+	$image_page_url = phpbb_gallery_url::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id{$additional_parameters}");
+	$image_url = phpbb_gallery_url::append_sid('image', "album_id=$album_id&amp;image_id=$image_id{$additional_parameters}" . ((!$count) ? '&amp;view=no_count' : ''));
+	$thumb_url = phpbb_gallery_url::append_sid('image', "mode=thumbnail&amp;album_id=$album_id&amp;image_id=$image_id{$additional_parameters}");
+	$medium_url = phpbb_gallery_url::append_sid('image', "mode=medium&amp;album_id=$album_id&amp;image_id=$image_id{$additional_parameters}");
 	switch ($content)
 	{
 		case 'image_name':
@@ -576,7 +576,7 @@ function generate_image_link($content, $mode, $image_id, $image_name, $album_id,
 		break;
 		default:
 			$url = $image_url;
-			$tpl = gallery_plugins::generate_image_link_plugins($mode);
+			$tpl = phpbb_gallery_plugins::generate_image_link_plugins($mode);
 		break;
 	}
 

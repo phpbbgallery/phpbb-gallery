@@ -36,7 +36,7 @@ class acp_gallery_config
 		{
 			global $phpbb_root_path, $phpEx;
 			include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/core.' . $phpEx);
-			phpbb_gallery::init('no_setup', $phpbb_root_path);
+			phpbb_gallery::init($phpbb_root_path);
 		}
 
 		$user->add_lang(array('mods/gallery_acp', 'mods/gallery'));
@@ -120,7 +120,7 @@ class acp_gallery_config
 					{
 						if (!class_exists('acp_bbcodes'))
 						{
-							phpbb_gallery::_include('acp/acp_bbcodes', 'phpbb');
+							phpbb_gallery_url::_include('acp/acp_bbcodes', 'phpbb');
 						}
 						$acp_bbcodes = new acp_bbcodes();
 						$bbcode_match = '[album]{NUMBER}[/album]';
@@ -316,7 +316,7 @@ class acp_gallery_config
 	{
 		global $user;
 
-		$sort_order_options = gallery_plugins::uc_select_plugins($value, $key);
+		$sort_order_options = phpbb_gallery_plugins::uc_select_plugins($value, $key);
 
 
 		if ($key != 'link_imagepage')
@@ -379,13 +379,13 @@ class acp_gallery_config
 	*/
 	function bbcode_tpl($value)
 	{
-		$gallery_url = phpbb_gallery::path('full');
+		$gallery_url = phpbb_gallery_url::path('full');
 
-		if (($value == 'highslide') && in_array('highslide', gallery_plugins::$plugins))
+		if (($value == 'highslide') && in_array('highslide', phpbb_gallery_plugins::$plugins))
 		{
 			$bbcode_tpl = '<a class="highslide" onclick="return hs.expand(this)" href="' . $gallery_url . 'image.php?image_id={NUMBER}"><img src="' . $gallery_url . 'image.php?mode=thumbnail&amp;image_id={NUMBER}" alt="{NUMBER}" /></a>';
 		}
-		else if (($value == 'lytebox') && in_array('lytebox', gallery_plugins::$plugins))
+		else if (($value == 'lytebox') && in_array('lytebox', phpbb_gallery_plugins::$plugins))
 		{
 			$bbcode_tpl = '<a class="image-resize" rel="lytebox" href="' . $gallery_url . 'image.php?image_id={NUMBER}"><img src="' . $gallery_url . 'image.php?mode=thumbnail&amp;image_id={NUMBER}" alt="{NUMBER}" /></a>';
 		}

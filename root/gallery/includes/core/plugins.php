@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 }
 
 
-class gallery_plugins
+class phpbb_gallery_plugins
 {
 	static $plugins		= array();
 	static $slideshow	= false;

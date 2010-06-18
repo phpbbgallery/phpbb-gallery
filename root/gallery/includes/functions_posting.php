@@ -44,7 +44,7 @@ function upload_image(&$image_data, $album_id)
 
 	if (!class_exists('parse_message'))
 	{
-		phpbb_gallery::_include('message_parser', 'phpbb');
+		phpbb_gallery_url::_include(array('bbcode', 'message_parser',), 'phpbb');
 	}
 
 	$message_parser				= new parse_message();
@@ -249,7 +249,7 @@ function gallery_notification($mode, $handle_id, $image_name)
 	{
 		if (!class_exists('messenger'))
 		{
-			phpbb_gallery::_include('functions_messenger', 'phpbb');
+			phpbb_gallery_url::_include('functions_messenger', 'phpbb');
 		}
 		$messenger = new messenger();
 
@@ -280,11 +280,11 @@ function gallery_notification($mode, $handle_id, $image_name)
 					'IMAGE_NAME'	=> htmlspecialchars_decode($image_name),
 					'ALBUM_NAME'	=> htmlspecialchars_decode($album_data['album_name']),
 
-					'U_ALBUM'				=> phpbb_gallery::create_link('full', 'album', "album_id=$album_id"),
-					'U_IMAGE'				=> phpbb_gallery::create_link('full', 'image_page', "album_id=$album_id&amp;image_id=$image_id"),
-					'U_NEWEST_POST'			=> phpbb_gallery::create_link('full', 'viewtopic', "album_id=$album_id&amp;image_id=$image_id"),
-					'U_STOP_WATCHING_IMAGE'	=> phpbb_gallery::create_link('full', 'posting', "mode=image&amp;submode=unwatch&amp;album_id=$album_id&amp;image_id=$image_id"),
-					'U_STOP_WATCHING_ALBUM'	=> phpbb_gallery::create_link('full', 'posting', "mode=album&amp;submode=unwatch&amp;album_id=$album_id"),
+					'U_ALBUM'				=> phpbb_gallery_url::create_link('full', 'album', "album_id=$album_id"),
+					'U_IMAGE'				=> phpbb_gallery_url::create_link('full', 'image_page', "album_id=$album_id&amp;image_id=$image_id"),
+					'U_NEWEST_POST'			=> phpbb_gallery_url::create_link('full', 'viewtopic', "album_id=$album_id&amp;image_id=$image_id"),
+					'U_STOP_WATCHING_IMAGE'	=> phpbb_gallery_url::create_link('full', 'posting', "mode=image&amp;submode=unwatch&amp;album_id=$album_id&amp;image_id=$image_id"),
+					'U_STOP_WATCHING_ALBUM'	=> phpbb_gallery_url::create_link('full', 'posting', "mode=album&amp;submode=unwatch&amp;album_id=$album_id"),
 				));
 
 				$messenger->send($addr['method']);

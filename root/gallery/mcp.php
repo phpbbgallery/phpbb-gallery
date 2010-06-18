@@ -15,16 +15,16 @@
 define('IN_PHPBB', true);
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include('includes/core.' . $phpEx);
-phpbb_gallery::init(array('mods/gallery', 'mods/gallery_mcp'));
-phpbb_gallery::_include(array('functions_mcp', 'functions_display'));
-phpbb_gallery::_include(array('functions_display'), 'phpbb');
+phpbb_gallery::setup(array('mods/gallery', 'mods/gallery_mcp'));
+phpbb_gallery_url::_include(array('functions_mcp', 'functions_display'));
+phpbb_gallery_url::_include(array('functions_display'), 'phpbb');
 
 $mode = request_var('mode', 'album');
 $action = request_var('action', '');
 
 if ($mode == 'whois' && $auth->acl_get('a_') && request_var('ip', ''))
 {
-	phpbb_gallery::_include(array('functions_user'), 'phpbb');
+	phpbb_gallery_url::_include(array('functions_user'), 'phpbb');
 
 	$template->assign_var('WHOIS', user_ipwhois(request_var('ip', '')));
 
@@ -98,14 +98,14 @@ switch ($action)
 
 if ($access_denied || !phpbb_gallery::$auth->acl_check('m_', $album_id, $album_data['album_user_id']))
 {
-	meta_refresh(5, phpbb_gallery::append_sid('album', "album_id=$album_id"));
+	meta_refresh(5, phpbb_gallery_url::append_sid('album', "album_id=$album_id"));
 	trigger_error('NOT_AUTHORISED');
 }
 
 generate_album_nav($album_data);
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> $user->lang['MCP'],
-	'U_VIEW_FORUM'	=> phpbb_gallery::append_sid('mcp', 'album_id=' . $album_data['album_id']),
+	'U_VIEW_FORUM'	=> phpbb_gallery_url::append_sid('mcp', 'album_id=' . $album_data['album_id']),
 ));
 
 $template->assign_vars(array(
@@ -117,8 +117,8 @@ $template->assign_vars(array(
 	'DELETE_IMG'	=> $user->img('icon_post_delete', 'DELETE_IMAGE'),
 	'ALBUM_NAME'	=> $album_data['album_name'],
 	'ALBUM_IMAGES'	=> $album_data['album_images'] . ' ' . (($album_data['album_images'] == 1) ? $user->lang['IMAGE'] : $user->lang['IMAGES']),
-	'U_VIEW_ALBUM'	=> phpbb_gallery::append_sid('album', 'album_id=' . $album_id),
-	'U_MOD_ALBUM'	=> phpbb_gallery::append_sid('mcp', 'mode=album&amp;album_id=' . $album_id),
+	'U_VIEW_ALBUM'	=> phpbb_gallery_url::append_sid('album', 'album_id=' . $album_id),
+	'U_MOD_ALBUM'	=> phpbb_gallery_url::append_sid('mcp', 'mode=album&amp;album_id=' . $album_id),
 ));
 
 // Build Navigation
@@ -280,9 +280,9 @@ if ($action && $image_id_ary)
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
-					@unlink(phpbb_gallery::path('phpbb') . GALLERY_CACHE_PATH . $image_data['image_thumbnail']);
-					@unlink(phpbb_gallery::path('phpbb') . GALLERY_MEDIUM_PATH . $image_data['image_thumbnail']);
-					@unlink(phpbb_gallery::path('phpbb') . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
+					@unlink(phpbb_gallery_url::path('phpbb') . GALLERY_CACHE_PATH . $image_data['image_thumbnail']);
+					@unlink(phpbb_gallery_url::path('phpbb') . GALLERY_MEDIUM_PATH . $image_data['image_thumbnail']);
+					@unlink(phpbb_gallery_url::path('phpbb') . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
 					add_log('gallery', $album_id, $row['image_id'], 'LOG_GALLERY_DELETED', $row['image_name']);
 				}
 				$db->sql_freeresult($result);
@@ -426,7 +426,7 @@ if ($action && $image_id_ary)
 		{
 			update_album_info($moving_target);
 		}
-		redirect(($redirect == 'redirect') ? phpbb_gallery::append_sid('album', "album_id=$album_id") : phpbb_gallery::append_sid('mcp', "mode=$mode&amp;album_id=$album_id"));
+		redirect(($redirect == 'redirect') ? phpbb_gallery_url::append_sid('album', "album_id=$album_id") : phpbb_gallery_url::append_sid('mcp', "mode=$mode&amp;album_id=$album_id"));
 	}
 }// end if ($action && $image_id_ary)
 

@@ -32,7 +32,7 @@ class acp_gallery_permissions
 		{
 			global $phpbb_root_path, $phpEx;
 			include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/core.' . $phpEx);
-			phpbb_gallery::init('no_setup', $phpbb_root_path);
+			phpbb_gallery::init($phpbb_root_path);
 		}
 
 		$user->add_lang(array('mods/gallery_acp', 'mods/gallery'));
@@ -412,7 +412,7 @@ class acp_gallery_permissions
 		{
 			if (!function_exists('user_get_id_name'))
 			{
-				phpbb_gallery::_include('functions_user', 'phpbb');
+				phpbb_gallery_url::_include('functions_user', 'phpbb');
 			}
 			user_get_id_name($user_id, $username);
 

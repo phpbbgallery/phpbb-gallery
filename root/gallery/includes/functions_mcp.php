@@ -68,7 +68,7 @@ class phpbb_gallery_mcp
 			$template->assign_block_vars('tabs', array(
 				'TAB_ACTIVE'	=> (strrpos(substr($mode, 0, 5), substr($navtab['mode_s'], 0, 5)) !== false) ? true : false,
 				'TAB_NAME'		=> $user->lang[$navtab['name']],
-				'U_TAB'			=> phpbb_gallery::append_sid('mcp', 'mode=' .  $navtab['mode'] . '&amp;album_id=' . $album_id),
+				'U_TAB'			=> phpbb_gallery_url::append_sid('mcp', 'mode=' .  $navtab['mode'] . '&amp;album_id=' . $album_id),
 			));
 			if (strrpos(substr($mode, 0, 5), substr($navtab['mode_s'], 0, 5)) !== false)
 			{
@@ -78,7 +78,7 @@ class phpbb_gallery_mcp
 					$template->assign_block_vars('tabs.modes', array(
 						'MODE_ACTIVE'		=> ($navsubsection['mode'] == $mode) ? true : false,
 						'MODE_NAME'			=> $user->lang[$navsubsection['name']],
-						'U_MODE'			=> phpbb_gallery::append_sid('mcp', 'mode=' .  $navsubsection['mode'] . '&amp;album_id=' . $album_id . (($option_id && (($navsubsection['mode'] == 'report_details') || ($navsubsection['mode'] == 'queue_details'))) ? '&amp;option_id=' . $option_id : '')),
+						'U_MODE'			=> phpbb_gallery_url::append_sid('mcp', 'mode=' .  $navsubsection['mode'] . '&amp;album_id=' . $album_id . (($option_id && (($navsubsection['mode'] == 'report_details') || ($navsubsection['mode'] == 'queue_details'))) ? '&amp;option_id=' . $option_id : '')),
 					));
 					if ($navsubsection['mode'] == $mode)
 					{
@@ -146,10 +146,10 @@ class phpbb_gallery_mcp
 				'IMAGE_ID'			=> $row['image_id'],
 				'S_REPORTED'		=> (isset($row['report_status']) && ($row['report_status'] == REPORT_OPEN)) ? true : false,
 				'S_UNAPPROVED'		=> ($row['image_status'] == IMAGE_UNAPPROVED) ? true : false,
-				'U_IMAGE'			=> phpbb_gallery::append_sid('image', "album_id=$album_id&amp;image_id=" . $row['image_id']),
-				'U_IMAGE_PAGE'		=> phpbb_gallery::append_sid('image_page', "album_id=$album_id&amp;image_id=" . $row['image_id']),
-				'U_REPORT'			=> phpbb_gallery::append_sid('mcp', "mode=report_details&amp;album_id=$album_id&amp;option_id=" . $row['report_id']),
-				'U_QUEUE'			=> phpbb_gallery::append_sid('mcp', "mode=queue_details&amp;album_id=$album_id&amp;option_id=" . $row['image_id']),
+				'U_IMAGE'			=> phpbb_gallery_url::append_sid('image', "album_id=$album_id&amp;image_id=" . $row['image_id']),
+				'U_IMAGE_PAGE'		=> phpbb_gallery_url::append_sid('image_page', "album_id=$album_id&amp;image_id=" . $row['image_id']),
+				'U_REPORT'			=> phpbb_gallery_url::append_sid('mcp', "mode=report_details&amp;album_id=$album_id&amp;option_id=" . $row['report_id']),
+				'U_QUEUE'			=> phpbb_gallery_url::append_sid('mcp', "mode=queue_details&amp;album_id=$album_id&amp;option_id=" . $row['image_id']),
 			));
 		}
 		$db->sql_freeresult($result);
@@ -161,7 +161,7 @@ class phpbb_gallery_mcp
 			'TITLE'					=> $user->lang['IMAGES'],
 			'DESCRIPTION'			=> '',//$desc_string,
 			'NO_IMAGES_NOTE'		=> $user->lang['NO_IMAGES'],
-			'PAGINATION'			=> generate_pagination(phpbb_gallery::append_sid('mcp', "mode=$mode&amp;album_id=$album_id&amp;sd=$sort_dir&amp;sk=$sort_key"), $count_images, $images_per_page, $start),
+			'PAGINATION'			=> generate_pagination(phpbb_gallery_url::append_sid('mcp', "mode=$mode&amp;album_id=$album_id&amp;sd=$sort_dir&amp;sk=$sort_key"), $count_images, $images_per_page, $start),
 			'PAGE_NUMBER'			=> on_page($count_images, $images_per_page, $start),
 			'TOTAL_IMAGES'			=> ($count_images == 1) ? $user->lang['VIEW_ALBUM_IMAGE'] : sprintf($user->lang['VIEW_ALBUM_IMAGES'], $count_images),
 
@@ -174,7 +174,7 @@ class phpbb_gallery_mcp
 		$template->assign_vars(array(
 			'REPORTED_IMG'				=> $user->img('icon_topic_reported', 'IMAGE_REPORTED'),
 			'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'IMAGE_UNAPPROVED'),
-			'S_MCP_ACTION'				=> phpbb_gallery::append_sid('mcp', "mode=$mode&amp;album_id=$album_id"),
+			'S_MCP_ACTION'				=> phpbb_gallery_url::append_sid('mcp', "mode=$mode&amp;album_id=$album_id"),
 			'DISP_FAKE_THUMB'			=> phpbb_gallery_config::get('mini_thumbnail_disp'),
 			'FAKE_THUMB_SIZE'			=> phpbb_gallery_config::get('mini_thumbnail_size'),
 		));
@@ -243,9 +243,9 @@ class phpbb_gallery_mcp
 			'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 			'IMAGE_TIME'		=> $user->format_date($row['image_time']),
 			'UC_IMAGE'			=> generate_image_link('medium', phpbb_gallery_config::get('link_thumbnail'), $row['image_id'], $row['image_name'], $album_id),
-			'U_EDIT_IMAGE'		=> phpbb_gallery::append_sid('posting', 'album_id=' . $album_id . '&amp;image_id=' . $row['image_id'] . '&amp;mode=image&amp;submode=edit'),
-			'U_DELETE_IMAGE'	=> phpbb_gallery::append_sid('posting', 'album_id=' . $album_id . '&amp;image_id=' . $row['image_id'] . '&amp;mode=image&amp;submode=delete'),
-			'S_MCP_ACTION'		=> phpbb_gallery::append_sid('mcp', "mode=" . (($mode == 'report_details') ? 'report_open' : 'queue_unapproved') . "&amp;album_id=$album_id"),
+			'U_EDIT_IMAGE'		=> phpbb_gallery_url::append_sid('posting', 'album_id=' . $album_id . '&amp;image_id=' . $row['image_id'] . '&amp;mode=image&amp;submode=edit'),
+			'U_DELETE_IMAGE'	=> phpbb_gallery_url::append_sid('posting', 'album_id=' . $album_id . '&amp;image_id=' . $row['image_id'] . '&amp;mode=image&amp;submode=delete'),
+			'S_MCP_ACTION'		=> phpbb_gallery_url::append_sid('mcp', "mode=" . (($mode == 'report_details') ? 'report_open' : 'queue_unapproved') . "&amp;album_id=$album_id"),
 		));
 	}
 
@@ -299,8 +299,8 @@ class phpbb_gallery_mcp
 				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
 				'IMAGE_NAME'		=> $row['image_name'],
 				'IMAGE_ID'			=> $row['image_id'],
-				'U_IMAGE'			=> phpbb_gallery::append_sid('image', "album_id=$album_id&amp;image_id=" . $row['image_id']),
-				'U_IMAGE_PAGE'		=> phpbb_gallery::append_sid('mcp', "mode=queue_details&amp;album_id=$album_id&amp;option_id=" . $row['image_id']),
+				'U_IMAGE'			=> phpbb_gallery_url::append_sid('image', "album_id=$album_id&amp;image_id=" . $row['image_id']),
+				'U_IMAGE_PAGE'		=> phpbb_gallery_url::append_sid('mcp', "mode=queue_details&amp;album_id=$album_id&amp;option_id=" . $row['image_id']),
 			));
 		}
 		$db->sql_freeresult($result);
@@ -325,7 +325,7 @@ class phpbb_gallery_mcp
 
 			'TITLE'					=> $user->lang['IMAGES'],
 			'DESCRIPTION'			=> $desc_string,
-			'PAGINATION'			=> generate_pagination(phpbb_gallery::append_sid('mcp', "mode=$mode&amp;album_id=$album_id&amp;sd=$sort_dir&amp;sk=$sort_key"), $count_images, $images_per_page, $start),
+			'PAGINATION'			=> generate_pagination(phpbb_gallery_url::append_sid('mcp', "mode=$mode&amp;album_id=$album_id&amp;sd=$sort_dir&amp;sk=$sort_key"), $count_images, $images_per_page, $start),
 			'PAGE_NUMBER'			=> on_page($count_images, $images_per_page, $start),
 			'TOTAL_IMAGES'			=> ($count_images == 1) ? $user->lang['VIEW_ALBUM_IMAGE'] : sprintf($user->lang['VIEW_ALBUM_IMAGES'], $count_images),
 
@@ -336,7 +336,7 @@ class phpbb_gallery_mcp
 		$template->assign_vars(array(
 			'REPORTED_IMG'				=> $user->img('icon_topic_reported', 'IMAGE_REPORTED'),
 			'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'IMAGE_UNAPPROVED'),
-			'S_MCP_ACTION'				=> phpbb_gallery::append_sid('mcp', "mode=$mode&amp;album_id=$album_id"),
+			'S_MCP_ACTION'				=> phpbb_gallery_url::append_sid('mcp', "mode=$mode&amp;album_id=$album_id"),
 			'DISP_FAKE_THUMB'			=> phpbb_gallery_config::get('mini_thumbnail_disp'),
 			'FAKE_THUMB_SIZE'			=> phpbb_gallery_config::get('mini_thumbnail_size'),
 		));
@@ -426,8 +426,8 @@ class phpbb_gallery_mcp
 				'REPORT_TIME'		=> $user->format_date($row['report_time']),
 				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
 				'IMAGE_NAME'		=> $row['image_name'],
-				'U_IMAGE'			=> phpbb_gallery::append_sid('image', "album_id=$album_id&amp;image_id=" . $row['image_id']),
-				'U_IMAGE_PAGE'		=> phpbb_gallery::append_sid('mcp', 'mode=report_details&amp;album_id=' . $album_id . '&amp;option_id=' . $row['report_id']),
+				'U_IMAGE'			=> phpbb_gallery_url::append_sid('image', "album_id=$album_id&amp;image_id=" . $row['image_id']),
+				'U_IMAGE_PAGE'		=> phpbb_gallery_url::append_sid('mcp', 'mode=report_details&amp;album_id=' . $album_id . '&amp;option_id=' . $row['report_id']),
 			));
 		}
 		$db->sql_freeresult($result);
@@ -448,7 +448,7 @@ class phpbb_gallery_mcp
 
 			'TITLE'					=> $user->lang['REPORTED_IMAGES'],
 			'DESCRIPTION'			=> $desc_string,
-			'PAGINATION'			=> generate_pagination(phpbb_gallery::append_sid('mcp', "mode=$mode&amp;album_id=$album_id&amp;sd=$sort_dir&amp;sk=$sort_key"), $count_images, $images_per_page, $start),
+			'PAGINATION'			=> generate_pagination(phpbb_gallery_url::append_sid('mcp', "mode=$mode&amp;album_id=$album_id&amp;sd=$sort_dir&amp;sk=$sort_key"), $count_images, $images_per_page, $start),
 			'PAGE_NUMBER'			=> on_page($count_images, $images_per_page, $start),
 			'TOTAL_IMAGES'			=> ($count_images == 1) ? $user->lang['VIEW_ALBUM_IMAGE'] : sprintf($user->lang['VIEW_ALBUM_IMAGES'], $count_images),
 
@@ -460,7 +460,7 @@ class phpbb_gallery_mcp
 		$template->assign_vars(array(
 			'REPORTED_IMG'				=> $user->img('icon_topic_reported', 'IMAGE_REPORTED'),
 			'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'IMAGE_UNAPPROVED'),
-			'S_MCP_ACTION'				=> phpbb_gallery::append_sid('mcp', "mode=$mode&amp;album_id=$album_id"),
+			'S_MCP_ACTION'				=> phpbb_gallery_url::append_sid('mcp', "mode=$mode&amp;album_id=$album_id"),
 			'DISP_FAKE_THUMB'			=> phpbb_gallery_config::get('mini_thumbnail_disp'),
 			'FAKE_THUMB_SIZE'			=> phpbb_gallery_config::get('mini_thumbnail_size'),
 		));

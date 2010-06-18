@@ -15,9 +15,9 @@
 define('IN_PHPBB', true);
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include('includes/core.' . $phpEx);
-phpbb_gallery::init(array('mods/gallery_ucp', 'mods/gallery'));
-phpbb_gallery::_include(array('functions_display'));
-phpbb_gallery::_include(array('bbcode', 'message_parser', 'functions_display'), 'phpbb');
+phpbb_gallery::setup(array('mods/gallery_ucp', 'mods/gallery'));
+phpbb_gallery_url::_include(array('functions_display'));
+phpbb_gallery_url::_include(array('bbcode', 'message_parser', 'functions_display'), 'phpbb');
 
 /**
 * Check the request
@@ -119,7 +119,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 {
 	if (phpbb_gallery::$auth->acl_check('m_', $album_id, $album_data['album_user_id']))
 	{
-		$template->assign_var('U_MCP', phpbb_gallery::append_sid('mcp', "album_id=$album_id"));
+		$template->assign_var('U_MCP', phpbb_gallery_url::append_sid('mcp', "album_id=$album_id"));
 	}
 
 	// When we do the slideshow, we don't need the moderators
@@ -238,7 +238,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 			if ($init_block)
 			{
 				$template->assign_block_vars('imageblock', array(
-					//'U_BLOCK'		=> phpbb_gallery::append_sid('album', 'album_id=' . $album_data['album_id']),
+					//'U_BLOCK'		=> phpbb_gallery_url::append_sid('album', 'album_id=' . $album_data['album_id']),
 					'BLOCK_NAME'	=> $album_data['album_name'],
 				));
 				$init_block = false;
@@ -298,34 +298,34 @@ $template->assign_vars(array(
 	'MODERATORS'				=> $moderators_list,
 
 	'U_UPLOAD_IMAGE'			=> ((!$album_data['album_user_id'] || ($album_data['album_user_id'] == $user->data['user_id'])) && (($user->data['user_id'] == ANONYMOUS) || phpbb_gallery::$auth->acl_check('i_upload', $album_id, $album_data['album_user_id']))) ?
-										phpbb_gallery::append_sid('posting', "mode=image&amp;submode=upload&amp;album_id=$album_id") : '',
+										phpbb_gallery_url::append_sid('posting', "mode=image&amp;submode=upload&amp;album_id=$album_id") : '',
 	'U_CREATE_ALBUM'			=> (($album_data['album_user_id'] == $user->data['user_id']) && $allowed_create) ?
-										phpbb_gallery::append_sid('phpbb', 'ucp', "i=gallery&amp;mode=manage_albums&amp;action=create&amp;parent_id=$album_id&amp;redirect=album") : '',
+										phpbb_gallery_url::append_sid('phpbb', 'ucp', "i=gallery&amp;mode=manage_albums&amp;action=create&amp;parent_id=$album_id&amp;redirect=album") : '',
 	'U_EDIT_ALBUM'				=> ($album_data['album_user_id'] == $user->data['user_id']) ?
-										phpbb_gallery::append_sid('phpbb', 'ucp', "i=gallery&amp;mode=manage_albums&amp;action=edit&amp;album_id=$album_id&amp;redirect=album") : '',
-	'U_SLIDE_SHOW'				=> (sizeof(gallery_plugins::$plugins) && gallery_plugins::$slideshow) ? phpbb_gallery::append_sid('album', "album_id=$album_id&amp;mode=slide_show" . (($sort_key != phpbb_gallery_config::get('default_sort_key')) ? "&amp;sk=$sort_key" : '') . (($sort_dir != phpbb_gallery_config::get('default_sort_dir')) ? "&amp;sd=$sort_dir" : '')) : '',
+										phpbb_gallery_url::append_sid('phpbb', 'ucp', "i=gallery&amp;mode=manage_albums&amp;action=edit&amp;album_id=$album_id&amp;redirect=album") : '',
+	'U_SLIDE_SHOW'				=> (sizeof(phpbb_gallery_plugins::$plugins) && phpbb_gallery_plugins::$slideshow) ? phpbb_gallery_url::append_sid('album', "album_id=$album_id&amp;mode=slide_show" . (($sort_key != phpbb_gallery_config::get('default_sort_key')) ? "&amp;sk=$sort_key" : '') . (($sort_dir != phpbb_gallery_config::get('default_sort_dir')) ? "&amp;sd=$sort_dir" : '')) : '',
 	'S_DISPLAY_SEARCHBOX'		=> ($auth->acl_get('u_search') && $config['load_search']) ? true : false,
-	'S_SEARCHBOX_ACTION'		=> phpbb_gallery::append_sid('search', 'aid[]=' . $album_id),
+	'S_SEARCHBOX_ACTION'		=> phpbb_gallery_url::append_sid('search', 'aid[]=' . $album_id),
 
 	'S_THUMBNAIL_SIZE'			=> phpbb_gallery_config::get('thumbnail_height') + 20 + ((phpbb_gallery_config::get('thumbnail_infoline')) ? THUMBNAIL_INFO_HEIGHT : 0),
 	'S_COLS'					=> phpbb_gallery_config::get('album_columns'),
 	'S_COL_WIDTH'				=> (100 / phpbb_gallery_config::get('album_columns')) . '%',
-	'S_JUMPBOX_ACTION'			=> phpbb_gallery::append_sid('album'),
-	'S_ALBUM_ACTION'			=> phpbb_gallery::append_sid('album', "album_id=$album_id"),
+	'S_JUMPBOX_ACTION'			=> phpbb_gallery_url::append_sid('album'),
+	'S_ALBUM_ACTION'			=> phpbb_gallery_url::append_sid('album', "album_id=$album_id"),
 
 	'S_SELECT_SORT_DIR'			=> $s_sort_dir,
 	'S_SELECT_SORT_KEY'			=> $s_sort_key,
 
 	'ALBUM_JUMPBOX'				=> gallery_albumbox(false, '', $album_id),
-	'U_RETURN_LINK'				=> phpbb_gallery::append_sid('index'),
+	'U_RETURN_LINK'				=> phpbb_gallery_url::append_sid('index'),
 	'S_RETURN_LINK'				=> $user->lang['GALLERY'],
 
-	'PAGINATION'				=> generate_pagination(phpbb_gallery::append_sid('album', "album_id=$album_id&amp;sk=$sort_key&amp;sd=$sort_dir&amp;st=$sort_days"), $image_counter, $images_per_page, $start),
+	'PAGINATION'				=> generate_pagination(phpbb_gallery_url::append_sid('album', "album_id=$album_id&amp;sk=$sort_key&amp;sd=$sort_dir&amp;st=$sort_days"), $image_counter, $images_per_page, $start),
 	'TOTAL_IMAGES'				=> ($image_counter == 1) ? $user->lang['IMAGE_#'] : sprintf($user->lang['IMAGES_#'], $image_counter),
 	'PAGE_NUMBER'				=> on_page($image_counter, $images_per_page, $start),
 
 	'L_WATCH_TOPIC'				=> ($album_data['watch_id']) ? $user->lang['UNWATCH_ALBUM'] : $user->lang['WATCH_ALBUM'],
-	'U_WATCH_TOPIC'				=> (($album_data['album_type'] != ALBUM_CAT) && ($user->data['user_id'] != ANONYMOUS)) ? phpbb_gallery::append_sid('posting', "mode=album&amp;submode=" . (($album_data['watch_id']) ?  'unwatch' : 'watch') . "&amp;album_id=$album_id") : '',
+	'U_WATCH_TOPIC'				=> (($album_data['album_type'] != ALBUM_CAT) && ($user->data['user_id'] != ANONYMOUS)) ? phpbb_gallery_url::append_sid('posting', "mode=album&amp;submode=" . (($album_data['watch_id']) ?  'unwatch' : 'watch') . "&amp;album_id=$album_id") : '',
 	'S_WATCHING_TOPIC'			=> ($album_data['watch_id']) ? true : false,
 ));
 

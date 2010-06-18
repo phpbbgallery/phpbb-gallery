@@ -63,39 +63,20 @@ function mod_version_check($return_version = false)
 
 	if ($file)
 	{
-		if (version_compare(PHP_VERSION, '5.0.0', '<'))
+		// let's not stop the page from loading if a mod author messed up their mod check file
+		// also take care of one of the easiest ways to mess up an xml file: "&"
+		$mod = @simplexml_load_string(str_replace('&', '&amp;', $file));
+		if (isset($mod->$var['tag']))
 		{
-			$row = array();
-			$data_array = mvc_setup_array($file);
-
-			$row = $data_array['mods'][$var['tag']];
-			$mod_version = $row['mod_version'];
-			$mod_version = $mod_version['major'] . '.' . $mod_version['minor'] . '.' . $mod_version['revision'] . $mod_version['release'];
+			$row = $mod->$var['tag'];
+			$mod_version = $row->mod_version->major . '.' . $row->mod_version->minor . '.' . $row->mod_version->revision . $row->mod_version->release;
 
 			$data = array(
-				'title'			=> $row['title'],
-				'description'	=> $row['description'],
-				'download'		=> $row['download'],
-				'announcement'	=> $row['announcement'],
+				'title'			=> $row->title,
+				'description'	=> $row->description,
+				'download'		=> $row->download,
+				'announcement'	=> $row->announcement,
 			);
-		}
-		else
-		{
-			// let's not stop the page from loading if a mod author messed up their mod check file
-			// also take care of one of the easiest ways to mess up an xml file: "&"
-			$mod = @simplexml_load_string(str_replace('&', '&amp;', $file));
-			if (isset($mod->$var['tag']))
-			{
-				$row = $mod->$var['tag'];
-				$mod_version = $row->mod_version->major . '.' . $row->mod_version->minor . '.' . $row->mod_version->revision . $row->mod_version->release;
-
-				$data = array(
-					'title'			=> $row->title,
-					'description'	=> $row->description,
-					'download'		=> $row->download,
-					'announcement'	=> $row->announcement,
-				);
-			}
 		}
 	}
 
@@ -124,75 +105,3 @@ function mod_version_check($return_version = false)
 		'U_AUTHOR'			=> 'http://www.phpbb.com/community/memberlist.php?mode=viewprofile&un=' . $var['author'],
 	));
 }
-
-/**
-* this is for php4 only
-* kind of a dirty hack, but since I get the say on how the xml is done, I can have 4 levels max
-*/
-function mvc_setup_array($xml)
-{
-	// Fire up the built-in XML parser
-	$values = $index = array();
-	$parser = xml_parser_create();
-	xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
-
-	// this takes care of one possible xml error
-	$xml = str_replace('&', '&amp;', $xml);
-
-	// Set tag names and values
-	xml_parse_into_struct($parser, $xml, $values, $index);
-
-	// Close down XML parser
-	xml_parser_free($parser);
-
-	$ary = array();
-
-	foreach ($values as $value)
-	{
-		switch (trim($value['level']))
-		{
-			case 1:
-				if ($value['type'] == 'open')
-				{
-					$one = $value['tag'];
-				}
-				else if ($value['type'] == 'complete')
-				{
-					$ary[$value['tag']] = $value['value'];
-				}
-			break;
-
-			case 2:
-				if ($value['type'] == 'open')
-				{
-					$two = $value['tag'];
-				}
-				else if ($value['type'] == 'complete')
-				{
-					$ary[$one][$value['tag']] = $value['value'];
-				}
-			break;
-
-			case 3:
-				if ($value['type'] == 'open')
-				{
-					$three = $value['tag'];
-				}
-				else if ($value['type'] == 'complete')
-				{
-					$ary[$one][$two][$value['tag']] = $value['value'];
-				}
-			break;
-
-			case 4:
-				if ($value['type'] == 'complete')
-				{
-					$ary[$one][$two][$three][$value['tag']] = isset($value['value']) ? $value['value'] : '';
-				}
-			break;
-		}
-	}
-	return $ary;
-}
-
-?>

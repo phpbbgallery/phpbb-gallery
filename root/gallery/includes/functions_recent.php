@@ -28,18 +28,18 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 	{
 		global $phpbb_root_path, $phpEx;
 		include('core.' . $phpEx);
-		phpbb_gallery::init('no_setup', $phpbb_root_path);
+		phpbb_gallery::init($phpbb_root_path);
 	}
 
 	$user->add_lang('mods/gallery');
 
 	if (!function_exists('generate_text_for_display'))
 	{
-		phpbb_gallery::_include('message_parser', 'phpbb');
+		phpbb_gallery_url::_include('message_parser', 'phpbb');
 	}
 	if (!function_exists('assign_image_block'))
 	{
-		phpbb_gallery::_include('functions_display');
+		phpbb_gallery_url::_include('functions_display');
 	}
 
 	$album_id = $user_id = 0;
@@ -204,7 +204,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 		{
 			$num = 0;
 			$template->assign_block_vars('imageblock', array(
-				'U_BLOCK'			=> phpbb_gallery::append_sid('search', 'search_id=recent'),
+				'U_BLOCK'			=> phpbb_gallery_url::append_sid('search', 'search_id=recent'),
 				'BLOCK_NAME'		=> $user->lang['RECENT_IMAGES'],
 			));
 			foreach ($recent_images as $recent_image)
@@ -226,7 +226,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 		{
 			$num = 0;
 			$template->assign_block_vars('imageblock', array(
-				'U_BLOCK'			=> phpbb_gallery::append_sid('search', 'search_id=random'),
+				'U_BLOCK'			=> phpbb_gallery_url::append_sid('search', 'search_id=random'),
 				'BLOCK_NAME'		=> $user->lang['RANDOM_IMAGES'],
 			));
 			foreach ($random_images as $random_image)
@@ -250,7 +250,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 			{
 				$num = 0;
 				$template->assign_block_vars('imageblock', array(
-					'U_BLOCK'			=> phpbb_gallery::append_sid('album', 'album_id=' . $contest_data['album_id'] . '&amp;sk=ra&amp;sd=d'),
+					'U_BLOCK'			=> phpbb_gallery_url::append_sid('album', 'album_id=' . $contest_data['album_id'] . '&amp;sk=ra&amp;sd=d'),
 					'BLOCK_NAME'		=> sprintf($user->lang['CONTEST_WINNERS_OF'], $contest_data['album_name']),
 					'S_CONTEST_BLOCK'	=> true,
 				));
@@ -308,13 +308,13 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 			$album_id = $commentrow['image_album_id'];
 
 			$template->assign_block_vars('commentrow', array(
-				'U_COMMENT'		=> phpbb_gallery::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id") . '#' . $commentrow['comment_id'],
+				'U_COMMENT'		=> phpbb_gallery_url::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id") . '#' . $commentrow['comment_id'],
 				'COMMENT_ID'	=> $commentrow['comment_id'],
 				'TIME'			=> $user->format_date($commentrow['comment_time']),
 				'TEXT'			=> generate_text_for_display($commentrow['comment'], $commentrow['comment_uid'], $commentrow['comment_bitfield'], 7),
-				'U_DELETE'		=> (phpbb_gallery::$auth->acl_check('m_comments', $album_id) || (phpbb_gallery::$auth->acl_check('c_delete', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? phpbb_gallery::append_sid('posting', "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=delete&amp;comment_id=" . $commentrow['comment_id']) : '',
-				'U_EDIT'		=> (phpbb_gallery::$auth->acl_check('m_comments', $album_id) || (phpbb_gallery::$auth->acl_check('c_edit', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? phpbb_gallery::append_sid('posting', "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=edit&amp;comment_id=" . $commentrow['comment_id']) : '',
-				'U_INFO'		=> ($auth->acl_get('a_')) ? phpbb_gallery::append_sid('mcp', 'mode=whois&amp;ip=' . $commentrow['comment_user_ip']) : '',
+				'U_DELETE'		=> (phpbb_gallery::$auth->acl_check('m_comments', $album_id) || (phpbb_gallery::$auth->acl_check('c_delete', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? phpbb_gallery_url::append_sid('posting', "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=delete&amp;comment_id=" . $commentrow['comment_id']) : '',
+				'U_EDIT'		=> (phpbb_gallery::$auth->acl_check('m_comments', $album_id) || (phpbb_gallery::$auth->acl_check('c_edit', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? phpbb_gallery_url::append_sid('posting', "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=edit&amp;comment_id=" . $commentrow['comment_id']) : '',
+				'U_INFO'		=> ($auth->acl_get('a_')) ? phpbb_gallery_url::append_sid('mcp', 'mode=whois&amp;ip=' . $commentrow['comment_user_ip']) : '',
 
 				'UC_THUMBNAIL'			=> generate_image_link('thumbnail', phpbb_gallery_config::get('link_thumbnail'), $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
 				'UC_IMAGE_NAME'			=> generate_image_link('image_name', phpbb_gallery_config::get('link_image_name'), $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
