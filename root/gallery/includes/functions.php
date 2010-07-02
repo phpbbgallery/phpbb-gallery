@@ -395,9 +395,9 @@ function handle_image_counter($image_id_ary, $add, $readd = false)
 {
 	global $db;
 
-	if (!function_exists('gallery_hookup_image_counter'))
+	if (!class_exists('phpbb_gallery_hookup'))
 	{
-		phpbb_gallery_url::_include('hookup_gallery');
+		phpbb_gallery_url::_include_core('hookup');
 	}
 
 	$num_images = $num_comments = 0;
@@ -423,7 +423,7 @@ function handle_image_counter($image_id_ary, $add, $readd = false)
 			'user_id'				=> $row['image_user_id'],
 			'user_images'			=> $row['images'],
 		);
-		gallery_hookup_image_counter($row['image_user_id'], (($add) ? $row['images'] : 0 - $row['images']));
+		phpbb_gallery_hookup::add_image($row['image_user_id'], (($add) ? $row['images'] : 0 - $row['images']));
 
 		$num_images = $num_images + $row['images'];
 		$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '

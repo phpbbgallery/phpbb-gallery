@@ -20,9 +20,9 @@ if (!defined('IN_PHPBB'))
 class phpbb_gallery_hookup
 {
 	// Edit your amounts here.
-	public const GALLERY_ADD_CASH = 10;
-	public const GALLERY_DELETE_CASH = 10;
-	public const GALLERY_VIEW_CASH = 1;
+	const GALLERY_ADD_CASH = 10;
+	const GALLERY_DELETE_CASH = 10;
+	const GALLERY_VIEW_CASH = 1;
 
 	/**
 	* Hookup image counter
@@ -70,7 +70,7 @@ class phpbb_gallery_hookup
 	*
 	* @param int $user_id		ID of the user, who viewed the images
 	*/
-	public static function viewing_image($user_id)
+	public static function view_image($user_id)
 	{
 		global $config, $db, $user;
 
