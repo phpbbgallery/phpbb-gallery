@@ -88,7 +88,7 @@ class phpbb_gallery_config
 			return false;
 		}
 
-		set_config_count(self::$prefix . $config_name, 0 - (int) $increment, self::is_dynamic($config_name));
+		set_config_count(self::$prefix . $config_name, 0 - (int) $decrement, self::is_dynamic($config_name));
 		self::$config[$config_name] -= (int) $decrement;
 		return true;
 	}
