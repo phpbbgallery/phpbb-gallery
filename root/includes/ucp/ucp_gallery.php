@@ -710,17 +710,13 @@ class ucp_gallery
 			$num_images = sizeof($deleted_images);
 			if ($num_images)
 			{
-				if (!function_exists('gallery_hookup_image_counter'))
-				{
-					phpbb_gallery_url::_include('hookup_gallery');
-				}
 				phpbb_gallery_hookup::add_image($user->data['user_id'], 0 - $num_images);
 
 				// No errors, if the image_count would be lower than 0
 				$db->sql_return_on_error(true);
 				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
 					SET user_images = user_images - ' . $num_images . '
-					WHERE user_id = ' . $user_data['user_id'];
+					WHERE user_id = ' . $user->data['user_id'];
 				$result = $db->sql_query($sql);
 				if ($result === false)
 				{
