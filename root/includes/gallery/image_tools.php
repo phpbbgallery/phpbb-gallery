@@ -22,85 +22,62 @@ if (!defined('IN_PHPBB'))
 *
 * resize, rotate, watermark, read exif, create thumbnail, write to hdd, send to browser
 */
-class nv_image_tools
+class phpbb_gallery_image_tools
 {
-	var $chmod = 0777;
+	public $chmod = 0777;
 
-	var $errors = array();
+	public $errors = array();
 
-	var $exif_data = array();
-	var $exif_data_exist = 2;
-	var $exif_data_serialized = '';
-	var $exif_data_force_db = false;
+	public $exif_data = array();
+	public $exif_data_exist = 2;
+	public $exif_data_serialized = '';
+	public $exif_data_force_db = false;
 
-	var $gd_version = 0;
+	public $gd_version = 0;
 
-	var $image;
-	var $image_content_type;
-	var $image_name = '';
-	var $image_quality = 100;
-	var $image_size = array();
-	var $image_source = '';
-	var $image_type;
+	public $image;
+	public $image_content_type;
+	public $image_name = '';
+	public $image_quality = 100;
+	public $image_size = array();
+	public $image_source = '';
+	public $image_type;
 
-	var $max_file_size = 0;
-	var $max_height = 0;
-	var $max_width = 0;
+	public $max_file_size = 0;
+	public $max_height = 0;
+	public $max_width = 0;
 
-	var $resized = false;
-	var $rotated = false;
+	public $resized = false;
+	public $rotated = false;
 
-	var $thumb_height = 0;
-	var $thumb_width = 0;
+	public $thumb_height = 0;
+	public $thumb_width = 0;
 
-	var $watermark;
-	var $watermark_size = array();
-	var $watermark_source = '';
-	var $watermarked = false;
+	public $watermark;
+	public $watermark_size = array();
+	public $watermark_source = '';
+	public $watermarked = false;
 
 	/**
 	* Constructor - init some basic stuff
 	* PHP5: function __constructor()
 	*/
-	function nv_image_tools($gd_version = 0)
+	public function phpbb_gallery_image_tools($gd_version = 0)
 	{
-		if (!defined('EXIF_UNAVAILABLE'))
-		{
-			define('EXIF_UNAVAILABLE', 0);
-			define('EXIF_AVAILABLE', 1);
-			define('EXIF_UNKNOWN', 2);
-			define('EXIF_DBSAVED', 3);
-			define('EXIFTIME_OFFSET', 0); // Use this constant, to change the exif-timestamp. Offset in seconds
-		}
-		if (!defined('WATERMARK_TOP'))
-		{
-			define('WATERMARK_TOP', 1);
-			define('WATERMARK_MIDDLE', 2);
-			define('WATERMARK_BOTTOM', 4);
-			define('WATERMARK_LEFT', 8);
-			define('WATERMARK_CENTER', 16);
-			define('WATERMARK_RIGHT', 32);
-		}
-		if (!defined('GDLIB1'))
-		{
-			define('GDLIB1', 1);
-			define('GDLIB2', 2);
-		}
-
 		if ($gd_version)
 		{
 			$this->gd_version = $gd_version;
 		}
 	}
 
-	function set_image_options($max_file_size, $max_height, $max_width)
+	public function set_image_options($max_file_size, $max_height, $max_width)
 	{
 		$this->max_file_size = $max_file_size;
 		$this->max_height = $max_height;
 		$this->max_width = $max_width;
 	}
 
-	function set_image_data($source = '', $name = '', $size = 0)
+	public function set_image_data($source = '', $name = '', $size = 0)
 	{
 		if ($source)
 		{
@@ -121,7 +98,7 @@ class nv_image_tools
 	*
 	* Only use this, if the image is secure. As we created all these images, they should be...
 	*/
-	function mimetype_by_filename($filename)
+	public function mimetype_by_filename($filename)
 	{
 		switch (utf8_substr(strtolower($filename), -4))
 		{
@@ -143,7 +120,7 @@ class nv_image_tools
 	/**
 	* Read image
 	*/
-	function read_image($force_filesize = false)
+	public function read_image($force_filesize = false)
 	{
 		if (!file_exists($this->image_source))
 		{
@@ -188,7 +165,7 @@ class nv_image_tools
 	/**
 	* Write image to disk
 	*/
-	function write_image($destination, $quality = 100, $destroy_image = false)
+	public function write_image($destination, $quality = 100, $destroy_image = false)
 	{
 		switch ($this->image_type)
 		{
@@ -211,10 +188,28 @@ class nv_image_tools
 	}
 
 	/**
+	* Get a browser friendly UTF-8 encoded filename
+	*/
+	public function header_filename($file)
+	{
+		$user_agent = (!empty($_SERVER['HTTP_USER_AGENT'])) ? htmlspecialchars((string) $_SERVER['HTTP_USER_AGENT']) : '';
+
+		// There be dragons here.
+		// Not many follows the RFC...
+		if (strpos($user_agent, 'MSIE') !== false || strpos($user_agent, 'Safari') !== false || strpos($user_agent, 'Konqueror') !== false)
+		{
+			return "filename=" . rawurlencode($file);
+		}
+
+		// follow the RFC for extended filename for the rest
+		return "filename*=UTF-8''" . rawurlencode($file);
+	}
+
+	/**
 	* Sending the image to the browser.
 	* Mostly copied from phpBB::download/file.php
 	*/
-	function send_image_to_browser($content_length = 0)
+	public function send_image_to_browser($content_length = 0)
 	{
 		global $db, $user;
 
@@ -237,27 +232,9 @@ class nv_image_tools
 			header('X-Content-Type-Options: nosniff');
 		}
 
-		/**
-		* Get a browser friendly UTF-8 encoded filename
-		*/
-		function header_filename($file)
-		{
-			$user_agent = (!empty($_SERVER['HTTP_USER_AGENT'])) ? htmlspecialchars((string) $_SERVER['HTTP_USER_AGENT']) : '';
-
-			// There be dragons here.
-			// Not many follows the RFC...
-			if (strpos($user_agent, 'MSIE') !== false || strpos($user_agent, 'Safari') !== false || strpos($user_agent, 'Konqueror') !== false)
-			{
-				return "filename=" . rawurlencode($file);
-			}
-
-			// follow the RFC for extended filename for the rest
-			return "filename*=UTF-8''" . rawurlencode($file);
-		}
-
 		if (empty($user->browser) || (!$is_ie8 && (strpos(strtolower($user->browser), 'msie') !== false)))
 		{
-			header('Content-Disposition: attachment; ' . header_filename(htmlspecialchars_decode($this->image_name)));
+			header('Content-Disposition: attachment; ' . $this->header_filename(htmlspecialchars_decode($this->image_name)));
 			if (empty($user->browser) || (strpos(strtolower($user->browser), 'msie 6.0') !== false))
 			{
 				header('expires: -1');
@@ -265,7 +242,7 @@ class nv_image_tools
 		}
 		else
 		{
-			header('Content-Disposition: inline; ' . header_filename(htmlspecialchars_decode($this->image_name)));
+			header('Content-Disposition: inline; ' . $this->header_filename(htmlspecialchars_decode($this->image_name)));
 			if ($is_ie8)
 			{
 				header('X-Download-Options: noopen');
@@ -308,7 +285,7 @@ class nv_image_tools
 		}
 	}
 
-	function create_thumbnail($max_width, $max_height, $print_details = false, $additional_height = 0, $image_size = array())
+	public function create_thumbnail($max_width, $max_height, $print_details = false, $additional_height = 0, $image_size = array())
 	{
 		$this->resize_image($max_width, $max_height, (($print_details) ? $additional_height : 0));
 
@@ -326,7 +303,7 @@ class nv_image_tools
 		}
 	}
 
-	function resize_image($max_width, $max_height, $additional_height = 0)
+	public function resize_image($max_width, $max_height, $additional_height = 0)
 	{
 		if (!$this->image)
 		{
@@ -350,8 +327,8 @@ class nv_image_tools
 			$this->thumb_width	= $max_width;
 		}
 
-		$image_copy = (($this->gd_version == GDLIB1) ? @imagecreate($this->thumb_width, $this->thumb_height + $additional_height) : @imagecreatetruecolor($this->thumb_width, $this->thumb_height + $additional_height));
-		$resize_function = ($this->gd_version == GDLIB1) ? 'imagecopyresized' : 'imagecopyresampled';
+		$image_copy = (($this->gd_version == phpbb_gallery_constants::GDLIB1) ? @imagecreate($this->thumb_width, $this->thumb_height + $additional_height) : @imagecreatetruecolor($this->thumb_width, $this->thumb_height + $additional_height));
+		$resize_function = ($this->gd_version == phpbb_gallery_constants::GDLIB1) ? 'imagecopyresized' : 'imagecopyresampled';
 		$resize_function($image_copy, $this->image, 0, 0, 0, 0, $this->thumb_width, $this->thumb_height, $this->image_size['width'], $this->image_size['height']);
 
 		imagealphablending($image_copy, true);
@@ -370,7 +347,7 @@ class nv_image_tools
 	* Rotate the image
 	* Usage optimized for 0°, 90°, 180° and 270° because of the height and width
 	*/
-	function rotate_image($angle, $ignore_dimensions)
+	public function rotate_image($angle, $ignore_dimensions)
 	{
 		if (!function_exists('imagerotate'))
 		{
@@ -422,7 +399,7 @@ class nv_image_tools
 	*
 	* @param int $watermark_position summary of the parameters for vertical and horizontal adjustment
 	*/
-	function watermark_image($watermark_source, $watermark_position = 20, $min_height = 0, $min_width = 0)
+	public function watermark_image($watermark_source, $watermark_position = 20, $min_height = 0, $min_width = 0)
 	{
 		$this->watermark_source = $watermark_source;
 		if (!$this->watermark_source || !file_exists($this->watermark_source))
@@ -465,19 +442,19 @@ class nv_image_tools
 		// Where do we display the watermark? up-left, down-right, ...?
 		$dst_x = (($this->image_size['width'] * 0.5) - ($this->watermark_size[0] * 0.5));
 		$dst_y = ($this->image_size['height'] - $this->watermark_size[1] - 5);
-		if ($watermark_position & WATERMARK_LEFT)
+		if ($watermark_position & phpbb_gallery_constants::WATERMARK_LEFT)
 		{
 			$dst_x = 5;
 		}
-		elseif ($watermark_position & WATERMARK_RIGHT)
+		elseif ($watermark_position & phpbb_gallery_constants::WATERMARK_RIGHT)
 		{
 			$dst_x = ($this->image_size['width'] - $this->watermark_size[0] - 5);
 		}
-		if ($watermark_position & WATERMARK_TOP)
+		if ($watermark_position & phpbb_gallery_constants::WATERMARK_TOP)
 		{
 			$dst_y = 5;
 		}
-		elseif ($watermark_position & WATERMARK_MIDDLE)
+		elseif ($watermark_position & phpbb_gallery_constants::WATERMARK_MIDDLE)
 		{
 			$dst_y = (($this->image_size['height'] * 0.5) - ($this->watermark_size[1] * 0.5));
 		}
@@ -490,7 +467,7 @@ class nv_image_tools
 	/**
 	* Read exif data from the image
 	*/
-	function read_exif_data()
+	public function read_exif_data()
 	{
 		if (!function_exists('exif_read_data') || !$this->image_source)
 		{
@@ -521,11 +498,11 @@ class nv_image_tools
 			}
 
 			$this->exif_data_serialized = serialize($this->exif_data);
-			$this->exif_data_exist = EXIF_DBSAVED;
+			$this->exif_data_exist = phpbb_gallery_constants::EXIF_DBSAVED;
 		}
 		else
 		{
-			$this->exif_data_exist = EXIF_UNAVAILABLE;
+			$this->exif_data_exist = phpbb_gallery_constants::EXIF_UNAVAILABLE;
 		}
 	}
 }

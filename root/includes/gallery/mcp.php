@@ -21,7 +21,7 @@ class phpbb_gallery_mcp
 {
 	static protected $allowed_sort_params = array('image_time', 'image_name_clean', 'image_username_clean', 'image_view_count', 'image_rate_avg', 'image_comments', 'image_last_comment');
 
-	static function build_navigation($album_id, $mode, $option_id = false)
+	static public function build_navigation($album_id, $mode, $option_id = false)
 	{
 		global $user, $template;
 
@@ -35,16 +35,16 @@ class phpbb_gallery_mcp
 			'album'		=> array(
 				//array('name' => 'GALLERY_MCP_OVERVIEW', 'mode' => 'overview'),
 				array('name' => 'GALLERY_MCP_VIEWALBUM', 'mode' => 'album'),
-				),
+			),
 			'report'		=> array(
 				array('name' => 'GALLERY_MCP_REPO_OPEN', 'mode' => 'report_open'),
 				array('name' => 'GALLERY_MCP_REPO_DONE', 'mode' => 'report_closed'),
-				),
+			),
 			'queue'		=> array(
 				array('name' => 'GALLERY_MCP_UNAPPROVED', 'mode' => 'queue_unapproved'),
 				array('name' => 'GALLERY_MCP_APPROVED', 'mode' => 'queue_approved'),
 				array('name' => 'GALLERY_MCP_LOCKED', 'mode' => 'queue_locked'),
-				),
+			),
 		);
 		if ($mode == 'queue_details')
 		{
@@ -70,6 +70,7 @@ class phpbb_gallery_mcp
 				'TAB_NAME'		=> $user->lang[$navtab['name']],
 				'U_TAB'			=> phpbb_gallery_url::append_sid('mcp', 'mode=' .  $navtab['mode'] . '&amp;album_id=' . $album_id),
 			));
+
 			if (strrpos(substr($mode, 0, 5), substr($navtab['mode_s'], 0, 5)) !== false)
 			{
 				$mode_s = $navtab['mode_s'];
@@ -80,6 +81,7 @@ class phpbb_gallery_mcp
 						'MODE_NAME'			=> $user->lang[$navsubsection['name']],
 						'U_MODE'			=> phpbb_gallery_url::append_sid('mcp', 'mode=' .  $navsubsection['mode'] . '&amp;album_id=' . $album_id . (($option_id && (($navsubsection['mode'] == 'report_details') || ($navsubsection['mode'] == 'queue_details'))) ? '&amp;option_id=' . $option_id : '')),
 					));
+
 					if ($navsubsection['mode'] == $mode)
 					{
 						$page_title = $user->lang[$navsubsection['name']];
@@ -95,7 +97,7 @@ class phpbb_gallery_mcp
 		return $page_title;
 	}
 
-	static function album($mode, $album_id, $album_data)
+	static public function album($mode, $album_id, $album_data)
 	{
 		global $config, $db, $template, $user;
 
@@ -110,7 +112,7 @@ class phpbb_gallery_mcp
 			$sort_key = 'image_time';
 		}
 
-		$m_status = ' AND image_status <> ' . IMAGE_UNAPPROVED;
+		$m_status = ' AND image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED;
 		if (phpbb_gallery::$auth->acl_check('m_status', $album_id))
 		{
 			$m_status = '';
@@ -136,7 +138,7 @@ class phpbb_gallery_mcp
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$template->assign_block_vars('image_row', array(
-				'THUMBNAIL'			=> generate_image_link('fake_thumbnail', phpbb_gallery_config::get('link_thumbnail'), $row['image_id'], $row['image_name'], $album_id),
+				'THUMBNAIL'			=> phpbb_gallery_image::generate_link('fake_thumbnail', phpbb_gallery_config::get('link_thumbnail'), $row['image_id'], $row['image_name'], $album_id),
 				'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
 				'IMAGE_NAME'		=> $row['image_name'],
@@ -144,8 +146,8 @@ class phpbb_gallery_mcp
 				'RATING'			=> ($row['image_rate_avg'] / 100),
 				'STATUS'			=> $user->lang['QUEUE_STATUS_' . $row['image_status']],
 				'IMAGE_ID'			=> $row['image_id'],
-				'S_REPORTED'		=> (isset($row['report_status']) && ($row['report_status'] == REPORT_OPEN)) ? true : false,
-				'S_UNAPPROVED'		=> ($row['image_status'] == IMAGE_UNAPPROVED) ? true : false,
+				'S_REPORTED'		=> (isset($row['report_status']) && ($row['report_status'] == phpbb_gallery_constants::REPORT_OPEN)) ? true : false,
+				'S_UNAPPROVED'		=> ($row['image_status'] == phpbb_gallery_image::STATUS_UNAPPROVED) ? true : false,
 				'U_IMAGE'			=> phpbb_gallery_url::append_sid('image', "album_id=$album_id&amp;image_id=" . $row['image_id']),
 				'U_IMAGE_PAGE'		=> phpbb_gallery_url::append_sid('image_page', "album_id=$album_id&amp;image_id=" . $row['image_id']),
 				'U_REPORT'			=> phpbb_gallery_url::append_sid('mcp', "mode=report_details&amp;album_id=$album_id&amp;option_id=" . $row['report_id']),
@@ -173,14 +175,14 @@ class phpbb_gallery_mcp
 
 		$template->assign_vars(array(
 			'REPORTED_IMG'				=> $user->img('icon_topic_reported', 'IMAGE_REPORTED'),
-			'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'IMAGE_UNAPPROVED'),
+			'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'phpbb_gallery_image::STATUS_UNAPPROVED'),
 			'S_MCP_ACTION'				=> phpbb_gallery_url::append_sid('mcp', "mode=$mode&amp;album_id=$album_id"),
 			'DISP_FAKE_THUMB'			=> phpbb_gallery_config::get('mini_thumbnail_disp'),
 			'FAKE_THUMB_SIZE'			=> phpbb_gallery_config::get('mini_thumbnail_size'),
 		));
 	}
 
-	static function details($mode, $option_id, $album_id, $album_data)
+	static public function details($mode, $option_id, $album_id, $album_data)
 	{
 		global $db, $template, $user;
 
@@ -200,7 +202,7 @@ class phpbb_gallery_mcp
 		}
 		else if ($mode == 'report_details')
 		{
-			$m_status = ' AND i.image_status <> ' . IMAGE_UNAPPROVED;
+			$m_status = ' AND i.image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED;
 			if (phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id']))
 			{
 				$m_status = '';
@@ -249,7 +251,7 @@ class phpbb_gallery_mcp
 		));
 	}
 
-	static function queue($mode, $album_id, $album_data)
+	static public function queue($mode, $album_id, $album_data)
 	{
 		global $config, $db, $template, $user;
 
@@ -267,7 +269,7 @@ class phpbb_gallery_mcp
 		$where_case = '';
 		if ($mode == 'queue_unapproved')
 		{
-			$where_case = 'AND image_status = ' . IMAGE_UNAPPROVED;
+			$where_case = 'AND image_status = ' . phpbb_gallery_image::STATUS_UNAPPROVED;
 		}
 		else if ($mode == 'queue_approved')
 		{
@@ -335,14 +337,14 @@ class phpbb_gallery_mcp
 
 		$template->assign_vars(array(
 			'REPORTED_IMG'				=> $user->img('icon_topic_reported', 'IMAGE_REPORTED'),
-			'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'IMAGE_UNAPPROVED'),
+			'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'phpbb_gallery_image::STATUS_UNAPPROVED'),
 			'S_MCP_ACTION'				=> phpbb_gallery_url::append_sid('mcp', "mode=$mode&amp;album_id=$album_id"),
 			'DISP_FAKE_THUMB'			=> phpbb_gallery_config::get('mini_thumbnail_disp'),
 			'FAKE_THUMB_SIZE'			=> phpbb_gallery_config::get('mini_thumbnail_size'),
 		));
 	}
 
-	static function report($mode, $album_id, $album_data)
+	static public function report($mode, $album_id, $album_data)
 	{
 		global $config, $db, $template, $user;
 
@@ -357,7 +359,7 @@ class phpbb_gallery_mcp
 			$sort_key = 'image_time';
 		}
 
-		$m_status = ' AND i.image_status <> ' . IMAGE_UNAPPROVED;
+		$m_status = ' AND i.image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED;
 		if (phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id']))
 		{
 			$m_status = '';
@@ -459,7 +461,7 @@ class phpbb_gallery_mcp
 
 		$template->assign_vars(array(
 			'REPORTED_IMG'				=> $user->img('icon_topic_reported', 'IMAGE_REPORTED'),
-			'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'IMAGE_UNAPPROVED'),
+			'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'phpbb_gallery_image::STATUS_UNAPPROVED'),
 			'S_MCP_ACTION'				=> phpbb_gallery_url::append_sid('mcp', "mode=$mode&amp;album_id=$album_id"),
 			'DISP_FAKE_THUMB'			=> phpbb_gallery_config::get('mini_thumbnail_disp'),
 			'FAKE_THUMB_SIZE'			=> phpbb_gallery_config::get('mini_thumbnail_size'),

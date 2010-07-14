@@ -38,7 +38,6 @@ if (!defined('GALLERY_ROOT_PATH'))
 {
 	trigger_error('MISSING_CONSTANTS');
 }
-include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/constants.'.$phpEx);
 
 //need some module-names
 $user->add_lang(array('acp/common', 'ucp', 'mods/info_acp_gallery', 'mods/info_ucp_gallery'));

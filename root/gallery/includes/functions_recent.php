@@ -37,10 +37,6 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 	{
 		phpbb_gallery_url::_include('message_parser', 'phpbb');
 	}
-	if (!function_exists('assign_image_block'))
-	{
-		phpbb_gallery_url::_include('functions_display');
-	}
 
 	$album_id = $user_id = 0;
 	switch ($mode_id)
@@ -66,7 +62,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 		if (phpbb_gallery::$auth->acl_check('i_view', $album_id))
 		{
 			$view_albums[] = $album_id;
-			$sql_permission_where = '(image_album_id = ' . $album_id . ' AND image_status <> ' . IMAGE_UNAPPROVED . ')';
+			$sql_permission_where = '(image_album_id = ' . $album_id . ' AND image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . ')';
 		}
 		if (phpbb_gallery::$auth->acl_check('m_status', $album_id))
 		{
@@ -85,7 +81,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 		$comment_albums = phpbb_gallery::$auth->acl_album_ids('c_read', 'array', true, $include_pgalleries);
 
 		$sql_permission_where = '(';
-		$sql_permission_where .= ((sizeof($view_albums)) ? '(' . $db->sql_in_set('image_album_id', $view_albums) . ' AND image_status <> ' . IMAGE_UNAPPROVED . (($user_id) ? ' AND image_contest = ' . IMAGE_NO_CONTEST : '') . ')' : '');
+		$sql_permission_where .= ((sizeof($view_albums)) ? '(' . $db->sql_in_set('image_album_id', $view_albums) . ' AND image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . (($user_id) ? ' AND image_contest = ' . phpbb_gallery_image::NO_CONTEST : '') . ')' : '');
 		$sql_permission_where .= ((sizeof($moderate_albums)) ? ((sizeof($view_albums)) ? ' OR ' : '') . '(' . $db->sql_in_set('image_album_id', $moderate_albums, false, true) . ')' : '');
 		$sql_permission_where .= ($user_id) ? ') AND image_user_id = ' . $user_id : ')';
 	}
@@ -94,7 +90,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 	{
 		$images = $recent_images = $random_images = $contest_images = array();
 		// First step: grab all the IDs we are going to display ...
-		if ($mode & RRC_MODE_RECENT)
+		if ($mode & phpbb_gallery_constants::RRC_MODE_RECENT)
 		{
 			$sql = 'SELECT image_id
 				FROM ' . GALLERY_IMAGES_TABLE . "
@@ -109,7 +105,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 			}
 			$db->sql_freeresult($result);
 		}
-		if ($mode & RRC_MODE_RANDOM)
+		if ($mode & phpbb_gallery_constants::RRC_MODE_RANDOM)
 		{
 			switch ($db->sql_layer)
 			{
@@ -151,7 +147,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 					),
 				),
 
-				'WHERE'			=> $db->sql_in_set('c.contest_album_id', array_unique(array_merge($view_albums, $moderate_albums))) . ' AND c.contest_marked = ' . IMAGE_NO_CONTEST,
+				'WHERE'			=> $db->sql_in_set('c.contest_album_id', array_unique(array_merge($view_albums, $moderate_albums))) . ' AND c.contest_marked = ' . phpbb_gallery_image::NO_CONTEST,
 				'ORDER_BY'		=> 'c.contest_start + c.contest_end DESC',
 			);
 			$sql = $db->sql_build_query('SELECT', $sql_array);
@@ -213,7 +209,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 				{
 					$template->assign_block_vars('imageblock.imagerow', array());
 				}
-				assign_image_block('imageblock.imagerow.image', $images_data[$recent_image], $images_data[$recent_image]['album_status'], $display, $images_data[$recent_image]['album_user_id']);
+				phpbb_gallery_image::assign_block('imageblock.imagerow.image', $images_data[$recent_image], $images_data[$recent_image]['album_status'], $display, $images_data[$recent_image]['album_user_id']);
 				$num++;
 			}
 			while (($num % $ints['columns']) > 0)
@@ -235,7 +231,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 				{
 					$template->assign_block_vars('imageblock.imagerow', array());
 				}
-				assign_image_block('imageblock.imagerow.image', $images_data[$random_image], $images_data[$random_image]['album_status'], $display, $images_data[$random_image]['album_user_id']);
+				phpbb_gallery_image::assign_block('imageblock.imagerow.image', $images_data[$random_image], $images_data[$random_image]['album_status'], $display, $images_data[$random_image]['album_user_id']);
 				$num++;
 			}
 			while (($num % $ints['columns']) > 0)
@@ -256,17 +252,17 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 				));
 				foreach ($contest_data['images'] as $contest_image)
 				{
-					if (($num % CONTEST_IMAGES) == 0)
+					if (($num % phpbb_gallery_constants::CONTEST_IMAGES) == 0)
 					{
 						$template->assign_block_vars('imageblock.imagerow', array());
 					}
 					if (!empty($images_data[$contest_image]))
 					{
-						assign_image_block('imageblock.imagerow.image', $images_data[$contest_image], $images_data[$contest_image]['album_status'], $display, $images_data[$contest_image]['album_user_id']);
+						phpbb_gallery_image::assign_block('imageblock.imagerow.image', $images_data[$contest_image], $images_data[$contest_image]['album_status'], $display, $images_data[$contest_image]['album_user_id']);
 						$num++;
 					}
 				}
-				while (($num % CONTEST_IMAGES) > 0)
+				while (($num % phpbb_gallery_constants::CONTEST_IMAGES) > 0)
 				{
 					$template->assign_block_vars('imageblock.imagerow.no_image', array());
 					$num++;
@@ -275,13 +271,13 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 		}
 
 		$template->assign_vars(array(
-			'S_THUMBNAIL_SIZE'		=> phpbb_gallery_config::get('thumbnail_height') + 20 + ((phpbb_gallery_config::get('thumbnail_infoline')) ? THUMBNAIL_INFO_HEIGHT : 0),
+			'S_THUMBNAIL_SIZE'		=> phpbb_gallery_config::get('thumbnail_height') + 20 + ((phpbb_gallery_config::get('thumbnail_infoline')) ? phpbb_gallery_constants::THUMBNAIL_INFO_HEIGHT : 0),
 			'S_COL_WIDTH'			=> (100 / $ints['columns']) . '%',
 			'S_COLS'				=> $ints['columns'],
 		));
 	}
 
-	if (phpbb_gallery_config::get('allow_comments') && ($mode & RRC_MODE_COMMENT) && sizeof($comment_albums) && $ints['comments'])
+	if (phpbb_gallery_config::get('allow_comments') && ($mode & phpbb_gallery_constants::RRC_MODE_COMMENT) && sizeof($comment_albums) && $ints['comments'])
 	{
 		$user->add_lang('viewtopic');
 
@@ -316,8 +312,8 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 				'U_EDIT'		=> (phpbb_gallery::$auth->acl_check('m_comments', $album_id) || (phpbb_gallery::$auth->acl_check('c_edit', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? phpbb_gallery_url::append_sid('posting', "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=edit&amp;comment_id=" . $commentrow['comment_id']) : '',
 				'U_INFO'		=> ($auth->acl_get('a_')) ? phpbb_gallery_url::append_sid('mcp', 'mode=whois&amp;ip=' . $commentrow['comment_user_ip']) : '',
 
-				'UC_THUMBNAIL'			=> generate_image_link('thumbnail', phpbb_gallery_config::get('link_thumbnail'), $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
-				'UC_IMAGE_NAME'			=> generate_image_link('image_name', phpbb_gallery_config::get('link_image_name'), $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
+				'UC_THUMBNAIL'			=> phpbb_gallery_image::generate_link('thumbnail', phpbb_gallery_config::get('link_thumbnail'), $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
+				'UC_IMAGE_NAME'			=> phpbb_gallery_image::generate_link('image_name', phpbb_gallery_config::get('link_image_name'), $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),
 				'IMAGE_AUTHOR'			=> get_username_string('full', $commentrow['image_user_id'], $commentrow['image_username'], $commentrow['image_user_colour']),
 				'IMAGE_TIME'			=> $user->format_date($commentrow['image_time']),
 

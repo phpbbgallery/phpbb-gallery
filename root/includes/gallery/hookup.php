@@ -33,7 +33,7 @@ class phpbb_gallery_hookup
 	* @param int $user_id		ID of the user, who ownes the images
 	* @param int $num_images	Number of images which are handled. (positive on add, negative on delete)
 	*/
-	public static function add_image($user_id, $num_images)
+	static public function add_image($user_id, $num_images)
 	{
 		global $config, $db, $user;
 
@@ -70,7 +70,7 @@ class phpbb_gallery_hookup
 	*
 	* @param int $user_id		ID of the user, who viewed the images
 	*/
-	public static function view_image($user_id)
+	static public function view_image($user_id)
 	{
 		global $config, $db, $user;
 

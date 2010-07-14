@@ -14,7 +14,9 @@
 
 define('IN_PHPBB', true);
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
-include('includes/core.' . $phpEx);
+include('includes/root_path.' . $phpEx);
+include($phpbb_root_path . 'common.' . $phpEx);
+
 phpbb_gallery::setup(array('mods/gallery'));
 //phpbb_gallery_url::_include('functions_display', 'phpbb');
 
@@ -25,15 +27,15 @@ define('S_GALLERY_PLUGINS', false);
 * Check whether the requested image & album exit.
 */
 $image_id = request_var('image_id', 0);
-$image_data = get_image_info($image_id);
+$image_data = phpbb_gallery_image::get_info($image_id);
 
 $album_id = $image_data['image_album_id'];
-$album_data = get_album_info($album_id);
+$album_data = phpbb_gallery_album::get_info($album_id);
 
 $image_error = '';
 
 $image_filetype = utf8_substr($image_data['image_filename'], strlen($image_data['image_filename']) - 4, 4);
-if (!file_exists(phpbb_gallery_url::path('phpbb') . GALLERY_UPLOAD_PATH . $image_data['image_filename']))
+if (!file_exists(phpbb_gallery_url::path('upload') . $image_data['image_filename']))
 {
 	$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
 		SET image_filemissing = 1
@@ -95,12 +97,12 @@ switch ($mode)
 {
 	case 'medium':
 		$filesize_var = 'filesize_medium';
-		$image_source_path = phpbb_gallery_url::path('phpbb') . GALLERY_MEDIUM_PATH;
+		$image_source_path = phpbb_gallery_url::path('medium');
 		$possible_watermark = true;
 	break;
 	case 'thumbnail':
 		$filesize_var = 'filesize_cache';
-		$image_source_path = phpbb_gallery_url::path('phpbb') . GALLERY_CACHE_PATH;
+		$image_source_path = phpbb_gallery_url::path('thumbnail');
 		$possible_watermark = false;
 	break;
 	default:
@@ -116,7 +118,7 @@ switch ($mode)
 			$image_error = 'not_authorised.jpg';
 		}
 
-		$image_source_path = phpbb_gallery_url::path('phpbb') . GALLERY_UPLOAD_PATH;
+		$image_source_path = phpbb_gallery_url::path('upload');
 		$possible_watermark = true;
 
 		// Increase the view count only for full images, if not already counted
@@ -144,11 +146,7 @@ if ($image_error)
 	$possible_watermark = false;
 }
 
-if (!class_exists('nv_image_tools'))
-{
-	phpbb_gallery_url::_include('functions_image');
-}
-$image_tools = new nv_image_tools(phpbb_gallery_config::get('gdlib_version'));
+$image_tools = new phpbb_gallery_image_tools(phpbb_gallery_config::get('gdlib_version'));
 $image_tools->set_image_options(phpbb_gallery_config::get('max_filesize'), phpbb_gallery_config::get('max_height'), phpbb_gallery_config::get('max_width'));
 $image_tools->set_image_data($image_source, $image_data['image_name']);
 
@@ -169,7 +167,7 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 
 	if (!file_exists($image_source))
 	{
-		$image_tools->set_image_data(phpbb_gallery_url::path('phpbb') . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
+		$image_tools->set_image_data(phpbb_gallery_url::path('upload') . $image_data['image_filename']);
 		$image_tools->read_image(true);
 
 		$image_size['file'] = $image_tools->image_size['file'];
@@ -181,7 +179,7 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 		if (($image_size['width'] > $resize_width) || ($image_size['height'] > $resize_height))
 		{
 			$put_details = (phpbb_gallery_config::get('thumbnail_infoline') && ($mode == 'thumbnail')) ? true : false;
-			$image_tools->create_thumbnail($resize_width, $resize_height, $put_details, THUMBNAIL_INFO_HEIGHT, $image_size);
+			$image_tools->create_thumbnail($resize_width, $resize_height, $put_details, phpbb_gallery_constants::THUMBNAIL_INFO_HEIGHT, $image_size);
 		}
 
 		if (phpbb_gallery_config::get($mode . '_cache'))

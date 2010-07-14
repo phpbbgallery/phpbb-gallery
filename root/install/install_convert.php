@@ -200,35 +200,40 @@ class install_convert extends module
 			'LEGEND_EXPLAIN'	=> $user->lang['FILES_REQUIRED_EXPLAIN'],
 		));
 
-		$directories = array(GALLERY_IMPORT_PATH, GALLERY_UPLOAD_PATH, GALLERY_MEDIUM_PATH, GALLERY_CACHE_PATH);
+		$directories = array(
+			'import',
+			'upload',
+			'medium',
+			'cache',
+		);
 
 		umask(0);
 
-		$passed['files'] = true;
+		$passed['dirs'] = true;
 		foreach ($directories as $dir)
 		{
 			$write = false;
 
 			// Now really check
-			if (file_exists($phpbb_root_path . $dir) && is_dir($phpbb_root_path . $dir))
+			if (phpbb_gallery_url::_file_exists('', $dir, '') && is_dir(phpbb_gallery_url::_return_file('', $dir, '')))
 			{
-				if (!@is_writable($phpbb_root_path . $dir))
+				if (!phpbb_gallery_url::_is_writable('', $dir, ''))
 				{
-					@chmod($phpbb_root_path . $dir, 0777);
+					@chmod(phpbb_gallery_url::_return_file('', $dir, ''), 0777);
 				}
 			}
 
 			// Now check if it is writable by storing a simple file
-			$fp = @fopen($phpbb_root_path . $dir . 'test_lock', 'wb');
+			$fp = @fopen(phpbb_gallery_url::_return_file('', $dir, '') . 'test_lock', 'wb');
 			if ($fp !== false)
 			{
 				$write = true;
 			}
 			@fclose($fp);
 
-			@unlink($phpbb_root_path . $dir . 'test_lock');
+			@unlink(phpbb_gallery_url::_return_file('', $dir, '') . 'test_lock');
 
-			$passed['files'] = ($write && $passed['files']) ? true : false;
+			$passed['dirs'] = ($write && $passed['dirs']) ? true : false;
 
 			$write = ($write) ? '<strong style="color:green">' . $user->lang['WRITABLE'] . '</strong>' : '<strong style="color:red">' . $user->lang['UNWRITABLE'] . '</strong>';
 
@@ -929,9 +934,9 @@ class install_convert extends module
 		else
 		{
 			$data = array(
-				'acp_module'		=> MODULE_DEFAULT_ACP,
-				'log_module'		=> MODULE_DEFAULT_LOG,
-				'ucp_module'		=> MODULE_DEFAULT_UCP,
+				'acp_module'		=> phpbb_gallery_constants::MODULE_DEFAULT_ACP,
+				'log_module'		=> phpbb_gallery_constants::MODULE_DEFAULT_LOG,
+				'ucp_module'		=> phpbb_gallery_constants::MODULE_DEFAULT_UCP,
 			);
 
 			foreach ($this->gallery_config_options as $config_key => $vars)

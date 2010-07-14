@@ -32,12 +32,7 @@ class acp_gallery_config
 	{
 		global $db, $user, $auth, $cache, $template;
 
-		if (!class_exists('phpbb_gallery'))
-		{
-			global $phpbb_root_path, $phpEx;
-			include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/core.' . $phpEx);
-			phpbb_gallery::init($phpbb_root_path);
-		}
+		phpbb_gallery::init();
 
 		$user->add_lang(array('mods/gallery_acp', 'mods/gallery'));
 
@@ -267,13 +262,13 @@ class acp_gallery_config
 	*/
 	function gd_radio($value, $key)
 	{
-		$key_gd1	= ($value == GDLIB1) ? ' checked="checked"' : '';
-		$key_gd2	= ($value == GDLIB2) ? ' checked="checked"' : '';
+		$key_gd1	= ($value == phpbb_gallery_constants::GDLIB1) ? ' checked="checked"' : '';
+		$key_gd2	= ($value == phpbb_gallery_constants::GDLIB2) ? ' checked="checked"' : '';
 
 		$tpl = '';
 
-		$tpl .= "<label><input type=\"radio\" name=\"config[$key]\" value=\"" . GDLIB1 . "\" $key_gd1 class=\"radio\" /> GD1</label>";
-		$tpl .= "<label><input type=\"radio\" id=\"$key\" name=\"config[$key]\" value=\"" . GDLIB2 . "\" $key_gd2  class=\"radio\" /> GD2</label>";
+		$tpl .= "<label><input type=\"radio\" name=\"config[$key]\" value=\"" . phpbb_gallery_constants::GDLIB1 . "\" $key_gd1 class=\"radio\" /> GD1</label>";
+		$tpl .= "<label><input type=\"radio\" id=\"$key\" name=\"config[$key]\" value=\"" . phpbb_gallery_constants::GDLIB2 . "\" $key_gd2  class=\"radio\" /> GD2</label>";
 
 		return $tpl;
 	}
@@ -297,13 +292,13 @@ class acp_gallery_config
 
 		$x_position_options = $y_position_options = '';
 
-		$x_position_options .= '<option' . (($value & WATERMARK_TOP) ? ' selected="selected"' : '') . " value='" . WATERMARK_TOP . "'>" . $user->lang['WATERMARK_POSITION_TOP'] . '</option>';
-		$x_position_options .= '<option' . (($value & WATERMARK_MIDDLE) ? ' selected="selected"' : '') . " value='" . WATERMARK_MIDDLE . "'>" . $user->lang['WATERMARK_POSITION_MIDDLE'] . '</option>';
-		$x_position_options .= '<option' . (($value & WATERMARK_BOTTOM) ? ' selected="selected"' : '') . " value='" . WATERMARK_BOTTOM . "'>" . $user->lang['WATERMARK_POSITION_BOTTOM'] . '</option>';
+		$x_position_options .= '<option' . (($value & phpbb_gallery_constants::WATERMARK_TOP) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::WATERMARK_TOP . "'>" . $user->lang['WATERMARK_POSITION_TOP'] . '</option>';
+		$x_position_options .= '<option' . (($value & phpbb_gallery_constants::WATERMARK_MIDDLE) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::WATERMARK_MIDDLE . "'>" . $user->lang['WATERMARK_POSITION_MIDDLE'] . '</option>';
+		$x_position_options .= '<option' . (($value & phpbb_gallery_constants::WATERMARK_BOTTOM) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::WATERMARK_BOTTOM . "'>" . $user->lang['WATERMARK_POSITION_BOTTOM'] . '</option>';
 
-		$y_position_options .= '<option' . (($value & WATERMARK_LEFT) ? ' selected="selected"' : '') . " value='" . WATERMARK_LEFT . "'>" . $user->lang['WATERMARK_POSITION_LEFT'] . '</option>';
-		$y_position_options .= '<option' . (($value & WATERMARK_CENTER) ? ' selected="selected"' : '') . " value='" . WATERMARK_CENTER . "'>" . $user->lang['WATERMARK_POSITION_CENTER'] . '</option>';
-		$y_position_options .= '<option' . (($value & WATERMARK_RIGHT) ? ' selected="selected"' : '') . " value='" . WATERMARK_RIGHT . "'>" . $user->lang['WATERMARK_POSITION_RIGHT'] . '</option>';
+		$y_position_options .= '<option' . (($value & phpbb_gallery_constants::WATERMARK_LEFT) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::WATERMARK_LEFT . "'>" . $user->lang['WATERMARK_POSITION_LEFT'] . '</option>';
+		$y_position_options .= '<option' . (($value & phpbb_gallery_constants::WATERMARK_CENTER) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::WATERMARK_CENTER . "'>" . $user->lang['WATERMARK_POSITION_CENTER'] . '</option>';
+		$y_position_options .= '<option' . (($value & phpbb_gallery_constants::WATERMARK_RIGHT) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::WATERMARK_RIGHT . "'>" . $user->lang['WATERMARK_POSITION_RIGHT'] . '</option>';
 
 		// Cheating is an evil-thing, but most times it's successful, that's why it is used.
 		return "<input type='hidden' name='config[$key]' value='$value' /><select name='" . $key . "_x' id='" . $key . "_x'>$x_position_options</select><select name='" . $key . "_y' id='" . $key . "_y'>$y_position_options</select>";
@@ -316,7 +311,7 @@ class acp_gallery_config
 	{
 		global $user;
 
-		$sort_order_options = phpbb_gallery_plugins::uc_select_plugins($value, $key);
+		$sort_order_options = phpbb_gallery_plugins::uc_select($value, $key);
 
 
 		if ($key != 'link_imagepage')
@@ -339,12 +334,12 @@ class acp_gallery_config
 
 		$rrc_mode_options = '';
 
-		$rrc_mode_options .= "<option value='" . RRC_MODE_NONE . "'>" . $user->lang['RRC_MODE_NONE'] . '</option>';
-		$rrc_mode_options .= '<option' . (($value & RRC_MODE_RECENT) ? ' selected="selected"' : '') . " value='" . RRC_MODE_RECENT . "'>" . $user->lang['RRC_MODE_RECENT'] . '</option>';
-		$rrc_mode_options .= '<option' . (($value & RRC_MODE_RANDOM) ? ' selected="selected"' : '') . " value='" . RRC_MODE_RANDOM . "'>" . $user->lang['RRC_MODE_RANDOM'] . '</option>';
+		$rrc_mode_options .= "<option value='" . phpbb_gallery_constants::RRC_MODE_NONE . "'>" . $user->lang['RRC_MODE_NONE'] . '</option>';
+		$rrc_mode_options .= '<option' . (($value & phpbb_gallery_constants::RRC_MODE_RECENT) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_MODE_RECENT . "'>" . $user->lang['RRC_MODE_RECENT'] . '</option>';
+		$rrc_mode_options .= '<option' . (($value & phpbb_gallery_constants::RRC_MODE_RANDOM) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_MODE_RANDOM . "'>" . $user->lang['RRC_MODE_RANDOM'] . '</option>';
 		if ($key != 'rrc_profile_mode')
 		{
-			$rrc_mode_options .= '<option' . (($value & RRC_MODE_COMMENT) ? ' selected="selected"' : '') . " value='" . RRC_MODE_COMMENT . "'>" . $user->lang['RRC_MODE_COMMENTS'] . '</option>';
+			$rrc_mode_options .= '<option' . (($value & phpbb_gallery_constants::RRC_MODE_COMMENT) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_MODE_COMMENT . "'>" . $user->lang['RRC_MODE_COMMENTS'] . '</option>';
 		}
 
 		// Cheating is an evil-thing, but most times it's successful, that's why it is used.
@@ -360,15 +355,15 @@ class acp_gallery_config
 
 		$rrc_display_options = '';
 
-		$rrc_display_options .= "<option value='" . RRC_DISPLAY_NONE . "'>" . $user->lang['RRC_DISPLAY_NONE'] . '</option>';
-		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_ALBUMNAME) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_ALBUMNAME . "'>" . $user->lang['RRC_DISPLAY_ALBUMNAME'] . '</option>';
-		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_COMMENTS) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_COMMENTS . "'>" . $user->lang['RRC_DISPLAY_COMMENTS'] . '</option>';
-		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_IMAGENAME) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_IMAGENAME . "'>" . $user->lang['RRC_DISPLAY_IMAGENAME'] . '</option>';
-		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_IMAGETIME) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_IMAGETIME . "'>" . $user->lang['RRC_DISPLAY_IMAGETIME'] . '</option>';
-		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_IMAGEVIEWS) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_IMAGEVIEWS . "'>" . $user->lang['RRC_DISPLAY_IMAGEVIEWS'] . '</option>';
-		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_USERNAME) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_USERNAME . "'>" . $user->lang['RRC_DISPLAY_USERNAME'] . '</option>';
-		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_RATINGS) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_RATINGS . "'>" . $user->lang['RRC_DISPLAY_RATINGS'] . '</option>';
-		$rrc_display_options .= '<option' . (($value & RRC_DISPLAY_IP) ? ' selected="selected"' : '') . " value='" . RRC_DISPLAY_IP . "'>" . $user->lang['RRC_DISPLAY_IP'] . '</option>';
+		$rrc_display_options .= "<option value='" . phpbb_gallery_constants::RRC_DISPLAY_NONE . "'>" . $user->lang['RRC_DISPLAY_NONE'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & phpbb_gallery_constants::RRC_DISPLAY_ALBUMNAME) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_DISPLAY_ALBUMNAME . "'>" . $user->lang['RRC_DISPLAY_ALBUMNAME'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & phpbb_gallery_constants::RRC_DISPLAY_COMMENTS) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_DISPLAY_COMMENTS . "'>" . $user->lang['RRC_DISPLAY_COMMENTS'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & phpbb_gallery_constants::RRC_DISPLAY_IMAGENAME) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_DISPLAY_IMAGENAME . "'>" . $user->lang['RRC_DISPLAY_IMAGENAME'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & phpbb_gallery_constants::RRC_DISPLAY_IMAGETIME) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_DISPLAY_IMAGETIME . "'>" . $user->lang['RRC_DISPLAY_IMAGETIME'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & phpbb_gallery_constants::RRC_DISPLAY_IMAGEVIEWS) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_DISPLAY_IMAGEVIEWS . "'>" . $user->lang['RRC_DISPLAY_IMAGEVIEWS'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & phpbb_gallery_constants::RRC_DISPLAY_USERNAME) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_DISPLAY_USERNAME . "'>" . $user->lang['RRC_DISPLAY_USERNAME'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & phpbb_gallery_constants::RRC_DISPLAY_RATINGS) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_DISPLAY_RATINGS . "'>" . $user->lang['RRC_DISPLAY_RATINGS'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & phpbb_gallery_constants::RRC_DISPLAY_IP) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_DISPLAY_IP . "'>" . $user->lang['RRC_DISPLAY_IP'] . '</option>';
 
 		// Cheating is an evil-thing, but most times it's successful, that's why it is used.
 		return "<input type='hidden' name='config[$key]' value='$value' /><select name='" . $key . "[]' multiple='multiple' id='$key'>$rrc_display_options</select>";
@@ -499,5 +494,3 @@ class acp_gallery_config
 		),
 	);
 }
-
-?>

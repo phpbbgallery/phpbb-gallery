@@ -19,32 +19,39 @@ if (!defined('IN_PHPBB'))
 
 class phpbb_gallery_url
 {
-	private static $loaded = false;
-
 	/**
 	* Path from the gallery root, back to phpbb's root
 	*/
-	private static $phpbb_root_path = '../';
+	static private $phpbb_root_path = '../';
 
 	/**
 	* Path from the phpbb root, into admin's root
 	*/
-	private static $phpbb_admin_path = 'adm/';
+	static private $phpbb_admin_path = 'adm/';
 
 	/**
 	* Path from the phpbb root, into gallery's root
 	*/
-	private static $phpbb_gallery_path = 'gallery/';
+	static private $phpbb_gallery_path = 'gallery/';
 
 	/**
 	* php-file extension
 	*/
-	private static $phpEx = '.php';
+	static private $phpEx = '.php';
+
+
+	const IMAGE_PATH = 'images/';
+	const UPLOAD_PATH = 'upload/';
+	const THUMBNAIL_PATH = 'cache/';
+	const MEDIUM_PATH = 'medium/';
+	const IMPORT_PATH = 'import/';
+
+	static private $loaded = false;
 
 	/**
 	* Static Constructor.
 	*/
-	public static function init($force_root_path = false)
+	static public function init($force_root_path = false)
 	{
 		global $phpbb_admin_path, $phpbb_root_path, $phpEx;
 
@@ -58,13 +65,12 @@ class phpbb_gallery_url
 		}
 		$phpbb_admin_path = self::$phpbb_root_path . self::$phpbb_admin_path;
 		self::$phpbb_admin_path = $phpbb_admin_path;
-		self::$phpbb_gallery_path = GALLERY_ROOT_PATH;
 		self::$phpEx = '.' . $phpEx;
 
 		self::$loaded = true;
 	}
 
-	public static function path($directory = 'gallery')
+	static public function path($directory = 'gallery')
 	{
 		if (!self::$loaded)
 		{
@@ -85,12 +91,25 @@ class phpbb_gallery_url
 				return generate_board_url() . '/' . self::$phpbb_gallery_path;
 			case 'board':
 				return generate_board_url();
+			case 'image':
+				return self::$phpbb_root_path . self::$phpbb_gallery_path . self::IMAGE_PATH;
+			case 'upload':
+				return self::$phpbb_root_path . self::$phpbb_gallery_path . self::IMAGE_PATH . self::UPLOAD_PATH;
+			case 'upload_noroot':
+				// stupid phpbb-upload class prepends the rootpath itself.
+				return self::$phpbb_gallery_path . self::IMAGE_PATH . self::UPLOAD_PATH;
+			case 'thumbnail':
+				return self::$phpbb_root_path . self::$phpbb_gallery_path . self::IMAGE_PATH . self::THUMBNAIL_PATH;
+			case 'medium':
+				return self::$phpbb_root_path . self::$phpbb_gallery_path . self::IMAGE_PATH . self::MEDIUM_PATH;
+			case 'import':
+				return self::$phpbb_root_path . self::$phpbb_gallery_path . self::IMAGE_PATH . self::IMPORT_PATH;
 		}
 
 		return false;
 	}
 
-	public static function append_sid()
+	static public function append_sid()
 	{
 		$args = func_get_args();
 		if (is_array($args[0]))
@@ -129,18 +148,18 @@ class phpbb_gallery_url
 		return append_sid($params[0], $params[1], $params[2], $params[3]);
 	}
 
-	public static function create_link($path, $file, $params = false, $is_amp = true)
+	static public function create_link($path, $file, $params = false, $is_amp = true)
 	{
 		// No ?sid=
 		return self::append_sid($path, $file, $params, $is_amp, '');
 	}
 
-	public static function redirect()
+	static public function redirect()
 	{
 		redirect(self::append_sid(func_get_args()));
 	}
 
-	public static function phpEx_file($file)
+	static public function phpEx_file($file)
 	{
 		if ((substr($file, -1) == '/') || (strlen($file) == 0))
 		{
@@ -153,10 +172,16 @@ class phpbb_gallery_url
 			self::init();
 		}
 
+		/*if ($file == 'image_page')
+		{
+			//@todo
+			$file = 'viewimage';
+		}*/
+
 		return $file . self::$phpEx;
 	}
 
-	public static function _include($file, $path = 'gallery', $sub_directory = 'includes/')
+	static public function _include($file, $path = 'gallery', $sub_directory = 'includes/')
 	{
 		if (!is_array($file))
 		{
@@ -171,35 +196,17 @@ class phpbb_gallery_url
 		}
 	}
 
-	public static function _include_core($classes)
-	{
-		if (!is_array($classes))
-		{
-			if (!class_exists('phpbb_gallery_' . $classes))
-			{
-				include(self::path('gallery') . 'includes/core/' . self::phpEx_file($classes));
-			}
-		}
-		else
-		{
-			foreach ($classes as $class)
-			{
-				self::_include_core($class);
-			}
-		}
-	}
-
-	public static function _file_exists($file, $path = 'gallery', $sub_directory = 'includes/')
+	static public function _file_exists($file, $path = 'gallery', $sub_directory = 'includes/')
 	{
 		return file_exists(self::path($path) . $sub_directory . self::phpEx_file($file));
 	}
 
-	public static function _is_writable($file, $path = 'gallery', $sub_directory = 'includes/')
+	static public function _is_writable($file, $path = 'gallery', $sub_directory = 'includes/')
 	{
 		return phpbb_is_writable(self::path($path) . $sub_directory . self::phpEx_file($file));
 	}
 
-	public static function _return_file($file, $path = 'gallery', $sub_directory = 'includes/')
+	static public function _return_file($file, $path = 'gallery', $sub_directory = 'includes/')
 	{
 		return self::path($path) . $sub_directory . self::phpEx_file($file);
 	}

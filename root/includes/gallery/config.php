@@ -22,13 +22,13 @@ class phpbb_gallery_config
 	/**
 	* Prefix which is prepend to the configs before they are stored in the config table.
 	*/
-	protected static $prefix = 'phpbb_gallery_';
+	static private $prefix = 'phpbb_gallery_';
 
-	protected static $config = false;
+	static private $config = false;
 
-	protected static $loaded = false;
+	static private $loaded = false;
 
-	public static function get($key)
+	static public function get($key)
 	{
 		if (self::$loaded === false)
 		{
@@ -38,7 +38,7 @@ class phpbb_gallery_config
 		return self::$config[$key];
 	}
 
-	public static function get_array()
+	static public function get_array()
 	{
 		if (self::$loaded === false)
 		{
@@ -48,12 +48,12 @@ class phpbb_gallery_config
 		return self::$config;
 	}
 
-	public static function get_default()
+	static public function get_default()
 	{
 		return self::$default_config;
 	}
 
-	public static function set($config_name, $config_value)
+	static public function set($config_name, $config_value)
 	{
 		settype($config_value, gettype(self::$default_config[$config_name]));
 		self::$config[$config_name] = $config_value;
@@ -69,7 +69,7 @@ class phpbb_gallery_config
 		}
 	}
 
-	public static function inc($config_name, $increment)
+	static public function inc($config_name, $increment)
 	{
 		if ((gettype(self::$default_config[$config_name]) != 'int') && (gettype(self::$default_config[$config_name]) != 'integer'))
 		{
@@ -81,7 +81,7 @@ class phpbb_gallery_config
 		return true;
 	}
 
-	public static function dec($config_name, $decrement)
+	static public function dec($config_name, $decrement)
 	{
 		if ((gettype(self::$default_config[$config_name]) != 'int') && (gettype(self::$default_config[$config_name]) != 'integer'))
 		{
@@ -93,7 +93,7 @@ class phpbb_gallery_config
 		return true;
 	}
 
-	public static function is_dynamic($config_name)
+	static public function is_dynamic($config_name)
 	{
 		if (isset(self::$is_dynamic[$config_name]))
 		{
@@ -102,7 +102,7 @@ class phpbb_gallery_config
 		return false;
 	}
 
-	public static function load($load_default = false)
+	static public function load($load_default = false)
 	{
 		global $config;
 
@@ -124,7 +124,7 @@ class phpbb_gallery_config
 		}
 	}
 
-	public static function exists($key)
+	static public function exists($key)
 	{
 		if (self::$loaded === false)
 		{
@@ -134,7 +134,7 @@ class phpbb_gallery_config
 		return !empty(self::$config[$key]);
 	}
 
-	protected static $is_dynamic = array(
+	static private $is_dynamic = array(
 		'mvc_time',
 		'mvc_version',
 
@@ -143,7 +143,7 @@ class phpbb_gallery_config
 		'num_pegas',
 	);
 
-	protected static $default_config = array(
+	static private $default_config = array(
 		'album_columns'		=> 3,
 		'album_display'		=> 254,
 		'album_images'		=> 2500,

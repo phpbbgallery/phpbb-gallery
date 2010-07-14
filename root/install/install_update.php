@@ -52,18 +52,11 @@ class install_update extends module
 
 		if ($user->data['user_type'] != USER_FOUNDER)
 		{
-			trigger_error('FOUNDER_NEEDED', E_USER_ERROR);
+			#trigger_error('FOUNDER_NEEDED', E_USER_ERROR);
 		}
 
 		$gallery_version = get_gallery_version();
-		if (version_compare($gallery_version, '0.0.0', '>'))
-		{
-			if (!class_exists('phpbb_gallery_config'))
-			{
-				include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/config.' . $phpEx);
-			}
-		}
-		else
+		if (!version_compare($gallery_version, '0.0.0', '>'))
 		{
 			trigger_error('NO_INSTALL_FOUND', E_USER_ERROR);
 		}
@@ -225,10 +218,10 @@ class install_update extends module
 		));
 
 		$directories = array(
-			GALLERY_IMPORT_PATH,
-			GALLERY_UPLOAD_PATH,
-			GALLERY_MEDIUM_PATH,
-			GALLERY_CACHE_PATH,
+			'import',
+			'upload',
+			'medium',
+			'cache',
 		);
 
 		umask(0);
@@ -239,23 +232,23 @@ class install_update extends module
 			$write = false;
 
 			// Now really check
-			if (file_exists($phpbb_root_path . $dir) && is_dir($phpbb_root_path . $dir))
+			if (phpbb_gallery_url::_file_exists('', $dir, '') && is_dir(phpbb_gallery_url::_return_file('', $dir, '')))
 			{
-				if (!@is_writable($phpbb_root_path . $dir))
+				if (!phpbb_gallery_url::_is_writable('', $dir, ''))
 				{
-					@chmod($phpbb_root_path . $dir, 0777);
+					@chmod(phpbb_gallery_url::_return_file('', $dir, ''), 0777);
 				}
 			}
 
 			// Now check if it is writable by storing a simple file
-			$fp = @fopen($phpbb_root_path . $dir . 'test_lock', 'wb');
+			$fp = @fopen(phpbb_gallery_url::_return_file('', $dir, '') . 'test_lock', 'wb');
 			if ($fp !== false)
 			{
 				$write = true;
 			}
 			@fclose($fp);
 
-			@unlink($phpbb_root_path . $dir . 'test_lock');
+			@unlink(phpbb_gallery_url::_return_file('', $dir, '') . 'test_lock');
 
 			$passed['dirs'] = ($write && $passed['dirs']) ? true : false;
 
@@ -282,7 +275,7 @@ class install_update extends module
 			// Replace gallery root path with the constant.
 			if (strpos($file, 'gallery/') == 0)
 			{
-				$file = substr_replace($file, GALLERY_ROOT_PATH, 0, 8);
+				$file = substr_replace($file, phpbb_gallery_url::path('relative'), 0, 8);
 			}
 			$file = preg_replace('/\.php$/i', ".$phpEx", $file);
 
@@ -714,8 +707,6 @@ class install_update extends module
 	{
 		global $user, $template, $phpbb_root_path, $phpEx, $db;
 
-		$gallery_config = load_gallery_config();
-
 		$create = request_var('create', '');
 		if ($create)
 		{
@@ -789,9 +780,9 @@ class install_update extends module
 		else
 		{
 			$data = array(
-				'acp_module'		=> MODULE_DEFAULT_ACP,
-				'log_module'		=> MODULE_DEFAULT_LOG,
-				'ucp_module'		=> MODULE_DEFAULT_UCP,
+				'acp_module'		=> phpbb_gallery_constants::MODULE_DEFAULT_ACP,
+				'log_module'		=> phpbb_gallery_constants::MODULE_DEFAULT_LOG,
+				'ucp_module'		=> phpbb_gallery_constants::MODULE_DEFAULT_UCP,
 			);
 			$modules = $this->gallery_config_options;
 			switch (phpbb_gallery_config::get('version'))

@@ -14,9 +14,10 @@
 
 define('IN_PHPBB', true);
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
-include('includes/core.' . $phpEx);
+include('includes/root_path.' . $phpEx);
+include($phpbb_root_path . 'common.' . $phpEx);
+
 phpbb_gallery::setup(array('mods/gallery', 'mods/gallery_mcp'));
-phpbb_gallery_url::_include(array('functions_mcp', 'functions_display'));
 phpbb_gallery_url::_include(array('functions_display'), 'phpbb');
 
 $mode = request_var('mode', 'album');
@@ -42,11 +43,14 @@ $image_id = request_var('image_id', 0);
 $album_id = request_var('album_id', 0);
 if ($image_id)
 {
-	$image_data = get_image_info($image_id);
+	$image_data = phpbb_gallery_image::get_info($image_id);
 	$album_id = $image_data['image_album_id'];
 	$user_id = $image_data['image_user_id'];
 }
-$album_data = get_album_info($album_id);
+if ($album_id)
+{
+	$album_data = phpbb_gallery_album::get_info($album_id);
+}
 
 // Some other variables
 $option_id = request_var('option_id', 0);
@@ -67,13 +71,27 @@ switch ($mode)
 	case 'report_open':
 	case 'report_closed':
 	case 'report_details':
-		$access_denied = (!phpbb_gallery::$auth->acl_check('m_report', $album_id, $album_data['album_user_id'])) ? true : false;
+		if ($album_id)
+		{
+			$access_denied = (!phpbb_gallery::$auth->acl_check('m_report', $album_id, $album_data['album_user_id'])) ? true : false;
+		}
+		else
+		{
+			$access_denied = (!sizeof(phpbb_gallery::$auth->acl_album_ids('m_report'))) ? true : false;
+		}
 	break;
 	case 'queue_unapproved':
 	case 'queue_approved':
 	case 'queue_locked':
 	case 'queue_details':
-		$access_denied = (!phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id'])) ? true : false;
+		if ($album_id)
+		{
+			$access_denied = (!phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id'])) ? true : false;
+		}
+		else
+		{
+			$access_denied = (!sizeof(phpbb_gallery::$auth->acl_album_ids('m_status'))) ? true : false;
+		}
 	break;
 }
 switch ($action)
@@ -96,13 +114,39 @@ switch ($action)
 	break;
 }
 
-if ($access_denied || !phpbb_gallery::$auth->acl_check('m_', $album_id, $album_data['album_user_id']))
+if ($access_denied || (($album_id && !phpbb_gallery::$auth->acl_check('m_', $album_id, $album_data['album_user_id'])) || (!$album_id && !sizeof(phpbb_gallery::$auth->acl_album_ids('m_')))))
 {
-	meta_refresh(5, phpbb_gallery_url::append_sid('album', "album_id=$album_id"));
+	if (!$album_id)
+	{
+		meta_refresh(5, phpbb_gallery_url::append_sid('index'));
+	}
+	else
+	{
+		meta_refresh(5, phpbb_gallery_url::append_sid('album', "album_id=$album_id"));
+	}
 	trigger_error('NOT_AUTHORISED');
 }
 
-generate_album_nav($album_data);
+// Build Navigation
+$page_title = phpbb_gallery_mcp::build_navigation($album_id, $mode, $option_id);
+
+if (!$album_id)
+{
+	$template->assign_block_vars('navlinks', array(
+		'FORUM_NAME'	=> $user->lang['MCP'],
+		'U_VIEW_FORUM'	=> phpbb_gallery_url::append_sid('mcp'),
+	));
+
+	page_header($user->lang['GALLERY'] . ' &bull; ' . $user->lang['MCP'] . ' &bull; ' . $page_title, false);
+
+	$template->set_filenames(array(
+		'body' => 'gallery/mcp_body.html')
+	);
+
+	page_footer();
+}
+
+phpbb_gallery_album::generate_nav($album_data);
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> $user->lang['MCP'],
 	'U_VIEW_FORUM'	=> phpbb_gallery_url::append_sid('mcp', 'album_id=' . $album_data['album_id']),
@@ -120,9 +164,6 @@ $template->assign_vars(array(
 	'U_VIEW_ALBUM'	=> phpbb_gallery_url::append_sid('album', 'album_id=' . $album_id),
 	'U_MOD_ALBUM'	=> phpbb_gallery_url::append_sid('mcp', 'mode=album&amp;album_id=' . $album_id),
 ));
-
-// Build Navigation
-$page_title = phpbb_gallery_mcp::build_navigation($album_id, $mode, $option_id);
 
 if ($action && $image_id_ary)
 {
@@ -462,5 +503,3 @@ $template->set_filenames(array(
 );
 
 page_footer();
-
-?>

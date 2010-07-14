@@ -21,7 +21,7 @@ if (!defined('IN_INSTALL'))
 	exit;
 }
 
-$gallery_root_path = GALLERY_ROOT_PATH;
+$gallery_root_path = phpbb_gallery_url::path('relative');
 
 function get_dbms_infos()
 {
@@ -88,7 +88,6 @@ function get_dbms_infos()
 function get_gallery_version()
 {
 	global $db;
-
 	$db->sql_return_on_error(true);
 
 	$sql = 'SELECT config_value
@@ -228,62 +227,6 @@ function nv_drop_table($table)
 		$result = $db->sql_query($sql);
 		$db->sql_freeresult($result);
 	}
-}
-
-/*
-* Advanced: Add/update a gallery-config value
-*/
-function set_gallery_config($config_name, $config_value, $is_dynamic = false)
-{
-	global $db, $gallery_config /*, $cache*/;
-
-	$sql = 'UPDATE ' . GALLERY_CONFIG_TABLE . "
-		SET config_value = '" . $db->sql_escape($config_value) . "'
-		WHERE config_name = '" . $db->sql_escape($config_name) . "'";
-	$db->sql_query($sql);
-
-	if (!$db->sql_affectedrows() && !isset($gallery_config[$config_name]))
-	{
-		$sql = 'INSERT INTO ' . GALLERY_CONFIG_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'config_name'	=> $config_name,
-			'config_value'	=> $config_value,
-			/*'is_dynamic'	=> ($is_dynamic) ? 1 : 0,*/));
-		$db->sql_query($sql);
-	}
-
-	$gallery_config[$config_name] = $config_value;
-
-	/*if (!$is_dynamic)
-	{
-		$cache->destroy('config');
-	}*/
-}
-function set_gallery_config_count($config_name, $increment, $is_dynamic = false)
-{
-	global $db /*, $cache*/;
-
-	switch ($db->sql_layer)
-	{
-		case 'firebird':
-			$sql_update = 'CAST(CAST(config_value as integer) + ' . (int) $increment . ' as CHAR)';
-		break;
-
-		case 'postgres':
-			$sql_update = 'int4(config_value) + ' . (int) $increment;
-		break;
-
-		// MySQL, SQlite, mssql, mssql_odbc, oracle
-		default:
-			$sql_update = 'config_value + ' . (int) $increment;
-		break;
-	}
-
-	$db->sql_query('UPDATE ' . GALLERY_CONFIG_TABLE . ' SET config_value = ' . $sql_update . " WHERE config_name = '" . $db->sql_escape($config_name) . "'");
-
-	/*if (!$is_dynamic)
-	{
-		$cache->destroy('config');
-	}*/
 }
 
 /*
@@ -437,26 +380,6 @@ function remove_module($module_id, $module_class)
 	$modules = new acp_modules();
 	$modules->module_class = $module_class;
 	$failed = $modules->delete_module($module_id);
-}
-
-/*
-* Advanced: Load gallery-config values
-*/
-function load_gallery_config()
-{
-	global $db;
-
-	$gallery_config = array();
-
-	$sql = 'SELECT * FROM ' . GALLERY_CONFIG_TABLE;
-	$result = $db->sql_query($sql);
-	while( $row = $db->sql_fetchrow($result) )
-	{
-		$gallery_config[$row['config_name']] = $row['config_value'];
-	}
-	$db->sql_freeresult($result);
-
-	return $gallery_config;
 }
 
 /*
@@ -644,131 +567,6 @@ function recalc_btree($sql_id, $sql_table, $where_options = array())
 	}
 }
 
-/**
-* Set the default config
-*/
-function set_default_config()
-{
-	global $config, $gallery_config;
-
-	// Previous configs
-	set_config('num_images', 0, true);
-	set_config('gallery_total_images', 1);
-
-	set_gallery_config('max_file_size', 512000);
-	set_gallery_config('max_width', 800);
-	set_gallery_config('max_height', 600);
-	set_gallery_config('rows_per_page', 3);
-	set_gallery_config('cols_per_page', 4);
-	set_gallery_config('thumbnail_quality', 50);
-	set_gallery_config('thumbnail_size', 125);
-	set_gallery_config('thumbnail_cache', 1);
-	set_gallery_config('sort_method', 't');
-	set_gallery_config('sort_order', 'd');
-	set_gallery_config('jpg_allowed', 1);
-	set_gallery_config('png_allowed', 1);
-	set_gallery_config('gif_allowed', 0);
-	set_gallery_config('desc_length', 512);
-	set_gallery_config('hotlink_prevent', 0);
-	set_gallery_config('hotlink_allowed', 'flying-bits.org');
-	set_gallery_config('rate', 1);
-	set_gallery_config('rate_scale', 10);
-	set_gallery_config('comment', 1);
-	set_gallery_config('gd_version', 2);
-	set_gallery_config('watermark_images', 1);
-	set_gallery_config('watermark_source', GALLERY_IMAGE_PATH . 'watermark.png');
-	set_gallery_config('preview_rsz_height', 768);
-	set_gallery_config('preview_rsz_width', 1024);
-	set_gallery_config('upload_images', 10);
-	set_gallery_config('thumbnail_info_line', 1);
-
-	// Added 0.3.2-RC1
-	set_gallery_config('fake_thumb_size', 70);
-	set_gallery_config('disp_fake_thumb', 1);
-	set_gallery_config('personal_counter', 0);
-	set_gallery_config('exif_data', 1);
-	set_gallery_config('watermark_height', 50);
-	set_gallery_config('watermark_width', 200);
-
-	// Added 0.4.0-RC3
-	set_gallery_config('shorted_imagenames', 25);
-
-	// Added 0.4.0
-	set_gallery_config('comment_length', 1024);
-	set_gallery_config('description_length', 1024);
-	set_gallery_config('allow_rates', 1);
-	set_gallery_config('allow_comments', 1);
-	set_gallery_config('link_thumbnail', 'image_page');
-	set_gallery_config('link_image_name', 'image_page');
-	set_gallery_config('link_image_icon', 'image_page');
-	set_gallery_config('personal_album_index', 0);
-	set_gallery_config('view_image_url', 1);
-	set_gallery_config('medium_cache', 1);
-
-	// Added 0.4.1
-	set_gallery_config('link_imagepage', 'image_page');
-
-	// Added 0.5.0
-	set_gallery_config('rrc_gindex_mode', 7);
-	set_gallery_config('rrc_gindex_rows', 1);
-	set_gallery_config('rrc_gindex_columns', 4);
-	set_gallery_config('rrc_gindex_comments', 0);
-
-	// Added 0.5.1:
-	set_gallery_config('user_images_profile', 1);
-	set_gallery_config('personal_album_profile', 1);
-	set_gallery_config('rrc_profile_mode', 3);
-	set_gallery_config('rrc_profile_columns', 4);
-	set_gallery_config('rrc_profile_rows', 1);
-	set_gallery_config('rrc_gindex_crows', 5);
-	set_gallery_config('contests_ended', 0);
-	set_gallery_config('rrc_gindex_contests', 1);
-
-	// Added 0.5.2:
-	set_gallery_config('rrc_gindex_display', 173);
-	set_gallery_config('rrc_profile_display', 141);
-	set_gallery_config('album_display', 254);
-
-	// Added 0.5.3:
-	set_config('gallery_viewtopic_icon', 1);
-	set_config('gallery_viewtopic_images', 1);
-	set_config('gallery_viewtopic_link', 0);
-
-	// Added 0.5.4:
-	set_gallery_config('num_comments', 0);
-	set_gallery_config('disp_login', 1);
-	set_gallery_config('disp_whoisonline', 1);
-	set_gallery_config('disp_birthdays', 0);
-	set_gallery_config('disp_statistic', 1);
-	set_gallery_config('rrc_gindex_pgalleries', 1);
-	set_gallery_config('newest_pgallery_user_id', 0);
-	set_gallery_config('newest_pgallery_username', '');
-	set_gallery_config('newest_pgallery_user_colour', '');
-	set_gallery_config('newest_pgallery_album_id', 0);
-
-	// Added 1.0.0-dev:
-	set_gallery_config('pgalleries_per_page', 10);
-	set_gallery_config('images_per_album', 1024);
-	set_gallery_config('watermark_position', 20);
-
-	// Added 1.0.0-RC1:
-	set_gallery_config('rrc_profile_pgalleries', 1);
-
-	// Added 1.0.2:
-	set_gallery_config('allow_resize_images', 1);
-	set_gallery_config('allow_rotate_images', 1);
-
-	// Added 1.0.3:
-	set_gallery_config('jpg_quality', 100);
-	set_gallery_config('search_display', 45);
-	set_gallery_config('version_check_version', '0.0.0');
-	set_gallery_config('version_check_time', 0);
-
-	// Added 1.0.5:
-	set_gallery_config('captcha_comment', 1);
-	set_gallery_config('captcha_upload', 1);
-}
-
 function config_mapping()
 {
 	return array(
@@ -818,7 +616,7 @@ function config_mapping()
 		'rrc_gindex_crows'			=> 'rrc_gindex_crows',
 		'rrc_gindex_contests'		=> 'rrc_gindex_contests',
 		'rrc_gindex_display'		=> 'rrc_gindex_display',
-		'rrc_gindex_pgalleries'		=> 'rrc_gindex_pgalleries',
+		'rrc_gindex_pgalleries'		=> 'rrc_gindex_pegas',
 
 		'disp_whoisonline'			=> 'disp_whoisonline',
 		'disp_birthdays'			=> 'disp_birthdays',

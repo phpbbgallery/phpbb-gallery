@@ -19,6 +19,16 @@ if (!defined('IN_PHPBB'))
 
 class phpbb_gallery_auth
 {
+	const SETTING_PERMISSIONS	= -39839;
+	const PERSONAL_ALBUM		= -3;
+	const OWN_ALBUM				= -2;
+	const PUBLIC_ALBUM			= 0;
+
+	// ACL - slightly different
+	const ACL_NO		= 0;
+	const ACL_YES		= 1;
+	const ACL_NEVER		= 2;
+
 	protected $_access_array = array();
 
 	public function init($user_id)
@@ -40,22 +50,22 @@ class phpbb_gallery_auth
 		//set all parts of the permissions to 0 / "no"
 		foreach ($permissions as $permission)
 		{
-			$this->_access_array[-1][$permission] = GALLERY_ACL_NO;
-			$this->_access_array[OWN_GALLERY_PERMISSIONS][$permission] = GALLERY_ACL_NO;
-			$this->_access_array[PERSONAL_GALLERY_PERMISSIONS][$permission] = GALLERY_ACL_NO;
+			$this->_access_array[-1][$permission] = self::ACL_NO;
+			$this->_access_array[self::OWN_ALBUM][$permission] = self::ACL_NO;
+			$this->_access_array[self::PERSONAL_ALBUM][$permission] = self::ACL_NO;
 			//generate for the sql
 			$pull_data .= " MAX($permission) as $permission,";
 		}
-		$this->_access_array[-1]['m_'] = GALLERY_ACL_NO;
-		$this->_access_array[OWN_GALLERY_PERMISSIONS]['m_'] = GALLERY_ACL_NO;
-		$this->_access_array[PERSONAL_GALLERY_PERMISSIONS]['m_'] = GALLERY_ACL_NO;
+		$this->_access_array[-1]['m_'] = self::ACL_NO;
+		$this->_access_array[self::OWN_ALBUM]['m_'] = self::ACL_NO;
+		$this->_access_array[self::PERSONAL_ALBUM]['m_'] = self::ACL_NO;
 		foreach ($albums as $album)
 		{
 			foreach ($permissions as $permission)
 			{
-				$this->_access_array[$album['album_id']][$permission] = GALLERY_ACL_NO;
+				$this->_access_array[$album['album_id']][$permission] = self::ACL_NO;
 			}
-			$this->_access_array[$album['album_id']]['m_'] = GALLERY_ACL_NO;
+			$this->_access_array[$album['album_id']]['m_'] = self::ACL_NO;
 		}
 
 		// Only available in >= 3.0.6
@@ -103,24 +113,24 @@ class phpbb_gallery_auth
 		{
 			switch ($row['perm_system'])
 			{
-				case PERSONAL_GALLERY_PERMISSIONS:
+				case self::PERSONAL_ALBUM:
 					foreach ($permissions as $permission)
 					{
-						$this->_access_array[PERSONAL_GALLERY_PERMISSIONS][$permission] = $row[$permission];
-						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == GALLERY_ACL_YES))
+						$this->_access_array[self::PERSONAL_ALBUM][$permission] = $row[$permission];
+						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == self::ACL_YES))
 						{
-							$this->_access_array[PERSONAL_GALLERY_PERMISSIONS]['m_'] = $row[$permission];
+							$this->_access_array[self::PERSONAL_ALBUM]['m_'] = $row[$permission];
 						}
 					}
 				break;
 
-				case OWN_GALLERY_PERMISSIONS:
+				case self::OWN_ALBUM:
 					foreach ($permissions as $permission)
 					{
-						$this->_access_array[OWN_GALLERY_PERMISSIONS][$permission] = $row[$permission];
-						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == GALLERY_ACL_YES))
+						$this->_access_array[self::OWN_ALBUM][$permission] = $row[$permission];
+						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == self::ACL_YES))
 						{
-							$this->_access_array[OWN_GALLERY_PERMISSIONS]['m_'] = $row[$permission];
+							$this->_access_array[self::OWN_ALBUM]['m_'] = $row[$permission];
 						}
 					}
 				break;
@@ -128,9 +138,9 @@ class phpbb_gallery_auth
 				case 1:
 					foreach ($permissions as $permission)
 					{
-						// if the permission is true ($row[$permission] == 1) and global_permission is never ($this->_access_array[PERSONAL_GALLERY_PERMISSIONS][$permission] == 2) we set it to "never"
-						$this->_access_array[$row['perm_album_id']][$permission] = (($row[$permission]) ? (($row[$permission] == GALLERY_ACL_YES && ($this->_access_array[PERSONAL_GALLERY_PERMISSIONS][$permission] == GALLERY_ACL_NEVER)) ? $this->_access_array[PERSONAL_GALLERY_PERMISSIONS][$permission] : $row[$permission]) : GALLERY_ACL_NO);
-						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == GALLERY_ACL_YES))
+						// if the permission is true ($row[$permission] == 1) and global_permission is never ($this->_access_array[self::PERSONAL_ALBUM][$permission] == 2) we set it to "never"
+						$this->_access_array[$row['perm_album_id']][$permission] = (($row[$permission]) ? (($row[$permission] == self::ACL_YES && ($this->_access_array[self::PERSONAL_ALBUM][$permission] == self::ACL_NEVER)) ? $this->_access_array[self::PERSONAL_ALBUM][$permission] : $row[$permission]) : self::ACL_NO);
+						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == self::ACL_YES))
 						{
 							$this->_access_array[$row['perm_album_id']]['m_'] = $row[$permission];
 						}
@@ -141,7 +151,7 @@ class phpbb_gallery_auth
 					foreach ($permissions as $permission)
 					{
 						$this->_access_array[$row['perm_album_id']][$permission] = $row[$permission];
-						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == GALLERY_ACL_YES))
+						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == self::ACL_YES))
 						{
 							$this->_access_array[$row['perm_album_id']]['m_'] = $row[$permission];
 						}
@@ -165,7 +175,7 @@ class phpbb_gallery_auth
 		}
 
 		// Do we have a function call without $album_user_id ?
-		if (($album_user_id < NON_PERSONAL_ALBUMS) && ($album_id > 0))
+		if (($album_user_id < phpbb_gallery_album::PUBLIC_ALBUM) && ($album_id > 0))
 		{
 			static $_album_list;
 			// Yes, from viewonline.php
@@ -182,27 +192,27 @@ class phpbb_gallery_auth
 			$album_user_id = $_album_list[$album_id]['album_user_id'];
 		}
 
-		if ($album_id == OWN_GALLERY_PERMISSIONS)
+		if ($album_id == self::OWN_ALBUM)
 		{
 			if ($mode == 'album_count')
 			{
-				$_gallery_acl_cache[$album_id][$mode] = $this->_access_array[OWN_GALLERY_PERMISSIONS][$mode];
+				$_gallery_acl_cache[$album_id][$mode] = $this->_access_array[self::OWN_ALBUM][$mode];
 			}
 			else
 			{
-				$_gallery_acl_cache[$album_id][$mode] = ($this->_access_array[OWN_GALLERY_PERMISSIONS][$mode] == GALLERY_ACL_YES) ? true : false;
+				$_gallery_acl_cache[$album_id][$mode] = ($this->_access_array[self::OWN_ALBUM][$mode] == self::ACL_YES) ? true : false;
 			}
 			return $_gallery_acl_cache[$album_id][$mode];
 		}
-		if ($album_id == PERSONAL_GALLERY_PERMISSIONS)
+		if ($album_id == self::PERSONAL_ALBUM)
 		{
 			if ($mode == 'album_count')
 			{
-				$_gallery_acl_cache[$album_id][$mode] = $this->_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode];
+				$_gallery_acl_cache[$album_id][$mode] = $this->_access_array[self::PERSONAL_ALBUM][$mode];
 			}
 			else
 			{
-				$_gallery_acl_cache[$album_id][$mode] = ($this->_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode] == GALLERY_ACL_YES) ? true : false;
+				$_gallery_acl_cache[$album_id][$mode] = ($this->_access_array[self::PERSONAL_ALBUM][$mode] == self::ACL_YES) ? true : false;
 			}
 			return $_gallery_acl_cache[$album_id][$mode];
 		}
@@ -213,11 +223,11 @@ class phpbb_gallery_auth
 		{
 			if ($album_user_id == $user->data['user_id'])
 			{
-				$_gallery_acl_cache[$album_id][$mode] = $this->_access_array[OWN_GALLERY_PERMISSIONS][$mode];
+				$_gallery_acl_cache[$album_id][$mode] = $this->_access_array[self::OWN_ALBUM][$mode];
 			}
-			else if ($album_user_id > NON_PERSONAL_ALBUMS)
+			else if ($album_user_id > phpbb_gallery_album::PUBLIC_ALBUM)
 			{
-				$_gallery_acl_cache[$album_id][$mode] = $this->_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode];
+				$_gallery_acl_cache[$album_id][$mode] = $this->_access_array[self::PERSONAL_ALBUM][$mode];
 			}
 			else
 			{
@@ -228,15 +238,15 @@ class phpbb_gallery_auth
 		{
 			if ($album_user_id == $user->data['user_id'])
 			{
-				$_gallery_acl_cache[$album_id][$mode] = (isset($this->_access_array[OWN_GALLERY_PERMISSIONS][$mode]) && $this->_access_array[OWN_GALLERY_PERMISSIONS][$mode] == GALLERY_ACL_YES) ? true : false;
+				$_gallery_acl_cache[$album_id][$mode] = (isset($this->_access_array[self::OWN_ALBUM][$mode]) && $this->_access_array[self::OWN_ALBUM][$mode] == self::ACL_YES) ? true : false;
 			}
-			else if ($album_user_id > NON_PERSONAL_ALBUMS)
+			else if ($album_user_id > phpbb_gallery_album::PUBLIC_ALBUM)
 			{
-				$_gallery_acl_cache[$album_id][$mode] = (isset($this->_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode]) && $this->_access_array[PERSONAL_GALLERY_PERMISSIONS][$mode] == GALLERY_ACL_YES) ? true : false;
+				$_gallery_acl_cache[$album_id][$mode] = (isset($this->_access_array[self::PERSONAL_ALBUM][$mode]) && $this->_access_array[self::PERSONAL_ALBUM][$mode] == self::ACL_YES) ? true : false;
 			}
 			else
 			{
-				$_gallery_acl_cache[$album_id][$mode] = (isset($this->_access_array[$album_id][$mode]) && $this->_access_array[$album_id][$mode] == GALLERY_ACL_YES) ? true : false;
+				$_gallery_acl_cache[$album_id][$mode] = (isset($this->_access_array[$album_id][$mode]) && $this->_access_array[$album_id][$mode] == self::ACL_YES) ? true : false;
 			}
 		}
 
@@ -260,17 +270,17 @@ class phpbb_gallery_auth
 		{
 			if ($album['album_user_id'] == $user->data['user_id'])
 			{
-				$acl_case = OWN_GALLERY_PERMISSIONS;
+				$acl_case = self::OWN_ALBUM;
 			}
-			else if ($album['album_user_id'] > NON_PERSONAL_ALBUMS)
+			else if ($album['album_user_id'] > phpbb_gallery_album::PUBLIC_ALBUM)
 			{
-				$acl_case = PERSONAL_GALLERY_PERMISSIONS;
+				$acl_case = self::PERSONAL_ALBUM;
 			}
 			else
 			{
 				$acl_case = $album['album_id'];
 			}
-			if (($this->_access_array[$acl_case][$permission] == GALLERY_ACL_YES) && (!$display_in_rrc || ($display_in_rrc && $album['display_in_rrc'])) && ($display_pgalleries || ($album['album_user_id'] == NON_PERSONAL_ALBUMS)))
+			if (($this->_access_array[$acl_case][$permission] == self::ACL_YES) && (!$display_in_rrc || ($display_in_rrc && $album['display_in_rrc'])) && ($display_pgalleries || ($album['album_user_id'] == phpbb_gallery_album::PUBLIC_ALBUM)))
 			{
 				$album_list .= (($album_list) ? ', ' : '') . $album['album_id'];
 				$album_array[] = $album['album_id'];

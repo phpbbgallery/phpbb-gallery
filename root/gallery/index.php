@@ -14,16 +14,17 @@
 
 define('IN_PHPBB', true);
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
-include('includes/core.' . $phpEx);
+include('includes/root_path.' . $phpEx);
+include($phpbb_root_path . 'common.' . $phpEx);
+
 phpbb_gallery::setup(array('mods/gallery'));
-phpbb_gallery_url::_include(array('functions_display'));
-phpbb_gallery_url::_include(array('bbcode', 'message_parser', 'functions_display'), 'phpbb');
+phpbb_gallery_url::_include('functions_display', 'phpbb');
 
 /**
 * Display albums
 */
 $mode = request_var('mode', 'index', true);
-display_albums((($mode == 'personal') ? 'personal' : 0), $config['load_moderators']);
+phpbb_gallery_album::display_albums((($mode == 'personal') ? 'personal' : 0), $config['load_moderators']);
 if ($mode == 'personal')
 {
 	$template->assign_block_vars('navlinks', array(
@@ -36,7 +37,7 @@ if ($mode == 'personal')
 /**
 * Add a personal albums category to the album listing if the user has permission to view personal albums
 */
-else if (phpbb_gallery_config::get('pegas_index_album') && phpbb_gallery::$auth->acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS))
+else if (phpbb_gallery_config::get('pegas_index_album') && phpbb_gallery::$auth->acl_check('a_list', phpbb_gallery_auth::PERSONAL_ALBUM))
 {
 	$images = $images_real = $last_image = 0;
 	$last_image = $lastimage_image_id = $lastimage_user_id = $lastimage_album_id = 0;
@@ -44,7 +45,7 @@ else if (phpbb_gallery_config::get('pegas_index_album') && phpbb_gallery::$auth-
 
 	$sql = 'SELECT *
 		FROM ' . GALLERY_ALBUMS_TABLE . '
-		WHERE album_user_id <> 0';
+		WHERE album_user_id <> ' . phpbb_gallery_album::PUBLIC_ALBUM;
 	$result = $db->sql_query($sql);
 	while ($row = $db->sql_fetchrow($result))
 	{
@@ -83,13 +84,13 @@ else if (phpbb_gallery_config::get('pegas_index_album') && phpbb_gallery::$auth-
 		'ALBUM_NAME'			=> $user->lang['USERS_PERSONAL_ALBUMS'],
 		'ALBUM_FOLDER_IMG'		=> $user->img('forum_read_subforum', 'no'),
 		'ALBUM_FOLDER_IMG_SRC'	=> $user->img('forum_read_subforum', 'no', false, '', 'src'),
-		'SUBALBUMS'				=> ((phpbb_gallery::$auth->acl_check('i_upload', OWN_GALLERY_PERMISSIONS) || $user->gallery['personal_album_id']) ? '<a href="' . (($user->gallery['personal_album_id']) ? phpbb_gallery_url::append_sid('album', 'album_id=' . $user->gallery['personal_album_id']) : phpbb_gallery_url::append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_albums')) . '">' . $user->data['username'] . '</a>' : ''),
+		'SUBALBUMS'				=> ((phpbb_gallery::$auth->acl_check('i_upload', phpbb_gallery_auth::OWN_ALBUM) || $user->gallery['personal_album_id']) ? '<a href="' . (($user->gallery['personal_album_id']) ? phpbb_gallery_url::append_sid('album', 'album_id=' . $user->gallery['personal_album_id']) : phpbb_gallery_url::append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_albums')) . '">' . $user->data['username'] . '</a>' : ''),
 		'ALBUM_DESC'			=> '',
 		'L_MODERATORS'			=> '',
-		'L_SUBALBUM_STR'		=> (phpbb_gallery::$auth->acl_check('i_upload', OWN_GALLERY_PERMISSIONS) || $user->gallery['personal_album_id']) ? $user->lang['YOUR_PERSONAL_ALBUM'] . ': ' : '',
+		'L_SUBALBUM_STR'		=> (phpbb_gallery::$auth->acl_check('i_upload', phpbb_gallery_auth::OWN_ALBUM) || $user->gallery['personal_album_id']) ? $user->lang['YOUR_PERSONAL_ALBUM'] . ': ' : '',
 		'MODERATORS'			=> '',
 		'IMAGES'				=> $images,
-		'UNAPPROVED_IMAGES'		=> (phpbb_gallery::$auth->acl_check('m_status', PERSONAL_GALLERY_PERMISSIONS)) ? $images_real - $images : '',
+		'UNAPPROVED_IMAGES'		=> (phpbb_gallery::$auth->acl_check('m_status', phpbb_gallery_auth::PERSONAL_ALBUM)) ? $images_real - $images : '',
 		'LAST_IMAGE_TIME'		=> $lastimage_time,
 		'LAST_USER_FULL'		=> get_username_string('full', $lastimage_user_id, $lastimage_username, $lastimage_user_colour),
 		'UC_FAKE_THUMBNAIL'		=> (phpbb_gallery_config::get('mini_thumbnail_disp')) ? generate_image_link('fake_thumbnail', phpbb_gallery_config::get('link_thumbnail'), $lastimage_image_id, $lastimage_name, $lastimage_album_id) : '',
@@ -99,7 +100,7 @@ else if (phpbb_gallery_config::get('pegas_index_album') && phpbb_gallery::$auth-
 
 	// Assign subforums loop for style authors
 	$template->assign_block_vars('albumrow.subalbum', array(
-		'U_SUBALBUM'	=> ((phpbb_gallery::$auth->acl_check('i_upload', OWN_GALLERY_PERMISSIONS)) ? ($user->gallery['personal_album_id'] > 0) ? phpbb_gallery_url::append_sid('album', 'album_id=' . $user->gallery['personal_album_id']) : phpbb_gallery_url::append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_albums') : ''),
+		'U_SUBALBUM'	=> ((phpbb_gallery::$auth->acl_check('i_upload', phpbb_gallery_auth::OWN_ALBUM)) ? ($user->gallery['personal_album_id'] > 0) ? phpbb_gallery_url::append_sid('album', 'album_id=' . $user->gallery['personal_album_id']) : phpbb_gallery_url::append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_albums') : ''),
 		'SUBALBUM_NAME'	=> $user->lang['YOUR_PERSONAL_ALBUM'],
 	));
 }
@@ -107,13 +108,6 @@ else if (phpbb_gallery_config::get('pegas_index_album') && phpbb_gallery::$auth-
 /**
 * Recent images & comments and random images
 */
-phpbb_gallery_url::_include('functions_recent');
-$ints = array(
-	'rows'		=> phpbb_gallery_config::get('rrc_gindex_rows'),
-	'columns'	=> phpbb_gallery_config::get('rrc_gindex_columns'),
-	'comments'	=> phpbb_gallery_config::get('rrc_gindex_crows'),
-	'contests'	=> phpbb_gallery_config::get('rrc_gindex_contests'),
-);
 /**
 * int		array	including all relevent numbers for rows, columns and stuff like that,
 * display	int		sum of the options which should be displayed, see gallery/includes/constants.php "// Display-options for RRC-Feature" for values
@@ -125,6 +119,13 @@ $ints = array(
 */
 if (phpbb_gallery_config::get('rrc_gindex_mode'))
 {
+	phpbb_gallery_url::_include('functions_recent');
+	$ints = array(
+		'rows'		=> phpbb_gallery_config::get('rrc_gindex_rows'),
+		'columns'	=> phpbb_gallery_config::get('rrc_gindex_columns'),
+		'comments'	=> phpbb_gallery_config::get('rrc_gindex_crows'),
+		'contests'	=> phpbb_gallery_config::get('rrc_gindex_contests'),
+	);
 	recent_gallery_images($ints, phpbb_gallery_config::get('rrc_gindex_display'), phpbb_gallery_config::get('rrc_gindex_mode'), phpbb_gallery_config::get('rrc_gindex_comments'), phpbb_gallery_config::get('rrc_gindex_pegas'));
 }
 
@@ -223,9 +224,9 @@ $s_char_options .= '<option value="other"' . (($first_char == 'other') ? ' selec
 
 // Output page
 $template->assign_vars(array(
-	'TOTAL_IMAGES'		=> (phpbb_gallery_config::get('disp_statistic')) ? sprintf($user->lang[$l_total_image_s], $total_images) : '',
+	'TOTAL_IMAGES'		=> (phpbb_gallery_config::get('disp_statistic')) ? $user->lang('TOTAL_IMAGES_SPRINTF', $total_images) : '',
 	'TOTAL_COMMENTS'	=> (phpbb_gallery_config::get('allow_comments')) ? sprintf($user->lang[$l_total_comment_s], $total_comments) : '',
-	'TOTAL_PGALLERIES'	=> (phpbb_gallery::$auth->acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS)) ? sprintf($user->lang[$l_total_pgallery_s], $total_pgalleries) : '',
+	'TOTAL_PGALLERIES'	=> (phpbb_gallery::$auth->acl_check('a_list', phpbb_gallery_auth::PERSONAL_ALBUM)) ? sprintf($user->lang[$l_total_pgallery_s], $total_pgalleries) : '',
 	'NEWEST_PGALLERIES'	=> ($total_pgalleries) ? sprintf($user->lang['NEWEST_PGALLERY'], get_username_string('full', phpbb_gallery_config::get('newest_pega_user_id'), phpbb_gallery_config::get('newest_pega_username'), phpbb_gallery_config::get('newest_pega_user_colour'), '', phpbb_gallery_url::append_sid('album', 'album_id=' . phpbb_gallery_config::get('newest_pega_album_id')))) : '',
 
 	'S_DISP_LOGIN'			=> phpbb_gallery_config::get('disp_login'),
@@ -236,9 +237,9 @@ $template->assign_vars(array(
 	'S_LOGIN_ACTION'			=> phpbb_gallery_url::append_sid('phpbb', 'ucp', 'mode=login&amp;redirect=' . urlencode(phpbb_gallery_url::path('relative') . "index.$phpEx" . (($mode == 'personal') ? '?mode=personal' : ''))),
 	'S_DISPLAY_BIRTHDAY_LIST'	=> (phpbb_gallery_config::get('disp_birthdays')) ? true : false,
 
-	'U_YOUR_PERSONAL_GALLERY'		=> (phpbb_gallery::$auth->acl_check('i_upload', OWN_GALLERY_PERMISSIONS)) ? ($user->gallery['personal_album_id'] > 0) ? phpbb_gallery_url::append_sid('album', 'album_id=' . $user->gallery['personal_album_id']) : phpbb_gallery_url::append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_albums') : '',
-	'U_USERS_PERSONAL_GALLERIES'	=> (phpbb_gallery::$auth->acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS)) ? phpbb_gallery_url::append_sid('index', 'mode=personal') : '',
-	'S_USERS_PERSONAL_GALLERIES'	=> (!phpbb_gallery_config::get('pegas_index_album') && phpbb_gallery::$auth->acl_check('a_list', PERSONAL_GALLERY_PERMISSIONS)) ? true : false,
+	'U_YOUR_PERSONAL_GALLERY'		=> (phpbb_gallery::$auth->acl_check('i_upload', phpbb_gallery_auth::OWN_ALBUM)) ? ($user->gallery['personal_album_id'] > 0) ? phpbb_gallery_url::append_sid('album', 'album_id=' . $user->gallery['personal_album_id']) : phpbb_gallery_url::append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_albums') : '',
+	'U_USERS_PERSONAL_GALLERIES'	=> (phpbb_gallery::$auth->acl_check('a_list', phpbb_gallery_auth::PERSONAL_ALBUM)) ? phpbb_gallery_url::append_sid('index', 'mode=personal') : '',
+	'S_USERS_PERSONAL_GALLERIES'	=> (!phpbb_gallery_config::get('pegas_index_album') && phpbb_gallery::$auth->acl_check('a_list', phpbb_gallery_auth::PERSONAL_ALBUM)) ? true : false,
 	'S_CHAR_OPTIONS'				=> $s_char_options,
 
 	'U_MARK_ALBUMS'					=> ($user->data['is_registered']) ? phpbb_gallery_url::append_sid('index', 'hash=' . generate_link_hash('global') . '&amp;mark=albums') : '',

@@ -14,10 +14,11 @@
 
 define('IN_PHPBB', true);
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
-include('includes/core.' . $phpEx);
+include('includes/root_path.' . $phpEx);
+include($phpbb_root_path . 'common.' . $phpEx);
+
 phpbb_gallery::setup(array('mods/gallery_ucp', 'mods/gallery'));
-phpbb_gallery_url::_include(array('functions_display'));
-phpbb_gallery_url::_include(array('bbcode', 'message_parser', 'functions_display'), 'phpbb');
+phpbb_gallery_url::_include('functions_display', 'phpbb');
 
 /**
 * Check the request
@@ -26,7 +27,7 @@ $user_id	= request_var('user_id', 0);
 $album_id	= request_var('album_id', 0);
 $start		= request_var('start', 0);
 $mode		= request_var('mode', '');
-$album_data	= get_album_info($album_id);
+$album_data	= phpbb_gallery_album::get_info($album_id);
 $sort_days	= request_var('st', 0);
 $sort_key	= request_var('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : phpbb_gallery_config::get('default_sort_key'));
 $sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : phpbb_gallery_config::get('default_sort_dir'));
@@ -102,8 +103,8 @@ if (!phpbb_gallery::$auth->acl_check('i_view', $album_id, $album_data['album_use
 }
 
 // Build the navigation & display subalbums
-generate_album_nav($album_data);
-display_albums($album_data, $config['load_moderators']);
+phpbb_gallery_album::generate_nav($album_data);
+phpbb_gallery_album::display_albums($album_data, $config['load_moderators']);
 
 // Set some variables to their defaults
 $allowed_create = false;
@@ -115,7 +116,7 @@ $images_per_page = phpbb_gallery_config::get('album_rows') * phpbb_gallery_confi
 /**
 * We have album_type so that there may be images ...
 */
-if ($album_data['album_type'] != ALBUM_CAT)
+if ($album_data['album_type'] != phpbb_gallery_album::TYPE_CAT)
 {
 	if (phpbb_gallery::$auth->acl_check('m_', $album_id, $album_data['album_user_id']))
 	{
@@ -127,7 +128,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 	{
 		if ($config['load_moderators'])
 		{
-			get_album_moderators($album_moderators, $album_id);
+			phpbb_gallery_album::get_moderators($album_moderators, $album_id);
 		}
 		if (!empty($album_moderators[$album_id]))
 		{
@@ -144,7 +145,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 	$sort_by_sql = array('t' => 'image_time', 'n' => 'image_name_clean', 'vc' => 'image_view_count');
 
 	// Do not sort images after upload-username on running contests, and of course ratings aswell!
-	if ($album_data['contest_marked'] != IMAGE_CONTEST)
+	if ($album_data['contest_marked'] != phpbb_gallery_image::IN_CONTEST)
 	{
 		$sort_by_text['u'] = $user->lang['SORT_USERNAME'];
 		$sort_by_sql['u'] = 'image_username_clean';
@@ -169,7 +170,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 
 	if ($album_data['album_images_real'] > 0)
 	{
-		$image_status_check = ' AND image_status <> ' . IMAGE_UNAPPROVED;
+		$image_status_check = ' AND image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED;
 		$image_counter = $album_data['album_images'];
 		if (phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id']))
 		{
@@ -256,7 +257,7 @@ if ($album_data['album_type'] != ALBUM_CAT)
 
 				// Assign the image to the template-block
 				$images[$j]['album_name'] = $album_data['album_name'];
-				assign_image_block('imageblock.imagerow.image', $images[$j], $album_data['album_status'], phpbb_gallery_config::get('album_display'), $album_data['album_user_id']);
+				phpbb_gallery_image::assign_block('imageblock.imagerow.image', $images[$j], $album_data['album_status'], phpbb_gallery_config::get('album_display'), $album_data['album_user_id']);
 			}
 		}
 	}
@@ -286,11 +287,11 @@ if ($album_data['album_type'] != ALBUM_CAT)
 // End of "We have album_type so that there may be images ..."
 
 // Page is ready loaded, mark album as "read"
-gallery_markread('album', $album_id);
+phpbb_gallery_misc::markread('album', $album_id);
 
 $template->assign_vars(array(
 	'S_IN_ALBUM'				=> true, // used for some templating in subsilver2
-	'S_IS_POSTABLE'				=> ($album_data['album_type'] != ALBUM_CAT) ? true : false,
+	'S_IS_POSTABLE'				=> ($album_data['album_type'] != phpbb_gallery_album::TYPE_CAT) ? true : false,
 	'S_IS_LOCKED'				=> ($album_data['album_status'] == ITEM_LOCKED) ? true : false,
 	'UPLOAD_IMG'				=> ($album_data['album_status'] == ITEM_LOCKED) ? $user->img('button_topic_locked', 'ALBUM_LOCKED') : $user->img('button_upload_image', 'UPLOAD_IMAGE'),
 	'S_MODE'					=> $album_data['album_type'],
@@ -316,7 +317,7 @@ $template->assign_vars(array(
 	'S_SELECT_SORT_DIR'			=> $s_sort_dir,
 	'S_SELECT_SORT_KEY'			=> $s_sort_key,
 
-	'ALBUM_JUMPBOX'				=> gallery_albumbox(false, '', $album_id),
+	'ALBUM_JUMPBOX'				=> phpbb_gallery_album::get_albumbox(false, '', $album_id),
 	'U_RETURN_LINK'				=> phpbb_gallery_url::append_sid('index'),
 	'S_RETURN_LINK'				=> $user->lang['GALLERY'],
 
@@ -325,7 +326,7 @@ $template->assign_vars(array(
 	'PAGE_NUMBER'				=> on_page($image_counter, $images_per_page, $start),
 
 	'L_WATCH_TOPIC'				=> ($album_data['watch_id']) ? $user->lang['UNWATCH_ALBUM'] : $user->lang['WATCH_ALBUM'],
-	'U_WATCH_TOPIC'				=> (($album_data['album_type'] != ALBUM_CAT) && ($user->data['user_id'] != ANONYMOUS)) ? phpbb_gallery_url::append_sid('posting', "mode=album&amp;submode=" . (($album_data['watch_id']) ?  'unwatch' : 'watch') . "&amp;album_id=$album_id") : '',
+	'U_WATCH_TOPIC'				=> (($album_data['album_type'] != phpbb_gallery_album::TYPE_CAT) && ($user->data['user_id'] != ANONYMOUS)) ? phpbb_gallery_url::append_sid('posting', "mode=album&amp;submode=" . (($album_data['watch_id']) ?  'unwatch' : 'watch') . "&amp;album_id=$album_id") : '',
 	'S_WATCHING_TOPIC'			=> ($album_data['watch_id']) ? true : false,
 ));
 
