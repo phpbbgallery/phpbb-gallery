@@ -31,9 +31,6 @@ class phpbb_gallery
 	{
 		global $auth, $db, $template, $user, $cache;
 
-		phpbb_gallery_url::_include('functions_phpbb');
-		phpbb_gallery_plugins::init(phpbb_gallery_url::path());
-
 		$lang_sets = array('mods/info_acp_gallery');
 		if (is_array($lang_set))
 		{
@@ -48,6 +45,9 @@ class phpbb_gallery
 		$user->session_begin();
 		$auth->acl($user->data);
 		$user->setup($lang_sets);
+
+		phpbb_gallery_url::_include('functions_phpbb');
+		phpbb_gallery_plugins::init(phpbb_gallery_url::path());
 
 		// Little precaution.
 		$user->data['user_id'] = (int) $user->data['user_id'];

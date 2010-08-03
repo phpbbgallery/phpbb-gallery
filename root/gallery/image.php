@@ -48,7 +48,7 @@ if (!file_exists(phpbb_gallery_url::path('upload') . $image_data['image_filename
 /**
 * Check permissions and hotlinking
 */
-if ((!phpbb_gallery::$auth->acl_check('i_view', $album_id, $album_data['album_user_id'])) || (!phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id']) && ($image_data['image_status'] == IMAGE_UNAPPROVED)))
+if ((!phpbb_gallery::$auth->acl_check('i_view', $album_id, $album_data['album_user_id'])) || (!phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id']) && ($image_data['image_status'] == phpbb_gallery_image::STATUS_UNAPPROVED)))
 {
 	//trigger_error('NOT_AUTHORISED');
 	$image_error = 'not_authorised.jpg';

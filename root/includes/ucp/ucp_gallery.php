@@ -202,8 +202,8 @@ class ucp_gallery
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc(request_var('album_desc', '', true)),
 				'album_parents'					=> '',
-				'album_type'					=> ALBUM_UPLOAD,
-				'album_status'					=> ITEM_UNLOCKED,
+				'album_type'					=> phpbb_gallery_album::TYPE_UPLOAD,
+				'album_status'					=> phpbb_gallery_album::STATUS_OPEN,
 				'album_user_id'					=> $user->data['user_id'],
 				'album_last_username'			=> '',
 				'album_last_user_colour'		=> $user->data['user_colour'],
@@ -386,7 +386,7 @@ class ucp_gallery
 				'parent_id'						=> request_var('parent_id', 0),
 				'album_parents'					=> '',
 				'album_type'					=> phpbb_gallery_album::TYPE_UPLOAD,
-				'album_status'					=> phpbb_gallery_album::STATUS_UNLOCKED,
+				'album_status'					=> phpbb_gallery_album::STATUS_OPEN,
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc(request_var('album_desc', '', true)),
 				'album_user_id'					=> $user->data['user_id'],
@@ -1054,7 +1054,7 @@ class ucp_gallery
 		}
 
 		$start				= request_var('start', 0);
-		$images_per_page	= phpbb_galler_config::get('album_rows') * phpbb_gallery_config::get('album_columns');
+		$images_per_page	= phpbb_gallery_config::get('album_rows') * phpbb_gallery_config::get('album_columns');
 		$total_images		= 0;
 
 		$sql = 'SELECT COUNT(image_id) as images

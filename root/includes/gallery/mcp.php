@@ -228,15 +228,21 @@ class phpbb_gallery_mcp
 			$sql = $db->sql_build_query('SELECT', $sql_array);
 			$result = $db->sql_query_limit($sql, 1);
 			$row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+
+			if ($row === false)
+			{
+				trigger_error('REPORT_NOT_FOUND');
+			}
+
 			$template->assign_vars(array(
 				'REPORTER'			=> get_username_string('full', $row['reporter_id'], $row['reporter_name'], $row['reporter_colour']),
 				'REPORT_TIME'		=> $user->format_date($row['report_time']),
 				'REPORT_ID'			=> $row['report_id'],
 				'REPORT_NOTE'		=> $row['report_note'],
-				'REPORT_STATUS'		=> ($row['report_status'] == REPORT_OPEN) ? true : false,
+				'REPORT_STATUS'		=> ($row['report_status'] == phpbb_gallery_constants::REPORT_OPEN) ? true : false,
 				'STATUS'			=> $user->lang['REPORT_STATUS_' . $row['report_status']] . ' ' . $user->lang['QUEUE_STATUS_' . $row['image_status']],
 			));
-			$db->sql_freeresult($result);
 		}
 
 		$template->assign_vars(array(
@@ -244,7 +250,7 @@ class phpbb_gallery_mcp
 			'IMAGE_DESC'		=> generate_text_for_display($row['image_desc'], $row['image_desc_uid'], $row['image_desc_bitfield'], 7),
 			'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 			'IMAGE_TIME'		=> $user->format_date($row['image_time']),
-			'UC_IMAGE'			=> generate_image_link('medium', phpbb_gallery_config::get('link_thumbnail'), $row['image_id'], $row['image_name'], $album_id),
+			'UC_IMAGE'			=> phpbb_gallery_image::generate_link('medium', phpbb_gallery_config::get('link_thumbnail'), $row['image_id'], $row['image_name'], $album_id),
 			'U_EDIT_IMAGE'		=> phpbb_gallery_url::append_sid('posting', 'album_id=' . $album_id . '&amp;image_id=' . $row['image_id'] . '&amp;mode=image&amp;submode=edit'),
 			'U_DELETE_IMAGE'	=> phpbb_gallery_url::append_sid('posting', 'album_id=' . $album_id . '&amp;image_id=' . $row['image_id'] . '&amp;mode=image&amp;submode=delete'),
 			'S_MCP_ACTION'		=> phpbb_gallery_url::append_sid('mcp', "mode=" . (($mode == 'report_details') ? 'report_open' : 'queue_unapproved') . "&amp;album_id=$album_id"),
@@ -273,11 +279,11 @@ class phpbb_gallery_mcp
 		}
 		else if ($mode == 'queue_approved')
 		{
-			$where_case = 'AND image_status = ' . IMAGE_APPROVED;
+			$where_case = 'AND image_status = ' . phpbb_gallery_image::STATUS_APPROVED;
 		}
 		else if ($mode == 'queue_locked')
 		{
-			$where_case = 'AND image_status = ' . IMAGE_LOCKED;
+			$where_case = 'AND image_status = ' . phpbb_gallery_image::STATUS_LOCKED;
 		}
 		$sql = 'SELECT COUNT(image_id) images
 			FROM ' . GALLERY_IMAGES_TABLE . "

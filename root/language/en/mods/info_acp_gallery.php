@@ -49,8 +49,10 @@ $lang = array_merge($lang, array(
 	'PERSONAL_ALBUM'					=> 'Personal album',
 	'PHPBB_GALLERY'						=> 'phpBB Gallery',
 
-	'TOTAL_IMAGES_OTHER'				=> 'Total images <strong>%d</strong>',
-	'TOTAL_IMAGES_ZERO'					=> 'Total images <strong>0</strong>',
+	'TOTAL_IMAGES_SPRINTF'				=> array(
+		0		=> 'Total images <strong>0</strong>',
+		1		=> 'Total images <strong>%d</strong>',
+	),
 ));
 
 ?>

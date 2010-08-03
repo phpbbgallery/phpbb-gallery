@@ -61,6 +61,11 @@ $moving_target = request_var('moving_target', 0);
 $image_id = ($image_id && !$option_id) ? $image_id : $option_id;
 $image_id_ary = ($image_id) ? array($image_id) : request_var('image_id_ary', array(0));
 
+if ((request_var('quickmod', 0) == 1) && ($action == 'report_details'))
+{
+	$mode = 'report_details';
+	$option_id = (int) $image_data['image_reported'];
+}
 
 /**
 * Check for all the requested permissions
@@ -218,7 +223,7 @@ if ($action && $image_id_ary)
 			}
 			else
 			{
-				$category_select = gallery_albumbox(false, 'moving_target', $album_id, 'i_upload', $album_id);
+				$category_select = phpbb_gallery_album::get_albumbox(false, 'moving_target', $album_id, 'i_upload', $album_id);
 				$template->assign_vars(array(
 					'S_MOVING_IMAGES'	=> true,
 					'S_ALBUM_SELECT'	=> $category_select,
@@ -230,7 +235,7 @@ if ($action && $image_id_ary)
 		case 'images_unapprove':
 			if (confirm_box(true))
 			{
-				handle_image_counter($image_id_ary, false);
+				phpbb_gallery_image::handle_counter($image_id_ary, false);
 
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 					SET image_status = ' . IMAGE_UNAPPROVED . '
@@ -257,7 +262,7 @@ if ($action && $image_id_ary)
 		case 'images_approve':
 			if (confirm_box(true))
 			{
-				handle_image_counter($image_id_ary, true, true);
+				phpbb_gallery_image::handle_counter($image_id_ary, true, true);
 
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 					SET image_status = ' . IMAGE_APPROVED . '
@@ -285,7 +290,7 @@ if ($action && $image_id_ary)
 		case 'images_lock':
 			if (confirm_box(true))
 			{
-				handle_image_counter($image_id_ary, false);
+				phpbb_gallery_image::handle_counter($image_id_ary, false);
 
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 					SET image_status = ' . IMAGE_LOCKED . '
@@ -312,7 +317,7 @@ if ($action && $image_id_ary)
 		case 'images_delete':
 			if (confirm_box(true))
 			{
-				handle_image_counter($image_id_ary, false);
+				phpbb_gallery_image::handle_counter($image_id_ary, false);
 
 				// Delete the files
 				$sql = 'SELECT image_id, image_name, image_filename, image_thumbnail
@@ -321,9 +326,9 @@ if ($action && $image_id_ary)
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
-					@unlink(phpbb_gallery_url::path('phpbb') . GALLERY_CACHE_PATH . $image_data['image_thumbnail']);
-					@unlink(phpbb_gallery_url::path('phpbb') . GALLERY_MEDIUM_PATH . $image_data['image_thumbnail']);
-					@unlink(phpbb_gallery_url::path('phpbb') . GALLERY_UPLOAD_PATH . $image_data['image_filename']);
+					@unlink(phpbb_gallery_url::path('cache') . $image_data['image_thumbnail']);
+					@unlink(phpbb_gallery_url::path('medium') . $image_data['image_thumbnail']);
+					@unlink(phpbb_gallery_url::path('upload') . $image_data['image_filename']);
 					add_log('gallery', $album_id, $row['image_id'], 'LOG_GALLERY_DELETED', $row['image_name']);
 				}
 				$db->sql_freeresult($result);
@@ -359,7 +364,7 @@ if ($action && $image_id_ary)
 			{
 				$sql_ary = array(
 					'report_manager'		=> $user->data['user_id'],
-					'report_status'			=> REPORT_LOCKED,
+					'report_status'			=> phpbb_gallery_constants::REPORT_LOCKED,
 				);
 				$sql = 'UPDATE ' . GALLERY_REPORTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 					WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
@@ -376,7 +381,7 @@ if ($action && $image_id_ary)
 				$db->sql_freeresult($result);
 
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-					SET image_reported = ' . REPORT_UNREPORT . '
+					SET image_reported = ' . phpbb_gallery_constants::REPORT_UNREPORT . '
 					WHERE ' . $db->sql_in_set('image_reported', $image_id_ary);
 				$db->sql_query($sql);
 
@@ -392,7 +397,7 @@ if ($action && $image_id_ary)
 			{
 				$sql_ary = array(
 					'report_manager'		=> $user->data['user_id'],
-					'report_status'			=> REPORT_OPEN,
+					'report_status'			=> phpbb_gallery_constants::REPORT_OPEN,
 				);
 				$sql = 'UPDATE ' . GALLERY_REPORTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 					WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
@@ -400,7 +405,7 @@ if ($action && $image_id_ary)
 
 				$sql = 'SELECT report_image_id, report_id
 					FROM ' . GALLERY_REPORTS_TABLE . '
-					WHERE report_status = ' . REPORT_OPEN . '
+					WHERE report_status = ' . phpbb_gallery_constants::REPORT_OPEN . '
 						AND ' . $db->sql_in_set('report_id', $image_id_ary);
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
@@ -447,7 +452,7 @@ if ($action && $image_id_ary)
 				$db->sql_freeresult($result);
 
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-					SET image_reported = ' . REPORT_UNREPORT . '
+					SET image_reported = ' . phpbb_gallery_constants::REPORT_UNREPORT . '
 					WHERE ' . $db->sql_in_set('image_reported', $image_id_ary);
 				$db->sql_query($sql);
 

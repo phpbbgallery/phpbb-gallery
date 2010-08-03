@@ -91,7 +91,7 @@ class phpbb_gallery_url
 				return generate_board_url() . '/' . self::$phpbb_gallery_path;
 			case 'board':
 				return generate_board_url();
-			case 'image':
+			case 'images':
 				return self::$phpbb_root_path . self::$phpbb_gallery_path . self::IMAGE_PATH;
 			case 'upload':
 				return self::$phpbb_root_path . self::$phpbb_gallery_path . self::IMAGE_PATH . self::UPLOAD_PATH;

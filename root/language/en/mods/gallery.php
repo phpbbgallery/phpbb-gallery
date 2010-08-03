@@ -181,7 +181,7 @@ $lang = array_merge($lang, array(
 	'RATES_STRING'					=> '%1$s (%2$s Rates)',
 	'RATING'						=> 'Rating',
 	'RATING_SUCCESSFUL'				=> 'The image has been rated successfully.',
-	'READ_REPORT'					=> 'Read report message',
+	'READ_REPORT'					=> 'Read report',
 	'RECENT_COMMENTS'				=> 'Recent comments',
 	'RECENT_IMAGES'					=> 'Recent Images',
 	'REPORT_IMAGE'					=> 'Report image',
@@ -227,7 +227,7 @@ $lang = array_merge($lang, array(
 	'TOTAL_PGALLERIES_SHORT'		=> '%d personal galleries ',
 	'TOTAL_PGALLERIES_ZERO'			=> 'Total personal galleries <strong>0</strong>',
 
-	'UNFAVORITE_IMAGE'				=> 'remove from favorites',
+	'UNFAVORITE_IMAGE'				=> 'Remove from favorites',
 	'UNFAVORITED_IMAGE'				=> 'The image was removed from your favorites.',
 	'UNFAVORITED_IMAGES'			=> 'The images were removed from your favorites.',
 	'UNLOCK_IMAGE'					=> 'Unlock image',

@@ -38,8 +38,8 @@ $lang = array_merge($lang, array(
 	'GALLERY_MCP_LOCKED'			=> 'Locked images',
 	'GALLERY_MCP_VIEWALBUM'			=> 'View album',
 
-	'IMAGE_REPORTED'				=> 'This image is reported.',
-	'IMAGE_UNAPPROVED'				=> 'This image is awaiting approval.',
+	'IMAGE_REPORTED'				=> 'The image was reported.',
+	'IMAGE_UNAPPROVED'				=> 'The image is awaiting for approval.',
 
 	'MODERATE_ALBUM'				=> 'Moderate album',
 
@@ -57,9 +57,9 @@ $lang = array_merge($lang, array(
 	'QUEUE_A_UNAPPROVE2'			=> 'Unapprove image?',
 	'QUEUE_A_UNAPPROVE2_CONFIRM'	=> 'Are you sure, you want to unapprove this image?',
 
-	'QUEUE_STATUS_0'				=> 'This image is waiting for approval.',
-	'QUEUE_STATUS_1'				=> 'This image is approved.',
-	'QUEUE_STATUS_2'				=> 'This image is locked.',
+	'QUEUE_STATUS_0'				=> 'The image is waiting for approval.',
+	'QUEUE_STATUS_1'				=> 'The image is approved.',
+	'QUEUE_STATUS_2'				=> 'The image is locked.',
 
 	'QUEUES_A_APPROVE'				=> 'Approve images',
 	'QUEUES_A_APPROVE2'				=> 'Approve images?',
@@ -85,8 +85,9 @@ $lang = array_merge($lang, array(
 	'REPORT_A_OPEN2'				=> 'Open report?',
 	'REPORT_A_OPEN2_CONFIRM'		=> 'Are you sure, you want to open this report?',
 
-	'REPORT_STATUS_1'				=> 'This report is needs to be reviewed.',
-	'REPORT_STATUS_2'				=> 'This report is closed.',
+	'REPORT_NOT_FOUND'				=> 'The report could not be found.',
+	'REPORT_STATUS_1'				=> 'The report needs to be reviewed.',
+	'REPORT_STATUS_2'				=> 'The report is closed.',
 
 	'REPORTS_A_CLOSE'				=> 'Close reports',
 	'REPORTS_A_CLOSE2'				=> 'Close reports?',

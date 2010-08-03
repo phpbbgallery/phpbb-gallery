@@ -118,7 +118,7 @@ class acp_gallery_albums
 					// Categories are not able to be locked...
 					if ($album_data['album_type'] == phpbb_gallery_album::TYPE_CAT)
 					{
-						$album_data['album_status'] = phpbb_gallery_album::STATUS_UNLOCKED;
+						$album_data['album_status'] = phpbb_gallery_album::STATUS_OPEN;
 					}
 
 					// Contests need contest_data, freaky... :-O
@@ -334,7 +334,7 @@ class acp_gallery_albums
 						$album_data = array(
 							'parent_id'				=> $this->parent_id,
 							'album_type'			=> phpbb_gallery_album::TYPE_UPLOAD,
-							'album_status'			=> phpbb_gallery_album::STATUS_UNLOCKED,
+							'album_status'			=> phpbb_gallery_album::STATUS_OPEN,
 							'album_name'			=> utf8_normalize_nfc(request_var('album_name', '', true)),
 							'album_desc'			=> '',
 							'album_image'			=> '',
@@ -407,7 +407,7 @@ class acp_gallery_albums
 				$album_sort_dir_options .= '<option' . (($album_data['album_sort_dir'] == 'd') ? ' selected="selected"' : '') . " value='d'>" . $user->lang['SORT_DESCENDING'] . '</option>';
 				$album_sort_dir_options .= '<option' . (($album_data['album_sort_dir'] == 'a') ? ' selected="selected"' : '') . " value='a'>" . $user->lang['SORT_ASCENDING'] . '</option>';
 
-				$statuslist = '<option value="' . phpbb_gallery_album::STATUS_UNLOCKED . '"' . (($album_data['album_status'] == phpbb_gallery_album::STATUS_UNLOCKED) ? ' selected="selected"' : '') . '>' . $user->lang['UNLOCKED'] . '</option><option value="' . phpbb_gallery_album::STATUS_LOCKED . '"' . (($album_data['album_status'] == phpbb_gallery_album::STATUS_LOCKED) ? ' selected="selected"' : '') . '>' . $user->lang['LOCKED'] . '</option>';
+				$statuslist = '<option value="' . phpbb_gallery_album::STATUS_OPEN . '"' . (($album_data['album_status'] == phpbb_gallery_album::STATUS_OPEN) ? ' selected="selected"' : '') . '>' . $user->lang['UNLOCKED'] . '</option><option value="' . phpbb_gallery_album::STATUS_LOCKED . '"' . (($album_data['album_status'] == phpbb_gallery_album::STATUS_LOCKED) ? ' selected="selected"' : '') . '>' . $user->lang['LOCKED'] . '</option>';
 
 				$sql = 'SELECT album_id
 					FROM ' . GALLERY_ALBUMS_TABLE . '

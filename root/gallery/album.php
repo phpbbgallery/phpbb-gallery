@@ -38,7 +38,7 @@ $sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['alb
 if ($album_data['contest_id'] && $album_data['contest_marked'] && (($album_data['contest_start'] + $album_data['contest_end']) < time()))
 {
 	$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-		SET image_contest = ' . IMAGE_NO_CONTEST . '
+		SET image_contest = ' . phpbb_gallery_image::NO_CONTEST . '
 		WHERE image_album_id = ' . $album_id;
 	$db->sql_query($sql);
 
@@ -46,14 +46,14 @@ if ($album_data['contest_id'] && $album_data['contest_marked'] && (($album_data[
 		FROM ' . GALLERY_IMAGES_TABLE . '
 		WHERE image_album_id = ' . $album_id . '
 		ORDER BY image_rate_avg DESC, image_rate_points DESC, image_id ASC';
-	$result = $db->sql_query_limit($sql, CONTEST_IMAGES);
+	$result = $db->sql_query_limit($sql, phpbb_gallery_constants::CONTEST_IMAGES);
 	$first = (int) $db->sql_fetchfield('image_id');
 	$second = (int) $db->sql_fetchfield('image_id');
 	$third = (int) $db->sql_fetchfield('image_id');
 	$db->sql_freeresult($result);
 
 	$sql = 'UPDATE ' . GALLERY_CONTESTS_TABLE . '
-		SET contest_marked = ' . IMAGE_NO_CONTEST . ",
+		SET contest_marked = ' . phpbb_gallery_image::NO_CONTEST . ",
 			contest_first = $first,
 			contest_second = $second,
 			contest_third = $third
@@ -78,7 +78,7 @@ if ($album_data['contest_id'] && $album_data['contest_marked'] && (($album_data[
 
 	phpbb_gallery_config::inc('contests_ended', 1);
 
-	$album_data['contest_marked'] = IMAGE_NO_CONTEST;
+	$album_data['contest_marked'] = phpbb_gallery_image::NO_CONTEST;
 }
 
 /**
@@ -264,7 +264,7 @@ if ($album_data['album_type'] != phpbb_gallery_album::TYPE_CAT)
 	// Is it a personal album, and does the user have permissions to create more?
 	if ($album_data['album_user_id'] == $user->data['user_id'])
 	{
-		if (phpbb_gallery::$auth->acl_check('i_upload', OWN_GALLERY_PERMISSIONS) && !phpbb_gallery::$auth->acl_check('album_unlimited', OWN_GALLERY_PERMISSIONS))
+		if (phpbb_gallery::$auth->acl_check('i_upload', phpbb_gallery_auth::OWN_ALBUM) && !phpbb_gallery::$auth->acl_check('album_unlimited', phpbb_gallery_auth::OWN_ALBUM))
 		{
 			$sql = 'SELECT COUNT(album_id) albums
 				FROM ' . GALLERY_ALBUMS_TABLE . '
@@ -273,12 +273,12 @@ if ($album_data['album_type'] != phpbb_gallery_album::TYPE_CAT)
 			$albums = (int) $db->sql_fetchfield('albums');
 			$db->sql_freeresult($result);
 
-			if ($albums < phpbb_gallery::$auth->acl_check('album_count', OWN_GALLERY_PERMISSIONS))
+			if ($albums < phpbb_gallery::$auth->acl_check('album_count', phpbb_gallery_auth::OWN_ALBUM))
 			{
 				$allowed_create = true;
 			}
 		}
-		elseif (phpbb_gallery::$auth->acl_check('album_unlimited', OWN_GALLERY_PERMISSIONS))
+		elseif (phpbb_gallery::$auth->acl_check('album_unlimited', phpbb_gallery_auth::OWN_ALBUM))
 		{
 			$allowed_create = true;
 		}
@@ -292,8 +292,8 @@ phpbb_gallery_misc::markread('album', $album_id);
 $template->assign_vars(array(
 	'S_IN_ALBUM'				=> true, // used for some templating in subsilver2
 	'S_IS_POSTABLE'				=> ($album_data['album_type'] != phpbb_gallery_album::TYPE_CAT) ? true : false,
-	'S_IS_LOCKED'				=> ($album_data['album_status'] == ITEM_LOCKED) ? true : false,
-	'UPLOAD_IMG'				=> ($album_data['album_status'] == ITEM_LOCKED) ? $user->img('button_topic_locked', 'ALBUM_LOCKED') : $user->img('button_upload_image', 'UPLOAD_IMAGE'),
+	'S_IS_LOCKED'				=> ($album_data['album_status'] == phpbb_gallery_album::STATUS_LOCKED) ? true : false,
+	'UPLOAD_IMG'				=> ($album_data['album_status'] == phpbb_gallery_album::STATUS_LOCKED) ? $user->img('button_topic_locked', 'ALBUM_LOCKED') : $user->img('button_upload_image', 'UPLOAD_IMAGE'),
 	'S_MODE'					=> $album_data['album_type'],
 	'L_MODERATORS'				=> $l_moderator,
 	'MODERATORS'				=> $moderators_list,
@@ -308,7 +308,7 @@ $template->assign_vars(array(
 	'S_DISPLAY_SEARCHBOX'		=> ($auth->acl_get('u_search') && $config['load_search']) ? true : false,
 	'S_SEARCHBOX_ACTION'		=> phpbb_gallery_url::append_sid('search', 'aid[]=' . $album_id),
 
-	'S_THUMBNAIL_SIZE'			=> phpbb_gallery_config::get('thumbnail_height') + 20 + ((phpbb_gallery_config::get('thumbnail_infoline')) ? THUMBNAIL_INFO_HEIGHT : 0),
+	'S_THUMBNAIL_SIZE'			=> phpbb_gallery_config::get('thumbnail_height') + 20 + ((phpbb_gallery_config::get('thumbnail_infoline')) ? phpbb_gallery_constants::THUMBNAIL_INFO_HEIGHT : 0),
 	'S_COLS'					=> phpbb_gallery_config::get('album_columns'),
 	'S_COL_WIDTH'				=> (100 / phpbb_gallery_config::get('album_columns')) . '%',
 	'S_JUMPBOX_ACTION'			=> phpbb_gallery_url::append_sid('album'),
@@ -347,5 +347,3 @@ $template->set_filenames(array(
 );
 
 page_footer();
-
-?>

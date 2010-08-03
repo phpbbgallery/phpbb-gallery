@@ -18,7 +18,6 @@ include('includes/root_path.' . $phpEx);
 include($phpbb_root_path . 'common.' . $phpEx);
 
 phpbb_gallery::setup(array('mods/gallery', 'posting'));
-phpbb_gallery_url::_include('functions_posting');
 phpbb_gallery_url::_include(array('functions_display', 'functions_posting', 'functions_user'), 'phpbb');
 phpbb_gallery_url::_include(array('bbcode', 'message_parser'), 'phpbb');
 
@@ -46,7 +45,7 @@ if ($comment_id)
 }
 if ($image_id)
 {
-	$image_data = get_image_info($image_id);
+	$image_data = phpbb_gallery_image::get_info($image_id);
 	$album_id = $image_data['image_album_id'];
 }
 $album_data = phpbb_gallery_album::get_info($album_id);

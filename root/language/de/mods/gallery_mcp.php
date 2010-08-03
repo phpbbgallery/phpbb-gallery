@@ -85,6 +85,7 @@ $lang = array_merge($lang, array(
 	'REPORT_A_OPEN2'				=> 'Meldung öffnen?',
 	'REPORT_A_OPEN2_CONFIRM'		=> 'Bist du dir sicher, dass du die Meldung öffnen möchtest?',
 
+	'REPORT_NOT_FOUND'				=> 'Die Meldung konnte nicht gefunden werden.',
 	'REPORT_STATUS_1'				=> 'Die Meldung wartet auf Überprüfung.',
 	'REPORT_STATUS_2'				=> 'Die Meldung ist geschlossen.',
 

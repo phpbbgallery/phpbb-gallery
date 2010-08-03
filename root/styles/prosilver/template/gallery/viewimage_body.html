@@ -2,120 +2,154 @@
 
 <h2><a href="{S_ALBUM_ACTION}">{IMAGE_NAME}</a></h2>
 
-<div class="post bg2">
+<div class="post bg2<!-- IF S_IMAGE_REPORTED --> reported<!-- ENDIF -->">
 	<div class="inner"><span class="corners-top"><span></span></span>
 		<!-- IF UC_PREVIOUS --><p style="float: left; text-align: left;">{UC_PREVIOUS_IMAGE}<br />{UC_PREVIOUS}</p><!-- ENDIF -->
 		<!-- IF UC_NEXT --><p style="float: right; text-align: right;">{UC_NEXT_IMAGE}<br />{UC_NEXT}</p><!-- ENDIF -->
-		<div style="text-align: center; padding: 20px;">{UC_IMAGE}</div>
+		<div style="text-align: center; padding: 20px;">{UC_IMAGE}
+			<!-- IF S_IMAGE_REPORTED --><br /><br /><a href="{U_IMAGE_REPORTED}" style="color: #BC2A4D; font-size: 1.1em; font-weight: bold;">{L_IMAGE_REPORTED}</a><!-- ENDIF -->
+		</div>
 	<span class="corners-bottom"><span></span></span></div>
 </div>
 
 <div id="details" class="panel">
 	<div class="inner"><span class="corners-top"><span></span></span>
-		<h3>{L_DETAILS}</h3>
-		<!-- IF U_EDIT or U_DELETE or U_REPORT -->
 		<div class="postbody">
+			<!-- IF U_EDIT or U_DELETE or U_REPORT -->
 			<ul class="profile-icons">
+					<!-- IF U_WATCH_TOPIC --><li <!-- IF S_WATCHING_TOPIC -->class="icon-unsubscribe"<!-- ELSE -->class="icon-subscribe"<!-- ENDIF -->><a href="{U_WATCH_TOPIC}" title="{L_WATCH_TOPIC}">{L_WATCH_TOPIC}</a></li><!-- ENDIF -->
+					<!-- IF U_BOOKMARK_TOPIC --><li class="icon-bookmark"><a href="{U_BOOKMARK_TOPIC}" title="{L_BOOKMARK_TOPIC}">{L_BOOKMARK_TOPIC}</a></li><!-- ENDIF -->
 				<!-- IF U_EDIT --><li class="edit-icon"><a href="{U_EDIT}" title="{L_EDIT_IMAGE}"><span>{L_EDIT_IMAGE}</span></a></li><!-- ENDIF -->
 				<!-- IF U_DELETE --><li class="delete-icon"><a href="{U_DELETE}" title="{L_DELETE_IMAGE}"><span>{L_DELETE_IMAGE}</span></a></li><!-- ENDIF -->
 				<!-- IF U_REPORT --><li class="report-icon"><a href="{U_REPORT}" title="{L_REPORT_IMAGE}"><span>{L_REPORT_IMAGE}</span></a></li><!-- ENDIF -->
-				<!-- IF U_STATUS --><li class="info-icon"><a href="{U_STATUS}" title="{L_CHANGE_IMAGE_STATUS}"><span>{L_CHANGE_IMAGE_STATUS}</span></a></li><!-- ENDIF -->
 			</ul>
-		</div>
-		<br style="clear: both;" />
-		<!-- ENDIF -->
-		<fieldset class="fields1">
-			<!-- IF CONTEST_RANK -->
-				<dl>
+			<!-- ENDIF -->
+			<h3>{IMAGE_NAME}</h3>
+			<hr />
+
+			<fieldset class="fields1 anti-postbody">
+				<!-- IF CONTEST_RANK -->
+				<dl class="column1">
 					<dt><label>{L_CONTEST_RESULT}:</label></dt>
 					<dd>{CONTEST_RANK}</dd>
 				</dl>
-			<!-- ENDIF -->
-			<dl>
-				<dt><label>{L_UPLOADED_BY_USER}:</label></dt>
-				<dd>{POSTER}</dd>
-			</dl>
-			<dl>
-				<dt><label>{L_IMAGE_NAME}:</label></dt>
-				<dd>{IMAGE_NAME}</dd>
-			</dl>
-			<dl>
-				<dt><label>{L_IMAGE_BBCODE}:</label></dt>
-				<dd><input type="text" size="28" value="{IMAGE_BBCODE}" class="inputbox autowidth" onclick="this.focus();this.select();" /></dd>
-				<!-- IF IMAGE_IMGURL_BBCODE -->
-					<dd><input type="text" size="28" value="{IMAGE_IMGURL_BBCODE}" class="inputbox autowidth" onclick="this.focus();this.select();" /></dd>
 				<!-- ENDIF -->
-			</dl>
-			<!-- IF IMAGE_URL -->
-				<dl>
+				<dl class="column2">
+					<dt><label>{L_UPLOADED_ON_DATE}:</label></dt>
+					<dd>{IMAGE_TIME}</dd>
+				</dl>
+				<!-- IF IMAGE_URL -->
+				<dl class="column1">
 					<dt><label>{L_IMAGE_URL}:</label></dt>
 					<dd><input type="text" size="28" value="{IMAGE_URL}" class="inputbox autowidth" onclick="this.focus();this.select();" /></dd>
 				</dl>
-			<!-- ENDIF -->
-			<dl>
-				<dt><label>{L_UPLOADED_ON_DATE}:</label></dt>
-				<dd>{IMAGE_TIME}</dd>
-			</dl>
-			<dl>
-				<dt><label>{L_VIEWS}:</label></dt>
-				<dd>{IMAGE_VIEW}</dd>
-			</dl>
-			<!-- IF S_VIEW_RATE -->
-				<dl>
+				<!-- ENDIF -->
+				<dl class="column2">
+					<dt><label>{L_VIEWS}:</label></dt>
+					<dd>{IMAGE_VIEW}</dd>
+				</dl>
+				<!-- IF S_BBCODE_ALLOWED -->
+				<dl class="column1">
+					<dt><label>{L_IMAGE_BBCODE}:</label></dt>
+					<dd><input type="text" size="28" value="{IMAGE_BBCODE}" class="inputbox autowidth" onclick="this.focus();this.select();" /></dd>
+					<!-- IF IMAGE_IMGURL_BBCODE -->
+						<dd><input type="text" size="28" value="{IMAGE_IMGURL_BBCODE}" class="inputbox autowidth" onclick="this.focus();this.select();" /></dd>
+					<!-- ENDIF -->
+				</dl>
+				<!-- ENDIF -->
+				<!-- IF S_VIEW_RATE -->
+				<dl class="column2">
 					<dt><label>{L_RATING}:</label></dt>
 					<dd><!-- IF CONTEST_RESULT_HIDDEN -->{CONTEST_RESULT_HIDDEN}<!-- ELSE -->{IMAGE_RATING}<!-- ENDIF --><!-- IF S_YOUR_RATING --> ({L_YOUR_RATING}: {S_YOUR_RATING})<!-- ENDIF --></dd>
 				</dl>
+				<!-- ENDIF -->
+			</fieldset>
+
+			<!-- IF .exif_value -->
+			<h3 class="anti-postbody">{L_EXIF-DATA}<!-- IF not S_VIEWEXIF --> - <a href="javascript: dE('exif_data_fieldset');">{L_SHOW_EXIF}</a><!-- ENDIF --></h3>
+			<fieldset class="fields1 anti-postbody" id="exif_data_fieldset"<!-- IF not S_VIEWEXIF --> style="display: none;"<!-- ENDIF -->>
+				<!-- BEGIN exif_value -->
+					<dl class="<!-- IF exif_value.S_ROW_COUNT is even -->column1<!-- ELSE -->column2<!-- ENDIF -->">
+						<dt><label>{exif_value.EXIF_NAME}:</label></dt>
+						<dd>{exif_value.EXIF_VALUE}</dd>
+					</dl>
+				<!-- END exif_value -->
+			</fieldset>
 			<!-- ENDIF -->
-		</fieldset>
+		</div>
+
+		<dl class="postprofile" id="profile_poster">
+			<dt>
+				<!-- IF POSTER_AVATAR -->
+					<!-- IF U_POSTER --><a href="{U_POSTER}">{POSTER_AVATAR}</a><!-- ELSE -->{POSTER_AVATAR}<!-- ENDIF --><br />
+				<!-- ENDIF -->
+				<!-- IF not U_POSTER --><strong>{POSTER_FULL}</strong><!-- ELSE -->{POSTER_FULL}<!-- ENDIF -->
+			</dt>
+
+			<!-- IF POSTER_RANK_TITLE or POSTER_RANK_IMG --><dd>{POSTER_RANK_TITLE}<!-- IF POSTER_RANK_TITLE and POSTER_RANK_IMG --><br /><!-- ENDIF -->{POSTER_RANK_IMG}</dd><!-- ENDIF -->
+
+			<dd>&nbsp;</dd>
+
+			<!-- IF POSTER_POSTS != '' --><dd><strong>{L_POSTS}:</strong> {POSTER_POSTS}</dd><!-- ENDIF -->
+			<!-- IF POSTER_GALLERY_IMAGES != '' --><dd><strong>{L_IMAGES}:</strong> <!-- IF U_POSTER_GALLERY_SEARCH --><a href="{U_POSTER_GALLERY_SEARCH}">{POSTER_GALLERY_IMAGES}</a><!-- ELSE -->{POSTER_GALLERY_IMAGES}<!-- ENDIF --></dd><!-- ENDIF -->
+			<!-- IF POSTER_JOINED --><dd><strong>{L_JOINED}:</strong> {POSTER_JOINED}</dd><!-- ENDIF -->
+			<!-- IF POSTER_FROM --><dd><strong>{L_LOCATION}:</strong> {POSTER_FROM}</dd><!-- ENDIF -->
+
+			<!-- IF S_PROFILE_FIELD1 -->
+				<!-- Use a construct like this to include admin defined profile fields. Replace FIELD1 with the name of your field. -->
+				<dd><strong>{PROFILE_FIELD1_NAME}:</strong> {PROFILE_FIELD1_VALUE}</dd>
+			<!-- ENDIF -->
+
+			<!-- BEGIN custom_fields -->
+				<dd><strong>{custom_fields.PROFILE_FIELD_NAME}:</strong> {custom_fields.PROFILE_FIELD_VALUE}</dd>
+			<!-- END custom_fields -->
+
+			<!-- IF not S_IS_BOT -->
+			<!-- IF U_POSTER_PM or U_POSTER_EMAIL or U_POSTER_WWW or U_POSTER_MSN or U_POSTER_ICQ or U_POSTER_YIM or U_POSTER_AIM or U_POSTER_JABBER -->
+				<dd>
+					<ul class="profile-icons">
+						<!-- IF U_POSTER_PM --><li class="pm-icon"><a href="{U_POSTER_PM}" title="{L_PRIVATE_MESSAGE}"><span>{L_PRIVATE_MESSAGE}</span></a></li><!-- ENDIF -->
+						<!-- IF U_POSTER_EMAIL --><li class="email-icon"><a href="{U_POSTER_EMAIL}" title="{L_SEND_EMAIL_USER} {POST_AUTHOR}"><span>{L_SEND_EMAIL_USER} {POST_AUTHOR}</span></a></li><!-- ENDIF -->
+						<!-- IF U_POSTER_WWW --><li class="web-icon"><a href="{U_POSTER_WWW}" title="{L_VISIT_WEBSITE}: {U_WWW}"><span>{L_WEBSITE}</span></a></li><!-- ENDIF -->
+						<!-- IF U_POSTER_MSN --><li class="msnm-icon"><a href="{U_POSTER_MSN}" onclick="popup(this.href, 550, 320); return false;" title="{L_MSNM}"><span>{L_MSNM}</span></a></li><!-- ENDIF -->
+						<!-- IF U_POSTER_ICQ --><li class="icq-icon"><a href="{U_POSTER_ICQ}" onclick="popup(this.href, 550, 320); return false;" title="{L_ICQ}"><span>{L_ICQ}</span></a></li><!-- ENDIF -->
+						<!-- IF U_POSTER_YIM --><li class="yahoo-icon"><a href="{U_POSTER_YIM}" onclick="popup(this.href, 780, 550); return false;" title="{L_YIM}"><span>{L_YIM}</span></a></li><!-- ENDIF -->
+						<!-- IF U_POSTER_AIM --><li class="aim-icon"><a href="{U_POSTER_AIM}" onclick="popup(this.href, 550, 320); return false;" title="{L_AIM}"><span>{L_AIM}</span></a></li><!-- ENDIF -->
+						<!-- IF U_POSTER_JABBER --><li class="jabber-icon"><a href="{U_POSTER_JABBER}" onclick="popup(this.href, 550, 320); return false;" title="{L_JABBER}"><span>{L_JABBER}</span></a></li><!-- ENDIF -->
+						<!-- IF U_POSTER_GALLERY --><li class="gallery-icon"><a href="{U_POSTER_GALLERY}" title="{L_PERSONAL_ALBUM}"><span>{L_PERSONAL_ALBUM}</span></a></li><!-- ENDIF -->
+					</ul>
+				</dd>
+			<!-- ENDIF -->
+			<!-- ENDIF -->
+		</dl>
 	<span class="corners-bottom"><span></span></span></div>
 </div>
 
-<!-- IF IMAGE_DESC -->
-	<div id="description" class="panel">
-		<div class="inner"><span class="corners-top"><span></span></span>
-			<h3>{L_IMAGE_DESC}</h3>
-			<div class="postbody" style="width: 100%"><div class="content">{IMAGE_DESC}</div></div>
-		<span class="corners-bottom"><span></span></span></div>
-	</div>
+<!-- IF S_QUICK_MOD -->
+	<form method="post" action="{S_MOD_ACTION}">
+	<fieldset class="quickmod" style="float: none; width: 100%;">
+		<label for="quick-mod-select">{L_QUICK_MOD}:</label>
+		<select name="action" id="quick-mod-select">
+			<!-- IF S_QM_MOVE --><option value="images_move">{L_QUEUE_A_MOVE}</option><!-- ENDIF -->
+			<!-- IF S_QM_STATUS -->
+				<!-- IF not S_STATUS_UNAPPROVED --><option value="images_unapprove">{L_QUEUE_A_UNAPPROVE}</option><!-- ENDIF -->
+				<!-- IF not S_STATUS_APPROVED --><option value="images_approve">{L_QUEUE_A_APPROVE}</option><!-- ENDIF -->
+				<!-- IF not S_STATUS_LOCKED --><option value="images_lock">{L_QUEUE_A_LOCK}</option><!-- ENDIF -->
+			<!-- ENDIF -->
+			<!-- IF S_QM_DELETE --><option value="images_delete">{L_QUEUE_A_DELETE}</option><!-- ENDIF -->
+			<!-- IF S_QM_REPORT and S_IMAGE_REPORTED --><option value="report_details">{L_READ_REPORT}</option><!-- ENDIF -->
+		</select>
+		<input type="submit" value="{L_GO}" class="button2" />
+		{S_FORM_TOKEN}
+	</fieldset>
+	</form>
 <!-- ENDIF -->
 
-<!-- IF .exif_value -->
-<script type="text/javascript">
-function getElement(iElementId)
-{
-	if (document.all) 
-	{
-		return document.all[iElementId];
-	}
-	if (document.getElementById)
-	{
-		return document.getElementById(iElementId);
-	}
-}
-
-function toggleElement(oElement)
-{
-	if (oElement.style.display == "none")
-	{
-		oElement.style.display = "";
-	}
-	else
-	{
-		oElement.style.display = "none";
-	}
-}
-</script>
-<div id="exif" class="panel">
+<!-- IF IMAGE_DESC -->
+<div class="panel">
 	<div class="inner"><span class="corners-top"><span></span></span>
-		<h3>{L_EXIF-DATA} - <a href="javascript: toggleElement( getElement('exif_data_fieldset'));">{L_SHOW_EXIF}</a></h3>
-		<fieldset class="fields1" id="exif_data_fieldset"<!-- IF not S_VIEWEXIF --> style="display: none;"<!-- ENDIF -->>
-			<!-- BEGIN exif_value -->
-				<dl>
-					<dt><label>{exif_value.EXIF_NAME}:</label></dt>
-					<dd>{exif_value.EXIF_VALUE}</dd>
-				</dl>
-			<!-- END exif_value -->
-		</fieldset>
+		<h3>{L_IMAGE_DESC}</h3>
+		<div class="postbody" style="width: 100%"><div class="content">{IMAGE_DESC}</div></div>
 	<span class="corners-bottom"><span></span></span></div>
 </div>
 <!-- ENDIF -->
@@ -126,7 +160,7 @@ function toggleElement(oElement)
 <div id="postingbox" class="panel">
 	<div class="inner"><span class="corners-top"><span></span></span>
 		<h3><!-- IF S_ALLOWED_TO_RATE and S_ALLOWED_TO_COMMENT -->{L_POST_COMMENT_RATE_IMAGE}<!-- ELSEIF S_ALLOWED_TO_COMMENT -->{L_POST_COMMENT}<!-- ELSE -->{L_RATE_IMAGE}<!-- ENDIF --></h3>
-		<fieldset class="fields1">
+		<fieldset id="comment-box" class="fields1">
 			<!-- IF S_ALLOWED_TO_RATE -->
 				<dl>
 					<dt><label>{L_YOUR_RATING}:</label></dt>
@@ -155,7 +189,7 @@ function toggleElement(oElement)
 					</dl>
 				<!-- ENDIF -->
 				<!-- IF CAPTCHA_TEMPLATE -->
-				<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+					<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
 				<!-- ENDIF -->
 				<!-- INCLUDE posting_buttons.html -->
 				<div id="smiley-box">
@@ -176,10 +210,10 @@ function toggleElement(oElement)
 						{IMG_STATUS}<br />
 						{FLASH_STATUS}<br />
 						{URL_STATUS}<br />
-						{SMILIES_STATUS}<hr />
 					<!-- ENDIF -->
+					{SMILIES_STATUS}
 					<!-- ENDIF -->
-					{L_COMMENT_LENGTH}
+					<hr />{L_COMMENT_LENGTH}
 				</div>
 				<div id="message-box">
 					<textarea name="message" id="message" rows="10" cols="76" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" class="inputbox"></textarea>
@@ -201,13 +235,7 @@ function toggleElement(oElement)
 <!-- IF not .commentrow -->
 	<div id="comments" class="panel">
 		<div class="inner"><span class="corners-top"><span></span></span>
-			<h3>{L_COMMENTS}</h3>
-			<fieldset class="fields1">
-				<dl>
-					<dt><label>{L_COMMENTS}:</label></dt>
-					<dd>{L_NO_COMMENTS}</dd>
-				</dl>
-			</fieldset>
+			<strong>{L_NO_COMMENTS}</strong>
 		<span class="corners-bottom"><span></span></span></div>
 	</div>
 <!-- ELSE -->
@@ -217,7 +245,7 @@ function toggleElement(oElement)
 		</div>
 	</div>
 	<!-- BEGIN commentrow -->
-	<a id="{commentrow.COMMENT_ID}"></a>
+	<a id="comment_{commentrow.COMMENT_ID}"></a>
 	<div class="post <!-- IF commentrow.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF --><!-- IF commentrow.S_ONLINE --> online<!-- ENDIF -->">
 		<div class="inner"><span class="corners-top"><span></span></span>
 			<div class="postbody">
