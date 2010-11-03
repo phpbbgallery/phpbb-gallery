@@ -27,7 +27,7 @@ class phpbb_gallery
 	/**
 	* Constructor: setup() also creates a phpbb-session, if you already have one, be sure to use init()
 	*/
-	static public function setup($lang_set = false)
+	static public function setup($lang_set = false, $update_session = true)
 	{
 		global $auth, $db, $template, $user, $cache;
 
@@ -42,7 +42,7 @@ class phpbb_gallery
 		}
 
 		// Start session management
-		$user->session_begin();
+		$user->session_begin($update_session);
 		$auth->acl($user->data);
 		$user->setup($lang_sets);
 

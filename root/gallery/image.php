@@ -17,7 +17,7 @@ $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include('includes/root_path.' . $phpEx);
 include($phpbb_root_path . 'common.' . $phpEx);
 
-phpbb_gallery::setup(array('mods/gallery'));
+phpbb_gallery::setup(array('mods/gallery'), false);
 //phpbb_gallery_url::_include('functions_display', 'phpbb');
 
 // Get general album information
