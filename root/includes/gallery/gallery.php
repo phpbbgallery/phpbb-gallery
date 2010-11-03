@@ -48,7 +48,7 @@ class phpbb_gallery
 		$auth->acl($user->data);
 		$user->setup($lang_sets);
 
-		phpbb_gallery_url::_include('functions_phpbb');
+		phpbb_gallery_url::_include('functions_phpbb', 'phpbb', 'includes/gallery/');
 		phpbb_gallery_plugins::init(phpbb_gallery_url::path());
 
 		// Little precaution.
@@ -93,7 +93,7 @@ class phpbb_gallery
 	{
 		global $user;
 
-		phpbb_gallery_url::_include('functions_phpbb');
+		phpbb_gallery_url::_include('functions_phpbb', 'phpbb', 'includes/gallery/');
 		phpbb_gallery_plugins::init(phpbb_gallery_url::path());
 
 		// Little precaution.

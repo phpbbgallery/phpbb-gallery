@@ -14,7 +14,7 @@
 
 define('IN_PHPBB', true);
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
-include('includes/root_path.' . $phpEx);
+include('common.' . $phpEx);
 include($phpbb_root_path . 'common.' . $phpEx);
 
 phpbb_gallery::setup(array('mods/gallery', 'mods/gallery_mcp'));
