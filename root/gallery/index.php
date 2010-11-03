@@ -119,14 +119,14 @@ else if (phpbb_gallery_config::get('pegas_index_album') && phpbb_gallery::$auth-
 */
 if (phpbb_gallery_config::get('rrc_gindex_mode'))
 {
-	phpbb_gallery_url::_include('functions_recent');
 	$ints = array(
-		'rows'		=> phpbb_gallery_config::get('rrc_gindex_rows'),
-		'columns'	=> phpbb_gallery_config::get('rrc_gindex_columns'),
-		'comments'	=> phpbb_gallery_config::get('rrc_gindex_crows'),
-		'contests'	=> phpbb_gallery_config::get('rrc_gindex_contests'),
+		phpbb_gallery_config::get('rrc_gindex_rows'),
+		phpbb_gallery_config::get('rrc_gindex_columns'),
+		phpbb_gallery_config::get('rrc_gindex_crows'),
+		phpbb_gallery_config::get('rrc_gindex_contests'),
 	);
-	recent_gallery_images($ints, phpbb_gallery_config::get('rrc_gindex_display'), phpbb_gallery_config::get('rrc_gindex_mode'), phpbb_gallery_config::get('rrc_gindex_comments'), phpbb_gallery_config::get('rrc_gindex_pegas'));
+	$gallery_block = new phpbb_gallery_block(phpbb_gallery_config::get('rrc_gindex_mode'), phpbb_gallery_config::get('rrc_gindex_display'), $ints, phpbb_gallery_config::get('rrc_gindex_comments'), phpbb_gallery_config::get('rrc_gindex_pegas'));
+	$gallery_block->display();
 }
 
 // Set some stats, get posts count from forums data if we... hum... retrieve all forums data
