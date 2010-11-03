@@ -334,12 +334,12 @@ class acp_gallery_config
 
 		$rrc_mode_options = '';
 
-		$rrc_mode_options .= "<option value='" . phpbb_gallery_constants::RRC_MODE_NONE . "'>" . $user->lang['RRC_MODE_NONE'] . '</option>';
-		$rrc_mode_options .= '<option' . (($value & phpbb_gallery_constants::RRC_MODE_RECENT) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_MODE_RECENT . "'>" . $user->lang['RRC_MODE_RECENT'] . '</option>';
-		$rrc_mode_options .= '<option' . (($value & phpbb_gallery_constants::RRC_MODE_RANDOM) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_MODE_RANDOM . "'>" . $user->lang['RRC_MODE_RANDOM'] . '</option>';
+		$rrc_mode_options .= "<option value='" . phpbb_gallery_block::MODE_NONE . "'>" . $user->lang['RRC_MODE_NONE'] . '</option>';
+		$rrc_mode_options .= '<option' . (($value & phpbb_gallery_block::MODE_RECENT) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_block::MODE_RECENT . "'>" . $user->lang['RRC_MODE_RECENT'] . '</option>';
+		$rrc_mode_options .= '<option' . (($value & phpbb_gallery_block::MODE_RANDOM) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_block::MODE_RANDOM . "'>" . $user->lang['RRC_MODE_RANDOM'] . '</option>';
 		if ($key != 'rrc_profile_mode')
 		{
-			$rrc_mode_options .= '<option' . (($value & phpbb_gallery_constants::RRC_MODE_COMMENT) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_MODE_COMMENT . "'>" . $user->lang['RRC_MODE_COMMENTS'] . '</option>';
+			$rrc_mode_options .= '<option' . (($value & phpbb_gallery_block::MODE_COMMENT) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_block::MODE_COMMENT . "'>" . $user->lang['RRC_MODE_COMMENTS'] . '</option>';
 		}
 
 		// Cheating is an evil-thing, but most times it's successful, that's why it is used.
@@ -355,15 +355,15 @@ class acp_gallery_config
 
 		$rrc_display_options = '';
 
-		$rrc_display_options .= "<option value='" . phpbb_gallery_constants::RRC_DISPLAY_NONE . "'>" . $user->lang['RRC_DISPLAY_NONE'] . '</option>';
-		$rrc_display_options .= '<option' . (($value & phpbb_gallery_constants::RRC_DISPLAY_ALBUMNAME) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_DISPLAY_ALBUMNAME . "'>" . $user->lang['RRC_DISPLAY_ALBUMNAME'] . '</option>';
-		$rrc_display_options .= '<option' . (($value & phpbb_gallery_constants::RRC_DISPLAY_COMMENTS) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_DISPLAY_COMMENTS . "'>" . $user->lang['RRC_DISPLAY_COMMENTS'] . '</option>';
-		$rrc_display_options .= '<option' . (($value & phpbb_gallery_constants::RRC_DISPLAY_IMAGENAME) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_DISPLAY_IMAGENAME . "'>" . $user->lang['RRC_DISPLAY_IMAGENAME'] . '</option>';
-		$rrc_display_options .= '<option' . (($value & phpbb_gallery_constants::RRC_DISPLAY_IMAGETIME) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_DISPLAY_IMAGETIME . "'>" . $user->lang['RRC_DISPLAY_IMAGETIME'] . '</option>';
-		$rrc_display_options .= '<option' . (($value & phpbb_gallery_constants::RRC_DISPLAY_IMAGEVIEWS) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_DISPLAY_IMAGEVIEWS . "'>" . $user->lang['RRC_DISPLAY_IMAGEVIEWS'] . '</option>';
-		$rrc_display_options .= '<option' . (($value & phpbb_gallery_constants::RRC_DISPLAY_USERNAME) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_DISPLAY_USERNAME . "'>" . $user->lang['RRC_DISPLAY_USERNAME'] . '</option>';
-		$rrc_display_options .= '<option' . (($value & phpbb_gallery_constants::RRC_DISPLAY_RATINGS) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_DISPLAY_RATINGS . "'>" . $user->lang['RRC_DISPLAY_RATINGS'] . '</option>';
-		$rrc_display_options .= '<option' . (($value & phpbb_gallery_constants::RRC_DISPLAY_IP) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_constants::RRC_DISPLAY_IP . "'>" . $user->lang['RRC_DISPLAY_IP'] . '</option>';
+		$rrc_display_options .= "<option value='" . phpbb_gallery_block::DISPLAY_NONE . "'>" . $user->lang['RRC_DISPLAY_NONE'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & phpbb_gallery_block::DISPLAY_ALBUMNAME) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_block::DISPLAY_ALBUMNAME . "'>" . $user->lang['RRC_DISPLAY_ALBUMNAME'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & phpbb_gallery_block::DISPLAY_COMMENTS) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_block::DISPLAY_COMMENTS . "'>" . $user->lang['RRC_DISPLAY_COMMENTS'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & phpbb_gallery_block::DISPLAY_IMAGENAME) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_block::DISPLAY_IMAGENAME . "'>" . $user->lang['RRC_DISPLAY_IMAGENAME'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & phpbb_gallery_block::DISPLAY_IMAGETIME) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_block::DISPLAY_IMAGETIME . "'>" . $user->lang['RRC_DISPLAY_IMAGETIME'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & phpbb_gallery_block::DISPLAY_IMAGEVIEWS) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_block::DISPLAY_IMAGEVIEWS . "'>" . $user->lang['RRC_DISPLAY_IMAGEVIEWS'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & phpbb_gallery_block::DISPLAY_USERNAME) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_block::DISPLAY_USERNAME . "'>" . $user->lang['RRC_DISPLAY_USERNAME'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & phpbb_gallery_block::DISPLAY_RATINGS) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_block::DISPLAY_RATINGS . "'>" . $user->lang['RRC_DISPLAY_RATINGS'] . '</option>';
+		$rrc_display_options .= '<option' . (($value & phpbb_gallery_block::DISPLAY_IP) ? ' selected="selected"' : '') . " value='" . phpbb_gallery_block::DISPLAY_IP . "'>" . $user->lang['RRC_DISPLAY_IP'] . '</option>';
 
 		// Cheating is an evil-thing, but most times it's successful, that's why it is used.
 		return "<input type='hidden' name='config[$key]' value='$value' /><select name='" . $key . "[]' multiple='multiple' id='$key'>$rrc_display_options</select>";

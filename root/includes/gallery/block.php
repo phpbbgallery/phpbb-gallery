@@ -192,8 +192,8 @@ class phpbb_gallery_block
 		$this->set_mode(($mode) ? $mode : (self::MODE_RECENT + self::MODE_RANDOM + self::MODE_COMMENT));
 		$this->set_options(($options) ? $options : (self::DISPLAY_ALBUMNAME + self::DISPLAY_IMAGENAME + self::DISPLAY_IMAGETIME + self::DISPLAY_IMAGEVIEWS + self::DISPLAY_USERNAME + self::DISPLAY_IP));
 		$this->set_nums(($nums) ? $nums : array(1, 4, 5, 0));
-		$this->set_toggle((is_bool($toggle_comments) ? $toggle_comments : false);
-		$this->set_pegas((is_bool($display_pegas) ? $display_pegas : true);
+		$this->set_toggle((is_bool($toggle_comments)) ? $toggle_comments : false);
+		$this->set_pegas((is_bool($display_pegas)) ? $display_pegas : true);
 
 		if (!phpbb_gallery::$loaded)
 		{
