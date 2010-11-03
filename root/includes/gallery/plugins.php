@@ -29,7 +29,7 @@ class phpbb_gallery_plugins
 		/**
 		* Highslide JS
 		*
-		* Latest version tested: 4.1.7
+		* Latest version tested: 4.1.9
 		* Download: http://highslide.com/download.php
 		* License:  Creative Commons Attribution-NonCommercial 2.5 License
 		*           http://creativecommons.org/licenses/by-nc/2.5/

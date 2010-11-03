@@ -81,7 +81,7 @@ class phpbb_gallery_integration
 		));
 
 		// View information about the personal album, only when the user is allowed to see it.
-		if (phpbb_gallery::$auth->acl_check('i_view', PERSONAL_GALLERY_PERMISSIONS) || (($user_id == $user->data['user_id']) && phpbb_gallery::$auth->acl_check('i_view', OWN_GALLERY_PERMISSIONS)))
+		if (phpbb_gallery::$auth->acl_check('i_view', phpbb_gallery_auth::PERSONAL_ALBUM) || (($user_id == $user->data['user_id']) && phpbb_gallery::$auth->acl_check('i_view', phpbb_gallery_auth::OWN_ALBUM)))
 		{
 			$template->assign_vars(array(
 				'SHOW_PERSONAL_ALBUM_OF'	=> sprintf($user->lang['SHOW_PERSONAL_ALBUM_OF'], $member['username']),

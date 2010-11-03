@@ -272,7 +272,7 @@ class phpbb_gallery_album_manage
 		}
 		else
 		{
-			$row = get_album_info($album_data_sql['album_id']);
+			$row = phpbb_gallery_album::get_info($album_data_sql['album_id']);
 			$reset_marked_images = false;
 
 			if ($row['album_type'] == phpbb_gallery_album::TYPE_CONTEST && $album_data_sql['album_type'] != phpbb_gallery_album::TYPE_CONTEST)

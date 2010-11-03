@@ -1,33 +1,7 @@
-<script type="text/javascript">
-function getElement(iElementId)
-{
-	if (document.all) 
-	{
-		return document.all[iElementId];
-	}
-	if (document.getElementById)
-	{
-		return document.getElementById(iElementId);
-	}
-}
-
-function toggleElement(oElement)
-{
-	if (oElement.style.display == "none")
-	{
-		oElement.style.display = "";
-	}
-	else
-	{
-		oElement.style.display = "none";
-	}
-}
-</script>
-
 <!-- INCLUDE gallery/imageblock_body.html -->
 
 <!-- IF .commentrow -->
-	<h4><!-- IF not COLLAPSE_COMMENTS --><!-- IF U_G_SEARCH_COMMENTED --><a href="{U_G_SEARCH_COMMENTED}">{L_RECENT_COMMENTS}</a><!-- ELSE -->{L_RECENT_COMMENTS}<!-- ENDIF --><!-- ELSE --><a href="javascript: toggleElement( getElement('recent-comments'));">{L_RECENT_COMMENTS}</a><!-- ENDIF --></h4>
+	<h4><!-- IF not COLLAPSE_COMMENTS --><!-- IF U_G_SEARCH_COMMENTED --><a href="{U_G_SEARCH_COMMENTED}">{L_RECENT_COMMENTS}</a><!-- ELSE -->{L_RECENT_COMMENTS}<!-- ENDIF --><!-- ELSE --><a href="javascript: dE('recent-comments');">{L_RECENT_COMMENTS}</a><!-- ENDIF --></h4>
 	<div id="recent-comments"<!-- IF COLLAPSE_COMMENTS --> style="display: none;"<!-- ENDIF -->>
 	<!-- BEGIN commentrow -->
 	<a id="comment_{commentrow.COMMENT_ID}"></a>

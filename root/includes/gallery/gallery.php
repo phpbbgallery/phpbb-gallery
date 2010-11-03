@@ -24,6 +24,8 @@ class phpbb_gallery
 
 	static public $auth = false;
 
+	static public $loaded = false;
+
 	/**
 	* Constructor: setup() also creates a phpbb-session, if you already have one, be sure to use init()
 	*/
@@ -52,10 +54,10 @@ class phpbb_gallery
 		// Little precaution.
 		$user->data['user_id'] = (int) $user->data['user_id'];
 
+		$user->gallery = phpbb_gallery_user::get_settings($user->data['user_id']);
+
 		self::$auth = new phpbb_gallery_auth();
 		self::$auth->init(($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from']);
-
-		$user->gallery = phpbb_gallery_user::get_settings($user->data['user_id']);
 
 		if (phpbb_gallery_config::get('mvc_time') < time())
 		{
@@ -80,6 +82,8 @@ class phpbb_gallery
 			'FORUM_NAME'	=> $user->lang['GALLERY'],
 			'U_VIEW_FORUM'	=> phpbb_gallery_url::append_sid('index'),
 		));
+
+		self::$loaded = true;
 	}
 
 	/**
@@ -95,10 +99,10 @@ class phpbb_gallery
 		// Little precaution.
 		$user->data['user_id'] = (int) $user->data['user_id'];
 
+		$user->gallery = phpbb_gallery_user::get_settings($user->data['user_id']);
+
 		self::$auth = new phpbb_gallery_auth();
 		self::$auth->init(($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from']);
-
-		$user->gallery = phpbb_gallery_user::get_settings($user->data['user_id']);
 
 		if (phpbb_gallery_config::get('mvc_time') < time())
 		{
@@ -106,5 +110,7 @@ class phpbb_gallery
 			phpbb_gallery_config::set('mvc_time', time() + 86400);
 			phpbb_gallery_config::set('mvc_version', phpbb_gallery_modversioncheck::check(true));
 		}
+
+		self::$loaded = true;
 	}
 }

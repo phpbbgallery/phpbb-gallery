@@ -7,7 +7,7 @@
 		<!-- IF UC_PREVIOUS --><p style="float: left; text-align: left;">{UC_PREVIOUS_IMAGE}<br />{UC_PREVIOUS}</p><!-- ENDIF -->
 		<!-- IF UC_NEXT --><p style="float: right; text-align: right;">{UC_NEXT_IMAGE}<br />{UC_NEXT}</p><!-- ENDIF -->
 		<div style="text-align: center; padding: 20px;">{UC_IMAGE}
-			<!-- IF S_IMAGE_REPORTED --><br /><br /><a href="{U_IMAGE_REPORTED}" style="color: #BC2A4D; font-size: 1.1em; font-weight: bold;">{L_IMAGE_REPORTED}</a><!-- ENDIF -->
+			<!-- IF S_IMAGE_REPORTED --><br /><br /><a href="{U_IMAGE_REPORTED}"><span class="error">{L_IMAGE_REPORTED}</span></a><!-- ENDIF -->
 		</div>
 	<span class="corners-bottom"><span></span></span></div>
 </div>
@@ -94,6 +94,7 @@
 			<!-- IF POSTER_GALLERY_IMAGES != '' --><dd><strong>{L_IMAGES}:</strong> <!-- IF U_POSTER_GALLERY_SEARCH --><a href="{U_POSTER_GALLERY_SEARCH}">{POSTER_GALLERY_IMAGES}</a><!-- ELSE -->{POSTER_GALLERY_IMAGES}<!-- ENDIF --></dd><!-- ENDIF -->
 			<!-- IF POSTER_JOINED --><dd><strong>{L_JOINED}:</strong> {POSTER_JOINED}</dd><!-- ENDIF -->
 			<!-- IF POSTER_FROM --><dd><strong>{L_LOCATION}:</strong> {POSTER_FROM}</dd><!-- ENDIF -->
+			<!-- IF POSTER_IP --><dd><strong>{L_IP}:</strong> {POSTER_IP} [ <a href="{U_POSTER_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a> ]</dd><!-- ENDIF -->
 
 			<!-- IF S_PROFILE_FIELD1 -->
 				<!-- Use a construct like this to include admin defined profile fields. Replace FIELD1 with the name of your field. -->
@@ -131,6 +132,7 @@
 		<label for="quick-mod-select">{L_QUICK_MOD}:</label>
 		<select name="action" id="quick-mod-select">
 			<!-- IF S_QM_MOVE --><option value="images_move">{L_QUEUE_A_MOVE}</option><!-- ENDIF -->
+			<!-- IF S_QM_EDIT --><option value="image_edit">{L_EDIT_IMAGE}</option><!-- ENDIF -->
 			<!-- IF S_QM_STATUS -->
 				<!-- IF not S_STATUS_UNAPPROVED --><option value="images_unapprove">{L_QUEUE_A_UNAPPROVE}</option><!-- ENDIF -->
 				<!-- IF not S_STATUS_APPROVED --><option value="images_approve">{L_QUEUE_A_APPROVE}</option><!-- ENDIF -->
