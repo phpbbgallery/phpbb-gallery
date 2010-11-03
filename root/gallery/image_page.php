@@ -144,21 +144,20 @@ if ((phpbb_gallery::$auth->acl_check('m_', $album_id, $album_data['album_user_id
 
 	$s_allowed_delete = ((phpbb_gallery::$auth->acl_check('i_delete', $album_id, $album_data['album_user_id']) && $s_user_allowed) || phpbb_gallery::$auth->acl_check('m_delete', $album_id, $album_data['album_user_id']));
 	$s_allowed_edit = ((phpbb_gallery::$auth->acl_check('i_edit', $album_id, $album_data['album_user_id']) && $s_user_allowed) || phpbb_gallery::$auth->acl_check('m_edit', $album_id, $album_data['album_user_id']));
-	$s_allowed_status = phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id']);
-
-	$s_quick_mod = ($s_allowed_delete || $s_allowed_edit || $s_allowed_status || phpbb_gallery::$auth->acl_check('m_move', $album_id, $album_data['album_user_id']));
+	$s_quick_mod = ($s_allowed_delete || $s_allowed_edit || phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id']) || phpbb_gallery::$auth->acl_check('m_move', $album_id, $album_data['album_user_id']));
 
 	$user->add_lang('mods/gallery_mcp');
 	$template->assign_vars(array(
 		'S_MOD_ACTION'		=> phpbb_gallery_url::append_sid('mcp', "album_id=$album_id&amp;image_id=$image_id&amp;quickmod=1" /*&amp;redirect=" . urlencode(str_replace('&amp;', '&', $viewtopic_url))*/, true, $user->session_id),
 		'S_QUICK_MOD'		=> $s_quick_mod,
 		'S_QM_MOVE'			=> phpbb_gallery::$auth->acl_check('m_move', $album_id, $album_data['album_user_id']),
+		'S_QM_EDIT'			=> $s_allowed_edit,
 		'S_QM_DELETE'		=> $s_allowed_delete,
 		'S_QM_REPORT'		=> phpbb_gallery::$auth->acl_check('m_report', $album_id, $album_data['album_user_id']),
 		'S_QM_STATUS'		=> phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id']),
 
 		'S_IMAGE_REPORTED'		=> $image_data['image_reported'],
-		'U_IMAGE_REPORTED'		=> phpbb_gallery_url::append_sid('mcp', "mode=report_details&amp;album_id=$album_id&amp;option_id=" . $image_data['image_reported']),
+		'U_IMAGE_REPORTED'		=> ($image_data['image_reported']) ? phpbb_gallery_url::append_sid('mcp', "mode=report_details&amp;album_id=$album_id&amp;option_id=" . $image_data['image_reported']) : '',
 		'S_STATUS_APPROVED'		=> ($image_data['image_status'] == phpbb_gallery_image::STATUS_APPROVED),
 		'S_STATUS_UNAPPROVED'	=> ($image_data['image_status'] == phpbb_gallery_image::STATUS_UNAPPROVED),
 		'S_STATUS_LOCKED'		=> ($image_data['image_status'] == phpbb_gallery_image::STATUS_LOCKED),
@@ -191,6 +190,8 @@ $template->assign_vars(array(
 	'IMAGE_URL'			=> (phpbb_gallery_config::get('disp_image_url')) ? phpbb_gallery_url::path('full') . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id" : '',
 	'IMAGE_TIME'		=> $user->format_date($image_data['image_time']),
 	'IMAGE_VIEW'		=> $image_data['image_view_count'],
+	'POSTER_IP'			=> ($auth->acl_get('a_')) ? $image_data['image_user_ip'] : '',
+	'U_POSTER_WHOIS'	=> ($auth->acl_get('a_')) ? phpbb_gallery_url::append_sid('mcp', 'mode=whois&amp;ip=' . $image_data['image_user_ip']) : '',
 
 	'L_BOOKMARK_TOPIC'	=> ($image_data['favorite_id']) ? $user->lang['UNFAVORITE_IMAGE'] : $user->lang['FAVORITE_IMAGE'],
 	'U_BOOKMARK_TOPIC'	=> ($user->data['user_id'] != ANONYMOUS) ? phpbb_gallery_url::append_sid('posting', "mode=image&amp;submode=" . (($image_data['favorite_id']) ?  'un' : '') . "favorite&amp;album_id=$album_id&amp;image_id=$image_id") : '',

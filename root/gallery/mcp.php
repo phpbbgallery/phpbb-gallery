@@ -22,6 +22,19 @@ phpbb_gallery_url::_include(array('functions_display'), 'phpbb');
 
 $mode = request_var('mode', 'album');
 $action = request_var('action', '');
+$option_id = request_var('option_id', 0);
+$image_id = request_var('image_id', 0);
+$album_id = request_var('album_id', 0);
+
+if ((request_var('quickmod', 0) == 1) && ($action == 'report_details'))
+{
+	$mode = 'report_details';
+	$option_id = (int) $image_data['image_reported'];
+}
+else if ((request_var('quickmod', 0) == 1) && ($action == 'image_edit'))
+{
+	phpbb_gallery_url::redirect('posting', "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id");
+}
 
 if ($mode == 'whois' && $auth->acl_get('a_') && request_var('ip', ''))
 {
@@ -39,8 +52,6 @@ if ($mode == 'whois' && $auth->acl_get('a_') && request_var('ip', ''))
 }
 
 //Basic-Information && Permissions
-$image_id = request_var('image_id', 0);
-$album_id = request_var('album_id', 0);
 if ($image_id)
 {
 	$image_data = phpbb_gallery_image::get_info($image_id);
@@ -53,19 +64,11 @@ if ($album_id)
 }
 
 // Some other variables
-$option_id = request_var('option_id', 0);
 $submit = (isset($_POST['submit'])) ? true : false;
-$action = request_var('action', '');
 $redirect = request_var('redirect', $mode);
 $moving_target = request_var('moving_target', 0);
 $image_id = ($image_id && !$option_id) ? $image_id : $option_id;
 $image_id_ary = ($image_id) ? array($image_id) : request_var('image_id_ary', array(0));
-
-if ((request_var('quickmod', 0) == 1) && ($action == 'report_details'))
-{
-	$mode = 'report_details';
-	$option_id = (int) $image_data['image_reported'];
-}
 
 /**
 * Check for all the requested permissions
@@ -196,7 +199,7 @@ if ($action && $image_id_ary)
 				{
 					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 						SET image_album_id = ' . $moving_target . ',
-							image_contest = ' . IMAGE_CONTEST . '
+							image_contest = ' . phpbb_gallery_image::IN_CONTEST . '
 						WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
 					$db->sql_query($sql);
 				}
@@ -204,7 +207,7 @@ if ($action && $image_id_ary)
 				{
 					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 						SET image_album_id = ' . $moving_target . ',
-							image_contest = ' . IMAGE_NO_CONTEST . '
+							image_contest = ' . phpbb_gallery_image::NO_CONTEST . '
 						WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
 					$db->sql_query($sql);
 				}
@@ -238,7 +241,7 @@ if ($action && $image_id_ary)
 				phpbb_gallery_image::handle_counter($image_id_ary, false);
 
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-					SET image_status = ' . IMAGE_UNAPPROVED . '
+					SET image_status = ' . phpbb_gallery_image::STATUS_UNAPPROVED . '
 					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
 				$db->sql_query($sql);
 
@@ -265,7 +268,7 @@ if ($action && $image_id_ary)
 				phpbb_gallery_image::handle_counter($image_id_ary, true, true);
 
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-					SET image_status = ' . IMAGE_APPROVED . '
+					SET image_status = ' . phpbb_gallery_image::STATUS_APPROVED . '
 					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
 				$db->sql_query($sql);
 
@@ -293,7 +296,7 @@ if ($action && $image_id_ary)
 				phpbb_gallery_image::handle_counter($image_id_ary, false);
 
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-					SET image_status = ' . IMAGE_LOCKED . '
+					SET image_status = ' . phpbb_gallery_image::STATUS_LOCKED . '
 					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
 				$db->sql_query($sql);
 
@@ -467,10 +470,10 @@ if ($action && $image_id_ary)
 
 	if (isset($success))
 	{
-		update_album_info($album_id);
+		phpbb_gallery_album::update_info($album_id);
 		if ($moving_target)
 		{
-			update_album_info($moving_target);
+			phpbb_gallery_album::update_info($moving_target);
 		}
 		redirect(($redirect == 'redirect') ? phpbb_gallery_url::append_sid('album', "album_id=$album_id") : phpbb_gallery_url::append_sid('mcp', "mode=$mode&amp;album_id=$album_id"));
 	}
