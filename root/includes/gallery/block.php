@@ -108,7 +108,7 @@ class phpbb_gallery_block
 
 	public function set_toggle($new_toggle)
 	{
-		if (is_bool($new_options) || ($new_toggle == 0) || ($new_toggle == 1))
+		if (is_bool($new_toggle) || ($new_toggle == 0) || ($new_toggle == 1))
 		{
 			$this->toggle_comments = (bool) $new_toggle;
 		}
@@ -124,7 +124,7 @@ class phpbb_gallery_block
 	* Empty array means all albums.
 	*/
 	private $albums = array();
-	private $include_personal_albums = true;
+	private $include_pegas = true;
 
 	public function add_albums($album_id)
 	{
@@ -137,11 +137,11 @@ class phpbb_gallery_block
 			$this->albums[] = $album_id;
 		}
 	}
-	public function set_personal($new_personal)
+	public function set_pegas($new_pegas)
 	{
-		if (is_bool($new_personal) || ($new_personal == 0) || ($new_personal == 1))
+		if (is_bool($new_pegas) || ($new_pegas == 0) || ($new_pegas == 1))
 		{
-			$this->include_personal_albums = (bool) $new_personal;
+			$this->include_pegas = (bool) $new_pegas;
 		}
 	}
 
@@ -154,9 +154,9 @@ class phpbb_gallery_block
 	{
 		return $this->albums;
 	}
-	public function get_personal()
+	public function get_pegas()
 	{
-		return $this->include_personal_albums;
+		return $this->include_pegas;
 	}
 
 	/**
@@ -187,11 +187,13 @@ class phpbb_gallery_block
 		return $this->users;
 	}
 
-	public function phpbb_gallery_block($mode = false, $options = false, $nums = false)
+	public function phpbb_gallery_block($mode = false, $options = false, $nums = false, $toggle_comments = '', $display_pegas = '')
 	{
 		$this->set_mode(($mode) ? $mode : (self::MODE_RECENT + self::MODE_RANDOM + self::MODE_COMMENT));
 		$this->set_options(($options) ? $options : (self::DISPLAY_ALBUMNAME + self::DISPLAY_IMAGENAME + self::DISPLAY_IMAGETIME + self::DISPLAY_IMAGEVIEWS + self::DISPLAY_USERNAME + self::DISPLAY_IP));
 		$this->set_nums(($nums) ? $nums : array(1, 4, 5, 0));
+		$this->set_toggle((is_bool($toggle_comments) ? $toggle_comments : false);
+		$this->set_pegas((is_bool($display_pegas) ? $display_pegas : true);
 
 		if (!phpbb_gallery::$loaded)
 		{
@@ -231,19 +233,19 @@ class phpbb_gallery_block
 	{
 		global $db;
 
-		$this->auth_moderate = phpbb_gallery::$auth->acl_album_ids('m_status', 'array', true, $this->get_personal());
+		$this->auth_moderate = phpbb_gallery::$auth->acl_album_ids('m_status', 'array', true, $this->get_pegas());
 		if (!empty($this->albums))
 		{
 			$this->auth_moderate = array_intersect($this->auth_moderate, $this->albums);
 		}
-		$this->auth_view = array_diff(phpbb_gallery::$auth->acl_album_ids('i_view', 'array', true, $this->get_personal()), $this->auth_moderate);
+		$this->auth_view = array_diff(phpbb_gallery::$auth->acl_album_ids('i_view', 'array', true, $this->get_pegas()), $this->auth_moderate);
 		if (!empty($this->albums))
 		{
 			$this->auth_view = array_intersect($this->auth_view, $this->albums);
 		}
 		if (phpbb_gallery_config::get('allow_comments') && ($this->mode & phpbb_gallery_block::MODE_COMMENT) && $this->num_comments)
 		{
-			$this->auth_comments = phpbb_gallery::$auth->acl_album_ids('c_read', 'array', true, $this->get_personal());
+			$this->auth_comments = phpbb_gallery::$auth->acl_album_ids('c_read', 'array', true, $this->get_pegas());
 			if (!empty($this->albums))
 			{
 				$this->auth_comments = array_intersect($this->auth_comments, $this->albums);
@@ -441,11 +443,11 @@ class phpbb_gallery_block
 			{
 				$num = 0;
 				$template->assign_block_vars('imageblock', array(
-					'U_BLOCK'			=> phpbb_gallery_url::append_sid('album', 'album_id=' . $this->contest_data['album_id'] . '&amp;sk=ra&amp;sd=d'),
-					'BLOCK_NAME'		=> sprintf($user->lang['CONTEST_WINNERS_OF'], $this->contest_data['album_name']),
+					'U_BLOCK'			=> phpbb_gallery_url::append_sid('album', 'album_id=' . $contest_data['album_id'] . '&amp;sk=ra&amp;sd=d'),
+					'BLOCK_NAME'		=> sprintf($user->lang['CONTEST_WINNERS_OF'], $contest_data['album_name']),
 					'S_CONTEST_BLOCK'	=> true,
 				));
-				foreach ($this->contest_data['images'] as $image)
+				foreach ($contest_data['images'] as $image)
 				{
 					if (($num % phpbb_gallery_constants::CONTEST_IMAGES) == 0)
 					{

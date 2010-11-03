@@ -34,23 +34,6 @@ class phpbb_gallery_constants
 	const EXIF_DBSAVED = 3;
 	const EXIFTIME_OFFSET = 0; // Use this constant, to change the exif-timestamp. Offset in seconds
 
-	// Display-options for RRC-Feature
-	const RRC_DISPLAY_NONE = 0;
-	const RRC_DISPLAY_ALBUMNAME = 1;
-	const RRC_DISPLAY_COMMENTS = 2;
-	const RRC_DISPLAY_IMAGENAME = 4;
-	const RRC_DISPLAY_IMAGETIME = 8;
-	const RRC_DISPLAY_IMAGEVIEWS = 16;
-	const RRC_DISPLAY_USERNAME = 32;
-	const RRC_DISPLAY_RATINGS = 64;
-	const RRC_DISPLAY_IP = 128;
-
-	// Mode-options for RRC-Feature
-	const RRC_MODE_NONE = 0;
-	const RRC_MODE_RECENT = 1;
-	const RRC_MODE_RANDOM = 2;
-	const RRC_MODE_COMMENT = 4;
-
 	// Watermark positions
 	const WATERMARK_TOP = 1;
 	const WATERMARK_MIDDLE = 2;
