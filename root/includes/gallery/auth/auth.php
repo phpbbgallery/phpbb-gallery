@@ -29,72 +29,82 @@ class phpbb_gallery_auth
 	const ACL_YES		= 1;
 	const ACL_NEVER		= 2;
 
-	protected $_access_array = array();
+	static private $_permission_i = array('i_view', 'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate');
+	static private $_permission_c = array('c_read', 'c_post', 'c_edit', 'c_delete');
+	static private $_permission_m = array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status');
+	static private $_permission_misc = array('a_list', 'i_count', 'i_unlimited', 'album_count', 'album_unlimited');
+	static private $_permissions = array();
+	static private $_permissions_flipped = array();
 
-	public function init($user_id)
+	private $_auth_data = array();
+	private $_auth_data_never = array();
+
+	private $acl_cache = array();
+
+	/**
+	* Create a auth-object for a given user
+	*
+	* @param	int		$user_id	User you want the permissions from.
+	* @param	int		$album_id	Only get the permissions for a given album_id. Should save some memory. // Not yet implemented.
+	*/
+	public function phpbb_gallery_auth($user_id, $album_id = false)
+	{
+		self::$_permissions = array_merge(self::$_permission_i, self::$_permission_c, self::$_permission_m, self::$_permission_misc);
+		self::$_permissions_flipped = array_flip(array_merge(self::$_permissions, array('m_')));
+		self::$_permissions_flipped['i_count'] = 'i_count';
+		self::$_permissions_flipped['a_count'] = 'a_count';
+
+		global $user;
+
+		if (($user_id == $user->data['user_id']) && !empty($user->gallery['user_permissions']))
+		{
+			$this->unserialize_auth_data($user->gallery['user_permissions']);
+			return;
+		}
+		else if ($user_id != $user->data['user_id'])
+		{
+			$permissions_user = phpbb_gallery_user::get_settings($user_id);
+			if (!empty($permissions_user['user_permissions']))
+			{
+				$this->unserialize_auth_data($permissions_user['user_permissions']);
+				return;
+			}
+		}
+		$this->query_auth_data($user_id);
+	}
+
+	/**
+	* Query the permissions for a given user and store them in the database.
+	*/
+	private function query_auth_data($user_id)
 	{
 		global $cache, $config, $db, $user;
 
 		$albums = $cache->obtain_album_list();
+		$user_groups_ary = self::get_usergroups($user_id);
 
-		$permissions = $permission_parts['misc'] = $permission_parts['m'] = $permission_parts['c'] = $permission_parts['i'] = array();
-		$permission_parts['i'] = array('i_view', 'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate');
-		$permission_parts['c'] = array('c_read', 'c_post', 'c_edit', 'c_delete');
-		$permission_parts['m'] = array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status');
-		$permission_parts['misc'] = array('a_list', 'i_count', 'i_unlimited', 'album_count', 'album_unlimited');
-		$permissions = array_merge($permissions, $permission_parts['i'], $permission_parts['c'], $permission_parts['m'], $permission_parts['misc']);
-
-		$pull_data = '';
-		$user_groups_ary = array();
-
-		//set all parts of the permissions to 0 / "no"
-		foreach ($permissions as $permission)
+		$sql_select = '';
+		foreach (self::$_permissions as $permission)
 		{
-			$this->_access_array[-1][$permission] = self::ACL_NO;
-			$this->_access_array[self::OWN_ALBUM][$permission] = self::ACL_NO;
-			$this->_access_array[self::PERSONAL_ALBUM][$permission] = self::ACL_NO;
-			//generate for the sql
-			$pull_data .= " MAX($permission) as $permission,";
+			$sql_select .= " MAX($permission) as $permission,";
 		}
-		$this->_access_array[-1]['m_'] = self::ACL_NO;
-		$this->_access_array[self::OWN_ALBUM]['m_'] = self::ACL_NO;
-		$this->_access_array[self::PERSONAL_ALBUM]['m_'] = self::ACL_NO;
+
+		$this->_auth_data[self::OWN_ALBUM]				= new phpbb_gallery_auth_set();
+		$this->_auth_data_never[self::OWN_ALBUM]		= new phpbb_gallery_auth_set();
+		$this->_auth_data[self::PERSONAL_ALBUM]			= new phpbb_gallery_auth_set();
+		$this->_auth_data_never[self::PERSONAL_ALBUM]	= new phpbb_gallery_auth_set();
+
 		foreach ($albums as $album)
 		{
-			foreach ($permissions as $permission)
+			if ($album['album_user_id'] == self::PUBLIC_ALBUM)
 			{
-				$this->_access_array[$album['album_id']][$permission] = self::ACL_NO;
+				$this->_auth_data[$album['album_id']]		= new phpbb_gallery_auth_set();
+				$this->_auth_data_never[$album['album_id']]	= new phpbb_gallery_auth_set();
 			}
-			$this->_access_array[$album['album_id']]['m_'] = self::ACL_NO;
 		}
-
-		// Only available in >= 3.0.6
-		if (version_compare($config['version'], '3.0.5', '>'))
-		{
-			$sql = 'SELECT ug.group_id
-				FROM ' . USER_GROUP_TABLE . ' ug
-				LEFT JOIN ' . GROUPS_TABLE . " g
-					ON (ug.group_id = g.group_id)
-				WHERE ug.user_id = $user_id
-					AND ug.user_pending = 0
-					AND g.group_skip_auth = 0";
-		}
-		else
-		{
-			$sql = 'SELECT group_id
-				FROM ' . USER_GROUP_TABLE . "
-				WHERE user_id = $user_id
-					AND user_pending = 0";
-		}
-		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result))
-		{
-			$user_groups_ary[] = $row['group_id'];
-		}
-		$db->sql_freeresult($result);
 
 		$sql_array = array(
-			'SELECT'		=> "p.perm_album_id, $pull_data p.perm_system",
+			'SELECT'		=> "p.perm_album_id, $sql_select p.perm_system",
 			'FROM'			=> array(GALLERY_PERMISSIONS_TABLE => 'p'),
 
 			'LEFT_JOIN'		=> array(
@@ -114,68 +124,186 @@ class phpbb_gallery_auth
 			switch ($row['perm_system'])
 			{
 				case self::PERSONAL_ALBUM:
-					foreach ($permissions as $permission)
-					{
-						$this->_access_array[self::PERSONAL_ALBUM][$permission] = $row[$permission];
-						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == self::ACL_YES))
-						{
-							$this->_access_array[self::PERSONAL_ALBUM]['m_'] = $row[$permission];
-						}
-					}
+					$this->store_acl_row(self::PERSONAL_ALBUM, $row);
 				break;
 
 				case self::OWN_ALBUM:
-					foreach ($permissions as $permission)
-					{
-						$this->_access_array[self::OWN_ALBUM][$permission] = $row[$permission];
-						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == self::ACL_YES))
-						{
-							$this->_access_array[self::OWN_ALBUM]['m_'] = $row[$permission];
-						}
-					}
+					$this->store_acl_row(self::OWN_ALBUM, $row);
 				break;
 
-				case 1:
-					foreach ($permissions as $permission)
-					{
-						// if the permission is true ($row[$permission] == 1) and global_permission is never ($this->_access_array[self::PERSONAL_ALBUM][$permission] == 2) we set it to "never"
-						$this->_access_array[$row['perm_album_id']][$permission] = (($row[$permission]) ? (($row[$permission] == self::ACL_YES && ($this->_access_array[self::PERSONAL_ALBUM][$permission] == self::ACL_NEVER)) ? $this->_access_array[self::PERSONAL_ALBUM][$permission] : $row[$permission]) : self::ACL_NO);
-						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == self::ACL_YES))
-						{
-							$this->_access_array[$row['perm_album_id']]['m_'] = $row[$permission];
-						}
-					}
-				break;
-
-				case 0:
-					foreach ($permissions as $permission)
-					{
-						$this->_access_array[$row['perm_album_id']][$permission] = $row[$permission];
-						if ((substr($permission, 0, 2) == 'm_') && ($row[$permission] == self::ACL_YES))
-						{
-							$this->_access_array[$row['perm_album_id']]['m_'] = $row[$permission];
-						}
-					}
+				case self::PUBLIC_ALBUM:
+					$this->store_acl_row(((int) $row['perm_album_id']), $row);
 				break;
 			}
 		}
 		$db->sql_freeresult($result);
+
+		$this->merge_acl_row();
+
+		$sql = 'UPDATE ' . GALLERY_USERS_TABLE . "
+			SET user_permissions = '" . $db->sql_escape($this->serialize_auth_data($this->_auth_data)) . "'
+			WHERE user_id = " . (int) $user_id;
+		$db->sql_query($sql);
 	}
 
 	/**
-	* An other call for the permissions ...
+	* Serialize the auth-data sop we can store it.
+	*
+	* Line-Format:	bitfields:i_count:a_count::album_id(s)
+	* Samples:		8912837:0:10::-3
+	*				9961469:20:0::1:23:42
 	*/
-	function acl_check($mode, $album_id, $album_user_id = -1)
+	private function serialize_auth_data($auth_data)
 	{
-		static $_gallery_acl_cache;
+		$acl_array = array();
 
-		if (isset($_gallery_acl_cache[$album_id][$mode]))
+		foreach ($auth_data as $a_id => $obj)
 		{
-			return $_gallery_acl_cache[$album_id][$mode];
+			$key = $obj->get_bits() . ':' . $obj->get_count('i_count') . ':' . $obj->get_count('a_count');
+			if (!isset($acl_array[$key]))
+			{
+				$acl_array[$key] = $key . '::' . $a_id;
+			}
+			else
+			{
+				$acl_array[$key] .= ':' . $a_id;
+			}
+		}
+
+		return implode("\n", $acl_array);
+	}
+
+	/**
+	* Unserialize the stored auth-data
+	*/
+	private function unserialize_auth_data($serialized_data)
+	{
+		$acl_array = explode("\n", $serialized_data);
+
+		foreach ($acl_array as $acl_row)
+		{
+			list ($acls, $a_ids) = explode('::', $acl_row);
+			list ($bits, $i_count, $a_count) = explode(':', $acls);
+
+			foreach (explode(':', $a_ids) as $a_id)
+			{
+				$this->_auth_data[$a_id] = new phpbb_gallery_auth_set($bits, $i_count, $a_count);
+			}
+		}
+	}
+
+	/**
+	* Stores an acl-row into the _auth_data-array.
+	*/
+	private function store_acl_row($album_id, $data)
+	{
+		foreach (self::$_permissions as $permission)
+		{
+			if (strpos('_count', $permission) === false)
+			{
+				if ($data[$permission] == self::ACL_NEVER)
+				{
+					$this->_auth_data_never[$album_id]->set_bit(self::$_permissions_flipped[$permission], true);
+				}
+				else if ($data[$permission] == self::ACL_YES)
+				{
+					$this->_auth_data[$album_id]->set_bit(self::$_permissions_flipped[$permission], true);
+					if (substr($permission, 0, 2) == 'm_')
+					{
+						$this->_auth_data[$album_id]->set_bit(self::$_permissions_flipped['m_'], true);
+					}
+				}
+			}
+			else
+			{
+				$this->_auth_data[$album_id]->set_count($permission, $data[$permission]);
+			}
+		}
+	}
+
+	/**
+	* Merge the NEVER-options into the YES-options by removing the YES, if it is set.
+	*/
+	private function merge_acl_row()
+	{
+		foreach ($this->_auth_data as $album_id => $obj)
+		{
+			foreach (self::$_permissions as $acl)
+			{
+				if (strpos('_count', $acl) === false)
+				{
+					$bit = self::$_permissions_flipped[$acl];
+					// If the yes and the never bit are set, we overwrite the yes with a false.
+					if ($obj->get_bit($bit) && $this->_auth_data_never[$album_id]->get_bit($bit))
+					{
+						$obj->set_bit($bit, false);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	* Get groups a user is member from.
+	*/
+	static public function get_usergroups($user_id)
+	{
+		global $config, $db;
+
+		$groups_ary = array();
+		// Only available in >= 3.0.6
+		if (version_compare($config['version'], '3.0.5', '>'))
+		{
+			$sql = 'SELECT ug.group_id
+				FROM ' . USER_GROUP_TABLE . ' ug
+				LEFT JOIN ' . GROUPS_TABLE . ' g
+					ON (ug.group_id = g.group_id)
+				WHERE ug.user_id = ' . (int) $user_id . '
+					AND ug.user_pending = 0
+					AND g.group_skip_auth = 0';
+		}
+		else
+		{
+			$sql = 'SELECT group_id
+				FROM ' . USER_GROUP_TABLE . '
+				WHERE user_id = ' . (int) $user_id . '
+					AND user_pending = 0';
+		}
+		$result = $db->sql_query($sql);
+
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$groups_ary[] = $row['group_id'];
+		}
+		$db->sql_freeresult($result);
+
+		return $groups_ary;
+	}
+
+	/**
+	* Get permission
+	*
+	* @param	string	$acl	One of the permissions, Exp: i_view
+	* @param	int		$a_id	The album_id, from which we want to have the permissions
+	* @param	int		$u_id	The user_id from the album-owner. If not specified we need to get it from the cache.
+	*
+	* @return	bool			Is the user allowed to do the $acl?
+	*/
+	public function acl_check($acl, $a_id, $u_id = -1)
+	{
+		$bit = self::$_permissions_flipped[$acl];
+		if ($bit < 0)
+		{
+			$bit = $acl;
+		}
+
+		if (isset($this->acl_cache[$a_id][$bit]))
+		{
+			return $this->acl_cache[$a_id][$bit];
 		}
 
 		// Do we have a function call without $album_user_id ?
-		if (($album_user_id < phpbb_gallery_album::PUBLIC_ALBUM) && ($album_id > 0))
+		if (($u_id < self::PUBLIC_ALBUM) && ($a_id > 0))
 		{
 			static $_album_list;
 			// Yes, from viewonline.php
@@ -184,84 +312,63 @@ class phpbb_gallery_auth
 				global $cache;
 				$_album_list = $cache->obtain_album_list();
 			}
-			if (!isset($_album_list[$album_id]))
+			if (!isset($_album_list[$a_id]))
 			{
 				// Do not give permissions, if the album does not exist.
 				return false;
 			}
-			$album_user_id = $_album_list[$album_id]['album_user_id'];
+			$u_id = $_album_list[$a_id]['album_user_id'];
 		}
 
-		if ($album_id == self::OWN_ALBUM)
+		$get_acl = 'get_bit';
+		if (!is_int($bit))
 		{
-			if ($mode == 'album_count')
+			$get_acl = 'get_count';
+		}
+
+		$p_id = $a_id;
+		if ($u_id)
+		{
+			global $user;
+
+			if ($u_id == $user->data['user_id'])
 			{
-				$_gallery_acl_cache[$album_id][$mode] = $this->_access_array[self::OWN_ALBUM][$mode];
+				$p_id = self::OWN_ALBUM;
 			}
 			else
 			{
-				$_gallery_acl_cache[$album_id][$mode] = ($this->_access_array[self::OWN_ALBUM][$mode] == self::ACL_YES) ? true : false;
-			}
-			return $_gallery_acl_cache[$album_id][$mode];
-		}
-		if ($album_id == self::PERSONAL_ALBUM)
-		{
-			if ($mode == 'album_count')
-			{
-				$_gallery_acl_cache[$album_id][$mode] = $this->_access_array[self::PERSONAL_ALBUM][$mode];
-			}
-			else
-			{
-				$_gallery_acl_cache[$album_id][$mode] = ($this->_access_array[self::PERSONAL_ALBUM][$mode] == self::ACL_YES) ? true : false;
-			}
-			return $_gallery_acl_cache[$album_id][$mode];
-		}
-
-		global $user;
-
-		if ($mode == 'i_count')
-		{
-			if ($album_user_id == $user->data['user_id'])
-			{
-				$_gallery_acl_cache[$album_id][$mode] = $this->_access_array[self::OWN_ALBUM][$mode];
-			}
-			else if ($album_user_id > phpbb_gallery_album::PUBLIC_ALBUM)
-			{
-				$_gallery_acl_cache[$album_id][$mode] = $this->_access_array[self::PERSONAL_ALBUM][$mode];
-			}
-			else
-			{
-				$_gallery_acl_cache[$album_id][$mode] = $this->_access_array[$album_id][$mode];
-			}
-		}
-		else
-		{
-			if ($album_user_id == $user->data['user_id'])
-			{
-				$_gallery_acl_cache[$album_id][$mode] = (isset($this->_access_array[self::OWN_ALBUM][$mode]) && $this->_access_array[self::OWN_ALBUM][$mode] == self::ACL_YES) ? true : false;
-			}
-			else if ($album_user_id > phpbb_gallery_album::PUBLIC_ALBUM)
-			{
-				$_gallery_acl_cache[$album_id][$mode] = (isset($this->_access_array[self::PERSONAL_ALBUM][$mode]) && $this->_access_array[self::PERSONAL_ALBUM][$mode] == self::ACL_YES) ? true : false;
-			}
-			else
-			{
-				$_gallery_acl_cache[$album_id][$mode] = (isset($this->_access_array[$album_id][$mode]) && $this->_access_array[$album_id][$mode] == self::ACL_YES) ? true : false;
+				$p_id = self::PERSONAL_ALBUM;
 			}
 		}
 
-		return $_gallery_acl_cache[$album_id][$mode];
+		if (isset($this->_auth_data[$p_id]))
+		{
+			$this->acl_cache[$a_id][$bit] = $this->_auth_data[$p_id]->$get_acl($bit);
+			return $this->acl_cache[$a_id][$bit];
+		}
+		return false;
 	}
 
 	/**
-	* Get album lists by permissions
+	* Get albums by permission
 	*
-	* @param	string	$permission		One of the permissions, Exp: i_view
-	* @param	string	$mode			'array' || 'string'
+	* @param	string	$acl			One of the permissions, Exp: i_view; *_count permissions are not allowed!
+	* @param	string	$return			Type of the return value. array returns an array, else it's a string.
+	* @param	bool	$display_in_rrc	Only return albums, that have the display_in_rrc-flag set.
+	* @param	bool	$display_pegas	Include personal galleries in the list.
+	*
+	* @return	mixed					$album_ids, either as list or array.
 	*/
-	function acl_album_ids($permission, $mode = 'array', $display_in_rrc = false, $display_pgalleries = true)
+	public function acl_album_ids($acl, $return = 'array', $display_in_rrc = false, $display_pegas = true)
 	{
 		global $user, $cache;
+
+		$bit = self::$_permissions_flipped[$acl];
+		if (!is_int($bit))
+		{
+			// No support for *_count permissions.
+			return ($mode == 'array') ? array() : '';
+		}
 
 		$album_list = '';
 		$album_array = array();
@@ -270,24 +377,24 @@ class phpbb_gallery_auth
 		{
 			if ($album['album_user_id'] == $user->data['user_id'])
 			{
-				$acl_case = self::OWN_ALBUM;
+				$a_id = self::OWN_ALBUM;
 			}
-			else if ($album['album_user_id'] > phpbb_gallery_album::PUBLIC_ALBUM)
+			else if ($album['album_user_id'] > self::PUBLIC_ALBUM)
 			{
-				$acl_case = self::PERSONAL_ALBUM;
+				$a_id = self::PERSONAL_ALBUM;
 			}
 			else
 			{
-				$acl_case = $album['album_id'];
+				$a_id = $album['album_id'];
 			}
-			if (($this->_access_array[$acl_case][$permission] == self::ACL_YES) && (!$display_in_rrc || ($display_in_rrc && $album['display_in_rrc'])) && ($display_pgalleries || ($album['album_user_id'] == phpbb_gallery_album::PUBLIC_ALBUM)))
+			if ($this->_auth_data[$a_id]->get_bit($bit) && (!$display_in_rrc || ($display_in_rrc && $album['display_in_rrc'])) && ($display_pegas || ($album['album_user_id'] == self::PUBLIC_ALBUM)))
 			{
 				$album_list .= (($album_list) ? ', ' : '') . $album['album_id'];
-				$album_array[] = $album['album_id'];
+				$album_array[] = (int) $album['album_id'];
 			}
 		}
 
-		return ($mode == 'array') ? $album_array : $album_list;
+		return ($return == 'array') ? $album_array : $album_list;
 	}
 
 	/**
@@ -296,12 +403,13 @@ class phpbb_gallery_auth
 	* @param	string	$mode			Can only be 'album' so far.
 	* @param	int		$album_id		The current album the user is in.
 	* @param	int		$album_status	The albums status bit.
+	* @param	int		$album_user_id	The user-id of the album owner. Saves us a call to the cache if it is set.
 	*
 	* borrowed from phpBB3
 	* @author: phpBB Group
 	* @function: gen_forum_auth_level
 	*/
-	function gen_auth_level($mode, $album_id, $album_status, $album_user_id = -1)
+	public function gen_auth_level($mode, $album_id, $album_status, $album_user_id = -1)
 	{
 		global $template, $user;
 
