@@ -324,7 +324,7 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
 	gallery_integrate_user_update_name($old_name, $new_name);]]></action>
 			</edit>
 			<edit>
-				<find><![CDATA[	$table_ary = array(USERS_TABLE, USER_GROUP_TABLE, TOPICS_WATCH_TABLE, FORUMS_WATCH_TABLE, ACL_USERS_TABLE, TOPICS_TRACK_TABLE, TOPICS_POSTED_TABLE, FORUMS_TRACK_TABLE, PROFILE_FIELDS_DATA_TABLE, MODERATOR_CACHE_TABLE, DRAFTS_TABLE, BOOKMARKS_TABLE, SESSIONS_KEYS_TABLE);]]></find>
+				<find><![CDATA[	$table_ary = array(USERS_TABLE, USER_GROUP_TABLE, TOPICS_WATCH_TABLE]]></find>
 				<action type="after-add"><![CDATA[	$table_ary = array_merge($table_ary, array(GALLERY_MODSCACHE_TABLE));]]></action>
 			</edit>
 			<edit>
