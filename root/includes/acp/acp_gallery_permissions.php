@@ -303,7 +303,7 @@ class acp_gallery_permissions
 			),
 
 			'WHERE'			=> ((!$p_system) ? $db->sql_in_set('p.perm_album_id', $album_id, false, true) : $db->sql_in_set('p.perm_system', $p_system, false, true)),
-			'GROUP_BY'		=> 'g.group_id',
+			'GROUP_BY'		=> 'g.group_id, g.group_type, g.group_name',
 		);
 		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);
@@ -320,8 +320,7 @@ class acp_gallery_permissions
 		// Get the other groups, so that the user can add them
 		$sql = 'SELECT group_name, group_id, group_type
 			FROM ' . GROUPS_TABLE . '
-			WHERE ' . $db->sql_in_set('group_id', $set_groups, true, true) . '
-			GROUP BY group_id';
+			WHERE ' . $db->sql_in_set('group_id', $set_groups, true, true);
 		$result = $db->sql_query($sql);
 
 		$s_add_group_options = '';
@@ -344,7 +343,7 @@ class acp_gallery_permissions
 			),
 
 			'WHERE'			=> ((!$p_system) ? $db->sql_in_set('p.perm_album_id', $album_id, false, true) : $db->sql_in_set('p.perm_system', $p_system, false, true)),
-			'GROUP_BY'		=> 'u.user_id',
+			'GROUP_BY'		=> 'u.user_id, u.username',
 		);
 		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);

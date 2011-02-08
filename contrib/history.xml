@@ -186,6 +186,14 @@ Installing:
 
 		<history>
 			<entry>
+				<date>YYYY-MM-DD</date>
+				<rev-version>1.0.x</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Fix] Fix several SQL-Errors for PostgreSQL and MSSQL (Bug #723)]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
 				<date>2010-11-23</date>
 				<rev-version>1.0.5.1</rev-version>
 				<changelog lang="en">

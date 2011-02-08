@@ -114,7 +114,8 @@ function get_album_access_array()
 			),
 
 			'WHERE'			=> 'p.perm_user_id = ' . $user_id . ' OR ' . $db->sql_in_set('p.perm_group_id', $user_groups_ary, false, true),
-			'GROUP_BY'		=> 'p.perm_system DESC, p.perm_album_id ASC',
+			'GROUP_BY'		=> 'p.perm_system, p.perm_album_id',
+			'ORDER_BY'		=> 'p.perm_system DESC, p.perm_album_id ASC',
 		);
 		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);
