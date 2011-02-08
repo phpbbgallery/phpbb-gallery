@@ -146,16 +146,16 @@
 			<!-- ENDIF --></dd>
 		</dl>
 		<dl>
-			<dt><label for="images">{L_IMPORT_USER}:</label>
+			<dt><label for="username">{L_IMPORT_USER}:</label>
 				<br /><span>{L_IMPORT_USER_EXP}</span></dt>
 			<dd><input class="inputbox autowidth" type="text" id="username" name="username" size="40" value="{USERNAME}" />&nbsp;
 				[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</dd>
 		</dl>
 		<dl>
-			<dt><label for="title">{L_IMAGE_NAME}:</label></dt>
-			<dd id="title"><input class="inputbox autowidth" type="text" name="image_name" value="{IMAGE_NAME}" size="60" /></dd>
-			<dd id="title"><br /><input class="inputbox autowidth" type="text" name="image_num" size="5" value="1" /> {L_LOOP_EXP}</dd>
-			<dd id="filename"><br /><input class="button2" type="checkbox" class="checkbox" name="filename" value="filename" /> {L_ORIG_FILENAME}</dd>
+			<dt><label for="image_name">{L_IMAGE_NAME}:</label></dt>
+			<dd><input id="image_name" class="inputbox autowidth" type="text" name="image_name" size="60" value="{IMAGE_NAME}" /></dd>
+			<dd><input class="inputbox autowidth" type="text" name="image_num" size="5" value="1" /> {L_LOOP_EXP}</dd>
+			<dd><input class="button2 checkbox" type="checkbox" name="filename" value="filename" /> {L_ORIG_FILENAME}</dd>
 		</dl>
 	</fieldset>
 	<fieldset class="submit-buttons">
