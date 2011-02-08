@@ -509,13 +509,6 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
 			</edit>
 		</open>
 
-		<open src="styles/prosilver/theme/bidi.css">
-			<edit>
-				<find><![CDATA[.rtl .sitehome, .rtl .icon-faq, .rtl .icon-members, .rtl .icon-home, .rtl .icon-ucp, .rtl .icon-register, .rtl .icon-logout,]]></find>
-				<action type="before-add"><![CDATA[.rtl .icon-gallery,]]></action>
-			</edit>
-		</open>
-
 		<open src="styles/prosilver/theme/stylesheet.css">
 			<edit>
 				<find><![CDATA[@import url("colours.css");]]></find>

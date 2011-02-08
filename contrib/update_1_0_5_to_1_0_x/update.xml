@@ -63,6 +63,12 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<file from="root/styles/prosilver/template/*.*" to="styles/prosilver/template/*.*" />
 		</copy>
 
+		<open src="styles/prosilver/theme/bidi.css">
+			<edit>
+				<remove><![CDATA[.rtl .icon-gallery,]]></remove>
+			</edit>
+		</open>
+
 		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
 
 Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
