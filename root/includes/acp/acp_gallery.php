@@ -529,7 +529,7 @@ class acp_gallery
 
 					if ($filename || ($image_name == ''))
 					{
-						$sql_ary['image_name'] = str_replace("_", " ", utf8_substr($image_src, 0, -4));
+						$sql_ary['image_name'] = str_replace("_", " ", utf8_substr($image_src, 0, utf8_strrpos($image_src, '.')));
 					}
 					else
 					{
