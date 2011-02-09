@@ -454,7 +454,7 @@ class acp_gallery
 						break;
 
 						default:
-							trigger_error('NOT_ALLOWED_FILE_TYPE');
+							trigger_error('NOT_ALLOWED_FILE_TYPE', E_USER_WARNING);
 						break;
 					}
 					$image_filename = md5(unique_id()) . $filetype_ext;
