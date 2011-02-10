@@ -146,7 +146,7 @@ if ($image_error)
 	$possible_watermark = false;
 }
 
-$image_tools = new phpbb_gallery_image_tools(phpbb_gallery_config::get('gdlib_version'));
+$image_tools = new phpbb_gallery_image_file(phpbb_gallery_config::get('gdlib_version'));
 $image_tools->set_image_options(phpbb_gallery_config::get('max_filesize'), phpbb_gallery_config::get('max_height'), phpbb_gallery_config::get('max_width'));
 $image_tools->set_image_data($image_source, $image_data['image_name']);
 
