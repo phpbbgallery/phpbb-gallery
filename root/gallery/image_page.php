@@ -226,13 +226,9 @@ if (phpbb_gallery_config::get('disp_exifdata') && ($image_data['image_has_exif']
 */
 if (phpbb_gallery_config::get('allow_rates'))
 {
-	$rating = new phpbb_gallery_posting_rating($image_id, $image_data, $album_data);
+	$rating = new phpbb_gallery_image_rating($image_id, $image_data, $album_data);
 
-	$user_rating = false;
-	if ($user->data['is_registered'])
-	{
-		$user_rating = $rating->get_user_rating($user->data['user_id']);
-	}
+	$user_rating = $rating->get_user_rating($user->data['user_id']);
 
 	// Check: User didn't rate yet, has permissions, it's not the users own image and the user is logged in
 	if (!$user_rating && $rating->is_allowed())
