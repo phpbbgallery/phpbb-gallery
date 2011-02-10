@@ -360,66 +360,26 @@ if (phpbb_gallery_config::get('disp_exifdata') && ($image_data['image_has_exif']
 */
 if (phpbb_gallery_config::get('allow_rates'))
 {
-	$allowed_to_rate = $your_rating = $contest_rating_msg = $contest_result_hidden = false;
+	$rating = new phpbb_gallery_posting_rating($image_id, $image_data, $album_data);
 
+	$user_rating = false;
 	if ($user->data['is_registered'])
 	{
-		$sql = 'SELECT *
-			FROM ' . GALLERY_RATES_TABLE . '
-			WHERE rate_image_id = ' . $image_id . '
-				AND rate_user_id = ' . (int) $user->data['user_id'];
-		$result = $db->sql_query($sql);
-
-		if ($db->sql_affectedrows($result) > 0)
-		{
-			$rated = $db->sql_fetchrow($result);
-			$your_rating = $rated['rate_point'];
-		}
-		$db->sql_freeresult($result);
-	}
-	// Hide the result, while still rating on contests
-	if ($image_data['image_contest'])
-	{
-		$contest_result_hidden = sprintf($user->lang['CONTEST_RESULT_HIDDEN'], $user->format_date(($album_data['contest_start'] + $album_data['contest_end']), false, true));
+		$user_rating = $rating->get_user_rating($user->data['user_id']);
 	}
 
 	// Check: User didn't rate yet, has permissions, it's not the users own image and the user is logged in
-	if (!$your_rating && phpbb_gallery::$auth->acl_check('i_rate', $album_id, $album_data['album_user_id']) && ($user->data['user_id'] != $image_data['image_user_id']) && ($user->data['user_id'] != ANONYMOUS) && ($album_data['album_status'] != phpbb_gallery_album::STATUS_LOCKED) && ($image_data['image_status'] != phpbb_gallery_image::STATUS_LOCKED))
+	if (!$user_rating && $rating->is_allowed())
 	{
-		$hide_rate = false;
-		if ($album_data['contest_id'])
-		{
-			if (time() < ($album_data['contest_start'] + $album_data['contest_rating']))
-			{
-				$hide_rate = true;
-				$contest_rating_msg = sprintf($user->lang['CONTEST_RATING_STARTS'], $user->format_date(($album_data['contest_start'] + $album_data['contest_rating']), false, true));
-			}
-			if (($album_data['contest_start'] + $album_data['contest_end']) < time())
-			{
-				$hide_rate = true;
-				$contest_rating_msg = sprintf($user->lang['CONTEST_RATING_ENDED'], $user->format_date(($album_data['contest_start'] + $album_data['contest_end']), false, true));
-			}
-		}
-		if (!$hide_rate)
-		{
-			for ($rate_scale = 1; $rate_scale <= phpbb_gallery_config::get('max_rating'); $rate_scale++)
-			{
-				$template->assign_block_vars('rate_scale', array(
-					'RATE_POINT'	=> $rate_scale,
-				));
-			}
-		}
-		$allowed_to_rate = true;
+		$rating->display_box();
 	}
 	$template->assign_vars(array(
-		'IMAGE_RATING'			=> ($image_data['image_rates'] != 0) ? sprintf((($image_data['image_rates'] == 1) ? $user->lang['RATE_STRING'] : $user->lang['RATES_STRING']), $image_data['image_rate_avg'] / 100, $image_data['image_rates']) : $user->lang['NOT_RATED'],
-		'S_YOUR_RATING'			=> $your_rating,
-		'S_ALLOWED_TO_RATE'		=> $allowed_to_rate,
-		'CONTEST_RATING'		=> $contest_rating_msg,
-		'CONTEST_RESULT_HIDDEN'	=> $contest_result_hidden,
+		'IMAGE_RATING'			=> $rating->get_image_rating($user_rating),
+		'S_ALLOWED_TO_RATE'		=> $rating->is_allowed(),
 		'S_VIEW_RATE'			=> (phpbb_gallery::$auth->acl_check('i_rate', $album_id, $album_data['album_user_id'])) ? true : false,
 		'S_COMMENT_ACTION'		=> phpbb_gallery_url::append_sid('posting', "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=rate"),
 	));
+	unset($rating);
 }
 
 /**

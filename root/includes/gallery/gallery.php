@@ -56,8 +56,8 @@ class phpbb_gallery
 
 		$user->gallery = phpbb_gallery_user::get_settings($user->data['user_id']);
 
-		self::$auth = new phpbb_gallery_auth();
-		self::$auth->init(($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from']);
+		$user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
+		self::$auth = new phpbb_gallery_auth($user_id);
 
 		if (phpbb_gallery_config::get('mvc_time') < time())
 		{
@@ -101,8 +101,8 @@ class phpbb_gallery
 
 		$user->gallery = phpbb_gallery_user::get_settings($user->data['user_id']);
 
-		self::$auth = new phpbb_gallery_auth();
-		self::$auth->init(($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from']);
+		$user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
+		self::$auth = new phpbb_gallery_auth($user_id);
 
 		if (phpbb_gallery_config::get('mvc_time') < time())
 		{

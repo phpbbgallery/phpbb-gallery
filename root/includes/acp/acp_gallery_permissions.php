@@ -1056,7 +1056,7 @@ class acp_gallery_permissions
 		}
 
 		$template->assign_vars(array(
-			'S_ALBUM_OPTIONS'		=> gallery_albumbox(true, ''),
+			'S_ALBUM_OPTIONS'		=> phpbb_gallery_album::get_albumbox(true, ''),
 			'S_COPY_PERMISSIONS'	=> true,
 		));
 	}

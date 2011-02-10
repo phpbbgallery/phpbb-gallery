@@ -32,7 +32,9 @@ class phpbb_gallery_user
 
 		if ($db->sql_affectedrows())
 		{
+			$temp = $array['user_permissions'];
 			$array = array_map('intval', $array);
+			$array['user_permissions'] = $temp;
 			$array['exists'] = true;
 		}
 

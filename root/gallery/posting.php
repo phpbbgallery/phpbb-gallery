@@ -1003,102 +1003,39 @@ switch ($mode)
 		/**
 		* Rating-System: now you can comment and rate in one form
 		*/
-		$rate_point = request_var('rate', 0);
 		if (phpbb_gallery_config::get('allow_rates') && ($submode != 'edit'))
 		{
-			$allowed_to_rate = $your_rating = false;
+			$rating = new phpbb_gallery_posting_rating($image_id, $image_data, $album_data);
 
+			$user_rating = false;
 			if ($user->data['is_registered'])
 			{
-				$sql = 'SELECT rate_point
-					FROM ' . GALLERY_RATES_TABLE . '
-					WHERE rate_image_id = ' . (int) $image_id . '
-						AND rate_user_id = ' . (int) $user->data['user_id'];
-				$result = $db->sql_query($sql);
-				if ($db->sql_affectedrows($result) > 0)
-				{
-					$your_rating = $db->sql_fetchfield('rate_point');
-				}
-				$db->sql_freeresult($result);
+				$user_rating = $rating->get_user_rating($user->data['user_id']);
 			}
 
 			// Check: User didn't rate yet, has permissions, it's not the users own image and the user is logged in
-			if (!$your_rating && phpbb_gallery::$auth->acl_check('i_rate', $album_id, $album_data['album_user_id']) && ($user->data['user_id'] != $image_data['image_user_id']) && ($user->data['user_id'] != ANONYMOUS))
+			if (!$user_rating && $rating->is_allowed())
 			{
-				$hide_rate = false;
-				if ($album_data['contest_id'])
-				{
-					if (time() < ($album_data['contest_start'] + $album_data['contest_rating']))
-					{
-						$hide_rate = true;
-						$contest_rating_msg = sprintf($user->lang['CONTEST_RATING_STARTS'], $user->format_date(($album_data['contest_start'] + $album_data['contest_rating']), false, true));
-					}
-					if (($album_data['contest_start'] + $album_data['contest_end']) < time())
-					{
-						$hide_rate = true;
-						$contest_rating_msg = sprintf($user->lang['CONTEST_RATING_ENDED'], $user->format_date(($album_data['contest_start'] + $album_data['contest_end']), false, true));
-					}
-				}
+				$rating->display_box();
 
 				// User just rated the image, so we store it
-				if (!$hide_rate && $rate_point > 0)
+				$rate_point = request_var('rating', 0);
+				if ($rating->rating_enabled && $rate_point > 0)
 				{
-					if ($rate_point > phpbb_gallery_config::get('max_rating'))
-					{
-						trigger_error('OUT_OF_RANGE_VALUE');
-					}
-
-					$sql_ary = array(
-						'rate_image_id'	=> $image_id,
-						'rate_user_id'	=> $user->data['user_id'],
-						'rate_user_ip'	=> $user->ip,
-						'rate_point'	=> $rate_point,
-					);
-					$db->sql_query('INSERT INTO ' . GALLERY_RATES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
-
-					$sql = 'SELECT rate_image_id, COUNT(rate_user_ip) image_rates, AVG(rate_point) image_rate_avg, SUM(rate_point) image_rate_points
-						FROM ' . GALLERY_RATES_TABLE . "
-						WHERE rate_image_id = $image_id
-						GROUP BY rate_image_id";
-					$result = $db->sql_query($sql);
-					while ($row = $db->sql_fetchrow($result))
-					{
-						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-							SET image_rates = ' . $row['image_rates'] . ',
-								image_rate_points = ' . $row['image_rate_points'] . ',
-								image_rate_avg = ' . round($row['image_rate_avg'], 2) * 100 . '
-							WHERE image_id = ' . $row['rate_image_id'];
-						$db->sql_query($sql);
-					}
-					$db->sql_freeresult($result);
+					$rating->submit_rating();
 
 					$message .= $user->lang['RATING_SUCCESSFUL'] . '<br />';
 				}
-				// else we show the drop down
-				else if (!$hide_rate)
-				{
-					for ($rate_scale = 1; $rate_scale <= phpbb_gallery_config::get('max_rating'); $rate_scale++)
-					{
-						$template->assign_block_vars('rate_scale', array(
-							'RATE_POINT'	=> $rate_scale,
-						));
-					}
-					$allowed_to_rate = true;
-				}
-				else
-				{
-					$allowed_to_rate = true;
-				}
 			}
 			$template->assign_vars(array(
-				'S_ALLOWED_TO_RATE'			=> $allowed_to_rate,
-				'CONTEST_RATING'			=> $contest_rating_msg,
+				'S_ALLOWED_TO_RATE'			=> $rating->is_allowed(),
 			));
 			if ($submode == 'rate')
 			{
 				$s_album_action = '';
 			}
 		}
+
 		switch ($submode)
 		{
 			case 'add':
