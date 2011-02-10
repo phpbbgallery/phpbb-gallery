@@ -209,150 +209,16 @@ $template->assign_vars(array(
 /**
 * Exif-Data
 */
-if (phpbb_gallery_config::get('disp_exifdata') && ($image_data['image_has_exif'] != phpbb_gallery_constants::EXIF_UNAVAILABLE) && (substr($image_data['image_filename'], -4) == '.jpg') && function_exists('exif_read_data') && (phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id']) || ($image_data['image_contest'] != phpbb_gallery_image::IN_CONTEST)))
+if (phpbb_gallery_config::get('disp_exifdata') && ($image_data['image_has_exif'] != phpbb_gallery_exif::UNAVAILABLE) && (substr($image_data['image_filename'], -4) == '.jpg') && function_exists('exif_read_data') && (phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id']) || ($image_data['image_contest'] != phpbb_gallery_image::IN_CONTEST)))
 {
-	if ($image_data['image_has_exif'] == phpbb_gallery_constants::EXIF_DBSAVED)
-	{
-		$exif = unserialize($image_data['image_exif_data']);
-	}
-	else
-	{
-		$image_tools = new phpbb_gallery_image_tools();
-		$image_tools->set_image_data(phpbb_gallery_url::path('upload') . $image_data['image_filename']);
-		$image_tools->read_exif_data();
-		$exif = $image_tools->exif_data;
-	}
-	if (!empty($exif["EXIF"]))
-	{
-		$exif_data = array();
+	$exif = new phpbb_gallery_exif(phpbb_gallery_url::path('upload') . $image_data['image_filename'], $image_id);
+	$exif->interpret($image_data['image_has_exif'], $image_data['image_exif_data']);
 
-		if (isset($exif["EXIF"]["DateTimeOriginal"]))
-		{
-			$timestamp_year = substr($exif["EXIF"]["DateTimeOriginal"], 0, 4);
-			$timestamp_month = substr($exif["EXIF"]["DateTimeOriginal"], 5, 2);
-			$timestamp_day = substr($exif["EXIF"]["DateTimeOriginal"], 8, 2);
-			$timestamp_hour = substr($exif["EXIF"]["DateTimeOriginal"], 11, 2);
-			$timestamp_minute = substr($exif["EXIF"]["DateTimeOriginal"], 14, 2);
-			$timestamp_second = substr($exif["EXIF"]["DateTimeOriginal"], 17, 2);
-			$timestamp = (int) @mktime($timestamp_hour, $timestamp_minute, $timestamp_second, $timestamp_month, $timestamp_day, $timestamp_year);
-			if ($timestamp)
-			{
-				$exif_data['exif_date'] = $user->format_date($timestamp + phpbb_gallery_constants::EXIFTIME_OFFSET);
-			}
-		}
-		if (isset($exif["EXIF"]["FocalLength"]))
-		{
-			list($num, $den) = explode("/", $exif["EXIF"]["FocalLength"]);
-			if ($den)
-			{
-				$exif_data['exif_focal'] = sprintf($user->lang['EXIF_FOCAL_EXP'], ($num / $den));
-			}
-		}
-		if (isset($exif["EXIF"]["ExposureTime"]))
-		{
-			list($num, $den) = explode("/", $exif["EXIF"]["ExposureTime"]);
-			$exif_exposure = '';
-			if (($num > $den) && $den)
-			{
-				$exif_exposure = $num / $den;
-			}
-			else if ($num)
-			{
-				$exif_exposure = ' 1/' . $den / $num ;
-			}
-			if ($exif_exposure)
-			{
-				$exif_data['exif_exposure'] = sprintf($user->lang['EXIF_EXPOSURE_EXP'], $exif_exposure);
-			}
-		}
-		if (isset($exif["EXIF"]["FNumber"]))
-		{
-			list($num,$den) = explode("/",$exif["EXIF"]["FNumber"]);
-			if ($den)
-			{
-				$exif_data['exif_aperture'] = "F/" . ($num / $den);
-			}
-		}
-		if (isset($exif["EXIF"]["ISOSpeedRatings"]) && !is_array($exif["EXIF"]["ISOSpeedRatings"]))
-		{
-			$exif_data['exif_iso'] = $exif["EXIF"]["ISOSpeedRatings"];
-		}
-		if (isset($exif["EXIF"]["WhiteBalance"]))
-		{
-			$exif_data['exif_whiteb'] = $user->lang['EXIF_WHITEB_' . (($exif["EXIF"]["WhiteBalance"]) ? 'MANU' : 'AUTO')];
-		}
-		if (isset($exif["EXIF"]["Flash"]))
-		{
-			if (isset($user->lang['EXIF_FLASH_CASE_' . $exif["EXIF"]["Flash"]]))
-			{
-				$exif_data['exif_flash'] = $user->lang['EXIF_FLASH_CASE_' . $exif["EXIF"]["Flash"]];
-			}
-		}
-		if (isset($exif["IFD0"]["Model"]))
-		{
-			$exif_data['exif_cam_model'] = ucwords($exif["IFD0"]["Model"]);
-		}
-		if (isset($exif["EXIF"]["ExposureProgram"]))
-		{
-			if (isset($user->lang['EXIF_EXPOSURE_PROG_' . $exif["EXIF"]["ExposureProgram"]]))
-			{
-				$exif_data['exif_exposure_prog'] = $user->lang['EXIF_EXPOSURE_PROG_' . $exif["EXIF"]["ExposureProgram"]];
-			}
-		}
-		if (isset($exif["EXIF"]["ExposureBiasValue"]))
-		{
-			list($num,$den) = explode("/", $exif["EXIF"]["ExposureBiasValue"]);
-			if ($den)
-			{
-				if (($num / $den) == 0)
-				{
-					$exif_exposure_bias = 0;
-				}
-				else
-				{
-					$exif_exposure_bias = $exif["EXIF"]["ExposureBiasValue"];
-				}
-				$exif_data['exif_exposure_bias'] = sprintf($user->lang['EXIF_EXPOSURE_BIAS_EXP'], $exif_exposure_bias);
-			}
-		}
-		if (isset($exif["EXIF"]["MeteringMode"]))
-		{
-			if (isset($user->lang['EXIF_METERING_MODE_' . $exif["EXIF"]["MeteringMode"]]))
-			{
-				$exif_data['exif_metering_mode'] = $user->lang['EXIF_METERING_MODE_' . $exif["EXIF"]["MeteringMode"]];
-			}
-		}
-
-		if (sizeof($exif_data))
-		{
-			foreach ($exif_data as $exif => $value)
-			{
-				$template->assign_block_vars('exif_value', array(
-					'EXIF_NAME'			=> $user->lang[strtoupper($exif)],
-					'EXIF_VALUE'		=> htmlspecialchars($value),
-				));
-			}
-			$template->assign_vars(array(
-				'S_EXIF_DATA'	=> true,
-				'S_VIEWEXIF'	=> $user->gallery['user_viewexif'],
-			));
-
-			if ($image_data['image_has_exif'] == phpbb_gallery_constants::EXIF_UNKNOWN)
-			{
-				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-					SET image_has_exif = ' . phpbb_gallery_constants::EXIF_AVAILABLE . '
-					WHERE image_id = ' . $image_id;
-				$db->sql_query($sql);
-			}
-		}
-	}
-	else
+	if (!empty($exif->data["EXIF"]))
 	{
-		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-			SET image_has_exif = ' . phpbb_gallery_constants::EXIF_UNAVAILABLE . '
-			WHERE image_id = ' . $image_id;
-		$db->sql_query($sql);
+		$exif->send_to_template($user->gallery['user_viewexif']);
 	}
+	unset($exif);
 }
 
 /**

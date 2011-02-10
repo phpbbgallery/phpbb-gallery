@@ -27,13 +27,6 @@ class phpbb_gallery_constants
 	const GDLIB1 = 1;
 	const GDLIB2 = 2;
 
-	// Exif-data
-	const EXIF_UNAVAILABLE = 0;
-	const EXIF_AVAILABLE = 1;
-	const EXIF_UNKNOWN = 2;
-	const EXIF_DBSAVED = 3;
-	const EXIFTIME_OFFSET = 0; // Use this constant, to change the exif-timestamp. Offset in seconds
-
 	// Watermark positions
 	const WATERMARK_TOP = 1;
 	const WATERMARK_MIDDLE = 2;

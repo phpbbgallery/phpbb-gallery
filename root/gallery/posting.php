@@ -480,14 +480,16 @@ switch ($mode)
 								}
 							}
 
-							$image_tools = new phpbb_gallery_image_tools();
+							$image_tools = new phpbb_gallery_image_file();
 							$image_tools->set_image_options(phpbb_gallery_config::get('max_filesize'), phpbb_gallery_config::get('max_height'), phpbb_gallery_config::get('max_width'));
 							$image_tools->set_image_data($image_file->destination_file, $image_data['image_name'], $image_file->filesize);
 
 							// Read exif data from file
-							$image_tools->read_exif_data();
-							$image_data['image_exif_data'] = $image_tools->exif_data_serialized;
-							$image_data['image_has_exif'] = $image_tools->exif_data_exist;
+							$exif = new phpbb_gallery_exif($image_file->destination_file);
+							$exif->read();
+							$image_data['image_exif_data'] = $exif->serialized;
+							$image_data['image_has_exif'] = $exif->status;
+							unset($exif);
 
 							/// Rotate the image
 							if (phpbb_gallery_config::get('allow_rotate'))
@@ -525,10 +527,10 @@ switch ($mode)
 								$image_file->filesize = $image_tools->image_size['file'];
 							}
 
-							if (!$image_tools->exif_data_force_db && ($image_data['image_has_exif'] == phpbb_gallery_constants::EXIF_DBSAVED))
+							if (!$image_tools->exif_data_force_db && ($image_data['image_has_exif'] == phpbb_gallery_exif::DBSAVED))
 							{
 								// Image was not resized, so we can pull the Exif from the image to save db-memory.
-								$image_data['image_has_exif'] = phpbb_gallery_constants::EXIF_AVAILABLE;
+								$image_data['image_has_exif'] = phpbb_gallery_exif::AVAILABLE;
 								$image_data['image_exif_data'] = '';
 							}
 
@@ -936,10 +938,6 @@ switch ($mode)
 				));
 				if (confirm_box(true))
 				{
-
-					@unlink(phpbb_gallery_url::path('cache') . $image_data['image_thumbnail']);
-					@unlink(phpbb_gallery_url::path('medium') . $image_data['image_thumbnail']);
-					@unlink(phpbb_gallery_url::path('upload') . $image_data['image_filename']);
 					handle_image_counter($image_id, false);
 
 					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . "
@@ -962,9 +960,7 @@ switch ($mode)
 						WHERE image_id = $image_id";
 					$db->sql_query($sql);
 
-					$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . "
-						WHERE image_id = $image_id";
-					$db->sql_query($sql);
+					phpbb_gallery_image_base::delete_images(array($image_id), array($image_id => $image_data['image_filename']));
 
 					update_album_info($album_id);
 

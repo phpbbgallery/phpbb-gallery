@@ -28,9 +28,6 @@ class phpbb_gallery_image_file
 
 	public $errors = array();
 
-	public $exif_data = array();
-	public $exif_data_exist = 2;
-	public $exif_data_serialized = '';
 	public $exif_data_force_db = false;
 
 	public $gd_version = 0;
@@ -60,9 +57,8 @@ class phpbb_gallery_image_file
 
 	/**
 	* Constructor - init some basic stuff
-	* PHP5: function __constructor()
 	*/
-	public function phpbb_gallery_image_tools($gd_version = 0)
+	public function __constructor($gd_version = 0)
 	{
 		if ($gd_version)
 		{
@@ -462,48 +458,6 @@ class phpbb_gallery_image_file
 		imagedestroy($this->watermark);
 
 		$this->watermarked = true;
-	}
-
-	/**
-	* Read exif data from the image
-	*/
-	public function read_exif_data()
-	{
-		if (!function_exists('exif_read_data') || !$this->image_source)
-		{
-			return;
-		}
-
-		$this->exif_data = @exif_read_data($this->image_source, 0, true);
-
-		if (!empty($this->exif_data["EXIF"]))
-		{
-			// Unset invalid exifs
-			foreach ($this->exif_data as $key => $array)
-			{
-				if (!in_array($key, array('EXIF', 'IFD0')))
-				{
-					unset($this->exif_data[$key]);
-				}
-				else
-				{
-					foreach ($this->exif_data[$key] as $subkey => $array)
-					{
-						if (!in_array($subkey, array('DateTimeOriginal', 'FocalLength', 'ExposureTime', 'FNumber', 'ISOSpeedRatings', 'WhiteBalance', 'Flash', 'Model', 'ExposureProgram', 'ExposureBiasValue', 'MeteringMode')))
-						{
-							unset($this->exif_data[$key][$subkey]);
-						}
-					}
-				}
-			}
-
-			$this->exif_data_serialized = serialize($this->exif_data);
-			$this->exif_data_exist = phpbb_gallery_constants::EXIF_DBSAVED;
-		}
-		else
-		{
-			$this->exif_data_exist = phpbb_gallery_constants::EXIF_UNAVAILABLE;
-		}
 	}
 
 	/**
