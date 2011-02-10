@@ -714,6 +714,7 @@ class phpbb_gallery_album_manage
 			break;
 		}
 
+		phpbb_gallery_auth::set_user_permissions('all', '');
 		return $errors;
 	}
 

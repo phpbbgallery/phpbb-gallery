@@ -992,6 +992,7 @@ class acp_gallery
 			$cache->destroy('sql', GALLERY_REPORTS_TABLE);
 			$cache->destroy('sql', GALLERY_WATCH_TABLE);
 			$cache->destroy('_albums');
+			phpbb_gallery_auth::set_user_permissions('all', '');
 
 			trigger_error(implode('<br />', $message) . adm_back_link($this->u_action));
 		}

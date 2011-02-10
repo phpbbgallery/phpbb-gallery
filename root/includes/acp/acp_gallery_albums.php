@@ -196,6 +196,7 @@ class acp_gallery_albums
 						$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);
 						$cache->destroy('sql', GALLERY_PERMISSIONS_TABLE);
 						$cache->destroy('_albums');
+						phpbb_gallery_auth::set_user_permissions('all', '');
 
 						$acl_url = '&amp;mode=manage&amp;action=v_mask&amp;album_id[]=' . $album_data['album_id'];
 

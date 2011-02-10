@@ -140,10 +140,7 @@ class phpbb_gallery_auth
 
 		$this->merge_acl_row();
 
-		$sql = 'UPDATE ' . GALLERY_USERS_TABLE . "
-			SET user_permissions = '" . $db->sql_escape($this->serialize_auth_data($this->_auth_data)) . "'
-			WHERE user_id = " . (int) $user_id;
-		$db->sql_query($sql);
+		$this->set_user_permissions($user_id, $this->_auth_data);
 	}
 
 	/**
@@ -278,6 +275,34 @@ class phpbb_gallery_auth
 		$db->sql_freeresult($result);
 
 		return $groups_ary;
+	}
+
+	/**
+	* Sets the permissions-cache in users-table to given array.
+	*/
+	static public function set_user_permissions($user_ids, $permissions = false)
+	{
+		global $db;
+
+		$sql_set = (is_array($permissions)) ? $db->sql_escape(self::serialize_auth_data($permissions)) : '';
+		$sql_where = '';
+		if (is_array($user_ids))
+		{
+			$sql_where = 'WHERE ' . $db->sql_in_set('user_id', array_map('intval', $user_ids));
+		}
+		elseif ($user_ids == 'all')
+		{
+			$sql_where = '';
+		}
+		else
+		{
+			$sql_where = 'WHERE user_id = ' . (int) $user_ids;
+		}
+
+		$sql = 'UPDATE ' . GALLERY_USERS_TABLE . "
+			SET user_permissions = '" . $sql_set . "'
+			" . $sql_where;
+		$db->sql_query($sql);
 	}
 
 	/**

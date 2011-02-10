@@ -947,6 +947,7 @@ class acp_gallery_permissions
 			$cache->destroy('sql', GALLERY_PERMISSIONS_TABLE);
 			$cache->destroy('sql', GALLERY_ROLES_TABLE);
 			$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);
+			phpbb_gallery_auth::set_user_permissions('all', '');
 
 			trigger_error($user->lang['PERMISSIONS_STORED'] . adm_back_link($this->u_action));
 		}
@@ -1038,6 +1039,7 @@ class acp_gallery_permissions
 
 				$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);
 				$cache->destroy('sql', GALLERY_PERMISSIONS_TABLE);
+				phpbb_gallery_auth::set_user_permissions('all', '');
 
 				trigger_error($user->lang['COPY_PERMISSIONS_SUCCESSFUL'] . adm_back_link($this->u_action));
 			}
