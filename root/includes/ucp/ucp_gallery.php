@@ -623,7 +623,7 @@ class ucp_gallery
 			$album_id = request_var('album_id', 0);
 			$left_id = $right_id = 0;
 			$deleted_images_na = '';
-			$deleted_albums = $deleted_images = array();
+			$deleted_albums = array();
 
 			// Check for owner
 			$sql = 'SELECT album_id, left_id, right_id, parent_id
@@ -660,26 +660,20 @@ class ucp_gallery
 				ORDER BY image_id ASC';
 			$result = $db->sql_query($sql);
 
+			$deleted_images = $filenames = array();
 			while ($row = $db->sql_fetchrow($result))
 			{
-				// Delete the files themselves.
-				@unlink(phpbb_gallery_url::path('cache') . $row['image_thumbnail']);
-				@unlink(phpbb_gallery_url::path('medium') . $row['image_filename']);
-				@unlink(phpbb_gallery_url::path('upload') . $row['image_filename']);
-
 				$deleted_images[] = $row['image_id'];
+				$filenames[(int) $row['image_id']] = $row['image_filename'];
 			}
 
 			// We have all image_ids in $deleted_images which are deleted.
 			// Aswell as the album_ids in $deleted_albums.
 			// So now drop the comments, ratings, images and albums.
-			if (sizeof($deleted_images))
+			if (!empty($deleted_images))
 			{
 				$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . '
 					WHERE ' . $db->sql_in_set('comment_image_id', $deleted_images);
-				$db->sql_query($sql);
-				$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . '
-					WHERE ' . $db->sql_in_set('rate_image_id', $deleted_images);
 				$db->sql_query($sql);
 				$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . '
 					WHERE ' . $db->sql_in_set('report_image_id', $deleted_images);
@@ -690,9 +684,8 @@ class ucp_gallery
 				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . '
 					WHERE ' . $db->sql_in_set('image_id', $deleted_images);
 				$db->sql_query($sql);
-				$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE ' . $db->sql_in_set('image_id', $deleted_images);
-				$db->sql_query($sql);
+
+				phpbb_gallery_image_base::delete_images($deleted_images, $filenames);
 			}
 			$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . '
 				WHERE ' . $db->sql_in_set('album_id', $deleted_albums);

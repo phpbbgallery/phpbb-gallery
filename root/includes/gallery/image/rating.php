@@ -326,7 +326,7 @@ class phpbb_gallery_image_rating
 
 		$sql = 'SELECT rate_image_id, COUNT(rate_user_ip) image_rates, AVG(rate_point) image_rate_avg, SUM(rate_point) image_rate_points
 			FROM ' . GALLERY_RATES_TABLE . '
-			WHERE ' . $db->sql_in_set('rate_image_id', $image_ids) . '
+			WHERE ' . $db->sql_in_set('rate_image_id', $image_ids, false, true) . '
 			GROUP BY rate_image_id';
 		$result = $db->sql_query($sql);
 
@@ -340,5 +340,39 @@ class phpbb_gallery_image_rating
 			$db->sql_query($sql);
 		}
 		$db->sql_freeresult($result);
+	}
+
+	/**
+	* Delete all ratings for given image_ids
+	*
+	* @param	mixed	$image_ids		Array or integer with image_id where we delete the rating.
+	* @param	bool	$reset_average	Shall we also reset the average? We can save that query, when the images are deleted anyway.
+	*/
+	static public function delete_ratings($image_ids, $reset_average = false)
+	{
+		global $db;
+
+		if (is_array($image_ids))
+		{
+			$image_ids = array_map('intval', $image_ids);
+		}
+		else
+		{
+			$image_ids = (int) $image_ids;
+		}
+
+		$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . '
+			WHERE ' . $db->sql_in_set('rate_image_id', $image_ids, false, true);
+		$result = $db->sql_query($sql);
+
+		if ($reset_average)
+		{
+			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+				SET image_rates = 0,
+					image_rate_points = 0,
+					image_rate_avg = 0
+				WHERE ' . $db->sql_in_set('image_id', $image_ids);
+			$db->sql_query($sql);
+		}
 	}
 }

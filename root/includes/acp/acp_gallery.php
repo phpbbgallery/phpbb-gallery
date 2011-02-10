@@ -274,12 +274,6 @@ class acp_gallery
 
 				case 'reset_rating':
 					$album_id = request_var('reset_album_id', 0);
-					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-						SET image_rates = 0,
-							image_rate_points = 0,
-							image_rate_avg = 0
-						WHERE image_album_id = ' . $album_id;
-					$db->sql_query($sql);
 
 					$image_ids = array();
 					$sql = 'SELECT image_id
@@ -292,9 +286,7 @@ class acp_gallery
 					}
 					$db->sql_freeresult($result);
 
-					$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . '
-						WHERE ' . $db->sql_in_set('rate_image_id', $image_ids);
-					$db->sql_query($sql);
+					phpbb_gallery_image_rating::delete_ratings($image_ids, true);
 
 					trigger_error($user->lang['RESET_RATING_COMPLETED'] . adm_back_link($this->u_action));
 				break;
@@ -772,11 +764,7 @@ class acp_gallery
 			$message = array();
 			if ($missing_sources)
 			{
-				$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $missing_sources);
-				$db->sql_query($sql);
 				$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . ' WHERE ' . $db->sql_in_set('comment_image_id', $missing_sources);
-				$db->sql_query($sql);
-				$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . ' WHERE ' . $db->sql_in_set('rate_image_id', $missing_sources);
 				$db->sql_query($sql);
 				$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . ' WHERE ' . $db->sql_in_set('report_image_id', $missing_sources);
 				$db->sql_query($sql);
@@ -784,6 +772,9 @@ class acp_gallery
 				$db->sql_query($sql);
 				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $missing_sources);
 				$db->sql_query($sql);
+
+				phpbb_gallery_image_base::delete_images($missing_sources);
+
 				$message[] = $user->lang['CLEAN_SOURCES_DONE'];
 			}
 			if ($missing_entries)
@@ -796,18 +787,17 @@ class acp_gallery
 			}
 			if ($missing_authors)
 			{
-				$deleted_images = array();
-				$sql = 'SELECT image_id, image_thumbnail, image_filename
-					FROM ' . GALLERY_IMAGES_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $missing_authors);
+				$deleted_images = $filenames = array();
+				$sql = 'SELECT image_id, image_filename
+					FROM ' . GALLERY_IMAGES_TABLE . '
+					WHERE ' . $db->sql_in_set('image_id', $missing_authors);
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
-					// Delete the files themselves
-					@unlink(phpbb_gallery_url::path('cache') . $row['image_thumbnail']);
-					@unlink(phpbb_gallery_url::path('medium') . $row['image_filename']);
-					@unlink(phpbb_gallery_url::path('upload') . $row['image_filename']);
+					$filenames[(int) $row['image_id']] = $row['image_filename'];
 					$deleted_images[] = $row['image_id'];
 				}
+				$db->sql_freeresult($result);
 				// we have all image_ids in $deleted_images which are deleted
 				// aswell as the album_ids in $deleted_albums
 				// so now drop the comments, ratings, images and albums
@@ -817,14 +807,12 @@ class acp_gallery
 					$db->sql_query($sql);
 					$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $deleted_images);
 					$db->sql_query($sql);
-					$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $deleted_images);
-					$db->sql_query($sql);
-					$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . ' WHERE ' . $db->sql_in_set('rate_image_id', $deleted_images);
-					$db->sql_query($sql);
 					$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . ' WHERE ' . $db->sql_in_set('report_image_id', $deleted_images);
 					$db->sql_query($sql);
 					$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $deleted_images);
 					$db->sql_query($sql);
+
+					phpbb_gallery_image_base::delete_images($deleted_images, $filenames);
 				}
 				$message[] = $user->lang['CLEAN_AUTHORS_DONE'];
 			}
@@ -858,16 +846,16 @@ class acp_gallery
 				}
 				$db->sql_freeresult($result);
 
-				$sql = 'SELECT image_id, image_thumbnail, image_filename, image_user_id
+				$sql = 'SELECT image_id, image_filename, image_user_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
 					WHERE ' . $db->sql_in_set('image_album_id', $deleted_albums);
 				$result = $db->sql_query($sql);
+
+				$filenames = array();
 				while ($row = $db->sql_fetchrow($result))
 				{
-					@unlink(phpbb_gallery_url::path('cache') . $row['image_thumbnail']);
-					@unlink(phpbb_gallery_url::path('medium') . $row['image_filename']);
-					@unlink(phpbb_gallery_url::path('upload') . $row['image_filename']);
 					$deleted_images[] = $row['image_id'];
+					$filenames[(int) $row['image_id']] = $row['image_filename'];
 
 					if (isset($user_image_count[$row['image_user_id']]))
 					{
@@ -886,14 +874,12 @@ class acp_gallery
 					$db->sql_query($sql);
 					$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $deleted_images);
 					$db->sql_query($sql);
-					$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $deleted_images);
-					$db->sql_query($sql);
-					$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . ' WHERE ' . $db->sql_in_set('rate_image_id', $deleted_images);
-					$db->sql_query($sql);
 					$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . ' WHERE ' . $db->sql_in_set('report_image_id', $deleted_images);
 					$db->sql_query($sql);
 					$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $deleted_images);
 					$db->sql_query($sql);
+
+					phpbb_gallery_image_base::delete_images($deleted_images, $filenames);
 				}
 
 				$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . ' WHERE ' . $db->sql_in_set('album_id', $deleted_albums);

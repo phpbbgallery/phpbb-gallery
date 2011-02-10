@@ -53,7 +53,6 @@ class phpbb_gallery_image_base
 	*/
 	static public function delete_images($images, $filenames = array())
 	{
-		//@todo: phpbb_gallery_rating_base::delete_images($images);
 		//@todo: phpbb_gallery_comment_base::delete_images($images);
 		//@todo: phpbb_gallery_report_base::delete_images($images);
 		//@todo: phpbb_gallery_favorite::delete_images($images);
@@ -70,6 +69,10 @@ class phpbb_gallery_image_base
 		}
 		$filenames = array_merge($filenames, self::get_filenames($need_filenames));
 		phpbb_gallery_image_file::delete($filenames);
+
+		// Delete the ratings...
+		phpbb_gallery_image_rating::delete_ratings($images);
+
 
 		$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE ' . $db->sql_in_set('image_id', $images);

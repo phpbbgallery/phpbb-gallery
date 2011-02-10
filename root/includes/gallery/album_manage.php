@@ -809,36 +809,26 @@ class phpbb_gallery_album_manage
 		}
 		$db->sql_freeresult($result);
 
-		$sql = 'SELECT image_id, image_filename, image_thumbnail, image_album_id
+		$sql = 'SELECT image_id, image_filename, image_album_id
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE image_album_id = ' . $album_id;
 		$result = $db->sql_query($sql);
 
-		$images = $deleted_images = array();
+		$filenames = $deleted_images = array();
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$images[] = $row;
 			$deleted_images[] = $row['image_id'];
+			$filenames[(int) $row['image_id']] = $row['image_filename'];
 		}
 		$db->sql_freeresult($result);
 
-		if (count($images) > 0)
+		if (!empty($deleted_images))
 		{
-			// Delete the files themselves.
-			foreach ($images as $row)
-			{
-				@unlink(phpbb_gallery::path('cache') . $row['image_thumbnail']);
-				@unlink(phpbb_gallery::path('medium') . $row['image_filename']);
-				@unlink(phpbb_gallery::path('upload') . $row['image_filename']);
-			}
 			$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . '
 				WHERE ' . $db->sql_in_set('comment_image_id', $deleted_images);
 			$db->sql_query($sql);
 			$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . '
 				WHERE ' . $db->sql_in_set('image_id', $deleted_images);
-			$db->sql_query($sql);
-			$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . '
-				WHERE ' . $db->sql_in_set('rate_image_id', $deleted_images);
 			$db->sql_query($sql);
 			$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . '
 				WHERE ' . $db->sql_in_set('report_image_id', $deleted_images);
@@ -846,9 +836,8 @@ class phpbb_gallery_album_manage
 			$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . '
 				WHERE ' . $db->sql_in_set('image_id', $deleted_images);
 			$db->sql_query($sql);
-			$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . '
-				WHERE ' . $db->sql_in_set('image_id', $deleted_images);
-			$db->sql_query($sql);
+
+			phpbb_gallery_image_base::delete_images($deleted_images, $filenames);
 		}
 
 		$sql = 'DELETE FROM ' . LOG_TABLE . "
@@ -872,7 +861,7 @@ class phpbb_gallery_album_manage
 		}
 
 		// Adjust users image counts
-		if (sizeof($image_counts))
+		if (!empty($image_counts))
 		{
 			foreach ($image_counts as $image_user_id => $substract)
 			{

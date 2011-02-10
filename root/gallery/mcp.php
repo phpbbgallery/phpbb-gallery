@@ -323,27 +323,21 @@ if ($action && $image_id_ary)
 				phpbb_gallery_image::handle_counter($image_id_ary, false);
 
 				// Delete the files
-				$sql = 'SELECT image_id, image_name, image_filename, image_thumbnail
+				$sql = 'SELECT image_id, image_name, image_filename
 					FROM ' . GALLERY_IMAGES_TABLE . '
 					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
 				$result = $db->sql_query($sql);
+
+				$filenames = array();
 				while ($row = $db->sql_fetchrow($result))
 				{
-					@unlink(phpbb_gallery_url::path('cache') . $image_data['image_thumbnail']);
-					@unlink(phpbb_gallery_url::path('medium') . $image_data['image_thumbnail']);
-					@unlink(phpbb_gallery_url::path('upload') . $image_data['image_filename']);
+					$filenames[(int) $row['image_id']] = $image_data['image_filename'];
 					add_log('gallery', $album_id, $row['image_id'], 'LOG_GALLERY_DELETED', $row['image_name']);
 				}
 				$db->sql_freeresult($result);
 
-				$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
-				$db->sql_query($sql);
 				$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . '
 					WHERE ' . $db->sql_in_set('comment_image_id', $image_id_ary);
-				$db->sql_query($sql);
-				$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . '
-					WHERE ' . $db->sql_in_set('rate_image_id', $image_id_ary);
 				$db->sql_query($sql);
 				$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . '
 					WHERE ' . $db->sql_in_set('report_image_id', $image_id_ary);
@@ -354,6 +348,8 @@ if ($action && $image_id_ary)
 				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . '
 					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
 				$db->sql_query($sql);
+
+				phpbb_gallery_image_base::delete_images($image_id_ary, $filenames);
 
 				$success = true;
 			}

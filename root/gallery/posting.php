@@ -948,10 +948,6 @@ switch ($mode)
 						WHERE image_id = $image_id";
 					$db->sql_query($sql);
 
-					$sql = 'DELETE FROM ' . GALLERY_RATES_TABLE . "
-						WHERE rate_image_id = $image_id";
-					$db->sql_query($sql);
-
 					$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . "
 						WHERE report_image_id = $image_id";
 					$db->sql_query($sql);
