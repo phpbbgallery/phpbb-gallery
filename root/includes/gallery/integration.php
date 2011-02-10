@@ -256,4 +256,20 @@ class phpbb_gallery_integration
 			}
 		}
 	}
+
+	/**
+	* Add user(s) to group
+	*/
+	static public function group_user_add($group_id, $user_id_ary)
+	{
+		phpbb_gallery_auth::set_user_permissions($user_id_ary);
+	}
+
+	/**
+	* Remove a user/s from a given group.
+	*/
+	static public function group_user_del($group_id, $user_id_ary)
+	{
+		phpbb_gallery_auth::set_user_permissions($user_id_ary);
+	}
 }
