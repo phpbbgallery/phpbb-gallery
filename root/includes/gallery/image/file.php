@@ -22,7 +22,7 @@ if (!defined('IN_PHPBB'))
 *
 * resize, rotate, watermark, read exif, create thumbnail, write to hdd, send to browser
 */
-class phpbb_gallery_image_tools
+class phpbb_gallery_image_file
 {
 	public $chmod = 0777;
 
@@ -503,6 +503,29 @@ class phpbb_gallery_image_tools
 		else
 		{
 			$this->exif_data_exist = phpbb_gallery_constants::EXIF_UNAVAILABLE;
+		}
+	}
+
+	/**
+	* Delete file from disc.
+	*
+	* @param	mixed		$files		String with filename or an array of filenames
+	*									Array-Format: $image_id => $filename
+	* @param	array		$locations	Array of valid url::path()s where the image should be deleted from
+	*/
+	public function delete($files, $locations = array('cache', 'medium', 'upload'))
+	{
+		if (!is_array($files))
+		{
+			$files = array(1 => $files);
+		}
+
+		foreach ($files as $image_id => $file)
+		{
+			foreach ($locations as $location)
+			{
+				@unlink(phpbb_gallery_url::path($location) . $file);
+			}
 		}
 	}
 }
