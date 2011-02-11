@@ -64,7 +64,7 @@ class phpbb_gallery_misc
 		$db->sql_query($sql);
 		$image_id = $db->sql_nextid();
 
-		if ($user->gallery['watch_own'])
+		if (phpbb_gallery::$user->data('watch_own'))
 		{
 			$sql_ary = array(
 				'image_id'			=> $image_id,

@@ -765,7 +765,7 @@ class phpbb_gallery_album
 				continue;
 			}
 
-			$album_tracking_info[$album_id] = (!empty($row['mark_time'])) ? $row['mark_time'] : ((isset($user->gallery['user_lastmark'])) ? $user->gallery['user_lastmark'] : 0);
+			$album_tracking_info[$album_id] = (!empty($row['mark_time'])) ? $row['mark_time'] : phpbb_gallery::$user->data('user_lastmark');
 
 			$row['album_images'] = $row['album_images'];
 			$row['album_images_real'] = $row['album_images_real'];
@@ -1047,7 +1047,7 @@ class phpbb_gallery_album
 	/**
 	* Generate personal album for user, when moving image into it
 	*/
-	public static function generate_personal_album($album_name, $user_id, $user_colour, $user_entry_exists)
+	public static function generate_personal_album($album_name, $user_id, $user_colour, $gallery_user)
 	{
 		global $cache, $db;
 
@@ -1067,21 +1067,10 @@ class phpbb_gallery_album
 		$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
 		$personal_album_id = $db->sql_nextid();
 
-		if ($user_entry_exists)
-		{
-			$sql = 'UPDATE ' . GALLERY_USERS_TABLE . ' 
-				SET personal_album_id = ' . (int) $personal_album_id . '
-				WHERE user_id  = ' . (int) $user_id;
-			$db->sql_query($sql);
-		}
-		else
-		{
-			$gallery_settings = array(
-				'user_id'			=> $user_id,
+		$gallery_user->update_data(array(
 				'personal_album_id'	=> $personal_album_id,
-			);
-			$db->sql_query('INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $gallery_settings));
-		}
+		));
+
 		phpbb_gallery_config::inc('num_pegas', 1);
 
 		// Update the config for the statistic on the index

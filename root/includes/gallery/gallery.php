@@ -22,7 +22,8 @@ class phpbb_gallery
 	// We still need this, as we can not guess that.
 	static private $phpbb_root_path = '../';
 
-	static public $auth = false;
+	static public $auth = null;
+	static public $user = null;
 
 	static public $loaded = false;
 
@@ -54,7 +55,7 @@ class phpbb_gallery
 		// Little precaution.
 		$user->data['user_id'] = (int) $user->data['user_id'];
 
-		$user->gallery = phpbb_gallery_user::get_settings($user->data['user_id']);
+		self::$user = new phpbb_gallery_user($db, GALLERY_USERS_TABLE, $user->data['user_id']);
 
 		$user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
 		self::$auth = new phpbb_gallery_auth($user_id);
@@ -91,7 +92,7 @@ class phpbb_gallery
 	*/
 	static public function init()
 	{
-		global $user;
+		global $db, $user;
 
 		phpbb_gallery_url::_include('functions_phpbb', 'phpbb', 'includes/gallery/');
 		phpbb_gallery_plugins::init(phpbb_gallery_url::path());
@@ -99,7 +100,7 @@ class phpbb_gallery
 		// Little precaution.
 		$user->data['user_id'] = (int) $user->data['user_id'];
 
-		$user->gallery = phpbb_gallery_user::get_settings($user->data['user_id']);
+		self::$user = new phpbb_gallery_user($db, GALLERY_USERS_TABLE, $user->data['user_id']);
 
 		$user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
 		self::$auth = new phpbb_gallery_auth($user_id);

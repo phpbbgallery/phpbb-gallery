@@ -216,7 +216,7 @@ if (phpbb_gallery_config::get('disp_exifdata') && ($image_data['image_has_exif']
 
 	if (!empty($exif->data["EXIF"]))
 	{
-		$exif->send_to_template($user->gallery['user_viewexif']);
+		$exif->send_to_template(phpbb_gallery::$user->data('user_viewexif'));
 	}
 	unset($exif);
 }
@@ -368,7 +368,7 @@ if ((phpbb_gallery_config::get('allow_comments') && phpbb_gallery::$auth->acl_ch
 
 		while ($row = $db->sql_fetchrow($result))
 		{
-			phpbb_gallery_user::add_user_to_user_cache($user_cache, $row);
+			phpbb_gallery_user_base::add_user_to_user_cache($user_cache, $row);
 		}
 		$db->sql_freeresult($result);
 
@@ -493,7 +493,7 @@ if (!isset($user_cache[$image_data['image_user_id']]))
 	$user_cache = array();
 	while ($row = $db->sql_fetchrow($result))
 	{
-		phpbb_gallery_user::add_user_to_user_cache($user_cache, $row);
+		phpbb_gallery_user_base::add_user_to_user_cache($user_cache, $row);
 	}
 	$db->sql_freeresult($result);
 }

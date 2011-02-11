@@ -699,27 +699,21 @@ switch ($mode)
 						$personal_album_id = 0;
 						if ($user->data['user_id'] != $image_data['image_user_id'])
 						{
-							$sql = 'SELECT personal_album_id
-								FROM ' . GALLERY_USERS_TABLE . '
-								WHERE user_id = ' . $image_data['image_user_id'];
-							$result = $db->sql_query($sql);
-							$personal_album_id = (int) $db->sql_fetchfield('personal_album_id');
-							$db->sql_freeresult($result);
-							$user_entry_exists = ($db->sql_affectedrows()) ? true : false;
+							$image_user = new phpbb_gallery_user($db, GALLERY_USERS_TABLE, $image_data['image_user_id']);
+							$personal_album_id = $image_user->data('personal_album_id');
 
 							// The User has no personal album, moderators can created that without the need of permissions
 							if (!$personal_album_id)
 							{
-								$personal_album_id = phpbb_gallery_album::generate_personal_album($image_data['image_username'], $image_data['image_user_id'], $image_data['image_user_colour'], $user_entry_exists);
+								$personal_album_id = phpbb_gallery_album::generate_personal_album($image_data['image_username'], $image_data['image_user_id'], $image_data['image_user_colour'], $image_user);
 							}
 						}
 						else
 						{
-							$personal_album_id = $user->gallery['personal_album_id'];
+							$personal_album_id = phpbb_gallery::$user->data('personal_album_id');
 							if (!$personal_album_id && phpbb_gallery::$auth->acl_check('i_upload', phpbb_gallery_auth::OWN_ALBUM))
 							{
-								$user_entry_exists = ($user->gallery['exists']) ? true : false;
-								$personal_album_id = phpbb_gallery_album::generate_personal_album($image_data['image_username'], $image_data['image_user_id'], $image_data['image_user_colour'], $user_entry_exists);
+								$personal_album_id = phpbb_gallery_album::generate_personal_album($image_data['image_username'], $image_data['image_user_id'], $image_data['image_user_colour'], phpbb_gallery::$user);
 							}
 						}
 						if ($personal_album_id)
@@ -796,7 +790,7 @@ switch ($mode)
 					'S_IMAGE'			=> true,
 					'S_EDIT'			=> true,
 					'S_ALLOW_ROTATE'	=> (phpbb_gallery_config::get('allow_rotate') && function_exists('imagerotate')),
-					'S_MOVE_PERSONAL'	=> ((phpbb_gallery::$auth->acl_check('i_upload', phpbb_gallery_auth::OWN_ALBUM) || $user->gallery['personal_album_id']) || ($user->data['user_id'] != $image_data['image_user_id'])) ? true : false,
+					'S_MOVE_PERSONAL'	=> ((phpbb_gallery::$auth->acl_check('i_upload', phpbb_gallery_auth::OWN_ALBUM) || phpbb_gallery::$user->data('personal_album_id')) || ($user->data['user_id'] != $image_data['image_user_id'])) ? true : false,
 					'S_MOVE_MODERATOR'	=> ($user->data['user_id'] != $image_data['image_user_id']) ? true : false,
 					'S_ALBUM_ACTION'	=> phpbb_gallery_url::append_sid('posting', "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id"),
 				));
@@ -899,7 +893,7 @@ switch ($mode)
 					SET image_favorited = image_favorited + 1
 					WHERE image_id = ' . $image_id;
 				$db->sql_query($sql);
-				if ($user->gallery['watch_favo'] && !$image_data['watch_id'])
+				if (phpbb_gallery::$user->data('watch_favo') && !$image_data['watch_id'])
 				{
 					$sql_ary = array(
 						'image_id'			=> $image_id,
@@ -1113,7 +1107,7 @@ switch ($mode)
 								image_last_comment = $newest_comment
 							WHERE " . $db->sql_in_set('image_id', $image_id);
 						$db->sql_query($sql);
-						if ($user->gallery['watch_com'] && !$image_data['watch_id'])
+						if (phpbb_gallery::$user->data('watch_com') && !$image_data['watch_id'])
 						{
 							$sql_ary = array(
 								'image_id'			=> $image_id,
