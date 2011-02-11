@@ -462,7 +462,7 @@ class phpbb_gallery_album_manage
 		if ($to_id > 0)
 		{
 			// Retrieve $to_data again, it may have been changed...
-			$to_data = get_album_info($to_id);
+			$to_data = phpbb_gallery_album::get_info($to_id);
 
 			// Resync new parents
 			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
@@ -629,7 +629,7 @@ class phpbb_gallery_album_manage
 					$db->sql_freeresult($result);
 
 					// Grab new album data for correct tree updating later
-					$album_data = get_album_info($album_id);
+					$album_data = phpbb_gallery_album::get_info($album_id);
 
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 						SET parent_id = $subalbums_to_id

@@ -193,7 +193,7 @@ if ($action && $image_id_ary)
 		case 'images_move':
 			if ($moving_target)
 			{
-				$target_data = get_album_info($moving_target);
+				$target_data = phpbb_gallery_album::get_info($moving_target);
 
 				if ($target_data['contest_id'] && (time() < ($target_data['contest_start'] + $target_data['contest_end'])))
 				{
