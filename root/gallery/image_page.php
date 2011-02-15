@@ -216,7 +216,7 @@ if (phpbb_gallery_config::get('disp_exifdata') && ($image_data['image_has_exif']
 
 	if (!empty($exif->data["EXIF"]))
 	{
-		$exif->send_to_template(phpbb_gallery::$user->data('user_viewexif'));
+		$exif->send_to_template(phpbb_gallery::$user->get_data('user_viewexif'));
 	}
 	unset($exif);
 }

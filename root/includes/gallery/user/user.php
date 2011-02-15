@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
-class phpbb_gallery_user
+class phpbb_gallery_user extends phpbb_gallery_user_base
 {
 	/**
 	* phpBB-user_id
@@ -28,11 +28,6 @@ class phpbb_gallery_user
 	* phpBB database object
 	*/
 	public $db = null;
-
-	/**
-	* Name of the database table the values are in.
-	*/
-	public $table = '';
 
 	/**
 	* Do we have an entry for the user in the table?
@@ -50,24 +45,23 @@ class phpbb_gallery_user
 	* @param	int		$user_id
 	* @param	bool	$load		Shall we automatically load the users data from the database?
 	*/
-	public function __construct($db, $table, $user_id, $load = true)
+	public function __construct($db, $user_id, $load = true)
 	{
-		$this->db		= $db;
-		$this->table	= $table;
-		$this->id		= (int) $user_id;
+		$this->db			= $db;
+		$this->id			= (int) $user_id;
 		if ($load)
 		{
-			$this->load();
+			$this->load_data();
 		}
 	}
 
 	/**
 	* Load the users data from the database and cast it...
 	*/
-	public function load()
+	public function load_data()
 	{
 		$sql = 'SELECT *
-			FROM ' . $this->table . '
+			FROM ' . $this->sql_table() . '
 			WHERE user_id = ' . $this->id;
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
@@ -82,12 +76,24 @@ class phpbb_gallery_user
 	}
 
 	/**
+	* Some functions need the data to be loaded or at least checked.
+	* So here we loaded if it is not laoded yet and we need it ;)
+	*/
+	public function force_load()
+	{
+		if (is_null($this->entry_exists))
+		{
+			$this->load_data();
+		}
+	}
+
+	/**
 	* Get user-setting, if the user does not have his own settings we fall back to default.
 	*
 	* @param	string	$key	Column name from the users-table
 	* @return	mixed			Returns the value of the column, it it does not exist it returns false.
 	*/
-	public function data($key)
+	public function get_data($key)
 	{
 		if (isset($this->data[$key]))
 		{
@@ -107,13 +113,15 @@ class phpbb_gallery_user
 	*/
 	public function update_data($data)
 	{
+		$this->force_load();
+
 		$suc = false;
 		if ($this->entry_exists)
 		{
 			$suc = $this->update($data);
 		}
 
-		if (!$suc || !$this->entry_exists)
+		if (($suc === false) || !$this->entry_exists)
 		{
 			$suc = $this->insert($data);
 		}
@@ -127,13 +135,15 @@ class phpbb_gallery_user
 	*/
 	public function increase_data($data)
 	{
+		$this->force_load();
+
 		$suc = false;
 		if ($this->entry_exists)
 		{
 			$suc = $this->update_values($data);
 		}
 
-		if (!$suc || !$this->entry_exists)
+		if (($suc === false) || !$this->entry_exists)
 		{
 			$suc = $this->insert($data);
 		}
@@ -150,14 +160,16 @@ class phpbb_gallery_user
 	private function update($data)
 	{
 		$sql_ary = array_merge($this->data, $this->validate_data($data), array(
-			'last_update'	=> time(),
+			'user_last_update'	=> time(),
 		));
 		unset($sql_ary['user_id']);
 
-		$sql = 'UPDATE ' . $this->table . '
+		$sql = 'UPDATE ' . $this->sql_table() . '
 			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 			WHERE user_id = ' . $this->id;
 		$this->db->sql_query($sql);
+
+		$this->data = array_merge($this->data, $sql_ary);
 
 		return ($this->db->sql_affectedrows() == 1) ? true : false;
 	}
@@ -166,24 +178,21 @@ class phpbb_gallery_user
 	* Updates the users table by increasing the values.
 	*
 	* @param	array	$data	Array of data we want to increment
-	* @return	bool			Returns true if the columns were updated successfully
+	* @return	mixed			Returns true if the columns were updated successfully, else false
 	*/
 	private function update_values($data)
 	{
 		$set_keys = array();
-		foreach ($this->validate_data($data) as $key => $value)
+		foreach ($this->validate_data($data, true) as $key => $value)
 		{
 			$set_keys[] = $key . ' = ' . $key . (($value > 0) ? (' + ' . $value) : (' - ' . abs($value)));
+			$this->data[$key] += $value;
 		}
 
-		if (empty($set_keys))
-		{
-			return false;
-		}
-
-		$sql = 'UPDATE ' . $this->table . '
-			SET ' . implode(', ', $set_keys) . ',
-				last_update = ' . time() . '
+		$this->data['user_last_update'] = time();
+		$sql = 'UPDATE ' . $this->sql_table() . '
+			SET ' . ((!empty($set_keys)) ? implode(', ', $set_keys) . ', ' : '') . '
+				user_last_update = ' . time() . '
 			WHERE user_id = ' . $this->id;
 		$this->db->sql_query($sql);
 
@@ -199,17 +208,23 @@ class phpbb_gallery_user
 	private function insert($data)
 	{
 		$sql_ary = array_merge(self::$default_values, $this->validate_data($data), array(
-			'user_id'		=> $this->id,
-			'last_update'	=> time(),
+			'user_id'			=> $this->id,
+			'user_last_update'	=> time(),
 		));
 
 		$this->db->sql_return_on_error(true);
-		$sql = 'INSERT INTO ' . $this->table . '
+
+		$sql = 'INSERT INTO ' . $this->sql_table() . '
 			' . $this->db->sql_build_array('INSERT', $sql_ary);
-		$result = $this->db->sql_query($sql);
+		$this->db->sql_query($sql);
+		$error = $this->db->sql_error_triggered;
+
 		$this->db->sql_return_on_error(false);
 
-		return ($result !== false) ? true : false;
+		$this->data = $sql_ary;
+		$this->entry_exists = true;
+
+		return ($error) ? false : true;
 	}
 
 	/**
@@ -217,64 +232,8 @@ class phpbb_gallery_user
 	*/
 	public function delete()
 	{
-		$sql = 'DELETE FROM ' . $this->table . '
+		$sql = 'DELETE FROM ' . $this->sql_table() . '
 			WHERE user_id = ' . $this->id;
 		$result = $this->db->sql_query($sql);
 	}
-
-	/**
-	* Validate user data.
-	*
-	* @param	array	$data	Array of data we need to validate
-	* @return	array			Array with all allowed keys and their casted and selected values
-	*/
-	public function validate_data($data)
-	{
-		$validated_data = array();
-		foreach ($data as $name => $value)
-		{
-			switch ($name)
-			{
-				case 'user_id':
-				case 'user_images':
-				case 'personal_album_id':
-				case 'user_lastmark':
-					$validated_data[$name] = max(0, (int) $value);
-				break;
-
-				case 'user_viewexif':
-				case 'watch_own':
-				case 'watch_favo':
-				case 'watch_com':
-					$validated_data[$name] = (bool) $value;
-				break;
-
-				case 'user_permissions':
-					$validated_data[$name] = $value;
-				break;
-			}
-		}
-		return $validated_data;
-	}
-
-	/**
-	* Default values for new users.
-	*/
-	static public $default_values = array(
-		'user_images'		=> 0,
-		'personal_album_id'	=> 0,
-		'user_lastmark'		=> 0,
-		'last_update'		=> 0,
-
-		'user_permissions'	=> '',
-
-		// Shall the EXIF data be viewed or collapsed by default?
-		'user_viewexif'		=> true,
-		// Shall the user be subscribed to his own images?
-		'watch_own'			=> true,
-		// Shall the user be subscribed if he adds the images to his favorites?
-		'watch_favo'		=> false,
-		// Shall the user be subscribed if he comments on an images?
-		'watch_com'			=> false,
-	);
 }

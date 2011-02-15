@@ -13,7 +13,9 @@ CREATE TABLE phpbb_gallery_users (
 	user_images INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	personal_album_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	user_lastmark INTEGER UNSIGNED NOT NULL DEFAULT '0',
+	user_last_update INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	user_viewexif INTEGER UNSIGNED NOT NULL DEFAULT '0',
+	user_permissions mediumtext(16777215) NOT NULL DEFAULT '',
 	PRIMARY KEY (user_id)
 );
 

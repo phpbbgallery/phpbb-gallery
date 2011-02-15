@@ -18,8 +18,10 @@ CREATE TABLE [phpbb_gallery_users] (
 	[user_images] [int] DEFAULT (0) NOT NULL ,
 	[personal_album_id] [int] DEFAULT (0) NOT NULL ,
 	[user_lastmark] [int] DEFAULT (0) NOT NULL ,
-	[user_viewexif] [int] DEFAULT (0) NOT NULL 
-) ON [PRIMARY]
+	[user_last_update] [int] DEFAULT (0) NOT NULL ,
+	[user_viewexif] [int] DEFAULT (0) NOT NULL ,
+	[user_permissions] [text] DEFAULT ('') NOT NULL 
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
 ALTER TABLE [phpbb_gallery_users] WITH NOCHECK ADD 

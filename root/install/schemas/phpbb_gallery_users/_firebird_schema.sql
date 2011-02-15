@@ -12,7 +12,9 @@ CREATE TABLE phpbb_gallery_users (
 	user_images INTEGER DEFAULT 0 NOT NULL,
 	personal_album_id INTEGER DEFAULT 0 NOT NULL,
 	user_lastmark INTEGER DEFAULT 0 NOT NULL,
-	user_viewexif INTEGER DEFAULT 0 NOT NULL
+	user_last_update INTEGER DEFAULT 0 NOT NULL,
+	user_viewexif INTEGER DEFAULT 0 NOT NULL,
+	user_permissions BLOB SUB_TYPE TEXT CHARACTER SET UTF8 DEFAULT '' NOT NULL
 );;
 
 ALTER TABLE phpbb_gallery_users ADD PRIMARY KEY (user_id);;

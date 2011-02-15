@@ -81,7 +81,7 @@ class ucp_gallery
 					default:
 						$title = 'UCP_GALLERY_PERSONAL_ALBUMS';
 						$this->page_title = $user->lang[$title];
-						if (!phpbb_gallery::$user->data('personal_album_id'))
+						if (!phpbb_gallery::$user->get_data('personal_album_id'))
 						{
 							$this->info();
 						}
@@ -143,10 +143,10 @@ class ucp_gallery
 			'L_TITLE'			=> $user->lang['UCP_GALLERY_SETTINGS'],
 			'L_TITLE_EXPLAIN'	=> $user->lang['WATCH_NOTE'],
 
-			'S_WATCH_OWN'		=> phpbb_gallery::$user->data('watch_own'),
-			'S_WATCH_COM'		=> phpbb_gallery::$user->data('watch_com'),
-			'S_WATCH_FAVO'		=> phpbb_gallery::$user->data('watch_favo'),
-			'S_VIEWEXIFS'		=> phpbb_gallery::$user->data('user_viewexif'),
+			'S_WATCH_OWN'		=> phpbb_gallery::$user->get_data('watch_own'),
+			'S_WATCH_COM'		=> phpbb_gallery::$user->get_data('watch_com'),
+			'S_WATCH_FAVO'		=> phpbb_gallery::$user->get_data('watch_favo'),
+			'S_VIEWEXIFS'		=> phpbb_gallery::$user->get_data('user_viewexif'),
 		));
 	}
 
@@ -154,7 +154,7 @@ class ucp_gallery
 	{
 		global $template, $user;
 
-		if (!phpbb_gallery::$user->data('personal_album_id'))
+		if (!phpbb_gallery::$user->get_data('personal_album_id'))
 		{
 			// User will probally go to initialise_album()
 			$template->assign_vars(array(
@@ -175,7 +175,7 @@ class ucp_gallery
 	{
 		global $cache, $db, $template, $user;
 
-		if (!phpbb_gallery::$user->data('personal_album_id'))
+		if (!phpbb_gallery::$user->get_data('personal_album_id'))
 		{
 			// Check if the user is allowed to have one
 			if (!phpbb_gallery::$auth->acl_check('i_upload', phpbb_gallery_auth::OWN_ALBUM))
@@ -222,7 +222,7 @@ class ucp_gallery
 	{
 		global $cache, $db, $template, $user;
 
-		$parent_id = request_var('parent_id', phpbb_gallery::$user->data('personal_album_id'));
+		$parent_id = request_var('parent_id', phpbb_gallery::$user->get_data('personal_album_id'));
 		phpbb_gallery_album::check_user($parent_id);
 
 		$sql = 'SELECT COUNT(album_id) albums
@@ -348,7 +348,7 @@ class ucp_gallery
 				'S_DESC_BBCODE_CHECKED'		=> true,
 				'S_DESC_SMILIES_CHECKED'	=> true,
 				'S_DESC_URLS_CHECKED'		=> true,
-				'S_PARENT_OPTIONS'			=> '<option value="' . phpbb_gallery::$user->data('personal_album_id') . '">' . $user->lang['NO_PARENT_ALBUM'] . '</option>' . $parents_list,
+				'S_PARENT_OPTIONS'			=> '<option value="' . phpbb_gallery::$user->get_data('personal_album_id') . '">' . $user->lang['NO_PARENT_ALBUM'] . '</option>' . $parents_list,
 			));
 		}
 		else
@@ -374,7 +374,7 @@ class ucp_gallery
 			{
 				trigger_error('MISSING_ALBUM_NAME');
 			}
-			$album_data['parent_id'] = ($album_data['parent_id']) ? $album_data['parent_id'] : phpbb_gallery::$user->data('personal_album_id');
+			$album_data['parent_id'] = ($album_data['parent_id']) ? $album_data['parent_id'] : phpbb_gallery::$user->get_data('personal_album_id');
 			generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], request_var('desc_parse_bbcode', false), request_var('desc_parse_urls', false), request_var('desc_parse_smilies', false));
 
 			/**
@@ -442,13 +442,13 @@ class ucp_gallery
 
 			$template->assign_vars(array(
 				'S_EDIT_SUBALBUM'			=> true,
-				'S_PERSONAL_ALBUM'			=> ($album_id == phpbb_gallery::$user->data('personal_album_id')) ? true : false,
+				'S_PERSONAL_ALBUM'			=> ($album_id == phpbb_gallery::$user->get_data('personal_album_id')) ? true : false,
 
 				'L_TITLE'					=> $user->lang['EDIT_SUBALBUM'],
 				'L_TITLE_EXPLAIN'			=> $user->lang['EDIT_SUBALBUM_EXP'],
 
 				'S_ALBUM_ACTION' 			=> $this->u_action . '&amp;action=edit&amp;album_id=' . $album_id . (($redirect != '') ? '&amp;redirect=album' : ''),
-				'S_PARENT_OPTIONS'			=> '<option value="' . phpbb_gallery::$user->data('personal_album_id') . '">' . $user->lang['NO_PARENT_ALBUM'] . '</option>' . $parents_list,
+				'S_PARENT_OPTIONS'			=> '<option value="' . phpbb_gallery::$user->get_data('personal_album_id') . '">' . $user->lang['NO_PARENT_ALBUM'] . '</option>' . $parents_list,
 
 				'ALBUM_NAME' 				=> $album_data['album_name'],
 				'ALBUM_DESC'				=> $album_desc_data['text'],
@@ -469,8 +469,8 @@ class ucp_gallery
 			}
 
 			$album_data = array(
-				'album_name'					=> ($album_id == phpbb_gallery::$user->data('personal_album_id')) ? $user->data['username'] : request_var('album_name', '', true),
-				'parent_id'						=> request_var('parent_id', (($album_id == phpbb_gallery::$user->data('personal_album_id')) ? 0 : phpbb_gallery::$user->data('personal_album_id'))),
+				'album_name'					=> ($album_id == phpbb_gallery::$user->get_data('personal_album_id')) ? $user->data['username'] : request_var('album_name', '', true),
+				'parent_id'						=> request_var('parent_id', (($album_id == phpbb_gallery::$user->get_data('personal_album_id')) ? 0 : phpbb_gallery::$user->get_data('personal_album_id'))),
 				//left_id and right_id are created some lines later
 				'album_parents'					=> '',
 				'album_type'					=> phpbb_gallery_album::TYPE_UPLOAD,
@@ -583,7 +583,7 @@ class ucp_gallery
 			$cache->destroy('_albums');
 
 			trigger_error($user->lang['EDITED_SUBALBUM'] . '<br /><br />
-				<a href="' . (($redirect) ? phpbb_gallery_url::append_sid('album', "album_id=$album_id") : phpbb_gallery_url::append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . (($album_data['parent_id']) ? $album_data['parent_id'] : phpbb_gallery::$user->data('personal_album_id')))) . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
+				<a href="' . (($redirect) ? phpbb_gallery_url::append_sid('album', "album_id=$album_id") : phpbb_gallery_url::append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . (($album_data['parent_id']) ? $album_data['parent_id'] : phpbb_gallery::$user->get_data('personal_album_id')))) . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
 		}
 	}
 
@@ -701,17 +701,16 @@ class ucp_gallery
 				$db->sql_return_on_error(false);
 			}
 
-			// Maybe we deleted all, so we have to empty phpbb_gallery::$user->data('personal_album_id')
-			if (in_array(phpbb_gallery::$user->data('personal_album_id'), $deleted_albums))
+			// Maybe we deleted all, so we have to empty phpbb_gallery::$user->get_data('personal_album_id')
+			if (in_array(phpbb_gallery::$user->get_data('personal_album_id'), $deleted_albums))
 			{
-				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
-					SET personal_album_id = 0
-					WHERE ' . $db->sql_in_set('personal_album_id', $deleted_albums);
-				$db->sql_query($sql);
+				phpbb_gallery::$user->update_data(array(
+					'personal_album_id'		=> 0,
+				));
 
 				phpbb_gallery_config::dec('num_pegas', 1);
 
-				if (phpbb_gallery_config::get('newest_pega_album_id') == phpbb_gallery::$user->data('personal_album_id'))
+				if (phpbb_gallery_config::get('newest_pega_album_id') == phpbb_gallery::$user->get_data('personal_album_id'))
 				{
 					// Update the config for the statistic on the index
 					if (phpbb_gallery_config::get('num_pegas') > 0)

@@ -64,7 +64,7 @@ class phpbb_gallery_misc
 		$db->sql_query($sql);
 		$image_id = $db->sql_nextid();
 
-		if (phpbb_gallery::$user->data('watch_own'))
+		if (phpbb_gallery::$user->get_data('watch_own'))
 		{
 			$sql_ary = array(
 				'image_id'			=> $image_id,
@@ -352,21 +352,9 @@ class phpbb_gallery_misc
 					WHERE user_id = ' . $user->data['user_id'];
 				$db->sql_query($sql);
 
-				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
-					SET user_lastmark = ' . time() . '
-					WHERE user_id = ' . $user->data['user_id'];
-				$db->sql_query($sql);
-
-				if ($db->sql_affectedrows() <= 0)
-				{
-					$sql_ary = array(
+				phpbb_gallery::$user->update_data(array(
 						'user_lastmark'		=> time(),
-						'user_id'			=> $user->data['user_id'],
-					);
-
-					$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-					$db->sql_query($sql);
-				}
+				));
 			}
 
 			return;

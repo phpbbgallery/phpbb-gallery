@@ -710,7 +710,7 @@ switch ($mode)
 						}
 						else
 						{
-							$personal_album_id = phpbb_gallery::$user->data('personal_album_id');
+							$personal_album_id = phpbb_gallery::$user->get_data('personal_album_id');
 							if (!$personal_album_id && phpbb_gallery::$auth->acl_check('i_upload', phpbb_gallery_auth::OWN_ALBUM))
 							{
 								$personal_album_id = phpbb_gallery_album::generate_personal_album($image_data['image_username'], $image_data['image_user_id'], $image_data['image_user_colour'], phpbb_gallery::$user);
@@ -790,7 +790,7 @@ switch ($mode)
 					'S_IMAGE'			=> true,
 					'S_EDIT'			=> true,
 					'S_ALLOW_ROTATE'	=> (phpbb_gallery_config::get('allow_rotate') && function_exists('imagerotate')),
-					'S_MOVE_PERSONAL'	=> ((phpbb_gallery::$auth->acl_check('i_upload', phpbb_gallery_auth::OWN_ALBUM) || phpbb_gallery::$user->data('personal_album_id')) || ($user->data['user_id'] != $image_data['image_user_id'])) ? true : false,
+					'S_MOVE_PERSONAL'	=> ((phpbb_gallery::$auth->acl_check('i_upload', phpbb_gallery_auth::OWN_ALBUM) || phpbb_gallery::$user->get_data('personal_album_id')) || ($user->data['user_id'] != $image_data['image_user_id'])) ? true : false,
 					'S_MOVE_MODERATOR'	=> ($user->data['user_id'] != $image_data['image_user_id']) ? true : false,
 					'S_ALBUM_ACTION'	=> phpbb_gallery_url::append_sid('posting', "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id"),
 				));
@@ -893,7 +893,7 @@ switch ($mode)
 					SET image_favorited = image_favorited + 1
 					WHERE image_id = ' . $image_id;
 				$db->sql_query($sql);
-				if (phpbb_gallery::$user->data('watch_favo') && !$image_data['watch_id'])
+				if (phpbb_gallery::$user->get_data('watch_favo') && !$image_data['watch_id'])
 				{
 					$sql_ary = array(
 						'image_id'			=> $image_id,
@@ -1107,7 +1107,7 @@ switch ($mode)
 								image_last_comment = $newest_comment
 							WHERE " . $db->sql_in_set('image_id', $image_id);
 						$db->sql_query($sql);
-						if (phpbb_gallery::$user->data('watch_com') && !$image_data['watch_id'])
+						if (phpbb_gallery::$user->get_data('watch_com') && !$image_data['watch_id'])
 						{
 							$sql_ary = array(
 								'image_id'			=> $image_id,

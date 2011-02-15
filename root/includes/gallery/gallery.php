@@ -55,7 +55,7 @@ class phpbb_gallery
 		// Little precaution.
 		$user->data['user_id'] = (int) $user->data['user_id'];
 
-		self::$user = new phpbb_gallery_user($db, GALLERY_USERS_TABLE, $user->data['user_id']);
+		self::$user = new phpbb_gallery_user($db, $user->data['user_id']);
 
 		$user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
 		self::$auth = new phpbb_gallery_auth($user_id);
@@ -100,7 +100,7 @@ class phpbb_gallery
 		// Little precaution.
 		$user->data['user_id'] = (int) $user->data['user_id'];
 
-		self::$user = new phpbb_gallery_user($db, GALLERY_USERS_TABLE, $user->data['user_id']);
+		self::$user = new phpbb_gallery_user($db, $user->data['user_id']);
 
 		$user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
 		self::$auth = new phpbb_gallery_auth($user_id);

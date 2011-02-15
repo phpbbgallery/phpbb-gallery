@@ -450,6 +450,8 @@ class install_update extends module
 
 
 			case '1.0.5':
+				nv_add_column(GALLERY_USERS_TABLE,	'user_permissions',	array('MTEXT', ''));
+				nv_add_column(GALLERY_USERS_TABLE,	'user_last_update',	array('TIMESTAMP', 0));
 			break;
 		}
 
