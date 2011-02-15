@@ -127,9 +127,7 @@ class acp_gallery
 					}
 
 					$total_images = $total_comments = 0;
-					$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
-						SET user_images = 0';
-					$db->sql_query($sql);
+					phpbb_gallery_user_helpers::update_users('all', array('user_images' => 0));
 
 					$sql = 'SELECT COUNT(image_id) num_images, image_user_id user_id, SUM(image_comments) AS num_comments
 						FROM ' . GALLERY_IMAGES_TABLE . '
@@ -141,20 +139,11 @@ class acp_gallery
 					{
 						$total_images += $row['num_images'];
 						$total_comments += $row['num_comments'];
-						$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
-							SET user_images = ' . $row['num_images'] . '
-							WHERE user_id = ' . $row['user_id'];
-						$db->sql_query($sql);
 
-						if ($db->sql_affectedrows() <= 0)
-						{
-							$sql_ary = array(
-								'user_id'				=> $row['user_id'],
-								'user_images'			=> $row['num_images'],
-							);
-							$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-							$db->sql_query($sql);
-						}
+						$image_user = new phpbb_gallery_user($db, $row['user_id'], false);
+						$image_user->update_data(array(
+							'user_images'		=> $row['num_images'],
+						));
 					}
 					$db->sql_freeresult($result);
 
@@ -169,9 +158,7 @@ class acp_gallery
 						trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 
-					$sql = 'UPDATE ' . GALLERY_USERS_TABLE . "
-						SET personal_album_id = 0";
-					$db->sql_query($sql);
+					phpbb_gallery_user_helpers::update_users('all', array('personal_album_id' => 0));
 
 					$sql = 'SELECT album_id, album_user_id
 						FROM ' . GALLERY_ALBUMS_TABLE . '
@@ -183,20 +170,10 @@ class acp_gallery
 					$number_of_personals = 0;
 					while ($row = $db->sql_fetchrow($result))
 					{
-						$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
-							SET personal_album_id = ' . $row['album_id'] . '
-							WHERE user_id = ' . $row['album_user_id'];
-						$db->sql_query($sql);
-
-						if ($db->sql_affectedrows() <= 0)
-						{
-							$sql_ary = array(
-								'user_id'				=> $row['album_user_id'],
-								'personal_album_id'		=> $row['album_id'],
-							);
-							$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-							$db->sql_query($sql);
-						}
+						$image_user = new phpbb_gallery_user($db, $row['album_user_id'], false);
+						$image_user->update_data(array(
+							'personal_album_id'		=> $row['album_id'],
+						));
 						$number_of_personals++;
 					}
 					$db->sql_freeresult($result);
@@ -530,21 +507,9 @@ class acp_gallery
 			}
 			if ($images_loop)
 			{
-				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . "
-					SET user_images = user_images + $images_loop
-					WHERE user_id = " . $user_data['user_id'];
-				$db->sql_query($sql);
-				if ($db->sql_affectedrows() <= 0)
-				{
-					$sql_ary = array(
-						'user_id'				=> $user_data['user_id'],
-						'user_images'			=> $images_loop,
-					);
-					$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-					$db->sql_query($sql);
-				}
-				// Since phpBB 3.0.5 this is the better solution
-				// If the function does not exist, we load it from gallery/includes/functions_phpbb.php
+				$image_user = new phpbb_gallery_user($db, $user_data['user_id'], false);
+				$image_user->update_images($images_loop);
+
 				phpbb_gallery_config::inc('num_images', $images_loop);
 				$todo_images = $todo_images - $images_loop;
 			}
@@ -925,29 +890,17 @@ class acp_gallery
 					}
 				}
 
-				// No errors, if the image_count would be lower than 0
-				$db->sql_return_on_error(true);
+				$user_ids = array();
 				foreach ($user_image_count as $user_id => $images)
 				{
+					$user_ids[] = (int) $user_id;
+
 					phpbb_gallery_hookup::add_image($user_id, (0 - $images));
 
-					$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
-						SET personal_album_id = 0,
-							user_images = user_images - ' . $images . '
-						WHERE user_id = ' . $user_id;
-					$result = $db->sql_query($sql);
-
-					if ($result === false)
-					{
-						$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
-							SET personal_album_id = 0,
-								user_images = 0
-							WHERE user_id = ' . $user_id;
-						$db->sql_query($sql);
-					}
-					$db->sql_freeresult($result);
+					$uploader = new phpbb_gallery_user($db, $user_id, false);
+					$uploader->update_images((0 - $images));
 				}
-				$db->sql_return_on_error(false);
+				phpbb_gallery_user_helpers::update_users($user_ids, array('personal_album_id' => 0));
 
 				if ($missing_personals)
 				{

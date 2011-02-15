@@ -9,5 +9,10 @@
 			<value>1</value>
 			<value>true</value>
 		</row>
+		<row>
+			<value>3</value>
+			<value>7</value>
+			<value>true</value>
+		</row>
 	</table>
 </dataset>

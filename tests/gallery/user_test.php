@@ -17,11 +17,11 @@ class gallery_phpbb_gallery_user_test extends gallery_database_test_case
 	public static function user_entry_exists_data()
 	{
 		return array(
-			array(0, false, null),
-			array(0, true, false),
-
 			array(2, false, null),
 			array(2, true, true),
+
+			array(5, false, null),
+			array(5, true, false),
 		);
 	}
 
@@ -40,11 +40,11 @@ class gallery_phpbb_gallery_user_test extends gallery_database_test_case
 	public static function user_force_load_data()
 	{
 		return array(
-			array(0, false, false),
-			array(0, true, false),
-
 			array(2, false, true),
 			array(2, true, true),
+
+			array(5, false, false),
+			array(5, true, false),
 		);
 	}
 
@@ -128,50 +128,18 @@ class gallery_phpbb_gallery_user_test extends gallery_database_test_case
 			array(2, true, array('user_images'	=> 2), array(
 				'user_id'			=> 2,
 				'user_images'		=> 2,
-				'personal_album_id'	=> 0,
-				'user_lastmark'		=> 0,
-				'user_last_update'	=> 0,
-				'user_permissions'	=> '',
-				'user_viewexif'		=> false,
-				'watch_own'			=> true,
-				'watch_favo'		=> false,
-				'watch_com'			=> false,
 			)),
 			array(2, true, array('does_not_exist'	=> 2), array(
 				'user_id'			=> 2,
 				'user_images'		=> 1,
-				'personal_album_id'	=> 0,
-				'user_lastmark'		=> 0,
-				'user_last_update'	=> 0,
-				'user_permissions'	=> '',
-				'user_viewexif'		=> false,
-				'watch_own'			=> true,
-				'watch_favo'		=> false,
-				'watch_com'			=> false,
 			)),
 			array(5, false, array('user_images'	=> 2), array(
 				'user_id'			=> 5,
 				'user_images'		=> 2,
-				'personal_album_id'	=> 0,
-				'user_lastmark'		=> 0,
-				'user_last_update'	=> 0,
-				'user_permissions'	=> '',
-				'user_viewexif'		=> true,
-				'watch_own'			=> true,
-				'watch_favo'		=> false,
-				'watch_com'			=> false,
 			)),
 			array(5, false, array('does_not_exist'	=> 2), array(
 				'user_id'			=> 5,
 				'user_images'		=> 0,
-				'personal_album_id'	=> 0,
-				'user_lastmark'		=> 0,
-				'user_last_update'	=> 0,
-				'user_permissions'	=> '',
-				'user_viewexif'		=> true,
-				'watch_own'			=> true,
-				'watch_favo'		=> false,
-				'watch_com'			=> false,
 			)),
 		);
 	}
@@ -187,119 +155,58 @@ class gallery_phpbb_gallery_user_test extends gallery_database_test_case
 		$this->assertEquals($entry_exists, $user->entry_exists);
 
 		$this->assertEquals(true, $user->update_data($update));
+		$fetch_user = new phpbb_gallery_user($db, $user_id);
 		foreach ($expected_values as $key => $value)
 		{
-			if ($key == 'user_last_update')
-			{
-				$this->assertGreaterThanOrEqual((time() - 1), $user->get_data($key));
-				continue;
-			}
 			$this->assertEquals($value, $user->get_data($key));
+			$this->assertEquals($value, $fetch_user->get_data($key));
 		}
 		$this->assertEquals(true, $user->entry_exists);
+		$this->assertEquals(true, $fetch_user->entry_exists);
 
 	}
 
-	public static function user_increase_data_data()
+	public static function user_update_images_data()
 	{
 		return array(
-			array(2, true, array('user_images'	=> 2), array(
+			array(2, true, 2, array(
 				'user_id'			=> 2,
 				'user_images'		=> 3,
-				'personal_album_id'	=> 0,
-				'user_lastmark'		=> 0,
-				'user_last_update'	=> 0,
-				'user_permissions'	=> '',
-				'user_viewexif'		=> false,
-				'watch_own'			=> true,
-				'watch_favo'		=> false,
-				'watch_com'			=> false,
 			)),
-			array(2, true, array('user_images'	=> 2, 'does_not_exist'	=> 2), array(
-				'user_id'			=> 2,
-				'user_images'		=> 3,
-				'personal_album_id'	=> 0,
-				'user_lastmark'		=> 0,
-				'user_last_update'	=> 0,
-				'user_permissions'	=> '',
-				'user_viewexif'		=> false,
-				'watch_own'			=> true,
-				'watch_favo'		=> false,
-				'watch_com'			=> false,
+			array(3, true, -3, array(
+				'user_id'			=> 3,
+				'user_images'		=> 4,
 			)),
-			array(2, true, array('does_not_exist'	=> 2), array(
-				'user_id'			=> 2,
-				'user_images'		=> 1,
-				'personal_album_id'	=> 0,
-				'user_lastmark'		=> 0,
-				'user_last_update'	=> 0,
-				'user_permissions'	=> '',
-				'user_viewexif'		=> false,
-				'watch_own'			=> true,
-				'watch_favo'		=> false,
-				'watch_com'			=> false,
-			)),
-			array(5, false, array('user_images'	=> 2), array(
-				'user_id'			=> 5,
-				'user_images'		=> 2,
-				'personal_album_id'	=> 0,
-				'user_lastmark'		=> 0,
-				'user_last_update'	=> 0,
-				'user_permissions'	=> '',
-				'user_viewexif'		=> true,
-				'watch_own'			=> true,
-				'watch_favo'		=> false,
-				'watch_com'			=> false,
-			)),
-			array(5, false, array('user_images'	=> 2, 'does_not_exist'	=> 2), array(
-				'user_id'			=> 5,
-				'user_images'		=> 2,
-				'personal_album_id'	=> 0,
-				'user_lastmark'		=> 0,
-				'user_last_update'	=> 0,
-				'user_permissions'	=> '',
-				'user_viewexif'		=> true,
-				'watch_own'			=> true,
-				'watch_favo'		=> false,
-				'watch_com'			=> false,
-			)),
-			array(5, false, array('does_not_exist'	=> 2), array(
-				'user_id'			=> 5,
+			array(3, true, -30, array(
+				'user_id'			=> 3,
 				'user_images'		=> 0,
-				'personal_album_id'	=> 0,
-				'user_lastmark'		=> 0,
-				'user_last_update'	=> 0,
-				'user_permissions'	=> '',
-				'user_viewexif'		=> true,
-				'watch_own'			=> true,
-				'watch_favo'		=> false,
-				'watch_com'			=> false,
+			)),
+			array(5, false, 2, array(
+				'user_id'			=> 5,
+				'user_images'		=> 2,
 			)),
 		);
 	}
 
 	/**
-	* @dataProvider user_increase_data_data
+	* @dataProvider user_update_images_data
 	*/
-	public function test_user_increase_data($user_id, $entry_exists, $update, $expected_values)
+	public function test_user_update_images($user_id, $entry_exists, $update, $expected_values)
 	{
 		$db = $this->new_dbal();
 
 		$user = new phpbb_gallery_user($db, $user_id);
 		$this->assertEquals($entry_exists, $user->entry_exists);
 
-		$this->assertEquals(true, $user->increase_data($update));
-		#$user->increase_data($update);
+		$this->assertEquals(true, $user->update_images($update));
+		$fetch_user = new phpbb_gallery_user($db, $user_id);
 		foreach ($expected_values as $key => $value)
 		{
-			if ($key == 'user_last_update')
-			{
-				$this->assertGreaterThanOrEqual((time() - 1), $user->get_data($key));
-				continue;
-			}
 			$this->assertEquals($value, $user->get_data($key));
+			$this->assertEquals($value, $fetch_user->get_data($key));
 		}
 		$this->assertEquals(true, $user->entry_exists);
+		$this->assertEquals(true, $fetch_user->entry_exists);
 
 	}
 

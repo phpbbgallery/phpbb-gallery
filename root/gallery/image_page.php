@@ -357,7 +357,7 @@ if ((phpbb_gallery_config::get('allow_comments') && phpbb_gallery::$auth->acl_ch
 
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GALLERY_USERS_TABLE => 'gu'),
+					'FROM'	=> array(phpbb_gallery_user_base::sql_table() => 'gu'),
 					'ON'	=> 'gu.user_id = u.user_id'
 				),
 			),
@@ -481,7 +481,7 @@ if (!isset($user_cache[$image_data['image_user_id']]))
 
 		'LEFT_JOIN'	=> array(
 			array(
-				'FROM'	=> array(GALLERY_USERS_TABLE => 'gu'),
+				'FROM'	=> array(phpbb_gallery_user_base::sql_table() => 'gu'),
 				'ON'	=> 'gu.user_id = u.user_id'
 			),
 		),

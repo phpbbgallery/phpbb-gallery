@@ -683,22 +683,7 @@ class ucp_gallery
 			if ($num_images)
 			{
 				phpbb_gallery_hookup::add_image($user->data['user_id'], 0 - $num_images);
-
-				// No errors, if the image_count would be lower than 0
-				$db->sql_return_on_error(true);
-				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
-					SET user_images = user_images - ' . $num_images . '
-					WHERE user_id = ' . $user->data['user_id'];
-				$result = $db->sql_query($sql);
-				if ($result === false)
-				{
-					$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
-						SET user_images = 0
-						WHERE user_id = ' . $user->data['user_id'];
-					$db->sql_query($sql);
-				}
-				$db->sql_freeresult($result);
-				$db->sql_return_on_error(false);
+				phpbb_gallery::$user->update_images((0 - $num_images));
 			}
 
 			// Maybe we deleted all, so we have to empty phpbb_gallery::$user->get_data('personal_album_id')

@@ -1082,7 +1082,9 @@ function get_schema_struct()
 			'user_images'		=> array('UINT', 0),
 			'personal_album_id'	=> array('UINT', 0),
 			'user_lastmark'		=> array('TIMESTAMP', 0),
+			'user_last_update'	=> array('TIMESTAMP', 0),
 			'user_viewexif'		=> array('UINT:1', 0),
+			'user_permissions'	=> array('MTEXT_UNI', ''),
 		),
 		'PRIMARY_KEY'		=> 'user_id',
 	);

@@ -194,7 +194,7 @@ class phpbb_gallery_user_helpers extends phpbb_gallery_user_base
 		global $db;
 
 		$sql_ary = array_merge(self::validate_data($data), array(
-			'last_update'	=> time(),
+			'user_last_update'	=> time(),
 		));
 		unset($sql_ary['user_id']);
 
@@ -205,6 +205,6 @@ class phpbb_gallery_user_helpers extends phpbb_gallery_user_base
 			' . $sql_where;
 		$db->sql_query($sql);
 
-		return ($this->db->sql_affectedrows() != 0) ? true : false;
+		return ($db->sql_affectedrows() != 0) ? true : false;
 	}
 }

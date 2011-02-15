@@ -699,8 +699,8 @@ switch ($mode)
 						$personal_album_id = 0;
 						if ($user->data['user_id'] != $image_data['image_user_id'])
 						{
-							$image_user = new phpbb_gallery_user($db, GALLERY_USERS_TABLE, $image_data['image_user_id']);
-							$personal_album_id = $image_user->data('personal_album_id');
+							$image_user = new phpbb_gallery_user($db, $image_data['image_user_id']);
+							$personal_album_id = $image_user->get_data('personal_album_id');
 
 							// The User has no personal album, moderators can created that without the need of permissions
 							if (!$personal_album_id)

@@ -133,19 +133,21 @@ class phpbb_gallery_user extends phpbb_gallery_user_base
 	* Increase/Inserts the data, depending on whether the user already exists or not.
 	*	Example: 'SET key = key + x'
 	*/
-	public function increase_data($data)
+	public function update_images($num)
 	{
-		$this->force_load();
-
 		$suc = false;
-		if ($this->entry_exists)
+		if ($this->entry_exists || is_null($this->entry_exists))
 		{
-			$suc = $this->update_values($data);
+			$suc = $this->update_image_count($num);
+			if ($suc === false)
+			{
+				$suc = $this->update(array('user_images' => max(0, $num)));
+			}
 		}
 
-		if (($suc === false) || !$this->entry_exists)
+		if ($suc === false)
 		{
-			$suc = $this->insert($data);
+			$suc = $this->insert(array('user_images' => max(0, $num)));
 		}
 
 		return $suc;
@@ -159,7 +161,7 @@ class phpbb_gallery_user extends phpbb_gallery_user_base
 	*/
 	private function update($data)
 	{
-		$sql_ary = array_merge($this->data, $this->validate_data($data), array(
+		$sql_ary = array_merge($this->validate_data($data), array(
 			'user_last_update'	=> time(),
 		));
 		unset($sql_ary['user_id']);
@@ -180,23 +182,22 @@ class phpbb_gallery_user extends phpbb_gallery_user_base
 	* @param	array	$data	Array of data we want to increment
 	* @return	mixed			Returns true if the columns were updated successfully, else false
 	*/
-	private function update_values($data)
+	private function update_image_count($num)
 	{
-		$set_keys = array();
-		foreach ($this->validate_data($data, true) as $key => $value)
-		{
-			$set_keys[] = $key . ' = ' . $key . (($value > 0) ? (' + ' . $value) : (' - ' . abs($value)));
-			$this->data[$key] += $value;
-		}
-
-		$this->data['user_last_update'] = time();
 		$sql = 'UPDATE ' . $this->sql_table() . '
-			SET ' . ((!empty($set_keys)) ? implode(', ', $set_keys) . ', ' : '') . '
+			SET user_images = user_images ' . (($num > 0) ? (' + ' . $num) : (' - ' . abs($num))) . ',
 				user_last_update = ' . time() . '
-			WHERE user_id = ' . $this->id;
+			WHERE ' . (($num < 0) ? ' user_images > ' . abs($num) . ' AND ' : '') . '
+				user_id = ' . $this->id;
 		$this->db->sql_query($sql);
 
-		return ($this->db->sql_affectedrows() == 1) ? true : false;
+		if ($this->db->sql_affectedrows() == 1)
+		{
+			$this->data['user_last_update'] = time();
+			$this->data['user_images'] += $num;
+			return true;
+		}
+		return false;
 	}
 
 	/**
