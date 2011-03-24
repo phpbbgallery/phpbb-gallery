@@ -137,7 +137,7 @@ class acp_gallery
 						SET user_images = 0';
 					$db->sql_query($sql);
 
-					$sql = 'SELECT COUNT(image_id) num_images, image_user_id user_id, SUM(image_comments) AS num_comments
+					$sql = 'SELECT COUNT(image_id) AS num_images, image_user_id AS user_id, SUM(image_comments) AS num_comments
 						FROM ' . GALLERY_IMAGES_TABLE . '
 						WHERE image_status <> ' . IMAGE_UNAPPROVED . '
 						GROUP BY image_user_id';
@@ -183,7 +183,7 @@ class acp_gallery
 						FROM ' . GALLERY_ALBUMS_TABLE . '
 						WHERE album_user_id <> ' . NON_PERSONAL_ALBUMS . '
 							AND parent_id = 0
-						GROUP BY album_user_id';
+						GROUP BY album_user_id, album_id';
 					$result = $db->sql_query($sql);
 
 					$number_of_personals = 0;

@@ -193,7 +193,7 @@ Installing:
 					<change><![CDATA[[Fix] xHTML-Validation Error when an image appears in multiple image-blocks (Bug #774)]]></change>
 					<change><![CDATA[[Fix] Correct some labels in ACP Import screen.]]></change>
 					<change><![CDATA[[Fix] Take filename as image name does not work correctly for non-ASCII-characters (Bug #745)]]></change>
-					<change><![CDATA[[Fix] Fix several SQL-Errors for PostgreSQL and MSSQL (Bug #723)]]></change>
+					<change><![CDATA[[Fix] Fix several SQL-Errors for PostgreSQL and MSSQL (Bug #723, #784)]]></change>
 
 					<change><![CDATA[[Change] Do not edit bidi.css but put the code in gallery.css]]></change>
 				</changelog>
