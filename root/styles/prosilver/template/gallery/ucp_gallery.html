@@ -1,52 +1,49 @@
 <!-- INCLUDE ucp_header.html -->
 <!-- IF S_PERSONAL_SETTINGS -->
+<form id="ucp_gallery" method="post" action="{S_UCP_ACTION}">
 <h2>{L_TITLE}</h2>
 <div class="panel">
 	<div class="inner"><span class="corners-top"><span></span></span>
-	<p>{L_TITLE_EXPLAIN}</p>
-	<form id="ucp_gallery" method="post" action="{S_UCP_ACTION}">
+		<p>{L_TITLE_EXPLAIN}</p>
 		<fieldset>
-
-	<dl>
-		<dt><label for="watch_own">{L_WATCH_OWN}:</label></dt>
-		<dd>
-			<label for="watch_own1"><input type="radio" name="watch_own" id="watch_own1" value="1"<!-- IF S_WATCH_OWN --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
-			<label for="watch_own0"><input type="radio" name="watch_own" id="watch_own0" value="0"<!-- IF not S_WATCH_OWN --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
-		</dd>
-	</dl>
-	<dl>
-		<dt><label for="watch_com1">{L_WATCH_COM}:</label></dt>
-		<dd>
-			<label for="watch_com1"><input type="radio" name="watch_com" id="watch_com1" value="1"<!-- IF S_WATCH_COM --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
-			<label for="watch_com0"><input type="radio" name="watch_com" id="watch_com0" value="0"<!-- IF not S_WATCH_COM --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
-		</dd>
-	</dl>
-	<dl>
-		<dt><label for="watch_favo1">{L_WATCH_FAVO}:</label></dt>
-		<dd>
-			<label for="watch_favo1"><input type="radio" name="watch_favo" id="watch_favo1" value="1"<!-- IF S_WATCH_FAVO --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
-			<label for="watch_favo0"><input type="radio" name="watch_favo" id="watch_favo0" value="0"<!-- IF not S_WATCH_FAVO --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
-		</dd>
-	</dl>
-	<hr />
-	<dl>
-		<dt><label for="viewexifs1">{L_VIEWEXIFS_DEFAULT}:</label></dt>
-		<dd>
-			<label for="viewexifs1"><input type="radio" name="viewexifs" id="viewexifs1" value="1"<!-- IF S_VIEWEXIFS --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
-			<label for="viewexifs0"><input type="radio" name="viewexifs" id="viewexifs0" value="0"<!-- IF not S_VIEWEXIFS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
-		</dd>
-	</dl>
+		<dl>
+			<dt><label for="watch_own1">{L_WATCH_OWN}:</label></dt>
+			<dd>
+				<label for="watch_own1"><input type="radio" name="watch_own" id="watch_own1" value="1"<!-- IF S_WATCH_OWN --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
+				<label for="watch_own0"><input type="radio" name="watch_own" id="watch_own0" value="0"<!-- IF not S_WATCH_OWN --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="watch_com1">{L_WATCH_COM}:</label></dt>
+			<dd>
+				<label for="watch_com1"><input type="radio" name="watch_com" id="watch_com1" value="1"<!-- IF S_WATCH_COM --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
+				<label for="watch_com0"><input type="radio" name="watch_com" id="watch_com0" value="0"<!-- IF not S_WATCH_COM --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="watch_favo1">{L_WATCH_FAVO}:</label></dt>
+			<dd>
+				<label for="watch_favo1"><input type="radio" name="watch_favo" id="watch_favo1" value="1"<!-- IF S_WATCH_FAVO --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
+				<label for="watch_favo0"><input type="radio" name="watch_favo" id="watch_favo0" value="0"<!-- IF not S_WATCH_FAVO --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+			</dd>
+		</dl>
+		<hr />
+		<dl>
+			<dt><label for="viewexifs1">{L_VIEWEXIFS_DEFAULT}:</label></dt>
+			<dd>
+				<label for="viewexifs1"><input type="radio" name="viewexifs" id="viewexifs1" value="1"<!-- IF S_VIEWEXIFS --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
+				<label for="viewexifs0"><input type="radio" name="viewexifs" id="viewexifs0" value="0"<!-- IF not S_VIEWEXIFS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+			</dd>
+		</dl>
 		</fieldset>
-		<fieldset class="submit-buttons">
-			<p class="submit-buttons">
-				<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
-				<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
-			</p>
-		</fieldset>
-		{S_FORM_TOKEN}
-	</form>
 	<span class="corners-bottom"><span></span></span></div>
 </div>
+	<fieldset class="submit-buttons">
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />&nbsp;
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
+		{S_FORM_TOKEN}
+	</fieldset>
+</form>
 <!-- ENDIF -->
 
 <!-- IF S_INFO_CREATE -->
@@ -66,40 +63,38 @@
 <!-- ENDIF -->
 
 <!-- IF S_CREATE_SUBALBUM || S_EDIT_SUBALBUM -->
-<h2>{L_TITLE}</h2>
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-	<p>{L_TITLE_EXPLAIN}</p>
 <form id="acp_gallery" method="post" action="{U_ACTION}">
-	<fieldset>
-		<!-- IF not S_PERSONAL_ALBUM -->
-		<dl>
-			<dt><label for="parent_id">{L_ALBUM_PARENT}:</label></dt>
-			<dd><select id="parent_id" name="parent_id">{S_PARENT_OPTIONS}</select></dd>
-		</dl>
-		<dl>
-			<dt><label for="album_name">{L_ALBUM_NAME}:</label></dt>
-			<dd><input class="inputbox" type="text" id="album_name" name="album_name" value="{ALBUM_NAME}" maxlength="255" /></dd>
-		</dl>
-		<!-- ENDIF -->
-		<dl>
-			<dt><label for="album_desc">{L_ALBUM_DESC}:</label></dt>
-			<dd><textarea class="inputbox" id="album_desc" name="album_desc" rows="5" cols="45">{ALBUM_DESC}</textarea></dd>
-		<dd><label><input type="checkbox" class="radio" name="desc_parse_bbcode"<!-- IF S_DESC_BBCODE_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_BBCODE}</label>
-			<label><input type="checkbox" class="radio" name="desc_parse_smilies"<!-- IF S_DESC_SMILIES_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_SMILIES}</label>
-			<label><input type="checkbox" class="radio" name="desc_parse_urls"<!-- IF S_DESC_URLS_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_URLS}</label></dd>
-		</dl>
-	</fieldset>
+	<h2>{L_TITLE}</h2>
+	<div class="panel">
+		<div class="inner"><span class="corners-top"><span></span></span>
+			<p>{L_TITLE_EXPLAIN}</p>
+			<fieldset>
+			<!-- IF not S_PERSONAL_ALBUM -->
+				<dl>
+					<dt><label for="parent_id">{L_ALBUM_PARENT}:</label></dt>
+					<dd><select id="parent_id" name="parent_id">{S_PARENT_OPTIONS}</select></dd>
+				</dl>
+				<dl>
+					<dt><label for="album_name">{L_ALBUM_NAME}:</label></dt>
+					<dd><input class="inputbox" type="text" id="album_name" name="album_name" value="{ALBUM_NAME}" maxlength="255" /></dd>
+				</dl>
+			<!-- ENDIF -->
+			<dl>
+				<dt><label for="album_desc">{L_ALBUM_DESC}:</label></dt>
+				<dd><textarea class="inputbox" id="album_desc" name="album_desc" rows="5" cols="45">{ALBUM_DESC}</textarea></dd>
+				<dd><label><input type="checkbox" class="radio" name="desc_parse_bbcode"<!-- IF S_DESC_BBCODE_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_BBCODE}</label>
+					<label><input type="checkbox" class="radio" name="desc_parse_smilies"<!-- IF S_DESC_SMILIES_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_SMILIES}</label>
+					<label><input type="checkbox" class="radio" name="desc_parse_urls"<!-- IF S_DESC_URLS_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_URLS}</label></dd>
+			</dl>
+			</fieldset>
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
 	<fieldset class="submit-buttons">
-		<p class="submit-buttons">
-			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
-			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
-		</p>
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />&nbsp;
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
+		{S_FORM_TOKEN}
 	</fieldset>
-	{S_FORM_TOKEN}
 </form>
-	<span class="corners-bottom"><span></span></span></div>
-</div>
 <!-- ENDIF -->
 
 <!-- IF S_MANAGE_SUBALBUMS -->

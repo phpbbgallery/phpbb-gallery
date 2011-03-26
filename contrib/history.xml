@@ -189,6 +189,7 @@ Installing:
 				<date>YYYY-MM-DD</date>
 				<rev-version>1.0.x</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] prosilver UCP is not designed like the phpBB-UCP pages. (Bug #782)]]></change>
 					<change><![CDATA[[Fix] "Disallowed file-type" message in ACP does not have the error-background (Bug #765)]]></change>
 					<change><![CDATA[[Fix] xHTML-Validation Error when an image appears in multiple image-blocks (Bug #774)]]></change>
 					<change><![CDATA[[Fix] Correct some labels in ACP Import screen.]]></change>
