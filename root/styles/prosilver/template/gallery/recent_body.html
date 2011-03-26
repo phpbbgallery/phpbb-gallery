@@ -30,7 +30,7 @@ function toggleElement(oElement)
 	<h4><!-- IF not COLLAPSE_COMMENTS --><!-- IF U_G_SEARCH_COMMENTED --><a href="{U_G_SEARCH_COMMENTED}">{L_RECENT_COMMENTS}</a><!-- ELSE -->{L_RECENT_COMMENTS}<!-- ENDIF --><!-- ELSE --><a href="javascript: toggleElement( getElement('recent-comments'));">{L_RECENT_COMMENTS}</a><!-- ENDIF --></h4>
 	<div id="recent-comments"<!-- IF COLLAPSE_COMMENTS --> style="display: none;"<!-- ENDIF -->>
 	<!-- BEGIN commentrow -->
-	<a id="{commentrow.COMMENT_ID}"></a>
+	<a id="comment_{commentrow.COMMENT_ID}"></a>
 	<div class="post <!-- IF commentrow.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
 		<div class="inner">
 			<span class="corners-top"><span></span></span>

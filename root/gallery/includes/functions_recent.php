@@ -308,7 +308,7 @@ function recent_gallery_images($ints, $display, $mode, $collapse_comments = fals
 			$album_id = $commentrow['image_album_id'];
 
 			$template->assign_block_vars('commentrow', array(
-				'U_COMMENT'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id") . '#' . $commentrow['comment_id'],
+				'U_COMMENT'		=> append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", "album_id=$album_id&amp;image_id=$image_id") . '#comment_' . $commentrow['comment_id'],
 				'COMMENT_ID'	=> $commentrow['comment_id'],
 				'TIME'			=> $user->format_date($commentrow['comment_time']),
 				'TEXT'			=> generate_text_for_display($commentrow['comment'], $commentrow['comment_uid'], $commentrow['comment_bitfield'], 7),
