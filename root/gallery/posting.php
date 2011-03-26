@@ -466,7 +466,7 @@ switch ($mode)
 								'thumbnail'			=> '',
 								'username'			=> request_var('username', $user->data['username']),
 							);
-							$image_data['image_name'] = ((request_var('filename', '') == 'filename') || ($image_data['image_name'] == '')) ? str_replace("_", " ", utf8_substr($image_file->uploadname, 0, strrpos($image_file->uploadname, '.'))) : $image_data['image_name'];
+							$image_data['image_name'] = ((request_var('filename', '') == 'filename') || ($image_data['image_name'] == '')) ? str_replace("_", " ", utf8_substr($image_file->uploadname, 0, utf8_strrpos($image_file->uploadname, '.'))) : $image_data['image_name'];
 
 							if (!$image_data['image_name'])
 							{

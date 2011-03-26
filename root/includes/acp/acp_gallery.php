@@ -129,7 +129,7 @@ class acp_gallery
 					$total_images = $total_comments = 0;
 					phpbb_gallery_user_helpers::update_users('all', array('user_images' => 0));
 
-					$sql = 'SELECT COUNT(image_id) num_images, image_user_id user_id, SUM(image_comments) AS num_comments
+					$sql = 'SELECT COUNT(image_id) AS num_images, image_user_id AS user_id, SUM(image_comments) AS num_comments
 						FROM ' . GALLERY_IMAGES_TABLE . '
 						WHERE image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . '
 						GROUP BY image_user_id';
@@ -164,7 +164,7 @@ class acp_gallery
 						FROM ' . GALLERY_ALBUMS_TABLE . '
 						WHERE album_user_id <> ' . phpbb_gallery_album::PUBLIC_ALBUM . '
 							AND parent_id = 0
-						GROUP BY album_user_id';
+						GROUP BY album_user_id, album_id';
 					$result = $db->sql_query($sql);
 
 					$number_of_personals = 0;
@@ -413,7 +413,7 @@ class acp_gallery
 						break;
 
 						default:
-							trigger_error('NOT_ALLOWED_FILE_TYPE');
+							trigger_error('NOT_ALLOWED_FILE_TYPE', E_USER_WARNING);
 						break;
 					}
 					$image_filename = md5(unique_id()) . $filetype_ext;
@@ -483,7 +483,7 @@ class acp_gallery
 
 					if ($filename || ($image_name == ''))
 					{
-						$sql_ary['image_name'] = str_replace("_", " ", utf8_substr($image_src, 0, -4));
+						$sql_ary['image_name'] = str_replace("_", " ", utf8_substr($image_src, 0, utf8_strrpos($image_src, '.')));
 					}
 					else
 					{

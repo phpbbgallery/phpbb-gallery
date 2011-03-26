@@ -56,9 +56,10 @@ class phpbb_gallery_auth
 
 		global $user;
 
-		if (($user_id == $user->data['user_id']) && !empty($user->gallery['user_permissions']))
+		$cached_permissions = phpbb_gallery::$user->get_data('user_permissions');
+		if (($user_id == $user->data['user_id']) && !empty($cached_permissions))
 		{
-			$this->unserialize_auth_data($user->gallery['user_permissions']);
+			$this->unserialize_auth_data($cached_permissions);
 			return;
 		}
 		else if ($user_id != $user->data['user_id'])
@@ -115,7 +116,8 @@ class phpbb_gallery_auth
 			),
 
 			'WHERE'			=> 'p.perm_user_id = ' . $user_id . ' OR ' . $db->sql_in_set('p.perm_group_id', $user_groups_ary, false, true),
-			'GROUP_BY'		=> 'p.perm_system DESC, p.perm_album_id ASC',
+			'GROUP_BY'		=> 'p.perm_system, p.perm_album_id',
+			'ORDER_BY'		=> 'p.perm_system DESC, p.perm_album_id ASC',
 		);
 		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);

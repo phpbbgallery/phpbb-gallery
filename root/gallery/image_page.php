@@ -414,7 +414,7 @@ if ((phpbb_gallery_config::get('allow_comments') && phpbb_gallery::$auth->acl_ch
 			}
 
 			$template->assign_block_vars('commentrow', array(
-				'U_COMMENT'		=> phpbb_gallery_url::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id&amp;start=$start&amp;sort_order=$sort_order") . '#' . $row['comment_id'],
+				'U_COMMENT'		=> phpbb_gallery_url::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id&amp;start=$start&amp;sort_order=$sort_order") . '#comment_' . $row['comment_id'],
 				'COMMENT_ID'	=> $row['comment_id'],
 				'TIME'			=> $user->format_date($row['comment_time']),
 				'TEXT'			=> generate_text_for_display($row['comment'], $row['comment_uid'], $row['comment_bitfield'], 7),
