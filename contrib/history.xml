@@ -176,7 +176,7 @@ Installing:
 			</author>
 		</author-group>
 
-		<mod-version>1.0.5.1</mod-version>
+		<mod-version>1.0.6</mod-version>
 
 		<installation>
 			<level>intermediate</level>
@@ -186,8 +186,8 @@ Installing:
 
 		<history>
 			<entry>
-				<date>YYYY-MM-DD</date>
-				<rev-version>1.0.x</rev-version>
+				<date>2011-03-26</date>
+				<rev-version>1.0.6</rev-version>
 				<changelog lang="en">
 					<change><![CDATA[[Fix] xHTML-Validation Error for new-line on comments. (Bug #787)]]></change>
 					<change><![CDATA[[Fix] Comment-links are invalid xHTML (Bug #783)]]></change>
