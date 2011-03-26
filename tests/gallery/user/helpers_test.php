@@ -7,13 +7,13 @@
 *
 */
 
-require_once dirname(__FILE__) . '/../test_framework/gallery_database_test_case.php';
+require_once dirname(__FILE__) . '/../../test_framework/gallery_database_test_case.php';
 
 class gallery_phpbb_gallery_user_helpers_test extends gallery_database_test_case
 {
 	public function getDataSet()
 	{
-		return $this->createXMLDataSet(dirname(__FILE__) . '/fixtures/gallery_users.xml');
+		return $this->createXMLDataSet(dirname(__FILE__) . '/../fixtures/gallery_users.xml');
 	}
 
 	public static function user_helpers_delete_users_data()
