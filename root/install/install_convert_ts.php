@@ -268,13 +268,11 @@ class install_convert_ts extends module
 		$this->page_title = $user->lang['STAGE_COPY_TABLE'];
 		$s_hidden_fields = '';
 
-		$dbms_data = get_dbms_infos();
-		$db_schema = $dbms_data['db_schema'];
-		$delimiter = $dbms_data['delimiter'];
-
 		// Create the tables
-		nv_create_table('phpbb_gallery_copyts_albums', $dbms_data);
-		nv_create_table('phpbb_gallery_copyts_users', $dbms_data);
+		$umil->table_add(
+			array('copyts_albums',			phpbb_gallery_dbal_schema::get_table_data('copyts_albums')),
+			array('copyts_users',			phpbb_gallery_dbal_schema::get_table_data('copyts_users')),
+		);
 
 		$offset_id = 0;
 		$offset = 0;
@@ -371,42 +369,47 @@ class install_convert_ts extends module
 		$this->page_title = $user->lang['STAGE_CREATE_TABLE'];
 		$s_hidden_fields = '';
 
-		$dbms_data = get_dbms_infos();
-		$db_schema = $dbms_data['db_schema'];
-		$delimiter = $dbms_data['delimiter'];
-
 		// Create the tables
-		nv_create_table('phpbb_gallery_albums', $dbms_data);
-		nv_create_table('phpbb_gallery_albums_track', $dbms_data);
-		nv_create_table('phpbb_gallery_comments', $dbms_data);
-		nv_create_table('phpbb_gallery_config', $dbms_data);
-		nv_create_table('phpbb_gallery_contests', $dbms_data);
-		nv_create_table('phpbb_gallery_favorites', $dbms_data);
-		nv_create_table('phpbb_gallery_images', $dbms_data);
-		nv_create_table('phpbb_gallery_modscache', $dbms_data);
-		nv_create_table('phpbb_gallery_permissions', $dbms_data);
-		nv_create_table('phpbb_gallery_rates', $dbms_data);
-		nv_create_table('phpbb_gallery_reports', $dbms_data);
-		nv_create_table('phpbb_gallery_roles', $dbms_data);
-		nv_create_table('phpbb_gallery_users', $dbms_data);
-		nv_create_table('phpbb_gallery_watch', $dbms_data);
+		$umil->table_add(
+			array(GALLERY_ALBUMS_TABLE,			phpbb_gallery_dbal_schema::get_table_data('albums')),
+			array(GALLERY_ATRACK_TABLE,			phpbb_gallery_dbal_schema::get_table_data('albums_track')),
+			array(GALLERY_COMMENTS_TABLE,		phpbb_gallery_dbal_schema::get_table_data('comments')),
+			array(GALLERY_CONFIG_TABLE,			phpbb_gallery_dbal_schema::get_table_data('config')),
+			array(GALLERY_CONTESTS_TABLE,		phpbb_gallery_dbal_schema::get_table_data('contests')),
+			array(GALLERY_FAVORITES_TABLE,		phpbb_gallery_dbal_schema::get_table_data('favorites')),
+			array(GALLERY_IMAGES_TABLE,			phpbb_gallery_dbal_schema::get_table_data('images')),
+			array(GALLERY_MODSCACHE_TABLE,		phpbb_gallery_dbal_schema::get_table_data('modscache')),
+			array(GALLERY_PERMISSIONS_TABLE,	phpbb_gallery_dbal_schema::get_table_data('permissions')),
+			array(GALLERY_RATES_TABLE,			phpbb_gallery_dbal_schema::get_table_data('rates')),
+			array(GALLERY_REPORTS_TABLE,		phpbb_gallery_dbal_schema::get_table_data('reports')),
+			array(GALLERY_ROLES_TABLE,			phpbb_gallery_dbal_schema::get_table_data('roles')),
+			array(GALLERY_USERS_TABLE,			phpbb_gallery_dbal_schema::get_table_data('users')),
+			array(GALLERY_WATCH_TABLE,			phpbb_gallery_dbal_schema::get_table_data('watch')),
+		);
 
 		// Create columns
-		nv_add_column(SESSIONS_TABLE,	'session_album_id',	array('UINT', 0));
-		nv_add_column(LOG_TABLE,		'album_id',			array('UINT', 0));
-		nv_add_column(LOG_TABLE,		'image_id',			array('UINT', 0));
+		$umil->table_column_add(
+			array(SESSIONS_TABLE,	'session_album_id',	array('UINT', 0)),
+			array(LOG_TABLE,		'album_id',			array('UINT', 0)),
+			array(LOG_TABLE,		'image_id',			array('UINT', 0)),
+		);
 
-		nv_add_index(GALLERY_USERS_TABLE,	'pg_palbum_id',	array('personal_album_id'));
-		nv_add_index(SESSIONS_TABLE,		'session_aid',	array('session_album_id'));
+		// Add index
+		$umil->table_index_add(
+			array(GALLERY_USERS_TABLE,	'pg_palbum_id',	array('personal_album_id')),
+			array(SESSIONS_TABLE,		'session_aid',	array('session_album_id')),
+		);
 
 		// Set default config
 		set_default_config();
 
-		$auth_admin = new auth_admin();
-		$auth_admin->acl_add_option(array(
-			'local'			=> array(),
-			'global'		=> array('a_gallery_manage', 'a_gallery_albums', 'a_gallery_import', 'a_gallery_cleanup')
-		));
+		// Add ACP permissions
+		$umil->permission_add(
+			array('a_gallery_manage'),
+			array('a_gallery_albums'),
+			array('a_gallery_import'),
+			array('a_gallery_cleanup'),
+		);
 		$cache->destroy('acl_options');
 
 		$template->assign_vars(array(
@@ -900,55 +903,96 @@ class install_convert_ts extends module
 		$create = request_var('create', '');
 		if ($create)
 		{
+			$umil = new umil(true);
+
 			// Add modules
 			$choosen_acp_module = request_var('acp_module', 0);
 			$choosen_log_module = request_var('log_module', 0);
 			$choosen_ucp_module = request_var('ucp_module', 0);
 			if ($choosen_acp_module < 0)
 			{
-				$acp_mods_tab = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => 0,	'module_class' => 'acp',	'module_langname'=> 'ACP_CAT_DOT_MODS',	'module_mode' => '',	'module_auth' => '');
-				add_module($acp_mods_tab);
-				$choosen_acp_module = $db->sql_nextid();
+				$umil->module_add('acp', 0, 'ACP_CAT_DOT_MODS');
+				$choosen_acp_module = 'ACP_CAT_DOT_MODS';
 			}
 			// ACP
-			$acp_gallery = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_acp_module,	'module_class' => 'acp',	'module_langname'=> 'PHPBB_GALLERY',	'module_mode' => '',	'module_auth' => '');
-			add_module($acp_gallery);
-			$acp_module_id = $db->sql_nextid();
-			set_gallery_config('acp_parent_module', $acp_module_id);
-
-			$acp_gallery_overview = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_OVERVIEW',	'module_mode' => 'overview',	'module_auth' => 'acl_a_gallery_manage');
-			add_module($acp_gallery_overview);
-			$acp_configure_gallery = array('module_basename' => 'gallery_config',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_CONFIGURE_GALLERY',	'module_mode' => 'main',	'module_auth' => 'acl_a_gallery_manage');
-			add_module($acp_configure_gallery);
-			$acp_gallery_manage_albums = array('module_basename' => 'gallery_albums',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_MANAGE_ALBUMS',	'module_mode' => 'manage',	'module_auth' => 'acl_a_gallery_albums');
-			add_module($acp_gallery_manage_albums);
-			$album_permissions = array('module_basename' => 'gallery_permissions',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS',	'module_mode' => 'manage',	'module_auth' => 'acl_a_gallery_albums');
-			add_module($album_permissions);
-			$album_permissions_copy = array('module_basename' => 'gallery_permissions',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_GALLERY_ALBUM_PERMISSIONS_COPY',	'module_mode' => 'copy',	'module_auth' => 'acl_a_gallery_albums');
-			add_module($album_permissions_copy);
-			$import_images = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname'=> 'ACP_IMPORT_ALBUMS',	'module_mode' => 'import_images',	'module_auth' => 'acl_a_gallery_import');
-			add_module($import_images);
-			$cleanup = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $acp_module_id,	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_CLEANUP',	'module_mode' => 'cleanup',	'module_auth' => 'acl_a_gallery_cleanup');
-			add_module($cleanup);
+			$umil->module_add('acp', $choosen_acp_module, 'PHPBB_GALLERY');
+			$umil->module_add('acp', 'PHPBB_GALLERY', array(
+				'module_basename'	=> 'gallery',
+				'module_langname'	=> 'ACP_GALLERY_OVERVIEW',
+				'module_mode'		=> 'overview',
+				'module_auth'		=> 'acl_a_gallery_manage',
+			));
+			$umil->module_add('acp', 'PHPBB_GALLERY', array(
+				'module_basename'	=> 'gallery_config',
+				'module_langname'	=> 'ACP_GALLERY_CONFIGURE_GALLERY',
+				'module_mode'		=> 'main',
+				'module_auth'		=> 'acl_a_gallery_manage',
+			));
+			$umil->module_add('acp', 'PHPBB_GALLERY', array(
+				'module_basename'	=> 'gallery_albums',
+				'module_langname'	=> 'ACP_GALLERY_MANAGE_ALBUMS',
+				'module_mode'		=> 'manage',
+				'module_auth'		=> 'acl_a_gallery_albums',
+			));
+			$umil->module_add('acp', 'PHPBB_GALLERY', array(
+				'module_basename'	=> 'gallery_permissions',
+				'module_langname'	=> 'ACP_GALLERY_ALBUM_PERMISSIONS',
+				'module_mode'		=> 'manage',
+				'module_auth'		=> 'acl_a_gallery_albums',
+			));
+			$umil->module_add('acp', 'PHPBB_GALLERY', array(
+				'module_basename'	=> 'gallery_permissions',
+				'module_langname'	=> 'ACP_GALLERY_ALBUM_PERMISSIONS_COPY',
+				'module_mode'		=> 'copy',
+				'module_auth'		=> 'acl_a_gallery_albums',
+			));
+			$umil->module_add('acp', 'PHPBB_GALLERY', array(
+				'module_basename'	=> 'gallery',
+				'module_langname'	=> 'ACP_IMPORT_ALBUMS',
+				'module_mode'		=> 'import_images',
+				'module_auth'		=> 'acl_a_gallery_import',
+			));
+			$umil->module_add('acp', 'PHPBB_GALLERY', array(
+				'module_basename'	=> 'gallery',
+				'module_langname'	=> 'ACP_GALLERY_CLEANUP',
+				'module_mode'		=> 'import_images',
+				'module_auth'		=> 'acl_a_gallery_cleanup',
+			));
 
 			// UCP
-			$ucp_gallery_overview = array('module_basename' => '',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_ucp_module,	'module_class' => 'ucp',	'module_langname'=> 'UCP_GALLERY',	'module_mode' => 'overview',	'module_auth' => '');
-			add_module($ucp_gallery_overview);
-			$ucp_module_id = $db->sql_nextid();
-			set_gallery_config('ucp_parent_module', $ucp_module_id);
-
-			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_SETTINGS',	'module_mode' => 'manage_settings',	'module_auth' => '');
-			add_module($ucp_gallery);
-			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_PERSONAL_ALBUMS',	'module_mode' => 'manage_albums',	'module_auth' => '');
-			add_module($ucp_gallery);
-			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_WATCH',	'module_mode' => 'manage_subscriptions',	'module_auth' => '');
-			add_module($ucp_gallery);
-			$ucp_gallery = array('module_basename' => 'gallery',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $ucp_module_id,	'module_class' => 'ucp',	'module_langname' => 'UCP_GALLERY_FAVORITES',	'module_mode' => 'manage_favorites',	'module_auth' => '');
-			add_module($ucp_gallery);
+			$umil->module_add('ucp', $choosen_ucp_module, 'UCP_GALLERY');
+			$umil->module_add('ucp', 'UCP_GALLERY', array(
+				'module_basename'	=> 'gallery',
+				'module_langname'	=> 'UCP_GALLERY_SETTINGS',
+				'module_mode'		=> 'manage_settings',
+				'module_auth'		=> '',
+			));
+			$umil->module_add('ucp', 'UCP_GALLERY', array(
+				'module_basename'	=> 'gallery',
+				'module_langname'	=> 'UCP_GALLERY_PERSONAL_ALBUMS',
+				'module_mode'		=> 'manage_albums',
+				'module_auth'		=> '',
+			));
+			$umil->module_add('ucp', 'UCP_GALLERY', array(
+				'module_basename'	=> 'gallery',
+				'module_langname'	=> 'UCP_GALLERY_WATCH',
+				'module_mode'		=> 'manage_subscriptions',
+				'module_auth'		=> '',
+			));
+			$umil->module_add('ucp', 'UCP_GALLERY', array(
+				'module_basename'	=> 'gallery',
+				'module_langname'	=> 'UCP_GALLERY_FAVORITES',
+				'module_mode'		=> 'manage_favorites',
+				'module_auth'		=> '',
+			));
 
 			// Logs
-			$gallery_log = array('module_basename' => 'logs',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_log_module,	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_LOGS',	'module_mode' => 'gallery',	'module_auth' => 'acl_a_viewlogs');
-			add_module($gallery_log);
+			$umil->module_add('acp', $choosen_log_module, array(
+				'module_basename'	=> 'logs',
+				'module_langname'	=> 'ACP_GALLERY_LOGS',
+				'module_mode'		=> 'gallery',
+				'module_auth'		=> 'acl_a_viewlogs',
+			));
 
 			// Add album-BBCode
 			add_bbcode('album');

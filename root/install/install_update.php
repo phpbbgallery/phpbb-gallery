@@ -358,15 +358,11 @@ class install_update extends module
 		global $db, $user, $template, $table_prefix;
 		global $phpbb_root_path, $phpEx;
 
+		$umil = new umil(true);
 		$this->page_title = $user->lang['STAGE_UPDATE_DB'];
-
 		$phpbb_gallery_version = get_gallery_version();
 
 		phpbb_gallery_config::set('version', $phpbb_gallery_version);
-
-		$dbms_data = get_dbms_infos();
-		$db_schema = $dbms_data['db_schema'];
-		$delimiter = $dbms_data['delimiter'];
 
 		switch (phpbb_gallery_config::get('version'))
 		{
@@ -387,62 +383,27 @@ class install_update extends module
 			case '0.4.0-RC2':
 			case '0.4.0-RC3':
 			case '0.4.0':
-				trigger_error('VERSION_NOT_SUPPORTED', E_USER_ERROR);
-			break;
-
 			case '0.4.1':
-				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_contest',			array('UINT', 0));
-
-				nv_add_column(GALLERY_IMAGES_TABLE,	'filesize_upload',			array('UINT:20', 0));
-				nv_add_column(GALLERY_IMAGES_TABLE,	'filesize_medium',			array('UINT:20', 0));
-				nv_add_column(GALLERY_IMAGES_TABLE,	'filesize_cache',			array('UINT:20', 0));
-				nv_add_column(GALLERY_IMAGES_TABLE,	'image_contest',			array('UINT:1', 0));
-				nv_add_column(GALLERY_IMAGES_TABLE,	'image_exif_data',			array('TEXT', ''));
-
-				nv_change_column(GALLERY_PERMISSIONS_TABLE,	'perm_system',	array('INT:3', 0));
-
-				nv_create_table('phpbb_gallery_contests',	$dbms_data);
 
 			case '0.5.0':
-				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_status',			array('UINT:1', 0));
-				nv_add_column(GALLERY_ALBUMS_TABLE,	'display_in_rrc',		array('UINT:1', 1));
-				nv_add_column(GALLERY_IMAGES_TABLE,	'image_contest_end',	array('TIMESTAMP', 0));
-				nv_add_column(GALLERY_IMAGES_TABLE,	'image_contest_rank',	array('UINT:3', 0));
 			case '0.5.1':
 			case '0.5.2':
-				nv_create_table('phpbb_gallery_albums_track',	$dbms_data);
-				nv_add_column(GALLERY_USERS_TABLE,	'user_lastmark',		array('TIMESTAMP', 0));
 			case '0.5.3':
-				nv_add_column(LOG_TABLE,			'album_id',				array('UINT', 0));
-				nv_add_column(LOG_TABLE,			'image_id',				array('UINT', 0));
 			case '0.5.4':
 
 			case '1.0.0-dev':
-				nv_add_column(GALLERY_ROLES_TABLE,	'i_unlimited',			array('UINT:3', 0));
-				nv_add_column(GALLERY_ROLES_TABLE,	'album_unlimited',		array('UINT:3', 0));
 			case '1.0.0-RC1':
 			case '1.0.0-RC2':
 			case '1.0.0':
-
 			case '1.0.1-dev':
-				nv_add_column(GALLERY_IMAGES_TABLE,	'image_name_clean',		array('VCHAR:255', ''));
-				nv_add_column(GALLERY_IMAGES_TABLE,	'image_username_clean',	array('VCHAR:255', ''));
 			case '1.0.1':
-
 			case '1.0.2-dev':
 			case '1.0.2-RC1':
 			case '1.0.2':
-
 			case '1.0.3-RC1':
 			case '1.0.3-RC2':
 			case '1.0.3':
-
 			case '1.0.4':
-				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_watermark',	array('UINT:1', 1));
-				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_sort_key',	array('VCHAR:8', ''));
-				nv_add_column(GALLERY_ALBUMS_TABLE,	'album_sort_dir',	array('VCHAR:8', ''));
-				nv_add_column(GALLERY_USERS_TABLE,	'user_viewexif',	array('UINT:1', 0));
-
 			case '1.0.5-RC1':
 				// Only allow update from 1.0.5
 				trigger_error('VERSION_NOT_SUPPORTED', E_USER_ERROR);
@@ -450,8 +411,10 @@ class install_update extends module
 
 
 			case '1.0.5':
-				nv_add_column(GALLERY_USERS_TABLE,	'user_permissions',	array('MTEXT', ''));
-				nv_add_column(GALLERY_USERS_TABLE,	'user_last_update',	array('TIMESTAMP', 0));
+				$umil->table_column_add(
+					array(GALLERY_USERS_TABLE, 'user_permissions', array('MTEXT', '')),
+					array(GALLERY_USERS_TABLE, 'user_last_update', array('TIMESTAMP', 0)),
+				);
 			break;
 		}
 
@@ -469,8 +432,7 @@ class install_update extends module
 	function update_db_data($mode, $sub)
 	{
 		global $cache, $db, $template, $user;
-		global $phpbb_root_path, $phpEx, $table_prefix;
-		include($phpbb_root_path . 'includes/acp/auth.' . $phpEx);
+		global $phpbb_root_path, $phpEx;
 
 		$database_step = request_var('step', 0);
 
@@ -589,6 +551,7 @@ class install_update extends module
 
 		$this->page_title = $user->lang['STAGE_UPDATE_DB'];
 		$reparse_modules_bbcode = false;
+		$umil = new umil(true);
 
 		switch (phpbb_gallery_config::get('version'))
 		{
@@ -604,25 +567,27 @@ class install_update extends module
 			case '0.3.2-RC2':
 			case '0.4.0-RC1':
 			case '0.4.0-RC2':
-				nv_remove_column(GROUPS_TABLE,			'personal_subalbums');
-				nv_remove_column(GROUPS_TABLE,			'allow_personal_albums');
-				nv_remove_column(GROUPS_TABLE,			'view_personal_albums');
-				nv_remove_column(USERS_TABLE,			'album_id');
-				nv_remove_column(GALLERY_ALBUMS_TABLE,	'album_approval');
-				nv_remove_column(GALLERY_ALBUMS_TABLE,	'album_order');
-				nv_remove_column(GALLERY_ALBUMS_TABLE,	'album_view_level');
-				nv_remove_column(GALLERY_ALBUMS_TABLE,	'album_upload_level');
-				nv_remove_column(GALLERY_ALBUMS_TABLE,	'album_rate_level');
-				nv_remove_column(GALLERY_ALBUMS_TABLE,	'album_comment_level');
-				nv_remove_column(GALLERY_ALBUMS_TABLE,	'album_edit_level');
-				nv_remove_column(GALLERY_ALBUMS_TABLE,	'album_delete_level');
-				nv_remove_column(GALLERY_ALBUMS_TABLE,	'album_view_groups');
-				nv_remove_column(GALLERY_ALBUMS_TABLE,	'album_upload_groups');
-				nv_remove_column(GALLERY_ALBUMS_TABLE,	'album_rate_groups');
-				nv_remove_column(GALLERY_ALBUMS_TABLE,	'album_comment_groups');
-				nv_remove_column(GALLERY_ALBUMS_TABLE,	'album_edit_groups');
-				nv_remove_column(GALLERY_ALBUMS_TABLE,	'album_delete_groups');
-				nv_remove_column(GALLERY_ALBUMS_TABLE,	'album_moderator_groups');
+				$umil->table_column_remove(
+					array(GROUPS_TABLE,			'personal_subalbums'),
+					array(GROUPS_TABLE,			'allow_personal_albums'),
+					array(GROUPS_TABLE,			'view_personal_albums'),
+					array(USERS_TABLE,			'album_id'),
+					array(GALLERY_ALBUMS_TABLE,	'album_approval'),
+					array(GALLERY_ALBUMS_TABLE,	'album_order'),
+					array(GALLERY_ALBUMS_TABLE,	'album_view_level'),
+					array(GALLERY_ALBUMS_TABLE,	'album_upload_level'),
+					array(GALLERY_ALBUMS_TABLE,	'album_rate_level'),
+					array(GALLERY_ALBUMS_TABLE,	'album_comment_level'),
+					array(GALLERY_ALBUMS_TABLE,	'album_edit_level'),
+					array(GALLERY_ALBUMS_TABLE,	'album_delete_level'),
+					array(GALLERY_ALBUMS_TABLE,	'album_view_groups'),
+					array(GALLERY_ALBUMS_TABLE,	'album_upload_groups'),
+					array(GALLERY_ALBUMS_TABLE,	'album_rate_groups'),
+					array(GALLERY_ALBUMS_TABLE,	'album_comment_groups'),
+					array(GALLERY_ALBUMS_TABLE,	'album_edit_groups'),
+					array(GALLERY_ALBUMS_TABLE,	'album_delete_groups'),
+					array(GALLERY_ALBUMS_TABLE,	'album_moderator_groups'),
+				);
 
 			case '0.4.0-RC3':
 			case '0.4.0':
@@ -635,7 +600,9 @@ class install_update extends module
 			case '0.5.4':
 
 			case '1.0.0-dev':
-				nv_remove_column(GALLERY_ROLES_TABLE,	'a_moderate');
+				$umil->table_column_remove(
+					array(GALLERY_ROLES_TABLE,	'a_moderate'),
+				);
 
 			case '1.0.0-RC1':
 			case '1.0.0-RC2':
@@ -712,6 +679,8 @@ class install_update extends module
 		$create = request_var('create', '');
 		if ($create)
 		{
+			$umil = new umil(true);
+
 			// Add modules
 			$choosen_acp_module = request_var('acp_module', 0);
 			$choosen_ucp_module = request_var('ucp_module', 0);
@@ -739,9 +708,13 @@ class install_update extends module
 				break;
 
 				case '0.4.1':
-					// Logs
-					$gallery_log = array('module_basename' => 'logs',	'module_enabled' => 1,	'module_display' => 1,	'parent_id' => $choosen_log_module,	'module_class' => 'acp',	'module_langname' => 'ACP_GALLERY_LOGS',	'module_mode' => 'gallery',	'module_auth' => 'acl_a_viewlogs');
-					add_module($gallery_log);
+					// Gallery Logs
+					$umil->module_add('acp', $choosen_log_module, array(
+						'module_basename'	=> 'logs',
+						'module_langname'	=> 'ACP_GALLERY_LOGS',
+						'module_mode'		=> 'gallery',
+						'module_auth'		=> 'acl_a_viewlogs',
+					));
 
 				case '0.5.0':
 				case '0.5.1':

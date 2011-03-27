@@ -149,33 +149,38 @@ class install_uninstall extends module
 		$this->page_title = $user->lang['STAGE_DELETE_TABLES'];
 
 		$db->sql_return_on_error(true);
+		$umil = new umil(true);
 
 		// Delete the tables
-		nv_drop_table(GALLERY_ALBUMS_TABLE);
-		nv_drop_table(GALLERY_ATRACK_TABLE);
-		nv_drop_table(GALLERY_COMMENTS_TABLE);
-		nv_drop_table(GALLERY_CONFIG_TABLE);
-		nv_drop_table(GALLERY_CONTESTS_TABLE);
-		nv_drop_table(GALLERY_FAVORITES_TABLE);
-		nv_drop_table(GALLERY_IMAGES_TABLE);
-		nv_drop_table(GALLERY_MODSCACHE_TABLE);
-		nv_drop_table(GALLERY_PERMISSIONS_TABLE);
-		nv_drop_table(GALLERY_RATES_TABLE);
-		nv_drop_table(GALLERY_REPORTS_TABLE);
-		nv_drop_table(GALLERY_ROLES_TABLE);
-		nv_drop_table(GALLERY_USERS_TABLE);
-		nv_drop_table(GALLERY_WATCH_TABLE);
-		nv_drop_table('phpbb_album');
-		nv_drop_table('phpbb_album_cat');
-		nv_drop_table('phpbb_album_comment');
-		nv_drop_table('phpbb_album_config');
-		nv_drop_table('phpbb_album_rate');
+		$umil->table_remove(
+			array(GALLERY_ALBUMS_TABLE),
+			array(GALLERY_ATRACK_TABLE),
+			array(GALLERY_COMMENTS_TABLE),
+			array(GALLERY_CONFIG_TABLE),
+			array(GALLERY_CONTESTS_TABLE),
+			array(GALLERY_FAVORITES_TABLE),
+			array(GALLERY_IMAGES_TABLE),
+			array(GALLERY_MODSCACHE_TABLE),
+			array(GALLERY_PERMISSIONS_TABLE),
+			array(GALLERY_RATES_TABLE),
+			array(GALLERY_REPORTS_TABLE),
+			array(GALLERY_ROLES_TABLE),
+			array(GALLERY_USERS_TABLE),
+			array(GALLERY_WATCH_TABLE),
+			array('phpbb_album'),
+			array('phpbb_album_cat'),
+			array('phpbb_album_comment'),
+			array('phpbb_album_config'),
+			array('phpbb_album_rate'),
+		);
 
 		// Delete columns
-		nv_remove_column(SESSIONS_TABLE,	'session_album_id');
-		nv_remove_column(LOG_TABLE,			'album_id');
-		nv_remove_column(LOG_TABLE,			'image_id');
-		nv_remove_column(USERS_TABLE,		'album_id');
+		$umil->table_column_remove(
+			array(SESSIONS_TABLE,	'session_album_id'),
+			array(LOG_TABLE,		'album_id'),
+			array(LOG_TABLE,		'image_id'),
+			array(USERS_TABLE,		'album_id'),
+		);
 
 		$db->sql_return_on_error(false);
 
@@ -185,35 +190,12 @@ class install_uninstall extends module
 			WHERE ' . $db->sql_in_set('config_name', $config_ary);
 		$db->sql_query($sql);
 
-		$auth_admin = array('a_gallery_manage', 'a_gallery_albums', 'a_gallery_import', 'a_gallery_cleanup');
-
-		$sql = 'SELECT auth_option_id, is_global, is_local
-			FROM ' . ACL_OPTIONS_TABLE . '
-			WHERE ' . $db->sql_in_set('auth_option', $auth_admin) . '
-				AND is_global = 1';
-		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result))
-		{
-			$id = $row['auth_option_id'];
-
-			// If it is a local and global permission, do not remove the row! :P
-			if ($row['is_global'] && $row['is_local'])
-			{
-				$sql = 'UPDATE ' . ACL_OPTIONS_TABLE . '
-					SET is_global = 0
-					WHERE auth_option_id = ' . $id;
-				$this->db->sql_query($sql);
-			}
-			else
-			{
-				// Delete time
-				$db->sql_query('DELETE FROM ' . ACL_GROUPS_TABLE . ' WHERE auth_option_id = ' . $id);
-				$db->sql_query('DELETE FROM ' . ACL_ROLES_DATA_TABLE . ' WHERE auth_option_id = ' . $id);
-				$db->sql_query('DELETE FROM ' . ACL_USERS_TABLE . ' WHERE auth_option_id = ' . $id);
-				$db->sql_query('DELETE FROM ' . ACL_OPTIONS_TABLE . ' WHERE auth_option_id = ' . $id);
-			}
-		}
-		$db->sql_freeresult($result);
+		$umil->permission_remove(
+			array('a_gallery_manage'),
+			array('a_gallery_albums'),
+			array('a_gallery_import'),
+			array('a_gallery_cleanup'),
+		);
 
 		// Purge the auth cache
 		$cache->destroy('_acl_options');
@@ -238,7 +220,7 @@ class install_uninstall extends module
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
-			remove_module($row['module_id'], $row['module_class']);
+			$umil->module_remove($row['module_class'], false, $row['module_id']);
 		}
 		$db->sql_freeresult($result);
 
