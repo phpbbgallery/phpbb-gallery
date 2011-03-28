@@ -152,7 +152,7 @@ class install_uninstall extends module
 		$umil = new umil(true);
 
 		// Delete the tables
-		$umil->table_remove(
+		$umil->table_remove(array(
 			array(GALLERY_ALBUMS_TABLE),
 			array(GALLERY_ATRACK_TABLE),
 			array(GALLERY_COMMENTS_TABLE),
@@ -172,15 +172,15 @@ class install_uninstall extends module
 			array('phpbb_album_comment'),
 			array('phpbb_album_config'),
 			array('phpbb_album_rate'),
-		);
+		));
 
 		// Delete columns
-		$umil->table_column_remove(
+		$umil->table_column_remove(array(
 			array(SESSIONS_TABLE,	'session_album_id'),
 			array(LOG_TABLE,		'album_id'),
 			array(LOG_TABLE,		'image_id'),
 			array(USERS_TABLE,		'album_id'),
-		);
+		));
 
 		$db->sql_return_on_error(false);
 
@@ -190,12 +190,12 @@ class install_uninstall extends module
 			WHERE ' . $db->sql_in_set('config_name', $config_ary);
 		$db->sql_query($sql);
 
-		$umil->permission_remove(
+		$umil->permission_remove(array(
 			array('a_gallery_manage'),
 			array('a_gallery_albums'),
 			array('a_gallery_import'),
 			array('a_gallery_cleanup'),
-		);
+		));
 
 		// Purge the auth cache
 		$cache->destroy('_acl_options');

@@ -277,7 +277,7 @@ class install_install extends module
 		$s_hidden_fields = '';
 
 		// Create the tables
-		$umil->table_add(
+		$umil->table_add(array(
 			array(GALLERY_ALBUMS_TABLE,			phpbb_gallery_dbal_schema::get_table_data('albums')),
 			array(GALLERY_ATRACK_TABLE,			phpbb_gallery_dbal_schema::get_table_data('albums_track')),
 			array(GALLERY_COMMENTS_TABLE,		phpbb_gallery_dbal_schema::get_table_data('comments')),
@@ -292,31 +292,31 @@ class install_install extends module
 			array(GALLERY_ROLES_TABLE,			phpbb_gallery_dbal_schema::get_table_data('roles')),
 			array(GALLERY_USERS_TABLE,			phpbb_gallery_dbal_schema::get_table_data('users')),
 			array(GALLERY_WATCH_TABLE,			phpbb_gallery_dbal_schema::get_table_data('watch')),
-		);
+		));
 
 		// Create columns
-		$umil->table_column_add(
+		$umil->table_column_add(array(
 			array(SESSIONS_TABLE,	'session_album_id',	array('UINT', 0)),
 			array(LOG_TABLE,		'album_id',			array('UINT', 0)),
 			array(LOG_TABLE,		'image_id',			array('UINT', 0)),
-		);
+		));
 
 		// Add index
-		$umil->table_index_add(
+		$umil->table_index_add(array(
 			array(GALLERY_USERS_TABLE,	'pg_palbum_id',	array('personal_album_id')),
 			array(SESSIONS_TABLE,		'session_aid',	array('session_album_id')),
-		);
+		));
 
 		// Set default config
 		set_default_config();
 
 		// Add ACP permissions
-		$umil->permission_add(
+		$umil->permission_add(array(
 			array('a_gallery_manage'),
 			array('a_gallery_albums'),
 			array('a_gallery_import'),
 			array('a_gallery_cleanup'),
-		);
+		));
 		$cache->destroy('acl_options');
 
 		$submit = $user->lang['NEXT_STEP'];

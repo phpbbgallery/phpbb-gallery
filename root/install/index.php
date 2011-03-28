@@ -27,6 +27,7 @@ include($phpbb_root_path . 'includes/acp/acp_modules.' . $phpEx);
 include($phpbb_root_path . 'includes/acp/acp_bbcodes.' . $phpEx);
 include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 require($phpbb_root_path . 'includes/functions_install.' . $phpEx);
+require($phpbb_root_path . 'install/dbal_schema.' . $phpEx);
 require($phpbb_root_path . 'umil/umil.' . $phpEx);
 
 // Start session management

@@ -411,10 +411,10 @@ class install_update extends module
 
 
 			case '1.0.5':
-				$umil->table_column_add(
+				$umil->table_column_add(array(
 					array(GALLERY_USERS_TABLE, 'user_permissions', array('MTEXT', '')),
 					array(GALLERY_USERS_TABLE, 'user_last_update', array('TIMESTAMP', 0)),
-				);
+				));
 			break;
 		}
 
@@ -567,7 +567,7 @@ class install_update extends module
 			case '0.3.2-RC2':
 			case '0.4.0-RC1':
 			case '0.4.0-RC2':
-				$umil->table_column_remove(
+				$umil->table_column_remove(array(
 					array(GROUPS_TABLE,			'personal_subalbums'),
 					array(GROUPS_TABLE,			'allow_personal_albums'),
 					array(GROUPS_TABLE,			'view_personal_albums'),
@@ -587,7 +587,7 @@ class install_update extends module
 					array(GALLERY_ALBUMS_TABLE,	'album_edit_groups'),
 					array(GALLERY_ALBUMS_TABLE,	'album_delete_groups'),
 					array(GALLERY_ALBUMS_TABLE,	'album_moderator_groups'),
-				);
+				));
 
 			case '0.4.0-RC3':
 			case '0.4.0':
@@ -600,9 +600,9 @@ class install_update extends module
 			case '0.5.4':
 
 			case '1.0.0-dev':
-				$umil->table_column_remove(
+				$umil->table_column_remove(array(
 					array(GALLERY_ROLES_TABLE,	'a_moderate'),
-				);
+				));
 
 			case '1.0.0-RC1':
 			case '1.0.0-RC2':
