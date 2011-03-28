@@ -327,7 +327,7 @@ class phpbb_gallery_dbal_schema
 				'PRIMARY_KEY'	=> 'report_id',
 			),
 		),
-		'rolls'	=> array(
+		'roles'	=> array(
 			'full_name'		=> GALLERY_ROLES_TABLE,
 			'added'			=> '0.3.1',
 			'modified'		=> '0.5.4',
