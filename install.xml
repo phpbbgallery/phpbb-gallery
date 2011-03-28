@@ -72,12 +72,12 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<file from="root/includes/acp/*.*" to="includes/acp/*.*" />
 			<file from="root/includes/ucp/*.*" to="includes/ucp/*.*" />
 			<file from="root/install/*.*" to="install/*.*" />
-			<file from="root/install/schemas/*.*" to="install/schemas/*.*" />
 			<file from="root/language/en/email/*.*" to="language/en/email/*.*" />
 			<file from="root/language/en/mods/*.*" to="language/en/mods/*.*" />
 			<file from="root/styles/prosilver/imageset/*.*" to="styles/prosilver/imageset/*.*" />
 			<file from="root/styles/prosilver/template/gallery/*.*" to="styles/prosilver/template/gallery/*.*" />
 			<file from="root/styles/prosilver/theme/*.*" to="styles/prosilver/theme/*.*" />
+			<file from="root/umil/*.*" to="umil/*.*" />
 		</copy>
 
 		<open src="index.php">
