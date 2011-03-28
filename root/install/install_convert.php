@@ -51,7 +51,7 @@ class install_convert extends module
 
 	function main($mode, $sub)
 	{
-		global $cache, $gallery_config, $phpbb_root_path, $phpEx, $template, $user;
+		global $cache, $phpbb_root_path, $phpEx, $template, $user;
 
 		if ($user->data['user_type'] != USER_FOUNDER)
 		{
@@ -81,18 +81,15 @@ class install_convert extends module
 			break;
 
 			case 'in_progress':
-				$gallery_config = load_gallery_config();
 				$this->convert_data($mode, $sub);
 			break;
 
 			case 'advanced':
-				$gallery_config = load_gallery_config();
 				$this->obtain_advanced_settings($mode, $sub);
 			break;
 
 			case 'final':
-				$gallery_config = load_gallery_config();
-				set_gallery_config('phpbb_gallery_version', NEWEST_PG_VERSION, true);
+				phpbb_gallery_config::set('version', NEWEST_PG_VERSION);
 				$cache->purge();
 
 				$template->assign_vars(array(
@@ -310,7 +307,7 @@ class install_convert extends module
 	*/
 	function load_schema($mode, $sub)
 	{
-		global $cache, $gallery_config, $phpbb_root_path, $phpEx, $template, $user;
+		global $cache, $phpbb_root_path, $phpEx, $template, $user;
 		include($phpbb_root_path . 'includes/acp/auth.' . $phpEx);
 
 		$umil = new umil(true);
@@ -353,7 +350,7 @@ class install_convert extends module
 		));
 
 		// Set default config
-		set_default_config();
+		phpbb_gallery_config::install();
 
 		// Add ACP permissions
 		$umil->permission_add(array(
@@ -378,7 +375,7 @@ class install_convert extends module
 	*/
 	function convert_data($mode, $sub)
 	{
-		global $db, $gallery_config, $template, $user, $phpbb_root_path, $phpEx;
+		global $db, $template, $user, $phpbb_root_path, $phpEx;
 
 		function decode_ip($int_ip)
 		{
@@ -683,11 +680,11 @@ class install_convert extends module
 				$newest_pgallery = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
 
-				set_gallery_config('newest_pgallery_user_id', (int) $newest_pgallery['user_id']);
-				set_gallery_config('newest_pgallery_username', (string) $newest_pgallery['username']);
-				set_gallery_config('newest_pgallery_user_colour', (string) $newest_pgallery['user_colour']);
-				set_gallery_config('newest_pgallery_album_id', (int) $newest_pgallery['album_id']);
-				set_gallery_config('personal_counter', $personal_albums);
+				phpbb_gallery_config::set('newest_pega_user_id', $newest_pgallery['user_id']);
+				phpbb_gallery_config::set('newest_pega_username', $newest_pgallery['username']);
+				phpbb_gallery_config::set('newest_pega_user_colour', $newest_pgallery['user_colour']);
+				phpbb_gallery_config::set('newest_pega_album_id', $newest_pgallery['album_id']);
+				phpbb_gallery_config::set('num_pegas', $personal_albums);
 
 				$body = $user->lang['CONVERTED_PERSONALS'];
 				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=5");
@@ -847,7 +844,7 @@ class install_convert extends module
 				$result = $db->sql_query($sql);
 				$num_comments = (int) $db->sql_fetchfield('comments');
 				$db->sql_freeresult($result);
-				set_gallery_config('num_comments', $num_comments, true);
+				phpbb_gallery_config::set('num_comments', $num_comments);
 
 				$body = $user->lang['CONVERTED_RESYNC_COMMENTS'];
 				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;convert_prefix=$convert_prefix&amp;step=9");
@@ -881,7 +878,7 @@ class install_convert extends module
 	*/
 	function obtain_advanced_settings($mode, $sub)
 	{
-		global $db, $gallery_config, $template, $user, $phpbb_root_path, $phpEx;
+		global $db, $template, $user, $phpbb_root_path, $phpEx;
 
 		$create = request_var('create', '');
 		if ($create)

@@ -102,6 +102,16 @@ class phpbb_gallery_config
 		return false;
 	}
 
+	static public function exists($key)
+	{
+		if (self::$loaded === false)
+		{
+			self::load();
+		}
+
+		return !empty(self::$config[$key]);
+	}
+
 	static public function load($load_default = false)
 	{
 		global $config;
@@ -124,14 +134,12 @@ class phpbb_gallery_config
 		}
 	}
 
-	static public function exists($key)
+	static public function install()
 	{
-		if (self::$loaded === false)
+		foreach (self::$default_config as $name => $value)
 		{
-			self::load();
+			self::set($name, $value);
 		}
-
-		return !empty(self::$config[$key]);
 	}
 
 	static private $is_dynamic = array(

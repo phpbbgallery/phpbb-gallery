@@ -47,7 +47,7 @@ class install_install extends module
 
 	function main($mode, $sub)
 	{
-		global $cache, $gallery_config, $phpbb_root_path, $phpEx, $template, $user;
+		global $cache, $phpbb_root_path, $phpEx, $template, $user;
 
 		if ($user->data['user_type'] != USER_FOUNDER)
 		{
@@ -76,13 +76,11 @@ class install_install extends module
 			break;
 
 			case 'advanced':
-				$gallery_config = load_gallery_config();
 				$this->obtain_advanced_settings($mode, $sub);
 			break;
 
 			case 'final':
-				$gallery_config = load_gallery_config();
-				set_gallery_config('phpbb_gallery_version', NEWEST_PG_VERSION, true);
+				phpbb_gallery_config::set('version', NEWEST_PG_VERSION);
 				$cache->purge();
 
 				$template->assign_vars(array(
@@ -111,7 +109,7 @@ class install_install extends module
 			'BODY'		=> $user->lang['REQUIREMENTS_EXPLAIN'],
 		));
 
-		$passed = array('php' => false, 'files' => false,);
+		$passed = array('php' => false, 'dirs' => false,);
 
 		// Test for basic PHP settings
 		$template->assign_block_vars('checks', array(
@@ -270,7 +268,7 @@ class install_install extends module
 	*/
 	function load_schema($mode, $sub)
 	{
-		global $cache, $gallery_config, $phpbb_root_path, $phpEx, $template, $user;
+		global $cache, $phpbb_root_path, $phpEx, $template, $user;
 
 		$umil = new umil(true);
 		$this->page_title = $user->lang['STAGE_CREATE_TABLE'];
@@ -308,7 +306,7 @@ class install_install extends module
 		));
 
 		// Set default config
-		set_default_config();
+		phpbb_gallery_config::install();
 
 		// Add ACP permissions
 		$umil->permission_add(array(
@@ -337,7 +335,7 @@ class install_install extends module
 	*/
 	function obtain_advanced_settings($mode, $sub)
 	{
-		global $db, $gallery_config, $template, $user, $phpbb_root_path, $phpEx;
+		global $db, $template, $user, $phpbb_root_path, $phpEx;
 
 		$create = request_var('create', '');
 		if ($create)

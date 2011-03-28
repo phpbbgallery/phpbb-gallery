@@ -47,7 +47,7 @@ class install_uninstall extends module
 
 	function main($mode, $sub)
 	{
-		global $cache, $gallery_config, $phpbb_root_path, $phpEx, $template, $user;
+		global $cache, $phpbb_root_path, $phpEx, $template, $user;
 
 		if ($user->data['user_type'] != USER_FOUNDER)
 		{
