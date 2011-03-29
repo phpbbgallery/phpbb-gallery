@@ -655,9 +655,6 @@ class ucp_gallery
 				$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . '
 					WHERE ' . $db->sql_in_set('report_image_id', $deleted_images);
 				$db->sql_query($sql);
-				$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . '
-					WHERE ' . $db->sql_in_set('image_id', $deleted_images);
-				$db->sql_query($sql);
 				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . '
 					WHERE ' . $db->sql_in_set('image_id', $deleted_images);
 				$db->sql_query($sql);
@@ -996,15 +993,7 @@ class ucp_gallery
 		$image_id_ary = request_var('image_id_ary', array(0));
 		if ($image_id_ary && ($action == 'remove_favorite'))
 		{
-			$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . '
-				WHERE user_id = ' . $user->data['user_id'] . '
-					AND ' . $db->sql_in_set('image_id', $image_id_ary);
-			$db->sql_query($sql);
-
-			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-				SET image_favorited = image_favorited - 1
-				WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
-			$db->sql_query($sql);
+			phpbb_gallery_image_favorite::remove($image_id_id_ary);
 
 			meta_refresh(3, $this->u_action);
 			trigger_error($user->lang['UNFAVORITED_IMAGES'] . '<br /><br />' . sprintf($user->lang['RETURN_UCP'], '<a href="' . $this->u_action . '">', '</a>'));

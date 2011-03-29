@@ -98,7 +98,6 @@ class phpbb_gallery_image
 
 		//@todo: phpbb_gallery_comment_base::delete_images($images);
 		//@todo: phpbb_gallery_report_base::delete_images($images);
-		//@todo: phpbb_gallery_favorite::delete_images($images);
 		//@todo: phpbb_gallery_watch::delete_images($images);
 
 		// Delete the files from the disc...
@@ -114,6 +113,7 @@ class phpbb_gallery_image
 		phpbb_gallery_image_file::delete($filenames);
 
 		// Delete the ratings...
+		phpbb_gallery_image_favorite::delete_favorites($images);
 		phpbb_gallery_image_rating::delete_ratings($images);
 
 

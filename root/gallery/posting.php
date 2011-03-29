@@ -883,16 +883,7 @@ switch ($mode)
 			case 'favorite':
 			if ($submode == 'favorite')
 			{
-				$sql_ary = array(
-					'image_id'			=> $image_id,
-					'user_id'			=> $user->data['user_id'],
-				);
-				$sql = 'INSERT INTO ' . GALLERY_FAVORITES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-				$db->sql_query($sql);
-				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-					SET image_favorited = image_favorited + 1
-					WHERE image_id = ' . $image_id;
-				$db->sql_query($sql);
+				phpbb_gallery_image_favorite::add($image_id);
 				if (phpbb_gallery::$user->get_data('watch_favo') && !$image_data['watch_id'])
 				{
 					$sql_ary = array(
@@ -909,14 +900,7 @@ switch ($mode)
 			case 'unfavorite':
 			if ($submode == 'unfavorite')
 			{
-				$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . "
-					WHERE image_id = $image_id
-						AND user_id = " . $user->data['user_id'];
-				$db->sql_query($sql);
-				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-					SET image_favorited = image_favorited - 1
-					WHERE image_id = ' . $image_id;
-				$db->sql_query($sql);
+				phpbb_gallery_image_favorite::remove($image_id);
 				$message = $user->lang['UNFAVORITED_IMAGE'] . '<br />';
 				$submit = true; // For redirect
 			}
@@ -936,10 +920,6 @@ switch ($mode)
 
 					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . "
 						WHERE comment_image_id = $image_id";
-					$db->sql_query($sql);
-
-					$sql = 'DELETE FROM ' . GALLERY_FAVORITES_TABLE . "
-						WHERE image_id = $image_id";
 					$db->sql_query($sql);
 
 					$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . "
