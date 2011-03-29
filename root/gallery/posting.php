@@ -306,12 +306,7 @@ switch ($mode)
 			case 'watch':
 			if ($submode == 'watch')
 			{
-				$sql_ary = array(
-					'album_id'			=> $album_id,
-					'user_id'			=> $user->data['user_id'],
-				);
-				$sql = 'INSERT INTO ' . GALLERY_WATCH_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-				$db->sql_query($sql);
+				phpbb_gallery_image_watch::add_albums($album_id);
 				$message = $user->lang['WATCHING_ALBUM'] . '<br />';
 				$submit = true; // For redirect
 			}
@@ -319,10 +314,7 @@ switch ($mode)
 			case 'unwatch':
 			if ($submode == 'unwatch')
 			{
-				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . '
-					WHERE album_id = ' . (int) $album_id . '
-						AND user_id = ' . $user->data['user_id'];
-				$db->sql_query($sql);
+				phpbb_gallery_image_watch::remove_albums($album_id);
 				$message = $user->lang['UNWATCHED_ALBUM'] . '<br />';
 				$submit = true; // For redirect
 			}
@@ -859,12 +851,7 @@ switch ($mode)
 			case 'watch':
 			if ($submode == 'watch')
 			{
-				$sql_ary = array(
-					'image_id'			=> $image_id,
-					'user_id'			=> $user->data['user_id'],
-				);
-				$sql = 'INSERT INTO ' . GALLERY_WATCH_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-				$db->sql_query($sql);
+				phpbb_gallery_image_watch::add($image_id);
 				$message = $user->lang['WATCHING_IMAGE'] . '<br />';
 				$submit = true; // For redirect
 			}
@@ -872,10 +859,7 @@ switch ($mode)
 			case 'unwatch':
 			if ($submode == 'unwatch')
 			{
-				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . "
-					WHERE image_id = $image_id
-						AND user_id = " . $user->data['user_id'];
-				$db->sql_query($sql);
+				phpbb_gallery_image_watch::remove($image_id);
 				$message = $user->lang['UNWATCHED_IMAGE'] . '<br />';
 				$submit = true; // For redirect
 			}
@@ -886,12 +870,7 @@ switch ($mode)
 				phpbb_gallery_image_favorite::add($image_id);
 				if (phpbb_gallery::$user->get_data('watch_favo') && !$image_data['watch_id'])
 				{
-					$sql_ary = array(
-						'image_id'			=> $image_id,
-						'user_id'			=> $user->data['user_id'],
-					);
-					$sql = 'INSERT INTO ' . GALLERY_WATCH_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-					$db->sql_query($sql);
+					phpbb_gallery_image_watch::remove($image_id);
 				}
 				$message = $user->lang['FAVORITED_IMAGE'] . '<br />';
 				$submit = true; // For redirect
@@ -924,10 +903,6 @@ switch ($mode)
 
 					$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . "
 						WHERE report_image_id = $image_id";
-					$db->sql_query($sql);
-
-					$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . "
-						WHERE image_id = $image_id";
 					$db->sql_query($sql);
 
 					phpbb_gallery_image::delete_images(array($image_id), array($image_id => $image_data['image_filename']));
@@ -1089,12 +1064,7 @@ switch ($mode)
 						$db->sql_query($sql);
 						if (phpbb_gallery::$user->get_data('watch_com') && !$image_data['watch_id'])
 						{
-							$sql_ary = array(
-								'image_id'			=> $image_id,
-								'user_id'			=> $user->data['user_id'],
-							);
-							$sql = 'INSERT INTO ' . GALLERY_WATCH_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-							$db->sql_query($sql);
+							phpbb_gallery_image_watch::add($image_id);
 						}
 						phpbb_gallery_misc::notification('image', $image_id, $image_data['image_name']);
 						$message .= $user->lang['COMMENT_STORED'] . '<br />';

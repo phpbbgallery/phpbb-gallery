@@ -98,7 +98,6 @@ class phpbb_gallery_image
 
 		//@todo: phpbb_gallery_comment_base::delete_images($images);
 		//@todo: phpbb_gallery_report_base::delete_images($images);
-		//@todo: phpbb_gallery_watch::delete_images($images);
 
 		// Delete the files from the disc...
 		$need_filenames = array();
@@ -115,7 +114,7 @@ class phpbb_gallery_image
 		// Delete the ratings...
 		phpbb_gallery_image_favorite::delete_favorites($images);
 		phpbb_gallery_image_rating::delete_ratings($images);
-
+		phpbb_gallery_image_watch::delete_images($images);
 
 		$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE ' . $db->sql_in_set('image_id', $images);

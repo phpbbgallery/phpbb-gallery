@@ -655,9 +655,6 @@ class ucp_gallery
 				$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . '
 					WHERE ' . $db->sql_in_set('report_image_id', $deleted_images);
 				$db->sql_query($sql);
-				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . '
-					WHERE ' . $db->sql_in_set('image_id', $deleted_images);
-				$db->sql_query($sql);
 
 				phpbb_gallery_image::delete_images($deleted_images, $filenames);
 			}
@@ -850,17 +847,11 @@ class ucp_gallery
 		{
 			if ($album_id_ary)
 			{
-				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . '
-					WHERE user_id = ' . $user->data['user_id'] . '
-						AND ' . $db->sql_in_set('album_id', $album_id_ary);
-				$db->sql_query($sql);
+				phpbb_gallery_image_watch::remove_albums($album_id_ary);
 			}
 			if ($image_id_ary)
 			{
-				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . '
-					WHERE user_id = ' . $user->data['user_id'] . '
-						AND ' . $db->sql_in_set('image_id', $image_id_ary);
-				$db->sql_query($sql);
+				phpbb_gallery_image_watch::remove($image_id_ary);
 			}
 
 			meta_refresh(3, $this->u_action);

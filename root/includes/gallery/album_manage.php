@@ -749,7 +749,6 @@ class phpbb_gallery_album_manage
 			WHERE report_album_id = $from_id";
 		$db->sql_query($sql);
 
-		//@todo: merge queries into loop
 		$sql = 'DELETE FROM ' . GALLERY_CONTESTS_TABLE . '
 			WHERE contest_album_id = ' . $from_id;
 		$db->sql_query($sql);
@@ -758,13 +757,11 @@ class phpbb_gallery_album_manage
 			WHERE perm_album_id = ' . $from_id;
 		$db->sql_query($sql);
 
-		$table_ary = array(GALLERY_WATCH_TABLE, GALLERY_MODSCACHE_TABLE);
-		foreach ($table_ary as $table)
-		{
-			$sql = "DELETE FROM $table
-				WHERE album_id = $from_id";
-			$db->sql_query($sql);
-		}
+		$sql = 'DELETE FROM ' . GALLERY_MODSCACHE_TABLE . '
+			WHERE album_id = ' . $from_id;
+		$db->sql_query($sql);
+
+		phpbb_gallery_image_watch::delete_albums($from_id);
 
 		$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 		$cache->destroy('sql', GALLERY_COMMENTS_TABLE);
@@ -830,9 +827,6 @@ class phpbb_gallery_album_manage
 			$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . '
 				WHERE ' . $db->sql_in_set('report_image_id', $deleted_images);
 			$db->sql_query($sql);
-			$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . '
-				WHERE ' . $db->sql_in_set('image_id', $deleted_images);
-			$db->sql_query($sql);
 
 			phpbb_gallery_image::delete_images($deleted_images, $filenames);
 		}
@@ -850,12 +844,11 @@ class phpbb_gallery_album_manage
 			WHERE contest_album_id = ' . $album_id;
 		$db->sql_query($sql);
 
-		$table_ary = array(GALLERY_WATCH_TABLE, GALLERY_MODSCACHE_TABLE);
+		$sql = 'DELETE FROM ' . GALLERY_MODSCACHE_TABLE . '
+			WHERE album_id = ' . $album_id;
+		$db->sql_query($sql);
 
-		foreach ($table_ary as $table)
-		{
-			$db->sql_query("DELETE FROM $table WHERE album_id = $album_id");
-		}
+		phpbb_gallery_image_watch::delete_albums($album_id);
 
 		// Adjust users image counts
 		if (!empty($image_counts))

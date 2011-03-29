@@ -66,12 +66,7 @@ class phpbb_gallery_misc
 
 		if (phpbb_gallery::$user->get_data('watch_own'))
 		{
-			$sql_ary = array(
-				'image_id'			=> $image_id,
-				'user_id'			=> $user->data['user_id'],
-			);
-			$sql = 'INSERT INTO ' . GALLERY_WATCH_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-			$db->sql_query($sql);
+			phpbb_gallery_image_watch::add($image_id);
 		}
 
 		return array('image_id' => $image_id, 'image_name' => $image_data['image_name']);
@@ -295,18 +290,12 @@ class phpbb_gallery_misc
 		// Now delete the user_ids not authorised to receive notifications on this image/album
 		if (!empty($delete_ids['image']))
 		{
-			$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . "
-				WHERE image_id = $image_id
-					AND " . $db->sql_in_set('user_id', $delete_ids['image']);
-			$db->sql_query($sql);
+			phpbb_gallery_image_watch::remove($image_id, $delete_ids['image']);
 		}
 
 		if (!empty($delete_ids['album']))
 		{
-			$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . "
-				WHERE album_id = $album_id
-					AND " . $db->sql_in_set('user_id', $delete_ids['album']);
-			$db->sql_query($sql);
+			phpbb_gallery_image_watch::remove_albums($album_id, $delete_ids['album']);
 		}
 	}
 

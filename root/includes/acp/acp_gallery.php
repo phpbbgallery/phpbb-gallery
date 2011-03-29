@@ -733,8 +733,6 @@ class acp_gallery
 				$db->sql_query($sql);
 				$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . ' WHERE ' . $db->sql_in_set('report_image_id', $missing_sources);
 				$db->sql_query($sql);
-				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $missing_sources);
-				$db->sql_query($sql);
 
 				phpbb_gallery_image::delete_images($missing_sources);
 
@@ -769,8 +767,6 @@ class acp_gallery
 					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . ' WHERE ' . $db->sql_in_set('comment_image_id', $deleted_images);
 					$db->sql_query($sql);
 					$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . ' WHERE ' . $db->sql_in_set('report_image_id', $deleted_images);
-					$db->sql_query($sql);
-					$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $deleted_images);
 					$db->sql_query($sql);
 
 					phpbb_gallery_image::delete_images($deleted_images, $filenames);
@@ -834,8 +830,6 @@ class acp_gallery
 					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . ' WHERE ' . $db->sql_in_set('comment_image_id', $deleted_images);
 					$db->sql_query($sql);
 					$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . ' WHERE ' . $db->sql_in_set('report_image_id', $deleted_images);
-					$db->sql_query($sql);
-					$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $deleted_images);
 					$db->sql_query($sql);
 
 					phpbb_gallery_image::delete_images($deleted_images, $filenames);
