@@ -357,7 +357,7 @@ if ((phpbb_gallery_config::get('allow_comments') && phpbb_gallery::$auth->acl_ch
 
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(phpbb_gallery_user_base::sql_table() => 'gu'),
+					'FROM'	=> array(GALLERY_USERS_TABLE => 'gu'),
 					'ON'	=> 'gu.user_id = u.user_id'
 				),
 			),
@@ -368,7 +368,7 @@ if ((phpbb_gallery_config::get('allow_comments') && phpbb_gallery::$auth->acl_ch
 
 		while ($row = $db->sql_fetchrow($result))
 		{
-			phpbb_gallery_user_helpers::add_user_to_cache($user_cache, $row);
+			phpbb_gallery_user::add_user_to_cache($user_cache, $row);
 		}
 		$db->sql_freeresult($result);
 
@@ -481,7 +481,7 @@ if (!isset($user_cache[$image_data['image_user_id']]))
 
 		'LEFT_JOIN'	=> array(
 			array(
-				'FROM'	=> array(phpbb_gallery_user_base::sql_table() => 'gu'),
+				'FROM'	=> array(GALLERY_USERS_TABLE => 'gu'),
 				'ON'	=> 'gu.user_id = u.user_id'
 			),
 		),
@@ -493,7 +493,7 @@ if (!isset($user_cache[$image_data['image_user_id']]))
 	$user_cache = array();
 	while ($row = $db->sql_fetchrow($result))
 	{
-		phpbb_gallery_user_helpers::add_user_to_cache($user_cache, $row);
+		phpbb_gallery_user::add_user_to_cache($user_cache, $row);
 	}
 	$db->sql_freeresult($result);
 }

@@ -127,7 +127,7 @@ class acp_gallery
 					}
 
 					$total_images = $total_comments = 0;
-					phpbb_gallery_user_helpers::update_users('all', array('user_images' => 0));
+					phpbb_gallery_user::update_users('all', array('user_images' => 0));
 
 					$sql = 'SELECT COUNT(image_id) AS num_images, image_user_id AS user_id, SUM(image_comments) AS num_comments
 						FROM ' . GALLERY_IMAGES_TABLE . '
@@ -158,7 +158,7 @@ class acp_gallery
 						trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 
-					phpbb_gallery_user_helpers::update_users('all', array('personal_album_id' => 0));
+					phpbb_gallery_user::update_users('all', array('personal_album_id' => 0));
 
 					$sql = 'SELECT album_id, album_user_id
 						FROM ' . GALLERY_ALBUMS_TABLE . '
@@ -882,7 +882,7 @@ class acp_gallery
 					$uploader = new phpbb_gallery_user($db, $user_id, false);
 					$uploader->update_images((0 - $images));
 				}
-				phpbb_gallery_user_helpers::update_users($user_ids, array('personal_album_id' => 0));
+				phpbb_gallery_user::update_users($user_ids, array('personal_album_id' => 0));
 
 				if ($missing_personals)
 				{
