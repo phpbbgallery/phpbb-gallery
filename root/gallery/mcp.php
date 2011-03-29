@@ -349,7 +349,7 @@ if ($action && $image_id_ary)
 					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
 				$db->sql_query($sql);
 
-				phpbb_gallery_image_base::delete_images($image_id_ary, $filenames);
+				phpbb_gallery_image::delete_images($image_id_ary, $filenames);
 
 				$success = true;
 			}

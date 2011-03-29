@@ -765,7 +765,7 @@ class phpbb_gallery_album
 				continue;
 			}
 
-			$album_tracking_info[$album_id] = (!empty($row['mark_time'])) ? $row['mark_time'] : phpbb_gallery::$user->data('user_lastmark');
+			$album_tracking_info[$album_id] = (!empty($row['mark_time'])) ? $row['mark_time'] : phpbb_gallery::$user->get_data('user_lastmark');
 
 			$row['album_images'] = $row['album_images'];
 			$row['album_images_real'] = $row['album_images_real'];

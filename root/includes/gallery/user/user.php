@@ -27,7 +27,7 @@ class phpbb_gallery_user extends phpbb_gallery_user_base
 	/**
 	* phpBB database object
 	*/
-	public $db = null;
+	private $db = null;
 
 	/**
 	* Do we have an entry for the user in the table?

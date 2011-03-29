@@ -738,7 +738,7 @@ class acp_gallery
 				$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $missing_sources);
 				$db->sql_query($sql);
 
-				phpbb_gallery_image_base::delete_images($missing_sources);
+				phpbb_gallery_image::delete_images($missing_sources);
 
 				$message[] = $user->lang['CLEAN_SOURCES_DONE'];
 			}
@@ -777,7 +777,7 @@ class acp_gallery
 					$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $deleted_images);
 					$db->sql_query($sql);
 
-					phpbb_gallery_image_base::delete_images($deleted_images, $filenames);
+					phpbb_gallery_image::delete_images($deleted_images, $filenames);
 				}
 				$message[] = $user->lang['CLEAN_AUTHORS_DONE'];
 			}
@@ -844,7 +844,7 @@ class acp_gallery
 					$sql = 'DELETE FROM ' . GALLERY_WATCH_TABLE . ' WHERE ' . $db->sql_in_set('image_id', $deleted_images);
 					$db->sql_query($sql);
 
-					phpbb_gallery_image_base::delete_images($deleted_images, $filenames);
+					phpbb_gallery_image::delete_images($deleted_images, $filenames);
 				}
 
 				$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . ' WHERE ' . $db->sql_in_set('album_id', $deleted_albums);

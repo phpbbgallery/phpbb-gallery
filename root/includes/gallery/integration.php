@@ -45,7 +45,7 @@ class phpbb_gallery_integration
 		$memberdays = max(1, round((time() - $member['user_regdate']) / 86400));
 
 		$sql = 'SELECT user_images, personal_album_id
-			FROM ' . GALLERY_USERS_TABLE . '
+			FROM ' . phpbb_gallery_user_base::sql_table() . '
 			WHERE user_id = ' . $user_id;
 		$result = $db->sql_query_limit($sql, 1);
 		$member_gallery = $db->sql_fetchrow($result);

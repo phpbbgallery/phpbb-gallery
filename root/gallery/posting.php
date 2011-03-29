@@ -950,7 +950,7 @@ switch ($mode)
 						WHERE image_id = $image_id";
 					$db->sql_query($sql);
 
-					phpbb_gallery_image_base::delete_images(array($image_id), array($image_id => $image_data['image_filename']));
+					phpbb_gallery_image::delete_images(array($image_id), array($image_id => $image_data['image_filename']));
 
 					update_album_info($album_id);
 

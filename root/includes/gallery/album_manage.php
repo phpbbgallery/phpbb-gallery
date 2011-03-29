@@ -837,7 +837,7 @@ class phpbb_gallery_album_manage
 				WHERE ' . $db->sql_in_set('image_id', $deleted_images);
 			$db->sql_query($sql);
 
-			phpbb_gallery_image_base::delete_images($deleted_images, $filenames);
+			phpbb_gallery_image::delete_images($deleted_images, $filenames);
 		}
 
 		$sql = 'DELETE FROM ' . LOG_TABLE . "
@@ -865,17 +865,8 @@ class phpbb_gallery_album_manage
 		{
 			foreach ($image_counts as $image_user_id => $substract)
 			{
-				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
-					SET user_images = 0
-					WHERE user_id = ' . $image_user_id . '
-						AND user_images < ' . $substract;
-				$db->sql_query($sql);
-
-				$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
-					SET user_images = user_images - ' . $substract . '
-					WHERE user_id = ' . $image_user_id . '
-						AND user_images >= ' . $substract;
-				$db->sql_query($sql);
+				$uploader = new phpbb_gallery_user($db, $image_user_id, false);
+				$uploader->update_images((0 - $substract));
 			}
 		}
 

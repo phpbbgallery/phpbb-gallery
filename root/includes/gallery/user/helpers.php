@@ -22,7 +22,7 @@ class phpbb_gallery_user_helpers extends phpbb_gallery_user_base
 	/**
 	*
 	*/
-	static public function add_user_to_user_cache(&$user_cache, $row)
+	static public function add_user_to_cache(&$user_cache, $row)
 	{
 		global $auth, $config, $user;
 
