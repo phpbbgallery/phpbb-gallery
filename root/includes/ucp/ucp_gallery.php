@@ -844,11 +844,11 @@ class ucp_gallery
 		{
 			if ($album_id_ary)
 			{
-				phpbb_gallery_image_watch::remove_albums($album_id_ary);
+				phpbb_gallery_notification::remove_albums($album_id_ary);
 			}
 			if ($image_id_ary)
 			{
-				phpbb_gallery_image_watch::remove($image_id_ary);
+				phpbb_gallery_notification::remove($image_id_ary);
 			}
 
 			meta_refresh(3, $this->u_action);

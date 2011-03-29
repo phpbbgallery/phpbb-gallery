@@ -758,7 +758,7 @@ class phpbb_gallery_album_manage
 			WHERE album_id = ' . $from_id;
 		$db->sql_query($sql);
 
-		phpbb_gallery_image_watch::delete_albums($from_id);
+		phpbb_gallery_notification::delete_albums($from_id);
 
 		$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 		$cache->destroy('sql', GALLERY_COMMENTS_TABLE);
@@ -842,7 +842,7 @@ class phpbb_gallery_album_manage
 			WHERE album_id = ' . $album_id;
 		$db->sql_query($sql);
 
-		phpbb_gallery_image_watch::delete_albums($album_id);
+		phpbb_gallery_notification::delete_albums($album_id);
 
 		// Adjust users image counts
 		if (!empty($image_counts))

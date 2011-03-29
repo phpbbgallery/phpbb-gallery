@@ -306,7 +306,7 @@ switch ($mode)
 			case 'watch':
 			if ($submode == 'watch')
 			{
-				phpbb_gallery_image_watch::add_albums($album_id);
+				phpbb_gallery_notification::add_albums($album_id);
 				$message = $user->lang['WATCHING_ALBUM'] . '<br />';
 				$submit = true; // For redirect
 			}
@@ -314,7 +314,7 @@ switch ($mode)
 			case 'unwatch':
 			if ($submode == 'unwatch')
 			{
-				phpbb_gallery_image_watch::remove_albums($album_id);
+				phpbb_gallery_notification::remove_albums($album_id);
 				$message = $user->lang['UNWATCHED_ALBUM'] . '<br />';
 				$submit = true; // For redirect
 			}
@@ -533,7 +533,7 @@ switch ($mode)
 								trigger_error('BAD_UPLOAD_FILE_SIZE');
 							}
 
-							$image_data = phpbb_gallery_misc::upload_image($image_data, $album_id);
+							$image_data = phpbb_gallery_image::add_image($image_data, $album_id);
 							$image_id = $image_data['image_id'];
 							$image_name = $image_data['image_name'];
 							$image_id_ary[] = $image_id;
@@ -548,7 +548,7 @@ switch ($mode)
 					}
 					else
 					{
-						phpbb_gallery_misc::notification('album', $album_id, $image_name);
+						phpbb_gallery_notification::send_notification('album', $album_id, $image_name);
 						phpbb_gallery_image::handle_counter($image_id_ary, true);
 
 						$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . " 
@@ -841,7 +841,7 @@ switch ($mode)
 			case 'watch':
 			if ($submode == 'watch')
 			{
-				phpbb_gallery_image_watch::add($image_id);
+				phpbb_gallery_notification::add($image_id);
 				$message = $user->lang['WATCHING_IMAGE'] . '<br />';
 				$submit = true; // For redirect
 			}
@@ -849,7 +849,7 @@ switch ($mode)
 			case 'unwatch':
 			if ($submode == 'unwatch')
 			{
-				phpbb_gallery_image_watch::remove($image_id);
+				phpbb_gallery_notification::remove($image_id);
 				$message = $user->lang['UNWATCHED_IMAGE'] . '<br />';
 				$submit = true; // For redirect
 			}
@@ -860,7 +860,7 @@ switch ($mode)
 				phpbb_gallery_image_favorite::add($image_id);
 				if (phpbb_gallery::$user->get_data('watch_favo') && !$image_data['watch_id'])
 				{
-					phpbb_gallery_image_watch::remove($image_id);
+					phpbb_gallery_notification::remove($image_id);
 				}
 				$message = $user->lang['FAVORITED_IMAGE'] . '<br />';
 				$submit = true; // For redirect
@@ -1050,9 +1050,9 @@ switch ($mode)
 						$db->sql_query($sql);
 						if (phpbb_gallery::$user->get_data('watch_com') && !$image_data['watch_id'])
 						{
-							phpbb_gallery_image_watch::add($image_id);
+							phpbb_gallery_notification::add($image_id);
 						}
-						phpbb_gallery_misc::notification('image', $image_id, $image_data['image_name']);
+						phpbb_gallery_notification::send_notification('image', $image_id, $image_data['image_name']);
 						$message .= $user->lang['COMMENT_STORED'] . '<br />';
 					}
 					else if (phpbb_gallery_misc::display_captcha('comment'))
