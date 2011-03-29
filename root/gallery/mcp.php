@@ -211,11 +211,7 @@ if ($action && $image_id_ary)
 						WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
 					$db->sql_query($sql);
 				}
-
-				$sql = 'UPDATE ' . GALLERY_REPORTS_TABLE . '
-					SET report_album_id = ' . $moving_target . '
-					WHERE ' . $db->sql_in_set('report_image_id', $image_id_ary);
-				$db->sql_query($sql);
+				phpbb_gallery_report::move_images($image_id_ary, $moving_target);
 
 				foreach ($image_id_ary as $image)
 				{
@@ -339,9 +335,6 @@ if ($action && $image_id_ary)
 				$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . '
 					WHERE ' . $db->sql_in_set('comment_image_id', $image_id_ary);
 				$db->sql_query($sql);
-				$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . '
-					WHERE ' . $db->sql_in_set('report_image_id', $image_id_ary);
-				$db->sql_query($sql);
 
 				phpbb_gallery_image::delete_images($image_id_ary, $filenames);
 
@@ -355,14 +348,6 @@ if ($action && $image_id_ary)
 		case 'reports_close':
 			if (confirm_box(true))
 			{
-				$sql_ary = array(
-					'report_manager'		=> $user->data['user_id'],
-					'report_status'			=> phpbb_gallery_constants::REPORT_LOCKED,
-				);
-				$sql = 'UPDATE ' . GALLERY_REPORTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-					WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
-				$db->sql_query($sql);
-
 				$sql = 'SELECT image_id, image_name
 					FROM ' . GALLERY_IMAGES_TABLE . '
 					WHERE ' . $db->sql_in_set('image_reported', $image_id_ary);
@@ -373,10 +358,7 @@ if ($action && $image_id_ary)
 				}
 				$db->sql_freeresult($result);
 
-				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-					SET image_reported = ' . phpbb_gallery_constants::REPORT_UNREPORT . '
-					WHERE ' . $db->sql_in_set('image_reported', $image_id_ary);
-				$db->sql_query($sql);
+				phpbb_gallery_report::change_status(phpbb_gallery_report::LOCKED, $image_id_ary);
 
 				$success = true;
 			}
@@ -388,27 +370,7 @@ if ($action && $image_id_ary)
 		case 'reports_open':
 			if (confirm_box(true))
 			{
-				$sql_ary = array(
-					'report_manager'		=> $user->data['user_id'],
-					'report_status'			=> phpbb_gallery_constants::REPORT_OPEN,
-				);
-				$sql = 'UPDATE ' . GALLERY_REPORTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-					WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
-				$db->sql_query($sql);
-
-				$sql = 'SELECT report_image_id, report_id
-					FROM ' . GALLERY_REPORTS_TABLE . '
-					WHERE report_status = ' . phpbb_gallery_constants::REPORT_OPEN . '
-						AND ' . $db->sql_in_set('report_id', $image_id_ary);
-				$result = $db->sql_query($sql);
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-						SET image_reported = ' . $row['report_id'] . '
-						WHERE ' . $db->sql_in_set('image_id', $row['report_image_id']);
-					$db->sql_query($sql);
-				}
-				$db->sql_freeresult($result);
+				phpbb_gallery_report::change_status(phpbb_gallery_report::OPEN, $image_id_ary);
 
 				$sql = 'SELECT image_id, image_name
 					FROM ' . GALLERY_IMAGES_TABLE . '
@@ -430,10 +392,6 @@ if ($action && $image_id_ary)
 		case 'reports_delete':
 			if (confirm_box(true))
 			{
-				$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . '
-					WHERE ' . $db->sql_in_set('report_id', $image_id_ary);
-				$db->sql_query($sql);
-
 				$sql = 'SELECT image_id, image_name
 					FROM ' . GALLERY_IMAGES_TABLE . '
 					WHERE ' . $db->sql_in_set('image_reported', $image_id_ary);
@@ -444,11 +402,7 @@ if ($action && $image_id_ary)
 				}
 				$db->sql_freeresult($result);
 
-				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-					SET image_reported = ' . phpbb_gallery_constants::REPORT_UNREPORT . '
-					WHERE ' . $db->sql_in_set('image_reported', $image_id_ary);
-				$db->sql_query($sql);
-
+				phpbb_gallery_report::delete($image_id_ary);
 				$success = true;
 			}
 			else

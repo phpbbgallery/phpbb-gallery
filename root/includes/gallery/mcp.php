@@ -146,7 +146,7 @@ class phpbb_gallery_mcp
 				'RATING'			=> ($row['image_rate_avg'] / 100),
 				'STATUS'			=> $user->lang['QUEUE_STATUS_' . $row['image_status']],
 				'IMAGE_ID'			=> $row['image_id'],
-				'S_REPORTED'		=> (isset($row['report_status']) && ($row['report_status'] == phpbb_gallery_constants::REPORT_OPEN)) ? true : false,
+				'S_REPORTED'		=> (isset($row['report_status']) && ($row['report_status'] == phpbb_gallery_report::OPEN)) ? true : false,
 				'S_UNAPPROVED'		=> ($row['image_status'] == phpbb_gallery_image::STATUS_UNAPPROVED) ? true : false,
 				'U_IMAGE'			=> phpbb_gallery_url::append_sid('image', "album_id=$album_id&amp;image_id=" . $row['image_id']),
 				'U_IMAGE_PAGE'		=> phpbb_gallery_url::append_sid('image_page', "album_id=$album_id&amp;image_id=" . $row['image_id']),
@@ -240,7 +240,7 @@ class phpbb_gallery_mcp
 				'REPORT_TIME'		=> $user->format_date($row['report_time']),
 				'REPORT_ID'			=> $row['report_id'],
 				'REPORT_NOTE'		=> $row['report_note'],
-				'REPORT_STATUS'		=> ($row['report_status'] == phpbb_gallery_constants::REPORT_OPEN) ? true : false,
+				'REPORT_STATUS'		=> ($row['report_status'] == phpbb_gallery_report::OPEN) ? true : false,
 				'STATUS'			=> $user->lang['REPORT_STATUS_' . $row['report_status']] . ' ' . $user->lang['QUEUE_STATUS_' . $row['image_status']],
 			));
 		}

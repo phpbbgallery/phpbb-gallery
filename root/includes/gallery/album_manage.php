@@ -744,10 +744,7 @@ class phpbb_gallery_album_manage
 			WHERE image_album_id = ' . $from_id;
 		$db->sql_query($sql);
 
-		$sql = 'UPDATE ' . GALLERY_REPORTS_TABLE . "
-			SET report_album_id = $to_id
-			WHERE report_album_id = $from_id";
-		$db->sql_query($sql);
+		phpbb_gallery_report::move_album_content($from_id, $to_id);
 
 		$sql = 'DELETE FROM ' . GALLERY_CONTESTS_TABLE . '
 			WHERE contest_album_id = ' . $from_id;
@@ -823,9 +820,6 @@ class phpbb_gallery_album_manage
 		{
 			$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . '
 				WHERE ' . $db->sql_in_set('comment_image_id', $deleted_images);
-			$db->sql_query($sql);
-			$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . '
-				WHERE ' . $db->sql_in_set('report_image_id', $deleted_images);
 			$db->sql_query($sql);
 
 			phpbb_gallery_image::delete_images($deleted_images, $filenames);

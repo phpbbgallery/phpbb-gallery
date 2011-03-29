@@ -808,29 +808,19 @@ switch ($mode)
 						$submit = false;
 					}
 
-					$sql_ary = array(
-						'report_album_id'			=> $album_id,
-						'report_image_id'			=> $image_id,
-						'reporter_id'				=> $user->data['user_id'],
-						'report_note'				=> $report_message,
-						'report_time'				=> time(),
-						'report_status'				=> phpbb_gallery_constants::REPORT_OPEN,
-					);
+					if (!$error && $image_data['image_reported'])
+					{
+						$error = $user->lang['IMAGE_ALREADY_REPORTED'];
+					}
 
 					if (!$error)
 					{
-						if ($image_data['image_reported'])
-						{
-							trigger_error('IMAGE_ALREADY_REPORTED');
-						}
-						$sql = 'INSERT INTO ' . GALLERY_REPORTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-						$db->sql_query($sql);
-						$report_id = $db->sql_nextid();
-
-						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
-							SET image_reported = ' . $report_id . '
-							WHERE image_id = ' . (int) $image_id;
-						$db->sql_query($sql);
+						$data = array(
+							'report_album_id'			=> $album_id,
+							'report_image_id'			=> $image_id,
+							'report_note'				=> $report_message,
+						);
+						phpbb_gallery_report::add($data);
 					}
 				}
 
@@ -899,10 +889,6 @@ switch ($mode)
 
 					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . "
 						WHERE comment_image_id = $image_id";
-					$db->sql_query($sql);
-
-					$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . "
-						WHERE report_image_id = $image_id";
 					$db->sql_query($sql);
 
 					phpbb_gallery_image::delete_images(array($image_id), array($image_id => $image_data['image_filename']));

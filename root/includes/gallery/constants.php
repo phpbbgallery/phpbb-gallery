@@ -19,10 +19,6 @@ if (!defined('IN_PHPBB'))
 
 class phpbb_gallery_constants
 {
-	const REPORT_UNREPORT = 0;
-	const REPORT_OPEN = 1;
-	const REPORT_LOCKED = 2;
-
 	// GD library
 	const GDLIB1 = 1;
 	const GDLIB2 = 2;
