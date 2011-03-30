@@ -39,7 +39,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_MCP_VIEWALBUM'			=> 'Album anzeigen',
 
 	'IMAGE_REPORTED'				=> 'Das Bild wurde gemeldet.',
-	'IMAGE_UNAPPROVED'				=> 'Das Bild wartet auf freigabe.',
+	'IMAGE_UNAPPROVED'				=> 'Das Bild wartet auf Freigabe.',
 
 	'MODERATE_ALBUM'				=> 'Album moderieren',
 
