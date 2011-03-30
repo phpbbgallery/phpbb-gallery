@@ -27,7 +27,7 @@ class phpbb_gallery_notification
 	*/
 	static public function add($image_ids, $user_id = false)
 	{
-		global $db;
+		global $db, $user;
 
 		$image_ids = self::cast_mixed_int2array($image_ids);
 		$user_id = (int) (($user_id) ? $user_id : $user->data['user_id']);
@@ -50,7 +50,7 @@ class phpbb_gallery_notification
 	*/
 	static public function add_albums($album_ids, $user_id = false)
 	{
-		global $db;
+		global $db, $user;
 
 		$album_ids = self::cast_mixed_int2array($album_ids);
 		$user_id = (int) (($user_id) ? $user_id : $user->data['user_id']);
@@ -74,7 +74,7 @@ class phpbb_gallery_notification
 	*/
 	static public function remove($image_ids, $user_ids = false)
 	{
-		global $db;
+		global $db, $user;
 
 		$image_ids = self::cast_mixed_int2array($image_ids);
 		$user_ids = self::cast_mixed_int2array((($user_ids) ? $user_ids : $user->data['user_id']));
@@ -93,7 +93,7 @@ class phpbb_gallery_notification
 	*/
 	static public function remove_albums($album_ids, $user_ids = false)
 	{
-		global $db;
+		global $db, $user;
 
 		$album_ids = self::cast_mixed_int2array($album_ids);
 		$user_ids = self::cast_mixed_int2array((($user_ids) ? $user_ids : $user->data['user_id']));
