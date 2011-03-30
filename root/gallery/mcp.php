@@ -332,10 +332,6 @@ if ($action && $image_id_ary)
 				}
 				$db->sql_freeresult($result);
 
-				$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . '
-					WHERE ' . $db->sql_in_set('comment_image_id', $image_id_ary);
-				$db->sql_query($sql);
-
 				phpbb_gallery_image::delete_images($image_id_ary, $filenames);
 
 				$success = true;

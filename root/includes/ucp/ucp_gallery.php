@@ -649,12 +649,9 @@ class ucp_gallery
 			// So now drop the comments, ratings, images and albums.
 			if (!empty($deleted_images))
 			{
-				$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . '
-					WHERE ' . $db->sql_in_set('comment_image_id', $deleted_images);
-				$db->sql_query($sql);
-
 				phpbb_gallery_image::delete_images($deleted_images, $filenames);
 			}
+
 			$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . '
 				WHERE ' . $db->sql_in_set('album_id', $deleted_albums);
 			$db->sql_query($sql);

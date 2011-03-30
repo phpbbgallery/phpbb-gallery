@@ -729,9 +729,6 @@ class acp_gallery
 			$message = array();
 			if ($missing_sources)
 			{
-				$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . ' WHERE ' . $db->sql_in_set('comment_image_id', $missing_sources);
-				$db->sql_query($sql);
-
 				phpbb_gallery_image::delete_images($missing_sources);
 
 				$message[] = $user->lang['CLEAN_SOURCES_DONE'];
@@ -762,17 +759,13 @@ class acp_gallery
 				// so now drop the comments, ratings, images and albums
 				if ($deleted_images)
 				{
-					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . ' WHERE ' . $db->sql_in_set('comment_image_id', $deleted_images);
-					$db->sql_query($sql);
-
 					phpbb_gallery_image::delete_images($deleted_images, $filenames);
 				}
 				$message[] = $user->lang['CLEAN_AUTHORS_DONE'];
 			}
 			if ($missing_comments)
 			{
-				$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . ' WHERE ' . $db->sql_in_set('comment_id', $missing_comments);
-				$db->sql_query($sql);
+				phpbb_gallery_comment::delete_comments($missing_comments);
 				$message[] = $user->lang['CLEAN_COMMENTS_DONE'];
 			}
 			if ($missing_personals || $personals_bad)
@@ -823,9 +816,6 @@ class acp_gallery
 
 				if ($deleted_images)
 				{
-					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . ' WHERE ' . $db->sql_in_set('comment_image_id', $deleted_images);
-					$db->sql_query($sql);
-
 					phpbb_gallery_image::delete_images($deleted_images, $filenames);
 				}
 

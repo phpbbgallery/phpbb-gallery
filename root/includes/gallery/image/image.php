@@ -149,8 +149,6 @@ class phpbb_gallery_image
 	{
 		global $db;
 
-		//@todo: phpbb_gallery_comment_base::delete_images($images);
-
 		// Delete the files from the disc...
 		$need_filenames = array();
 		foreach ($images as $image)
@@ -166,8 +164,9 @@ class phpbb_gallery_image
 		// Delete the ratings...
 		phpbb_gallery_image_favorite::delete_favorites($images);
 		phpbb_gallery_image_rating::delete_ratings($images);
-		phpbb_gallery_notification::delete_images($images);
 
+		phpbb_gallery_comment::delete_images($images);
+		phpbb_gallery_notification::delete_images($images);
 		phpbb_gallery_report::delete_images($images);
 
 		$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . '

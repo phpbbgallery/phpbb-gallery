@@ -887,10 +887,6 @@ switch ($mode)
 				{
 					handle_image_counter($image_id, false);
 
-					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . "
-						WHERE comment_image_id = $image_id";
-					$db->sql_query($sql);
-
 					phpbb_gallery_image::delete_images(array($image_id), array($image_id => $image_data['image_filename']));
 
 					update_album_info($album_id);
@@ -1023,35 +1019,23 @@ switch ($mode)
 					}
 					$sql_ary = array(
 						'comment_image_id'		=> $image_id,
-						'comment_user_id'		=> $user->data['user_id'],
-						'comment_username'		=> ($user->data['user_id'] != ANONYMOUS) ? $user->data['username'] : $comment_username,
-						'comment_user_colour'	=> $user->data['user_colour'],
-						'comment_user_ip'		=> $user->ip,
-						'comment_time'			=> time(),
 						'comment'				=> $message_parser->message,
 						'comment_uid'			=> $message_parser->bbcode_uid,
 						'comment_bitfield'		=> $message_parser->bbcode_bitfield,
 					);
 					if ((!$error) && ($sql_ary['comment'] != ''))
 					{
-						$db->sql_query('INSERT INTO ' . GALLERY_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
-						$newest_comment = $db->sql_nextid();
-						phpbb_gallery_config::inc('num_comments', 1);
-
 						if (phpbb_gallery_misc::display_captcha('comment'))
 						{
 							$captcha->reset();
 						}
 
-						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . "
-							SET image_comments = image_comments + 1,
-								image_last_comment = $newest_comment
-							WHERE " . $db->sql_in_set('image_id', $image_id);
-						$db->sql_query($sql);
+						phpbb_gallery_comment::add($sql_ary, $comment_username);
 						if (phpbb_gallery::$user->get_data('watch_com') && !$image_data['watch_id'])
 						{
 							phpbb_gallery_notification::add($image_id);
 						}
+
 						phpbb_gallery_notification::send_notification('image', $image_id, $image_data['image_name']);
 						$message .= $user->lang['COMMENT_STORED'] . '<br />';
 					}
@@ -1147,13 +1131,11 @@ switch ($mode)
 						'comment_uid'			=> $message_parser->bbcode_uid,
 						'comment_bitfield'		=> $message_parser->bbcode_bitfield,
 						'comment_edit_count'	=> $comment_data['comment_edit_count'] + 1,
-						'comment_edit_time'		=> time(),
-						'comment_edit_user_id'	=> $user->data['user_id'],
 					));
 
 					if (!$error)
 					{
-						$db->sql_query('UPDATE ' . GALLERY_COMMENTS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . ' WHERE comment_id = ' . (int) $comment_id);
+						phpbb_gallery_comment::edit($comment_id, $sql_ary);
 						$message .= $user->lang['COMMENT_STORED'] . '<br />';
 						if ($user->data['user_id'] != $comment_data['comment_user_id'])
 						{
@@ -1182,24 +1164,7 @@ switch ($mode)
 				$comment = $comment_username = $comment_username_req = '';
 				if (confirm_box(true))
 				{
-					$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . " WHERE comment_id = $comment_id;";
-					$db->sql_query($sql);
-					phpbb_gallery_config::dec('num_comments', 1);
-
-					$sql = 'SELECT MAX(comment_id) last_comment
-						FROM ' . GALLERY_COMMENTS_TABLE . "
-						WHERE comment_image_id = $image_id
-						ORDER BY comment_id";
-					$result = $db->sql_query_limit($sql, 1);
-					$last_comment_id = (int) $db->sql_fetchfield('last_comment');
-					$db->sql_freeresult($result);
-
-					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . "
-						SET image_comments = image_comments - 1,
-							image_last_comment = $last_comment_id
-						WHERE " . $db->sql_in_set('image_id', $image_id);
-					$db->sql_query($sql);
-
+					phpbb_gallery_comment::delete_comments($comment_id);
 					if ($user->data['user_id'] != $comment_data['comment_user_id'])
 					{
 						add_log('gallery', $image_data['image_album_id'], $image_data['image_id'], 'LOG_GALLERY_COMMENT_DELETED', $image_data['image_name']);

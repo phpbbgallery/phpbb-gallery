@@ -818,10 +818,6 @@ class phpbb_gallery_album_manage
 
 		if (!empty($deleted_images))
 		{
-			$sql = 'DELETE FROM ' . GALLERY_COMMENTS_TABLE . '
-				WHERE ' . $db->sql_in_set('comment_image_id', $deleted_images);
-			$db->sql_query($sql);
-
 			phpbb_gallery_image::delete_images($deleted_images, $filenames);
 		}
 

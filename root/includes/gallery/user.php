@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
-class phpbb_gallery_user extends phpbb_gallery_user_base
+class phpbb_gallery_user
 {
 	/**
 	* phpBB-user_id
