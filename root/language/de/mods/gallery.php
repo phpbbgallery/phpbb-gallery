@@ -24,6 +24,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
+	'ADD_UPLOAD_FIELD'				=> 'Weitere Felder zum Hochladen hinzufügen',
 	'ALBUM'							=> 'Album',
 	'ALBUM_IS_CATEGORY'				=> 'Das Album, in welches du dich gemogelt hast, ist eine Kategorie.<br />In Kategorien können keine Bilder hochgeladen werden.',
 	'ALBUM_LOCKED'					=> 'Gesperrt',
@@ -31,8 +32,10 @@ $lang = array_merge($lang, array(
 	'ALBUM_NOT_EXIST'				=> 'Dieses Album existiert nicht',
 	'ALBUM_PERMISSIONS'				=> 'Berechtigungen in diesem Album',
 	'ALBUM_REACHED_QUOTA'			=> 'Dieses Album hat das Kontingent zum hochladen von Bildern erreicht. Es können keine weiteren Bilder mehr hochgeladen werden. Für weitere Information wende dich bitte an einen Administrator',
-	'ALBUM_UPLOAD_NEED_APPROVAL'	=> 'Dein Bild wurde erfolgreich hochgeladen.<br /><br />Aber die Funktion der Genehmigung von Bildern vor der Veröffentlichung ist aktiv. Somit muss dein Bild vor der Veröffentlichung von einem Administrator oder einem Moderator genehmigt werden.',
+	'ALBUM_UPLOAD_NEED_APPROVAL'		=> 'Dein Bild wurde erfolgreich hochgeladen.<br /><br />Allerdings müssen deine Bilder erst durch einen Administrator oder Moderator freigeschalten werden.',
+	'ALBUM_UPLOAD_NEED_APPROVAL_ERROR'	=> 'Dein Bild wurde erfolgreich hochgeladen.<br /><br />Allerdings müssen deine Bilder erst durch einen Administrator oder Moderator freigeschalten werden.<br /><br /><span class="error">%s</span>',
 	'ALBUM_UPLOAD_SUCCESSFUL'		=> 'Dein Bild wurde erfolgreich hochgeladen.',
+	'ALBUM_UPLOAD_SUCCESSFUL_ERROR'	=> 'Dein Bild wurde erfolgreich hochgeladen.<br /><br /><span class="error">%s</span>',
 	'ALBUMS_MARKED'					=> 'Alle Alben wurden als gelesen markiert.',
 	'ALL'							=> 'Alle',
 	'ALL_IMAGES'					=> 'Alle Bilder',
@@ -238,6 +241,7 @@ $lang = array_merge($lang, array(
 	'UNWATCHED_ALBUMS'				=> 'Du wirst nicht mehr über neue Bilder in diesen Alben benachrichtigt.',
 	'UNWATCHED_IMAGE'				=> 'Du wirst nicht mehr über Kommentare zu diesem Bild benachrichtigt.',
 	'UNWATCHED_IMAGES'				=> 'Du wirst nicht mehr über Kommentare zu diesen Bildern benachrichtigt.',
+	'UPLOAD_ERROR'					=> 'Wärend dem Hochladen von „%1$s“ ist der folgende Fehler aufgetreten:<br />&raquo; %2$s',
 	'UPLOAD_IMAGE'					=> 'Bild hochladen',
 	'UPLOAD_IMAGE_SIZE_TOO_BIG'		=> 'Die Dimension Deines Bildes ist zu groß',
 	'UPLOAD_NO_FILE'				=> 'Du musst deinen Pfad und Dateinamen eingeben',
