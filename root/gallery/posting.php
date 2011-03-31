@@ -641,21 +641,15 @@ switch ($mode)
 					$submit = false;
 				}
 
-				$count = 0;
 				$upload_image_files = phpbb_gallery_config::get('num_uploads');
 				if (!phpbb_gallery::$auth->acl_check('i_unlimited', $album_id, $album_data['album_user_id']) && ((phpbb_gallery::$auth->acl_check('i_count', $album_id, $album_data['album_user_id']) - $own_images) < $upload_image_files))
 				{
 					$upload_image_files = (phpbb_gallery::$auth->acl_check('i_count', $album_id, $album_data['album_user_id']) - $own_images);
-					$error .= (($error) ? '<br />' : '') . sprintf($user->lang['USER_NEARLY_REACHED_QUOTA'], phpbb_gallery::$auth->acl_check('i_count', $album_id, $album_data['album_user_id']), $own_images, $upload_image_files);
-					$template->assign_vars(array(
-						'ERROR'		=> $error,
-					));
 				}
 
-				while ($count < $upload_image_files)
+				for ($i = 0; $i < $upload_image_files; $i++)
 				{
 					$template->assign_block_vars('upload_image', array());
-					$count++;
 				}
 
 				$message .= '<br />';

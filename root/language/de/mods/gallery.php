@@ -31,7 +31,7 @@ $lang = array_merge($lang, array(
 	'ALBUM_NAME'					=> 'Name des Albums',
 	'ALBUM_NOT_EXIST'				=> 'Dieses Album existiert nicht',
 	'ALBUM_PERMISSIONS'				=> 'Berechtigungen in diesem Album',
-	'ALBUM_REACHED_QUOTA'			=> 'Dieses Album hat das Kontingent zum hochladen von Bildern erreicht. Es können keine weiteren Bilder mehr hochgeladen werden. Für weitere Information wende dich bitte an einen Administrator',
+	'ALBUM_REACHED_QUOTA'			=> 'Dieses Album hat das Kontingent zum hochladen von Bildern erreicht. Es können keine weiteren Bilder mehr hochgeladen werden.<br />Für weitere Information wende dich bitte an einen Administrator',
 	'ALBUM_UPLOAD_NEED_APPROVAL'		=> 'Dein Bild wurde erfolgreich hochgeladen.<br /><br />Allerdings müssen deine Bilder erst durch einen Administrator oder Moderator freigeschalten werden.',
 	'ALBUM_UPLOAD_NEED_APPROVAL_ERROR'	=> 'Dein Bild wurde erfolgreich hochgeladen.<br /><br />Allerdings müssen deine Bilder erst durch einen Administrator oder Moderator freigeschalten werden.<br /><br /><span class="error">%s</span>',
 	'ALBUM_UPLOAD_SUCCESSFUL'		=> 'Dein Bild wurde erfolgreich hochgeladen.',
@@ -247,8 +247,11 @@ $lang = array_merge($lang, array(
 	'UPLOAD_NO_FILE'				=> 'Du musst deinen Pfad und Dateinamen eingeben',
 	'UPLOADED_BY_USER'				=> 'Hochgeladen von',
 	'UPLOADED_ON_DATE'				=> 'Hochgeladen',
-	'USER_NEARLY_REACHED_QUOTA'		=> 'Du darfst nur %s Bilder hochladen, hast aber schon %s Bilder hochgeladen. Deswegen werden nun nur noch %s Dateifelder angezeigt.',
-	'USER_REACHED_QUOTA'			=> 'Du darfst nur %s Bilder hochladen.<br /><br />Für weitere Information wende dich bitte an einen Administrator.',
+	'USER_REACHED_QUOTA'			=> array(
+		0	=> 'Du darfst <strong>keine</strong> Bilder hochladen.<br />Für weitere Information wende dich bitte an einen Administrator.',
+		1	=> 'Du darfst nur <strong>1</strong> Bild hochladen.<br />Für weitere Information wende dich bitte an einen Administrator.',
+		2	=> 'Du darfst nur <strong>%s</strong> Bilder hochladen.<br />Für weitere Information wende dich bitte an einen Administrator.',
+	),
 	'USERNAME_BEGINS_WITH'			=> 'Benutzername fängt an mit',
 	'USERS_PERSONAL_ALBUMS'			=> 'Persönliche Alben der Mitglieder',
 

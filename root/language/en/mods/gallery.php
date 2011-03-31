@@ -31,7 +31,7 @@ $lang = array_merge($lang, array(
 	'ALBUM_NAME'					=> 'Album name',
 	'ALBUM_NOT_EXIST'				=> 'This album does not exist',
 	'ALBUM_PERMISSIONS'				=> 'Album Permissions',
-	'ALBUM_REACHED_QUOTA'			=> 'This album has reached the quota of images. You cannot upload any more. Please contact the administrator for more information.',
+	'ALBUM_REACHED_QUOTA'			=> 'This album has reached the quota of images. You cannot upload images anymore.<br />Please contact the administrator for more information.',
 	'ALBUM_UPLOAD_NEED_APPROVAL'		=> 'Your images have been uploaded successfully.<br /><br />But your image must be approved by a administrator or a moderator before they are public visible.',
 	'ALBUM_UPLOAD_NEED_APPROVAL_ERROR'	=> 'Some of your images have been uploaded successfully.<br /><br />But your images must be approved by a administrator or a moderator before they are public visible.<br /><br /><p class="error">%s</p>',
 	'ALBUM_UPLOAD_SUCCESSFUL'		=> 'Your images have been uploaded successfully.',
@@ -246,8 +246,11 @@ $lang = array_merge($lang, array(
 	'UPLOAD_NO_FILE'				=> 'You must enter your path and filename',
 	'UPLOADED_BY_USER'				=> 'Uploaded by',
 	'UPLOADED_ON_DATE'				=> 'Uploaded',
-	'USER_NEARLY_REACHED_QUOTA'		=> 'You are not allowed to upload more than %s images, but you already uploaded %s images. So there are only %s filelines displayed.',
-	'USER_REACHED_QUOTA'			=> 'You are not allowed to upload more than %s images.<br /><br />Please contact the administrator for more information.',
+	'USER_REACHED_QUOTA'			=> array(
+		0	=> 'You are not allowed to upload <strong>any</strong> images.<br />Please contact the administrator for more information.',
+		1	=> 'You are not allowed to upload more than <strong>1</strong> image.<br />Please contact the administrator for more information.',
+		2	=> 'You are not allowed to upload more than <strong>%s</strong> images.<br />Please contact the administrator for more information.',
+	),
 	'USERNAME_BEGINS_WITH'			=> 'Username begins with',
 	'USERS_PERSONAL_ALBUMS'			=> 'Users Personal Albums',
 
