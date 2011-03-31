@@ -379,6 +379,7 @@ class acp_gallery
 					$filetype = getimagesize($image_src_full);
 					$filetype_ext = '';
 
+					$error_occured = false;
 					switch ($filetype['mime'])
 					{
 						case 'image/jpeg':
@@ -530,7 +531,7 @@ class acp_gallery
 			{
 				unlink(phpbb_gallery_url::_return_file($import_schema, 'import', ''));
 				$errors = @file_get_contents(phpbb_gallery_url::_return_file($import_schema . '_errors', 'import', ''));
-				unlink(phpbb_gallery_url::_return_file($import_schema . '_errors', 'import', ''));
+				@unlink(phpbb_gallery_url::_return_file($import_schema . '_errors', 'import', ''));
 				if (!$errors)
 				{
 					trigger_error(sprintf($user->lang['IMPORT_FINISHED'], $done_images) . adm_back_link($this->u_action));
