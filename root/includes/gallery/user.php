@@ -193,8 +193,11 @@ class phpbb_gallery_user
 
 		if ($this->db->sql_affectedrows() == 1)
 		{
-			$this->data['user_last_update'] = time();
-			$this->data['user_images'] += $num;
+			if (!empty($this->data))
+			{
+				$this->data['user_last_update'] = time();
+				$this->data['user_images'] += $num;
+			}
 			return true;
 		}
 		return false;

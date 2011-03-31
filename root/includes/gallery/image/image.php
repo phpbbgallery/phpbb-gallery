@@ -414,9 +414,7 @@ class phpbb_gallery_image
 			$num_images = $num_images + $row['images'];
 
 			$image_user = new phpbb_gallery_user($db, GALLERY_USERS_TABLE, $row['image_user_id'], false);
-			$image_user->increase_data(array(
-				'user_images'	=> (($add) ? $row['images'] : 0 - $row['images']),
-			));
+			$image_user->update_images((($add) ? $row['images'] : 0 - $row['images']));
 		}
 		$db->sql_freeresult($result);
 
