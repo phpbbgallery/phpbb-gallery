@@ -198,7 +198,7 @@ class phpbb_gallery_auth
 	{
 		foreach (self::$_permissions as $permission)
 		{
-			if (strpos('_count', $permission) === false)
+			if (strpos($permission, '_count') === false)
 			{
 				if ($data[$permission] == self::ACL_NEVER)
 				{

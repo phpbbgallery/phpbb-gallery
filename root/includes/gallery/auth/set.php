@@ -53,11 +53,11 @@ class phpbb_gallery_auth_set
 
 	public function set_count($data, $set)
 	{
-		$this->_counts[$data] = $set;
+		$this->_counts[$data] = (int) $set;
 	}
 
 	public function get_count($data)
 	{
-		return $this->_counts[$data];
+		return (int) $this->_counts[$data];
 	}
 }
