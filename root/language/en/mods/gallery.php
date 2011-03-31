@@ -179,10 +179,16 @@ $lang = array_merge($lang, array(
 
 	'RANDOM_IMAGES'					=> 'Random images',
 	'RATE_IMAGE'					=> 'Rate the image',
-	'RATE_STRING'					=> '%1$s (%2$s Rate)', // 1.Rating-average 2.number of rates
-	'RATES_COUNT'					=> 'Rates',
-	'RATES_STRING'					=> '%1$s (%2$s Rates)',
 	'RATING'						=> 'Rating',
+	'RATING_STRINGS'				=> array(
+		0	=> 'not rated',
+		1	=> '%2$s (1 rating)',
+		2	=> '%2$s (%1$s ratings)',
+	),
+	'RATING_STRINGS_USER'			=> array(
+		1	=> '%2$s (1 rating, your rating: %3$s)',
+		2	=> '%2$s (%1$s ratings, your rating: %3$s)',
+	),
 	'RATING_SUCCESSFUL'				=> 'The image has been rated successfully.',
 	'READ_REPORT'					=> 'Read report',
 	'RECENT_COMMENTS'				=> 'Recent comments',

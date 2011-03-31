@@ -180,10 +180,16 @@ $lang = array_merge($lang, array(
 
 	'RANDOM_IMAGES'					=> 'Zufällige Bilder',
 	'RATE_IMAGE'					=> 'Bild bewerten',
-	'RATE_STRING'					=> '%1$s (%2$s Bewertung)', // 1.Rating-average 2.number of rates
-	'RATES_COUNT'					=> 'Bewertungen',
-	'RATES_STRING'					=> '%1$s (%2$s Bewertungen)',
 	'RATING'						=> 'Bewertung',
+	'RATING_STRINGS'				=> array(
+		0	=> 'Nicht bewertet',
+		1	=> '%2$s (1 Bewertung)',
+		2	=> '%2$s (%1$s Bewertungen)',
+	),
+	'RATING_STRINGS_USER'			=> array(
+		1	=> '%2$s (1 Bewertung, deine Bewertung: %3$s)',
+		2	=> '%2$s (%1$s Bewertungen, deine Bewertung: %3$s)',
+	),
 	'RATING_SUCCESSFUL'				=> 'Das Bild wurde erfolgreich bewertet.',
 	'READ_REPORT'					=> 'Meldung ansehen',
 	'RECENT_COMMENTS'				=> 'Neueste Kommentare',
