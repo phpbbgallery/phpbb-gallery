@@ -388,7 +388,8 @@ class acp_gallery
 							$read_function = 'imagecreatefromjpeg';
 							if ((substr(strtolower($image_src), -4) != '.jpg') && (substr(strtolower($image_src), -5) != '.jpeg'))
 							{
-								trigger_error(sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $image_src, $filetype['mime']), E_USER_WARNING);
+								$this->log_import_error($import_schema, sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $image_src, $filetype['mime']));
+								$error_occured = true;
 							}
 						break;
 
@@ -398,7 +399,8 @@ class acp_gallery
 							$read_function = 'imagecreatefrompng';
 							if (substr(strtolower($image_src), -4) != '.png')
 							{
-								trigger_error(sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $image_src, $filetype['mime']), E_USER_WARNING);
+								$this->log_import_error($import_schema, sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $image_src, $filetype['mime']));
+								$error_occured = true;
 							}
 						break;
 
@@ -408,91 +410,100 @@ class acp_gallery
 							$read_function = 'imagecreatefromgif';
 							if (substr(strtolower($image_src), -4) != '.gif')
 							{
-								trigger_error(sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $image_src, $filetype['mime']), E_USER_WARNING);
+								$this->log_import_error($import_schema, sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $image_src, $filetype['mime']));
+								$error_occured = true;
 							}
 						break;
 
 						default:
-							trigger_error('NOT_ALLOWED_FILE_TYPE', E_USER_WARNING);
+							$this->log_import_error($import_schema, $user->lang['NOT_ALLOWED_FILE_TYPE']);
+							$error_occured = true;
 						break;
 					}
 					$image_filename = md5(unique_id()) . $filetype_ext;
 
-					if (!@move_uploaded_file($image_src_full, phpbb_gallery_url::path('upload') . $image_filename))
+					if (!$error_occured || !@move_uploaded_file($image_src_full, phpbb_gallery_url::path('upload') . $image_filename))
 					{
 						if (!@copy($image_src_full, phpbb_gallery_url::path('upload') . $image_filename))
 						{
 							$user->add_lang('posting');
-							trigger_error(sprintf($user->lang['GENERAL_UPLOAD_ERROR'], phpbb_gallery_url::path('upload') . $image_filename), E_USER_WARNING);
+							$this->log_import_error($import_schema, sprintf($user->lang['GENERAL_UPLOAD_ERROR'], phpbb_gallery_url::path('upload') . $image_filename));
+							$error_occured = true;
 						}
 					}
-					@chmod(phpbb_gallery_url::path('upload') . $image_filename, 0777);
-					// The source image is imported, so we delete it.
-					@unlink($image_src_full);
 
-					$sql_ary = array(
-						'image_filename' 		=> $image_filename,
-						'image_thumbnail'		=> '',
-						'image_desc'			=> '',
-						'image_desc_uid'		=> '',
-						'image_desc_bitfield'	=> '',
-						'image_user_id'			=> $user_data['user_id'],
-						'image_username'		=> $user_data['username'],
-						'image_username_clean'	=> utf8_clean_string($user_data['username']),
-						'image_user_colour'		=> $user_data['user_colour'],
-						'image_user_ip'			=> $user->ip,
-						'image_time'			=> $start_time + $done_images,
-						'image_album_id'		=> $album_id,
-						'image_status'			=> phpbb_gallery_image::STATUS_APPROVED,
-						'image_exif_data'		=> '',
-					);
-
-					$image_tools = new phpbb_gallery_image_tools();
-					$image_tools->set_image_options(phpbb_gallery_config::get('max_filesize'), phpbb_gallery_config::get('max_height'), phpbb_gallery_config::get('max_width'));
-					$image_tools->set_image_data(phpbb_gallery_url::path('upload') . $image_filename);
-
-					// Read exif data from file
-					$image_tools->read_exif_data();
-					$sql_ary['image_exif_data'] = $image_tools->exif_data_serialized;
-					$sql_ary['image_has_exif'] = $image_tools->exif_data_exist;
-
-					if (($filetype[0] > phpbb_gallery_config::get('max_width')) || ($filetype[1] > phpbb_gallery_config::get('max_height')))
+					if (!$error_occured)
 					{
-						/**
-						* Resize overside images
-						*/
-						if (phpbb_gallery_config::get('allow_resize'))
+						@chmod(phpbb_gallery_url::path('upload') . $image_filename, 0777);
+						// The source image is imported, so we delete it.
+						@unlink($image_src_full);
+
+						$sql_ary = array(
+							'image_filename' 		=> $image_filename,
+							'image_thumbnail'		=> '',
+							'image_desc'			=> '',
+							'image_desc_uid'		=> '',
+							'image_desc_bitfield'	=> '',
+							'image_user_id'			=> $user_data['user_id'],
+							'image_username'		=> $user_data['username'],
+							'image_username_clean'	=> utf8_clean_string($user_data['username']),
+							'image_user_colour'		=> $user_data['user_colour'],
+							'image_user_ip'			=> $user->ip,
+							'image_time'			=> $start_time + $done_images,
+							'image_album_id'		=> $album_id,
+							'image_status'			=> phpbb_gallery_image::STATUS_APPROVED,
+							'image_exif_data'		=> '',
+						);
+
+						$image_tools = new phpbb_gallery_image_file();
+						$image_tools->set_image_options(phpbb_gallery_config::get('max_filesize'), phpbb_gallery_config::get('max_height'), phpbb_gallery_config::get('max_width'));
+						$image_tools->set_image_data(phpbb_gallery_url::path('upload') . $image_filename);
+
+						// Read exif data from file
+						$exif = new phpbb_gallery_exif(phpbb_gallery_url::path('upload') . $image_filename);
+						$exif->read();
+						$sql_ary['image_exif_data'] = $exif->serialized;
+						$sql_ary['image_has_exif'] = $exif->status;
+						unset($exif);
+
+						if (($filetype[0] > phpbb_gallery_config::get('max_width')) || ($filetype[1] > phpbb_gallery_config::get('max_height')))
 						{
-							$image_tools->resize_image(phpbb_gallery_config::get('max_width'), phpbb_gallery_config::get('max_height'));
-							if ($image_tools->resized)
+							/**
+							* Resize overside images
+							*/
+							if (phpbb_gallery_config::get('allow_resize'))
 							{
-								$image_tools->write_image(phpbb_gallery_url::path('upload') . $image_filename, phpbb_gallery_config::get('jpg_quality'), true);
+								$image_tools->resize_image(phpbb_gallery_config::get('max_width'), phpbb_gallery_config::get('max_height'));
+								if ($image_tools->resized)
+								{
+									$image_tools->write_image(phpbb_gallery_url::path('upload') . $image_filename, phpbb_gallery_config::get('jpg_quality'), true);
+								}
 							}
 						}
-					}
 
-					if (!$image_tools->exif_data_force_db && ($sql_ary['image_has_exif'] == phpbb_gallery_constants::EXIF_DBSAVED))
-					{
-						// Image was not resized, so we can pull the Exif from the image to save db-memory.
-						$sql_ary['image_has_exif'] = phpbb_gallery_constants::EXIF_AVAILABLE;
-						$sql_ary['image_exif_data'] = '';
-					}
+						if (!$image_tools->exif_data_force_db && ($sql_ary['image_has_exif'] == phpbb_gallery_exif::DBSAVED))
+						{
+							// Image was not resized, so we can pull the Exif from the image to save db-memory.
+							$sql_ary['image_has_exif'] = phpbb_gallery_exif::AVAILABLE;
+							$sql_ary['image_exif_data'] = '';
+						}
 
-					// Try to get real filesize from temporary folder (not always working) ;)
-					$sql_ary['filesize_upload'] = (@filesize(phpbb_gallery_url::path('upload') . $image_filename)) ? @filesize(phpbb_gallery_url::path('upload') . $image_filename) : 0;
+						// Try to get real filesize from temporary folder (not always working) ;)
+						$sql_ary['filesize_upload'] = (@filesize(phpbb_gallery_url::path('upload') . $image_filename)) ? @filesize(phpbb_gallery_url::path('upload') . $image_filename) : 0;
 
-					if ($filename || ($image_name == ''))
-					{
-						$sql_ary['image_name'] = str_replace("_", " ", utf8_substr($image_src, 0, utf8_strrpos($image_src, '.')));
-					}
-					else
-					{
-						$sql_ary['image_name'] = str_replace('{NUM}', $num_offset + $done_images, $image_name);
-					}
-					$sql_ary['image_name_clean'] = utf8_clean_string($sql_ary['image_name']);
+						if ($filename || ($image_name == ''))
+						{
+							$sql_ary['image_name'] = str_replace("_", " ", utf8_substr($image_src, 0, utf8_strrpos($image_src, '.')));
+						}
+						else
+						{
+							$sql_ary['image_name'] = str_replace('{NUM}', $num_offset + $done_images, $image_name);
+						}
+						$sql_ary['image_name_clean'] = utf8_clean_string($sql_ary['image_name']);
 
-					// Put the images into the database
-					$db->sql_query('INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+						// Put the images into the database
+						$db->sql_query('INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+					}
 					$done_images++;
 				}
 
@@ -518,7 +529,17 @@ class acp_gallery
 			if (!$todo_images)
 			{
 				unlink(phpbb_gallery_url::_return_file($import_schema, 'import', ''));
-				trigger_error(sprintf($user->lang['IMPORT_FINISHED'], $done_images) . adm_back_link($this->u_action));
+				$errors = @file_get_contents(phpbb_gallery_url::_return_file($import_schema . '_errors', 'import', ''));
+				unlink(phpbb_gallery_url::_return_file($import_schema . '_errors', 'import', ''));
+				if (!$errors)
+				{
+					trigger_error(sprintf($user->lang['IMPORT_FINISHED'], $done_images) . adm_back_link($this->u_action));
+				}
+				else
+				{
+					$errors = explode("\n", $errors);
+					trigger_error(sprintf($user->lang['IMPORT_FINISHED_ERRORS'], $done_images - sizeof($errors)) . implode('<br />', $errors) . adm_back_link($this->u_action), E_USER_WARNING);
+				}
 			}
 			else
 			{
@@ -680,6 +701,12 @@ class acp_gallery
 		}
 	}
 
+	function log_import_error($import_schema, $error)
+	{
+		$error_file = phpbb_gallery_url::_return_file($import_schema . '_errors', 'import', '');
+		$content = @file_get_contents($error_file);
+		file_put_contents($error_file, $content .= (($content) ? "\n" : '') . $error);
+	}
 
 	function cleanup()
 	{

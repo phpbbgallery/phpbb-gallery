@@ -181,6 +181,7 @@ $lang = array_merge($lang, array(
 	'IMPORT_DEBUG_MES'				=> '%1$s images imported. There are still %2$s images remaining.',
 	'IMPORT_DIR_EMPTY'				=> 'The folder %s is empty. You need to upload the images, before you can import them.',
 	'IMPORT_FINISHED'				=> 'All %1$s images successful imported.',
+	'IMPORT_FINISHED_ERRORS'		=> '%1$s images were successful imported, but the following errors occurred:<br /><br />',
 	'IMPORT_MISSING_ALBUM'			=> 'Please select an album to import the images into.',
 	'IMPORT_SELECT'					=> 'Choose the images which you want to import. Successful uploaded images are deleted. All other images are still available.',
 	'IMPORT_SCHEMA_CREATED'			=> 'The import-schema was successfully created, please wait while the images get imported.',
