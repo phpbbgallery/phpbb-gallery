@@ -1,29 +1,26 @@
 <!-- INCLUDE gallery/gallery_header.html -->
-<script type="text/javascript">
-function getElement(iElementId)
-{
-	if (document.all) 
-	{
-		return document.all[iElementId];
-	}
-	if (document.getElementById)
-	{
-		return document.getElementById(iElementId);
-	}
-}
 
-function toggleElement(oElement)
-{
-	if (oElement.style.display == "none")
+<!-- IF S_UPLOAD -->
+<script type="text/javascript">
+//<![CDATA[
+	var num_displayed_fields = 1;
+	var limit_fields = 5;
+	function add_field()
 	{
-		oElement.style.display = "";
+		if (num_displayed_fields < limit_fields)
+		{
+			dE('upload_field_' + num_displayed_fields);
+			num_displayed_fields++;
+			if (num_displayed_fields == limit_fields)
+			{
+				dE('add_field_link', -1);
+			}
+		}
 	}
-	else
-	{
-		oElement.style.display = "none";
-	}
-}
+//]]>
 </script>
+<!-- ENDIF -->
+
 <h2><!-- IF U_VIEW_IMAGE --><a href="{U_VIEW_IMAGE}">{IMAGE_NAME}</a><!-- ELSE --><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a><!-- ENDIF --></h2>
 
 <!-- IF U_IMAGE -->
@@ -56,7 +53,7 @@ function toggleElement(oElement)
 					<dt><label for="image_name">{L_IMAGE_NAME}:</label></dt>
 					<dd id="image_name_fields"><input class="inputbox autowidth" type="text" tabindex="2" id="image_name" name="image_name" value="{IMAGE_NAME}" size="60" />
 					<!-- IF S_MULTI_IMAGES --><br /><input class="inputbox autowidth" type="text" name="image_num" size="5" value="1" /> {L_LOOP_EXP}<!-- ENDIF --></dd>
-					<!-- IF S_UPLOAD --><dd><input class="checkbox" type="checkbox" name="filename" id="filename" value="filename" onclick="toggleElement(getElement('image_name_fields'));" /><label for="filename"> {L_ORIG_FILENAME}</label></dd><!-- ENDIF -->
+					<!-- IF S_UPLOAD --><dd><input class="checkbox" type="checkbox" name="filename" id="filename" value="filename" onclick="dE('image_name_fields');" /><label for="filename"> {L_ORIG_FILENAME}</label></dd><!-- ENDIF -->
 				</dl>
 			<!-- ENDIF -->
 			<!-- IF S_ALLOWED_TO_RATE -->
@@ -109,10 +106,10 @@ function toggleElement(oElement)
 			</div>
 			<!-- ENDIF -->
 			<div id="message-box">
-				<textarea name="message" id="message" rows="15" cols="76" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" class="inputbox">{MESSAGE}</textarea>
+				<textarea name="message" id="message" rows="7" cols="76" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" class="inputbox">{MESSAGE}</textarea>
 			</div>
 			<!-- IF S_EDIT and S_ALLOW_ROTATE -->
-				<dl>
+				<dl id="upload_field_{upload_image.S_ROW_COUNT}">
 					<dt><label for="rotate">{L_ROTATE_IMAGE}:</label></dt>
 					<dd><input type="radio" name="rotate" id="rotate_0" value="0" checked="checked" /> <label for="rotate_0">{L_ROTATE_NONE}</label> &nbsp;
 						<input type="radio" name="rotate" id="rotate_270" value="270" /> <label for="rotate_270">{L_ROTATE_RIGHT}</label> &nbsp;
@@ -121,19 +118,6 @@ function toggleElement(oElement)
 				</dl>
 			<!-- ENDIF -->
 			<!-- IF S_UPLOAD -->
-				<hr />
-				<!-- BEGIN upload_image -->
-					<dl>
-						<dt><label for="image_file_{upload_image.S_ROW_COUNT}">{L_FILE}:</label></dt>
-						<dd><input class="inputbox autowidth" type="file" tabindex="1{upload_image.S_ROW_COUNT}" id="image_file_{upload_image.S_ROW_COUNT}" name="image_file_{upload_image.S_ROW_COUNT}" size="52" /></dd>
-						<!-- IF S_ALLOW_ROTATE -->
-							<dd><input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_0" value="0" checked="checked" /> <label for="rotate[{upload_image.S_ROW_COUNT}]_0">{L_ROTATE_NONE}</label> &nbsp;
-								<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_270" value="270" /> <label for="rotate[{upload_image.S_ROW_COUNT}]_270">{L_ROTATE_RIGHT}</label> &nbsp;
-								<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_180" value="180" /> <label for="rotate[{upload_image.S_ROW_COUNT}]_180">{L_ROTATE_UPSIDEDOWN}</label> &nbsp;
-								<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_90" value="90" /> <label for="rotate[{upload_image.S_ROW_COUNT}]_90">{L_ROTATE_LEFT}</label></dd>
-						<!-- ENDIF -->
-					</dl>
-				<!-- END upload_image -->
 				<!-- IF S_MULTI_IMAGES --><hr /><!-- ENDIF -->
 				<dl>
 					<dt><label for="max_filesize">{L_MAX_FILE_SIZE}:</label></dt>
@@ -151,6 +135,30 @@ function toggleElement(oElement)
 					<dt><label for="allowed_filetypes">{L_ALLOWED_FILETYPES}:</label></dt>
 					<dd id="allowed_filetypes">{S_ALLOWED_FILETYPES}</dd>
 				</dl>
+				<hr />
+				<!-- BEGIN upload_image -->
+					<dl id="upload_field_{upload_image.S_ROW_COUNT}">
+						<dt><label for="image_file_{upload_image.S_ROW_COUNT}">{L_FILE}:</label></dt>
+						<dd><input class="inputbox autowidth" type="file" onchange="javascript: add_field();" tabindex="1{upload_image.S_ROW_COUNT}" id="image_file_{upload_image.S_ROW_COUNT}" name="image_file_{upload_image.S_ROW_COUNT}" size="52" /></dd>
+						<!-- IF S_ALLOW_ROTATE -->
+							<dd><input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_0" value="0" checked="checked" /> <label for="rotate[{upload_image.S_ROW_COUNT}]_0">{L_ROTATE_NONE}</label> &nbsp;
+								<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_270" value="270" /> <label for="rotate[{upload_image.S_ROW_COUNT}]_270">{L_ROTATE_RIGHT}</label> &nbsp;
+								<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_180" value="180" /> <label for="rotate[{upload_image.S_ROW_COUNT}]_180">{L_ROTATE_UPSIDEDOWN}</label> &nbsp;
+								<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate[{upload_image.S_ROW_COUNT}]_90" value="90" /> <label for="rotate[{upload_image.S_ROW_COUNT}]_90">{L_ROTATE_LEFT}</label></dd>
+						<!-- ENDIF -->
+					</dl>
+				<!-- END upload_image -->
+
+				<a id="add_field_link" style="display: none;" href="javascript: add_field();">{L_ADD_UPLOAD_FIELD}</a>
+				<script type="text/javascript">
+				//<![CDATA[
+					for (i = 1; i < limit_fields; i++)
+					{
+						dE('upload_field_' + i);
+					}
+					dE('add_field_link');
+				//]]>
+				</script>
 			<!-- ENDIF -->
 		</fieldset>
 	<span class="corners-bottom"><span></span></span></div>

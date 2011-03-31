@@ -183,6 +183,7 @@ $lang = array_merge($lang, array(
 	'IMPORT_DEBUG_MES'				=> '%1$s Bilder importiert. Es sind noch %2$s Bilder zu importieren.',
 	'IMPORT_DIR_EMPTY'				=> 'Das Verzeichnis %s ist leer. Du musst die Bilder erst hochladen, bevor du sie importieren kannst.',
 	'IMPORT_FINISHED'				=> 'Alle %1$s Bilder erfolgreich importiert.',
+	'IMPORT_FINISHED_ERRORS'		=> '%1$s Bilder wurden erfolgreich importiert, aber die folgenden Fehler sind aufgetreten:<br /><br />',
 	'IMPORT_MISSING_ALBUM'			=> 'Wähle bitte ein Album aus, in das die Bilder importiert werden sollen.',
 	'IMPORT_SCHEMA_CREATED'			=> 'Das Import-Schema wurde erstellt, warte bitte während die Bilder importiert werden.',
 	'IMPORT_SELECT'					=> 'Wähle die Bilder aus, die importiert werden sollen. Bilder die erfolgreich importiert wurden, werden aus der Auswahl gelöscht. Die anderen Bilder stehen dir danach noch zur Verfügung.',

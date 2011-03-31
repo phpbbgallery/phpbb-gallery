@@ -24,6 +24,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
+	'ADD_UPLOAD_FIELD'				=> 'Add more upload fields',
 	'ALBUM'							=> 'Album',
 	'ALBUM_IS_CATEGORY'				=> 'The album you cheated to, is a category-album.<br />You can\'t upload to categories.',
 	'ALBUM_LOCKED'					=> 'Locked',
@@ -31,8 +32,10 @@ $lang = array_merge($lang, array(
 	'ALBUM_NOT_EXIST'				=> 'This album does not exist',
 	'ALBUM_PERMISSIONS'				=> 'Album Permissions',
 	'ALBUM_REACHED_QUOTA'			=> 'This album has reached the quota of images. You cannot upload any more. Please contact the administrator for more information.',
-	'ALBUM_UPLOAD_NEED_APPROVAL'	=> 'Your image has been uploaded successfully.<br /><br />But the feature Image Approval has been enabled so your image must be approved by a administrator or a moderator before posting',
-	'ALBUM_UPLOAD_SUCCESSFUL'		=> 'Your image has been uploaded successfully',
+	'ALBUM_UPLOAD_NEED_APPROVAL'		=> 'Your images have been uploaded successfully.<br /><br />But your image must be approved by a administrator or a moderator before they are public visible.',
+	'ALBUM_UPLOAD_NEED_APPROVAL_ERROR'	=> 'Some of your images have been uploaded successfully.<br /><br />But your images must be approved by a administrator or a moderator before they are public visible.<br /><br /><p class="error">%s</p>',
+	'ALBUM_UPLOAD_SUCCESSFUL'		=> 'Your images have been uploaded successfully.',
+	'ALBUM_UPLOAD_SUCCESSFUL_ERROR'	=> 'Some of your images have been uploaded successfully.<br /><br /><span class="error">%s</span>',
 	'ALBUMS_MARKED'					=> 'All albums have been marked read.',
 	'ALL'							=> 'All',
 	'ALL_IMAGES'					=> 'All image',
@@ -237,6 +240,7 @@ $lang = array_merge($lang, array(
 	'UNWATCHED_ALBUMS'				=> 'You are no longer informed about new images in these albums.',
 	'UNWATCHED_IMAGE'				=> 'You are no longer informed about new comments on this image.',
 	'UNWATCHED_IMAGES'				=> 'You are no longer informed about new comments on these images.',
+	'UPLOAD_ERROR'					=> 'While uploading „%1$s“ the following error occurred:<br />&raquo; %2$s',
 	'UPLOAD_IMAGE'					=> 'Upload Image',
 	'UPLOAD_IMAGE_SIZE_TOO_BIG'		=> 'Your image dimension size is too large',
 	'UPLOAD_NO_FILE'				=> 'You must enter your path and filename',

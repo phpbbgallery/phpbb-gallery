@@ -364,6 +364,25 @@ switch ($mode)
 					$s_captcha_hidden_fields = '';
 				}
 
+				$allowed_filetypes = $allowed_extensions = array();
+				if (phpbb_gallery_config::get('allow_jpg'))
+				{
+					$allowed_filetypes[] = $user->lang['FILETYPES_JPG'];
+					$allowed_extensions[] = 'jpg';
+					$allowed_extensions[] = 'jpeg';
+				}
+				if (phpbb_gallery_config::get('allow_gif'))
+				{
+					$allowed_filetypes[] = $user->lang['FILETYPES_GIF'];
+					$allowed_extensions[] = 'gif';
+				}
+				if (phpbb_gallery_config::get('allow_png'))
+				{
+					$allowed_filetypes[] = $user->lang['FILETYPES_PNG'];
+					$allowed_extensions[] = 'png';
+				}
+				$upload_successful = false;
+
 				$images = 0;
 				if($submit)
 				{
@@ -372,28 +391,14 @@ switch ($mode)
 						trigger_error('FORM_INVALID');
 					}
 
+					$error_array = array();
 					if (phpbb_gallery_misc::display_captcha('upload'))
 					{
 						$captcha_error = $captcha->validate();
-						if ($captcha_error)
+						if ($captcha_error !== false)
 						{
-							trigger_error($captcha_error);
+							$error_array[] = $captcha_error;
 						}
-					}
-
-					$allowed_extensions = array();
-					if (phpbb_gallery_config::get('allow_jpg'))
-					{
-						$allowed_extensions[] = 'jpg';
-						$allowed_extensions[] = 'jpeg';
-					}
-					if (phpbb_gallery_config::get('allow_gif'))
-					{
-						$allowed_extensions[] = 'gif';
-					}
-					if (phpbb_gallery_config::get('allow_png'))
-					{
-						$allowed_extensions[] = 'png';
 					}
 
 					if (!class_exists('fileupload'))
@@ -408,26 +413,41 @@ switch ($mode)
 					// Get File Upload Info
 					$image_id_ary = array();
 					$loop = request_var('image_num', 0);
+					$username = request_var('username', $user->data['username']);
 					$rotate = request_var('rotate', array(0));
 					$loop = ($loop != 0) ? $loop - 1 : $loop;
-					for ($i = 0; $i < $upload_image_files; $i++)
+
+					if (!$user->data['is_registered'] && $username)
 					{
-						$image_file = $fileupload->form_upload('image_file_' . $i);
-						if (!$image_file->uploadname)
+						if ($result = validate_username($username))
 						{
-							continue;
+							$user->add_lang('ucp');
+							$error_array[] = $user->lang[$result . '_USERNAME'];
 						}
-						$image_file->clean_filename('unique_ext'/*, $user->data['user_id'] . '_'*/);
-						$image_file->move_file(substr(phpbb_gallery_url::path('upload_noroot'), 0, -1), false, false, CHMOD_ALL);
-						if (sizeof($image_file->error) && $image_file->uploadname)
+					}
+
+					$upload_successful = (empty($error_array)) ? true : false;
+					if (empty($error_array))
+					{
+						for ($i = 0; $i < $upload_image_files; $i++)
 						{
-							$image_file->remove();
-							trigger_error(implode('<br />', $image_file->error));
-						}
-						@chmod($image_file->destination_file, 0777);
-						$image_data = array();
-						if (1 == 1)
-						{
+							$image_file = $fileupload->form_upload('image_file_' . $i);
+							if (!$image_file->uploadname)
+							{
+								continue;
+							}
+
+							$image_file->clean_filename('unique_ext'/*, $user->data['user_id'] . '_'*/);
+							$image_file->move_file(substr(phpbb_gallery_url::path('upload_noroot'), 0, -1), false, false, CHMOD_ALL);
+							if (sizeof($image_file->error) && $image_file->uploadname)
+							{
+								$image_file->remove();
+								$error_array[] = $user->lang('UPLOAD_ERROR', $image_file->uploadname, implode('<br />&raquo; ', $image_file->error));
+								continue;
+							}
+							@chmod($image_file->destination_file, 0777);
+							$image_data = array();
+
 							$loop = $loop + 1;
 							$images = $images + 1;
 
@@ -456,21 +476,9 @@ switch ($mode)
 								'image_time'		=> time() + $loop,
 								'image_contest'		=> ($album_data['album_contest']) ? phpbb_gallery_image::IN_CONTEST : phpbb_gallery_image::NO_CONTEST,
 								'thumbnail'			=> '',
-								'username'			=> request_var('username', $user->data['username']),
+								'username'			=> $username,
 							);
 							$image_data['image_name'] = ((request_var('filename', '') == 'filename') || ($image_data['image_name'] == '')) ? str_replace("_", " ", utf8_substr($image_file->uploadname, 0, utf8_strrpos($image_file->uploadname, '.'))) : $image_data['image_name'];
-
-							if (!$image_data['image_name'])
-							{
-								trigger_error('MISSING_IMAGE_NAME');
-							}
-							if (!$user->data['is_registered'] && $image_data['username'])
-							{
-								if (validate_username($image_data['username']))
-								{
-									trigger_error('INVALID_USERNAME');
-								}
-							}
 
 							$image_tools = new phpbb_gallery_image_file();
 							$image_tools->set_image_options(phpbb_gallery_config::get('max_filesize'), phpbb_gallery_config::get('max_height'), phpbb_gallery_config::get('max_width'));
@@ -509,7 +517,8 @@ switch ($mode)
 								else
 								{
 									@unlink($image_file->destination_file);
-									trigger_error('UPLOAD_IMAGE_SIZE_TOO_BIG');
+									$error_array[] = $user->lang('UPLOAD_ERROR', $image_file->uploadname, $user->lang['UPLOAD_IMAGE_SIZE_TOO_BIG']);
+									continue;
 								}
 							}
 
@@ -530,7 +539,8 @@ switch ($mode)
 							if ($image_data['image_filesize'] > (1.2 * phpbb_gallery_config::get('max_filesize')))
 							{
 								@unlink($image_file->destination_file);
-								trigger_error('BAD_UPLOAD_FILE_SIZE');
+								$error_array[] = $user->lang('UPLOAD_ERROR', $image_file->uploadname, $user->lang['BAD_UPLOAD_FILE_SIZE']);
+								continue;
 							}
 
 							$image_data = phpbb_gallery_image::add_image($image_data, $album_id);
@@ -538,15 +548,22 @@ switch ($mode)
 							$image_name = $image_data['image_name'];
 							$image_id_ary[] = $image_id;
 						}
-					}
-					$image_id = ($images > 1) ? 0 : $image_id;
+						$error = implode('<br />', $error_array);
 
-					// Complete... now send a message to user
-					if ($images < 1)
-					{
-						$error .= (($error) ? '<br />' : '') . $user->lang['UPLOAD_NO_FILE'];
+						if ($images < 1)
+						{
+							$upload_successful = false;
+							$error .= ($error) ? '' : $user->lang['UPLOAD_NO_FILE'];
+						}
+						$image_id = ($images > 1) ? 0 : $image_id;
 					}
 					else
+					{
+						$error = implode('<br />', $error_array);
+					}
+
+					// Complete... now send a message to user
+					if ($upload_successful)
 					{
 						phpbb_gallery_notification::send_notification('album', $album_id, $image_name);
 						phpbb_gallery_image::handle_counter($image_id_ary, true);
@@ -561,19 +578,6 @@ switch ($mode)
 					{
 						$captcha->reset();
 					}
-				}
-				$allowed_filetypes = array();
-				if (phpbb_gallery_config::get('allow_gif'))
-				{
-					$allowed_filetypes[] = $user->lang['FILETYPES_GIF'];
-				}
-				if (phpbb_gallery_config::get('allow_jpg'))
-				{
-					$allowed_filetypes[] = $user->lang['FILETYPES_JPG'];
-				}
-				if (phpbb_gallery_config::get('allow_png'))
-				{
-					$allowed_filetypes[] = $user->lang['FILETYPES_PNG'];
 				}
 
 				$template->assign_vars(array(
@@ -613,23 +617,28 @@ switch ($mode)
 					));
 				}
 
-				if (!$error)
+				if ($upload_successful)
 				{
 					if (phpbb_gallery::$auth->acl_check('i_approve', $album_id, $album_data['album_user_id']))
 					{
-						$message = $user->lang['ALBUM_UPLOAD_SUCCESSFUL'];
+						$message = (!$error) ? $user->lang['ALBUM_UPLOAD_SUCCESSFUL'] : $user->lang('ALBUM_UPLOAD_SUCCESSFUL_ERROR', $error);
 					}
 					else
 					{
-						$message = $user->lang['ALBUM_UPLOAD_NEED_APPROVAL'];
+						$message = (!$error) ? $user->lang['ALBUM_UPLOAD_NEED_APPROVAL'] : $user->lang('ALBUM_UPLOAD_NEED_APPROVAL_ERROR', $error);
 						$slower_redirect = true;
 						$image_id = false;
+					}
+
+					if ($error)
+					{
+						$slower_redirect = true;
+						$error = '';
 					}
 				}
 				else
 				{
 					$submit = false;
-					$message = $user->lang['UPLOAD_NO_FILE'];
 				}
 
 				$count = 0;
@@ -994,9 +1003,10 @@ switch ($mode)
 							$submit = false;
 							$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_USERNAME'];
 						}
-						if (validate_username($comment_username))
+						if ($result = validate_username($comment_username))
 						{
-							$error .= (($error) ? '<br />' : '') . $user->lang['INVALID_USERNAME'];
+							$user->add_lang('ucp');
+							$error .= (($error) ? '<br />' : '') . $user->lang[$result . '_USERNAME'];
 							$submit = false;
 						}
 					}
@@ -1222,7 +1232,7 @@ if ($submit)
 		$message .= '<br />' . sprintf($user->lang['CLICK_RETURN_ALBUM'], '<a href="' . $album_backlink . '">', '</a>');
 	}
 
-	meta_refresh((($slower_redirect) ? 10 : 3), ($image_id) ? $image_backlink : $album_backlink);
+	meta_refresh((($slower_redirect) ? 20 : 3), ($image_id) ? $image_backlink : $album_backlink);
 	trigger_error($message);
 }
 
