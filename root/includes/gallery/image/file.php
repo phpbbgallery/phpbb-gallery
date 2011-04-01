@@ -299,7 +299,7 @@ class phpbb_gallery_image_file
 			header('Content-Length: ' . $content_length);
 		}
 
-		$db->sql_close();
+		garbage_collection();
 
 		$cached = false;
 		if ($this->browser_cache)
