@@ -242,16 +242,9 @@ class phpbb_gallery_image
 		$sk	= request_var('sk', phpbb_gallery_config::get('default_sort_key'));
 		$sd	= request_var('sd', phpbb_gallery_config::get('default_sort_dir'));
 
-		$image_data['rating'] = $user->lang['NOT_RATED'];
-		if ($image_data['image_rates'])
-		{
-			$image_data['rating'] = sprintf((($image_data['image_rates'] == 1) ? $user->lang['RATE_STRING'] : $user->lang['RATES_STRING']), $image_data['image_rate_avg'] / 100, $image_data['image_rates']);
-		}
-		// Hide the result, while still rating on contests
-		if ($image_data['image_contest'])
-		{
-			$image_data['rating'] = $user->lang['CONTEST_RATING_HIDDEN'];
-		}
+		$rating = new phpbb_gallery_image_rating($image_data['image_id'], $image_data, $image_data);
+		$image_data['rating'] = $rating->get_image_rating(false, false);
+		unset($rating);
 
 		$s_user_allowed = (($image_data['image_user_id'] == $user->data['user_id']) && ($album_status != phpbb_gallery_album::STATUS_LOCKED));
 

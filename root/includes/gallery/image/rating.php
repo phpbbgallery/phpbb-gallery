@@ -171,10 +171,11 @@ class phpbb_gallery_image_rating
 	/**
 	* Get rating for a image
 	*
-	* @param	$user_rating	Personal rating of the user is displayed in most cases.
-	* @return	string			Returns a string containing the information how the image was rated in average and how often.
+	* @param	$user_rating			Personal rating of the user is displayed in most cases.
+	* @param	$display_contest_end	Shall we display the end-time of the contest? This requires the album-data to be filled.
+	* @return	string					Returns a string containing the information how the image was rated in average and how often.
 	*/
-	public function get_image_rating($user_rating = false)
+	public function get_image_rating($user_rating = false, $display_contest_end = true)
 	{
 		global $template;
 		$template->assign_var('GALLERY_RATING', self::MODE_SELECT);//@todo: phpbb_gallery_config::get('rating_mode'));
@@ -188,6 +189,10 @@ class phpbb_gallery_image_rating
 				global $user;
 				if ($this->image_data('image_contest'))
 				{
+					if (!$display_contest_end)
+					{
+						return $user->lang['CONTEST_RATING_HIDDEN'];
+					}
 					return $user->lang('CONTEST_RESULT_HIDDEN', $user->format_date(($this->album_data('contest_start') + $this->album_data('contest_end')), false, true));
 				}
 				else
