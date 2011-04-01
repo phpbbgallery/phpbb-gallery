@@ -215,7 +215,6 @@ class phpbb_gallery_dbal_schema
 				'COLUMNS'		=> array(
 					'image_id'				=> array('UINT', NULL, 'auto_increment'),
 					'image_filename'		=> array('VCHAR:255', ''),
-					'image_thumbnail'		=> array('VCHAR:255', ''),
 					'image_name'			=> array('VCHAR:255', ''),
 					'image_name_clean'		=> array('VCHAR:255', ''),
 					'image_desc'			=> array('MTEXT_UNI', ''),

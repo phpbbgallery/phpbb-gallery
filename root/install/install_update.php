@@ -626,6 +626,9 @@ class install_update extends module
 				//@todo: Move on bbcode-change or creating all modules
 				//$reparse_modules_bbcode = true;
 			case '1.0.5':
+				$umil->table_column_remove(array(
+					array(GALLERY_IMAGES_TABLE,	'image_thumbnail'),
+				));
 			break;
 		}
 

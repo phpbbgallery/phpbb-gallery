@@ -215,7 +215,7 @@ class acp_gallery
 					}
 
 					// Hopefully this won't take to long! >> I think we must make it batchwise
-					$sql = 'SELECT image_id, image_filename, image_thumbnail
+					$sql = 'SELECT image_id, image_filename
 						FROM ' . GALLERY_IMAGES_TABLE . '
 						WHERE filesize_upload = 0';
 					$result = $db->sql_query($sql);
@@ -223,8 +223,8 @@ class acp_gallery
 					{
 						$sql_ary = array(
 							'filesize_upload'		=> @filesize(phpbb_gallery_url::path('upload') . $row['image_filename']),
-							'filesize_medium'		=> @filesize(phpbb_gallery_url::path('medium') . $row['image_thumbnail']),
-							'filesize_cache'		=> @filesize(phpbb_gallery_url::path('cache') . $row['image_thumbnail']),
+							'filesize_medium'		=> @filesize(phpbb_gallery_url::path('medium') . $row['image_filename']),
+							'filesize_cache'		=> @filesize(phpbb_gallery_url::path('cache') . $row['image_filename']),
 						);
 						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 							SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
@@ -441,7 +441,6 @@ class acp_gallery
 
 						$sql_ary = array(
 							'image_filename' 		=> $image_filename,
-							'image_thumbnail'		=> '',
 							'image_desc'			=> '',
 							'image_desc_uid'		=> '',
 							'image_desc_bitfield'	=> '',
