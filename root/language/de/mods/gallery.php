@@ -180,6 +180,7 @@ $lang = array_merge($lang, array(
 
 	'RANDOM_IMAGES'					=> 'Zufällige Bilder',
 	'RATE_IMAGE'					=> 'Bild bewerten',
+	'RATES_COUNT'					=> 'Anzahl der Bewertungen',
 	'RATING'						=> 'Bewertung',
 	'RATING_STRINGS'				=> array(
 		0	=> 'Nicht bewertet',

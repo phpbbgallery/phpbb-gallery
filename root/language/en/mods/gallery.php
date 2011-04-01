@@ -179,6 +179,7 @@ $lang = array_merge($lang, array(
 
 	'RANDOM_IMAGES'					=> 'Random images',
 	'RATE_IMAGE'					=> 'Rate the image',
+	'RATES_COUNT'					=> 'Number of ratings',
 	'RATING'						=> 'Rating',
 	'RATING_STRINGS'				=> array(
 		0	=> 'not rated',

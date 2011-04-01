@@ -62,14 +62,14 @@ class phpbb_gallery_integration
 		if (phpbb_gallery_config::get('rrc_profile_mode'))
 		{
 			$ints = array(
-				'rows'		=> phpbb_gallery_config::get('rrc_profile_rows'),
-				'columns'	=> phpbb_gallery_config::get('rrc_profile_columns'),
-				'comments'	=> 0,
-				'contests'	=> 0,
+				phpbb_gallery_config::get('rrc_profile_rows'),
+				phpbb_gallery_config::get('rrc_profile_columns'),
+				0, 0,
 			);
 
-			phpbb_gallery_url::_include('functions_recent');
-			recent_gallery_images($ints, phpbb_gallery_config::get('rrc_profile_display'), phpbb_gallery_config::get('rrc_profile_mode'), false, phpbb_gallery_config::get('rrc_profile_pegas'), 'user', $user_id);
+			$gallery_block = new phpbb_gallery_block(phpbb_gallery_config::get('rrc_profile_mode'), phpbb_gallery_config::get('rrc_profile_display'), $ints, false, phpbb_gallery_config::get('rrc_profile_pegas'));
+			$gallery_block->add_users($user_id);
+			$gallery_block->display();
 		}
 
 		$template->assign_vars(array(

@@ -32,7 +32,6 @@ class phpbb_gallery_constants
 	const WATERMARK_RIGHT = 32;
 
 	// Additional constants
-	const CONTEST_IMAGES = 3;
 	const MODULE_DEFAULT_ACP = 31;
 	const MODULE_DEFAULT_LOG = 25;
 	const MODULE_DEFAULT_UCP = 0;

@@ -651,7 +651,7 @@ class acp_gallery_albums
 		}
 		else if ($this->parent_id)
 		{
-			$row = get_album_info($this->parent_id);
+			$row = phpbb_gallery_album::get_info($this->parent_id);
 
 			$url = $this->u_action . '&amp;parent_id=' . $this->parent_id . '&amp;a=' . $row['album_id'];
 
