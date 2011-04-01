@@ -37,46 +37,8 @@ $sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['alb
 */
 if ($album_data['contest_id'] && $album_data['contest_marked'] && (($album_data['contest_start'] + $album_data['contest_end']) < time()))
 {
-	$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-		SET image_contest = ' . phpbb_gallery_image::NO_CONTEST . '
-		WHERE image_album_id = ' . $album_id;
-	$db->sql_query($sql);
-
-	$sql = 'SELECT image_id
-		FROM ' . GALLERY_IMAGES_TABLE . '
-		WHERE image_album_id = ' . $album_id . '
-		ORDER BY image_rate_avg DESC, image_rate_points DESC, image_id ASC';
-	$result = $db->sql_query_limit($sql, phpbb_gallery_constants::CONTEST_IMAGES);
-	$first = (int) $db->sql_fetchfield('image_id');
-	$second = (int) $db->sql_fetchfield('image_id');
-	$third = (int) $db->sql_fetchfield('image_id');
-	$db->sql_freeresult($result);
-
-	$sql = 'UPDATE ' . GALLERY_CONTESTS_TABLE . '
-		SET contest_marked = ' . phpbb_gallery_image::NO_CONTEST . ",
-			contest_first = $first,
-			contest_second = $second,
-			contest_third = $third
-		WHERE contest_id = " . (int) $album_data['contest_id'];
-	$db->sql_query($sql);
 	$contest_end_time = $album_data['contest_start'] + $album_data['contest_end'];
-	$sql_update = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-		SET image_contest_end = ' . $contest_end_time . ',
-			image_contest_rank = 1
-		WHERE image_id = ' . $first;
-	$db->sql_query($sql_update);
-	$sql_update = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-		SET image_contest_end = ' . $contest_end_time . ',
-			image_contest_rank = 2
-		WHERE image_id = ' . $second;
-	$db->sql_query($sql_update);
-	$sql_update = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-		SET image_contest_end = ' . $contest_end_time . ',
-			image_contest_rank = 3
-		WHERE image_id = ' . $third;
-	$db->sql_query($sql_update);
-
-	phpbb_gallery_config::inc('contests_ended', 1);
+	phpbb_gallery_contest::end($album_id, $album_data['contest_id'], $contest_end_time);
 
 	$album_data['contest_marked'] = phpbb_gallery_image::NO_CONTEST;
 }
