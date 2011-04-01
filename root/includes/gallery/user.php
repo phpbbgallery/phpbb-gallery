@@ -76,6 +76,17 @@ class phpbb_gallery_user
 	}
 
 	/**
+	* Load the users data from the database and cast it...
+	*/
+	public function set_permissions_changed($time)
+	{
+		if ($this->data)
+		{
+			$this->data['user_permissions_changed']= $time;
+		}
+	}
+
+	/**
 	* Some functions need the data to be loaded or at least checked.
 	* So here we loaded if it is not laoded yet and we need it ;)
 	*/

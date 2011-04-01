@@ -27,6 +27,8 @@ class phpbb_gallery_image_file
 	public $chmod = 0777;
 
 	public $errors = array();
+	private $browser_cache = true;
+	private $last_modified = 0;
 
 	public $exif_data_force_db = false;
 
@@ -202,6 +204,53 @@ class phpbb_gallery_image_file
 	}
 
 	/**
+	* We need to disable the "last-modified" caching for guests and in cases of image-errors,
+	* so that they can view them, if they logged in or the error was fixed.
+	*/
+	public function disable_browser_cache()
+	{
+		$this->browser_cache = false;
+	}
+
+	/**
+	* Collect the last timestamp where something changed.
+	* This must contain:
+	*	- Last change of the file
+	*	- Last change of user's permissions
+	*	- Last change of user's groups
+	*	- Last change of watermark config
+	*	- Last change of watermark file
+	*/
+	public function set_last_modified($timestamp)
+	{
+		$this->last_modified = max($timestamp, $this->last_modified);
+	}
+
+	/**
+	* Check if the browser has the file already and set the appropriate headers.
+	* @returns false if a resend is in order.
+	*/
+	function set_modified_headers($browser)
+	{
+		// let's see if we have to send the file at all
+		$last_load = phpbb_parse_if_modified_since();
+		if (strpos(strtolower($browser), 'msie 6.0') === false)
+		{
+			if ($last_load !== false && $last_load >= $this->last_modified)
+			{
+				send_status_line(304, 'Not Modified');
+				return true;
+			}
+			else
+			{
+				header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $this->last_modified) . ' GMT');
+				header('Cache-Control: max-age=1, must-revalidate');
+			}
+		}
+		return false;
+	}
+
+	/**
 	* Sending the image to the browser.
 	* Mostly copied from phpBB::download/file.php
 	*/
@@ -252,7 +301,18 @@ class phpbb_gallery_image_file
 
 		$db->sql_close();
 
-		if ($this->image)
+		$cached = false;
+		if ($this->browser_cache)
+		{
+			$this->set_last_modified(@filemtime($this->image_source));
+			$cached = $this->set_modified_headers($user->browser);
+		}
+
+		if ($cached)
+		{
+			return;
+		}
+		elseif ($this->image)
 		{
 			$image_function = 'image' . $this->image_type;
 			$image_function($this->image);

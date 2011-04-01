@@ -377,6 +377,7 @@ class phpbb_gallery_dbal_schema
 					'user_last_update'	=> array('TIMESTAMP', 0),
 					'user_viewexif'		=> array('UINT:1', 0),
 					'user_permissions'	=> array('MTEXT_UNI', ''),
+					'user_permissions_changed'	=> array('TIMESTAMP', 0),
 				),
 				'PRIMARY_KEY'		=> 'user_id',
 			),
