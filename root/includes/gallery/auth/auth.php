@@ -284,7 +284,7 @@ class phpbb_gallery_auth
 	*/
 	static public function set_user_permissions($user_ids, $permissions = false)
 	{
-		global $db;
+		global $db, $user;
 
 		$sql_set = (is_array($permissions)) ? $db->sql_escape(self::serialize_auth_data($permissions)) : '';
 		$sql_where = '';
@@ -301,9 +301,18 @@ class phpbb_gallery_auth
 			$sql_where = 'WHERE user_id = ' . (int) $user_ids;
 		}
 
+		if ($user_ids == $user->data['user_id'])
+		{
+			if (isset(phpbb_gallery::$user))
+			{
+				phpbb_gallery::$user->set_permissions_changed(time());
+			}
+		}
+
 		$sql = 'UPDATE ' . GALLERY_USERS_TABLE . "
-			SET user_permissions = '" . $sql_set . "'
-			" . $sql_where;
+			SET user_permissions = '" . $sql_set . "',
+				user_permissions_changed = " . time() . '
+			' . $sql_where;
 		$db->sql_query($sql);
 	}
 

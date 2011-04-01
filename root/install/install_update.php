@@ -413,6 +413,7 @@ class install_update extends module
 			case '1.0.5':
 				$umil->table_column_add(array(
 					array(GALLERY_USERS_TABLE, 'user_permissions', array('MTEXT', '')),
+					array(GALLERY_USERS_TABLE, 'user_permissions_changed', array('TIMESTAMP', 0)),
 					array(GALLERY_USERS_TABLE, 'user_last_update', array('TIMESTAMP', 0)),
 				));
 			break;
@@ -527,6 +528,8 @@ class install_update extends module
 						phpbb_gallery_config::set($name, $value);
 					}
 				}
+
+				phpbb_gallery_config::set('watermark_changed', time());
 
 				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=4");
 			break;

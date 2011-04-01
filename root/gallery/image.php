@@ -150,6 +150,11 @@ $image_tools = new phpbb_gallery_image_file(phpbb_gallery_config::get('gdlib_ver
 $image_tools->set_image_options(phpbb_gallery_config::get('max_filesize'), phpbb_gallery_config::get('max_height'), phpbb_gallery_config::get('max_width'));
 $image_tools->set_image_data($image_source, $image_data['image_name']);
 
+if ($image_error || !$user->data['is_registered'])
+{
+	$image_tools->disable_browser_cache();
+}
+
 // Generate the sourcefile, if it's missing
 if (($mode == 'medium') || ($mode == 'thumbnail'))
 {
@@ -203,10 +208,14 @@ if (($mode == 'medium') || ($mode == 'thumbnail'))
 	}
 }
 
+$image_tools->set_last_modified(phpbb_gallery::$user->get_data('user_permissions_changed'));
+$image_tools->set_last_modified(phpbb_gallery_config::get('watermark_changed'));
+
 // Watermark
 if (phpbb_gallery_config::get('watermark_enabled') && $album_data['album_watermark'] && !phpbb_gallery::$auth->acl_check('i_watermark', $album_id, $album_data['album_user_id']) && $possible_watermark)
 {
 	$filesize_var = '';
+	$image_tools->set_last_modified(@filemtime(phpbb_gallery_url::path('phpbb') . phpbb_gallery_config::get('watermark_source')));
 	$image_tools->watermark_image(phpbb_gallery_url::path('phpbb') . phpbb_gallery_config::get('watermark_source'), phpbb_gallery_config::get('watermark_position'), phpbb_gallery_config::get('watermark_height'), phpbb_gallery_config::get('watermark_width'));
 }
 

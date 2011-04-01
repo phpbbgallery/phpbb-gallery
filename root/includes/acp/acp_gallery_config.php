@@ -136,6 +136,10 @@ class acp_gallery_config
 						$cache->destroy('sql', BBCODES_TABLE);
 					}
 				}
+				if ((strpos($config_name, 'watermark') !== false) && (phpbb_gallery_config::get($config_name) != $config_value))
+				{
+					phpbb_gallery_config::set('watermark_changed', time());
+				}
 				phpbb_gallery_config::set($config_name, $config_value);
 			}
 		}

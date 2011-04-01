@@ -247,6 +247,7 @@ class phpbb_gallery_config
 		'viewtopic_images'		=> true,
 		'viewtopic_link'		=> false,
 
+		'watermark_changed'		=> 0,
 		'watermark_enabled'		=> true,
 		'watermark_height'		=> 50,
 		'watermark_position'	=> 20,
