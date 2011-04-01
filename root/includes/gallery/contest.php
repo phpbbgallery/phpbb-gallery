@@ -21,6 +21,32 @@ class phpbb_gallery_contest
 {
 	const NUM_IMAGES = 3;
 
+	/**
+	* There are different modes to calculate who won the contest.
+	* This value should be one of the constant-names below.
+	*/
+	private $mode = self::MODE_AVERAGE;
+
+	/**
+	* The image with the highest average wins.
+	*/
+	const MODE_AVERAGE = 1;
+	/**
+	* The image with the highest number of total points wins.
+	*/
+	const MODE_SUM = 2;
+
+	static private function get_tabulation()
+	{
+		switch (self::$mode)
+		{
+			case self::MODE_AVERAGE:
+				return 'image_rate_avg DESC, image_rate_points DESC, image_id ASC';
+			case self::MODE_SUM:
+				return 'image_rate_points DESC, image_rate_avg DESC, image_id ASC';
+		}
+	}
+
 	static public function end($album_id, $contest_id, $end_time)
 	{
 		global $db;
@@ -33,7 +59,7 @@ class phpbb_gallery_contest
 		$sql = 'SELECT image_id
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE image_album_id = ' . $album_id . '
-			ORDER BY image_rate_avg DESC, image_rate_points DESC, image_id ASC';
+			ORDER BY ' . self::get_tabulation();
 		$result = $db->sql_query_limit($sql, self::NUM_IMAGES);
 		$first = (int) $db->sql_fetchfield('image_id');
 		$second = (int) $db->sql_fetchfield('image_id');
@@ -97,7 +123,7 @@ class phpbb_gallery_contest
 		$sql = 'SELECT image_id
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE image_album_id = ' . $album_id . '
-			ORDER BY image_rate_avg DESC, image_rate_points DESC, image_id ASC';
+			ORDER BY ' . self::get_tabulation();
 		$result = $db->sql_query_limit($sql, self::NUM_IMAGES);
 		$first = (int) $db->sql_fetchfield('image_id');
 		$second = (int) $db->sql_fetchfield('image_id');
