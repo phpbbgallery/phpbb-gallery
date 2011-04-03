@@ -234,13 +234,14 @@
 
 <!-- IF S_ALLOWED_READ_COMMENTS -->
 <a name="comments"></a>
-<!-- IF not .commentrow -->
+<!-- IF not .commentrow or S_COMMENTS_DISABLED -->
 	<div id="comments" class="panel">
 		<div class="inner"><span class="corners-top"><span></span></span>
-			<strong>{L_NO_COMMENTS}</strong>
+			<strong><!-- IF S_COMMENTS_DISABLED -->{L_IMAGE_COMMENTS_DISABLED}<!-- ELSE -->{L_NO_COMMENTS}<!-- ENDIF --></strong>
 		<span class="corners-bottom"><span></span></span></div>
 	</div>
-<!-- ELSE -->
+<!-- ENDIF -->
+<!-- IF .commentrow -->
 	<div class="topic-actions">
 		<div class="pagination">
 			{IMAGE_COMMENTS} {L_COMMENTS} &bull; {PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF -->

@@ -237,7 +237,7 @@ if (phpbb_gallery_config::get('allow_rates'))
 	}
 	$template->assign_vars(array(
 		'IMAGE_RATING'			=> $rating->get_image_rating($user_rating),
-		'S_ALLOWED_TO_RATE'		=> $rating->is_allowed(),
+		'S_ALLOWED_TO_RATE'		=> (!$user_rating && $rating->is_allowed()),
 		'S_VIEW_RATE'			=> (phpbb_gallery::$auth->acl_check('i_rate', $album_id, $album_data['album_user_id'])) ? true : false,
 		'S_COMMENT_ACTION'		=> phpbb_gallery_url::append_sid('posting', "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=rate"),
 	));
@@ -247,7 +247,8 @@ if (phpbb_gallery_config::get('allow_rates'))
 /**
 * Posting comment
 */
-if (phpbb_gallery_config::get('allow_comments') && phpbb_gallery::$auth->acl_check('c_post', $album_id, $album_data['album_user_id']) && ($album_data['album_status'] != ITEM_LOCKED) && (($image_data['image_status'] != phpbb_gallery_image::STATUS_LOCKED) || phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id'])))
+$comments_disabled = (!phpbb_gallery_config::get('allow_comments') || (phpbb_gallery_config::get('comment_user_control') && !$image_data['image_allow_comments']));
+if (!$comments_disabled && phpbb_gallery::$auth->acl_check('c_post', $album_id, $album_data['album_user_id']) && ($album_data['album_status'] != ITEM_LOCKED) && (($image_data['image_status'] != phpbb_gallery_image::STATUS_LOCKED) || phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id'])))
 {
 	$user->add_lang('posting');
 	phpbb_gallery_url::_include('functions_posting', 'phpbb');
@@ -307,7 +308,10 @@ if (phpbb_gallery_config::get('allow_comments') && phpbb_gallery::$auth->acl_che
 		$template->assign_var('S_COMMENT_ACTION', phpbb_gallery_url::append_sid('posting', "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=add"));
 	}
 }
-
+elseif (phpbb_gallery_config::get('comment_user_control') && !$image_data['image_allow_comments'])
+{
+	$template->assign_var('S_COMMENTS_DISABLED', true);
+}
 
 /**
 * Listing comment

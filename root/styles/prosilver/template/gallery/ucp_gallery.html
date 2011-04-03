@@ -35,6 +35,15 @@
 				<label for="viewexifs0"><input type="radio" name="viewexifs" id="viewexifs0" value="0"<!-- IF not S_VIEWEXIFS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
 			</dd>
 		</dl>
+		<!-- IF S_COMMENTS_ENABLED -->
+		<dl>
+			<dt><label for="allow_comments1">{L_USER_ALLOW_COMMENTS}:</label></dt>
+			<dd>
+				<label for="allow_comments1"><input type="radio" name="allow_comments" id="allow_comments1" value="1"<!-- IF S_ALLOW_COMMENTS --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
+				<label for="allow_comments0"><input type="radio" name="allow_comments" id="allow_comments0" value="0"<!-- IF not S_ALLOW_COMMENTS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+			</dd>
+		</dl>
+		<!-- ENDIF -->
 		</fieldset>
 	<span class="corners-bottom"><span></span></span></div>
 </div>

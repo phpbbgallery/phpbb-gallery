@@ -123,11 +123,16 @@ class ucp_gallery
 		if($submit)
 		{
 			$gallery_settings = array(
-				'watch_own'		=> request_var('watch_own',		false),
-				'watch_com'		=> request_var('watch_com',		false),
-				'watch_favo'	=> request_var('watch_favo',	false),
-				'user_viewexif'	=> request_var('viewexifs',		false),
+				'watch_own'				=> request_var('watch_own',		false),
+				'watch_com'				=> request_var('watch_com',		false),
+				'watch_favo'			=> request_var('watch_favo',	false),
+				'user_viewexif'			=> request_var('viewexifs',		false),
+				'user_allow_comments'	=> request_var('allow_comments',false),
 			);
+			if (!phpbb_gallery_config::get('allow_comments') || !phpbb_gallery_config::get('comment_user_control'))
+			{
+				unset($gallery_settings['user_allow_comments']);
+			}
 
 			phpbb_gallery::$user->update_data($gallery_settings);
 
@@ -147,6 +152,8 @@ class ucp_gallery
 			'S_WATCH_COM'		=> phpbb_gallery::$user->get_data('watch_com'),
 			'S_WATCH_FAVO'		=> phpbb_gallery::$user->get_data('watch_favo'),
 			'S_VIEWEXIFS'		=> phpbb_gallery::$user->get_data('user_viewexif'),
+			'S_ALLOW_COMMENTS'	=> phpbb_gallery::$user->get_data('user_allow_comments'),
+			'S_COMMENTS_ENABLED'=> phpbb_gallery_config::get('allow_comments') && phpbb_gallery_config::get('comment_user_control'),
 		));
 	}
 

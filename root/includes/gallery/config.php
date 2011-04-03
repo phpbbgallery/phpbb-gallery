@@ -165,10 +165,11 @@ class phpbb_gallery_config
 		'allow_resize'		=> true,
 		'allow_rotate'		=> true,
 
-		'captcha_comment'	=> true,
-		'captcha_upload'	=> true,
-		'comment_length'	=> 2000,
-		'contests_ended'	=> 0,
+		'captcha_comment'		=> true,
+		'captcha_upload'		=> true,
+		'comment_length'		=> 2000,
+		'comment_user_control'	=> true,
+		'contests_ended'		=> 0,
 
 		'default_sort_dir'	=> 'd',
 		'default_sort_key'	=> 't',

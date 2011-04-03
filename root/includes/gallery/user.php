@@ -373,9 +373,12 @@ class phpbb_gallery_user
 		'personal_album_id'	=> 0,
 		'user_lastmark'		=> 0,
 		'user_last_update'	=> 0,
+		'user_permissions_changed'	=> 0,
 
 		'user_permissions'	=> '',
 
+		// Shall other users be allowed to comment on this users images by default?
+		'user_allow_comments'	=> true,
 		// Shall the EXIF data be viewed or collapsed by default?
 		'user_viewexif'		=> true,
 		// Shall the user be subscribed to his own images?

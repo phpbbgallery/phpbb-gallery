@@ -169,7 +169,7 @@ switch ($mode)
 		{
 			gallery_not_authorised($image_backlink, $user, $image_loginlink);
 		}
-		if (($submode != 'rate') && (!phpbb_gallery_config::get('allow_comments')))
+		if (($submode != 'rate') && (!phpbb_gallery_config::get('allow_comments') || (phpbb_gallery_config::get('comment_user_control') && !$image_data['image_allow_comments'])))
 		{
 			gallery_not_authorised($image_backlink, $user, $image_loginlink);
 		}
@@ -352,7 +352,7 @@ switch ($mode)
 					$db->sql_freeresult($result);
 					if ($own_images >= phpbb_gallery::$auth->acl_check('i_count', $album_id, $album_data['album_user_id']))
 					{
-						trigger_error(sprintf($user->lang['USER_REACHED_QUOTA'], phpbb_gallery::$auth->acl_check('i_count', $album_id, $album_data['album_user_id'])));
+						trigger_error($user->lang('USER_REACHED_QUOTA', phpbb_gallery::$auth->acl_check('i_count', $album_id, $album_data['album_user_id'])));
 					}
 				}
 
@@ -414,6 +414,11 @@ switch ($mode)
 					$image_id_ary = array();
 					$loop = request_var('image_num', 0);
 					$username = request_var('username', $user->data['username']);
+					$allow_comments = request_var('allow_comments', false);
+					if (!phpbb_gallery_config::get('allow_comments') || !phpbb_gallery_config::get('comment_user_control'))
+					{
+						$allow_comments = 0;
+					}
 					$rotate = request_var('rotate', array(0));
 					$loop = ($loop != 0) ? $loop - 1 : $loop;
 
@@ -477,6 +482,7 @@ switch ($mode)
 								'image_contest'		=> ($album_data['album_contest']) ? phpbb_gallery_image::IN_CONTEST : phpbb_gallery_image::NO_CONTEST,
 								'thumbnail'			=> '',
 								'username'			=> $username,
+								'image_allow_comments'=> $allow_comments,
 							);
 							$image_data['image_name'] = ((request_var('filename', '') == 'filename') || ($image_data['image_name'] == '')) ? str_replace("_", " ", utf8_substr($image_file->uploadname, 0, utf8_strrpos($image_file->uploadname, '.'))) : $image_data['image_name'];
 
@@ -592,6 +598,9 @@ switch ($mode)
 					'S_MULTI_IMAGES'		=> (phpbb_gallery_config::get('num_uploads') > 1) ? true : false,
 					'S_ALBUM_ACTION'		=> phpbb_gallery_url::append_sid('posting', "mode=image&amp;submode=upload&amp;album_id=$album_id"),
 
+					'S_COMMENTS_ENABLED'	=> phpbb_gallery_config::get('allow_comments') && phpbb_gallery_config::get('comment_user_control'),
+					'S_ALLOW_COMMENTS'		=> phpbb_gallery::$user->get_data('user_allow_comments'),
+
 					'IMAGE_RSZ_WIDTH'		=> phpbb_gallery_config::get('medium_width'),
 					'IMAGE_RSZ_HEIGHT'		=> phpbb_gallery_config::get('medium_height'),
 					'L_DESCRIPTION_LENGTH'	=> sprintf($user->lang['DESCRIPTION_LENGTH'], phpbb_gallery_config::get('description_length')),
@@ -686,7 +695,13 @@ switch ($mode)
 						'image_desc'				=> $message_parser->message,
 						'image_desc_uid'			=> $message_parser->bbcode_uid,
 						'image_desc_bitfield'		=> $message_parser->bbcode_bitfield,
+						'image_allow_comments'		=> request_var('allow_comments', 0),
 					);
+
+					if (!phpbb_gallery_config::get('allow_comments') || !phpbb_gallery_config::get('comment_user_control'))
+					{
+						unset($sql_ary['image_allow_comments']);
+					}
 
 					$move_to_personal = request_var('move_to_personal', 0);
 					if ($move_to_personal)
@@ -781,6 +796,9 @@ switch ($mode)
 					'U_VIEW_IMAGE'		=> ($image_id) ? phpbb_gallery_url::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id") : '',
 					'IMAGE_RSZ_WIDTH'	=> phpbb_gallery_config::get('medium_width'),
 					'IMAGE_RSZ_HEIGHT'	=> phpbb_gallery_config::get('medium_height'),
+
+					'S_COMMENTS_ENABLED'=> phpbb_gallery_config::get('allow_comments') && phpbb_gallery_config::get('comment_user_control'),
+					'S_ALLOW_COMMENTS'	=> $image_data['image_allow_comments'],
 
 					'S_IMAGE'			=> true,
 					'S_EDIT'			=> true,
@@ -926,6 +944,7 @@ switch ($mode)
 	{
 		$comment = $comment_username = $s_captcha_hidden_fields = '';
 		$comment_username_req = $contest_rating_msg = false;
+		$rate_point = 0;
 		/**
 		* Rating-System: now you can comment and rate in one form
 		*/
@@ -948,10 +967,10 @@ switch ($mode)
 
 					$message .= $user->lang['RATING_SUCCESSFUL'] . '<br />';
 				}
+				$template->assign_vars(array(
+					'S_ALLOWED_TO_RATE'			=> $rating->is_allowed(),
+				));
 			}
-			$template->assign_vars(array(
-				'S_ALLOWED_TO_RATE'			=> $rating->is_allowed(),
-			));
 			if ($submode == 'rate')
 			{
 				$s_album_action = '';

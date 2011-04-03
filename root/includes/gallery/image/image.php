@@ -108,6 +108,7 @@ class phpbb_gallery_image
 			'image_contest'			=> $image_data['image_contest'],
 			'image_exif_data'		=> $image_data['image_exif_data'],
 			'image_has_exif'		=> $image_data['image_has_exif'],
+			'image_allow_comments'	=> $image_data['image_allow_comments'],
 		);
 
 		$message_parser				= new parse_message();

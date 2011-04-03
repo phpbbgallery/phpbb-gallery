@@ -160,20 +160,25 @@
 				//]]>
 				</script>
 			<!-- ENDIF -->
+			<!-- IF S_MOVE_PERSONAL or S_COMMENTS_ENABLED --><hr /><!-- ENDIF -->
+			<!-- IF S_MOVE_PERSONAL -->
+				<dl>
+					<dt><label for="move_to_personal">{L_MOVE_TO_PERSONAL}:</label></dt>
+					<dd><input style="inputbox checkbox" type="checkbox" name="move_to_personal" id="move_to_personal" value="1" /> <!-- IF S_MOVE_MODERATOR -->{L_MOVE_TO_PERSONAL_MOD}<!-- ELSE -->{L_MOVE_TO_PERSONAL_EXPLAIN}<!-- ENDIF --></dd>
+				</dl>
+			<!-- ENDIF -->
+			<!-- IF S_COMMENTS_ENABLED -->
+				<dl>
+					<dt><label for="allow_comments">{L_COMMENTS}:</label></dt>
+					<dd><input type="checkbox" style="inputbox checkbox" name="allow_comments" id="allow_comments"<!-- IF S_ALLOW_COMMENTS --> checked="checked"<!-- ENDIF --> value="1" /> <label for="allow_comments">{L_ALLOW_COMMENTS}</label></dd>
+				</dl>
+			<!-- ENDIF -->
 		</fieldset>
 	<span class="corners-bottom"><span></span></span></div>
 </div>
 
 <div class="panel bg2">
 	<div class="inner"><span class="corners-top"><span></span></span>
-		<!-- IF S_MOVE_PERSONAL -->
-		<fieldset class="fields1">
-			<dl>
-				<dt><label for="move_to_personal">{L_MOVE_TO_PERSONAL}:</label><br /><span><!-- IF S_MOVE_MODERATOR -->{L_MOVE_TO_PERSONAL_MOD}<!-- ELSE -->{L_MOVE_TO_PERSONAL_EXPLAIN}<!-- ENDIF --></span></dt>
-				<dd><input type="radio" name="move_to_personal" id="move_to_personal" value="1" /> {L_YES} <input type="radio" name="move_to_personal" id="move_to_personal" value="0" checked="checked" /> {L_NO}</dd>
-			</dl>
-		</fieldset>
-		<!-- ENDIF -->
 		<fieldset class="submit-buttons">
 			{S_HIDDEN_FIELDS}{S_CAPTCHA_HIDDEN_FIELDS}
 			<input type="reset" accesskey="r" tabindex="200" value="{L_RESET}" class="button2" />&nbsp;

@@ -45,7 +45,7 @@
 	<!-- ENDIF -->
 	<tr class="row1">
 		<td width="25%" align="right"><span class="genmed">{L_UPLOADED_BY_USER}:</span></td>
-		<td><span class="genmed">{POSTER}</span></td>
+		<td><span class="genmed">{POSTER_FULL}</span></td>
 	</tr>
 	<tr class="row1">
 		<td width="25%" align="right"><span class="genmed">{L_IMAGE_NAME}:</span></td>
@@ -360,6 +360,17 @@ function toggleElement(oElement)
 	<!-- ENDIF -->
 	</table>
 <!-- END commentrow -->
+
+<!-- IF S_COMMENTS_DISABLED -->
+<table class="tablebg" width="100%" cellspacing="1">
+<tr>
+	<th>{L_COMMENTS}</th>
+</tr>
+<tr> 
+	<td class="row1" align="center"><br /><p class="gen">{L_IMAGE_COMMENTS_DISABLED}</p><br /></td>
+</tr>
+</table>
+<!-- ENDIF -->
 
 <!-- IF IMAGE_COMMENTS -->
 	<table width="100%" cellspacing="1">
