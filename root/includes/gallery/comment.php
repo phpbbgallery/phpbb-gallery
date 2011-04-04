@@ -39,7 +39,7 @@ class phpbb_gallery_comment
 			'comment_time'			=> time(),
 		);
 
-		$db->sql_query('INSERT INTO ' . GALLERY_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
+		$db->sql_query('INSERT INTO ' . GALLERY_COMMENTS_TABLE . ' ' . $db->sql_build_array('INSERT', $data));
 		$newest_comment_id = (int) $db->sql_nextid();
 		phpbb_gallery_config::inc('num_comments', 1);
 
@@ -70,7 +70,7 @@ class phpbb_gallery_comment
 		);
 
 		$sql = 'UPDATE ' . GALLERY_COMMENTS_TABLE . '
-			SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+			SET ' . $db->sql_build_array('UPDATE', $data) . '
 			WHERE comment_id = ' . (int) $comment_id;
 		$db->sql_query($sql);
 

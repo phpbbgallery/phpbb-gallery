@@ -1045,6 +1045,7 @@ switch ($mode)
 						'comment'				=> $message_parser->message,
 						'comment_uid'			=> $message_parser->bbcode_uid,
 						'comment_bitfield'		=> $message_parser->bbcode_bitfield,
+						'comment_signature'		=> ($auth->acl_get('u_sig') && isset($_POST['attach_sig'])),
 					);
 					if ((!$error) && ($sql_ary['comment'] != ''))
 					{
@@ -1069,6 +1070,7 @@ switch ($mode)
 				}
 				else
 				{
+					$sig_checked = $user->optionget('attachsig');
 					if ($user->data['user_id'] != ANONYMOUS)
 					{
 						$comment_username_req = true;
@@ -1154,6 +1156,7 @@ switch ($mode)
 						'comment_uid'			=> $message_parser->bbcode_uid,
 						'comment_bitfield'		=> $message_parser->bbcode_bitfield,
 						'comment_edit_count'	=> $comment_data['comment_edit_count'] + 1,
+						'comment_signature'		=> ($auth->acl_get('u_sig') && isset($_POST['attach_sig'])),
 					));
 
 					if (!$error)
@@ -1168,6 +1171,8 @@ switch ($mode)
 				}
 				else
 				{
+					$sig_checked = (bool) $comment_data['comment_signature'];
+
 					$comment_ary = generate_text_for_edit($comment_data['comment'], $comment_data['comment_uid'], $comment_data['comment_bitfield'], 7);
 					$comment = $comment_ary['text'];
 					$comment_username = $comment_data['comment_username'];
@@ -1224,6 +1229,7 @@ switch ($mode)
 			'U_VIEW_IMAGE'			=> ($image_id) ? phpbb_gallery_url::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id") : '',
 			'IMAGE_NAME'			=> ($image_id) ? $image_data['image_name'] : '',
 
+			'S_SIGNATURE_CHECKED'	=> (isset($sig_checked) && $sig_checked) ? ' checked="checked"' : '',
 			'S_ALBUM_ACTION'		=> $s_album_action,
 			'S_COMMENT'				=> true,
 		));
