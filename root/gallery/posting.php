@@ -703,6 +703,43 @@ switch ($mode)
 						unset($sql_ary['image_allow_comments']);
 					}
 
+					$album_sql_ary = array();
+					if (phpbb_gallery::$auth->acl_check('m_edit', $album_id, $album_data['album_user_id']))
+					{
+						$user_data = phpbb_gallery_image::get_new_author_info(request_var('change_author', '', true));
+						if ($user_data)
+						{
+							$sql_ary = array_merge($sql_ary, array(
+								'image_user_id'			=> $user_data['user_id'],
+								'image_username'		=> $user_data['username'],
+								'image_username_clean'	=> utf8_clean_string($user_data['username']),
+								'image_user_colour'		=> $user_data['user_colour'],
+							));
+							if ($album_data['album_last_image_id'] == $image_id)
+							{
+								$album_sql_ary = array(
+									'album_last_user_id'		=> $user_data['user_id'],
+									'album_last_username'		=> $user_data['username'],
+									'album_last_user_colour'	=> $user_data['user_colour'],
+								);
+								$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $album_sql_ary) . '
+									WHERE ' . $db->sql_in_set('album_id', $image_data['image_album_id']);
+								$db->sql_query($sql);
+							}
+							if ($image_data['image_status'] != phpbb_gallery_image::STATUS_UNAPPROVED)
+							{
+								$new_user = new phpbb_gallery_user($db, $user_data['user_id'], false);
+								$new_user->update_images(1);
+								$old_user = new phpbb_gallery_user($db, $image_data['image_user_id'], false);
+								$old_user->update_images(-1);
+							}
+						}
+						else if (request_var('change_author', '', true))
+						{
+							trigger_error('INVALID_USERNAME');
+						}
+					}
+
 					$move_to_personal = request_var('move_to_personal', 0);
 					if ($move_to_personal)
 					{
@@ -733,9 +770,9 @@ switch ($mode)
 					}
 					else if ($album_data['album_last_image_id'] == $image_id)
 					{
-						$album_sql_ary = array(
+						$album_sql_ary = array_merge($album_sql_ary, array(
 							'album_last_image_name'		=> $image_name,
-						);
+						));
 						$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $album_sql_ary) . '
 							WHERE ' . $db->sql_in_set('album_id', $image_data['image_album_id']);
 						$db->sql_query($sql);
@@ -797,6 +834,8 @@ switch ($mode)
 					'IMAGE_RSZ_WIDTH'	=> phpbb_gallery_config::get('medium_width'),
 					'IMAGE_RSZ_HEIGHT'	=> phpbb_gallery_config::get('medium_height'),
 
+					'S_CHANGE_AUTHOR'	=> phpbb_gallery::$auth->acl_check('m_edit', $album_id, $album_data['album_user_id']),
+					'U_FIND_USERNAME'	=> phpbb_gallery_url::append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=postform&amp;field=change_author&amp;select_single=true'),
 					'S_COMMENTS_ENABLED'=> phpbb_gallery_config::get('allow_comments') && phpbb_gallery_config::get('comment_user_control'),
 					'S_ALLOW_COMMENTS'	=> $image_data['image_allow_comments'],
 

@@ -139,6 +139,40 @@ class phpbb_gallery_image
 		return array('image_id' => $image_id, 'image_name' => $image_data['image_name']);
 	}
 
+	static public function get_new_author_info($username)
+	{
+		global $db;
+
+		// Who is the new uploader?
+		if (!$username)
+		{
+			return false;
+		}
+		$user_id = 0;
+		if ($username)
+		{
+			if (!function_exists('user_get_id_name'))
+			{
+				phpbb_gallery_url::_include('functions_user', 'phpbb');
+			}
+			user_get_id_name($user_id, $username);
+		}
+
+		if (empty($user_id))
+		{
+			return false;
+		}
+
+		$sql = 'SELECT username, user_colour, user_id
+			FROM ' . USERS_TABLE . '
+			WHERE user_id = ' . (int) $user_id[0];
+		$result = $db->sql_query($sql);
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $row;
+	}
+
 	/**
 	* Delete an image completly.
 	*
@@ -423,7 +457,7 @@ class phpbb_gallery_image
 
 			$num_images = $num_images + $row['images'];
 
-			$image_user = new phpbb_gallery_user($db, GALLERY_USERS_TABLE, $row['image_user_id'], false);
+			$image_user = new phpbb_gallery_user($db, $row['image_user_id'], false);
 			$image_user->update_images((($add) ? $row['images'] : 0 - $row['images']));
 		}
 		$db->sql_freeresult($result);

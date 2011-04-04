@@ -68,7 +68,7 @@ $lang = array_merge($lang, array(
 	'ALBUMS'						=> 'Albums',
 
 	'CACHE_DIR_SIZE'				=> 'cache/-directory size',
-	'CHANGE_AUTHOR'					=> 'Change author to guest',
+	'CHANGE_AUTHOR_TO_GUEST'		=> 'Change author to guest',
 	'CHECK'							=> 'Check',
 	'CHECK_AUTHOR_EXPLAIN'			=> 'No images without valid author found.',
 	'CHECK_COMMENT_EXPLAIN'			=> 'No comments without valid author found.',

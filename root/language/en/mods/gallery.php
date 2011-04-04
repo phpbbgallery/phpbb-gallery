@@ -63,6 +63,7 @@ $lang = array_merge($lang, array(
 	'BROWSING_ALBUM_GUEST'			=> 'Users browsing this album: %1$s and %2$d guest',
 	'BROWSING_ALBUM_GUESTS'			=> 'Users browsing this album: %1$s and %2$d guests',
 
+	'CHANGE_AUTHOR'					=> 'Change author',
 	'CHANGE_IMAGE_STATUS'			=> 'Change image-status',
 	'CLICK_RETURN_ALBUM'			=> 'Click %shere%s to return to the album',
 	'CLICK_RETURN_IMAGE'			=> 'Click %shere%s to return to the image',

@@ -41,7 +41,7 @@ function toggleElement(oElement)
 <br />
 <!-- ENDIF -->
 
-<form name="upload" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data">
+<form name="postform" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data">
 	<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
 		<tr>
 			<th colspan="2"><!-- IF S_COMMENT -->{L_POST_COMMENT}<!-- ELSEIF S_UPLOAD -->{L_UPLOAD_IMAGE}<!-- ELSEIF S_EDIT -->{L_EDIT_IMAGE}<!-- ELSEIF S_REPORT -->{L_REPORT_IMAGE}<!-- ENDIF --></th>
@@ -116,7 +116,7 @@ function toggleElement(oElement)
 			<td class="row2" valign="top">
 				<script type="text/javascript">
 				// <![CDATA[
-					var form_name = 'upload';
+					var form_name = 'postform';
 					var text_name = 'message';
 				// ]]>
 				</script>
@@ -210,6 +210,12 @@ function toggleElement(oElement)
 			<tr>
 				<td class="row1" height="28"><b class="genmed">{L_COMMENTS}:</b></td>
 				<td class="row2"><input type="checkbox" style="inputbox checkbox" name="allow_comments" id="allow_comments"<!-- IF S_ALLOW_COMMENTS --> checked="checked"<!-- ENDIF --> value="1" /> <span class="gen">{L_ALLOW_COMMENTS}</span></td>
+			</tr>
+		<!-- ENDIF -->
+		<!-- IF S_CHANGE_AUTHOR and U_FIND_USERNAME -->
+			<tr>
+				<td class="row1" height="28"><b class="genmed">{L_CHANGE_AUTHOR}:</b></td>
+				<td class="row2"><input type="text" class="inputbox autowidth" name="change_author" id="change_author" value="" size="32" /> <span class="gen">[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</span></td>
 			</tr>
 		<!-- ENDIF -->
 		<tr>

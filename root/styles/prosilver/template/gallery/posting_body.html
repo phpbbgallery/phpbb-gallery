@@ -163,17 +163,23 @@
 				//]]>
 				</script>
 			<!-- ENDIF -->
-			<!-- IF S_MOVE_PERSONAL or S_COMMENTS_ENABLED --><hr /><!-- ENDIF -->
+			<!-- IF S_MOVE_PERSONAL or S_COMMENTS_ENABLED or S_CHANGE_AUTHOR --><hr /><!-- ENDIF -->
 			<!-- IF S_MOVE_PERSONAL -->
 				<dl>
 					<dt><label for="move_to_personal">{L_MOVE_TO_PERSONAL}:</label></dt>
-					<dd><input style="inputbox checkbox" type="checkbox" name="move_to_personal" id="move_to_personal" value="1" /> <!-- IF S_MOVE_MODERATOR -->{L_MOVE_TO_PERSONAL_MOD}<!-- ELSE -->{L_MOVE_TO_PERSONAL_EXPLAIN}<!-- ENDIF --></dd>
+					<dd><input type="checkbox" class="checkbox" name="move_to_personal" id="move_to_personal" value="1" /> <!-- IF S_MOVE_MODERATOR -->{L_MOVE_TO_PERSONAL_MOD}<!-- ELSE -->{L_MOVE_TO_PERSONAL_EXPLAIN}<!-- ENDIF --></dd>
 				</dl>
 			<!-- ENDIF -->
 			<!-- IF S_COMMENTS_ENABLED -->
 				<dl>
 					<dt><label for="allow_comments">{L_COMMENTS}:</label></dt>
-					<dd><input type="checkbox" style="inputbox checkbox" name="allow_comments" id="allow_comments"<!-- IF S_ALLOW_COMMENTS --> checked="checked"<!-- ENDIF --> value="1" /> <label for="allow_comments">{L_ALLOW_COMMENTS}</label></dd>
+					<dd><input type="checkbox" class="checkbox" name="allow_comments" id="allow_comments"<!-- IF S_ALLOW_COMMENTS --> checked="checked"<!-- ENDIF --> value="1" /> <label for="allow_comments">{L_ALLOW_COMMENTS}</label></dd>
+				</dl>
+			<!-- ENDIF -->
+			<!-- IF S_CHANGE_AUTHOR and U_FIND_USERNAME -->
+				<dl>
+					<dt><label for="change_author">{L_CHANGE_AUTHOR}:</label></dt>
+					<dd><input type="text" class="inputbox autowidth" name="change_author" id="change_author" value="" size="32" /> [ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</dd>
 				</dl>
 			<!-- ENDIF -->
 		</fieldset>
