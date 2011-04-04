@@ -1059,7 +1059,7 @@ class phpbb_gallery_album
 			'album_desc'					=> '',
 			'album_parents'					=> '',
 			'album_type'					=> self::TYPE_UPLOAD,
-			'album_status'					=> self::STATUS_UNLOCKED,
+			'album_status'					=> self::STATUS_OPEN,
 			'album_user_id'					=> $user_id,
 			'album_last_username'			=> '',
 			'album_last_user_colour'		=> $user_colour,

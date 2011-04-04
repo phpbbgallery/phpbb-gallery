@@ -189,6 +189,7 @@ $lang = array_merge($lang, array(
 	'IMPORT_SCHEMA_CREATED'			=> 'The import-schema was successfully created, please wait while the images get imported.',
 	'IMPORT_USER'					=> 'Uploaded by',
 	'IMPORT_USER_EXP'				=> 'You can add the images to another user here.',
+	'IMPORT_USERS_PEGA'				=> 'Upload to users personal gallery.',
 	'INDEX_SETTINGS'				=> 'Settings for gallery/index.' . $phpEx,
 	'INFO_LINE'						=> 'Display file-size on thumbnail',
 	'INHERIT_PERMISSIONS_ALBUM'		=> 'Inherit permissions of an other album',

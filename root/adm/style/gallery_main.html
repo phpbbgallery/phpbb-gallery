@@ -128,11 +128,12 @@
 
 <!-- IF S_IMPORT_IMAGES -->
 <form id="acp_gallery" method="post" action="{U_ACTION}">
-	<fieldset>
+	<fieldset class="field1">
 		<legend>{L_ALBUM_SETTINGS}</legend>
 		<dl>
 			<dt><label for="album_id">{L_IMPORT_ALBUM}:</label></dt>
 			<dd>{S_SELECT_IMPORT}</dd>
+			<dd><input class="radio" type="checkbox" name="users_pega" id="users_pega" value="1" /> <label for="users_pega">{L_IMPORT_USERS_PEGA}</dd>
 		</dl>
 		<dl>
 			<dt><label for="images">{L_IMAGES}:</label>
@@ -155,7 +156,7 @@
 			<dt><label for="image_name">{L_IMAGE_NAME}:</label></dt>
 			<dd><input id="image_name" class="inputbox autowidth" type="text" name="image_name" size="60" value="{IMAGE_NAME}" /></dd>
 			<dd><input class="inputbox autowidth" type="text" name="image_num" size="5" value="1" /> {L_LOOP_EXP}</dd>
-			<dd><input class="button2 checkbox" type="checkbox" name="filename" value="filename" /> {L_ORIG_FILENAME}</dd>
+			<dd><input class="radio" type="checkbox" name="filename" value="filename" /> {L_ORIG_FILENAME}</dd>
 		</dl>
 	</fieldset>
 	<fieldset class="submit-buttons">

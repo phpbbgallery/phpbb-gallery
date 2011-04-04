@@ -191,6 +191,7 @@ $lang = array_merge($lang, array(
 	'IMPORT_SELECT'					=> 'Wähle die Bilder aus, die importiert werden sollen. Bilder die erfolgreich importiert wurden, werden aus der Auswahl gelöscht. Die anderen Bilder stehen dir danach noch zur Verfügung.',
 	'IMPORT_USER'					=> 'Hochgeladen durch',
 	'IMPORT_USER_EXP'				=> 'Du kannst die Bilder auch einem anderem Mitglied zuordnen lassen.',
+	'IMPORT_USERS_PEGA'				=> 'In das persönliche Album des Benutzers laden.',
 	'INDEX_SETTINGS'				=> 'Einstellungen für gallery/index.' . $phpEx,
 	'INFO_LINE'						=> 'Dateigröße auf dem Thumbnail anzeigen',
 	'INHERIT_PERMISSIONS_ALBUM'		=> 'Berechtigung von einem anderem Album übernehmen',

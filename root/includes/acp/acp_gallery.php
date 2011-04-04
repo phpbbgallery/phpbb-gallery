@@ -594,8 +594,31 @@ class acp_gallery
 				trigger_error('HACKING_ATTEMPT', E_USER_WARNING);
 			}
 
-			// Where do we put them to?
 			$album_id = request_var('album_id', 0);
+			if (isset($_POST['users_pega']))
+			{
+				if ($user->data['user_id'] != $user_row['user_id'])
+				{
+					$image_user = new phpbb_gallery_user($db, $user_row['user_id']);
+					$album_id = $image_user->get_data('personal_album_id');
+					if (!$album_id)
+					{
+						// The User has no personal album
+						$album_id = phpbb_gallery_album::generate_personal_album($user_row['username'], $user_row['user_id'], $user_row['user_colour'], $image_user);
+					}
+					unset($image_user);
+				}
+				else
+				{
+					$album_id = phpbb_gallery::$user->get_data('personal_album_id');
+					if (!$album_id)
+					{
+						$album_id = phpbb_gallery_album::generate_personal_album($user_row['username'], $user_row['user_id'], $user_row['user_colour'], phpbb_gallery::$user);
+					}
+				}
+			}
+
+			// Where do we put them to?
 			$sql = 'SELECT album_id, album_name
 				FROM ' . GALLERY_ALBUMS_TABLE . '
 				WHERE album_id = ' . $album_id;
