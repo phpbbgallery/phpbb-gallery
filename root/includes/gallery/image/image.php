@@ -204,16 +204,16 @@ class phpbb_gallery_image
 		phpbb_gallery_notification::delete_images($images);
 		phpbb_gallery_report::delete_images($images);
 
-		$sql = 'SELECT album_id
+		$sql = 'SELECT image_album_id
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE image_contest_rank > 0
 				AND ' . $db->sql_in_set('image_id', $images) . '
-			GROUP BY album_id';
+			GROUP BY image_album_id';
 		$result = $db->sql_query($sql);
 		$resync_contests = array();
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$resync_contests[] = (int) $row['album_id'];
+			$resync_contests[] = (int) $row['image_album_id'];
 		}
 		$db->sql_freeresult($result);
 

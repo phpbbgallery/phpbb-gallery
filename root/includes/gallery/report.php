@@ -161,7 +161,7 @@ class phpbb_gallery_report
 		$image_ids = self::cast_mixed_int2array($image_ids);
 
 		$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . '
-			WHERE ' . $db->sql_in_set('image_id', $image_ids);
+			WHERE ' . $db->sql_in_set('report_image_id', $image_ids);
 		$result = $db->sql_query($sql);
 	}
 
@@ -178,7 +178,7 @@ class phpbb_gallery_report
 		$album_ids = self::cast_mixed_int2array($album_ids);
 
 		$sql = 'DELETE FROM ' . GALLERY_REPORTS_TABLE . '
-			WHERE ' . $db->sql_in_set('album_id', $album_ids);
+			WHERE ' . $db->sql_in_set('report_album_id', $album_ids);
 		$result = $db->sql_query($sql);
 	}
 

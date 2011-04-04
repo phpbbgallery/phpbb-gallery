@@ -104,6 +104,49 @@ class acp_gallery
 					$confirm = true;
 					$confirm_lang = 'GALLERY_PURGE_CACHE_EXPLAIN';
 				break;
+				case 'create_pega':
+					$confirm = false;
+					if (!$auth->acl_get('a_board'))
+					{
+						trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
+					}
+
+					$username = request_var('username', '', true);
+					$user_id = 0;
+					if ($username)
+					{
+						if (!function_exists('user_get_id_name'))
+						{
+							phpbb_gallery_url::_include('functions_user', 'phpbb');
+						}
+						user_get_id_name($user_id, $username);
+					}
+					if (is_array($user_id))
+					{
+						$user_id = (isset($user_id[0])) ? $user_id[0] : 0;
+					}
+
+					$sql = 'SELECT username, user_colour, user_id
+						FROM ' . USERS_TABLE . '
+						WHERE user_id = ' . $user_id;
+					$result = $db->sql_query($sql);
+					$user_row = $db->sql_fetchrow($result);
+					$db->sql_freeresult($result);
+					if (!$user_row)
+					{
+						trigger_error($user->lang['NO_USER'] . adm_back_link($this->u_action), E_USER_WARNING);
+					}
+
+					$image_user = new phpbb_gallery_user($db, $user_row['user_id']);
+					$album_id = $image_user->get_data('personal_album_id');
+					if ($album_id)
+					{
+						trigger_error($user->lang('PEGA_ALREADY_EXISTS', $user_row['username']) . adm_back_link($this->u_action), E_USER_WARNING);
+					}
+					phpbb_gallery_album::generate_personal_album($user_row['username'], $user_row['user_id'], $user_row['user_colour'], $image_user);
+
+					trigger_error($user->lang('PEGA_CREATED', $user_row['username']) . adm_back_link($this->u_action));
+				break;
 			}
 
 			if ($confirm)
@@ -338,6 +381,7 @@ class acp_gallery
 			'MEDIUM_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat_medium']),
 			'CACHE_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat_cache']),
 			'GALLERY_VERSION'		=> phpbb_gallery_config::get('version'),
+			'U_FIND_USERNAME'		=> phpbb_gallery_url::append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=action_create_pega&amp;field=username&amp;select_single=true'),
 
 			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
 		));
@@ -922,7 +966,7 @@ class acp_gallery
 					$uploader = new phpbb_gallery_user($db, $user_id, false);
 					$uploader->update_images((0 - $images));
 				}
-				phpbb_gallery_user::update_users($user_ids, array('personal_album_id' => 0));
+				phpbb_gallery_user::update_users($delete_albums, array('personal_album_id' => 0));
 
 				if ($missing_personals)
 				{

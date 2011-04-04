@@ -41,10 +41,13 @@ class phpbb_gallery_modversioncheck
 
 		// load version files
 		$class_functions = array();
-		include($phpbb_admin_path . 'mods/phpbb_gallery_version.' . $phpEx);
+		if (!class_exists('phpbb_gallery_version'))
+		{
+			include($phpbb_admin_path . 'mods/phpbb_gallery_version.' . $phpEx);
+		}
 		$class_name = 'phpbb_gallery_version';
 
-		$var = call_user_func(array($class_name, 'version'));
+		$var = phpbb_gallery_version::version();
 
 		// Get current and latest version
 		$errstr = '';
