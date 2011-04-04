@@ -278,6 +278,7 @@ if (!$comments_disabled && phpbb_gallery::$auth->acl_check('c_post', $album_id, 
 		'FLASH_STATUS'			=> ($flash_status) ? $user->lang['FLASH_IS_ON'] : $user->lang['FLASH_IS_OFF'],
 		'SMILIES_STATUS'		=> ($smilies_status) ? $user->lang['SMILIES_ARE_ON'] : $user->lang['SMILIES_ARE_OFF'],
 		'URL_STATUS'			=> ($bbcode_status && $url_status) ? $user->lang['URL_IS_ON'] : $user->lang['URL_IS_OFF'],
+		'S_SIGNATURE_CHECKED'	=> ($user->optionget('attachsig')) ? ' checked="checked"' : '',
 
 		'S_BBCODE_ALLOWED'		=> $bbcode_status,
 		'S_SMILIES_ALLOWED'		=> $smilies_status,
@@ -432,7 +433,7 @@ if ((phpbb_gallery_config::get('allow_comments') && phpbb_gallery::$auth->acl_ch
 				'POST_AUTHOR'			=> get_username_string('username', $user_id, $row['comment_username'], $user_cache[$user_id]['user_colour']),
 				'U_POST_AUTHOR'			=> get_username_string('profile', $user_id, $row['comment_username'], $user_cache[$user_id]['user_colour']),
 
-				'SIGNATURE'			=> $user_cache[$user_id]['sig'],
+				'SIGNATURE'			=> ($row['comment_signature']) ? $user_cache[$user_id]['sig'] : '',
 				'RANK_TITLE'		=> $user_cache[$user_id]['rank_title'],
 				'RANK_IMG'			=> $user_cache[$user_id]['rank_image'],
 				'RANK_IMG_SRC'		=> $user_cache[$user_id]['rank_image_src'],

@@ -108,6 +108,9 @@
 			<div id="message-box">
 				<textarea name="message" id="message" rows="7" cols="76" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" class="inputbox">{MESSAGE}</textarea>
 			</div>
+			<!-- IF S_COMMENT -->
+				<div><label for="attach_sig"><input type="checkbox" name="attach_sig" id="attach_sig"{S_SIGNATURE_CHECKED} /> {L_ATTACH_SIG}</label></div>
+			<!-- ENDIF -->
 			<!-- IF S_EDIT and S_ALLOW_ROTATE -->
 				<dl id="upload_field_{upload_image.S_ROW_COUNT}">
 					<dt><label for="rotate">{L_ROTATE_IMAGE}:</label></dt>

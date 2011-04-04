@@ -218,9 +218,10 @@
 					<hr />{L_COMMENT_LENGTH}
 				</div>
 				<div id="message-box">
-					<textarea name="message" id="message" rows="10" cols="76" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" class="inputbox"></textarea>
+					<textarea name="message" id="message" rows="7" cols="76" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" class="inputbox"></textarea>
 				</div>
-				<input type="submit" name="submit" value="{L_SUBMIT}" class="button1" />
+				<div><label for="attach_sig"><input type="checkbox" name="attach_sig" id="attach_sig"{S_SIGNATURE_CHECKED} /> {L_ATTACH_SIG}</label></div>
+				<div style="text-align: center;"><input style=" padding-bottom: 3px; padding-top: 3px; vertical-align: middle;"type="submit" name="submit" value="{L_SUBMIT}" class="button1" /></div>
 			</fieldset>
 		<!-- ELSE IF S_HIDE_COMMENT_INPUT -->
 			<!-- IF S_ALLOWED_TO_RATE --><hr class="dashed" /><!-- ENDIF -->
