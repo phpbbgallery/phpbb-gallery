@@ -128,7 +128,7 @@ $lang = array_merge($lang, array(
 
 	'UPDATE_INSTALLATION_EXPLAIN'	=> 'Here you can Update your phpBB Gallery-Version.',
 
-	'VERSION_NOT_SUPPORTED'		=> 'Sorry, but your updates from < 0.2.0 are not supported from this install-version.',
+	'VERSION_NOT_SUPPORTED'		=> 'Sorry, but your updates prior to 1.0.6 are not supported from this install/update-system.',
 ));
 
 ?>
