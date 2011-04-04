@@ -164,6 +164,17 @@ if ((phpbb_gallery::$auth->acl_check('m_', $album_id, $album_data['album_user_id
 	));
 }
 
+$image_desc = '';
+if (phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id']) || ($image_data['image_contest'] != phpbb_gallery_image::IN_CONTEST))
+{
+	$image_desc = generate_text_for_display($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], 7);
+}
+elseif ($image_data['image_desc'])
+{
+	$image_desc = sprintf($user->lang['CONTEST_IMAGE_DESC'], $user->format_date(($album_data['contest_start'] + $album_data['contest_end']), false, true));
+}
+
+
 $template->assign_vars(array(
 	'U_VIEW_ALBUM'		=> phpbb_gallery_url::append_sid("album.$phpEx", "album_id=$album_id"),
 
@@ -184,7 +195,7 @@ $template->assign_vars(array(
 
 	'CONTEST_RANK'		=> ($image_data['image_contest_rank']) ? $user->lang['CONTEST_RESULT_' . $image_data['image_contest_rank']] : '',
 	'IMAGE_NAME'		=> $image_data['image_name'],
-	'IMAGE_DESC'		=> generate_text_for_display($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], 7),
+	'IMAGE_DESC'		=> $image_desc,
 	'IMAGE_BBCODE'		=> '[album]' . $image_id . '[/album]',
 	'IMAGE_IMGURL_BBCODE'	=> (phpbb_gallery_config::get('disp_image_url')) ? '[url=' . phpbb_gallery_url::path('full') . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id" . '][img]' . generate_board_url(false) . '/' . phpbb_gallery_url::path('relative') . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id&amp;mode=thumbnail" . '[/img][/url]' : '',
 	'IMAGE_URL'			=> (phpbb_gallery_config::get('disp_image_url')) ? phpbb_gallery_url::path('full') . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id" : '',
