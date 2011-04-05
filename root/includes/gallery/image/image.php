@@ -179,22 +179,26 @@ class phpbb_gallery_image
 	* @param	array		$images		Array with the image_id(s)
 	* @param	array		$filenames	Array with filenames for the image_ids. If a filename is missing it's queried from the database.
 	*									Format: $image_id => $filename
+	* @param	bool		$skip_files	If set to true, we won't try to delete the source files.
 	*/
-	static public function delete_images($images, $filenames = array())
+	static public function delete_images($images, $filenames = array(), $skip_files = false)
 	{
 		global $db;
 
-		// Delete the files from the disc...
-		$need_filenames = array();
-		foreach ($images as $image)
+		if (!$skip_files)
 		{
-			if (!isset($filenames[$image]))
+			// Delete the files from the disc...
+			$need_filenames = array();
+			foreach ($images as $image)
 			{
-				$need_filenames[] = $image;
+				if (!isset($filenames[$image]))
+				{
+					$need_filenames[] = $image;
+				}
 			}
+			$filenames = array_merge($filenames, self::get_filenames($need_filenames));
+			phpbb_gallery_image_file::delete($filenames);
 		}
-		$filenames = array_merge($filenames, self::get_filenames($need_filenames));
-		phpbb_gallery_image_file::delete($filenames);
 
 		// Delete the ratings...
 		phpbb_gallery_image_favorite::delete_favorites($images);

@@ -821,161 +821,25 @@ class acp_gallery
 		if (confirm_box(true))
 		{
 			$message = array();
-			if ($missing_sources)
-			{
-				phpbb_gallery_image::delete_images($missing_sources);
-
-				$message[] = $user->lang['CLEAN_SOURCES_DONE'];
-			}
 			if ($missing_entries)
 			{
-				foreach ($missing_entries as $missing_image)
-				{
-					@unlink(phpbb_gallery_url::path('upload') . utf8_decode($missing_image));
-				}
-				$message[] = $user->lang['CLEAN_ENTRIES_DONE'];
+				$message[] = phpbb_gallery_cleanup::delete_files($missing_entries);
+			}
+			if ($missing_sources)
+			{
+				$message[] = phpbb_gallery_cleanup::delete_images($missing_sources);
 			}
 			if ($missing_authors)
 			{
-				$deleted_images = $filenames = array();
-				$sql = 'SELECT image_id, image_filename
-					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE ' . $db->sql_in_set('image_id', $missing_authors);
-				$result = $db->sql_query($sql);
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$filenames[(int) $row['image_id']] = $row['image_filename'];
-					$deleted_images[] = $row['image_id'];
-				}
-				$db->sql_freeresult($result);
-				// we have all image_ids in $deleted_images which are deleted
-				// aswell as the album_ids in $deleted_albums
-				// so now drop the comments, ratings, images and albums
-				if ($deleted_images)
-				{
-					phpbb_gallery_image::delete_images($deleted_images, $filenames);
-				}
-				$message[] = $user->lang['CLEAN_AUTHORS_DONE'];
+				$message[] = phpbb_gallery_cleanup::delete_author_images($missing_entries);
 			}
 			if ($missing_comments)
 			{
-				phpbb_gallery_comment::delete_comments($missing_comments);
-				$message[] = $user->lang['CLEAN_COMMENTS_DONE'];
+				$message[] = phpbb_gallery_cleanup::delete_author_comments($missing_comments);
 			}
 			if ($missing_personals || $personals_bad)
 			{
-				$delete_albums = array_merge($missing_personals, $personals_bad);
-
-				$deleted_images = $deleted_albums = array(0);
-				$user_image_count = array();
-				$sql = 'SELECT COUNT(album_user_id) personal_counter
-					FROM ' . GALLERY_ALBUMS_TABLE . '
-					WHERE parent_id = 0
-						AND ' . $db->sql_in_set('album_user_id', $delete_albums);
-				$result = $db->sql_query($sql);
-				$remove_personal_counter = $db->sql_fetchfield('personal_counter');
-				$db->sql_freeresult($result);
-
-				$sql = 'SELECT album_id
-					FROM ' . GALLERY_ALBUMS_TABLE . '
-					WHERE ' . $db->sql_in_set('album_user_id', $delete_albums);
-				$result = $db->sql_query($sql);
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$deleted_albums[] = $row['album_id'];
-				}
-				$db->sql_freeresult($result);
-
-				$sql = 'SELECT image_id, image_filename, image_user_id
-					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE ' . $db->sql_in_set('image_album_id', $deleted_albums);
-				$result = $db->sql_query($sql);
-
-				$filenames = array();
-				while ($row = $db->sql_fetchrow($result))
-				{
-					$deleted_images[] = $row['image_id'];
-					$filenames[(int) $row['image_id']] = $row['image_filename'];
-
-					if (isset($user_image_count[$row['image_user_id']]))
-					{
-						$user_image_count[$row['image_user_id']]++;
-					}
-					else
-					{
-						$user_image_count[(int) $row['image_user_id']] = 1;
-					}
-				}
-				$db->sql_freeresult($result);
-
-				if ($deleted_images)
-				{
-					phpbb_gallery_image::delete_images($deleted_images, $filenames);
-				}
-
-				$sql = 'DELETE FROM ' . GALLERY_ALBUMS_TABLE . ' WHERE ' . $db->sql_in_set('album_id', $deleted_albums);
-				$db->sql_query($sql);
-				phpbb_gallery_config::get('num_pegas', $remove_personal_counter);
-
-				if (in_array(phpbb_gallery_config::get('newest_pega_album_id'), $deleted_albums))
-				{
-					// Update the config for the statistic on the index
-					if (phpbb_gallery_config::get('num_pegas') > 0)
-					{
-						$sql_array = array(
-							'SELECT'		=> 'a.album_id, u.user_id, u.username, u.user_colour',
-							'FROM'			=> array(GALLERY_ALBUMS_TABLE => 'a'),
-
-							'LEFT_JOIN'		=> array(
-								array(
-									'FROM'		=> array(USERS_TABLE => 'u'),
-									'ON'		=> 'u.user_id = a.album_user_id',
-								),
-							),
-
-							'WHERE'			=> 'a.album_user_id <> ' . phpbb_gallery_album::PUBLIC_ALBUM . ' AND a.parent_id = 0',
-							'ORDER_BY'		=> 'a.album_id DESC',
-						);
-						$sql = $db->sql_build_query('SELECT', $sql_array);
-
-						$result = $db->sql_query_limit($sql, 1);
-						$newest_pgallery = $db->sql_fetchrow($result);
-						$db->sql_freeresult($result);
-
-						phpbb_gallery_config::set('newest_pega_user_id', $newest_pgallery['user_id']);
-						phpbb_gallery_config::set('newest_pega_username', $newest_pgallery['username']);
-						phpbb_gallery_config::set('newest_pega_user_colour', $newest_pgallery['user_colour']);
-						phpbb_gallery_config::set('newest_pega_album_id', $newest_pgallery['album_id']);
-					}
-					else
-					{
-						phpbb_gallery_config::set('newest_pega_user_id', 0);
-						phpbb_gallery_config::set('newest_pega_username', '');
-						phpbb_gallery_config::set('newest_pega_user_colour', '');
-						phpbb_gallery_config::set('newest_pega_album_id', 0);
-					}
-				}
-
-				$user_ids = array();
-				foreach ($user_image_count as $user_id => $images)
-				{
-					$user_ids[] = (int) $user_id;
-
-					phpbb_gallery_hookup::add_image($user_id, (0 - $images));
-
-					$uploader = new phpbb_gallery_user($db, $user_id, false);
-					$uploader->update_images((0 - $images));
-				}
-				phpbb_gallery_user::update_users($delete_albums, array('personal_album_id' => 0));
-
-				if ($missing_personals)
-				{
-					$message[] = $user->lang['CLEAN_PERSONALS_DONE'];
-				}
-				if ($personals_bad)
-				{
-					$message[] = $user->lang['CLEAN_PERSONALS_BAD_DONE'];
-				}
+				$message = array_merge($message, phpbb_gallery_cleanup::delete_pegas($personals_bad, $missing_personals));
 			}
 
 			// Make sure the overall image & comment count is correct...
@@ -999,7 +863,13 @@ class acp_gallery
 			$cache->destroy('_albums');
 			phpbb_gallery_auth::set_user_permissions('all', '');
 
-			trigger_error(implode('<br />', $message) . adm_back_link($this->u_action));
+			$message_string = '';
+			foreach ($message as $lang_key)
+			{
+				$message_string .= (($message_string) ? '<br />' : '') . $user->lang[$lang_key];
+			}
+
+			trigger_error($message_string . adm_back_link($this->u_action));
 		}
 		else if (($delete) || (isset($_POST['cancel'])))
 		{

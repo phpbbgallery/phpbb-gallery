@@ -527,7 +527,7 @@ class phpbb_gallery_image_file
 	*									Array-Format: $image_id => $filename
 	* @param	array		$locations	Array of valid url::path()s where the image should be deleted from
 	*/
-	public function delete($files, $locations = array('cache', 'medium', 'upload'))
+	static public function delete($files, $locations = array('cache', 'medium', 'upload'))
 	{
 		if (!is_array($files))
 		{
