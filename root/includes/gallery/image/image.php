@@ -181,7 +181,7 @@ class phpbb_gallery_image
 	*									Format: $image_id => $filename
 	* @param	bool		$skip_files	If set to true, we won't try to delete the source files.
 	*/
-	static public function delete_images($images, $filenames = array(), $skip_files = false)
+	static public function delete_images($images, $filenames = array(), $resync_albums = true, $skip_files = false)
 	{
 		global $db;
 
@@ -208,18 +208,23 @@ class phpbb_gallery_image
 		phpbb_gallery_notification::delete_images($images);
 		phpbb_gallery_report::delete_images($images);
 
-		$sql = 'SELECT image_album_id
+		$sql = 'SELECT image_album_id, image_contest_rank
 			FROM ' . GALLERY_IMAGES_TABLE . '
-			WHERE image_contest_rank > 0
-				AND ' . $db->sql_in_set('image_id', $images) . '
-			GROUP BY image_album_id';
+			WHERE ' . $db->sql_in_set('image_id', $images) . '
+			GROUP BY image_album_id, image_contest_rank';
 		$result = $db->sql_query($sql);
-		$resync_contests = array();
+		$resync_album_ids = $resync_contests = array();
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$resync_contests[] = (int) $row['image_album_id'];
+			if ($row['image_contest_rank'])
+			{
+				$resync_contests[] = (int) $row['image_album_id'];
+			}
+			$resync_album_ids[] = (int) $row['image_album_id'];
 		}
 		$db->sql_freeresult($result);
+		$resync_contests = array_unique($resync_contests);
+		$resync_album_ids = array_unique($resync_album_ids);
 
 		$sql = 'DELETE FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE ' . $db->sql_in_set('image_id', $images);
@@ -227,6 +232,13 @@ class phpbb_gallery_image
 
 		// The images need to be deleted, before we grab the new winners.
 		phpbb_gallery_contest::resync_albums($resync_contests);
+		if ($resync_albums)
+		{
+			foreach ($resync_album_ids as $album_id)
+			{
+				phpbb_gallery_album::update_info($album_id);
+			}
+		}
 
 		return true;
 	}

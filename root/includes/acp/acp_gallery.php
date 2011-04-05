@@ -780,6 +780,7 @@ class acp_gallery
 		global $auth, $cache, $db, $template, $user;
 
 		$delete = (isset($_POST['delete'])) ? true : false;
+		$prune = (isset($_POST['prune'])) ? true : false;
 		$submit = (isset($_POST['submit'])) ? true : false;
 
 		$missing_sources = request_var('source', array(0));
@@ -788,6 +789,54 @@ class acp_gallery
 		$missing_comments = request_var('comment', array(0), true);
 		$missing_personals = request_var('personal', array(0), true);
 		$personals_bad = request_var('personal_bad', array(0), true);
+		$prune_pattern = request_var('prune_pattern', array('' => ''), true);
+
+		if ($prune && empty($prune_pattern))
+		{
+			$prune_pattern['image_album_id'] = implode(',', request_var('prune_album_ids', array(0)));
+			if (isset($_POST['prune_username_check']))
+			{
+				$usernames = request_var('prune_usernames', '', true);
+				$usernames = explode("\n", $usernames);
+				$prune_pattern['image_user_id'] = array();
+				if (!empty($usernames))
+				{
+					if (!function_exists('user_get_id_name'))
+					{
+						phpbb_gallery_url::_include('functions_user', 'phpbb');
+					}
+					user_get_id_name($user_ids, $usernames);
+					$prune_pattern['image_user_id'] = $user_ids;
+				}
+				if (isset($_POST['prune_anonymous']))
+				{
+					$prune_pattern['image_user_id'][] = ANONYMOUS;
+				}
+				$prune_pattern['image_user_id'] = implode(',', $prune_pattern['image_user_id']);
+			}
+			if (isset($_POST['prune_time_check']))
+			{
+				$prune_time = explode('-', request_var('prune_time', ''));
+
+				if (sizeof($prune_time) == 3)
+				{
+					$prune_pattern['image_time'] = @gmmktime(0, 0, 0, (int) $prune_time[1], (int) $prune_time[2], (int) $prune_time[0]);
+				}
+			}
+			if (isset($_POST['prune_comments_check']))
+			{
+				$prune_pattern['image_comments'] = request_var('prune_comments', 0);
+			}
+			if (isset($_POST['prune_ratings_check']))
+			{
+				$prune_pattern['image_rates'] = request_var('prune_ratings', 0);
+			}
+			if (isset($_POST['prune_rating_avg_check']))
+			{
+				$prune_pattern['image_rate_avg'] = (int) (request_var('prune_rating_avg', 0.0) * 100);
+			}
+		}
+
 		$s_hidden_fields = build_hidden_fields(array(
 			'source'		=> $missing_sources,
 			'entry'			=> $missing_entries,
@@ -795,6 +844,7 @@ class acp_gallery
 			'comment'		=> $missing_comments,
 			'personal'		=> $missing_personals,
 			'personal_bad'	=> $personals_bad,
+			'prune_pattern'	=> $prune_pattern,
 		));
 
 		if ($submit)
@@ -840,6 +890,19 @@ class acp_gallery
 			if ($missing_personals || $personals_bad)
 			{
 				$message = array_merge($message, phpbb_gallery_cleanup::delete_pegas($personals_bad, $missing_personals));
+
+				// Only do this, when we changed something about the albums
+				$cache->destroy('_albums');
+				phpbb_gallery_auth::set_user_permissions('all', '');
+			}
+			if ($prune_pattern)
+			{
+				$message[] = phpbb_gallery_cleanup::prune($prune_pattern);
+			}
+
+			if (empty($message))
+			{
+				trigger_error($user->lang['CLEAN_NO_ACTION'] . adm_back_link($this->u_action), E_USER_WARNING);
 			}
 
 			// Make sure the overall image & comment count is correct...
@@ -860,8 +923,6 @@ class acp_gallery
 			$cache->destroy('sql', GALLERY_RATES_TABLE);
 			$cache->destroy('sql', GALLERY_REPORTS_TABLE);
 			$cache->destroy('sql', GALLERY_WATCH_TABLE);
-			$cache->destroy('_albums');
-			phpbb_gallery_auth::set_user_permissions('all', '');
 
 			$message_string = '';
 			foreach ($message as $lang_key)
@@ -871,7 +932,7 @@ class acp_gallery
 
 			trigger_error($message_string . adm_back_link($this->u_action));
 		}
-		else if (($delete) || (isset($_POST['cancel'])))
+		else if ($delete || $prune || (isset($_POST['cancel'])))
 		{
 			if (isset($_POST['cancel']))
 			{
@@ -917,11 +978,19 @@ class acp_gallery
 				}
 				if ($missing_personals)
 				{
-					$user->lang['CLEAN_GALLERY_CONFIRM'] = sprintf($user->lang['CONFIRM_CLEAN_PERSONALS'], implode(', ', $missing_personals_names)) . '<br />' . $user->lang['CLEAN_GALLERY_CONFIRM'];
+					$user->lang['CLEAN_GALLERY_CONFIRM'] = $user->lang('CONFIRM_CLEAN_PERSONALS', implode(', ', $missing_personals_names)) . '<br />' . $user->lang['CLEAN_GALLERY_CONFIRM'];
 				}
 				if ($personals_bad)
 				{
-					$user->lang['CLEAN_GALLERY_CONFIRM'] = sprintf($user->lang['CONFIRM_CLEAN_PERSONALS_BAD'], implode(', ', $personals_bad_names)) . '<br />' . $user->lang['CLEAN_GALLERY_CONFIRM'];
+					$user->lang['CLEAN_GALLERY_CONFIRM'] = $user->lang('CONFIRM_CLEAN_PERSONALS_BAD', implode(', ', $personals_bad_names)) . '<br />' . $user->lang['CLEAN_GALLERY_CONFIRM'];
+				}
+				if ($prune && empty($prune_pattern))
+				{
+					trigger_error($user->lang['CLEAN_PRUNE_NO_PATTERN'] . adm_back_link($this->u_action), E_USER_WARNING);
+				}
+				elseif ($prune && $prune_pattern)
+				{
+					$user->lang['CLEAN_GALLERY_CONFIRM'] = $user->lang('CONFIRM_PRUNE', phpbb_gallery_cleanup::lang_prune_pattern($prune_pattern)) . '<br />' . $user->lang['CLEAN_GALLERY_CONFIRM'];
 				}
 				confirm_box(false, 'CLEAN_GALLERY', $s_hidden_fields);
 			}
@@ -1114,6 +1183,9 @@ class acp_gallery
 			'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_GALLERY_CLEANUP_EXPLAIN'],
 			'CHECK_SOURCE'			=> $this->u_action . '&amp;check_mode=source',
 			'CHECK_ENTRY'			=> $this->u_action . '&amp;check_mode=entry',
+
+			'U_FIND_USERNAME'		=> phpbb_gallery_url::append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=acp_gallery&amp;field=prune_usernames'),
+			'S_SELECT_ALBUM'		=> phpbb_gallery_album::get_albumbox(false, '', false, false, false, phpbb_gallery_album::PUBLIC_ALBUM, phpbb_gallery_album::TYPE_UPLOAD),
 
 			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
 		));

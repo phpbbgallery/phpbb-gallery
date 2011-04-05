@@ -43,7 +43,7 @@ class phpbb_gallery_cleanup
 	*/
 	static public function delete_images($image_ids)
 	{
-		phpbb_gallery_image::delete_images($image_ids, false, true);
+		phpbb_gallery_image::delete_images($image_ids, false, true, true);
 
 		return 'CLEAN_SOURCES_DONE';
 	}
@@ -179,7 +179,7 @@ class phpbb_gallery_cleanup
 				phpbb_gallery_config::set('newest_pega_user_colour', '');
 				phpbb_gallery_config::set('newest_pega_album_id', 0);
 
-				if (isset($newest_pega == false))
+				if (isset($newest_pega))
 				{
 					phpbb_gallery_config::set('num_pegas', 0);
 				}
@@ -206,6 +206,117 @@ class phpbb_gallery_cleanup
 		}
 
 		return $return;
+	}
+
+	/**
+	*
+	*/
+	static public function prune($pattern)
+	{
+		global $db;
+
+		$sql_where = '';
+		if (isset($pattern['image_album_id']))
+		{
+			$pattern['image_album_id'] = array_map('intval', explode(',', $pattern['image_album_id']));
+		}
+		if (isset($pattern['image_user_id']))
+		{
+			$pattern['image_user_id'] = array_map('intval', explode(',', $pattern['image_user_id']));
+		}
+		foreach ($pattern as $field => $value)
+		{
+			if (is_array($value))
+			{
+				$sql_where .= (($sql_where) ? ' AND ' : ' WHERE ') . $db->sql_in_set($field, $value);
+				continue;
+			}
+			$sql_where .= (($sql_where) ? ' AND ' : ' WHERE ') . $field . ' < ' . $value;
+		}
+
+		$sql = 'SELECT image_id, image_filename
+			FROM ' . GALLERY_IMAGES_TABLE . '
+			' . $sql_where;
+		$result = $db->sql_query($sql);
+		$image_ids = $filenames = $update_albums = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$image_ids[] = (int) $row['image_id'];
+			$filenames[(int) $row['image_id']] = $row['image_filename'];
+		}
+		$db->sql_freeresult($result);
+
+		if ($image_ids)
+		{
+			phpbb_gallery_image::delete_images($image_ids, $filenames);
+		}
+
+		return 'CLEAN_PRUNE_DONE';
+	}
+
+	/**
+	*
+	*/
+	static public function lang_prune_pattern($pattern)
+	{
+		global $db, $user;
+
+		if (isset($pattern['image_album_id']))
+		{
+			$pattern['image_album_id'] = array_map('intval', explode(',', $pattern['image_album_id']));
+		}
+		if (isset($pattern['image_user_id']))
+		{
+			$pattern['image_user_id'] = array_map('intval', explode(',', $pattern['image_user_id']));
+		}
+
+		$lang_pattern = '';
+		foreach ($pattern as $field => $value)
+		{
+			$field = (strpos($field, 'image_') === 0) ? substr($field, 6) : $field;
+
+			switch ($field)
+			{
+				case 'album_id':
+					$sql = 'SELECT album_name
+						FROM ' . GALLERY_ALBUMS_TABLE . '
+						WHERE ' . $db->sql_in_set('album_id', $value) . '
+						ORDER BY album_id ASC';
+					$result = $db->sql_query($sql);
+					$value = '';
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$value .= (($value) ? ', ' : '') . $row['album_name'];
+					}
+					$db->sql_freeresult($result);
+				break;
+
+				case 'user_id':
+					$sql = 'SELECT user_id, user_colour, username
+						FROM ' . USERS_TABLE . '
+						WHERE ' . $db->sql_in_set('user_id', $value) . '
+						ORDER BY user_id ASC';
+					$result = $db->sql_query($sql);
+					$value = '';
+					while ($row = $db->sql_fetchrow($result))
+					{
+						$value .= (($value) ? ', ' : '') . get_username_string('full', $row['user_id'], (($row['user_id'] != ANONYMOUS) ? $row['username'] : $user->lang['GUEST']), $row['user_colour']);
+					}
+					$db->sql_freeresult($result);
+				break;
+
+				case 'time':
+					$value = $user->format_date($value, false, true);
+				break;
+
+				case 'rate_avg':
+					$value = ($value / 100);
+				break;
+			}
+			$lang_pattern .= (($lang_pattern) ? '<br />' : '') . $user->lang('PRUNE_PATTERN_' . strtoupper($field), $value);
+		}
+
+		return $lang_pattern;
 	}
 }
 

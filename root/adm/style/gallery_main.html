@@ -149,7 +149,7 @@
 			<dd><!-- IF not .imagerow -->
 				{L_IMPORT_DIR_EMPTY}
 			<!-- ELSE -->
-				<select id="images" name="images[]" multiple="multiple">
+				<select id="images" name="images[]" multiple="multiple" size="10">
 					<!-- BEGIN imagerow --><option value="{imagerow.FILE_NAME}">{imagerow.FILE_NAME}</option><!-- END imagerow -->
 				</select>
 			<!-- ENDIF --></dd>
@@ -188,7 +188,7 @@
 			<dd><!-- IF not .sourcerow -->
 				{L_CHECK_SOURCE_EXPLAIN}
 			<!-- ELSE -->
-				<select id="source" name="source[]" multiple="multiple">
+				<select id="source" name="source[]" multiple="multiple" size="10">
 					<!-- BEGIN sourcerow --><option value="{sourcerow.IMAGE_ID}">{L_IMAGE_ID}: {sourcerow.IMAGE_ID} - {sourcerow.IMAGE_NAME}</option><!-- END sourcerow -->
 				</select>
 			<!-- ENDIF --></dd>
@@ -199,7 +199,7 @@
 			<dd><!-- IF not .entryrow -->
 				{L_CHECK_ENTRY_EXPLAIN}
 			<!-- ELSE -->
-				<select id="entry" name="entry[]" multiple="multiple">
+				<select id="entry" name="entry[]" multiple="multiple" size="10">
 					<!-- BEGIN entryrow --><option value="{entryrow.FILE_NAME}">{entryrow.FILE_NAME}</option><!-- END entryrow -->
 				</select>
 			<!-- ENDIF --></dd>
@@ -217,7 +217,7 @@
 			<dd><!-- IF not .authorrow -->
 				{L_CHECK_AUTHOR_EXPLAIN}
 			<!-- ELSE -->
-				<select id="author" name="author[]" multiple="multiple">
+				<select id="author" name="author[]" multiple="multiple" size="10">
 					<!-- BEGIN authorrow --><option value="{authorrow.IMAGE_ID}">{L_IMAGE_ID}: {authorrow.IMAGE_ID} - {L_AUTHOR}: {authorrow.AUTHOR_NAME}</option><!-- END authorrow -->
 				</select>
 			<!-- ENDIF --></dd>
@@ -227,7 +227,7 @@
 			<dd><!-- IF not .commentrow -->
 				{L_CHECK_COMMENT_EXPLAIN}
 			<!-- ELSE -->
-				<select id="comment" name="comment[]" multiple="multiple">
+				<select id="comment" name="comment[]" multiple="multiple" size="10">
 					<!-- BEGIN commentrow --><option value="{commentrow.COMMENT_ID}">{L_COMMENT_ID}: {commentrow.COMMENT_ID} - {L_IMAGE_ID}: {commentrow.IMAGE_ID} - {L_AUTHOR}: {commentrow.AUTHOR_NAME}</option><!-- END commentrow -->
 				</select>
 			<!-- ENDIF --></dd>
@@ -247,7 +247,7 @@
 			<dd><!-- IF not .personalrow -->
 				{L_CHECK_PERSONALS_EXPLAIN}
 			<!-- ELSE -->
-				<select id="personal_missing" name="personal[]" multiple="multiple">
+				<select id="personal_missing" name="personal[]" multiple="multiple" size="10">
 					<!-- BEGIN personalrow --><option value="{personalrow.USER_ID}">{L_ALBUM_ID}: {personalrow.ALBUM_ID} - {L_AUTHOR}: {personalrow.AUTHOR_NAME}</option><!-- END personalrow -->
 				</select>
 			<!-- ENDIF --></dd>
@@ -258,7 +258,7 @@
 			<dd><!-- IF not .personal_bad_row -->
 				{L_CHECK_PERSONALS_BAD_EXPLAIN}
 			<!-- ELSE -->
-				<select id="personal_bad" name="personal_bad[]" multiple="multiple">
+				<select id="personal_bad" name="personal_bad[]" multiple="multiple" size="10">
 					<!-- BEGIN personal_bad_row --><option value="{personal_bad_row.USER_ID}">{L_ALBUM_ID}: {personal_bad_row.ALBUM_ID} - {L_AUTHOR}: {personal_bad_row.AUTHOR_NAME} - {L_IMAGES}: {personal_bad_row.IMAGES}</option><!-- END personal_bad_row -->
 				</select>
 			<!-- ENDIF --></dd>
@@ -268,6 +268,49 @@
 			<input class="button1" type="submit" id="delete" name="delete" value="{L_DELETE}" />
 		</p>
 	</fieldset>
+
+	<!-- IF S_SELECT_ALBUM -->
+	<fieldset>
+		<legend>{L_PRUNE_ALBUMS}</legend>
+		<dl>
+			<dt><label for="prune_album_ids">{L_SELECT_ALBUMS}:</dt>
+			<dd><select id="prune_album_ids" name="prune_album_ids[]" multiple="multiple" size="10">{S_SELECT_ALBUM}</select></dd>
+		</dl>
+		<dl>
+			<dt><label for="prune_username_check">{L_PRUNE_USERNAME}:</label>
+				<br /><span>{L_PRUNE_USERNAME_EXP}</span></dt>
+			<dd><input class="radio" type="checkbox" id="prune_username_check" name="prune_username_check" value="1" /> <label for="prune_username_check">{L_PRUNE_CHECK_OPTION}</label></dd>
+			<dd><textarea id="prune_usernames" name="prune_usernames" rows="5" cols="5"></textarea></dd>
+			<dd><div style="float: {S_CONTENT_FLOW_END};">[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</div><label><input type="checkbox" class="radio" id="anonymous" name="prune_anonymous" value="{ANONYMOUS_USER_ID}" /> {L_SELECT_ANONYMOUS}</label></dd>
+		</dl>
+		<dl>
+			<dt><label for="prune_time_check">{L_PRUNE_TIME}:</label>
+				<br /><span>{L_PRUNE_TIME_EXP}</span></dt>
+			<dd><input class="radio" type="checkbox" id="prune_time_check" name="prune_time_check" value="1" /> <label for="prune_time_check">{L_PRUNE_CHECK_OPTION}</label></dd>
+			<dd><input class="inputbox autowidth" type="text" name="prune_time" size="15" value="" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="prune_comments_check">{L_PRUNE_COMMENTS}:</label></dt>
+			<dd><input class="radio" type="checkbox" id="prune_comments_check" name="prune_comments_check" value="1" /> <label for="prune_comments_check">{L_PRUNE_CHECK_OPTION}</label></dd>
+			<dd><input class="inputbox autowidth" type="text" name="prune_comments" size="15" value="" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="prune_ratings_check">{L_PRUNE_RATINGS}:</label></dt>
+			<dd><input class="radio" type="checkbox" id="prune_ratings_check" name="prune_ratings_check" value="1" /> <label for="prune_ratings_check">{L_PRUNE_CHECK_OPTION}</label></dd>
+			<dd><input class="inputbox autowidth" type="text" name="prune_ratings" size="15" value="" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="prune_rating_avg_check">{L_PRUNE_RATING_AVG}:</label>
+				<br /><span>{L_PRUNE_RATING_AVG_EXP}</span></dt>
+			<dd><input class="radio" type="checkbox" id="prune_rating_avg_check" name="prune_rating_avg_check" value="1" /> <label for="prune_rating_avg_check">{L_PRUNE_CHECK_OPTION}</label></dd>
+			<dd><input class="inputbox autowidth" type="text" name="prune_rating_avg" size="15" value="" /></dd>
+		</dl>
+
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="prune" name="prune" value="{L_PRUNE}" />
+		</p>
+	</fieldset>
+	<!-- ENDIF -->
 	{S_FORM_TOKEN}
 </form>
 <!-- ENDIF -->
