@@ -39,7 +39,7 @@ class phpbb_gallery_report
 			'report_time'				=> time(),
 			'report_status'				=> self::OPEN,
 		);
-		$sql = 'INSERT INTO ' . GALLERY_REPORTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+		$sql = 'INSERT INTO ' . GALLERY_REPORTS_TABLE . ' ' . $db->sql_build_array('INSERT', $data);
 		$db->sql_query($sql);
 
 		$report_id = (int) $db->sql_nextid();
