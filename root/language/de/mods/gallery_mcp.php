@@ -27,6 +27,7 @@ $lang = array_merge($lang, array(
 	'CHOOSE_ACTION'					=> 'gewünschte Aktion auswählen',
 
 	'GALLERY_MCP_MAIN'				=> 'Hauptbereich',
+	'GALLERY_MCP_OVERVIEW'			=> 'Übersicht',
 	'GALLERY_MCP_QUEUE'				=> 'Warteschlange',
 	'GALLERY_MCP_QUEUE_DETAIL'		=> 'Details des Bildes',
 	'GALLERY_MCP_REPORTED'			=> 'Gemeldete Bilder',
@@ -42,6 +43,9 @@ $lang = array_merge($lang, array(
 	'IMAGE_UNAPPROVED'				=> 'Das Bild wartet auf Freigabe.',
 
 	'MODERATE_ALBUM'				=> 'Album moderieren',
+
+	'LATEST_IMAGES_REPORTED'		=> 'Die letzten 5 gemeldeten Bilder',
+	'LATEST_IMAGES_UNAPPROVED'		=> 'Die letzten 5 Bilder, die auf Freigabe warten',
 
 	'QUEUE_A_APPROVE'				=> 'Bild freischalten',
 	'QUEUE_A_APPROVE2'				=> 'Bild freischalten?',

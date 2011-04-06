@@ -2,11 +2,11 @@
 
 <h2>{L_MCP}</h2>
 
-<!-- IF not S_MOVING_IMAGES -->
-
+<!-- IF not S_MOVING_IMAGES and not S_MODE_OVERVIEW -->
 <p class="linkmcp">
-	[ <a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a> | <a href="{U_MOD_ALBUM}">{L_MODERATE_ALBUM}</a> ]
+	[ <a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a> | <a href="{U_MOD_ALBUM}">{L_MODERATE_ALBUM}</a> | <a href="{U_MCP_OVERVIEW}">{L_GALLERY_MCP_OVERVIEW}</a> ]
 </p>
+
 <div id="tabs">
 	<ul>
 		<!-- BEGIN tabs -->
@@ -14,6 +14,7 @@
 		<!-- END tabs -->
 	</ul>
 </div>
+
 <div class="panel bg3">
 	<div class="inner"><span class="corners-top"><span></span></span>
 	<div style="width: 100%;">
@@ -232,6 +233,80 @@
 			</fieldset>
 		</form>
 	<!-- ENDIF -->
+	</div>
+	<div class="clear"></div>
+
+	</div>
+	<span class="corners-bottom"><span></span></span></div>
+</div>
+<!-- ELSEIF S_MODE_OVERVIEW -->
+<div class="panel bg3">
+	<div class="inner"><span class="corners-top"><span></span></span>
+	<div style="width: 100%;">
+	<div id="cp-menu">&nbsp;</div>
+
+	<div id="cp-main" class="mcp-main">
+	<h2>{SUBSECTION}</h2>
+
+	<div class="panel">
+		<div class="inner"><span class="corners-top"><span></span></span>
+
+		<h3>{L_LATEST_IMAGES_UNAPPROVED}</h3>
+
+		<!-- IF .queue_row -->
+		<ul class="topiclist cplist">
+			<!-- BEGIN queue_row -->
+			<li class="row<!-- IF queue_row.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF -->">
+				<dl>
+					<dt>
+						<!-- IF DISP_FAKE_THUMB and queue_row.THUMBNAIL --><span style="float: left; text-align: center; width: {FAKE_THUMB_SIZE}px; padding-right: 5px;">{queue_row.THUMBNAIL}</span><!-- ENDIF -->
+						<a href="{queue_row.U_IMAGE_PAGE}" class="topictitle">{queue_row.IMAGE_NAME} {UNAPPROVED_IMG}</a><br />
+						<span>{L_POST_BY_AUTHOR} {queue_row.UPLOADER}<br />
+						&raquo; {queue_row.IMAGE_TIME}</span>
+					</dt>
+				</dl>
+			</li>
+			<!-- END queue_row -->
+		</ul>
+		<!-- ELSE -->
+			<strong>{NO_UNAPPROVED_IMAGE}</strong>
+		<!-- ENDIF -->
+
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+
+	<div class="panel">
+		<div class="inner"><span class="corners-top"><span></span></span>
+
+		<h3>{L_LATEST_IMAGES_REPORTED}</h3>
+
+		<!-- IF .report_row -->
+		<ul class="topiclist cplist">
+			<!-- BEGIN report_row -->
+			<li class="row<!-- IF report_row.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF -->">
+			<dl>
+				<dt>
+					<!-- IF DISP_FAKE_THUMB and report_row.THUMBNAIL --><span style="float: left; text-align: center; width: {FAKE_THUMB_SIZE}px; padding-right: 5px;">{report_row.THUMBNAIL}</span><!-- ENDIF -->
+					<a href="<!-- IF not S_REPORT -->{report_row.U_IMAGE_PAGE}<!-- ELSE -->{report_row.U_REPORT}<!-- ENDIF -->" class="topictitle">{report_row.IMAGE_NAME}</a><!-- IF report_row.S_REPORTED --> <a href="{report_row.U_REPORT}">{REPORTED_IMG}</a><!-- ENDIF --><!-- IF report_row.S_UNAPPROVED --> <a href="{report_row.U_QUEUE}">{UNAPPROVED_IMG}</a><!-- ENDIF --><br />
+					<span>{L_POST_BY_AUTHOR} {report_row.UPLOADER}<br />
+					&raquo; {report_row.IMAGE_TIME}
+					<!-- IF report_row.REPORT_MOD --><br />{L_REPORT_MOD} {report_row.REPORT_MOD}<!-- ENDIF --></span>
+				</dt>
+				<dd class="moderation">
+					<span>{L_REPORT_BY} {report_row.REPORTER}<br />
+					{report_row.REPORT_TIME}
+				</dd>
+			</dl>
+			</li>
+			<!-- END report_row -->
+		</ul>
+		<!-- ELSE -->
+			<strong>{NO_REPORTED_IMAGE}</strong>
+		<!-- ENDIF -->
+
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+
 	</div>
 	<div class="clear"></div>
 

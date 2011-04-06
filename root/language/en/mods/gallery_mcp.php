@@ -27,6 +27,7 @@ $lang = array_merge($lang, array(
 	'CHOOSE_ACTION'					=> 'Select desired action',
 
 	'GALLERY_MCP_MAIN'				=> 'Main',
+	'GALLERY_MCP_OVERVIEW'			=> 'Overview',
 	'GALLERY_MCP_QUEUE'				=> 'Queue',
 	'GALLERY_MCP_QUEUE_DETAIL'		=> 'Image details',
 	'GALLERY_MCP_REPORTED'			=> 'Reported images',
@@ -42,6 +43,9 @@ $lang = array_merge($lang, array(
 	'IMAGE_UNAPPROVED'				=> 'The image is awaiting for approval.',
 
 	'MODERATE_ALBUM'				=> 'Moderate album',
+
+	'LATEST_IMAGES_REPORTED'		=> 'Latest 5 reports',
+	'LATEST_IMAGES_UNAPPROVED'		=> 'Latest 5 images awaiting approval',
 
 	'QUEUE_A_APPROVE'				=> 'Approve image',
 	'QUEUE_A_APPROVE2'				=> 'Approve image?',

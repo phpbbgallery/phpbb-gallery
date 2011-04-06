@@ -175,7 +175,7 @@ class phpbb_gallery_mcp
 
 		$template->assign_vars(array(
 			'REPORTED_IMG'				=> $user->img('icon_topic_reported', 'IMAGE_REPORTED'),
-			'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'phpbb_gallery_image::STATUS_UNAPPROVED'),
+			'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'IMAGE_UNAPPROVED'),
 			'S_MCP_ACTION'				=> phpbb_gallery_url::append_sid('mcp', "mode=$mode&amp;album_id=$album_id"),
 			'DISP_FAKE_THUMB'			=> phpbb_gallery_config::get('mini_thumbnail_disp'),
 			'FAKE_THUMB_SIZE'			=> phpbb_gallery_config::get('mini_thumbnail_size'),
@@ -302,7 +302,7 @@ class phpbb_gallery_mcp
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$template->assign_block_vars('image_row', array(
-				'THUMBNAIL'			=> generate_image_link('fake_thumbnail', phpbb_gallery_config::get('link_thumbnail'), $row['image_id'], $row['image_name'], $album_id),
+				'THUMBNAIL'			=> phpbb_gallery_image::generate_link('fake_thumbnail', phpbb_gallery_config::get('link_thumbnail'), $row['image_id'], $row['image_name'], $album_id),
 				'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
 				'IMAGE_NAME'		=> $row['image_name'],
@@ -343,7 +343,7 @@ class phpbb_gallery_mcp
 
 		$template->assign_vars(array(
 			'REPORTED_IMG'				=> $user->img('icon_topic_reported', 'IMAGE_REPORTED'),
-			'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'phpbb_gallery_image::STATUS_UNAPPROVED'),
+			'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'IMAGE_UNAPPROVED'),
 			'S_MCP_ACTION'				=> phpbb_gallery_url::append_sid('mcp', "mode=$mode&amp;album_id=$album_id"),
 			'DISP_FAKE_THUMB'			=> phpbb_gallery_config::get('mini_thumbnail_disp'),
 			'FAKE_THUMB_SIZE'			=> phpbb_gallery_config::get('mini_thumbnail_size'),
@@ -373,11 +373,11 @@ class phpbb_gallery_mcp
 
 		if ($mode == 'report_open')
 		{
-			$report_status = REPORT_OPEN;
+			$report_status = phpbb_gallery_report::OPEN;
 		}
 		else
 		{
-			$report_status = REPORT_LOCKED;
+			$report_status = phpbb_gallery_report::LOCKED;
 		}
 
 		$sql_array = array(
@@ -426,7 +426,7 @@ class phpbb_gallery_mcp
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$template->assign_block_vars('image_row', array(
-				'THUMBNAIL'			=> generate_image_link('fake_thumbnail', phpbb_gallery_config::get('link_thumbnail'), $row['image_id'], $row['image_name'], $album_id),
+				'THUMBNAIL'			=> phpbb_gallery_image::generate_link('fake_thumbnail', phpbb_gallery_config::get('link_thumbnail'), $row['image_id'], $row['image_name'], $album_id),
 				'REPORTER'			=> get_username_string('full', $row['reporter_id'], $row['reporter_name'], $row['reporter_colour']),
 				'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 				'REPORT_ID'			=> $row['report_id'],
@@ -440,7 +440,7 @@ class phpbb_gallery_mcp
 		}
 		$db->sql_freeresult($result);
 
-		if ($report_status == REPORT_LOCKED)
+		if ($report_status == phpbb_gallery_report::LOCKED)
 		{
 			$desc_string = $user->lang('WAITING_REPORTED_DONE', $count_images);
 		}
@@ -467,7 +467,7 @@ class phpbb_gallery_mcp
 
 		$template->assign_vars(array(
 			'REPORTED_IMG'				=> $user->img('icon_topic_reported', 'IMAGE_REPORTED'),
-			'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'phpbb_gallery_image::STATUS_UNAPPROVED'),
+			'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'IMAGE_UNAPPROVED'),
 			'S_MCP_ACTION'				=> phpbb_gallery_url::append_sid('mcp', "mode=$mode&amp;album_id=$album_id"),
 			'DISP_FAKE_THUMB'			=> phpbb_gallery_config::get('mini_thumbnail_disp'),
 			'FAKE_THUMB_SIZE'			=> phpbb_gallery_config::get('mini_thumbnail_size'),

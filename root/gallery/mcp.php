@@ -101,6 +101,9 @@ switch ($mode)
 			$access_denied = (!sizeof(phpbb_gallery::$auth->acl_album_ids('m_status'))) ? true : false;
 		}
 	break;
+	case 'overview':
+		$access_denied = (!phpbb_gallery::$auth->acl_check_global('m_')) ? true : false;
+	break;
 }
 switch ($action)
 {
@@ -135,8 +138,92 @@ if ($access_denied || (($album_id && !phpbb_gallery::$auth->acl_check('m_', $alb
 	trigger_error('NOT_AUTHORISED');
 }
 
-// Build Navigation
-$page_title = phpbb_gallery_mcp::build_navigation($album_id, $mode, $option_id);
+if ($mode == 'overview')
+{
+	$page_title = $user->lang['GALLERY_MCP_OVERVIEW'];
+
+	$template->assign_vars(array(
+		'S_MODE_OVERVIEW'	=> true,
+		'SUBSECTION'		=> $user->lang['GALLERY_MCP_OVERVIEW'],
+
+		'REPORTED_IMG'				=> $user->img('icon_topic_reported', 'IMAGE_REPORTED'),
+		'UNAPPROVED_IMG'			=> $user->img('icon_topic_unapproved', 'IMAGE_UNAPPROVED'),
+		'DISP_FAKE_THUMB'			=> phpbb_gallery_config::get('mini_thumbnail_disp'),
+		'FAKE_THUMB_SIZE'			=> phpbb_gallery_config::get('mini_thumbnail_size'),
+
+		'NO_REPORTED_IMAGE'			=> $user->lang('WAITING_REPORTED_IMAGE', 0),
+		'NO_UNAPPROVED_IMAGE'		=> $user->lang('WAITING_UNAPPROVED_IMAGE', 0),
+	));
+
+	$sql = 'SELECT image_time, image_name, image_id, image_album_id, image_user_id, image_username, image_user_colour
+		FROM ' . GALLERY_IMAGES_TABLE . '
+		WHERE image_status = ' . phpbb_gallery_image::STATUS_UNAPPROVED . '
+			AND ' . $db->sql_in_set('image_album_id', phpbb_gallery::$auth->acl_album_ids('m_status', 'array'), false, true) . '
+		ORDER BY image_time DESC';
+	$result = $db->sql_query_limit($sql, 5);
+
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$template->assign_block_vars('queue_row', array(
+			'THUMBNAIL'			=> phpbb_gallery_image::generate_link('fake_thumbnail', phpbb_gallery_config::get('link_thumbnail'), $row['image_id'], $row['image_name'], $row['image_album_id']),
+			'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
+			'IMAGE_TIME'		=> $user->format_date($row['image_time']),
+			'IMAGE_NAME'		=> $row['image_name'],
+			'IMAGE_ID'			=> $row['image_id'],
+			'U_IMAGE'			=> phpbb_gallery_url::append_sid('image', 'album_id=' . $row['image_album_id'] . '&amp;image_id=' . $row['image_id']),
+			'U_IMAGE_PAGE'		=> phpbb_gallery_url::append_sid('mcp', 'mode=queue_details&amp;album_id=' . $row['image_album_id'] . '&amp;option_id=' . $row['image_id']),
+		));
+	}
+	$db->sql_freeresult($result);
+
+	$sql_array = array(
+		'SELECT'		=> 'r.*, u.username reporter_name, u.user_colour reporter_colour, m.username mod_username, m.user_colour mod_user_colour, i.*',
+		'FROM'			=> array(GALLERY_REPORTS_TABLE => 'r'),
+
+		'LEFT_JOIN'		=> array(
+			array(
+				'FROM'		=> array(USERS_TABLE => 'u'),
+				'ON'		=> 'r.reporter_id = u.user_id',
+			),
+			array(
+				'FROM'		=> array(USERS_TABLE => 'm'),
+				'ON'		=> 'r.report_manager = m.user_id',
+			),
+			array(
+				'FROM'		=> array(GALLERY_IMAGES_TABLE => 'i'),
+				'ON'		=> 'r.report_image_id = i.image_id',
+			),
+		),
+
+		'WHERE'			=> 'r.report_status = ' . phpbb_gallery_report::OPEN . ' AND ' . $db->sql_in_set('r.report_album_id', phpbb_gallery::$auth->acl_album_ids('m_report', 'array'), false, true),
+		'ORDER_BY'		=> 'report_time DESC',
+	);
+	$sql = $db->sql_build_query('SELECT', $sql_array);
+	$result = $db->sql_query_limit($sql, 5);
+
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$template->assign_block_vars('report_row', array(
+			'THUMBNAIL'			=> phpbb_gallery_image::generate_link('fake_thumbnail', phpbb_gallery_config::get('link_thumbnail'), $row['image_id'], $row['image_name'], $row['image_album_id']),
+			'REPORTER'			=> get_username_string('full', $row['reporter_id'], $row['reporter_name'], $row['reporter_colour']),
+			'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
+			'REPORT_ID'			=> $row['report_id'],
+			'REPORT_MOD'		=> ($row['report_manager']) ? get_username_string('full', $row['report_manager'], $row['mod_username'], $row['mod_user_colour']) : '',
+			'REPORT_TIME'		=> $user->format_date($row['report_time']),
+			'IMAGE_TIME'		=> $user->format_date($row['image_time']),
+			'IMAGE_NAME'		=> $row['image_name'],
+			'U_IMAGE'			=> phpbb_gallery_url::append_sid('image', 'album_id=' . $row['image_album_id'] . '&amp;image_id=' . $row['image_id']),
+			'U_IMAGE_PAGE'		=> phpbb_gallery_url::append_sid('mcp', 'mode=report_details&amp;album_id=' . $row['image_album_id'] . '&amp;option_id=' . $row['report_id']),
+		));
+	}
+	$db->sql_freeresult($result);
+
+}
+else
+{
+	// Build Navigation
+	$page_title = phpbb_gallery_mcp::build_navigation($album_id, $mode, $option_id);
+}
 
 if (!$album_id)
 {
@@ -171,6 +258,7 @@ $template->assign_vars(array(
 	'ALBUM_IMAGES'	=> $album_data['album_images'] . ' ' . (($album_data['album_images'] == 1) ? $user->lang['IMAGE'] : $user->lang['IMAGES']),
 	'U_VIEW_ALBUM'	=> phpbb_gallery_url::append_sid('album', 'album_id=' . $album_id),
 	'U_MOD_ALBUM'	=> phpbb_gallery_url::append_sid('mcp', 'mode=album&amp;album_id=' . $album_id),
+	'U_MCP_OVERVIEW'	=> phpbb_gallery_url::append_sid('mcp', 'mode=overview'),
 ));
 
 if ($action && $image_id_ary)
@@ -434,8 +522,6 @@ switch ($mode)
 	case 'queue_approved':
 	case 'queue_locked':
 		phpbb_gallery_mcp::queue($mode, $album_id, $album_data);
-	break;
-
 	break;
 
 	case 'report_details':

@@ -386,6 +386,45 @@ class phpbb_gallery_auth
 	}
 
 	/**
+	* Does the user ahve the permission for any album?
+	*
+	* @param	string	$acl			One of the permissions, Exp: i_view; *_count permissions are not allowed!
+	*
+	* @return	bool			Is the user allowed to do the $acl?
+	*/
+	public function acl_check_global($acl)
+	{
+		global $cache;
+
+		$bit = self::$_permissions_flipped[$acl];
+		if (!is_int($bit))
+		{
+			// No support for *_count permissions.
+			return false;
+		}
+
+		if ($this->_auth_data[self::OWN_ALBUM]->get_bit($bit))
+		{
+			return true;
+		}
+		if ($this->_auth_data[self::PERSONAL_ALBUM]->get_bit($bit))
+		{
+			return true;
+		}
+
+		$albums = $cache->obtain_album_list();
+		foreach ($albums as $album)
+		{
+			if (!$album['album_user_id'] && $this->_auth_data[$a_id]->get_bit($bit))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	* Get albums by permission
 	*
 	* @param	string	$acl			One of the permissions, Exp: i_view; *_count permissions are not allowed!

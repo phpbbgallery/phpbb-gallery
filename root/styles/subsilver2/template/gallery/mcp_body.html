@@ -1,10 +1,10 @@
 <!-- INCLUDE gallery/gallery_header.html -->
 
-<!-- IF not S_MOVING_IMAGES -->
+<!-- IF not S_MOVING_IMAGES and not S_MODE_OVERVIEW -->
 
 <div id="pageheader">
 	<p class="linkmcp">
-		[ <a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a> | <a href="{U_MOD_ALBUM}">{L_MODERATE_ALBUM}</a> ]
+		[ <a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a> | <a href="{U_MOD_ALBUM}">{L_MODERATE_ALBUM}</a> | <a href="{U_MCP_OVERVIEW}">{L_GALLERY_MCP_OVERVIEW}</a> ]
 	</p>
 	<h2><a class="titles" href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>
 </div>
@@ -94,7 +94,7 @@
 					<a href="<!-- IF not S_REPORT -->{image_row.U_IMAGE_PAGE}<!-- ELSE -->{image_row.U_REPORT}<!-- ENDIF -->" class="topictitle">{image_row.IMAGE_NAME}</a><!-- IF image_row.S_REPORTED --> <a href="{image_row.U_REPORT}">{REPORTED_IMG}</a><!-- ENDIF --><!-- IF image_row.S_UNAPPROVED --> <a href="{image_row.U_QUEUE}">{UNAPPROVED_IMG}</a><!-- ENDIF --><br />
 					<span>{L_POST_BY_AUTHOR} {image_row.UPLOADER}<br />
 					{image_row.IMAGE_TIME}
-					<!-- IF image_row.REPORT_MOD --><br />{L_REPORT_MOD} {image_row.REPORT_MOD}<!-- ENDIF -->
+					<!-- IF image_row.REPORT_MOD --><br />{L_REPORT_MOD} {image_row.REPORT_MOD}<!-- ENDIF --></span>
 				</td>
 				<!-- IF S_COMMENTS --><td class="row1" width="50" align="center">&nbsp;{image_row.COMMENTS}&nbsp;</td><!-- ENDIF -->
 				<!-- IF S_RATINGS --><td class="row1" width="50" align="center">&nbsp;{image_row.RATING}&nbsp;</td><!-- ENDIF -->
@@ -229,6 +229,69 @@
 		</table>
 		<br />
 	<!-- ENDIF -->
+</div>
+<!-- ELSEIF S_MODE_OVERVIEW -->
+<br />
+
+<div id="pagecontent">
+	<table class="tablebg" width="100%" cellspacing="1">
+			<tr>
+				<!-- IF DISP_FAKE_THUMB --><th width="4%" nowrap="nowrap">&nbsp;</th><!-- ENDIF -->
+				<th nowrap="nowrap">{L_LATEST_IMAGES_UNAPPROVED}</th>
+			</tr>
+			<!-- BEGIN queue_row -->
+			<tr>
+
+				<!-- IF DISP_FAKE_THUMB and queue_row.THUMBNAIL --><td class="row1" width="{FAKE_THUMB_SIZE}" align="center"><span style="float: left; text-align: center; width: {FAKE_THUMB_SIZE}px; padding-right: 5px;">{queue_row.THUMBNAIL}</span></td><!-- ENDIF -->
+				<td class="row1">
+					<a href="<!-- IF not S_REPORT -->{queue_row.U_IMAGE_PAGE}<!-- ELSE -->{queue_row.U_REPORT}<!-- ENDIF -->" class="topictitle">{queue_row.IMAGE_NAME}</a><!-- IF queue_row.S_REPORTED --> <a href="{queue_row.U_REPORT}">{REPORTED_IMG}</a><!-- ENDIF --><!-- IF queue_row.S_UNAPPROVED --> <a href="{queue_row.U_QUEUE}">{UNAPPROVED_IMG}</a><!-- ENDIF --><br />
+					<span>{L_POST_BY_AUTHOR} {queue_row.UPLOADER}<br />
+					{queue_row.IMAGE_TIME}
+					<!-- IF queue_row.REPORT_MOD --><br />{L_REPORT_MOD} {queue_row.REPORT_MOD}<!-- ENDIF --></span>
+				</td>
+				<!-- IF S_COMMENTS --><td class="row1" width="50" align="center">&nbsp;{queue_row.COMMENTS}&nbsp;</td><!-- ENDIF -->
+				<!-- IF S_RATINGS --><td class="row1" width="50" align="center">&nbsp;{queue_row.RATING}&nbsp;</td><!-- ENDIF -->
+				<!-- IF S_REPORTER --><td class="row1" width="150" align="center">&nbsp;
+					{L_REPORT_BY} {queue_row.REPORTER}<br />
+					{queue_row.REPORT_TIME}<br />
+					{L_ALBUM}: <a href="{U_VIEW_ALBUM}" style="font-weight: bold;">{ALBUM_NAME}</a>
+				&nbsp;</td><!-- ENDIF -->
+				<!-- IF S_STATUS --><td class="row1" width="150" align="center">&nbsp;{queue_row.STATUS}<!-- IF queue_row.S_REPORTED --><br />{L_IMAGE_REPORTED}<!-- ENDIF -->&nbsp;</td><!-- ENDIF -->
+				<!-- IF S_MARK --><td class="row2" align="center">&nbsp;<input type="checkbox" name="image_id_ary[]" value="<!-- IF not S_REPORT_LIST -->{queue_row.IMAGE_ID}<!-- ELSE -->{queue_row.REPORT_ID}<!-- ENDIF -->" />&nbsp;</td><!-- ENDIF -->
+			</tr>
+			<!-- BEGINELSE -->
+			<tr>
+				<td class="row1"<!-- IF DISP_FAKE_THUMB --> colspan="2"<!-- ENDIF -->><b class="genmed">{NO_UNAPPROVED_IMAGE}</b></td>
+			</tr>
+			<!-- END queue_row -->
+	</table>
+	<br />
+
+	<table class="tablebg" width="100%" cellspacing="1">
+			<tr>
+				<!-- IF DISP_FAKE_THUMB --><th width="4%" nowrap="nowrap">&nbsp;</th><!-- ENDIF -->
+				<th nowrap="nowrap" colspan="2">{L_LATEST_IMAGES_REPORTED}</th>
+			</tr>
+			<!-- BEGIN report_row -->
+			<tr>
+
+				<!-- IF DISP_FAKE_THUMB and report_row.THUMBNAIL --><td class="row1" width="{FAKE_THUMB_SIZE}" align="center"><span style="float: left; text-align: center; width: {FAKE_THUMB_SIZE}px; padding-right: 5px;">{report_row.THUMBNAIL}</span></td><!-- ENDIF -->
+				<td class="row1">
+					<a href="{report_row.U_REPORT}" class="topictitle">{report_row.IMAGE_NAME} {REPORTED_IMG}</a><br />
+					<span>{L_POST_BY_AUTHOR} {report_row.UPLOADER}<br />
+					{report_row.IMAGE_TIME}
+				</td>
+				<td class="row1" width="150" align="center">
+					{L_REPORT_BY} {report_row.REPORTER}<br />
+					{report_row.REPORT_TIME}
+				</td>
+			</tr>
+			<!-- BEGINELSE -->
+			<tr>
+				<td class="row1" colspan="<!-- IF DISP_FAKE_THUMB -->3<!-- ELSE -->2<!-- ENDIF -->"><b class="genmed">{NO_REPORTED_IMAGE}</b></td>
+			</tr>
+			<!-- END report_row -->
+			</table>
 </div>
 <!-- ELSE -->
 <form method="post" id="mcp" action="{S_MCP_ACTION}">

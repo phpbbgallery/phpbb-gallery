@@ -242,6 +242,7 @@ $template->assign_vars(array(
 	'S_USERS_PERSONAL_GALLERIES'	=> (!phpbb_gallery_config::get('pegas_index_album') && phpbb_gallery::$auth->acl_check('a_list', phpbb_gallery_auth::PERSONAL_ALBUM)) ? true : false,
 	'S_CHAR_OPTIONS'				=> $s_char_options,
 
+	'U_MCP'							=> (phpbb_gallery::$auth->acl_check_global('m_')) ? phpbb_gallery_url::append_sid('mcp', 'mode=overview') : '',
 	'U_MARK_ALBUMS'					=> ($user->data['is_registered']) ? phpbb_gallery_url::append_sid('index', 'hash=' . generate_link_hash('global') . '&amp;mark=albums') : '',
 
 	'U_G_SEARCH_COMMENTED'			=> (phpbb_gallery_config::get('allow_comments')) ? phpbb_gallery_url::append_sid('search', 'search_id=commented') : '',
