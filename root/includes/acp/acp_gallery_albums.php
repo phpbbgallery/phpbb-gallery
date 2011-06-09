@@ -108,6 +108,7 @@ class acp_gallery_albums
 						'display_subalbum_list'	=> request_var('display_subalbum_list', false),
 						'display_on_index'		=> request_var('display_on_index', false),
 						'display_in_rrc'		=> request_var('display_in_rrc', false),
+						'album_feed'			=> request_var('album_feed', false),
 						/*
 						'album_password'		=> request_var('album_password', '', true),
 						'album_password_confirm'=> request_var('album_password_confirm', '', true),
@@ -345,6 +346,7 @@ class acp_gallery_albums
 							'display_subalbum_list'	=> true,
 							'display_on_index'		=> true,
 							'display_in_rrc'		=> true,
+							'album_feed'			=> true,
 							/*
 							'album_password'		=> '',
 							'album_password_confirm'=> '',
@@ -511,6 +513,7 @@ class acp_gallery_albums
 					'S_DISPLAY_SUBALBUM_LIST'	=> ($album_data['display_subalbum_list']) ? true : false,
 					'S_DISPLAY_ON_INDEX'		=> ($album_data['display_on_index']) ? true : false,
 					'S_DISPLAY_IN_RRC'			=> ($album_data['display_in_rrc']) ? true : false,
+					'S_FEED_ENABLED'			=> ($album_data['album_feed']) ? true : false,
 
 					'S_CONTEST_START'			=> $user->format_date($contest_data['contest_start'], 'Y-m-d H:i'),
 					'CONTEST_RATING'			=> $user->format_date($contest_data['contest_start'] + $contest_data['contest_rating'], 'Y-m-d H:i'),

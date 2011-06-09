@@ -43,7 +43,8 @@ $lang = array_merge($lang, array(
 	'ALBUM_DESC'					=> 'Description',
 	'ALBUM_DESC_EXPLAIN'			=> 'Any HTML markup entered here will be displayed as is.',
 	'ALBUM_DESC_TOO_LONG'			=> 'The album description is too long, it must be less than 4000 characters.',
-	'ALBUM_EDIT_EXPLAIN'			=> 'The form below will allow you to customise this album. Please note that moderation control are set via album permissions for each ' . /*user or */ 'usergroup.',
+	'ALBUM_EDIT_EXPLAIN'			=> 'The form below will allow you to customise this album. Please note that moderation control are set via album permissions for each user or usergroup.',
+	'ALBUM_FEED'					=> 'Display images of this album in feeds',
 	'ALBUM_ID'						=> 'Album-ID',
 	'ALBUM_IMAGE'					=> 'Album image',
 	'ALBUM_IMAGE_EXPLAIN'			=> 'Location, relative to the phpBB root directory, of an additional image to associate with this album.',
@@ -160,6 +161,10 @@ $lang = array_merge($lang, array(
 
 	'FAKE_THUMB_SIZE'				=> 'Thumbnail-size',
 	'FAKE_THUMB_SIZE_EXP'			=> 'If you want to resize them to the full size, remember 16 pixels for the black-info-line',
+	'FEED_ENABLED'					=> 'Enable album feeds',
+	'FEED_ENABLED_PEGAS'			=> 'Enable feeds for personal galleries',
+	'FEED_LIMIT'					=> 'Number of elements displayed',
+	'FEED_SETTINGS'					=> 'Feed settings',
 
 	'GALLERY_ALBUMS_TITLE'			=> 'Gallery Albums Control',
 	'GALLERY_CONFIG'				=> 'Gallery Configuration',

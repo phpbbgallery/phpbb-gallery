@@ -52,7 +52,7 @@ class phpbb_gallery_dbal_schema
 		'albums'	=> array(
 			'full_name'		=> GALLERY_ALBUMS_TABLE,
 			'added'			=> '0.0.0',
-			'modified'		=> '1.0.4',
+			'modified'		=> '1.1.0',
 			'structure'		=> array(
 				'COLUMNS'		=> array(
 					'album_id'					=> array('UINT', NULL, 'auto_increment'),
@@ -84,6 +84,7 @@ class phpbb_gallery_dbal_schema
 					'display_in_rrc'			=> array('UINT:1', 1),
 					'display_on_index'			=> array('UINT:1', 1),
 					'display_subalbum_list'		=> array('UINT:1', 1),
+					'album_feed'				=> array('BOOL', 1),
 				),
 				'PRIMARY_KEY'	=> 'album_id',
 			),
@@ -113,6 +114,7 @@ class phpbb_gallery_dbal_schema
 					'comment_username'		=> array('VCHAR', ''),
 					'comment_user_colour'	=> array('VCHAR:6', ''),
 					'comment_user_ip'		=> array('VCHAR:40', ''),
+					'comment_signature'		=> array('BOOL', 0),
 					'comment_time'			=> array('UINT:11', 0),
 					'comment'				=> array('MTEXT_UNI', ''),
 					'comment_uid'			=> array('VCHAR:8', ''),
@@ -240,6 +242,7 @@ class phpbb_gallery_dbal_schema
 					'image_rate_avg'		=> array('UINT', 0),
 					'image_comments'		=> array('UINT', 0),
 					'image_last_comment'	=> array('UINT', 0),
+					'image_allow_comments'	=> array('TINT:1', 1),
 					'image_favorited'		=> array('UINT', 0),
 					'image_reported'		=> array('UINT', 0),
 					'filesize_upload'		=> array('UINT:20', 0),
@@ -364,7 +367,7 @@ class phpbb_gallery_dbal_schema
 		'users'	=> array(
 			'full_name'		=> GALLERY_USERS_TABLE,
 			'added'			=> '0.3.1',
-			'modified'		=> '1.0.4',
+			'modified'		=> '1.1.0',
 			'structure'		=> array(
 				'COLUMNS'		=> array(
 					'user_id'			=> array('UINT', 0),
@@ -378,6 +381,7 @@ class phpbb_gallery_dbal_schema
 					'user_viewexif'		=> array('UINT:1', 0),
 					'user_permissions'	=> array('MTEXT_UNI', ''),
 					'user_permissions_changed'	=> array('TIMESTAMP', 0),
+					'user_allow_comments'		=> array('TINT:1', 1),
 				),
 				'PRIMARY_KEY'		=> 'user_id',
 			),

@@ -96,7 +96,7 @@ class phpbb_gallery_image_file
 	*
 	* Only use this, if the image is secure. As we created all these images, they should be...
 	*/
-	public function mimetype_by_filename($filename)
+	static public function mimetype_by_filename($filename)
 	{
 		switch (utf8_substr(strtolower($filename), -4))
 		{

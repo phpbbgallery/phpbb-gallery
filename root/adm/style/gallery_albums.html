@@ -235,6 +235,11 @@
 				<label><input type="radio" class="radio" name="display_in_rrc" value="0"<!-- IF not S_DISPLAY_IN_RRC --> id="display_in_rrc" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
+			<dt><label for="album_feed">{L_ALBUM_FEED}:</label></dt>
+			<dd><label><input type="radio" class="radio" name="album_feed" value="1"<!-- IF S_FEED_ENABLED --> id="album_feed" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="album_feed" value="0"<!-- IF not S_FEED_ENABLED --> id="album_feed" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
+		<dl>
 			<dt><label for="display_subalbum_list">{L_LIST_SUBALBUMS}:</label><br /><span>{L_LIST_SUBALBUMS_EXPLAIN}</span></dt>
 			<dd><label><input type="radio" class="radio" name="display_subalbum_list" value="1"<!-- IF S_DISPLAY_SUBALBUM_LIST --> id="display_subalbum_list" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 				<label><input type="radio" class="radio" name="display_subalbum_list" value="0"<!-- IF not S_DISPLAY_SUBALBUM_LIST --> id="display_subalbum_list" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>

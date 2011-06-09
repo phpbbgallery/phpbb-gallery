@@ -415,6 +415,7 @@ class install_update extends module
 					array(GALLERY_USERS_TABLE, 'user_permissions', array('MTEXT', '')),
 					array(GALLERY_USERS_TABLE, 'user_permissions_changed', array('TIMESTAMP', 0)),
 					array(GALLERY_USERS_TABLE, 'user_last_update', array('TIMESTAMP', 0)),
+					array(GALLERY_ALBUMS_TABLE, 'album_feed', array('BOOL', 1),),
 				));
 			break;
 		}

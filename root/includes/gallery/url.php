@@ -90,7 +90,7 @@ class phpbb_gallery_url
 			case 'full':
 				return generate_board_url() . '/' . self::$phpbb_gallery_path;
 			case 'board':
-				return generate_board_url();
+				return generate_board_url() . '/';
 			case 'images':
 				return self::$phpbb_root_path . self::$phpbb_gallery_path . self::IMAGE_PATH;
 			case 'upload':
@@ -118,20 +118,10 @@ class phpbb_gallery_url
 			$args = $args[0];
 		}
 
-		if ($args[0] == 'phpbb')
+		if (in_array($args[0], array('phpbb', 'admin', 'relative', 'full', 'board')))
 		{
 			$mode = array_shift($args);
-			$args[0] = self::path('phpbb') . self::phpEx_file($args[0]);
-		}
-		else if ($args[0] == 'admin')
-		{
-			$mode = array_shift($args);
-			$args[0] = self::path('admin') . self::phpEx_file($args[0]);
-		}
-		else if ($args[0] == 'relative')
-		{
-			$mode = array_shift($args);
-			$args[0] = self::path('relative') . self::phpEx_file($args[0]);
+			$args[0] = self::path($mode) . self::phpEx_file($args[0]);
 		}
 		else
 		{
