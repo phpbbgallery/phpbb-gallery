@@ -420,6 +420,16 @@ class install_update extends module
 					array(GALLERY_COMMENTS_TABLE, 'comment_signature', array('BOOL', 0),),
 					array(GALLERY_ALBUMS_TABLE, 'album_feed', array('BOOL', 1),),
 				));
+				$umil->table_column_update(array(
+					array(GALLERY_RATES_TABLE, 'rate_image_id', array('UINT', 0)),
+				));
+				$umil->db_tools->sql_create_unique_index(GALLERY_RATES_TABLE, 'rate_image_user', array('rate_image_id', 'rate_user_id'));
+				$umil->table_index_remove(array(
+					array(GALLERY_RATES_TABLE, 'rate_image_id'),
+					array(GALLERY_RATES_TABLE, 'rate_user_id'),
+					array(GALLERY_RATES_TABLE, 'rate_user_ip'),
+					array(GALLERY_RATES_TABLE, 'rate_point'),
+				));
 			break;
 		}
 

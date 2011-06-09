@@ -295,19 +295,16 @@ class phpbb_gallery_dbal_schema
 		'rates'	=> array(
 			'full_name'		=> GALLERY_RATES_TABLE,
 			'added'			=> '0.0.0',
-			'modified'		=> '0.0.0',
+			'modified'		=> '1.1.0',
 			'structure'		=> array(
 				'COLUMNS'		=> array(
-					'rate_image_id'		=> array('UINT', NULL, 'auto_increment'),
+					'rate_image_id'		=> array('UINT', 0),
 					'rate_user_id'		=> array('UINT', 0),
 					'rate_user_ip'		=> array('VCHAR:40', ''),
 					'rate_point'		=> array('UINT:3', 0),
 				),
 				'KEYS'		=> array(
-					'rate_image_id'		=> array('INDEX', 'rate_image_id'),
-					'rate_user_id'		=> array('INDEX', 'rate_user_id'),
-					'rate_user_ip'		=> array('INDEX', 'rate_user_ip'),
-					'rate_point'		=> array('INDEX', 'rate_point'),
+					'rate_image_user'	=> array('UNIQUE', array('rate_image_id', 'rate_user_id')),
 				),
 			),
 		),
