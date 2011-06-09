@@ -24,6 +24,11 @@ class phpbb_gallery_auth
 	const OWN_ALBUM				= -2;
 	const PUBLIC_ALBUM			= 0;
 
+	const CONTROL_ALL			= 0;
+	const CONTROL_REGISTERED	= 1;
+	const CONTROL_NOT_FOES		= 2;
+	const CONTROL_FRIENDS		= 3;
+
 	// ACL - slightly different
 	const ACL_NO		= 0;
 	const ACL_YES		= 1;
@@ -142,6 +147,8 @@ class phpbb_gallery_auth
 
 		$this->merge_acl_row();
 
+		$this->restrict_pegas($user_id);
+
 		$this->set_user_permissions($user_id, $this->_auth_data);
 	}
 
@@ -240,6 +247,89 @@ class phpbb_gallery_auth
 				}
 			}
 		}
+	}
+
+	/**
+	* Restrict the access to personal galleries, if the user is not a moderator.
+	*/
+	private function restrict_pegas($user_id)
+	{
+		if (($user_id != ANONYMOUS) && $this->_auth_data[self::PERSONAL_ALBUM]->get_bit(self::$_permissions_flipped['m_']))
+		{
+			// No restrictions for moderators.
+			return;
+		}
+
+		$zebra = null;
+		global $cache;
+
+		$albums = $cache->obtain_album_list();
+		foreach ($albums as $album)
+		{
+			if (!$album['album_auth_control'] || ($album['album_user_id'] == self::PUBLIC_ALBUM))# || ($album['album_user_id'] == $user_id))
+			{
+				continue;
+			}
+			else if ($user_id == ANONYMOUS)
+			{
+				// Level 1: No guests
+				$this->_auth_data[$album['album_id']] = new phpbb_gallery_auth_set();
+				continue;
+			}
+			else if ($album['album_auth_control'] == self::CONTROL_NOT_FOES)
+			{
+				if ($zebra == null)
+				{
+					$zebra = self::get_user_zebra($user_id);
+				}
+				if (in_array($album['album_user_id'], $zebra['foe']))
+				{
+					// Level 2: No foes allowed
+					$this->_auth_data[$album['album_id']] = new phpbb_gallery_auth_set();
+					continue;
+				}
+			}
+			else if ($album['album_auth_control'] == self::CONTROL_FRIENDS)
+			{
+				if ($zebra == null)
+				{
+					$zebra = self::get_user_zebra($user_id);
+				}
+				if (!in_array($album['album_user_id'], $zebra['friend']))
+				{
+					// Level 3: Only friends allowed
+					$this->_auth_data[$album['album_id']] = new phpbb_gallery_auth_set();
+					continue;
+				}
+			}
+		}
+	}
+
+	/**
+	* Get the users, which added our user as friend and/or foe
+	*/
+	static public function get_user_zebra($user_id)
+	{
+		global $db;
+
+		$zebra = array('foe' => array(), 'friend' => array());
+		$sql = 'SELECT *
+			FROM ' . ZEBRA_TABLE . '
+			WHERE zebra_id = ' . (int) $user_id;
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			if ($row['foe'])
+			{
+				$zebra['foe'][] = (int) $row['user_id'];
+			}
+			else
+			{
+				$zebra['friend'][] = (int) $row['user_id'];
+			}
+		}
+		$db->sql_freeresult($result);
+		return $zebra;
 	}
 
 	/**
@@ -373,7 +463,10 @@ class phpbb_gallery_auth
 			}
 			else
 			{
-				$p_id = self::PERSONAL_ALBUM;
+				if (!isset($this->_auth_data[$a_id]))
+				{
+					$p_id = self::PERSONAL_ALBUM;
+				}
 			}
 		}
 
@@ -386,7 +479,7 @@ class phpbb_gallery_auth
 	}
 
 	/**
-	* Does the user ahve the permission for any album?
+	* Does the user have the permission for any album?
 	*
 	* @param	string	$acl			One of the permissions, Exp: i_view; *_count permissions are not allowed!
 	*
@@ -415,7 +508,7 @@ class phpbb_gallery_auth
 		$albums = $cache->obtain_album_list();
 		foreach ($albums as $album)
 		{
-			if (!$album['album_user_id'] && $this->_auth_data[$a_id]->get_bit($bit))
+			if (!$album['album_user_id'] && $this->_auth_data[$album['album_id']]->get_bit($bit))
 			{
 				return true;
 			}
@@ -488,7 +581,7 @@ class phpbb_gallery_auth
 	{
 		global $template, $user;
 
-		$locked = ($album_status == ITEM_LOCKED && !gallery_acl_check('m_', $album_id, $album_user_id)) ? true : false;
+		$locked = ($album_status == ITEM_LOCKED && !$this->acl_check('m_', $album_id, $album_user_id)) ? true : false;
 
 		$rules = array(
 			($this->acl_check('i_view', $album_id, $album_user_id) && !$locked) ? $user->lang['ALBUM_VIEW_CAN'] : $user->lang['ALBUM_VIEW_CANNOT'],

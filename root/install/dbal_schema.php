@@ -85,6 +85,7 @@ class phpbb_gallery_dbal_schema
 					'display_on_index'			=> array('UINT:1', 1),
 					'display_subalbum_list'		=> array('UINT:1', 1),
 					'album_feed'				=> array('BOOL', 1),
+					'album_auth_control'		=> array('TINT:1', 0),
 				),
 				'PRIMARY_KEY'	=> 'album_id',
 			),
