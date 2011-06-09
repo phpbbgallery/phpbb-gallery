@@ -183,6 +183,10 @@ class phpbb_gallery_config
 		'disp_total_images'			=> true,
 		'disp_whoisonline'			=> true,
 
+		'feed_enable'			=> true,
+		'feed_enable_pegas'		=> true,
+		'feed_limit'			=> 10,
+
 		'gdlib_version'		=> 2,
 
 		'hotlinking_domains'	=> 'flying-bits.org',

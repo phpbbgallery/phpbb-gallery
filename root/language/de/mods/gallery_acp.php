@@ -42,7 +42,8 @@ $lang = array_merge($lang, array(
 	'ALBUM_DESC'					=> 'Beschreibung',
 	'ALBUM_DESC_EXPLAIN'			=> 'Jede verwendete HTML-Auszeichnung wird so, wie sie ist, angezeigt.',
 	'ALBUM_DESC_TOO_LONG'			=> 'Die Beschreibung des Albums ist zu lang. Sie muss weniger als 4000 Zeichen umfassen.',
-	'ALBUM_EDIT_EXPLAIN'			=> 'Das unten stehende Formular erlaubt dir, dieses Album individuell anzupassen. Beachte bitte, dass Moderations-Einstellungen über die Berechtigungen für jede Benutzergruppe gesetzt werden.',
+	'ALBUM_EDIT_EXPLAIN'			=> 'Das unten stehende Formular erlaubt dir, dieses Album individuell anzupassen. Beachte bitte, dass Moderations-Einstellungen über die Berechtigungen für jeden Benutzer bzw. Benutzergruppe gesetzt werden.',
+	'ALBUM_FEED'					=> 'Bilder aus diesem Album im Feed anzeigen',
 	'ALBUM_ID'						=> 'Album-ID',
 	'ALBUM_IMAGE'					=> 'Album-Bild',
 	'ALBUM_IMAGE_EXPLAIN'			=> 'Der Ort eines Bildes, relativ zum phpBB-Hauptverzeichnis, das diesem Album zusätzlich zugeordnet werden soll.',
@@ -162,6 +163,10 @@ $lang = array_merge($lang, array(
 
 	'FAKE_THUMB_SIZE'				=> 'Thumbnailgröße',
 	'FAKE_THUMB_SIZE_EXP'			=> 'Wenn du die volle Größe wählst, denke an die 16 Pixel für die schwarze Info-Zeile',
+	'FEED_ENABLED'					=> 'Feeds für Alben einschalten',
+	'FEED_ENABLED_PEGAS'			=> 'Feeds für persönliche Alben einschalten',
+	'FEED_LIMIT'					=> 'Anzahl der angezeigten Elemente',
+	'FEED_SETTINGS'					=> 'Feed-Einstellungen',
 
 	'GALLERY_ALBUMS_TITLE'			=> 'Galerie Alben Kontrolle',
 	'GALLERY_CONFIG'				=> 'Galerie Konfiguration',

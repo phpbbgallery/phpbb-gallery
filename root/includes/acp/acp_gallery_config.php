@@ -495,7 +495,12 @@ class acp_gallery_config
 			'disp_birthdays'		=> array('lang' => 'DISP_BIRTHDAYS',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 			'disp_statistic'		=> array('lang' => 'DISP_STATISTIC',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
 
-			'legend11'				=> '',
+			'legend11'				=> 'FEED_SETTINGS',
+			'feed_enable'			=> array('lang' => 'FEED_ENABLED',			'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
+			'feed_enable_pegas'		=> array('lang' => 'FEED_ENABLED_PEGAS',	'validate' => 'bool',	'type' => 'radio:yes_no',	'gallery' => true,	'explain' => false),
+			'feed_limit'			=> array('lang' => 'FEED_LIMIT',			'validate' => 'int',	'type' => 'text:7:3',		'gallery' => true,	'explain' => false),
+
+			'legend12'				=> '',
 		),
 	);
 }
