@@ -322,6 +322,10 @@ class acp_gallery_config
 		{
 			$sort_order_options .= '<option' . (($value == 'image_page') ? ' selected="selected"' : '') . " value='image_page'>" . $user->lang['UC_LINK_IMAGE_PAGE'] . '</option>';
 		}
+		else
+		{
+			$sort_order_options .= '<option' . (($value == 'next') ? ' selected="selected"' : '') . " value='next'>" . $user->lang['UC_LINK_NEXT'] . '</option>';
+		}
 		$sort_order_options .= '<option' . (($value == 'image') ? ' selected="selected"' : '') . " value='image'>" . $user->lang['UC_LINK_IMAGE'] . '</option>';
 		$sort_order_options .= '<option' . (($value == 'none') ? ' selected="selected"' : '') . " value='none'>" . $user->lang['UC_LINK_NONE'] . '</option>';
 
