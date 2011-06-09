@@ -595,6 +595,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 					'TIME'			=> $user->format_date($commentrow['comment_time']),
 					'TEXT'			=> generate_text_for_display($commentrow['comment'], $commentrow['comment_uid'], $commentrow['comment_bitfield'], 7),
 					'U_DELETE'		=> (phpbb_gallery::$auth->acl_check('m_comments', $album_id) || (phpbb_gallery::$auth->acl_check('c_delete', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? phpbb_gallery_url::append_sid('posting', "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=delete&amp;comment_id=" . $commentrow['comment_id']) : '',
+					'U_QUOTE'		=> (phpbb_gallery::$auth->acl_check('c_post', $album_id)) ? phpbb_gallery_url::append_sid('posting', "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=add&amp;comment_id=" . $row['comment_id']) : '',
 					'U_EDIT'		=> (phpbb_gallery::$auth->acl_check('m_comments', $album_id) || (phpbb_gallery::$auth->acl_check('c_edit', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? phpbb_gallery_url::append_sid('posting', "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=edit&amp;comment_id=" . $commentrow['comment_id']) : '',
 					'U_INFO'		=> ($auth->acl_get('a_')) ? phpbb_gallery_url::append_sid('mcp', 'mode=whois&amp;ip=' . $commentrow['comment_user_ip']) : '',
 
@@ -614,6 +615,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			$template->assign_vars(array(
 				'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_COMMENT'),
 				'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_COMMENT'),
+				'QUOTE_IMG'			=> $user->img('icon_post_quote', 'QUOTE_COMMENT'),
 				'INFO_IMG'			=> $user->img('icon_post_info', 'IP'),
 				'MINI_POST_IMG'		=> $user->img('icon_post_target_unread', 'COMMENT'),
 				'PROFILE_IMG'		=> $user->img('icon_user_profile', 'READ_PROFILE'),
