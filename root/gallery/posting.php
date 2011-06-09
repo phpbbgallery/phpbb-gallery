@@ -1110,6 +1110,11 @@ switch ($mode)
 				}
 				else
 				{
+					if ($comment_id)
+					{
+						$comment_ary = generate_text_for_edit($comment_data['comment'], $comment_data['comment_uid'], $comment_data['comment_bitfield'], 7);
+						$comment = '[quote="' . $comment_data['comment_username'] . '"]' . $comment_ary['text'] . '[/quote]';
+					}
 					$sig_checked = $user->optionget('attachsig');
 					if ($user->data['user_id'] != ANONYMOUS)
 					{

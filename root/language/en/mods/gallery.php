@@ -181,6 +181,8 @@ $lang = array_merge($lang, array(
 	'POST_COMMENT_RATE_IMAGE'		=> 'Post a comment and rate the image',
 	'POSTER'						=> 'Poster',
 
+	'QUOTE_COMMENT'					=> 'Quote comment',
+
 	'RANDOM_IMAGES'					=> 'Random images',
 	'RATE_IMAGE'					=> 'Rate the image',
 	'RATES_COUNT'					=> 'Number of ratings',
