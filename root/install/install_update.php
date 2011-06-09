@@ -415,6 +415,9 @@ class install_update extends module
 					array(GALLERY_USERS_TABLE, 'user_permissions', array('MTEXT', '')),
 					array(GALLERY_USERS_TABLE, 'user_permissions_changed', array('TIMESTAMP', 0)),
 					array(GALLERY_USERS_TABLE, 'user_last_update', array('TIMESTAMP', 0)),
+					array(GALLERY_USERS_TABLE, 'user_allow_comments', array('TINT:1', 1)),
+					array(GALLERY_IMAGES_TABLE, 'image_allow_comments', array('TINT:1', 1)),
+					array(GALLERY_COMMENTS_TABLE, 'comment_signature', array('BOOL', 0),),
 					array(GALLERY_ALBUMS_TABLE, 'album_feed', array('BOOL', 1),),
 				));
 			break;
@@ -632,6 +635,10 @@ class install_update extends module
 			case '1.0.5':
 				$umil->table_column_remove(array(
 					array(GALLERY_IMAGES_TABLE,	'image_thumbnail'),
+				));
+
+				$umil->table_remove(array(
+					GALLERY_CONFIG_TABLE,
 				));
 			break;
 		}

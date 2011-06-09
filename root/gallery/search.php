@@ -505,11 +505,6 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			}
 			$db->sql_freeresult($result);
 
-			if (!function_exists('assign_image_block'))
-			{
-				phpbb_gallery_url::_include('functions_display');
-			}
-
 			$columns_per_page = ($search_id == 'contests') ? phpbb_gallery_constants::CONTEST_IMAGES : phpbb_gallery_config::get('album_columns');
 			$init_block = true;
 			if ($search_id == 'contests')
