@@ -364,7 +364,7 @@ class phpbb_gallery_image
 	* @param	bool	$count		shall the image-link be counted as view? (Set to false from image_page.php to deny double increment)
 	* @param	string	$additional_parameters		additional parameters for the url, (starting with &amp;)
 	*/
-	static public function generate_link($content, $mode, $image_id, $image_name, $album_id, $is_gif = false, $count = true, $additional_parameters = '')
+	static public function generate_link($content, $mode, $image_id, $image_name, $album_id, $is_gif = false, $count = true, $additional_parameters = '', $next_image = 0)
 	{
 		global $phpEx, $user;
 
@@ -404,18 +404,18 @@ class phpbb_gallery_image
 				$content = $user->img('icon_topic_latest', 'VIEW_LATEST_IMAGE');
 			break;
 		}
+
+		$url = $image_page_url;
+
 		switch ($mode)
 		{
 			case 'image_page':
-				$url = $image_page_url;
 				$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}">{CONTENT}</a>';
 			break;
 			case 'image_page_next':
-				$url = $image_page_url;
 				$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" class="right-box right">{CONTENT}</a>';
 			break;
 			case 'image_page_prev':
-				$url = $image_page_url;
 				$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" class="left-box left">{CONTENT}</a>';
 			break;
 			case 'image':
@@ -423,8 +423,18 @@ class phpbb_gallery_image
 				$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}">{CONTENT}</a>';
 			break;
 			case 'none':
-				$url = $image_page_url;
 				$tpl = '{CONTENT}';
+			break;
+			case 'next':
+				if ($next_image)
+				{
+					$url = phpbb_gallery_url::append_sid('image_page', "album_id=$album_id&amp;image_id=$next_image{$additional_parameters}");
+					$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}">{CONTENT}</a>';
+				}
+				else
+				{
+					$tpl = '{CONTENT}';
+				}
 			break;
 			default:
 				$url = $image_url;
