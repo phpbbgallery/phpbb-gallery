@@ -1106,6 +1106,7 @@ switch ($mode)
 					{
 						$s_captcha_hidden_fields = ($captcha->is_solved()) ? build_hidden_fields($captcha->get_hidden_fields()) : '';
 					}
+					$sig_checked = ($auth->acl_get('u_sig') && isset($_POST['attach_sig']));
 				}
 				else
 				{
