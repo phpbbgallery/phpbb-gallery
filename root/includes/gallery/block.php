@@ -537,6 +537,7 @@ class phpbb_gallery_block
 
 			'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_COMMENT'),
 			'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_COMMENT'),
+			'QUOTE_IMG'			=> $user->img('icon_post_quote', 'QUOTE_COMMENT'),
 			'INFO_IMG'			=> $user->img('icon_post_info', 'IP'),
 			'MINI_POST_IMG'		=> $user->img('icon_post_target_unread', 'COMMENT'),
 			'PROFILE_IMG'		=> $user->img('icon_user_profile', 'READ_PROFILE'),

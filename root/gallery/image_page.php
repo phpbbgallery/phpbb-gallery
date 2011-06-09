@@ -481,6 +481,7 @@ if ((phpbb_gallery_config::get('allow_comments') && phpbb_gallery::$auth->acl_ch
 		$template->assign_vars(array(
 			'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_COMMENT'),
 			'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_COMMENT'),
+			'QUOTE_IMG'			=> $user->img('icon_post_quote', 'QUOTE_COMMENT'),
 			'INFO_IMG'			=> $user->img('icon_post_info', 'IP'),
 			'MINI_POST_IMG'		=> $user->img('icon_post_target_unread', 'COMMENT'),
 			'PAGE_NUMBER'		=> sprintf($user->lang['PAGE_OF'], (floor($start / $config['posts_per_page']) + 1), ceil($image_data['image_comments'] / $config['posts_per_page'])),
