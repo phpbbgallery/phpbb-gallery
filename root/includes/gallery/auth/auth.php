@@ -24,10 +24,10 @@ class phpbb_gallery_auth
 	const OWN_ALBUM				= -2;
 	const PUBLIC_ALBUM			= 0;
 
-	const CONTROL_ALL			= 0;
-	const CONTROL_REGISTERED	= 1;
-	const CONTROL_NOT_FOES		= 2;
-	const CONTROL_FRIENDS		= 3;
+	const ACCESS_ALL			= 0;
+	const ACCESS_REGISTERED	= 1;
+	const ACCESS_NOT_FOES		= 2;
+	const ACCESS_FRIENDS		= 3;
 
 	// ACL - slightly different
 	const ACL_NO		= 0;
@@ -37,7 +37,7 @@ class phpbb_gallery_auth
 	static private $_permission_i = array('i_view', 'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate');
 	static private $_permission_c = array('c_read', 'c_post', 'c_edit', 'c_delete');
 	static private $_permission_m = array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status');
-	static private $_permission_misc = array('a_list', 'i_count', 'i_unlimited', 'album_count', 'album_unlimited');
+	static private $_permission_misc = array('a_list', 'i_count', 'i_unlimited', 'album_count', 'album_unlimited', 'a_restrict');
 	static private $_permissions = array();
 	static private $_permissions_flipped = array();
 
@@ -266,7 +266,7 @@ class phpbb_gallery_auth
 		$albums = $cache->obtain_album_list();
 		foreach ($albums as $album)
 		{
-			if (!$album['album_auth_control'] || ($album['album_user_id'] == self::PUBLIC_ALBUM))# || ($album['album_user_id'] == $user_id))
+			if (!$album['album_auth_access'] || ($album['album_user_id'] == self::PUBLIC_ALBUM))# || ($album['album_user_id'] == $user_id))
 			{
 				continue;
 			}
@@ -276,7 +276,7 @@ class phpbb_gallery_auth
 				$this->_auth_data[$album['album_id']] = new phpbb_gallery_auth_set();
 				continue;
 			}
-			else if ($album['album_auth_control'] == self::CONTROL_NOT_FOES)
+			else if ($album['album_auth_access'] == self::ACCESS_NOT_FOES)
 			{
 				if ($zebra == null)
 				{
@@ -289,7 +289,7 @@ class phpbb_gallery_auth
 					continue;
 				}
 			}
-			else if ($album['album_auth_control'] == self::CONTROL_FRIENDS)
+			else if ($album['album_auth_access'] == self::ACCESS_FRIENDS)
 			{
 				if ($zebra == null)
 				{

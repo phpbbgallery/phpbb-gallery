@@ -272,4 +272,16 @@ class phpbb_gallery_integration
 	{
 		phpbb_gallery_auth::set_user_permissions($user_id_ary);
 	}
+
+	/**
+	* Add/Remove a user from the friends/foes list
+	*
+	* @param string $mode		Mode of action: either 'add' or 'remove'
+	* @param string $zebra_ids	Array of affected users.
+	* @param string $user_id	User performing the action.
+	*/
+	static public function ucp_zebra($mode, $zebar_ids, $user_id)
+	{
+		phpbb_gallery_auth::set_user_permissions($zebar_ids);
+	}
 }

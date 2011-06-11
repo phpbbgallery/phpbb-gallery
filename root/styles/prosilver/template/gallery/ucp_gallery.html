@@ -88,6 +88,12 @@
 					<dd><input class="inputbox" type="text" id="album_name" name="album_name" value="{ALBUM_NAME}" maxlength="255" /></dd>
 				</dl>
 			<!-- ENDIF -->
+			<!-- IF S_AUTH_ACCESS_OPTIONS -->
+				<dl>
+					<dt><label for="album_auth_access">{L_ALBUM_ACCESS}:</label><br /><span>{L_ALBUM_ACCESS_EXPLAIN}</span></dt>
+					<dd><select id="album_auth_access" name="album_auth_access">{S_AUTH_ACCESS_OPTIONS}</select></dd>
+				</dl>
+			<!-- ENDIF -->
 			<dl>
 				<dt><label for="album_desc">{L_ALBUM_DESC}:</label></dt>
 				<dd><textarea class="inputbox" id="album_desc" name="album_desc" rows="5" cols="45">{ALBUM_DESC}</textarea></dd>
