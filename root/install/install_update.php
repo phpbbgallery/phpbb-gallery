@@ -419,6 +419,8 @@ class install_update extends module
 					array(GALLERY_IMAGES_TABLE, 'image_allow_comments', array('TINT:1', 1)),
 					array(GALLERY_COMMENTS_TABLE, 'comment_signature', array('BOOL', 0),),
 					array(GALLERY_ALBUMS_TABLE, 'album_feed', array('BOOL', 1),),
+					array(GALLERY_ALBUMS_TABLE, 'album_auth_access', array('TINT:1', 0)),
+					array(GALLERY_ROLES_TABLE, 'a_restrict', array('UINT:3', 0)),
 				));
 			break;
 		}

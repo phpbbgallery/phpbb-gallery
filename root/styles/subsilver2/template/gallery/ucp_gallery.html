@@ -89,6 +89,12 @@
 			<td class="row1" colspan="2"><p class="gensmall"><input class="inputbox" type="text" id="album_name" name="album_name" value="{ALBUM_NAME}" maxlength="255" /></p></td>
 		</tr>
 	<!-- ENDIF -->
+	<!-- IF S_AUTH_ACCESS_OPTIONS -->
+		<tr>
+			<td class="row1" colspan="2"><b class="gensmall">{L_ALBUM_ACCESS}:</b><br /><span class="gensmall">{L_ALBUM_ACCESS_EXPLAIN}</span></td>
+			<td class="row1" colspan="2"><p class="gensmall"><select id="album_auth_access" name="album_auth_access">{S_AUTH_ACCESS_OPTIONS}</select></p></td>
+		</tr>
+	<!-- ENDIF -->
 	<tr>
 		<td class="row1" colspan="2"><b class="gensmall">{L_ALBUM_DESC}:</b></td>
 		<td class="row1" colspan="2"><p class="gensmall"><textarea class="inputbox" id="album_desc" name="album_desc" rows="5" cols="45">{ALBUM_DESC}</textarea>

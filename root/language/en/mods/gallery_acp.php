@@ -258,6 +258,7 @@ $lang = array_merge($lang, array(
 	'PERMISSION_YES'				=> 'Yes',
 
 	'PERMISSION_A_LIST'				=> 'Can see album',
+	'PERMISSION_A_RESTRICT'			=> 'Can restrict access',
 	'PERMISSION_ALBUM_COUNT'		=> 'Number of possible personal subalbums',
 	'PERMISSION_ALBUM_UNLIMITED'	=> 'Unlimited number of personal subalbums',
 	'PERMISSION_C'					=> 'Comments',

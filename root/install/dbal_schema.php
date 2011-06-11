@@ -85,6 +85,7 @@ class phpbb_gallery_dbal_schema
 					'display_on_index'			=> array('UINT:1', 1),
 					'display_subalbum_list'		=> array('UINT:1', 1),
 					'album_feed'				=> array('BOOL', 1),
+					'album_auth_access'			=> array('TINT:1', 0),
 				),
 				'PRIMARY_KEY'	=> 'album_id',
 			),
@@ -332,7 +333,7 @@ class phpbb_gallery_dbal_schema
 		'roles'	=> array(
 			'full_name'		=> GALLERY_ROLES_TABLE,
 			'added'			=> '0.3.1',
-			'modified'		=> '0.5.4',
+			'modified'		=> '1.1.0',
 			'structure'		=> array(
 				'COLUMNS'		=> array(
 					'role_id'			=> array('UINT', NULL, 'auto_increment'),
@@ -360,6 +361,7 @@ class phpbb_gallery_dbal_schema
 					'm_status'			=> array('UINT:3', 0),
 					'album_count'		=> array('UINT', 0),
 					'album_unlimited'	=> array('UINT:3', 0),
+					'a_restrict'		=> array('UINT:3', 0),
 				),
 				'PRIMARY_KEY'		=> 'role_id',
 			),

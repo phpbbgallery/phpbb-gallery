@@ -340,11 +340,26 @@ class ucp_gallery
 		$submit = (isset($_POST['submit'])) ? true : false;
 		$redirect = request_var('redirect', '');
 
-		if(!$submit)
+		if (!$submit)
 		{
 			$parent_id = request_var('parent_id', 0);
 			phpbb_gallery_album::check_user($parent_id);
 			$parents_list = phpbb_gallery_album::get_albumbox(false, '', $parent_id, false, false, $user->data['user_id']);
+
+			$s_access_options = '';
+			if (phpbb_gallery::$auth->acl_check('a_restrict', phpbb_gallery_auth::OWN_ALBUM))
+			{
+				$access_options = array(
+					phpbb_gallery_auth::ACCESS_ALL			=> 'ALL',
+					phpbb_gallery_auth::ACCESS_REGISTERED	=> 'REGISTERED',
+					phpbb_gallery_auth::ACCESS_NOT_FOES		=> 'NOT_FOES',
+					phpbb_gallery_auth::ACCESS_FRIENDS		=> 'FRIENDS',
+				);
+				foreach ($access_options as $value => $lang_key)
+				{
+					$s_access_options .= '<option value="' . $value . '">' . $user->lang['ACCESS_CONTROL_' . $lang_key] . '</option>';
+				}
+			}
 
 			$template->assign_vars(array(
 				'S_CREATE_SUBALBUM'		=> true,
@@ -356,6 +371,9 @@ class ucp_gallery
 				'S_DESC_SMILIES_CHECKED'	=> true,
 				'S_DESC_URLS_CHECKED'		=> true,
 				'S_PARENT_OPTIONS'			=> '<option value="' . phpbb_gallery::$user->get_data('personal_album_id') . '">' . $user->lang['NO_PARENT_ALBUM'] . '</option>' . $parents_list,
+
+				'S_AUTH_ACCESS_OPTIONS'		=> $s_access_options,
+				'L_ALBUM_ACCESS_EXPLAIN'	=> $user->lang('ALBUM_ACCESS_EXPLAIN', '<a href="' . phpbb_gallery_url::append_sid('phpbb', 'faq') . '#f6r0">', '</a>'),
 			));
 		}
 		else
@@ -376,7 +394,11 @@ class ucp_gallery
 				'album_desc'					=> utf8_normalize_nfc(request_var('album_desc', '', true)),
 				'album_user_id'					=> $user->data['user_id'],
 				'album_last_username'			=> '',
+				'album_auth_access'				=> (phpbb_gallery::$auth->acl_check('a_restrict', phpbb_gallery_auth::OWN_ALBUM)) ? request_var('album_auth_access', 0) : 0,
 			);
+
+			$album_data['album_auth_access'] = min(3, max(0, $album_data['album_auth_access']));
+
 			if (!$album_data['album_name'])
 			{
 				trigger_error('MISSING_ALBUM_NAME');
@@ -441,15 +463,32 @@ class ucp_gallery
 
 		$submit = (isset($_POST['submit'])) ? true : false;
 		$redirect = request_var('redirect', '');
-		if(!$submit)
+		if (!$submit)
 		{
 			$album_data = phpbb_gallery_album::get_info($album_id);
 			$album_desc_data = generate_text_for_edit($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_options']);
 			$parents_list = phpbb_gallery_album::get_albumbox(false, '', $album_data['parent_id'], false, $album_id, $user->data['user_id']);
 
+			$s_access_options = '';
+			if (phpbb_gallery::$auth->acl_check('a_restrict', phpbb_gallery_auth::OWN_ALBUM))
+			{
+				$access_options = array(
+					phpbb_gallery_auth::ACCESS_ALL			=> 'ALL',
+					phpbb_gallery_auth::ACCESS_REGISTERED	=> 'REGISTERED',
+					phpbb_gallery_auth::ACCESS_NOT_FOES		=> 'NOT_FOES',
+					phpbb_gallery_auth::ACCESS_FRIENDS		=> 'FRIENDS',
+				);
+				foreach ($access_options as $value => $lang_key)
+				{
+					$s_access_options .= '<option value="' . $value . '">' . $user->lang['ACCESS_CONTROL_' . $lang_key] . '</option>';
+				}
+			}
+
 			$template->assign_vars(array(
 				'S_EDIT_SUBALBUM'			=> true,
 				'S_PERSONAL_ALBUM'			=> ($album_id == phpbb_gallery::$user->get_data('personal_album_id')) ? true : false,
+				'S_AUTH_ACCESS_OPTIONS'		=> $s_access_options,
+				'L_ALBUM_ACCESS_EXPLAIN'	=> $user->lang('ALBUM_ACCESS_EXPLAIN', '<a href="' . phpbb_gallery_url::append_sid('phpbb', 'faq') . '#f6r0">', '</a>'),
 
 				'L_TITLE'					=> $user->lang['EDIT_SUBALBUM'],
 				'L_TITLE_EXPLAIN'			=> $user->lang['EDIT_SUBALBUM_EXP'],
@@ -483,7 +522,9 @@ class ucp_gallery
 				'album_type'					=> phpbb_gallery_album::TYPE_UPLOAD,
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc(request_var('album_desc', '', true)),
+				'album_auth_access'				=> (phpbb_gallery::$auth->acl_check('a_restrict', phpbb_gallery_auth::OWN_ALBUM)) ? request_var('album_auth_access', 0) : 0,
 			);
+
 			generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], request_var('desc_parse_bbcode', false), request_var('desc_parse_urls', false), request_var('desc_parse_smilies', false));
 			$row = phpbb_gallery_album::get_info($album_id);
 
@@ -579,6 +620,13 @@ class ucp_gallery
 				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 					SET album_parents = ''";
 				$db->sql_query($sql);
+			}
+
+			// The album access has changed, clear the permissions of all users.
+			$album_data['album_auth_access'] = min(3, max(0, $album_data['album_auth_access']));
+			if ($row['album_auth_access'] != $album_data['album_auth_access'])
+			{
+				phpbb_gallery_auth::set_user_permissions('all', '');
 			}
 
 			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' 
