@@ -84,7 +84,7 @@ $lang = array_merge($lang, array(
 	'WATCH_CHANGED'					=> 'Einstellungen gespeichert',
 	'WATCH_COM'						=> 'Kommentierte Bilder standardmässig beobachten',
 	'WATCH_FAVO'					=> 'Lieblingsbilder standardmässig beobachten',
-	'WATCH_NOTE'					=> 'Die Einstellung wirkt sich nur auf neue Bilder aus. Andere Bilder musst du über die Option "Bild beobachten" hinzufügen',
+	'WATCH_NOTE'					=> 'Die Einstellung wirkt sich nur auf neue Bilder aus. Andere Bilder musst du über die Option „Bild beobachten“ hinzufügen',
 	'WATCH_OWN'						=> 'Eigene Bilder standardmässig beobachten',
 ));
 

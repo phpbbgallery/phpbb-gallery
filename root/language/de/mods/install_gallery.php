@@ -37,7 +37,7 @@ $lang = array_merge($lang, array(
 	'CONVERT_SMARTOR_INTRO_BODY'	=> 'Mit diesem Konverter, kannst du deine Alben, Bilder, Bewertungen und Kommentare aus dem <a href="http://www.phpbb.com/community/viewtopic.php?f=16&t=74772">Album-MOD</a> von Smartor (getestet mit v2.0.56) und <a href="http://www.phpbbhacks.com/download/5028">Full Album Pack</a> (getestet mit v1.4.1) auslesen und dann in die phpBB Gallery einfügen lassen.<br /><br /><strong>Achtung:</strong> Die <strong>Berechtigungen</strong> werden dabei <strong>nicht übernommen</strong>.',
 	'CONVERT_TS_INTRO'				=> 'Konverter von der „TS Gallery“ zur „phpBB Gallery“',
 	'CONVERT_TS_INTRO_BODY'			=> 'Mit diesem Konverter, kannst du deine Alben, Bilder, Bewertungen und Kommentare aus der <a href="http://www.phpbb.com/community/viewtopic.php?f=70&t=610509">TS Gallery</a> (getestet mit v0.2.1) auslesen und dann in die phpBB Gallery einfügen lassen.<br /><br /><strong>Achtung:</strong> Die <strong>Berechtigungen</strong> werden dabei <strong>nicht übernommen</strong>.',
-	'CONVERT_COMPLETE_EXPLAIN'		=> 'Du hast nun deine Gallery erfolgreich auf die phpBB Gallery v%s konvertiert.<br />Bitte prüfe, ob alle Einträge richtig übernommen wurden, bevor du dein Board durch Löschen des „install“-Verzeichnisses freigibst.<br /><br /><strong>Bitte beachte, dass die Berechtigungen nicht übernohmen wurden. Du musst diese also neu vergeben.</strong><br /><br />Es wird außerdem empfohlen die Datenbank von Einträgen zu befreien, bei denen die Bilder nicht mehr existieren. Dies kann im Administrations-Bereich unter "MODs > phpBB Galerie > Galerie reinigen" getan werden.',
+	'CONVERT_COMPLETE_EXPLAIN'		=> 'Du hast nun deine Gallery erfolgreich auf die phpBB Gallery v%s konvertiert.<br />Bitte prüfe, ob alle Einträge richtig übernommen wurden, bevor du dein Board durch Löschen des „install“-Verzeichnisses freigibst.<br /><br /><strong>Bitte beachte, dass die Berechtigungen nicht übernohmen wurden. Du musst diese also neu vergeben.</strong><br /><br />Es wird außerdem empfohlen die Datenbank von Einträgen zu befreien, bei denen die Bilder nicht mehr existieren. Dies kann im Administrations-Bereich unter „MODs > phpBB Galerie > Galerie reinigen“ getan werden.',
 
 	'CONVERTED_ALBUMS'			=> 'Die Alben wurden erfolgreich kopiert.',
 	'CONVERTED_COMMENTS'		=> 'Die Kommentare wurden erfolgreich kopiert.',
@@ -50,7 +50,7 @@ $lang = array_merge($lang, array(
 	'CONVERTED_RESYNC_COUNTS'	=> 'Die Zähler-Statistiken wurden erfolgreich resyncronisiert.',
 	'CONVERTED_RESYNC_RATES'	=> 'Die Bewertungen wurden erfolgreich resyncronisiert.',
 
-	'FILE_DELETE_FAIL'				=> 'Datei konnte nicht gelöscht werden, du musst sie manuel löschen',
+	'FILE_DELETE_FAIL'				=> 'Datei konnte nicht gelöscht werden, du musst sie manuell löschen',
 	'FILE_STILL_EXISTS'				=> 'Datei existiert noch',
 	'FILES_REQUIRED_EXPLAIN'		=> '<strong>Voraussetzung</strong> - die phpBB Gallery muss auf diverse Verzeichnisse zugreifen oder diese beschreiben können, um reibungslos zu funktionieren. Wenn „Nicht beschreibbar“ angezeigt wird, musst du die Befugnisse für die Datei oder das Verzeichnis so ändern, dass phpBB darauf schreiben kann.',
 	'FILES_DELETE_OUTDATED'			=> 'Veraltete Dateien löschen',
@@ -72,19 +72,19 @@ $lang = array_merge($lang, array(
 	'MISSING_CONSTANTS'			=> 'Bevor du das Installations-Skript aufrufen kannst, musst du deine geänderten Dateien hochladen, insbesondere die includes/constants.php.',
 	'MODULES_CREATE_PARENT'		=> 'Übergeordnetes Standard-Modul erstellen',
 	'MODULES_PARENT_SELECT'		=> 'Übergeordnetes Modul auswählen',
-	'MODULES_SELECT_4ACP'		=> 'Übergeordnetes Modul für den "Administrations-Bereich"',
-	'MODULES_SELECT_4LOG'		=> 'Übergeordnetes Modul für das "Gallery-Protokoll"',
-	'MODULES_SELECT_4MCP'		=> 'Übergeordnetes Modul für den "Moderations-Bereich"',
-	'MODULES_SELECT_4UCP'		=> 'Übergeordnetes Modul für den "Persönlichen Bereich"',
+	'MODULES_SELECT_4ACP'		=> 'Übergeordnetes Modul für den „Administrations-Bereich“',
+	'MODULES_SELECT_4LOG'		=> 'Übergeordnetes Modul für das „Gallery-Protokoll“',
+	'MODULES_SELECT_4MCP'		=> 'Übergeordnetes Modul für den „Moderations-Bereich“',
+	'MODULES_SELECT_4UCP'		=> 'Übergeordnetes Modul für den „Persönlichen Bereich“',
 	'MODULES_SELECT_NONE'		=> 'kein übergeordnetes Modul',
 
 	'NO_INSTALL_FOUND'			=> 'Es wurde keine installierte Version gefunden!',
 
-	'OPTIONAL_EXIFDATA'				=> 'Funktion "exif_read_data" existiert',
+	'OPTIONAL_EXIFDATA'				=> 'Funktion „exif_read_data“ existiert',
 	'OPTIONAL_EXIFDATA_EXP'			=> 'Das Exif-Modul ist nicht installiert oder geladen.',
 	'OPTIONAL_EXIFDATA_EXPLAIN'		=> 'Wenn die Funktion existiert, werden auf der imagepage die Exif Daten zu den Bildern mit angezeigt.',
-	'OPTIONAL_IMAGEROTATE'			=> 'Funktion "imagerotate" existiert',
-	'OPTIONAL_IMAGEROTATE_EXP'		=> 'Du musst deine GD Version, derzeit "%s", aktualisieren.',
+	'OPTIONAL_IMAGEROTATE'			=> 'Funktion „imagerotate“ existiert',
+	'OPTIONAL_IMAGEROTATE_EXP'		=> 'Du musst deine GD Version, derzeit „%s“, aktualisieren.',
 	'OPTIONAL_IMAGEROTATE_EXPLAIN'	=> 'Wenn die Funktion existiert, können Bilder während dem Hochladen und Bearbeiten gedreht werden.',
 
 	'PAYPAL_DEV_SUPPORT'				=> '</p><div class="errorbox">
@@ -107,7 +107,7 @@ $lang = array_merge($lang, array(
 	'STAGE_CREATE_TABLE_EXPLAIN'	=> 'Die von der phpBB Gallery genutzten Datenbank-Tabellen wurden nun erstellt und mit einigen Ausgangswerten gefüllt. Geh weiter zum nächsten Schritt, um die Installation der phpBB Gallery abzuschließen.',
 	'STAGE_DELETE_TABLES'			=> 'Datenbank reinigen',
 	'STAGE_DELETE_TABLES_EXPLAIN'	=> 'Die von der phpBB Gallery genutzten Datenbank-Inhalte wurden gelöscht. Geh weiter zum nächsten Schritt, um die Deinstallation der phpBB Gallery abzuschließen.',
-	'SUPPORT_BODY'					=> 'Für die aktuelle, stabile Version der "phpBB Gallery" wird kostenloser Support gewährt. Dies umfasst:</p><ul><li>Installation</li><li>Konfiguration</li><li>Technische Fragen</li><li>Probleme durch eventuelle Fehler in der Software</li><li>Aktualisierung von Release Candidates (RC) oder stabilen Versionen zur aktuellen stabilen Version</li><li>Konvertierungen von smartor\'s Album MOD für phpBB 2.0.x zur phpBB Gallery für phpBB3</li><li>Konvertierungen von der TS Gallery zur phpBB Gallery</li></ul><p>Die Verwendung der Beta-Versionen wird nur beschränkt empfohlen. Sollte ein neues Update erscheinen, wird empfohlen das Update schnell durchzuführen.</p><p>Support gibt es in folgenden Foren:</p><ul><li><a href="http://www.flying-bits.org/">flying-bits.org - Homepage des MOD-Autor\'s nickvergessen</a></li><li><a href="http://www.phpbb.de/">phpbb.de</a></li><li><a href="http://www.phpbb.com/">phpbb.com</a></li></ul><p>',
+	'SUPPORT_BODY'					=> 'Für die aktuelle, stabile Version der „phpBB Gallery“ wird kostenloser Support gewährt. Dies umfasst:</p><ul><li>Installation</li><li>Konfiguration</li><li>Technische Fragen</li><li>Probleme durch eventuelle Fehler in der Software</li><li>Aktualisierung von Release Candidates (RC) oder stabilen Versionen zur aktuellen stabilen Version</li><li>Konvertierungen von smartor\'s Album MOD für phpBB 2.0.x zur phpBB Gallery für phpBB3</li><li>Konvertierungen von der TS Gallery zur phpBB Gallery</li></ul><p>Die Verwendung der Beta-Versionen wird nur beschränkt empfohlen. Sollte ein neues Update erscheinen, wird empfohlen das Update schnell durchzuführen.</p><p>Support gibt es in folgenden Foren:</p><ul><li><a href="http://www.flying-bits.org/">flying-bits.org - Homepage des MOD-Autor\'s nickvergessen</a></li><li><a href="http://www.phpbb.de/">phpbb.de</a></li><li><a href="http://www.phpbb.com/">phpbb.com</a></li></ul><p>',
 
 	'TABLE_ALBUM'				=> 'Tabelle mit den Bildern',
 	'TABLE_ALBUM_CAT'			=> 'Tabelle mit den Alben',

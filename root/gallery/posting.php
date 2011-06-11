@@ -590,7 +590,7 @@ switch ($mode)
 					'ERROR'						=> $error,
 					'U_VIEW_ALBUM'				=> phpbb_gallery_url::append_sid('album', "album_id=$album_id"),
 					'CAT_TITLE'					=> $album_data['album_name'],
-					'S_MAX_FILESIZE'			=> phpbb_gallery_config::get('max_filesize'),
+					'S_MAX_FILESIZE'			=> get_formatted_filesize(phpbb_gallery_config::get('max_filesize')),
 					'S_MAX_WIDTH'				=> phpbb_gallery_config::get('max_width'),
 					'S_MAX_HEIGHT'				=> phpbb_gallery_config::get('max_height'),
 
