@@ -2,7 +2,7 @@ Subject: Benachrichtigung über neuen Kommentar — „{IMAGE_NAME}“
 
 Hallo {USERNAME},
 
-du erhältst diese Benachrichtigung, weil du das Bild „{IMAGE_NAME}“ auf „{SITENAME}“ beobachtest. Seit deinem letzten Besuch wurde zu diesem Bild ein neuer Kommentar abgegeben. Du kannst den folgenden Link benutzen, um den Kommentar zulesen.
+du erhältst diese Benachrichtigung, weil du das Bild „{IMAGE_NAME}“ auf „{SITENAME}“ beobachtest. Seit deinem letzten Besuch wurde zu diesem Bild ein neuer Kommentar abgegeben. Du kannst den folgenden Link benutzen, um den Kommentar zu lesen.
 
 {U_IMAGE}
 
