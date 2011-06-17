@@ -270,7 +270,7 @@ class install_update extends module
 
 		$passed['files'] = true;
 		$delete = (isset($_POST['delete'])) ? true : false;
-		foreach ($oudated_files as $file)
+		foreach ($outdated_files as $file)
 		{
 			// Replace gallery root path with the constant.
 			if (strpos($file, 'gallery/') == 0)

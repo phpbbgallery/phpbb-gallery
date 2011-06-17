@@ -76,8 +76,10 @@ $files = show_dir('v1_0_1/', '', $files);
 $files = show_dir('v1_0_2/', '', $files);
 $files = show_dir('v1_0_3/', '', $files);
 $files = show_dir('v1_0_4/', '', $files);
+$files = show_dir('v1_0_5/', '', $files);
+$files = show_dir('v1_0_6/', '', $files);
 
-$trunk = show_dir('v1_0_5/', '', $trunk);
+$trunk = show_dir('root/', '', $trunk);
 
 $files = array_unique($files);
 sort ($files);
@@ -103,7 +105,7 @@ $get_outdated_files .= "{\n";
 $get_outdated_files .= "	exit;\n";
 $get_outdated_files .= "}\n";
 $get_outdated_files .= "\n";
-$get_outdated_files .= "\$oudated_files = array(\n";
+$get_outdated_files .= "\$outdated_files = array(\n";
 foreach ($files as $file)
 {
 	if (!in_array($file, $trunk))
