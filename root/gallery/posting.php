@@ -945,11 +945,11 @@ switch ($mode)
 				));
 				if (confirm_box(true))
 				{
-					handle_image_counter($image_id, false);
+					phpbb_gallery_image::handle_counter($image_id, false);
 
 					phpbb_gallery_image::delete_images(array($image_id), array($image_id => $image_data['image_filename']));
 
-					update_album_info($album_id);
+					phpbb_gallery_album::update_info($album_id);
 
 					$submit = true;
 					$message = $user->lang['DELETED_IMAGE'] . '<br />';
