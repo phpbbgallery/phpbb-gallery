@@ -129,6 +129,8 @@ class phpbb_gallery_image_file
 		{
 			case '.png':
 				$this->image = imagecreatefrompng($this->image_source);
+				imagealphablending($this->image, true); // Set alpha blending on ...
+				imagesavealpha($this->image, true); // ... and save alphablending!
 				$this->image_type = 'png';
 			break;
 			case '.gif':
