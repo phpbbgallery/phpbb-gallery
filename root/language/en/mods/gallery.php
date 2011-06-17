@@ -65,6 +65,7 @@ $lang = array_merge($lang, array(
 
 	'CHANGE_AUTHOR'					=> 'Change author',
 	'CHANGE_IMAGE_STATUS'			=> 'Change image-status',
+	'CHARACTERS'					=> 'characters',
 	'CLICK_RETURN_ALBUM'			=> 'Click %shere%s to return to the album',
 	'CLICK_RETURN_IMAGE'			=> 'Click %shere%s to return to the image',
 	'COMMENT'						=> 'Comment',
@@ -147,11 +148,8 @@ $lang = array_merge($lang, array(
 
 	'MARK_ALBUMS_READ'				=> 'Mark albums read',
 	'MAX_FILE_SIZE'					=> 'Maximum file size',
-	'MAX_FILE_SIZE_EXP'				=> 'Size in bytes',
 	'MAX_HEIGHT'					=> 'Maximum image height',
-	'MAX_HEIGHT_EXP'				=> 'Height in pixels',
 	'MAX_WIDTH'						=> 'Maximum image width',
-	'MAX_WIDTH_EXP'					=> 'Width in pixels',
 	'MISSING_COMMENT'				=> 'No Message entered',
 	'MISSING_MODE'					=> 'No mode selected',
 	'MISSING_REPORT_REASON'			=> 'You need to mention a reason, to report an image.',
@@ -179,7 +177,9 @@ $lang = array_merge($lang, array(
 	'ORIG_FILENAME'					=> 'Take filename as imagename (the insert-field has no function)',
 	'OUT_OF_RANGE_VALUE'			=> 'Value is out of range',
 
+	'PERCENT'						=> '%',
 	'PERSONAL_ALBUMS'				=> 'Personal albums',
+	'PIXELS'						=> 'pixels',
 	'POST_COMMENT'					=> 'Post a comment',
 	'POST_COMMENT_RATE_IMAGE'		=> 'Post a comment and rate the image',
 	'POSTER'						=> 'Poster',
