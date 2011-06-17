@@ -63,6 +63,12 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<file from="root/styles/prosilver/template/*.*" to="styles/prosilver/template/*.*" />
 		</copy>
 
+		<delete>
+			<file name="gallery/includes/*.*" />
+			<file name="gallery/mcp/*.*" />
+			<file name="gallery/plugins/index.php" />
+		</delete>
+
 		<open src="index.php">
 			<edit>
 				<remove><![CDATA[$total_images	= $config['num_images'];
