@@ -82,14 +82,15 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 		<open src="index.php">
 			<edit>
-				<find><![CDATA[$total_users	= $config['num_users'];]]></find>
-				<action type="after-add"><![CDATA[$total_images	= $config['num_images'];
-$user->add_lang('mods/info_acp_gallery');
-$l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OTHER';]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA['TOTAL_USERS'	=> sprintf($user->lang[$l_total_user_s], $total_users),]]></find>
-				<action type="after-add"><![CDATA['TOTAL_IMAGES'	=> ($config['gallery_total_images']) ? sprintf($user->lang[$l_total_image_s], $total_images) : '',]]></action>
+				<find><![CDATA[// Assign index specific vars
+$template->assign_vars(array(]]></find>
+				<action type="before-add"><![CDATA[if (!class_exists('phpbb_gallery_integration'))
+{
+	$gallery_root_path = GALLERY_ROOT_PATH;
+	include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/phpbb_integration.' . $phpEx);
+}
+phpbb_gallery_integration::index_total_images();
+]]></action>
 			</edit>
 		</open>
 
@@ -97,13 +98,7 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
 			<edit>
 				<find><![CDATA[			unset($module);
 		}]]></find>
-				<action type="after-add"><![CDATA[		// phpBB Gallery integration
-		if (!function_exists('integrate_memberlist_viewprofile'))
-		{
-			$gallery_root_path = GALLERY_ROOT_PATH;
-			include($phpbb_root_path . $gallery_root_path . 'includes/phpbb_integration.' . $phpEx);
-		}
-		integrate_memberlist_viewprofile($member);]]></action>
+				<action type="after-add"><![CDATA[		phpbb_gallery_integration::memberlist_viewprofile($member);]]></action>
 			</edit>
 		</open>
 
@@ -192,11 +187,18 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
 	*/
 	function obtain_album_list()
 	{
-		global $db;
+		static $albums;
+
+		if (isset($albums))
+		{
+			return $albums;
+		}
 
 		if (($albums = $this->get('_albums')) === false)
 		{
-			$sql = 'SELECT album_id, parent_id, album_name, album_type, left_id, right_id, album_user_id, display_in_rrc
+			global $db;
+
+			$sql = 'SELECT album_id, parent_id, album_name, album_type, left_id, right_id, album_user_id, display_in_rrc, album_auth_access
 				FROM ' . GALLERY_ALBUMS_TABLE . '
 				ORDER BY album_user_id ASC, left_id ASC';
 			$result = $db->sql_query($sql);
@@ -213,6 +215,7 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
 					'right_id'			=> $row['right_id'],
 					'album_user_id'		=> $row['album_user_id'],
 					'display_in_rrc'	=> $row['display_in_rrc'],
+					'album_auth_access'	=> $row['album_auth_access'],
 				);
 			}
 			$db->sql_freeresult($result);
@@ -276,7 +279,7 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
 				<find><![CDATA[// The following assigns all _common_ variables that may be used at any point in a template.]]></find>
 				<action type="before-add"><![CDATA[	$user->add_lang('mods/info_acp_gallery');
 	$gallery_root_path = GALLERY_ROOT_PATH;
-	include($phpbb_root_path . $gallery_root_path . 'plugins/index.' . $phpEx);]]></action>
+	phpbb_gallery_plugins::init($phpbb_root_path . $gallery_root_path);]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA['U_PRIVATEMSGS'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;folder=inbox'),]]></find>
@@ -444,6 +447,22 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
 			</edit>
 		</open>
 
+		<open src="includes/ucp/ucp_zebra.php">
+			<edit>
+				<find><![CDATA[						$sql = 'DELETE FROM ' . ZEBRA_TABLE . '
+							WHERE user_id = ' . $user->data['user_id'] . '
+								AND ' . $db->sql_in_set('zebra_id', $data['usernames']);
+						$db->sql_query($sql);]]></find>
+				<action type="after-add"><![CDATA[
+						phpbb_gallery_integration::ucp_zebra('remove', $data['usernames'], (int) $user->data['user_id']);]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[$db->sql_multi_insert(ZEBRA_TABLE, $sql_ary);]]></find>
+				<action type="before-add"><![CDATA[									phpbb_gallery_integration::ucp_zebra('add', $user_id_ary, (int) $user->data['user_id']);
+]]></action>
+			</edit>
+		</open>
+
 		<open src="styles/prosilver/imageset/en/imageset.cfg">
 			<edit>
 				<find><![CDATA[img_button_topic_reply = button_topic_reply.gif*25*96]]></find>
@@ -504,13 +523,6 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
 			<edit>
 				<find><![CDATA[<!-- IF postrow.U_JABBER --><li class="jabber-icon"><a href="{postrow.U_JABBER}" onclick="popup(this.href, 550, 320); return false;" title="{L_JABBER}"><span>{L_JABBER}</span></a></li><!-- ENDIF -->]]></find>
 				<action type="after-add"><![CDATA[<!-- IF postrow.U_GALLERY --><li class="gallery-icon"><a href="{postrow.U_GALLERY}" title="{L_PERSONAL_ALBUM}"><span>{L_PERSONAL_ALBUM}</span></a></li><!-- ENDIF -->]]></action>
-			</edit>
-		</open>
-
-		<open src="styles/prosilver/theme/bidi.css">
-			<edit>
-				<find><![CDATA[.rtl .sitehome, .rtl .icon-faq, .rtl .icon-members, .rtl .icon-home, .rtl .icon-ucp, .rtl .icon-register, .rtl .icon-logout,]]></find>
-				<action type="before-add"><![CDATA[.rtl .icon-gallery,]]></action>
 			</edit>
 		</open>
 
