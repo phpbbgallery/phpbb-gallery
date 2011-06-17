@@ -394,12 +394,10 @@ $lang = array_merge($lang, array(
 
 	'THUMBNAIL_CACHE'				=> 'Bildvorschau Cache',
 	'THUMBNAIL_HEIGHT'				=> 'Thumbnailhöhe',
-	'THUMBNAIL_HEIGHT_EXP'			=> 'Höhe in Pixel',
 	'THUMBNAIL_QUALITY'				=> 'Bildvorschau Qualität',
 	'THUMBNAIL_QUALITY_EXP'			=> 'Der Wert muss zwischen 1 und 100 sein.',
 	'THUMBNAIL_SETTINGS'			=> 'Bildvorschau Einstellungen',
 	'THUMBNAIL_WIDTH'				=> 'Thumbnailbreiteh',
-	'THUMBNAIL_WIDTH_EXP'			=> 'Breite in Pixel',
 
 	'UC_IMAGE_NAME'					=> 'Bildname',
 	'UC_IMAGE_ICON'					=> '„Letzes Bild“-Icon',

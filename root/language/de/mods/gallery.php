@@ -65,6 +65,7 @@ $lang = array_merge($lang, array(
 
 	'CHANGE_AUTHOR'					=> 'Benutzer ändern',
 	'CHANGE_IMAGE_STATUS'			=> 'Bildstatus ändern',
+	'CHARACTERS'					=> 'Buchstaben',
 	'CLICK_RETURN_ALBUM'			=> 'Klicke %shier%s um zum Album zurückzukehren',
 	'CLICK_RETURN_IMAGE'			=> 'Klicke %shier%s um zum Bild zurückzukehren',
 	'COMMENT'						=> 'Kommentar',
@@ -147,11 +148,8 @@ $lang = array_merge($lang, array(
 
 	'MARK_ALBUMS_READ'				=> 'Alle Alben als gelesen markieren',
 	'MAX_FILE_SIZE'					=> 'Maximale Dateigröße',
-	'MAX_FILE_SIZE_EXP'				=> 'Dateigröße in Byte',
 	'MAX_HEIGHT'					=> 'Maximale Bildhöhe',
-	'MAX_HEIGHT_EXP'				=> 'Bildhöhe in Pixel',
 	'MAX_WIDTH'						=> 'Maximale Bildbreite',
-	'MAX_WIDTH_EXP'					=> 'Bildbreite in Pixel',
 	'MISSING_COMMENT'				=> 'Keinen Text eingegeben',
 	'MISSING_IMAGE_NAME'			=> 'Du musst einen Titel für Dein Bild angeben',
 	'MISSING_MODE'					=> 'Kein Modus ausgewählt',
@@ -180,7 +178,9 @@ $lang = array_merge($lang, array(
 	'ORIG_FILENAME'					=> 'Dateinamen als Bildname verwenden (das Eingabefeld ist ohne Funktion)',
 	'OUT_OF_RANGE_VALUE'			=> 'Wert ist ausserhalb des Bereichs',
 
+	'PERCENT'						=> '%',
 	'PERSONAL_ALBUMS'				=> 'Persönliche Alben',
+	'PIXELS'						=> 'Pixel',
 	'POST_COMMENT'					=> 'Kommentar schreiben',
 	'POST_COMMENT_RATE_IMAGE'		=> 'Kommentar schreiben und Bild bewerten',
 	'POSTER'						=> 'Autor',
