@@ -29,7 +29,7 @@ if (!defined('IN_PHPBB'))
 *
 * @package phpBB3
 */
-class phpbb_class_loader
+class phpbb_gallery_class_loader
 {
 	private $phpbb_root_path;
 	private $php_ext;
