@@ -41,8 +41,6 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<link type="contrib" lang="en" href="../history.xml">History/Developers/Features</link>
 			<link type="parent" lang="de" href="../../install.xml">Installations-Anleitung</link>
 			<link type="parent" lang="en" href="../../install.xml">Install</link>
-			<link type="contrib" lang="de" href="../addons/rrc_on_index.xml">Neueste/Zufällige Bilder und Kommentare auf der index.php anzeigen</link>
-			<link type="contrib" lang="en" href="../addons/rrc_on_index.xml">View recent/random images and comments on index.php</link>
 			<link type="contrib" lang="de" href="../plugins/highslide.xml">Plugin Highslide JS</link>
 			<link type="contrib" lang="en" href="../plugins/highslide.xml">Plugin Highslide JS</link>
 			<link type="contrib" lang="de" href="../plugins/lytebox.xml">Plugin Lytebox</link>
