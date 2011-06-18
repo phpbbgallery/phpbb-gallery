@@ -187,6 +187,53 @@ Installing:
 
 		<history>
 			<entry>
+				<date>2011-06-18</date>
+				<rev-version>1.1.0-A1</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Feature] Add option to go to next image when clicking on image_page (Feature #798)]]></change>
+					<change><![CDATA[[Feature] Add friends and foes control to personal galleries (Feature #749)]]></change>
+					<change><![CDATA[[Feature] Use "Last-Modified"-header to cache images in browser (Bug #747)]]></change>
+					<change><![CDATA[[Feature] Add option to quote a comment (Feature #744)]]></change>
+					<change><![CDATA[[Feature] Add option to change contest winner tabulation (Feature #730)]]></change>
+					<change><![CDATA[[Feature] Add option to allow changing the "uploaded by"-information (Feature #729)]]></change>
+					<change><![CDATA[[Feature] Add option dis-/enable the signature on comments (Feature #719)]]></change>
+					<change><![CDATA[[Feature] Add option to create personal gallery for users in ACP (Feature #714)]]></change>
+					<change><![CDATA[[Feature] Add option for uploader to disable comment for images (Feature #704)]]></change>
+					<change><![CDATA[[Feature] Add option to prune albums manually in the ACP (Feature #680)]]></change>
+					<change><![CDATA[[Feature] Add recently reported and unapproved iamges to MCP-Index (Feature #437, #658)]]></change>
+					<change><![CDATA[[Feature] Add RSS/Atom Feed for new images (Feature #312)]]></change>
+
+					<change><![CDATA[[Change] phpBB Gallery Integration throws errors while installing/updating the board (Bug #801)]]></change>
+					<change><![CDATA[[Change] Change install to use UMIL for database changes (Bug #788)]]></change>
+					<change><![CDATA[[Change] Make image description invisible until the end of contest (Feature #718)]]></change>
+
+					<change><![CDATA[[Fix] SQL-Error for MSSQL when trying to rate an image (Bug #791)]]></change>
+					<change><![CDATA[[Fix] Several typos, wordings and wrong quotation-marks (Bug #789, #799)]]></change>
+					<change><![CDATA[[Fix] Change error handling on upload-page to continue after corrupted files (Bug #781)]]></change>
+					<change><![CDATA[[Fix] Remove confusing message about number of upload-fields (Bug #767)]]></change>
+					<change><![CDATA[[Fix] Resync contest winners, if a winner get's deleted (Bug #751)]]></change>
+					<change><![CDATA[[Fix] Call garbage_collection() to free some memory before viewing images (Bug #696)]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
+				<date>2011-03-26</date>
+				<rev-version>1.0.6</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Fix] xHTML-Validation Error for new-line on comments. (Bug #787)]]></change>
+					<change><![CDATA[[Fix] Comment-links are invalid xHTML (Bug #783)]]></change>
+					<change><![CDATA[[Fix] prosilver UCP is not designed like the phpBB-UCP pages. (Bug #782)]]></change>
+					<change><![CDATA[[Fix] "Disallowed file-type" message in ACP does not have the error-background (Bug #765)]]></change>
+					<change><![CDATA[[Fix] xHTML-Validation Error when an image appears in multiple image-blocks (Bug #774)]]></change>
+					<change><![CDATA[[Fix] Correct some labels in ACP Import screen.]]></change>
+					<change><![CDATA[[Fix] Take filename as image name does not work correctly for non-ASCII-characters (Bug #745)]]></change>
+					<change><![CDATA[[Fix] Fix several SQL-Errors for PostgreSQL and MSSQL (Bug #723, #784)]]></change>
+
+					<change><![CDATA[[Change] Do not edit bidi.css but put the code in gallery.css]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
 				<date>2010-02-28</date>
 				<rev-version>1.0.5</rev-version>
 				<changelog lang="en">
@@ -965,8 +1012,8 @@ Installing:
 		<link-group>
 			<link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
 			<link type="parent" lang="en" href="../install.xml">Manual</link>
-			<link type="parent" lang="de" href="update_1_0_4_to_1_0_5/update.xml">Update von 1.0.4 auf 1.0.5</link>
-			<link type="parent" lang="en" href="update_1_0_4_to_1_0_5/update.xml">Update from 1.0.4 to 1.0.5</link>
+			<link type="parent" lang="de" href="update_1_0_6_to_1_1_0_A1/update.xml">Update von 1.0.6 auf 1.1.0-A1</link>
+			<link type="parent" lang="en" href="update_1_0_6_to_1_1_0_A1/update.xml">Update from 1.0.6 to 1.1.0-A1</link>
 		</link-group>
 	</header>
 
