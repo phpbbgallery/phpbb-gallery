@@ -90,6 +90,14 @@ class phpbb_gallery_integration
 		}
 	}
 
+	static public function viewonline_pre_switch(&$on_page)
+	{
+		if ((utf8_substr($on_page[1], 0, utf8_strlen(GALLERY_ROOT_PATH))) == GALLERY_ROOT_PATH)
+		{
+			$on_page[1] = utf8_substr($on_page[1], 0, utf8_strlen(GALLERY_ROOT_PATH));
+		}
+	}
+
 	static public function viewonline($on_page, $album_id, $session_page)
 	{
 		static $album_data;
@@ -156,6 +164,44 @@ class phpbb_gallery_integration
 		}
 	}
 
+	static public function cache()
+	{
+		global $db;
+
+		$sql = 'SELECT album_id, parent_id, album_name, album_type, left_id, right_id, album_user_id, display_in_rrc, album_auth_access
+			FROM ' . GALLERY_ALBUMS_TABLE . '
+			ORDER BY album_user_id ASC, left_id ASC';
+		$result = $db->sql_query($sql);
+
+		$albums = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$albums[$row['album_id']] = array(
+				'album_id'			=> $row['album_id'],
+				'parent_id'			=> $row['parent_id'],
+				'album_name'		=> $row['album_name'],
+				'album_type'		=> $row['album_type'],
+				'left_id'			=> $row['left_id'],
+				'right_id'			=> $row['right_id'],
+				'album_user_id'		=> $row['album_user_id'],
+				'display_in_rrc'	=> $row['display_in_rrc'],
+				'album_auth_access'	=> $row['album_auth_access'],
+			);
+		}
+		$db->sql_freeresult($result);
+
+		return $albums;
+	}
+
+	static public function page_header()
+	{
+		global $phpbb_root_path, $phpEx, $template, $user;
+
+		$user->add_lang('mods/info_acp_gallery');
+		phpbb_gallery_plugins::init($phpbb_root_path . GALLERY_ROOT_PATH);
+		$template->assign_var('U_GALLERY_MOD', append_sid($phpbb_root_path . GALLERY_ROOT_PATH . 'index.' . $phpEx));
+	}
+
 	/**
 	* Updates a username across all relevant tables/fields
 	*
@@ -217,6 +263,27 @@ class phpbb_gallery_integration
 		$cache->destroy('_albums');
 		$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 		$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);
+	}
+
+	/**
+	* Remove User
+	*/
+	static public function user_delete($mode, $user_id, $post_username, $table_ary)
+	{
+		return array_merge($table_ary, array(GALLERY_MODSCACHE_TABLE));
+	}
+
+	/**
+	* Group Delete
+	*/
+	static public function group_delete($group_id, $group_name)
+	{
+		global $db;
+
+		// Delete the group from the gallery-moderators
+		$sql = 'DELETE FROM ' . GALLERY_MODSCACHE_TABLE . '
+			WHERE group_id = ' . (int) $group_id;
+		$db->sql_query($sql);
 	}
 
 	/**

@@ -69,6 +69,17 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<file name="gallery/plugins/index.php" />
 		</delete>
 
+		<open src="common.php">
+			<edit>
+				<find><![CDATA[$cache		= new cache();
+$db			= new $sql_db();]]></find>
+				<action type="after-add"><![CDATA[// Setup class loader for the gallery
+require($phpbb_root_path . 'includes/gallery/class_loader.' . $phpEx);
+$gallery_class_loader = new phpbb_gallery_class_loader($phpbb_root_path, '.' . $phpEx, $cache);
+$gallery_class_loader->register();]]></action>
+			</edit>
+		</open>
+
 		<open src="index.php">
 			<edit>
 				<remove><![CDATA[$total_images	= $config['num_images'];
@@ -78,12 +89,10 @@ $l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OT
 			<edit>
 				<find><![CDATA[// Assign index specific vars
 $template->assign_vars(array(]]></find>
-				<action type="before-add"><![CDATA[if (!class_exists('phpbb_gallery_integration'))
+				<action type="before-add"><![CDATA[if (class_exists('phpbb_gallery_integration'))
 {
-	$gallery_root_path = GALLERY_ROOT_PATH;
-	include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/phpbb_integration.' . $phpEx);
+	phpbb_gallery_integration::index_total_images();
 }
-phpbb_gallery_integration::index_total_images();
 ]]></action>
 			</edit>
 			<edit>
@@ -93,18 +102,39 @@ phpbb_gallery_integration::index_total_images();
 
 		<open src="memberlist.php">
 			<edit>
-				<find><![CDATA[		// phpBB Gallery integration
+				<remove><![CDATA[		// phpBB Gallery integration
 		if (!function_exists('integrate_memberlist_viewprofile'))
 		{
 			$gallery_root_path = GALLERY_ROOT_PATH;
 			include($phpbb_root_path . $gallery_root_path . 'includes/phpbb_integration.' . $phpEx);
 		}
-		integrate_memberlist_viewprofile($member);]]></find>
-				<action type="replace-with"><![CDATA[		phpbb_gallery_integration::memberlist_viewprofile($member);]]></action>
+		integrate_memberlist_viewprofile($member);]]></remove>
+			</edit>
+			<edit>
+				<find><![CDATA[			unset($module);
+		}]]></find>
+				<action type="after-add"><![CDATA[		if (class_exists('phpbb_gallery_integration'))
+		{
+			phpbb_gallery_integration::memberlist_viewprofile($member);
+		}]]></action>
 			</edit>
 		</open>
 
 		<open src="viewonline.php">
+			<edit>
+				<find><![CDATA[	// phpBB Gallery integration
+	if ((utf8_substr($on_page[1], 0, utf8_strlen(GALLERY_ROOT_PATH))) == GALLERY_ROOT_PATH)
+	{
+		$gallery_on_page[1] = $on_page[1];
+		$on_page[1] = utf8_substr($on_page[1], 0, utf8_strlen(GALLERY_ROOT_PATH));
+	}]]></find>
+				<action type="replace-with"><![CDATA[	// phpBB Gallery integration
+	if (class_exists('phpbb_gallery_integration'))
+	{
+		$gallery_on_page[1] = $on_page[1];
+		phpbb_gallery_integration::viewonline_pre_switch($on_page);
+	}]]></action>
+			</edit>
 			<edit>
 				<find><![CDATA[		// phpBB Gallery integration
 		case GALLERY_ROOT_PATH:
@@ -118,8 +148,11 @@ phpbb_gallery_integration::index_total_images();
 		break;]]></find>
 				<action type="replace-with"><![CDATA[		// phpBB Gallery integration
 		case GALLERY_ROOT_PATH:
-			$on_page[1] = $gallery_on_page[1];
-			phpbb_gallery_integration::viewonline($on_page, $row['session_album_id'], $row['session_page']);
+			if (class_exists('phpbb_gallery_integration'))
+			{
+				$on_page[1] = $gallery_on_page[1];
+				phpbb_gallery_integration::viewonline($on_page, $row['session_album_id'], $row['session_page']);
+			}
 		break;]]></action>
 			</edit>
 		</open>
@@ -175,31 +208,11 @@ phpbb_gallery_integration::index_total_images();
 
 		if (($albums = $this->get('_albums')) === false)
 		{
-			global $db;
-
-			$sql = 'SELECT album_id, parent_id, album_name, album_type, left_id, right_id, album_user_id, display_in_rrc, album_auth_access
-				FROM ' . GALLERY_ALBUMS_TABLE . '
-				ORDER BY album_user_id ASC, left_id ASC';
-			$result = $db->sql_query($sql);
-
-			$albums = array();
-			while ($row = $db->sql_fetchrow($result))
+			if (class_exists('phpbb_gallery_integration'))
 			{
-				$albums[$row['album_id']] = array(
-					'album_id'			=> $row['album_id'],
-					'parent_id'			=> $row['parent_id'],
-					'album_name'		=> $row['album_name'],
-					'album_type'		=> $row['album_type'],
-					'left_id'			=> $row['left_id'],
-					'right_id'			=> $row['right_id'],
-					'album_user_id'		=> $row['album_user_id'],
-					'display_in_rrc'	=> $row['display_in_rrc'],
-					'album_auth_access'	=> $row['album_auth_access'],
-				);
+				$albums = phpbb_gallery_integration::cache();
+				$this->put('_albums', $albums);
 			}
-			$db->sql_freeresult($result);
-
-			$this->put('_albums', $albums);
 		}
 
 		return $albums;
@@ -212,9 +225,13 @@ phpbb_gallery_integration::index_total_images();
 				<find><![CDATA[	$user->add_lang('mods/info_acp_gallery');
 	$gallery_root_path = GALLERY_ROOT_PATH;
 	include($phpbb_root_path . $gallery_root_path . 'plugins/index.' . $phpEx);]]></find>
-				<action type="replace-with"><![CDATA[	$user->add_lang('mods/info_acp_gallery');
-	$gallery_root_path = GALLERY_ROOT_PATH;
-	phpbb_gallery_plugins::init($phpbb_root_path . $gallery_root_path);]]></action>
+				<action type="replace-with"><![CDATA[	if (class_exists('phpbb_gallery_integration'))
+	{
+		phpbb_gallery_integration::page_header();
+	}]]></action>
+			</edit>
+			<edit>
+				<remove><![CDATA['U_GALLERY_MOD'			=> append_sid("{$phpbb_root_path}{$gallery_root_path}index.$phpEx"),]]></remove>
 			</edit>
 		</open>
 
@@ -226,7 +243,52 @@ phpbb_gallery_integration::index_total_images();
 		include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/phpbb_integration.' . $phpEx);
 	}
 	gallery_integrate_user_update_name($old_name, $new_name);]]></find>
-				<action type="replace-with"><![CDATA[	phpbb_gallery_integration::user_update_name($old_name, $new_name);]]></action>
+				<action type="replace-with"><![CDATA[	if (class_exists('phpbb_gallery_integration'))
+	{
+		phpbb_gallery_integration::user_update_name($old_name, $new_name);
+	}]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	$table_ary = array_merge($table_ary, array(GALLERY_MODSCACHE_TABLE));]]></find>
+				<action type="replace-with"><![CDATA[	if (class_exists('phpbb_gallery_integration'))
+	{
+		$table_ary = phpbb_gallery_integration::user_delete($mode, $user_id, $post_username, $table_ary);
+	}]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	// Delete the group from the gallery-moderators
+	$sql = 'DELETE FROM ' . GALLERY_MODSCACHE_TABLE . "
+		WHERE group_id = $group_id";
+	$db->sql_query($sql);]]></find>
+				<action type="replace-with"><![CDATA[	if (class_exists('phpbb_gallery_integration'))
+	{
+		phpbb_gallery_integration::group_delete($group_id, $group_name);
+	}]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	$db->sql_transaction('commit');
+
+	// Clear permissions cache of relevant users
+	$auth->acl_clear_prefetch($user_id_ary);]]></find>
+				<action type="after-add"><![CDATA[
+	if (class_exists('phpbb_gallery_integration'))
+	{
+		phpbb_gallery_integration::group_user_add($group_id, $user_id_ary);
+	}]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[	$sql = 'DELETE FROM ' . USER_GROUP_TABLE . "
+		WHERE group_id = $group_id
+			AND " . $db->sql_in_set('user_id', $user_id_ary);
+	$db->sql_query($sql);
+
+	// Clear permissions cache of relevant users
+	$auth->acl_clear_prefetch($user_id_ary);]]></find>
+				<action type="after-add"><![CDATA[
+	if (class_exists('phpbb_gallery_integration'))
+	{
+		phpbb_gallery_integration::group_user_del($group_id, $user_id_ary);
+	}]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA[	if (!function_exists('gallery_integrate_group_set_user_default'))
@@ -235,7 +297,10 @@ phpbb_gallery_integration::index_total_images();
 		include($phpbb_root_path . GALLERY_ROOT_PATH . 'includes/phpbb_integration.' . $phpEx);
 	}
 	gallery_integrate_group_set_user_default($user_id_ary, $sql_ary);]]></find>
-				<action type="replace-with"><![CDATA[phpbb_gallery_integration::group_user_add($group_id, $user_id_ary);]]></action>
+				<action type="replace-with"><![CDATA[	if (class_exists('phpbb_gallery_integration'))
+	{
+		phpbb_gallery_integration::group_set_user_default($user_id_ary, $sql_ary);
+	}]]></action>
 			</edit>
 		</open>
 
@@ -246,11 +311,17 @@ phpbb_gallery_integration::index_total_images();
 								AND ' . $db->sql_in_set('zebra_id', $data['usernames']);
 						$db->sql_query($sql);]]></find>
 				<action type="after-add"><![CDATA[
-						phpbb_gallery_integration::ucp_zebra('remove', $data['usernames'], (int) $user->data['user_id']);]]></action>
+						if (class_exists('phpbb_gallery_integration'))
+						{
+							phpbb_gallery_integration::ucp_zebra('remove', $data['usernames'], (int) $user->data['user_id']);
+						}]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA[$db->sql_multi_insert(ZEBRA_TABLE, $sql_ary);]]></find>
-				<action type="before-add"><![CDATA[									phpbb_gallery_integration::ucp_zebra('add', $user_id_ary, (int) $user->data['user_id']);
+				<action type="before-add"><![CDATA[									if (class_exists('phpbb_gallery_integration'))
+									{
+										phpbb_gallery_integration::ucp_zebra('add', $user_id_ary, (int) $user->data['user_id']);
+									}
 ]]></action>
 			</edit>
 		</open>
@@ -260,6 +331,8 @@ phpbb_gallery_integration::index_total_images();
 				<remove><![CDATA[rtl .icon-gallery,]]></remove>
 			</edit>
 		</open>
+
+		<php-installer>install/index.php</php-installer>
 
 		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
 
