@@ -1,11 +1,6 @@
 Within the zip-package there are several files.
 In this file I try to document, for what the files are:
 	|_ contrib/
-	|	|_ addons/
-	|	|		Contains some good and useful addons for the gallery.
-	|	|		Just open the *.xml files with your browser.
-	|	|		You can ignore the modx.prosilver.en.xsl, see notes at the end of this file.
-	|	|
 	|	|_ plugins/
 	|	|		Contains some plugins for the gallery to open the images dynamical,
 	|	|		after clicking on a thumbnail. Just open the *.xml files with your browser.
@@ -17,10 +12,6 @@ In this file I try to document, for what the files are:
 	|	|	|	|_ de.xml					Update for the german language-package
 	|	|	|	|_ subsilver2.xml			Update for subsilver2-based styles
 	|	|	|	\_ modx.prosilver.en.xsl	You can ignore the modx.prosilver.en.xsl, see notes at the end of this file.
-	|	|	|_ code_changes.xml			Contains full code changes for all files with the root/
-	|	|	|							You can use this manual to update your gallery-files, when you modified them.
-	|	|	|							If you do this, you also need to do the stuff from the update.xml,
-	|	|	|							but do not need to overwrite already existing files.
 	|	|	|_ modx.prosilver.en.xsl	You can ignore the modx.prosilver.en.xsl, see notes at the end of this file.
 	|	|	\_ update.xml				Contains all changes that need to be applied to your phpbb-files to run the new version.
 	|	|

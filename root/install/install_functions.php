@@ -26,6 +26,19 @@ $gallery_root_path = phpbb_gallery_url::path('relative');
 function get_gallery_version()
 {
 	global $db;
+
+	$sql = 'SELECT config_value
+		FROM ' . CONFIG_TABLE . "
+		WHERE config_name = 'phpbb_gallery_version'";
+	$result = $db->sql_query($sql);
+	$config_data = $db->sql_fetchfield('config_value');
+	$db->sql_freeresult($result);
+
+	if ($config_data)
+	{
+		return $config_data;
+	}
+
 	$db->sql_return_on_error(true);
 
 	$sql = 'SELECT config_value
@@ -41,64 +54,7 @@ function get_gallery_version()
 		return $config_data;
 	}
 
-	$sql = 'SELECT config_value
-		FROM ' . GALLERY_CONFIG_TABLE . "
-		WHERE config_name = 'album_version'";
-	$result = $db->sql_query($sql);
-	$config_data = $db->sql_fetchfield('config_value');
-	$db->sql_freeresult($result);
-
-	$config_data = (isset($config_data)) ? $config_data : '0.0.0';
-
-	if (in_array($config_data, array('0.1.2', '0.1.3', '0.2.0', '0.2.1', '0.2.2', '0.2.3', '0.3.0', '0.3.1')))
-	{
-		$sql = 'SELECT *
-			FROM ' . GALLERY_ALBUMS_TABLE;
-		$result = $db->sql_query_limit($sql, 1);
-		$test = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-
-		if ($test === false)
-		{
-			// DB-Table missing
-			$config_data = '0.1.2';
-		}
-		else
-		{
-			// No Schema Changes between 0.1.3 and 0.2.2
-			$config_data = '0.1.3';
-			if (defined('GALLERY_ALBUMS_TABLE'))
-			{
-				$config_data = '0.2.1';
-
-				global $phpbb_root_path, $phpEx;
-
-				$gallery_folder_name = (defined('ALBUM_DIR_NAME')) ? ALBUM_DIR_NAME : ((defined('GALLERY_ROOT_PATH')) ? GALLERY_ROOT_PATH : 'gallery/');
-				include($phpbb_root_path . $gallery_folder_name . 'includes/functions.' . $phpEx);
-
-				if (function_exists('make_album_jumpbox'))
-				{
-					$config_data = '0.2.2';
-				}
-				if (isset($test['album_user_id']))
-				{
-					$config_data = '0.2.3';
-					if (function_exists('personal_album_access'))
-					{
-						$config_data = '0.3.0';
-					}
-					if (nv_check_column(SESSIONS_TABLE, 'session_album_id'))
-					{
-						$config_data = '0.3.1';
-					}
-				}
-			}
-		}
-	}
-
-	$db->sql_return_on_error(false);
-
-	return $config_data;
+	return '0.0.0';
 }
 
 /*

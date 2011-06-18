@@ -1,8 +1,8 @@
-[b]Modification Name:[/b] phpBB Gallery
+[b]MOD Name:[/b] phpBB Gallery
 [b]Author:[/b] [url=http://www.flying-bits.org][b]nickvergessen[/b][/url]
 
-[b]Modification Version:[/b] 1.0.5
-[b]Modification Description:[/b]
+[b]MOD Version:[/b] 1.1.0-A1
+[b]MOD Description:[/b]
 [list]An image-gallery integrated into your phpbb-board.[/list]
 
 [b]Features:[/b] For a (nearly) full feature list see http://www.flying-bits.org/go/phpbb_gallery/features
@@ -10,13 +10,9 @@
 [b]Demo URL:[/b] http://www.flying-bits.org/gallery/index.php
 [b]Supported Styles:[/b] prosilver, subsilver2
 [b]Supported Language-Packages:[/b] de, en
-[list]more languages can be found [url=http://www.flying-bits.org/go/phpbb_gallery/translations]here[/url][/list]
+[list]more languages can be found [url=http://www.flying-bits.org/go/phpbb_gallery/translations/1.1]here[/url][/list]
 
-[b]Repositories[/b]: [list]
-[*][b]MOD Repository[/b]: http://code.bantux.org/svn/phpbb-gallery (SVN/Subversion)
-[*][b]Language-Packages Repository[/b]: http://code.bantux.org/svn/phpbb-gallery-lang (SVN/Subversion)
-[*][b]Addons Repository[/b]: http://code.bantux.org/svn/phpbb-gallery-addons (SVN/Subversion)
-[/list]
+[b]MOD Repository[/b]: https://github.com/nickvergessen/phpbb-gallery (Git)
 [b]Bug-Tracker[/b]: http://www.flying-bits.org/go/bugtracker/
 (Before reporting a bug see the FAQ, whether there is something you should know about that bug)
 
@@ -24,6 +20,4 @@
 [b]FAQ & Known-Issues[/b]: http://www.flying-bits.org/go/phpbb_gallery/faq
 [b]Paypal-Donation[/b]: If you like the MOD, you may return the favor with a little [url=http://www.flying-bits.org/paypal.php]Paypal-Donation[/url] (nickvergessen Q gmx.de / Q=@).
 
-[b]Downloads:[/b] [size=150][b][url=http://www.flying-bits.org/go/phpbb_gallery/download]Download v1.0.5[/url][/b][/size]
-[list][*][url=http://www.flying-bits.org/go/phpbb_gallery/translations]Language-Packages[/url]
-[*][url=http://www.flying-bits.org/go/phpbb_gallery/addons]Addons[/url][/list]
+[b]Downloads:[/b] [size=150][b][url=http://www.flying-bits.org/go/phpbb_gallery/download]Download v1.1.0-A1[/url][/b][/size]

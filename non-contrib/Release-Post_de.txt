@@ -1,7 +1,7 @@
 [b]MOD Name:[/b] phpBB Gallery
 [b]Autor:[/b] [url=http://www.flying-bits.org][b]nickvergessen[/b][/url]
 
-[b]MOD Version:[/b] 1.0.5
+[b]MOD Version:[/b] 1.1.0-A1
 [b]MOD Beschreibung:[/b]
 [list]Eine Bilder-Galerie, die in dein phpBB integriert wird.[/list]
 
@@ -10,13 +10,9 @@
 [b]Demo URL:[/b] http://www.flying-bits.org/gallery/index.php
 [b]Unterstützte Styles:[/b] prosilver, subsilver2
 [b]Unterstützte Sprachpakete:[/b] de, en
-[list]Weitere Sprachpakete gibts [url=http://www.flying-bits.org/go/phpbb_gallery/translations]hier[/url][/list]
+[list]Weitere Sprachpakete gibts [url=http://www.flying-bits.org/go/phpbb_gallery/translations/1.1]hier[/url][/list]
 
-[b]Repositories[/b]: [list]
-[*][b]MOD Repository[/b]: http://code.bantux.org/svn/phpbb-gallery (SVN/Subversion)
-[*][b]Repository für Sprachpakete[/b]: http://code.bantux.org/svn/phpbb-gallery-lang (SVN/Subversion)
-[*][b]Repository für Addons[/b]: http://code.bantux.org/svn/phpbb-gallery-addons (SVN/Subversion)
-[/list]
+[b]MOD Repository[/b]: https://github.com/nickvergessen/phpbb-gallery (Git)
 [b]Bug-Tracker[/b]: http://www.flying-bits.org/go/bugtracker/
 (Bevor du einen Bug meldest, wirf einen Blick in die FAQ, ob du etwas dazu findest)
 
@@ -24,6 +20,4 @@
 [b]FAQ & Bekannte Probleme[/b]: http://www.flying-bits.org/go/phpbb_gallery/faq
 [b]Paypal-Spende[/b]: Wenn dir die MOD gefällt, kannst du dich gerne mit einer kleinen [url=http://www.flying-bits.org/paypal.php]Paypal-Spende[/url] dafür revangieren. (nickvergessen Q gmx.de / Q=@).
 
-[b]Downloads:[/b] [size=150][b][url=http://www.flying-bits.org/go/phpbb_gallery/download]Download v1.0.5[/url][/b][/size]
-[list][*][url=http://www.flying-bits.org/go/phpbb_gallery/translations]Sprachpakete[/url]
-[*][url=http://www.flying-bits.org/go/phpbb_gallery/addons]Addons[/url][/list]
+[b]Downloads:[/b] [size=150][b][url=http://www.flying-bits.org/go/phpbb_gallery/download]Download v1.1.0-A1[/url][/b][/size]

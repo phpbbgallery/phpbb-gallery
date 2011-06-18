@@ -184,10 +184,14 @@ class install_uninstall extends module
 
 		$db->sql_return_on_error(false);
 
-		// Delete default config
+		// Delete config
 		$config_ary = array('gallery_user_images_profil', 'gallery_personal_album_profil', 'gallery_viewtopic_icon', 'gallery_viewtopic_images', 'gallery_viewtopic_link', 'num_images', 'gallery_total_images');
 		$sql = 'DELETE FROM ' . CONFIG_TABLE . '
 			WHERE ' . $db->sql_in_set('config_name', $config_ary);
+		$db->sql_query($sql);
+
+		$sql = 'DELETE FROM ' . CONFIG_TABLE . "
+			WHERE config_name LIKE 'phpbb_gallery_%'";
 		$db->sql_query($sql);
 
 		$umil->permission_remove(array(

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
 <!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
-<!-- $Id$ -->
-<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.3.xsd">
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.5.xsd">
 	<header>
 		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
 
-		<title lang="de">phpBB Gallery Plugin: Highslide JS (4.1.8)</title>
-		<title lang="en">phpBB Gallery Plugin: Highslide JS (4.1.8)</title>
+		<title lang="de">phpBB Gallery Plugin: Highslide JS (4.1.12)</title>
+		<title lang="en">phpBB Gallery Plugin: Highslide JS (4.1.12)</title>
 
 		<description lang="de"><![CDATA[Diese Anleitung ermöglicht ein einfaches implementieren von Highslide JS (von Torstein Hønsi: http://highslide.com/) in die Gallery.]]></description>
 		<description lang="en"><![CDATA[This manual is an easy way to implement Highslide JS (by Torstein Hønsi: http://highslide.com/) into the gallery.]]></description>
@@ -43,12 +42,12 @@ http://creativecommons.org/licenses/by-nc/2.5/]]></author-notes>
 			</author>
 		</author-group>
 
-		<mod-version>1.0.5</mod-version>
+		<mod-version>1.1.0</mod-version>
 
 		<installation>
 			<level>easy</level>
 			<time>60</time>
-			<target-version>3.0.7</target-version>
+			<target-version>3.0.9</target-version>
 		</installation>
 	</header>
 

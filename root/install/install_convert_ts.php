@@ -650,7 +650,6 @@ class install_convert_ts extends module
 					$image_data = array(
 						'image_id'				=> $row['pic_id'],
 						'image_filename'		=> $row['pic_physical_filename'],
-						'image_thumbnail'		=> $row['pic_physical_filename'],
 						'image_name'			=> $row['pic_title'],
 						'image_name_clean'		=> utf8_clean_string($row['pic_title']),
 						'image_desc'			=> $image_desc_data['text'],
@@ -814,7 +813,7 @@ class install_convert_ts extends module
 						$db->sql_multi_insert(GALLERY_USERS_TABLE, $ary);
 					}
 				}
-				set_config('num_images', $num_images, true);
+				phpbb_gallery_config::set('num_images', $num_images);
 
 				$body = $user->lang['CONVERTED_RESYNC_COUNTS'];
 				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=in_progress&amp;step=7");

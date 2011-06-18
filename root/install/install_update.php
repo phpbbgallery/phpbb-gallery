@@ -362,55 +362,19 @@ class install_update extends module
 		$this->page_title = $user->lang['STAGE_UPDATE_DB'];
 		$phpbb_gallery_version = get_gallery_version();
 
+		if (version_compare($phpbb_gallery_version, '1.0.5', '<'))
+		{
+			// Only allow update from 1.0.5
+			trigger_error('VERSION_NOT_SUPPORTED', E_USER_ERROR);
+		}
+
 		phpbb_gallery_config::set('version', $phpbb_gallery_version);
 
 		switch (phpbb_gallery_config::get('version'))
 		{
-			case '0.1.2':
-			case '0.1.3':
-
-			case '0.2.0':
-			case '0.2.1':
-			case '0.2.2':
-			case '0.2.3':
-
-			case '0.3.0':
-			case '0.3.1':
-			case '0.3.2-RC1':
-			case '0.3.2-RC2':
-
-			case '0.4.0-RC1':
-			case '0.4.0-RC2':
-			case '0.4.0-RC3':
-			case '0.4.0':
-			case '0.4.1':
-
-			case '0.5.0':
-			case '0.5.1':
-			case '0.5.2':
-			case '0.5.3':
-			case '0.5.4':
-
-			case '1.0.0-dev':
-			case '1.0.0-RC1':
-			case '1.0.0-RC2':
-			case '1.0.0':
-			case '1.0.1-dev':
-			case '1.0.1':
-			case '1.0.2-dev':
-			case '1.0.2-RC1':
-			case '1.0.2':
-			case '1.0.3-RC1':
-			case '1.0.3-RC2':
-			case '1.0.3':
-			case '1.0.4':
-			case '1.0.5-RC1':
-				// Only allow update from 1.0.5
-				trigger_error('VERSION_NOT_SUPPORTED', E_USER_ERROR);
-			break;
-
-
 			case '1.0.5':
+			case '1.0.5.1':
+			case '1.0.6':
 				$umil->table_column_add(array(
 					array(GALLERY_USERS_TABLE, 'user_permissions', array('MTEXT', '')),
 					array(GALLERY_USERS_TABLE, 'user_permissions_changed', array('TIMESTAMP', 0)),
@@ -456,82 +420,43 @@ class install_update extends module
 		$this->page_title = $user->lang['STAGE_UPDATE_DB'];
 		$next_update_url = '';
 
+		$umil = new umil(true);
+
 		switch (phpbb_gallery_config::get('version'))
 		{
-			case '0.1.2':
-			case '0.1.3':
-
-			case '0.2.0':
-			case '0.2.1':
-			case '0.2.2':
-			case '0.2.3':
-
-			case '0.3.0':
-			case '0.3.1':
-			case '0.3.2-RC1':
-			case '0.3.2-RC2':
-
-			case '0.4.0-RC1':
-			case '0.4.0-RC2':
-			case '0.4.0-RC3':
-			case '0.4.0':
-			case '0.4.1':
-			case '0.5.0':
-			case '0.5.1-dev':
-			case '0.5.1':
-			case '0.5.2-dev':
-			case '0.5.2':
-			case '0.5.3-dev':
-			case '0.5.3':
-			case '0.5.4':
-			case '1.0.0-dev':
-			case '1.0.0-RC1':
-			case '1.0.0-RC2':
-			case '1.0.0':
-			case '1.0.1-dev':
-			case '1.0.1':
-			case '1.0.2-dev':
-			case '1.0.2-RC1':
-			case '1.0.2':
-			case '1.0.3-RC1':
-			case '1.0.3-RC2':
-			case '1.0.3':
-			case '1.0.4':
-			case '1.0.5-RC1':
-				/**
-				* Cheating?
-				*/
-				trigger_error('VERSION_NOT_SUPPORTED', E_USER_ERROR);
-			break;
-
 			case '1.0.5':
-				$sql = 'SELECT *
-					FROM ' . GALLERY_CONFIG_TABLE;
-				$result = $db->sql_query($sql);
-				$old_config = array();
-				while ($row = $db->sql_fetchrow($result))
+			case '1.0.5.1':
+			case '1.0.6':
+				if ($umil->table_exists(GALLERY_CONFIG_TABLE))
 				{
-					$old_config[$row['config_name']] = $row['config_value'];
-				}
-				$db->sql_freeresult($result);
-
-				$others = array('gallery_total_images', 'gallery_viewtopic_icon', 'gallery_viewtopic_images', 'gallery_viewtopic_link');
-				foreach ($others as $config_name)
-				{
-					if (isset($config[$config_name]))
+					$sql = 'SELECT *
+						FROM ' . GALLERY_CONFIG_TABLE;
+					$result = $db->sql_query($sql);
+					$old_config = array();
+					while ($row = $db->sql_fetchrow($result))
 					{
-						$old_config[$config_name] = $config[$config_name];
+						$old_config[$row['config_name']] = $row['config_value'];
 					}
-				}
-				$db->sql_freeresult($result);
+					$db->sql_freeresult($result);
 
-
-				$config_map = config_mapping();
-				foreach ($config_map as $old_name => $new_name)
-				{
-					if (isset($old_config[$old_name]))
+					$others = array('gallery_total_images', 'gallery_viewtopic_icon', 'gallery_viewtopic_images', 'gallery_viewtopic_link');
+					foreach ($others as $config_name)
 					{
-						phpbb_gallery_config::set($new_name, $old_config[$old_name]);
+						if (isset($config[$config_name]))
+						{
+							$old_config[$config_name] = $config[$config_name];
+						}
+					}
+					$db->sql_freeresult($result);
+
+
+					$config_map = config_mapping();
+					foreach ($config_map as $old_name => $new_name)
+					{
+						if (isset($old_config[$old_name]))
+						{
+							phpbb_gallery_config::set($new_name, $old_config[$old_name]);
+						}
 					}
 				}
 
@@ -574,77 +499,9 @@ class install_update extends module
 
 		switch (phpbb_gallery_config::get('version'))
 		{
-/*			case '0.1.2':
-			case '0.1.3':
-			case '0.2.0':
-			case '0.2.1':
-			case '0.2.2':
-			case '0.2.3':
-			case '0.3.0':
-			case '0.3.1':
-			case '0.3.2-RC1':
-			case '0.3.2-RC2':
-			case '0.4.0-RC1':
-			case '0.4.0-RC2':
-				$umil->table_column_remove(array(
-					array(GROUPS_TABLE,			'personal_subalbums'),
-					array(GROUPS_TABLE,			'allow_personal_albums'),
-					array(GROUPS_TABLE,			'view_personal_albums'),
-					array(USERS_TABLE,			'album_id'),
-					array(GALLERY_ALBUMS_TABLE,	'album_approval'),
-					array(GALLERY_ALBUMS_TABLE,	'album_order'),
-					array(GALLERY_ALBUMS_TABLE,	'album_view_level'),
-					array(GALLERY_ALBUMS_TABLE,	'album_upload_level'),
-					array(GALLERY_ALBUMS_TABLE,	'album_rate_level'),
-					array(GALLERY_ALBUMS_TABLE,	'album_comment_level'),
-					array(GALLERY_ALBUMS_TABLE,	'album_edit_level'),
-					array(GALLERY_ALBUMS_TABLE,	'album_delete_level'),
-					array(GALLERY_ALBUMS_TABLE,	'album_view_groups'),
-					array(GALLERY_ALBUMS_TABLE,	'album_upload_groups'),
-					array(GALLERY_ALBUMS_TABLE,	'album_rate_groups'),
-					array(GALLERY_ALBUMS_TABLE,	'album_comment_groups'),
-					array(GALLERY_ALBUMS_TABLE,	'album_edit_groups'),
-					array(GALLERY_ALBUMS_TABLE,	'album_delete_groups'),
-					array(GALLERY_ALBUMS_TABLE,	'album_moderator_groups'),
-				));
-
-			case '0.4.0-RC3':
-			case '0.4.0':
-			case '0.4.1':
-
-			case '0.5.0':
-			case '0.5.1':
-			case '0.5.2':
-			case '0.5.3':
-			case '0.5.4':
-
-			case '1.0.0-dev':
-				$umil->table_column_remove(array(
-					array(GALLERY_ROLES_TABLE,	'a_moderate'),
-				));
-
-			case '1.0.0-RC1':
-			case '1.0.0-RC2':
-			case '1.0.0':
-
-			case '1.0.1-dev':
-			case '1.0.1':
-
-			case '1.0.2-dev':
-			case '1.0.2-RC1':
-			case '1.0.2':
-
-			case '1.0.3-RC1':
-			case '1.0.3-RC2':
-			case '1.0.3':
-
-			case '1.0.4':
-
-			case '1.0.5-RC1':*/
-
-				//@todo: Move on bbcode-change or creating all modules
-				//$reparse_modules_bbcode = true;
 			case '1.0.5':
+			case '1.0.5.1':
+			case '1.0.6':
 				$umil->table_column_remove(array(
 					array(GALLERY_IMAGES_TABLE,	'image_thumbnail'),
 				));
@@ -652,6 +509,10 @@ class install_update extends module
 				$umil->table_remove(array(
 					GALLERY_CONFIG_TABLE,
 				));
+
+				//@todo: Move on bbcode-change or creating all modules
+				//$reparse_modules_bbcode = true;
+
 			break;
 		}
 
@@ -714,64 +575,22 @@ class install_update extends module
 
 			switch (phpbb_gallery_config::get('version'))
 			{
-				case '0.1.2':
-				case '0.1.3':
-
-				case '0.2.0':
-				case '0.2.1':
-				case '0.2.2':
-				case '0.2.3':
-
-				case '0.3.0':
-				case '0.3.1':
-				case '0.3.2-RC1':
-				case '0.3.2-RC2':
-
-				case '0.4.0-RC1':
-				case '0.4.0-RC2':
-				case '0.4.0-RC3':
-				case '0.4.0':
-				break;
-
-				case '0.4.1':
-					// Gallery Logs
+				case '1.0.5':
+				case '1.0.5.1':
+				case '1.0.6':
+					/**
+					* Add Module
 					$umil->module_add('acp', $choosen_log_module, array(
 						'module_basename'	=> 'logs',
 						'module_langname'	=> 'ACP_GALLERY_LOGS',
 						'module_mode'		=> 'gallery',
 						'module_auth'		=> 'acl_a_viewlogs',
 					));
-
-				case '0.5.0':
-				case '0.5.1':
-				case '0.5.2':
-				case '0.5.3':
-				case '0.5.4':
-
-				case '1.0.0-dev':
-				case '1.0.0-RC1':
-				case '1.0.0-RC2':
-				case '1.0.0':
-
-				case '1.0.1-dev':
-				case '1.0.1':
-
-				case '1.0.2-dev':
-				case '1.0.2-RC1':
-					// Add album-BBCode
+					*/
+					/**
+					* Refresh BBCode
 					add_bbcode('album');
-
-				case '1.0.2':
-
-				case '1.0.3-RC1':
-				case '1.0.3-RC2':
-				case '1.0.3':
-
-				case '1.0.4':
-
-				case '1.0.5-RC1':
-					trigger_error('VERSION_NOT_SUPPORTED', E_USER_ERROR);
-				case '1.0.5':
+					*/
 				break;
 			}
 
@@ -788,45 +607,26 @@ class install_update extends module
 			$modules = $this->gallery_config_options;
 			switch (phpbb_gallery_config::get('version'))
 			{
-				case '1.0.5-RC1':
+				case '1.0.6':
+				case '1.0.5.1':
 				case '1.0.5':
 
-				case '1.0.4':
-
-				case '1.0.3':
-				case '1.0.3-RC2':
-				case '1.0.3-RC1':
-
-				case '1.0.2':
-				case '1.0.2-RC1':
-				case '1.0.2-dev':
-
-				case '1.0.1':
+					/**
+					* Refresh BBCode
 					$template->assign_block_vars('checks', array(
 						'S_LEGEND'			=> true,
 						'LEGEND'			=> '',
 						'LEGEND_EXPLAIN'	=> $user->lang['BBCODES_NEEDS_REPARSE'],
 					));
-				case '1.0.1-dev':
-
-				case '1.0.0':
-				case '1.0.0-RC2':
-				case '1.0.0-RC1':
-				case '1.0.0-dev':
-
-				case '0.5.4':
-				case '0.5.3':
-				case '0.5.2':
-				case '0.5.1':
-				case '0.5.0':
-					// needs to be moved before the first unset.
+					*/
+					/**
+					* unset($modules['legend1']) must be before the first unset module.
+					* Unset every module in the version where it was added.
+					*/
 					unset($modules['legend1']);
 					unset($modules['log_module']);
-
-				case '0.4.1':
 					unset($modules['acp_module']);
 					unset($modules['ucp_module']);
-					// We need to build all modules before this version
 				break;
 			}
 
