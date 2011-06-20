@@ -56,15 +56,15 @@ $lang = array_merge($lang, array(
 	'MANAGE_SUBALBUMS'				=> 'Manage your subalbums',
 	'MISSING_ALBUM_NAME'			=> 'Please insert a name for the album',
 
-	'NEED_INITIALISE'				=> 'You don’t have a personal album yet.',
+	'NEED_INITIALISE'				=> 'You donâ€™t have a personal album yet.',
 	'NO_ALBUM_STEALING'				=> 'You are not allowed to manage the Album of other users.',
-	'NO_FAVORITES'					=> 'You don’t have any favorites.',
+	'NO_FAVORITES'					=> 'You donâ€™t have any favorites.',
 	'NO_MORE_SUBALBUMS_ALLOWED'		=> 'You added your maximum of subalbums to your personal album',
 	'NO_PARENT_ALBUM'				=> '&laquo;-- no parent',
-	'NO_PERSALBUM_ALLOWED'			=> 'You don’t have the permissions create your personal album',
-	'NO_PERSONAL_ALBUM'				=> 'You don’t have a personal album yet. Here you can create your personal album, with some subalbums.<br />In personal albums only the owner can upload images.',
+	'NO_PERSALBUM_ALLOWED'			=> 'You donâ€™t have the permissions create your personal album',
+	'NO_PERSONAL_ALBUM'				=> 'You donâ€™t have a personal album yet. Here you can create your personal album, with some subalbums.<br />In personal albums only the owner can upload images.',
 	'NO_SUBALBUMS'					=> 'No Albums attached',
-	'NO_SUBSCRIPTIONS'				=> 'You didn’t subscribe to any image.',
+	'NO_SUBSCRIPTIONS'				=> 'You didnâ€™t subscribe to any image.',
 
 	'PARSE_BBCODE'					=> 'Parse BBCode',
 	'PARSE_SMILIES'					=> 'Parse smilies',
@@ -76,7 +76,7 @@ $lang = array_merge($lang, array(
 	'UNSUBSCRIBE'					=> 'stop watching',
 	'USER_ALLOW_COMMENTS'			=> 'Allow users to comment your images',
 
-	'YOUR_FAVORITE_IMAGES'			=> 'Here you can see your favorite-images. You may remove them, if you don’t like them anymore.',
+	'YOUR_FAVORITE_IMAGES'			=> 'Here you can see your favorite-images. You may remove them, if you donâ€™t like them anymore.',
 	'YOUR_SUBSCRIPTIONS'			=> 'Here you see albums and images you get notified on.',
 
 	'VIEWEXIFS_DEFAULT'				=> 'View Exif-Data by default',
@@ -84,7 +84,7 @@ $lang = array_merge($lang, array(
 	'WATCH_CHANGED'					=> 'Settings stored',
 	'WATCH_COM'						=> 'Subscribe commented images by default',
 	'WATCH_FAVO'					=> 'Subscribe favorite images by default',
-	'WATCH_NOTE'					=> 'This option only affects on new images. All other images need to be added by the „subscribe image“ option.',
+	'WATCH_NOTE'					=> 'This option only affects on new images. All other images need to be added by the â€žsubscribe imageâ€œ option.',
 	'WATCH_OWN'						=> 'Subscribe own images by default',
 ));
 
