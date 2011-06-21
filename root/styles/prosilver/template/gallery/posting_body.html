@@ -38,9 +38,9 @@
 
 <div class="panel" id="postingbox">
 	<div class="inner"><span class="corners-top"><span></span></span>
-		<h3><!-- IF S_COMMENT -->{L_POST_COMMENT}<!-- ELSEIF S_UPLOAD -->{L_UPLOAD_IMAGE}<!-- ELSEIF S_EDIT -->{L_EDIT_IMAGE}<!-- ELSEIF S_REPORT -->{L_REPORT_IMAGE}<!-- ENDIF --></h3>
-	<fieldset class="fields1">
-	<!-- IF ERROR --><p class="error">{ERROR}</p><!-- ENDIF -->
+		<h3><!-- IF S_UPLOAD -->{L_UPLOAD_IMAGE}<!-- ELSEIF S_EDIT -->{L_EDIT_IMAGE}<!-- ELSEIF S_REPORT -->{L_REPORT_IMAGE}<!-- ENDIF --></h3>
+		<fieldset class="fields1">
+			<!-- IF ERROR --><p class="error">{ERROR}</p><!-- ENDIF -->
 
 			<!-- IF not S_USER_LOGGED_IN -->
 			<dl>
@@ -56,30 +56,16 @@
 					<!-- IF S_UPLOAD --><dd><input class="checkbox" type="checkbox" name="filename" id="filename" value="filename" onclick="dE('image_name_fields');" /><label for="filename"> {L_ORIG_FILENAME}</label></dd><!-- ENDIF -->
 				</dl>
 			<!-- ENDIF -->
-			<!-- IF S_ALLOWED_TO_RATE -->
-				<dl>
-					<dt><label>{L_YOUR_RATING}:</label></dt>
-					<dd>
-					<!-- IF .rate_scale -->
-						<select name="rating">
-						<!-- BEGIN rate_scale -->
-							<!-- IF rate_scale.RATE_POINT == 1 --><option value="0">{L_DONT_RATE_IMAGE}</option><!-- ENDIF -->
-							<option value="{rate_scale.RATE_POINT}">{rate_scale.RATE_POINT}</option>
-						<!-- END rate_scale -->
-						</select>
-					<!-- ELSE -->
-						{CONTEST_RATING}
-					<!-- ENDIF -->
-					</dd>
-				</dl>
-			<!-- ENDIF -->
+
 			<!-- IF not S_REPORT -->
 			<!-- IF CAPTCHA_TEMPLATE -->
-			<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+				<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
 			<!-- ENDIF -->
+
 			<dl>
-				<dt><label for="message"><!-- IF S_COMMENT -->{L_YOUR_COMMENT}<!-- ELSE -->{L_IMAGE_DESC}<!-- ENDIF -->:</label></dt>
+				<dt><label for="message">{L_IMAGE_DESC}:</label></dt>
 			</dl>
+
 			<!-- INCLUDE posting_buttons.html -->
 			<div id="smiley-box">
 				<!-- IF S_SMILIES_ALLOWED and .smiley -->
@@ -102,15 +88,14 @@
 					{SMILIES_STATUS}<hr />
 				<!-- ENDIF -->
 				<!-- ENDIF -->
-				<!-- IF S_UPLOAD or S_EDIT -->{L_DESCRIPTION_LENGTH}<!-- ELSEIF not S_REPORT -->{L_COMMENT_LENGTH}<!-- ENDIF -->
+				<!-- IF S_UPLOAD or S_EDIT -->{L_DESCRIPTION_LENGTH}<!-- ENDIF -->
 			</div>
 			<!-- ENDIF -->
+
 			<div id="message-box">
 				<textarea name="message" id="message" rows="7" cols="76" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" class="inputbox">{MESSAGE}</textarea>
 			</div>
-			<!-- IF S_COMMENT -->
-				<div><label for="attach_sig"><input type="checkbox" name="attach_sig" id="attach_sig"{S_SIGNATURE_CHECKED} /> {L_ATTACH_SIG}</label></div>
-			<!-- ENDIF -->
+
 			<!-- IF S_EDIT and S_ALLOW_ROTATE -->
 				<dl id="upload_field_{upload_image.S_ROW_COUNT}">
 					<dt><label for="rotate">{L_ROTATE_IMAGE}:</label></dt>
@@ -120,6 +105,7 @@
 						<input type="radio" name="rotate" id="rotate_90" value="90" /> <label for="rotate_90">{L_ROTATE_LEFT}</label></dd>
 				</dl>
 			<!-- ENDIF -->
+
 			<!-- IF S_UPLOAD -->
 				<!-- IF S_MULTI_IMAGES --><hr /><!-- ENDIF -->
 				<dl>
@@ -163,7 +149,9 @@
 				//]]>
 				</script>
 			<!-- ENDIF -->
+
 			<!-- IF S_MOVE_PERSONAL or S_COMMENTS_ENABLED or S_CHANGE_AUTHOR --><hr /><!-- ENDIF -->
+
 			<!-- IF S_MOVE_PERSONAL -->
 				<dl>
 					<dt><label for="move_to_personal">{L_MOVE_TO_PERSONAL}:</label></dt>
