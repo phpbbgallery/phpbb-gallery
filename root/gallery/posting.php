@@ -76,22 +76,6 @@ if ($album_data['album_type'] == phpbb_gallery_album::TYPE_CAT)
 }
 switch ($mode)
 {
-	case 'album':
-		switch ($submode)
-		{
-			case 'watch':
-			case 'unwatch':
-				if (!phpbb_gallery::$auth->acl_check('i_view', $album_id, $album_data['album_user_id']))
-				{
-					gallery_not_authorised($image_backlink, $user, $image_loginlink);
-				}
-			break;
-
-			default:
-				trigger_error('MISSING_SUBMODE');
-			break;
-		}
-	break;
 	case 'image':
 		if (!phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id']) && ($album_data['album_status'] == phpbb_gallery_album::STATUS_LOCKED))
 		{
@@ -298,31 +282,6 @@ generate_smilies('inline', 0);
 
 switch ($mode)
 {
-	case 'album':
-	if ($mode == 'album')
-	{
-		switch ($submode)
-		{
-			case 'watch':
-			if ($submode == 'watch')
-			{
-				phpbb_gallery_notification::add_albums($album_id);
-				$message = $user->lang['WATCHING_ALBUM'] . '<br />';
-				$submit = true; // For redirect
-			}
-			break;
-			case 'unwatch':
-			if ($submode == 'unwatch')
-			{
-				phpbb_gallery_notification::remove_albums($album_id);
-				$message = $user->lang['UNWATCHED_ALBUM'] . '<br />';
-				$submit = true; // For redirect
-			}
-			break;
-		}
-	}
-	break;
-
 	case 'image':
 	if ($mode == 'image')
 	{

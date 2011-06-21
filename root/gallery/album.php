@@ -64,6 +64,31 @@ if (!phpbb_gallery::$auth->acl_check('i_view', $album_id, $album_data['album_use
 	}
 }
 
+/**
+* Are we (un)watching the album?
+*/
+$token = request_var('hash', '');
+if ((($mode == 'watch') || ($mode == 'unwatch')) && check_link_hash($token, "{$mode}_$album_id"))
+{
+	$backlink = phpbb_gallery_url::append_sid('album', "album_id=$album_id");
+
+	if ($mode == 'watch')
+	{
+		phpbb_gallery_notification::add_albums($album_id);
+		$message = $user->lang['WATCHING_ALBUM'] . '<br />';
+	}
+	if ($mode == 'unwatch')
+	{
+		phpbb_gallery_notification::remove_albums($album_id);
+		$message = $user->lang['UNWATCHED_ALBUM'] . '<br />';
+	}
+
+	$message .= '<br />' . sprintf($user->lang['CLICK_RETURN_ALBUM'], '<a href="' . $backlink . '">', '</a>');
+
+	meta_refresh(3, $backlink);
+	trigger_error($message);
+}
+
 // Build the navigation & display subalbums
 phpbb_gallery_album::generate_nav($album_data);
 phpbb_gallery_album::display_albums($album_data, $config['load_moderators']);
@@ -251,6 +276,8 @@ if ($album_data['album_type'] != phpbb_gallery_album::TYPE_CAT)
 // Page is ready loaded, mark album as "read"
 phpbb_gallery_misc::markread('album', $album_id);
 
+$watch_mode = ($album_data['watch_id']) ?  'unwatch' : 'watch';
+
 $template->assign_vars(array(
 	'S_IN_ALBUM'				=> true, // used for some templating in subsilver2
 	'S_IS_POSTABLE'				=> ($album_data['album_type'] != phpbb_gallery_album::TYPE_CAT) ? true : false,
@@ -288,7 +315,7 @@ $template->assign_vars(array(
 	'PAGE_NUMBER'				=> on_page($image_counter, $images_per_page, $start),
 
 	'L_WATCH_TOPIC'				=> ($album_data['watch_id']) ? $user->lang['UNWATCH_ALBUM'] : $user->lang['WATCH_ALBUM'],
-	'U_WATCH_TOPIC'				=> (($album_data['album_type'] != phpbb_gallery_album::TYPE_CAT) && ($user->data['user_id'] != ANONYMOUS)) ? phpbb_gallery_url::append_sid('posting', "mode=album&amp;submode=" . (($album_data['watch_id']) ?  'unwatch' : 'watch') . "&amp;album_id=$album_id") : '',
+	'U_WATCH_TOPIC'				=> (($album_data['album_type'] != phpbb_gallery_album::TYPE_CAT) && ($user->data['user_id'] != ANONYMOUS)) ? phpbb_gallery_url::append_sid('album', "mode=" . $watch_mode . "&amp;album_id=$album_id&amp;hash=" . generate_link_hash("{$watch_mode}_$album_id")) : '',
 	'S_WATCHING_TOPIC'			=> ($album_data['watch_id']) ? true : false,
 ));
 
