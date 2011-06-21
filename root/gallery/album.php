@@ -162,14 +162,14 @@ if ($album_data['album_type'] != phpbb_gallery_album::TYPE_CAT)
 			* Slideshow - Using message_body.html
 			*/
 			// No plugins means, no javascript to do a slideshow
-			if (!sizeof($gallery_plugins['plugins']) || !$gallery_plugins['slideshow'])
+			if (!phpbb_gallery_plugins::$slideshow)
 			{
 				trigger_error('MISSING_SLIDESHOW_PLUGIN');
 			}
 
 			$result = $db->sql_query($sql);
 
-			$trigger_message = gallery_plugins::slideshow_plugins($result);
+			$trigger_message = phpbb_gallery_plugins::slideshow($result);
 			$db->sql_freeresult($result);
 
 			$template->assign_vars(array(
