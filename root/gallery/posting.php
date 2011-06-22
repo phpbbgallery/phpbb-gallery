@@ -132,15 +132,6 @@ switch ($mode)
 					gallery_not_authorised($image_backlink, $user, $image_loginlink);
 				}
 			break;
-			case 'watch':
-			case 'unwatch':
-			case 'favorite':
-			case 'unfavorite':
-				if (!phpbb_gallery::$auth->acl_check('i_view', $album_id, $album_data['album_user_id']))
-				{
-					gallery_not_authorised($image_backlink, $user, $image_loginlink);
-				}
-			break;
 
 			default:
 				trigger_error('MISSING_SUBMODE');
@@ -778,42 +769,6 @@ switch ($mode)
 				));
 				$message = $user->lang['IMAGES_REPORTED_SUCCESSFULLY'] . '<br />';
 				$page_title = $user->lang['REPORT_IMAGE'];
-			}
-			break;
-			case 'watch':
-			if ($submode == 'watch')
-			{
-				phpbb_gallery_notification::add($image_id);
-				$message = $user->lang['WATCHING_IMAGE'] . '<br />';
-				$submit = true; // For redirect
-			}
-			break;
-			case 'unwatch':
-			if ($submode == 'unwatch')
-			{
-				phpbb_gallery_notification::remove($image_id);
-				$message = $user->lang['UNWATCHED_IMAGE'] . '<br />';
-				$submit = true; // For redirect
-			}
-			break;
-			case 'favorite':
-			if ($submode == 'favorite')
-			{
-				phpbb_gallery_image_favorite::add($image_id);
-				if (phpbb_gallery::$user->get_data('watch_favo') && !$image_data['watch_id'])
-				{
-					phpbb_gallery_notification::remove($image_id);
-				}
-				$message = $user->lang['FAVORITED_IMAGE'] . '<br />';
-				$submit = true; // For redirect
-			}
-			break;
-			case 'unfavorite':
-			if ($submode == 'unfavorite')
-			{
-				phpbb_gallery_image_favorite::remove($image_id);
-				$message = $user->lang['UNFAVORITED_IMAGE'] . '<br />';
-				$submit = true; // For redirect
 			}
 			break;
 			case 'delete':

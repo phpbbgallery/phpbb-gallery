@@ -36,6 +36,7 @@ phpbb_gallery_url::_include('functions_display', 'phpbb');
 /**
 * Check the request and get image_data
 */
+$mode = request_var('mode', '');
 $image_id = request_var('image_id', 0);
 $image_data = phpbb_gallery_image::get_info($image_id);
 
@@ -76,6 +77,45 @@ phpbb_gallery_album::generate_nav($album_data);
 // Salting the form...yumyum ...
 add_form_key('gallery');
 
+
+/**
+* Are we (un)watching/(un)favoriting the image?
+*/
+$token = request_var('hash', '');
+if (in_array($mode, array('watch', 'unwatch', 'favorite', 'unfavorite')) && check_link_hash($token, "{$mode}_$image_id"))
+{
+	$backlink = phpbb_gallery_url::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id");
+
+	if ($mode == 'watch')
+	{
+		phpbb_gallery_notification::add($image_id);
+		$message = $user->lang['WATCHING_IMAGE'] . '<br />';
+	}
+	if ($mode == 'unwatch')
+	{
+		phpbb_gallery_notification::remove($image_id);
+		$message = $user->lang['UNWATCHED_IMAGE'] . '<br />';
+	}
+	if ($mode == 'favorite')
+	{
+		phpbb_gallery_image_favorite::add($image_id);
+		$message = $user->lang['FAVORITED_IMAGE'] . '<br />';
+		if (phpbb_gallery::$user->get_data('watch_favo') && !$image_data['watch_id'])
+		{
+			phpbb_gallery_notification::add($image_id);
+		}
+	}
+	if ($mode == 'unfavorite')
+	{
+		phpbb_gallery_image_favorite::remove($image_id);
+		$message = $user->lang['UNFAVORITED_IMAGE'] . '<br />';
+	}
+
+	$message .= '<br />' . sprintf($user->lang['CLICK_RETURN_IMAGE'], '<a href="' . $backlink . '">', '</a>');
+
+	meta_refresh(3, $backlink);
+	trigger_error($message);
+}
 /**
 * Main work here...
 */
@@ -174,6 +214,8 @@ elseif ($image_data['image_desc'])
 	$image_desc = sprintf($user->lang['CONTEST_IMAGE_DESC'], $user->format_date(($album_data['contest_start'] + $album_data['contest_end']), false, true));
 }
 
+$favorite_mode = (($image_data['favorite_id']) ?  'un' : '') . 'favorite';
+$watch_mode = (($image_data['watch_id']) ?  'un' : '') . 'watch';
 
 $template->assign_vars(array(
 	'U_VIEW_ALBUM'		=> phpbb_gallery_url::append_sid("album.$phpEx", "album_id=$album_id"),
@@ -205,9 +247,9 @@ $template->assign_vars(array(
 	'U_POSTER_WHOIS'	=> ($auth->acl_get('a_')) ? phpbb_gallery_url::append_sid('mcp', 'mode=whois&amp;ip=' . $image_data['image_user_ip']) : '',
 
 	'L_BOOKMARK_TOPIC'	=> ($image_data['favorite_id']) ? $user->lang['UNFAVORITE_IMAGE'] : $user->lang['FAVORITE_IMAGE'],
-	'U_BOOKMARK_TOPIC'	=> ($user->data['user_id'] != ANONYMOUS) ? phpbb_gallery_url::append_sid('posting', "mode=image&amp;submode=" . (($image_data['favorite_id']) ?  'un' : '') . "favorite&amp;album_id=$album_id&amp;image_id=$image_id") : '',
+	'U_BOOKMARK_TOPIC'	=> ($user->data['user_id'] != ANONYMOUS) ? phpbb_gallery_url::append_sid('image_page', "mode=$favorite_mode&amp;album_id=$album_id&amp;image_id=$image_id&amp;hash=" . generate_link_hash("{$favorite_mode}_$image_id")) : '',
 	'L_WATCH_TOPIC'		=> ($image_data['watch_id']) ? $user->lang['UNWATCH_IMAGE'] : $user->lang['WATCH_IMAGE'],
-	'U_WATCH_TOPIC'		=> ($user->data['user_id'] != ANONYMOUS) ? phpbb_gallery_url::append_sid('posting', "mode=image&amp;submode=" . (($image_data['watch_id']) ?  'un' : '') . "watch&amp;album_id=$album_id&amp;image_id=$image_id") : '',
+	'U_WATCH_TOPIC'		=> ($user->data['user_id'] != ANONYMOUS) ? phpbb_gallery_url::append_sid('image_page', "mode=$watch_mode&amp;album_id=$album_id&amp;image_id=$image_id&amp;hash=" . generate_link_hash("{$watch_mode}_$image_id")) : '',
 	'S_WATCHING_TOPIC'	=> ($image_data['watch_id']) ? true : false,
 	'S_ALBUM_ACTION'	=> phpbb_gallery_url::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id"),
 
