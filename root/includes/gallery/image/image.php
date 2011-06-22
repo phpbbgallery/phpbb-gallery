@@ -347,8 +347,8 @@ class phpbb_gallery_image
 			'U_STATUS'	=> (phpbb_gallery::$auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id)) ? phpbb_gallery_url::append_sid('mcp', "mode=queue_details&amp;album_id={$image_data['image_album_id']}&amp;option_id=" . $image_data['image_id']) : '',
 			'L_STATUS'	=> ($image_data['image_status'] == self::STATUS_UNAPPROVED) ? $user->lang['APPROVE_IMAGE'] : (($image_data['image_status'] == self::STATUS_APPROVED) ? $user->lang['CHANGE_IMAGE_STATUS'] : $user->lang['UNLOCK_IMAGE']),
 			'U_MOVE'	=> (phpbb_gallery::$auth->acl_check('m_move', $image_data['image_album_id'], $album_user_id)) ? phpbb_gallery_url::append_sid('mcp', "action=images_move&amp;album_id={$image_data['image_album_id']}&amp;image_id=" . $image_data['image_id'] . "&amp;redirect=redirect") : '',
-			'U_EDIT'	=> $s_allowed_edit ? phpbb_gallery_url::append_sid('posting', "mode=image&amp;submode=edit&amp;album_id={$image_data['image_album_id']}&amp;image_id=" . $image_data['image_id']) : '',
-			'U_DELETE'	=> $s_allowed_delete ? phpbb_gallery_url::append_sid('posting', "mode=image&amp;submode=delete&amp;album_id={$image_data['image_album_id']}&amp;image_id=" . $image_data['image_id']) : '',
+			'U_EDIT'	=> $s_allowed_edit ? phpbb_gallery_url::append_sid('posting', "mode=edit&amp;album_id={$image_data['image_album_id']}&amp;image_id=" . $image_data['image_id']) : '',
+			'U_DELETE'	=> $s_allowed_delete ? phpbb_gallery_url::append_sid('posting', "mode=delete&amp;album_id={$image_data['image_album_id']}&amp;image_id=" . $image_data['image_id']) : '',
 		));
 	}
 

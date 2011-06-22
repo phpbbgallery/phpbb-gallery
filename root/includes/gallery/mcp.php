@@ -251,8 +251,8 @@ class phpbb_gallery_mcp
 			'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 			'IMAGE_TIME'		=> $user->format_date($row['image_time']),
 			'UC_IMAGE'			=> phpbb_gallery_image::generate_link('medium', phpbb_gallery_config::get('link_thumbnail'), $row['image_id'], $row['image_name'], $album_id),
-			'U_EDIT_IMAGE'		=> phpbb_gallery_url::append_sid('posting', 'album_id=' . $album_id . '&amp;image_id=' . $row['image_id'] . '&amp;mode=image&amp;submode=edit'),
-			'U_DELETE_IMAGE'	=> phpbb_gallery_url::append_sid('posting', 'album_id=' . $album_id . '&amp;image_id=' . $row['image_id'] . '&amp;mode=image&amp;submode=delete'),
+			'U_EDIT_IMAGE'		=> phpbb_gallery_url::append_sid('posting', 'mode=edit&amp;album_id=' . $album_id . '&amp;image_id=' . $row['image_id']),
+			'U_DELETE_IMAGE'	=> phpbb_gallery_url::append_sid('posting', 'mode=delete&amp;album_id=' . $album_id . '&amp;image_id=' . $row['image_id']),
 			'S_MCP_ACTION'		=> phpbb_gallery_url::append_sid('mcp', "mode=" . (($mode == 'report_details') ? 'report_open' : 'queue_unapproved') . "&amp;album_id=$album_id"),
 		));
 	}

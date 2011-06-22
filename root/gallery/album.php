@@ -288,7 +288,7 @@ $template->assign_vars(array(
 	'MODERATORS'				=> $moderators_list,
 
 	'U_UPLOAD_IMAGE'			=> ((!$album_data['album_user_id'] || ($album_data['album_user_id'] == $user->data['user_id'])) && (($user->data['user_id'] == ANONYMOUS) || phpbb_gallery::$auth->acl_check('i_upload', $album_id, $album_data['album_user_id']))) ?
-										phpbb_gallery_url::append_sid('posting', "mode=image&amp;submode=upload&amp;album_id=$album_id") : '',
+										phpbb_gallery_url::append_sid('posting', "mode=upload&amp;album_id=$album_id") : '',
 	'U_CREATE_ALBUM'			=> (($album_data['album_user_id'] == $user->data['user_id']) && $allowed_create) ?
 										phpbb_gallery_url::append_sid('phpbb', 'ucp', "i=gallery&amp;mode=manage_albums&amp;action=create&amp;parent_id=$album_id&amp;redirect=album") : '',
 	'U_EDIT_ALBUM'				=> ($album_data['album_user_id'] == $user->data['user_id']) ?

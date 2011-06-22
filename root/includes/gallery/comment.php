@@ -48,7 +48,7 @@ class phpbb_gallery_comment
 	static public function is_able($album_data, $image_data)
 	{
 		global $user;
-		return self::is_allowed($album_data, $image_data) && (!$album_data['contest_id'] || (time() > ($album_data['contest_start'] + $album_data['contest_end'])));
+		return self::is_allowed($album_data, $image_data) && phpbb_gallery_contest::is_step('comment', $album_data);
 	}
 
 	/**

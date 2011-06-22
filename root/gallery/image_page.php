@@ -230,9 +230,9 @@ $template->assign_vars(array(
 	'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_IMAGE'),
 	'REPORT_IMG'		=> $user->img('icon_post_report', 'REPORT_IMAGE'),
 	'STATUS_IMG'		=> $user->img('icon_post_info', 'STATUS_IMAGE'),
-	'U_DELETE'			=> ($s_allowed_delete) ? phpbb_gallery_url::append_sid('posting', "mode=image&amp;submode=delete&amp;album_id=$album_id&amp;image_id=$image_id") : '',
-	'U_EDIT'			=> ($s_allowed_edit) ? phpbb_gallery_url::append_sid('posting', "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id") : '',
-	'U_REPORT'			=> (phpbb_gallery::$auth->acl_check('i_report', $album_id, $album_data['album_user_id']) && ($image_data['image_user_id'] != $user->data['user_id'])) ? phpbb_gallery_url::append_sid('posting', "mode=image&amp;submode=report&amp;album_id=$album_id&amp;image_id=$image_id") : '',
+	'U_DELETE'			=> ($s_allowed_delete) ? phpbb_gallery_url::append_sid('posting', "mode=delete&amp;album_id=$album_id&amp;image_id=$image_id") : '',
+	'U_EDIT'			=> ($s_allowed_edit) ? phpbb_gallery_url::append_sid('posting', "mode=edit&amp;album_id=$album_id&amp;image_id=$image_id") : '',
+	'U_REPORT'			=> (phpbb_gallery::$auth->acl_check('i_report', $album_id, $album_data['album_user_id']) && ($image_data['image_user_id'] != $user->data['user_id'])) ? phpbb_gallery_url::append_sid('posting', "mode=report&amp;album_id=$album_id&amp;image_id=$image_id") : '',
 	'U_STATUS'			=> ($s_allowed_status) ? phpbb_gallery_url::append_sid('mcp', "mode=queue_details&amp;album_id=$album_id&amp;option_id=$image_id") : '',
 
 	'CONTEST_RANK'		=> ($image_data['image_contest_rank']) ? $user->lang['CONTEST_RESULT_' . $image_data['image_contest_rank']] : '',

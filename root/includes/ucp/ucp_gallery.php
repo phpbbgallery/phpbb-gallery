@@ -303,7 +303,7 @@ class ucp_gallery
 			'U_GOTO'			=> phpbb_gallery_url::append_sid('album', 'album_id=' . $parent_id),
 			'U_EDIT'			=> $this->u_action . '&amp;action=edit&amp;album_id=' . $parent_id,
 			'U_DELETE'			=> $this->u_action . '&amp;action=delete&amp;album_id=' . $parent_id,
-			'U_UPLOAD'			=> phpbb_gallery_url::append_sid('posting', 'mode=image&amp;submode=upload&amp;album_id=' . $parent_id),
+			'U_UPLOAD'			=> phpbb_gallery_url::append_sid('posting', 'mode=upload&amp;album_id=' . $parent_id),
 			'ICON_MOVE_DOWN'			=> '<img src="' . phpbb_gallery_url::path('images') . 'icon_down.gif" alt="" />',
 			'ICON_MOVE_DOWN_DISABLED'	=> '<img src="' . phpbb_gallery_url::path('images') . 'icon_down_disabled.gif" alt="" />',
 			'ICON_MOVE_UP'				=> '<img src="' . phpbb_gallery_url::path('images') . 'icon_up.gif" alt="" />',

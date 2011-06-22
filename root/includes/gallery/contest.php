@@ -47,6 +47,21 @@ class phpbb_gallery_contest
 		}
 	}
 
+	static public function is_step($mode, $album_data)
+	{
+		switch ($mode)
+		{
+			case 'upload':
+				return (!$album_data['contest_id'] || ((($album_data['contest_start']) < time()) &&
+					 (time() < ($album_data['contest_start'] + $album_data['contest_rating']))));
+			case 'rate':
+				return (!$album_data['contest_id'] || ((($album_data['contest_start'] + $album_data['contest_rating']) < time()) &&
+					 (time() < ($album_data['contest_start'] + $album_data['contest_end']))));
+			case 'comment':
+				return (!$album_data['contest_id'] || (time() > ($album_data['contest_start'] + $album_data['contest_end'])));
+		}
+	}
+
 	static public function end($album_id, $contest_id, $end_time)
 	{
 		global $db;

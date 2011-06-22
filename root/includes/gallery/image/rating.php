@@ -105,6 +105,8 @@ class phpbb_gallery_image_rating
 	/**
 	* Returns the value of album_data key.
 	* If the value is missing, it is queried from the database.
+	*
+	* @param	$key	string	The value of the album data, if true it returns the hole array.
 	*/
 	private function album_data($key)
 	{
@@ -125,7 +127,7 @@ class phpbb_gallery_image_rating
 			}
 		}
 
-		return $this->album_data[$key];
+		return ($key === true) ? $this->album_data : $this->album_data[$key];
 	}
 
 	/**
@@ -235,10 +237,7 @@ class phpbb_gallery_image_rating
 	public function is_able()
 	{
 		global $user;
-		return $this->is_allowed() && (!$this->album_data('contest_id') ||
-				((($this->album_data('contest_start') + $this->album_data('contest_rating')) < time()) &&
-				 (time() < ($this->album_data('contest_start') + $this->album_data('contest_end'))))
-			);
+		return $this->is_allowed() && phpbb_gallery_contest::is_step('rate', $this->album_data(true));
 	}
 
 	/**

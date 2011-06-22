@@ -33,7 +33,7 @@ if ((request_var('quickmod', 0) == 1) && ($action == 'report_details'))
 }
 else if ((request_var('quickmod', 0) == 1) && ($action == 'image_edit'))
 {
-	phpbb_gallery_url::redirect('posting', "mode=image&amp;submode=edit&amp;album_id=$album_id&amp;image_id=$image_id");
+	phpbb_gallery_url::redirect('posting', "mode=edit&amp;album_id=$album_id&amp;image_id=$image_id");
 }
 
 if ($mode == 'whois' && $auth->acl_get('a_') && request_var('ip', ''))

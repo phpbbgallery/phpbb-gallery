@@ -340,8 +340,8 @@ class phpbb_gallery_notification
 						'U_ALBUM'				=> phpbb_gallery_url::create_link('full', 'album', "album_id=$album_id"),
 						'U_IMAGE'				=> phpbb_gallery_url::create_link('full', 'image_page', "album_id=$album_id&amp;image_id=$image_id"),
 						'U_NEWEST_POST'			=> phpbb_gallery_url::create_link('full', 'viewtopic', "album_id=$album_id&amp;image_id=$image_id"),
-						'U_STOP_WATCHING_IMAGE'	=> phpbb_gallery_url::create_link('full', 'posting', "mode=image&amp;submode=unwatch&amp;album_id=$album_id&amp;image_id=$image_id"),
-						'U_STOP_WATCHING_ALBUM'	=> phpbb_gallery_url::create_link('full', 'posting', "mode=album&amp;submode=unwatch&amp;album_id=$album_id"),
+						'U_STOP_WATCHING_IMAGE'	=> phpbb_gallery_url::create_link('full', 'image_page', "mode=unwatch&amp;album_id=$album_id&amp;image_id=$image_id" . generate_link_hash("unwatch_$image_id")),
+						'U_STOP_WATCHING_ALBUM'	=> phpbb_gallery_url::create_link('full', 'album', "mode=unwatch&amp;album_id=$album_id" . generate_link_hash("unwatch_$album_id")),
 					));
 
 					$messenger->send($addr['method']);
