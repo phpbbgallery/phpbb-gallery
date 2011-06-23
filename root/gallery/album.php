@@ -179,6 +179,7 @@ if ($album_data['album_type'] != phpbb_gallery_album::TYPE_CAT)
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE image_album_id = ' . (int) $album_id . "
 				$image_status_check
+				AND image_status <> " . phpbb_gallery_image::STATUS_ORPHAN . "
 			ORDER BY $sql_sort_order" . $sql_help_sort;
 
 		if ($mode == 'slide_show')

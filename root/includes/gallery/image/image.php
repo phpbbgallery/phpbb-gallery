@@ -35,6 +35,11 @@ class phpbb_gallery_image
 	const STATUS_LOCKED		= 2;
 
 	/**
+	* Orphan files are only visible for their author, because they're not yet ready uploaded.
+	*/
+	const STATUS_ORPHAN		= 3;
+
+	/**
 	* Constants regarding the image contest relation
 	*/
 	const NO_CONTEST = 0;

@@ -326,12 +326,14 @@ if ($action && $image_id_ary)
 
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 					SET image_status = ' . phpbb_gallery_image::STATUS_UNAPPROVED . '
-					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+					WHERE image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '
+						AND ' . $db->sql_in_set('image_id', $image_id_ary);
 				$db->sql_query($sql);
 
 				$sql = 'SELECT image_id, image_name
 					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+					WHERE image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '
+						AND ' . $db->sql_in_set('image_id', $image_id_ary);
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -353,13 +355,15 @@ if ($action && $image_id_ary)
 
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 					SET image_status = ' . phpbb_gallery_image::STATUS_APPROVED . '
-					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+					WHERE image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '
+						AND ' . $db->sql_in_set('image_id', $image_id_ary);
 				$db->sql_query($sql);
 
 				$image_names = array();
 				$sql = 'SELECT image_id, image_name
 					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+					WHERE image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '
+						AND ' . $db->sql_in_set('image_id', $image_id_ary);
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{
@@ -381,12 +385,14 @@ if ($action && $image_id_ary)
 
 				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 					SET image_status = ' . phpbb_gallery_image::STATUS_LOCKED . '
-					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+					WHERE image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '
+						AND ' . $db->sql_in_set('image_id', $image_id_ary);
 				$db->sql_query($sql);
 
 				$sql = 'SELECT image_id, image_name
 					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE ' . $db->sql_in_set('image_id', $image_id_ary);
+					WHERE image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '
+						AND ' . $db->sql_in_set('image_id', $image_id_ary);
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
 				{

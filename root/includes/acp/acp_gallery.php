@@ -175,6 +175,7 @@ class acp_gallery
 					$sql = 'SELECT COUNT(image_id) AS num_images, image_user_id AS user_id, SUM(image_comments) AS num_comments
 						FROM ' . GALLERY_IMAGES_TABLE . '
 						WHERE image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . '
+							AND image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '
 						GROUP BY image_user_id';
 					$result = $db->sql_query($sql);
 

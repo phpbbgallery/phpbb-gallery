@@ -294,6 +294,7 @@ class phpbb_gallery_album
 		$sql = 'SELECT COUNT(image_id) images
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . '
+				AND image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '
 				AND image_album_id = ' . (int) $album_id;
 		$result = $db->sql_query($sql);
 		$images = $db->sql_fetchfield('images');
@@ -302,7 +303,8 @@ class phpbb_gallery_album
 		// Number of total images
 		$sql = 'SELECT COUNT(image_id) images_real
 			FROM ' . GALLERY_IMAGES_TABLE . '
-			WHERE image_album_id = ' . (int) $album_id;
+			WHERE image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '
+				AND image_album_id = ' . (int) $album_id;
 		$result = $db->sql_query($sql);
 		$images_real = $db->sql_fetchfield('images_real');
 		$db->sql_freeresult($result);
@@ -310,8 +312,9 @@ class phpbb_gallery_album
 		// Data of the last not unapproved image
 		$sql = 'SELECT image_id, image_time, image_name, image_username, image_user_colour, image_user_id
 			FROM ' . GALLERY_IMAGES_TABLE . '
-			WHERE image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . ' AND
-				image_album_id = ' . (int) $album_id . '
+			WHERE image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . '
+				AND image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '
+				AND image_album_id = ' . (int) $album_id . '
 			ORDER BY image_time DESC';
 		$result = $db->sql_query($sql);
 		if ($row = $db->sql_fetchrow($result))

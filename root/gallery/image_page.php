@@ -56,7 +56,7 @@ if (!file_exists(phpbb_gallery_url::path('upload') . $image_data['image_filename
 /**
 * Check the permissions and approval
 */
-if (!phpbb_gallery::$auth->acl_check('i_view', $album_id, $album_data['album_user_id']))
+if (!phpbb_gallery::$auth->acl_check('i_view', $album_id, $album_data['album_user_id']) || ($image_data['image_status'] == phpbb_gallery_image::STATUS_ORPHAN))
 {
 	if (!$user->data['is_registered'])
 	{

@@ -113,7 +113,8 @@ class phpbb_gallery_cleanup
 			$delete_images[] = (int) $row['image_id'];
 			$filenames[(int) $row['image_id']] = $row['image_filename'];
 
-			if ($row['image_status'] == phpbb_gallery_image::STATUS_UNAPPROVED)
+			if (($row['image_status'] == phpbb_gallery_image::STATUS_UNAPPROVED) ||
+			 ($row['image_status'] == phpbb_gallery_image::STATUS_ORPHAN))
 			{
 				continue;
 			}
@@ -319,25 +320,3 @@ class phpbb_gallery_cleanup
 		return $lang_pattern;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

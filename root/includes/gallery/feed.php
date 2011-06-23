@@ -112,7 +112,7 @@ class phpbb_gallery_feed
 			'SELECT'		=> 'i.*',
 			'FROM'			=> array(GALLERY_IMAGES_TABLE => 'i'),
 
-			'WHERE'			=> $this->sql_where,
+			'WHERE'			=> $this->sql_where . ' AND i.image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN,
 			'ORDER_BY'		=> 'i.image_time DESC',
 		);
 

@@ -277,6 +277,7 @@ class phpbb_gallery_block
 			$sql = 'SELECT image_id
 				FROM ' . GALLERY_IMAGES_TABLE . '
 				WHERE ' . $this->sql_where_auth . '
+					AND image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '
 				ORDER BY image_time DESC';
 			$result = $db->sql_query_limit($sql, $this->num_sql_limit);
 
@@ -306,6 +307,7 @@ class phpbb_gallery_block
 			$sql = 'SELECT image_id
 				FROM ' . GALLERY_IMAGES_TABLE . '
 				WHERE ' . $this->sql_where_auth . '
+					AND image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '
 				ORDER BY ' . $random_sql;
 			$result = $db->sql_query_limit($sql, $this->num_sql_limit);
 
