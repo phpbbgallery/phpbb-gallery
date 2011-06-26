@@ -30,18 +30,29 @@ class phpbb_gallery_image_upload
 	/**
 	*
 	*/
-	public $errors = array();
+	public $loaded_files = 0;
 	public $uploaded_files = 0;
-	private $file_count = 0;
+	public $errors = array();
+	public $images = array();
+	public $image_data = array();
+	public $array_id2row = array();
 	private $album_id = 0;
+	private $file_count = 0;
+	private $image_num = 0;
 	private $exif_status = false;
 	private $exif_data = false;
+	private $username = '';
+	private $file_descriptions = array();
+	private $file_names = array();
+	private $file_rotating = array();
 
 	/**
 	*
 	*/
 	public function __construct($album_id, $num_files = 0)
 	{
+		global $user;
+
 		if (!class_exists('fileupload'))
 		{
 			phpbb_gallery_url::_include('functions_upload', 'phpbb');
@@ -53,6 +64,7 @@ class phpbb_gallery_image_upload
 
 		$this->album_id = (int) $album_id;
 		$this->file_limit = (int) $num_files;
+		$this->username = $user->data['username'];
 	}
 
 	/**
@@ -73,12 +85,67 @@ class phpbb_gallery_image_upload
 		$this->exif_status = false;
 		$this->exif_data = false;
 
-		$error = $this->prepare_file();
+		$image_id = $this->prepare_file();
 
-		if (!$error)
+		if ($image_id)
 		{
 			$this->uploaded_files++;
+			$this->images[] = (int) $image_id;
 		}
+	}
+
+	/**
+	*
+	*/
+	public function update_image($image_id, $needs_approval = false)
+	{
+		if ($this->file_limit && ($this->uploaded_files >= $this->file_limit))
+		{
+			$this->new_error($user->lang('UPLOAD_ERROR', $this->file->uploadname, $user->lang['QUOTA_REACHED']));
+			return false;
+		}
+		$this->file_count = (int) $this->array_id2row[$image_id];
+
+		$message_parser				= new parse_message();
+		$message_parser->message	= utf8_normalize_nfc($this->get_description());
+		if ($message_parser->message)
+		{
+			$message_parser->parse(true, true, true, true, false, true, true, true);
+		}
+
+		$sql_ary = array(
+			'image_status'				=> ($needs_approval) ? phpbb_gallery_image::STATUS_UNAPPROVED : phpbb_gallery_image::STATUS_APPROVED,
+			'image_desc'				=> $message_parser->message,
+			'image_desc_uid'			=> $message_parser->bbcode_uid,
+			'image_desc_bitfield'		=> $message_parser->bbcode_bitfield,
+			'image_time'				=> time() + $this->file_count,
+		);
+		$new_image_name = $this->get_name();
+		if (($new_image_name != '') && ($new_image_name != $this->image_data[$image_id]['image_name']))
+		{
+			$sql_ary = array_merge($sql_ary, array(
+				'image_name'		=> $new_image_name,
+				'image_name_clean'	=> utf8_clean_string($new_image_name),
+			));
+		}
+
+		// Rotate image
+		if ($this->prepare_file_update($image_id))
+		{
+			$sql_ary = array_merge($sql_ary, array(
+				'image_exif_data'		=> $this->exif_data,
+				'image_has_exif'		=> $this->exif_status,
+			));
+		}
+
+		global $db;
+
+		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . ' 
+			SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+			WHERE image_id = ' . $image_id;
+		$db->sql_query($sql);
+
+		return true;
 	}
 
 	public function prepare_file()
@@ -102,7 +169,7 @@ class phpbb_gallery_image_upload
 		}
 
 		$this->tools->set_image_options(phpbb_gallery_config::get('max_filesize'), phpbb_gallery_config::get('max_height'), phpbb_gallery_config::get('max_width'));
-		$this->tools->set_image_data($this->file->destination_file, '', $this->file->filesize);
+		$this->tools->set_image_data($this->file->destination_file, '', $this->file->filesize, true);
 
 
 		// Rotate the image
@@ -147,8 +214,46 @@ class phpbb_gallery_image_upload
 			return false;
 		}
 
+		if ($this->tools->rotated || $this->tools->resized)
+		{
+			$this->tools->write_image($this->file->destination_file, phpbb_gallery_config::get('jpg_quality'), true);
+		}
+
 		// Everything okay, now add the file to the database and return the image_id
 		return $this->file_to_database();
+	}
+
+	public function prepare_file_update($image_id)
+	{
+		if (($this->image_data[$image_id]['image_has_exif'] == phpbb_gallery_exif::AVAILABLE) ||
+		 ($this->image_data[$image_id]['image_has_exif'] == phpbb_gallery_exif::UNKNOWN))
+		{
+			$update_exif = true;
+			$this->get_exif();
+		}
+
+		$this->tools->set_image_options(phpbb_gallery_config::get('max_filesize'), phpbb_gallery_config::get('max_height'), phpbb_gallery_config::get('max_width'));
+		$this->tools->set_image_data(phpbb_gallery_url::path('upload') . $this->image_data[$image_id]['image_filename'], '', 0, true);
+
+
+		// Rotate the image
+		if (phpbb_gallery_config::get('allow_rotate') && $this->get_rotating())
+		{
+			$this->tools->rotate_image($this->get_rotating(), phpbb_gallery_config::get('allow_resize'));
+			if ($this->tools->rotated)
+			{
+				$this->tools->write_image($this->tools->image_source, phpbb_gallery_config::get('jpg_quality'), true);
+				@unlink(phpbb_gallery_url::path('thumbnail') . $this->image_data[$image_id]['image_filename']);
+				@unlink(phpbb_gallery_url::path('medium') . $this->image_data[$image_id]['image_filename']);
+			}
+
+		}
+
+		if (isset($update_exif) && ($this->exif_status == phpbb_gallery_exif::DB_SAVED))
+		{
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -171,12 +276,12 @@ class phpbb_gallery_image_upload
 
 			'image_user_id'			=> $user->data['user_id'],
 			'image_user_colour'		=> $user->data['user_colour'],
-			'image_username'		=> $user->data['username'],
-			'image_username_clean'	=> utf8_clean_string($user->data['username']),
+			'image_username'		=> $this->username,
+			'image_username_clean'	=> utf8_clean_string($this->username),
 			'image_user_ip'			=> $user->ip,
 
 			'image_album_id'		=> $this->album_id,
-			'image_status'			=> phpbb_gallery_image::STATUS_UPLOAD,
+			'image_status'			=> phpbb_gallery_image::STATUS_ORPHAN,
 			'image_contest'			=> phpbb_gallery_image::NO_CONTEST,
 			'image_allow_comments'	=> true,
 			'image_desc'			=> '',
@@ -187,7 +292,10 @@ class phpbb_gallery_image_upload
 		$sql = 'INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 		$db->sql_query($sql);
 
-		return (int) $db->sql_nextid();
+		$image_id = (int) $db->sql_nextid();
+		$this->image_data[$image_id] = $sql_ary;
+
+		return $image_id;
 	}
 
 	/**
@@ -203,14 +311,43 @@ class phpbb_gallery_image_upload
 		$this->file_limit = (int) $num_files;
 	}
 
+	public function set_username($username)
+	{
+		$this->username = $username;
+	}
+
 	public function set_rotating($data)
 	{
 		$this->file_rotating = array_map('intval', $data);
 	}
 
-	public function get_rotating()
+	public function set_descriptions($descs)
 	{
-		return $this->file_rotating[$this->file_count];
+		$this->file_descriptions = $descs;
+	}
+
+	public function set_names($names)
+	{
+		$this->file_names = $names;
+	}
+
+	public function set_image_num($num)
+	{
+		$this->image_num = (int) $num;
+	}
+
+	public function use_same_name($use_same_name)
+	{
+		if ($use_same_name)
+		{
+			$image_name = $this->file_names[0];
+			$image_desc = $this->file_descriptions[0];
+			for ($i = 0; $i < sizeof($this->file_names); $i++)
+			{
+				$this->file_names[$i] = str_replace('{NUM}', ($this->image_num + $i), $image_name);
+				$this->file_descriptions[$i] = str_replace('{NUM}', ($this->image_num + $i), $image_desc);
+			}
+		}
 	}
 
 	public function get_exif()
@@ -221,6 +358,71 @@ class phpbb_gallery_image_upload
 		$this->exif_status = $exif->status;
 		$this->exif_data = $exif->serialized;
 		unset($exif);
+	}
+
+	public function get_rotating()
+	{
+		if (($this->file_rotating[$this->file_count] % 90) != 0)
+		{
+			return 0;
+		}
+		return $this->file_rotating[$this->file_count];
+	}
+
+	public function get_name()
+	{
+		return utf8_normalize_nfc($this->file_names[$this->file_count]);
+	}
+
+	public function get_description()
+	{
+		return utf8_normalize_nfc($this->file_descriptions[$this->file_count]);
+	}
+
+	public function get_images($uploaded_ids)
+	{
+		global $db;
+
+		$image_ids = $filenames = array();
+		foreach ($uploaded_ids as $row => $check)
+		{
+			if (strpos($check, '$') == false) continue;
+			list($image_id, $filename) = explode('$', $check);
+			$image_ids[] = (int) $image_id;
+			$filenames[$image_id] = $filename;
+			$this->array_id2row[$image_id] = $row;
+		}
+
+		if (empty($image_ids)) return;
+
+		$sql = 'SELECT *
+			FROM ' . GALLERY_IMAGES_TABLE . '
+			WHERE ' . $db->sql_in_set('image_id', $image_ids);
+		$result = $db->sql_query($sql);
+
+		while ($row = $db->sql_fetchrow($result))
+		{
+			if ($filenames[$row['image_id']] == substr($row['image_filename'], 0, 8))
+			{
+				$this->images[] = (int) $row['image_id'];
+				$this->image_data[(int) $row['image_id']] = $row;
+				$this->loaded_files++;
+			}
+		}
+		$db->sql_freeresult($result);
+	}
+
+	/**
+	* Generate some kind of check so users only complete the uplaod for their images
+	*/
+	public function generate_hidden_fields()
+	{
+		$checks = array();
+		foreach ($this->images as $image_id)
+		{
+			$checks[] = $image_id . '$' . substr($this->image_data[$image_id]['image_filename'], 0, 8);
+		}
+		return $checks;
 	}
 
 	/**

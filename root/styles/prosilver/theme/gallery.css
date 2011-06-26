@@ -17,6 +17,42 @@ ul.profile-icons li.gallery-icon	{ width: 20px; height: 20px; }
 	padding: 1px 17px 0 0;
 }
 
+fieldset.gallery dd.simulate-dt label {
+	margin-left:	0;
+	float:			left;
+	font-weight:	bold;
+	text-align:		left;
+	color:			#425067;
+}
+.rtl fieldset.gallery dd.simulate-dt label {
+	text-align:		right;
+}
+
+fieldset.gallery dl:hover dd.simulate-dt label {
+	color:			#000000;
+}
+
+fieldset.gallery dt.simulate-dt {
+	width:			22em;
+}
+
+fieldset.gallery dd.simulate-dt {
+	margin-left:	0;
+	float:			left;
+}
+
+fieldset.gallery dd.simulate-dd {
+	margin-left:	35em;
+}
+
+fieldset.gallery #format-buttons {
+	margin-top: 0;
+}
+
+fieldset.gallery input.readonly, fieldset.gallery textarea.readonly {
+	background: #DCDCDC;
+}
+
 dd.g_lastimage {
 	padding-left: 5px;
 	width: 30%;

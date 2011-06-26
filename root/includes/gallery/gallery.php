@@ -46,6 +46,16 @@ class phpbb_gallery
 
 		// Start session management
 		$user->session_begin($update_session);
+		/**
+		* Maybe we need this for the feed
+		if (!empty($config['feed_http_auth']) && request_var('auth', '') == 'http')
+		{
+			phpbb_http_login(array(
+				'auth_message'	=> 'Feed',
+				'viewonline'	=> request_var('viewonline', true),
+			));
+		}
+		*/
 		$auth->acl($user->data);
 		$user->setup($lang_sets);
 
