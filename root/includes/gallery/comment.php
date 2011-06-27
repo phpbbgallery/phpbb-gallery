@@ -20,6 +20,38 @@ if (!defined('IN_PHPBB'))
 class phpbb_gallery_comment
 {
 	/**
+	* Is the user allowed to comment?
+	* Following statements must be true:
+	*	- User must have permissions.
+	*	- User is neither owner of the image nor guest.
+	*	- Album and image are not locked.
+	*
+	* @return	bool
+	*/
+	static public function is_allowed($album_data, $image_data)
+	{
+		global $user;
+
+		return phpbb_gallery_config::get('allow_comments') && (!phpbb_gallery_config::get('comment_user_control') || $image_data['image_allow_comments']) &&
+			(phpbb_gallery::$auth->acl_check('m_status', $album_data['album_id'], $album_data['album_user_id']) ||
+			 (($image_data['image_status'] == phpbb_gallery_image::STATUS_APPROVED) && ($album_data['album_status'] != phpbb_gallery_album::STATUS_LOCKED)));
+	}
+
+	/**
+	* Is the user able to comment?
+	* Following statements must be true:
+	*	- User must be allowed to rate
+	*	- If the image is in a contest, it must be finished
+	*
+	* @return	bool
+	*/
+	static public function is_able($album_data, $image_data)
+	{
+		global $user;
+		return self::is_allowed($album_data, $image_data) && phpbb_gallery_contest::is_step('comment', $album_data);
+	}
+
+	/**
 	* Add a comment
 	*/
 	static public function add($data, $comment_username = '')

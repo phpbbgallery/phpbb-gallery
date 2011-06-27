@@ -97,6 +97,11 @@ class phpbb_gallery_plugins
 	{
 		global $user;
 
+		if ($mode == 'plugin')
+		{
+			$mode = self::$plugins[0];
+		}
+
 		$tpl = '';
 		switch ($mode)
 		{
@@ -135,7 +140,7 @@ class phpbb_gallery_plugins
 			$trigger_message = $user->lang['SLIDE_SHOW_HIGHSLIDE'];
 			while ($row = $db->sql_fetchrow($query_result))
 			{
-				$images[] = generate_image_link('image_name', 'highslide', $row['image_id'], $row['image_name'], $row['image_album_id']);
+				$images[] = phpbb_gallery_image::generate_link('image_name', 'highslide', $row['image_id'], $row['image_name'], $row['image_album_id']);
 			}
 		}
 		elseif (in_array('shadowbox', self::$plugins))
@@ -143,7 +148,7 @@ class phpbb_gallery_plugins
 			$trigger_message = $user->lang['SLIDE_SHOW_SHADOWBOX'];
 			while ($row = $db->sql_fetchrow($query_result))
 			{
-				$images[] = generate_image_link('image_name', 'shadowbox_slideshow', $row['image_id'], $row['image_name'], $row['image_album_id']);
+				$images[] = phpbb_gallery_image::generate_link('image_name', 'shadowbox_slideshow', $row['image_id'], $row['image_name'], $row['image_album_id']);
 			}
 		}
 		elseif (in_array('lytebox', self::$plugins))
@@ -151,7 +156,7 @@ class phpbb_gallery_plugins
 			$trigger_message = $user->lang['SLIDE_SHOW_LYTEBOX'];
 			while ($row = $db->sql_fetchrow($query_result))
 			{
-				$images[] = generate_image_link('image_name', 'lytebox_slideshow', $row['image_id'], $row['image_name'], $row['image_album_id']);
+				$images[] = phpbb_gallery_image::generate_link('image_name', 'lytebox_slideshow', $row['image_id'], $row['image_name'], $row['image_album_id']);
 			}
 		}
 		else

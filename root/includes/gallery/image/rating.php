@@ -105,6 +105,8 @@ class phpbb_gallery_image_rating
 	/**
 	* Returns the value of album_data key.
 	* If the value is missing, it is queried from the database.
+	*
+	* @param	$key	string	The value of the album data, if true it returns the hole array.
 	*/
 	private function album_data($key)
 	{
@@ -125,7 +127,7 @@ class phpbb_gallery_image_rating
 			}
 		}
 
-		return $this->album_data[$key];
+		return ($key === true) ? $this->album_data : $this->album_data[$key];
 	}
 
 	/**
@@ -221,7 +223,21 @@ class phpbb_gallery_image_rating
 		global $user;
 		return phpbb_gallery::$auth->acl_check('i_rate', $this->album_data('album_id'), $this->album_data('album_user_id')) &&
 			($user->data['user_id'] != $this->image_data('image_user_id')) && ($user->data['user_id'] != ANONYMOUS) &&
-			($this->album_data('album_status') != phpbb_gallery_album::STATUS_LOCKED) && ($this->image_data('image_status') != phpbb_gallery_image::STATUS_LOCKED);
+			($this->album_data('album_status') != phpbb_gallery_album::STATUS_LOCKED) && ($this->image_data('image_status') == phpbb_gallery_image::STATUS_APPROVED);
+	}
+
+	/**
+	* Is the user able to rate?
+	* Following statements must be true:
+	*	- User must be allowed to rate
+	*	- If the image is in a contest, it must be in the rating timespan
+	*
+	* @return	bool
+	*/
+	public function is_able()
+	{
+		global $user;
+		return $this->is_allowed() && phpbb_gallery_contest::is_step('rate', $this->album_data(true));
 	}
 
 	/**

@@ -129,7 +129,8 @@ class phpbb_gallery_mcp
 				),
 			),
 
-			'WHERE'			=> 'image_album_id = ' . $album_id . ' ' . $m_status,
+			'WHERE'			=> 'i.image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '
+									AND i.image_album_id = ' . $album_id . ' ' . $m_status,
 			'ORDER_BY'		=> "i.$sort_key $sort_dir",
 		);
 		$sql = $db->sql_build_query('SELECT', $sql_array);
@@ -251,8 +252,8 @@ class phpbb_gallery_mcp
 			'UPLOADER'			=> get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 			'IMAGE_TIME'		=> $user->format_date($row['image_time']),
 			'UC_IMAGE'			=> phpbb_gallery_image::generate_link('medium', phpbb_gallery_config::get('link_thumbnail'), $row['image_id'], $row['image_name'], $album_id),
-			'U_EDIT_IMAGE'		=> phpbb_gallery_url::append_sid('posting', 'album_id=' . $album_id . '&amp;image_id=' . $row['image_id'] . '&amp;mode=image&amp;submode=edit'),
-			'U_DELETE_IMAGE'	=> phpbb_gallery_url::append_sid('posting', 'album_id=' . $album_id . '&amp;image_id=' . $row['image_id'] . '&amp;mode=image&amp;submode=delete'),
+			'U_EDIT_IMAGE'		=> phpbb_gallery_url::append_sid('posting', 'mode=edit&amp;album_id=' . $album_id . '&amp;image_id=' . $row['image_id']),
+			'U_DELETE_IMAGE'	=> phpbb_gallery_url::append_sid('posting', 'mode=delete&amp;album_id=' . $album_id . '&amp;image_id=' . $row['image_id']),
 			'S_MCP_ACTION'		=> phpbb_gallery_url::append_sid('mcp', "mode=" . (($mode == 'report_details') ? 'report_open' : 'queue_unapproved') . "&amp;album_id=$album_id"),
 		));
 	}
@@ -272,7 +273,7 @@ class phpbb_gallery_mcp
 			$sort_key = 'image_time';
 		}
 
-		$where_case = '';
+		$where_case = 'AND image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '';
 		if ($mode == 'queue_unapproved')
 		{
 			$where_case = 'AND image_status = ' . phpbb_gallery_image::STATUS_UNAPPROVED;
@@ -288,7 +289,7 @@ class phpbb_gallery_mcp
 		$sql = 'SELECT COUNT(image_id) images
 			FROM ' . GALLERY_IMAGES_TABLE . "
 			WHERE image_album_id = $album_id
-			$where_case";
+				$where_case";
 		$result = $db->sql_query($sql);
 		$count_images = (int) $db->sql_fetchfield('images');
 		$db->sql_freeresult($result);
@@ -391,7 +392,9 @@ class phpbb_gallery_mcp
 				),
 			),
 
-			'WHERE'			=> "r.report_album_id = $album_id AND r.report_status = $report_status $m_status",
+			'WHERE'			=> "r.report_album_id = $album_id
+								AND i.image_status <> " . phpbb_gallery_image::STATUS_ORPHAN . "
+								AND r.report_status = $report_status $m_status",
 		);
 		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);

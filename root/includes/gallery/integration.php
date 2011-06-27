@@ -135,19 +135,12 @@ class phpbb_gallery_integration
 				break;
 
 				case phpbb_gallery_url::path('relative') . 'posting':
-					preg_match('#mode=([a-z]+)#', $session_page, $on_page);
-					$on_page = (sizeof($on_page)) ? $on_page[1] : '';
+					$location = sprintf($user->lang['VIEWING_ALBUM'], $album_data[$album_id]['album_name']);
+					$location_url = phpbb_gallery_url::append_sid('album', 'album_id=' . $album_id);
+				break;
 
-					switch ($on_page)
-					{
-						case 'comment':
-							$location = sprintf($user->lang['COMMENT_IMAGE'], $album_data[$album_id]['album_name']);
-						break;
-
-						default:
-							$location = sprintf($user->lang['VIEWING_ALBUM'], $album_data[$album_id]['album_name']);
-						break;
-					}
+				case phpbb_gallery_url::path('relative') . 'comment':
+					$location = sprintf($user->lang['COMMENT_IMAGE'], $album_data[$album_id]['album_name']);
 					$location_url = phpbb_gallery_url::append_sid('album', 'album_id=' . $album_id);
 				break;
 			}

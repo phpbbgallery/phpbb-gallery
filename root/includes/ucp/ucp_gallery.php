@@ -303,7 +303,7 @@ class ucp_gallery
 			'U_GOTO'			=> phpbb_gallery_url::append_sid('album', 'album_id=' . $parent_id),
 			'U_EDIT'			=> $this->u_action . '&amp;action=edit&amp;album_id=' . $parent_id,
 			'U_DELETE'			=> $this->u_action . '&amp;action=delete&amp;album_id=' . $parent_id,
-			'U_UPLOAD'			=> phpbb_gallery_url::append_sid('posting', 'mode=image&amp;submode=upload&amp;album_id=' . $parent_id),
+			'U_UPLOAD'			=> phpbb_gallery_url::append_sid('posting', 'mode=upload&amp;album_id=' . $parent_id),
 			'ICON_MOVE_DOWN'			=> '<img src="' . phpbb_gallery_url::path('images') . 'icon_down.gif" alt="" />',
 			'ICON_MOVE_DOWN_DISABLED'	=> '<img src="' . phpbb_gallery_url::path('images') . 'icon_down_disabled.gif" alt="" />',
 			'ICON_MOVE_UP'				=> '<img src="' . phpbb_gallery_url::path('images') . 'icon_up.gif" alt="" />',
@@ -714,7 +714,8 @@ class ucp_gallery
 			// Make sure the overall image & comment count is correct...
 			$sql = 'SELECT COUNT(image_id) AS num_images, SUM(image_comments) AS num_comments
 				FROM ' . GALLERY_IMAGES_TABLE . '
-				WHERE image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED;
+				WHERE image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . '
+					AND image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN;
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
