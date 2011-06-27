@@ -116,11 +116,13 @@
 					<dd id="username"><input class="inputbox autowidth" type="text" tabindex="1" name="username" value="{S_USERNAME}" size="60" maxlength="32" /></dd>
 				</dl>
 			<!-- ENDIF -->
+			<!-- IF BBCODE_STATUS -->
 			<dl>
 				<dt><label>{L_BBCODES}:</label></dt>
 				<!-- IF S_BBCODE_ALLOWED --><dd><!-- INCLUDE posting_buttons.html --></dd><!-- ENDIF -->
-				<!-- IF BBCODE_STATUS --><dd>{BBCODE_STATUS}<!-- IF S_BBCODE_ALLOWED -->; {IMG_STATUS} {FLASH_STATUS}; {URL_STATUS}; {SMILIES_STATUS}<!-- ENDIF --></dd><!-- ENDIF -->
+				<dd>{BBCODE_STATUS}<!-- IF S_BBCODE_ALLOWED -->; {IMG_STATUS} {FLASH_STATUS}; {URL_STATUS}; {SMILIES_STATUS}<!-- ENDIF --></dd>
 			</dl>
+			<!-- ENDIF -->
 			<!-- IF S_SMILIES_ALLOWED and .smiley -->
 				<dl>
 					<dt><label>{L_SMILIES}:</label></dt>
@@ -151,6 +153,10 @@
 					<!-- ENDIF -->
 				</dl>
 			<!-- END image -->
+
+			<!-- IF S_REPORT -->
+				<div><textarea name="message" id="message" rows="4" cols="76" tabindex="3" class="inputbox"></textarea></dd></div>
+			<!-- ENDIF -->
 		</fieldset>
 	<span class="corners-bottom"><span></span></span></div>
 </div>

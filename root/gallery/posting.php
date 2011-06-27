@@ -142,14 +142,15 @@ if ($mode == 'report')
 				'report_note'				=> $report_message,
 			);
 			phpbb_gallery_report::add($data);
+
+			$message = $user->lang['IMAGES_REPORTED_SUCCESSFULLY'];
+			$message .= '<br /><br />' . sprintf($user->lang['CLICK_RETURN_IMAGE'], '<a href="' . $image_backlink . '">', '</a>');
+			$message .= '<br /><br />' . sprintf($user->lang['CLICK_RETURN_ALBUM'], '<a href="' . $album_backlink . '">', '</a>');
+
+			meta_refresh(3, $image_backlink);
+			trigger_error($message);
 		}
 
-		$message = $user->lang['IMAGES_REPORTED_SUCCESSFULLY'] . '<br />';
-		$message .= '<br />' . sprintf($user->lang['CLICK_RETURN_IMAGE'], '<a href="' . $image_backlink . '">', '</a>');
-		$message .= '<br />' . sprintf($user->lang['CLICK_RETURN_ALBUM'], '<a href="' . $album_backlink . '">', '</a>');
-
-		meta_refresh(3, $image_backlink);
-		trigger_error($message);
 	}
 
 	$template->assign_vars(array(
@@ -160,7 +161,7 @@ if ($mode == 'report')
 		'IMAGE_RSZ_HEIGHT'	=> phpbb_gallery_config::get('medium_height'),
 
 		'S_REPORT'			=> true,
-		'S_ALBUM_ACTION'	=> phpbb_gallery_url::append_sid('posting', "mode=image&amp;submode=report&amp;album_id=$album_id&amp;image_id=$image_id"),
+		'S_ALBUM_ACTION'	=> phpbb_gallery_url::append_sid('posting', "mode=report&amp;album_id=$album_id&amp;image_id=$image_id"),
 	));
 }
 else if ($mode == 'delete')

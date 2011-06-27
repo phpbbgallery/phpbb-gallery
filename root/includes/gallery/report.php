@@ -30,7 +30,7 @@ class phpbb_gallery_report
 	{
 		global $db, $user;
 
-		if (!isset($data['report_album_id']) || !isset($data['report_album_id']) || !isset($data['report_note']))
+		if (!isset($data['report_album_id']) || !isset($data['report_image_id']) || !isset($data['report_note']))
 		{
 			return;
 		}
