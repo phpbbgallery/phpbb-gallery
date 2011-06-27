@@ -4,7 +4,7 @@
 <script type="text/javascript">
 //<![CDATA[
 	var num_displayed_fields = 1;
-	var limit_fields = 5;
+	var limit_fields = {S_UPLOAD_LIMIT};
 	function add_field()
 	{
 		if (num_displayed_fields < limit_fields)
@@ -46,7 +46,7 @@
 					<dd><input type="checkbox" class="checkbox" name="allow_comments" id="allow_comments"<!-- IF S_ALLOW_COMMENTS --> checked="checked"<!-- ENDIF --> value="1" /> <label for="allow_comments">{L_ALLOW_COMMENTS}</label></dd>
 				</dl>
 			<!-- ENDIF -->
-			<!-- IF not S_USER_LOGGED_IN or S_COMMENTS_ENABLED --><hr /><!-- ENDIF -->
+			<!-- IF CAPTCHA_TEMPLATE or not S_USER_LOGGED_IN or S_COMMENTS_ENABLED --><hr /><!-- ENDIF -->
 			<dl>
 				<dt><label>{L_MAX_DIMENSIONS}:</label></dt>
 				<dd>{L_FILE_SIZE}: {S_MAX_FILESIZE}</dd>

@@ -330,9 +330,11 @@ else
 				'S_ALBUM_ACTION'		=> phpbb_gallery_url::append_sid('posting', "mode=upload&amp;album_id=$album_id"),
 				'S_UPLOAD'				=> true,
 				'S_ALLOW_ROTATE'		=> (phpbb_gallery_config::get('allow_rotate') && function_exists('imagerotate')),
+				'S_UPLOAD_LIMIT'		=> $upload_files_limit,
 
 				'S_COMMENTS_ENABLED'	=> phpbb_gallery_config::get('allow_comments') && phpbb_gallery_config::get('comment_user_control'),
 				'S_ALLOW_COMMENTS'		=> true,
+				'L_ALLOW_COMMENTS'		=> $user->lang('ALLOW_COMMENTS_ARY', $upload_files_limit),
 			));
 
 			if (phpbb_gallery_misc::display_captcha('upload'))
@@ -469,13 +471,15 @@ else
 			'upload_ids'	=> $process->generate_hidden_fields(),
 		));
 
+		$s_can_rotate = (phpbb_gallery_config::get('allow_rotate') && function_exists('imagerotate'));
 		$template->assign_vars(array(
 			'S_ALBUM_ACTION'	=> phpbb_gallery_url::append_sid('posting', "mode=upload_edit&amp;album_id=$album_id"),
 			'S_UPLOAD_EDIT'		=> true,
-			'S_ALLOW_ROTATE'	=> (phpbb_gallery_config::get('allow_rotate') && function_exists('imagerotate')),
+			'S_ALLOW_ROTATE'	=> $s_can_rotate,
 
 			'S_USERNAME'		=> (!$user->data['is_registered']) ? $username : '',
 			'NUM_IMAGES'		=> $num_images,
+			'COLOUR_ROWSPAN'	=> ($s_can_rotate) ? $num_images * 3 : $num_images * 2,
 
 			'L_DESCRIPTION_LENGTH'	=> $user->lang('DESCRIPTION_LENGTH', phpbb_gallery_config::get('description_length')),
 			'S_HIDDEN_FIELDS'	=> $s_hidden_fields,

@@ -40,6 +40,10 @@ $lang = array_merge($lang, array(
 	'ALL'							=> 'Alle',
 	'ALL_IMAGES'					=> 'Alle Bilder',
 	'ALLOW_COMMENTS'				=> 'Kommentare für dieses Bild erlauben.',
+	'ALLOW_COMMENTS_ARY'			=> array(
+		0	=> 'Kommentare für dieses Bild erlauben.',
+		2	=> 'Kommentare für diese Bilder erlauben.',
+	),
 	'ALLOWED_FILETYPES'				=> 'Erlaubte Dateitypen',
 	'APPROVE'						=> 'Freigeben',
 	'APPROVE_IMAGE'					=> 'Bild freischalten',
