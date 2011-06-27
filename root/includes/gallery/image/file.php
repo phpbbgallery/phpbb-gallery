@@ -75,7 +75,7 @@ class phpbb_gallery_image_file
 		$this->max_width = $max_width;
 	}
 
-	public function set_image_data($source = '', $name = '', $size = 0)
+	public function set_image_data($source = '', $name = '', $size = 0, $force_empty_image = false)
 	{
 		if ($source)
 		{
@@ -88,6 +88,14 @@ class phpbb_gallery_image_file
 		if ($size)
 		{
 			$this->image_size['file'] = $size;
+		}
+		if ($force_empty_image)
+		{
+			$this->image = null;
+			$this->watermarked = false;
+			$this->rotated = false;
+			$this->resized = false;
+			$this->exif_data_force_db = false;
 		}
 	}
 
@@ -529,7 +537,7 @@ class phpbb_gallery_image_file
 	*									Array-Format: $image_id => $filename
 	* @param	array		$locations	Array of valid url::path()s where the image should be deleted from
 	*/
-	static public function delete($files, $locations = array('cache', 'medium', 'upload'))
+	static public function delete($files, $locations = array('thumbnail', 'medium', 'upload'))
 	{
 		if (!is_array($files))
 		{

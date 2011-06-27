@@ -185,7 +185,8 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				$sql_limit = phpbb_gallery_constants::SEARCH_PAGES_NUMBER * $images_per_page;
 				$sql = 'SELECT image_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE ((' . $db->sql_in_set('image_album_id', phpbb_gallery::$auth->acl_album_ids('i_view'), false, true) . ' AND image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . ')
+					WHERE image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '
+						AND ((' . $db->sql_in_set('image_album_id', phpbb_gallery::$auth->acl_album_ids('i_view'), false, true) . ' AND image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . ')
 							OR ' . $db->sql_in_set('image_album_id', phpbb_gallery::$auth->acl_album_ids('m_status'), false, true) . ')
 					ORDER BY ' . $sql_order;
 			break;
@@ -217,7 +218,8 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				$sql_limit = $images_per_page;
 				$sql = 'SELECT image_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE ((' . $db->sql_in_set('image_album_id', phpbb_gallery::$auth->acl_album_ids('i_view'), false, true) . ' AND image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . ')
+					WHERE image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '
+						AND ((' . $db->sql_in_set('image_album_id', phpbb_gallery::$auth->acl_album_ids('i_view'), false, true) . ' AND image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . ')
 							OR ' . $db->sql_in_set('image_album_id', phpbb_gallery::$auth->acl_album_ids('m_status'), false, true) . ')
 					ORDER BY ' . $sql_order;
 			break;
@@ -272,7 +274,8 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				// We need to hide contest-images on this search_id, if the contest is still running!
 				$sql = 'SELECT image_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE image_rate_points <> 0
+					WHERE image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '
+						AND image_rate_points <> 0
 						AND ((' . $db->sql_in_set('image_album_id', phpbb_gallery::$auth->acl_album_ids('i_view'), false, true) . ' AND image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . ' AND image_contest = ' . phpbb_gallery_image::NO_CONTEST . ')
 							OR ' . $db->sql_in_set('image_album_id', phpbb_gallery::$auth->acl_album_ids('m_status'), false, true) . ')
 					ORDER BY ' . $sql_order;
@@ -346,7 +349,8 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				// We need to hide contest-images on this search_id, if the contest is still running!
 				$sql = 'SELECT image_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE image_user_id = ' . $user_id . '
+					WHERE image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '
+						AND image_user_id = ' . $user_id . '
 						AND ((' . $db->sql_in_set('image_album_id', phpbb_gallery::$auth->acl_album_ids('i_view'), false, true) . ' AND image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . ' AND image_contest = ' . phpbb_gallery_image::NO_CONTEST . ')
 							OR ' . $db->sql_in_set('image_album_id', phpbb_gallery::$auth->acl_album_ids('m_status'), false, true) . ')
 					ORDER BY ' . $sql_order;
@@ -382,7 +386,8 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 
 		$sql = 'SELECT i.image_id
 			FROM ' . GALLERY_IMAGES_TABLE . ' i
-			WHERE ((' . $db->sql_in_set('i.image_album_id', phpbb_gallery::$auth->acl_album_ids('i_view'), false, true) . ' AND i.image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . ')
+			WHERE i.image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '
+				AND ((' . $db->sql_in_set('i.image_album_id', phpbb_gallery::$auth->acl_album_ids('i_view'), false, true) . ' AND i.image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . ')
 					OR ' . $db->sql_in_set('i.image_album_id', phpbb_gallery::$auth->acl_album_ids('m_status'), false, true) . ')
 				' . (($search_query) ? 'AND (' . $search_query . ')' : '') . '
 				' . (($user_id_ary) ? ' AND ' . $db->sql_in_set('i.image_user_id', $user_id_ary) : '') . '
@@ -485,7 +490,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 					),
 				),
 
-				'WHERE'			=> $sql_where,
+				'WHERE'			=> 'i.image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . ' AND ' . $sql_where,
 				'ORDER_BY'		=> $sql_order,
 			);
 			$sql = $db->sql_build_query('SELECT', $sql_array);
@@ -594,9 +599,9 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 					'COMMENT_ID'	=> $commentrow['comment_id'],
 					'TIME'			=> $user->format_date($commentrow['comment_time']),
 					'TEXT'			=> generate_text_for_display($commentrow['comment'], $commentrow['comment_uid'], $commentrow['comment_bitfield'], 7),
-					'U_DELETE'		=> (phpbb_gallery::$auth->acl_check('m_comments', $album_id) || (phpbb_gallery::$auth->acl_check('c_delete', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? phpbb_gallery_url::append_sid('posting', "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=delete&amp;comment_id=" . $commentrow['comment_id']) : '',
-					'U_QUOTE'		=> (phpbb_gallery::$auth->acl_check('c_post', $album_id)) ? phpbb_gallery_url::append_sid('posting', "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=add&amp;comment_id=" . $row['comment_id']) : '',
-					'U_EDIT'		=> (phpbb_gallery::$auth->acl_check('m_comments', $album_id) || (phpbb_gallery::$auth->acl_check('c_edit', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? phpbb_gallery_url::append_sid('posting', "album_id=$album_id&amp;image_id=$image_id&amp;mode=comment&amp;submode=edit&amp;comment_id=" . $commentrow['comment_id']) : '',
+					'U_DELETE'		=> (phpbb_gallery::$auth->acl_check('m_comments', $album_id) || (phpbb_gallery::$auth->acl_check('c_delete', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? phpbb_gallery_url::append_sid('comment', "album_id=$album_id&amp;image_id=$image_id&amp;mode=delete&amp;comment_id=" . $commentrow['comment_id']) : '',
+					'U_QUOTE'		=> (phpbb_gallery::$auth->acl_check('c_post', $album_id)) ? phpbb_gallery_url::append_sid('comment', "album_id=$album_id&amp;image_id=$image_id&amp;mode=add&amp;comment_id=" . $row['comment_id']) : '',
+					'U_EDIT'		=> (phpbb_gallery::$auth->acl_check('m_comments', $album_id) || (phpbb_gallery::$auth->acl_check('c_edit', $album_id) && ($commentrow['comment_user_id'] == $user->data['user_id']) && $user->data['is_registered'])) ? phpbb_gallery_url::append_sid('comment', "album_id=$album_id&amp;image_id=$image_id&amp;mode=edit&amp;comment_id=" . $commentrow['comment_id']) : '',
 					'U_INFO'		=> ($auth->acl_get('a_')) ? phpbb_gallery_url::append_sid('mcp', 'mode=whois&amp;ip=' . $commentrow['comment_user_ip']) : '',
 
 					'UC_THUMBNAIL'			=> phpbb_gallery_image::generate_link('thumbnail', phpbb_gallery_config::get('link_thumbnail'), $commentrow['image_id'], $commentrow['image_name'], $commentrow['image_album_id']),

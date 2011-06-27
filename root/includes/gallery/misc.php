@@ -35,6 +35,29 @@ class phpbb_gallery_misc
 		return $gallery_display_captcha[$mode];
 	}
 
+	static public function not_authorised($backlink, $loginlink = '', $login_explain = '')
+	{
+		global $user;
+
+		if (!$user->data['is_registered'] && $loginlink)
+		{
+			if ($login_explain && isset($user->lang[$login_explain]))
+			{
+				$login_explain = $user->lang[$login_explain];
+			}
+			else
+			{
+				$login_explain = '';
+			}
+			login_box($loginlink, $login_explain);
+		}
+		else
+		{
+			meta_refresh(3, $backlink);
+			trigger_error('NOT_AUTHORISED');
+		}
+	}
+
 	/**
 	* Marks a album as read
 	*
