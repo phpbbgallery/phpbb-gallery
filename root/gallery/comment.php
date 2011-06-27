@@ -181,7 +181,7 @@ if (phpbb_gallery_config::get('allow_rates') && ($mode != 'edit'))
 			'S_ALLOWED_TO_RATE'			=> $rating->is_allowed(),
 		));
 	}
-	if ($submode == 'rate')
+	if ($mode == 'rate')
 	{
 		$s_album_action = '';
 	}
@@ -331,17 +331,17 @@ else if ($mode == 'edit')
 			);
 		}
 
-		if ($comment_text == '')
+		if ($comment_plain == '')
 		{
 			$error .= (($error) ? '<br />' : '') . $user->lang['MISSING_COMMENT'];
 		}
-		if (utf8_strlen($comment_text) > phpbb_gallery_config::get('comment_length'))
+		if (utf8_strlen($comment_plain) > phpbb_gallery_config::get('comment_length'))
 		{
 			$error .= (($error) ? '<br />' : '') . $user->lang['COMMENT_TOO_LONG'];
 		}
 
 		$message_parser				= new parse_message();
-		$message_parser->message	= utf8_normalize_nfc($comment_text);
+		$message_parser->message	= utf8_normalize_nfc($comment_plain);
 		if ($message_parser->message)
 		{
 			$message_parser->parse(true, true, true, true, false, true, true, true);
@@ -370,7 +370,7 @@ else if ($mode == 'edit')
 		$sig_checked = (bool) $comment_data['comment_signature'];
 
 		$comment_ary = generate_text_for_edit($comment_data['comment'], $comment_data['comment_uid'], $comment_data['comment_bitfield'], 7);
-		$comment = $comment_ary['text'];
+		$comment_plain = $comment_ary['text'];
 		$comment_username = $comment_data['comment_username'];
 	}
 }
@@ -422,7 +422,7 @@ $template->assign_vars(array(
 	'IMAGE_NAME'			=> $image_data['image_name'],
 
 	'S_SIGNATURE_CHECKED'	=> (isset($sig_checked) && $sig_checked) ? ' checked="checked"' : '',
-	'S_ALBUM_ACTION'		=> phpbb_gallery_url::append_sid('posting', "mode=$mode&amp;album_id=$album_id&amp;image_id=$image_id" . (($comment_id) ? "&amp;comment_id=$comment_id" : '')),
+	'S_ALBUM_ACTION'		=> phpbb_gallery_url::append_sid('comment', "mode=$mode&amp;album_id=$album_id&amp;image_id=$image_id" . (($comment_id) ? "&amp;comment_id=$comment_id" : '')),
 ));
 
 if ($submit && !$error)
