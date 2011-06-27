@@ -90,60 +90,6 @@ class phpbb_gallery_image
 		return $row;
 	}
 
-	/**
-	* Insert the image into the database
-	*/
-	static public function add_image(&$image_data, $album_id)
-	{
-		global $user, $db;
-
-		$sql_ary = array(
-			'image_filename' 		=> $image_data['filename'],
-			'image_name'			=> $image_data['image_name'],
-			'image_name_clean'		=> utf8_clean_string($image_data['image_name']),
-			'image_user_id'			=> $user->data['user_id'],
-			'image_user_colour'		=> $user->data['user_colour'],
-			'image_username'		=> $image_data['username'],
-			'image_username_clean'	=> utf8_clean_string($image_data['username']),
-			'image_user_ip'			=> $user->ip,
-			'image_time'			=> $image_data['image_time'],
-			'image_album_id'		=> $image_data['image_album_id'],
-			'image_status'			=> (phpbb_gallery::$auth->acl_check('i_approve', $album_id)) ? phpbb_gallery_image::STATUS_APPROVED : phpbb_gallery_image::STATUS_UNAPPROVED,
-			'filesize_upload'		=> $image_data['image_filesize'],
-			'image_contest'			=> $image_data['image_contest'],
-			'image_exif_data'		=> $image_data['image_exif_data'],
-			'image_has_exif'		=> $image_data['image_has_exif'],
-			'image_allow_comments'	=> $image_data['image_allow_comments'],
-		);
-
-		$message_parser				= new parse_message();
-		$message_parser->message	= utf8_normalize_nfc($image_data['image_desc']);
-		if($message_parser->message)
-		{
-			$message_parser->parse(true, true, true, true, false, true, true, true);
-			$sql_ary['image_desc']			= $message_parser->message;
-			$sql_ary['image_desc_uid']		= $message_parser->bbcode_uid;
-			$sql_ary['image_desc_bitfield']	= $message_parser->bbcode_bitfield;
-		}
-		else
-		{
-			$sql_ary['image_desc']			= '';
-			$sql_ary['image_desc_uid']		= '';
-			$sql_ary['image_desc_bitfield']	= '';
-		}
-
-		$sql = 'INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-		$db->sql_query($sql);
-		$image_id = (int) $db->sql_nextid();
-
-		if (phpbb_gallery::$user->get_data('watch_own'))
-		{
-			phpbb_gallery_notification::add($image_id);
-		}
-
-		return array('image_id' => $image_id, 'image_name' => $image_data['image_name']);
-	}
-
 	static public function get_new_author_info($username)
 	{
 		global $db;

@@ -39,6 +39,7 @@ class phpbb_gallery_image_upload
 	private $album_id = 0;
 	private $file_count = 0;
 	private $image_num = 0;
+	private $allow_comments = false;
 	private $exif_status = false;
 	private $exif_data = false;
 	private $username = '';
@@ -283,7 +284,7 @@ class phpbb_gallery_image_upload
 			'image_album_id'		=> $this->album_id,
 			'image_status'			=> phpbb_gallery_image::STATUS_ORPHAN,
 			'image_contest'			=> phpbb_gallery_image::NO_CONTEST,
-			'image_allow_comments'	=> true,
+			'image_allow_comments'	=> $this->allow_comments,
 			'image_desc'			=> '',
 			'image_desc_uid'		=> '',
 			'image_desc_bitfield'	=> '',
@@ -319,6 +320,11 @@ class phpbb_gallery_image_upload
 	public function set_rotating($data)
 	{
 		$this->file_rotating = array_map('intval', $data);
+	}
+
+	public function set_allow_comments($value)
+	{
+		$this->allow_comments = $value;
 	}
 
 	public function set_descriptions($descs)
@@ -397,7 +403,8 @@ class phpbb_gallery_image_upload
 
 		$sql = 'SELECT *
 			FROM ' . GALLERY_IMAGES_TABLE . '
-			WHERE ' . $db->sql_in_set('image_id', $image_ids);
+			WHERE image_status = ' . phpbb_gallery_image::STATUS_ORPHAN . '
+				AND ' . $db->sql_in_set('image_id', $image_ids);
 		$result = $db->sql_query($sql);
 
 		while ($row = $db->sql_fetchrow($result))
@@ -410,19 +417,6 @@ class phpbb_gallery_image_upload
 			}
 		}
 		$db->sql_freeresult($result);
-	}
-
-	/**
-	* Generate some kind of check so users only complete the uplaod for their images
-	*/
-	public function generate_hidden_fields()
-	{
-		$checks = array();
-		foreach ($this->images as $image_id)
-		{
-			$checks[] = $image_id . '$' . substr($this->image_data[$image_id]['image_filename'], 0, 8);
-		}
-		return $checks;
 	}
 
 	/**
@@ -451,5 +445,18 @@ class phpbb_gallery_image_upload
 		}
 
 		return ($get_types) ? $types : $extensions;
+	}
+
+	/**
+	* Generate some kind of check so users only complete the uplaod for their images
+	*/
+	public function generate_hidden_fields()
+	{
+		$checks = array();
+		foreach ($this->images as $image_id)
+		{
+			$checks[] = $image_id . '$' . substr($this->image_data[$image_id]['image_filename'], 0, 8);
+		}
+		return $checks;
 	}
 }

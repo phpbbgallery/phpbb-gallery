@@ -40,6 +40,13 @@
 				<dd id="username"><input class="inputbox autowidth" type="text" tabindex="1" name="username" value="{USERNAME}" size="60" maxlength="32" /></dd>
 			</dl>
 			<!-- ENDIF -->
+			<!-- IF S_COMMENTS_ENABLED -->
+				<dl>
+					<dt><label for="allow_comments">{L_COMMENTS}:</label></dt>
+					<dd><input type="checkbox" class="checkbox" name="allow_comments" id="allow_comments"<!-- IF S_ALLOW_COMMENTS --> checked="checked"<!-- ENDIF --> value="1" /> <label for="allow_comments">{L_ALLOW_COMMENTS}</label></dd>
+				</dl>
+			<!-- ENDIF -->
+			<!-- IF not S_USER_LOGGED_IN or S_COMMENTS_ENABLED --><hr /><!-- ENDIF -->
 			<dl>
 				<dt><label>{L_MAX_DIMENSIONS}:</label></dt>
 				<dd>{L_FILE_SIZE}: {S_MAX_FILESIZE}</dd>
@@ -93,24 +100,8 @@
 
 <!-- INCLUDE gallery/posting_javascript.html -->
 
-<script type="text/javascript">
-//<![CDATA[
-	set_text_field(0);
-//]]>
-</script>
+<h2><!-- IF U_VIEW_IMAGE --><a href="{U_VIEW_IMAGE}">{IMAGE_NAME}</a><!-- ELSE --><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a><!-- ENDIF --></h2>
 
-	<h2><!-- IF U_VIEW_IMAGE --><a href="{U_VIEW_IMAGE}">{IMAGE_NAME}</a><!-- ELSE --><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a><!-- ENDIF --></h2>
-
-	<!-- IF U_IMAGE -->
-	<div class="post bg2">
-		<div class="inner">
-			<span class="corners-top"><span></span></span>
-			<div style="text-align: center; padding: 20px;">
-				<a href="{U_IMAGE}"<!-- IF S_GP_HIGHSLIDE --> class="highslide" onclick="return hs.expand(this)"<!-- ELSEIF S_GP_LYTEBOX --> rel="lytebox" class="image-resize"<!-- ENDIF -->><img src="{U_IMAGE}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-height: {IMAGE_RSZ_HEIGHT}px; max-width: {IMAGE_RSZ_WIDTH}px;" /></a></div>
-			<span class="corners-bottom"><span></span></span>
-		</div>
-	</div>
-	<!-- ENDIF -->
 <form id="postform" action="{S_ALBUM_ACTION}" method="post">
 
 <div class="panel" id="postingbox">
@@ -151,26 +142,23 @@
 					<dd class="simulate-dt"><label for="message_{image.S_ROW_COUNT}">{L_IMAGE_DESC}:</label></dd>
 					<dd class="simulate-dd" id="desc_length_{image.S_ROW_COUNT}">{L_DESCRIPTION_LENGTH}</dd>
 					<dd class="simulate-dd"><textarea name="message[{image.S_ROW_COUNT}]" id="message_{image.S_ROW_COUNT}" rows="4" cols="76" tabindex="3" onchange="set_text_field({image.S_ROW_COUNT});<!-- IF image.S_FIRST_ROW --> update_all('message');<!-- ENDIF -->" onselect="set_text_field({image.S_ROW_COUNT});<!-- IF image.S_FIRST_ROW --> update_all('message');<!-- ENDIF --> storeCaret(this);" onclick="set_text_field({image.S_ROW_COUNT});<!-- IF image.S_FIRST_ROW --> update_all('message');<!-- ENDIF --> storeCaret(this);" onkeyup="set_text_field({image.S_ROW_COUNT});<!-- IF image.S_FIRST_ROW --> update_all('message');<!-- ENDIF --> storeCaret(this);" class="inputbox">{image.IMAGE_DESC}</textarea></dd>
+					<!-- IF S_ALLOW_ROTATE -->
 					<dd class="simulate-dt"><label for="rotate_{image.S_ROW_COUNT}_0">{L_ROTATE_IMAGE}:</label></dd>
 					<dd class="simulate-dd"><input type="radio" name="rotate[{image.S_ROW_COUNT}]" id="rotate_{image.S_ROW_COUNT}_0" value="0" checked="checked" /> <label for="rotate_{image.S_ROW_COUNT}_0">{L_ROTATE_NONE}</label> &nbsp;
 						<input type="radio" name="rotate[{image.S_ROW_COUNT}]" id="rotate_{image.S_ROW_COUNT}_270" value="270" /> <label for="rotate_{image.S_ROW_COUNT}_270">{L_ROTATE_RIGHT}</label> &nbsp;
 						<input type="radio" name="rotate[{image.S_ROW_COUNT}]" id="rotate_{image.S_ROW_COUNT}_180" value="180" /> <label for="rotate_{image.S_ROW_COUNT}_180">{L_ROTATE_UPSIDEDOWN}</label> &nbsp;
 						<input type="radio" name="rotate[{image.S_ROW_COUNT}]" id="rotate_{image.S_ROW_COUNT}_90" value="90" /> <label for="rotate_{image.S_ROW_COUNT}_90">{L_ROTATE_LEFT}</label></dd>
+					<!-- ENDIF -->
 				</dl>
 			<!-- END image -->
+		</fieldset>
+	<span class="corners-bottom"><span></span></span></div>
+</div>
 
-			<!-- IF S_EDIT and S_ALLOW_ROTATE -->
-				<dl id="upload_field_{upload_image.S_ROW_COUNT}">
-					<dt><label for="rotate">{L_ROTATE_IMAGE}:</label></dt>
-					<dd><input type="radio" name="rotate" id="rotate_0" value="0" checked="checked" /> <label for="rotate_0">{L_ROTATE_NONE}</label> &nbsp;
-						<input type="radio" name="rotate" id="rotate_270" value="270" /> <label for="rotate_270">{L_ROTATE_RIGHT}</label> &nbsp;
-						<input type="radio" name="rotate" id="rotate_180" value="180" /> <label for="rotate_180">{L_ROTATE_UPSIDEDOWN}</label> &nbsp;
-						<input type="radio" name="rotate" id="rotate_90" value="90" /> <label for="rotate_90">{L_ROTATE_LEFT}</label></dd>
-				</dl>
-			<!-- ENDIF -->
-
-			<!-- IF S_MOVE_PERSONAL or S_COMMENTS_ENABLED or S_CHANGE_AUTHOR --><hr /><!-- ENDIF -->
-
+<!-- IF S_MOVE_PERSONAL or S_COMMENTS_ENABLED or S_CHANGE_AUTHOR -->
+<div class="panel">
+	<div class="inner"><span class="corners-top"><span></span></span>
+		<fieldset class="fields1">
 			<!-- IF S_MOVE_PERSONAL -->
 				<dl>
 					<dt><label for="move_to_personal">{L_MOVE_TO_PERSONAL}:</label></dt>
@@ -192,6 +180,13 @@
 		</fieldset>
 	<span class="corners-bottom"><span></span></span></div>
 </div>
+<!-- ENDIF -->
+
+<script type="text/javascript">
+//<![CDATA[
+	set_text_field(0);
+//]]>
+</script>
 
 <div class="panel bg2">
 	<div class="inner"><span class="corners-top"><span></span></span>

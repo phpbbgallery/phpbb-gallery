@@ -154,6 +154,7 @@ $lang = array_merge($lang, array(
 	'MAX_HEIGHT'					=> 'Maximum image height',
 	'MAX_WIDTH'						=> 'Maximum image width',
 	'MISSING_COMMENT'				=> 'No Message entered',
+	'MISSING_IMAGE_NAME'			=> 'You must specify a name when editing an image.',
 	'MISSING_MODE'					=> 'No mode selected',
 	'MISSING_REPORT_REASON'			=> 'You need to mention a reason, to report an image.',
 	'MISSING_SLIDESHOW_PLUGIN'		=> 'No slideshow-plugin found. Contact the board-administration.',
