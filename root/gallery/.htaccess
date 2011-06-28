@@ -1,4 +1,4 @@
 <Files "common.php">
-Order Allow,Deny
-Deny from All
+	Order Allow,Deny
+	Deny from All
 </Files>

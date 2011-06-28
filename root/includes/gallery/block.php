@@ -255,6 +255,13 @@ class phpbb_gallery_block
 		$this->sql_where_auth = '(';
 		$this->sql_where_auth .= ((!empty($this->auth_view)) ? '(' . $db->sql_in_set('image_album_id', $this->auth_view) . ' AND image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . ((empty($this->users)) ? ' AND image_contest = ' . phpbb_gallery_image::NO_CONTEST : '') . ')' : '');
 		$this->sql_where_auth .= ((!empty($this->auth_moderate)) ? ((!empty($this->auth_view)) ? ' OR ' : '') . '(' . $db->sql_in_set('image_album_id', $this->auth_moderate, false, true) . ')' : '');
+
+		if ($this->sql_where_auth == '(')
+		{
+			// User does not have permissions for any album, so we jsut return with 1=0 so there is no result:
+			$this->sql_where_auth = '0 = 1';
+			return;
+		}
 		$this->sql_where_auth .= (!empty($this->users)) ? ') AND ' . $db->sql_in_set('image_user_id', $this->users) : ')';
 	}
 
@@ -331,7 +338,7 @@ class phpbb_gallery_block
 					),
 				),
 
-				'WHERE'			=> $db->sql_in_set('c.contest_album_id', array_unique(array_merge($this->auth_view, $this->auth_moderate))) . ' AND c.contest_marked = ' . phpbb_gallery_image::NO_CONTEST,
+				'WHERE'			=> $db->sql_in_set('c.contest_album_id', array_unique(array_merge($this->auth_view, $this->auth_moderate)), false, true) . ' AND c.contest_marked = ' . phpbb_gallery_image::NO_CONTEST,
 				'ORDER_BY'		=> 'c.contest_start + c.contest_end DESC',
 			);
 			$sql = $db->sql_build_query('SELECT', $sql_array);
