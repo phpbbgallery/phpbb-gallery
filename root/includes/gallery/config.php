@@ -223,6 +223,7 @@ class phpbb_gallery_config
 		'pegas_per_page'		=> 15,
 		'profile_user_images'	=> true,
 		'profile_pega'			=> true,
+		'prune_orphan_time'		=> 0,
 
 		'rrc_gindex_columns'	=> 4,
 		'rrc_gindex_comments'	=> false,

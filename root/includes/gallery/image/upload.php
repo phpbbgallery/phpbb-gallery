@@ -300,6 +300,33 @@ class phpbb_gallery_image_upload
 	}
 
 	/**
+	* Delete orphan uploaded files, which are older than half an hour...
+	*/
+	static public function prune_orphan($time = 0)
+	{
+		global $db;
+		$prunetime = (int) (($time) ? $time : (time() - 1800));
+
+		$sql = 'SELECT image_id, image_filename
+			FROM ' . GALLERY_IMAGES_TABLE . '
+			WHERE image_status = ' . phpbb_gallery_image::STATUS_ORPHAN . '
+				AND image_time < ' . $prunetime;
+		$result = $db->sql_query($sql);
+		$images = $filenames = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$images[] = (int) $row['image_id'];
+			$filenames[(int) $row['image_id']] = $row['image_filename'];
+		}
+		$db->sql_freeresult($result);
+
+		if ($images)
+		{
+			phpbb_gallery_image::delete_images($images, $filenames, false);
+		}
+	}
+
+	/**
 	*
 	*/
 	public function new_error($error_msg)
