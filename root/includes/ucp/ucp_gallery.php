@@ -210,6 +210,7 @@ class ucp_gallery
 				'personal_album_id'	=> $album_id,
 			));
 
+			$this->subscribe_pegas($album_id);
 			phpbb_gallery_config::inc('num_pegas', 1);
 
 			// Update the config for the statistic on the index
@@ -443,6 +444,8 @@ class ucp_gallery
 			}
 			$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
 			$redirect_album_id = $db->sql_nextid();
+
+			$this->subscribe_pegas($redirect_album_id);
 
 			$cache->destroy('_albums');
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
@@ -1099,5 +1102,21 @@ class ucp_gallery
 			'DISP_FAKE_THUMB'			=> true,
 			'FAKE_THUMB_SIZE'			=> phpbb_gallery_config::get('mini_thumbnail_size'),
 		));
+	}
+
+	function subscribe_pegas($album_id)
+	{
+		global $db;
+
+		$sql = 'SELECT user_id
+			FROM ' . GALLERY_USERS_TABLE . '
+			WHERE subscribe_pegas = 1';
+		$result = $db->sql_query($sql);
+
+		while ($row = $db->sql_fetchrow($result))
+		{
+			phpbb_gallery_notification::add_albums($album_id, (int) $row['user_id']);
+		}
+		$db->sql_freeresult($result);
 	}
 }

@@ -397,6 +397,11 @@ class install_update extends module
 					array(GALLERY_RATES_TABLE, 'rate_point'),
 				));
 			break;
+			case '1.1.0-A1':
+				$umil->table_column_add(array(
+					array(GALLERY_USERS_TABLE, 'subscribe_pegas', array('TINT:1', 0)),
+				));
+			break;
 		}
 
 		$template->assign_vars(array(
@@ -513,6 +518,7 @@ class install_update extends module
 				//@todo: Move on bbcode-change or creating all modules
 				//$reparse_modules_bbcode = true;
 
+			case '1.1.0-A1':
 			break;
 		}
 
@@ -591,6 +597,7 @@ class install_update extends module
 					* Refresh BBCode
 					add_bbcode('album');
 					*/
+				case '1.1.0-A1':
 				break;
 			}
 
@@ -607,6 +614,7 @@ class install_update extends module
 			$modules = $this->gallery_config_options;
 			switch (phpbb_gallery_config::get('version'))
 			{
+				case '1.1.0-A1':
 				case '1.0.6':
 				case '1.0.5.1':
 				case '1.0.5':
