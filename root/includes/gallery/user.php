@@ -101,16 +101,17 @@ class phpbb_gallery_user
 	/**
 	* Get user-setting, if the user does not have his own settings we fall back to default.
 	*
-	* @param	string	$key	Column name from the users-table
+	* @param	string	$key		Column name from the users-table
+	* @param	bool	$default	Load default value, if user has no entry
 	* @return	mixed			Returns the value of the column, it it does not exist it returns false.
 	*/
-	public function get_data($key)
+	public function get_data($key, $default = true)
 	{
 		if (isset($this->data[$key]))
 		{
 			return $this->data[$key];
 		}
-		elseif (isset(self::$default_values[$key]))
+		elseif ($default && isset(self::$default_values[$key]))
 		{
 			return self::$default_values[$key];
 		}
@@ -354,6 +355,7 @@ class phpbb_gallery_user
 				case 'watch_own':
 				case 'watch_favo':
 				case 'watch_com':
+				case 'subscribe_pegas':
 					$validated_data[$name] = (bool) $value;
 				break;
 
@@ -387,6 +389,8 @@ class phpbb_gallery_user
 		'watch_favo'		=> false,
 		// Shall the user be subscribed if he comments on an images?
 		'watch_com'			=> false,
+		// Automatically subscribe user to new personal galleries?
+		'subscribe_pegas'	=> false,
 	);
 
 	/**
