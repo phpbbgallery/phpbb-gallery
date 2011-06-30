@@ -431,7 +431,7 @@ else
 
 			foreach ($process->images as $image_id)
 			{
-				$process->update_image($image_id, !phpbb_gallery::$auth->acl_check('i_approve', $album_id, $album_data['album_user_id']));
+				$process->update_image($image_id, !phpbb_gallery::$auth->acl_check('i_approve', $album_id, $album_data['album_user_id']), $album_data['album_contest']);
 			}
 
 			$message = '';

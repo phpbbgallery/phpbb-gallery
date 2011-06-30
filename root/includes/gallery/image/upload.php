@@ -98,7 +98,7 @@ class phpbb_gallery_image_upload
 	/**
 	*
 	*/
-	public function update_image($image_id, $needs_approval = false)
+	public function update_image($image_id, $needs_approval = false, $is_in_contest = false)
 	{
 		if ($this->file_limit && ($this->uploaded_files >= $this->file_limit))
 		{
@@ -116,6 +116,7 @@ class phpbb_gallery_image_upload
 
 		$sql_ary = array(
 			'image_status'				=> ($needs_approval) ? phpbb_gallery_image::STATUS_UNAPPROVED : phpbb_gallery_image::STATUS_APPROVED,
+			'image_contest'				=> ($is_in_contest) ? phpbb_gallery_image::IN_CONTEST : phpbb_gallery_image::NO_CONTEST,
 			'image_desc'				=> $message_parser->message,
 			'image_desc_uid'			=> $message_parser->bbcode_uid,
 			'image_desc_bitfield'		=> $message_parser->bbcode_bitfield,
