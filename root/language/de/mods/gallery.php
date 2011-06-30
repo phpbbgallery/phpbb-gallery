@@ -128,6 +128,7 @@ $lang = array_merge($lang, array(
 	'FILETYPES_GIF'					=> 'gif',
 	'FILETYPES_JPG'					=> 'jpg',
 	'FILETYPES_PNG'					=> 'png',
+	'FILETYPES_ZIP'					=> 'zip',
 
 	'IMAGE'								=> 'Bild',
 	'IMAGE_#'							=> '1 Bild',
@@ -280,6 +281,11 @@ $lang = array_merge($lang, array(
 		0	=> 'Du darfst <strong>keine</strong> Bilder hochladen.<br />Für weitere Information wende dich bitte an einen Administrator.',
 		1	=> 'Du darfst nur <strong>1</strong> Bild hochladen.<br />Für weitere Information wende dich bitte an einen Administrator.',
 		2	=> 'Du darfst nur <strong>%s</strong> Bilder hochladen.<br />Für weitere Information wende dich bitte an einen Administrator.',
+	),
+	'USER_REACHED_QUOTA_SHORT'		=> array(
+		0	=> 'Du darfst <strong>keine</strong> Bilder hochladen.',
+		1	=> 'Du darfst nur <strong>1</strong> Bild hochladen.',
+		2	=> 'Du darfst nur <strong>%s</strong> Bilder hochladen.',
 	),
 	'USERNAME_BEGINS_WITH'			=> 'Benutzername fängt an mit',
 	'USERS_PERSONAL_ALBUMS'			=> 'Persönliche Alben der Mitglieder',

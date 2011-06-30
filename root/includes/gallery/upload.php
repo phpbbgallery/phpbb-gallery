@@ -17,18 +17,19 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
-class phpbb_gallery_image_upload
+class phpbb_gallery_upload
 {
 	/**
-	* phpBB Upload-Form-Object, File-Object, ExifData-Object
+	* Objects: phpBB Upload, 2 Files, ExifData and Image-Functions
 	*/
-	private $form = null;
+	private $upload = null;
 	private $file = null;
+	private $zip_file = null;
 	private $exif = null;
 	private $tools = null;
 
 	/**
-	*
+	* Basic variables...
 	*/
 	public $loaded_files = 0;
 	public $uploaded_files = 0;
@@ -42,13 +43,14 @@ class phpbb_gallery_image_upload
 	private $allow_comments = false;
 	private $exif_status = false;
 	private $exif_data = false;
+	private $sent_quota_error = false;
 	private $username = '';
 	private $file_descriptions = array();
 	private $file_names = array();
 	private $file_rotating = array();
 
 	/**
-	*
+	* Constructor
 	*/
 	public function __construct($album_id, $num_files = 0)
 	{
@@ -58,8 +60,8 @@ class phpbb_gallery_image_upload
 		{
 			phpbb_gallery_url::_include('functions_upload', 'phpbb');
 		}
-		$this->form = new fileupload();
-		$this->form->fileupload('', self::get_allowed_types(), (4 * phpbb_gallery_config::get('max_filesize')));
+		$this->upload = new fileupload();
+		$this->upload->fileupload('', self::get_allowed_types(), (4 * phpbb_gallery_config::get('max_filesize')));
 
 		$this->tools = new phpbb_gallery_image_file(phpbb_gallery_config::get('gdlib_version'));
 
@@ -69,16 +71,17 @@ class phpbb_gallery_image_upload
 	}
 
 	/**
-	*
+	* Upload a file and then call the function for reading the zip or preparing the image
 	*/
 	public function upload_file($file_count)
 	{
 		if ($this->file_limit && ($this->uploaded_files >= $this->file_limit))
 		{
+			$this->quota_error();
 			return false;
 		}
 		$this->file_count = (int) $file_count;
-		$this->file = $this->form->form_upload('image_file_' . $this->file_count);
+		$this->file = $this->upload->form_upload('image_file_' . $this->file_count);
 		if (!$this->file->uploadname)
 		{
 			return false;
@@ -86,17 +89,117 @@ class phpbb_gallery_image_upload
 		$this->exif_status = false;
 		$this->exif_data = false;
 
-		$image_id = $this->prepare_file();
-
-		if ($image_id)
+		if ($this->file->extension == 'zip')
 		{
-			$this->uploaded_files++;
-			$this->images[] = (int) $image_id;
+			$this->zip_file = $this->file;
+			$this->upload_zip();
+		}
+		else
+		{
+			$image_id = $this->prepare_file();
+
+			if ($image_id)
+			{
+				$this->uploaded_files++;
+				$this->images[] = (int) $image_id;
+			}
 		}
 	}
 
 	/**
-	*
+	* Upload a zip file and save the images into the import/ directory.
+	*/
+	public function upload_zip()
+	{
+		if (!class_exists('compress_zip'))
+		{
+			phpbb_gallery_url::_include('functions_compress', 'phpbb');
+		}
+
+		global $user;
+		$tmp_dir = phpbb_gallery_url::path('import') . 'tmp_' . md5(unique_id()) . '/';
+
+		$this->zip_file->clean_filename('unique_ext'/*, $user->data['user_id'] . '_'*/);
+		$this->zip_file->move_file(substr(phpbb_gallery_url::path('import_noroot'), 0, -1), false, false, CHMOD_ALL);
+		if (!empty($this->zip_file->error))
+		{
+			global $user;
+
+			$this->zip_file->remove();
+			$this->new_error($user->lang('UPLOAD_ERROR', $this->zip_file->uploadname, implode('<br />&raquo; ', $this->zip_file->error)));
+			return false;
+		}
+
+		$compress = new compress_zip('r', $this->zip_file->destination_file);
+		$compress->extract($tmp_dir);
+		$compress->close();
+
+		$this->zip_file->remove();
+
+		// Remove zip from allowed extensions
+		$this->upload->set_allowed_extensions(self::get_allowed_types(false, true));
+
+		$this->read_zip_folder($tmp_dir);
+
+		// Readd zip from allowed extensions
+		$this->upload->set_allowed_extensions(self::get_allowed_types());
+	}
+
+	/**
+	* Read a folder from the zip, "upload" the images and remove the rest.
+	*/
+	public function read_zip_folder($current_dir)
+	{
+		$handle = opendir($current_dir);
+		while ($file = readdir($handle))
+		{
+			if ($file == '.' || $file == '..') continue;
+			if (is_dir($current_dir . $file))
+			{
+				$this->read_zip_folder($current_dir . $file . '/');
+			}
+			else if (in_array(utf8_substr(strtolower($file), utf8_strpos($file, '.') + 1), self::get_allowed_types(false, true)))
+			{
+				if (!$this->file_limit || ($this->uploaded_files < $this->file_limit))
+				{
+					$this->file = $this->upload->local_upload($current_dir . $file);
+					if ($this->file->error)
+					{
+						$this->new_error($user->lang('UPLOAD_ERROR', $this->file->uploadname, implode('<br />&raquo; ', $this->file->error)));
+					}
+					$image_id = $this->prepare_file();
+
+					if ($image_id)
+					{
+						$this->uploaded_files++;
+						$this->images[] = (int) $image_id;
+					}
+					else
+					{
+						if ($this->file->error)
+						{
+							$this->new_error($user->lang('UPLOAD_ERROR', $this->file->uploadname, implode('<br />&raquo; ', $this->file->error)));
+						}
+					}
+				}
+				else
+				{
+					$this->quota_error();
+					@unlink($current_dir . $file);
+				}
+
+			}
+			else
+			{
+				@unlink($current_dir . $file);
+			}
+		}
+		closedir($handle);
+		@rmdir($current_dir);
+	}
+
+	/**
+	* Update image information in the database: name, description, status, contest, ...
 	*/
 	public function update_image($image_id, $needs_approval = false, $is_in_contest = false)
 	{
@@ -150,6 +253,9 @@ class phpbb_gallery_image_upload
 		return true;
 	}
 
+	/**
+	* Prepare file on upload: rotate, resize and read exif
+	*/
 	public function prepare_file()
 	{
 		// Rename the file, move it to the correct location and set chmod
@@ -164,6 +270,7 @@ class phpbb_gallery_image_upload
 			return false;
 		}
 		@chmod($this->file->destination_file, 0777);
+		var_dump($this->file->destination_file);
 
 		if (in_array($this->file->extension, array('jpg', 'jpeg')))
 		{
@@ -212,7 +319,7 @@ class phpbb_gallery_image_upload
 			global $user;
 
 			$this->file->remove();
-			$this->new_error($user->lang('UPLOAD_ERROR', $image_file->uploadname, $user->lang['BAD_UPLOAD_FILE_SIZE']));
+			$this->new_error($user->lang('UPLOAD_ERROR', $this->file->uploadname, $user->lang['BAD_UPLOAD_FILE_SIZE']));
 			return false;
 		}
 
@@ -225,6 +332,10 @@ class phpbb_gallery_image_upload
 		return $this->file_to_database();
 	}
 
+	/**
+	* Prepare file on second upload step.
+	* You can still rotate the image there.
+	*/
 	public function prepare_file_update($image_id)
 	{
 		if (($this->image_data[$image_id]['image_has_exif'] == phpbb_gallery_exif::AVAILABLE) ||
@@ -327,9 +438,15 @@ class phpbb_gallery_image_upload
 		}
 	}
 
-	/**
-	*
-	*/
+	public function quota_error()
+	{
+		if ($this->sent_quota_error) return;
+
+		global $user;
+		$this->new_error($user->lang('USER_REACHED_QUOTA_SHORT', $this->file_limit));
+		$this->sent_quota_error = true;
+	}
+
 	public function new_error($error_msg)
 	{
 		$this->errors[] = $error_msg;
@@ -450,7 +567,7 @@ class phpbb_gallery_image_upload
 	/**
 	* Get an array of allowed file types or file extensions
 	*/
-	static public function get_allowed_types($get_types = false)
+	static public function get_allowed_types($get_types = false, $ignore_zip = false)
 	{
 		global $user;
 
@@ -470,6 +587,11 @@ class phpbb_gallery_image_upload
 		{
 			$types[] = $user->lang['FILETYPES_PNG'];
 			$extensions[] = 'png';
+		}
+		if (!$ignore_zip && phpbb_gallery_config::get('allow_zip'))
+		{
+			$types[] = $user->lang['FILETYPES_ZIP'];
+			$extensions[] = 'zip';
 		}
 
 		return ($get_types) ? $types : $extensions;

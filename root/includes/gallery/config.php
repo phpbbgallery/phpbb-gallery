@@ -164,6 +164,7 @@ class phpbb_gallery_config
 		'allow_rates'		=> true,
 		'allow_resize'		=> true,
 		'allow_rotate'		=> true,
+		'allow_zip'			=> false,
 
 		'captcha_comment'		=> true,
 		'captcha_upload'		=> true,

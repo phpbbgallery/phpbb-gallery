@@ -433,6 +433,8 @@ $lang = array_merge($lang, array(
 	'WATERMARK_SOURCE_EXP'		 	=> 'Relative to your phpBB rootpath',
 	'WATERMARK_WIDTH'				=> 'Minimum-width for watermark',
 	'WATERMARK_WIDTH_EXP'			=> 'To avoid small images from being covered by the watermark, you may enter a minimum width of the image here. If the image is smaller, the watermark will not be viewed.',
+
+	'ZIP_ALLOWED'					=> 'Allowed to upload ZIP archives',
 ));
 
 /**

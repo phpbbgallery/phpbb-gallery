@@ -128,6 +128,7 @@ $lang = array_merge($lang, array(
 	'FILETYPES_GIF'					=> 'gif',
 	'FILETYPES_JPG'					=> 'jpg',
 	'FILETYPES_PNG'					=> 'png',
+	'FILETYPES_ZIP'					=> 'zip',
 
 	'IMAGE'								=> 'Image',
 	'IMAGE_#'							=> '1 image',
@@ -280,6 +281,11 @@ $lang = array_merge($lang, array(
 		0	=> 'You are not allowed to upload <strong>any</strong> images.<br />Please contact the administrator for more information.',
 		1	=> 'You are not allowed to upload more than <strong>1</strong> image.<br />Please contact the administrator for more information.',
 		2	=> 'You are not allowed to upload more than <strong>%s</strong> images.<br />Please contact the administrator for more information.',
+	),
+	'USER_REACHED_QUOTA_SHORT'		=> array(
+		0	=> 'You are not allowed to upload <strong>any</strong> images.',
+		1	=> 'You are not allowed to upload more than <strong>1</strong> image.',
+		2	=> 'You are not allowed to upload more than <strong>%s</strong> images.',
 	),
 	'USERNAME_BEGINS_WITH'			=> 'Username begins with',
 	'USERS_PERSONAL_ALBUMS'			=> 'Users Personal Albums',
