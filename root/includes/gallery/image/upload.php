@@ -43,6 +43,7 @@ class phpbb_gallery_image_upload
 	private $allow_comments = false;
 	private $exif_status = false;
 	private $exif_data = false;
+	private $sent_quota_error = false;
 	private $username = '';
 	private $file_descriptions = array();
 	private $file_names = array();
@@ -76,6 +77,7 @@ class phpbb_gallery_image_upload
 	{
 		if ($this->file_limit && ($this->uploaded_files >= $this->file_limit))
 		{
+			$this->quota_error();
 			return false;
 		}
 		$this->file_count = (int) $file_count;
@@ -137,34 +139,64 @@ class phpbb_gallery_image_upload
 		// Remove zip from allowed extensions
 		$this->form->set_allowed_extensions(self::get_allowed_types(false, true));
 
-		$handle = opendir($tmp_dir);
+		$this->read_zip_folder($tmp_dir);
+
+		// Readd zip from allowed extensions
+		$this->form->set_allowed_extensions(self::get_allowed_types());
+	}
+
+	public function read_zip_folder($current_dir)
+	{
+		$handle = opendir($current_dir);
 		while ($file = readdir($handle))
 		{
-			if (is_dir($tmp_dir . $file))
+			if ($file == '.' || $file == '..') continue;
+			if (is_dir($current_dir . $file))
 			{
-				continue;
+				$this->read_zip_folder($current_dir . $file . '/');
 			}
-			if (((substr(strtolower($file), -4) == '.png') && phpbb_gallery_config::get('allow_png')) ||
+			else if (((substr(strtolower($file), -4) == '.png') && phpbb_gallery_config::get('allow_png')) ||
 			((substr(strtolower($file), -4) == '.gif') && phpbb_gallery_config::get('allow_gif')) ||
 			((substr(strtolower($file), -4) == '.jpg') && phpbb_gallery_config::get('allow_jpg')) ||
 			((substr(strtolower($file), -5) == '.jpeg') && phpbb_gallery_config::get('allow_jpg'))
 			)
 			{
-				$this->file = $this->form->local_upload($tmp_dir . $file);
-				$image_id = $this->prepare_file();
-
-				if ($image_id)
+				if (!$this->file_limit || ($this->uploaded_files < $this->file_limit))
 				{
-					$this->uploaded_files++;
-					$this->images[] = (int) $image_id;
+					$this->file = $this->form->local_upload($current_dir . $file);
+					if ($this->file->error)
+					{
+						$this->new_error($user->lang('UPLOAD_ERROR', $this->file->uploadname, implode('<br />&raquo; ', $this->file->error)));
+					}
+					$image_id = $this->prepare_file();
+
+					if ($image_id)
+					{
+						$this->uploaded_files++;
+						$this->images[] = (int) $image_id;
+					}
+					else
+					{
+						if ($this->file->error)
+						{
+							$this->new_error($user->lang('UPLOAD_ERROR', $this->file->uploadname, implode('<br />&raquo; ', $this->file->error)));
+						}
+					}
 				}
+				else
+				{
+					$this->quota_error();
+					@unlink($current_dir . $file);
+				}
+
+			}
+			else
+			{
+				@unlink($current_dir . $file);
 			}
 		}
 		closedir($handle);
-		@rmdir($tmp_dir);
-
-		// Readd zip from allowed extensions
-		$this->form->set_allowed_extensions(self::get_allowed_types());
+		@rmdir($current_dir);
 	}
 
 	/**
@@ -236,6 +268,7 @@ class phpbb_gallery_image_upload
 			return false;
 		}
 		@chmod($this->file->destination_file, 0777);
+		var_dump($this->file->destination_file);
 
 		if (in_array($this->file->extension, array('jpg', 'jpeg')))
 		{
@@ -284,7 +317,7 @@ class phpbb_gallery_image_upload
 			global $user;
 
 			$this->file->remove();
-			$this->new_error($user->lang('UPLOAD_ERROR', $image_file->uploadname, $user->lang['BAD_UPLOAD_FILE_SIZE']));
+			$this->new_error($user->lang('UPLOAD_ERROR', $this->file->uploadname, $user->lang['BAD_UPLOAD_FILE_SIZE']));
 			return false;
 		}
 
@@ -399,9 +432,15 @@ class phpbb_gallery_image_upload
 		}
 	}
 
-	/**
-	*
-	*/
+	public function quota_error()
+	{
+		if ($this->sent_quota_error) return;
+
+		global $user;
+		$this->new_error($user->lang('USER_REACHED_QUOTA_SHORT', $this->file_limit));
+		$this->sent_quota_error = true;
+	}
+
 	public function new_error($error_msg)
 	{
 		$this->errors[] = $error_msg;
@@ -543,7 +582,7 @@ class phpbb_gallery_image_upload
 			$types[] = $user->lang['FILETYPES_PNG'];
 			$extensions[] = 'png';
 		}
-		if (!$ignore_zip && true)//phpbb_gallery_config::get('allow_zip'))
+		if (!$ignore_zip && phpbb_gallery_config::get('allow_zip'))
 		{
 			$types[] = $user->lang['FILETYPES_ZIP'];
 			$extensions[] = 'zip';

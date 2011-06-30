@@ -473,6 +473,7 @@ else
 
 		$s_can_rotate = (phpbb_gallery_config::get('allow_rotate') && function_exists('imagerotate'));
 		$template->assign_vars(array(
+			'ERROR'				=> $error,
 			'S_ALBUM_ACTION'	=> phpbb_gallery_url::append_sid('posting', "mode=upload_edit&amp;album_id=$album_id"),
 			'S_UPLOAD_EDIT'		=> true,
 			'S_ALLOW_ROTATE'	=> $s_can_rotate,

@@ -178,7 +178,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_VERSION'				=> 'Version der phpBB Gallery',//ja mit ll und y, da es sich um den MOD-Namen handelt
 	'GD_VERSION'					=> 'GD Version optimieren',
 	'GENERAL_ALBUM_SETTINGS'		=> 'Allgemeine Albumseinstellungen',
-	'GIF_ALLOWED'					=> 'Es ist erlaubt GIF- Dateien hochzuladen',
+	'GIF_ALLOWED'					=> 'Es ist erlaubt GIF-Dateien hochzuladen',
 	'GUPLOAD_DIR_SIZE'				=> 'Größe des upload/-Ordners',
 
 	'HACKING_ATTEMPT'				=> 'Hacking attempt!',
@@ -208,7 +208,7 @@ $lang = array_merge($lang, array(
 	'INHERIT_PERMISSIONS_ALBUM'		=> 'Berechtigung von einem anderem Album übernehmen',
 	'INHERIT_PERMISSIONS_VICTIM'	=> 'Berechtigung aus einer anderen Einstellung übernehmen',
 
-	'JPG_ALLOWED'					=> 'Es ist erlaubt JPG- Dateien hochzuladen',
+	'JPG_ALLOWED'					=> 'Es ist erlaubt JPG-Dateien hochzuladen',
 	'JPG_QUALITY'					=> 'JPG-Qualtität',
 	'JPG_QUALITY_EXP'				=> 'Wenn Bilder gedreht oder verkleinert werden, kann ihre Dateigröße danach größer sein als davor. Mit dieser Option kann die Qualtität verringert werden, um Speicherplatz zu sparen.',
 
@@ -303,7 +303,7 @@ $lang = array_merge($lang, array(
 	'PEGA_ALREADY_EXISTS'			=> '%s hat bereits ein persönliches Album.',
 	'PGALLERIES_PER_PAGE'			=> 'Anzahl der persönlichen Galerien pro Seite',
 	'PHPBB_INTEGRATION'				=> 'Integration in phpBB',
-	'PNG_ALLOWED'					=> 'Es ist erlaubt PNG- Dateien hochzuladen',
+	'PNG_ALLOWED'					=> 'Es ist erlaubt PNG-Dateien hochzuladen',
 	'PURGED_CACHE'					=> 'Cache geleert',
 	'PRUNE_ALBUMS'					=> 'Bilder aus Alben löschen',
 	'PRUNE_CHECK_OPTION'			=> 'Diese Option beim Löschen berücksichtigen.',
@@ -435,6 +435,8 @@ $lang = array_merge($lang, array(
 	'WATERMARK_SOURCE_EXP'			=> 'Releativer Pfad zum Root-Verzeichnis deines Forums',
 	'WATERMARK_WIDTH'				=> 'Mindestbreite',
 	'WATERMARK_WIDTH_EXP'			=> 'Um zu verhindern, dass kleine Bilder vollkommen vom Wasserzeichen verdeckt werden, kannst du hier eine Mindestbreite für das Bild angeben. Wenn das Bild kleiner ist, wird das Wasserzeichen nicht eingeblendet.',
+
+	'ZIP_ALLOWED'					=> 'Es ist erlaubt ZIP-Archive hochzuladen',
 ));
 
 /**

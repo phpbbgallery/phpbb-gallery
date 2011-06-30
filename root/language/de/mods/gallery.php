@@ -282,6 +282,11 @@ $lang = array_merge($lang, array(
 		1	=> 'Du darfst nur <strong>1</strong> Bild hochladen.<br />Für weitere Information wende dich bitte an einen Administrator.',
 		2	=> 'Du darfst nur <strong>%s</strong> Bilder hochladen.<br />Für weitere Information wende dich bitte an einen Administrator.',
 	),
+	'USER_REACHED_QUOTA_SHORT'		=> array(
+		0	=> 'Du darfst <strong>keine</strong> Bilder hochladen.',
+		1	=> 'Du darfst nur <strong>1</strong> Bild hochladen.',
+		2	=> 'Du darfst nur <strong>%s</strong> Bilder hochladen.',
+	),
 	'USERNAME_BEGINS_WITH'			=> 'Benutzername fängt an mit',
 	'USERS_PERSONAL_ALBUMS'			=> 'Persönliche Alben der Mitglieder',
 
