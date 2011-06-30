@@ -20,10 +20,11 @@ if (!defined('IN_PHPBB'))
 class phpbb_gallery_image_upload
 {
 	/**
-	* phpBB Upload-Form-Object, File-Object, ExifData-Object
+	* phpBB Upload-Form-Object, File-Object, ExifData-Object and more
 	*/
 	private $form = null;
 	private $file = null;
+	private $zip_file = null;
 	private $exif = null;
 	private $tools = null;
 
@@ -86,13 +87,84 @@ class phpbb_gallery_image_upload
 		$this->exif_status = false;
 		$this->exif_data = false;
 
-		$image_id = $this->prepare_file();
-
-		if ($image_id)
+		if ($this->file->extension == 'zip')
 		{
-			$this->uploaded_files++;
-			$this->images[] = (int) $image_id;
+			$this->zip_file = $this->file;
+			$this->upload_zip();
 		}
+		else
+		{
+			$image_id = $this->prepare_file();
+
+			if ($image_id)
+			{
+				$this->uploaded_files++;
+				$this->images[] = (int) $image_id;
+			}
+		}
+	}
+
+	/**
+	*
+	*/
+	public function upload_zip()
+	{
+		if (!class_exists('compress_zip'))
+		{
+			phpbb_gallery_url::_include('functions_compress', 'phpbb');
+		}
+
+		global $user;
+		$tmp_dir = phpbb_gallery_url::path('import') . 'tmp_' . md5(unique_id()) . '/';
+
+		$this->zip_file->clean_filename('unique_ext'/*, $user->data['user_id'] . '_'*/);
+		$this->zip_file->move_file(substr(phpbb_gallery_url::path('import_noroot'), 0, -1), false, false, CHMOD_ALL);
+		if (!empty($this->zip_file->error))
+		{
+			global $user;
+
+			$this->zip_file->remove();
+			$this->new_error($user->lang('UPLOAD_ERROR', $this->zip_file->uploadname, implode('<br />&raquo; ', $this->zip_file->error)));
+			return false;
+		}
+
+		$compress = new compress_zip('r', $this->zip_file->destination_file);
+		$compress->extract($tmp_dir);
+		$compress->close();
+
+		$this->zip_file->remove();
+
+		// Remove zip from allowed extensions
+		$this->form->set_allowed_extensions(self::get_allowed_types(false, true));
+
+		$handle = opendir($tmp_dir);
+		while ($file = readdir($handle))
+		{
+			if (is_dir($tmp_dir . $file))
+			{
+				continue;
+			}
+			if (((substr(strtolower($file), -4) == '.png') && phpbb_gallery_config::get('allow_png')) ||
+			((substr(strtolower($file), -4) == '.gif') && phpbb_gallery_config::get('allow_gif')) ||
+			((substr(strtolower($file), -4) == '.jpg') && phpbb_gallery_config::get('allow_jpg')) ||
+			((substr(strtolower($file), -5) == '.jpeg') && phpbb_gallery_config::get('allow_jpg'))
+			)
+			{
+				$this->file = $this->form->local_upload($tmp_dir . $file);
+				$image_id = $this->prepare_file();
+
+				if ($image_id)
+				{
+					$this->uploaded_files++;
+					$this->images[] = (int) $image_id;
+				}
+			}
+		}
+		closedir($handle);
+		@rmdir($tmp_dir);
+
+		// Readd zip from allowed extensions
+		$this->form->set_allowed_extensions(self::get_allowed_types());
 	}
 
 	/**
@@ -450,7 +522,7 @@ class phpbb_gallery_image_upload
 	/**
 	* Get an array of allowed file types or file extensions
 	*/
-	static public function get_allowed_types($get_types = false)
+	static public function get_allowed_types($get_types = false, $ignore_zip = false)
 	{
 		global $user;
 
@@ -470,6 +542,11 @@ class phpbb_gallery_image_upload
 		{
 			$types[] = $user->lang['FILETYPES_PNG'];
 			$extensions[] = 'png';
+		}
+		if (!$ignore_zip && true)//phpbb_gallery_config::get('allow_zip'))
+		{
+			$types[] = $user->lang['FILETYPES_ZIP'];
+			$extensions[] = 'zip';
 		}
 
 		return ($get_types) ? $types : $extensions;

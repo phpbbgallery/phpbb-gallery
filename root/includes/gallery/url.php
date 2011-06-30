@@ -104,6 +104,8 @@ class phpbb_gallery_url
 				return self::$phpbb_root_path . self::$phpbb_gallery_path . self::IMAGE_PATH . self::MEDIUM_PATH;
 			case 'import':
 				return self::$phpbb_root_path . self::$phpbb_gallery_path . self::IMAGE_PATH . self::IMPORT_PATH;
+			case 'import_noroot':
+				return self::$phpbb_gallery_path . self::IMAGE_PATH . self::IMPORT_PATH;
 		}
 
 		return false;
