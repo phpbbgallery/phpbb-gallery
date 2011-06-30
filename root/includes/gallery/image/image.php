@@ -136,6 +136,11 @@ class phpbb_gallery_image
 	{
 		global $db;
 
+		if (empty($images))
+		{
+			return;
+		}
+
 		if (!$skip_files)
 		{
 			// Delete the files from the disc...

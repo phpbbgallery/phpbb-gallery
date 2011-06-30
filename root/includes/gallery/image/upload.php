@@ -98,7 +98,7 @@ class phpbb_gallery_image_upload
 	/**
 	*
 	*/
-	public function update_image($image_id, $needs_approval = false)
+	public function update_image($image_id, $needs_approval = false, $is_in_contest = false)
 	{
 		if ($this->file_limit && ($this->uploaded_files >= $this->file_limit))
 		{
@@ -116,6 +116,7 @@ class phpbb_gallery_image_upload
 
 		$sql_ary = array(
 			'image_status'				=> ($needs_approval) ? phpbb_gallery_image::STATUS_UNAPPROVED : phpbb_gallery_image::STATUS_APPROVED,
+			'image_contest'				=> ($is_in_contest) ? phpbb_gallery_image::IN_CONTEST : phpbb_gallery_image::NO_CONTEST,
 			'image_desc'				=> $message_parser->message,
 			'image_desc_uid'			=> $message_parser->bbcode_uid,
 			'image_desc_bitfield'		=> $message_parser->bbcode_bitfield,
@@ -297,6 +298,33 @@ class phpbb_gallery_image_upload
 		$this->image_data[$image_id] = $sql_ary;
 
 		return $image_id;
+	}
+
+	/**
+	* Delete orphan uploaded files, which are older than half an hour...
+	*/
+	static public function prune_orphan($time = 0)
+	{
+		global $db;
+		$prunetime = (int) (($time) ? $time : (time() - 1800));
+
+		$sql = 'SELECT image_id, image_filename
+			FROM ' . GALLERY_IMAGES_TABLE . '
+			WHERE image_status = ' . phpbb_gallery_image::STATUS_ORPHAN . '
+				AND image_time < ' . $prunetime;
+		$result = $db->sql_query($sql);
+		$images = $filenames = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$images[] = (int) $row['image_id'];
+			$filenames[(int) $row['image_id']] = $row['image_filename'];
+		}
+		$db->sql_freeresult($result);
+
+		if ($images)
+		{
+			phpbb_gallery_image::delete_images($images, $filenames, false);
+		}
 	}
 
 	/**

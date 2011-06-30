@@ -73,8 +73,15 @@ class phpbb_gallery
 		if (phpbb_gallery_config::get('mvc_time') < time())
 		{
 			// Check the version, do we need to update?
-			phpbb_gallery_config::set('mvc_time', time() + 86400);
 			phpbb_gallery_config::set('mvc_version', phpbb_gallery_modversioncheck::check(true));
+			phpbb_gallery_config::set('mvc_time', time() + 86400);
+		}
+
+		if (phpbb_gallery_config::get('prune_orphan_time') < time())
+		{
+			// Delete orphan uploaded files, which are older than half an hour...
+			phpbb_gallery_image_upload::prune_orphan();
+			phpbb_gallery_config::set('prune_orphan_time', time() + 1800);
 		}
 
 		if ($auth->acl_get('a_') && version_compare(phpbb_gallery_config::get('version'), phpbb_gallery_config::get('mvc_version'), '<'))
