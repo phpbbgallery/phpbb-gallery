@@ -17,19 +17,19 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
-class phpbb_gallery_image_upload
+class phpbb_gallery_upload
 {
 	/**
-	* phpBB Upload-Form-Object, File-Object, ExifData-Object and more
+	* Objects: phpBB Upload, 2 Files, ExifData and Image-Functions
 	*/
-	private $form = null;
+	private $upload = null;
 	private $file = null;
 	private $zip_file = null;
 	private $exif = null;
 	private $tools = null;
 
 	/**
-	*
+	* Basic variables...
 	*/
 	public $loaded_files = 0;
 	public $uploaded_files = 0;
@@ -50,7 +50,7 @@ class phpbb_gallery_image_upload
 	private $file_rotating = array();
 
 	/**
-	*
+	* Constructor
 	*/
 	public function __construct($album_id, $num_files = 0)
 	{
@@ -60,8 +60,8 @@ class phpbb_gallery_image_upload
 		{
 			phpbb_gallery_url::_include('functions_upload', 'phpbb');
 		}
-		$this->form = new fileupload();
-		$this->form->fileupload('', self::get_allowed_types(), (4 * phpbb_gallery_config::get('max_filesize')));
+		$this->upload = new fileupload();
+		$this->upload->fileupload('', self::get_allowed_types(), (4 * phpbb_gallery_config::get('max_filesize')));
 
 		$this->tools = new phpbb_gallery_image_file(phpbb_gallery_config::get('gdlib_version'));
 
@@ -71,7 +71,7 @@ class phpbb_gallery_image_upload
 	}
 
 	/**
-	*
+	* Upload a file and then call the function for reading the zip or preparing the image
 	*/
 	public function upload_file($file_count)
 	{
@@ -81,7 +81,7 @@ class phpbb_gallery_image_upload
 			return false;
 		}
 		$this->file_count = (int) $file_count;
-		$this->file = $this->form->form_upload('image_file_' . $this->file_count);
+		$this->file = $this->upload->form_upload('image_file_' . $this->file_count);
 		if (!$this->file->uploadname)
 		{
 			return false;
@@ -107,7 +107,7 @@ class phpbb_gallery_image_upload
 	}
 
 	/**
-	*
+	* Upload a zip file and save the images into the import/ directory.
 	*/
 	public function upload_zip()
 	{
@@ -137,14 +137,17 @@ class phpbb_gallery_image_upload
 		$this->zip_file->remove();
 
 		// Remove zip from allowed extensions
-		$this->form->set_allowed_extensions(self::get_allowed_types(false, true));
+		$this->upload->set_allowed_extensions(self::get_allowed_types(false, true));
 
 		$this->read_zip_folder($tmp_dir);
 
 		// Readd zip from allowed extensions
-		$this->form->set_allowed_extensions(self::get_allowed_types());
+		$this->upload->set_allowed_extensions(self::get_allowed_types());
 	}
 
+	/**
+	* Read a folder from the zip, "upload" the images and remove the rest.
+	*/
 	public function read_zip_folder($current_dir)
 	{
 		$handle = opendir($current_dir);
@@ -155,15 +158,11 @@ class phpbb_gallery_image_upload
 			{
 				$this->read_zip_folder($current_dir . $file . '/');
 			}
-			else if (((substr(strtolower($file), -4) == '.png') && phpbb_gallery_config::get('allow_png')) ||
-			((substr(strtolower($file), -4) == '.gif') && phpbb_gallery_config::get('allow_gif')) ||
-			((substr(strtolower($file), -4) == '.jpg') && phpbb_gallery_config::get('allow_jpg')) ||
-			((substr(strtolower($file), -5) == '.jpeg') && phpbb_gallery_config::get('allow_jpg'))
-			)
+			else if (in_array(utf8_substr(strtolower($file), utf8_strpos($file, '.') + 1), self::get_allowed_types(false, true)))
 			{
 				if (!$this->file_limit || ($this->uploaded_files < $this->file_limit))
 				{
-					$this->file = $this->form->local_upload($current_dir . $file);
+					$this->file = $this->upload->local_upload($current_dir . $file);
 					if ($this->file->error)
 					{
 						$this->new_error($user->lang('UPLOAD_ERROR', $this->file->uploadname, implode('<br />&raquo; ', $this->file->error)));
@@ -200,7 +199,7 @@ class phpbb_gallery_image_upload
 	}
 
 	/**
-	*
+	* Update image information in the database: name, description, status, contest, ...
 	*/
 	public function update_image($image_id, $needs_approval = false, $is_in_contest = false)
 	{
@@ -254,6 +253,9 @@ class phpbb_gallery_image_upload
 		return true;
 	}
 
+	/**
+	* Prepare file on upload: rotate, resize and read exif
+	*/
 	public function prepare_file()
 	{
 		// Rename the file, move it to the correct location and set chmod
@@ -330,6 +332,10 @@ class phpbb_gallery_image_upload
 		return $this->file_to_database();
 	}
 
+	/**
+	* Prepare file on second upload step.
+	* You can still rotate the image there.
+	*/
 	public function prepare_file_update($image_id)
 	{
 		if (($this->image_data[$image_id]['image_has_exif'] == phpbb_gallery_exif::AVAILABLE) ||

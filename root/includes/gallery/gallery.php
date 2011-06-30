@@ -80,7 +80,7 @@ class phpbb_gallery
 		if (phpbb_gallery_config::get('prune_orphan_time') < time())
 		{
 			// Delete orphan uploaded files, which are older than half an hour...
-			phpbb_gallery_image_upload::prune_orphan();
+			phpbb_gallery_upload::prune_orphan();
 			phpbb_gallery_config::set('prune_orphan_time', time() + 1800);
 		}
 

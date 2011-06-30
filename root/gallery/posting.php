@@ -251,7 +251,7 @@ else
 				trigger_error('FORM_INVALID');
 			}
 
-			$process = new phpbb_gallery_image_upload($album_id, $upload_files_limit);
+			$process = new phpbb_gallery_upload($album_id, $upload_files_limit);
 			$process->set_rotating(request_var('rotate', array(0)));
 			$process->set_allow_comments(request_var('allow_comments', false));
 
@@ -326,7 +326,7 @@ else
 				'S_MAX_FILESIZE'		=> get_formatted_filesize(phpbb_gallery_config::get('max_filesize')),
 				'S_MAX_WIDTH'			=> phpbb_gallery_config::get('max_width'),
 				'S_MAX_HEIGHT'			=> phpbb_gallery_config::get('max_height'),
-				'S_ALLOWED_FILETYPES'	=> implode(', ', phpbb_gallery_image_upload::get_allowed_types(true)),
+				'S_ALLOWED_FILETYPES'	=> implode(', ', phpbb_gallery_upload::get_allowed_types(true)),
 				'S_ALBUM_ACTION'		=> phpbb_gallery_url::append_sid('posting', "mode=upload&amp;album_id=$album_id"),
 				'S_UPLOAD'				=> true,
 				'S_ALLOW_ROTATE'		=> (phpbb_gallery_config::get('allow_rotate') && function_exists('imagerotate')),
@@ -420,7 +420,7 @@ else
 
 			$upload_ids = request_var('upload_ids', array(''));
 
-			$process = new phpbb_gallery_image_upload($album_id, $upload_files_limit);
+			$process = new phpbb_gallery_upload($album_id, $upload_files_limit);
 			$process->set_rotating(request_var('rotate', array(0)));
 			$process->get_images($upload_ids);
 			$image_names = request_var('image_name', array(''), true);
