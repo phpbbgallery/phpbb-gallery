@@ -270,7 +270,6 @@ class phpbb_gallery_upload
 			return false;
 		}
 		@chmod($this->file->destination_file, 0777);
-		var_dump($this->file->destination_file);
 
 		if (in_array($this->file->extension, array('jpg', 'jpeg')))
 		{
