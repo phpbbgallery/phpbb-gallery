@@ -138,6 +138,7 @@ $lang = array_merge($lang, array(
 	'IMAGE_DAY'							=> '%.2f Bilder pro Tag',
 	'IMAGE_DESC'						=> 'Bildbeschreibung',
 	'IMAGE_HEIGHT'						=> 'Bildhöhe',
+	'IMAGE_INSERTED'					=> 'Bild eingefügt',
 	'IMAGE_LOCKED'						=> 'Entschuldigung, aber dieses Bild wurde gesperrt. Du kannst für dieses Bild keine Kommentare mehr abgeben.',
 	'IMAGE_NAME'						=> 'Bildname',
 	'IMAGE_NOT_EXIST'					=> 'Dieses Bild existiert nicht',
@@ -148,6 +149,7 @@ $lang = array_merge($lang, array(
 	'IMAGES_#'							=> '%s Bilder',
 	'IMAGES_REPORTED_SUCCESSFULLY'		=> 'Das Bild wurde erfolgreich gemeldet',
 	'IMAGES_UPDATED_SUCCESSFULLY'		=> 'Deine Bilderinformationen wurden erfolgreich aktualisiert',
+	'INSERT_IMAGE_POST'					=> 'Bild in Beitrag einfügen',
 	'INVALID_USERNAME'					=> 'Der Benutzername ist ungültig',
 
 	'LAST_COMMENT'					=> 'Letzter Kommentar',
@@ -186,6 +188,7 @@ $lang = array_merge($lang, array(
 	'ORDER'							=> 'Reihenfolge',
 	'ORIG_FILENAME'					=> 'Dateinamen als Bildname verwenden (das Eingabefeld ist ohne Funktion)',
 	'OUT_OF_RANGE_VALUE'			=> 'Wert ist ausserhalb des Bereichs',
+	'OWN_IMAGES'					=> 'Deine Bilder',
 
 	'PERCENT'						=> '%',
 	'PERSONAL_ALBUMS'				=> 'Persönliche Alben',

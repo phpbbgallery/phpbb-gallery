@@ -648,6 +648,10 @@ if (!$s_albums)
 // Prevent undefined variable on build_hidden_fields()
 $s_hidden_fields = array('e' => 0);
 
+if (phpbb_gallery::$display_popup)
+{
+	$s_hidden_fields['display'] = 'popup';
+}
 if ($_SID)
 {
 	$s_hidden_fields['sid'] = $_SID;
