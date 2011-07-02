@@ -38,6 +38,8 @@ $lang = array_merge($lang, array(
 	'GALLERY'							=> 'Gallery',
 	'GALLERY_EXPLAIN'					=> 'Image Gallery',
 	'GALLERY_HELPLINE_ALBUM'			=> 'Gallery image: [album]image_id[/album], with this BBCode you can add an image from the gallery into your post.',
+	'GALLERY_POPUP'						=> 'Gallery',
+	'GALLERY_POPUP_HELPLINE'			=> 'Open a popup where you can select your recent images and upload new images.',
 
 	// A little line where you can give yourself some credits on the translation.
 	//'GALLERY_TRANSLATION_INFO'			=> 'English „phpBB Gallery“-Translation by <a href="http://www.flying-bits.org/">nickvergessen</a>',

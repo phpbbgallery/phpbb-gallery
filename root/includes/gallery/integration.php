@@ -90,6 +90,23 @@ class phpbb_gallery_integration
 		}
 	}
 
+	static public function posting_display_popup()
+	{
+		if (true)//phpbb_gallery_config::get('display_popup'))
+		{
+			global $template, $user;
+
+			// Initial load of some needed stuff, like permissions, album data, ...
+			phpbb_gallery::init();
+			$user->add_lang('mods/gallery');
+
+			$template->assign_vars(array(
+				'S_GALLERY_POPUP'	=> true,
+				'U_GALLERY_POPUP'	=> phpbb_gallery_url::append_sid('search', 'user_id=' . (int) $user->data['user_id'] . '&amp;display=popup'),
+			));
+		}
+	}
+
 	static public function viewonline_pre_switch(&$on_page)
 	{
 		if ((utf8_substr($on_page[1], 0, utf8_strlen(GALLERY_ROOT_PATH))) == GALLERY_ROOT_PATH)

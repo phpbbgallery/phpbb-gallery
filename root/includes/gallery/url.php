@@ -129,10 +129,14 @@ class phpbb_gallery_url
 		{
 			$args[0] = self::path() . self::phpEx_file($args[0]);
 		}
+		if (isset($args[1]))
+		{
+			$args[1] .= phpbb_gallery::$display_popup;
+		}
 
 		$params = $args + array(
 			0	=> '',
-			1	=> false,
+			1	=> phpbb_gallery::$display_popup,
 			2	=> true,
 			3	=> false,
 		);

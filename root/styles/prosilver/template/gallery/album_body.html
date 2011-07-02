@@ -24,10 +24,10 @@ function toggleElement(oElement)
 	}
 }
 </script>
-<!-- IF U_MCP --><p>[&nbsp;<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</p><!-- ENDIF -->
+<!-- IF not S_IN_GALLERY_POPUP and U_MCP --><p>[&nbsp;<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</p><!-- ENDIF -->
 <h2><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>
 
-<!-- IF ALBUM_DESC or MODERATORS or U_MCP -->
+<!-- IF not S_IN_GALLERY_POPUP and ALBUM_DESC or MODERATORS or U_MCP -->
 <div>
 	<!-- NOTE: remove the style="display: none !important;" when you want to have the album description on the album body -->
 	<!-- IF ALBUM_DESC --><div style="display: none !important;">{ALBUM_DESC}<br /></div><!-- ENDIF -->
@@ -52,13 +52,13 @@ function toggleElement(oElement)
 <!-- IF S_IS_POSTABLE and (U_UPLOAD_IMAGE or PAGINATION or TOTAL_IMAGES or (U_SLIDE_SHOW and not S_IS_BOT)) -->
 	<div class="topic-actions" <!-- IF S_HAS_SUBALBUM -->style="margin-top: 2em;"<!-- ENDIF -->>
 
-	<!-- IF U_UPLOAD_IMAGE -->
+	<!-- IF not S_IN_GALLERY_POPUP and U_UPLOAD_IMAGE -->
 		<div class="buttons">
 			<div class="<!-- IF S_IS_LOCKED -->locked-icon<!-- ELSE -->upload-icon<!-- ENDIF -->"><a href="{U_UPLOAD_IMAGE}" title="<!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF -->"><span></span><!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF --></a></div>
 		</div>
 	<!-- ENDIF -->
 
-	<!-- IF S_DISPLAY_SEARCHBOX -->
+	<!-- IF not S_IN_GALLERY_POPUP and S_DISPLAY_SEARCHBOX -->
 		<div class="search-box">
 			<form method="post" id="album-search" action="{S_SEARCHBOX_ACTION}">
 			<fieldset>
@@ -76,7 +76,7 @@ function toggleElement(oElement)
 		</div>
 	<!-- ENDIF -->
 
-	<!-- IF S_IS_POSTABLE and U_SLIDE_SHOW and not S_IS_BOT -->
+	<!-- IF not S_IN_GALLERY_POPUP and S_IS_POSTABLE and U_SLIDE_SHOW and not S_IS_BOT -->
 		<div class="pagination"><a href="{U_SLIDE_SHOW}">{L_SLIDE_SHOW}</a><!-- IF PAGINATION or TOTAL_IMAGES or U_SLIDE_SHOW --> &bull;&nbsp;<!-- ENDIF --></div>
 	<!-- ENDIF -->
 
@@ -84,7 +84,11 @@ function toggleElement(oElement)
 <!-- ENDIF -->
 
 <!-- IF .imageblock -->
-	<!-- INCLUDE gallery/imageblock_body.html -->
+	<!-- IF S_IN_GALLERY_POPUP -->
+		<!-- INCLUDE gallery/imageblock_popup.html -->
+	<!-- ELSE -->
+		<!-- INCLUDE gallery/imageblock_body.html -->
+	<!-- ENDIF -->
 <!-- ELSE -->
 	<!-- IF S_IS_POSTABLE -->
 	<div class="panel">
@@ -120,6 +124,7 @@ function toggleElement(oElement)
 	<!-- ENDIF -->
 <!-- ENDIF -->
 
+<!-- IF not S_IN_GALLERY_POPUP -->
 	<p></p><p><a href="{U_RETURN_LINK}" class="left-box {S_CONTENT_FLOW_BEGIN}" accesskey="r">{L_RETURN_TO} {S_RETURN_LINK}</a></p>
 	<form method="post" id="jumpbox" action="{S_JUMPBOX_ACTION}" onsubmit="if(document.jumpbox.album_id.value == -1){return false;}">
 		<fieldset class="jumpbox">
@@ -130,12 +135,14 @@ function toggleElement(oElement)
 			<input type="submit" value="{L_GO}" class="button2" />
 		</fieldset>
 	</form>
+<!-- ENDIF -->
 
-<!-- IF S_DISPLAY_ONLINE_LIST -->
+<!-- IF not S_IN_GALLERY_POPUP and S_DISPLAY_ONLINE_LIST -->
 	<h3><a href="{U_VIEWONLINE}">{L_WHO_IS_ONLINE}</a></h3>
 	<p><!-- IF CHEAT_LOGGED_IN_USER_LIST -->{CHEAT_LOGGED_IN_USER_LIST}<!-- ELSE -->{LOGGED_IN_USER_LIST}<!-- ENDIF --></p>
 <!-- ENDIF -->
-<!-- IF S_IS_POSTABLE -->
+
+<!-- IF not S_IN_GALLERY_POPUP and S_IS_POSTABLE -->
 	<h3>{L_ALBUM_PERMISSIONS}</h3>
 	<p><!-- BEGIN rules -->{rules.RULE}<br /><!-- END rules --></p>
 <!-- ENDIF -->

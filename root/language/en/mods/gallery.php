@@ -138,6 +138,7 @@ $lang = array_merge($lang, array(
 	'IMAGE_DAY'							=> '%.2f images per day',
 	'IMAGE_DESC'						=> 'Image Description',
 	'IMAGE_HEIGHT'						=> 'Image height',
+	'IMAGE_INSERTED'					=> 'Image inserted',
 	'IMAGE_LOCKED'						=> 'Sorry, this image is locked. You cannot post comments for this image anymore.',
 	'IMAGE_NAME'						=> 'Imagename',
 	'IMAGE_NOT_EXIST'					=> 'This image does not exist.',
@@ -148,6 +149,7 @@ $lang = array_merge($lang, array(
 	'IMAGES_#'							=> '%s images',
 	'IMAGES_REPORTED_SUCCESSFULLY'		=> 'The image was successful reported',
 	'IMAGES_UPDATED_SUCCESSFULLY'		=> 'Your image information has been updated successfully',
+	'INSERT_IMAGE_POST'					=> 'Insert image into post',
 	'INVALID_USERNAME'					=> 'Your Username is invalid',
 
 	'LAST_COMMENT'					=> 'Last Comment',
@@ -186,6 +188,7 @@ $lang = array_merge($lang, array(
 	'ORDER'							=> 'Order',
 	'ORIG_FILENAME'					=> 'Take filename as imagename (the insert-field has no function)',
 	'OUT_OF_RANGE_VALUE'			=> 'Value is out of range',
+	'OWN_IMAGES'					=> 'Your Images',
 
 	'PERCENT'						=> '%',
 	'PERSONAL_ALBUMS'				=> 'Personal albums',
