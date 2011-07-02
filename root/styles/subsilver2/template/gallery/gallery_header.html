@@ -1,13 +1,40 @@
-<!-- INCLUDE overall_header.html -->
+<!-- IF S_IN_GALLERY_POPUP -->
+	<!-- INCLUDE simple_header.html -->
 
-<!-- IF GALLERY_VERSION_CHECK and U_ACP -->
-<table class="tablebg" width="100%" cellspacing="1" cellpadding="0" style="margin-top: 5px;">
-	<tbody>
-		<tr>
-			<td class="row1">
-				<p class="breadcrumbs"><span style="color: red;">{GALLERY_VERSION_CHECK}</span></p>
-			</td>
-		</tr>
-	</tbody>
-</table>
+	<table class="tablebg" width="100%" cellspacing="1" cellpadding="0" style="margin-top: 5px;">
+	<tr>
+		<td class="row1">
+			<p class="breadcrumbs"><a href="{U_POPUP_OWN}">{L_OWN_IMAGES}</a>&nbsp;&bull;&nbsp;</p>
+				<p class="breadcrumbs"><a href="{U_POPUP_RECENT}">{L_RECENT_IMAGES}</a></p>
+				<!-- IF U_POPUP_UPLOAD -->&nbsp;&bull;&nbsp;<p class="breadcrumbs"><a href="{U_POPUP_UPLOAD}">{L_UPLOAD_IMAGES}</a></p><!-- ENDIF -->
+			</p>
+		</td>
+	</tr>
+	</table>
+	<br />
+
+	<script type="text/javascript">
+	// <![CDATA[
+	function insert_image(image_id, field_id)
+	{
+		opener.document.forms['postform'].message.value += '[album]' + image_id +'[/album]';
+		document.getElementById('inserted_' + field_id).style.display = 'block';
+	}
+	// ]]>
+	</script>
+
+<!-- ELSE -->
+	<!-- INCLUDE overall_header.html -->
+
+	<!-- IF GALLERY_VERSION_CHECK and U_ACP -->
+	<table class="tablebg" width="100%" cellspacing="1" cellpadding="0" style="margin-top: 5px;">
+		<tbody>
+			<tr>
+				<td class="row1">
+					<p class="breadcrumbs"><span style="color: red;">{GALLERY_VERSION_CHECK}</span></p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<!-- ENDIF -->
 <!-- ENDIF -->

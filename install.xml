@@ -530,15 +530,6 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
 			</edit>
 		</open>
 
-		<open src="styles/prosilver/template/posting_buttons.html">
-			<edit>
-				<find><![CDATA[	<!-- END custom_tags -->]]></find>
-				<action type="after-add"><![CDATA[	<!-- IF S_GALLERY_POPUP -->
-		<input type="button" class="button2" name="gallery_button" value="{L_GALLERY_POPUP}" onclick="popup('{U_GALLERY_POPUP}', 800, 600);" title="{L_GALLERY_POPUP_HELPLINE}" />
-	<!-- ENDIF -->]]></action>
-			</edit>
-		</open>
-
 		<open src="styles/prosilver/template/overall_header.html">
 			<edit>
 				<find><![CDATA[</head>]]></find>
@@ -547,6 +538,16 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
 			<edit>
 				<find><![CDATA[<li class="icon-faq"><a href="{U_FAQ}" title="{L_FAQ_EXPLAIN}">{L_FAQ}</a></li>]]></find>
 				<action type="after-add"><![CDATA[<li class="icon-gallery"><a href="{U_GALLERY_MOD}" title="{L_GALLERY_EXPLAIN}">{L_GALLERY}</a></li>]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/posting_buttons.html">
+			<edit>
+				<find><![CDATA[		<input type="button" class="button2" name="addbbcode{custom_tags.BBCODE_ID}" value="{custom_tags.BBCODE_TAG}" onclick="bbstyle({custom_tags.BBCODE_ID})" title="{custom_tags.BBCODE_HELPLINE}" />
+	<!-- END custom_tags -->]]></find>
+				<action type="after-add"><![CDATA[	<!-- IF S_GALLERY_POPUP -->
+		<input type="button" class="button2" name="gallery_button" value="{L_GALLERY_POPUP}" onclick="popup('{U_GALLERY_POPUP}', 800, 600);" title="{L_GALLERY_POPUP_HELPLINE}" />
+	<!-- ENDIF -->]]></action>
 			</edit>
 		</open>
 

@@ -116,6 +116,16 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</edit>
 		</open>
 
+		<open src="styles/subsilver2/template/posting_buttons.html">
+			<edit>
+				<find><![CDATA[			<input type="button" class="btnbbcode" name="addbbcode{custom_tags.BBCODE_ID}" value="{custom_tags.BBCODE_TAG}" onclick="bbstyle({custom_tags.BBCODE_ID})"<!-- IF custom_tags.BBCODE_HELPLINE !== '' --> onmouseover="helpline('cb_{custom_tags.BBCODE_ID}')" onmouseout="helpline('tip')"<!-- ENDIF --> />
+		<!-- END custom_tags -->]]></find>
+				<action type="after-add"><![CDATA[		<!-- IF S_GALLERY_POPUP -->
+			<input type="button" class="btnbbcode" name="gallery_button" value="{L_GALLERY_POPUP}" onclick="popup('{U_GALLERY_POPUP}', 800, 600);" />
+		<!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+
 		<open src="styles/subsilver2/template/viewtopic_body.html">
 			<edit>
 				<find><![CDATA[<!-- IF postrow.POSTER_POSTS != '' --><br /><b>{L_POSTS}:</b> {postrow.POSTER_POSTS}<!-- ENDIF -->]]></find>

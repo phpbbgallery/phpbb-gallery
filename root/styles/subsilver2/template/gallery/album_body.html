@@ -38,11 +38,11 @@ function toggleElement(oElement)
 		<!-- IF ALBUM_CONTEST_RATING -->{ALBUM_CONTEST_RATING}<br /><!-- ENDIF -->
 		<!-- IF ALBUM_CONTEST_END -->{ALBUM_CONTEST_END}<br /><br /><!-- ENDIF -->
 		<!-- IF MODERATORS --><p class="moderators"><!-- IF S_SINGLE_MODERATOR -->{L_MODERATOR}<!-- ELSE -->{L_MODERATORS}<!-- ENDIF -->: {MODERATORS}</p><!-- ENDIF -->
-		<!-- IF U_MCP -->
+		<!-- IF not S_IN_GALLERY_POPUP and U_MCP -->
 			<p class="linkmcp">[ <a href="{U_MCP}">{L_MCP}</a> ]</p>
 		<!-- ENDIF -->
-		<!-- IF U_EDIT_ALBUM --><p class="linkmcp">[ <a href="{U_EDIT_ALBUM}">{L_EDIT_ALBUM}</a> ]<!-- IF U_MCP -->&nbsp;<!-- ENDIF --></p><!-- ENDIF -->
-		<!-- IF U_CREATE_ALBUM --><p class="linkmcp">[ <a href="{U_CREATE_ALBUM}">{L_CREATE_SUBALBUM}</a> ]&nbsp;</p><!-- ENDIF -->
+		<!-- IF not S_IN_GALLERY_POPUP and U_EDIT_ALBUM --><p class="linkmcp">[ <a href="{U_EDIT_ALBUM}">{L_EDIT_ALBUM}</a> ]<!-- IF U_MCP -->&nbsp;<!-- ENDIF --></p><!-- ENDIF -->
+		<!-- IF not S_IN_GALLERY_POPUP and U_CREATE_ALBUM --><p class="linkmcp">[ <a href="{U_CREATE_ALBUM}">{L_CREATE_SUBALBUM}</a> ]&nbsp;</p><!-- ENDIF -->
 	</div>
 
 	<br clear="all" /><br />
@@ -54,7 +54,7 @@ function toggleElement(oElement)
 	<!-- IF U_UPLOAD_IMAGE or TOTAL_IMAGES -->
 		<table width="100%" cellspacing="1">
 		<tr>
-			<!-- IF U_UPLOAD_IMAGE -->
+			<!-- IF not S_IN_GALLERY_POPUP and U_UPLOAD_IMAGE -->
 				<td align="{S_CONTENT_FLOW_BEGIN}" valign="middle"><a href="{U_UPLOAD_IMAGE}">{UPLOAD_IMG}</a></td>
 			<!-- ENDIF -->
 			<!-- IF TOTAL_IMAGES -->
@@ -67,7 +67,11 @@ function toggleElement(oElement)
 	<!-- ENDIF -->
 
 <!-- IF .imageblock -->
-	<!-- INCLUDE gallery/imageblock_body.html -->
+	<!-- IF S_IN_GALLERY_POPUP -->
+		<!-- INCLUDE gallery/imageblock_popup.html -->
+	<!-- ELSE -->
+		<!-- INCLUDE gallery/imageblock_body.html -->
+	<!-- ENDIF -->
 <!-- ELSE -->
 	<!-- IF S_IS_POSTABLE -->
 	<table class="tablebg" cellspacing="1" width="100%">
@@ -85,7 +89,7 @@ function toggleElement(oElement)
 	<!-- IF U_UPLOAD_IMAGE or TOTAL_IMAGES -->
 		<table width="100%" cellspacing="1">
 		<tr>
-			<!-- IF U_UPLOAD_IMAGE -->
+			<!-- IF not S_IN_GALLERY_POPUP and U_UPLOAD_IMAGE -->
 				<td align="{S_CONTENT_FLOW_BEGIN}" valign="middle"><a href="{U_UPLOAD_IMAGE}">{UPLOAD_IMG}</a></td>
 			<!-- ENDIF -->
 			<!-- IF TOTAL_IMAGES -->
@@ -103,7 +107,7 @@ function toggleElement(oElement)
 
 <!-- INCLUDE breadcrumbs.html -->
 
-<!-- IF S_DISPLAY_ONLINE_LIST -->
+<!-- IF not S_IN_GALLERY_POPUP and S_DISPLAY_ONLINE_LIST -->
 	<br clear="all" />
 
 	<table class="tablebg" width="100%" cellspacing="1">
@@ -115,7 +119,7 @@ function toggleElement(oElement)
 	</tr>
 	</table>
 <!-- ENDIF -->
-<!-- IF S_IS_POSTABLE -->
+<!-- IF not S_IN_GALLERY_POPUP and S_IS_POSTABLE -->
 
 	<br clear="all" />
 
@@ -125,7 +129,7 @@ function toggleElement(oElement)
 	</tr>
 	</table>
 <!-- ENDIF -->
-
+<!-- IF not S_IN_GALLERY_POPUP -->
 <br clear="all" />
 
 <table width="100%" cellspacing="0">
@@ -146,5 +150,6 @@ function toggleElement(oElement)
 	</td>
 </tr>
 </table>
+<!-- ENDIF -->
 
 <!-- INCLUDE gallery/gallery_footer.html -->

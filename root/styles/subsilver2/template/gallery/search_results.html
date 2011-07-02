@@ -40,7 +40,11 @@ function toggleElement(oElement)
 <br clear="all" />
 
 <!-- IF SEARCH_IMAGES and .imageblock -->
-	<!-- INCLUDE gallery/imageblock_body.html -->
+	<!-- IF S_IN_GALLERY_POPUP -->
+		<!-- INCLUDE gallery/imageblock_popup.html -->
+	<!-- ELSE -->
+		<!-- INCLUDE gallery/imageblock_body.html -->
+	<!-- ENDIF -->
 <!-- ENDIF -->
 
 <!-- IF .commentrow -->
