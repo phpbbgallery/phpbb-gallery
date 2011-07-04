@@ -315,20 +315,16 @@
 </div>
 <!-- ELSE -->
 <form method="post" id="mcp" action="{S_MCP_ACTION}">
-	<div class="panel" id="message">
-		<div class="inner">
-			<span class="corners-top"><span></span></span>
-				<h2>{L_MOVE}</h2>
-				<p>
-					<span class="gen">{L_MOVE_TO_ALBUM}</span>
-					&nbsp; {S_ALBUM_SELECT} &nbsp; 
-					<input class="button2" type="submit" name="move" value="{L_MOVE}" />
-					{S_HIDDEN_FIELDS}
-				</p>
-			<span class="corners-bottom"><span></span></span>
-		</div>
-		{S_FORM_TOKEN}
-	</div>
+<div class="panel" id="message">
+	<div class="inner"><span class="corners-top"><span></span></span>
+		<h2>{L_MOVE}</h2>
+		<p>
+			{L_MOVE_TO_ALBUM} &nbsp; {S_ALBUM_SELECT} &nbsp;
+			<input class="button2" type="submit" name="move" value="{L_MOVE}" />
+			{S_HIDDEN_FIELDS}{S_FORM_TOKEN}
+		</p>
+	<span class="corners-bottom"><span></span></span></div>
+</div>
 </form>
 <!-- ENDIF -->
 

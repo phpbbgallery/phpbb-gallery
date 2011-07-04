@@ -1,6 +1,22 @@
 <!-- INCLUDE gallery/gallery_header.html -->
 
-<!-- IF S_UPLOAD -->
+<!-- IF S_ALBUM_SELECT -->
+<br />
+<form method="post" id="mcp" action="{S_ALBUM_ACTION}">
+	<div id="pagecontent">
+		<table class="tablebg" width="100%" cellspacing="1">
+		<tr>
+			<th>{L_UPLOAD_IMAGE}</th>
+		</tr>
+		<tr>
+			<td class="row1" align="center"><br /><p class="gen">{L_SELECT_ALBUM}: <select name="album_id">{S_ALBUM_SELECT}</select></p><br />
+			{S_FORM_TOKEN}{S_HIDDEN_FIELDS}
+			<input class="btnmain" type="submit" name="move" value="{L_SUBMIT}" /></td>
+		</tr>
+		</table>
+	</div>
+</form>
+<!-- ELSEIF S_UPLOAD -->
 
 <h2><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>
 
