@@ -29,6 +29,30 @@ $image_id = request_var('image_id', 0);
 $error = $message = '';
 $slower_redirect = false;
 
+if (!$album_id && ($mode == 'upload'))
+{
+	// Public albums
+	$s_album_select = phpbb_gallery_album::get_albumbox(true, '', 0, 'i_upload', false, phpbb_gallery_album::PUBLIC_ALBUM, phpbb_gallery_album::TYPE_UPLOAD);
+	if ($user->data['user_id'] != ANONYMOUS)
+	{
+		// Personal albums
+		$s_album_select .= phpbb_gallery_album::get_albumbox(false, '', -1, 'i_upload', false, $user->data['user_id'], phpbb_gallery_album::TYPE_UPLOAD);
+	}
+	$template->assign_vars(array(
+	//function get_albumbox($ignore_personals, $select_name, $select_id = false, $requested_permission = false, $ignore_id = false, $album_user_id = self::PUBLIC_ALBUM, $requested_album_type = -1)
+		'S_ALBUM_SELECT'	=> $s_album_select,
+	));
+
+	page_header($user->lang['UPLOAD_IMAGE'], false);
+
+	$template->set_filenames(array(
+		'body' => 'gallery/posting_body.html',
+	));
+
+	page_footer();
+	return;
+}
+
 // Check for permissions cheaters!
 if ($image_id)
 {

@@ -151,12 +151,15 @@ class phpbb_gallery
 		global $template, $user;
 
 		self::$display_popup = '&amp;display=popup';
+
+		$can_upload = phpbb_gallery::$auth->acl_album_ids('i_upload', 'bool');
+
 		$template->assign_vars(array(
 			'S_IN_GALLERY_POPUP'			=> (request_var('display', '') == 'popup') ? true : false,
 
-			'U_POPUP_OWN'		=> phpbb_gallery_url::append_sid('search', 'user_id=' . (int) $user->data['user_id'] . '&amp;display=popup'),
-			'U_POPUP_RECENT'	=> phpbb_gallery_url::append_sid('search', 'search_id=recent&amp;display=popup'),
-//			'U_POPUP_UPLOAD'	=> phpbb_gallery_url::append_sid('posting', 'mode=upload&amp;display=popup'),
+			'U_POPUP_OWN'		=> phpbb_gallery_url::append_sid('search', 'user_id=' . (int) $user->data['user_id']),
+			'U_POPUP_RECENT'	=> phpbb_gallery_url::append_sid('search', 'search_id=recent'),
+			'U_POPUP_UPLOAD'	=> ($can_upload) ? phpbb_gallery_url::append_sid('posting', 'mode=upload') : '',
 		));
 	}
 }

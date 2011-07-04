@@ -240,6 +240,7 @@ $lang = array_merge($lang, array(
 	'SEARCH_TOPRATED'				=> 'Beste Bewertungen',
 	'SEARCH_USER_IMAGES'			=> 'Bilder des Mitglieds anzeigen',
 	'SEARCH_USER_IMAGES_OF'			=> 'Bilder von %s',
+	'SELECT_ALBUM'					=> 'Wähle ein Album aus',
 	'SHOW_PERSONAL_ALBUM_OF'		=> 'Persönliches Album von %s anzeigen',
 	'SLIDE_SHOW'					=> 'Diashow',
 	'SLIDE_SHOW_HIGHSLIDE'			=> 'Um die Diashow zu starten, klicke auf einen der Bildnamen und dann auf das „play“-Icon:',

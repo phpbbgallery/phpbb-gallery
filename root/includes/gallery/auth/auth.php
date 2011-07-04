@@ -522,6 +522,7 @@ class phpbb_gallery_auth
 	*
 	* @param	string	$acl			One of the permissions, Exp: i_view; *_count permissions are not allowed!
 	* @param	string	$return			Type of the return value. array returns an array, else it's a string.
+	*									bool means it only checks whether the user has the permission anywhere.
 	* @param	bool	$display_in_rrc	Only return albums, that have the display_in_rrc-flag set.
 	* @param	bool	$display_pegas	Include personal galleries in the list.
 	*
@@ -557,9 +558,18 @@ class phpbb_gallery_auth
 			}
 			if ($this->_auth_data[$a_id]->get_bit($bit) && (!$display_in_rrc || ($display_in_rrc && $album['display_in_rrc'])) && ($display_pegas || ($album['album_user_id'] == self::PUBLIC_ALBUM)))
 			{
+				if ($return == 'bool')
+				{
+					return true;
+				}
 				$album_list .= (($album_list) ? ', ' : '') . $album['album_id'];
 				$album_array[] = (int) $album['album_id'];
 			}
+		}
+
+		if ($return == 'bool')
+		{
+			return false;
 		}
 
 		return ($return == 'array') ? $album_array : $album_list;

@@ -240,6 +240,7 @@ $lang = array_merge($lang, array(
 	'SEARCH_TOPRATED'				=> 'Top rated images',
 	'SEARCH_USER_IMAGES'			=> 'Search user’s images',
 	'SEARCH_USER_IMAGES_OF'			=> 'Images of %s',
+	'SELECT_ALBUM'					=> 'Select an album',
 	'SHOW_PERSONAL_ALBUM_OF'		=> 'Show personal album of %s',
 	'SLIDE_SHOW'					=> 'Slideshow',
 	'SLIDE_SHOW_HIGHSLIDE'			=> 'To start the slideshow, click on one of the image-names and than click on the „play“-icon:',
