@@ -17,9 +17,13 @@ An image-gallery integrated into your phpbb-board.
 Features: http://www.flying-bits.org/go/phpbb_gallery/features]]></description>
 
 		<author-notes lang="de"><![CDATA[
+Diese MOD benötigt php5.
+
 Untersützt die "MOD Version Check"-MOD von Handyman´:
 http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		<author-notes lang="en"><![CDATA[
+This MOD requires php5.
+
 Supports the "MOD Version Check"-MOD by Handyman´:
 http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
@@ -33,7 +37,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</author>
 		</author-group>
 
-		<mod-version>1.1.0-A1</mod-version>
+		<mod-version>1.1.0-B1</mod-version>
 
 		<installation>
 			<level>intermediate</level>
@@ -44,8 +48,10 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		<link-group>
 			<link type="contrib" lang="de" href="contrib/history.xml">Geschichte/Entwickler/Features</link>
 			<link type="contrib" lang="en" href="contrib/history.xml">History/Developers/Features</link>
-			<link type="contrib" lang="de" href="contrib/update_1_0_6_to_1_1_0_A1/update.xml">Update von 1.0.6 auf 1.1.0-A1</link>
-			<link type="contrib" lang="en" href="contrib/update_1_0_6_to_1_1_0_A1/update.xml">Update from 1.0.6 to 1.1.0-A1</link>
+			<link type="contrib" lang="de" href="contrib/update_1_0_6_to_1_1_0_B1/update.xml">Update von 1.0.6 auf 1.1.0-B1</link>
+			<link type="contrib" lang="en" href="contrib/update_1_0_6_to_1_1_0_B1/update.xml">Update from 1.0.6 to 1.1.0-B1</link>
+			<link type="contrib" lang="de" href="contrib/update_1_1_0_A1_to_1_1_0_B1/update.xml">Update von 1.1.0-A1 auf 1.1.0-B1</link>
+			<link type="contrib" lang="en" href="contrib/update_1_1_0_A1_to_1_1_0_B1/update.xml">Update from 1.1.0-A1 to 1.1.0-B1</link>
 			<link type="language" lang="de" href="contrib/de.xml">Anleitung für das deutsche Sprachpaket</link>
 			<link type="language" lang="en" href="contrib/de.xml">Manual for German Language-set</link>
 			<link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>

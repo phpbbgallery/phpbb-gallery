@@ -13,6 +13,7 @@
 		[*]Search function (also available in the album) (page for Recent/Random/Top-Rated/Last comments/Own images)
 		[*]Highslide JS, Shadowbox and Lytebox support (These scripts must be downloaded seperatly because of the licence, see contrib/plugins/)
 		[*]Diashow (Requires a Plugin to be installed, see contrib/plugins/)
+		[*]Feed with recent images of the gallery or a specific album
 		[*]Available in more languages: http://www.flying-bits.org/go/phpbb_gallery/translations
 		[*]Available Addons: http://www.flying-bits.org/go/phpbb_gallery/addons
 	[/list]
@@ -25,6 +26,7 @@
 		[*]BBcode to use gallery images in postings
 		[*]Available for prosilver-& subsilver2-based styles
 		[*]HookUp gallery with Cash-MOD (See gallery/includes/hookup_gallery.php for more Information)
+		[*]Popup on posting.php with own and recent images aswell as an upload option
 	[/list]
 	[*]Album / Permission-management:
 	[list]
@@ -39,6 +41,7 @@
 		[*]Moderate-permissions: moderate comments, image: delete, edit, move, handle reports, approve/lock
 		[*]Misc-permissions: View album, Number of allowed images (also unlimited), albums (for personal galleries)
 		[*]Personal galleries (upload by owner only), with subalbums and management through UCP
+		[*]Friends and foes control to personal galleries
 	[/list]
 	[*]Images / Comments:
 	[list]
@@ -53,6 +56,7 @@
 		[*]Option to favorite images
 		[*]Next/Previous link (with imagename and thumbnail)
 		[*]Unread-markup of albums with new images
+		[*]Upload of zip packages
 	[/list]
 	[*]ACP:
 	[list]

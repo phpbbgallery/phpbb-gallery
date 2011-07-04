@@ -12,9 +12,13 @@
 		<description lang="en"><![CDATA[Update-Manual]]></description>
 
 		<author-notes lang="de"><![CDATA[
+Diese MOD benötigt php5.
+
 Untersützt die "MOD Version Check"-MOD von Handyman´:
 http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		<author-notes lang="en"><![CDATA[
+This MOD requires php5.
+
 Supports the "MOD Version Check"-MOD by Handyman´:
 http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
@@ -28,7 +32,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</author>
 		</author-group>
 
-		<mod-version>1.1.0-A1</mod-version>
+		<mod-version>1.1.0-B1</mod-version>
 
 		<installation>
 			<level>intermediate</level>
@@ -115,6 +119,17 @@ $template->assign_vars(array(]]></find>
 		{
 			phpbb_gallery_integration::memberlist_viewprofile($member);
 		}]]></action>
+			</edit>
+		</open>
+
+		<open src="posting.php">
+			<edit>
+				<find><![CDATA[// Output page ...
+page_header($page_title, false);]]></find>
+				<action type="before-add"><![CDATA[if (class_exists('phpbb_gallery_integration'))
+{
+	phpbb_gallery_integration::posting_display_popup();
+}]]></action>
 			</edit>
 		</open>
 
@@ -321,6 +336,16 @@ $template->assign_vars(array(]]></find>
 										phpbb_gallery_integration::ucp_zebra('add', $user_id_ary, (int) $user->data['user_id']);
 									}
 ]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/posting_buttons.html">
+			<edit>
+				<find><![CDATA[		<input type="button" class="button2" name="addbbcode{custom_tags.BBCODE_ID}" value="{custom_tags.BBCODE_TAG}" onclick="bbstyle({custom_tags.BBCODE_ID})" title="{custom_tags.BBCODE_HELPLINE}" />
+	<!-- END custom_tags -->]]></find>
+				<action type="after-add"><![CDATA[	<!-- IF S_GALLERY_POPUP -->
+		<input type="button" class="button2" name="gallery_button" value="{L_GALLERY_POPUP}" onclick="popup('{U_GALLERY_POPUP}', 800, 600);" title="{L_GALLERY_POPUP_HELPLINE}" />
+	<!-- ENDIF -->]]></action>
 			</edit>
 		</open>
 

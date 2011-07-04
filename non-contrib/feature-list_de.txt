@@ -13,6 +13,7 @@
 		[*]Suchfunktion (auch innerhalb des Albums möglich) (Extra Seite mit Neusten/Zufälligen/Am besten bewerteten Bildern usw.)
 		[*]Highslide JS, Shadowbox und Lytebox Unterstützung (Die Scripte müssen auf Grund der Lizenz extra heruntergeladen werden, siehe contrib/plugins/)
 		[*]Diashow (Benötigt ein Plguin, siehe contrib/plugins/)
+		[*]Feed mit den neuesten Bildern des Galerie oder eines speziellen Albums
 		[*]In weiteren Sprachen verfügbar: http://www.flying-bits.org/go/phpbb_gallery/translations
 		[*]Verfügbare Addons: http://www.flying-bits.org/go/phpbb_gallery/addons
 	[/list]
@@ -25,6 +26,7 @@
 		[*]BBCode für die Benutzung in Beiträgen
 		[*]Verfügbar für prosilver- und subsilver2-basierende Styles
 		[*]Einbindung von Cash-MODs in die Gallery (Siehe gallery/includes/hookup_gallery.php für mehr Informationen)
+		[*]Popup auf der posting.php mit eigenen und den neuesten Bildern, sowie eine Option zum Hochladen von Bildern
 	[/list]
 	[*]Albenverwaltung / Berechtigungen:
 	[list]
@@ -39,6 +41,7 @@
 		[*]Moderations-Berechtigungen: Kommentare moderieren, Bilder: ändern, löschen, verschieben, Meldungen bearbeiten, Freigeben/Sperren
 		[*]Weitere Berechtigungen: Album sehen, Anzahl der Bilder (auch unbegrenzt), Alben (Nur für persönliche Galerien)
 		[*]Persönliche Galerien (Hochladen nur durch den Besitzer möglich), mit Subalben, Verwaltung im persönlichen Bereich (UCP)
+		[*]Freundesliste und Liste ignorierter Mitglieder als Kontroll-Option für den Zugriff auf persönliche Galerien
 	[/list]
 	[*]Bilder/Kommentare:
 	[list]
@@ -53,6 +56,7 @@
 		[*]Favoriten-Funktion
 		[*]Nächstes/Vorheriges Bild mit Name und Thumbnail
 		[*]Ungelesen-Markierung der Alben bei neuen Bildern
+		[*]Hochladen von zip-Paketen
 	[/list]
 	[*]ACP:
 	[list]

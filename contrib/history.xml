@@ -145,6 +145,17 @@ Installing:
 » Full support on install and update
 » Converters from Smartor's "Album MOD" for phpBB2 and visiblethunder's "TS Gallery" for phpBB3]]></description>
 
+		<author-notes lang="de"><![CDATA[
+Diese MOD benötigt php5.
+
+Untersützt die "MOD Version Check"-MOD von Handyman´:
+http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
+		<author-notes lang="en"><![CDATA[
+This MOD requires php5.
+
+Supports the "MOD Version Check"-MOD by Handyman´:
+http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
+
 		<author-group>
 			<author>
 				<realname>Joas Schilling</realname>
@@ -186,6 +197,20 @@ Installing:
 		</installation>
 
 		<history>
+			<entry>
+				<date>2011-07-04</date>
+				<rev-version>1.1.0-B1</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Feature] Add feature to subscribe to new personal galleries (Feature #748)]]></change>
+					<change><![CDATA[[Feature] Add zip-upload feature (Feature #426)]]></change>
+					<change><![CDATA[[Feature] Add popup to phpBB/posting.php with own and recent images aswell as an upload option (Feature #421, #446)]]></change>
+
+					<change><![CDATA[[Change] Rewrote the upload part, so it's easier to name and describe the images (Bug #809)]]></change>
+
+					<change><![CDATA[[Fix] SQL Error on gallery block when user has no permissions (Bug #812)]]></change>
+				</changelog>
+			</entry>
+
 			<entry>
 				<date>2011-06-18</date>
 				<rev-version>1.1.0-A1</rev-version>
@@ -1012,8 +1037,8 @@ Installing:
 		<link-group>
 			<link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
 			<link type="parent" lang="en" href="../install.xml">Manual</link>
-			<link type="parent" lang="de" href="update_1_0_6_to_1_1_0_A1/update.xml">Update von 1.0.6 auf 1.1.0-A1</link>
-			<link type="parent" lang="en" href="update_1_0_6_to_1_1_0_A1/update.xml">Update from 1.0.6 to 1.1.0-A1</link>
+			<link type="parent" lang="de" href="update_1_0_6_to_1_1_0_B1/update.xml">Update von 1.0.6 auf 1.1.0-B1</link>
+			<link type="parent" lang="en" href="update_1_0_6_to_1_1_0_B1/update.xml">Update from 1.0.6 to 1.1.0-B1</link>
 		</link-group>
 	</header>
 
