@@ -43,7 +43,6 @@ if ($mode == 'personal')
 
 		if ($watch_pegas == 'watch')
 		{
-			var_dump(2);
 			phpbb_gallery::$user->update_data(array('subscribe_pegas' => true));
 			$message = $user->lang['WATCHING_PEGAS'] . '<br />';
 		}
