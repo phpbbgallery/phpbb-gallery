@@ -25,7 +25,7 @@ class phpbb_gallery
 	static public $auth = null;
 	static public $user = null;
 
-	static public $display_popup = '';
+	static public $display_popup = false;
 	static public $loaded = false;
 
 	/**
