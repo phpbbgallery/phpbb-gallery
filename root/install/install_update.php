@@ -528,6 +528,26 @@ class install_update extends module
 			WHERE ' . $db->sql_in_set('config_name', $old_configs);
 		$db->sql_query($sql);
 
+		// Get all permissions, which don't have an album anymore and remove them.
+		$sql = 'SELECT p.perm_id, p.perm_album_id, a.album_name
+			FROM ' . GALLERY_PERMISSIONS_TABLE . ' p
+			LEFT JOIN ' . GALLERY_ALBUMS_TABLE . ' a
+				ON a.album_id = p.perm_album_id
+			WHERE p.perm_album_id > 0
+				AND a.album_name IS NULL';
+		$result = $db->sql_query($sql);
+
+		$orphan_perms = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$orphan_perms[] = $row['perm_id'];
+		}
+		$db->sql_freeresult($result);
+
+		$sql = 'DELETE FROM ' . GALLERY_PERMISSIONS_TABLE . '
+			WHERE ' . $db->sql_in_set('perm_id', $orphan_perms, false, true);
+		$db->sql_query($sql);
+
 		// Remove some old p_masks
 		$sql = 'SELECT perm_role_id
 			FROM ' . GALLERY_PERMISSIONS_TABLE;
