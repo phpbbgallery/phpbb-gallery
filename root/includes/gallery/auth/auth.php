@@ -203,6 +203,12 @@ class phpbb_gallery_auth
 	*/
 	private function store_acl_row($album_id, $data)
 	{
+		if (!isset($this->_auth_data[$album_id]))
+		{
+			// The album we have permissions for does not exist any more, so do nothing.
+			return;
+		}
+
 		foreach (self::$_permissions as $permission)
 		{
 			if (strpos($permission, '_count') === false)
