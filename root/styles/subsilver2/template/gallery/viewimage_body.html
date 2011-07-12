@@ -85,6 +85,27 @@
 </table>
 <br clear="all" />
 
+<!-- IF S_QUICK_MOD -->
+	<form name="jumpbox" method="post" action="{S_MOD_ACTION}">
+	<table width="100%" cellspacing="0" cellpadding="0" border="0">
+	<tr>
+		<td align="{S_CONTENT_FLOW_END}" nowrap="nowrap"><span class="gensmall">{L_QUICK_MOD}:</span>&nbsp;<select name="action" id="quick-mod-select">
+			<!-- IF S_QM_MOVE --><option value="images_move">{L_QUEUE_A_MOVE}</option><!-- ENDIF -->
+			<!-- IF S_QM_EDIT --><option value="image_edit">{L_EDIT_IMAGE}</option><!-- ENDIF -->
+			<!-- IF S_QM_STATUS -->
+				<!-- IF not S_STATUS_UNAPPROVED --><option value="images_unapprove">{L_QUEUE_A_UNAPPROVE}</option><!-- ENDIF -->
+				<!-- IF not S_STATUS_APPROVED --><option value="images_approve">{L_QUEUE_A_APPROVE}</option><!-- ENDIF -->
+				<!-- IF not S_STATUS_LOCKED --><option value="images_lock">{L_QUEUE_A_LOCK}</option><!-- ENDIF -->
+			<!-- ENDIF -->
+			<!-- IF S_QM_DELETE --><option value="images_delete">{L_QUEUE_A_DELETE}</option><!-- ENDIF -->
+			<!-- IF S_QM_REPORT and S_IMAGE_REPORTED --><option value="report_details">{L_READ_REPORT}</option><!-- ENDIF -->
+		</select>&nbsp;<input class="btnlite" type="submit" value="{L_GO}" />{S_FORM_TOKEN}</td>
+	</tr>
+	</table>
+	</form>
+	<br clear="all" />
+<!-- ENDIF -->
+
 <!-- IF .exif_value -->
 <script type="text/javascript">
 function getElement(iElementId)
