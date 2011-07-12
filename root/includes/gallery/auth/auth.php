@@ -69,10 +69,12 @@ class phpbb_gallery_auth
 		}
 		else if ($user_id != $user->data['user_id'])
 		{
-			$permissions_user = phpbb_gallery_user::get_settings($user_id);
-			if (!empty($permissions_user['user_permissions']))
+			global $db;
+			$permissions_user = new phpbb_gallery_user($db, $user_id);
+			$cached_permissions = $permissions_user->get_data('user_permissions');
+			if (!empty($cached_permissions))
 			{
-				$this->unserialize_auth_data($permissions_user['user_permissions']);
+				$this->unserialize_auth_data($cached_permissions);
 				return;
 			}
 		}
