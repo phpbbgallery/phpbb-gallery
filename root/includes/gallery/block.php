@@ -246,9 +246,9 @@ class phpbb_gallery_block
 		{
 			$this->users = array_unique(array_merge($this->users, array_map('int', $user_id)));
 		}
-		else if (is_int($user_id) && !in_array($this->users, $user_id))
+		else if (!in_array((int) $user_id, $this->users))
 		{
-			$this->users[] = $user_id;
+			$this->users[] = (int) $user_id;
 		}
 	}
 
