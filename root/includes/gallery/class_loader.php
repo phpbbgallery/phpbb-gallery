@@ -6,6 +6,10 @@
 * @copyright (c) 2010 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
+* Changes made for phpBB Gallery:
+* - Restrict autoload to phpbb_gallery and phpbb_gallery_* classnames,
+*   so we do not break other MODs.
+*
 */
 
 /**
@@ -149,7 +153,7 @@ class phpbb_gallery_class_loader
 	*/
 	public function load_class($class)
 	{
-		if (substr($class, 0, 6) === 'phpbb_')
+		if ((substr($class, 0, 14) === 'phpbb_gallery_') || ($class === 'phpbb_gallery'))
 		{
 			$path = $this->resolve_path($class);
 
