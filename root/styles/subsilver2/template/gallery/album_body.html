@@ -136,7 +136,7 @@ function toggleElement(oElement)
 <tr>
 	<td><!-- IF S_DISPLAY_SEARCHBOX --><!-- INCLUDE searchbox.html --><!-- ENDIF --></td>
 	<td align="{S_CONTENT_FLOW_END}">
-	<form method="post" id="jumpbox" action="{S_JUMPBOX_ACTION}" onsubmit="if(document.jumpbox.album_id.value == -1){return false;}">
+	<form method="post" id="jumpbox" action="{S_JUMPBOX_ACTION}" onsubmit="if(this.album_id.value == -1){return false;}">
 
 	<table cellspacing="0" cellpadding="0" border="0">
 	<tr>
