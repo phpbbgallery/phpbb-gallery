@@ -1,29 +1,5 @@
 <!-- INCLUDE gallery/gallery_header.html -->
-<script type="text/javascript">
-function getElement(iElementId)
-{
-	if (document.all) 
-	{
-		return document.all[iElementId];
-	}
-	if (document.getElementById)
-	{
-		return document.getElementById(iElementId);
-	}
-}
 
-function toggleElement(oElement)
-{
-	if (oElement.style.display == "none")
-	{
-		oElement.style.display = "";
-	}
-	else
-	{
-		oElement.style.display = "none";
-	}
-}
-</script>
 <!-- IF not S_IN_GALLERY_POPUP and U_MCP --><p>[&nbsp;<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</p><!-- ENDIF -->
 <h2><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h2>
 
