@@ -166,6 +166,25 @@ class install_update extends module
 			'S_LEGEND'		=> false,
 		));
 
+		// Check for php version
+		if (version_compare(PHP_VERSION, REQUIRED_PHP_VERSION) >= 0)
+		{
+			$result = '<strong style="color:green">' . $user->lang['YES'] . ' - ' . PHP_VERSION . '</strong>';
+		}
+		else
+		{
+			$passed['php'] = false;
+			$result = '<strong style="color:red">' . $user->lang['NO'] . ' - ' . PHP_VERSION . '</strong>';
+		}
+
+		$template->assign_block_vars('checks', array(
+			'TITLE'			=> $user->lang('REQ_PHP_VERSION', REQUIRED_PHP_VERSION),
+			'RESULT'		=> $result,
+
+			'S_EXPLAIN'		=> false,
+			'S_LEGEND'		=> false,
+		));
+
 		// Test for optional PHP settings
 		$template->assign_block_vars('checks', array(
 			'S_LEGEND'			=> true,
@@ -396,11 +415,15 @@ class install_update extends module
 					array(GALLERY_RATES_TABLE, 'rate_user_ip'),
 					array(GALLERY_RATES_TABLE, 'rate_point'),
 				));
-			break;
+			// no break;
+
 			case '1.1.0-A1':
 				$umil->table_column_add(array(
 					array(GALLERY_USERS_TABLE, 'subscribe_pegas', array('TINT:1', 0)),
 				));
+			// no break;
+
+			case '1.1.0-B1':
 			break;
 		}
 
@@ -476,6 +499,10 @@ class install_update extends module
 				}
 
 				phpbb_gallery_config::set('watermark_changed', time());
+			// no break;
+
+			case '1.1.0-A1':
+			case '1.1.0-B1':
 
 				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=4");
 			break;
@@ -514,11 +541,12 @@ class install_update extends module
 				$umil->table_remove(array(
 					GALLERY_CONFIG_TABLE,
 				));
-
-				//@todo: Move on bbcode-change or creating all modules
-				//$reparse_modules_bbcode = true;
+			// no break;
 
 			case '1.1.0-A1':
+			case '1.1.0-B1':
+				//@todo: Move on bbcode-change or creating all modules
+				//$reparse_modules_bbcode = true;
 			break;
 		}
 
@@ -618,6 +646,7 @@ class install_update extends module
 					add_bbcode('album');
 					*/
 				case '1.1.0-A1':
+				case '1.1.0-B1':
 				break;
 			}
 
@@ -634,6 +663,7 @@ class install_update extends module
 			$modules = $this->gallery_config_options;
 			switch (phpbb_gallery_config::get('version'))
 			{
+				case '1.1.0-B1':
 				case '1.1.0-A1':
 				case '1.0.6':
 				case '1.0.5.1':

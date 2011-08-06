@@ -146,6 +146,25 @@ class install_convert extends module
 			'S_LEGEND'		=> false,
 		));
 
+		// Check for php version
+		if (version_compare(PHP_VERSION, REQUIRED_PHP_VERSION) >= 0)
+		{
+			$result = '<strong style="color:green">' . $user->lang['YES'] . ' - ' . PHP_VERSION . '</strong>';
+		}
+		else
+		{
+			$passed['php'] = false;
+			$result = '<strong style="color:red">' . $user->lang['NO'] . ' - ' . PHP_VERSION . '</strong>';
+		}
+
+		$template->assign_block_vars('checks', array(
+			'TITLE'			=> $user->lang('REQ_PHP_VERSION', REQUIRED_PHP_VERSION),
+			'RESULT'		=> $result,
+
+			'S_EXPLAIN'		=> false,
+			'S_LEGEND'		=> false,
+		));
+
 		// Test for optional PHP settings
 		$template->assign_block_vars('checks', array(
 			'S_LEGEND'			=> true,

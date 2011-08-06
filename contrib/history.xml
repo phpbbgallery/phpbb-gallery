@@ -198,6 +198,19 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 		<history>
 			<entry>
+				<date>2011-08-06</date>
+				<rev-version>1.1.0</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Fix] Jumpbox allows jumping to invalid albums (Bug #823)]]></change>
+					<change><![CDATA[[Fix] Restrict autoloader to gallery classes (Bug #821)]]></change>
+					<change><![CDATA[[Fix] User option for blocks not working correctly (Bug #820)]]></change>
+					<change><![CDATA[[Fix] Add missing quick moderation to subsilver2 (Bug #817)]]></change>
+					<change><![CDATA[[Fix] Error when testing user permissions (Bug #818)]]></change>
+					<change><![CDATA[[Fix] Gallery throws error when there are permissions for deleted albums (Bug #816)]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
 				<date>2011-07-04</date>
 				<rev-version>1.1.0-B1</rev-version>
 				<changelog lang="en">
@@ -1037,8 +1050,8 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		<link-group>
 			<link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
 			<link type="parent" lang="en" href="../install.xml">Manual</link>
-			<link type="parent" lang="de" href="update_1_0_6_to_1_1_0_B1/update.xml">Update von 1.0.6 auf 1.1.0-B1</link>
-			<link type="parent" lang="en" href="update_1_0_6_to_1_1_0_B1/update.xml">Update from 1.0.6 to 1.1.0-B1</link>
+			<link type="parent" lang="de" href="update_1_0_6_to_1_1_0/update.xml">Update von 1.0.6 auf 1.1.0</link>
+			<link type="parent" lang="en" href="update_1_0_6_to_1_1_0/update.xml">Update from 1.0.6 to 1.1.0</link>
 		</link-group>
 	</header>
 

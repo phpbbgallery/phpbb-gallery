@@ -1,23 +1,17 @@
-[b]MOD Name:[/b] phpBB Gallery
-[b]Author:[/b] [url=http://www.flying-bits.org][b]nickvergessen[/b][/url]
-
-[b]MOD Version:[/b] 1.1.0-A1
-[b]MOD Description:[/b]
-[list]An image-gallery integrated into your phpbb-board.[/list]
-
+[b]Version:[/b] 1.1.0
+[b]Description:[/b] An image-gallery integrated into your phpbb-board.
 [b]Features:[/b] For a (nearly) full feature list see http://www.flying-bits.org/go/phpbb_gallery/features
 
-[b]Demo URL:[/b] http://www.flying-bits.org/gallery/index.php
 [b]Supported Styles:[/b] prosilver, subsilver2
 [b]Supported Language-Packages:[/b] de, en
-[list]more languages can be found [url=http://www.flying-bits.org/go/phpbb_gallery/translations/1.1]here[/url][/list]
 
-[b]MOD Repository[/b]: https://github.com/nickvergessen/phpbb-gallery (Git)
-[b]Bug-Tracker[/b]: http://www.flying-bits.org/go/bugtracker/
-(Before reporting a bug see the FAQ, whether there is something you should know about that bug)
+[b]Required phpBB-Version:[/b] 3.0.9
+[b]Required php-Version:[/b] 5+
 
+[b]Repository[/b]: [url]https://github.com/nickvergessen/phpbb-gallery[/url] (Git)
+[b]Bug-Tracker[/b]: [url]http://www.flying-bits.org/go/bugtracker/[/url]
 
-[b]FAQ & Known-Issues[/b]: http://www.flying-bits.org/go/phpbb_gallery/faq
-[b]Paypal-Donation[/b]: If you like the MOD, you may return the favor with a little [url=http://www.flying-bits.org/paypal.php]Paypal-Donation[/url] (nickvergessen Q gmx.de / Q=@).
+[b]Paypal-Donation[/b]:
+As developing a modification like this, takes a lot of time, I would appreciate if you make a little [url=http://www.flying-bits.org/paypal.php]donation[/url] (nickvergessen Q gmx.de / Q=@).
 
-[b]Downloads:[/b] [size=150][b][url=http://www.flying-bits.org/go/phpbb_gallery/download]Download v1.1.0-A1[/url][/b][/size]
+[b]Downloads:[/b] [size=150][b][url=http://www.flying-bits.org/go/phpbb_gallery/download]Download v1.1.0[/url][/b][/size]
