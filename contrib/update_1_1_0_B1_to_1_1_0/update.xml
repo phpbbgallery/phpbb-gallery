@@ -62,7 +62,8 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<file from="root/includes/*.*" to="includes/*.*" />
 			<file from="root/install/*.*" to="install/*.*" />
 			<file from="root/language/en/*.*" to="language/en/*.*" />
-			<file from="root/styles/prosilver/template/*.*" to="styles/prosilver/template/*.*" />
+			<file from="root/styles/prosilver/*.*" to="styles/prosilver/*.*" />
+			<file from="root/umil/*.*" to="umil/*.*" />
 		</copy>
 
 		<php-installer>install/index.php</php-installer>
