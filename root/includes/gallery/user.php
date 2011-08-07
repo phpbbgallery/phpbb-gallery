@@ -60,19 +60,18 @@ class phpbb_gallery_user
 	*/
 	public function load_data()
 	{
+		$this->entry_exists	= false;
 		$sql = 'SELECT *
 			FROM ' . GALLERY_USERS_TABLE . '
 			WHERE user_id = ' . $this->id;
 		$result = $this->db->sql_query($sql);
-		$row = $this->db->sql_fetchrow($result);
-		$this->db->sql_freeresult($result);
-
-		$this->entry_exists	= false;
-		if ($row !== false)
+		if ($row = $this->db->sql_fetchrow($result))
 		{
 			$this->data			= $this->validate_data($row);
 			$this->entry_exists	= true;
 		}
+		$this->db->sql_freeresult($result);
+
 	}
 
 	/**
