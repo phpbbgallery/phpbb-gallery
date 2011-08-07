@@ -412,7 +412,6 @@ class install_convert_ts extends module
 
 		// Add index
 		$umil->table_index_add(array(
-			array(GALLERY_USERS_TABLE,	'pg_palbum_id',	array('personal_album_id')),
 			array(SESSIONS_TABLE,		'session_aid',	array('session_album_id')),
 		));
 
