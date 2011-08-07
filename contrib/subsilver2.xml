@@ -49,10 +49,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 	<action-group>
 		<copy>
-			<file from="root/styles/subsilver2/imageset/en/button_upload_image.gif" to="styles/subsilver2/imageset/en/button_upload_image.gif" />
-			<file from="root/styles/subsilver2/imageset/en/icon_contact_gallery.gif" to="styles/subsilver2/imageset/en/icon_contact_gallery.gif" />
-			<file from="root/styles/subsilver2/template/*.*" to="styles/subsilver2/template/*.*" />
-			<file from="root/styles/subsilver2/theme/images/icon_mini_gallery.gif" to="styles/subsilver2/theme/images/icon_mini_gallery.gif" />
+			<file from="root/styles/subsilver2/*.*" to="styles/subsilver2/*.*" />
 		</copy>
 
 		<open src="styles/subsilver2/imageset/en/imageset.cfg">
