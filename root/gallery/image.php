@@ -60,7 +60,9 @@ if ((!phpbb_gallery::$auth->acl_check('i_view', $album_id, $album_data['album_us
 	$image_error = 'not_authorised.jpg';
 }
 
-// Hotlink prevention
+/**
+* Hotlink prevention
+* Currently disabled, revisit for next version
 if (phpbb_gallery_config::get('allow_hotlinking') && isset($_SERVER['HTTP_REFERER']))
 {
 	$check_referer = trim($_SERVER['HTTP_REFERER']);
@@ -93,6 +95,7 @@ if (phpbb_gallery_config::get('allow_hotlinking') && isset($_SERVER['HTTP_REFERE
 		$image_error = 'no_hotlinking.jpg';
 	}
 }
+*/
 
 
 /**
