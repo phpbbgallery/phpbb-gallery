@@ -424,6 +424,7 @@ class install_update extends module
 			// no break;
 
 			case '1.1.0-B1':
+			case '1.1.0':
 			break;
 		}
 
@@ -503,6 +504,7 @@ class install_update extends module
 
 			case '1.1.0-A1':
 			case '1.1.0-B1':
+			case '1.1.0':
 
 				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=4");
 			break;
@@ -545,6 +547,7 @@ class install_update extends module
 
 			case '1.1.0-A1':
 			case '1.1.0-B1':
+			case '1.1.0':
 				//@todo: Move on bbcode-change or creating all modules
 				//$reparse_modules_bbcode = true;
 			break;
@@ -647,6 +650,7 @@ class install_update extends module
 					*/
 				case '1.1.0-A1':
 				case '1.1.0-B1':
+				case '1.1.0':
 				break;
 			}
 
@@ -663,6 +667,7 @@ class install_update extends module
 			$modules = $this->gallery_config_options;
 			switch (phpbb_gallery_config::get('version'))
 			{
+				case '1.1.0':
 				case '1.1.0-B1':
 				case '1.1.0-A1':
 				case '1.0.6':

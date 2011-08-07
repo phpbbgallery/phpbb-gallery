@@ -19,7 +19,7 @@ define('IN_INSTALL', true);
 
 define('REQUIRED_PHP_VERSION', '5.0');
 
-define('NEWEST_PG_VERSION', '1.1.0');//@todo
+define('NEWEST_PG_VERSION', '1.1.1');//@todo
 
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);

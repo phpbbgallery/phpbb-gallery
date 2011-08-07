@@ -188,7 +188,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</author>
 		</author-group>
 
-		<mod-version>1.1.0</mod-version>
+		<mod-version>1.1.1</mod-version>
 
 		<installation>
 			<level>intermediate</level>
@@ -197,6 +197,16 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		</installation>
 
 		<history>
+			<entry>
+				<date>2011-08-07</date>
+				<rev-version>1.1.1</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Fix] Fix copy operations in XML files (delete and add some directories) (Bug #827)]]></change>
+					<change><![CDATA[[Fix] PHP Warning: in file /includes/gallery/user.php on line 334: Invalid argument supplied for foreach() (Bug #826)]]></change>
+					<change><![CDATA[[Fix] Index name ... on table ... is too long. The maximum is 24 characters. (Bug #825)]]></change>
+				</changelog>
+			</entry>
+
 			<entry>
 				<date>2011-08-06</date>
 				<rev-version>1.1.0</rev-version>
