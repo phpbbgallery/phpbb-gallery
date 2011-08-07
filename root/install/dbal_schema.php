@@ -106,7 +106,7 @@ class phpbb_gallery_dbal_schema
 		'comments'	=> array(
 			'full_name'		=> GALLERY_COMMENTS_TABLE,
 			'added'			=> '0.0.0',
-			'modified'		=> '0.3.1',
+			'modified'		=> '1.1.1',
 			'structure'		=> array(
 				'COLUMNS'		=> array(
 					'comment_id'			=> array('UINT', NULL, 'auto_increment'),
@@ -126,10 +126,10 @@ class phpbb_gallery_dbal_schema
 				),
 				'PRIMARY_KEY'	=> 'comment_id',
 				'KEYS'		=> array(
-					'comment_image_id'		=> array('INDEX', 'comment_image_id'),
-					'comment_user_id'		=> array('INDEX', 'comment_user_id'),
-					'comment_user_ip'		=> array('INDEX', 'comment_user_ip'),
-					'comment_time'			=> array('INDEX', 'comment_time'),
+					'id'			=> array('INDEX', 'comment_image_id'),
+					'uid'			=> array('INDEX', 'comment_user_id'),
+					'ip'			=> array('INDEX', 'comment_user_ip'),
+					'time'			=> array('INDEX', 'comment_time'),
 				),
 			),
 		),
@@ -196,7 +196,7 @@ class phpbb_gallery_dbal_schema
 		'favorites'	=> array(
 			'full_name'		=> GALLERY_FAVORITES_TABLE,
 			'added'			=> '0.3.1',
-			'modified'		=> '0.3.1',
+			'modified'		=> '1.1.1',
 			'structure'		=> array(
 				'COLUMNS'		=> array(
 					'favorite_id'			=> array('UINT', NULL, 'auto_increment'),
@@ -205,15 +205,15 @@ class phpbb_gallery_dbal_schema
 				),
 				'PRIMARY_KEY'	=> 'favorite_id',
 				'KEYS'		=> array(
-					'user_id'		=> array('INDEX', 'user_id'),
-					'image_id'		=> array('INDEX', 'image_id'),
+					'uid'		=> array('INDEX', 'user_id'),
+					'id'		=> array('INDEX', 'image_id'),
 				),
 			),
 		),
 		'images'	=> array(
 			'full_name'		=> GALLERY_IMAGES_TABLE,
 			'added'			=> '0.0.0',
-			'modified'		=> '1.0.0',
+			'modified'		=> '1.1.1',
 			'structure'		=> array(
 				'COLUMNS'		=> array(
 					'image_id'				=> array('UINT', NULL, 'auto_increment'),
@@ -252,16 +252,16 @@ class phpbb_gallery_dbal_schema
 				),
 				'PRIMARY_KEY'				=> 'image_id',
 				'KEYS'		=> array(
-					'image_album_id'		=> array('INDEX', 'image_album_id'),
-					'image_user_id'			=> array('INDEX', 'image_user_id'),
-					'image_time'			=> array('INDEX', 'image_time'),
+					'aid'			=> array('INDEX', 'image_album_id'),
+					'uid'			=> array('INDEX', 'image_user_id'),
+					'time'			=> array('INDEX', 'image_time'),
 				),
 			),
 		),
 		'modscache'	=> array(
 			'full_name'		=> GALLERY_MODSCACHE_TABLE,
 			'added'			=> '0.3.1',
-			'modified'		=> '0.3.1',
+			'modified'		=> '1.1.1',
 			'structure'		=> array(
 				'COLUMNS'		=> array(
 					'album_id'				=> array('UINT', 0),
@@ -272,8 +272,8 @@ class phpbb_gallery_dbal_schema
 					'display_on_index'		=> array('TINT:1', 1),
 				),
 				'KEYS'		=> array(
-					'disp_idx'		=> array('INDEX', 'display_on_index'),
-					'album_id'		=> array('INDEX', 'album_id'),
+					'doi'		=> array('INDEX', 'display_on_index'),
+					'aid'		=> array('INDEX', 'album_id'),
 				),
 			),
 		),
@@ -296,7 +296,7 @@ class phpbb_gallery_dbal_schema
 		'rates'	=> array(
 			'full_name'		=> GALLERY_RATES_TABLE,
 			'added'			=> '0.0.0',
-			'modified'		=> '1.1.0',
+			'modified'		=> '1.1.1',
 			'structure'		=> array(
 				'COLUMNS'		=> array(
 					'rate_image_id'		=> array('UINT', 0),
@@ -304,9 +304,7 @@ class phpbb_gallery_dbal_schema
 					'rate_user_ip'		=> array('VCHAR:40', ''),
 					'rate_point'		=> array('UINT:3', 0),
 				),
-				'KEYS'		=> array(
-					'rate_image_user'	=> array('UNIQUE', array('rate_image_id', 'rate_user_id')),
-				),
+				'PRIMARY_KEY'	=> array('rate_image_id', 'rate_user_id'),
 			),
 		),
 		'reports'	=> array(
@@ -366,7 +364,7 @@ class phpbb_gallery_dbal_schema
 		'users'	=> array(
 			'full_name'		=> GALLERY_USERS_TABLE,
 			'added'			=> '0.3.1',
-			'modified'		=> '1.1.0',
+			'modified'		=> '1.1.1',
 			'structure'		=> array(
 				'COLUMNS'		=> array(
 					'user_id'			=> array('UINT', 0),
@@ -384,12 +382,15 @@ class phpbb_gallery_dbal_schema
 					'subscribe_pegas'			=> array('TINT:1', 0),
 				),
 				'PRIMARY_KEY'		=> 'user_id',
+				'KEYS'		=> array(
+					'pega'			=> array('INDEX', array('personal_album_id')),
+				),
 			),
 		),
 		'watch'	=> array(
 			'full_name'		=> GALLERY_WATCH_TABLE,
 			'added'			=> '0.3.1',
-			'modified'		=> '0.3.1',
+			'modified'		=> '1.1.1',
 			'structure'		=> array(
 				'COLUMNS'		=> array(
 					'watch_id'		=> array('UINT', NULL, 'auto_increment'),
@@ -399,9 +400,9 @@ class phpbb_gallery_dbal_schema
 				),
 				'PRIMARY_KEY'		=> 'watch_id',
 				'KEYS'		=> array(
-					'user_id'			=> array('INDEX', 'user_id'),
-					'image_id'			=> array('INDEX', 'image_id'),
-					'album_id'			=> array('INDEX', 'album_id'),
+					'uid'			=> array('INDEX', 'user_id'),
+					'id'			=> array('INDEX', 'image_id'),
+					'aid'			=> array('INDEX', 'album_id'),
 				),
 			),
 		),

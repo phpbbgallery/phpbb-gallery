@@ -408,7 +408,7 @@ class install_update extends module
 				$umil->table_column_update(array(
 					array(GALLERY_RATES_TABLE, 'rate_image_id', array('UINT', 0)),
 				));
-				$umil->db_tools->sql_create_unique_index(GALLERY_RATES_TABLE, 'rate_image_user', array('rate_image_id', 'rate_user_id'));
+				$umil->db_tools->sql_create_unique_index(GALLERY_RATES_TABLE, 'id_uid', array('rate_image_id', 'rate_user_id'));
 				$umil->table_index_remove(array(
 					array(GALLERY_RATES_TABLE, 'rate_image_id'),
 					array(GALLERY_RATES_TABLE, 'rate_user_id'),
