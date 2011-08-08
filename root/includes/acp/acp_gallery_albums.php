@@ -298,7 +298,7 @@ class acp_gallery_albums
 					}
 					if ($row['album_type'] == phpbb_gallery_album::TYPE_CONTEST)
 					{
-						$contest_data = $this->get_contest_info('album', $album_id);
+						$contest_data = phpbb_gallery_contest::get_contest($album_id, 'album');
 					}
 					else
 					{

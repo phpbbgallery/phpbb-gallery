@@ -326,7 +326,7 @@ class phpbb_gallery_album_manage
 			{
 				// Changing a contest to contest? Yes!
 				// We need to check for the contest_data
-				$row_contest = $this->get_contest_info('album', $album_data['album_id']);
+				$row_contest = phpbb_gallery_contest::get_contest($album_data['album_id'], 'album');
 				$contest_data['contest_id'] = $row_contest['contest_id'];
 				if ($row_contest['contest_marked'] == phpbb_gallery_image::NO_CONTEST)
 				{

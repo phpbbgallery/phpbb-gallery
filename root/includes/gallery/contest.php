@@ -36,6 +36,34 @@ class phpbb_gallery_contest
 	*/
 	const MODE_SUM = 2;
 
+	/**
+	* Get the contest row from the table
+	*
+	* @param	int		$id				ID of the contest or album, depending on second parameter
+	* @param	string	$mode			contest or album ID to get the contest.
+	* @param	bool	$throw_error	Shall we throw an error if the contest was not found?
+	*
+	* @return	mixed	Either the array or boolean false if contest does not exist
+	*/
+	function get_contest($id, $mode = 'contest', $throw_error = true)
+	{
+		global $db;
+
+		$sql = 'SELECT *
+			FROM ' . GALLERY_CONTESTS_TABLE . '
+			WHERE ' . (($mode = 'album') ? 'contest_album_id' : 'contest_id') . ' = ' . (int) $id;
+		$result = $db->sql_query_limit($sql, 1);
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		if (!$row && $throw_error)
+		{
+			trigger_error('NO_CONTEST', E_USER_ERROR);
+		}
+
+		return (!$row) ? false : $row;
+	}
+
 	static private function get_tabulation()
 	{
 		switch (self::$mode)
