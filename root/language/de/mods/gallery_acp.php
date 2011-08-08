@@ -305,6 +305,7 @@ $lang = array_merge($lang, array(
 	'PHPBB_INTEGRATION'				=> 'Integration in phpBB',
 	'PNG_ALLOWED'					=> 'Es ist erlaubt PNG-Dateien hochzuladen',
 	'PURGED_CACHE'					=> 'Cache geleert',
+	'PRUNE'							=> 'Bilder löschen',
 	'PRUNE_ALBUMS'					=> 'Bilder aus Alben löschen',
 	'PRUNE_CHECK_OPTION'			=> 'Diese Option beim Löschen berücksichtigen.',
 	'PRUNE_COMMENTS'				=> 'Weniger als x Kommentare',

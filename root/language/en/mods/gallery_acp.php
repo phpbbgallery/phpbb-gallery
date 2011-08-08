@@ -303,6 +303,7 @@ $lang = array_merge($lang, array(
 	'PHPBB_INTEGRATION'				=> 'phpBB integration',
 	'PNG_ALLOWED'					=> 'Allowed to upload PNG files',
 	'PURGED_CACHE'					=> 'Purged the cache',
+	'PRUNE'							=> 'Prune',
 	'PRUNE_ALBUMS'					=> 'Prune albums',
 	'PRUNE_CHECK_OPTION'			=> 'Check this option, while pruning images.',
 	'PRUNE_COMMENTS'				=> 'Less than x comments',
