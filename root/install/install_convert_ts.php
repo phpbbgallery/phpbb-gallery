@@ -221,7 +221,7 @@ class install_convert_ts extends module
 			'import',
 			'upload',
 			'medium',
-			'cache',
+			'thumbnail',
 		);
 
 		umask(0);

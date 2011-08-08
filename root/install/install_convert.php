@@ -220,7 +220,7 @@ class install_convert extends module
 			'import',
 			'upload',
 			'medium',
-			'cache',
+			'thumbnail',
 		);
 
 		umask(0);

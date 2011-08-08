@@ -240,7 +240,7 @@ class install_update extends module
 			'import',
 			'upload',
 			'medium',
-			'cache',
+			'thumbnail',
 		);
 
 		umask(0);
