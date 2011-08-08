@@ -83,12 +83,14 @@ class phpbb_gallery_cleanup
 	*/
 	static public function delete_pegas($unwanted_pegas, $obsolent_pegas)
 	{
+		global $db;
+
 		$delete_pegas = array_merge($unwanted_pegas, $obsolent_pegas);
 
 		$delete_images = $delete_albums = $user_image_count = array();
 		$num_pegas = 0;
 
-		$sql = 'SELECT album_id
+		$sql = 'SELECT album_id, parent_id
 			FROM ' . GALLERY_ALBUMS_TABLE . '
 			WHERE ' . $db->sql_in_set('album_user_id', $delete_pegas);
 		$result = $db->sql_query($sql);
