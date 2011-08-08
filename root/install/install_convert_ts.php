@@ -255,7 +255,7 @@ class install_convert_ts extends module
 			$write = ($write) ? '<strong style="color:green">' . $user->lang['WRITABLE'] . '</strong>' : '<strong style="color:red">' . $user->lang['UNWRITABLE'] . '</strong>';
 
 			$template->assign_block_vars('checks', array(
-				'TITLE'		=> $dir,
+				'TITLE'		=> phpbb_gallery_url::_return_file('', $dir . '_noroot', ''),
 				'RESULT'	=> $write,
 
 				'S_EXPLAIN'	=> false,
