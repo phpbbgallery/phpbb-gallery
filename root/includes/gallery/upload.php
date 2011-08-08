@@ -361,7 +361,7 @@ class phpbb_gallery_upload
 
 		}
 
-		if (isset($update_exif) && ($this->exif_status == phpbb_gallery_exif::DB_SAVED))
+		if (isset($update_exif) && ($this->exif_status == phpbb_gallery_exif::DBSAVED))
 		{
 			return true;
 		}
