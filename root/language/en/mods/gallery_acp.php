@@ -160,7 +160,7 @@ $lang = array_merge($lang, array(
 	'EDIT_ALBUM'					=> 'Edit album',
 
 	'FAKE_THUMB_SIZE'				=> 'Thumbnail-size',
-	'FAKE_THUMB_SIZE_EXP'			=> 'If you want to resize them to the full size, remember 16 pixels for the black-info-line',
+	'FAKE_THUMB_SIZE_EXP'			=> 'If you want to keep the original size, remember 16 pixels for the black-info-line',
 	'FEED_ENABLED'					=> 'Enable album feeds',
 	'FEED_ENABLED_PEGAS'			=> 'Enable feeds for personal galleries',
 	'FEED_LIMIT'					=> 'Number of elements displayed',

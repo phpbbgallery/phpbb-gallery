@@ -162,7 +162,7 @@ $lang = array_merge($lang, array(
 	'EDIT_ALBUM'					=> 'Album bearbeiten',
 
 	'FAKE_THUMB_SIZE'				=> 'Thumbnailgröße',
-	'FAKE_THUMB_SIZE_EXP'			=> 'Wenn du die volle Größe wählst, denke an die 16 Pixel für die schwarze Info-Zeile',
+	'FAKE_THUMB_SIZE_EXP'			=> 'Wenn du die volle Größe willst, denke an die 16 Pixel für die schwarze Info-Zeile',
 	'FEED_ENABLED'					=> 'Feeds für Alben einschalten',
 	'FEED_ENABLED_PEGAS'			=> 'Feeds für persönliche Alben einschalten',
 	'FEED_LIMIT'					=> 'Anzahl der angezeigten Elemente',
@@ -209,7 +209,7 @@ $lang = array_merge($lang, array(
 	'INHERIT_PERMISSIONS_VICTIM'	=> 'Berechtigung aus einer anderen Einstellung übernehmen',
 
 	'JPG_ALLOWED'					=> 'Es ist erlaubt JPG-Dateien hochzuladen',
-	'JPG_QUALITY'					=> 'JPG-Qualtität',
+	'JPG_QUALITY'					=> 'JPG-Qualität',
 	'JPG_QUALITY_EXP'				=> 'Wenn Bilder gedreht oder verkleinert werden, kann ihre Dateigröße danach größer sein als davor. Mit dieser Option kann die Qualtität verringert werden, um Speicherplatz zu sparen.',
 
 	'LIST_INDEX'					=> 'Führe Subalbum in der Legende des übergeordneten Albums auf',
@@ -401,7 +401,7 @@ $lang = array_merge($lang, array(
 	'THUMBNAIL_WIDTH'				=> 'Thumbnailbreiteh',
 
 	'UC_IMAGE_NAME'					=> 'Bildname',
-	'UC_IMAGE_ICON'					=> '„Letzes Bild“-Icon',
+	'UC_IMAGE_ICON'					=> '„Letztes Bild“-Icon',
 	'UC_IMAGEPAGE'					=> 'Bild auf der Image-page',
 	'UC_IMAGEPAGE_EXP'				=> 'Das ist die Seite mit den Details und Kommentaren',
 	'UC_LINK_CONFIG'				=> 'Link Konfiguration',
