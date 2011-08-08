@@ -307,7 +307,10 @@ class acp_gallery
 					}
 					$db->sql_freeresult($result);
 
-					phpbb_gallery_image_rating::delete_ratings($image_ids, true);
+					if (!empty($image_ids))
+					{
+						phpbb_gallery_image_rating::delete_ratings($image_ids, true);
+					}
 
 					trigger_error($user->lang['RESET_RATING_COMPLETED'] . adm_back_link($this->u_action));
 				break;
