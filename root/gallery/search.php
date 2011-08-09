@@ -510,7 +510,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 			}
 			$db->sql_freeresult($result);
 
-			$columns_per_page = ($search_id == 'contests') ? phpbb_gallery_constants::CONTEST_IMAGES : phpbb_gallery_config::get('album_columns');
+			$columns_per_page = ($search_id == 'contests') ? phpbb_gallery_contest::NUM_IMAGES : phpbb_gallery_config::get('album_columns');
 			$init_block = true;
 			if ($search_id == 'contests')
 			{
@@ -524,7 +524,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 					));
 					foreach ($contest_data['images'] as $contest_image)
 					{
-						if (($num % phpbb_gallery_constants::CONTEST_IMAGES) == 0)
+						if (($num % phpbb_gallery_contest::NUM_IMAGES) == 0)
 						{
 							$template->assign_block_vars('imageblock.imagerow', array());
 						}
@@ -534,7 +534,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 							$num++;
 						}
 					}
-					while (($num % phpbb_gallery_constants::CONTEST_IMAGES) > 0)
+					while (($num % phpbb_gallery_contest::NUM_IMAGES) > 0)
 					{
 						$template->assign_block_vars('imageblock.imagerow.no_image', array());
 						$num++;
