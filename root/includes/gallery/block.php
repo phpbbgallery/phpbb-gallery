@@ -505,17 +505,17 @@ class phpbb_gallery_block
 				));
 				foreach ($contest_data['images'] as $image)
 				{
-					if (($num % phpbb_gallery_constants::CONTEST_IMAGES) == 0)
+					if (($num % phpbb_gallery_contest::NUM_IMAGES) == 0)
 					{
 						$template->assign_block_vars('imageblock.imagerow', array());
 					}
 					if (!empty($this->images_data[$image]))
 					{
-						phpbb_gallery_image::assign_block('imageblock.imagerow.image', $this->images_data[$image], $this->images_data[$image]['album_status'], $this->get_display(), $images_data[$image]['album_user_id']);
+						phpbb_gallery_image::assign_block('imageblock.imagerow.image', $this->images_data[$image], $this->images_data[$image]['album_status'], $this->get_display(), $this->images_data[$image]['album_user_id']);
 						$num++;
 					}
 				}
-				while (($num % phpbb_gallery_constants::CONTEST_IMAGES) > 0)
+				while (($num % phpbb_gallery_contest::NUM_IMAGES) > 0)
 				{
 					$template->assign_block_vars('imageblock.imagerow.no_image', array());
 					$num++;
