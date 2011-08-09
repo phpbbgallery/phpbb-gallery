@@ -128,7 +128,8 @@ class phpbb_gallery_comment
 		$sql = 'SELECT comment_image_id, COUNT(comment_id) AS num_comments, MAX(comment_id) AS last_comment
 			FROM ' . GALLERY_COMMENTS_TABLE . "
 			$sql_where
-			GROUP BY comment_id";
+			GROUP BY comment_image_id
+			ORDER BY comment_id DESC";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
@@ -171,7 +172,8 @@ class phpbb_gallery_comment
 
 		$sql = 'SELECT comment_image_id, COUNT(comment_id) AS num_comments
 			FROM ' . GALLERY_COMMENTS_TABLE . '
-			WHERE ' . $db->sql_in_set('comment_id', $comment_ids);
+			WHERE ' . $db->sql_in_set('comment_id', $comment_ids) . '
+			GROUP BY comment_image_id';
 		$result = $db->sql_query($sql);
 
 		$image_ids = array();
