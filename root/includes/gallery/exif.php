@@ -308,8 +308,9 @@ class phpbb_gallery_exif
 
 		global $db;
 
+		$update_data = ($this->status == self::DBSAVED) ? ", image_exif_data = '" . $db->sql_escape($this->serialized) . "'" : '';
 		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-			SET image_has_exif = ' . $this->status . '
+			SET image_has_exif = ' . $this->status . $update_data . '
 			WHERE image_id = ' . $this->image_id;
 		$db->sql_query($sql);
 	}
