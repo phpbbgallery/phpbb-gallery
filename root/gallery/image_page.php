@@ -560,6 +560,7 @@ if (!isset($user_cache[$image_data['image_user_id']]))
 
 if (phpbb_gallery::$auth->acl_check('m_status', $album_id, $album_data['album_user_id']) || ($image_data['image_contest'] != phpbb_gallery_image::IN_CONTEST))
 {
+	$user_id = $image_data['image_user_id'];
 	$user_cache[$user_id]['username'] = ($image_data['image_username']) ? $image_data['image_username'] : $user->lang['GUEST'];
 	$template->assign_vars(array(
 		'POSTER_FULL'		=> get_username_string('full', $user_id, $user_cache[$user_id]['username'], $user_cache[$user_id]['user_colour']),
