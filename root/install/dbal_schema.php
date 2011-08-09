@@ -146,7 +146,7 @@ class phpbb_gallery_dbal_schema
 			),
 		),
 		'contests'	=> array(
-			'full_name'		=> GALLERY_CONTEST_TABLE,
+			'full_name'		=> GALLERY_CONTESTS_TABLE,
 			'added'			=> '0.4.1',
 			'modified'		=> '0.4.1',
 			'structure'		=> array(
