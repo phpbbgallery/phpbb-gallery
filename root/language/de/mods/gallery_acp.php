@@ -184,9 +184,9 @@ $lang = array_merge($lang, array(
 	'HACKING_ATTEMPT'				=> 'Hacking attempt!',
 	'HANDLE_IMAGES'					=> 'Was soll mit Bildern passieren',
 	'HANDLE_SUBS'					=> 'Was soll mit angehängten Alben passieren',
-	'HOTLINK_ALLOWED'				=> 'Erlaubt Domains für Hotlink',
-	'HOTLINK_ALLOWED_EXP'			=> 'Die Domains müssen mit Kommata getrennt werden (keine Leerzeichen). Beispiel: „flying-bits.org,phpbb.com“',
-	'HOTLINK_PREVENT'				=> 'Hotlink Prävention',
+	'HOTLINK_ALLOWED'				=> 'Link Whitelist',
+	'HOTLINK_ALLOWED_EXP'			=> 'Links auf Bilder von diesen Seiten sind immer erlaubt. Die Domains müssen mit Kommata getrennt werden (keine Leerzeichen). Beispiel: „flying-bits.org,phpbb.com“',
+	'HOTLINK_PREVENT'				=> 'Links auf Bilder von allen Seiten aus erlauben',
 
 	'IMAGE_DESC_MAX_LENGTH'			=> 'Bild Beschreibung / Kommentar maximale Länge',
 	'IMAGE_ID'						=> 'Bild-ID',
