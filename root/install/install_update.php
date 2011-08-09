@@ -506,6 +506,9 @@ class install_update extends module
 			case '1.1.0-B1':
 			case '1.1.0':
 
+			case '1.1.1':
+				phpbb_gallery_config::set('allow_hotlinking', true);
+
 				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=4");
 			break;
 		}

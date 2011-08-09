@@ -62,40 +62,32 @@ if ((!phpbb_gallery::$auth->acl_check('i_view', $album_id, $album_data['album_us
 
 /**
 * Hotlink prevention
-* Currently disabled, revisit for next version
-if (phpbb_gallery_config::get('allow_hotlinking') && isset($_SERVER['HTTP_REFERER']))
+*/
+if (!phpbb_gallery_config::get('allow_hotlinking') && isset($_SERVER['HTTP_REFERER']))
 {
-	$check_referer = trim($_SERVER['HTTP_REFERER']);
-	if (substr($check_referer, 0, 7) == 'http://')
-	{
-		$check_referer = substr($check_referer, 7);
-	}
-	else if (substr($check_referer, 0, 8) == 'https://')
-	{
-		$check_referer = substr($check_referer, 8);
-	}
-	if (strpos($check_referer, '/'))
-	{
-		$check_referer = substr($check_referer, 0, strpos($check_referer, '/'));
-	}
-	if (substr_count($check_referer, '.') == 2)
-	{
-		$check_referer = substr($check_referer, (strpos($check_referer, '.') + 1));
-	}
-
 	$good_referers = array($config['server_name']);
 	if (phpbb_gallery_config::get('hotlinking_domains') != '')
 	{
 		$good_referers = array_merge($good_referers, explode(',', phpbb_gallery_config::get('hotlinking_domains')));
 	}
 
-	if (!in_array($check_referer, $good_referers))
+	$referer = @parse_url(trim($_SERVER['HTTP_REFERER']), PHP_URL_HOST);
+	// Do not shorten IP adresses...
+	if (substr_count($referer, '.') >= 2 && !preg_match(get_preg_expression('ipv4'), $referer) && !preg_match(get_preg_expression('ipv6'), $referer))
+	{
+		$position = strrpos($referer, '.');
+		$position = strrpos(substr($referer, 0, $position), '.');
+		$referer_host = substr($referer, $position + 1);
+	}
+
+	// Is the host (flying-bits.org) or the full domain (xyz.flying-bits.org) in the white-list?
+	if (!in_array($referer, $good_referers) && !in_array($referer_host, $good_referers))
 	{
 		//trigger_error('NOT_AUTHORISED');
 		$image_error = 'no_hotlinking.jpg';
 	}
 }
-*/
+
 
 
 /**
