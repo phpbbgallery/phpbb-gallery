@@ -117,6 +117,7 @@ class phpbb_gallery_comment
 		global $db;
 
 		$sql_where = $sql_where_image = '';
+		$resync = array();
 		if ($image_ids != false)
 		{
 			$image_ids = self::cast_mixed_int2array($image_ids);
@@ -127,7 +128,7 @@ class phpbb_gallery_comment
 		$sql = 'SELECT comment_image_id, COUNT(comment_id) AS num_comments, MAX(comment_id) AS last_comment
 			FROM ' . GALLERY_COMMENTS_TABLE . "
 			$sql_where
-			ORDER BY comment_id";
+			GROUP BY comment_id";
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
@@ -144,13 +145,16 @@ class phpbb_gallery_comment
 			' . $sql_where_image;
 		$db->sql_query($sql);
 
-		foreach ($resync as $image_id => $data)
+		if (!empty($resync))
 		{
-			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-				SET image_last_comment = ' . $data['last_comment'] . ',
-					image_comments = ' . $data['num,_comments'] . '
-				WHERE image_id = ' . $image_id;
-			$db->sql_query($sql);
+			foreach ($resync as $image_id => $data)
+			{
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+					SET image_last_comment = ' . $data['last_comment'] . ',
+						image_comments = ' . $data['num_comments'] . '
+					WHERE image_id = ' . $image_id;
+				$db->sql_query($sql);
+			}
 		}
 	}
 
