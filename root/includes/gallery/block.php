@@ -56,11 +56,8 @@ class phpbb_gallery_block
 	*/
 	public function set_modes($modes = array())
 	{
-		if (in_array('none', $modes))
-		{
-			// Reset the mode
-			$this->mode = self::MODE_NONE;
-		}
+		// Reset the mode
+		$this->mode = self::MODE_NONE;
 
 		$allowed_modes = array('recent', 'random', 'comment');
 		foreach ($allowed_modes as $mode)
@@ -109,11 +106,8 @@ class phpbb_gallery_block
 	*/
 	public function set_display_options($options = array())
 	{
-		if (in_array('none', $options))
-		{
-			// Reset the mode
-			$this->display = self::DISPLAY_NONE;
-		}
+		// Reset the mode
+		$this->display = self::DISPLAY_NONE;
 
 		$allowed_options = array('albumname', 'comments', 'imagename', 'imagetime', 'imageviews', 'username', 'ratings', 'ip');
 		foreach ($allowed_options as $option)
