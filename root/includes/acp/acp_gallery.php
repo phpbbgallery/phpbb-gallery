@@ -268,7 +268,7 @@ class acp_gallery
 						$sql_ary = array(
 							'filesize_upload'		=> @filesize(phpbb_gallery_url::path('upload') . $row['image_filename']),
 							'filesize_medium'		=> @filesize(phpbb_gallery_url::path('medium') . $row['image_filename']),
-							'filesize_cache'		=> @filesize(phpbb_gallery_url::path('cache') . $row['image_filename']),
+							'filesize_cache'		=> @filesize(phpbb_gallery_url::path('thumbnail') . $row['image_filename']),
 						);
 						$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 							SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
@@ -321,12 +321,12 @@ class acp_gallery
 						trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 
-					$cache_dir = @opendir(phpbb_gallery_url::path('cache'));
+					$cache_dir = @opendir(phpbb_gallery_url::path('thumbnail'));
 					while ($cache_file = @readdir($cache_dir))
 					{
 						if (preg_match('/(\.gif$|\.png$|\.jpg|\.jpeg)$/is', $cache_file))
 						{
-							@unlink(phpbb_gallery_url::path('cache') . $cache_file);
+							@unlink(phpbb_gallery_url::path('thumbnail') . $cache_file);
 						}
 					}
 					@closedir($cache_dir);
