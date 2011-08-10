@@ -17,7 +17,7 @@ $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include('common.' . $phpEx);
 include($phpbb_root_path . 'common.' . $phpEx);
 
-phpbb_gallery::setup(array('mods/gallery', 'mods/exif_data'));
+phpbb_gallery::setup(array('viewtopic', 'mods/gallery', 'mods/exif_data'));
 phpbb_gallery_url::_include('functions_display', 'phpbb');
 
 /**
@@ -218,7 +218,7 @@ $favorite_mode = (($image_data['favorite_id']) ?  'un' : '') . 'favorite';
 $watch_mode = (($image_data['watch_id']) ?  'un' : '') . 'watch';
 
 $template->assign_vars(array(
-	'U_VIEW_ALBUM'		=> phpbb_gallery_url::append_sid("album.$phpEx", "album_id=$album_id"),
+	'U_VIEW_ALBUM'		=> phpbb_gallery_url::append_sid('album', "album_id=$album_id"),
 
 	'UC_PREVIOUS_IMAGE'	=> (!empty($previous_data) && phpbb_gallery_config::get('disp_nextprev_thumbnail')) ? generate_image_link('thumbnail', 'image_page', $previous_data['image_id'], $previous_data['image_name'], $album_id) : '',
 	'UC_PREVIOUS'		=> (!empty($previous_data)) ? phpbb_gallery_image::generate_link('image_name_unbold', 'image_page_prev', $previous_data['image_id'], $previous_data['image_name'], $album_id) : '',
@@ -372,7 +372,6 @@ elseif (phpbb_gallery_config::get('comment_user_control') && !$image_data['image
 */
 if ((phpbb_gallery_config::get('allow_comments') && phpbb_gallery::$auth->acl_check('c_read', $album_id, $album_data['album_user_id'])) && (time() > ($album_data['contest_start'] + $album_data['contest_end'])))
 {
-	$user->add_lang('viewtopic');
 	$start = request_var('start', 0);
 	$sort_order = (request_var('sort_order', 'ASC') == 'ASC') ? 'ASC' : 'DESC';
 	$template->assign_vars(array(
