@@ -338,10 +338,6 @@ class install_convert extends module
 		$this->page_title = $user->lang['STAGE_CREATE_TABLE'];
 		$s_hidden_fields = '';
 
-		$dbms_data = get_dbms_infos();
-		$db_schema = $dbms_data['db_schema'];
-		$delimiter = $dbms_data['delimiter'];
-
 		// Create the tables
 		$umil->table_add(array(
 			array(GALLERY_ALBUMS_TABLE,			phpbb_gallery_dbal_schema::get_table_data('albums')),
@@ -417,7 +413,7 @@ class install_convert extends module
 		switch ($step)
 		{
 			case 0:
-				$batch_ary = array();
+				$batch_ary = $rates_ary = array();
 				$current_batch = 1;
 				$current_batch_size = 1;
 
@@ -428,12 +424,25 @@ class install_convert extends module
 
 				while ($row = $db->sql_fetchrow($result))
 				{
+					if ($row['rate_user_id'] < 0)
+					{
+						// guest ratings are not supported.
+						continue;
+					}
 					$ary = array(
 						'rate_image_id'					=> $row['rate_pic_id'],
 						'rate_user_id'					=> ($row['rate_user_id'] < 0) ? ANONYMOUS : $row['rate_user_id'],
 						'rate_user_ip'					=> decode_ip($row['rate_user_ip']),
 						'rate_point'					=> $row['rate_point'],
 					);
+
+					if (in_array($ary['rate_image_id'] . '-' . $ary['rate_user_id'], $rates_ary))
+					{
+						// Duplicated key
+						continue;
+					}
+					$rates_ary[] = $ary['rate_image_id'] . '-' . $ary['rate_user_id'];
+
 					$batch_ary[$current_batch][] = $ary;
 
 					$current_batch_size++;
@@ -541,8 +550,8 @@ class install_convert extends module
 							'left_id'						=> $left_id,
 							'right_id'						=> $left_id + 1,
 							'album_parents'					=> '',
-							'album_type'					=> ALBUM_CAT,
-							'album_status'					=> ITEM_UNLOCKED,
+							'album_type'					=> phpbb_gallery_album::TYPE_CAT,
+							'album_status'					=> phpbb_gallery_album::STATUS_OPEN,
 							'album_desc'					=> $album_desc_data['text'],
 							'album_desc_uid'				=> '',
 							'album_desc_bitfield'			=> '',
@@ -607,7 +616,7 @@ class install_convert extends module
 						'image_time'			=> $row['pic_time'],
 						'image_album_id'		=> (in_array($row['pic_cat_id'], $personal_albums) ? 0 : $row['pic_cat_id']),
 						'image_view_count'		=> $row['pic_view_count'],
-						'image_status'			=> ($row['pic_lock']) ? IMAGE_LOCKED : $row['pic_approval'],
+						'image_status'			=> ($row['pic_lock']) ? phpbb_gallery_image::STATUS_LOCKED : $row['pic_approval'],
 						'image_reported'		=> 0,
 						'image_exif_data'		=> '',
 					);
@@ -653,8 +662,8 @@ class install_convert extends module
 						'album_desc_options'			=> 7,
 						'album_desc'					=> '',
 						'album_parents'					=> '',
-						'album_type'					=> ALBUM_UPLOAD,
-						'album_status'					=> ITEM_UNLOCKED,
+						'album_type'					=> phpbb_gallery_album::TYPE_UPLOAD,
+						'album_status'					=> phpbb_gallery_album::STATUS_OPEN,
 						'album_user_id'					=> ($row['image_user_id'] < 0) ? ANONYMOUS : $row['image_user_id'],
 					);
 					$db->sql_query('INSERT INTO ' . GALLERY_ALBUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $album_data));
@@ -664,6 +673,7 @@ class install_convert extends module
 					$user_data = array(
 						'personal_album_id'		=> $new_personal_album_id,
 						'user_id'				=> $row['image_user_id'],
+						'user_permissions'		=> '',
 					);
 					$batch_ary[$current_batch][] = $user_data;
 
@@ -716,7 +726,7 @@ class install_convert extends module
 				//Step 5.1: Number of public images and last_image_id
 				$sql = 'SELECT COUNT(image_id) images, MAX(image_id) last_image_id, image_album_id
 					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE image_status <> ' . IMAGE_UNAPPROVED . '
+					WHERE image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . '
 					GROUP BY image_album_id';
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
@@ -740,7 +750,7 @@ class install_convert extends module
 				{
 					$sql_ary = array(
 						'album_images_real'	=> $row['images'],
-						'album_type'		=> ALBUM_UPLOAD,
+						'album_type'		=> phpbb_gallery_album::TYPE_UPLOAD,
 					);
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 						WHERE ' . $db->sql_in_set('album_id', $row['image_album_id']);
@@ -786,7 +796,7 @@ class install_convert extends module
 					FROM ' . USERS_TABLE . ' u
 					LEFT JOIN ' . GALLERY_IMAGES_TABLE . ' i
 						ON i.image_user_id = u.user_id
-							AND i.image_status <> ' . IMAGE_UNAPPROVED . '
+							AND i.image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . '
 					GROUP BY i.image_user_id';
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
@@ -800,6 +810,7 @@ class install_convert extends module
 						$ary = array(
 							'user_id'				=> $row['user_id'],
 							'user_images'			=> $row['images'],
+							'user_permissions'		=> '',
 						);
 						$batch_ary[$current_batch][] = $ary;
 
@@ -862,7 +873,7 @@ class install_convert extends module
 				$num_comments = 0;
 				$sql = 'SELECT SUM(image_comments) comments
 					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE image_status <> ' . IMAGE_UNAPPROVED;
+					WHERE image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED;
 				$result = $db->sql_query($sql);
 				$num_comments = (int) $db->sql_fetchfield('comments');
 				$db->sql_freeresult($result);
