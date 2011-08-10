@@ -118,7 +118,12 @@ class install_convert extends module
 			'BODY'		=> $user->lang['REQUIREMENTS_EXPLAIN'],
 		));
 
-		$passed = array('php' => false, 'files' => false,);
+		$passed = array('php' => false, 'dirs' => false,);
+		$convert_tables = array('album', 'album_cat', 'album_comment', 'album_config', 'album_rate');
+		foreach ($convert_tables as $table)
+		{
+			$passed[$table] = false;
+		}
 
 		// Test for basic PHP settings
 		$template->assign_block_vars('checks', array(

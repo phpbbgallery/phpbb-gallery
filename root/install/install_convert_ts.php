@@ -119,7 +119,7 @@ class install_convert_ts extends module
 			'BODY'		=> $user->lang['REQUIREMENTS_EXPLAIN'],
 		));
 
-		$passed = array('php' => false, 'files' => false,);
+		$passed = array('php' => false, 'dirs' => false,);
 
 		// Test for basic PHP settings
 		$template->assign_block_vars('checks', array(
