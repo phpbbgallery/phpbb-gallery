@@ -229,7 +229,7 @@ if (!$album_id)
 {
 	$template->assign_block_vars('navlinks', array(
 		'FORUM_NAME'	=> $user->lang['MCP'],
-		'U_VIEW_FORUM'	=> phpbb_gallery_url::append_sid('mcp'),
+		'U_VIEW_FORUM'	=> phpbb_gallery_url::append_sid('mcp', 'mode=overview'),
 	));
 
 	page_header($user->lang['GALLERY'] . ' &bull; ' . $user->lang['MCP'] . ' &bull; ' . $page_title, false);
