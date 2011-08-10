@@ -509,6 +509,22 @@ class install_update extends module
 			case '1.1.1':
 				phpbb_gallery_config::set('allow_hotlinking', true);
 
+				// Reset exif data, if we broke them
+				// http://www.flying-bits.org/viewtopic.php?p=14344#p14344
+				$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
+					SET image_has_exif = ' . phpbb_gallery_exif::UNKNOWN . '
+					WHERE image_has_exif = ' . phpbb_gallery_exif::DBSAVED . "
+						AND image_exif_data = ''";
+				$db->sql_query($sql);
+
+				// Fix the cleanup module, if the board was installed with 1.1.x
+				// http://www.flying-bits.org/viewtopic.php?p=14389#p14389
+				$sql = 'UPDATE ' . MODULES_TABLE . "
+					SET module_mode = 'cleanup'
+					WHERE module_mode = 'import_images'
+						AND module_langname = 'ACP_GALLERY_CLEANUP'";
+				$db->sql_query($sql);
+
 				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=4");
 			break;
 		}
