@@ -264,6 +264,7 @@ class acp_gallery_permissions
 				$cache->destroy('sql', GALLERY_PERMISSIONS_TABLE);
 				$cache->destroy('sql', GALLERY_ROLES_TABLE);
 				$cache->destroy('sql', GALLERY_MODSCACHE_TABLE);
+				phpbb_gallery_auth::set_user_permissions('all', '');
 			}
 		}
 
