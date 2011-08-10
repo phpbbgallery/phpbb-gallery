@@ -97,7 +97,7 @@ class phpbb_gallery_plugins
 	{
 		global $user;
 
-		if ($mode == 'plugin')
+		if ($mode == 'plugin' && !empty(self::$plugins[0]))
 		{
 			$mode = self::$plugins[0];
 		}
