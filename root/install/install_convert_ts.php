@@ -450,7 +450,7 @@ class install_convert_ts extends module
 		switch ($step)
 		{
 			case 0:
-				$batch_ary = array();
+				$batch_ary = $rates_ary = array();
 				$current_batch = 1;
 				$current_batch_size = 1;
 
@@ -461,12 +461,25 @@ class install_convert_ts extends module
 
 				while ($row = $db->sql_fetchrow($result))
 				{
+					if ($row['rate_user_id'] == ANONYMOUS)
+					{
+						// guest ratings are not supported.
+						continue;
+					}
 					$ary = array(
 						'rate_image_id'					=> $row['rate_pic_id'],
 						'rate_user_id'					=> $row['rate_user_id'],
 						'rate_user_ip'					=> $row['rate_user_ip'],
 						'rate_point'					=> $row['rate_point'],
 					);
+
+					if (in_array($ary['rate_image_id'] . '-' . $ary['rate_user_id'], $rates_ary))
+					{
+						// Duplicated key
+						continue;
+					}
+					$rates_ary[] = $ary['rate_image_id'] . '-' . $ary['rate_user_id'];
+
 					$batch_ary[$current_batch][] = $ary;
 
 					$current_batch_size++;
@@ -569,8 +582,8 @@ class install_convert_ts extends module
 						'left_id'						=> $row['left_id'],
 						'right_id'						=> $row['right_id'],
 						'album_parents'					=> '',
-						'album_type'					=> ($row['album_user_id']) ? ALBUM_UPLOAD : ALBUM_CAT,
-						'album_status'					=> ITEM_UNLOCKED,
+						'album_type'					=> ($row['album_user_id']) ? phpbb_gallery_album::TYPE_UPLOAD : phpbb_gallery_album::TYPE_CAT,
+						'album_status'					=> phpbb_gallery_album::STATUS_OPEN,
 						'album_desc'					=> $album_desc_data['text'],
 						'album_desc_uid'				=> '',
 						'album_desc_bitfield'			=> '',
@@ -592,6 +605,7 @@ class install_convert_ts extends module
 						$ary = array(
 							'user_id'			=> $row['album_user_id'],
 							'personal_album_id'	=> $row['album_id'],
+							'user_permissions'	=> '',
 						);
 						$batch2_ary[$current_batch2][] = $ary;
 
@@ -682,7 +696,7 @@ class install_convert_ts extends module
 						'image_time'			=> $row['pic_time'],
 						'image_album_id'		=> $row['pic_album_id'],
 						'image_view_count'		=> $row['pic_views'],
-						'image_status'			=> ($row['pic_lock']) ? IMAGE_LOCKED : IMAGE_APPROVED,
+						'image_status'			=> ($row['pic_lock']) ? phpbb_gallery_image::STATUS_LOCKED : phpbb_gallery_image::STATUS_APPROVED,
 						'image_reported'		=> 0,
 						'image_exif_data'		=> '',
 					);
@@ -715,7 +729,7 @@ class install_convert_ts extends module
 				//Step 5.1: Number of public images and last_image_id
 				$sql = 'SELECT COUNT(i.image_id) images, MAX(i.image_id) last_image_id, i.image_album_id
 					FROM ' . GALLERY_IMAGES_TABLE . ' i
-					WHERE i.image_status <> ' . IMAGE_UNAPPROVED . '
+					WHERE i.image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . '
 					GROUP BY i.image_album_id';
 				$result = $db->sql_query($sql);
 				while ($row = $db->sql_fetchrow($result))
@@ -739,7 +753,7 @@ class install_convert_ts extends module
 				{
 					$sql_ary = array(
 						'album_images_real'	=> $row['images'],
-						'album_type'		=> ALBUM_UPLOAD,
+						'album_type'		=> phpbb_gallery_album::TYPE_UPLOAD,
 					);
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 						WHERE ' . $db->sql_in_set('album_id', $row['image_album_id']);
@@ -795,7 +809,7 @@ class install_convert_ts extends module
 					'LEFT_JOIN'	=> array(
 						array(
 							'FROM'	=> array(GALLERY_IMAGES_TABLE => 'i'),
-							'ON'	=> 'i.image_user_id = u.user_id AND i.image_status <> ' . IMAGE_UNAPPROVED,
+							'ON'	=> 'i.image_user_id = u.user_id AND i.image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED,
 						),
 					),
 					'GROUP_BY'		=> 'i.image_user_id',
@@ -812,6 +826,7 @@ class install_convert_ts extends module
 						$ary = array(
 							'user_id'				=> $row['user_id'],
 							'user_images'			=> $row['images'],
+							'user_permissions'		=> '',
 						);
 						$batch_ary[$current_batch][] = $ary;
 
@@ -874,7 +889,7 @@ class install_convert_ts extends module
 				$num_comments = 0;
 				$sql = 'SELECT SUM(image_comments) comments
 					FROM ' . GALLERY_IMAGES_TABLE . '
-					WHERE image_status <> ' . IMAGE_UNAPPROVED;
+					WHERE image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED;
 				$result = $db->sql_query($sql);
 				$num_comments = (int) $db->sql_fetchfield('comments');
 				$db->sql_freeresult($result);
