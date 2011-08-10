@@ -984,7 +984,7 @@ class install_convert_ts extends module
 			$umil->module_add('acp', 'PHPBB_GALLERY', array(
 				'module_basename'	=> 'gallery',
 				'module_langname'	=> 'ACP_GALLERY_CLEANUP',
-				'module_mode'		=> 'import_images',
+				'module_mode'		=> 'cleanup',
 				'module_auth'		=> 'acl_a_gallery_cleanup',
 			));
 
