@@ -185,6 +185,9 @@ class phpbb_gallery_url
 	{
 		if (!is_array($file))
 		{
+			// Trying to break less MODs by populating the needed variables for inclusions
+			global $phpbb_admin_path, $phpbb_root_path, $phpEx;
+
 			include(self::path($path) . $sub_directory . self::phpEx_file($file));
 		}
 		else
