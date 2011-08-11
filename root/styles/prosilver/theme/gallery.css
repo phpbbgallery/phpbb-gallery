@@ -95,3 +95,8 @@ span.reported-images-number {
 	background-repeat: no-repeat;
 	background-image: url("{T_IMAGESET_PATH}/icon_gallery_reported.gif");
 }
+
+input.autowidth-gallery {
+	width: 96%;
+	max-width: 186px;
+}
