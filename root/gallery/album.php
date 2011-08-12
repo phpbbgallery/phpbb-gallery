@@ -321,16 +321,7 @@ $template->assign_vars(array(
 ));
 
 
-if (version_compare($config['version'], '3.0.5', '>'))
-{
-	page_header($user->lang['VIEW_ALBUM'] . ' - ' . $album_data['album_name'], true, $album_id, 'album');
-}
-else
-{
-	// Backwards compatible
-	cheat_phpbb_31975();
-	page_header($user->lang['VIEW_ALBUM'] . ' - ' . $album_data['album_name']);
-}
+page_header($user->lang['VIEW_ALBUM'] . ' - ' . $album_data['album_name'], true, $album_id, 'album');
 
 $template->set_filenames(array(
 	'body' => 'gallery/album_body.html')
