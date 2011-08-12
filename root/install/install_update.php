@@ -444,6 +444,8 @@ class install_update extends module
 
 			case '1.1.0-B1':
 			case '1.1.0':
+
+			case '1.1.1':
 			break;
 		}
 
@@ -586,6 +588,8 @@ class install_update extends module
 			case '1.1.0-A1':
 			case '1.1.0-B1':
 			case '1.1.0':
+
+			case '1.1.1':
 				//@todo: Move on bbcode-change or creating all modules
 				//$reparse_modules_bbcode = true;
 			break;
@@ -689,6 +693,7 @@ class install_update extends module
 				case '1.1.0-A1':
 				case '1.1.0-B1':
 				case '1.1.0':
+				case '1.1.1':
 				break;
 			}
 
@@ -705,6 +710,7 @@ class install_update extends module
 			$modules = $this->gallery_config_options;
 			switch (phpbb_gallery_config::get('version'))
 			{
+				case '1.1.1':
 				case '1.1.0':
 				case '1.1.0-B1':
 				case '1.1.0-A1':

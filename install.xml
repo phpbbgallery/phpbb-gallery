@@ -37,7 +37,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</author>
 		</author-group>
 
-		<mod-version>1.1.1</mod-version>
+		<mod-version>1.1.2</mod-version>
 
 		<installation>
 			<level>intermediate</level>
@@ -50,8 +50,8 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<link type="contrib" lang="en" href="contrib/history.xml">History/Developers/Features</link>
 			<link type="contrib" lang="de" href="contrib/update_1_0_6_to_1_1_1/update.xml">Update von 1.0.6 auf 1.1.1</link>
 			<link type="contrib" lang="en" href="contrib/update_1_0_6_to_1_1_1/update.xml">Update from 1.0.6 to 1.1.1</link>
-			<link type="contrib" lang="de" href="contrib/update_1_1_0_to_1_1_1/update.xml">Update von 1.1.0 auf 1.1.1</link>
-			<link type="contrib" lang="en" href="contrib/update_1_1_0_to_1_1_1/update.xml">Update from 1.1.0 to 1.1.1</link>
+			<link type="contrib" lang="de" href="contrib/update_1_1_1_to_1_1_2/update.xml">Update von 1.1.1 auf 1.1.2</link>
+			<link type="contrib" lang="en" href="contrib/update_1_1_1_to_1_1_2/update.xml">Update from 1.1.1 to 1.1.2</link>
 			<link type="language" lang="de" href="contrib/de.xml">Anleitung für das deutsche Sprachpaket</link>
 			<link type="language" lang="en" href="contrib/de.xml">Manual for German Language-set</link>
 			<link type="template" lang="de" href="contrib/subsilver2.xml">Anleitung für das Style subsilver2</link>

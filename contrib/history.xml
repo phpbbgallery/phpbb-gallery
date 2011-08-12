@@ -188,7 +188,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</author>
 		</author-group>
 
-		<mod-version>1.1.1</mod-version>
+		<mod-version>1.1.2</mod-version>
 
 		<installation>
 			<level>intermediate</level>
@@ -197,6 +197,42 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		</installation>
 
 		<history>
+			<entry>
+				<date>2011-08-DD</date>
+				<rev-version>1.1.2</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Change] Require phpBB 3.0.9 so we can clean the function_phpbb.php file a bit.]]></change>
+					<change><![CDATA[[Change] Check phpBB and php version requirements during install/update]]></change>
+					<change><![CDATA[[Change] Use a button instead of a text link for inserting the images from the popup]]></change>
+					<change><![CDATA[[Change] Populate path and ext variables for MODs that added include() (Bug #845)]]></change>
+
+					<change><![CDATA[[Fix] Fix display of the input-boxes when the page is less than 1024 pixels wide ]]></change>
+					<change><![CDATA[[Fix] Fix Fix several usages of old constants in convertor scripts ]]></change>
+					<change><![CDATA[[Fix] Fix pruging the "cache", the correct path is thumbnail ]]></change>
+					<change><![CDATA[[Fix] Fix quick-moderation language in image_page, when comments are disabled]]></change>
+					<change><![CDATA[[Fix] Fix typo in table name: Use of undefined constant GALLERY_CONTEST_TABLE ]]></change>
+					<change><![CDATA[[Fix] Error in block: Always reset the mode and display when the function is called]]></change>
+					<change><![CDATA[[Fix] Correctly install cleanup module in ACP ]]></change>
+					<change><![CDATA[[Fix] Fix debug error messages in acp config when functions are disabled (Bug #850)]]></change>
+					<change><![CDATA[[Fix] Personal Gallery icon does not appear on viewtopic (Bug #847)]]></change>
+					<change><![CDATA[[Fix] Do not try to use plugins on upload, when none is installed. (Bug #843)]]></change>
+					<change><![CDATA[[Fix] Breadcrumb link from moderation-overview leads to album_id=0 (Bug #842)]]></change>
+					<change><![CDATA[[Fix] Purge permissions cache when deleting permissions (Bug #841)]]></change>
+					<change><![CDATA[[Fix] Store exif data when we set the status to saved in database (Bug #840)]]></change>
+					<change><![CDATA[[Fix] image-page displayes wrong data for uploader (Bug #839)]]></change>
+					<change><![CDATA[[Fix] Fix error when deleting comments (Bug #838)]]></change>
+					<change><![CDATA[[Fix] Fix contests with undefined constant and undeclared property (Bug #837)]]></change>
+					<change><![CDATA[[Fix] {NUM}-explanation missing on ACP import (Bug #836)]]></change>
+					<change><![CDATA[[Fix] Fix typos in de-package and rephrase a string in en-package (Bug #834)]]></change>
+					<change><![CDATA[[Fix] Undefined class constant 'DB_SAVED' (mistyped DBSAVED) (Bug #833)]]></change>
+					<change><![CDATA[[Fix] Fix error while editing a contest-album (Bug #832)]]></change>
+					<change><![CDATA[[Fix] SQL Error when reseting rating of an empty album (Bug #831)]]></change>
+					<change><![CDATA[[Fix] Correctly state, which folder needs to have the CHMOD in install/ (Bug #830)]]></change>
+					<change><![CDATA[[Fix] Code for pruning is not working and the lang-string is missing (Bug #829)]]></change>
+					<change><![CDATA[[Fix] Fix code for hotlink prevention (Bug #828)]]></change>
+				</changelog>
+			</entry>
+
 			<entry>
 				<date>2011-08-07</date>
 				<rev-version>1.1.1</rev-version>
@@ -302,6 +338,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 					<change><![CDATA[[Fix] "Undefined variable"-Error on rotating while editing image (Bug #690)]]></change>
 					<change><![CDATA[[Fix] Wrong language-strings on "copy permissions"-feature (Bug #689)]]></change>
 					<change><![CDATA[[Fix] Typo in german language-pack (Bug #687)]]></change>
+
 					<change><![CDATA[[Feature] View captcha for guests when uploading images and posting comments (Bug #705)]]></change>
 					<change><![CDATA[[Feature] Option to sort albums with other default value (Bug #692)]]></change>
 					<change><![CDATA[[Feature] User-Option to view exif data by default (Bug #681)]]></change>
@@ -1060,8 +1097,10 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		<link-group>
 			<link type="parent" lang="de" href="../install.xml">Installations-Anleitung</link>
 			<link type="parent" lang="en" href="../install.xml">Manual</link>
-			<link type="parent" lang="de" href="update_1_0_6_to_1_1_0/update.xml">Update von 1.0.6 auf 1.1.0</link>
-			<link type="parent" lang="en" href="update_1_0_6_to_1_1_0/update.xml">Update from 1.0.6 to 1.1.0</link>
+			<link type="parent" lang="de" href="update_1_0_6_to_1_1_1/update.xml">Update von 1.0.6 auf 1.1.1</link>
+			<link type="parent" lang="en" href="update_1_0_6_to_1_1_1/update.xml">Update from 1.0.6 to 1.1.1</link>
+			<link type="parent" lang="de" href="update_1_1_1_to_1_1_2/update.xml">Update von 1.1.1 auf 1.1.2</link>
+			<link type="parent" lang="en" href="update_1_1_1_to_1_1_2/update.xml">Update from 1.1.1 to 1.1.2</link>
 		</link-group>
 	</header>
 
