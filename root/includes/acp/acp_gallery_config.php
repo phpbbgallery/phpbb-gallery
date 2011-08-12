@@ -48,15 +48,15 @@ class acp_gallery_config
 				// Disable some Options if they can not be used
 				if (!function_exists('exif_read_data'))
 				{
-					$this->display_vars['vars']['exif_data']['type'] = 'custom';
-					$this->display_vars['vars']['exif_data']['explain'] = true;
-					$this->display_vars['vars']['exif_data']['method'] = 'disabled_boolean';
+					$this->display_vars['vars']['disp_exifdata']['type'] = 'custom';
+					$this->display_vars['vars']['disp_exifdata']['explain'] = true;
+					$this->display_vars['vars']['disp_exifdata']['method'] = 'disabled_boolean';
 				}
 				if (!function_exists('imagerotate'))
 				{
-					$this->display_vars['vars']['allow_rotate_images']['type'] = 'custom';
-					$this->display_vars['vars']['allow_rotate_images']['explain'] = true;
-					$this->display_vars['vars']['allow_rotate_images']['method'] = 'disabled_boolean';
+					$this->display_vars['vars']['allow_rotate']['type'] = 'custom';
+					$this->display_vars['vars']['allow_rotate']['explain'] = true;
+					$this->display_vars['vars']['allow_rotate']['method'] = 'disabled_boolean';
 				}
 			break;
 
