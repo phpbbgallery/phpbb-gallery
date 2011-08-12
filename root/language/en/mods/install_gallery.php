@@ -100,6 +100,7 @@ $lang = array_merge($lang, array(
 
 	'REQ_GD_LIBRARY'			=> 'GD Library is installed',
 	'REQ_PHP_VERSION'			=> 'php version >= %s',
+	'REQ_PHPBB_VERSION'			=> 'phpBB version >= %s',
 	'REQUIREMENTS_EXPLAIN'		=> 'Before proceeding with the full installation phpBB will carry out some tests on your server configuration and files to ensure that you are able to install and run phpBB Gallery. Please ensure you read through the results thoroughly and do not proceed until all the required tests are passed.',
 
 	'STAGE_ADVANCED_EXPLAIN'		=> 'Please choose the parent module for the gallery modules. In normal case you should not change them.',

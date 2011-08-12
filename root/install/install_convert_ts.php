@@ -166,6 +166,25 @@ class install_convert_ts extends module
 			'S_LEGEND'		=> false,
 		));
 
+		// Check for phpBB version
+		if (version_compare(PHPBB_VERSION, REQUIRED_PHPBB_VERSION) >= 0)
+		{
+			$result = '<strong style="color:green">' . $user->lang['YES'] . ' - ' . PHPBB_VERSION . '</strong>';
+		}
+		else
+		{
+			$passed['phpbb'] = false;
+			$result = '<strong style="color:red">' . $user->lang['NO'] . ' - ' . PHPBB_VERSION . '</strong>';
+		}
+
+		$template->assign_block_vars('checks', array(
+			'TITLE'			=> $user->lang('REQ_PHPBB_VERSION', REQUIRED_PHPBB_VERSION),
+			'RESULT'		=> $result,
+
+			'S_EXPLAIN'		=> false,
+			'S_LEGEND'		=> false,
+		));
+
 		// Test for optional PHP settings
 		$template->assign_block_vars('checks', array(
 			'S_LEGEND'			=> true,
