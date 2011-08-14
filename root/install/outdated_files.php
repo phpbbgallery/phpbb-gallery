@@ -67,6 +67,7 @@ $outdated_files = array(
 	'gallery/upload/cache/index.html',
 	'gallery/upload/index.htm',
 	'gallery/upload/index.html',
+	'includes/gallery/config.php',
 	'language/de/mods/gallery_install.php',
 	'language/en/mods/gallery_install.php',
 	'styles/prosilver/imageset/Thumbs.db',
