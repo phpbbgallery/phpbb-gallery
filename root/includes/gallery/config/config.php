@@ -3,7 +3,7 @@
 *
 * @package phpBB Gallery
 * @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
+* @copyright (c) 2011 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -114,7 +114,35 @@ class phpbb_gallery_config
 
 	static public function load($load_default = false)
 	{
-		global $config;
+		global $config, $cache;
+
+		self::load_configs('core');
+
+		// Load the configs of the available plugins
+		if (($plugins = $cache->get('_gallery_config_plugins')) === false)
+		{
+			$dir = @opendir(phpbb_gallery_url::_return_file('plugins/', 'phpbb', 'includes/gallery/config/'));
+			if ($dir)
+			{
+				global $phpEx;
+
+				while (($entry = readdir($dir)) !== false)
+				{
+					if (substr(strrchr($entry, '.'), 1) == $phpEx)
+					{
+						$plugins[] = substr(basename($entry), 0, -(strlen($phpEx) + 1));
+					}
+				}
+				closedir($dir);
+			}
+			$cache->put('_gallery_config_plugins', $plugins);
+		}
+
+
+		foreach ($plugins as $plugin)
+		{
+			self::load_configs($plugin);
+		}
 
 		foreach ($config as $config_name => $config_value)
 		{
@@ -132,133 +160,49 @@ class phpbb_gallery_config
 			// Should we load the default-config?
 			self::$config = self::$config + self::$default_config;
 		}
+
+		self::$loaded = true;
+	}
+
+	static private function load_configs($plugin_name)
+	{
+		if ($plugin_name == 'core')
+		{
+			$class_name = 'phpbb_gallery_config_core';
+		}
+		elseif (class_exists('phpbb_gallery_config_plugins_' . $plugin_name))
+		{
+			$class_name = 'phpbb_gallery_config_plugins_' . $plugin_name;
+		}
+		else
+		{
+			global $user;
+			$user->add_lang('mods/gallery');
+			trigger_error($user->lang('PLUGIN_CLASS_MISSING', 'phpbb_gallery_config_plugins_' . $plugin_name));
+		}
+
+		foreach ($class_name::$configs as $name => $value)
+		{
+			self::$default_config[$class_name::$prefix . $name] = $value;
+		}
+
+		foreach ($class_name::$is_dynamic as $name)
+		{
+			self::$is_dynamic[] = $class_name::$prefix . $name;
+		}
 	}
 
 	static public function install()
 	{
+		self::load_configs('core');
+
 		foreach (self::$default_config as $name => $value)
 		{
 			self::set($name, $value);
 		}
 	}
 
-	static private $is_dynamic = array(
-		'mvc_time',
-		'mvc_version',
+	static private $is_dynamic = array();
 
-		'num_comments',
-		'num_images',
-		'num_pegas',
-	);
-
-	static private $default_config = array(
-		'album_columns'		=> 3,
-		'album_display'		=> 254,
-		'album_images'		=> 2500,
-		'album_rows'		=> 4,
-		'allow_comments'	=> true,
-		'allow_gif'			=> true,
-		'allow_hotlinking'	=> true,
-		'allow_jpg'			=> true,
-		'allow_png'			=> true,
-		'allow_rates'		=> true,
-		'allow_resize'		=> true,
-		'allow_rotate'		=> true,
-		'allow_zip'			=> false,
-
-		'captcha_comment'		=> true,
-		'captcha_upload'		=> true,
-		'comment_length'		=> 2000,
-		'comment_user_control'	=> true,
-		'contests_ended'		=> 0,
-
-		'default_sort_dir'	=> 'd',
-		'default_sort_key'	=> 't',
-		'description_length'=> 2000,
-		'disp_birthdays'			=> false,
-		'disp_exifdata'				=> true,
-		'disp_image_url'			=> true,
-		'disp_login'				=> true,
-		'disp_nextprev_thumbnail'	=> false,
-		'disp_statistic'			=> true,
-		'disp_total_images'			=> true,
-		'disp_whoisonline'			=> true,
-
-		'feed_enable'			=> true,
-		'feed_enable_pegas'		=> true,
-		'feed_limit'			=> 10,
-
-		'gdlib_version'		=> 2,
-
-		'hotlinking_domains'	=> 'flying-bits.org',
-
-		'jpg_quality'			=> 100,
-
-		'link_thumbnail'		=> 'image_page',
-		'link_imagepage'		=> 'image',
-		'link_image_name'		=> 'image_page',
-		'link_image_icon'		=> 'image_page',
-
-		'max_filesize'			=> 512000,
-		'max_height'			=> 1024,
-		'max_rating'			=> 10,
-		'max_width'				=> 1280,
-		'medium_cache'			=> true,
-		'medium_height'			=> 600,
-		'medium_width'			=> 800,
-		'mini_thumbnail_disp'	=> true,
-		'mini_thumbnail_size'	=> 70,
-		'mvc_time'				=> 0,
-		'mvc_version'			=> '',
-
-		'newest_pega_user_id'	=> 0,
-		'newest_pega_username'	=> '',
-		'newest_pega_user_colour'	=> '',
-		'newest_pega_album_id'	=> 0,
-		'num_comments'			=> 0,
-		'num_images'			=> 0,
-		'num_pegas'				=> 0,
-		'num_uploads'			=> 10,
-
-		'pegas_index_album'		=> false,
-		'pegas_per_page'		=> 15,
-		'profile_user_images'	=> true,
-		'profile_pega'			=> true,
-		'prune_orphan_time'		=> 0,
-
-		'rrc_gindex_columns'	=> 4,
-		'rrc_gindex_comments'	=> false,
-		'rrc_gindex_contests'	=> 1,
-		'rrc_gindex_crows'		=> 5,
-		'rrc_gindex_display'	=> 173,
-		'rrc_gindex_mode'		=> 7,
-		'rrc_gindex_pegas'		=> true,
-		'rrc_gindex_rows'		=> 1,
-		'rrc_profile_columns'	=> 4,
-		'rrc_profile_display'	=> 141,
-		'rrc_profile_mode'		=> 3,
-		'rrc_profile_pegas'		=> true,
-		'rrc_profile_rows'		=> 1,
-
-		'search_display'		=> 45,
-		'shortnames'			=> 25,
-
-		'thumbnail_cache'		=> true,
-		'thumbnail_height'		=> 160,
-		'thumbnail_infoline'	=> false,
-		'thumbnail_quality'		=> 50,
-		'thumbnail_width'		=> 240,
-
-		'version'				=> '',
-		'viewtopic_icon'		=> true,
-		'viewtopic_images'		=> true,
-		'viewtopic_link'		=> false,
-
-		'watermark_changed'		=> 0,
-		'watermark_enabled'		=> true,
-		'watermark_height'		=> 50,
-		'watermark_position'	=> 20,
-		'watermark_source'		=> 'gallery/images/watermark.png',
-		'watermark_width'		=> 200,
-	);
+	static private $default_config = array();
 }
