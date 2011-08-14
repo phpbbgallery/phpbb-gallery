@@ -412,6 +412,11 @@ class phpbb_gallery_image
 	{
 		global $db;
 
+		if (empty($image_id_ary))
+		{
+			return;
+		}
+
 		$num_images = $num_comments = 0;
 		$sql = 'SELECT SUM(image_comments) comments
 			FROM ' . GALLERY_IMAGES_TABLE . '
