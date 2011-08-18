@@ -453,9 +453,10 @@ else
 			$process->set_image_num(request_var('image_num', 0));
 			$process->use_same_name(request_var('same_name', false));
 
+			$success = true;
 			foreach ($process->images as $image_id)
 			{
-				$process->update_image($image_id, !phpbb_gallery::$auth->acl_check('i_approve', $album_id, $album_data['album_user_id']), $album_data['album_contest']);
+				$success = $success && $process->update_image($image_id, !phpbb_gallery::$auth->acl_check('i_approve', $album_id, $album_data['album_user_id']), $album_data['album_contest']);
 			}
 
 			$message = '';
@@ -463,7 +464,7 @@ else
 			if (phpbb_gallery::$auth->acl_check('i_approve', $album_id, $album_data['album_user_id']))
 			{
 				$message .= (!$error) ? $user->lang['ALBUM_UPLOAD_SUCCESSFUL'] : $user->lang('ALBUM_UPLOAD_SUCCESSFUL_ERROR', $error);
-				meta_refresh(3, $album_backlink);
+				meta_refresh(($success) ? 3 : 20, $album_backlink);
 			}
 			else
 			{
