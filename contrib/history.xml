@@ -198,19 +198,26 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 		<history>
 			<entry>
-				<date>2011-08-DD</date>
+				<date>2011-08-19</date>
 				<rev-version>1.1.2</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Change] Make phpbb_gallery_config easier to extend for plugins (Bug #852)]]></change>
 					<change><![CDATA[[Change] Require phpBB 3.0.9 so we can clean the function_phpbb.php file a bit.]]></change>
 					<change><![CDATA[[Change] Check phpBB and php version requirements during install/update]]></change>
 					<change><![CDATA[[Change] Use a button instead of a text link for inserting the images from the popup]]></change>
 					<change><![CDATA[[Change] Populate path and ext variables for MODs that added include() (Bug #845)]]></change>
 
-					<change><![CDATA[[Fix] Fix display of the input-boxes when the page is less than 1024 pixels wide ]]></change>
-					<change><![CDATA[[Fix] Fix Fix several usages of old constants in convertor scripts ]]></change>
-					<change><![CDATA[[Fix] Fix pruging the "cache", the correct path is thumbnail ]]></change>
+					<change><![CDATA[[Fix] Fix various errors in the new upload process (Bug #859)]]></change>
+					<change><![CDATA[[Fix] Do not display "Add more upload fields" link for limit=1 (Bug #858)]]></change>
+					<change><![CDATA[[Fix] Add option for displaying the thumbnail for next/prev image links (Bug #857)]]></change>
+					<change><![CDATA[[Fix] Fix "Column 'image_desc' cannot be null" error with outdated style (Bug #856)]]></change>
+					<change><![CDATA[[Fix] Fix Undefined class constant 'REPORT_UNREPORT' (Bug #853)]]></change>
+					<change><![CDATA[[Fix] Fix quote option on (recent) comment search (Bug #851)]]></change>
+					<change><![CDATA[[Fix] Fix display of the input-boxes when the page is less than 1024 pixels wide]]></change>
+					<change><![CDATA[[Fix] Fix Fix several usages of old constants in convertor scripts]]></change>
+					<change><![CDATA[[Fix] Fix pruging the "cache", the correct path is thumbnail]]></change>
 					<change><![CDATA[[Fix] Fix quick-moderation language in image_page, when comments are disabled]]></change>
-					<change><![CDATA[[Fix] Fix typo in table name: Use of undefined constant GALLERY_CONTEST_TABLE ]]></change>
+					<change><![CDATA[[Fix] Fix typo in table name: Use of undefined constant GALLERY_CONTEST_TABLE]]></change>
 					<change><![CDATA[[Fix] Error in block: Always reset the mode and display when the function is called]]></change>
 					<change><![CDATA[[Fix] Correctly install cleanup module in ACP ]]></change>
 					<change><![CDATA[[Fix] Fix debug error messages in acp config when functions are disabled (Bug #850)]]></change>
