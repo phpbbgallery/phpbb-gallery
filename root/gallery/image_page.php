@@ -220,10 +220,10 @@ $watch_mode = (($image_data['watch_id']) ?  'un' : '') . 'watch';
 $template->assign_vars(array(
 	'U_VIEW_ALBUM'		=> phpbb_gallery_url::append_sid('album', "album_id=$album_id"),
 
-	'UC_PREVIOUS_IMAGE'	=> (!empty($previous_data) && phpbb_gallery_config::get('disp_nextprev_thumbnail')) ? generate_image_link('thumbnail', 'image_page', $previous_data['image_id'], $previous_data['image_name'], $album_id) : '',
+	'UC_PREVIOUS_IMAGE'	=> (!empty($previous_data) && phpbb_gallery_config::get('disp_nextprev_thumbnail')) ? phpbb_gallery_image::generate_link('thumbnail', 'image_page', $previous_data['image_id'], $previous_data['image_name'], $album_id) : '',
 	'UC_PREVIOUS'		=> (!empty($previous_data)) ? phpbb_gallery_image::generate_link('image_name_unbold', 'image_page_prev', $previous_data['image_id'], $previous_data['image_name'], $album_id) : '',
 	'UC_IMAGE'			=> phpbb_gallery_image::generate_link('medium', phpbb_gallery_config::get('link_imagepage'), $image_id, $image_data['image_name'], $album_id, ((substr($image_data['image_filename'], 0 -3) == 'gif') ? true : false), false, '', $next_data['image_id']),
-	'UC_NEXT_IMAGE'		=> (!empty($next_data) && phpbb_gallery_config::get('disp_nextprev_thumbnail')) ? generate_image_link('thumbnail', 'image_page', $next_data['image_id'], $next_data['image_name'], $album_id) : '',
+	'UC_NEXT_IMAGE'		=> (!empty($next_data) && phpbb_gallery_config::get('disp_nextprev_thumbnail')) ? phpbb_gallery_image::generate_link('thumbnail', 'image_page', $next_data['image_id'], $next_data['image_name'], $album_id) : '',
 	'UC_NEXT'			=> (!empty($next_data)) ? phpbb_gallery_image::generate_link('image_name_unbold', 'image_page_next', $next_data['image_id'], $next_data['image_name'], $album_id) : '',
 
 	'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_IMAGE'),
