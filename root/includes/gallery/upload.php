@@ -205,7 +205,8 @@ class phpbb_gallery_upload
 	{
 		if ($this->file_limit && ($this->uploaded_files >= $this->file_limit))
 		{
-			$this->new_error($user->lang('UPLOAD_ERROR', $this->file->uploadname, $user->lang['QUOTA_REACHED']));
+			global $user;
+			$this->new_error($user->lang('UPLOAD_ERROR', $this->image_data[$image_id]['image_name'], $user->lang['QUOTA_REACHED']));
 			return false;
 		}
 		$this->file_count = (int) $this->array_id2row[$image_id];
@@ -249,6 +250,8 @@ class phpbb_gallery_upload
 			SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 			WHERE image_id = ' . $image_id;
 		$db->sql_query($sql);
+
+		$this->uploaded_files++;
 
 		return true;
 	}
@@ -341,7 +344,7 @@ class phpbb_gallery_upload
 		 ($this->image_data[$image_id]['image_has_exif'] == phpbb_gallery_exif::UNKNOWN))
 		{
 			$update_exif = true;
-			$this->get_exif();
+			$this->get_exif(phpbb_gallery_url::path('upload') . $this->image_data[$image_id]['image_filename']);
 		}
 
 		$this->tools->set_image_options(phpbb_gallery_config::get('max_filesize'), phpbb_gallery_config::get('max_height'), phpbb_gallery_config::get('max_width'));
@@ -500,10 +503,12 @@ class phpbb_gallery_upload
 		}
 	}
 
-	public function get_exif()
+	public function get_exif($path = false)
 	{
+		$path = ($path === false) ? $this->file->destination_file : $path;
+
 		// Read exif data from file
-		$exif = new phpbb_gallery_exif($this->file->destination_file);
+		$exif = new phpbb_gallery_exif($path);
 		$exif->read();
 		$this->exif_status = $exif->status;
 		$this->exif_data = $exif->serialized;
