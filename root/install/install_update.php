@@ -129,7 +129,7 @@ class install_update extends module
 	*/
 	function check_server_requirements($mode, $sub)
 	{
-		global $user, $template, $phpbb_root_path, $phpEx;
+		global $cache, $user, $template, $phpbb_root_path, $phpEx;
 
 		$this->page_title = $user->lang['STAGE_REQUIREMENTS'];
 
@@ -377,6 +377,9 @@ class install_update extends module
 				'S_LEGEND'	=> false,
 			));
 		}
+
+		// Delete the class cache to get the new config directory from 1.1.2
+		$cache->destroy('class_loader');
 
 		$url = (!in_array(false, $passed)) ? append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db") : append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=requirements");
 		$submit = (!in_array(false, $passed)) ? $user->lang['INSTALL_START'] : $user->lang['INSTALL_TEST'];
