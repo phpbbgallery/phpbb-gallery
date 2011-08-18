@@ -150,7 +150,7 @@ class phpbb_gallery_config
 
 	static private $cache_file = '_gallery_config_plugins';
 
-	static private function load($load_default = false)
+	static public function load($load_default = false)
 	{
 		global $config, $cache;
 
