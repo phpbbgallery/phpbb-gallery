@@ -41,11 +41,21 @@ class phpbb_gallery_config
 
 	static public function get_default()
 	{
+		if (self::$loaded === false)
+		{
+			self::load();
+		}
+
 		return self::$default_config;
 	}
 
 	static public function set($config_name, $config_value)
 	{
+		if (self::$loaded === false)
+		{
+			self::load();
+		}
+
 		settype($config_value, gettype(self::$default_config[$config_name]));
 		self::$config[$config_name] = $config_value;
 
@@ -62,6 +72,11 @@ class phpbb_gallery_config
 
 	static public function inc($config_name, $increment)
 	{
+		if (self::$loaded === false)
+		{
+			self::load();
+		}
+
 		if ((gettype(self::$default_config[$config_name]) != 'int') && (gettype(self::$default_config[$config_name]) != 'integer'))
 		{
 			return false;
@@ -74,6 +89,11 @@ class phpbb_gallery_config
 
 	static public function dec($config_name, $decrement)
 	{
+		if (self::$loaded === false)
+		{
+			self::load();
+		}
+
 		if ((gettype(self::$default_config[$config_name]) != 'int') && (gettype(self::$default_config[$config_name]) != 'integer'))
 		{
 			return false;
@@ -86,6 +106,11 @@ class phpbb_gallery_config
 
 	static public function is_dynamic($config_name)
 	{
+		if (self::$loaded === false)
+		{
+			self::load();
+		}
+
 		if (isset(self::$is_dynamic[$config_name]))
 		{
 			return true;
@@ -95,6 +120,11 @@ class phpbb_gallery_config
 
 	static public function exists($key)
 	{
+		if (self::$loaded === false)
+		{
+			self::load();
+		}
+
 		if (self::$loaded === false)
 		{
 			self::load();
