@@ -116,11 +116,11 @@ class phpbb_gallery_config
 	{
 		global $config, $cache;
 
-		self::load_configs('core');
-
 		// Load the configs of the available plugins
 		if (($plugins = $cache->get('_gallery_config_plugins')) === false)
 		{
+			$plugins = array();
+			$plugins[] = 'core';
 			$dir = @opendir(phpbb_gallery_url::_return_file('plugins/', 'phpbb', 'includes/gallery/config/'));
 			if ($dir)
 			{
@@ -128,7 +128,7 @@ class phpbb_gallery_config
 
 				while (($entry = readdir($dir)) !== false)
 				{
-					if (substr(strrchr($entry, '.'), 1) == $phpEx)
+					if ((substr(strrchr($entry, '.'), 1) == $phpEx) && (isset($entry[0]) && $entry[0] != '_'))
 					{
 						$plugins[] = substr(basename($entry), 0, -(strlen($phpEx) + 1));
 					}
@@ -150,6 +150,13 @@ class phpbb_gallery_config
 			if (strpos($config_name, self::$prefix) === 0)
 			{
 				$config_name = substr($config_name, strlen(self::$prefix));
+
+				if (!isset(self::$default_config[$config_name]))
+				{
+					// Ignore values from the table which are not defined properly.
+					continue;
+				}
+
 				settype($config_value, gettype(self::$default_config[$config_name]));
 				self::$config[$config_name] = $config_value;
 			}
@@ -176,8 +183,11 @@ class phpbb_gallery_config
 		}
 		else
 		{
-			global $user;
+			global $cache, $user;
+
+			$cache->destroy('_gallery_config_plugins');
 			$user->add_lang('mods/gallery');
+
 			trigger_error($user->lang('PLUGIN_CLASS_MISSING', 'phpbb_gallery_config_plugins_' . $plugin_name));
 		}
 
