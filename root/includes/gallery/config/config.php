@@ -191,15 +191,38 @@ class phpbb_gallery_config
 			trigger_error($user->lang('PLUGIN_CLASS_MISSING', 'phpbb_gallery_config_plugins_' . $plugin_name));
 		}
 
-		foreach ($class_name::$configs as $name => $value)
+		/**
+		* Prior to php 5.3 you can not access static variables by $var::$reference
+		* So we just use a work around to get them
+		if (version_compare(PHP_VERSION, '5.3'))
 		{
-			self::$default_config[$class_name::$prefix . $name] = $value;
-		}
+			foreach ($class_name::$configs as $name => $value)
+			{
+				self::$default_config[$class_name::$prefix . $name] = $value;
+			}
 
-		foreach ($class_name::$is_dynamic as $name)
-		{
-			self::$is_dynamic[] = $class_name::$prefix . $name;
+			foreach ($class_name::$is_dynamic as $name)
+			{
+				self::$is_dynamic[] = $class_name::$prefix . $name;
+			}
 		}
+		else
+		{
+		*/
+			$class_variables = get_class_vars($class_name);
+
+			foreach ($class_variables['configs'] as $name => $value)
+			{
+				self::$default_config[$class_variables['prefix'] . $name] = $value;
+			}
+
+			foreach ($class_variables['is_dynamic'] as $name)
+			{
+				self::$is_dynamic[] = $class_variables['prefix'] . $name;
+			}
+		/*
+		}
+		*/
 	}
 
 	static public function install()
