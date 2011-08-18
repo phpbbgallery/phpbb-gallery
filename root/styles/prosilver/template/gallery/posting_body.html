@@ -93,7 +93,10 @@
 				{
 					dE('upload_field_' + i);
 				}
-				dE('add_field_link');
+				if (limit_fields > 1)
+				{
+					dE('add_field_link');
+				}
 			//]]>
 			</script>
 		</fieldset>
