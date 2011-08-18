@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 class phpbb_gallery_report
 {
-	const UNREPORT = 0;
+	const UNREPORTED = 0;
 	const OPEN = 1;
 	const LOCKED = 2;
 
@@ -73,7 +73,7 @@ class phpbb_gallery_report
 		if ($new_status == self::LOCKED)
 		{
 			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-				SET image_reported = ' . self::UNREPORT . '
+				SET image_reported = ' . self::UNREPORTED . '
 				WHERE ' . $db->sql_in_set('report_id', $report_ids);
 			$db->sql_query($sql);
 		}
@@ -143,7 +143,7 @@ class phpbb_gallery_report
 		$result = $db->sql_query($sql);
 
 		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
-			SET image_reported = ' . self::REPORT_UNREPORT . '
+			SET image_reported = ' . self::UNREPORTED . '
 			WHERE ' . $db->sql_in_set('image_reported', $report_ids);
 		$db->sql_query($sql);
 	}
