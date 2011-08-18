@@ -526,6 +526,11 @@ class phpbb_gallery_upload
 
 	public function get_description()
 	{
+		if (!isset($this->file_descriptions[$this->file_count]))
+		{
+			// If the template is still outdated, you'd get a general error later...
+			return '';
+		}
 		return utf8_normalize_nfc($this->file_descriptions[$this->file_count]);
 	}
 
