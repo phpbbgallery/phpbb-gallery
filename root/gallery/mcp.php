@@ -421,7 +421,7 @@ if ($action && $image_id_ary)
 				$filenames = array();
 				while ($row = $db->sql_fetchrow($result))
 				{
-					$filenames[(int) $row['image_id']] = $image_data['image_filename'];
+					$filenames[(int) $row['image_id']] = $row['image_filename'];
 					add_log('gallery', $album_id, $row['image_id'], 'LOG_GALLERY_DELETED', $row['image_name']);
 				}
 				$db->sql_freeresult($result);
