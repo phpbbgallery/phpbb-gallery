@@ -238,7 +238,7 @@ $template->assign_vars(array(
 	'CONTEST_RANK'		=> ($image_data['image_contest_rank']) ? $user->lang['CONTEST_RESULT_' . $image_data['image_contest_rank']] : '',
 	'IMAGE_NAME'		=> $image_data['image_name'],
 	'IMAGE_DESC'		=> $image_desc,
-	'IMAGE_BBCODE'		=> '[album]' . $image_id . '[/album]',
+	'IMAGE_BBCODE'		=> ($config['allow_bbcode']) ? '[album]' . $image_id . '[/album]' : '',
 	'IMAGE_IMGURL_BBCODE'	=> (phpbb_gallery_config::get('disp_image_url')) ? '[url=' . phpbb_gallery_url::path('full') . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id" . '][img]' . generate_board_url(false) . '/' . phpbb_gallery_url::path('relative') . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id&amp;mode=thumbnail" . '[/img][/url]' : '',
 	'IMAGE_URL'			=> (phpbb_gallery_config::get('disp_image_url')) ? phpbb_gallery_url::path('full') . "image.$phpEx?album_id=$album_id&amp;image_id=$image_id" : '',
 	'IMAGE_TIME'		=> $user->format_date($image_data['image_time']),

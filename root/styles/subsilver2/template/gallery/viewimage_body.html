@@ -57,11 +57,13 @@
 			<td><span class="genmed">{IMAGE_DESC}</span></td>
 		</tr>
 	<!-- ENDIF -->
+	<!-- IF IMAGE_BBCODE -->
 	<tr class="row1">
 		<td width="25%" align="right"><span class="genmed">{L_IMAGE_BBCODE}:</span></td>
 		<td><span class="genmed"><input type="text" size="28" value="{IMAGE_BBCODE}" class="inputbox autowidth" onclick="this.focus();this.select();" /></span><!-- IF IMAGE_IMGURL_BBCODE --><br />
 			<span class="genmed"><input type="text" size="28" value="{IMAGE_IMGURL_BBCODE}" class="inputbox autowidth" onclick="this.focus();this.select();" /></span><!-- ENDIF --></td>
 	</tr>
+	<!-- ENDIF -->
 	<!-- IF IMAGE_URL -->
 		<tr class="row1">
 			<td width="25%" align="right"><span class="genmed">{L_IMAGE_URL}:</span></td>
