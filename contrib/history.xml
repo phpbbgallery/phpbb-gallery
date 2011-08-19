@@ -207,6 +207,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 					<change><![CDATA[[Change] Use a button instead of a text link for inserting the images from the popup]]></change>
 					<change><![CDATA[[Change] Populate path and ext variables for MODs that added include() (Bug #845)]]></change>
 
+					<change><![CDATA[[Fix] Fix also display BBCodes for images, when comments are disabled. (Bug #860)]]></change>
 					<change><![CDATA[[Fix] Fix various errors in the new upload process (Bug #859)]]></change>
 					<change><![CDATA[[Fix] Do not display "Add more upload fields" link for limit=1 (Bug #858)]]></change>
 					<change><![CDATA[[Fix] Add option for displaying the thumbnail for next/prev image links (Bug #857)]]></change>

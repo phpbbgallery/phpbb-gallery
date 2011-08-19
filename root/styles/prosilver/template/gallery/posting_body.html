@@ -152,7 +152,7 @@
 			<!-- BEGIN image -->
 				<hr />
 				<dl>
-					<dt class="simulate-dt">{image.U_IMAGE}</dt>
+					<dt class="simulate-dt<!-- IF image.S_FIRST_ROW and (NUM_IMAGES > 1) --> first<!-- ENDIF -->">{image.U_IMAGE}</dt>
 					<dd class="simulate-dt"><label for="image_name_{image.S_ROW_COUNT}">{L_IMAGE_NAME}:</label></dd>
 					<!-- IF image.S_FIRST_ROW and (NUM_IMAGES > 1) -->
 						<dd class="simulate-dd"><input type="checkbox" name="same_name" id="same_name" value="1" onchange="change_read_write();" /> <label for="same_name">{L_USE_SAME_NAME}</label></dd>

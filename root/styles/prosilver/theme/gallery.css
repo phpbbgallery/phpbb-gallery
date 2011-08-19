@@ -36,6 +36,10 @@ fieldset.gallery dt.simulate-dt {
 	width:			22em;
 }
 
+fieldset.gallery dt.first {
+	min-height:		16em;
+}
+
 fieldset.gallery dd.simulate-dt {
 	margin-left:	0;
 	float:			left;
