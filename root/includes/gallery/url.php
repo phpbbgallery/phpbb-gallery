@@ -46,6 +46,9 @@ class phpbb_gallery_url
 	const MEDIUM_PATH = 'medium/';
 	const IMPORT_PATH = 'import/';
 
+	static private $phpbb_gallery_relative = '';
+	static private $phpbb_gallery_full_path = '';
+
 	static private $loaded = false;
 
 	/**
@@ -66,6 +69,8 @@ class phpbb_gallery_url
 		$phpbb_admin_path = self::$phpbb_root_path . self::$phpbb_admin_path;
 		self::$phpbb_admin_path = $phpbb_admin_path;
 		self::$phpEx = '.' . $phpEx;
+		self::$phpbb_gallery_relative = self::beautiful_path(self::$phpbb_root_path . self::$phpbb_gallery_path);
+		self::$phpbb_gallery_full_path = self::beautiful_path(generate_board_url() . '/' . self::$phpbb_gallery_path);
 
 		self::$loaded = true;
 	}
@@ -80,7 +85,7 @@ class phpbb_gallery_url
 		switch ($directory)
 		{
 			case 'gallery':
-				return self::$phpbb_root_path . self::$phpbb_gallery_path;
+				return self::$phpbb_gallery_relative;
 			case 'phpbb':
 				return self::$phpbb_root_path;
 			case 'admin':
@@ -88,26 +93,26 @@ class phpbb_gallery_url
 			case 'relative':
 				return self::$phpbb_gallery_path;
 			case 'full':
-				return generate_board_url() . '/' . self::$phpbb_gallery_path;
+				return self::$phpbb_gallery_full_path;
 			case 'board':
 				return generate_board_url() . '/';
 			case 'images':
-				return self::$phpbb_root_path . self::$phpbb_gallery_path . self::IMAGE_PATH;
+				return self::$phpbb_gallery_relative . self::IMAGE_PATH;
 			case 'upload':
-				return self::$phpbb_root_path . self::$phpbb_gallery_path . self::IMAGE_PATH . self::UPLOAD_PATH;
+				return self::$phpbb_gallery_relative . self::IMAGE_PATH . self::UPLOAD_PATH;
 			case 'upload_noroot':
 				// stupid phpbb-upload class prepends the rootpath itself.
 				return self::$phpbb_gallery_path . self::IMAGE_PATH . self::UPLOAD_PATH;
 			case 'thumbnail':
-				return self::$phpbb_root_path . self::$phpbb_gallery_path . self::IMAGE_PATH . self::THUMBNAIL_PATH;
+				return self::$phpbb_gallery_relative . self::IMAGE_PATH . self::THUMBNAIL_PATH;
 			case 'thumbnail_noroot':
 				return self::$phpbb_gallery_path . self::IMAGE_PATH . self::THUMBNAIL_PATH;
 			case 'medium':
-				return self::$phpbb_root_path . self::$phpbb_gallery_path . self::IMAGE_PATH . self::MEDIUM_PATH;
+				return self::$phpbb_gallery_relative . self::IMAGE_PATH . self::MEDIUM_PATH;
 			case 'medium_noroot':
 				return self::$phpbb_gallery_path . self::IMAGE_PATH . self::MEDIUM_PATH;
 			case 'import':
-				return self::$phpbb_root_path . self::$phpbb_gallery_path . self::IMAGE_PATH . self::IMPORT_PATH;
+				return self::$phpbb_gallery_relative . self::IMAGE_PATH . self::IMPORT_PATH;
 			case 'import_noroot':
 				return self::$phpbb_gallery_path . self::IMAGE_PATH . self::IMPORT_PATH;
 		}
@@ -212,5 +217,42 @@ class phpbb_gallery_url
 	static public function _return_file($file, $path = 'gallery', $sub_directory = 'includes/')
 	{
 		return self::path($path) . $sub_directory . self::phpEx_file($file);
+	}
+
+	/**
+	* Creates beautiful relative path from ugly relative path
+	* Resolves .. (up directory)
+	*
+	* @author	bantu		based on phpbb_own_realpath() by Chris Smith
+	* @license	http://opensource.org/licenses/gpl-license.php GNU Public License
+	*
+	* @param	string		ugly path e.g. "../community/../gallery/"
+	* @return	string		beautiful path e.g. "../gallery/"
+	*/
+	static public function beautiful_path($path)
+	{
+		// Remove any repeated slashes
+		$path = preg_replace('#/{2,}#', '/', $path);
+
+		// Break path into pieces
+		$bits = explode('/', $path);
+
+		// Lets get looping, run over and resolve any .. (up directory)
+		for ($i = 0, $max = sizeof($bits); $i < $max; $i++)
+		{
+			if ($bits[$i] == '..' && isset($bits[$i - 1]) && $bits[$i - 1][0] != '.')
+			{
+				// We found a .. and we are able to traverse upwards ...
+				unset($bits[$i]);
+				unset($bits[$i - 1]);
+
+				$i -= 2;
+				$max -= 2;
+
+				$bits = array_values($bits);
+			}
+		}
+
+		return implode('/', $bits);
 	}
 }
