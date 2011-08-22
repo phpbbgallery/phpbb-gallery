@@ -34,14 +34,16 @@ $feed = new phpbb_gallery_feed($album_id);
 
 if ($album_id)
 {
-	$self_link = phpbb_gallery_url::append_sid('full', 'album', 'album_id=' . $album_id);
+	$back_link = phpbb_gallery_url::append_sid('full', 'album', 'album_id=' . $album_id);
+	$self_link = phpbb_gallery_url::append_sid('full', 'feed', 'album_id=' . $album_id);
 }
 else
 {
-	$self_link = phpbb_gallery_url::append_sid('full', 'search', 'search_id=recent');
+	$back_link = phpbb_gallery_url::append_sid('full', 'search', 'search_id=recent');
+	$self_link = phpbb_gallery_url::append_sid('full', 'feed');
 }
 
-$feed->send_header($config['sitename'], $config['site_desc'], $self_link);
+$feed->send_header($config['sitename'], $config['site_desc'], $self_link, $back_link);
 
 $feed->send_images();
 
