@@ -1038,7 +1038,7 @@ class ucp_gallery
 		$image_id_ary = request_var('image_id_ary', array(0));
 		if ($image_id_ary && ($action == 'remove_favorite'))
 		{
-			phpbb_gallery_image_favorite::remove($image_id_id_ary);
+			phpbb_gallery_image_favorite::remove($image_id_ary);
 
 			meta_refresh(3, $this->u_action);
 			trigger_error($user->lang['UNFAVORITED_IMAGES'] . '<br /><br />' . sprintf($user->lang['RETURN_UCP'], '<a href="' . $this->u_action . '">', '</a>'));
