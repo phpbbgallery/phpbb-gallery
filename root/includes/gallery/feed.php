@@ -153,7 +153,7 @@ class phpbb_gallery_feed
 
 		foreach ($this->images_data as $image_id => $row)
 		{
-			$u_thumbnail = phpbb_gallery_url::append_sid('image', 'mode=thumbnail&amp;album_id=' . $row['image_album_id'] . '&amp;image_id=' . $image_id);
+			$u_thumbnail = phpbb_gallery_url::append_sid('full', 'image', 'mode=thumbnail&amp;album_id=' . $row['image_album_id'] . '&amp;image_id=' . $image_id);
 			$url_imagepage = phpbb_gallery_url::append_sid('full', 'image_page', 'album_id=' . $row['image_album_id'] . '&amp;image_id=' . $image_id);
 			$url_fullsize = phpbb_gallery_url::append_sid('full', 'image', 'album_id=' . $row['image_album_id'] . '&amp;image_id=' . $image_id);
 			$title = censor_text($row['album_name'] . ' ' . $this->separator . ' ' . $row['image_name']);
@@ -180,13 +180,14 @@ class phpbb_gallery_feed
 			echo '<item>';
 			echo '<title>' . $title . '</title>';
 			echo '<link>' . $url_imagepage . '</link>';
+			echo '<guid>' . $row['image_time'] . '</guid>';
 			echo '<description>&lt;img src="' . $u_thumbnail . '" alt="" /&gt;&lt;br /&gt;<![CDATA[' . $description;
 			echo '<p>' . $user->lang['STATISTICS'] . ': ' . $image_username . ' ' . $this->separator_stats . ' ' . $user->format_date($row['image_time']) . '</p>';
 			echo ']]></description>';
 
 			echo '<media:content url="' . $url_fullsize . '" type="' . phpbb_gallery_image_file::mimetype_by_filename($row['image_filename']) . '" medium="image" isDefault="true" expression="full">';
 			echo '	<media:title>' . $title . '</media:title>';
-			echo '	<media:description><![CDATA[' . $description . '';
+			echo '	<media:description type="html"><![CDATA[' . $description . '';
 			echo '	<p>' . $user->lang['STATISTICS'] . ': ' . $image_username . ' ' . $this->separator_stats . ' ' . $user->format_date($row['image_time']) . '</p>';
 			echo '	]]></media:description>';
 			echo '	<media:thumbnail url="' . $u_thumbnail . '" />';
@@ -195,7 +196,7 @@ class phpbb_gallery_feed
 		}
 	}
 
-	public function send_header($title, $description, $self_link)
+	public function send_header($title, $description, $self_link, $back_link)
 	{
 		header("Content-Type: application/atom+xml; charset=UTF-8");
 		if ($this->feed_time)
@@ -207,8 +208,9 @@ class phpbb_gallery_feed
 		echo '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">' . "\n";
 
 		echo '<channel>' . "\n";
+		echo '<atom:link rel="self" type="application/atom+xml" href="' . $self_link . '" />' . "\n";
 		echo '<title>' . $title . '</title>' . "\n";
-		echo '<link>' . $self_link . '</link>' . "\n";
+		echo '<link>' . $back_link . '</link>' . "\n";
 		echo '<description>' . $description . '</description>' . "\n";
 	}
 
