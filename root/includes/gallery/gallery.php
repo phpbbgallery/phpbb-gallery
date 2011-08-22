@@ -33,7 +33,7 @@ class phpbb_gallery
 	*/
 	static public function setup($lang_set = false, $update_session = true)
 	{
-		global $auth, $db, $template, $user, $cache;
+		global $auth, $config, $db, $template, $user, $cache;
 
 		$lang_sets = array('mods/info_acp_gallery');
 		if (is_array($lang_set))
@@ -100,7 +100,13 @@ class phpbb_gallery
 			'S_IN_GALLERY'					=> true,
 			'U_GALLERY_SEARCH'				=> phpbb_gallery_url::append_sid('search'),
 			'GALLERY_TRANSLATION_INFO'		=> (!empty($user->lang['GALLERY_TRANSLATION_INFO'])) ? $user->lang['GALLERY_TRANSLATION_INFO'] : '',
+
+			'S_GALLERY_FEEDS'				=> phpbb_gallery_config::get('feed_enable'),
+			'U_GALLERY_FEED'				=> phpbb_gallery_url::append_sid('feed'),
 		));
+
+		// Okay, this is not the best way, but we disable the phpbb feeds and display the ones of the gallery.
+		$config['feed_overall'] = $config['feed_overall_forums'] = $config['feed_topics_new'] = $config['feed_topics_active'] = false;
 
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['GALLERY'],

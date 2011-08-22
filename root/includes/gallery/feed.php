@@ -66,8 +66,8 @@ class phpbb_gallery_feed
 		global $db;
 
 		$sql = 'SELECT album_id
-			FROM ' . GALLERY_ALBUMS_TABLE /*. '
-			WHERE album_feed = 1'*/;
+			FROM ' . GALLERY_ALBUMS_TABLE . '
+			WHERE album_feed = 1';
 		$result = $db->sql_query($sql);
 		$feed_albums = array();
 		while ($row = $db->sql_fetchrow($result))
