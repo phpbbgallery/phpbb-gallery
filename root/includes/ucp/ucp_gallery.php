@@ -451,7 +451,8 @@ class ucp_gallery
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 			phpbb_gallery_auth::set_user_permissions('all', '');
 
-			trigger_error($user->lang['CREATED_SUBALBUM'] . '<br /><br /><a href="' . (($redirect) ? phpbb_gallery_url::append_sid('album', "album_id=$redirect_album_id") : $this->u_action) . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
+			trigger_error($user->lang['CREATED_SUBALBUM'] . '<br /><br />
+				<a href="' . (($redirect) ? phpbb_gallery_url::append_sid('album', "album_id=$redirect_album_id") : phpbb_gallery_url::append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . (($album_data['parent_id']) ? $album_data['parent_id'] : phpbb_gallery::$user->get_data('personal_album_id')))) . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
 		}
 	}
 
@@ -809,7 +810,7 @@ class ucp_gallery
 			phpbb_gallery_auth::set_user_permissions('all', '');
 
 			trigger_error($user->lang['DELETED_ALBUMS'] . '<br /><br />
-				<a href="' . (($parent_id) ? phpbb_gallery_url::append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . $parent_id) : append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_albums')) . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
+				<a href="' . (($parent_id) ? phpbb_gallery_url::append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . $parent_id) : phpbb_gallery_url::append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_albums')) . '">' . $user->lang['BACK_TO_PREV'] . '</a>');
 		}
 		else
 		{
