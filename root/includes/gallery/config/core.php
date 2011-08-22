@@ -126,7 +126,7 @@ class phpbb_gallery_config_core
 		'thumbnail_height'		=> 160,
 		'thumbnail_infoline'	=> false,
 		'thumbnail_quality'		=> 50,
-		'thumbnail_width'		=> 240,
+		'thumbnail_width'		=> 160,
 
 		'version'				=> '',
 		'viewtopic_icon'		=> true,
