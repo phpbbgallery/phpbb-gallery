@@ -70,7 +70,7 @@ class phpbb_gallery_url
 		self::$phpbb_admin_path = $phpbb_admin_path;
 		self::$phpEx = '.' . $phpEx;
 		self::$phpbb_gallery_relative = self::beautiful_path(self::$phpbb_root_path . self::$phpbb_gallery_path);
-		self::$phpbb_gallery_full_path = self::beautiful_path(generate_board_url() . '/' . self::$phpbb_gallery_path);
+		self::$phpbb_gallery_full_path = self::beautiful_path(generate_board_url() . '/' . self::$phpbb_gallery_path, true);
 
 		self::$loaded = true;
 	}
@@ -227,12 +227,26 @@ class phpbb_gallery_url
 	* @license	http://opensource.org/licenses/gpl-license.php GNU Public License
 	*
 	* @param	string		ugly path e.g. "../community/../gallery/"
+	* @param	bool		is it a full url, so we need to fix teh http:// at the beginning?
 	* @return	string		beautiful path e.g. "../gallery/"
 	*/
-	static public function beautiful_path($path)
+	static public function beautiful_path($path, $is_full_url = false)
 	{
 		// Remove any repeated slashes
 		$path = preg_replace('#/{2,}#', '/', $path);
+
+		if ($is_full_url)
+		{
+			// Fix the double slash, which we just removed.
+			if (strpos($path, 'https:/') === 0)
+			{
+				$path = 'https://' . substr($path, 7);
+			}
+			else if (strpos($path, 'http:/') === 0)
+			{
+				$path = 'http://' . substr($path, 6);
+			}
+		}
 
 		// Break path into pieces
 		$bits = explode('/', $path);
