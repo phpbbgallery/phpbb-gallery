@@ -42,6 +42,19 @@ class phpbb_gallery_block
 	}
 
 	/**
+	* The name of the outer template loop for the imageblock and comments
+	* You need to call this on your second code block,
+	* when you want to view the module two times with different settings on the same page.
+	*/
+	private $template_block_images = 'imageblock';
+	private $template_block_comments = 'commentrow';
+	public function set_template_block_name($image_block, $comment_block = 'commentrow')
+	{
+		$this->template_block_images = $image_block;
+		$this->template_block_comments = $comment_block;
+	}
+
+	/**
 	* Modes that you want to display on the block.
 	*/
 	private $mode	= self::MODE_NONE;
@@ -452,81 +465,87 @@ class phpbb_gallery_block
 		if (!empty($this->recent_images))
 		{
 			$num = 0;
-			$template->assign_block_vars('imageblock', array(
+			$template->assign_block_vars($this->template_block_images, array(
 				'U_BLOCK'			=> phpbb_gallery_url::append_sid('search', 'search_id=recent'),
 				'BLOCK_NAME'		=> $user->lang['RECENT_IMAGES'],
+				'S_COL_WIDTH'		=> (100 / $this->num_columns) . '%',
+				'S_COLS'			=> $this->num_columns,
 			));
 			foreach ($this->recent_images as $image)
 			{
 				if (($num % $this->num_columns) == 0)
 				{
-					$template->assign_block_vars('imageblock.imagerow', array());
+					$template->assign_block_vars($this->template_block_images . '.imagerow', array());
 				}
-				phpbb_gallery_image::assign_block('imageblock.imagerow.image', $this->images_data[$image], $this->images_data[$image]['album_status'], $this->get_display(), $this->images_data[$image]['album_user_id']);
+				phpbb_gallery_image::assign_block($this->template_block_images . '.imagerow.image', $this->images_data[$image], $this->images_data[$image]['album_status'], $this->get_display(), $this->images_data[$image]['album_user_id']);
 				$num++;
 			}
 			while (($num % $this->num_columns) > 0)
 			{
-				$template->assign_block_vars('imageblock.imagerow.no_image', array());
+				$template->assign_block_vars($this->template_block_images . '.imagerow.no_image', array());
 				$num++;
 			}
 		}
+
 		if (!empty($this->random_images))
 		{
 			$num = 0;
-			$template->assign_block_vars('imageblock', array(
+			$template->assign_block_vars($this->template_block_images, array(
 				'U_BLOCK'			=> phpbb_gallery_url::append_sid('search', 'search_id=random'),
 				'BLOCK_NAME'		=> $user->lang['RANDOM_IMAGES'],
+				'S_COL_WIDTH'		=> (100 / $this->num_columns) . '%',
+				'S_COLS'			=> $this->num_columns,
 			));
 			foreach ($this->random_images as $image)
 			{
 				if (($num % $this->num_columns) == 0)
 				{
-					$template->assign_block_vars('imageblock.imagerow', array());
+					$template->assign_block_vars($this->template_block_images . '.imagerow', array());
 				}
-				phpbb_gallery_image::assign_block('imageblock.imagerow.image', $this->images_data[$image], $this->images_data[$image]['album_status'], $this->get_display(), $this->images_data[$image]['album_user_id']);
+				phpbb_gallery_image::assign_block($this->template_block_images . '.imagerow.image', $this->images_data[$image], $this->images_data[$image]['album_status'], $this->get_display(), $this->images_data[$image]['album_user_id']);
 				$num++;
 			}
 			while (($num % $this->num_columns) > 0)
 			{
-				$template->assign_block_vars('imageblock.imagerow.no_image', array());
+				$template->assign_block_vars($this->template_block_images . '.imagerow.no_image', array());
 				$num++;
 			}
 		}
+
 		if (!empty($this->contest_images))
 		{
 			foreach ($this->contest_images as $contest => $contest_data)
 			{
 				$num = 0;
-				$template->assign_block_vars('imageblock', array(
+				$template->assign_block_vars($this->template_block_images, array(
 					'U_BLOCK'			=> phpbb_gallery_url::append_sid('album', 'album_id=' . $contest_data['album_id'] . '&amp;sk=ra&amp;sd=d'),
 					'BLOCK_NAME'		=> sprintf($user->lang['CONTEST_WINNERS_OF'], $contest_data['album_name']),
 					'S_CONTEST_BLOCK'	=> true,
+					'S_COL_WIDTH'		=> '33%',
+					'S_COLS'			=> 3,
 				));
 				foreach ($contest_data['images'] as $image)
 				{
 					if (($num % phpbb_gallery_contest::NUM_IMAGES) == 0)
 					{
-						$template->assign_block_vars('imageblock.imagerow', array());
+						$template->assign_block_vars($this->template_block_images . '.imagerow', array());
 					}
 					if (!empty($this->images_data[$image]))
 					{
-						phpbb_gallery_image::assign_block('imageblock.imagerow.image', $this->images_data[$image], $this->images_data[$image]['album_status'], $this->get_display(), $this->images_data[$image]['album_user_id']);
+						phpbb_gallery_image::assign_block($this->template_block_images . '.imagerow.image', $this->images_data[$image], $this->images_data[$image]['album_status'], $this->get_display(), $this->images_data[$image]['album_user_id']);
 						$num++;
 					}
 				}
 				while (($num % phpbb_gallery_contest::NUM_IMAGES) > 0)
 				{
-					$template->assign_block_vars('imageblock.imagerow.no_image', array());
+					$template->assign_block_vars($this->template_block_images . '.imagerow.no_image', array());
 					$num++;
 				}
 			}
 		}
 
 		$template->assign_vars(array(
-			'S_THUMBNAIL_SIZE'		=> phpbb_gallery_config::get('thumbnail_height') + 20 + ((phpbb_gallery_config::get('thumbnail_infoline')) ? phpbb_gallery_constants::THUMBNAIL_INFO_HEIGHT : 0),
-			'S_COL_WIDTH'			=> (100 / $this->num_columns) . '%',
-			'S_COLS'				=> $this->num_columns,
+			'S_THUMBNAIL_SIZE'	=> phpbb_gallery_config::get('thumbnail_height') + 20 + ((phpbb_gallery_config::get('thumbnail_infoline')) ? phpbb_gallery_constants::THUMBNAIL_INFO_HEIGHT : 0),
 		));
 	}
 
@@ -565,7 +584,7 @@ class phpbb_gallery_block
 			$image_id = (int) $row['image_id'];
 			$album_id = (int) $row['image_album_id'];
 
-			$template->assign_block_vars('commentrow', array(
+			$template->assign_block_vars($this->template_block_comments, array(
 				'U_COMMENT'		=> phpbb_gallery_url::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id") . '#comment_' . $row['comment_id'],
 				'COMMENT_ID'	=> $row['comment_id'],
 				'TIME'			=> $user->format_date($row['comment_time']),
