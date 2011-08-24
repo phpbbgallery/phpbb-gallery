@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
+<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.5.xsd">
+	<header>
+		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+
+		<title lang="de">phpBB Gallery</title>
+		<title lang="en">phpBB Gallery</title>
+
+		<description lang="de"><![CDATA[Update-Anleitung]]></description>
+		<description lang="en"><![CDATA[Update-Manual]]></description>
+
+		<author-notes lang="de"><![CDATA[
+Diese MOD benötigt php5.
+
+Untersützt die "MOD Version Check"-MOD von Handyman´:
+http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
+		<author-notes lang="en"><![CDATA[
+This MOD requires php5.
+
+Supports the "MOD Version Check"-MOD by Handyman´:
+http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
+
+		<author-group>
+			<author>
+				<realname>Joas Schilling</realname>
+				<email>nickvergessen@gmx.de</email>
+				<username>nickvergessen</username>
+				<homepage>http://www.flying-bits.org/</homepage>
+				<contributions />
+			</author>
+		</author-group>
+
+		<mod-version>1.1.3</mod-version>
+
+		<installation>
+			<level>intermediate</level>
+			<time>1200</time>
+			<target-version>3.0.9</target-version>
+		</installation>
+
+		<link-group>
+			<link type="contrib" lang="de" href="../history.xml">Geschichte/Entwickler/Features</link>
+			<link type="contrib" lang="en" href="../history.xml">History/Developers/Features</link>
+			<link type="parent" lang="de" href="../../install.xml">Installations-Anleitung</link>
+			<link type="parent" lang="en" href="../../install.xml">Install</link>
+			<link type="contrib" lang="de" href="../plugins/highslide.xml">Plugin Highslide JS</link>
+			<link type="contrib" lang="en" href="../plugins/highslide.xml">Plugin Highslide JS</link>
+			<link type="contrib" lang="de" href="../plugins/lytebox.xml">Plugin Lytebox</link>
+			<link type="contrib" lang="en" href="../plugins/lytebox.xml">Plugin Lytebox</link>
+			<link type="contrib" lang="de" href="../plugins/shadowbox.xml">Plugin Shadowbox</link>
+			<link type="contrib" lang="en" href="../plugins/shadowbox.xml">Plugin Shadowbox</link>
+		</link-group>
+	</header>
+
+	<action-group>
+		<copy>
+			<file from="root/adm/mods/phpbb_gallery_version.php" to="adm/mods/phpbb_gallery_version.php" />
+			<file from="root/adm/style/*.*" to="adm/style/*.*" />
+			<file from="root/gallery/*.*" to="gallery/*.*" />
+			<file from="root/includes/*.*" to="includes/*.*" />
+			<file from="root/install/*.*" to="install/*.*" />
+			<file from="root/language/en/*.*" to="language/en/*.*" />
+			<file from="root/styles/prosilver/*.*" to="styles/prosilver/*.*" />
+			<file from="root/umil/*.*" to="umil/*.*" />
+		</copy>
+
+		<open src="viewonline.php">
+			<edit>
+				<find><![CDATA[	// phpBB Gallery integration
+	if (class_exists('phpbb_gallery_integration'))
+	{
+		$gallery_on_page[1] = $on_page[1];
+		phpbb_gallery_integration::viewonline_pre_switch($on_page);
+	}]]></find>
+				<action type="replace-with"><![CDATA[	// phpBB Gallery integration
+	if (class_exists('phpbb_gallery_integration'))
+	{
+		phpbb_gallery_integration::viewonline_pre_switch($on_page, $row['session_page']);
+	}]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[		// phpBB Gallery integration
+		case GALLERY_ROOT_PATH:
+			if (class_exists('phpbb_gallery_integration'))
+			{
+				$on_page[1] = $gallery_on_page[1];
+				phpbb_gallery_integration::viewonline($on_page, $row['session_album_id'], $row['session_page']);
+			}
+		break;]]></find>
+				<action type="replace-with"><![CDATA[		// phpBB Gallery integration
+		case phpbb_gallery_url::path('relative'):
+			if (class_exists('phpbb_gallery_integration'))
+			{
+				phpbb_gallery_integration::viewonline($row['session_album_id']);
+			}
+		break;]]></action>
+			</edit>
+		</open>
+
+		<open src="includes/constants.php">
+			<edit>
+				<remove><![CDATA[define('GALLERY_ROOT_PATH', 'gallery/');]]></remove>
+			</edit>
+		</open>
+
+		<php-installer>install/index.php</php-installer>
+
+		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
+
+Leere den Cache im "Administrations-Bereich" (ACP) > "Allgemein" > "Den Cache leeren"
+
+Aktualisiere deine Styles:
+    "Administrations-Bereich" (ACP) > "Styles" > "Templates" > jedes > "Aktualisieren"
+    "Administrations-Bereich" (ACP) > "Styles" > "Themes" > jedes > "Aktualisieren"
+    "Administrations-Bereich" (ACP) > "Styles" > "Grafiksammlungen" > jedes > "Aktualisieren"]]></diy-instructions>
+		<diy-instructions lang="en"><![CDATA[Browse to install/ and run the update-script
+
+Clear your cache in the "Administration Control Panel" (ACP) > "General" > "Purge the cache"
+
+Refresh your Styles:
+    "Administration Control Panel" (ACP) > "Styles" > "Templates" > each > "refresh"
+    "Administration Control Panel" (ACP) > "Styles" > "Themes" > each > "refresh"
+    "Administration Control Panel" (ACP) > "Styles" > "Imagesets" > each > "refresh"]]></diy-instructions>
+	</action-group>
+</mod>

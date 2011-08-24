@@ -107,22 +107,44 @@ class phpbb_gallery_integration
 		}
 	}
 
-	static public function viewonline_pre_switch(&$on_page)
+	static private $session_page = '';
+
+	static public function viewonline_pre_switch(&$on_page, $session_page = '')
 	{
-		if ((utf8_substr($on_page[1], 0, utf8_strlen(GALLERY_ROOT_PATH))) == GALLERY_ROOT_PATH)
+		if (utf8_strpos($session_page, phpbb_gallery_url::path('relative')) === 0)
 		{
-			$on_page[1] = utf8_substr($on_page[1], 0, utf8_strlen(GALLERY_ROOT_PATH));
+			// Remove the gallery root path and get the file name like phpBB does
+			$session_page = utf8_substr($session_page, utf8_strlen(phpbb_gallery_url::path('relative')));
+			preg_match('#^([a-z0-9/_-]+)#i', $session_page, $gallery_page);
+			if (isset($gallery_page[1]))
+			{
+				self::$session_page = $gallery_page[1];
+				$on_page[1] = phpbb_gallery_url::path('relative');
+
+				if (self::$session_page == 'index')
+				{
+					// Are we on personal album list?
+					preg_match('#mode=([a-z]+)#', $session_page, $gallery_page);
+					if (isset($gallery_page[1]) && $gallery_page[1] == 'personal')
+					{
+						self::$session_page = 'personal';
+					}
+				}
+			}
 		}
 	}
 
-	static public function viewonline($on_page, $album_id, $session_page)
+	static public function viewonline($album_id)
 	{
 		static $album_data;
 
 		global $template, $user, $location, $location_url;
 
-		// Initial load of some needed stuff, like permissions, album data, ...
-		phpbb_gallery::init();
+		if (!phpbb_gallery::$loaded)
+		{
+			// Initial load of some needed stuff, like permissions, album data, ...
+			phpbb_gallery::init();
+		}
 
 		if (empty($album_data))
 		{
@@ -138,39 +160,34 @@ class phpbb_gallery_integration
 
 		if ($album_id && phpbb_gallery::$auth->acl_check('i_view', $album_id))
 		{
-			switch ($on_page[1])
+			switch (self::$session_page)
 			{
-				case phpbb_gallery_url::path('relative') . 'album':
+				case 'album':
 					$location = sprintf($user->lang['VIEWING_ALBUM'], $album_data[$album_id]['album_name']);
 					$location_url = phpbb_gallery_url::append_sid('album', 'album_id=' . $album_id);
 				break;
 
-				case phpbb_gallery_url::path('relative') . 'image_page':
-				case phpbb_gallery_url::path('relative') . 'image':
+				case 'image_page':
+				case 'image':
 					$location = sprintf($user->lang['VIEWING_IMAGE'], $album_data[$album_id]['album_name']);
 					$location_url = phpbb_gallery_url::append_sid('album', 'album_id=' . $album_id);
 				break;
 
-				case phpbb_gallery_url::path('relative') . 'posting':
+				case 'posting':
 					$location = sprintf($user->lang['VIEWING_ALBUM'], $album_data[$album_id]['album_name']);
 					$location_url = phpbb_gallery_url::append_sid('album', 'album_id=' . $album_id);
 				break;
 
-				case phpbb_gallery_url::path('relative') . 'comment':
+				case 'comment':
 					$location = sprintf($user->lang['COMMENT_IMAGE'], $album_data[$album_id]['album_name']);
 					$location_url = phpbb_gallery_url::append_sid('album', 'album_id=' . $album_id);
 				break;
 			}
 		}
-		else
+		else if (self::$session_page == 'personal' && phpbb_gallery::$auth->acl_check('i_view', PERSONAL_GALLERY_PERMISSIONS))
 		{
-			preg_match('#mode=([a-z]+)#', $session_page, $on_page);
-			$on_page = (sizeof($on_page)) ? $on_page[1] : '';
-			if (($on_page == 'personal') && (phpbb_gallery::$auth->acl_check('i_view', PERSONAL_GALLERY_PERMISSIONS)))
-			{
-				$location = $user->lang['PERSONAL_ALBUMS'];
-				$location_url = phpbb_gallery_url::append_sid('index', 'mode=personal');
-			}
+			$location = $user->lang['PERSONAL_ALBUMS'];
+			$location_url = phpbb_gallery_url::append_sid('index', 'mode=personal');
 		}
 	}
 
@@ -208,8 +225,8 @@ class phpbb_gallery_integration
 		global $phpbb_root_path, $phpEx, $template, $user;
 
 		$user->add_lang('mods/info_acp_gallery');
-		phpbb_gallery_plugins::init($phpbb_root_path . GALLERY_ROOT_PATH);
-		$template->assign_var('U_GALLERY_MOD', append_sid($phpbb_root_path . GALLERY_ROOT_PATH . 'index.' . $phpEx));
+		phpbb_gallery_plugins::init(phpbb_gallery_url::path('gallery'));
+		$template->assign_var('U_GALLERY_MOD', phpbb_gallery_url::append_sid('index'));
 	}
 
 	/**
