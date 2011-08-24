@@ -139,8 +139,7 @@ page_header($page_title, false);]]></find>
 				<action type="after-add"><![CDATA[	// phpBB Gallery integration
 	if (class_exists('phpbb_gallery_integration'))
 	{
-		$gallery_on_page[1] = $on_page[1];
-		phpbb_gallery_integration::viewonline_pre_switch($on_page);
+		phpbb_gallery_integration::viewonline_pre_switch($on_page, $row['session_page']);
 	}]]></action>
 			</edit>
 			<edit>
@@ -149,11 +148,10 @@ page_header($page_title, false);]]></find>
 			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
 		break;]]></find>
 				<action type="after-add"><![CDATA[		// phpBB Gallery integration
-		case GALLERY_ROOT_PATH:
+		case phpbb_gallery_url::path('relative'):
 			if (class_exists('phpbb_gallery_integration'))
 			{
-				$on_page[1] = $gallery_on_page[1];
-				phpbb_gallery_integration::viewonline($on_page, $row['session_album_id'], $row['session_page']);
+				phpbb_gallery_integration::viewonline($row['session_album_id']);
 			}
 		break;]]></action>
 			</edit>
@@ -235,9 +233,7 @@ page_header($page_title, false);]]></find>
 			</edit>
 			<edit>
 				<find><![CDATA[// Additional tables]]></find>
-				<action type="after-add"><![CDATA[define('GALLERY_ROOT_PATH', 'gallery/');
-
-define('GALLERY_ALBUMS_TABLE',			$table_prefix . 'gallery_albums');
+				<action type="after-add"><![CDATA[define('GALLERY_ALBUMS_TABLE',			$table_prefix . 'gallery_albums');
 define('GALLERY_ATRACK_TABLE',			$table_prefix . 'gallery_albums_track');
 define('GALLERY_COMMENTS_TABLE',		$table_prefix . 'gallery_comments');
 define('GALLERY_CONFIG_TABLE',			$table_prefix . 'gallery_config');
