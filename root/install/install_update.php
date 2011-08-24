@@ -427,6 +427,8 @@ class install_update extends module
 					array(GALLERY_ALBUMS_TABLE, 'album_auth_access', array('TINT:1', 0)),
 					array(GALLERY_ROLES_TABLE, 'a_restrict', array('UINT:3', 0)),
 				));
+				// Remove duplicated rates, before creating the unique index
+				remove_duplicated_rates();
 				$umil->table_column_update(array(
 					array(GALLERY_RATES_TABLE, 'rate_image_id', array('UINT', 0)),
 				));
@@ -449,6 +451,34 @@ class install_update extends module
 			case '1.1.0':
 
 			case '1.1.1':
+
+			case '1.1.2':
+				/**
+				* Renaming workaround
+				*/
+				// Add new columns
+				$umil->table_column_add(array(
+					array(GALLERY_ROLES_TABLE, 'a_count', array('UINT', 0)),
+					array(GALLERY_ROLES_TABLE, 'a_unlimited', array('UINT:3', 0)),
+				));
+				$db->sql_return_on_error(true);
+				// Copy content
+				$sql = 'UPDATE ' . GALLERY_ROLES_TABLE . '
+					SET a_count = album_count,
+						a_unlimited = album_unlimited';
+				$db->sql_query($sql);
+				if (!$db->sql_error_triggered)
+				{
+					// Remove old columns
+					$umil->table_column_remove(array(
+						array(GALLERY_ROLES_TABLE, 'album_count'),
+						array(GALLERY_ROLES_TABLE, 'album_unlimited'),
+					));
+				}
+				$db->sql_return_on_error(false);
+				/**
+				* END: Renaming workaround
+				*/
 			break;
 		}
 
@@ -482,6 +512,13 @@ class install_update extends module
 			case '1.0.6':
 				if ($umil->table_exists(GALLERY_CONFIG_TABLE))
 				{
+					// Add new configs:
+					$default_config = phpbb_gallery_config::get_default();
+					foreach ($default_config as $name => $value)
+					{
+						phpbb_gallery_config::set($name, $value);
+					}
+
 					$sql = 'SELECT *
 						FROM ' . GALLERY_CONFIG_TABLE;
 					$result = $db->sql_query($sql);
@@ -502,7 +539,7 @@ class install_update extends module
 					}
 					$db->sql_freeresult($result);
 
-
+					// Overwrite the config with the old settings.
 					$config_map = config_mapping();
 					foreach ($config_map as $old_name => $new_name)
 					{
@@ -510,16 +547,6 @@ class install_update extends module
 						{
 							phpbb_gallery_config::set($new_name, $old_config[$old_name]);
 						}
-					}
-				}
-
-				// Add new configs:
-				$default_config = phpbb_gallery_config::get_default();
-				foreach ($default_config as $name => $value)
-				{
-					if (!phpbb_gallery_config::exists($name))
-					{
-						phpbb_gallery_config::set($name, $value);
 					}
 				}
 

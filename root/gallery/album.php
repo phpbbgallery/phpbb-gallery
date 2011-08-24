@@ -252,7 +252,7 @@ if ($album_data['album_type'] != phpbb_gallery_album::TYPE_CAT)
 	// Is it a personal album, and does the user have permissions to create more?
 	if ($album_data['album_user_id'] == $user->data['user_id'])
 	{
-		if (phpbb_gallery::$auth->acl_check('i_upload', phpbb_gallery_auth::OWN_ALBUM) && !phpbb_gallery::$auth->acl_check('album_unlimited', phpbb_gallery_auth::OWN_ALBUM))
+		if (phpbb_gallery::$auth->acl_check('i_upload', phpbb_gallery_auth::OWN_ALBUM) && !phpbb_gallery::$auth->acl_check('a_unlimited', phpbb_gallery_auth::OWN_ALBUM))
 		{
 			$sql = 'SELECT COUNT(album_id) albums
 				FROM ' . GALLERY_ALBUMS_TABLE . '
@@ -261,12 +261,12 @@ if ($album_data['album_type'] != phpbb_gallery_album::TYPE_CAT)
 			$albums = (int) $db->sql_fetchfield('albums');
 			$db->sql_freeresult($result);
 
-			if ($albums < phpbb_gallery::$auth->acl_check('album_count', phpbb_gallery_auth::OWN_ALBUM))
+			if ($albums < phpbb_gallery::$auth->acl_check('a_count', phpbb_gallery_auth::OWN_ALBUM))
 			{
 				$allowed_create = true;
 			}
 		}
-		elseif (phpbb_gallery::$auth->acl_check('album_unlimited', phpbb_gallery_auth::OWN_ALBUM))
+		elseif (phpbb_gallery::$auth->acl_check('a_unlimited', phpbb_gallery_auth::OWN_ALBUM))
 		{
 			$allowed_create = true;
 		}

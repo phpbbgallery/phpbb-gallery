@@ -237,12 +237,13 @@ class ucp_gallery
 			FROM ' . GALLERY_ALBUMS_TABLE . '
 			WHERE album_user_id = ' . $user->data['user_id'];
 		$result = $db->sql_query($sql);
-		$albums = $db->sql_fetchfield('albums');
+		$albums = (int) $db->sql_fetchfield('albums');
 		$db->sql_freeresult($result);
 
+		$s_allowed_create = (phpbb_gallery::$auth->acl_check('a_unlimited', phpbb_gallery_auth::OWN_ALBUM) || (phpbb_gallery::$auth->acl_check('a_count', phpbb_gallery_auth::OWN_ALBUM) > $albums)) ? true : false;
 		$template->assign_vars(array(
 			'S_MANAGE_SUBALBUMS'			=> true,
-			'U_CREATE_SUBALBUM'				=> ((phpbb_gallery::$auth->acl_check('album_unlimited', phpbb_gallery_auth::OWN_ALBUM) || (phpbb_gallery::$auth->acl_check('album_count', phpbb_gallery_auth::OWN_ALBUM) > $albums)) ? ($this->u_action . '&amp;action=create' . (($parent_id) ? '&amp;parent_id=' . $parent_id : '')) : ''),
+			'U_CREATE_SUBALBUM'				=> ($s_allowed_create) ? ($this->u_action . '&amp;action=create' . (($parent_id) ? '&amp;parent_id=' . $parent_id : '')) : '',
 
 			'L_TITLE'			=> $user->lang['MANAGE_SUBALBUMS'],
 			//'ACP_GALLERY_TITLE_EXPLAIN'	=> $user->lang['ALBUM'],
@@ -298,6 +299,7 @@ class ucp_gallery
 				'U_DELETE'				=> $this->u_action . '&amp;action=delete&amp;album_id=' . $album[$i]['album_id'],
 			));
 		}
+
 		$template->assign_vars(array(
 			'NAVIGATION'		=> $navigation,
 			'S_ALBUM'			=> $parent_id,
@@ -333,7 +335,7 @@ class ucp_gallery
 		$albums = $db->sql_fetchfield('albums');
 		$db->sql_freeresult($result);
 
-		if (!phpbb_gallery::$auth->acl_check('album_unlimited', phpbb_gallery_auth::OWN_ALBUM) && (phpbb_gallery::$auth->acl_check('album_count', phpbb_gallery_auth::OWN_ALBUM) <= $albums))
+		if (!phpbb_gallery::$auth->acl_check('a_unlimited', phpbb_gallery_auth::OWN_ALBUM) && (phpbb_gallery::$auth->acl_check('a_count', phpbb_gallery_auth::OWN_ALBUM) <= $albums))
 		{
 			trigger_error('NO_MORE_SUBALBUMS_ALLOWED');
 		}

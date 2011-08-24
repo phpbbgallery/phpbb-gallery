@@ -328,7 +328,7 @@ class phpbb_gallery_dbal_schema
 		'roles'	=> array(
 			'full_name'		=> GALLERY_ROLES_TABLE,
 			'added'			=> '0.3.1',
-			'modified'		=> '1.1.0',
+			'modified'		=> '1.1.3',
 			'structure'		=> array(
 				'COLUMNS'		=> array(
 					'role_id'			=> array('UINT', NULL, 'auto_increment'),
@@ -354,8 +354,8 @@ class phpbb_gallery_dbal_schema
 					'm_move'			=> array('UINT:3', 0),
 					'm_report'			=> array('UINT:3', 0),
 					'm_status'			=> array('UINT:3', 0),
-					'album_count'		=> array('UINT', 0),
-					'album_unlimited'	=> array('UINT:3', 0),
+					'a_count'			=> array('UINT', 0),
+					'a_unlimited'		=> array('UINT:3', 0),
 					'a_restrict'		=> array('UINT:3', 0),
 				),
 				'PRIMARY_KEY'		=> 'role_id',
