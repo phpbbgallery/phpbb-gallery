@@ -37,7 +37,7 @@ class phpbb_gallery_auth
 	static private $_permission_i = array('i_view', 'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate');
 	static private $_permission_c = array('c_read', 'c_post', 'c_edit', 'c_delete');
 	static private $_permission_m = array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status');
-	static private $_permission_misc = array('a_list', 'i_count', 'i_unlimited', 'album_count', 'album_unlimited', 'a_restrict');
+	static private $_permission_misc = array('a_list', 'i_count', 'i_unlimited', 'a_count', 'a_unlimited', 'a_restrict');
 	static private $_permissions = array();
 	static private $_permissions_flipped = array();
 
