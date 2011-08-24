@@ -252,6 +252,7 @@ $template->assign_vars(array(
 	'U_WATCH_TOPIC'		=> ($user->data['user_id'] != ANONYMOUS) ? phpbb_gallery_url::append_sid('image_page', "mode=$watch_mode&amp;album_id=$album_id&amp;image_id=$image_id&amp;hash=" . generate_link_hash("{$watch_mode}_$image_id")) : '',
 	'S_WATCHING_TOPIC'	=> ($image_data['watch_id']) ? true : false,
 	'S_ALBUM_ACTION'	=> phpbb_gallery_url::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id"),
+	'S_ENABLE_FEEDS_ALBUM'	=> $album_data['album_feed'] && (phpbb_gallery_config::get('feed_enable_pegas') || !$album_data['album_user_id']),
 
 	'U_RETURN_LINK'		=> phpbb_gallery_url::append_sid('album', "album_id=$album_id"),
 	'S_RETURN_LINK'		=> $album_data['album_name'],
