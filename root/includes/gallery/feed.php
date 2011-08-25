@@ -167,7 +167,11 @@ class phpbb_gallery_feed
 				strip_bbcode($description, $row['image_desc_uid']);
 			}
 
-			if ($row['image_user_id'] == ANONYMOUS)
+			if ($row['image_contest'] == phpbb_gallery_image::IN_CONTEST && !phpbb_gallery::$auth->acl_check('m_status', $row['image_album_id'], phpbb_gallery_album::PUBLIC_ALBUM))
+			{
+				$image_username = $user->lang['CONTEST_USERNAME'];
+			}
+			else if ($row['image_user_id'] == ANONYMOUS)
 			{
 				$image_username = $row['image_username'];
 			}
