@@ -1,8 +1,17 @@
 <script type="text/javascript">
 //<![CDATA[
+var gallery_popup_window = false;
+var current_active_message = 0;
+
 function set_text_field(id)
 {
+	current_active_message = id
 	text_name = 'message_' + id;
+
+	if (gallery_popup_window)
+	{
+		gallery_popup_window.text_name = 'message_' + id;
+	}
 }
 
 var same_name = false;
@@ -27,6 +36,7 @@ function change_read_write()
 		make_readonly('{image.S_ROW_COUNT}');
 			<!-- ENDIF -->
 		<!-- END image -->
+		set_text_field(0);
 	}
 }
 
@@ -102,6 +112,31 @@ function remove_class(ele, cls)
 		var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
 		ele.className = ele.className.replace(reg,' ');
 	}
+}
+
+/**
+* Window popup
+* Based on the function of phpBB.
+* Just storing the return of window.open(),
+* so we can set the text_name in the popup aswell.
+*/
+function gallery_popup(url, width, height, name)
+{
+	if (!name)
+	{
+		name = '_popup';
+	}
+
+	gallery_popup_window = window.open(url.replace(/&amp;/g, '&'), name, 'height=' + height + ',resizable=yes,scrollbars=yes, width=' + width);
+
+	/**
+	* Update the value of text_name when the window got opened...
+	* We use a 0.5 second timeout here, so the browser got the popup open, before we try to set the field.
+	* Hopefully users on super-fast computers, are not too fast in selecting the smilies.
+	*/
+	setTimeout("set_text_field(current_active_message)", 500);
+
+	return false;
 }
 //]]>
 </script>
