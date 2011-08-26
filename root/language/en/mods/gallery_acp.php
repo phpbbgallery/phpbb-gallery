@@ -410,6 +410,7 @@ $lang = array_merge($lang, array(
 	'UC_LINK_IMAGE_PAGE'			=> 'Open Image-page (with details and comments)',
 	'UC_LINK_LYTEBOX'				=> 'Open Lytebox-Plugin',
 	'UC_LINK_NEXT'					=> 'Next Image',
+	'UC_LINK_NEWTAB'				=> 'Open New Tab',
 	'UC_LINK_NONE'					=> 'No Link',
 	'UC_LINK_SHADOWBOX'				=> 'Open Shadowbox-Plugin',
 	'UC_THUMBNAIL'					=> 'Thumbnail',

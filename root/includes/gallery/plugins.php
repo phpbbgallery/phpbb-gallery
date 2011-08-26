@@ -77,6 +77,7 @@ class phpbb_gallery_plugins
 		global $user;
 
 		$sort_order_options = '';
+		$sort_order_options .= '<option' . (($value == 'newtab') ? ' selected="selected"' : '') . " value='newtab'>" . $user->lang['UC_LINK_NEWTAB'] . '</option>';
 		if (in_array('highslide', self::$plugins))
 		{
 			$sort_order_options .= '<option' . (($value == 'highslide') ? ' selected="selected"' : '') . " value='highslide'>" . $user->lang['UC_LINK_HIGHSLIDE'] . '</option>';
@@ -120,6 +121,9 @@ class phpbb_gallery_plugins
 			break;
 			case 'shadowbox_slideshow':
 				$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" rel="shadowbox[flying-bits];options={slideshowDelay: 3}">{CONTENT}</a>';
+			break;
+			case 'newtab':
+				$tpl = '<a href="{IMAGE_URL}" title="{IMAGE_NAME}" onclick="window.open(this.href); return false;">{CONTENT}</a>';
 			break;
 			default:
 				// Plugin not found, return blank image
