@@ -188,7 +188,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</author>
 		</author-group>
 
-		<mod-version>1.1.2</mod-version>
+		<mod-version>1.1.3</mod-version>
 
 		<installation>
 			<level>intermediate</level>
@@ -197,6 +197,33 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		</installation>
 
 		<history>
+			<entry>
+				<date>2011-08-31</date>
+				<rev-version>1.1.3</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Change] Add option to hide the update advice for a week (Bug #879)]]></change>
+					<change><![CDATA[[Change] Rename submit button on first upload step to "continue" (Bug #878)]]></change>
+					<change><![CDATA[[Change] Add option to open image-links in new tab (Bug #877)]]></change>
+					<change><![CDATA[[Change] Fix inconsistent naming of a_count and a_unlimited permissions (Bug #865)]]></change>
+					<change><![CDATA[[Change] Remove GALLERY_ROOT_PATH constant (Bug #863)]]></change>
+					<change><![CDATA[[Change] Add album-feed to feed-list on image_page (Bug #873)]]></change>
+					<change><![CDATA[[Change] Allow embeding two different blocks on the same page (Bug #874)]]></change>
+
+					<change><![CDATA[[Fix] "Instant Redirect" breaks album information update on upload (Bug #881)]]></change>
+					<change><![CDATA[[Fix] Fix two little bugs in html code of ACP (Bug #880)]]></change>
+					<change><![CDATA[[Fix] Hide name of uploader on feeds for contest albums (Bug #876)]]></change>
+					<change><![CDATA[[Fix] Fix inserting smilies from popup into image description (Bug #875)]]></change>
+					<change><![CDATA[[Fix] Fix invalid feed format (Bug #870)]]></change>
+					<change><![CDATA[[Fix] Fix invalid feed format (Bug #870, #871)]]></change>
+					<change><![CDATA[[Fix] Add links to feeds, when they are enabled (Bug #869)]]></change>
+					<change><![CDATA[[Fix] Fix rating not possible in subsilver2 (Bug #868)]]></change>
+					<change><![CDATA[[Fix] Fix Undefined variable: image_id_id_ary when removing favorites (Bug #864)]]></change>
+					<change><![CDATA[[Fix] Fix typo in language packages (Bug #867)]]></change>
+					<change><![CDATA[[Fix] Correctly link back when deleting the personal main album (Bug #866)]]></change>
+					<change><![CDATA[[Fix] Remove ../ parts from the url when gallery is besides the forum (Bug #862)]]></change>
+				</changelog>
+			</entry>
+
 			<entry>
 				<date>2011-08-19</date>
 				<rev-version>1.1.2</rev-version>
@@ -1109,6 +1136,8 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<link type="parent" lang="en" href="update_1_0_6_to_1_1_1/update.xml">Update from 1.0.6 to 1.1.1</link>
 			<link type="parent" lang="de" href="update_1_1_1_to_1_1_2/update.xml">Update von 1.1.1 auf 1.1.2</link>
 			<link type="parent" lang="en" href="update_1_1_1_to_1_1_2/update.xml">Update from 1.1.1 to 1.1.2</link>
+			<link type="parent" lang="de" href="update_1_1_2_to_1_1_3/update.xml">Update von 1.1.2 auf 1.1.3</link>
+			<link type="parent" lang="en" href="update_1_1_2_to_1_1_3/update.xml">Update from 1.1.2 to 1.1.3</link>
 		</link-group>
 	</header>
 
