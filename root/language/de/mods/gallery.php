@@ -131,6 +131,7 @@ $lang = array_merge($lang, array(
 	'FILETYPES_PNG'					=> 'png',
 	'FILETYPES_ZIP'					=> 'zip',
 
+	'IGNORE_NOTUPTODATE_MESSAGE'		=> 'In 7 Tagen wieder erinnern',
 	'IMAGE'								=> 'Bild',
 	'IMAGE_#'							=> '1 Bild',
 	'IMAGE_ALREADY_REPORTED'			=> 'Das Bild wurde bereits gemeldet.',

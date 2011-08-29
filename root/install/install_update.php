@@ -576,6 +576,9 @@ class install_update extends module
 						AND module_langname = 'ACP_GALLERY_CLEANUP'";
 				$db->sql_query($sql);
 
+			case '1.1.2':
+				phpbb_gallery_config::set('mvc_ignore', 0);
+
 				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=4");
 			break;
 		}
