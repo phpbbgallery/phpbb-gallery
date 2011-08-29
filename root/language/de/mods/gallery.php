@@ -98,7 +98,8 @@ $lang = array_merge($lang, array(
 	'CONTEST_USERNAME'				=> '<strong>Wettbewerb</strong>',
 	'CONTEST_USERNAME_LONG'			=> '<strong>Wettbewerb</strong> » Der Benutzername wird bis zum Ende des Wettbewerbs am %s versteckt.',
 	'CONTEST_IMAGE_DESC'			=> '<strong>Wettbewerb</strong> » Die Beschreibung wird bis zum Ende des Wettbewerbs am %s versteckt.',
-	'CONTEST_WINNERS_OF'			=> 'Sieger des Wettbewerbs "%s"',
+	'CONTEST_WINNERS_OF'			=> 'Sieger des Wettbewerbs „%s“',
+	'CONTINUE'						=> 'Fortsetzen',
 
 	'DELETE_COMMENT'				=> 'Kommentar löschen',
 	'DELETE_COMMENT2'				=> 'Kommentar löschen?',
