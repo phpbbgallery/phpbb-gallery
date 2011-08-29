@@ -87,6 +87,7 @@ class phpbb_gallery_config_core
 		'medium_width'			=> 800,
 		'mini_thumbnail_disp'	=> true,
 		'mini_thumbnail_size'	=> 70,
+		'mvc_ignore'			=> 0,
 		'mvc_time'				=> 0,
 		'mvc_version'			=> '',
 
@@ -126,7 +127,7 @@ class phpbb_gallery_config_core
 		'thumbnail_height'		=> 160,
 		'thumbnail_infoline'	=> false,
 		'thumbnail_quality'		=> 50,
-		'thumbnail_width'		=> 160,
+		'thumbnail_width'		=> 240,
 
 		'version'				=> '',
 		'viewtopic_icon'		=> true,

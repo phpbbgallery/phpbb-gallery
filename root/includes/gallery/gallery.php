@@ -85,10 +85,26 @@ class phpbb_gallery
 			phpbb_gallery_config::set('prune_orphan_time', time() + 1800);
 		}
 
-		if ($auth->acl_get('a_') && version_compare(phpbb_gallery_config::get('version'), phpbb_gallery_config::get('mvc_version'), '<'))
+		if ($auth->acl_get('a_'))
 		{
-			$user->add_lang('mods/gallery_acp');
-			$template->assign_var('GALLERY_VERSION_CHECK', sprintf($user->lang['NOT_UP_TO_DATE'], $user->lang['GALLERY']));
+			$mvc_ignore = request_var('mvc_ignore', '');
+			if (!phpbb_gallery_config::get('mvc_ignore') && check_link_hash($mvc_ignore, 'mvc_ignore'))
+			{
+				// Ignore the warning for 7 days
+				phpbb_gallery_config::set('mvc_ignore', time() + 3600 * 24 * 7);
+			}
+			else if (!phpbb_gallery_config::get('mvc_ignore') || phpbb_gallery_config::get('mvc_ignore') < time())
+			{
+				if (version_compare(phpbb_gallery_config::get('version'), phpbb_gallery_config::get('mvc_version'), '<'))
+				{
+					$user->add_lang('mods/gallery_acp');
+					$template->assign_var('GALLERY_VERSION_CHECK', sprintf($user->lang['NOT_UP_TO_DATE'], $user->lang['GALLERY']));
+				}
+				if (phpbb_gallery_config::get('mvc_ignore'))
+				{
+					phpbb_gallery_config::set('mvc_ignore', 0);
+				}
+			}
 		}
 
 		if (request_var('display', '') == 'popup')
@@ -99,6 +115,7 @@ class phpbb_gallery
 		$template->assign_vars(array(
 			'S_IN_GALLERY'					=> true,
 			'U_GALLERY_SEARCH'				=> phpbb_gallery_url::append_sid('search'),
+			'U_MVC_IGNORE'					=> ($auth->acl_get('a_') && !phpbb_gallery_config::get('mvc_ignore')) ? phpbb_gallery_url::append_sid('index', 'mvc_ignore=' . generate_link_hash('mvc_ignore')) : '',
 			'GALLERY_TRANSLATION_INFO'		=> (!empty($user->lang['GALLERY_TRANSLATION_INFO'])) ? $user->lang['GALLERY_TRANSLATION_INFO'] : '',
 
 			'S_GALLERY_FEEDS'				=> phpbb_gallery_config::get('feed_enable'),
