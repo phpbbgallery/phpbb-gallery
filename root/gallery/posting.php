@@ -464,12 +464,12 @@ else
 			if (phpbb_gallery::$auth->acl_check('i_approve', $album_id, $album_data['album_user_id']))
 			{
 				$message .= (!$error) ? $user->lang['ALBUM_UPLOAD_SUCCESSFUL'] : $user->lang('ALBUM_UPLOAD_SUCCESSFUL_ERROR', $error);
-				meta_refresh(($success) ? 3 : 20, $album_backlink);
+				$meta_refresh_time = ($success) ? 3 : 20;
 			}
 			else
 			{
 				$message .= (!$error) ? $user->lang['ALBUM_UPLOAD_NEED_APPROVAL'] : $user->lang('ALBUM_UPLOAD_NEED_APPROVAL_ERROR', $error);
-				meta_refresh(20, $album_backlink);
+				$meta_refresh_time = 20;
 			}
 			$message .= '<br /><br />' . sprintf($user->lang['CLICK_RETURN_ALBUM'], '<a href="' . $album_backlink . '">', '</a>');
 
@@ -477,6 +477,7 @@ else
 			phpbb_gallery_image::handle_counter($process->images, true);
 			phpbb_gallery_album::update_info($album_id);
 
+			meta_refresh($meta_refresh_time, $album_backlink);
 			trigger_error($message);
 		}
 
