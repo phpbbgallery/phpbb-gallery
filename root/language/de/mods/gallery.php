@@ -101,6 +101,7 @@ $lang = array_merge($lang, array(
 	'CONTEST_WINNERS_OF'			=> 'Sieger des Wettbewerbs „%s“',
 	'CONTINUE'						=> 'Fortsetzen',
 
+	'DATABASE_NOT_UPTODATE'			=> 'Deine Datenbank hat nicht die gleiche Version wie deine Dateien. Bitte aktualisiere deine Datenbank.',
 	'DELETE_COMMENT'				=> 'Kommentar löschen',
 	'DELETE_COMMENT2'				=> 'Kommentar löschen?',
 	'DELETE_COMMENT2_CONFIRM'		=> 'Bist Du Dir sicher das Du den Kommentar löschen möchtest?',

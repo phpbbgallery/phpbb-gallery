@@ -127,7 +127,16 @@ class phpbb_gallery_auth
 			'ORDER_BY'		=> 'p.perm_system DESC, p.perm_album_id ASC',
 		);
 		$sql = $db->sql_build_query('SELECT', $sql_array);
+
+		$db->sql_return_on_error(true);
 		$result = $db->sql_query($sql);
+		if ($result === false)
+		{
+			trigger_error('DATABASE_NOT_UPTODATE');
+
+		}
+		$db->sql_return_on_error(false);
+
 		while ($row = $db->sql_fetchrow($result))
 		{
 			switch ($row['perm_system'])
