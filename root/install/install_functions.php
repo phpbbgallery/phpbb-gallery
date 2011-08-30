@@ -118,7 +118,7 @@ function add_bbcode($album_bbcode)
 		include($phpbb_root_path . 'includes/acp/acp_bbcodes.' . $phpEx);
 	}
 	$acp_bbcodes = new acp_bbcodes();
-	$gallery_url = generate_board_url() . '/' . GALLERY_ROOT_PATH;
+	$gallery_url = phpbb_gallery_url::path('full');
 
 	$bbcode_match = '[' . $album_bbcode . ']{NUMBER}[/' . $album_bbcode . ']';
 	$bbcode_tpl = '<a href="' . $gallery_url . 'image.php?image_id={NUMBER}"><img src="' . $gallery_url . 'image.php?mode=thumbnail&amp;image_id={NUMBER}" alt="{NUMBER}" /></a>';
@@ -277,6 +277,16 @@ function recalc_btree($sql_id, $sql_table, $where_options = array())
 			$sql_where";
 		$db->sql_query($sql);
 	}
+}
+
+function remove_duplicated_rates()
+{
+	global $db;
+
+	$sql = 'SELECT *, COUNT(*) AS num_extries
+		FROM ' . GALLERY_RATES_TABLE . '
+		GROUP BY rate_image_id , rate_user_id
+		WHERE num_extries > 1';
 }
 
 function config_mapping()

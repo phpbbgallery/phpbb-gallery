@@ -38,7 +38,7 @@ $user->session_begin();
 $auth->acl($user->data);
 $user->setup(array('install', 'mods/install_gallery'));
 
-if (!defined('GALLERY_ROOT_PATH'))
+if (!defined('GALLERY_FAVORITES_TABLE'))
 {
 	trigger_error('MISSING_CONSTANTS');
 }
