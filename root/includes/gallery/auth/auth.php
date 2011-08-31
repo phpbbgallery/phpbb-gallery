@@ -130,7 +130,7 @@ class phpbb_gallery_auth
 
 		$db->sql_return_on_error(true);
 		$result = $db->sql_query($sql);
-		if ($result === false)
+		if ($db->sql_error_triggered)
 		{
 			trigger_error('DATABASE_NOT_UPTODATE');
 
