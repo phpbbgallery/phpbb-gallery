@@ -469,8 +469,6 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 
 		'U_SEARCH_WORDS'	=> $u_search,
 		'SEARCH_IMAGES'		=> ($search_results == 'image') ? true : false,
-		'S_COL_WIDTH'		=> (100 / phpbb_gallery_config::get('album_columns')) . '%',
-		'S_COLS'			=> phpbb_gallery_config::get('album_columns'),
 		'S_THUMBNAIL_SIZE'	=> phpbb_gallery_config::get('thumbnail_height') + 20 + ((phpbb_gallery_config::get('thumbnail_infoline')) ? phpbb_gallery_constants::THUMBNAIL_INFO_HEIGHT : 0),
 	));
 
@@ -521,6 +519,8 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 						'U_BLOCK'			=> phpbb_gallery_url::append_sid('album', 'album_id=' . $contest_data['album_id'] . '&amp;sk=ra&amp;sd=d'),
 						'BLOCK_NAME'		=> sprintf($user->lang['CONTEST_WINNERS_OF'], $contest_data['album_name']),
 						'S_CONTEST_BLOCK'	=> true,
+						'S_COL_WIDTH'		=> '33%',
+						'S_COLS'			=> 3,
 					));
 					foreach ($contest_data['images'] as $contest_image)
 					{
@@ -550,6 +550,8 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 						$template->assign_block_vars('imageblock', array(
 							'U_BLOCK'		=> $u_search,
 							'BLOCK_NAME'	=> ($l_search_title) ? $l_search_title : $l_search_matches,
+							'S_COL_WIDTH'	=> (100 / phpbb_gallery_config::get('album_columns')) . '%',
+							'S_COLS'		=> phpbb_gallery_config::get('album_columns'),
 						));
 						$init_block = false;
 					}

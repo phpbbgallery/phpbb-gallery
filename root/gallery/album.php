@@ -229,6 +229,8 @@ if ($album_data['album_type'] != phpbb_gallery_album::TYPE_CAT)
 				$template->assign_block_vars('imageblock', array(
 					//'U_BLOCK'		=> phpbb_gallery_url::append_sid('album', 'album_id=' . $album_data['album_id']),
 					'BLOCK_NAME'	=> $album_data['album_name'],
+					'S_COL_WIDTH'	=> (100 / phpbb_gallery_config::get('album_columns')) . '%',
+					'S_COLS'		=> phpbb_gallery_config::get('album_columns'),
 				));
 				$init_block = false;
 			}
@@ -300,8 +302,6 @@ $template->assign_vars(array(
 	'S_ENABLE_FEEDS_ALBUM'		=> $album_data['album_feed'] && (phpbb_gallery_config::get('feed_enable_pegas') || !$album_data['album_user_id']),
 
 	'S_THUMBNAIL_SIZE'			=> phpbb_gallery_config::get('thumbnail_height') + 20 + ((phpbb_gallery_config::get('thumbnail_infoline')) ? phpbb_gallery_constants::THUMBNAIL_INFO_HEIGHT : 0),
-	'S_COLS'					=> phpbb_gallery_config::get('album_columns'),
-	'S_COL_WIDTH'				=> (100 / phpbb_gallery_config::get('album_columns')) . '%',
 	'S_JUMPBOX_ACTION'			=> phpbb_gallery_url::append_sid('album'),
 	'S_ALBUM_ACTION'			=> phpbb_gallery_url::append_sid('album', "album_id=$album_id"),
 
