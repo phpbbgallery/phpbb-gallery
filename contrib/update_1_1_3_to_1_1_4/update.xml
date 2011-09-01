@@ -66,6 +66,26 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<file from="root/umil/*.*" to="umil/*.*" />
 		</copy>
 
+		<open src="includes/functions_admin.php">
+			<edit>
+				<find><![CDATA[		case 'gallery':
+			$log_type = LOG_GALLERY;
+			$sql_forum = '';
+			$gallery_root_path = GALLERY_ROOT_PATH;
+		break;]]></find>
+				<action type="replace-with"><![CDATA[		case 'gallery':
+			$log_type = LOG_GALLERY;
+			$sql_forum = '';
+		break;]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[			'viewalbum'			=> ((isset($row['album_id']) && $row['album_id'] && ($log_type == LOG_GALLERY)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}album.$phpEx", 'album_id=' . $row['album_id']) : false),
+			'viewimage'			=> ((isset($row['image_id']) && $row['image_id'] && ($log_type == LOG_GALLERY)) ? append_sid("{$phpbb_root_path}{$gallery_root_path}image_page.$phpEx", 'album_id=' . $row['album_id'] . '&amp;image_id=' . $row['image_id']) : false),]]></find>
+				<action type="replace-with"><![CDATA[			'viewalbum'			=> ((isset($row['album_id']) && $row['album_id'] && ($log_type == LOG_GALLERY)) ? phpbb_gallery_url::append_sid('album', 'album_id=' . $row['album_id']) : false),
+			'viewimage'			=> ((isset($row['image_id']) && $row['image_id'] && ($log_type == LOG_GALLERY)) ? phpbb_gallery_url::append_sid('image_page', 'album_id=' . $row['album_id'] . '&amp;image_id=' . $row['image_id']) : false),]]></action>
+			</edit>
+		</open>
+
 		<php-installer>install/index.php</php-installer>
 
 		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
