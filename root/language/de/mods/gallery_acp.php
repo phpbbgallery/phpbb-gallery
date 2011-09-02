@@ -91,6 +91,7 @@ $lang = array_merge($lang, array(
 	'COLS_PER_PAGE'					=> 'Anzahl der Spalten pro Seite',
 	'COMMENT'						=> 'Kommentar',
 	'COMMENT_ID'					=> 'Kommentar-ID',
+	'COMMENT_MAX_LENGTH'			=> 'Maximale Länge für Kommentare',
 	'COMMENT_SYSTEM'				=> 'Kommentar System aktivieren',
 	'COMMENT_USER_CONTROL'			=> 'Benutzer können Kommentare einstellen',
 	'COMMENT_USER_CONTROL_EXP'		=> 'Mit dieser Option erlauben sie Benutzern einzustellen, ob andere Benutzer ihre Bilder kommentieren dürfen.',
@@ -190,7 +191,7 @@ $lang = array_merge($lang, array(
 	'HOTLINK_ALLOWED_EXP'			=> 'Links auf Bilder von diesen Seiten sind immer erlaubt. Die Domains müssen mit Kommata getrennt werden (keine Leerzeichen). Beispiel: „flying-bits.org,phpbb.com“',
 	'HOTLINK_PREVENT'				=> 'Links auf Bilder von allen Seiten aus erlauben',
 
-	'IMAGE_DESC_MAX_LENGTH'			=> 'Bild Beschreibung / Kommentar maximale Länge',
+	'IMAGE_DESC_MAX_LENGTH'			=> 'Maximale Länge für Beschreibungen',
 	'IMAGE_ID'						=> 'Bild-ID',
 	'IMAGE_SETTINGS'				=> 'Einstellungen zu den Bildern',
 	'IMAGES_PER_DAY'				=> 'Bilder pro Tag',

@@ -92,6 +92,7 @@ $lang = array_merge($lang, array(
 	'COLS_PER_PAGE'					=> 'Number of columns on thumbnail page',
 	'COMMENT'						=> 'Comment',
 	'COMMENT_ID'					=> 'Comment-ID',
+	'COMMENT_MAX_LENGTH'			=> 'Maximum length for comments',
 	'COMMENT_SYSTEM'				=> 'Enable comment system',
 	'COMMENT_USER_CONTROL'			=> 'Users can control comments',
 	'COMMENT_USER_CONTROL_EXP'		=> 'Allow users to select, whether other users can comment on their images.',
@@ -188,7 +189,7 @@ $lang = array_merge($lang, array(
 	'HOTLINK_ALLOWED_EXP'			=> 'Links to images from this domains are always allowed. The domains must be seperated by comma only (no space). Exp: „flying-bits.org,phpbb.com“',
 	'HOTLINK_PREVENT'				=> 'Allow links to images from all sites',
 
-	'IMAGE_DESC_MAX_LENGTH'			=> 'Image description/comment maximum length',
+	'IMAGE_DESC_MAX_LENGTH'			=> 'Maximum length for descriptions',
 	'IMAGE_ID'						=> 'Image-ID',
 	'IMAGE_SETTINGS'				=> 'Image settings',
 	'IMAGES_PER_DAY'				=> 'Images per day',
