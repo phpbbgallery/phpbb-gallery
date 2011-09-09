@@ -214,7 +214,7 @@ class phpbb_gallery_block
 		{
 			$this->albums = array_unique(array_merge($this->albums, array_map('int', $album_id)));
 		}
-		else if (is_int($album_id) && !in_array($this->albums, $album_id))
+		else if (is_int($album_id) && !in_array($album_id, $this->albums))
 		{
 			$this->albums[] = $album_id;
 		}
@@ -253,9 +253,9 @@ class phpbb_gallery_block
 		{
 			$this->users = array_unique(array_merge($this->users, array_map('int', $user_id)));
 		}
-		else if (!in_array((int) $user_id, $this->users))
+		else if (is_int($user_id) && !in_array($user_id, $this->users))
 		{
-			$this->users[] = (int) $user_id;
+			$this->users[] = $user_id;
 		}
 	}
 
