@@ -123,6 +123,15 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</edit>
 		</open>
 
+		<open src="styles/subsilver2/template/posting_smilies.html">
+			<edit>
+				<find><![CDATA[	var text_name = 'message';]]></find>
+				<action type="after-add"><![CDATA[	<!-- IF S_GALLERY_SMILIES_POPUP -->
+		text_name = opener.text_name;
+	<!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+
 		<open src="styles/subsilver2/template/viewtopic_body.html">
 			<edit>
 				<find><![CDATA[<!-- IF postrow.POSTER_POSTS != '' --><br /><b>{L_POSTS}:</b> {postrow.POSTER_POSTS}<!-- ENDIF -->]]></find>
