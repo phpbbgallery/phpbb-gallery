@@ -573,9 +573,21 @@ class install_update extends module
 					WHERE module_mode = 'import_images'
 						AND module_langname = 'ACP_GALLERY_CLEANUP'";
 				$db->sql_query($sql);
+			// no break;
 
 			case '1.1.2':
 				phpbb_gallery_config::set('mvc_ignore', 0);
+			// no break;
+
+			case '1.1.3':
+					// This might look weird, but we just update all values to there current value.
+					// This ensures that every key is set in the database.
+					$default_config = phpbb_gallery_config::get_default();
+					foreach ($default_config as $name => $value)
+					{
+						phpbb_gallery_config::set($name, phpbb_gallery_config::get($name));
+					}
+			// no break;
 
 				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=4");
 			break;
