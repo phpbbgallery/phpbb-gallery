@@ -303,6 +303,19 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
 			</edit>
 		</open>
 
+		<open src="includes/functions_posting.php">
+			<edit>
+				<find><![CDATA[			'U_MORE_SMILIES' 		=> append_sid("{$phpbb_root_path}posting.$phpEx", 'mode=smilies&amp;f=' . $forum_id))
+		);
+	}]]></find>
+				<action type="after-add"><![CDATA[
+	if (class_exists('phpbb_gallery_integration'))
+	{
+		phpbb_gallery_integration::generate_smilies($mode, $forum_id);
+	}]]></action>
+			</edit>
+		</open>
+
 		<open src="includes/functions_user.php">
 			<edit>
 				<find><![CDATA[	if ($config['newest_username'] == $old_name)]]></find>
@@ -541,6 +554,15 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
 	<!-- END custom_tags -->]]></find>
 				<action type="after-add"><![CDATA[	<!-- IF S_GALLERY_POPUP -->
 		<input type="button" class="button2" name="gallery_button" value="{L_GALLERY_POPUP}" onclick="popup('{U_GALLERY_POPUP}', 800, 600);" title="{L_GALLERY_POPUP_HELPLINE}" />
+	<!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/posting_smilies.html">
+			<edit>
+				<find><![CDATA[	var text_name = 'message';]]></find>
+				<action type="after-add"><![CDATA[	<!-- IF S_GALLERY_SMILIES_POPUP -->
+		text_name = opener.text_name;
 	<!-- ENDIF -->]]></action>
 			</edit>
 		</open>

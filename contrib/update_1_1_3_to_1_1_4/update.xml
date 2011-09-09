@@ -86,6 +86,28 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</edit>
 		</open>
 
+		<open src="includes/functions_posting.php">
+			<edit>
+				<find><![CDATA[			'U_MORE_SMILIES' 		=> append_sid("{$phpbb_root_path}posting.$phpEx", 'mode=smilies&amp;f=' . $forum_id))
+		);
+	}]]></find>
+				<action type="after-add"><![CDATA[
+	if (class_exists('phpbb_gallery_integration'))
+	{
+		phpbb_gallery_integration::generate_smilies($mode, $forum_id);
+	}]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/posting_smilies.html">
+			<edit>
+				<find><![CDATA[	var text_name = 'message';]]></find>
+				<action type="after-add"><![CDATA[	<!-- IF S_GALLERY_SMILIES_POPUP -->
+		text_name = opener.text_name;
+	<!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+
 		<php-installer>install/index.php</php-installer>
 
 		<diy-instructions lang="de"><![CDATA[Rufe install/ auf und führe das Update-Script aus
