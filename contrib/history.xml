@@ -188,7 +188,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</author>
 		</author-group>
 
-		<mod-version>1.1.3</mod-version>
+		<mod-version>1.1.4</mod-version>
 
 		<installation>
 			<level>intermediate</level>
@@ -197,6 +197,19 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		</installation>
 
 		<history>
+			<entry>
+				<date>2011-09-10</date>
+				<rev-version>1.1.4</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Fix] Add publish date to feed (Bug #890)]]></change>
+					<change><![CDATA[[Fix] Error in_array() expects parameter 2 to be array on block album option (Bug #889)]]></change>
+					<change><![CDATA[[Fix] Ensure that all config keys are set to a correct value (Bug #884)]]></change>
+					<change><![CDATA[[Fix] Completly fix the popup-smilies-issue from ticket/875 (Bug #885)]]></change>
+					<change><![CDATA[[Fix] Fix can not set comment length in ACP (Bug #883)]]></change>
+					<change><![CDATA[[Fix] Fix use of undefined constant GALLERY_ROOT_PATH in ACP logs (Bug #882)]]></change>
+				</changelog>
+			</entry>
+
 			<entry>
 				<date>2011-08-31</date>
 				<rev-version>1.1.3</rev-version>
@@ -1138,6 +1151,8 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<link type="parent" lang="en" href="update_1_1_1_to_1_1_2/update.xml">Update from 1.1.1 to 1.1.2</link>
 			<link type="parent" lang="de" href="update_1_1_2_to_1_1_3/update.xml">Update von 1.1.2 auf 1.1.3</link>
 			<link type="parent" lang="en" href="update_1_1_2_to_1_1_3/update.xml">Update from 1.1.2 to 1.1.3</link>
+			<link type="parent" lang="de" href="update_1_1_3_to_1_1_4/update.xml">Update von 1.1.3 auf 1.1.4</link>
+			<link type="parent" lang="en" href="update_1_1_3_to_1_1_4/update.xml">Update from 1.1.3 to 1.1.4</link>
 		</link-group>
 	</header>
 
