@@ -185,6 +185,7 @@ class phpbb_gallery_feed
 			echo '<title>' . $title . '</title>';
 			echo '<link>' . $url_imagepage . '</link>';
 			echo '<guid>' . $url_imagepage . '</guid>';
+			echo '<pubdate>' . $user->format_date($row['image_time'], 'r') . '</pubdate>';
 			echo '<description>&lt;img src="' . $u_thumbnail . '" alt="" /&gt;&lt;br /&gt;<![CDATA[' . $description;
 			echo '<p>' . $user->lang['STATISTICS'] . ': ' . $image_username . ' ' . $this->separator_stats . ' ' . $user->format_date($row['image_time']) . '</p>';
 			echo ']]></description>';
