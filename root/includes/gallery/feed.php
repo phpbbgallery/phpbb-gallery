@@ -185,7 +185,7 @@ class phpbb_gallery_feed
 			echo '<title>' . $title . '</title>';
 			echo '<link>' . $url_imagepage . '</link>';
 			echo '<guid>' . $url_imagepage . '</guid>';
-			echo '<pubdate>' . $user->format_date($row['image_time'], 'r') . '</pubdate>';
+			echo '<pubDate>' . self::format_date($row['image_time']) . '</pubDate>';
 			echo '<description>&lt;img src="' . $u_thumbnail . '" alt="" /&gt;&lt;br /&gt;<![CDATA[' . $description;
 			echo '<p>' . $user->lang['STATISTICS'] . ': ' . $image_username . ' ' . $this->separator_stats . ' ' . $user->format_date($row['image_time']) . '</p>';
 			echo ']]></description>';
@@ -226,5 +226,29 @@ class phpbb_gallery_feed
 
 		garbage_collection();
 		exit_handler();
+	}
+
+	static public function format_date($time)
+	{
+		static $zone_offset;
+		static $offset_string;
+
+		if (empty($offset_string))
+		{
+			global $user;
+
+			$zone_offset = (int) $user->timezone + (int) $user->dst;
+
+			$sign = ($zone_offset < 0) ? '-' : '+';
+			$time_offset = abs($zone_offset);
+
+			$offset_seconds	= $time_offset % 3600;
+			$offset_minutes	= $offset_seconds / 60;
+			$offset_hours	= ($time_offset - $offset_seconds) / 3600;
+
+			$offset_string	= sprintf(" %s%02d%02d", $sign, $offset_hours, $offset_minutes);
+		}
+
+		return gmdate("D, d M Y H:i:s", $time + $zone_offset) . $offset_string;
 	}
 }
