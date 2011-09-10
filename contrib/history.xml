@@ -201,6 +201,7 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<date>2011-09-10</date>
 				<rev-version>1.1.4</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Fix] Ensure that no child album is selected as parent album (Bug #891)]]></change>
 					<change><![CDATA[[Fix] Add publish date to feed (Bug #890)]]></change>
 					<change><![CDATA[[Fix] Error in_array() expects parameter 2 to be array on block album option (Bug #889)]]></change>
 					<change><![CDATA[[Fix] Ensure that all config keys are set to a correct value (Bug #884)]]></change>

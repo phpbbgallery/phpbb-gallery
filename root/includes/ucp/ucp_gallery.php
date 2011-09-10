@@ -473,7 +473,15 @@ class ucp_gallery
 		{
 			$album_data = phpbb_gallery_album::get_info($album_id);
 			$album_desc_data = generate_text_for_edit($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_options']);
-			$parents_list = phpbb_gallery_album::get_albumbox(false, '', $album_data['parent_id'], false, $album_id, $user->data['user_id']);
+
+			// Make sure no direct child forums are able to be selected as parents.
+			$exclude_albums = array($album_id);
+			foreach (phpbb_gallery_album::get_branch($album_data['album_user_id'], $album_id, 'children') as $row)
+			{
+				$exclude_albums[] = (int) $row['album_id'];
+			}
+
+			$parents_list = phpbb_gallery_album::get_albumbox(false, '', $album_data['parent_id'], false, $exclude_albums, $user->data['user_id']);
 
 			$s_access_options = '';
 			if (phpbb_gallery::$auth->acl_check('a_restrict', phpbb_gallery_auth::OWN_ALBUM))
@@ -534,9 +542,26 @@ class ucp_gallery
 			generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], request_var('desc_parse_bbcode', false), request_var('desc_parse_urls', false), request_var('desc_parse_smilies', false));
 			$row = phpbb_gallery_album::get_info($album_id);
 
+			// Ensure that no child is selected as parent
+			$exclude_albums = array($album_id);
+			foreach (phpbb_gallery_album::get_branch($album_data['album_user_id'], $album_id, 'children') as $row)
+			{
+				$exclude_albums[] = (int) $row['album_id'];
+			}
+			if (in_array($album_data['parent_id'], $exclude_albums))
+			{
+				$album_data['parent_id'] = (int) $row['parent_id'];
+			}
+
 			// If the parent is different, the left_id and right_id have changed.
 			if ($row['parent_id'] != $album_data['parent_id'])
 			{
+				if ($album_data['parent_id'])
+				{
+					// Get the parent album now, so it throws an error when it does not exist, before we change the database.
+					$parent = phpbb_gallery_album::get_info($album_data['parent_id']);
+				}
+
 				// How many do we have to move and how far.
 				$moving_ids = ($row['right_id'] - $row['left_id']) + 1;
 				$sql = 'SELECT MAX(right_id) right_id
@@ -590,9 +615,6 @@ class ucp_gallery
 							AND right_id >= ' . $row['left_id'] . '
 							AND right_id <= ' . $stop_updating;
 					$db->sql_query($sql);
-
-					// Create new gap, therefore we need parent_information.
-					$parent = get_album_info($album_data['parent_id']);
 
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . '
 						SET left_id = left_id + ' . $moving_ids . '

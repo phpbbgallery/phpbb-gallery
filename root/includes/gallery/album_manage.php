@@ -441,6 +441,11 @@ class phpbb_gallery_album_manage
 		$moved_ids = array();
 		for ($i = 0, $end = sizeof($moved_albums); $i < $end; ++$i)
 		{
+			// Can not select child as parent
+			if ($moved_albums[$i]['album_id'] == $to_id)
+			{
+				return array($user->lang['ALBUM_PARENT_INVALID']);
+			}
 			$moved_ids[] = $moved_albums[$i]['album_id'];
 		}
 
