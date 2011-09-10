@@ -51,6 +51,7 @@ $lang = array_merge($lang, array(
 	'ALBUM_NAME_EMPTY'				=> 'You must enter a name for this album.',
 	'ALBUM_NO_TYPE_CHANGE_TO_CONTEST'	=> 'A Non-Contest-Album can not be turned into a Contest-Albums.',
 	'ALBUM_PARENT'					=> 'Parent album',
+	'ALBUM_PARENT_INVALID'			=> 'The album parent you selected is invalid. It either is a child of the album you edit or does not exist.',
 	'ALBUM_PASSWORD'				=> 'Album password',
 	'ALBUM_PASSWORD_EXPLAIN'		=> 'Defines a password for this album, use the permission system in preference.',
 	'ALBUM_PASSWORD_CONFIRM'		=> 'Confirm album password',

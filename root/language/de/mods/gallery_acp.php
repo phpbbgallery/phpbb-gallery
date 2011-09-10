@@ -50,6 +50,7 @@ $lang = array_merge($lang, array(
 	'ALBUM_NAME_EMPTY'				=> 'Du musst einen Namen für dieses Album angeben.',
 	'ALBUM_NO_TYPE_CHANGE_TO_CONTEST'	=> 'Ein Album ohne Wettbewerb kann nicht in ein Album mit Wettbewerb geändert werden.',
 	'ALBUM_PARENT'					=> 'Übergeordnetes Album',
+	'ALBUM_PARENT_INVALID'			=> 'Das übergeordnete Album das du ausgewählt hast existiert nicht, oder ist ein untergeordnetes Album von dem, das du gerade bearbeitest.',
 	'ALBUM_PASSWORD'				=> 'Album-Passwort',
 	'ALBUM_PASSWORD_EXPLAIN'		=> 'Definiert ein Passwort für dieses Album. Es wird empfohlen, vorzugsweise das Berechtigungs-System zu nutzen.',
 	'ALBUM_PASSWORD_CONFIRM'		=> 'Album-Passwort bestättigen',
