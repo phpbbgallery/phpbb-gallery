@@ -544,9 +544,9 @@ class ucp_gallery
 
 			// Ensure that no child is selected as parent
 			$exclude_albums = array($album_id);
-			foreach (phpbb_gallery_album::get_branch($album_data['album_user_id'], $album_id, 'children') as $row)
+			foreach (phpbb_gallery_album::get_branch($row['album_user_id'], $album_id, 'children') as $loop)
 			{
-				$exclude_albums[] = (int) $row['album_id'];
+				$exclude_albums[] = (int) $loop['album_id'];
 			}
 			if (in_array($album_data['parent_id'], $exclude_albums))
 			{
