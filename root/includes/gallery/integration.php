@@ -41,7 +41,7 @@ class phpbb_gallery_integration
 
 		phpbb_gallery::init();
 
-		$user_id = $member['user_id'];
+		$user_id = (int) $member['user_id'];
 		$memberdays = max(1, round((time() - $member['user_regdate']) / 86400));
 
 		$sql = 'SELECT user_images, personal_album_id
