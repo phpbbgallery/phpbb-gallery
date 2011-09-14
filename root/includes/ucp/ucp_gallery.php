@@ -484,7 +484,7 @@ class ucp_gallery
 			$parents_list = phpbb_gallery_album::get_albumbox(false, '', $album_data['parent_id'], false, $exclude_albums, $user->data['user_id']);
 
 			$s_access_options = '';
-			if (phpbb_gallery::$auth->acl_check('a_restrict', phpbb_gallery_auth::OWN_ALBUM))
+			if (phpbb_gallery::$auth->acl_check('a_restrict', phpbb_gallery_auth::OWN_ALBUM) && $album_data['parent_id'])
 			{
 				$access_options = array(
 					phpbb_gallery_auth::ACCESS_ALL			=> 'ALL',
@@ -494,7 +494,7 @@ class ucp_gallery
 				);
 				foreach ($access_options as $value => $lang_key)
 				{
-					$s_access_options .= '<option value="' . $value . '">' . $user->lang['ACCESS_CONTROL_' . $lang_key] . '</option>';
+					$s_access_options .= '<option value="' . $value . (($value == $album_data['album_auth_access']) ? '" selected="selected' : '') . '">' . $user->lang['ACCESS_CONTROL_' . $lang_key] . '</option>';
 				}
 			}
 
@@ -541,6 +541,11 @@ class ucp_gallery
 
 			generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], request_var('desc_parse_bbcode', false), request_var('desc_parse_urls', false), request_var('desc_parse_smilies', false));
 			$row = phpbb_gallery_album::get_info($album_id);
+			if (!$row['parent_id'])
+			{
+				// do not allow to restrict access on the base-album
+				$album_data['album_auth_access'] = 0;
+			}
 
 			// Ensure that no child is selected as parent
 			$exclude_albums = array($album_id);
@@ -643,7 +648,11 @@ class ucp_gallery
 			}
 
 			// The album name has changed, clear the parents list of all albums.
-			if ($row['album_name'] != $album_data['album_name'])
+			if ($album_data['album_name'] == '')
+			{
+				$album_data['album_name'] = $row['album_name'];
+			}
+			else if ($row['album_name'] != $album_data['album_name'])
 			{
 				$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 					SET album_parents = ''";
