@@ -52,7 +52,7 @@ if (!phpbb_gallery::$auth->acl_check('i_view', $album_id, $album_data['album_use
 {
 	if ($user->data['is_bot'])
 	{
-		phpbb_gallery::redirect('index');
+		phpbb_gallery_url::redirect('index');
 	}
 	if (!$user->data['is_registered'])
 	{
