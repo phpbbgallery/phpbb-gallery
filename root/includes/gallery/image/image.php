@@ -259,6 +259,8 @@ class phpbb_gallery_image
 		$s_allowed_edit = ((phpbb_gallery::$auth->acl_check('i_edit', $image_data['image_album_id'], $album_user_id) && $s_user_allowed) || phpbb_gallery::$auth->acl_check('m_edit', $image_data['image_album_id'], $album_user_id));
 		$s_quick_mod = ($s_allowed_delete || $s_allowed_edit || phpbb_gallery::$auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id) || phpbb_gallery::$auth->acl_check('m_move', $image_data['image_album_id'], $album_user_id));
 
+		$s_username_hidden = $image_data['image_contest'] && !phpbb_gallery::$auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id) && ($user->data['user_id'] != $image_data['image_user_id'] || $image_data['image_user_id'] == ANONYMOUS);
+
 		$template->assign_block_vars($template_block, array(
 			'IMAGE_ID'		=> $image_data['image_id'],
 			'UC_IMAGE_NAME'	=> ($display & phpbb_gallery_block::DISPLAY_IMAGENAME) ? self::generate_link('image_name', phpbb_gallery_config::get('link_image_name'), $image_data['image_id'], $image_data['image_name'], $image_data['image_album_id'], false, true, "&amp;sk={$sk}&amp;sd={$sd}&amp;st={$st}") : '',
@@ -270,7 +272,7 @@ class phpbb_gallery_image
 
 			'ALBUM_NAME'		=> ($display & phpbb_gallery_block::DISPLAY_ALBUMNAME) ? ((isset($image_data['album_name'])) ? ((utf8_strlen(htmlspecialchars_decode($image_data['album_name'])) > phpbb_gallery_config::get('shortnames') + 3) ? htmlspecialchars(utf8_substr(htmlspecialchars_decode($image_data['album_name']), 0, phpbb_gallery_config::get('shortnames')) . '...') : ($image_data['album_name'])) : '') : '',
 			'ALBUM_NAME_FULL'	=> ($display & phpbb_gallery_block::DISPLAY_ALBUMNAME) ? ((isset($image_data['album_name'])) ? $image_data['album_name'] : '') : '',
-			'POSTER'		=> ($display & phpbb_gallery_block::DISPLAY_USERNAME) ? (($image_data['image_contest'] && !phpbb_gallery::$auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id)) ? $user->lang['CONTEST_USERNAME'] : get_username_string('full', $image_data['image_user_id'], $image_data['image_username'], $image_data['image_user_colour'])) : '',
+			'POSTER'		=> ($display & phpbb_gallery_block::DISPLAY_USERNAME) ? (($s_username_hidden) ? $user->lang['CONTEST_USERNAME'] : get_username_string('full', $image_data['image_user_id'], $image_data['image_username'], $image_data['image_user_colour'])) : '',
 			'TIME'			=> ($display & phpbb_gallery_block::DISPLAY_IMAGETIME) ? $user->format_date($image_data['image_time']) : '',
 			'VIEW'			=> ($display & phpbb_gallery_block::DISPLAY_IMAGEVIEWS) ? $image_data['image_view_count'] : -1,
 			'CONTEST_RANK'		=> ($image_data['image_contest_rank']) ? $user->lang['CONTEST_RESULT_' . $image_data['image_contest_rank']] : '',
