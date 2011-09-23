@@ -313,7 +313,7 @@ class phpbb_gallery_block
 		}
 
 		$this->sql_where_auth = '(';
-		$this->sql_where_auth .= ((!empty($this->auth_view)) ? '(' . $db->sql_in_set('image_album_id', $this->auth_view) . ' AND image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . ((empty($this->users)) ? ' AND image_contest = ' . phpbb_gallery_image::NO_CONTEST : '') . ')' : '');
+		$this->sql_where_auth .= ((!empty($this->auth_view)) ? '(' . $db->sql_in_set('image_album_id', $this->auth_view) . ' AND image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . ((!empty($this->users)) ? ' AND image_contest = ' . phpbb_gallery_image::NO_CONTEST : '') . ')' : '');
 		$this->sql_where_auth .= ((!empty($this->auth_moderate)) ? ((!empty($this->auth_view)) ? ' OR ' : '') . '(' . $db->sql_in_set('image_album_id', $this->auth_moderate, false, true) . ')' : '');
 
 		if ($this->sql_where_auth == '(')
