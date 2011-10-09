@@ -165,7 +165,7 @@
 					<input type="checkbox" name="same_name" id="same_name" value="1" onchange="change_read_write();" /> {L_USE_SAME_NAME}<br />
 					{L_USE_NUM} <input class="inputbox autowidth" type="text" id="image_num" name="image_num" size="5" onchange="update_all('image_name'); update_all('message');" onkeyup="update_all('image_name'); update_all('message');" value="1" /><br />
 				<!-- ENDIF -->
-				<input class="inputbox autowidth" type="text" tabindex="1{image.S_ROW_COUNT}" id="image_name_{image.S_ROW_COUNT}" name="image_name[{image.S_ROW_COUNT}]" value="{image.IMAGE_NAME}"<!-- IF image.S_FIRST_ROW --> onchange="update_all('image_name');" onselect="update_all('image_name');" onclick="update_all('image_name');" onkeyup="update_all('image_name');"<!-- ENDIF --> size="60" maxlength="32" />
+				<input class="inputbox autowidth" type="text" tabindex="1{image.S_ROW_COUNT}" id="image_name_{image.S_ROW_COUNT}" name="image_name[{image.S_ROW_COUNT}]" value="{image.IMAGE_NAME}"<!-- IF image.S_FIRST_ROW --> onchange="update_all('image_name');" onselect="update_all('image_name');" onclick="update_all('image_name');" onkeyup="update_all('image_name');"<!-- ENDIF --> size="60" maxlength="128" />
 			</span></td>
 			<!-- IF image.S_FIRST_ROW -->
 			<td class="row1" valign="top" rowspan="{COLOUR_ROWSPAN}">
