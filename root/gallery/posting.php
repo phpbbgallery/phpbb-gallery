@@ -619,9 +619,10 @@ else
 				if (($image_data['image_has_exif'] != phpbb_gallery_exif::UNAVAILABLE) && ($image_data['image_has_exif'] != phpbb_gallery_exif::DBSAVED))
 				{
 					// Store exif-data to database if there are any and we didn't already do that.
-					$image_tools->read_exif_data();
-					$sql_ary['image_exif_data'] = $image_tools->exif_data_serialized;
-					$sql_ary['image_has_exif'] = $image_tools->exif_data_exist;
+					$exif = new phpbb_gallery_exif($image_tools->image_source);
+					$exif->read();
+					$sql_ary['image_has_exif'] = $exif->status;
+					$sql_ary['image_exif_data'] = $exif->serialized;
 				}
 
 				// Rotate the image
