@@ -74,7 +74,7 @@ class phpbb_gallery_report
 		{
 			$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 				SET image_reported = ' . self::UNREPORTED . '
-				WHERE ' . $db->sql_in_set('report_id', $report_ids);
+				WHERE ' . $db->sql_in_set('image_reported', $report_ids);
 			$db->sql_query($sql);
 		}
 		else
