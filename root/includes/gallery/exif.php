@@ -232,9 +232,9 @@ class phpbb_gallery_exif
 				$this->prepared_data['exif_flash'] = $user->lang['EXIF_FLASH_CASE_' . $this->data["EXIF"]["Flash"]];
 			}
 		}
-		if (isset($exif["IFD0"]["Model"]))
+		if (isset($this->data["IFD0"]["Model"]))
 		{
-			$this->prepared_data['exif_cam_model'] = ucwords($exif["IFD0"]["Model"]);
+			$this->prepared_data['exif_cam_model'] = ucwords($this->data["IFD0"]["Model"]);
 		}
 		if (isset($this->data["EXIF"]["ExposureProgram"]))
 		{
