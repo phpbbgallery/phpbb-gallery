@@ -401,4 +401,32 @@ class phpbb_gallery_integration
 	{
 		phpbb_gallery_auth::set_user_permissions($zebar_ids);
 	}
+
+	/**
+	* View private message
+	*/
+	static public function ucp_pm_viewmessage($id, $mode, $folder_id, $msg_id, $folder, $message_row)
+	{
+		global $db, $template, $user;
+
+		if ($message_row['author_id'] && (phpbb_gallery_config::get('viewtopic_icon') || phpbb_gallery_config::get('viewtopic_images')))
+		{
+			$sql = 'SELECT personal_album_id, user_images
+				FROM ' . GALLERY_USERS_TABLE . '
+				WHERE user_id = ' . (int) $message_row['author_id'];
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+
+			if ($row)
+			{
+				$template->assign_vars(array(
+					'GALLERY_IMG'		=> $user->img('icon_contact_gallery', 'PERSONAL_ALBUM'),
+					'U_GALLERY'			=> (phpbb_gallery_config::get('viewtopic_icon') && $row['personal_album_id']) ? phpbb_gallery_url::append_sid('album', "album_id=" . $row['personal_album_id']) : '',
+					'GALLERY_IMAGES'	=> (phpbb_gallery_config::get('viewtopic_images')) ? $row['user_images'] : 0,
+					'U_GALLERY_SEARCH'	=> (phpbb_gallery_config::get('viewtopic_images') && phpbb_gallery_config::get('viewtopic_link') && $row['user_images']) ? phpbb_gallery_url::append_sid('search', "user_id=$poster_id") : '',
+				));
+			}
+		}
+	}
 }
