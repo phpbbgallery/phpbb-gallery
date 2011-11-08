@@ -65,6 +65,30 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			<file from="root/styles/prosilver/*.*" to="styles/prosilver/*.*" />
 			<file from="root/umil/*.*" to="umil/*.*" />
 		</copy>
+ 
+		<open src="posting.php">
+			<edit>
+				<remove><![CDATA[if (class_exists('phpbb_gallery_integration'))
+{
+	phpbb_gallery_integration::posting_display_popup();
+}]]></remove>
+			</edit>
+		</open>
+
+		<open src="includes/functions_display.php">
+			<edit>
+				<find><![CDATA[}
+
+	/**
+	* Display reasons
+	*/
+	function display_reasons($reason_id = 0)]]></find>
+					<action type="before-add"><![CDATA[if (class_exists('phpbb_gallery_integration'))
+	{
+		phpbb_gallery_integration::posting_display_popup();
+	}]]></action>
+			</edit>
+		</open>
 
 		<open src="includes/ucp/ucp_pm_viewmessage.php">
 			<edit>
