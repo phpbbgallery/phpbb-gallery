@@ -474,6 +474,20 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
 			</edit>
 		</open>
 
+		<open src="includes/ucp/ucp_pm_viewmessage.php">
+			<edit>
+				<find><![CDATA[	// Display not already displayed Attachments for this post, we already parsed them. ;)
+	if (isset($attachments) && sizeof($attachments))
+	{
+		foreach ($attachments as $attachment)
+		{]]></find>
+				<action type="before-add"><![CDATA[	if (class_exists('phpbb_gallery_integration'))
+	{
+		phpbb_gallery_integration::ucp_pm_viewmessage($id, $mode, $folder_id, $msg_id, $folder, $message_row);
+	}]]></action>
+			</edit>
+		</open>
+
 		<open src="includes/ucp/ucp_zebra.php">
 			<edit>
 				<find><![CDATA[						$sql = 'DELETE FROM ' . ZEBRA_TABLE . '
@@ -564,6 +578,17 @@ define('GALLERY_WATCH_TABLE',			$table_prefix . 'gallery_watch');]]></action>
 				<action type="after-add"><![CDATA[	<!-- IF S_GALLERY_SMILIES_POPUP -->
 		text_name = opener.text_name;
 	<!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/ucp_pm_viewmessage.html">
+			<edit>
+				<find><![CDATA[<dd><strong>{L_POSTS}:</strong> {AUTHOR_POSTS}</dd>]]></find>
+				<action type="after-add"><![CDATA[<!-- IF GALLERY_IMAGES != '' --><dd><strong>{L_IMAGES}:</strong> <!-- IF U_GALLERY_SEARCH --><a href="{U_GALLERY_SEARCH}">{GALLERY_IMAGES}</a><!-- ELSE -->{GALLERY_IMAGES}<!-- ENDIF --></dd><!-- ENDIF -->]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[<!-- IF U_JABBER --><li class="jabber-icon"><a href="{U_JABBER}" onclick="popup(this.href, 550, 320); return false;" title="{L_JABBER}"><span>{L_JABBER}</span></a></li><!-- ENDIF -->]]></find>
+				<action type="after-add"><![CDATA[<!-- IF U_GALLERY --><li class="gallery-icon"><a href="{U_GALLERY}" title="{L_PERSONAL_ALBUM}"><span>{L_PERSONAL_ALBUM}</span></a></li><!-- ENDIF -->]]></action>
 			</edit>
 		</open>
 
