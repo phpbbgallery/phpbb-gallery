@@ -262,7 +262,7 @@ class ucp_gallery
 			{
 				if ($row['album_id'] == $parent_id)
 				{
-					$navigation .= ' &raquo; ' . $row['album_name'] . '</a>';
+					$navigation .= ' &raquo; ' . $row['album_name'];
 				}
 				else
 				{
