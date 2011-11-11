@@ -6,8 +6,8 @@
 	<header>
 		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
 
-		<title lang="de">phpBB Gallery</title>
-		<title lang="en">phpBB Gallery</title>
+		<title lang="de"><![CDATA[phpBB Gallery » Konvertieren]]></title>
+		<title lang="en"><![CDATA[phpBB Gallery » Convert]]></title>
 
 		<description lang="de"><![CDATA[
 Diese Anleitung ermöglicht eine Konvertierung von Smartor's "Album MOD" für phpBB2 und visiblethunder's "TS Gallery" für phpBB3
