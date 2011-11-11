@@ -5,8 +5,8 @@
 	<header>
 		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
 
-		<title lang="de">phpBB Gallery Plugin: Lytebox (3.22)</title>
-		<title lang="en">phpBB Gallery Plugin: Lytebox (3.22)</title>
+		<title lang="de"><![CDATA[phpBB Gallery » Plugins » Lytebox (3.22)]]></title>
+		<title lang="en"><![CDATA[phpBB Gallery » Plugins » Lytebox (3.22)]]></title>
 
 		<description lang="de"><![CDATA[Diese Anleitung ermöglicht ein einfaches implementieren von Lytebox (von Markus F. Hay: http://www.dolem.com/lytebox/) in die Gallery.]]></description>
 		<description lang="en"><![CDATA[This manual is an easy way to implement Lytebox (by Markus F. Hay: http://www.dolem.com/lytebox/) into the gallery.]]></description>

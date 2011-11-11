@@ -5,8 +5,8 @@
 	<header>
 		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
 
-		<title lang="de">phpBB Gallery</title>
-		<title lang="en">phpBB Gallery</title>
+		<title lang="de"><![CDATA[phpBB Gallery » Update 1.1.1 nach 1.1.2]]></title>
+		<title lang="en"><![CDATA[phpBB Gallery » Update 1.1.1 to 1.1.2]]></title>
 
 		<description lang="de"><![CDATA[Update-Anleitung]]></description>
 		<description lang="en"><![CDATA[Update-Manual]]></description>

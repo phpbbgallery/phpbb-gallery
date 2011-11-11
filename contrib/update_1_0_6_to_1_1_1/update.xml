@@ -5,8 +5,8 @@
 	<header>
 		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
 
-		<title lang="de">phpBB Gallery</title>
-		<title lang="en">phpBB Gallery</title>
+		<title lang="de"><![CDATA[phpBB Gallery » Update 1.0.6 nach 1.1.1]]></title>
+		<title lang="en"><![CDATA[phpBB Gallery » Update 1.0.6 to 1.1.1]]></title>
 
 		<description lang="de"><![CDATA[Update-Anleitung]]></description>
 		<description lang="en"><![CDATA[Update-Manual]]></description>
@@ -41,6 +41,8 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 		</installation>
 
 		<link-group>
+			<link type="template" lang="de" href="contrib/subsilver2.xml">Update-Anleitung für das Style subsilver2</link>
+			<link type="template" lang="en" href="contrib/subsilver2.xml">Update manual for subsilver2 Style</link>
 			<link type="contrib" lang="de" href="../history.xml">Geschichte/Entwickler/Features</link>
 			<link type="contrib" lang="en" href="../history.xml">History/Developers/Features</link>
 			<link type="parent" lang="de" href="../../install.xml">Installations-Anleitung</link>

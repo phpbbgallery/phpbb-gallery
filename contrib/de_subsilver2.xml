@@ -6,8 +6,8 @@
 	<header>
 		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
 
-		<title lang="de">phpBB Gallery</title>
-		<title lang="en">phpBB Gallery</title>
+		<title lang="de"><![CDATA[phpBB Gallery » Deutsch » subSilver2]]></title>
+		<title lang="en"><![CDATA[phpBB Gallery » German » subSilver2]]></title>
 
 		<description lang="de"><![CDATA[Anleitung für das Deutsche Sprachpaket]]></description>
 		<description lang="en"><![CDATA[Manual for the german language package]]></description>
