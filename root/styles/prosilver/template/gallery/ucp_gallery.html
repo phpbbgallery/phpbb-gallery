@@ -162,8 +162,8 @@
 			<fieldset class="quick">
 				<!--input type="hidden" name="action" value="add" /-->
 				<input class="button2" name="addforum" type="submit" value="{L_CREATE_SUBALBUM}" />
+				{S_FORM_TOKEN}
 			</fieldset>
-			{S_FORM_TOKEN}
 		</form>
 	<!-- ENDIF -->
 	<span class="corners-bottom"><span></span></span></div>
@@ -209,8 +209,7 @@
 						</li>
 					<!-- END album_row -->
 					</ul>
-					<div><a href="#" onclick="marklist('ucp_gallery', 'album_id_ary', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('ucp_gallery', 'album_id_ary', false); return false;">{L_UNMARK_ALL}</a></div>
-					<br />
+					<div><a href="#" onclick="marklist('ucp_gallery', 'album_id_ary', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('ucp_gallery', 'album_id_ary', false); return false;">{L_UNMARK_ALL}</a><br /></div>
 				<!-- ENDIF -->
 			<!-- ENDIF -->
 

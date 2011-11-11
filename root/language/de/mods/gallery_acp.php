@@ -160,7 +160,7 @@ $lang = array_merge($lang, array(
 	'DISP_VIEWTOPIC_IMAGES'			=> 'Anzahl der Bilder auf der viewtopic.' . $phpEx . ' anzeigen',
 	'DISP_VIEWTOPIC_LINK'			=> 'Die Anzahl der Bilder auf die Benutzer Bilder verlinken',
 	'DISP_WHOISONLINE'				=> '„Wer ist online“ anzeigen',
-	'DISPLAY_IN_RRC'				=> 'Bilder aus diesem Album in den „Neusten & Zufälligen“-Bildern anzeigen',
+	'DISPLAY_IN_RRC'				=> 'Bilder aus diesem Album in den „Neusten &amp; Zufälligen“-Bildern anzeigen',
 	'DONT_COPY_PERMISSIONS'			=> 'Berechtigungen nicht kopieren',
 
 	'EDIT_ALBUM'					=> 'Album bearbeiten',
@@ -359,7 +359,7 @@ $lang = array_merge($lang, array(
 	'RRC_DISPLAY_OPTIONS'			=> 'Welche Werte sollen unter dem Thumbnail angezeigt werden',
 	'RRC_DISPLAY_USERNAME'			=> 'Benutzername',
 	'RRC_DISPLAY_RATINGS'			=> 'Bewertungen',
-	'RRC_GINDEX'					=> 'Neueste & zufällige Bilder & Kommentare - Feature',
+	'RRC_GINDEX'					=> 'Neueste &amp; zufällige Bilder &amp; Kommentare - Feature',
 	'RRC_GINDEX_COLUMNS'			=> 'Spalten',
 	'RRC_GINDEX_COMMENTS'			=> 'Kommentare einklappen',
 	'RRC_GINDEX_CONTESTS'			=> 'Anzahl der Wettbewerbe',
@@ -373,7 +373,7 @@ $lang = array_merge($lang, array(
 	'RRC_MODE_RANDOM'				=> 'Zufällige Bilder',
 	'RRC_MODE_RECENT'				=> 'Neueste Bilder',
 	'RRC_PROFILE_COLUMNS'			=> 'Spalten',
-	'RRC_PROFILE_MODE'				=> 'Modus des „Neueste & zufällige Bilder“-Features im Profil',
+	'RRC_PROFILE_MODE'				=> 'Modus des „Neueste &amp; zufällige Bilder“-Features im Profil',
 	'RRC_PROFILE_MODE_EXP'			=> '„Zufällige Bilder“ kann bei großen Datenbanken einige Ladezeit in Anspruch nehmen!',
 	'RRC_PROFILE_ROWS'				=> 'Zeilen',
 

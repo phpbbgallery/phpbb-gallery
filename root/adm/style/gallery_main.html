@@ -123,10 +123,10 @@
 			</dl>
 		</form>
 
-		<form id="action_create_pega" method="post" action="{U_ACTION}">
+		<form id="action_create_pega_form" method="post" action="{U_ACTION}">
 			<dl>
 				<dt><label for="username">{L_CREATE_USERS_PEGA}</label></dt>
-				<dd><input class="inputbox autowidth" type="text" name="username" size="15" value="" />
+				<dd><input class="inputbox autowidth" type="text" id="username" name="username" size="15" value="" />
 					<input type="hidden" name="action" value="create_pega" /><input class="button2" type="submit" id="action_create_pega" name="action_create_pega" value="{L_CREATE}" /></dd>
 				<dd>[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</dd>
 			</dl>
@@ -141,10 +141,10 @@
 		<dl>
 			<dt><label for="album_id">{L_IMPORT_ALBUM}:</label></dt>
 			<dd>{S_SELECT_IMPORT}</dd>
-			<dd><input class="radio" type="checkbox" name="users_pega" id="users_pega" value="1" /> <label for="users_pega">{L_IMPORT_USERS_PEGA}</dd>
+			<dd><input class="radio" type="checkbox" name="users_pega" id="users_pega" value="1" /> <label for="users_pega">{L_IMPORT_USERS_PEGA}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="images">{L_IMAGES}:</label>
+			<dt><label<!-- IF .imagerow --> for="images"<!-- ENDIF -->>{L_IMAGES}:</label>
 				<br /><span>{L_IMPORT_SELECT}</span></dt>
 			<dd><!-- IF not .imagerow -->
 				{L_IMPORT_DIR_EMPTY}
@@ -172,9 +172,9 @@
 		<p class="submit-buttons">
 			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
 			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+			{S_FORM_TOKEN}
 		</p>
 	</fieldset>
-	{S_FORM_TOKEN}
 </form>
 <!-- ENDIF -->
 
@@ -183,7 +183,7 @@
 	<fieldset>
 		<legend>{L_MANAGE_CRASHED_IMAGES}</legend>
 		<dl>
-			<dt><label for="source">{L_MISSING_SOURCE}:</label>
+			<dt><label<!-- IF .sourcerow --> for="source"<!-- ENDIF -->>{L_MISSING_SOURCE}:</label>
 				<br /><span><a href="{CHECK_SOURCE}">{L_CHECK}</a></span></dt>
 			<dd><!-- IF not .sourcerow -->
 				{L_CHECK_SOURCE_EXPLAIN}
@@ -194,7 +194,7 @@
 			<!-- ENDIF --></dd>
 		</dl>
 		<dl>
-			<dt><label for="entry">{L_MISSING_ENTRY}:</label>
+			<dt><label<!-- IF .entryrow --> for="entry"<!-- ENDIF -->>{L_MISSING_ENTRY}:</label>
 				<br /><span><a href="{CHECK_ENTRY}">{L_CHECK}</a></span></dt>
 			<dd><!-- IF not .entryrow -->
 				{L_CHECK_ENTRY_EXPLAIN}
@@ -205,15 +205,17 @@
 			<!-- ENDIF --></dd>
 		</dl>
 
+		<!-- IF .entryrow or .sourcerow -->
 		<p class="submit-buttons">
-			<input class="button1" type="submit" id="delete" name="delete" value="{L_DELETE}" />
+			<input class="button1" type="submit" name="delete" value="{L_DELETE}" />
 		</p>
+		<!-- ENDIF -->
 	</fieldset>
 
 	<fieldset>
 		<legend>{L_MANAGE_CRASHED_ENTRIES}</legend>
 		<dl>
-			<dt><label for="author">{L_MISSING_AUTHOR}:</label></dt>
+			<dt><label<!-- IF .authorrow --> for="author"<!-- ENDIF -->>{L_MISSING_AUTHOR}:</label></dt>
 			<dd><!-- IF not .authorrow -->
 				{L_CHECK_AUTHOR_EXPLAIN}
 			<!-- ELSE -->
@@ -223,7 +225,7 @@
 			<!-- ENDIF --></dd>
 		</dl>
 		<dl>
-			<dt><label for="comment">{L_MISSING_AUTHOR_C}:</label></dt>
+			<dt><label<!-- IF .commentrow --> for="comment"<!-- ENDIF -->>{L_MISSING_AUTHOR_C}:</label></dt>
 			<dd><!-- IF not .commentrow -->
 				{L_CHECK_COMMENT_EXPLAIN}
 			<!-- ELSE -->
@@ -233,16 +235,18 @@
 			<!-- ENDIF --></dd>
 		</dl>
 
+		<!-- IF .commentrow or .authorrow -->
 		<p class="submit-buttons">
-			<input class="button1" type="submit" id="submit" name="submit" value="{L_CHANGE_AUTHOR_TO_GUEST}" />
-			<input class="button1" type="submit" id="delete" name="delete" value="{L_DELETE}" />
+			<input class="button1" type="submit" name="submit" value="{L_CHANGE_AUTHOR_TO_GUEST}" />
+			<input class="button1" type="submit" name="delete" value="{L_DELETE}" />
 		</p>
+		<!-- ENDIF -->
 	</fieldset>
 
 	<fieldset>
 		<legend>{L_MANAGE_PERSONALS}</legend>
 		<dl>
-			<dt><label for="personal_missing">{L_MISSING_OWNER}:</label>
+			<dt><label<!-- IF .personalrow --> for="personal_missing"<!-- ENDIF -->>{L_MISSING_OWNER}:</label>
 				<br /><span>{L_MISSING_OWNER_EXP}</span></dt>
 			<dd><!-- IF not .personalrow -->
 				{L_CHECK_PERSONALS_EXPLAIN}
@@ -253,7 +257,7 @@
 			<!-- ENDIF --></dd>
 		</dl>
 		<dl>
-			<dt><label for="personal_bad">{L_PERSONAL_ALBUMS}:</label>
+			<dt><label<!-- IF .personal_bad_row --> for="personal_bad"<!-- ENDIF -->>{L_PERSONAL_ALBUMS}:</label>
 				<br /><span>{L_MISSING_OWNER_EXP}</span></dt>
 			<dd><!-- IF not .personal_bad_row -->
 				{L_CHECK_PERSONALS_BAD_EXPLAIN}
@@ -264,9 +268,11 @@
 			<!-- ENDIF --></dd>
 		</dl>
 
+		<!-- IF .personalrow or .personal_bad_row -->
 		<p class="submit-buttons">
-			<input class="button1" type="submit" id="delete" name="delete" value="{L_DELETE}" />
+			<input class="button1" type="submit" name="delete" value="{L_DELETE}" />
 		</p>
+		<!-- ENDIF -->
 	</fieldset>
 
 	<!-- IF S_SELECT_ALBUM -->
@@ -307,11 +313,11 @@
 		</dl>
 
 		<p class="submit-buttons">
-			<input class="button1" type="submit" id="prune" name="prune" value="{L_PRUNE}" />
+			<input class="button1" type="submit" name="prune" value="{L_PRUNE}" />
 		</p>
 	</fieldset>
 	<!-- ENDIF -->
-	{S_FORM_TOKEN}
+	<p>{S_FORM_TOKEN}</p>
 </form>
 <!-- ENDIF -->
 
