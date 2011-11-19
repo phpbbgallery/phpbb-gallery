@@ -391,6 +391,23 @@ class phpbb_gallery_integration
 	}
 
 	/**
+	* Integration into UCP before the active module is set.
+	* We use this to hide some modules, when the user has no permissions.
+	*
+	* @param object $module		The module handler
+	*/
+	static public function ucp(&$module)
+	{
+		phpbb_gallery::init();
+
+		// Do not display signature panel if not authed to do so
+		if (!phpbb_gallery::$auth->acl_check('i_upload', phpbb_gallery_auth::OWN_ALBUM))
+		{
+			$module->set_display('gallery', 'manage_albums', false);
+		}
+	}
+
+	/**
 	* Add/Remove a user from the friends/foes list
 	*
 	* @param string $mode		Mode of action: either 'add' or 'remove'
