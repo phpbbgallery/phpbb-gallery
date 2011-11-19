@@ -75,6 +75,21 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 			</edit>
 		</open>
 
+		<open src="ucp.php">
+			<edit>
+				<find><![CDATA[// Do not display signature panel if not authed to do so
+if (!$auth->acl_get('u_sig'))
+{
+	$module->set_display('profile', 'signature', false);
+}]]></find>
+				<action type="after-add"><![CDATA[
+if (class_exists('phpbb_gallery_integration'))
+{
+	phpbb_gallery_integration::ucp($module);
+}]]></action>
+			</edit>
+		</open>
+
 		<open src="includes/functions_display.php">
 			<edit>
 				<find><![CDATA[}
