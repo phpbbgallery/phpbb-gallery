@@ -198,6 +198,32 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 		<history>
 			<entry>
+				<date>2011-MM-DD</date>
+				<rev-version>1.1.5</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Change] Increase maximum imagename length to 128 characters. (Bug #903)]]></change>
+					<change><![CDATA[[Change] Update manuals should have unique name (more usability in AutoMOD) (Bug #909)]]></change>
+
+					<change><![CDATA[[Fix] Hide personal album module when user has no permissions (Bug #918)]]></change>
+					<change><![CDATA[[Fix] Undefined PERSONAL_GALLERY_PERMISSIONS in viewonline integration (Bug #917)]]></change>
+					<change><![CDATA[[Fix] Undefined offset: 0 while editing when rotating is disabled (Bug #920)]]></change>
+					<change><![CDATA[[Fix] Fix various xHTML issues (Fix partly by WileCoyote) (Bug #916)]]></change>
+					<change><![CDATA[[Fix] Fix version tag set to phpbb_gallery_dev (Bug #915)]]></change>
+					<change><![CDATA[[Fix] Load gallery button everytime the bbcodes are displayed. (Bug #912)]]></change>
+					<change><![CDATA[[Fix] Gallery user info not visible in PM view (Bug #905)]]></change>
+					<change><![CDATA[[Fix] Model not displayed in EXIF data (Bug #913)]]></change>
+					<change><![CDATA[[Fix] Handle transparency on unresized images correctly. (Bug #792-Part2)]]></change>
+					<change><![CDATA[[Fix] Unknown column 'report_id' in 'where clause' while closing reports (Bug #907)]]></change>
+					<change><![CDATA[[Fix] Fatal error: Call to undefined method read_exif_data() (Bug #906)]]></change>
+					<change><![CDATA[[Fix] Call to undefined method phpbb_gallery::redirect() (Bug #896)]]></change>
+					<change><![CDATA[[Fix] Logic-error contests #2: Hide contest images from users profile (Bug #897)]]></change>
+					<change><![CDATA[[Fix] Do not display usernames in contests (Bug #899)]]></change>
+					<change><![CDATA[[Fix] Do not loose selection of auth_access when editing an album (Bug #895)]]></change>
+					<change><![CDATA[[Fix] PHP Notice Undefined index album_user_id when editing album in UCP (Bug #893)]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
 				<date>2011-09-10</date>
 				<rev-version>1.1.4</rev-version>
 				<changelog lang="en">
