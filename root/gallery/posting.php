@@ -609,7 +609,7 @@ else
 			}
 
 			$rotate = request_var('rotate', array(0));
-			$rotate = $rotate[0];
+			$rotate = (isset($rotate[0])) ? $rotate[0] : 0;
 			if (phpbb_gallery_config::get('allow_rotate') && ($rotate > 0) && (($rotate % 90) == 0))
 			{
 				$image_tools = new phpbb_gallery_image_file();
