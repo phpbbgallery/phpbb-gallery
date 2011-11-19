@@ -33,11 +33,11 @@ $lang = array_merge($lang, array(
 	'CHECK_TABLES'				=> 'Check tables',
 	'CHECK_TABLES_EXPLAIN'		=> 'The following tables need to exist, so they can be converted.',
 
-	'CONVERT_SMARTOR_INTRO'			=> 'Convertor from „Album-MOD“ by smartor to „phpBB Gallery“',
+	'CONVERT_SMARTOR_INTRO'			=> 'Convertor from “Album-MOD“ by smartor to “phpBB Gallery“',
 	'CONVERT_SMARTOR_INTRO_BODY'	=> 'With this convertor, you can convert your albums, images, rates and comments from the <a href="http://www.phpbb.com/community/viewtopic.php?f=16&t=74772">Album-MOD</a> by Smartor (tested v2.0.56) and <a href="http://www.phpbbhacks.com/download/5028">Full Album Pack</a> (tested v1.4.1) to the phpBB Gallery.<br /><br /><strong>Note:</strong> The <strong>permissions</strong> will <strong>not be copied</strong>.',
-	'CONVERT_TS_INTRO'				=> 'Convertor from „TS Gallery“ to „phpBB Gallery“',
+	'CONVERT_TS_INTRO'				=> 'Convertor from “TS Gallery“ to “phpBB Gallery“',
 	'CONVERT_TS_INTRO_BODY'			=> 'With this convertor, you can convert your albums, images, rates and comments from the <a href="http://www.phpbb.com/community/viewtopic.php?f=70&t=610509">TS Gallery</a> (tested v0.2.1) to the phpBB Gallery.<br /><br /><strong>Note:</strong> The <strong>permissions</strong> will <strong>not be copied</strong>.',
-	'CONVERT_COMPLETE_EXPLAIN'		=> 'Conversion from your gallery to phpBB Gallery v%s was successful.<br />Please ensure that the settings were transferred correctly before enabling your board by deleting the install directory.<br /><br /><strong>Please note that the permissions were not copied.</strong><br /><br />You should also clean your database from old entries, where the images are missing. This can be done in „.MODs > phpBB Gallery > Cleanup gallery“.',
+	'CONVERT_COMPLETE_EXPLAIN'		=> 'Conversion from your gallery to phpBB Gallery v%s was successful.<br />Please ensure that the settings were transferred correctly before enabling your board by deleting the install directory.<br /><br /><strong>Please note that the permissions were not copied.</strong><br /><br />You should also clean your database from old entries, where the images are missing. This can be done in “.MODs > phpBB Gallery > Cleanup gallery“.',
 
 	'CONVERTED_ALBUMS'			=> 'The albums were successful copied.',
 	'CONVERTED_COMMENTS'		=> 'The comments were successful copied.',
@@ -60,8 +60,8 @@ $lang = array_merge($lang, array(
 	'FOUND_INSTALL'					=> 'Double Installation',
 	'FOUND_INSTALL_EXPLAIN'			=> '<strong>Double Installation</strong> - An Installation of the gallery was found! If you continue here, you overwrite all existing data. All albums, images and comments will be deleted! <strong>That´s why an %1$supdate%2$s recommanded.</strong>',
 	'FOUND_VERSION'					=> 'The following version was found',
-	'FOUNDER_CHECK'					=> 'You are a „Founder“ of this board',
-	'FOUNDER_NEEDED'				=> 'You must be a „Founder“ of this board!',
+	'FOUNDER_CHECK'					=> 'You are a “Founder“ of this board',
+	'FOUNDER_NEEDED'				=> 'You must be a “Founder“ of this board!',
 
 	'INSTALL_CONGRATS_EXPLAIN'	=> 'You have now successfully installed phpBB Gallery v%s.<br/><br/><strong>Please now delete, move or rename the install directory before you use your board. If this directory is still present, only the Administration Control Panel (ACP) will be accessible.</strong>',
 	'INSTALL_INTRO_BODY'		=> 'With this option, it is possible to install phpBB Gallery onto your board.',
@@ -72,19 +72,19 @@ $lang = array_merge($lang, array(
 	'MISSING_CONSTANTS'			=> 'Before you can run the install-script, you need to upload your edited files, especially the includes/constants.php.',
 	'MODULES_CREATE_PARENT'		=> 'Create parent standard-module',
 	'MODULES_PARENT_SELECT'		=> 'Choose parent module',
-	'MODULES_SELECT_4ACP'		=> 'Choose parent module for „admin control panel“',
-	'MODULES_SELECT_4LOG'		=> 'Choose parent module for „Gallery log“',
-	'MODULES_SELECT_4MCP'		=> 'Choose parent module for „moderation control panel“',
-	'MODULES_SELECT_4UCP'		=> 'Choose parent module for „user control panel“',
+	'MODULES_SELECT_4ACP'		=> 'Choose parent module for “admin control panel“',
+	'MODULES_SELECT_4LOG'		=> 'Choose parent module for “Gallery log“',
+	'MODULES_SELECT_4MCP'		=> 'Choose parent module for “moderation control panel“',
+	'MODULES_SELECT_4UCP'		=> 'Choose parent module for “user control panel“',
 	'MODULES_SELECT_NONE'		=> 'no parent module',
 
 	'NO_INSTALL_FOUND'			=> 'No installation was found!',
 
-	'OPTIONAL_EXIFDATA'				=> 'Function „exif_read_data“ exists',
+	'OPTIONAL_EXIFDATA'				=> 'Function “exif_read_data“ exists',
 	'OPTIONAL_EXIFDATA_EXP'			=> 'The exif-module is not loaded or installed.',
 	'OPTIONAL_EXIFDATA_EXPLAIN'		=> 'If the function exists, the exif data of the images are displayed on the imagepage.',
-	'OPTIONAL_IMAGEROTATE'			=> 'Function „imagerotate“ exists',
-	'OPTIONAL_IMAGEROTATE_EXP'		=> 'You should update your GD Version, which is currently „%s“.',
+	'OPTIONAL_IMAGEROTATE'			=> 'Function “imagerotate“ exists',
+	'OPTIONAL_IMAGEROTATE_EXP'		=> 'You should update your GD Version, which is currently “%s“.',
 	'OPTIONAL_IMAGEROTATE_EXPLAIN'	=> 'If the function exists, you can rotate images while uploading and editing them.',
 
 	'PAYPAL_DEV_SUPPORT'				=> '</p><div class="errorbox">
