@@ -207,7 +207,7 @@ class phpbb_gallery_integration
 				break;
 			}
 		}
-		else if (self::$session_page == 'personal' && phpbb_gallery::$auth->acl_check('i_view', PERSONAL_GALLERY_PERMISSIONS))
+		else if (self::$session_page == 'personal' && phpbb_gallery::$auth->acl_check('i_view', phpbb_gallery_auth::PERSONAL_ALBUM))
 		{
 			$location = $user->lang['PERSONAL_ALBUMS'];
 			$location_url = phpbb_gallery_url::append_sid('index', 'mode=personal');
