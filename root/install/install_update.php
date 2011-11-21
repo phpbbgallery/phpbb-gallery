@@ -52,7 +52,7 @@ class install_update extends module
 
 		if ($user->data['user_type'] != USER_FOUNDER)
 		{
-			#trigger_error('FOUNDER_NEEDED', E_USER_ERROR);
+			trigger_error('FOUNDER_NEEDED', E_USER_ERROR);
 		}
 
 		$gallery_version = get_gallery_version();
@@ -420,8 +420,8 @@ class install_update extends module
 					array(GALLERY_USERS_TABLE, 'user_last_update', array('TIMESTAMP', 0)),
 					array(GALLERY_USERS_TABLE, 'user_allow_comments', array('TINT:1', 1)),
 					array(GALLERY_IMAGES_TABLE, 'image_allow_comments', array('TINT:1', 1)),
-					array(GALLERY_COMMENTS_TABLE, 'comment_signature', array('BOOL', 0),),
-					array(GALLERY_ALBUMS_TABLE, 'album_feed', array('BOOL', 1),),
+					array(GALLERY_COMMENTS_TABLE, 'comment_signature', array('BOOL', 0)),
+					array(GALLERY_ALBUMS_TABLE, 'album_feed', array('BOOL', 1)),
 					array(GALLERY_ALBUMS_TABLE, 'album_auth_access', array('TINT:1', 0)),
 					array(GALLERY_ROLES_TABLE, 'a_restrict', array('UINT:3', 0)),
 				));
@@ -480,8 +480,17 @@ class install_update extends module
 			// no break;
 
 			case '1.1.3':
+			// no break;
+
+			case '1.1.4':
 			break;
 		}
+
+		// These two columns seem to miss sometimes, so we just ensure they got added here
+		$umil->table_column_add(array(
+			array(GALLERY_ALBUMS_TABLE, 'album_feed', array('BOOL', 1)),
+			array(GALLERY_ALBUMS_TABLE, 'album_auth_access', array('TINT:1', 0)),
+		));
 
 		$template->assign_vars(array(
 			'BODY'		=> $user->lang['STAGE_CREATE_TABLE_EXPLAIN'],
@@ -592,6 +601,9 @@ class install_update extends module
 					}
 			// no break;
 
+			case '1.1.4':
+			// no break;
+
 				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=4");
 			break;
 		}
@@ -638,6 +650,7 @@ class install_update extends module
 			case '1.1.1':
 			case '1.1.2':
 			case '1.1.3':
+			case '1.1.4':
 				//@todo: Move on bbcode-change or creating all modules
 				//$reparse_modules_bbcode = true;
 			break;
@@ -744,6 +757,7 @@ class install_update extends module
 				case '1.1.1':
 				case '1.1.2':
 				case '1.1.3':
+				case '1.1.4':
 				break;
 			}
 
@@ -760,6 +774,7 @@ class install_update extends module
 			$modules = $this->gallery_config_options;
 			switch (phpbb_gallery_config::get('version'))
 			{
+				case '1.1.4':
 				case '1.1.3':
 				case '1.1.2':
 				case '1.1.1':

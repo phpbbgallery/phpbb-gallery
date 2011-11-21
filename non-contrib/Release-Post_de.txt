@@ -1,11 +1,11 @@
-[b]Version:[/b] 1.1.4
+[b]Version:[/b] 1.1.5
 [b]Beschreibung:[/b] Eine Bilder-Galerie, die in dein phpBB integriert wird.
 [b]Features:[/b] Die Liste mit (fast) allen Features: http://www.flying-bits.org/go/phpbb_gallery/features
 
 [b]Unterstützte Styles:[/b] prosilver, subsilver2
 [b]Unterstützte Sprachpakete:[/b] de, en
 
-[b]Benötigte phpBB-Version:[/b] 3.0.9
+[b]Benötigte phpBB-Version:[/b] 3.0.10
 [b]Benötigte php-Version:[/b] 5+
 
 [b]Repository[/b]: [url]https://github.com/nickvergessen/phpbb-gallery[/url] (Git)
@@ -14,4 +14,4 @@
 [b]Paypal-Spende[/b]:
 Wenn dir die MOD gefällt, kannst du dich gerne mit einer kleinen [url=http://www.flying-bits.org/paypal.php]Paypal-Spende[/url] dafür revangieren. (nickvergessen Q gmx.de / Q=@).
 
-[b]Downloads:[/b] [size=150][b][url=http://www.flying-bits.org/go/phpbb_gallery/download]Download v1.1.4[/url][/b][/size]
+[b]Downloads:[/b] [size=150][b][url=http://www.flying-bits.org/go/phpbb_gallery/download]Download v1.1.5[/url][/b][/size]
