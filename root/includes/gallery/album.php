@@ -992,6 +992,7 @@ class phpbb_gallery_album
 				'S_IS_CAT'			=> false,
 				'S_NO_CAT'			=> $catless && !$last_catless,
 				'S_LOCKED_ALBUM'	=> ($row['album_status'] == self::STATUS_LOCKED) ? true : false,
+				'S_UNREAD_ALBUM'	=> ($album_unread) ? true : false,
 				'S_LIST_SUBALBUMS'	=> ($row['display_subalbum_list']) ? true : false,
 				'S_SUBALBUMS'		=> (sizeof($subalbums_list)) ? true : false,
 
