@@ -153,10 +153,17 @@ class phpbb_gallery_url
 		return append_sid($params[0], $params[1], $params[2], $params[3]);
 	}
 
+	/**
+	* Removes the sid and replaces &amp; with normal &
+	*/
 	static public function create_link($path, $file, $params = false, $is_amp = true)
 	{
-		// No ?sid=
-		return self::append_sid($path, $file, $params, $is_amp, '');
+		if ($is_amp && !is_array($params))
+		{
+			$params = implode('&', explode('&amp;', $params));
+		}
+
+		return self::append_sid($path, $file, $params, false, '');
 	}
 
 	static public function redirect()
