@@ -218,9 +218,11 @@ class phpbb_gallery_integration
 	{
 		global $db;
 
-		$sql = 'SELECT album_id, parent_id, album_name, album_type, left_id, right_id, album_user_id, display_in_rrc, album_auth_access
-			FROM ' . GALLERY_ALBUMS_TABLE . '
-			ORDER BY album_user_id ASC, left_id ASC';
+		$sql = 'SELECT a.album_id, a.parent_id, a.album_name, a.album_type, a.left_id, a.right_id, a.album_user_id, a.display_in_rrc, a.album_auth_access
+			FROM ' . GALLERY_ALBUMS_TABLE . ' a
+			LEFT JOIN ' . USERS_TABLE . ' u
+				ON (u.user_id = a.album_user_id)
+			ORDER BY u.username_clean, a.left_id ASC';
 		$result = $db->sql_query($sql);
 
 		$albums = array();
