@@ -212,7 +212,7 @@ class phpbb_gallery_block
 	{
 		if (is_array($album_id))
 		{
-			$this->albums = array_unique(array_merge($this->albums, array_map('int', $album_id)));
+			$this->albums = array_unique(array_merge($this->albums, array_map('intval', $album_id)));
 		}
 		else if (is_int($album_id) && !in_array($album_id, $this->albums))
 		{
@@ -251,7 +251,7 @@ class phpbb_gallery_block
 	{
 		if (is_array($user_id))
 		{
-			$this->users = array_unique(array_merge($this->users, array_map('int', $user_id)));
+			$this->users = array_unique(array_merge($this->users, array_map('intval', $user_id)));
 		}
 		else if (is_int($user_id) && !in_array($user_id, $this->users))
 		{
