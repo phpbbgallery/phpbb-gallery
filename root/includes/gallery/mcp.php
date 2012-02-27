@@ -20,6 +20,7 @@ if (!defined('IN_PHPBB'))
 class phpbb_gallery_mcp
 {
 	static protected $allowed_sort_params = array('image_time', 'image_name_clean', 'image_username_clean', 'image_view_count', 'image_rate_avg', 'image_comments', 'image_last_comment');
+	static protected $allowed_sort_params_report = array('reporter_name', 'mod_username');
 
 	static public function build_navigation($album_id, $mode, $option_id = false)
 	{
@@ -107,9 +108,17 @@ class phpbb_gallery_mcp
 		$images_per_page	= $config['topics_per_page'];
 		$count_images		= $album_data['album_images_real'];
 
-		if (!in_array($sort_key, self::$allowed_sort_params))
+		$use_sort_key = $sort_key;
+		if (!in_array($use_sort_key, self::$allowed_sort_params))
 		{
-			$sort_key = 'image_time';
+			if (in_array($use_sort_key . '_clean', self::$allowed_sort_params))
+			{
+				$use_sort_key .= '_clean';
+			}
+			else
+			{
+				$use_sort_key = 'image_time';
+			}
 		}
 
 		$m_status = ' AND image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED;
@@ -131,7 +140,7 @@ class phpbb_gallery_mcp
 
 			'WHERE'			=> 'i.image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '
 									AND i.image_album_id = ' . $album_id . ' ' . $m_status,
-			'ORDER_BY'		=> "i.$sort_key $sort_dir",
+			'ORDER_BY'		=> "i.$use_sort_key $sort_dir",
 		);
 		$sql = $db->sql_build_query('SELECT', $sql_array);
 
@@ -268,9 +277,17 @@ class phpbb_gallery_mcp
 		$images_per_page	= $config['topics_per_page'];
 		$count_images		= 0;
 
-		if (!in_array($sort_key,self::$allowed_sort_params))
+		$use_sort_key = $sort_key;
+		if (!in_array($use_sort_key, self::$allowed_sort_params))
 		{
-			$sort_key = 'image_time';
+			if (in_array($use_sort_key . '_clean', self::$allowed_sort_params))
+			{
+				$use_sort_key .= '_clean';
+			}
+			else
+			{
+				$use_sort_key = 'image_time';
+			}
 		}
 
 		$where_case = 'AND image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN . '';
@@ -298,7 +315,7 @@ class phpbb_gallery_mcp
 			FROM ' . GALLERY_IMAGES_TABLE . "
 			WHERE image_album_id = $album_id
 			$where_case
-			ORDER BY $sort_key $sort_dir";
+			ORDER BY $use_sort_key $sort_dir";
 		$result = $db->sql_query_limit($sql, $images_per_page, $start);
 		while ($row = $db->sql_fetchrow($result))
 		{
@@ -360,10 +377,17 @@ class phpbb_gallery_mcp
 		$sort_dir			= (request_var('sd', 'DESC') == 'DESC') ? 'DESC' : 'ASC';
 		$images_per_page	= $config['topics_per_page'];
 		$count_images		= 0;
-
-		if (!in_array($sort_key, self::$allowed_sort_params))
+		$use_sort_key = $sort_key;
+		if (!in_array($use_sort_key, array_merge(self::$allowed_sort_params, self::$allowed_sort_params_report)))
 		{
-			$sort_key = 'image_time';
+			if (in_array($use_sort_key . '_clean', array_merge(self::$allowed_sort_params, self::$allowed_sort_params_report)))
+			{
+				$use_sort_key .= '_clean';
+			}
+			else
+			{
+				$use_sort_key = 'image_time';
+			}
 		}
 
 		$m_status = ' AND i.image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED;
@@ -421,7 +445,7 @@ class phpbb_gallery_mcp
 			),
 
 			'WHERE'			=> "r.report_album_id = $album_id AND r.report_status = $report_status $m_status",
-			'ORDER_BY'		=> $sort_key . ' ' . $sort_dir,
+			'ORDER_BY'		=> $use_sort_key . ' ' . $sort_dir,
 		);
 		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query_limit($sql, $images_per_page, $start);
