@@ -201,11 +201,26 @@ class phpbb_gallery_image_rating
 				{
 					if ($user_rating)
 					{
-						return $user->lang('RATING_STRINGS_USER', (int) $this->image_data('image_rates'), ($this->image_data('image_rate_avg') / 100), $user_rating);
+						return $user->lang('RATING_STRINGS_USER', (int) $this->image_data('image_rates'), $this->get_image_rating_value(), $user_rating);
 					}
-					return $user->lang('RATING_STRINGS', (int) $this->image_data('image_rates'), ($this->image_data('image_rate_avg') / 100));
+					return $user->lang('RATING_STRINGS', (int) $this->image_data('image_rates'), $this->get_image_rating_value());
 				}
 			break;
+		}
+	}
+
+	/**
+	* Get rated value for a image
+	*/
+	private function get_image_rating_value()
+	{
+		if (phpbb_gallery_contest::$mode == phpbb_gallery_contest::MODE_SUM)
+		{
+			return $this->image_data('image_rate_points');
+		}
+		else
+		{
+			return ($this->image_data('image_rate_avg') / 100);
 		}
 	}
 

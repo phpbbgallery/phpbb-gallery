@@ -70,7 +70,7 @@ $sort_by_sql = array('t' => 'image_time', 'n' => 'image_name_clean', 'u' => 'ima
 if (phpbb_gallery_config::get('allow_rates'))
 {
 	$sort_by_text['ra'] = $user->lang['RATING'];
-	$sort_by_sql['ra'] = 'image_rate_avg';
+	$sort_by_sql['ra'] = (phpbb_gallery_contest::$mode == phpbb_gallery_contest::MODE_SUM) ? 'image_rate_points' : 'image_rate_avg';
 	$sort_by_text['r'] = $user->lang['RATES_COUNT'];
 	$sort_by_sql['r'] = 'image_rates';
 }
