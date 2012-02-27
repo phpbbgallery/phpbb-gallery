@@ -1,4 +1,4 @@
-Subject: New topic notification - "{IMAGE_NAME}"
+Subject: New comment notification - "{IMAGE_NAME}"
 
 Hello {USERNAME},
 
@@ -6,8 +6,6 @@ You are receiving this notification because you are watching the image, "{IMAGE_
 
 {U_IMAGE}
 
-If you no longer wish to watch this album you can either click the "Unsubscribe image" link found in the album above, or by clicking the following link:
-
-{U_STOP_WATCHING_IMAGE}
+If you no longer wish to watch this image/album you can click the "Unsubscribe image" link found in the link above.
 
 {EMAIL_SIG}

@@ -1,4 +1,4 @@
-Subject: New topic notification - "{ALBUM_NAME}"
+Subject: New image notification - "{ALBUM_NAME}"
 
 Hello {USERNAME},
 
@@ -6,8 +6,6 @@ You are receiving this notification because you are watching the album, "{ALBUM_
 
 {U_ALBUM}
 
-If you no longer wish to watch this album you can either click the "Unsubscribe album" link found in the album above, or by clicking the following link:
-
-{U_STOP_WATCHING_ALBUM}
+If you no longer wish to watch this album you can click the "Unsubscribe album" link found in the link above.
 
 {EMAIL_SIG}
