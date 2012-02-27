@@ -293,20 +293,22 @@ class phpbb_gallery_block
 	{
 		global $db;
 
-		$this->auth_moderate = phpbb_gallery::$auth->acl_album_ids('m_status', 'array', true, $this->get_pegas());
-		if (!empty($this->albums))
+		$albums_is_empty = !empty($this->albums);
+
+		$this->auth_moderate = phpbb_gallery::$auth->acl_album_ids('m_status', 'array', !$albums_is_empty, $this->get_pegas());
+		if ($albums_is_empty)
 		{
 			$this->auth_moderate = array_intersect($this->auth_moderate, $this->albums);
 		}
-		$this->auth_view = array_diff(phpbb_gallery::$auth->acl_album_ids('i_view', 'array', true, $this->get_pegas()), $this->auth_moderate);
-		if (!empty($this->albums))
+		$this->auth_view = array_diff(phpbb_gallery::$auth->acl_album_ids('i_view', 'array', !$albums_is_empty, $this->get_pegas()), $this->auth_moderate);
+		if ($albums_is_empty)
 		{
 			$this->auth_view = array_intersect($this->auth_view, $this->albums);
 		}
 		if (phpbb_gallery_config::get('allow_comments') && ($this->mode & self::MODE_COMMENT) && $this->num_comments)
 		{
-			$this->auth_comments = phpbb_gallery::$auth->acl_album_ids('c_read', 'array', true, $this->get_pegas());
-			if (!empty($this->albums))
+			$this->auth_comments = phpbb_gallery::$auth->acl_album_ids('c_read', 'array', !$albums_is_empty, $this->get_pegas());
+			if ($albums_is_empty)
 			{
 				$this->auth_comments = array_intersect($this->auth_comments, $this->albums);
 			}
