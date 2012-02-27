@@ -25,7 +25,7 @@ class phpbb_gallery_contest
 	* There are different modes to calculate who won the contest.
 	* This value should be one of the constant-names below.
 	*/
-	static private $mode = self::MODE_AVERAGE;
+	static public $mode = self::MODE_AVERAGE;
 
 	/**
 	* The image with the highest average wins.
