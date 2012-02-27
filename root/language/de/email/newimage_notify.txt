@@ -1,4 +1,4 @@
-Subject: Benachrichtigung über neue Bild — „{ALBUM_NAME}“
+Subject: Benachrichtigung über neues Bild — „{ALBUM_NAME}“
 
 Hallo {USERNAME},
 
@@ -6,8 +6,6 @@ du erhältst diese Benachrichtigung, weil du das Album „{ALBUM_NAME}“ auf �
 
 {U_ALBUM}
 
-Wenn du das Album nicht länger beobachten möchtest, verwende entweder den Link „Album nicht mehr beobachten“ in dem entsprechenden Album oder besuche folgenden Link:
-
-{U_STOP_WATCHING_ALBUM}
+Wenn du das Album nicht länger beobachten möchtest, verwende den Link „Album nicht mehr beobachten“ im obigen Link.
 
 {EMAIL_SIG}
