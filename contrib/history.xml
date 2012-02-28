@@ -201,9 +201,17 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 				<date>2012-02-28</date>
 				<rev-version>1.1.5</rev-version>
 				<changelog lang="en">
+					<change><![CDATA[[Change] Display the album in RRC, if the user manually set it (Bug #932)]]></change>
+					<change><![CDATA[[Change] Change the sorting of the rate when the winner is chosen by sum (Bug #928)]]></change>
+					<change><![CDATA[[Change] Add template variable for the unread status of an album (Bug #923)]]></change>
 					<change><![CDATA[[Change] Increase maximum imagename length to 128 characters. (Bug #903)]]></change>
 					<change><![CDATA[[Change] Update manuals should have unique name (more usability in AutoMOD) (Bug #909)]]></change>
 
+					<change><![CDATA[[Fix] Fix problem with unsubscribe-link in notifications (Bug #926)]]></change>
+					<change><![CDATA[[Fix] Fix sorting options in MCP (Bug #939)]]></change>
+					<change><![CDATA[[Fix] Adding an array of albums to the block does not work correctly (Bug #931)]]></change>
+					<change><![CDATA[[Fix] Fix ampersands in notification-mails (Bug #924)]]></change>
+					<change><![CDATA[[Fix] Order personal gallery by username in the albumbox (Bug #922)]]></change>
 					<change><![CDATA[[Fix] Hide personal album module when user has no permissions (Bug #918)]]></change>
 					<change><![CDATA[[Fix] Undefined PERSONAL_GALLERY_PERMISSIONS in viewonline integration (Bug #917)]]></change>
 					<change><![CDATA[[Fix] Undefined offset: 0 while editing when rotating is disabled (Bug #920)]]></change>
