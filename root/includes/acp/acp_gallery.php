@@ -385,10 +385,11 @@ class acp_gallery
 			'MEDIUM_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat_medium']),
 			'CACHE_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat_cache']),
 			'GALLERY_VERSION'		=> phpbb_gallery_config::get('version'),
-			'U_FIND_USERNAME'		=> phpbb_gallery_url::append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=action_create_pega&amp;field=username&amp;select_single=true'),
+			'U_FIND_USERNAME'		=> phpbb_gallery_url::append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=action_create_pega_form&amp;field=username&amp;select_single=true'),
 			'S_SELECT_ALBUM'		=> phpbb_gallery_album::get_albumbox(false, 'reset_album_id', false, false, false, phpbb_gallery_album::PUBLIC_ALBUM, phpbb_gallery_album::TYPE_UPLOAD),
 
 			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
+			'U_ACTION'				=> $this->u_action,
 		));
 	}
 
