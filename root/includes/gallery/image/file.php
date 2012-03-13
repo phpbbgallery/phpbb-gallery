@@ -365,6 +365,8 @@ class phpbb_gallery_image_file
 			$dimension_width = imagefontwidth($dimension_font) * strlen($dimension_string);
 			$dimension_x = ($this->image_size['width'] - $dimension_width) / 2;
 			$dimension_y = $this->image_size['height'] + (($additional_height - $dimension_height) / 2);
+			$black_background = imagecolorallocate($this->image, 0, 0, 0);
+			imagefilledrectangle($this->image, 0, $this->thumb_height, $this->thumb_width, $this->thumb_height + $additional_height, $black_background);
 			imagestring($this->image, 1, $dimension_x, $dimension_y, $dimension_string, $dimension_colour);
 		}
 	}
@@ -394,10 +396,13 @@ class phpbb_gallery_image_file
 		}
 
 		$image_copy = (($this->gd_version == phpbb_gallery_constants::GDLIB1) ? @imagecreate($this->thumb_width, $this->thumb_height + $additional_height) : @imagecreatetruecolor($this->thumb_width, $this->thumb_height + $additional_height));
-		imagealphablending($image_copy, false);
-		imagesavealpha($image_copy, true);
-		$transparent = imagecolorallocatealpha($image_copy, 255, 255, 255, 127);
-		imagefilledrectangle($image_copy, 0, 0, $this->thumb_width, $this->thumb_height + $additional_height, $transparent);
+		if ($this->image_type != 'jpeg')
+		{
+			imagealphablending($image_copy, false);
+			imagesavealpha($image_copy, true);
+			$transparent = imagecolorallocatealpha($image_copy, 255, 255, 255, 127);
+			imagefilledrectangle($image_copy, 0, 0, $this->thumb_width, $this->thumb_height + $additional_height, $transparent);
+		}
 
 		$resize_function = ($this->gd_version == phpbb_gallery_constants::GDLIB1) ? 'imagecopyresized' : 'imagecopyresampled';
 		$resize_function($image_copy, $this->image, 0, 0, 0, 0, $this->thumb_width, $this->thumb_height, $this->image_size['width'], $this->image_size['height']);
