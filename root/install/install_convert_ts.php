@@ -302,6 +302,7 @@ class install_convert_ts extends module
 
 		$this->page_title = $user->lang['STAGE_COPY_TABLE'];
 		$s_hidden_fields = '';
+		$umil = new umil(true);
 
 		// Create the tables
 		$umil->table_add(array(
@@ -403,6 +404,7 @@ class install_convert_ts extends module
 
 		$this->page_title = $user->lang['STAGE_CREATE_TABLE'];
 		$s_hidden_fields = '';
+		$umil = new umil(true);
 
 		// Create the tables
 		$umil->table_add(array(
