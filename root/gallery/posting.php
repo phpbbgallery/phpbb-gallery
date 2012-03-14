@@ -457,6 +457,10 @@ else
 			foreach ($process->images as $image_id)
 			{
 				$success = $success && $process->update_image($image_id, !phpbb_gallery::$auth->acl_check('i_approve', $album_id, $album_data['album_user_id']), $album_data['album_contest']);
+				if (phpbb_gallery::$user->get_data('watch_own'))
+				{
+					phpbb_gallery_notification::add($image_id);
+				}
 			}
 
 			$message = '';
