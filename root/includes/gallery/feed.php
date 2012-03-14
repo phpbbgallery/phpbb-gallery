@@ -153,9 +153,9 @@ class phpbb_gallery_feed
 
 		foreach ($this->images_data as $image_id => $row)
 		{
-			$u_thumbnail = phpbb_gallery_url::append_sid('full', 'image', 'mode=thumbnail&amp;album_id=' . $row['image_album_id'] . '&amp;image_id=' . $image_id);
-			$url_imagepage = phpbb_gallery_url::append_sid('full', 'image_page', 'album_id=' . $row['image_album_id'] . '&amp;image_id=' . $image_id);
-			$url_fullsize = phpbb_gallery_url::append_sid('full', 'image', 'album_id=' . $row['image_album_id'] . '&amp;image_id=' . $image_id);
+			$u_thumbnail = phpbb_gallery_url::append_sid('full', 'image', 'mode=thumbnail&amp;album_id=' . $row['image_album_id'] . '&amp;image_id=' . $image_id, true, '');
+			$url_imagepage = phpbb_gallery_url::append_sid('full', 'image_page', 'album_id=' . $row['image_album_id'] . '&amp;image_id=' . $image_id, true, '');
+			$url_fullsize = phpbb_gallery_url::append_sid('full', 'image', 'album_id=' . $row['image_album_id'] . '&amp;image_id=' . $image_id, true, '');
 			$title = censor_text($row['album_name'] . ' ' . $this->separator . ' ' . $row['image_name']);
 
 			$description = $row['image_desc'];
@@ -177,7 +177,7 @@ class phpbb_gallery_feed
 			}
 			else
 			{
-				$u_profile = phpbb_gallery_url::append_sid('board', 'memberlist', 'mode=viewprofile&amp;u=' . $row['image_user_id']);
+				$u_profile = phpbb_gallery_url::append_sid('board', 'memberlist', 'mode=viewprofile&amp;u=' . $row['image_user_id'], true, '');
 				$image_username = '<a href="' . $u_profile . '">' . $row['image_username'] . '</a>';
 			}
 
