@@ -128,7 +128,7 @@ if ($album_data['album_type'] != phpbb_gallery_album::TYPE_CAT)
 	* Build the sort options
 	*/
 	$limit_days = array(0 => $user->lang['ALL_IMAGES'], 1 => $user->lang['1_DAY'], 7 => $user->lang['7_DAYS'], 14 => $user->lang['2_WEEKS'], 30 => $user->lang['1_MONTH'], 90 => $user->lang['3_MONTHS'], 180 => $user->lang['6_MONTHS'], 365 => $user->lang['1_YEAR']);
-	$sort_by_text = array('t' => $user->lang['TIME'], 'n' => $user->lang['IMAGE_NAME'], 'vc' => $user->lang['VIEWS']);
+	$sort_by_text = array('t' => $user->lang['TIME'], 'n' => $user->lang['IMAGE_NAME'], 'vc' => $user->lang['GALLERY_VIEWS']);
 	$sort_by_sql = array('t' => 'image_time', 'n' => 'image_name_clean', 'vc' => 'image_view_count');
 
 	// Do not sort images after upload-username on running contests, and of course ratings aswell!
@@ -313,7 +313,7 @@ $template->assign_vars(array(
 	'S_RETURN_LINK'				=> $user->lang['GALLERY'],
 
 	'PAGINATION'				=> generate_pagination(phpbb_gallery_url::append_sid('album', "album_id=$album_id&amp;sk=$sort_key&amp;sd=$sort_dir&amp;st=$sort_days"), $image_counter, $images_per_page, $start),
-	'TOTAL_IMAGES'				=> ($image_counter == 1) ? $user->lang['IMAGE_#'] : sprintf($user->lang['IMAGES_#'], $image_counter),
+	'TOTAL_IMAGES'				=> $user->lang('VIEW_ALBUM_IMAGES', $image_counter),
 	'PAGE_NUMBER'				=> on_page($image_counter, $images_per_page, $start),
 
 	'L_WATCH_TOPIC'				=> ($album_data['watch_id']) ? $user->lang['UNWATCH_ALBUM'] : $user->lang['WATCH_ALBUM'],

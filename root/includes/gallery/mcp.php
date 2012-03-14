@@ -175,7 +175,7 @@ class phpbb_gallery_mcp
 			'NO_IMAGES_NOTE'		=> $user->lang['NO_IMAGES'],
 			'PAGINATION'			=> generate_pagination(phpbb_gallery_url::append_sid('mcp', "mode=$mode&amp;album_id=$album_id&amp;sd=$sort_dir&amp;sk=$sort_key"), $count_images, $images_per_page, $start),
 			'PAGE_NUMBER'			=> on_page($count_images, $images_per_page, $start),
-			'TOTAL_IMAGES'			=> ($count_images == 1) ? $user->lang['VIEW_ALBUM_IMAGE'] : sprintf($user->lang['VIEW_ALBUM_IMAGES'], $count_images),
+			'TOTAL_IMAGES'			=> $user->lang('VIEW_ALBUM_IMAGES', $count_images),
 
 			'S_COMMENTS'			=> phpbb_gallery_config::get('allow_comments'),
 			'S_RATINGS'				=> phpbb_gallery_config::get('allow_rates'),
@@ -353,7 +353,7 @@ class phpbb_gallery_mcp
 			'DESCRIPTION'			=> $desc_string,
 			'PAGINATION'			=> generate_pagination(phpbb_gallery_url::append_sid('mcp', "mode=$mode&amp;album_id=$album_id&amp;sd=$sort_dir&amp;sk=$sort_key"), $count_images, $images_per_page, $start),
 			'PAGE_NUMBER'			=> on_page($count_images, $images_per_page, $start),
-			'TOTAL_IMAGES'			=> ($count_images == 1) ? $user->lang['VIEW_ALBUM_IMAGE'] : sprintf($user->lang['VIEW_ALBUM_IMAGES'], $count_images),
+			'TOTAL_IMAGES'			=> $user->lang('VIEW_ALBUM_IMAGES', $count_images),
 
 			'S_QUEUE_LIST'			=> true,
 			'S_MARK'				=> true,
@@ -485,7 +485,7 @@ class phpbb_gallery_mcp
 			'DESCRIPTION'			=> $desc_string,
 			'PAGINATION'			=> generate_pagination(phpbb_gallery_url::append_sid('mcp', "mode=$mode&amp;album_id=$album_id&amp;sd=$sort_dir&amp;sk=$sort_key"), $count_images, $images_per_page, $start),
 			'PAGE_NUMBER'			=> on_page($count_images, $images_per_page, $start),
-			'TOTAL_IMAGES'			=> ($count_images == 1) ? $user->lang['VIEW_ALBUM_IMAGE'] : sprintf($user->lang['VIEW_ALBUM_IMAGES'], $count_images),
+			'TOTAL_IMAGES'			=> $user->lang('VIEW_ALBUM_IMAGES', $count_images),
 
 			'S_REPORT_LIST'			=> true,
 			'S_REPORTER'			=> true,

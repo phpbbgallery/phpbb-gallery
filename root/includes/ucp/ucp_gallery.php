@@ -1056,7 +1056,7 @@ class ucp_gallery
 
 			'PAGINATION'				=> generate_pagination(phpbb_gallery_url::append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_subscriptions'), $total_images, $images_per_page, $start),
 			'PAGE_NUMBER'				=> on_page($total_images, $images_per_page, $start),
-			'TOTAL_IMAGES'				=> ($total_images == 1) ? $user->lang['VIEW_ALBUM_IMAGE'] : sprintf($user->lang['VIEW_ALBUM_IMAGES'], $total_images),
+			'TOTAL_IMAGES'				=> $user->lang('VIEW_ALBUM_IMAGES', $total_images),
 
 			'DISP_FAKE_THUMB'			=> true,
 			'FAKE_THUMB_SIZE'			=> phpbb_gallery_config::get('mini_thumbnail_size'),
@@ -1131,7 +1131,7 @@ class ucp_gallery
 
 			'PAGINATION'				=> generate_pagination(phpbb_gallery_url::append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_favorites'), $total_images, $images_per_page, $start),
 			'PAGE_NUMBER'				=> on_page($total_images, $images_per_page, $start),
-			'TOTAL_IMAGES'				=> ($total_images == 1) ? $user->lang['VIEW_ALBUM_IMAGE'] : sprintf($user->lang['VIEW_ALBUM_IMAGES'], $total_images),
+			'TOTAL_IMAGES'				=> $user->lang('VIEW_ALBUM_IMAGES', $total_images),
 
 			'DISP_FAKE_THUMB'			=> true,
 			'FAKE_THUMB_SIZE'			=> phpbb_gallery_config::get('mini_thumbnail_size'),

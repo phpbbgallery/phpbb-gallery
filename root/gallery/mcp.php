@@ -255,7 +255,7 @@ $template->assign_vars(array(
 	'EDIT_IMG'		=> $user->img('icon_post_edit', 'EDIT_IMAGE'),
 	'DELETE_IMG'	=> $user->img('icon_post_delete', 'DELETE_IMAGE'),
 	'ALBUM_NAME'	=> $album_data['album_name'],
-	'ALBUM_IMAGES'	=> $album_data['album_images'] . ' ' . (($album_data['album_images'] == 1) ? $user->lang['IMAGE'] : $user->lang['IMAGES']),
+	'ALBUM_IMAGES'	=> $user->lang('IMAGE_COUNT', $album_data['album_images']) . ' ' . (($album_data['album_images'] == 1) ? $user->lang['IMAGE'] : $user->lang['IMAGES']),
 	'U_VIEW_ALBUM'	=> phpbb_gallery_url::append_sid('album', 'album_id=' . $album_id),
 	'U_MOD_ALBUM'	=> phpbb_gallery_url::append_sid('mcp', 'mode=album&amp;album_id=' . $album_id),
 	'U_MCP_OVERVIEW'	=> phpbb_gallery_url::append_sid('mcp', 'mode=overview'),

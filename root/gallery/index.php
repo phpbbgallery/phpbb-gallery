@@ -161,15 +161,6 @@ if (phpbb_gallery_config::get('rrc_gindex_mode'))
 	$gallery_block->display();
 }
 
-// Set some stats, get posts count from forums data if we... hum... retrieve all forums data
-$total_images	= phpbb_gallery_config::get('num_images');
-$total_comments	= phpbb_gallery_config::get('num_comments');
-$total_pgalleries	= phpbb_gallery_config::get('num_pegas');
-//@TODO: Use $user->lang()
-$l_total_image_s = ($total_images == 0) ? 'TOTAL_IMAGES_ZERO' : 'TOTAL_IMAGES_OTHER';
-$l_total_comment_s = ($total_comments == 0) ? 'TOTAL_COMMENTS_ZERO' : 'TOTAL_COMMENTS_OTHER';
-$l_total_pgallery_s = ($total_pgalleries == 0) ? 'TOTAL_PGALLERIES_ZERO' : 'TOTAL_PGALLERIES_OTHER';
-
 // Grab group details for legend display
 $legend = '';
 if (phpbb_gallery_config::get('disp_whoisonline'))
@@ -256,10 +247,10 @@ $s_char_options .= '<option value="other"' . (($first_char == 'other') ? ' selec
 
 // Output page
 $template->assign_vars(array(
-	'TOTAL_IMAGES'		=> (phpbb_gallery_config::get('disp_statistic')) ? $user->lang('TOTAL_IMAGES_SPRINTF', $total_images) : '',
-	'TOTAL_COMMENTS'	=> (phpbb_gallery_config::get('allow_comments')) ? sprintf($user->lang[$l_total_comment_s], $total_comments) : '',
-	'TOTAL_PGALLERIES'	=> (phpbb_gallery::$auth->acl_check('a_list', phpbb_gallery_auth::PERSONAL_ALBUM)) ? sprintf($user->lang[$l_total_pgallery_s], $total_pgalleries) : '',
-	'NEWEST_PGALLERIES'	=> ($total_pgalleries) ? sprintf($user->lang['NEWEST_PGALLERY'], get_username_string('full', phpbb_gallery_config::get('newest_pega_user_id'), phpbb_gallery_config::get('newest_pega_username'), phpbb_gallery_config::get('newest_pega_user_colour'), '', phpbb_gallery_url::append_sid('album', 'album_id=' . phpbb_gallery_config::get('newest_pega_album_id')))) : '',
+	'TOTAL_IMAGES'		=> (phpbb_gallery_config::get('disp_statistic')) ? $user->lang('TOTAL_IMAGES_SPRINTF', phpbb_gallery_config::get('num_images')) : '',
+	'TOTAL_COMMENTS'	=> (phpbb_gallery_config::get('allow_comments')) ? $user->lang('TOTAL_COMMENTS_SPRINTF', phpbb_gallery_config::get('num_comments')) : '',
+	'TOTAL_PGALLERIES'	=> (phpbb_gallery::$auth->acl_check('a_list', phpbb_gallery_auth::PERSONAL_ALBUM)) ? $user->lang('TOTAL_PEGAS_SPRINTF', phpbb_gallery_config::get('num_pegas')) : '',
+	'NEWEST_PGALLERIES'	=> (phpbb_gallery_config::get('num_pegas')) ? sprintf($user->lang['NEWEST_PGALLERY'], get_username_string('full', phpbb_gallery_config::get('newest_pega_user_id'), phpbb_gallery_config::get('newest_pega_username'), phpbb_gallery_config::get('newest_pega_user_colour'), '', phpbb_gallery_url::append_sid('album', 'album_id=' . phpbb_gallery_config::get('newest_pega_album_id')))) : '',
 
 	'S_DISP_LOGIN'			=> phpbb_gallery_config::get('disp_login'),
 	'S_DISP_WHOISONLINE'	=> phpbb_gallery_config::get('disp_whoisonline'),

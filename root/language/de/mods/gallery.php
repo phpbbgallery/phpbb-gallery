@@ -132,9 +132,10 @@ $lang = array_merge($lang, array(
 	'FILETYPES_PNG'					=> 'png',
 	'FILETYPES_ZIP'					=> 'zip',
 
+	'GALLERY_IMAGE'					=> 'Bild',
+	'GALLERY_VIEWS'					=> 'Betrachtet',
+
 	'IGNORE_NOTUPTODATE_MESSAGE'		=> 'In 7 Tagen wieder erinnern',
-	'IMAGE'								=> 'Bild',
-	'IMAGE_#'							=> '1 Bild',
 	'IMAGE_ALREADY_REPORTED'			=> 'Das Bild wurde bereits gemeldet.',
 	'IMAGE_BBCODE'						=> 'BBCode',
 	'IMAGE_COMMENTS_DISABLED'			=> 'Kommentare wurden für dieses Bild deaktiviert.',
@@ -149,7 +150,6 @@ $lang = array_merge($lang, array(
 	'IMAGE_STATUS'						=> 'Status',
 	'IMAGE_URL'							=> 'Bildlink',
 	'IMAGE_WIDTH'						=> 'Bildbreite',
-	'IMAGES_#'							=> '%s Bilder',
 	'IMAGES_REPORTED_SUCCESSFULLY'		=> 'Das Bild wurde erfolgreich gemeldet',
 	'IMAGES_UPDATED_SUCCESSFULLY'		=> 'Deine Bilderinformationen wurden erfolgreich aktualisiert',
 	'INSERT_IMAGE_POST'					=> 'Bild in Beitrag einfügen',
@@ -258,12 +258,22 @@ $lang = array_merge($lang, array(
 	'SUBALBUM'						=> 'Subalbum',
 
 	'THUMBNAIL_SIZE'				=> 'Vorschaubildgrösse (Pixel)',
-	'TOTAL_COMMENTS_OTHER'			=> 'Kommentare insgesamt: <strong>%d</strong>',
-	'TOTAL_COMMENTS_ZERO'			=> 'Kommentare insgesamt: <strong>0</strong>',
+	'TOTAL_COMMENTS_SPRINTF'		=> array(
+		0	=> 'Kommentare insgesamt: <strong>0</strong>',
+		1	=> 'Kommentare insgesamt: <strong>%d</strong>',
+		2	=> 'Kommentare insgesamt: <strong>%d</strong>',
+	),
 	'TOTAL_IMAGES'					=> 'Bilder insgesamt',
-	'TOTAL_PGALLERIES_OTHER'		=> 'Persönliche Galerien insgesamt: <strong>%d</strong>',
-	'TOTAL_PGALLERIES_SHORT'		=> '%d persönliche Galerien',
-	'TOTAL_PGALLERIES_ZERO'			=> 'Persönliche Galerien insgesamt: <strong>0</strong>',
+	'TOTAL_PEGAS_SHORT_SPRINTF'		=> array(
+		0	=> '0 persönliche Galerien',
+		1	=> '%d persönliche Galerie',
+		2	=> '%d persönliche Galerien',
+	),
+	'TOTAL_PEGAS_SPRINTF'		=> array(
+		0	=> 'Persönliche Galerien insgesamt: <strong>0</strong>',
+		1	=> 'Persönliche Galerien insgesamt: <strong>%d</strong>',
+		2	=> 'Persönliche Galerien insgesamt: <strong>%d</strong>',
+	),
 
 	'UNFAVORITE_IMAGE'				=> 'aus Lieblingsbildern entfernen',
 	'UNFAVORITED_IMAGE'				=> 'Das Bild wurde aus deinen Lieblingsbildern entfernt.',
@@ -299,8 +309,10 @@ $lang = array_merge($lang, array(
 	'USERS_PERSONAL_ALBUMS'			=> 'Persönliche Alben der Mitglieder',
 
 	'VIEW_ALBUM'					=> 'Album ansehen',
-	'VIEW_ALBUM_IMAGE'				=> '1 Bild',
-	'VIEW_ALBUM_IMAGES'				=> '%s Bilder',
+	'VIEW_ALBUM_IMAGES'				=> array(
+		1	=> '1 Bild',
+		2	=> '%s Bilder',
+	),
 	'VIEW_IMAGE'					=> 'Bild ansehen',
 	'VIEW_LATEST_IMAGE'				=> 'Das neueste Bild ansehen',
 	'VIEW_SEARCH_RECENT'			=> 'Neueste Bilder',
@@ -311,7 +323,6 @@ $lang = array_merge($lang, array(
 	'VIEW_SEARCH_SELF'				=> 'Eigene Bilder',
 	'VIEWING_ALBUM'					=> 'Betrachtet Album %s',
 	'VIEWING_IMAGE'					=> 'Betrachtet ein Bild im Album %s',
-	'VIEWS'							=> 'Betrachtet',
 
 	'WATCH_ALBUM'					=> 'Album beobachten',
 	'WATCH_IMAGE'					=> 'Bild beobachten',

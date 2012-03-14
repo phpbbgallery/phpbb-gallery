@@ -132,9 +132,10 @@ $lang = array_merge($lang, array(
 	'FILETYPES_PNG'					=> 'png',
 	'FILETYPES_ZIP'					=> 'zip',
 
+	'GALLERY_IMAGE'					=> 'Image',
+	'GALLERY_VIEWS'					=> 'Views',
+
 	'IGNORE_NOTUPTODATE_MESSAGE'		=> 'Remind me in 7 days',
-	'IMAGE'								=> 'Image',
-	'IMAGE_#'							=> '1 image',
 	'IMAGE_ALREADY_REPORTED'			=> 'The image was already reported.',
 	'IMAGE_BBCODE'						=> 'Image BBCode',
 	'IMAGE_COMMENTS_DISABLED'			=> 'Comments are disabled for this image.',
@@ -149,7 +150,6 @@ $lang = array_merge($lang, array(
 	'IMAGE_STATUS'						=> 'Status',
 	'IMAGE_URL'							=> 'Image-URL',
 	'IMAGE_WIDTH'						=> 'Image width',
-	'IMAGES_#'							=> '%s images',
 	'IMAGES_REPORTED_SUCCESSFULLY'		=> 'The image was successful reported',
 	'IMAGES_UPDATED_SUCCESSFULLY'		=> 'Your image information has been updated successfully',
 	'INSERT_IMAGE_POST'					=> 'Insert image into post',
@@ -258,12 +258,22 @@ $lang = array_merge($lang, array(
 	'SUBALBUM'						=> 'Subalbum',
 
 	'THUMBNAIL_SIZE'				=> 'Thumbnail size (pixels)',
-	'TOTAL_COMMENTS_OTHER'			=> 'Total comments <strong>%d</strong>',
-	'TOTAL_COMMENTS_ZERO'			=> 'Total comments <strong>0</strong>',
+	'TOTAL_COMMENTS_SPRINTF'		=> array(
+		0	=> 'Total comments <strong>0</strong>',
+		1	=> 'Total comments <strong>%d</strong>',
+		2	=> 'Total comments <strong>%d</strong>',
+	),
 	'TOTAL_IMAGES'					=> 'Total images',
-	'TOTAL_PGALLERIES_OTHER'		=> 'Total personal galleries <strong>%d</strong>',
-	'TOTAL_PGALLERIES_SHORT'		=> '%d personal galleries ',
-	'TOTAL_PGALLERIES_ZERO'			=> 'Total personal galleries <strong>0</strong>',
+	'TOTAL_PEGAS_SHORT_SPRINTF'		=> array(
+		0	=> '0 personal galleries',
+		1	=> '%d personal gallery',
+		2	=> '%d personal galleries',
+	),
+	'TOTAL_PEGAS_SPRINTF'		=> array(
+		0	=> 'Total personal galleries <strong>0</strong>',
+		1	=> 'Total personal galleries <strong>%d</strong>',
+		2	=> 'Total personal galleries <strong>%d</strong>',
+	),
 
 	'UNFAVORITE_IMAGE'				=> 'Remove from favorites',
 	'UNFAVORITED_IMAGE'				=> 'The image was removed from your favorites.',
@@ -299,8 +309,10 @@ $lang = array_merge($lang, array(
 	'USERS_PERSONAL_ALBUMS'			=> 'Users Personal Albums',
 
 	'VIEW_ALBUM'					=> 'View album',
-	'VIEW_ALBUM_IMAGE'				=> '1 image',
-	'VIEW_ALBUM_IMAGES'				=> '%s images',
+	'VIEW_ALBUM_IMAGES'				=> array(
+		1	=> '1 image',
+		2	=> '%s images',
+	),
 	'VIEW_IMAGE'					=> 'View image',
 	'VIEW_LATEST_IMAGE'				=> 'View the latest image',
 	'VIEW_SEARCH_RECENT'			=> 'View recent images',
@@ -311,7 +323,6 @@ $lang = array_merge($lang, array(
 	'VIEW_SEARCH_SELF'				=> 'View your images',
 	'VIEWING_ALBUM'					=> 'Viewing album %s',
 	'VIEWING_IMAGE'					=> 'Viewing image in album %s',
-	'VIEWS'							=> 'Views',
 
 	'WATCH_ALBUM'					=> 'Subscribe album',
 	'WATCH_IMAGE'					=> 'Subscribe image',
