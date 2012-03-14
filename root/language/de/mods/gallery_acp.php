@@ -256,6 +256,8 @@ $lang = array_merge($lang, array(
 	'NUMBER_PERSONALS'				=> 'Anzahl von Persönlichen Alben',
 
 	'OWN_PERSONAL_ALBUMS'			=> 'Eigene persönliche Alben',
+	'OWN_PERSONAL_ALBUMS_EXPLAIN'	=> 'Diese Berechtigungen werden verwendet, wenn Benutzer A eines seiner eigenen Alben betrachtet. <strong>Wenn deine Benutzer keine persönlichen Alben erstellen können, musst du diese Berechtigungen bearbeiten.</strong>',
+	'PERSONAL_ALBUMS_EXPLAIN'		=> 'Diese Berechtigungen werden verwendet, wenn Benutzer A ein persönliches Album von Benutzer B betrachtet. <strong>Wenn deine Moderatoren keine Bilder in den persönlichen Alben bearbeiten können, musst du diese Berechtigungen bearbeiten.</strong>',
 
 	'PERMISSION'					=> 'Berechtigung',
 	'PERMISSION_NEVER'				=> 'Nie',

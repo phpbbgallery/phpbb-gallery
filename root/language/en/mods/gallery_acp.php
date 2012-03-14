@@ -254,6 +254,8 @@ $lang = array_merge($lang, array(
 	'NUMBER_PERSONALS'				=> 'Number of personal albums',
 
 	'OWN_PERSONAL_ALBUMS'			=> 'Own personal albums',
+	'OWN_PERSONAL_ALBUMS_EXPLAIN'	=> 'These permissions are used, when User A visits one of his own personal albums. <strong>If your users can not create a personal album, you need to edit these permissions.</strong>',
+	'PERSONAL_ALBUMS_EXPLAIN'		=> 'These permissions are used, when User A visits a personal album of User B. <strong>If your moderators can not moderate images in personal albums, you need to edit these permissions.</strong>',
 
 	'PERMISSION'					=> 'Permission',
 	'PERMISSION_NEVER'				=> 'Never',
