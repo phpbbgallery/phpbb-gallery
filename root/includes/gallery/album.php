@@ -682,7 +682,7 @@ class phpbb_gallery_album
 			$limit = phpbb_gallery_config::get('pegas_per_page');
 			$template->assign_vars(array(
 				'PAGINATION'				=> generate_pagination(phpbb_gallery_url::append_sid('index', 'mode=' . $mode . (($first_char) ? '&amp;first_char=' . $first_char : '')), $num_pegas, $limit, $start),
-				'TOTAL_PGALLERIES_SHORT'	=> sprintf($user->lang['TOTAL_PGALLERIES_SHORT'], $num_pegas),
+				'TOTAL_PGALLERIES_SHORT'	=> $user->lang('TOTAL_PEGAS_SHORT_SPRINTF', $num_pegas),
 				'PAGE_NUMBER'				=> on_page($num_pegas, $limit, $start),
 			));
 		}
