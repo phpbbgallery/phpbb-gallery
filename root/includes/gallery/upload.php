@@ -141,7 +141,7 @@ class phpbb_gallery_upload
 
 		$this->read_zip_folder($tmp_dir);
 
-		// Readd zip from allowed extensions
+		// Read zip from allowed extensions
 		$this->upload->set_allowed_extensions(self::get_allowed_types());
 	}
 
@@ -158,7 +158,7 @@ class phpbb_gallery_upload
 			{
 				$this->read_zip_folder($current_dir . $file . '/');
 			}
-			else if (in_array(utf8_substr(strtolower($file), utf8_strpos($file, '.') + 1), self::get_allowed_types(false, true)))
+			else if (in_array(utf8_substr(strtolower($file), utf8_strrpos($file, '.') + 1), self::get_allowed_types(false, true)))
 			{
 				if (!$this->file_limit || ($this->uploaded_files < $this->file_limit))
 				{
