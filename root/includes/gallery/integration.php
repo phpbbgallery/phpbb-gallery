@@ -121,7 +121,7 @@ class phpbb_gallery_integration
 
 			// Initial load of some needed stuff, like permissions, album data, ...
 			phpbb_gallery::init();
-			$user->add_lang('mods/gallery');
+			$user->add_lang(array('mods/info_acp_gallery', 'mods/gallery'));
 
 			$template->assign_vars(array(
 				'S_GALLERY_POPUP'	=> true,
@@ -222,7 +222,7 @@ class phpbb_gallery_integration
 			FROM ' . GALLERY_ALBUMS_TABLE . ' a
 			LEFT JOIN ' . USERS_TABLE . ' u
 				ON (u.user_id = a.album_user_id)
-			ORDER BY u.username_clean, a.left_id ASC';
+			ORDER BY u.username_clean, a.album_user_id, a.left_id ASC';
 		$result = $db->sql_query($sql);
 
 		$albums = array();
