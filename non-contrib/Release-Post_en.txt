@@ -1,4 +1,4 @@
-[b]Version:[/b] 1.1.5
+[b]Version:[/b] 1.1.6
 [b]Description:[/b] An image-gallery integrated into your phpbb-board.
 [b]Features:[/b] For a (nearly) full feature list see http://www.flying-bits.org/go/phpbb_gallery/features
 
@@ -14,4 +14,4 @@
 [b]Paypal-Donation[/b]:
 As developing a modification like this, takes a lot of time, I would appreciate if you make a little [url=http://www.flying-bits.org/paypal.php]donation[/url] (nickvergessen Q gmx.de / Q=@).
 
-[b]Downloads:[/b] [size=150][b][url=http://www.flying-bits.org/go/phpbb_gallery/download]Download v1.1.5[/url][/b][/size]
+[b]Downloads:[/b] [size=150][b][url=http://www.flying-bits.org/go/phpbb_gallery/download]Download v1.1.6[/url][/b][/size]
