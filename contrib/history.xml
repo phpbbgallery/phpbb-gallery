@@ -198,6 +198,24 @@ http://www.phpbb.com/community/viewtopic.php?f=69&t=691155]]></author-notes>
 
 		<history>
 			<entry>
+				<date>2012-04-13</date>
+				<rev-version>1.1.6</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[[Fix] Fix "Undefined variable: poster_id" when viewing a pm (Bug #954)]]></change>
+					<change><![CDATA[[Fix] Correctly list personal albums of deleted users (Bug #957)]]></change>
+					<change><![CDATA[[Fix] Fix SQL error in ACP with PostgreSQL (Bug #955)]]></change>
+					<change><![CDATA[[Fix] Images with dots in the name are not extracted from zips (Bug #953)]]></change>
+					<change><![CDATA[[Fix] Do not append_sid to links in feed.php (Bug #952)]]></change>
+					<change><![CDATA[[Fix] Add a short explanation for the permission cases (Bug #951)]]></change>
+					<change><![CDATA[[Fix] Fix automated subscription when uploading images (Bug #925)]]></change>
+					<change><![CDATA[[Fix] Fix overwriting of core language keys and other language stuff (Bug #944)]]></change>
+					<change><![CDATA[[Fix] Fix "Undefined variable: umil" in TS convertor (Bug #948)]]></change>
+					<change><![CDATA[[Fix] Fix background of the image-size line on thumbnails (Bug #946)]]></change>
+					<change><![CDATA[[Fix] Can not select a member when creating personal gallery in ACP (Bug #950)]]></change>
+				</changelog>
+			</entry>
+
+			<entry>
 				<date>2012-02-28</date>
 				<rev-version>1.1.5</rev-version>
 				<changelog lang="en">
