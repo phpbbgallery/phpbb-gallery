@@ -443,7 +443,7 @@ class phpbb_gallery_integration
 					'GALLERY_IMG'		=> $user->img('icon_contact_gallery', 'PERSONAL_ALBUM'),
 					'U_GALLERY'			=> (phpbb_gallery_config::get('viewtopic_icon') && $row['personal_album_id']) ? phpbb_gallery_url::append_sid('album', "album_id=" . $row['personal_album_id']) : '',
 					'GALLERY_IMAGES'	=> (phpbb_gallery_config::get('viewtopic_images')) ? $row['user_images'] : 0,
-					'U_GALLERY_SEARCH'	=> (phpbb_gallery_config::get('viewtopic_images') && phpbb_gallery_config::get('viewtopic_link') && $row['user_images']) ? phpbb_gallery_url::append_sid('search', "user_id=$poster_id") : '',
+					'U_GALLERY_SEARCH'	=> (phpbb_gallery_config::get('viewtopic_images') && phpbb_gallery_config::get('viewtopic_link') && $row['user_images']) ? phpbb_gallery_url::append_sid('search', 'user_id=' . (int) $message_row['author_id']) : '',
 				));
 			}
 		}
