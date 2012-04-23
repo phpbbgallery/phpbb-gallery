@@ -525,7 +525,7 @@ if ((phpbb_gallery_config::get('allow_comments') && phpbb_gallery::$auth->acl_ch
 			'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_COMMENT'),
 			'QUOTE_IMG'			=> $user->img('icon_post_quote', 'QUOTE_COMMENT'),
 			'INFO_IMG'			=> $user->img('icon_post_info', 'IP'),
-			'MINI_POST_IMG'		=> $user->img('icon_post_target_unread', 'COMMENT'),
+			'MINI_POST_IMG'		=> $user->img('icon_post_target', 'COMMENT'),
 			'PAGE_NUMBER'		=> sprintf($user->lang['PAGE_OF'], (floor($start / $config['posts_per_page']) + 1), ceil($image_data['image_comments'] / $config['posts_per_page'])),
 			'PAGINATION'		=> generate_pagination(phpbb_gallery_url::append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id&amp;sort_order=$sort_order"), $image_data['image_comments'], $config['posts_per_page'], $start),
 		));

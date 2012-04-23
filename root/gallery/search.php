@@ -624,7 +624,7 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 				'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_COMMENT'),
 				'QUOTE_IMG'			=> $user->img('icon_post_quote', 'QUOTE_COMMENT'),
 				'INFO_IMG'			=> $user->img('icon_post_info', 'IP'),
-				'MINI_POST_IMG'		=> $user->img('icon_post_target_unread', 'COMMENT'),
+				'MINI_POST_IMG'		=> $user->img('icon_post_target', 'COMMENT'),
 				'PROFILE_IMG'		=> $user->img('icon_user_profile', 'READ_PROFILE'),
 			));
 		}
