@@ -517,6 +517,11 @@ class phpbb_gallery_upload
 
 	public function get_rotating()
 	{
+		if (!isset($this->file_rotating[$this->file_count]))
+		{
+			// If the template is still outdated, you'd get an error here...
+			return 0;
+		}
 		if (($this->file_rotating[$this->file_count] % 90) != 0)
 		{
 			return 0;
