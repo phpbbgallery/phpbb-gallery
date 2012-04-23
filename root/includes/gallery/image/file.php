@@ -279,21 +279,14 @@ class phpbb_gallery_image_file
 		}
 
 		header('Pragma: public');
-		$is_ie = (strpos(strtolower($user->browser), 'msie ') !== false);
-		$is_ie_8plus = false;
-		if ($is_ie)
-		{
-			$ie_version = substr($user->browser, strpos(strtolower($user->browser), 'msie ') + 5, 3);
-			$is_ie_8plus = phpbb_version_compare($ie_version, '8', '>=');
-		}
 		header('Content-Type: ' . $this->image_content_type);
 
-		if ($is_ie_8plus)
+		if (self::is_ie_greater7($user->browser))
 		{
 			header('X-Content-Type-Options: nosniff');
 		}
 
-		if (empty($user->browser) || (!$is_ie_8plus && (strpos(strtolower($user->browser), 'msie') !== false)))
+		if (empty($user->browser) || (!self::is_ie_greater7($user->browser) && (strpos(strtolower($user->browser), 'msie') !== false)))
 		{
 			header('Content-Disposition: attachment; ' . $this->header_filename(htmlspecialchars_decode($this->image_name)));
 			if (empty($user->browser) || (strpos(strtolower($user->browser), 'msie 6.0') !== false))
@@ -304,7 +297,7 @@ class phpbb_gallery_image_file
 		else
 		{
 			header('Content-Disposition: inline; ' . $this->header_filename(htmlspecialchars_decode($this->image_name)));
-			if ($is_ie_8plus)
+			if (self::is_ie_greater7($user->browser))
 			{
 				header('X-Download-Options: noopen');
 			}
@@ -355,6 +348,11 @@ class phpbb_gallery_image_file
 
 			flush();
 		}
+	}
+
+	static public function is_ie_greater7($browser)
+	{
+		return (bool) preg_match('/msie (\d{2,3}|[89]+).[0-9.]*;/', strtolower($browser));
 	}
 
 	public function create_thumbnail($max_width, $max_height, $print_details = false, $additional_height = 0, $image_size = array())
