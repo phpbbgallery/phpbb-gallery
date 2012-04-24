@@ -480,9 +480,9 @@ class install_update extends module
 			// no break;
 
 			case '1.1.3':
-			// no break;
-
 			case '1.1.4':
+			case '1.1.5':
+			case '1.1.6':
 			break;
 		}
 
@@ -602,6 +602,10 @@ class install_update extends module
 			// no break;
 
 			case '1.1.4':
+			case '1.1.5':
+			case '1.1.6':
+				phpbb_gallery_config::set('current_upload_dir_size', 0, true);
+				phpbb_gallery_config::set('current_upload_dir', 0);
 			// no break;
 
 				$next_update_url = append_sid("{$phpbb_root_path}install/index.$phpEx", "mode=$mode&amp;sub=update_db&amp;step=4");
@@ -651,6 +655,8 @@ class install_update extends module
 			case '1.1.2':
 			case '1.1.3':
 			case '1.1.4':
+			case '1.1.5':
+			case '1.1.6':
 				//@todo: Move on bbcode-change or creating all modules
 				//$reparse_modules_bbcode = true;
 			break;
@@ -758,6 +764,8 @@ class install_update extends module
 				case '1.1.2':
 				case '1.1.3':
 				case '1.1.4':
+				case '1.1.5':
+				case '1.1.6':
 				break;
 			}
 
@@ -774,6 +782,8 @@ class install_update extends module
 			$modules = $this->gallery_config_options;
 			switch (phpbb_gallery_config::get('version'))
 			{
+				case '1.1.6':
+				case '1.1.5':
 				case '1.1.4':
 				case '1.1.3':
 				case '1.1.2':

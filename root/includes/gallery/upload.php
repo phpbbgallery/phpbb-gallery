@@ -20,6 +20,14 @@ if (!defined('IN_PHPBB'))
 class phpbb_gallery_upload
 {
 	/**
+	* Number of Files per Directory
+	*
+	* If this constant is set to a value >0 the gallery will create a new directory,
+	* when the current directory has more files in it than set here.
+	*/
+	const NUM_FILES_PER_DIR = 0;
+
+	/**
 	* Objects: phpBB Upload, 2 Files, ExifData and Image-Functions
 	*/
 	private $upload = null;
@@ -123,8 +131,6 @@ class phpbb_gallery_upload
 		$this->zip_file->move_file(substr(phpbb_gallery_url::path('import_noroot'), 0, -1), false, false, CHMOD_ALL);
 		if (!empty($this->zip_file->error))
 		{
-			global $user;
-
 			$this->zip_file->remove();
 			$this->new_error($user->lang('UPLOAD_ERROR', $this->zip_file->uploadname, implode('<br />&raquo; ', $this->zip_file->error)));
 			return false;
@@ -261,13 +267,26 @@ class phpbb_gallery_upload
 	*/
 	public function prepare_file()
 	{
+		global $user;
+
+		$upload_dir = self::get_current_upload_dir();
+
 		// Rename the file, move it to the correct location and set chmod
-		$this->file->clean_filename('unique_ext'/*, $user->data['user_id'] . '_'*/);
-		$this->file->move_file(substr(phpbb_gallery_url::path('upload_noroot'), 0, -1), false, false, CHMOD_ALL);
+		if (!$upload_dir)
+		{
+			$this->file->clean_filename('unique_ext');
+			$this->file->move_file(substr(phpbb_gallery_url::path('upload_noroot'), 0, -1), false, false, CHMOD_ALL);
+		}
+		else
+		{
+			// Okay, this looks hacky, but what we do here is, we store the directory name in the filename.
+			// However phpBB strips directories form the filename, when moving, so we need to specify that again.
+			$this->file->clean_filename('unique_ext', $upload_dir . '/');
+			$this->file->move_file(phpbb_gallery_url::path('upload_noroot') . $upload_dir, false, false, CHMOD_ALL);
+		}
+
 		if (!empty($this->file->error))
 		{
-			global $user;
-
 			$this->file->remove();
 			$this->new_error($user->lang('UPLOAD_ERROR', $this->file->uploadname, implode('<br />&raquo; ', $this->file->error)));
 			return false;
@@ -294,7 +313,7 @@ class phpbb_gallery_upload
 			}
 		}
 
-		// Resize overside images
+		// Resize oversized images
 		if (($this->file->width > phpbb_gallery_config::get('max_width')) || ($this->file->height > phpbb_gallery_config::get('max_height')))
 		{
 			if (phpbb_gallery_config::get('allow_resize'))
@@ -438,6 +457,31 @@ class phpbb_gallery_upload
 		{
 			phpbb_gallery_image::delete_images($images, $filenames, false);
 		}
+	}
+
+	static private function get_current_upload_dir()
+	{
+		if (self::NUM_FILES_PER_DIR <= 0)
+		{
+			return 0;
+		}
+
+		phpbb_gallery_config::inc('current_upload_dir_size', 1);
+		if (phpbb_gallery_config::get('current_upload_dir_size') >= self::NUM_FILES_PER_DIR)
+		{
+			phpbb_gallery_config::set('current_upload_dir_size', 0, true);
+			phpbb_gallery_config::inc('current_upload_dir', 1);
+			mkdir(phpbb_gallery_url::path('upload') . phpbb_gallery_config::get('current_upload_dir'));
+			mkdir(phpbb_gallery_url::path('medium') . phpbb_gallery_config::get('current_upload_dir'));
+			mkdir(phpbb_gallery_url::path('thumbnail') . phpbb_gallery_config::get('current_upload_dir'));
+			copy(phpbb_gallery_url::path('upload') . 'index.htm', phpbb_gallery_url::path('upload') . phpbb_gallery_config::get('current_upload_dir') . '/index.htm');
+			copy(phpbb_gallery_url::path('upload') . 'index.htm', phpbb_gallery_url::path('medium') . phpbb_gallery_config::get('current_upload_dir') . '/index.htm');
+			copy(phpbb_gallery_url::path('upload') . 'index.htm', phpbb_gallery_url::path('thumbnail') . phpbb_gallery_config::get('current_upload_dir') . '/index.htm');
+			copy(phpbb_gallery_url::path('upload') . '.htaccess', phpbb_gallery_url::path('upload') . phpbb_gallery_config::get('current_upload_dir') . '/.htaccess');
+			copy(phpbb_gallery_url::path('upload') . '.htaccess', phpbb_gallery_url::path('medium') . phpbb_gallery_config::get('current_upload_dir') . '/.htaccess');
+			copy(phpbb_gallery_url::path('upload') . '.htaccess', phpbb_gallery_url::path('thumbnail') . phpbb_gallery_config::get('current_upload_dir') . '/.htaccess');
+		}
+		return phpbb_gallery_config::get('current_upload_dir');
 	}
 
 	public function quota_error()

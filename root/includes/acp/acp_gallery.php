@@ -341,6 +341,29 @@ class acp_gallery
 					}
 					@closedir($medium_dir);
 
+					for ($i = 1; $i <= phpbb_gallery_config::get('current_upload_dir'); $i++)
+					{
+						$cache_dir = @opendir(phpbb_gallery_url::path('thumbnail') . $i . '/');
+						while ($cache_file = @readdir($cache_dir))
+						{
+							if (preg_match('/(\.gif$|\.png$|\.jpg|\.jpeg)$/is', $cache_file))
+							{
+								@unlink(phpbb_gallery_url::path('thumbnail') . $i . '/' . $cache_file);
+							}
+						}
+						@closedir($cache_dir);
+
+						$medium_dir = @opendir(phpbb_gallery_url::path('medium') . $i . '/');
+						while ($medium_file = @readdir($medium_dir))
+						{
+							if (preg_match('/(\.gif$|\.png$|\.jpg|\.jpeg)$/is', $medium_file))
+							{
+								@unlink(phpbb_gallery_url::path('medium') . $i . '/' . $medium_file);
+							}
+						}
+						@closedir($medium_dir);
+					}
+
 					$sql_ary = array(
 						'filesize_medium'		=> 0,
 						'filesize_cache'		=> 0,
