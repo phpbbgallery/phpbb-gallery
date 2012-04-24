@@ -28,6 +28,8 @@ class phpbb_gallery_config_core
 		'num_comments',
 		'num_images',
 		'num_pegas',
+
+		'current_upload_dir_size',
 	);
 
 	static public $configs = array(
@@ -50,6 +52,8 @@ class phpbb_gallery_config_core
 		'comment_length'		=> 2000,
 		'comment_user_control'	=> true,
 		'contests_ended'		=> 0,
+		'current_upload_dir_size'	=> 0,
+		'current_upload_dir'	=> 0,
 
 		'default_sort_dir'	=> 'd',
 		'default_sort_key'	=> 't',
