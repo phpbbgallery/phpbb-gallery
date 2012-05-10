@@ -18,10 +18,12 @@ $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include('common.' . $phpEx);
 include($phpbb_root_path . 'common.' . $phpEx);
 
-phpbb_gallery::setup(array('mods/gallery'));
-phpbb_gallery_url::_include('functions_display', 'phpbb');
+$phpbb_ext_gallery = new phpbb_ext_gallery_core($auth, $cache, $config, $db, $template, $user, $phpEx, $phpbb_root_path);
+$phpbb_ext_gallery->setup();
+$phpbb_ext_gallery->url->_include('functions_phpbb', 'ext');
+$phpbb_ext_gallery->url->_include('functions_display', 'phpbb');
 
-if (!phpbb_gallery_config::get('feed_enable'))
+if (!$phpbb_ext_gallery->config->get('feed_enable'))
 {
 	trigger_error('NO_FEED_ENABLED');
 }
@@ -30,17 +32,17 @@ if (!phpbb_gallery_config::get('feed_enable'))
 $mode		= request_var('mode', '');
 $album_id	= request_var('album_id', 0);
 
-$feed = new phpbb_gallery_feed($album_id);
+$feed = new phpbb_ext_gallery_core_feed($album_id);
 
 if ($album_id)
 {
-	$back_link = phpbb_gallery_url::append_sid('full', 'album', 'album_id=' . $album_id);
-	$self_link = phpbb_gallery_url::append_sid('full', 'feed', 'album_id=' . $album_id);
+	$back_link = $phpbb_ext_gallery->url->append_sid('full', 'album', 'album_id=' . $album_id);
+	$self_link = $phpbb_ext_gallery->url->append_sid('full', 'feed', 'album_id=' . $album_id);
 }
 else
 {
-	$back_link = phpbb_gallery_url::append_sid('full', 'search', 'search_id=recent');
-	$self_link = phpbb_gallery_url::append_sid('full', 'feed');
+	$back_link = $phpbb_ext_gallery->url->append_sid('full', 'search', 'search_id=recent');
+	$self_link = $phpbb_ext_gallery->url->append_sid('full', 'feed');
 }
 
 $feed->send_header($config['sitename'], $config['site_desc'], $self_link, $back_link);
