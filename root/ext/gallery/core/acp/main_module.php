@@ -421,7 +421,7 @@ class phpbb_ext_gallery_core_acp_main_module
 
 	function import()
 	{
-		global $db, $template, $user, $phpbb_ext_gallery;
+		global $db, $template, $user, $phpbb_ext_gallery, $phpbb_dispatcher;
 
 		$import_schema = request_var('import_schema', '');
 		$images = request_var('images', array(''), true);
@@ -527,20 +527,19 @@ class phpbb_ext_gallery_core_acp_main_module
 							'image_user_ip'			=> $user->ip,
 							'image_time'			=> $start_time + $done_images,
 							'image_album_id'		=> $album_id,
-							'image_status'			=> phpbb_gallery_image::STATUS_APPROVED,
+							'image_status'			=> phpbb_ext_gallery_core_image::STATUS_APPROVED,
 							'image_exif_data'		=> '',
 						);
 
-						$image_tools = new phpbb_gallery_image_file();
+						$image_tools = new phpbb_ext_gallery_core_file();
 						$image_tools->set_image_options($phpbb_ext_gallery->config->get('max_filesize'), $phpbb_ext_gallery->config->get('max_height'), $phpbb_ext_gallery->config->get('max_width'));
 						$image_tools->set_image_data($phpbb_ext_gallery->url->path('upload') . $image_filename);
 
-						// Read exif data from file
-						$exif = new phpbb_gallery_exif($phpbb_ext_gallery->url->path('upload') . $image_filename);
-						$exif->read();
-						$sql_ary['image_exif_data'] = $exif->serialized;
-						$sql_ary['image_has_exif'] = $exif->status;
-						unset($exif);
+						$additional_sql_data = array();
+						$file_link = $phpbb_ext_gallery->url->path('upload') . $image_filename;
+
+						$vars = array('additional_sql_data', 'file_link');
+						extract($phpbb_dispatcher->trigger_event('gallery.core.massimport.update_image_before', compact($vars)));
 
 						if (($filetype[0] > $phpbb_ext_gallery->config->get('max_width')) || ($filetype[1] > $phpbb_ext_gallery->config->get('max_height')))
 						{
@@ -556,13 +555,12 @@ class phpbb_ext_gallery_core_acp_main_module
 								}
 							}
 						}
+						$file_updated = (bool) $image_tools->resized;
 
-						if (!$image_tools->exif_data_force_db && ($sql_ary['image_has_exif'] == phpbb_gallery_exif::DBSAVED))
-						{
-							// Image was not resized, so we can pull the Exif from the image to save db-memory.
-							$sql_ary['image_has_exif'] = phpbb_gallery_exif::AVAILABLE;
-							$sql_ary['image_exif_data'] = '';
-						}
+						$vars = array('additional_sql_data', 'file_updated');
+						extract($phpbb_dispatcher->trigger_event('gallery.core.massimport.update_image', compact($vars)));
+
+						$sql_ary = array_merge($sql_ary, $additional_sql_data);
 
 						// Try to get real filesize from temporary folder (not always working) ;)
 						$sql_ary['filesize_upload'] = (@filesize($phpbb_ext_gallery->url->path('upload') . $image_filename)) ? @filesize($phpbb_ext_gallery->url->path('upload') . $image_filename) : 0;
@@ -594,7 +592,7 @@ class phpbb_ext_gallery_core_acp_main_module
 			}
 			if ($images_loop)
 			{
-				$image_user = new phpbb_gallery_user($db, $user_data['user_id'], false);
+				$image_user = new phpbb_ext_gallery_core_user($db, $user_data['user_id'], false);
 				$image_user->update_images($images_loop);
 
 				$phpbb_ext_gallery->config->inc('num_images', $images_loop);
@@ -675,7 +673,7 @@ class phpbb_ext_gallery_core_acp_main_module
 			{
 				if ($user->data['user_id'] != $user_row['user_id'])
 				{
-					$image_user = new phpbb_gallery_user($db, $user_row['user_id']);
+					$image_user = new phpbb_ext_gallery_core_user($db, $user_row['user_id']);
 					$album_id = $image_user->get_data('personal_album_id');
 					if (!$album_id)
 					{
