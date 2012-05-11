@@ -240,7 +240,7 @@ class phpbb_ext_gallery_core_image
 		static $lang_loaded;
 		if (!$lang_loaded)
 		{
-			$user->add_lang_ext('gallery/core', 'mcp');
+			$user->add_lang_ext('gallery/core', 'gallery_mcp');
 			$lang_loaded = true;
 		}
 

@@ -11,19 +11,19 @@
 		</ul>
 		<ul class="topiclist topics">
 			<li class="bg2">
-				<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline">
+				<table style="width: 100%;" border="0" class="forumline">
 					<!-- BEGIN imagerow -->
 					<tr>
 						<!-- BEGIN image -->
-						<td class="bg2" valign="top" style="width: {imageblock.S_COL_WIDTH};">
-							<table width="100%" cellpadding="2" cellspacing="5" border="0" class="forumline">
+						<td style="vertical-align: top; width: {imageblock.S_COL_WIDTH}; padding: 10px;">
+							<table style="width: 100%;" class="bg2 forumline">
 								<tr>
-									<td align="center" style="height: {S_THUMBNAIL_SIZE}px;" class="bg1<!-- IF imageblock.imagerow.image.S_UNAPPROVED --> g_unapproved<!-- ENDIF --><!-- IF imageblock.imagerow.image.S_LOCKED --> g_locked<!-- ENDIF --><!-- IF imageblock.imagerow.image.S_REPORTED --> g_reported<!-- ENDIF -->">
+									<td style="vertical-align: middle; text-align: center; height: {S_THUMBNAIL_SIZE}px;" class="bg1<!-- IF imageblock.imagerow.image.S_UNAPPROVED --> g_unapproved<!-- ENDIF --><!-- IF imageblock.imagerow.image.S_LOCKED --> g_locked<!-- ENDIF --><!-- IF imageblock.imagerow.image.S_REPORTED --> g_reported<!-- ENDIF -->">
 										<span class="genmed">{imageblock.imagerow.image.UC_THUMBNAIL}</span>
 									</td>
 								</tr>
 								<tr>
-									<td class="bg2" valign="top">
+									<td class="bg2" style="vertical-align: top;">
 										<div class="gensmall" style="overflow: hidden;">
 											<!-- IF imageblock.imagerow.image.CONTEST_RANK -->{L_CONTEST_RESULT}: <strong>{imageblock.imagerow.image.CONTEST_RANK}</strong><br /><!-- ENDIF -->
 											<!-- IF imageblock.imagerow.image.UC_IMAGE_NAME -->{L_IMAGE_NAME}: {imageblock.imagerow.image.UC_IMAGE_NAME}<br /><!-- ENDIF -->
@@ -51,7 +51,7 @@
 						</td>
 						<!-- END image -->
 						<!-- BEGIN no_image --> 
-							<td class="bg2" valign="top" style="width: {imageblock.S_COL_WIDTH};">
+							<td class="bg2"  style="vertical-align: top; width: {imageblock.S_COL_WIDTH};">
 								<table width="100%" cellpadding="2" cellspacing="10" border="0" class="forumline"><tr>
 								<td style="height: {S_THUMBNAIL_SIZE}px;" class="bg1"></td>
 								</tr></table>

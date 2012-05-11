@@ -187,7 +187,7 @@ if (($phpbb_ext_gallery->auth->acl_check('m_', $album_id, $album_data['album_use
 	$s_allowed_edit = (($phpbb_ext_gallery->auth->acl_check('i_edit', $album_id, $album_data['album_user_id']) && $s_user_allowed) || $phpbb_ext_gallery->auth->acl_check('m_edit', $album_id, $album_data['album_user_id']));
 	$s_quick_mod = ($s_allowed_delete || $s_allowed_edit || $phpbb_ext_gallery->auth->acl_check('m_status', $album_id, $album_data['album_user_id']) || $phpbb_ext_gallery->auth->acl_check('m_move', $album_id, $album_data['album_user_id']));
 
-	$user->add_lang_ext('gallery/core', 'mcp');
+	$user->add_lang_ext('gallery/core', 'gallery_mcp');
 	$template->assign_vars(array(
 		'S_MOD_ACTION'		=> $phpbb_ext_gallery->url->append_sid('mcp', "album_id=$album_id&amp;image_id=$image_id&amp;quickmod=1" /*&amp;redirect=" . urlencode(str_replace('&amp;', '&', $viewtopic_url))*/, true, $user->session_id),
 		'S_QUICK_MOD'		=> $s_quick_mod,

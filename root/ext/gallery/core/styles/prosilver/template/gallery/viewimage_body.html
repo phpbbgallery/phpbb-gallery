@@ -106,7 +106,14 @@
 			<!-- END custom_fields -->
 
 			<!-- IF not S_IS_BOT -->
-			<!-- IF U_POSTER_PM or U_POSTER_EMAIL or U_POSTER_WWW or U_POSTER_MSN or U_POSTER_ICQ or U_POSTER_YIM or U_POSTER_AIM or U_POSTER_JABBER -->
+				<!-- DEFINE $DISPLAY_PROFILE_ICONS = false -->
+				<!-- IF U_POSTER_PM or U_POSTER_EMAIL or U_POSTER_WWW or U_POSTER_MSN or U_POSTER_ICQ -->
+					<!-- DEFINE $DISPLAY_PROFILE_ICONS = true -->
+				<!-- ELSEIF U_POSTER_YIM or U_POSTER_AIM or U_POSTER_JABBER or U_POSTER_GALLERY -->
+					<!-- DEFINE $DISPLAY_PROFILE_ICONS = true -->
+				<!-- ENDIF -->
+			<!-- ENDIF -->
+			<!-- IF $DISPLAY_PROFILE_ICONS -->
 				<dd>
 					<ul class="profile-icons">
 						<!-- IF U_POSTER_PM --><li class="pm-icon"><a href="{U_POSTER_PM}" title="{L_PRIVATE_MESSAGE}"><span>{L_PRIVATE_MESSAGE}</span></a></li><!-- ENDIF -->
@@ -120,7 +127,6 @@
 						<!-- IF U_POSTER_GALLERY --><li class="gallery-icon"><a href="{U_POSTER_GALLERY}" title="{L_PERSONAL_ALBUM}"><span>{L_PERSONAL_ALBUM}</span></a></li><!-- ENDIF -->
 					</ul>
 				</dd>
-			<!-- ENDIF -->
 			<!-- ENDIF -->
 		</dl>
 	<span class="corners-bottom"><span></span></span></div>
@@ -293,7 +299,13 @@
 				<!-- END custom_fields -->
 
 				<!-- IF not S_IS_BOT -->
-				<!-- IF commentrow.U_PM or commentrow.U_EMAIL or commentrow.U_WWW or commentrow.U_MSN or commentrow.U_ICQ or commentrow.U_YIM or commentrow.U_AIM or commentrow.U_JABBER -->
+					<!-- IF commentrow.U_PM or commentrow.U_EMAIL or commentrow.U_WWW or commentrow.U_MSN or commentrow.U_ICQ -->
+						<!-- DEFINE $DISPLAY_PROFILE_ICONS = true -->
+					<!-- ELSEIF commentrow.U_YIM or commentrow.U_AIM or commentrow.U_JABBER or commentrow.U_GALLERY -->
+						<!-- DEFINE $DISPLAY_PROFILE_ICONS = true -->
+					<!-- ENDIF -->
+				<!-- ENDIF -->
+				<!-- IF $DISPLAY_PROFILE_ICONS -->
 					<dd>
 						<ul class="profile-icons">
 							<!-- IF commentrow.U_PM --><li class="pm-icon"><a href="{commentrow.U_PM}" title="{L_PRIVATE_MESSAGE}"><span>{L_PRIVATE_MESSAGE}</span></a></li><!-- ENDIF -->
@@ -307,7 +319,6 @@
 							<!-- IF commentrow.U_GALLERY --><li class="gallery-icon"><a href="{commentrow.U_GALLERY}" title="{L_PERSONAL_ALBUM}"><span>{L_PERSONAL_ALBUM}</span></a></li><!-- ENDIF -->
 						</ul>
 					</dd>
-				<!-- ENDIF -->
 				<!-- ENDIF -->
 			</dl>
 		<span class="corners-bottom"><span></span></span></div>
