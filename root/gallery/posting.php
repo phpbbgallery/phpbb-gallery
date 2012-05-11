@@ -603,7 +603,7 @@ else
 				else
 				{
 					$personal_album_id = $phpbb_ext_gallery->user->get_data('personal_album_id');
-					if (!$personal_album_id && $phpbb_ext_gallery->auth->acl_check('i_upload', phpbb_gallery_auth::OWN_ALBUM))
+					if (!$personal_album_id && $phpbb_ext_gallery->auth->acl_check('i_upload', phpbb_ext_gallery_core_auth::OWN_ALBUM))
 					{
 						$personal_album_id = phpbb_ext_gallery_core_album::generate_personal_album($image_data['image_username'], $image_data['image_user_id'], $image_data['image_user_colour'], phpbb_gallery::$user);
 					}
@@ -615,22 +615,19 @@ else
 				}
 			}
 
+			$additional_sql_data = array();
+
 			$rotate = request_var('rotate', array(0));
 			$rotate = (isset($rotate[0])) ? $rotate[0] : 0;
 			if ($phpbb_ext_gallery->config->get('allow_rotate') && ($rotate > 0) && (($rotate % 90) == 0))
 			{
-				$image_tools = new phpbb_ext_gallery_core_image_file();
+				$image_tools = new phpbb_ext_gallery_core_file();
 				$image_tools->set_image_options($phpbb_ext_gallery->config->get('max_filesize'), $phpbb_ext_gallery->config->get('max_height'), $phpbb_ext_gallery->config->get('max_width'));
 				$image_tools->set_image_data($phpbb_ext_gallery->url->path('upload') . $image_data['image_filename']);
 
-				if (($image_data['image_has_exif'] != phpbb_gallery_exif::UNAVAILABLE) && ($image_data['image_has_exif'] != phpbb_gallery_exif::DBSAVED))
-				{
-					// Store exif-data to database if there are any and we didn't already do that.
-					$exif = new phpbb_gallery_exif($image_tools->image_source);
-					$exif->read();
-					$sql_ary['image_has_exif'] = $exif->status;
-					$sql_ary['image_exif_data'] = $exif->serialized;
-				}
+				$file_link = $image_tools->image_source;
+				$vars = array('additional_sql_data', 'image_data', 'file_link');
+				extract($phpbb_dispatcher->trigger_event('gallery.core.posting.edit_before_rotate', compact($vars)));
 
 				// Rotate the image
 				$image_tools->rotate_image($rotate, $phpbb_ext_gallery->config->get('allow_resize'));
@@ -644,6 +641,7 @@ else
 			}
 
 			$error = implode('<br />', $errors);
+			$sql_ary = array_merge($sql_ary, $additional_sql_data);
 
 			if (!$error)
 			{
@@ -706,7 +704,7 @@ else
 
 			'NUM_IMAGES'		=> 1,
 			'S_ALLOW_ROTATE'	=> ($phpbb_ext_gallery->config->get('allow_rotate') && function_exists('imagerotate')),
-			'S_MOVE_PERSONAL'	=> (($phpbb_ext_gallery->auth->acl_check('i_upload', phpbb_gallery_auth::OWN_ALBUM) || $phpbb_ext_gallery->user->get_data('personal_album_id')) || ($user->data['user_id'] != $image_data['image_user_id'])) ? true : false,
+			'S_MOVE_PERSONAL'	=> (($phpbb_ext_gallery->auth->acl_check('i_upload', phpbb_ext_gallery_core_auth::OWN_ALBUM) || $phpbb_ext_gallery->user->get_data('personal_album_id')) || ($user->data['user_id'] != $image_data['image_user_id'])) ? true : false,
 			'S_MOVE_MODERATOR'	=> ($user->data['user_id'] != $image_data['image_user_id']) ? true : false,
 		));
 	}

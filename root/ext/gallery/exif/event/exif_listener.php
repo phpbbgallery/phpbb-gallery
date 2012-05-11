@@ -7,11 +7,15 @@ class phpbb_ext_gallery_exif_event_exif_listener implements EventSubscriberInter
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'gallery.core.viewimage'				=> 'viewimage',
-			'gallery.core.user.get_default_values'	=> 'user_get_default_values',
-			'gallery.core.user.validate_data'		=> 'user_validate_data',
-			'gallery.core.ucp.set_settings_submit'	=> 'ucp_set_settings_submit',
-			'gallery.core.ucp.set_settings_nosubmit'=> 'ucp_set_settings_nosubmit',
+			'gallery.core.viewimage'					=> 'viewimage',
+			'gallery.core.user.get_default_values'		=> 'user_get_default_values',
+			'gallery.core.user.validate_data'			=> 'user_validate_data',
+			'gallery.core.ucp.set_settings_submit'		=> 'ucp_set_settings_submit',
+			'gallery.core.ucp.set_settings_nosubmit'	=> 'ucp_set_settings_nosubmit',
+			'gallery.core.upload.prepare_file_before'	=> 'upload_prepare_file_before',
+			'gallery.core.upload.update_image_before'	=> 'upload_update_image_before',
+			'gallery.core.upload.update_image_nofilechange'	=> 'upload_update_image_nofilechange',
+			'gallery.core.posting.edit_before_rotate'	=> 'posting_edit_before_rotate',
 		);
 	}
 
@@ -77,5 +81,72 @@ class phpbb_ext_gallery_exif_event_exif_listener implements EventSubscriberInter
 		$template->assign_vars(array(
 			'S_VIEWEXIFS'		=> $phpbb_ext_gallery->user->get_data('user_viewexif'),
 		));
+	}
+
+	public function upload_prepare_file_before($event)
+	{
+		if (in_array($event['file']->extension, array('jpg', 'jpeg')))
+		{
+			$additional_sql_data = $event['additional_sql_data'];
+
+			// Read exif data from file
+			$exif = new phpbb_ext_gallery_exif($event['file']->destination_file);
+			$exif->read();
+			$additional_sql_data['image_exif_data'] = $exif->serialized;
+			$additional_sql_data['image_has_exif'] = $exif->status;
+
+			$event['additional_sql_data'] = $additional_sql_data;
+			unset($exif);
+		}
+	}
+
+	public function upload_update_image_before($event)
+	{
+		$image_data = $event['image_data'];
+
+		if (($image_data['image_has_exif'] == phpbb_ext_gallery_exif::AVAILABLE) ||
+		 ($image_data['image_has_exif'] == phpbb_ext_gallery_exif::UNKNOWN))
+		{
+			$additional_sql_data = $event['additional_sql_data'];
+
+			// Read exif data from file
+			$exif = new phpbb_ext_gallery_exif($event['file_link']);
+			$exif->read();
+			$additional_sql_data['image_exif_data'] = $exif->serialized;
+			$additional_sql_data['image_has_exif'] = $exif->status;
+
+			$event['additional_sql_data'] = $additional_sql_data;
+			unset($exif);
+		}
+	}
+
+	public function upload_update_image_nofilechange($event)
+	{
+		$additional_sql_data = $event['additional_sql_data'];
+
+		unset($additional_sql_data['image_exif_data']);
+		unset($additional_sql_data['image_has_exif']);
+
+		$event['additional_sql_data'] = $additional_sql_data;
+	}
+
+	public function posting_edit_before_rotate($event)
+	{
+		$image_data = $event['image_data'];
+
+		if (($image_data['image_has_exif'] == phpbb_ext_gallery_exif::AVAILABLE) ||
+		 ($image_data['image_has_exif'] == phpbb_ext_gallery_exif::UNKNOWN))
+		{
+			$additional_sql_data = $event['additional_sql_data'];
+
+			// Read exif data from file
+			$exif = new phpbb_ext_gallery_exif($event['file_link']);
+			$exif->read();
+			$additional_sql_data['image_exif_data'] = $exif->serialized;
+			$additional_sql_data['image_has_exif'] = $exif->status;
+
+			$event['additional_sql_data'] = $additional_sql_data;
+			unset($exif);
+		}
 	}
 }
