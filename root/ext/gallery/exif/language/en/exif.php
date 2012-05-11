@@ -24,7 +24,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'EXIF-DATA'					=> 'EXIF-Data',
+	'EXIF_DATA'					=> 'Exif Data',
 	'EXIF_APERTURE'				=> 'F-number',
 	'EXIF_CAM_MODEL'			=> 'Camera-model',
 	'EXIF_DATE'					=> 'Image taken on',
@@ -88,6 +88,6 @@ $lang = array_merge($lang, array(
 		'EXIF_WHITEB_MANU'			=> 'Manual',
 
 	'SHOW_EXIF'					=> 'show/hide',
-));
 
-?>
+	'VIEWEXIFS_DEFAULT'			=> 'View Exif-Data by default',
+));

@@ -79,8 +79,6 @@ $lang = array_merge($lang, array(
 	'YOUR_FAVORITE_IMAGES'			=> 'Here you can see your favorite-images. You may remove them, if you don’t like them anymore.',
 	'YOUR_SUBSCRIPTIONS'			=> 'Here you see albums and images you get notified on.',
 
-	'VIEWEXIFS_DEFAULT'				=> 'View Exif-Data by default',
-
 	'WATCH_CHANGED'					=> 'Settings stored',
 	'WATCH_COM'						=> 'Subscribe commented images by default',
 	'WATCH_FAVO'					=> 'Subscribe favorite images by default',

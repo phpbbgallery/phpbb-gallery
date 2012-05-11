@@ -20,8 +20,22 @@ if (!defined('IN_PHPBB'))
 /**
 *
 */
-class phpbb_ext_gallery_core_exif
+class phpbb_ext_gallery_exif
 {
+	/**
+	* Default value for new users
+	*/
+	const DEFAULT_DISPLAY	= true;
+
+	/**
+	* phpBB will treat the time from the exifdata like UTC.
+	* If your images were taken with an other timezone, you can insert an offset here.
+	* The offset is than added to the timestamp before it is converted into the users time.
+	*
+	* Offset must be set in seconds.
+	*/
+	const TIME_OFFSET	= 0;
+
 	/**
 	* Constants for the status of the exif-data.
 	*/
@@ -29,15 +43,6 @@ class phpbb_ext_gallery_core_exif
 	const AVAILABLE		= 1;
 	const UNKNOWN		= 2;
 	const DBSAVED		= 3;
-
-	/**
-	* phpBB will treat the time from the exifdata like UTC.
-	* If your images were taken with an other timezone, you can insert an offset here.
-	* The offset is than counted on the timestamp before it is converted into the users time.
-	*
-	* Offset must be set in seconds.
-	*/
-	const TIME_OFFSET	= 0;
 
 	/**
 	* Is the function available?
@@ -168,6 +173,8 @@ class phpbb_ext_gallery_core_exif
 	private function prepare_data()
 	{
 		global $user;
+
+		$user->add_lang_ext('gallery/exif', 'exif');
 
 		$this->prepared_data = array();
 		if (isset($this->data["EXIF"]["DateTimeOriginal"]))

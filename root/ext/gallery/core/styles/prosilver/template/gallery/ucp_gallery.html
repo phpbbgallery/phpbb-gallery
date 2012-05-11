@@ -28,13 +28,6 @@
 			</dd>
 		</dl>
 		<hr />
-		<dl>
-			<dt><label for="viewexifs1">{L_VIEWEXIFS_DEFAULT}:</label></dt>
-			<dd>
-				<label for="viewexifs1"><input type="radio" name="viewexifs" id="viewexifs1" value="1"<!-- IF S_VIEWEXIFS --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
-				<label for="viewexifs0"><input type="radio" name="viewexifs" id="viewexifs0" value="0"<!-- IF not S_VIEWEXIFS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
-			</dd>
-		</dl>
 		<!-- IF S_COMMENTS_ENABLED -->
 		<dl>
 			<dt><label for="allow_comments1">{L_USER_ALLOW_COMMENTS}:</label></dt>
@@ -44,9 +37,14 @@
 			</dd>
 		</dl>
 		<!-- ENDIF -->
+		<!-- EVENT gallery_ucp_settings_fieldset -->
 		</fieldset>
+
 	<span class="corners-bottom"><span></span></span></div>
 </div>
+
+<!-- EVENT gallery_ucp_settings_form -->
+
 	<fieldset class="submit-buttons">
 		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />&nbsp;
 		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />

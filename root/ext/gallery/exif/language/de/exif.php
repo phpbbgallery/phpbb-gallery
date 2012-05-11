@@ -24,7 +24,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'EXIF-DATA'					=> 'EXIF-Daten',
+	'EXIF_DATA'					=> 'Exif Daten',
 	'EXIF_APERTURE'				=> 'Blende',
 	'EXIF_CAM_MODEL'			=> 'Kamera-Modell',
 	'EXIF_DATE'					=> 'Bild aufgenommen am',
