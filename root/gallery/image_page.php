@@ -27,7 +27,6 @@ $phpbb_ext_gallery->url->_include('functions_display', 'phpbb');
 * - Check the request and get image_data
 * - Check the permissions and approval
 * - Main work here...
-* - Exif-Data
 * - Rating
 * - Posting comment
 * - Listing comment
@@ -265,24 +264,9 @@ $vars = array('phpbb_ext_gallery', 'image_id', 'image_data', 'album_data');
 extract($phpbb_dispatcher->trigger_event('gallery.core.viewimage', compact($vars)));
 
 /**
-* Exif-Data
-*/
-if ($phpbb_ext_gallery->config->get('disp_exifdata') && ($image_data['image_has_exif'] != phpbb_ext_gallery_exif::UNAVAILABLE) && (substr($image_data['image_filename'], -4) == '.jpg') && function_exists('exif_read_data') && ($phpbb_ext_gallery->auth->acl_check('m_status', $album_id, $album_data['album_user_id']) || ($image_data['image_contest'] != phpbb_ext_gallery_core_image::IN_CONTEST)))
-{
-	$exif = new phpbb_ext_gallery_exif($phpbb_ext_gallery->url->path('upload') . $image_data['image_filename'], $image_id);
-	$exif->interpret($image_data['image_has_exif'], $image_data['image_exif_data']);
-
-	if (!empty($exif->data["EXIF"]))
-	{
-		$exif->send_to_template($phpbb_ext_gallery->user->get_data('user_viewexif'));
-	}
-	unset($exif);
-}
-
-/**
 * Rating
 */
-if (false)//@todo: $phpbb_ext_gallery->config->get('allow_rates'))
+if ($phpbb_ext_gallery->config->get('allow_rates'))
 {
 	$rating = new phpbb_ext_gallery_core_rating($image_id, $image_data, $album_data);
 

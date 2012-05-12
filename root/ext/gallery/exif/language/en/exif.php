@@ -88,7 +88,8 @@ $lang = array_merge($lang, array(
 		'EXIF_WHITEB_AUTO'			=> 'Auto',
 		'EXIF_WHITEB_MANU'			=> 'Manual',
 
+	'DISP_EXIF_DATA'			=> 'Display Exif-data',
+	'DISP_EXIF_DATA_EXP'		=> 'This feature can not be used at the moment, as the need function “exif_read_data“ is not included in your PHP Installation.',
 	'SHOW_EXIF'					=> 'show/hide',
-
 	'VIEWEXIFS_DEFAULT'			=> 'View Exif-Data by default',
 ));

@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package Gallery - Exif Extension
+* @package Gallery - Exif Extension [Deutsch]
 * @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -88,5 +88,8 @@ $lang = array_merge($lang, array(
 		'EXIF_WHITEB_AUTO'			=> 'Automatisch',
 		'EXIF_WHITEB_MANU'			=> 'Manuell',
 
+	'DISP_EXIF_DATA'			=> 'Exif Daten anzeigen',
+	'DISP_EXIF_DATA_EXP'		=> 'Das Feature steht derzeit nicht zur Verfügung, da die benötigte Funktion „exif_read_data“ nicht in deiner PHP Installation enthalten ist.',
 	'SHOW_EXIF'					=> 'ein-/ausblenden',
+	'VIEWEXIFS_DEFAULT'			=> 'Exif Daten standardmässig anzeigen',
 ));

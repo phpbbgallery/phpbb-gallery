@@ -26,7 +26,8 @@ class phpbb_ext_gallery_exif_event_exif_listener implements EventSubscriberInter
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'gallery.core.config.load_config_sets'			=> 'load_config_sets',
+			'gallery.core.acp.config.get_display_vars'		=> 'acp_config_get_display_vars',
+			'gallery.core.config.load_config_sets'			=> 'config_load_config_sets',
 			'gallery.core.massimport.update_image_before'	=> 'massimport_update_image_before',
 			'gallery.core.massimport.update_image'			=> 'massimport_update_image',
 			'gallery.core.posting.edit_before_rotate'		=> 'posting_edit_before_rotate',
@@ -41,7 +42,23 @@ class phpbb_ext_gallery_exif_event_exif_listener implements EventSubscriberInter
 		);
 	}
 
-	public function load_config_sets($event)
+	public function acp_config_get_display_vars($event)
+	{
+		if ($event['mode'] == 'main')
+		{
+			$return_ary = $event['return_ary'];
+			if (isset($return_ary['vars']['IMAGE_SETTINGS']))
+			{
+				global $user;
+				$user->add_lang_ext('gallery/exif', 'exif');
+
+				$return_ary['vars']['IMAGE_SETTINGS']['exif:disp_exifdata'] = array('lang' => 'DISP_EXIF_DATA',		'validate' => 'bool',	'type' => 'radio:yes_no');
+				$event['return_ary'] = $return_ary;
+			}
+		}
+	}
+
+	public function config_load_config_sets($event)
 	{
 		$additional_config_sets = $event['additional_config_sets'];
 		$additional_config_sets['exif'] = 'phpbb_ext_gallery_exif_config_sets_exif';

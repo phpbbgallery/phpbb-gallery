@@ -28,7 +28,7 @@ class phpbb_ext_gallery_core_upload
 	const NUM_FILES_PER_DIR = 0;
 
 	/**
-	* Objects: phpBB Upload, 2 Files, ExifData and Image-Functions
+	* Objects: phpBB Upload, 2 Files and Image-Functions
 	*/
 	private $upload = null;
 	private $file = null;
