@@ -1,9 +1,9 @@
 <?php
 /**
 *
-* @package - Toolio
-* @copyright (c) 2011 nickvergessen <nickvergessen@gmx.de> http://www.flying-bits.org/
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License, v2 or later
+* @package Toolio - Config
+* @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
