@@ -7,6 +7,7 @@ class phpbb_ext_gallery_exif_event_exif_listener implements EventSubscriberInter
 	static public function getSubscribedEvents()
 	{
 		return array(
+			'gallery.core.config.load_config_sets'			=> 'load_config_sets',
 			'gallery.core.massimport.update_image_before'	=> 'massimport_update_image_before',
 			'gallery.core.massimport.update_image'			=> 'massimport_update_image',
 			'gallery.core.posting.edit_before_rotate'		=> 'posting_edit_before_rotate',
@@ -19,6 +20,13 @@ class phpbb_ext_gallery_exif_event_exif_listener implements EventSubscriberInter
 			'gallery.core.user.validate_data'				=> 'user_validate_data',
 			'gallery.core.viewimage'						=> 'viewimage',
 		);
+	}
+
+	public function load_config_sets($event)
+	{
+		$additional_config_sets = $event['additional_config_sets'];
+		$additional_config_sets['exif'] = 'phpbb_ext_gallery_exif_config_sets_exif';
+		$event['additional_config_sets'] = $additional_config_sets;
 	}
 
 	public function massimport_update_image_before($event)
@@ -161,7 +169,7 @@ class phpbb_ext_gallery_exif_event_exif_listener implements EventSubscriberInter
 		global $user;
 		$user->add_lang_ext('gallery/exif', 'exif');
 
-		if ($event['phpbb_ext_gallery']->config->get('disp_exifdata') &&
+		if ($event['phpbb_ext_gallery']->config->get(array('exif', 'disp_exifdata')) &&
 		 ($event['image_data']['image_has_exif'] != phpbb_ext_gallery_exif::UNAVAILABLE) &&
 		 (substr($event['image_data']['image_filename'], -4) == '.jpg') &&
 		 function_exists('exif_read_data') &&

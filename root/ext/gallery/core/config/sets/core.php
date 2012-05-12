@@ -69,7 +69,6 @@ class phpbb_ext_gallery_core_config_sets_core implements phpbb_ext_nickvergessen
 			'default_sort_key'	=> 't',
 			'description_length'=> 2000,
 			'disp_birthdays'			=> false,
-			'disp_exifdata'				=> true,
 			'disp_image_url'			=> true,
 			'disp_login'				=> true,
 			'disp_nextprev_thumbnail'	=> false,

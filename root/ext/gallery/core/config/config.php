@@ -26,11 +26,17 @@ class phpbb_ext_gallery_core_config extends phpbb_ext_nickvergessen_toolio_confi
 	*/
 	public function default_sets()
 	{
+		global $phpbb_dispatcher;
+
 		$default_sets = array(
 			'core',
 		);
 
-		//@todo: Add hook here, to allow automated loading of plugin sets
-		return $default_sets;
+		$additional_config_sets = array();
+
+		$vars = array('additional_config_sets');
+		extract($phpbb_dispatcher->trigger_event('gallery.core.config.load_config_sets', compact($vars)));
+
+		return array_merge($default_sets, $additional_config_sets);
 	}
 }
