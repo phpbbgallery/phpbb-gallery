@@ -418,7 +418,7 @@ class phpbb_ext_gallery_core_image
 	*/
 	static public function handle_counter($image_id_ary, $add, $readd = false)
 	{
-		global $db;
+		global $db, $phpbb_ext_gallery;
 
 		if (empty($image_id_ary))
 		{
@@ -445,27 +445,27 @@ class phpbb_ext_gallery_core_image
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$sql_ary = array(
-				'user_id'				=> $row['image_user_id'],
-				'user_images'			=> $row['images'],
+				'user_id'				=> (int) $row['image_user_id'],
+				'user_images'			=> (int) $row['images'],
 			);
-			phpbb_gallery_hookup::add_image($row['image_user_id'], (($add) ? $row['images'] : 0 - $row['images']));
+			//@todo: phpbb_gallery_hookup::add_image($row['image_user_id'], (($add) ? $row['images'] : 0 - $row['images']));
 
 			$num_images = $num_images + $row['images'];
 
-			$image_user = new phpbb_gallery_user($db, $row['image_user_id'], false);
+			$image_user = new phpbb_ext_gallery_core_user($db, (int) $row['image_user_id'], false);
 			$image_user->update_images((($add) ? $row['images'] : 0 - $row['images']));
 		}
 		$db->sql_freeresult($result);
 
 		if ($add)
 		{
-			phpbb_gallery_config::inc('num_images', $num_images);
-			phpbb_gallery_config::inc('num_comments', $num_comments);
+			$phpbb_ext_gallery->config->inc('num_images', $num_images);
+			$phpbb_ext_gallery->config->inc('num_comments', $num_comments);
 		}
 		else
 		{
-			phpbb_gallery_config::dec('num_images', $num_images);
-			phpbb_gallery_config::dec('num_comments', $num_comments);
+			$phpbb_ext_gallery->config->dec('num_images', $num_images);
+			$phpbb_ext_gallery->config->dec('num_comments', $num_comments);
 		}
 	}
 }

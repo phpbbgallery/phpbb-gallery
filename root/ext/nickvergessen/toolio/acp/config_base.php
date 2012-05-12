@@ -1,9 +1,9 @@
 <?php
 /**
 *
-* @package - Toolio
-* @copyright (c) 2011 nickvergessen <nickvergessen@gmx.de> http://www.flying-bits.org/
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License, v2 or later
+* @package Toolio - Config ACP Module
+* @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
@@ -61,7 +61,7 @@ abstract class phpbb_ext_nickvergessen_toolio_acp_config_base implements phpbb_e
 		$display_vars = $this->get_display_vars($mode);
 		foreach ($display_vars['vars'] as $config_name => $null)
 		{
-			if (!isset($cfg_array[$config_name]) || strpos($config_name, 'legend') !== false)
+			if (!isset($cfg_array[$config_name]) || strpos($config_name, 'legend') === 0)
 			{
 				continue;
 			}
@@ -101,12 +101,12 @@ abstract class phpbb_ext_nickvergessen_toolio_acp_config_base implements phpbb_e
 		// Output relevant page
 		foreach ($display_vars['vars'] as $config_key => $vars)
 		{
-			if (!is_array($vars) && strpos($config_key, 'legend') === false)
+			if (!is_array($vars) && strpos($config_key, 'legend') !== 0)
 			{
 				continue;
 			}
 
-			if (strpos($config_key, 'legend') !== false)
+			if (strpos($config_key, 'legend') === 0)
 			{
 				$template->assign_block_vars('options', array(
 					'S_LEGEND'		=> true,
@@ -124,7 +124,7 @@ abstract class phpbb_ext_nickvergessen_toolio_acp_config_base implements phpbb_e
 			$type = explode(':', $vars['type']);
 
 			$l_explain = '';
-			if ($vars['explain'])
+			if (empty($vars['explain']))
 			{
 				$l_explain = (isset($user->lang[$vars['lang'] . '_EXP'])) ? $user->lang[$vars['lang'] . '_EXP'] : '';
 				if ($l_explain != '')
@@ -143,7 +143,7 @@ abstract class phpbb_ext_nickvergessen_toolio_acp_config_base implements phpbb_e
 			$template->assign_block_vars('options', array(
 				'KEY'			=> $config_key,
 				'TITLE'			=> (isset($user->lang[$vars['lang']])) ? $user->lang[$vars['lang']] : $vars['lang'],
-				'S_EXPLAIN'		=> $vars['explain'],
+				'S_EXPLAIN'		=> empty($vars['explain']),
 				'TITLE_EXPLAIN'	=> $l_explain,
 				'CONTENT'		=> $content,
 			));
