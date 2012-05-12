@@ -109,7 +109,7 @@ switch ($mode)
 	break;
 	default:
 		$filesize_var = 'filesize_upload';
-		if (!class_exists('phpbb_gallery_hookup'))
+		/*if (!class_exists('phpbb_gallery_hookup'))
 		{
 			$phpbb_ext_gallery->url->_include_core('hookup');
 		}
@@ -118,7 +118,7 @@ switch ($mode)
 			// Cash-MOD HookUp failed and denies to view the image
 			//trigger_error('NOT_AUTHORISED');
 			$image_error = 'not_authorised.jpg';
-		}
+		}*/
 
 		$image_source_path = $phpbb_ext_gallery->url->path('upload');
 		$possible_watermark = true;
