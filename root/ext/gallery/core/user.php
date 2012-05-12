@@ -110,9 +110,9 @@ class phpbb_ext_gallery_core_user
 		{
 			return $this->data[$key];
 		}
-		elseif ($default && isset(self::$default_values[$key]))
+		elseif ($default && self::get_default_value($key) !== null)
 		{
-			return self::$default_values[$key];
+			return self::get_default_value($key);
 		}
 
 		return false;
@@ -222,7 +222,7 @@ class phpbb_ext_gallery_core_user
 	*/
 	private function insert($data)
 	{
-		$sql_ary = array_merge(self::$default_values, $this->validate_data($data), array(
+		$sql_ary = array_merge(self::get_default_values(), $this->validate_data($data), array(
 			'user_id'			=> $this->id,
 			'user_last_update'	=> time(),
 		));
@@ -329,6 +329,8 @@ class phpbb_ext_gallery_core_user
 	*/
 	static public function validate_data($data, $inc = false)
 	{
+		global $phpbb_dispatcher;
+
 		$validated_data = array();
 		foreach ($data as $name => $value)
 		{
@@ -350,7 +352,6 @@ class phpbb_ext_gallery_core_user
 					}
 				break;
 
-				case 'user_viewexif':
 				case 'watch_own':
 				case 'watch_favo':
 				case 'watch_com':
@@ -361,9 +362,51 @@ class phpbb_ext_gallery_core_user
 				case 'user_permissions':
 					$validated_data[$name] = $value;
 				break;
+
+				default:
+					$is_validated = false;
+
+					$vars = array('is_validated', 'name', 'value');
+					extract($phpbb_dispatcher->trigger_event('gallery.core.user.validate_data', compact($vars)));
+
+					if ($is_validated)
+					{
+						$validated_data[$name] = $value;
+					}
+				break;
 			}
 		}
 		return $validated_data;
+	}
+
+	static private function get_default_value($key)
+	{
+		$default_values = self::get_default_values();
+
+		if (isset($default_values[$key]))
+		{
+			return $default_values[$key];
+		}
+
+		return null;
+	}
+
+	static private function get_default_values()
+	{
+		static $default_values;
+
+		if ($default_values)
+		{
+			return $default_values;
+		}
+
+		global $phpbb_dispatcher;
+		$default_values = self::$default_values;
+
+		$vars = array('default_values');
+		extract($phpbb_dispatcher->trigger_event('gallery.core.user.get_default_values', compact($vars)));
+
+		return $default_values;
 	}
 
 	/**
@@ -380,8 +423,6 @@ class phpbb_ext_gallery_core_user
 
 		// Shall other users be allowed to comment on this users images by default?
 		'user_allow_comments'	=> true,
-		// Shall the EXIF data be viewed or collapsed by default?
-		'user_viewexif'		=> true,
 		// Shall the user be subscribed to his own images?
 		'watch_own'			=> true,
 		// Shall the user be subscribed if he adds the images to his favorites?

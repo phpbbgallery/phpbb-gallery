@@ -1,18 +1,16 @@
 <?php
 /**
 *
-* exif_data [Deutsch]
+* @package Gallery - Exif Extension [Deutsch]
+* @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
-* @package phpBB Gallery / NV Exif Data
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-**/
+*/
 
 /**
-* DO NOT CHANGE
+* @ignore
 */
+
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -23,8 +21,11 @@ if (empty($lang) || !is_array($lang))
 	$lang = array();
 }
 
+/**
+* Language for Exif data
+*/
 $lang = array_merge($lang, array(
-	'EXIF-DATA'					=> 'EXIF-Daten',
+	'EXIF_DATA'					=> 'Exif Daten',
 	'EXIF_APERTURE'				=> 'Blende',
 	'EXIF_CAM_MODEL'			=> 'Kamera-Modell',
 	'EXIF_DATE'					=> 'Bild aufgenommen am',
@@ -87,7 +88,8 @@ $lang = array_merge($lang, array(
 		'EXIF_WHITEB_AUTO'			=> 'Automatisch',
 		'EXIF_WHITEB_MANU'			=> 'Manuell',
 
+	'DISP_EXIF_DATA'			=> 'Exif Daten anzeigen',
+	'DISP_EXIF_DATA_EXP'		=> 'Das Feature steht derzeit nicht zur Verfügung, da die benötigte Funktion „exif_read_data“ nicht in deiner PHP Installation enthalten ist.',
 	'SHOW_EXIF'					=> 'ein-/ausblenden',
+	'VIEWEXIFS_DEFAULT'			=> 'Exif Daten standardmässig anzeigen',
 ));
-
-?>

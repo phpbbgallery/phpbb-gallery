@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 /**
 * A little class for all the actions that the gallery does on images.
 *
-* resize, rotate, watermark, read exif, create thumbnail, write to hdd, send to browser
+* resize, rotate, watermark, create thumbnail, write to hdd, send to browser
 */
 class phpbb_ext_gallery_core_file
 {
@@ -33,8 +33,6 @@ class phpbb_ext_gallery_core_file
 	public $errors = array();
 	private $browser_cache = true;
 	private $last_modified = 0;
-
-	public $exif_data_force_db = false;
 
 	public $gd_version = 0;
 
@@ -99,7 +97,6 @@ class phpbb_ext_gallery_core_file
 			$this->watermarked = false;
 			$this->rotated = false;
 			$this->resized = false;
-			$this->exif_data_force_db = false;
 		}
 	}
 
@@ -425,8 +422,6 @@ class phpbb_ext_gallery_core_file
 		$this->image_size['width'] = $this->thumb_width;
 
 		$this->resized = true;
-		// We loose the exif data, so force to store them in the database
-		$this->exif_data_force_db = true;
 	}
 
 	/**
@@ -476,8 +471,6 @@ class phpbb_ext_gallery_core_file
 		$this->image = imagerotate($this->image, $angle, 0);
 
 		$this->rotated = true;
-		// We loose the exif data, so force to store them in the database
-		$this->exif_data_force_db = true;
 	}
 
 	/**

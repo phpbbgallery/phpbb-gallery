@@ -108,48 +108,6 @@
 	<br clear="all" />
 <!-- ENDIF -->
 
-<!-- IF .exif_value -->
-<script type="text/javascript">
-function getElement(iElementId)
-{
-	if (document.all) 
-	{
-		return document.all[iElementId];
-	}
-	if (document.getElementById)
-	{
-		return document.getElementById(iElementId);
-	}
-}
-
-function toggleElement(oElement)
-{
-	if (oElement.style.display == "none")
-	{
-		oElement.style.display = "";
-	}
-	else
-	{
-		oElement.style.display = "none";
-	}
-}
-</script>
-<table class="tablebg" cellspacing="1" width="100%">
-	<tr>
-		<th colspan="2">{L_EXIF-DATA} - <a href="javascript: toggleElement( getElement('exif_data_fieldset'));">{L_SHOW_EXIF}</a></th>
-	</tr>
-</table>
-<table class="tablebg" cellspacing="1" width="100%" id="exif_data_fieldset"<!-- IF not S_VIEWEXIF --> style="display: none;"<!-- ENDIF -->>
-	<!-- BEGIN exif_value -->
-		<tr class="row1">
-			<td width="25%" align="right"><span class="genmed">{exif_value.EXIF_NAME}:</span></td>
-				<td><span class="genmed">{exif_value.EXIF_VALUE}</span></td>
-		</tr>
-	<!-- END exif_value -->
-</table>
-<br clear="all" />
-<!-- ENDIF -->
-
 <!-- IF not S_IS_BOT and (S_ALLOWED_TO_RATE or S_ALLOWED_TO_COMMENT) -->
 		<a name="rating"></a>
 		<form name="postform" action="{S_COMMENT_ACTION}" method="post">

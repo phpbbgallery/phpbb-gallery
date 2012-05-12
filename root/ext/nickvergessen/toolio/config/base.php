@@ -19,6 +19,11 @@ if (!defined('IN_PHPBB'))
 abstract class phpbb_ext_nickvergessen_toolio_config_base implements phpbb_ext_nickvergessen_toolio_config_interface
 {
 	/**
+	* Array with all sets we try to load
+	*/
+	private $sets = array();
+
+	/**
 	* Array with all configs from the loaded sets and their current values
 	*/
 	private $configs = array();
@@ -50,11 +55,20 @@ abstract class phpbb_ext_nickvergessen_toolio_config_base implements phpbb_ext_n
 		$this->phpbb_config_table = $table;
 		$this->phpbb_db = $db;
 		$this->class_prefix = get_class($this) . '_sets_';
+		//$this->class_prefix . $set_name
 
 		$sets = $this->default_sets();
-		foreach ($sets as $set)
+		foreach ($sets as $set_name => $class_name)
 		{
-			$this->load_set($set);
+			if (is_int($set_name))
+			{
+				$set_name = $class_name;
+				$class_name = $this->class_prefix . $set_name;
+			}
+
+			$this->sets[$set_name] = $class_name;
+
+			$this->load_set($set_name);
 		}
 	}
 
@@ -194,7 +208,8 @@ abstract class phpbb_ext_nickvergessen_toolio_config_base implements phpbb_ext_n
 	*/
 	final public function install_set($set_name)
 	{
-		$set_defaults = call_user_func(array($this->class_prefix . $set_name, 'get_configs'));
+		$class_name = (isset($this->sets[$set_name])) ? $this->sets[$set_name] : $this->class_prefix . $set_name;
+		$set_defaults = call_user_func(array($class_name, 'get_configs'));
 		foreach ($set_defaults as $name => $default_value)
 		{
 			if ((gettype($default_value) == 'bool') || (gettype($default_value) == 'boolean'))
@@ -224,7 +239,8 @@ abstract class phpbb_ext_nickvergessen_toolio_config_base implements phpbb_ext_n
 	{
 		$delete_configs = array();
 
-		$set_defaults = call_user_func(array($this->class_prefix . $set_name, 'get_configs'));
+		$class_name = (isset($this->sets[$set_name])) ? $this->sets[$set_name] : $this->class_prefix . $set_name;
+		$set_defaults = call_user_func(array($class_name, 'get_configs'));
 		foreach ($set_defaults as $name => $default_value)
 		{
 			$config_name = $this->get_config_name(array($set_name, $name));
@@ -251,7 +267,8 @@ abstract class phpbb_ext_nickvergessen_toolio_config_base implements phpbb_ext_n
 	*/
 	final public function load_set($set_name)
 	{
-		$set_defaults = call_user_func(array($this->class_prefix . $set_name, 'get_configs'));
+		$class_name = (isset($this->sets[$set_name])) ? $this->sets[$set_name] : $this->class_prefix . $set_name;
+		$set_defaults = call_user_func(array($class_name, 'get_configs'));
 		foreach ($set_defaults as $name => $default_value)
 		{
 			$this->defaults[$this->get_config_name(array($set_name, $name))] = $default_value;
@@ -265,7 +282,7 @@ abstract class phpbb_ext_nickvergessen_toolio_config_base implements phpbb_ext_n
 			}
 		}
 
-		$set_dynamics = call_user_func(array($this->class_prefix . $set_name, 'get_dynamics'));
+		$set_dynamics = call_user_func(array($class_name, 'get_dynamics'));
 		foreach ($set_dynamics as $name)
 		{
 			// Only allow setting configs as dynamic, which are from this set
@@ -298,10 +315,18 @@ abstract class phpbb_ext_nickvergessen_toolio_config_base implements phpbb_ext_n
 			return $config_names[$tmp_name];
 		}
 
-		$tmp_name = 'core-' . $config_name;
-		if (isset($config_names[$tmp_name]))
+		if (isset($config_names['core-' . $config_name]))
 		{
-			return $config_names[$tmp_name];
+			return $config_names['core-' . $config_name];
+		}
+
+		// Okay, the variable is not in the core and no set was specified, so we now loop through all sets
+		foreach ($this->sets as $set_name => $class_name)
+		{
+			if (isset($config_names[$set_name. '-' . $config_name]))
+			{
+				return $config_names[$set_name. '-' . $config_name];
+			}
 		}
 
 		$config_names[$tmp_name] = $this->get_prefix_for_set('core') . $config_name;
@@ -323,7 +348,8 @@ abstract class phpbb_ext_nickvergessen_toolio_config_base implements phpbb_ext_n
 			return $prefix_list[$set_name];
 		}
 
-		$prefix_list[$set_name] = call_user_func(array($this->class_prefix . $set_name, 'get_prefix'));
+		$class_name = (isset($this->sets[$set_name])) ? $this->sets[$set_name] : $this->class_prefix . $set_name;
+		$prefix_list[$set_name] = call_user_func(array($class_name, 'get_prefix'));
 		return $prefix_list[$set_name];
 	}
 }

@@ -28,12 +28,11 @@ class phpbb_ext_gallery_core_upload
 	const NUM_FILES_PER_DIR = 0;
 
 	/**
-	* Objects: phpBB Upload, 2 Files, ExifData and Image-Functions
+	* Objects: phpBB Upload, 2 Files and Image-Functions
 	*/
 	private $upload = null;
 	private $file = null;
 	private $zip_file = null;
-	private $exif = null;
 	private $tools = null;
 
 	/**
@@ -49,8 +48,6 @@ class phpbb_ext_gallery_core_upload
 	private $file_count = 0;
 	private $image_num = 0;
 	private $allow_comments = false;
-	private $exif_status = false;
-	private $exif_data = false;
 	private $sent_quota_error = false;
 	private $username = '';
 	private $file_descriptions = array();
@@ -94,8 +91,6 @@ class phpbb_ext_gallery_core_upload
 		{
 			return false;
 		}
-		$this->exif_status = false;
-		$this->exif_data = false;
 
 		if ($this->file->extension == 'zip')
 		{
@@ -243,14 +238,23 @@ class phpbb_ext_gallery_core_upload
 			));
 		}
 
+		global $phpbb_dispatcher, $phpbb_ext_gallery;
+
+		$additional_sql_data = array();
+		$image_data = $this->image_data[$image_id];
+		$file_link = $phpbb_ext_gallery->url->path('upload') . $this->image_data[$image_id]['image_filename'];
+
+		$vars = array('additional_sql_data', 'image_data', 'file_link');
+		extract($phpbb_dispatcher->trigger_event('gallery.core.upload.update_image_before', compact($vars)));
+
 		// Rotate image
-		if ($this->prepare_file_update($image_id))
+		if (!$this->prepare_file_update($image_id))
 		{
-			$sql_ary = array_merge($sql_ary, array(
-				'image_exif_data'		=> $this->exif_data,
-				'image_has_exif'		=> $this->exif_status,
-			));
+			$vars = array('additional_sql_data');
+			extract($phpbb_dispatcher->trigger_event('gallery.core.upload.update_image_nofilechange', compact($vars)));
 		}
+
+		$sql_ary = array_merge($sql_ary, $additional_sql_data);
 
 		global $db;
 
@@ -265,11 +269,11 @@ class phpbb_ext_gallery_core_upload
 	}
 
 	/**
-	* Prepare file on upload: rotate, resize and read exif
+	* Prepare file on upload: rotate and resize
 	*/
 	public function prepare_file()
 	{
-		global $user, $phpbb_ext_gallery;
+		global $user, $phpbb_ext_gallery, $phpbb_dispatcher;
 
 		$upload_dir = self::get_current_upload_dir();
 
@@ -295,10 +299,11 @@ class phpbb_ext_gallery_core_upload
 		}
 		@chmod($this->file->destination_file, 0777);
 
-		if (in_array($this->file->extension, array('jpg', 'jpeg')))
-		{
-			$this->get_exif();
-		}
+		$additional_sql_data = array();
+		$file = $this->file;
+
+		$vars = array('additional_sql_data', 'file');
+		extract($phpbb_dispatcher->trigger_event('gallery.core.upload.prepare_file_before', compact($vars)));
 
 		$this->tools->set_image_options($phpbb_ext_gallery->config->get('max_filesize'), $phpbb_ext_gallery->config->get('max_height'), $phpbb_ext_gallery->config->get('max_width'));
 		$this->tools->set_image_data($this->file->destination_file, '', $this->file->filesize, true);
@@ -352,7 +357,7 @@ class phpbb_ext_gallery_core_upload
 		}
 
 		// Everything okay, now add the file to the database and return the image_id
-		return $this->file_to_database();
+		return $this->file_to_database($additional_sql_data);
 	}
 
 	/**
@@ -362,13 +367,6 @@ class phpbb_ext_gallery_core_upload
 	public function prepare_file_update($image_id)
 	{
 		global $phpbb_ext_gallery;
-
-		if (($this->image_data[$image_id]['image_has_exif'] == phpbb_ext_gallery_core_exif::AVAILABLE) ||
-		 ($this->image_data[$image_id]['image_has_exif'] == phpbb_ext_gallery_core_exif::UNKNOWN))
-		{
-			$update_exif = true;
-			$this->get_exif($phpbb_ext_gallery->url->path('upload') . $this->image_data[$image_id]['image_filename']);
-		}
 
 		$this->tools->set_image_options($phpbb_ext_gallery->config->get('max_filesize'), $phpbb_ext_gallery->config->get('max_height'), $phpbb_ext_gallery->config->get('max_width'));
 		$this->tools->set_image_data($phpbb_ext_gallery->url->path('upload') . $this->image_data[$image_id]['image_filename'], '', 0, true);
@@ -387,30 +385,24 @@ class phpbb_ext_gallery_core_upload
 
 		}
 
-		if (isset($update_exif) && ($this->exif_status == phpbb_ext_gallery_core_exif::DBSAVED))
-		{
-			return true;
-		}
-		return false;
+		return $this->tools->rotated;
 	}
 
 	/**
 	* Insert the file into the database
 	*/
-	public function file_to_database()
+	public function file_to_database($additional_sql_ary)
 	{
 		global $user, $db;
 
 		$image_name = str_replace("_", " ", utf8_substr($this->file->uploadname, 0, utf8_strrpos($this->file->uploadname, '.')));
 
-		$sql_ary = array(
+		$sql_ary = array_merge(array(
 			'image_name'			=> $image_name,
 			'image_name_clean'		=> utf8_clean_string($image_name),
 			'image_filename' 		=> $this->file->realname,
 			'filesize_upload'		=> $this->file->filesize,
 			'image_time'			=> time() + $this->file_count,
-			'image_exif_data'		=> $this->exif_data,
-			'image_has_exif'		=> $this->exif_status,
 
 			'image_user_id'			=> $user->data['user_id'],
 			'image_user_colour'		=> $user->data['user_colour'],
@@ -425,7 +417,7 @@ class phpbb_ext_gallery_core_upload
 			'image_desc'			=> '',
 			'image_desc_uid'		=> '',
 			'image_desc_bitfield'	=> '',
-		);
+		), $additional_sql_ary);
 
 		$sql = 'INSERT INTO ' . GALLERY_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 		$db->sql_query($sql);
@@ -551,18 +543,6 @@ class phpbb_ext_gallery_core_upload
 				$this->file_descriptions[$i] = str_replace('{NUM}', ($this->image_num + $i), $image_desc);
 			}
 		}
-	}
-
-	public function get_exif($path = false)
-	{
-		$path = ($path === false) ? $this->file->destination_file : $path;
-
-		// Read exif data from file
-		$exif = new phpbb_ext_gallery_core_exif($path);
-		$exif->read();
-		$this->exif_status = $exif->status;
-		$this->exif_data = $exif->serialized;
-		unset($exif);
 	}
 
 	public function get_rotating()
