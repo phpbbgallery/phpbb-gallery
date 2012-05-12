@@ -1,18 +1,16 @@
 <?php
 /**
 *
-* exif_data [Deutsch]
+* @package Gallery - Exif Extension
+* @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
-* @package phpBB Gallery / NV Exif Data
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-**/
+*/
 
 /**
-* DO NOT CHANGE
+* @ignore
 */
+
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -23,6 +21,9 @@ if (empty($lang) || !is_array($lang))
 	$lang = array();
 }
 
+/**
+* Language for Exif data
+*/
 $lang = array_merge($lang, array(
 	'EXIF_DATA'					=> 'Exif Daten',
 	'EXIF_APERTURE'				=> 'Blende',

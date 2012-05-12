@@ -1,5 +1,24 @@
 <?php
+/**
+*
+* @package Gallery - Exif Extension
+* @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+*
+*/
 
+/**
+* @ignore
+*/
+
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
+/**
+* Event listener
+*/
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class phpbb_ext_gallery_exif_event_exif_listener implements EventSubscriberInterface
@@ -33,7 +52,6 @@ class phpbb_ext_gallery_exif_event_exif_listener implements EventSubscriberInter
 	{
 		$additional_sql_data = $event['additional_sql_data'];
 
-		// Read exif data from file
 		$exif = new phpbb_ext_gallery_exif($event['file_link']);
 		$exif->read();
 		$additional_sql_data['image_exif_data'] = $exif->serialized;
@@ -65,7 +83,6 @@ class phpbb_ext_gallery_exif_event_exif_listener implements EventSubscriberInter
 		{
 			$additional_sql_data = $event['additional_sql_data'];
 
-			// Read exif data from file
 			$exif = new phpbb_ext_gallery_exif($event['file_link']);
 			$exif->read();
 			$additional_sql_data['image_exif_data'] = $exif->serialized;
@@ -92,7 +109,6 @@ class phpbb_ext_gallery_exif_event_exif_listener implements EventSubscriberInter
 		{
 			$additional_sql_data = $event['additional_sql_data'];
 
-			// Read exif data from file
 			$exif = new phpbb_ext_gallery_exif($event['file']->destination_file);
 			$exif->read();
 			$additional_sql_data['image_exif_data'] = $exif->serialized;
@@ -112,7 +128,6 @@ class phpbb_ext_gallery_exif_event_exif_listener implements EventSubscriberInter
 		{
 			$additional_sql_data = $event['additional_sql_data'];
 
-			// Read exif data from file
 			$exif = new phpbb_ext_gallery_exif($event['file_link']);
 			$exif->read();
 			$additional_sql_data['image_exif_data'] = $exif->serialized;
@@ -138,7 +153,6 @@ class phpbb_ext_gallery_exif_event_exif_listener implements EventSubscriberInter
 		$default_values = $event['default_values'];
 		if (!in_array('user_viewexif', $default_values))
 		{
-			// Shall the EXIF data be viewed or collapsed by default?
 			$default_values['user_viewexif'] = (bool) phpbb_ext_gallery_exif::DEFAULT_DISPLAY;
 			$event['default_values'] = $default_values;
 		}
@@ -158,7 +172,6 @@ class phpbb_ext_gallery_exif_event_exif_listener implements EventSubscriberInter
 	{
 		if ($event['name'] == 'user_viewexif')
 		{
-			// Shall the EXIF data be viewed or collapsed by default?
 			$event['value'] = (bool) $event['value'];
 			$event['is_validated'] = true;
 		}
@@ -171,8 +184,7 @@ class phpbb_ext_gallery_exif_event_exif_listener implements EventSubscriberInter
 
 		if ($event['phpbb_ext_gallery']->config->get(array('exif', 'disp_exifdata')) &&
 		 ($event['image_data']['image_has_exif'] != phpbb_ext_gallery_exif::UNAVAILABLE) &&
-		 (substr($event['image_data']['image_filename'], -4) == '.jpg') &&
-		 function_exists('exif_read_data') &&
+		 (substr($event['image_data']['image_filename'], -4) == '.jpg') && function_exists('exif_read_data') &&
 		 ($event['phpbb_ext_gallery']->auth->acl_check('m_status', $event['image_data']['image_album_id'], $event['album_data']['album_user_id']) ||
 		  ($event['image_data']['image_contest'] != phpbb_ext_gallery_core_image::IN_CONTEST)))
 		{

@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package NV Image Tools
-* @version $Id$
-* @copyright (c) 2009 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org/
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Gallery - Exif Extension
+* @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
@@ -18,7 +17,7 @@ if (!defined('IN_PHPBB'))
 }
 
 /**
-*
+* Base class for Exif handling
 */
 class phpbb_ext_gallery_exif
 {
@@ -28,7 +27,7 @@ class phpbb_ext_gallery_exif
 	const DEFAULT_DISPLAY	= true;
 
 	/**
-	* phpBB will treat the time from the exifdata like UTC.
+	* phpBB will treat the time from the Exif data like UTC.
 	* If your images were taken with an other timezone, you can insert an offset here.
 	* The offset is than added to the timestamp before it is converted into the users time.
 	*
@@ -37,7 +36,7 @@ class phpbb_ext_gallery_exif
 	const TIME_OFFSET	= 0;
 
 	/**
-	* Constants for the status of the exif-data.
+	* Constants for the status of the Exif data.
 	*/
 	const UNAVAILABLE	= 0;
 	const AVAILABLE		= 1;
@@ -76,7 +75,7 @@ class phpbb_ext_gallery_exif
 	public $file		= '';
 
 	/**
-	* Image-ID, just needed to update the exif-status
+	* Image-ID, just needed to update the Exif status
 	*/
 	public $image_id	= false;
 
@@ -104,7 +103,7 @@ class phpbb_ext_gallery_exif
 	* Intepret the values from the database, and read the data if we don't have it.
 	*
 	* @param	int		$status		Value of a status constant (see beginning of the class)
-	* @param	mixed	$data		Either an empty string or the serialized array of the exif from the database
+	* @param	mixed	$data		Either an empty string or the serialized array of the Exif from the database
 	*/
 	public function interpret($status, $data)
 	{
@@ -121,7 +120,7 @@ class phpbb_ext_gallery_exif
 	}
 
 	/**
-	* Read exif data from the image
+	* Read Exif data from the image
 	*/
 	public function read()
 	{
@@ -134,7 +133,7 @@ class phpbb_ext_gallery_exif
 
 		if (!empty($this->data["EXIF"]))
 		{
-			// Unset invalid exifs
+			// Unset invalid Exifs
 			foreach ($this->data as $key => $array)
 			{
 				if (!in_array($key, self::$allowed_groups))
@@ -276,10 +275,10 @@ class phpbb_ext_gallery_exif
 	}
 
 	/**
-	* Sends the exif into the template
+	* Sends the Exif into the template
 	*
-	* @param	bool	$expand_view	Shall we expand the exif data on page view or collapse?
-	* @param	string	$block			Name of the template loop the exifs are displayed in.
+	* @param	bool	$expand_view	Shall we expand the Exif data on page view or collapse?
+	* @param	string	$block			Name of the template loop the Exifs are displayed in.
 	*/
 	public function send_to_template($expand_view = true, $block = 'exif_value')
 	{
@@ -304,7 +303,7 @@ class phpbb_ext_gallery_exif
 	}
 
 	/**
-	* Save the new exif status in the database
+	* Save the new Exif status in the database
 	*/
 	public function set_status()
 	{
