@@ -30,7 +30,7 @@ class phpbb_ext_gallery_core_album_manage
 
 	private $u_action = '';
 
-	public function phpbb_gallery_album_manage($user_id, $parent_id, $u_action = '')
+	public function phpbb_ext_gallery_core_album_manage($user_id, $parent_id, $u_action = '')
 	{
 		$this->user_id = (int) $user_id;
 		$this->parent_id = (int) $parent_id;
@@ -88,7 +88,7 @@ class phpbb_ext_gallery_core_album_manage
 			}
 		}*/
 		// Validate the contest timestamps:
-		if ($album_data['album_type'] == phpbb_gallery_album::TYPE_CONTEST)
+		if ($album_data['album_type'] == phpbb_ext_gallery_core_album::TYPE_CONTEST)
 		{
 			$start_date_error = $date_error = false;
 			if (!preg_match('#(\\d{4})-(\\d{1,2})-(\\d{1,2}) (\\d{1,2}):(\\d{2})#', $contest_data['contest_start'], $m))
@@ -252,11 +252,11 @@ class phpbb_ext_gallery_core_album_manage
 			$album_data['album_id'] = (int) $db->sql_nextid();
 
 			// Type is contest, so create it...
-			if ($album_data['album_type'] == phpbb_gallery_album::TYPE_CONTEST)
+			if ($album_data['album_type'] == phpbb_ext_gallery_core_album::TYPE_CONTEST)
 			{
 				$contest_data_sql = $contest_data;
 				$contest_data_sql['contest_album_id'] = $album_data['album_id'];
-				$contest_data_sql['contest_marked'] = phpbb_gallery_image::IN_CONTEST;
+				$contest_data_sql['contest_marked'] = phpbb_ext_gallery_core_image::IN_CONTEST;
 
 				$sql = 'INSERT INTO ' . GALLERY_CONTESTS_TABLE . ' ' . $db->sql_build_array('INSERT', $contest_data_sql);
 				$db->sql_query($sql);
@@ -272,31 +272,31 @@ class phpbb_ext_gallery_core_album_manage
 		}
 		else
 		{
-			$row = phpbb_gallery_album::get_info($album_data_sql['album_id']);
+			$row = phpbb_ext_gallery_core_album::get_info($album_data_sql['album_id']);
 			$reset_marked_images = false;
 
-			if ($row['album_type'] == phpbb_gallery_album::TYPE_CONTEST && $album_data_sql['album_type'] != phpbb_gallery_album::TYPE_CONTEST)
+			if ($row['album_type'] == phpbb_ext_gallery_core_album::TYPE_CONTEST && $album_data_sql['album_type'] != phpbb_ext_gallery_core_album::TYPE_CONTEST)
 			{
 				// Changing a contest to album? No!
 				// Changing a contest to category? No!
 				$errors[] = $user->lang['ALBUM_WITH_CONTEST_NO_TYPE_CHANGE'];
 				return $errors;
 			}
-			else if ($row['album_type'] != phpbb_gallery_album::TYPE_CONTEST && $album_data_sql['album_type'] == phpbb_gallery_album::TYPE_CONTEST)
+			else if ($row['album_type'] != phpbb_ext_gallery_core_album::TYPE_CONTEST && $album_data_sql['album_type'] == phpbb_ext_gallery_core_album::TYPE_CONTEST)
 			{
 				// Changing a album to contest? No!
 				// Changing a category to contest? No!
 				$errors[] = $user->lang['ALBUM_NO_TYPE_CHANGE_TO_CONTEST'];
 				return $errors;
 			}
-			else if ($row['album_type'] == phpbb_gallery_album::TYPE_CAT && $album_data_sql['album_type'] == phpbb_gallery_album::TYPE_UPLOAD)
+			else if ($row['album_type'] == phpbb_ext_gallery_core_album::TYPE_CAT && $album_data_sql['album_type'] == phpbb_ext_gallery_core_album::TYPE_UPLOAD)
 			{
 				// Changing a category to a album? Yes!
 				// Reset the data (you couldn't upload directly in a cat, you must use a album)
 				$album_data_sql['album_images'] = $album_data_sql['album_images_real'] = $album_data_sql['album_last_image_id'] = $album_data_sql['album_last_user_id'] = $album_data_sql['album_last_image_time'] = $album_data_sql['album_contest'] = 0;
 				$album_data_sql['album_last_username'] = $album_data_sql['album_last_user_colour'] = $album_data_sql['album_last_image_name'] = '';
 			}
-			else if ($row['album_type'] == phpbb_gallery_album::TYPE_UPLOAD && $album_data_sql['album_type'] == phpbb_gallery_album::TYPE_CAT)
+			else if ($row['album_type'] == phpbb_ext_gallery_core_album::TYPE_UPLOAD && $album_data_sql['album_type'] == phpbb_ext_gallery_core_album::TYPE_CAT)
 			{
 				// Changing a album to a category? Yes!
 				// we're turning a uploadable album into a non-uploadable album
@@ -322,19 +322,19 @@ class phpbb_ext_gallery_core_album_manage
 					return array($user->lang['NO_ALBUM_ACTION']);
 				}
 			}
-			else if ($row['album_type'] == phpbb_gallery_album::TYPE_CONTEST && $album_data_sql['album_type'] == phpbb_gallery_album::TYPE_CONTEST)
+			else if ($row['album_type'] == phpbb_ext_gallery_core_album::TYPE_CONTEST && $album_data_sql['album_type'] == phpbb_ext_gallery_core_album::TYPE_CONTEST)
 			{
 				// Changing a contest to contest? Yes!
 				// We need to check for the contest_data
 				$row_contest = phpbb_gallery_contest::get_contest($album_data['album_id'], 'album');
 				$contest_data['contest_id'] = $row_contest['contest_id'];
-				if ($row_contest['contest_marked'] == phpbb_gallery_image::NO_CONTEST)
+				if ($row_contest['contest_marked'] == phpbb_ext_gallery_core_image::NO_CONTEST)
 				{
 					// If the old contest is finished, but the new one isn't, we need to remark the images!
 					// If we change it the other way round, the album.php will do the end on the first visit!
 					if (($row_contest['contest_start'] + $row_contest['contest_end']) > time())
 					{
-						$contest_data['contest_marked'] = phpbb_gallery_image::IN_CONTEST;
+						$contest_data['contest_marked'] = phpbb_ext_gallery_core_image::IN_CONTEST;
 						$reset_marked_images = true;
 					}
 				}
@@ -381,7 +381,7 @@ class phpbb_ext_gallery_core_album_manage
 				WHERE album_id = ' . $album_id;
 			$db->sql_query($sql);
 
-			if ($album_data_sql['album_type'] == phpbb_gallery_album::TYPE_CONTEST)
+			if ($album_data_sql['album_type'] == phpbb_ext_gallery_core_album::TYPE_CONTEST)
 			{
 				// Setting the contest id to the contest id is not really received well by some dbs. ;)
 				$contest_id = $contest_data['contest_id'];
@@ -397,7 +397,7 @@ class phpbb_ext_gallery_core_album_manage
 					$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 						SET image_contest_rank = 0,
 							image_contest_end = 0,
-							image_contest = ' . phpbb_gallery_image::IN_CONTEST . '
+							image_contest = ' . phpbb_ext_gallery_core_image::IN_CONTEST . '
 						WHERE image_album_id = ' . $album_id;
 					$db->sql_query($sql);
 				}
@@ -431,10 +431,10 @@ class phpbb_ext_gallery_core_album_manage
 		// Get the parent data
 		if ($to_id > 0)
 		{
-			$to_data = phpbb_gallery_album::get_info($to_id);
+			$to_data = phpbb_ext_gallery_core_album::get_info($to_id);
 		}
 
-		$moved_albums = phpbb_gallery_album::get_branch($this->user_id, $from_id, 'children', 'descending');
+		$moved_albums = phpbb_ext_gallery_core_album::get_branch($this->user_id, $from_id, 'children', 'descending');
 		$from_data = $moved_albums[0];
 		$diff = sizeof($moved_albums) * 2;
 
@@ -467,7 +467,7 @@ class phpbb_ext_gallery_core_album_manage
 		if ($to_id > 0)
 		{
 			// Retrieve $to_data again, it may have been changed...
-			$to_data = phpbb_gallery_album::get_info($to_id);
+			$to_data = phpbb_ext_gallery_core_album::get_info($to_id);
 
 			// Resync new parents
 			$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
@@ -530,7 +530,7 @@ class phpbb_ext_gallery_core_album_manage
 	{
 		global $db, $user, $cache;
 
-		$album_data = phpbb_gallery_album::get_info($album_id);
+		$album_data = phpbb_ext_gallery_core_album::get_info($album_id);
 
 		$errors = array();
 		$log_action_images = $log_action_albums = $images_to_name = $subalbums_to_name = '';
@@ -578,7 +578,7 @@ class phpbb_ext_gallery_core_album_manage
 		if ($action_subalbums == 'delete')
 		{
 			$log_action_albums = 'ALBUMS';
-			$rows = phpbb_gallery_album::get_branch($this->user_id, $album_id, 'children', 'descending', false);
+			$rows = phpbb_ext_gallery_core_album::get_branch($this->user_id, $album_id, 'children', 'descending', false);
 
 			foreach ($rows as $row)
 			{
@@ -634,7 +634,7 @@ class phpbb_ext_gallery_core_album_manage
 					$db->sql_freeresult($result);
 
 					// Grab new album data for correct tree updating later
-					$album_data = phpbb_gallery_album::get_info($album_id);
+					$album_data = phpbb_ext_gallery_core_album::get_info($album_id);
 
 					$sql = 'UPDATE ' . GALLERY_ALBUMS_TABLE . "
 						SET parent_id = $subalbums_to_id
@@ -745,7 +745,7 @@ class phpbb_ext_gallery_core_album_manage
 			SET image_album_id = ' . $to_id . ',
 				image_contest_rank = 0,
 				image_contest_end = 0,
-				image_contest = ' . phpbb_gallery_image::NO_CONTEST . '
+				image_contest = ' . phpbb_ext_gallery_core_image::NO_CONTEST . '
 			WHERE image_album_id = ' . $from_id;
 		$db->sql_query($sql);
 
@@ -777,8 +777,8 @@ class phpbb_ext_gallery_core_album_manage
 		if ($sync)
 		{
 			// Resync counters
-			phpbb_gallery_album::update_info($from_id);
-			phpbb_gallery_album::update_info($to_id);
+			phpbb_ext_gallery_core_album::update_info($from_id);
+			phpbb_ext_gallery_core_album::update_info($to_id);
 		}
 
 		return array();
@@ -798,8 +798,8 @@ class phpbb_ext_gallery_core_album_manage
 		$sql = 'SELECT image_user_id
 			FROM ' . GALLERY_IMAGES_TABLE . '
 			WHERE image_album_id = ' . $album_id . '
-				AND image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . '
-				AND image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN;
+				AND image_status <> ' . phpbb_ext_gallery_core_image::STATUS_UNAPPROVED . '
+				AND image_status <> ' . phpbb_ext_gallery_core_image::STATUS_ORPHAN;
 		$result = $db->sql_query($sql);
 
 		$image_counts = array();
@@ -824,7 +824,7 @@ class phpbb_ext_gallery_core_album_manage
 
 		if (!empty($deleted_images))
 		{
-			phpbb_gallery_image::delete_images($deleted_images, $filenames);
+			phpbb_ext_gallery_core_image::delete_images($deleted_images, $filenames);
 		}
 
 		$sql = 'DELETE FROM ' . LOG_TABLE . "
@@ -859,8 +859,8 @@ class phpbb_ext_gallery_core_album_manage
 		// Make sure the overall image & comment count is correct...
 		$sql = 'SELECT COUNT(image_id) AS num_images, SUM(image_comments) AS num_comments
 			FROM ' . GALLERY_IMAGES_TABLE . '
-			WHERE image_status <> ' . phpbb_gallery_image::STATUS_UNAPPROVED . '
-				AND image_status <> ' . phpbb_gallery_image::STATUS_ORPHAN;
+			WHERE image_status <> ' . phpbb_ext_gallery_core_image::STATUS_UNAPPROVED . '
+				AND image_status <> ' . phpbb_ext_gallery_core_image::STATUS_ORPHAN;
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);

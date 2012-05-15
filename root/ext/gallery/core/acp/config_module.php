@@ -89,6 +89,9 @@ class phpbb_ext_gallery_core_acp_config_module extends phpbb_ext_nickvergessen_t
 			}
 			$legend_count++;
 		}
+
+		// Add one last legend for the buttons
+		$vars['legend' . $legend_count] = '';
 		$return_ary['vars'] = $vars;
 
 		return $return_ary;
@@ -201,14 +204,6 @@ class phpbb_ext_gallery_core_acp_config_module extends phpbb_ext_nickvergessen_t
 					'disp_birthdays'		=> array('lang' => 'DISP_BIRTHDAYS',		'validate' => 'bool',	'type' => 'radio:yes_no'),
 					'disp_statistic'		=> array('lang' => 'DISP_STATISTIC',		'validate' => 'bool',	'type' => 'radio:yes_no'),
 				),
-
-				'FEED_SETTINGS'	=> array(
-					'feed_enable'			=> array('lang' => 'FEED_ENABLED',			'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'feed_enable_pegas'		=> array('lang' => 'FEED_ENABLED_PEGAS',	'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'feed_limit'			=> array('lang' => 'FEED_LIMIT',			'validate' => 'int',	'type' => 'text:7:3'),
-				),
-
-				''	=> array(),
 			),
 			//'tpl'	=> 'my_custom_templatefile',
 		),
