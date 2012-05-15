@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2011 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Gallery - Feed Extension
+* @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
@@ -32,7 +31,7 @@ if (!$phpbb_ext_gallery->config->get('feed_enable'))
 $mode		= request_var('mode', '');
 $album_id	= request_var('album_id', 0);
 
-$feed = new phpbb_ext_gallery_core_feed($album_id);
+$feed = new phpbb_ext_gallery_feed($album_id);
 
 if ($album_id)
 {
@@ -48,5 +47,10 @@ else
 $feed->send_header($config['sitename'], $config['site_desc'], $self_link, $back_link);
 
 $feed->send_images();
+
+$template->set_filenames(array(
+	'body' => 'gallery/feed_body.html',
+));
+$template->display('body');
 
 $feed->send_footer();

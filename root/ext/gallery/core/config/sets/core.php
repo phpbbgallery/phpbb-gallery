@@ -76,10 +76,6 @@ class phpbb_ext_gallery_core_config_sets_core implements phpbb_ext_nickvergessen
 			'disp_total_images'			=> true,
 			'disp_whoisonline'			=> true,
 
-			'feed_enable'			=> true,
-			'feed_enable_pegas'		=> true,
-			'feed_limit'			=> 10,
-
 			'gdlib_version'		=> 2,
 
 			'hotlinking_domains'	=> 'flying-bits.org',

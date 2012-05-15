@@ -61,7 +61,7 @@ class phpbb_ext_gallery_core
 	}
 
 	/**
-	* Constructor: setup() also creates a phpbb-session, if you already have one, be sure to use init()
+	* setup() also creates a phpbb-session, if you already have one, be sure to use init()
 	*/
 	public function setup($lang_set = false, $update_session = true)
 	{
@@ -77,19 +77,8 @@ class phpbb_ext_gallery_core
 
 		// Start session management
 		$this->phpbb_user->session_begin($update_session);
-		/**
-		* Maybe we need this for the feed
-		if (!empty($config['feed_http_auth']) && request_var('auth', '') == 'http')
-		{
-			phpbb_http_login(array(
-				'auth_message'	=> 'Feed',
-				'viewonline'	=> request_var('viewonline', true),
-			));
-		}
-		*/
 		$this->phpbb_auth->acl($this->phpbb_user->data);
 		$this->phpbb_user->setup($lang_sets);
-		$this->phpbb_user->session_begin($update_session);
 
 		$this->phpbb_user->add_lang_ext('gallery/core', array('gallery', 'info_acp_gallery'));
 
@@ -149,18 +138,15 @@ class phpbb_ext_gallery_core
 			'U_GALLERY_SEARCH'				=> $this->url->append_sid('search'),
 			'U_MVC_IGNORE'					=> ($this->phpbb_auth->acl_get('a_') && !$this->config->get('mvc_ignore')) ? $this->url->append_sid('index', 'mvc_ignore=' . generate_link_hash('mvc_ignore')) : '',
 			'GALLERY_TRANSLATION_INFO'		=> (!empty($this->user->lang['GALLERY_TRANSLATION_INFO'])) ? $this->user->lang['GALLERY_TRANSLATION_INFO'] : '',
-
-			'S_GALLERY_FEEDS'				=> $this->config->get('feed_enable'),
-			'U_GALLERY_FEED'				=> $this->url->append_sid('feed'),
 		));
-
-		// Okay, this is not the best way, but we disable the phpbb feeds and display the ones of the gallery.
-		$config['feed_overall'] = $config['feed_overall_forums'] = $config['feed_topics_new'] = $config['feed_topics_active'] = false;
 
 		$this->phpbb_template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> 'Gallery Ext',//@todo: $this->phpbb_user->lang['GALLERY'],
 			'U_VIEW_FORUM'	=> $this->url->append_sid('index'),
 		));
+
+		global $phpbb_dispatcher;
+		$phpbb_dispatcher->trigger_event('gallery.core.setup');
 	}
 
 	/**
@@ -190,6 +176,8 @@ class phpbb_ext_gallery_core
 			$this->init_popup();
 		}
 
+		global $phpbb_dispatcher;
+		$phpbb_dispatcher->trigger_event('gallery.core.init');
 	}
 
 	/**
@@ -210,5 +198,8 @@ class phpbb_ext_gallery_core
 			'U_POPUP_RECENT'	=> $this->url->append_sid('search', 'search_id=recent'),
 			'U_POPUP_UPLOAD'	=> ($can_upload) ? $this->url->append_sid('posting', 'mode=upload') : '',
 		));
+
+		global $phpbb_dispatcher;
+		$phpbb_dispatcher->trigger_event('gallery.core.init_popup');
 	}
 }

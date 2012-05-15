@@ -1,10 +1,9 @@
 <?php
 /**
 *
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2011 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package Gallery - Feed Extension
+* @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
@@ -17,7 +16,7 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
-class phpbb_ext_gallery_core_feed
+class phpbb_ext_gallery_feed
 {
 	/**
 	* Separator for title elements to separate items (for example album / image_name)
@@ -151,11 +150,11 @@ class phpbb_ext_gallery_core_feed
 
 	public function send_images()
 	{
-		global $user, $phpbb_ext_gallery;
+		global $user, $phpbb_ext_gallery, $template;
 
 		foreach ($this->images_data as $image_id => $row)
 		{
-			$u_thumbnail = $phpbb_ext_gallery->url->append_sid('full', 'image', 'mode=thumbnail&amp;album_id=' . $row['image_album_id'] . '&amp;image_id=' . $image_id, true, '');
+			$url_thumbnail = $phpbb_ext_gallery->url->append_sid('full', 'image', 'mode=thumbnail&amp;album_id=' . $row['image_album_id'] . '&amp;image_id=' . $image_id, true, '');
 			$url_imagepage = $phpbb_ext_gallery->url->append_sid('full', 'image_page', 'album_id=' . $row['image_album_id'] . '&amp;image_id=' . $image_id, true, '');
 			$url_fullsize = $phpbb_ext_gallery->url->append_sid('full', 'image', 'album_id=' . $row['image_album_id'] . '&amp;image_id=' . $image_id, true, '');
 			$title = censor_text($row['album_name'] . ' ' . $this->separator . ' ' . $row['image_name']);
@@ -179,53 +178,45 @@ class phpbb_ext_gallery_core_feed
 			}
 			else
 			{
-				$u_profile = $phpbb_ext_gallery->url->append_sid('board', 'memberlist', 'mode=viewprofile&amp;u=' . $row['image_user_id'], true, '');
-				$image_username = '<a href="' . $u_profile . '">' . $row['image_username'] . '</a>';
+				$url_profile = $phpbb_ext_gallery->url->append_sid('board', 'memberlist', 'mode=viewprofile&amp;u=' . $row['image_user_id'], true, '');
+				$image_username = '<a href="' . $url_profile . '">' . $row['image_username'] . '</a>';
 			}
 
-			echo '<item>';
-			echo '<title>' . $title . '</title>';
-			echo '<link>' . $url_imagepage . '</link>';
-			echo '<guid>' . $url_imagepage . '</guid>';
-			echo '<pubDate>' . self::format_date($row['image_time']) . '</pubDate>';
-			echo '<description>&lt;img src="' . $u_thumbnail . '" alt="" /&gt;&lt;br /&gt;<![CDATA[' . $description;
-			echo '<p>' . $user->lang['STATISTICS'] . ': ' . $image_username . ' ' . $this->separator_stats . ' ' . $user->format_date($row['image_time']) . '</p>';
-			echo ']]></description>';
+			$template->assign_block_vars('item_row', array(
+				'TITLE'			=> $title,
+				'IMAGE_TIME'	=> self::format_date($row['image_time']),
+				'DESCRIPTION'	=> $description,
+				'STATISTIC'		=> $user->lang['STATISTICS'] . ': ' . $image_username . ' ' . $this->separator_stats . ' ' . $user->format_date($row['image_time']),
+				'MIME_TYPE'		=> phpbb_ext_gallery_core_file::mimetype_by_filename($row['image_filename']),
 
-			echo '<media:content url="' . $url_fullsize . '" type="' . phpbb_ext_gallery_core_file::mimetype_by_filename($row['image_filename']) . '" medium="image" isDefault="true" expression="full">';
-			echo '	<media:title>' . $title . '</media:title>';
-			echo '	<media:description type="html"><![CDATA[' . $description . '';
-			echo '	<p>' . $user->lang['STATISTICS'] . ': ' . $image_username . ' ' . $this->separator_stats . ' ' . $user->format_date($row['image_time']) . '</p>';
-			echo '	]]></media:description>';
-			echo '	<media:thumbnail url="' . $u_thumbnail . '" />';
-			echo '</media:content>';
-			echo '</item>' . "\n";
+				'U_VIEWIMAGE'	=> $url_imagepage,
+				'U_FULL_IMAGE'	=> $url_fullsize,
+				'U_THUMBNAIL'	=> $url_thumbnail,
+			));
 		}
 	}
 
 	public function send_header($title, $description, $self_link, $back_link)
 	{
+		global $template;
+
 		header("Content-Type: application/atom+xml; charset=UTF-8");
 		if ($this->feed_time)
 		{
 			header("Last-Modified: " . gmdate('D, d M Y H:i:s', $this->feed_time) . ' GMT');
 		}
 
-		echo '<?xml version="1.0" encoding="utf-8" standalone="yes"?>' . "\n";
-		echo '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">' . "\n";
+		$template->assign_vars(array(
+			'TITLE'			=> $title,
+			'DESCRIPTION'	=> $description,
 
-		echo '<channel>' . "\n";
-		echo '<atom:link rel="self" type="application/atom+xml" href="' . $self_link . '" />' . "\n";
-		echo '<title>' . $title . '</title>' . "\n";
-		echo '<link>' . $back_link . '</link>' . "\n";
-		echo '<description>' . $description . '</description>' . "\n";
+			'U_SELF_LINK'		=> $self_link,
+			'U_BACK_LINK'		=> $back_link,
+		));
 	}
 
 	public function send_footer()
 	{
-		echo '</channel>' . "\n";
-		echo '</rss>' . "\n";
-
 		garbage_collection();
 		exit_handler();
 	}
