@@ -126,10 +126,12 @@ class phpbb_ext_gallery_favorite_event_favorite_listener implements EventSubscri
 		global $user, $template, $phpbb_ext_gallery;
 
 		$favorite_mode = (($event['image_data']['favorite_id']) ?  'un' : '') . 'favorite';
+		$favorite_mode_toggle = ((!$event['image_data']['favorite_id']) ?  'un' : '') . 'favorite';
 		$template->assign_vars(array(
-			'S_FAVORITE_NAME'	=> ($event['image_data']['favorite_id']) ? $user->lang['UNFAVORITE_IMAGE'] : $user->lang['FAVORITE_IMAGE'],
-			'S_FAVORITE_TOOGLE'	=> (!$event['image_data']['favorite_id']) ? $user->lang['UNFAVORITE_IMAGE'] : $user->lang['FAVORITE_IMAGE'],
-			'U_FAVORITE_IMAGE'	=> ($user->data['user_id'] != ANONYMOUS) ? $phpbb_ext_gallery->url->append_sid('image_page', "mode=$favorite_mode&amp;album_id={$event['image_data']['image_album_id']}&amp;image_id={$event['image_id']}&amp;hash=" . generate_link_hash("{$favorite_mode}_{$event['image_id']}")) : '',
+			'S_FAVORITE_NAME'			=> ($event['image_data']['favorite_id']) ? $user->lang['UNFAVORITE_IMAGE'] : $user->lang['FAVORITE_IMAGE'],
+			'S_FAVORITE_NAME_TOGGLE'	=> (!$event['image_data']['favorite_id']) ? $user->lang['UNFAVORITE_IMAGE'] : $user->lang['FAVORITE_IMAGE'],
+			'U_FAVORITE_IMAGE'			=> ($user->data['user_id'] != ANONYMOUS) ? $phpbb_ext_gallery->url->append_sid('image_page', "mode=$favorite_mode&amp;album_id={$event['image_data']['image_album_id']}&amp;image_id={$event['image_id']}&amp;hash=" . generate_link_hash("{$favorite_mode}_{$event['image_id']}")) : '',
+			'U_FAVORITE_IMAGE_TOGGLE'	=> ($user->data['user_id'] != ANONYMOUS) ? $phpbb_ext_gallery->url->append_sid('image_page', "mode=$favorite_mode_toggle&amp;album_id={$event['image_data']['image_album_id']}&amp;image_id={$event['image_id']}&amp;hash=" . generate_link_hash("{$favorite_mode_toggle}_{$event['image_id']}")) : '',
 		));
 	}
 
