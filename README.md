@@ -2,7 +2,7 @@
 
 © 2012 - [nickvergessen](http://www.flying-bits.org)
 
-With phpBB 3.1 MODs will mostly be replaces with Extensions. The main difference is, that extensions are designed (by code) in a different way and won't require code edits. So I started to port the Gallery MOD to a Gallery Extension. While refactoring the code, I also split it into several Extensions.
+With phpBB 3.1 MODs will mostly be replaced with Extensions. The main difference is, that extensions are designed (by code) in a different way and won't require code edits. So I started to port the Gallery MOD to a Gallery Extension. While refactoring the code, I also split it into several Extensions.
 
 The aim behind this splitting is, to make it easily possible to disable some features and also be able to remove their code completly from the forum.
 
