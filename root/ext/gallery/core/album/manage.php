@@ -732,7 +732,7 @@ class phpbb_ext_gallery_core_album_manage
 	*/
 	public function move_album_content($from_id, $to_id, $sync = true)
 	{
-		global $cache, $db;
+		global $cache, $db, $phpbb_dispatcher;
 
 		$sql = 'UPDATE ' . LOG_TABLE . "
 			SET album_id = $to_id
