@@ -811,7 +811,7 @@ class phpbb_ext_gallery_core_acp_main_module
 
 	function cleanup()
 	{
-		global $auth, $cache, $db, $template, $user, $phpbb_ext_gallery;
+		global $auth, $cache, $db, $template, $user, $phpbb_ext_gallery, $phpbb_dispatcher;
 
 		$delete = (isset($_POST['delete'])) ? true : false;
 		$prune = (isset($_POST['prune'])) ? true : false;
@@ -952,11 +952,12 @@ class phpbb_ext_gallery_core_acp_main_module
 
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 			$cache->destroy('sql', GALLERY_COMMENTS_TABLE);
-			$cache->destroy('sql', GALLERY_FAVORITES_TABLE);
 			$cache->destroy('sql', GALLERY_IMAGES_TABLE);
 			$cache->destroy('sql', GALLERY_RATES_TABLE);
 			$cache->destroy('sql', GALLERY_REPORTS_TABLE);
 			$cache->destroy('sql', GALLERY_WATCH_TABLE);
+
+			$phpbb_dispatcher->trigger_event('gallery.core.acp.main.cleanup_finished', compact($vars));
 
 			$message_string = '';
 			foreach ($message as $lang_key)

@@ -1,9 +1,8 @@
 <?php
 /**
 *
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
+* @package Gallery - Favorite Extension
+* @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
 */
@@ -17,8 +16,13 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
-class phpbb_ext_gallery_core_favorite
+class phpbb_ext_gallery_favorite
 {
+	/**
+	* Default value for new users
+	*/
+	const DEFAULT_SUBSCRIBE = true;
+
 	/**
 	* Add to favorites
 	*
@@ -31,6 +35,23 @@ class phpbb_ext_gallery_core_favorite
 
 		$image_ids = self::cast_mixed_int2array($image_ids);
 		$user_id = (int) (($user_id) ? $user_id : $user->data['user_id']);
+		$sql = 'SELECT image_id
+			FROM ' . GALLERY_FAVORITES_TABLE . '
+			WHERE user_id = ' . $user_id . '
+				AND ' . $db->sql_in_set('image_id', $image_ids);
+		$result = $db->sql_query($sql);
+		$already_favorite = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$already_favorite[] = (int) $row['image_id'];
+		}
+		$db->sql_freeresult($result);
+
+		$image_ids = array_diff($image_ids, $already_favorite);
+		if (empty($image_ids))
+		{
+			return;
+		}
 
 		foreach ($image_ids as $image_id)
 		{
@@ -65,6 +86,7 @@ class phpbb_ext_gallery_core_favorite
 			WHERE user_id = ' . $user_id . '
 				AND ' . $db->sql_in_set('image_id', $image_ids);
 		$db->sql_query($sql);
+
 		$sql = 'UPDATE ' . GALLERY_IMAGES_TABLE . '
 			SET image_favorited = image_favorited - 1
 			WHERE ' . $db->sql_in_set('image_id', $image_ids);
@@ -75,7 +97,7 @@ class phpbb_ext_gallery_core_favorite
 	* Delete given image_ids from the favorites
 	*
 	* @param	mixed	$image_ids		Array or integer with image_id where we delete from the favorites.
-	* @param	bool	$reset_votes	Shall we also reset the average? We can save that query, when the images are deleted anyway.
+	* @param	bool	$reset_votes	Shall we also reset the number of favorites? We can save that query, when the images are deleted anyway.
 	*/
 	static public function delete_favorites($image_ids, $reset_votes = false)
 	{

@@ -765,9 +765,11 @@ class phpbb_ext_gallery_core_album_manage
 
 		phpbb_gallery_notification::delete_albums($from_id);
 
+		$vars = array('from_id', 'to_id', 'sync');
+		extract($phpbb_dispatcher->trigger_event('gallery.core.album.manage.move_album_content', compact($vars)));
+
 		$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 		$cache->destroy('sql', GALLERY_COMMENTS_TABLE);
-		$cache->destroy('sql', GALLERY_FAVORITES_TABLE);
 		$cache->destroy('sql', GALLERY_IMAGES_TABLE);
 		$cache->destroy('sql', GALLERY_RATES_TABLE);
 		$cache->destroy('sql', GALLERY_REPORTS_TABLE);
@@ -790,7 +792,7 @@ class phpbb_ext_gallery_core_album_manage
 	*/
 	public function delete_album_content($album_id)
 	{
-		global $cache, $db;
+		global $cache, $db, $phpbb_dispatcher;
 
 		$album_id = (int) $album_id;
 
@@ -868,9 +870,11 @@ class phpbb_ext_gallery_core_album_manage
 		phpbb_gallery_config::set('num_images', $row['num_images']);
 		phpbb_gallery_config::set('num_comments', $row['num_comments']);
 
+		$vars = array('album_id');
+		extract($phpbb_dispatcher->trigger_event('gallery.core.album.manage.delete_album_content', compact($vars)));
+
 		$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 		$cache->destroy('sql', GALLERY_COMMENTS_TABLE);
-		$cache->destroy('sql', GALLERY_FAVORITES_TABLE);
 		$cache->destroy('sql', GALLERY_IMAGES_TABLE);
 		$cache->destroy('sql', GALLERY_RATES_TABLE);
 		$cache->destroy('sql', GALLERY_REPORTS_TABLE);

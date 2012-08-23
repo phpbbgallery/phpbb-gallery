@@ -127,7 +127,6 @@ class phpbb_ext_gallery_core_ucp_main_module
 			$gallery_settings = array(
 				'watch_own'				=> request_var('watch_own',		false),
 				'watch_com'				=> request_var('watch_com',		false),
-				'watch_favo'			=> request_var('watch_favo',	false),
 				'user_allow_comments'	=> request_var('allow_comments',false),
 			);
 			$additional_settings = array();
@@ -159,7 +158,6 @@ class phpbb_ext_gallery_core_ucp_main_module
 
 			'S_WATCH_OWN'		=> $phpbb_ext_gallery->user->get_data('watch_own'),
 			'S_WATCH_COM'		=> $phpbb_ext_gallery->user->get_data('watch_com'),
-			'S_WATCH_FAVO'		=> $phpbb_ext_gallery->user->get_data('watch_favo'),
 			'S_ALLOW_COMMENTS'	=> $phpbb_ext_gallery->user->get_data('user_allow_comments'),
 			'S_COMMENTS_ENABLED'=> $phpbb_ext_gallery->config->get('allow_comments') && $phpbb_ext_gallery->config->get('comment_user_control'),
 		));
@@ -840,9 +838,11 @@ class phpbb_ext_gallery_core_ucp_main_module
 				$db->sql_query($sql);
 			}
 
+			$vars = array('album_id', 'deleted_albums');
+			extract($phpbb_dispatcher->trigger_event('gallery.core.ucp.delete_album', compact($vars)));
+
 			$cache->destroy('sql', GALLERY_ALBUMS_TABLE);
 			$cache->destroy('sql', GALLERY_COMMENTS_TABLE);
-			$cache->destroy('sql', GALLERY_FAVORITES_TABLE);
 			$cache->destroy('sql', GALLERY_IMAGES_TABLE);
 			$cache->destroy('sql', GALLERY_RATES_TABLE);
 			$cache->destroy('sql', GALLERY_REPORTS_TABLE);

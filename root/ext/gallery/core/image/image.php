@@ -54,10 +54,10 @@ class phpbb_ext_gallery_core_image
 	*/
 	static public function get_info($image_id, $extended_info = true)
 	{
-		global $db, $user;
+		global $db, $user, $phpbb_dispatcher;
 
 		$sql_array = array(
-			'SELECT'		=> '*',
+			'SELECT'		=> 'i.*, w.*',
 			'FROM'			=> array(GALLERY_IMAGES_TABLE => 'i'),
 			'WHERE'			=> 'i.image_id = ' . (int) $image_id,
 		);
@@ -69,12 +69,12 @@ class phpbb_ext_gallery_core_image
 					'FROM'		=> array(GALLERY_WATCH_TABLE => 'w'),
 					'ON'		=> 'i.image_id = w.image_id AND w.user_id = ' . $user->data['user_id'],
 				),
-				array(
-					'FROM'		=> array(GALLERY_FAVORITES_TABLE => 'f'),
-					'ON'		=> 'i.image_id = f.image_id AND f.user_id = ' . $user->data['user_id'],
-				),
 			);
 		}
+
+		$vars = array('image_id', 'extended_info', 'sql_array');
+		extract($phpbb_dispatcher->trigger_event('gallery.core.image.get_data', compact($vars)));
+
 		$sql = $db->sql_build_query('SELECT', $sql_array);
 
 		$result = $db->sql_query($sql);
@@ -156,12 +156,13 @@ class phpbb_ext_gallery_core_image
 		}
 
 		// Delete the ratings...
-		phpbb_gallery_image_favorite::delete_favorites($images);
 		phpbb_gallery_image_rating::delete_ratings($images);
-
 		phpbb_gallery_comment::delete_images($images);
 		phpbb_gallery_notification::delete_images($images);
 		phpbb_gallery_report::delete_images($images);
+
+		$vars = array('images', 'filenames');
+		extract($phpbb_dispatcher->trigger_event('gallery.core.image.delete_images', compact($vars)));
 
 		$sql = 'SELECT image_album_id, image_contest_rank
 			FROM ' . GALLERY_IMAGES_TABLE . '
