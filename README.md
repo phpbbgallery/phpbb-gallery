@@ -12,9 +12,10 @@ So which Extensions will the Gallery include?
 
 ###Already implemented
 
+* Exif Data
+* Favorite
 * Feed
     * todo: _Add links back to overall_header.html when the template event is commited._
-* Exif Data
 
 ###Planned
 
@@ -27,7 +28,6 @@ So which Extensions will the Gallery include?
 * ACP Massimport
 * Notification (Mail)
 * Report
-* Favorite
 * HighslideJS/Lytebox/Shadowbox/etc.
 
 ###Ideas
