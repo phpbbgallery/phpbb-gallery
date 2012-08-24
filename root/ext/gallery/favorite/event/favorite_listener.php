@@ -85,7 +85,7 @@ class phpbb_ext_gallery_favorite_event_favorite_listener implements EventSubscri
 	public function ucp_set_settings_nosubmit()
 	{
 		global $template, $user, $phpbb_ext_gallery;
-		$user->add_lang_ext('gallery/exif', 'exif');
+		$user->add_lang_ext('gallery/favorite', 'favorite');
 
 		$template->assign_vars(array(
 			'S_WATCH_FAVORITES'		=> $phpbb_ext_gallery->user->get_data('watch_favo'),
@@ -124,6 +124,8 @@ class phpbb_ext_gallery_favorite_event_favorite_listener implements EventSubscri
 	public function viewimage($event)
 	{
 		global $user, $template, $phpbb_ext_gallery;
+
+		$user->add_lang_ext('gallery/favorite', 'favorite');
 
 		$favorite_mode = (($event['image_data']['favorite_id']) ?  'un' : '') . 'favorite';
 		$favorite_mode_toggle = ((!$event['image_data']['favorite_id']) ?  'un' : '') . 'favorite';

@@ -58,7 +58,6 @@ $lang = array_merge($lang, array(
 
 	'NEED_INITIALISE'				=> 'You don’t have a personal album yet.',
 	'NO_ALBUM_STEALING'				=> 'You are not allowed to manage the Album of other users.',
-	'NO_FAVORITES'					=> 'You don’t have any favorites.',
 	'NO_MORE_SUBALBUMS_ALLOWED'		=> 'You added your maximum of subalbums to your personal album',
 	'NO_PARENT_ALBUM'				=> '&laquo;-- no parent',
 	'NO_PERSALBUM_ALLOWED'			=> 'You don’t have the permissions create your personal album',
@@ -71,17 +70,13 @@ $lang = array_merge($lang, array(
 	'PARSE_URLS'					=> 'Parse links',
 	'PERSONAL_ALBUM'				=> 'Personal album',
 
-	'REMOVE_FROM_FAVORITES'			=> 'Remove from favorites',
-
 	'UNSUBSCRIBE'					=> 'stop watching',
 	'USER_ALLOW_COMMENTS'			=> 'Allow users to comment your images',
 
-	'YOUR_FAVORITE_IMAGES'			=> 'Here you can see your favorite-images. You may remove them, if you don’t like them anymore.',
 	'YOUR_SUBSCRIPTIONS'			=> 'Here you see albums and images you get notified on.',
 
 	'WATCH_CHANGED'					=> 'Settings stored',
 	'WATCH_COM'						=> 'Subscribe commented images by default',
-	'WATCH_FAVO'					=> 'Subscribe favorite images by default',
 	'WATCH_NOTE'					=> 'This option only affects on new images. All other images need to be added by the “subscribe image“ option.',
 	'WATCH_OWN'						=> 'Subscribe own images by default',
 ));

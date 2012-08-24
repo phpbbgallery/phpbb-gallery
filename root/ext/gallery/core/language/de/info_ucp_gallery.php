@@ -25,7 +25,6 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'UCP_GALLERY'						=> 'Galerie',
-	'UCP_GALLERY_FAVORITES'				=> 'Lieblingsbilder verwalten',
 	'UCP_GALLERY_PERSONAL_ALBUMS'		=> 'Persönliche Alben verwalten',
 	'UCP_GALLERY_SETTINGS'				=> 'Persönliche Einstellungen',
 	'UCP_GALLERY_WATCH'					=> 'Benachrichtigungen verwalten',

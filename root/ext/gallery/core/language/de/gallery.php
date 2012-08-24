@@ -122,8 +122,6 @@ $lang = array_merge($lang, array(
 	'EDITED_TIME_TOTAL'				=> 'Zuletzt bearbeitet von %s am %s; insgesamt %d mal bearbeitet',
 	'EDITED_TIMES_TOTAL'			=> 'Zuletzt bearbeitet von %s am %s; insgesamt %d mal bearbeitet',
 
-	'FAVORITE_IMAGE'				=> 'zu Lieblingsbildern hinzufügen',
-	'FAVORITED_IMAGE'				=> 'Das Bild wurde zu deinen Lieblingsbildern hinzugefügt.',
 	'FILE'							=> 'Datei',
 	'FILE_SIZE'						=> 'Dateigröße',
 	'FILETYPE_MIMETYPE_MISMATCH'	=> 'Der Datei-Typ von „<strong>%1$s</strong>“ Stimmt nicht mit dem Mime-Typ (%2$s) überein.',
@@ -275,9 +273,6 @@ $lang = array_merge($lang, array(
 		2	=> 'Persönliche Galerien insgesamt: <strong>%d</strong>',
 	),
 
-	'UNFAVORITE_IMAGE'				=> 'aus Lieblingsbildern entfernen',
-	'UNFAVORITED_IMAGE'				=> 'Das Bild wurde aus deinen Lieblingsbildern entfernt.',
-	'UNFAVORITED_IMAGES'			=> 'Die Bilder wurde aus deinen Lieblingsbildern entfernt.',
 	'UNLOCK_IMAGE'					=> 'Bild entsperren',
 	'UNWATCH_ALBUM'					=> 'Album nicht mehr beobachten',
 	'UNWATCH_IMAGE'					=> 'Bild nicht mehr beobachten',

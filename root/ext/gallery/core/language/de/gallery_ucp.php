@@ -58,7 +58,6 @@ $lang = array_merge($lang, array(
 
 	'NEED_INITIALISE'				=> 'Du hast bisher noch kein Subalbum.',
 	'NO_ALBUM_STEALING'				=> 'Du bist nicht berechtigt Alben von anderen Benutzern zu verwalten.',
-	'NO_FAVORITES'					=> 'Du hast keine Lieblingsbilder.',
 	'NO_MORE_SUBALBUMS_ALLOWED'		=> 'Du hast bereits die maximale Anzahl von Subalben zu Deinem persönlichem Album hinzugefügt.',
 	'NO_PARENT_ALBUM'				=> '&laquo;-- kein übergeordnetes Album',
 	'NO_PERSALBUM_ALLOWED'			=> 'Du bist nicht berechtigt ein persönliches Album zu erstellen.',
@@ -71,17 +70,13 @@ $lang = array_merge($lang, array(
 	'PARSE_URLS'					=> 'Links erkennen',
 	'PERSONAL_ALBUM'				=> 'Persönliches Album',
 
-	'REMOVE_FROM_FAVORITES'			=> 'Aus den Lieblingsbildern entfernen',
-
 	'UNSUBSCRIBE'					=> 'nicht mehr beobachten',
 	'USER_ALLOW_COMMENTS'			=> 'Benutzern erlauben deine Bilder zu kommentieren',
 
-	'YOUR_FAVORITE_IMAGES'			=> 'Hier siehst du deine Lieblingsbilder. Du kannst sie auch wieder entfernen, wenn sie dir nicht gefallen.',
 	'YOUR_SUBSCRIPTIONS'			=> 'Hier siehst du die Bilder und Alben, bei denen du benachrichtigt wirst.',
 
 	'WATCH_CHANGED'					=> 'Einstellungen gespeichert',
 	'WATCH_COM'						=> 'Kommentierte Bilder standardmässig beobachten',
-	'WATCH_FAVO'					=> 'Lieblingsbilder standardmässig beobachten',
 	'WATCH_NOTE'					=> 'Die Einstellung wirkt sich nur auf neue Bilder aus. Andere Bilder musst du über die Option „Bild beobachten“ hinzufügen',
 	'WATCH_OWN'						=> 'Eigene Bilder standardmässig beobachten',
 ));

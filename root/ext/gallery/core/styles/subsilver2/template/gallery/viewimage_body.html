@@ -8,10 +8,8 @@
 			<table width="100%" cellspacing="0">
 			<tr>
 				<td class="nav" nowrap="nowrap">
-				<!-- IF not S_IS_BOT -->
-					<!-- IF U_WATCH_TOPIC -->&nbsp;<a href="{U_WATCH_TOPIC}" title="{L_WATCH_TOPIC}">{L_WATCH_TOPIC}</a><!-- IF U_BOOKMARK_TOPIC --> |<!-- ENDIF --><!-- ENDIF -->
-					<!-- IF U_BOOKMARK_TOPIC -->&nbsp;<a href="{U_BOOKMARK_TOPIC}" title="{L_BOOKMARK_TOPIC}">{L_BOOKMARK_TOPIC}</a><!-- ENDIF -->
-				<!-- ENDIF -->
+				<!-- IF not S_IS_BOT and U_WATCH_TOPIC -->&nbsp;<a href="{U_WATCH_TOPIC}" title="{L_WATCH_TOPIC}">{L_WATCH_TOPIC}</a><!-- IF U_BOOKMARK_TOPIC --> |<!-- ENDIF --><!-- ENDIF -->
+					<!-- EVENT gallery_viewimage_actions -->
 				</td>
 			</tr>
 			</table>

@@ -31,7 +31,8 @@ class phpbb_ext_gallery_favorite_ucp_main_module
 		$phpbb_ext_gallery->init();
 		$phpbb_ext_gallery->url->_include('functions_display', 'phpbb');
 
-		$user->add_lang_ext('gallery/core', array('gallery', 'gallery_acp', 'gallery_mcp', 'gallery_ucp'));
+		$user->add_lang_ext('gallery/core', 'gallery');
+		$user->add_lang_ext('gallery/favorite', 'favorite');
 		$this->tpl_name = 'gallery/ucp_gallery_favorite';
 		add_form_key('ucp_gallery');
 
