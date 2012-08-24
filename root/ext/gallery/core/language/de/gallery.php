@@ -309,6 +309,10 @@ $lang = array_merge($lang, array(
 		2	=> '%s Bilder',
 	),
 	'VIEW_IMAGE'					=> 'Bild ansehen',
+	'VIEW_IMAGE_COMMENTS'			=> array(
+		1	=> '1 Kommentar',
+		2	=> '%s Kommentare',
+	),
 	'VIEW_LATEST_IMAGE'				=> 'Das neueste Bild ansehen',
 	'VIEW_SEARCH_RECENT'			=> 'Neueste Bilder',
 	'VIEW_SEARCH_RANDOM'			=> 'Zufällige Bilder',

@@ -508,14 +508,17 @@ if (($phpbb_ext_gallery->config->get('allow_comments') && $phpbb_ext_gallery->au
 		}
 		$db->sql_freeresult($result);
 
+		phpbb_generate_template_pagination($template, $phpbb_ext_gallery->url->append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id&amp;sort_order=$sort_order"), 'pagination', 'start', $image_data['image_comments'], $config['posts_per_page'], $start);
+
 		$template->assign_vars(array(
+			'TOTAL_COMMENTS'	=> $user->lang('VIEW_IMAGE_COMMENTS', $image_data['image_comments']),
+			'PAGE_NUMBER'		=> phpbb_on_page($template, $user, $phpbb_ext_gallery->url->append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id&amp;sort_order=$sort_order"), $image_data['image_comments'], $config['posts_per_page'], $start),
+
 			'DELETE_IMG'		=> $user->img('icon_post_delete', 'DELETE_COMMENT'),
 			'EDIT_IMG'			=> $user->img('icon_post_edit', 'EDIT_COMMENT'),
 			'QUOTE_IMG'			=> $user->img('icon_post_quote', 'QUOTE_COMMENT'),
 			'INFO_IMG'			=> $user->img('icon_post_info', 'IP'),
 			'MINI_POST_IMG'		=> $user->img('icon_post_target', 'COMMENT'),
-			'PAGE_NUMBER'		=> sprintf($user->lang['PAGE_OF'], (floor($start / $config['posts_per_page']) + 1), ceil($image_data['image_comments'] / $config['posts_per_page'])),
-			'PAGINATION'		=> generate_pagination($phpbb_ext_gallery->url->append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id&amp;sort_order=$sort_order"), $image_data['image_comments'], $config['posts_per_page'], $start),
 		));
 	}
 }

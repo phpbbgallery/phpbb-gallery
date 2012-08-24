@@ -46,9 +46,14 @@
 		</div>
 	<!-- ENDIF -->
 
-	<!-- IF PAGINATION or TOTAL_IMAGES -->
+	<!-- IF .pagination or TOTAL_IMAGES -->
 		<div class="pagination">
-			{TOTAL_IMAGES}<!-- IF PAGINATION --> &bull; <a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+			{TOTAL_IMAGES}
+			<!-- IF .pagination -->
+				 &bull; <!-- INCLUDE pagination.html -->
+			<!-- ELSE -->
+				 &bull; {PAGE_NUMBER}
+			<!-- ENDIF -->
 		</div>
 	<!-- ENDIF -->
 
@@ -85,16 +90,24 @@
 	</fieldset>
 	</form>
 	<hr />
-	<!-- IF .imagerow -->
+	<!-- IF .imageblock -->
 	<div class="topic-actions">
 		<!-- IF U_UPLOAD_IMAGE -->
 			<div class="buttons">
 				<div class="<!-- IF S_IS_LOCKED -->locked-icon<!-- ELSE -->upload-icon<!-- ENDIF -->"><a href="{U_UPLOAD_IMAGE}" title="<!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF -->"><span></span><!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF --></a></div>
 			</div>
 		<!-- ENDIF -->
+
+		<!-- IF .pagination or TOTAL_IMAGES -->
 		<div class="pagination">
-			{TOTAL_IMAGES}<!-- IF PAGINATION --> &bull; <a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a> &bull; <span>{PAGINATION}</span><!-- ENDIF -->
+			{TOTAL_IMAGES}
+			<!-- IF .pagination -->
+				 &bull; <!-- INCLUDE pagination.html -->
+			<!-- ELSE -->
+				 &bull; {PAGE_NUMBER}
+			<!-- ENDIF -->
 		</div>
+		<!-- ENDIF -->
 	</div>
 	<br />
 	<!-- ENDIF -->

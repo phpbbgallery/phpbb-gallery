@@ -453,13 +453,15 @@ if ($keywords || $username || $user_id || $search_id || $submit)
 	$u_search .= (!$search_child) ? '&amp;sc=0' : '';
 	$u_search .= ($search_fields != 'all') ? '&amp;sf=' . $search_fields : '';
 
+	phpbb_generate_template_pagination($template, $u_search, 'pagination', 'start', $total_match_count, $images_per_page, $start);
+
 	$template->assign_vars(array(
-		'SEARCH_TITLE'		=> $l_search_title,
 		'SEARCH_MATCHES'	=> $l_search_matches,
+		'PAGE_NUMBER'		=> phpbb_on_page($template, $user, $u_search, $total_match_count, $images_per_page, $start),
+
+		'SEARCH_TITLE'		=> $l_search_title,
 		'SEARCH_WORDS'		=> $searchwords,
 		//@todo: 'IGNORED_WORDS'		=> (sizeof($search->common_words)) ? implode(' ', $search->common_words) : '',
-		'PAGINATION'		=> generate_pagination($u_search, $total_match_count, $images_per_page, $start),
-		'PAGE_NUMBER'		=> on_page($total_match_count, $images_per_page, $start),
 		'TOTAL_MATCHES'		=> $total_match_count,
 		'SEARCH_IN_RESULTS'	=> ($search_id) ? false : true,
 

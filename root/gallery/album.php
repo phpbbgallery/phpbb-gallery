@@ -282,7 +282,12 @@ phpbb_ext_gallery_core_misc::markread('album', $album_id);
 
 $watch_mode = ($album_data['watch_id']) ?  'unwatch' : 'watch';
 
+phpbb_generate_template_pagination($template, $phpbb_ext_gallery->url->append_sid('album', "album_id=$album_id&amp;sk=$sort_key&amp;sd=$sort_dir&amp;st=$sort_days"), 'pagination', 'start', $image_counter, $images_per_page, $start);
+
 $template->assign_vars(array(
+	'TOTAL_IMAGES'				=> $user->lang('VIEW_ALBUM_IMAGES', $image_counter),
+	'PAGE_NUMBER'				=> phpbb_on_page($template, $user, $phpbb_ext_gallery->url->append_sid('album', "album_id=$album_id&amp;sk=$sort_key&amp;sd=$sort_dir&amp;st=$sort_days"), $image_counter, $images_per_page, $start),
+
 	'S_IN_ALBUM'				=> true, // used for some templating in subsilver2
 	'S_IS_POSTABLE'				=> ($album_data['album_type'] != phpbb_ext_gallery_core_album::TYPE_CAT) ? true : false,
 	'S_IS_LOCKED'				=> ($album_data['album_status'] == phpbb_ext_gallery_core_album::STATUS_LOCKED) ? true : false,
@@ -312,10 +317,6 @@ $template->assign_vars(array(
 	'ALBUM_JUMPBOX'				=> phpbb_ext_gallery_core_album::get_albumbox(false, '', $album_id),
 	'U_RETURN_LINK'				=> $phpbb_ext_gallery->url->append_sid('index'),
 	'S_RETURN_LINK'				=> $user->lang['GALLERY'],
-
-	'PAGINATION'				=> generate_pagination($phpbb_ext_gallery->url->append_sid('album', "album_id=$album_id&amp;sk=$sort_key&amp;sd=$sort_dir&amp;st=$sort_days"), $image_counter, $images_per_page, $start),
-	'TOTAL_IMAGES'				=> $user->lang('VIEW_ALBUM_IMAGES', $image_counter),
-	'PAGE_NUMBER'				=> on_page($image_counter, $images_per_page, $start),
 
 	'L_WATCH_TOPIC'				=> ($album_data['watch_id']) ? $user->lang['UNWATCH_ALBUM'] : $user->lang['WATCH_ALBUM'],
 	'U_WATCH_TOPIC'				=> (($album_data['album_type'] != phpbb_ext_gallery_core_album::TYPE_CAT) && ($user->data['user_id'] != ANONYMOUS)) ? $phpbb_ext_gallery->url->append_sid('album', "mode=" . $watch_mode . "&amp;album_id=$album_id&amp;hash=" . generate_link_hash("{$watch_mode}_$album_id")) : '',
