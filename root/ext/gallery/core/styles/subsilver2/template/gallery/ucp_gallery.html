@@ -165,7 +165,7 @@
 </form>
 <!-- ENDIF -->
 
-<!-- IF S_MANAGE_FAVORITES or S_MANAGE_SUBSCRIPTIONS -->
+<!-- IF S_MANAGE_SUBSCRIPTIONS -->
 	<table class="tablebg" width="100%" cellspacing="1">
 		<tr>
 			<th colspan="4">{L_TITLE}</th>
@@ -214,7 +214,7 @@
 			<tr>
 				<!-- IF DISP_FAKE_THUMB --><th width="4%" nowrap="nowrap">&nbsp;</th><!-- ENDIF -->
 				<th nowrap="nowrap">{L_IMAGES}</th>
-				<!-- IF not S_MANAGE_FAVORITES --><th width="37%" nowrap="nowrap">&nbsp;{L_LAST_COMMENT}&nbsp;</th><!-- ENDIF -->
+				<th width="37%" nowrap="nowrap">&nbsp;{L_LAST_COMMENT}&nbsp;</th>
 				<th width="5%" nowrap="nowrap">&nbsp;{L_MARK}&nbsp;</th>
 			</tr>
 			<!-- BEGIN image_row -->
@@ -227,18 +227,20 @@
 					{image_row.IMAGE_TIME}<br />
 					{L_ALBUM}: <a href="{image_row.U_VIEW_ALBUM}" style="font-weight: bold;">{image_row.ALBUM_NAME}</a></span>
 				</td>
-				<!-- IF not S_MANAGE_FAVORITES --><td class="row1" width="150" align="center">&nbsp;
+				<td class="row1" width="150" align="center">&nbsp;
 					<!-- IF image_row.COMMENT -->
 						{L_POST_BY_AUTHOR} {image_row.LAST_COMMENT_BY}<br />
 						{image_row.LAST_COMMENT_TIME}
+					<!-- ELSE -->
+						&nbsp;
 					<!-- ENDIF -->
-				&nbsp;</td><!-- ENDIF -->
+				</td>
 				<td class="row2" align="center">&nbsp;<input type="checkbox" name="image_id_ary[]" value="{image_row.IMAGE_ID}" />&nbsp;</td>
 			</tr>
 			<!-- BEGINELSE -->
 			<tr>
-				<td class="row1" colspan="<!-- IF S_MANAGE_FAVORITES -->3<!-- ELSE -->4<!-- ENDIF -->">
-					<span><!-- IF S_MANAGE_FAVORITES -->{L_NO_FAVORITES}<!-- ELSE -->{L_NO_SUBSCRIPTIONS}<!-- ENDIF --></span>
+				<td class="row1" colspan="4">
+					<span>{L_NO_SUBSCRIPTIONS}</span>
 				</td>
 			</tr>
 			<!-- END image_row -->
@@ -246,11 +248,7 @@
 				<td class="cat" colspan="6" align="right">
 					<select name="action">
 						<option value="" selected="selected">{L_CHOOSE_ACTION}</option>
-						<!-- IF S_MANAGE_FAVORITES -->
-							<option value="remove_favorite">{L_REMOVE_FROM_FAVORITES}</option>
-						<!-- ELSE -->
-							<option value="unsubscribe">{L_UNSUBSCRIBE}</option>
-						<!-- ENDIF -->
+						<option value="unsubscribe">{L_UNSUBSCRIBE}</option>
 					</select>
 					<input class="btnmain" type="submit" value="{L_SUBMIT}" />
 				</td>

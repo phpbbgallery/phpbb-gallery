@@ -162,13 +162,12 @@
 </div>
 <!-- ENDIF -->
 
-<!-- IF S_MANAGE_FAVORITES or S_MANAGE_SUBSCRIPTIONS -->
+<!-- IF S_MANAGE_SUBSCRIPTIONS -->
 <h2>{L_TITLE}</h2>
 <div class="panel">
 	<div class="inner"><span class="corners-top"><span></span></span>
 	<p>{L_TITLE_EXPLAIN}</p>
 	<form id="ucp_gallery" method="post" action="{S_UCP_ACTION}">
-			<!-- IF S_MANAGE_SUBSCRIPTIONS -->
 				<!-- IF .album_row -->
 					<ul class="topiclist">
 						<li class="header">
@@ -203,14 +202,13 @@
 					</ul>
 					<div><a href="#" onclick="marklist('ucp_gallery', 'album_id_ary', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('ucp_gallery', 'album_id_ary', false); return false;">{L_UNMARK_ALL}</a><br /></div>
 				<!-- ENDIF -->
-			<!-- ENDIF -->
 
 			<!-- IF .image_row -->
 				<ul class="topiclist">
 					<li class="header">
 						<dl>
 							<dt>{L_IMAGES}</dt>
-							<!-- IF not S_MANAGE_FAVORITES --><dd class="moderation">{L_LAST_COMMENT}</dd><!-- ENDIF -->
+							<dd class="moderation">{L_LAST_COMMENT}</dd>
 							<dd class="mark">{L_MARK}</dd>
 						</dl>
 					</li>
@@ -227,12 +225,12 @@
 								{image_row.IMAGE_TIME}<br />
 								{L_ALBUM}: <a href="{image_row.U_VIEW_ALBUM}" style="font-weight: bold;">{image_row.ALBUM_NAME}</a>
 							</dt>
-							<!-- IF not S_MANAGE_FAVORITES and image_row.COMMENT -->
 								<dd class="moderation">
-									<span>{L_POST_BY_AUTHOR} {image_row.LAST_COMMENT_BY}<br />
-									{image_row.LAST_COMMENT_TIME}</span>
+									<!-- IF image_row.COMMENT -->
+										<span>{L_POST_BY_AUTHOR} {image_row.LAST_COMMENT_BY}<br />
+										{image_row.LAST_COMMENT_TIME}</span>
+									<!-- ELSE -->&nbsp;<!-- ENDIF -->
 								</dd>
-							<!-- ENDIF -->
 							<dd class="mark"><input type="checkbox" name="image_id_ary[]" value="{image_row.IMAGE_ID}" /></dd>
 						</dl>
 					</li>
@@ -241,7 +239,7 @@
 				<div><a href="#" onclick="marklist('ucp_gallery', 'image_id_ary', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('ucp_gallery', 'image_id_ary', false); return false;">{L_UNMARK_ALL}</a></div>
 			<!-- ELSE -->
 				<ul class="topiclist">
-					<li><p class="notopics"><!-- IF S_MANAGE_FAVORITES -->{L_NO_FAVORITES}<!-- ELSE -->{L_NO_SUBSCRIPTIONS}<!-- ENDIF --></p></li>
+					<li><p class="notopics">{L_NO_SUBSCRIPTIONS}</p></li>
 				</ul>
 			<!-- ENDIF -->
 
@@ -257,11 +255,7 @@
 		<fieldset class="display-actions">
 			<select name="action">
 				<option value="" selected="selected">{L_CHOOSE_ACTION}</option>
-				<!-- IF S_MANAGE_FAVORITES -->
-					<option value="remove_favorite">{L_REMOVE_FROM_FAVORITES}</option>
-				<!-- ELSE -->
-					<option value="unsubscribe">{L_UNSUBSCRIBE}</option>
-				<!-- ENDIF -->
+				<option value="unsubscribe">{L_UNSUBSCRIBE}</option>
 			</select>
 			<input class="button2" type="submit" value="{L_SUBMIT}" />
 		</fieldset>
