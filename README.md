@@ -12,6 +12,7 @@ So which Extensions will the Gallery include?
 
 ###Already implemented
 
+* ACP Import
 * Exif Data
 * Favorite
 * Feed
@@ -25,7 +26,6 @@ So which Extensions will the Gallery include?
     * Rating required
     * Comment required
 * Search
-* ACP Massimport
 * Notification (Mail)
 * Report
 * HighslideJS/Lytebox/Shadowbox/etc.
