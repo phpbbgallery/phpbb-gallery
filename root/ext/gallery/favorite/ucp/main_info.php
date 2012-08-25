@@ -3,7 +3,7 @@
 *
 * @package Gallery - Favorite Extension
 * @copyright (c) 2012 nickvergessen - http://www.flying-bits.org/
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
@@ -29,4 +29,3 @@ class phpbb_ext_gallery_favorite_ucp_main_info
 		);
 	}
 }
-?>

@@ -29,4 +29,3 @@ class phpbb_ext_gallery_acpimport_acp_main_info
 		);
 	}
 }
-?>
