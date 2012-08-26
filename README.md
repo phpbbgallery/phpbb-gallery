@@ -12,6 +12,7 @@ So which Extensions will the Gallery include?
 
 ###Already implemented
 
+* ACP CleanUp
 * ACP Import
 * Exif Data
 * Favorite

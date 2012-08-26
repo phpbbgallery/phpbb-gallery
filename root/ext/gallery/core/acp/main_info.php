@@ -26,7 +26,6 @@ class phpbb_ext_gallery_core_acp_main_info
 			'version'	=> '1.0.0',
 			'modes'		=> array(
 				'overview'			=> array('title' => 'ACP_GALLERY_OVERVIEW',				'auth' => 'acl_a_gallery_manage',	'cat' => array('PHPBB_GALLERY')),
-				'cleanup'			=> array('title' => 'ACP_GALLERY_CLEANUP',				'auth' => 'acl_a_gallery_cleanup',	'cat' => array('PHPBB_GALLERY')),
 			),
 		);
 	}
