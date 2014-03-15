@@ -4,7 +4,7 @@
 // however you can override the default methods and add custom
 // installation logic
 
-namespace gallery\core;
+namespace phpbbgallery\core;
 
 class ext extends \phpbb\extension\base
 {
