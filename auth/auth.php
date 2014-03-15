@@ -54,7 +54,7 @@ class auth
 
 		global $user;
 
-		$cached_permissions = phpbb_gallery::$user->get_data('user_permissions');
+		$cached_permissions = \phpbbgallery\core\gallery::$user->get_data('user_permissions');
 		if (($user_id == $user->data['user_id']) && !empty($cached_permissions))
 		{
 			$this->unserialize_auth_data($cached_permissions);
@@ -63,7 +63,7 @@ class auth
 		else if ($user_id != $user->data['user_id'])
 		{
 			global $db;
-			$permissions_user = new phpbb_gallery_user($db, $user_id);
+			$permissions_user = new \phpbbgallery\core\user($db, $user_id);
 			$cached_permissions = $permissions_user->get_data('user_permissions');
 			if (!empty($cached_permissions))
 			{
@@ -583,46 +583,5 @@ class auth
 		}
 
 		return ($return == 'array') ? $album_array : $album_list;
-	}
-
-	/**
-	* User authorisation levels output
-	*
-	* @param	string	$mode			Can only be 'album' so far.
-	* @param	int		$album_id		The current album the user is in.
-	* @param	int		$album_status	The albums status bit.
-	* @param	int		$album_user_id	The user-id of the album owner. Saves us a call to the cache if it is set.
-	*
-	* borrowed from phpBB3
-	* @author: phpBB Group
-	* @function: gen_forum_auth_level
-	*/
-	public function gen_auth_level($mode, $album_id, $album_status, $album_user_id = -1)
-	{
-		global $template, $user;
-
-		$locked = ($album_status == ITEM_LOCKED && !$this->acl_check('m_', $album_id, $album_user_id)) ? true : false;
-
-		$rules = array(
-			($this->acl_check('i_view', $album_id, $album_user_id) && !$locked) ? $user->lang['ALBUM_VIEW_CAN'] : $user->lang['ALBUM_VIEW_CANNOT'],
-			($this->acl_check('i_upload', $album_id, $album_user_id) && !$locked) ? $user->lang['ALBUM_UPLOAD_CAN'] : $user->lang['ALBUM_UPLOAD_CANNOT'],
-			($this->acl_check('i_edit', $album_id, $album_user_id) && !$locked) ? $user->lang['ALBUM_EDIT_CAN'] : $user->lang['ALBUM_EDIT_CANNOT'],
-			($this->acl_check('i_delete', $album_id, $album_user_id) && !$locked) ? $user->lang['ALBUM_DELETE_CAN'] : $user->lang['ALBUM_DELETE_CANNOT'],
-		);
-		if (phpbb_gallery_config::get('allow_comments') && $this->acl_check('c_read', $album_id, $album_user_id))
-		{
-			$rules[] = ($this->acl_check('c_post', $album_id, $album_user_id) && !$locked) ? $user->lang['ALBUM_COMMENT_CAN'] : $user->lang['ALBUM_COMMENT_CANNOT'];
-		}
-		if (phpbb_gallery_config::get('allow_rates'))
-		{
-			$rules[] = ($this->acl_check('i_rate', $album_id, $album_user_id) && !$locked) ? $user->lang['ALBUM_RATE_CAN'] : $user->lang['ALBUM_RATE_CANNOT'];
-		}
-
-		foreach ($rules as $rule)
-		{
-			$template->assign_block_vars('rules', array('RULE' => $rule));
-		}
-
-		return;
 	}
 }

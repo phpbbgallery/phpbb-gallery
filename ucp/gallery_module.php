@@ -18,7 +18,7 @@ class gallery_module
 	{
 		global $db, $template, $user;
 
-		phpbb_gallery::init();
+		\phpbbgallery\core\gallery::init();
 
 		$user->add_lang(array('mods/gallery', 'mods/gallery_acp', 'mods/gallery_mcp', 'mods/gallery_ucp'));
 		$this->tpl_name = 'gallery/ucp_gallery';

@@ -1,23 +1,16 @@
 <?php
-/**
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-*/
 
 /**
-* @ignore
-*/
+ *
+ * @package phpBB Gallery
+ * @copyright (c) 2014 nickvergessen
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
 
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
+namespace phpbbgallery\core;
 
-class phpbb_gallery_user
+class user
 {
 	/**
 	* phpBB-user_id
@@ -38,6 +31,8 @@ class phpbb_gallery_user
 	* Users data in the table
 	*/
 	private $data = array();
+
+	protected $table_name = 'gallery_users';
 
 	/**
 	* Constructor
@@ -60,9 +55,11 @@ class phpbb_gallery_user
 	*/
 	public function load_data()
 	{
+		global $table_prefix;
+
 		$this->entry_exists	= false;
 		$sql = 'SELECT *
-			FROM ' . GALLERY_USERS_TABLE . '
+			FROM ' . $table_prefix . $this->table_name . '
 			WHERE user_id = ' . $this->id;
 		$result = $this->db->sql_query($sql);
 		if ($row = $this->db->sql_fetchrow($result))

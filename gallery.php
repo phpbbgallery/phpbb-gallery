@@ -1,23 +1,16 @@
 <?php
-/**
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-*/
 
 /**
-* @ignore
-*/
+ *
+ * @package phpBB Gallery
+ * @copyright (c) 2014 nickvergessen
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
 
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
+namespace phpbbgallery\core;
 
-class phpbb_gallery
+class gallery
 {
 	// We still need this, as we can not guess that.
 	static private $phpbb_root_path = '../';
@@ -60,7 +53,7 @@ class phpbb_gallery
 		$auth->acl($user->data);
 		$user->setup($lang_sets);
 
-		phpbb_gallery_url::_include('functions_phpbb', 'phpbb', 'includes/gallery/');
+		//phpbb_gallery_url::_include('functions_phpbb', 'phpbb', 'includes/gallery/');
 		phpbb_gallery_plugins::init(phpbb_gallery_url::path());
 
 		// Little precaution.
@@ -140,23 +133,23 @@ class phpbb_gallery
 	{
 		global $db, $user;
 
-		phpbb_gallery_url::_include('functions_phpbb', 'phpbb', 'includes/gallery/');
-		phpbb_gallery_plugins::init(phpbb_gallery_url::path());
+		//phpbb_gallery_url::_include('functions_phpbb', 'phpbb', 'includes/gallery/');
+		//phpbb_gallery_plugins::init(phpbb_gallery_url::path());
 
 		// Little precaution.
 		$user->data['user_id'] = (int) $user->data['user_id'];
 
-		self::$user = new phpbb_gallery_user($db, $user->data['user_id']);
+		self::$user = new \phpbbgallery\core\user($db, $user->data['user_id']);
 
 		$user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
-		self::$auth = new phpbb_gallery_auth($user_id);
+		self::$auth = new \phpbbgallery\core\auth\auth($user_id);
 
-		if (phpbb_gallery_config::get('mvc_time') < time())
-		{
-			// Check the version, do we need to update?
-			phpbb_gallery_config::set('mvc_time', time() + 86400);
-			phpbb_gallery_config::set('mvc_version', phpbb_gallery_modversioncheck::check(true));
-		}
+		//if (phpbb_gallery_config::get('mvc_time') < time())
+		//{
+		//	// Check the version, do we need to update?
+		//	phpbb_gallery_config::set('mvc_time', time() + 86400);
+		//	phpbb_gallery_config::set('mvc_version', phpbb_gallery_modversioncheck::check(true));
+		//}
 
 		self::$loaded = true;
 		if (request_var('display', '') == 'popup')
