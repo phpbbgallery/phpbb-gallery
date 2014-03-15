@@ -1,0 +1,3 @@
+phpbbgallery_index:
+    pattern: /gallery
+    defaults: { _controller: phpbbgallery.core.index:base }

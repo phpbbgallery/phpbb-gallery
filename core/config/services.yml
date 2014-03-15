@@ -19,3 +19,12 @@ services:
             - %tables.phpbbgallery.permissions%
             - %tables.phpbbgallery.roles%
             - %tables.phpbbgallery.users%
+    phpbbgallery.core.listener:
+        class: phpbbgallery\core\event\main_listener
+        arguments:
+            - @controller.helper
+            - @template
+            - @user
+            - %core.php_ext%
+        tags:
+            - { name: event.listener }

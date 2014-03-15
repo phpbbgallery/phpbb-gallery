@@ -1,15 +1,20 @@
-.gallery-icon, .gallery-icon a		{ background: none top left no-repeat; }
-ul.profile-icons li.gallery-icon	{ width: 20px; height: 20px; }
-.gallery-icon, .gallery-icon a		{ background-image: url("{T_IMAGESET_PATH}/icon_contact_gallery.gif"); }
+.gallery-icon, .gallery-icon a {
+	background: none top left no-repeat;
+}
 
-.buttons div.upload-icon	{ width: {IMG_BUTTON_UPLOAD_IMAGE_WIDTH}px; height: {IMG_BUTTON_UPLOAD_IMAGE_HEIGHT}px; }
-.upload-icon span	{ background-image: url("{IMG_BUTTON_UPLOAD_IMAGE_SRC}"); }
+ul.profile-icons li.gallery-icon {
+	width: 20px; height: 20px;
+}
+
+.gallery-icon, .gallery-icon a {
+	background-image: url("./images/icon_contact_gallery.gif");
+}
 
 .icon-gallery {
 	background-position: 0 50%;
 	background-repeat: no-repeat;
 	padding: 1px 0 0 17px;
-	background-image: url("{T_THEME_PATH}/images/icon_gallery.gif");
+	background-image: url("./images/icon_gallery.gif");
 }
 
 .rtl .icon-gallery {
@@ -83,21 +88,15 @@ span.reported-images-number {
 }
 
 .g_unapproved {
-	background-position: 100% 0;
-	background-repeat: no-repeat;
-	background-image: url("{T_IMAGESET_PATH}/icon_gallery_unapproved.gif");
+	background: 100% 0 no-repeat url("./images/icon_gallery_unapproved.gif");
 }
 
 .g_locked {
-	background-position: 100% 0;
-	background-repeat: no-repeat;
-	background-image: url("{T_IMAGESET_PATH}/icon_gallery_locked.gif");
+	background: 100% 0 no-repeat url("./images/icon_gallery_locked.gif");
 }
 
 .g_reported {
-	background-position: 100% 0;
-	background-repeat: no-repeat;
-	background-image: url("{T_IMAGESET_PATH}/icon_gallery_reported.gif");
+	background: 100% 0 no-repeat url("./images/icon_gallery_reported.gif");
 }
 
 input.autowidth-gallery {

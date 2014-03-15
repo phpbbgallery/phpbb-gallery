@@ -54,5 +54,3 @@ $lang = array_merge($lang, array(
 		1		=> 'Total images <strong>%d</strong>',
 	),
 ));
-
-?>

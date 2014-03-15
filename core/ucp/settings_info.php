@@ -11,8 +11,9 @@
 namespace phpbbgallery\core\ucp;
 
 /**
-* @package module_install
-*/
+ * Info file for UCP Module for the User base settings
+ * @package phpbbgallery\core\ucp
+ */
 class settings_info
 {
 	function module()
