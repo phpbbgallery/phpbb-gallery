@@ -1,26 +1,16 @@
 <?php
+
 /**
 *
 * @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2014 nickvergessen
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
-/**
-* @ignore
-*/
+namespace phpbbgallery\core\acp;
 
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
-
-/**
-* @package acp
-*/
-class acp_gallery
+class gallery_module
 {
 	var $u_action;
 

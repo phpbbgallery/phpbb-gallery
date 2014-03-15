@@ -1,31 +1,16 @@
 <?php
+
 /**
 *
 * @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2014 nickvergessen
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
-* mostly borrowed from phpBB3
-* @author: phpBB Group
-* @location: includes/acp/acp_forums.php
-*
-* Note: There are several code parts commented out, for example the album/forum_password.
-*       I didn't remove them, to have it easier when I implement this feature one day. I hope it's okay.
 */
 
-/**
-* @ignore
-*/
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
+namespace phpbbgallery\core\acp;
 
-/**
-* @package acp
-*/
-class acp_gallery_albums
+class albums_module
 {
 	var $u_action;
 	var $parent_id = 0;
