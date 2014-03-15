@@ -15,12 +15,19 @@ class user
 	/**
 	* phpBB-user_id
 	*/
-	public $id = 0;
+	protected $user_id = 0;
 
 	/**
-	* phpBB database object
+	* Database object
+	* @var \phpbb\db\driver\driver
 	*/
-	private $db = null;
+	protected $db;
+
+	/**
+	* Gallery users table
+	* @var string
+	*/
+	protected $table_name;
 
 	/**
 	* Do we have an entry for the user in the table?
@@ -30,20 +37,29 @@ class user
 	/**
 	* Users data in the table
 	*/
-	private $data = array();
-
-	protected $table_name = 'gallery_users';
+	protected $data = array();
 
 	/**
-	* Constructor
+	* Construct
+	*
+	* @param	\phpbb\db\driver\driver	$db			Database object
+	* @param	string					$table_name	Gallery users table
+	*/
+	public function __construct(\phpbb\db\driver\driver $db, $table_name)
+	{
+		$this->db			= $db;
+		$this->table_name	= $table_name;
+	}
+
+	/**
+	* Set the user ID
 	*
 	* @param	int		$user_id
 	* @param	bool	$load		Shall we automatically load the users data from the database?
 	*/
-	public function __construct($db, $user_id, $load = true)
+	public function set_user_id($user_id, $load = true)
 	{
-		$this->db			= $db;
-		$this->id			= (int) $user_id;
+		$this->user_id			= (int) $user_id;
 		if ($load)
 		{
 			$this->load_data();
@@ -51,16 +67,25 @@ class user
 	}
 
 	/**
+	* Is it the same user?
+	*
+	* @param	int		$user_id
+	* @return	bool
+	*/
+	public function is_user($user_id)
+	{
+		return $this->user_id == $user_id;
+	}
+
+	/**
 	* Load the users data from the database and cast it...
 	*/
 	public function load_data()
 	{
-		global $table_prefix;
-
 		$this->entry_exists	= false;
 		$sql = 'SELECT *
-			FROM ' . $table_prefix . $this->table_name . '
-			WHERE user_id = ' . $this->id;
+			FROM ' . $this->table_name . '
+			WHERE user_id = ' . $this->user_id;
 		$result = $this->db->sql_query($sql);
 		if ($row = $this->db->sql_fetchrow($result))
 		{
@@ -84,7 +109,7 @@ class user
 
 	/**
 	* Some functions need the data to be loaded or at least checked.
-	* So here we loaded if it is not laoded yet and we need it ;)
+	* So here we loaded if it is not loaded yet and we need it ;)
 	*/
 	public function force_load()
 	{
@@ -107,9 +132,9 @@ class user
 		{
 			return $this->data[$key];
 		}
-		elseif ($default && isset(self::$default_values[$key]))
+		elseif ($default && isset($this->default_values[$key]))
 		{
-			return self::$default_values[$key];
+			return $this->default_values[$key];
 		}
 
 		return false;
@@ -167,16 +192,16 @@ class user
 	* @param	array	$data	Array of data we want to add/update.
 	* @return	bool			Returns true if the columns were updated successfully
 	*/
-	private function update($data)
+	protected function update($data)
 	{
 		$sql_ary = array_merge($this->validate_data($data), array(
 			'user_last_update'	=> time(),
 		));
 		unset($sql_ary['user_id']);
 
-		$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
+		$sql = 'UPDATE ' . $this->table_name . '
 			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
-			WHERE user_id = ' . $this->id;
+			WHERE user_id = ' . $this->user_id;
 		$this->db->sql_query($sql);
 
 		$this->data = array_merge($this->data, $sql_ary);
@@ -190,13 +215,13 @@ class user
 	* @param	array	$data	Array of data we want to increment
 	* @return	mixed			Returns true if the columns were updated successfully, else false
 	*/
-	private function update_image_count($num)
+	protected function update_image_count($num)
 	{
-		$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
+		$sql = 'UPDATE ' . $this->table_name . '
 			SET user_images = user_images ' . (($num > 0) ? (' + ' . $num) : (' - ' . abs($num))) . ',
 				user_last_update = ' . time() . '
 			WHERE ' . (($num < 0) ? ' user_images > ' . abs($num) . ' AND ' : '') . '
-				user_id = ' . $this->id;
+				user_id = ' . $this->user_id;
 		$this->db->sql_query($sql);
 
 		if ($this->db->sql_affectedrows() == 1)
@@ -217,16 +242,16 @@ class user
 	* @param	array	$data	Array of data we want to insert
 	* @return	bool			Returns true if the data was inserted successfully
 	*/
-	private function insert($data)
+	protected function insert($data)
 	{
-		$sql_ary = array_merge(self::$default_values, $this->validate_data($data), array(
-			'user_id'			=> $this->id,
+		$sql_ary = array_merge($this->default_values, $this->validate_data($data), array(
+			'user_id'			=> $this->user_id,
 			'user_last_update'	=> time(),
 		));
 
 		$this->db->sql_return_on_error(true);
 
-		$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . '
+		$sql = 'INSERT INTO ' . $this->table_name . '
 			' . $this->db->sql_build_array('INSERT', $sql_ary);
 		$this->db->sql_query($sql);
 		$error = $this->db->sql_error_triggered;
@@ -244,9 +269,9 @@ class user
 	*/
 	public function delete()
 	{
-		$sql = 'DELETE FROM ' . GALLERY_USERS_TABLE . '
-			WHERE user_id = ' . $this->id;
-		$result = $this->db->sql_query($sql);
+		$sql = 'DELETE FROM ' . $this->table_name . '
+			WHERE user_id = ' . $this->user_id;
+		$this->db->sql_query($sql);
 	}
 
 	/**
@@ -254,15 +279,13 @@ class user
 	*
 	* @param	mixed	$user_ids	Can either be an array of IDs, one ID or the string 'all' to delete all users.
 	*/
-	static public function delete_users($user_ids)
+	public function delete_users($user_ids)
 	{
-		global $db;
+		$sql_where = $this->sql_build_where($user_ids);
 
-		$sql_where = self::sql_build_where($user_ids);
-
-		$sql = 'DELETE FROM ' . GALLERY_USERS_TABLE . '
+		$sql = 'DELETE FROM ' . $this->table_name . '
 			' . $sql_where;
-		$result = $db->sql_query($sql);
+		$this->db->sql_query($sql);
 	}
 
 	/**
@@ -272,23 +295,22 @@ class user
 	* @param	array	$data		Array of data we want to add/update.
 	* @return	bool				Returns true if the columns were updated successfully
 	*/
-	static public function update_users($user_ids, $data)
+	public function update_users($user_ids, $data)
 	{
-		global $db;
 
-		$sql_ary = array_merge(self::validate_data($data), array(
+		$sql_ary = array_merge($this->validate_data($data), array(
 			'user_last_update'	=> time(),
 		));
 		unset($sql_ary['user_id']);
 
-		$sql_where = self::sql_build_where($user_ids);
+		$sql_where = $this->sql_build_where($user_ids);
 
-		$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
-			SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+		$sql = 'UPDATE ' . $this->table_name . '
+			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 			' . $sql_where;
-		$db->sql_query($sql);
+		$this->db->sql_query($sql);
 
-		return ($db->sql_affectedrows() != 0) ? true : false;
+		return ($this->db->sql_affectedrows() != 0) ? true : false;
 	}
 
 	/**
@@ -297,14 +319,11 @@ class user
 	* @param	mixed	$user_ids	Can either be an array of IDs, one ID or the string 'all' to update all users.
 	* @return	string				The WHERE statement with "WHERE " if needed.
 	*/
-	static public function sql_build_where($user_ids)
+	public function sql_build_where($user_ids)
 	{
-		global $db;
-
-		$sql_where = '';
 		if (is_array($user_ids) && !empty($user_ids))
 		{
-			$sql_where = 'WHERE ' . $db->sql_in_set('user_id', array_map('intval', $user_ids));
+			$sql_where = 'WHERE ' . $this->db->sql_in_set('user_id', array_map('intval', $user_ids));
 		}
 		elseif ($user_ids == 'all')
 		{
@@ -324,7 +343,7 @@ class user
 	* @param	array	$data	Array of data we need to validate
 	* @return	array			Array with all allowed keys and their casted and selected values
 	*/
-	static public function validate_data($data, $inc = false)
+	public function validate_data($data, $inc = false)
 	{
 		$validated_data = array();
 		foreach ($data as $name => $value)
@@ -338,7 +357,7 @@ class user
 				case 'user_last_update':
 					if ($inc && ($name == 'user_images'))
 					{
-						// While incrementing, the iamges might be lower than 0.
+						// While incrementing, the images might be lower than 0.
 						$validated_data[$name] = (int) $value;
 					}
 					else
@@ -366,7 +385,7 @@ class user
 	/**
 	* Default values for new users.
 	*/
-	static protected $default_values = array(
+	protected $default_values = array(
 		'user_images'		=> 0,
 		'personal_album_id'	=> 0,
 		'user_lastmark'		=> 0,
@@ -392,7 +411,7 @@ class user
 	/**
 	*
 	*/
-	static public function add_user_to_cache(&$user_cache, $row)
+	public function add_user_to_cache(&$user_cache, $row)
 	{
 		global $auth, $config, $user;
 
@@ -410,7 +429,7 @@ class user
 				'sig_bbcode_bitfield'	=> '',
 
 				'online'			=> false,
-				'avatar'			=> ($user->optionget('viewavatars')) ? get_user_avatar($row['user_avatar'], $row['user_avatar_type'], $row['user_avatar_width'], $row['user_avatar_height']) : '',
+				'avatar'			=> ($user->optionget('viewavatars')) ? phpbb_get_user_avatar($row) : '',
 				'rank_title'		=> '',
 				'rank_image'		=> '',
 				'rank_image_src'	=> '',
@@ -465,7 +484,7 @@ class user
 				'viewonline'	=> $row['user_allow_viewonline'],
 				'allow_pm'		=> $row['user_allow_pm'],
 
-				'avatar'		=> ($user->optionget('viewavatars')) ? get_user_avatar($row['user_avatar'], $row['user_avatar_type'], $row['user_avatar_width'], $row['user_avatar_height']) : '',
+				'avatar'		=> ($user->optionget('viewavatars')) ? phpbb_get_user_avatar($row) : '',
 				'age'			=> '',
 
 				'rank_title'		=> '',

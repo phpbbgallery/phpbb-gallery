@@ -131,7 +131,7 @@ class gallery
 	*/
 	static public function init()
 	{
-		global $db, $user;
+		global $cache, $db, $user;
 
 		//phpbb_gallery_url::_include('functions_phpbb', 'phpbb', 'includes/gallery/');
 		//phpbb_gallery_plugins::init(phpbb_gallery_url::path());
@@ -139,10 +139,12 @@ class gallery
 		// Little precaution.
 		$user->data['user_id'] = (int) $user->data['user_id'];
 
-		self::$user = new \phpbbgallery\core\user($db, $user->data['user_id']);
+		global $phpbb_container;
+		self::$user = new \phpbbgallery\core\user($db, $phpbb_container->getParameter('tables.gallery.users'));
+		self::$user->set_user_id($user->data['user_id']);
 
 		$user_id = ($user->data['user_perm_from'] == 0) ? $user->data['user_id'] : $user->data['user_perm_from'];
-		self::$auth = new \phpbbgallery\core\auth\auth($user_id);
+		self::$auth = new \phpbbgallery\core\auth\auth($cache, $db, self::$user, $phpbb_container->getParameter('tables.gallery.permissions'), $phpbb_container->getParameter('tables.gallery.roles'), $phpbb_container->getParameter('tables.gallery.users'));
 
 		//if (phpbb_gallery_config::get('mvc_time') < time())
 		//{
