@@ -1,0 +1,24 @@
+{
+	"name": "phpbbgallery/core",
+	"type": "phpbb-extension",
+	"description": "",
+	"homepage": "https://github.com/nickvergessen/phpbb-gallery",
+	"version": "1.2.0",
+	"time": "2014-03-15",
+	"licence": "GPL-2.0",
+	"authors": [
+		{
+			"name": "Joas Schilling",
+			"email": "nickvergessen@gmx.de",
+			"homepage": "http://github.com/nickvergessen",
+			"role": "Lead Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.3",
+		"phpbb/phpbb": "3.1.*@dev"
+	},
+	"extra": {
+		"display-name": "phpBB Gallery"
+	}
+}
