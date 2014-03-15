@@ -142,110 +142,6 @@ else if ($phpbb_ext_gallery->config->get('pegas_index_album') && $phpbb_ext_gall
 	));
 }
 
-/**
-* Recent images & comments and random images
-*/
-/**
-* int		array	including all relevent numbers for rows, columns and stuff like that,
-* display	int		sum of the options which should be displayed, see gallery/includes/constants.php "// Display-options for RRC-Feature" for values
-* modes		int		sum of the modes which should be displayed, see gallery/includes/constants.php "// Mode-options for RRC-Feature" for values
-* collapse	bool	collapse comments
-* include_pgalleries	bool	include personal albums
-* mode_id	string	'user' or 'album' to only display images of a certain user or album
-* id		int		user_id for user profile or album_id for view of recent and random images
-*/
-/*
-if ($phpbb_ext_gallery->config->get('rrc_gindex_mode'))
-{
-	$ints = array(
-		$phpbb_ext_gallery->config->get('rrc_gindex_rows'),
-		$phpbb_ext_gallery->config->get('rrc_gindex_columns'),
-		$phpbb_ext_gallery->config->get('rrc_gindex_crows'),
-		$phpbb_ext_gallery->config->get('rrc_gindex_contests'),
-	);
-	$gallery_block = new phpbb_gallery_block($phpbb_ext_gallery->config->get('rrc_gindex_mode'), $phpbb_ext_gallery->config->get('rrc_gindex_display'), $ints, $phpbb_ext_gallery->config->get('rrc_gindex_comments'), $phpbb_ext_gallery->config->get('rrc_gindex_pegas'));
-	$gallery_block->display();
-}
-
-*/
-
-// Grab group details for legend display
-$legend = '';
-if ($phpbb_ext_gallery->config->get('disp_whoisonline'))
-{
-	// Copied from phpbb::index.php
-	//@todo: Update code to index.php from 3.1
-	if ($auth->acl_gets('a_group', 'a_groupadd', 'a_groupdel'))
-	{
-		$sql = 'SELECT group_id, group_name, group_colour, group_type
-			FROM ' . GROUPS_TABLE . '
-			WHERE group_legend = 1
-			ORDER BY group_name ASC';
-	}
-	else
-	{
-		$sql = 'SELECT g.group_id, g.group_name, g.group_colour, g.group_type
-			FROM ' . GROUPS_TABLE . ' g
-			LEFT JOIN ' . USER_GROUP_TABLE . ' ug
-				ON (
-					g.group_id = ug.group_id
-					AND ug.user_id = ' . $user->data['user_id'] . '
-					AND ug.user_pending = 0
-				)
-			WHERE g.group_legend > 0
-				AND (g.group_type <> ' . GROUP_HIDDEN . ' OR ug.user_id = ' . $user->data['user_id'] . ')
-			ORDER BY g.group_name ASC';
-	}
-	$result = $db->sql_query($sql);
-
-	$legend = array();
-	while ($row = $db->sql_fetchrow($result))
-	{
-		$colour_text = ($row['group_colour']) ? ' style="color:#' . $row['group_colour'] . '"' : '';
-		$group_name = ($row['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $row['group_name']] : $row['group_name'];
-
-		if ($row['group_name'] == 'BOTS' || ($user->data['user_id'] != ANONYMOUS && !$auth->acl_get('u_viewprofile')))
-		{
-			$legend[] = '<span' . $colour_text . '>' . $group_name . '</span>';
-		}
-		else
-		{
-			$legend[] = '<a' . $colour_text . ' href="' . $phpbb_ext_gallery->url->append_sid('phpbb', 'memberlist', 'mode=group&amp;g=' . $row['group_id']) . '">' . $group_name . '</a>';
-		}
-	}
-	$db->sql_freeresult($result);
-
-	$legend = implode(', ', $legend);
-}
-
-// Generate birthday list if required ...
-$birthday_list = '';
-if ($config['allow_birthdays'] && $phpbb_ext_gallery->config->get('disp_birthdays'))
-{
-	// Copied from phpbb::index.php
-	//@todo: Update code to index.php from 3.1
-	$now = getdate(time() + $user->timezone + $user->dst - date('Z'));
-	$sql = 'SELECT u.user_id, u.username, u.user_colour, u.user_birthday
-		FROM ' . USERS_TABLE . ' u
-		LEFT JOIN ' . BANLIST_TABLE . " b ON (u.user_id = b.ban_userid)
-		WHERE (b.ban_id IS NULL
-			OR b.ban_exclude = 1)
-			AND u.user_birthday LIKE '" . $db->sql_escape(sprintf('%2d-%2d-', $now['mday'], $now['mon'])) . "%'
-			AND u.user_type IN (" . USER_NORMAL . ', ' . USER_FOUNDER . ')';
-	$result = $db->sql_query($sql);
-
-	while ($row = $db->sql_fetchrow($result))
-	{
-		$birthday_list .= (($birthday_list != '') ? ', ' : '') . get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']);
-
-		if ($age = (int) substr($row['user_birthday'], -4))
-		{
-			$birthday_list .= ' (' . ($now['year'] - $age) . ')';
-		}
-	}
-	$db->sql_freeresult($result);
-}
-
 $first_char = request_var('first_char', '');
 $s_char_options = '<option value=""' . ((!$first_char) ? ' selected="selected"' : '') . '>' . $user->lang['ALL'] . '</option>';
 // Loop the ASCII: a-z
@@ -264,11 +160,8 @@ $template->assign_vars(array(
 
 	'S_DISP_LOGIN'			=> $phpbb_ext_gallery->config->get('disp_login'),
 	'S_DISP_WHOISONLINE'	=> $phpbb_ext_gallery->config->get('disp_whoisonline'),
-	'LEGEND'				=> $legend,
-	'BIRTHDAY_LIST'			=> $birthday_list,
 
 	'S_LOGIN_ACTION'			=> $phpbb_ext_gallery->url->append_sid('phpbb', 'ucp', 'mode=login&amp;redirect=' . urlencode($phpbb_ext_gallery->url->path('relative') . "index.$phpEx" . (($mode == 'personal') ? '?mode=personal' : ''))),
-	'S_DISPLAY_BIRTHDAY_LIST'	=> ($phpbb_ext_gallery->config->get('disp_birthdays')) ? true : false,
 
 	'U_YOUR_PERSONAL_GALLERY'		=> ($phpbb_ext_gallery->auth->acl_check('i_upload', phpbb_ext_gallery_core_auth::OWN_ALBUM)) ? ($phpbb_ext_gallery->user->get_data('personal_album_id')) ? $phpbb_ext_gallery->url->append_sid('album', 'album_id=' . $phpbb_ext_gallery->user->get_data('personal_album_id')) : $phpbb_ext_gallery->url->append_sid('phpbb', 'ucp', 'i=gallery&amp;mode=manage_albums') : '',
 	'U_USERS_PERSONAL_GALLERIES'	=> ($phpbb_ext_gallery->auth->acl_check('a_list', phpbb_ext_gallery_core_auth::PERSONAL_ALBUM)) ? $phpbb_ext_gallery->url->append_sid('index', 'mode=personal') : '',

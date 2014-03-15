@@ -81,15 +81,15 @@
 	</form>
 <!-- ENDIF -->
 
-<!-- IF S_DISPLAY_ONLINE_LIST and S_DISP_WHOISONLINE -->
+<!-- IF S_DISPLAY_ONLINE_LIST -->
 	<!-- IF U_VIEWONLINE --><h3><a href="{U_VIEWONLINE}">{L_WHO_IS_ONLINE}</a></h3><!-- ELSE --><h3>{L_WHO_IS_ONLINE}</h3><!-- ENDIF -->
 	<p>{TOTAL_USERS_ONLINE} ({L_ONLINE_EXPLAIN})<br />{RECORD_USERS}<br /> <br />{LOGGED_IN_USER_LIST}
-	<!-- IF LEGEND --><br /><em>{L_LEGEND}: {LEGEND}</em><!-- ENDIF --></p>
+	<!-- IF LEGEND --><br /><em>{L_LEGEND}{L_COLON} {LEGEND}</em><!-- ENDIF --></p>
 <!-- ENDIF -->
 
-<!-- IF S_DISPLAY_BIRTHDAY_LIST and .birthdays -->
+<!-- IF S_DISPLAY_BIRTHDAY_LIST -->
 	<h3>{L_BIRTHDAYS}</h3>
-	<p><!-- IF .birthdays -->{L_CONGRATULATIONS}: <strong><!-- BEGIN birthdays -->{birthdays.USERNAME}<!-- IF birthdays.AGE !== '' --> ({birthdays.AGE})<!-- ENDIF --><!-- IF not birthdays.S_LAST_ROW -->, <!-- ENDIF --><!-- END birthdays --></strong><!-- ELSE -->{L_NO_BIRTHDAYS}<!-- ENDIF --></p>
+	<p><!-- IF .birthdays -->{L_CONGRATULATIONS}{L_COLON} <strong><!-- BEGIN birthdays -->{birthdays.USERNAME}<!-- IF birthdays.AGE !== '' --> ({birthdays.AGE})<!-- ENDIF --><!-- IF not birthdays.S_LAST_ROW -->, <!-- ENDIF --><!-- END birthdays --></strong><!-- ELSE -->{L_NO_BIRTHDAYS}<!-- ENDIF --></p>
 <!-- ENDIF -->
 
 <!-- IF TOTAL_IMAGES -->

@@ -28,3 +28,15 @@ services:
             - %core.php_ext%
         tags:
             - { name: event.listener }
+    phpbbgallery.core.controller.index:
+        class: phpbbgallery\core\controller\index
+        arguments:
+            - @auth
+            - @config
+            - @dbal.conn
+            - @request
+            - @template
+            - @user
+            - @controller.helper
+            - %core.root_path%
+            - %core.php_ext%
