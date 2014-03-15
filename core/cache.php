@@ -1,28 +1,22 @@
 <?php
+
+
 /**
 *
 * @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2014 nickvergessen
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
-/**
-* @ignore
-*/
+namespace phpbbgallery\core;
 
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
-
-class phpbb_ext_gallery_core_cache
+class cache
 {
 	private $phpbb_cache;
 	private $phpbb_db;
 
-	public function __construct(phpbb_cache_service $cache, dbal $db)
+	public function __construct(\phpbb\cache\service $cache, \phpbb\db\driver\driver $db)
 	{
 		$this->phpbb_cache = $cache;
 		$this->phpbb_db = $db;
@@ -51,7 +45,7 @@ class phpbb_ext_gallery_core_cache
 		if (($albums = $this->phpbb_cache->get('_albums')) === false)
 		{
 			$sql = 'SELECT a.album_id, a.parent_id, a.album_name, a.album_type, a.left_id, a.right_id, a.album_user_id, a.display_in_rrc, a.album_auth_access
-				FROM ' . GALLERY_ALBUMS_TABLE . ' a
+				FROM ' . 'phpbb_gallery_albums' . ' a
 				LEFT JOIN ' . USERS_TABLE . ' u
 					ON (u.user_id = a.album_user_id)
 				ORDER BY u.username_clean, a.album_user_id, a.left_id ASC';

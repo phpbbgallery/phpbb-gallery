@@ -1,23 +1,16 @@
 <?php
+
 /**
 *
 * @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2014 nickvergessen
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
-/**
-* @ignore
-*/
+namespace phpbbgallery\core\auth;
 
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
-
-class phpbb_ext_gallery_core_auth
+class auth
 {
 	const SETTING_PERMISSIONS	= -39839;
 	const PERSONAL_ALBUM		= -3;
@@ -25,7 +18,7 @@ class phpbb_ext_gallery_core_auth
 	const PUBLIC_ALBUM			= 0;
 
 	const ACCESS_ALL			= 0;
-	const ACCESS_REGISTERED	= 1;
+	const ACCESS_REGISTERED		= 1;
 	const ACCESS_NOT_FOES		= 2;
 	const ACCESS_FRIENDS		= 3;
 
@@ -34,69 +27,108 @@ class phpbb_ext_gallery_core_auth
 	const ACL_YES		= 1;
 	const ACL_NEVER		= 2;
 
-	static private $_permission_i = array('i_view', 'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate');
-	static private $_permission_c = array('c_read', 'c_post', 'c_edit', 'c_delete');
-	static private $_permission_m = array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status');
-	static private $_permission_misc = array('a_list', 'i_count', 'i_unlimited', 'a_count', 'a_unlimited', 'a_restrict');
-	static private $_permissions = array();
-	static private $_permissions_flipped = array();
+	static protected $_permission_i = array('i_view', 'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate');
+	static protected $_permission_c = array('c_read', 'c_post', 'c_edit', 'c_delete');
+	static protected $_permission_m = array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status');
+	static protected $_permission_misc = array('a_list', 'i_count', 'i_unlimited', 'a_count', 'a_unlimited', 'a_restrict');
+	static protected $_permissions = array();
+	static protected $_permissions_flipped = array();
 
-	private $_auth_data = array();
-	private $_auth_data_never = array();
+	protected $_auth_data = array();
+	protected $_auth_data_never = array();
 
-	private $acl_cache = array();
-
-	private $cache;
-	private $user;
-	private $phpbb_db;
-	private $phpbb_template;
-	private $phpbb_user;
+	protected $acl_cache = array();
 
 	/**
-	* Create a auth-object for a given user
-	*
-	* @param	int		$user_id	User you want the permissions from.
-	* @param	int		$album_id	Only get the permissions for a given album_id. Should save some memory. // Not yet implemented.
+	* Cache object
+	* @var \phpbbgallery\core\cache
 	*/
-	public function __construct(phpbb_ext_gallery_core_cache $cache, phpbb_ext_gallery_core_user $user, dbal $db, phpbb_template $template, phpbb_user $phpbb_user, $user_id, $album_id = false)
+	protected $cache;
+
+	/**
+	* Database object
+	* @var \phpbb\db\driver\driver
+	*/
+	protected $db;
+
+	/**
+	* Gallery user object
+	* @var \phpbbgallery\core\user
+	*/
+	protected $user;
+
+	/**
+	* Gallery permissions table
+	* @var string
+	*/
+	protected $table_permissions;
+
+	/**
+	* Gallery permission roles table
+	* @var string
+	*/
+	protected $table_roles;
+
+	/**
+	* Gallery users table
+	* @var string
+	*/
+	protected $table_users;
+
+	/**
+	* Construct
+	*
+	* @param	\phpbbgallery\core\cache	$cache	Cache object
+	* @param	\phpbb\db\driver\driver	$db			Database object
+	* @param	\phpbbgallery\core\user	$user		Gallery user object
+	* @param	string			$permissions_table	Gallery permissions table
+	* @param	string			$roles_table		Gallery permission roles table
+	* @param	string			$users_table		Gallery users table
+	*/
+	public function __construct(\phpbbgallery\core\cache $cache, \phpbb\db\driver\driver $db, \phpbbgallery\core\user $user, $permissions_table, $roles_table, $users_table)
 	{
+		$this->cache = $cache;
+		$this->db = $db;
+		$this->user = $user;
+		$this->table_permissions = $permissions_table;
+		$this->table_roles = $roles_table;
+		$this->table_users = $users_table;
+
 		self::$_permissions = array_merge(self::$_permission_i, self::$_permission_c, self::$_permission_m, self::$_permission_misc);
 		self::$_permissions_flipped = array_flip(array_merge(self::$_permissions, array('m_')));
 		self::$_permissions_flipped['i_count'] = 'i_count';
 		self::$_permissions_flipped['a_count'] = 'a_count';
+	}
 
-		$this->cache = $cache;
-		$this->user = $user;
-		$this->phpbb_db = $db;
-		$this->phpbb_template = $template;
-		$this->phpbb_user = $phpbb_user;
-
+	public function load_user_premissions($user_id, $album_id = false)
+	{
 		$cached_permissions = $this->user->get_data('user_permissions');
-		if (($user_id == $this->phpbb_user->data['user_id']) && !empty($cached_permissions))
+		if (/*($user_id == $user->data['user_id']) && */!empty($cached_permissions))
 		{
 			$this->unserialize_auth_data($cached_permissions);
 			return;
 		}
-		else if ($user_id != $this->phpbb_user->data['user_id'])
+		//@todo: No permission testing feature for now
+		/*else if ($user_id != $user->data['user_id'])
 		{
-			$permissions_user = new phpbb_ext_gallery_core_user($this->phpbb_db, $user_id);
+			$permissions_user = new \phpbbgallery\core\user($db, $user_id);
 			$cached_permissions = $permissions_user->get_data('user_permissions');
 			if (!empty($cached_permissions))
 			{
 				$this->unserialize_auth_data($cached_permissions);
 				return;
 			}
-		}
+		}*/
 		$this->query_auth_data($user_id);
 	}
 
 	/**
 	* Query the permissions for a given user and store them in the database.
 	*/
-	private function query_auth_data($user_id)
+	protected function query_auth_data($user_id)
 	{
-		$albums = $this->cache->get('albums');
-		$user_groups_ary = $this->get_usergroups($user_id);
+		$albums = array();//@todo $this->cache->obtain_album_list();
+		$user_groups_ary = self::get_usergroups($user_id);
 
 		$sql_select = '';
 		foreach (self::$_permissions as $permission)
@@ -104,46 +136,47 @@ class phpbb_ext_gallery_core_auth
 			$sql_select .= " MAX($permission) as $permission,";
 		}
 
-		$this->_auth_data[self::OWN_ALBUM]				= new phpbb_ext_gallery_core_auth_set();
-		$this->_auth_data_never[self::OWN_ALBUM]		= new phpbb_ext_gallery_core_auth_set();
-		$this->_auth_data[self::PERSONAL_ALBUM]			= new phpbb_ext_gallery_core_auth_set();
-		$this->_auth_data_never[self::PERSONAL_ALBUM]	= new phpbb_ext_gallery_core_auth_set();
+		$this->_auth_data[self::OWN_ALBUM]				= new \phpbbgallery\core\auth\set();
+		$this->_auth_data_never[self::OWN_ALBUM]		= new \phpbbgallery\core\auth\set();
+		$this->_auth_data[self::PERSONAL_ALBUM]			= new \phpbbgallery\core\auth\set();
+		$this->_auth_data_never[self::PERSONAL_ALBUM]	= new \phpbbgallery\core\auth\set();
 
 		foreach ($albums as $album)
 		{
 			if ($album['album_user_id'] == self::PUBLIC_ALBUM)
 			{
-				$this->_auth_data[$album['album_id']]		= new phpbb_ext_gallery_core_auth_set();
-				$this->_auth_data_never[$album['album_id']]	= new phpbb_ext_gallery_core_auth_set();
+				$this->_auth_data[$album['album_id']]		= new \phpbbgallery\core\auth\set();
+				$this->_auth_data_never[$album['album_id']]	= new \phpbbgallery\core\auth\set();
 			}
 		}
 
 		$sql_array = array(
 			'SELECT'		=> "p.perm_album_id, $sql_select p.perm_system",
-			'FROM'			=> array(GALLERY_PERMISSIONS_TABLE => 'p'),
+			'FROM'			=> array($this->table_permissions => 'p'),
 
 			'LEFT_JOIN'		=> array(
 				array(
-					'FROM'		=> array(GALLERY_ROLES_TABLE => 'pr'),
+					'FROM'		=> array($this->table_roles => 'pr'),
 					'ON'		=> 'p.perm_role_id = pr.role_id',
 				),
 			),
 
-			'WHERE'			=> 'p.perm_user_id = ' . $user_id . ' OR ' . $this->phpbb_db->sql_in_set('p.perm_group_id', $user_groups_ary, false, true),
+			'WHERE'			=> 'p.perm_user_id = ' . $user_id . ' OR ' . $this->db->sql_in_set('p.perm_group_id', $user_groups_ary, false, true),
 			'GROUP_BY'		=> 'p.perm_system, p.perm_album_id',
 			'ORDER_BY'		=> 'p.perm_system DESC, p.perm_album_id ASC',
 		);
-		$sql = $this->phpbb_db->sql_build_query('SELECT', $sql_array);
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 
-		$this->phpbb_db->sql_return_on_error(true);
-		$result = $this->phpbb_db->sql_query($sql);
-		if ($this->phpbb_db->sql_error_triggered)
+		$this->db->sql_return_on_error(true);
+		$result = $this->db->sql_query($sql);
+		if ($this->db->sql_error_triggered)
 		{
 			trigger_error('DATABASE_NOT_UPTODATE');
-		}
-		$this->phpbb_db->sql_return_on_error(false);
 
-		while ($row = $this->phpbb_db->sql_fetchrow($result))
+		}
+		$this->db->sql_return_on_error(false);
+
+		while ($row = $this->db->sql_fetchrow($result))
 		{
 			switch ($row['perm_system'])
 			{
@@ -160,7 +193,7 @@ class phpbb_ext_gallery_core_auth
 				break;
 			}
 		}
-		$this->phpbb_db->sql_freeresult($result);
+		$this->db->sql_freeresult($result);
 
 		$this->merge_acl_row();
 
@@ -176,7 +209,7 @@ class phpbb_ext_gallery_core_auth
 	* Samples:		8912837:0:10::-3
 	*				9961469:20:0::1:23:42
 	*/
-	private function serialize_auth_data($auth_data)
+	protected function serialize_auth_data($auth_data)
 	{
 		$acl_array = array();
 
@@ -199,7 +232,7 @@ class phpbb_ext_gallery_core_auth
 	/**
 	* Unserialize the stored auth-data
 	*/
-	private function unserialize_auth_data($serialized_data)
+	protected function unserialize_auth_data($serialized_data)
 	{
 		$acl_array = explode("\n", $serialized_data);
 
@@ -210,7 +243,7 @@ class phpbb_ext_gallery_core_auth
 
 			foreach (explode(':', $a_ids) as $a_id)
 			{
-				$this->_auth_data[$a_id] = new phpbb_ext_gallery_core_auth_set($bits, $i_count, $a_count);
+				$this->_auth_data[$a_id] = new \phpbbgallery\core\auth\set($bits, $i_count, $a_count);
 			}
 		}
 	}
@@ -218,7 +251,7 @@ class phpbb_ext_gallery_core_auth
 	/**
 	* Stores an acl-row into the _auth_data-array.
 	*/
-	private function store_acl_row($album_id, $data)
+	protected function store_acl_row($album_id, $data)
 	{
 		if (!isset($this->_auth_data[$album_id]))
 		{
@@ -253,7 +286,7 @@ class phpbb_ext_gallery_core_auth
 	/**
 	* Merge the NEVER-options into the YES-options by removing the YES, if it is set.
 	*/
-	private function merge_acl_row()
+	protected function merge_acl_row()
 	{
 		foreach ($this->_auth_data as $album_id => $obj)
 		{
@@ -275,7 +308,7 @@ class phpbb_ext_gallery_core_auth
 	/**
 	* Restrict the access to personal galleries, if the user is not a moderator.
 	*/
-	private function restrict_pegas($user_id)
+	protected function restrict_pegas($user_id)
 	{
 		if (($user_id != ANONYMOUS) && $this->_auth_data[self::PERSONAL_ALBUM]->get_bit(self::$_permissions_flipped['m_']))
 		{
@@ -285,8 +318,7 @@ class phpbb_ext_gallery_core_auth
 
 		$zebra = null;
 
-		$albums = $this->cache->get('albums');
-
+		$albums = array();//@todo $this->cache->obtain_album_list();
 		foreach ($albums as $album)
 		{
 			if (!$album['album_auth_access'] || ($album['album_user_id'] == self::PUBLIC_ALBUM))# || ($album['album_user_id'] == $user_id))
@@ -296,7 +328,7 @@ class phpbb_ext_gallery_core_auth
 			else if ($user_id == ANONYMOUS)
 			{
 				// Level 1: No guests
-				$this->_auth_data[$album['album_id']] = new phpbb_gallery_auth_set();
+				$this->_auth_data[$album['album_id']] = new \phpbbgallery\core\auth\set();
 				continue;
 			}
 			else if ($album['album_auth_access'] == self::ACCESS_NOT_FOES)
@@ -308,7 +340,7 @@ class phpbb_ext_gallery_core_auth
 				if (in_array($album['album_user_id'], $zebra['foe']))
 				{
 					// Level 2: No foes allowed
-					$this->_auth_data[$album['album_id']] = new phpbb_gallery_auth_set();
+					$this->_auth_data[$album['album_id']] = new \phpbbgallery\core\auth\set();
 					continue;
 				}
 			}
@@ -321,7 +353,7 @@ class phpbb_ext_gallery_core_auth
 				if (!in_array($album['album_user_id'], $zebra['friend']))
 				{
 					// Level 3: Only friends allowed
-					$this->_auth_data[$album['album_id']] = new phpbb_gallery_auth_set();
+					$this->_auth_data[$album['album_id']] = new \phpbbgallery\core\auth\set();
 					continue;
 				}
 			}
@@ -331,14 +363,15 @@ class phpbb_ext_gallery_core_auth
 	/**
 	* Get the users, which added our user as friend and/or foe
 	*/
-	static public function get_user_zebra($user_id)
+	public function get_user_zebra($user_id)
 	{
+
 		$zebra = array('foe' => array(), 'friend' => array());
 		$sql = 'SELECT *
 			FROM ' . ZEBRA_TABLE . '
 			WHERE zebra_id = ' . (int) $user_id;
-		$result = $this->phpbb_db->sql_query($sql);
-		while ($row = $this->phpbb_db->sql_fetchrow($result))
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
 		{
 			if ($row['foe'])
 			{
@@ -349,7 +382,7 @@ class phpbb_ext_gallery_core_auth
 				$zebra['friend'][] = (int) $row['user_id'];
 			}
 		}
-		$this->phpbb_db->sql_freeresult($result);
+		$this->db->sql_freeresult($result);
 		return $zebra;
 	}
 
@@ -367,13 +400,13 @@ class phpbb_ext_gallery_core_auth
 			WHERE ug.user_id = ' . (int) $user_id . '
 				AND ug.user_pending = 0
 				AND g.group_skip_auth = 0';
-		$result = $this->phpbb_db->sql_query($sql);
+		$result = $this->db->sql_query($sql);
 
-		while ($row = $this->phpbb_db->sql_fetchrow($result))
+		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$groups_ary[] = $row['group_id'];
 		}
-		$this->phpbb_db->sql_freeresult($result);
+		$this->db->sql_freeresult($result);
 
 		return $groups_ary;
 	}
@@ -383,11 +416,11 @@ class phpbb_ext_gallery_core_auth
 	*/
 	public function set_user_permissions($user_ids, $permissions = false)
 	{
-		$sql_set = (is_array($permissions)) ? $this->phpbb_db->sql_escape(self::serialize_auth_data($permissions)) : '';
+		$sql_set = (is_array($permissions)) ? $this->db->sql_escape($this->serialize_auth_data($permissions)) : '';
 		$sql_where = '';
 		if (is_array($user_ids))
 		{
-			$sql_where = 'WHERE ' . $this->phpbb_db->sql_in_set('user_id', array_map('intval', $user_ids));
+			$sql_where = 'WHERE ' . $this->db->sql_in_set('user_id', array_map('intval', $user_ids));
 		}
 		elseif ($user_ids == 'all')
 		{
@@ -398,19 +431,16 @@ class phpbb_ext_gallery_core_auth
 			$sql_where = 'WHERE user_id = ' . (int) $user_ids;
 		}
 
-		if (isset($this->phpbb_user) && isset($this->user))
+		if ($this->user->is_user($user_ids))
 		{
-			if ($user_ids == $this->phpbb_user->data['user_id'])
-			{
-				$this->user->set_permissions_changed(time());
-			}
+			$this->user->set_permissions_changed(time());
 		}
 
-		$sql = 'UPDATE ' . GALLERY_USERS_TABLE . "
+		$sql = 'UPDATE ' . $this->table_users . "
 			SET user_permissions = '" . $sql_set . "',
 				user_permissions_changed = " . time() . '
 			' . $sql_where;
-		$this->phpbb_db->sql_query($sql);
+		$this->db->sql_query($sql);
 	}
 
 	/**
@@ -442,7 +472,7 @@ class phpbb_ext_gallery_core_auth
 			// Yes, from viewonline.php
 			if (!$_album_list)
 			{
-				$_album_list = $this->cache->get('albums');
+				$_album_list = $this->cache->obtain_album_list();
 			}
 			if (!isset($_album_list[$a_id]))
 			{
@@ -461,7 +491,8 @@ class phpbb_ext_gallery_core_auth
 		$p_id = $a_id;
 		if ($u_id)
 		{
-			if ($u_id == $this->phpbb_user->data['user_id'])
+
+			if ($this->user->is_user($u_id))
 			{
 				$p_id = self::OWN_ALBUM;
 			}
@@ -507,7 +538,7 @@ class phpbb_ext_gallery_core_auth
 			return true;
 		}
 
-		$albums = $this->cache->get('albums');
+		$albums = $this->cache->obtain_album_list();
 		foreach ($albums as $album)
 		{
 			if (!$album['album_user_id'] && $this->_auth_data[$album['album_id']]->get_bit($bit))
@@ -536,15 +567,15 @@ class phpbb_ext_gallery_core_auth
 		if (!is_int($bit))
 		{
 			// No support for *_count permissions.
-			return ($mode == 'array') ? array() : '';
+			return ($return == 'array') ? array() : '';
 		}
 
 		$album_list = '';
 		$album_array = array();
-		$albums = $this->cache->get('albums');
+		$albums = $this->cache->obtain_album_list();
 		foreach ($albums as $album)
 		{
-			if ($album['album_user_id'] == $this->phpbb_user->data['user_id'])
+			if ($this->user->is_user($album['album_user_id']))
 			{
 				$a_id = self::OWN_ALBUM;
 			}
@@ -573,45 +604,5 @@ class phpbb_ext_gallery_core_auth
 		}
 
 		return ($return == 'array') ? $album_array : $album_list;
-	}
-
-	/**
-	* User authorisation levels output
-	*
-	* @param	string	$mode			Can only be 'album' so far.
-	* @param	int		$album_id		The current album the user is in.
-	* @param	int		$album_status	The albums status bit.
-	* @param	int		$album_user_id	The user-id of the album owner. Saves us a call to the cache if it is set.
-	*
-	* borrowed from phpBB3
-	* @author: phpBB Group
-	* @function: gen_forum_auth_level
-	*/
-	public function gen_auth_level($mode, $album_id, $album_status, $album_user_id = -1)
-	{
-		global $phpbb_ext_gallery;
-		$locked = ($album_status == ITEM_LOCKED && !$this->acl_check('m_', $album_id, $album_user_id)) ? true : false;
-
-		$rules = array(
-			($this->acl_check('i_view', $album_id, $album_user_id) && !$locked) ? $this->phpbb_user->lang['ALBUM_VIEW_CAN'] : $this->phpbb_user->lang['ALBUM_VIEW_CANNOT'],
-			($this->acl_check('i_upload', $album_id, $album_user_id) && !$locked) ? $this->phpbb_user->lang['ALBUM_UPLOAD_CAN'] : $this->phpbb_user->lang['ALBUM_UPLOAD_CANNOT'],
-			($this->acl_check('i_edit', $album_id, $album_user_id) && !$locked) ? $this->phpbb_user->lang['ALBUM_EDIT_CAN'] : $this->phpbb_user->lang['ALBUM_EDIT_CANNOT'],
-			($this->acl_check('i_delete', $album_id, $album_user_id) && !$locked) ? $this->phpbb_user->lang['ALBUM_DELETE_CAN'] : $this->phpbb_user->lang['ALBUM_DELETE_CANNOT'],
-		);
-		if ($phpbb_ext_gallery->config->get('allow_comments') && $this->acl_check('c_read', $album_id, $album_user_id))
-		{
-			$rules[] = ($this->acl_check('c_post', $album_id, $album_user_id) && !$locked) ? $this->phpbb_user->lang['ALBUM_COMMENT_CAN'] : $this->phpbb_user->lang['ALBUM_COMMENT_CANNOT'];
-		}
-		if ($phpbb_ext_gallery->config->get('allow_rates'))
-		{
-			$rules[] = ($this->acl_check('i_rate', $album_id, $album_user_id) && !$locked) ? $this->phpbb_user->lang['ALBUM_RATE_CAN'] : $this->phpbb_user->lang['ALBUM_RATE_CANNOT'];
-		}
-
-		foreach ($rules as $rule)
-		{
-			$this->phpbb_template->assign_block_vars('rules', array('RULE' => $rule));
-		}
-
-		return;
 	}
 }

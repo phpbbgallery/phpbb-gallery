@@ -1,23 +1,16 @@
 <?php
+
 /**
 *
 * @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2014 nickvergessen
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
-/**
-* @ignore
-*/
+namespace phpbbgallery\core;
 
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
-
-class phpbb_ext_gallery_core
+class core
 {
 	// We still need this, as we can not guess that.
 
@@ -41,23 +34,25 @@ class phpbb_ext_gallery_core
 	/**
 	* Constructor
 	*/
-	public function __construct(phpbb_auth $auth, phpbb_cache_service $cache,
-		phpbb_config $config, dbal $db, phpbb_template $template,
-		phpbb_user $user, $phpEx, $phpbb_root_path)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache,
+		\phpbb\config\config $config, \phpbb\db\driver\driver $db, \phpbb\template\template $template,
+		\phpbb\user $user, $phpEx, $phpbb_root_path)
 	{
 		$this->phpbb_auth = $auth;
 		$this->phpbb_cache = $cache;
-		$this->phpbb_config = $config;
+		$this->config = $config;
 		$this->phpbb_db = $db;
 		$this->phpbb_template = $template;
 		$this->phpbb_user = $user;
 
+		global $phpbb_dispatcher;
+		$this->dispatcher = $phpbb_dispatcher;
+
 		$this->phpbb_phpEx = $phpEx;
 		$this->phpbb_root_path = $phpbb_root_path;
 
-		$this->url = new phpbb_ext_gallery_core_url($this->phpbb_root_path, $this->phpbb_phpEx);
-		$this->config = new phpbb_ext_gallery_core_config($this->phpbb_config, $this->phpbb_db, CONFIG_TABLE);
-		$this->cache = new phpbb_ext_gallery_core_cache($this->phpbb_cache, $this->phpbb_db);
+		$this->url = new \phpbbgallery\core\url($this->phpbb_root_path, $this->phpbb_phpEx);
+		$this->cache = new \phpbbgallery\core\cache($this->phpbb_cache, $this->phpbb_db);
 	}
 
 	/**
@@ -89,8 +84,8 @@ class phpbb_ext_gallery_core
 		$this->phpbb_user->data['user_id'] = (int) $this->phpbb_user->data['user_id'];
 		$user_id = ($this->phpbb_user->data['user_perm_from'] == 0) ? $this->phpbb_user->data['user_id'] : (int) $this->phpbb_user->data['user_perm_from'];
 
-		$this->user = new phpbb_ext_gallery_core_user($this->phpbb_db, $this->phpbb_user->data['user_id']);
-		$this->auth = new phpbb_ext_gallery_core_auth($this->cache, $this->user, $this->phpbb_db, $this->phpbb_template, $this->phpbb_user, $user_id);
+		$this->user = new \phpbbgallery\core\user($this->phpbb_db, $this->dispatcher, $this->phpbb_user->data['user_id']);
+		$this->auth = new \phpbbgallery\core\auth\auth($this->cache, $this->phpbb_db, $this->user, 'phpbb_gallery_permissions', 'phpbb_gallery_roles', 'phpbb_gallery_users');
 
 		if ($this->config->get('mvc_time') < time())
 		{
@@ -159,15 +154,17 @@ class phpbb_ext_gallery_core
 
 		// Little precaution.
 		$this->phpbb_user->data['user_id'] = (int) $this->phpbb_user->data['user_id'];
-		$user_id = ($this->phpbb_user->data['user_perm_from'] == 0) ? $this->phpbb_user->data['user_id'] : (int) $this->phpbb_user->data['user_perm_from'];
 
-		$this->user = new phpbb_ext_gallery_core_user($this->phpbb_db, $this->phpbb_user->data['user_id']);
-		$this->auth = new phpbb_ext_gallery_core_auth($this->cache, $this->user, $this->phpbb_db, $this->phpbb_template, $this->phpbb_user, $user_id);
+		//@todo hardcoded table names
+		$this->user = new \phpbbgallery\core\user($this->phpbb_db, $this->dispatcher, 'phpbb_gallery_users');
+		$this->user->set_user_id($this->phpbb_user->data['user_id']);
+		$this->auth = new \phpbbgallery\core\auth\auth($this->cache, $this->phpbb_db, $this->user, 'phpbb_gallery_permissions', 'phpbb_gallery_roles', 'phpbb_gallery_users');
+		$this->auth->load_user_premissions($this->phpbb_user->data['user_perm_from'] ?: $this->phpbb_user->data['user_id']);
 
-		if ($this->config->get('mvc_time') < time())
+		if ($this->config['phpbb_gallery_mvc_time'] < time())
 		{
 			// Check the version, do we need to update?
-			$this->config->set('mvc_time', time() + 86400);
+			$this->config->set('phpbb_gallery_mvc_time', time() + 86400);
 			//@todo: $this->config->set('mvc_version', phpbb_gallery_modversioncheck::check(true));
 		}
 

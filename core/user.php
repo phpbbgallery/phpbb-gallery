@@ -1,58 +1,89 @@
 <?php
-/**
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-*/
 
 /**
-* @ignore
-*/
+ *
+ * @package phpBB Gallery
+ * @copyright (c) 2014 nickvergessen
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
 
-if (!defined('IN_PHPBB'))
+namespace phpbbgallery\core;
+
+class user
 {
-	exit;
-}
-
-class phpbb_ext_gallery_core_user
-{
 	/**
-	* phpBB-user_id
-	*/
-	public $id = 0;
+	 * phpBB-user_id
+	 * @var int
+	 */
+	public $user_id;
 
 	/**
-	* phpBB database object
-	*/
-	private $phpbb_db;
+	 * Database object
+	 * @var \phpbb\db\driver\driver
+	 */
+	protected $db;
 
 	/**
-	* Do we have an entry for the user in the table?
-	*/
+	 * Event dispatcher object
+	 * @var \phpbb\event\dispatcher
+	 */
+	protected $dispatcher;
+
+	/**
+	 * Gallery users table
+	 * @var string
+	 */
+	protected $table_name;
+
+	/**
+	 * Do we have an entry for the user in the table?
+	 */
 	public $entry_exists = null;
 
 	/**
-	* Users data in the table
-	*/
-	private $data = array();
+	 * Users data in the table
+	 */
+	protected $data = array();
 
 	/**
-	* Constructor
-	*
-	* @param	int		$user_id
-	* @param	bool	$load		Shall we automatically load the users data from the database?
-	*/
-	public function __construct(dbal $db, $user_id, $load = true)
+	 * Constructor
+	 *
+	 * @param	\phpbb\db\driver\driver	$db			Database object
+	 * @param	\phpbb\event\dispatcher	$dispatcher	Event dispatcher object
+	 * @param	string					$table_name	Gallery users table
+	 */
+	public function __construct(\phpbb\db\driver\driver $db, \phpbb\event\dispatcher $dispatcher, $table_name)
 	{
-		$this->phpbb_db	= $db;
-		$this->id		= (int) $user_id;
+		$this->db			= $db;
+		$this->dispatcher	= $dispatcher;
+		$this->table_name	= $table_name;
+	}
+
+	/**
+	 * Set the user ID
+	 *
+	 * @param	int		$user_id
+	 * @param	bool	$load		Shall we automatically load the users data from the database?
+	 */
+	public function set_user_id($user_id, $load = true)
+	{
+		$this->user_id		= (int) $user_id;
 		if ($load)
 		{
 			$this->load_data();
 		}
+	}
+
+	/**
+	 * Is it the same user?
+	 *
+	 * @param	int		$user_id
+	 * @return	bool
+	 */
+	public function is_user($user_id)
+	{
+		return $this->user_id == $user_id;
 	}
 
 	/**
@@ -62,15 +93,15 @@ class phpbb_ext_gallery_core_user
 	{
 		$this->entry_exists	= false;
 		$sql = 'SELECT *
-			FROM ' . GALLERY_USERS_TABLE . '
-			WHERE user_id = ' . $this->id;
-		$result = $this->phpbb_db->sql_query($sql);
-		if ($row = $this->phpbb_db->sql_fetchrow($result))
+			FROM ' . $this->table_name . '
+			WHERE user_id = ' . $this->user_id;
+		$result = $this->db->sql_query($sql);
+		if ($row = $this->db->sql_fetchrow($result))
 		{
 			$this->data			= $this->validate_data($row);
 			$this->entry_exists	= true;
 		}
-		$this->phpbb_db->sql_freeresult($result);
+		$this->db->sql_freeresult($result);
 
 	}
 
@@ -110,9 +141,9 @@ class phpbb_ext_gallery_core_user
 		{
 			return $this->data[$key];
 		}
-		elseif ($default && self::get_default_value($key) !== null)
+		else if ($default && $this->get_default_value($key) !== null)
 		{
-			return self::get_default_value($key);
+			return $this->get_default_value($key);
 		}
 
 		return false;
@@ -177,32 +208,32 @@ class phpbb_ext_gallery_core_user
 		));
 		unset($sql_ary['user_id']);
 
-		$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
-			SET ' . $this->phpbb_db->sql_build_array('UPDATE', $sql_ary) . '
-			WHERE user_id = ' . $this->id;
-		$this->phpbb_db->sql_query($sql);
+		$sql = 'UPDATE ' . $this->table_name . '
+			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
+			WHERE user_id = ' . $this->user_id;
+		$this->db->sql_query($sql);
 
 		$this->data = array_merge($this->data, $sql_ary);
 
-		return ($this->phpbb_db->sql_affectedrows() == 1) ? true : false;
+		return ($this->db->sql_affectedrows() == 1) ? true : false;
 	}
 
 	/**
 	* Updates the users table by increasing the values.
 	*
-	* @param	array	$data	Array of data we want to increment
-	* @return	mixed			Returns true if the columns were updated successfully, else false
+	* @param	int		$num	Number of images to add to the counter
+	* @return	bool			Returns true if the columns were updated successfully, else false
 	*/
-	private function update_image_count($num)
+	protected function update_image_count($num)
 	{
-		$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
+		$sql = 'UPDATE ' . $this->table_name . '
 			SET user_images = user_images ' . (($num > 0) ? (' + ' . $num) : (' - ' . abs($num))) . ',
 				user_last_update = ' . time() . '
 			WHERE ' . (($num < 0) ? ' user_images > ' . abs($num) . ' AND ' : '') . '
-				user_id = ' . $this->id;
-		$this->phpbb_db->sql_query($sql);
+				user_id = ' . $this->user_id;
+		$this->db->sql_query($sql);
 
-		if ($this->phpbb_db->sql_affectedrows() == 1)
+		if ($this->db->sql_affectedrows() == 1)
 		{
 			if (!empty($this->data))
 			{
@@ -223,18 +254,18 @@ class phpbb_ext_gallery_core_user
 	private function insert($data)
 	{
 		$sql_ary = array_merge(self::get_default_values(), $this->validate_data($data), array(
-			'user_id'			=> $this->id,
+			'user_id'			=> $this->user_id,
 			'user_last_update'	=> time(),
 		));
 
-		$this->phpbb_db->sql_return_on_error(true);
+		$this->db->sql_return_on_error(true);
 
-		$sql = 'INSERT INTO ' . GALLERY_USERS_TABLE . '
-			' . $this->phpbb_db->sql_build_array('INSERT', $sql_ary);
-		$this->phpbb_db->sql_query($sql);
-		$error = $this->phpbb_db->sql_error_triggered;
+		$sql = 'INSERT INTO ' . $this->table_name . '
+			' . $this->db->sql_build_array('INSERT', $sql_ary);
+		$this->db->sql_query($sql);
+		$error = $this->db->sql_error_triggered;
 
-		$this->phpbb_db->sql_return_on_error(false);
+		$this->db->sql_return_on_error(false);
 
 		$this->data = $sql_ary;
 		$this->entry_exists = true;
@@ -247,9 +278,9 @@ class phpbb_ext_gallery_core_user
 	*/
 	public function delete()
 	{
-		$sql = 'DELETE FROM ' . GALLERY_USERS_TABLE . '
-			WHERE user_id = ' . $this->id;
-		$result = $this->phpbb_db->sql_query($sql);
+		$sql = 'DELETE FROM ' . $this->table_name . '
+			WHERE user_id = ' . $this->user_id;
+		$this->db->sql_query($sql);
 	}
 
 	/**
@@ -257,15 +288,14 @@ class phpbb_ext_gallery_core_user
 	*
 	* @param	mixed	$user_ids	Can either be an array of IDs, one ID or the string 'all' to delete all users.
 	*/
-	static public function delete_users($user_ids)
+	public function delete_users($user_ids)
 	{
-		global $db;
 
-		$sql_where = self::sql_build_where($user_ids);
+		$sql_where = $this->sql_build_where($user_ids);
 
-		$sql = 'DELETE FROM ' . GALLERY_USERS_TABLE . '
+		$sql = 'DELETE FROM ' . $this->table_name . '
 			' . $sql_where;
-		$result = $db->sql_query($sql);
+		$this->db->sql_query($sql);
 	}
 
 	/**
@@ -275,23 +305,21 @@ class phpbb_ext_gallery_core_user
 	* @param	array	$data		Array of data we want to add/update.
 	* @return	bool				Returns true if the columns were updated successfully
 	*/
-	static public function update_users($user_ids, $data)
+	public function update_users($user_ids, $data)
 	{
-		global $db;
-
-		$sql_ary = array_merge(self::validate_data($data), array(
+		$sql_ary = array_merge($this->validate_data($data), array(
 			'user_last_update'	=> time(),
 		));
 		unset($sql_ary['user_id']);
 
-		$sql_where = self::sql_build_where($user_ids);
+		$sql_where = $this->sql_build_where($user_ids);
 
-		$sql = 'UPDATE ' . GALLERY_USERS_TABLE . '
-			SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+		$sql = 'UPDATE ' . $this->table_name . '
+			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 			' . $sql_where;
-		$db->sql_query($sql);
+		$this->db->sql_query($sql);
 
-		return ($db->sql_affectedrows() != 0) ? true : false;
+		return ($this->db->sql_affectedrows() != 0) ? true : false;
 	}
 
 	/**
@@ -300,14 +328,11 @@ class phpbb_ext_gallery_core_user
 	* @param	mixed	$user_ids	Can either be an array of IDs, one ID or the string 'all' to update all users.
 	* @return	string				The WHERE statement with "WHERE " if needed.
 	*/
-	static public function sql_build_where($user_ids)
+	public function sql_build_where($user_ids)
 	{
-		global $db;
-
-		$sql_where = '';
 		if (is_array($user_ids) && !empty($user_ids))
 		{
-			$sql_where = 'WHERE ' . $db->sql_in_set('user_id', array_map('intval', $user_ids));
+			$sql_where = 'WHERE ' . $this->db->sql_in_set('user_id', array_map('intval', $user_ids));
 		}
 		elseif ($user_ids == 'all')
 		{
@@ -325,12 +350,11 @@ class phpbb_ext_gallery_core_user
 	* Validate user data.
 	*
 	* @param	array	$data	Array of data we need to validate
+	* @param	bool	$inc	Are we incrementing the value
 	* @return	array			Array with all allowed keys and their casted and selected values
 	*/
-	static public function validate_data($data, $inc = false)
+	public function validate_data($data, $inc = false)
 	{
-		global $phpbb_dispatcher;
-
 		$validated_data = array();
 		foreach ($data as $name => $value)
 		{
@@ -366,7 +390,7 @@ class phpbb_ext_gallery_core_user
 					$is_validated = false;
 
 					$vars = array('is_validated', 'name', 'value');
-					extract($phpbb_dispatcher->trigger_event('gallery.core.user.validate_data', compact($vars)));
+					extract($this->dispatcher->trigger_event('gallery.core.user.validate_data', compact($vars)));
 
 					if ($is_validated)
 					{
@@ -378,9 +402,9 @@ class phpbb_ext_gallery_core_user
 		return $validated_data;
 	}
 
-	static private function get_default_value($key)
+	private function get_default_value($key)
 	{
-		$default_values = self::get_default_values();
+		$default_values = $this->get_default_values();
 
 		if (isset($default_values[$key]))
 		{
@@ -390,7 +414,7 @@ class phpbb_ext_gallery_core_user
 		return null;
 	}
 
-	static private function get_default_values()
+	private function get_default_values()
 	{
 		static $default_values;
 
@@ -399,11 +423,10 @@ class phpbb_ext_gallery_core_user
 			return $default_values;
 		}
 
-		global $phpbb_dispatcher;
 		$default_values = self::$default_values;
 
 		$vars = array('default_values');
-		extract($phpbb_dispatcher->trigger_event('gallery.core.user.get_default_values', compact($vars)));
+		extract($this->dispatcher->trigger_event('gallery.core.user.get_default_values', compact($vars)));
 
 		return $default_values;
 	}

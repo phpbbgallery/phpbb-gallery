@@ -1,26 +1,19 @@
 <?php
+
 /**
 *
 * @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2014 nickvergessen
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
-/**
-* @ignore
-*/
-
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
+namespace phpbbgallery\core\ucp;
 
 /**
 * @package ucp
 */
-class phpbb_ext_gallery_core_ucp_main_module
+class main_module
 {
 	var $u_action;
 
@@ -28,11 +21,11 @@ class phpbb_ext_gallery_core_ucp_main_module
 	{
 		global $auth, $cache, $config, $db, $template, $user, $phpEx, $phpbb_root_path, $phpbb_ext_gallery;
 
-		$phpbb_ext_gallery = new phpbb_ext_gallery_core($auth, $cache, $config, $db, $template, $user, $phpEx, $phpbb_root_path);
+		$phpbb_ext_gallery = new \phpbbgallery\core\core($auth, $cache, $config, $db, $template, $user, $phpEx, $phpbb_root_path);
 		$phpbb_ext_gallery->init();
 		$phpbb_ext_gallery->url->_include('functions_display', 'phpbb');
 
-		$user->add_lang_ext('gallery/core', array('gallery', 'gallery_acp', 'gallery_mcp', 'gallery_ucp'));
+		$user->add_lang_ext('phpbbgallery/core', array('gallery', 'gallery_acp', 'gallery_mcp', 'gallery_ucp'));
 		$this->tpl_name = 'gallery/ucp_gallery';
 		add_form_key('ucp_gallery');
 
@@ -112,7 +105,7 @@ class phpbb_ext_gallery_core_ucp_main_module
 
 	function set_personal_settings()
 	{
-		global $db, $template, $user, $phpbb_ext_gallery, $phpbb_dispatcher;
+		global $config, $template, $user, $phpbb_ext_gallery, $phpbb_dispatcher;
 
 		$submit = (isset($_POST['submit'])) ? true : false;
 
@@ -130,7 +123,7 @@ class phpbb_ext_gallery_core_ucp_main_module
 
 			$gallery_settings = array_merge($gallery_settings, $additional_settings);
 
-			if (!$phpbb_ext_gallery->config->get('allow_comments') || !$phpbb_ext_gallery->config->get('comment_user_control'))
+			if (!$config['phpbb_gallery_allow_comments'] || !$config['phpbb_gallery_comment_user_control'])
 			{
 				unset($gallery_settings['user_allow_comments']);
 			}
@@ -153,7 +146,7 @@ class phpbb_ext_gallery_core_ucp_main_module
 			'S_WATCH_OWN'		=> $phpbb_ext_gallery->user->get_data('watch_own'),
 			'S_WATCH_COM'		=> $phpbb_ext_gallery->user->get_data('watch_com'),
 			'S_ALLOW_COMMENTS'	=> $phpbb_ext_gallery->user->get_data('user_allow_comments'),
-			'S_COMMENTS_ENABLED'=> $phpbb_ext_gallery->config->get('allow_comments') && $phpbb_ext_gallery->config->get('comment_user_control'),
+			'S_COMMENTS_ENABLED'=> $config['phpbb_gallery_allow_comments'] && $config['phpbb_gallery_comment_user_control'],
 		));
 	}
 

@@ -392,25 +392,26 @@ class release_1_1_6 extends \phpbb\db\migration\migration
 			// UCP
 			array('module.add', array('ucp', '', 'UCP_GALLERY')),
 			array('module.add', array('ucp', 'UCP_GALLERY', array(
-				'module_basename'	=> '\phpbbgallery\core\ucp\settings_module',
+				'module_basename'	=> '\phpbbgallery\core\ucp\main_module',
 				'module_langname'	=> 'UCP_GALLERY_SETTINGS',
-				'module_mode'		=> 'manage',
+				'module_mode'		=> 'manage_settings',
 				'module_auth'		=> '',
 			))),
 			array('module.add', array('ucp', 'UCP_GALLERY', array(
-				'module_basename'	=> '\phpbbgallery\core\ucp\gallery_module',
+				'module_basename'	=> '\phpbbgallery\core\ucp\main_module',
 				'module_langname'	=> 'UCP_GALLERY_PERSONAL_ALBUMS',
 				'module_mode'		=> 'manage_albums',
 				'module_auth'		=> '',
 			))),
 			array('module.add', array('ucp', 'UCP_GALLERY', array(
-				'module_basename'	=> '\phpbbgallery\core\ucp\gallery_module',
+				'module_basename'	=> '\phpbbgallery\core\ucp\main_module',
 				'module_langname'	=> 'UCP_GALLERY_WATCH',
 				'module_mode'		=> 'manage_subscriptions',
 				'module_auth'		=> '',
 			))),
+			//@todo move
 			array('module.add', array('ucp', 'UCP_GALLERY', array(
-				'module_basename'	=> '\phpbbgallery\core\ucp\gallery_module',
+				'module_basename'	=> '\phpbbgallery\core\ucp\main_module',
 				'module_langname'	=> 'UCP_GALLERY_FAVORITES',
 				'module_mode'		=> 'manage_favorites',
 				'module_auth'		=> '',
