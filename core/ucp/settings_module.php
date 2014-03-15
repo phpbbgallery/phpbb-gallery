@@ -11,8 +11,9 @@
 namespace phpbbgallery\core\ucp;
 
 /**
-* @package ucp
-*/
+ * UCP Module for the User base settings
+ * @package phpbbgallery\core\ucp
+ */
 class settings_module
 {
 	/** @var string */
@@ -45,7 +46,7 @@ class settings_module
 	/** @var \phpbbgallery\core\user */
 	protected $gallery_user;
 
-	function main($id, $mode)
+	public function main($id, $mode)
 	{
 		global $config, $db, $template, $user, $request, $phpbb_dispatcher, $phpbb_container;
 
@@ -73,7 +74,7 @@ class settings_module
 		}
 	}
 
-	function set_personal_settings()
+	protected function set_personal_settings()
 	{
 		if ($this->request->is_set_post('submit'))
 		{
