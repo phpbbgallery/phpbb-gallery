@@ -1,23 +1,16 @@
 <?php
+
 /**
 *
 * @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2014 nickvergessen
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
-/**
-* @ignore
-*/
+namespace phpbbgallery\core\auth;
 
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
-
-class phpbb_gallery_auth
+class auth
 {
 	const SETTING_PERMISSIONS	= -39839;
 	const PERSONAL_ALBUM		= -3;
@@ -25,7 +18,7 @@ class phpbb_gallery_auth
 	const PUBLIC_ALBUM			= 0;
 
 	const ACCESS_ALL			= 0;
-	const ACCESS_REGISTERED	= 1;
+	const ACCESS_REGISTERED		= 1;
 	const ACCESS_NOT_FOES		= 2;
 	const ACCESS_FRIENDS		= 3;
 
@@ -52,7 +45,7 @@ class phpbb_gallery_auth
 	* @param	int		$user_id	User you want the permissions from.
 	* @param	int		$album_id	Only get the permissions for a given album_id. Should save some memory. // Not yet implemented.
 	*/
-	public function phpbb_gallery_auth($user_id, $album_id = false)
+	public function __construct($user_id, $album_id = false)
 	{
 		self::$_permissions = array_merge(self::$_permission_i, self::$_permission_c, self::$_permission_m, self::$_permission_misc);
 		self::$_permissions_flipped = array_flip(array_merge(self::$_permissions, array('m_')));
@@ -86,7 +79,7 @@ class phpbb_gallery_auth
 	*/
 	private function query_auth_data($user_id)
 	{
-		global $cache, $config, $db, $user;
+		global $cache, $db;
 
 		$albums = $cache->obtain_album_list();
 		$user_groups_ary = self::get_usergroups($user_id);
@@ -97,17 +90,17 @@ class phpbb_gallery_auth
 			$sql_select .= " MAX($permission) as $permission,";
 		}
 
-		$this->_auth_data[self::OWN_ALBUM]				= new phpbb_gallery_auth_set();
-		$this->_auth_data_never[self::OWN_ALBUM]		= new phpbb_gallery_auth_set();
-		$this->_auth_data[self::PERSONAL_ALBUM]			= new phpbb_gallery_auth_set();
-		$this->_auth_data_never[self::PERSONAL_ALBUM]	= new phpbb_gallery_auth_set();
+		$this->_auth_data[self::OWN_ALBUM]				= new \phpbbgallery\core\auth\set();
+		$this->_auth_data_never[self::OWN_ALBUM]		= new \phpbbgallery\core\auth\set();
+		$this->_auth_data[self::PERSONAL_ALBUM]			= new \phpbbgallery\core\auth\set();
+		$this->_auth_data_never[self::PERSONAL_ALBUM]	= new \phpbbgallery\core\auth\set();
 
 		foreach ($albums as $album)
 		{
 			if ($album['album_user_id'] == self::PUBLIC_ALBUM)
 			{
-				$this->_auth_data[$album['album_id']]		= new phpbb_gallery_auth_set();
-				$this->_auth_data_never[$album['album_id']]	= new phpbb_gallery_auth_set();
+				$this->_auth_data[$album['album_id']]		= new \phpbbgallery\core\auth\set();
+				$this->_auth_data_never[$album['album_id']]	= new \phpbbgallery\core\auth\set();
 			}
 		}
 
@@ -204,7 +197,7 @@ class phpbb_gallery_auth
 
 			foreach (explode(':', $a_ids) as $a_id)
 			{
-				$this->_auth_data[$a_id] = new phpbb_gallery_auth_set($bits, $i_count, $a_count);
+				$this->_auth_data[$a_id] = new \phpbbgallery\core\auth\set($bits, $i_count, $a_count);
 			}
 		}
 	}
@@ -290,7 +283,7 @@ class phpbb_gallery_auth
 			else if ($user_id == ANONYMOUS)
 			{
 				// Level 1: No guests
-				$this->_auth_data[$album['album_id']] = new phpbb_gallery_auth_set();
+				$this->_auth_data[$album['album_id']] = new \phpbbgallery\core\auth\set();
 				continue;
 			}
 			else if ($album['album_auth_access'] == self::ACCESS_NOT_FOES)
@@ -302,7 +295,7 @@ class phpbb_gallery_auth
 				if (in_array($album['album_user_id'], $zebra['foe']))
 				{
 					// Level 2: No foes allowed
-					$this->_auth_data[$album['album_id']] = new phpbb_gallery_auth_set();
+					$this->_auth_data[$album['album_id']] = new \phpbbgallery\core\auth\set();
 					continue;
 				}
 			}
@@ -315,7 +308,7 @@ class phpbb_gallery_auth
 				if (!in_array($album['album_user_id'], $zebra['friend']))
 				{
 					// Level 3: Only friends allowed
-					$this->_auth_data[$album['album_id']] = new phpbb_gallery_auth_set();
+					$this->_auth_data[$album['album_id']] = new \phpbbgallery\core\auth\set();
 					continue;
 				}
 			}
@@ -553,7 +546,7 @@ class phpbb_gallery_auth
 		if (!is_int($bit))
 		{
 			// No support for *_count permissions.
-			return ($mode == 'array') ? array() : '';
+			return ($return == 'array') ? array() : '';
 		}
 
 		$album_list = '';
