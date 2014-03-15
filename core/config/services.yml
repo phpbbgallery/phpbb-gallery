@@ -1,0 +1,21 @@
+parameters:
+    tables.phpbbgallery.permissions: %core.table_prefix%gallery_permissions
+    tables.phpbbgallery.roles: %core.table_prefix%gallery_roles
+    tables.phpbbgallery.users: %core.table_prefix%gallery_users
+
+services:
+    phpbbgallery.core.user:
+        class: phpbbgallery\core\user
+        arguments:
+            - @dbal.conn
+            - @dispatcher
+            - %tables.phpbbgallery.users%
+    phpbbgallery.core.auth:
+        class: phpbbgallery\core\auth\auth
+        arguments:
+            - @cache
+            - @dbal.conn
+            - @phpbbgallery.core.user
+            - %tables.phpbbgallery.permissions%
+            - %tables.phpbbgallery.roles%
+            - %tables.phpbbgallery.users%

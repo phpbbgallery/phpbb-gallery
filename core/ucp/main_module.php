@@ -93,61 +93,7 @@ class main_module
 				$this->page_title = $user->lang[$title];
 				$this->manage_subscriptions();
 			break;
-
-			case 'manage_settings':
-			default:
-				$title = 'UCP_GALLERY_SETTINGS';
-				$this->page_title = $user->lang[$title];
-				$this->set_personal_settings();
-			break;
 		}
-	}
-
-	function set_personal_settings()
-	{
-		global $config, $template, $user, $phpbb_ext_gallery, $phpbb_dispatcher;
-
-		$submit = (isset($_POST['submit'])) ? true : false;
-
-		if ($submit)
-		{
-			$gallery_settings = array(
-				'watch_own'				=> request_var('watch_own',		false),
-				'watch_com'				=> request_var('watch_com',		false),
-				'user_allow_comments'	=> request_var('allow_comments',false),
-			);
-			$additional_settings = array();
-
-			$vars = array('additional_settings');
-			extract($phpbb_dispatcher->trigger_event('gallery.core.ucp.set_settings_submit', compact($vars)));
-
-			$gallery_settings = array_merge($gallery_settings, $additional_settings);
-
-			if (!$config['phpbb_gallery_allow_comments'] || !$config['phpbb_gallery_comment_user_control'])
-			{
-				unset($gallery_settings['user_allow_comments']);
-			}
-
-			$phpbb_ext_gallery->user->update_data($gallery_settings);
-
-			meta_refresh(3, $this->u_action);
-			trigger_error($user->lang['WATCH_CHANGED'] . '<br /><br />' . sprintf($user->lang['RETURN_UCP'], '<a href="' . $this->u_action . '">', '</a>'));
-		}
-
-		$phpbb_dispatcher->trigger_event('gallery.core.ucp.set_settings_nosubmit');
-
-		$template->assign_vars(array(
-			'S_PERSONAL_SETTINGS'	=> true,
-			'S_UCP_ACTION'			=> $this->u_action,
-
-			'L_TITLE'			=> $user->lang['UCP_GALLERY_SETTINGS'],
-			'L_TITLE_EXPLAIN'	=> $user->lang['WATCH_NOTE'],
-
-			'S_WATCH_OWN'		=> $phpbb_ext_gallery->user->get_data('watch_own'),
-			'S_WATCH_COM'		=> $phpbb_ext_gallery->user->get_data('watch_com'),
-			'S_ALLOW_COMMENTS'	=> $phpbb_ext_gallery->user->get_data('user_allow_comments'),
-			'S_COMMENTS_ENABLED'=> $config['phpbb_gallery_allow_comments'] && $config['phpbb_gallery_comment_user_control'],
-		));
 	}
 
 	function info()
