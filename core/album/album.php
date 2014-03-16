@@ -1,23 +1,16 @@
 <?php
+
 /**
 *
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package NV Newspage Extension
+* @copyright (c) 2014 nickvergessen
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
-/**
-* @ignore
-*/
+namespace phpbbgallery\core\album;
 
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
-
-class phpbb_ext_gallery_core_album
+class album
 {
 	const PUBLIC_ALBUM		= 0;
 

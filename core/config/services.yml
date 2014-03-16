@@ -1,24 +1,35 @@
 parameters:
+    tables.phpbbgallery.albums: %core.table_prefix%gallery_albums
+    tables.phpbbgallery.contests: %core.table_prefix%gallery_contests
+    tables.phpbbgallery.moderators: %core.table_prefix%gallery_modscache
     tables.phpbbgallery.permissions: %core.table_prefix%gallery_permissions
     tables.phpbbgallery.roles: %core.table_prefix%gallery_roles
+    tables.phpbbgallery.tracking: %core.table_prefix%gallery_albums_track
     tables.phpbbgallery.users: %core.table_prefix%gallery_users
 
 services:
-    phpbbgallery.core.user:
-        class: phpbbgallery\core\user
+    phpbbgallery.core.album.display:
+        class: phpbbgallery\core\album\display
         arguments:
-            - @dbal.conn
-            - @dispatcher
-            - %tables.phpbbgallery.users%
+            - @phpbbgallery.core.auth
+            - %tables.phpbbgallery.albums%
+            - %tables.phpbbgallery.contests%
+            - %tables.phpbbgallery.moderators%
+            - %tables.phpbbgallery.tracking%
     phpbbgallery.core.auth:
         class: phpbbgallery\core\auth\auth
         arguments:
-            - @cache
+            - @phpbbgallery.core.cache
             - @dbal.conn
             - @phpbbgallery.core.user
             - %tables.phpbbgallery.permissions%
             - %tables.phpbbgallery.roles%
             - %tables.phpbbgallery.users%
+    phpbbgallery.core.cache:
+        class: phpbbgallery\core\cache
+        arguments:
+            - @cache
+            - @dbal.conn
     phpbbgallery.core.listener:
         class: phpbbgallery\core\event\main_listener
         arguments:
@@ -28,6 +39,13 @@ services:
             - %core.php_ext%
         tags:
             - { name: event.listener }
+    phpbbgallery.core.user:
+        class: phpbbgallery\core\user
+        arguments:
+            - @dbal.conn
+            - @dispatcher
+            - %tables.phpbbgallery.users%
+
     phpbbgallery.core.controller.index:
         class: phpbbgallery\core\controller\index
         arguments:
@@ -38,5 +56,6 @@ services:
             - @template
             - @user
             - @controller.helper
+            - @phpbbgallery.core.album.display
             - %core.root_path%
             - %core.php_ext%

@@ -103,3 +103,23 @@ input.autowidth-gallery {
 	width: 96%;
 	max-width: 186px;
 }
+
+.polaroid img {
+	max-height: 120px;
+	max-width: 230px;
+}
+
+.polaroid
+{
+	width: 242px;
+	background: #FFFFFF;
+	display: block;
+	float: left;
+	margin: 15px;
+	padding: 10px;
+	text-align: center;
+	text-decoration: none;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, .3);
+	transition: all .15s linear;
+	border: 1px solid #EFEFEF;
+}

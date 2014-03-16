@@ -33,6 +33,9 @@ class index
 	/* @var \phpbb\controller\helper */
 	protected $helper;
 
+	/* @var \phpbbgallery\core\album\display */
+	protected $display;
+
 	/* @var string */
 	protected $root_path;
 
@@ -49,10 +52,11 @@ class index
 	* @param \phpbb\template\template	$template	Template object
 	* @param \phpbb\user				$user		User object
 	* @param \phpbb\controller\helper	$helper		Controller helper object
+	* @param \phpbbgallery\core\album\display	$display	Albums display object
 	* @param string						$root_path	Root path
 	* @param string						$php_ext	php file extension
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\driver\driver $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\controller\helper $helper, $root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\driver\driver $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\controller\helper $helper, \phpbbgallery\core\album\display $display, $root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -61,6 +65,7 @@ class index
 		$this->template = $template;
 		$this->user = $user;
 		$this->helper = $helper;
+		$this->display = $display;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 	}
@@ -74,6 +79,8 @@ class index
 		$this->display_legend();
 
 		$this->display_brithdays();
+
+		$this->display->display_albums(0, $this->config['load_moderators']);
 
 		return $this->helper->render('gallery/index_body.html');
 	}
