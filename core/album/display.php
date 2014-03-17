@@ -2,7 +2,7 @@
 
 /**
 *
-* @package NV Newspage Extension
+* @package phpBB Gallery Core
 * @copyright (c) 2014 nickvergessen
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *

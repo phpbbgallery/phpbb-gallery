@@ -57,6 +57,13 @@ services:
             - @dispatcher
             - %tables.phpbbgallery.users%
 
+    phpbbgallery.core.controller.album:
+        class: phpbbgallery\core\controller\album
+        arguments:
+            - @config
+            - @user
+            - @controller.helper
+            - @phpbbgallery.core.album.display
     phpbbgallery.core.controller.index:
         class: phpbbgallery\core\controller\index
         arguments:

@@ -2,7 +2,7 @@
 
 /**
 *
-* @package NV Newspage Extension
+* @package phpBB Gallery Core
 * @copyright (c) 2014 nickvergessen
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -71,22 +71,76 @@ class index
 	}
 
 	/**
-	* Newspage controller to display multiple news
+	* Index Controller
+	*	Route: gallery
+	*
 	* @return Symfony\Component\HttpFoundation\Response A Symfony Response object
 	*/
-	public function base()
+	public function index()
 	{
 		$this->user->add_lang_ext('phpbbgallery/core', array('gallery'));
+		$this->display->display_albums(false, $this->config['load_moderators']);
+
 		$this->display_legend();
-
 		$this->display_brithdays();
+		$this->assign_dropdown_links('phpbbgallery_index');
 
-		$this->display->display_albums(0, $this->config['load_moderators']);
-
-		return $this->helper->render('gallery/index_body.html');
+		return $this->helper->render('gallery/index_body.html', $this->user->lang('GALLERY'));
 	}
 
-	public function display_legend()
+	/**
+	* Personal Index Controller
+	*	Route: gallery/users
+	*
+	* @return Symfony\Component\HttpFoundation\Response A Symfony Response object
+	*/
+	public function personal()
+	{
+		$this->user->add_lang_ext('phpbbgallery/core', array('gallery'));
+		$this->display->display_albums('personal', $this->config['load_moderators']);
+
+		$this->assign_dropdown_links('phpbbgallery_personal');
+
+		$first_char = $this->request->variable('first_char', '');
+		$s_char_options = '<option value=""' . ((!$first_char) ? ' selected="selected"' : '') . '>' . $this->user->lang('ALL') . '</option>';
+// Loop the ASCII: a-z
+		for ($i = 97; $i < 123; $i++)
+		{
+			$s_char_options .= '<option value="' . chr($i) . '"' . (($first_char == chr($i)) ? ' selected="selected"' : '') . '>' . chr($i - 32) . '</option>';
+		}
+		$s_char_options .= '<option value="other"' . (($first_char == 'other') ? ' selected="selected"' : '') . '>#</option>';
+
+		$this->template->assign_vars(array(
+			'S_CHAR_OPTIONS'				=> $s_char_options,
+		));
+
+		return $this->helper->render('gallery/index_body.html', $this->user->lang('PERSONAL_ALBUMS'));
+	}
+
+	protected function assign_dropdown_links($base_route)
+	{
+//		$this->template->assign_vars(array(
+//			'TOTAL_IMAGES'		=> ($phpbb_ext_gallery->config->get('disp_statistic')) ? $user->lang('TOTAL_IMAGES_SPRINTF', $phpbb_ext_gallery->config->get('num_images')) : '',
+//			'TOTAL_COMMENTS'	=> ($phpbb_ext_gallery->config->get('allow_comments')) ? $user->lang('TOTAL_COMMENTS_SPRINTF', $phpbb_ext_gallery->config->get('num_comments')) : '',
+//			'TOTAL_PGALLERIES'	=> ($phpbb_ext_gallery->auth->acl_check('a_list', phpbb_ext_gallery_core_auth::PERSONAL_ALBUM)) ? $user->lang('TOTAL_PEGAS_SPRINTF', $phpbb_ext_gallery->config->get('num_pegas')) : '',
+//			'NEWEST_PGALLERIES'	=> ($phpbb_ext_gallery->config->get('num_pegas')) ? sprintf($user->lang['NEWEST_PGALLERY'], get_username_string('full', $phpbb_ext_gallery->config->get('newest_pega_user_id'), $phpbb_ext_gallery->config->get('newest_pega_username'), $phpbb_ext_gallery->config->get('newest_pega_user_colour'), '', $phpbb_ext_gallery->url->append_sid('album', 'album_id=' . $phpbb_ext_gallery->config->get('newest_pega_album_id')))) : '',
+//		));
+
+		$this->template->assign_vars(array(
+			//'U_MCP'		=> ($this->gallery_auth->acl_check_global('m_')) ? $this->helper->route('phpbbgallery_mcp', array('mode' => 'overview')) : '',
+			'U_MARK_ALBUMS'					=> ($this->user->data['is_registered']) ? $this->helper->route($base_route, array('hash' => generate_link_hash('global'), 'mark' => 'albums')) : '',
+			'S_LOGIN_ACTION'			=> append_sid($this->root_path . 'ucp.' . $this->php_ext, 'mode=login&amp;redirect=' . urlencode($this->helper->route($base_route))),
+
+			'U_GALLERY_SEARCH'				=> $this->helper->route('phpbbgallery_search'),
+			'U_G_SEARCH_COMMENTED'			=> $this->config['phpbb_gallery_allow_comments'] ? $this->helper->route('phpbbgallery_search_commented') : '',
+			'U_G_SEARCH_CONTESTS'			=> $this->config['phpbb_gallery_allow_rates'] && $this->config['phpbb_gallery_contests_ended'] ? $this->helper->route('phpbbgallery_search_contests') : '',
+			'U_G_SEARCH_RECENT'				=> $this->helper->route('phpbbgallery_search_recent'),
+			'U_G_SEARCH_SELF'				=> $this->helper->route('phpbbgallery_search_egosearch'),
+			'U_G_SEARCH_TOPRATED'			=> $this->config['phpbb_gallery_allow_rates'] ? $this->helper->route('phpbbgallery_search_toprated') : '',
+		));
+	}
+
+	protected function display_legend()
 	{
 		$order_legend = ($this->config['legend_sort_groupname']) ? 'group_name' : 'group_legend';
 
@@ -136,7 +190,7 @@ class index
 		));
 	}
 
-	public function display_brithdays()
+	protected function display_brithdays()
 	{
 		// Generate birthday list if required ...
 		if ($this->config['load_birthdays'] && $this->config['allow_birthdays'] && $this->config['phpbb_gallery_disp_birthdays'] && $this->auth->acl_gets('u_viewprofile', 'a_user', 'a_useradd', 'a_userdel'))

@@ -1,7 +1,6 @@
 phpbbgallery_index:
     pattern: /gallery
-    defaults: { _controller: phpbbgallery.core.controller.index:base }
-
+    defaults: { _controller: phpbbgallery.core.controller.index:index }
 phpbbgallery_personal:
     pattern: /gallery/users
     defaults: { _controller: phpbbgallery.core.controller.index:personal }
@@ -13,3 +12,19 @@ phpbbgallery_album:
 phpbbgallery_image:
     pattern: /gallery/image/{image_id}
     defaults: { _controller: phpbbgallery.core.controller.image:base }
+
+phpbbgallery_search:
+    pattern: /gallery/search
+    defaults: { _controller: phpbbgallery.core.controller.search:base }
+phpbbgallery_search_commented:
+    pattern: /gallery/search/commented
+    defaults: { _controller: phpbbgallery.core.controller.search:base }
+phpbbgallery_search_recent:
+    pattern: /gallery/search/recent
+    defaults: { _controller: phpbbgallery.core.controller.search:base }
+phpbbgallery_search_egosearch:
+    pattern: /gallery/search/self
+    defaults: { _controller: phpbbgallery.core.controller.search:base }
+phpbbgallery_search_toprated:
+    pattern: /gallery/search/toprated
+    defaults: { _controller: phpbbgallery.core.controller.search:base }
