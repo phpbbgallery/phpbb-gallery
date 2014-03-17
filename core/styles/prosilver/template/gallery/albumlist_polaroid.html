@@ -5,7 +5,7 @@
 
 	<!-- IF albumrow.S_IS_CAT or albumrow.S_FIRST_ROW or albumrow.S_NO_CAT  -->
 		<span class="clear"></span>
-		<h2><!-- IF albumrow.S_IS_CAT --><a href="{albumrow.U_VIEWALBUM}">{albumrow.ALBUM_NAME}</a><!-- ELSE -->{L_ALBUM}<!-- ENDIF --></h2>
+		<h2<!-- IF albumrow.S_FIRST_ROW --> class="invade-linklist"<!-- ENDIF -->><!-- IF albumrow.S_IS_CAT --><a href="{albumrow.U_VIEWALBUM}">{albumrow.ALBUM_NAME}</a><!-- ELSE -->{L_ALBUM}<!-- ENDIF --></h2>
 	<!-- ENDIF -->
 
 	<!-- IF not albumrow.S_IS_CAT -->
@@ -13,7 +13,7 @@
 			<a href="{albumrow.U_VIEWALBUM}" style="font-weight: bold; font-size: 1.2em;<!-- IF S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR --> color: {albumrow.ALBUM_COLOUR};<!-- ENDIF -->">{albumrow.ALBUM_NAME}</a>
 				<hr />
 				<!-- IF albumrow.UC_THUMBNAIL -->{albumrow.UC_THUMBNAIL}<!-- ENDIF -->
-				<img src="{ROOT_PATH}images/test.png" alt="Island" title="Island" />
+				<img src="{ROOT_PATH}../../test.png" alt="Island" title="Island" />
 
 				<hr />
 				{L_IMAGES}{L_COLON} <strong>{albumrow.IMAGES} <!-- IF albumrow.UNAPPROVED_IMAGES --> + <span class="reported-images-number">{albumrow.UNAPPROVED_IMAGES}</span><!-- ENDIF --></strong><br />

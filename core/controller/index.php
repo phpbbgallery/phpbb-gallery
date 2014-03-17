@@ -76,6 +76,7 @@ class index
 	*/
 	public function base()
 	{
+		$this->user->add_lang_ext('phpbbgallery/core', array('gallery'));
 		$this->display_legend();
 
 		$this->display_brithdays();

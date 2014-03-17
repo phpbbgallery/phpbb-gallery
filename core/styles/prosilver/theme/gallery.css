@@ -10,6 +10,10 @@ ul.profile-icons li.gallery-icon {
 	background-image: url("./images/icon_contact_gallery.gif");
 }
 
+h2.invade-linklist {
+	margin-top: -20px;
+}
+
 .icon-gallery {
 	background-position: 0 50%;
 	background-repeat: no-repeat;

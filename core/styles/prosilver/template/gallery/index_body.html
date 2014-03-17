@@ -3,13 +3,36 @@
 <p class="{S_CONTENT_FLOW_END}<!-- IF S_USER_LOGGED_IN --> rightside<!-- ENDIF -->"><!-- IF S_USER_LOGGED_IN -->{LAST_VISIT_DATE}<!-- ELSE -->{CURRENT_TIME}<!-- ENDIF --></p>
 <!-- IF U_MCP --><p>{CURRENT_TIME} <br />[&nbsp;<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</p><!-- ELSEIF S_USER_LOGGED_IN --><p>{CURRENT_TIME}</p><!-- ENDIF -->
 
-<!-- IF S_DISPLAY_SEARCH or (S_USER_LOGGED_IN and not S_IS_BOT) -->
+<!-- IF S_USER_LOGGED_IN and not S_IS_BOT -->
 <ul class="linklist">
-	<!-- IF S_DISPLAY_SEARCH -->
-		<li><a href="{U_G_SEARCH_RECENT}">{L_VIEW_SEARCH_RECENT}</a> &bull; <a href="{U_G_SEARCH_RANDOM}">{L_VIEW_SEARCH_RANDOM}</a><!-- IF U_G_SEARCH_COMMENTED --> &bull; <a href="{U_G_SEARCH_COMMENTED}">{L_VIEW_SEARCH_COMMENTED}</a><!-- ENDIF --><!-- IF U_G_SEARCH_TOPRATED --> &bull; <a href="{U_G_SEARCH_TOPRATED}">{L_VIEW_SEARCH_TOPRATED}</a><!-- ENDIF --><!-- IF U_G_SEARCH_CONTESTS --> &bull; <a href="{U_G_SEARCH_CONTESTS}">{L_VIEW_SEARCH_CONTESTS}</a><!-- ENDIF --><!-- IF S_USER_LOGGED_IN --> &bull; <a href="{U_G_SEARCH_SELF}">{L_VIEW_SEARCH_SELF}</a><!-- ENDIF --></li>
-		<li class="rightside"><a href="{U_GALLERY_SEARCH}">{L_SEARCH}</a></li>
-	<!-- ENDIF -->
-	<!-- IF not S_IS_BOT and U_MARK_ALBUMS --><li class="rightside"><a href="{U_MARK_ALBUMS}" accesskey="m">{L_MARK_ALBUMS_READ}</a><!-- IF S_DISPLAY_SEARCH --> &bull; <!-- ENDIF --></li><!-- ENDIF -->
+	<li class="rightside">
+		<div class="dropdown-container dropdown-button-control topic-tools dropdown-right dropdown-down">
+			<span title="{L_NEWS_FILTER_BY_CATEGORY}" class="dropdown-trigger dropdown-select dropdown-select-icon tools-icon dropdown-toggle"></span>
+			<div class="dropdown hidden">
+				<div class="pointer"><div class="pointer-inner"></div></div>
+				<ul class="dropdown-contents">
+					<!-- IF not S_IS_BOT and U_MARK_ALBUMS -->
+						<li><a href="{U_MARK_ALBUMS}" accesskey="m">{L_MARK_ALBUMS_READ}</a></li>
+					<!-- ENDIF -->
+					<li><a href="{U_GALLERY_SEARCH}">{L_SEARCH}</a></li>
+					<li><a href="{U_G_SEARCH_RECENT}">{L_VIEW_SEARCH_RECENT}</a></li>
+					<li><a href="{U_G_SEARCH_RANDOM}">{L_VIEW_SEARCH_RANDOM}</a></li>
+					<!-- IF U_G_SEARCH_COMMENTED -->
+						<li><a href="{U_G_SEARCH_COMMENTED}">{L_VIEW_SEARCH_COMMENTED}</a></li>
+					<!-- ENDIF -->
+					<!-- IF U_G_SEARCH_TOPRATED -->
+						<li><a href="{U_G_SEARCH_TOPRATED}">{L_VIEW_SEARCH_TOPRATED}</a></li>
+					<!-- ENDIF -->
+					<!-- IF U_G_SEARCH_CONTESTS -->
+						<li><a href="{U_G_SEARCH_CONTESTS}">{L_VIEW_SEARCH_CONTESTS}</a></li>
+					<!-- ENDIF -->
+					<!-- IF S_USER_LOGGED_IN -->
+						<li><a href="{U_G_SEARCH_SELF}">{L_VIEW_SEARCH_SELF}</a></li>
+					<!-- ENDIF -->
+				</ul>
+			</div>
+		</div>
+	</li>
 </ul>
 <!-- ENDIF -->
 

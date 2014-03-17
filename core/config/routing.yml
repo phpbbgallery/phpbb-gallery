@@ -1,3 +1,15 @@
 phpbbgallery_index:
     pattern: /gallery
     defaults: { _controller: phpbbgallery.core.controller.index:base }
+
+phpbbgallery_personal:
+    pattern: /gallery/users
+    defaults: { _controller: phpbbgallery.core.controller.index:personal }
+
+phpbbgallery_album:
+    pattern: /gallery/album/{album_id}
+    defaults: { _controller: phpbbgallery.core.controller.album:base }
+
+phpbbgallery_image:
+    pattern: /gallery/image/{image_id}
+    defaults: { _controller: phpbbgallery.core.controller.image:base }

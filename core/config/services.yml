@@ -11,7 +11,18 @@ services:
     phpbbgallery.core.album.display:
         class: phpbbgallery\core\album\display
         arguments:
+            - @auth
+            - @config
+            - @controller.helper
+            - @dbal.conn
+            - @pagination
+            - @request
+            - @template
+            - @user
             - @phpbbgallery.core.auth
+            - @phpbbgallery.core.user
+            - %core.root_path%
+            - %core.php_ext%
             - %tables.phpbbgallery.albums%
             - %tables.phpbbgallery.contests%
             - %tables.phpbbgallery.moderators%
