@@ -27,6 +27,12 @@ services:
             - %tables.phpbbgallery.contests%
             - %tables.phpbbgallery.moderators%
             - %tables.phpbbgallery.tracking%
+    phpbbgallery.core.album.loader:
+        class: phpbbgallery\core\album\loader
+        arguments:
+            - @dbal.conn
+            - @user
+            - %tables.phpbbgallery.albums%
     phpbbgallery.core.auth:
         class: phpbbgallery\core\auth\auth
         arguments:
@@ -36,6 +42,13 @@ services:
             - %tables.phpbbgallery.permissions%
             - %tables.phpbbgallery.roles%
             - %tables.phpbbgallery.users%
+    phpbbgallery.core.auth.level:
+        class: phpbbgallery\core\auth\level
+        arguments:
+            - @phpbbgallery.core.auth
+            - @config
+            - @template
+            - @user
     phpbbgallery.core.cache:
         class: phpbbgallery\core\cache
         arguments:
@@ -61,9 +74,13 @@ services:
         class: phpbbgallery\core\controller\album
         arguments:
             - @config
-            - @user
             - @controller.helper
+            - @template
+            - @user
             - @phpbbgallery.core.album.display
+            - @phpbbgallery.core.album.loader
+            - @phpbbgallery.core.auth
+            - @phpbbgallery.core.auth.level
     phpbbgallery.core.controller.index:
         class: phpbbgallery\core\controller\index
         arguments:

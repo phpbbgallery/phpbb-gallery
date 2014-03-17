@@ -1,25 +1,4 @@
 <?php
-/**
-*
-* @package phpBB Gallery
-* @version $Id$
-* @copyright (c) 2007 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-*/
-
-/**
-* @ignore
-*/
-
-define('IN_PHPBB', true);
-$phpEx = substr(strrchr(__FILE__, '.'), 1);
-include('common.' . $phpEx);
-include($phpbb_root_path . 'common.' . $phpEx);
-
-$phpbb_ext_gallery = new phpbb_ext_gallery_core($auth, $cache, $config, $db, $template, $user, $phpEx, $phpbb_root_path);
-$phpbb_ext_gallery->setup();
-$phpbb_ext_gallery->url->_include('functions_display', 'phpbb');
 
 /**
 * Check the request
@@ -33,67 +12,6 @@ $sort_days	= request_var('st', 0);
 $sort_key	= request_var('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $phpbb_ext_gallery->config->get('default_sort_key'));
 $sort_dir	= request_var('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : $phpbb_ext_gallery->config->get('default_sort_dir'));
 
-/**
-* Did the contest end?
-*/
-if ($album_data['contest_id'] && $album_data['contest_marked'] && (($album_data['contest_start'] + $album_data['contest_end']) < time()))
-{
-	$contest_end_time = $album_data['contest_start'] + $album_data['contest_end'];
-	phpbb_gallery_contest::end($album_id, $album_data['contest_id'], $contest_end_time);
-
-	$album_data['contest_marked'] = phpbb_ext_gallery_core_image::NO_CONTEST;
-}
-
-/**
-* Build auth-list
-*/
-$phpbb_ext_gallery->auth->gen_auth_level('album', $album_id, $album_data['album_status'], $album_data['album_user_id']);
-
-if (!$phpbb_ext_gallery->auth->acl_check('i_view', $album_id, $album_data['album_user_id']))
-{
-	if ($user->data['is_bot'])
-	{
-		$phpbb_ext_gallery->url->redirect('index');
-	}
-	if (!$user->data['is_registered'])
-	{
-		login_box();
-	}
-	else
-	{
-		trigger_error('NOT_AUTHORISED');
-	}
-}
-
-/**
-* Are we (un)watching the album?
-*/
-$token = request_var('hash', '');
-if ((($mode == 'watch') || ($mode == 'unwatch')) && check_link_hash($token, "{$mode}_$album_id"))
-{
-	$backlink = $phpbb_ext_gallery->url->append_sid('album', "album_id=$album_id");
-
-	if ($mode == 'watch')
-	{
-		phpbb_gallery_notification::add_albums($album_id);
-		$message = $user->lang['WATCHING_ALBUM'] . '<br />';
-	}
-	if ($mode == 'unwatch')
-	{
-		phpbb_gallery_notification::remove_albums($album_id);
-		$message = $user->lang['UNWATCHED_ALBUM'] . '<br />';
-	}
-
-	$message .= '<br />' . sprintf($user->lang['CLICK_RETURN_ALBUM'], '<a href="' . $backlink . '">', '</a>');
-
-	meta_refresh(3, $backlink);
-	trigger_error($message);
-}
-
-// Build the navigation & display subalbums
-phpbb_ext_gallery_core_album_display::generate_nav($album_data);
-phpbb_ext_gallery_core_album_display::display_albums($album_data, $config['load_moderators']);
-
 // Set some variables to their defaults
 $allowed_create = false;
 $image_counter = 0;
@@ -106,25 +24,6 @@ $images_per_page = $phpbb_ext_gallery->config->get('album_rows') * $phpbb_ext_ga
 */
 if ($album_data['album_type'] != phpbb_ext_gallery_core_album::TYPE_CAT)
 {
-	if ($phpbb_ext_gallery->auth->acl_check('m_', $album_id, $album_data['album_user_id']))
-	{
-		$template->assign_var('U_MCP', $phpbb_ext_gallery->url->append_sid('mcp', "album_id=$album_id"));
-	}
-
-	// When we do the slideshow, we don't need the moderators
-	if ($mode != 'slide_show')
-	{
-		if ($config['load_moderators'])
-		{
-			phpbb_ext_gallery_core_album_display::get_moderators($album_moderators, $album_id);
-		}
-		if (!empty($album_moderators[$album_id]))
-		{
-			$l_moderator = (sizeof($album_moderators[$album_id]) == 1) ? $user->lang['MODERATOR'] : $user->lang['MODERATORS'];
-			$moderators_list = implode(', ', $album_moderators[$album_id]);
-		}
-	}
-
 	/**
 	* Build the sort options
 	*/
@@ -182,38 +81,7 @@ if ($album_data['album_type'] != phpbb_ext_gallery_core_album::TYPE_CAT)
 				$image_status_check
 				AND image_status <> " . phpbb_ext_gallery_core_image::STATUS_ORPHAN . "
 			ORDER BY $sql_sort_order" . $sql_help_sort;
-
-		if ($mode == 'slide_show')
-		{
-			/**
-			* Slideshow - Using message_body.html
-			*/
-			// No plugins means, no javascript to do a slideshow
-			if (!phpbb_gallery_plugins::$slideshow)
-			{
-				trigger_error('MISSING_SLIDESHOW_PLUGIN');
-			}
-
-			$result = $db->sql_query($sql);
-
-			$trigger_message = phpbb_gallery_plugins::slideshow($result);
-			$db->sql_freeresult($result);
-
-			$template->assign_vars(array(
-				'MESSAGE_TITLE'		=> $user->lang['SLIDE_SHOW'],
-				'MESSAGE_TEXT'		=> $trigger_message,
-			));
-
-			page_header($user->lang['SLIDE_SHOW']);
-			$template->set_filenames(array(
-				'body' => 'message_body.html')
-			);
-			page_footer();
-		}
-		else
-		{
-			$result = $db->sql_query_limit($sql, $images_per_page, $start);
-		}
+		$result = $db->sql_query_limit($sql, $images_per_page, $start);
 
 		while ($row = $db->sql_fetchrow($result))
 		{
@@ -252,28 +120,6 @@ if ($album_data['album_type'] != phpbb_ext_gallery_core_album::TYPE_CAT)
 			}
 		}
 	}
-	// Is it a personal album, and does the user have permissions to create more?
-	if ($album_data['album_user_id'] == $user->data['user_id'])
-	{
-		if ($phpbb_ext_gallery->auth->acl_check('i_upload', phpbb_ext_gallery_core_auth::OWN_ALBUM) && !$phpbb_ext_gallery->auth->acl_check('a_unlimited', phpbb_ext_gallery_core_auth::OWN_ALBUM))
-		{
-			$sql = 'SELECT COUNT(album_id) albums
-				FROM ' . GALLERY_ALBUMS_TABLE . '
-				WHERE album_user_id = ' . $user->data['user_id'];
-			$result = $db->sql_query($sql);
-			$albums = (int) $db->sql_fetchfield('albums');
-			$db->sql_freeresult($result);
-
-			if ($albums < $phpbb_ext_gallery->auth->acl_check('a_count', phpbb_ext_gallery_core_auth::OWN_ALBUM))
-			{
-				$allowed_create = true;
-			}
-		}
-		elseif ($phpbb_ext_gallery->auth->acl_check('a_unlimited', phpbb_ext_gallery_core_auth::OWN_ALBUM))
-		{
-			$allowed_create = true;
-		}
-	}
 }
 // End of "We have album_type so that there may be images ..."
 
@@ -287,22 +133,8 @@ phpbb_generate_template_pagination($template, $phpbb_ext_gallery->url->append_si
 $template->assign_vars(array(
 	'TOTAL_IMAGES'				=> $user->lang('VIEW_ALBUM_IMAGES', $image_counter),
 	'PAGE_NUMBER'				=> phpbb_on_page($template, $user, $phpbb_ext_gallery->url->append_sid('album', "album_id=$album_id&amp;sk=$sort_key&amp;sd=$sort_dir&amp;st=$sort_days"), $image_counter, $images_per_page, $start),
-
-	'S_IN_ALBUM'				=> true, // used for some templating in subsilver2
-	'S_IS_POSTABLE'				=> ($album_data['album_type'] != phpbb_ext_gallery_core_album::TYPE_CAT) ? true : false,
-	'S_IS_LOCKED'				=> ($album_data['album_status'] == phpbb_ext_gallery_core_album::STATUS_LOCKED) ? true : false,
-	'UPLOAD_IMG'				=> ($album_data['album_status'] == phpbb_ext_gallery_core_album::STATUS_LOCKED) ? $user->img('button_topic_locked', 'ALBUM_LOCKED') : $user->img('button_upload_image', 'UPLOAD_IMAGE'),
 	'S_MODE'					=> $album_data['album_type'],
-	'L_MODERATORS'				=> $l_moderator,
-	'MODERATORS'				=> $moderators_list,
 
-	'U_UPLOAD_IMAGE'			=> ((!$album_data['album_user_id'] || ($album_data['album_user_id'] == $user->data['user_id'])) && (($user->data['user_id'] == ANONYMOUS) || $phpbb_ext_gallery->auth->acl_check('i_upload', $album_id, $album_data['album_user_id']))) ?
-										$phpbb_ext_gallery->url->append_sid('posting', "mode=upload&amp;album_id=$album_id") : '',
-	'U_CREATE_ALBUM'			=> (($album_data['album_user_id'] == $user->data['user_id']) && $allowed_create) ?
-										$phpbb_ext_gallery->url->append_sid('phpbb', 'ucp', "i=gallery&amp;mode=manage_albums&amp;action=create&amp;parent_id=$album_id&amp;redirect=album") : '',
-	'U_EDIT_ALBUM'				=> ($album_data['album_user_id'] == $user->data['user_id']) ?
-										$phpbb_ext_gallery->url->append_sid('phpbb', 'ucp', "i=gallery&amp;mode=manage_albums&amp;action=edit&amp;album_id=$album_id&amp;redirect=album") : '',
-	'U_SLIDE_SHOW'				=> '',//@todo: (sizeof(phpbb_gallery_plugins::$plugins) && phpbb_gallery_plugins::$slideshow) ? $phpbb_ext_gallery->url->append_sid('album', "album_id=$album_id&amp;mode=slide_show" . (($sort_key != $phpbb_ext_gallery->config->get('default_sort_key')) ? "&amp;sk=$sort_key" : '') . (($sort_dir != $phpbb_ext_gallery->config->get('default_sort_dir')) ? "&amp;sd=$sort_dir" : '')) : '',
 	'S_DISPLAY_SEARCHBOX'		=> ($auth->acl_get('u_search') && $config['load_search']) ? true : false,
 	'S_SEARCHBOX_ACTION'		=> $phpbb_ext_gallery->url->append_sid('search', 'aid[]=' . $album_id),
 	'S_ENABLE_FEEDS_ALBUM'		=> $album_data['album_feed'] && ($phpbb_ext_gallery->config->get('feed_enable_pegas') || !$album_data['album_user_id']),
@@ -315,19 +147,8 @@ $template->assign_vars(array(
 	'S_SELECT_SORT_KEY'			=> $s_sort_key,
 
 	'ALBUM_JUMPBOX'				=> phpbb_ext_gallery_core_album::get_albumbox(false, '', $album_id),
-	'U_RETURN_LINK'				=> $phpbb_ext_gallery->url->append_sid('index'),
-	'S_RETURN_LINK'				=> $user->lang['GALLERY'],
 
 	'L_WATCH_TOPIC'				=> ($album_data['watch_id']) ? $user->lang['UNWATCH_ALBUM'] : $user->lang['WATCH_ALBUM'],
 	'U_WATCH_TOPIC'				=> (($album_data['album_type'] != phpbb_ext_gallery_core_album::TYPE_CAT) && ($user->data['user_id'] != ANONYMOUS)) ? $phpbb_ext_gallery->url->append_sid('album', "mode=" . $watch_mode . "&amp;album_id=$album_id&amp;hash=" . generate_link_hash("{$watch_mode}_$album_id")) : '',
 	'S_WATCHING_TOPIC'			=> ($album_data['watch_id']) ? true : false,
 ));
-
-
-page_header($user->lang['VIEW_ALBUM'] . ' - ' . $album_data['album_name'], true, $album_id, 'album');
-
-$template->set_filenames(array(
-	'body' => 'gallery/album_body.html')
-);
-
-page_footer();

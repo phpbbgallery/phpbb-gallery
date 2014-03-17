@@ -22,7 +22,7 @@
 		<li class="rightside"><a href="{U_MARK_ALBUMS}">{L_MARK_ALBUMS_READ}</a></li>
 	</ul>
 	<!-- ENDIF -->
-	<!-- INCLUDE gallery/albumlist_body.html -->
+	<!-- INCLUDE gallery/albumlist_polaroid.html -->
 <!-- ENDIF -->
 
 <!-- IF S_IS_POSTABLE and (U_UPLOAD_IMAGE or PAGINATION or TOTAL_IMAGES or (U_SLIDE_SHOW and not S_IS_BOT)) -->
@@ -114,7 +114,7 @@
 <!-- ENDIF -->
 
 <!-- IF not S_IN_GALLERY_POPUP -->
-	<p></p><p><a href="{U_RETURN_LINK}" class="left-box {S_CONTENT_FLOW_BEGIN}" accesskey="r">{L_RETURN_TO} {S_RETURN_LINK}</a></p>
+	<p></p><p><a href="{U_RETURN_LINK}" class="left-box {S_CONTENT_FLOW_BEGIN}" accesskey="r">{L_RETURN_LINK}</a></p>
 	<form method="post" id="jumpbox" action="{S_JUMPBOX_ACTION}" onsubmit="if(this.album_id.value == -1){return false;}">
 		<fieldset class="jumpbox">
 			<label for="album_id" accesskey="album_id">{L_JUMP_TO}:</label>

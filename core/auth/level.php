@@ -10,7 +10,7 @@
 
 namespace phpbbgallery\core\auth;
 
-class generate_level
+class level
 {
 
 	/**
@@ -65,7 +65,7 @@ class generate_level
 	* @author: phpBB Group
 	* @function: gen_forum_auth_level
 	*/
-	public function gen_auth_level($album_id, $album_status, $album_user_id = -1)
+	public function display($album_id, $album_status, $album_user_id = -1)
 	{
 		$locked = ($album_status == ITEM_LOCKED && !$this->auth->acl_check('m_', $album_id, $album_user_id)) ? true : false;
 

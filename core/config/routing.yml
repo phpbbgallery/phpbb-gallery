@@ -7,7 +7,17 @@ phpbbgallery_personal:
 
 phpbbgallery_album:
     pattern: /gallery/album/{album_id}
+    defaults: { _controller: phpbbgallery.core.controller.album:base, page: 1 }
+phpbbgallery_album_page:
+    pattern: /gallery/album/{album_id}/page/{page}
     defaults: { _controller: phpbbgallery.core.controller.album:base }
+phpbbgallery_album_upload:
+    pattern: /gallery/album/{album_id}/upload
+    defaults: { _controller: phpbbgallery.core.controller.album:base }
+
+phpbbgallery_moderate_album:
+    pattern: /gallery/moderate/{album_id}
+    defaults: { _controller: phpbbgallery.core.controller.moderate:base }
 
 phpbbgallery_image:
     pattern: /gallery/image/{image_id}

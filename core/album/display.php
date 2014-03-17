@@ -105,7 +105,7 @@ class display
 	* @author: phpBB Group
 	* @function: generate_forum_nav
 	*/
-	public function generate_nav(&$album_data)
+	public function generate_navigation($album_data)
 	{
 		// Get album parents
 		$album_parents = $this->get_parents($album_data);
@@ -121,7 +121,7 @@ class display
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$this->template->assign_block_vars('navlinks', array(
-					'FORUM_NAME'	=> $this->user->lang['PERSONAL_ALBUMS'],
+					'FORUM_NAME'	=> $this->user->lang('PERSONAL_ALBUMS'),
 					'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_personal'),
 				));
 			}
@@ -153,9 +153,9 @@ class display
 			'ALBUM_ID' 		=> $album_data['album_id'],
 			'ALBUM_NAME'	=> $album_data['album_name'],
 			'ALBUM_DESC'	=> generate_text_for_display($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options']),
-			'ALBUM_CONTEST_START'	=> ($album_data['contest_id']) ? $this->user->lang('CONTEST_START' . ((($album_data['contest_start']) < time())? 'ED' : 'S'), $this->user->format_date(($album_data['contest_start']), false, true)) : '',
-			'ALBUM_CONTEST_RATING'	=> ($album_data['contest_id']) ? $this->user->lang('CONTEST_RATING_START' . ((($album_data['contest_start'] + $album_data['contest_rating']) < time())? 'ED' : 'S'), $this->user->format_date(($album_data['contest_start'] + $album_data['contest_rating']), false, true)) : '',
-			'ALBUM_CONTEST_END'		=> ($album_data['contest_id']) ? $this->user->lang('CONTEST_END' . ((($album_data['contest_start'] + $album_data['contest_end']) < time())? 'ED' : 'S'), $this->user->format_date(($album_data['contest_start'] + $album_data['contest_end']), false, true)) : '',
+			//'ALBUM_CONTEST_START'	=> ($album_data['contest_id']) ? $this->user->lang('CONTEST_START' . ((($album_data['contest_start']) < time())? 'ED' : 'S'), $this->user->format_date(($album_data['contest_start']), false, true)) : '',
+			//'ALBUM_CONTEST_RATING'	=> ($album_data['contest_id']) ? $this->user->lang('CONTEST_RATING_START' . ((($album_data['contest_start'] + $album_data['contest_rating']) < time())? 'ED' : 'S'), $this->user->format_date(($album_data['contest_start'] + $album_data['contest_rating']), false, true)) : '',
+			//'ALBUM_CONTEST_END'		=> ($album_data['contest_id']) ? $this->user->lang('CONTEST_END' . ((($album_data['contest_start'] + $album_data['contest_end']) < time())? 'ED' : 'S'), $this->user->format_date(($album_data['contest_start'] + $album_data['contest_end']), false, true)) : '',
 			'U_VIEW_ALBUM'	=> $this->helper->route('phpbbgallery_album', array('album_id' => $album_data['album_id'])),
 		));
 
@@ -169,7 +169,7 @@ class display
 	* @author: phpBB Group
 	* @function: get_forum_parents
 	*/
-	public function get_parents(&$album_data)
+	public function get_parents($album_data)
 	{
 		$album_parents = array();
 		if ($album_data['parent_id'] > 0)
@@ -213,9 +213,9 @@ class display
 	* @author: phpBB Group
 	* @function: get_forum_moderators
 	*/
-	public function get_moderators(&$album_moderators, $album_id = false)
+	public function get_moderators($album_id = false)
 	{
-		$album_id_ary = array();
+		$album_id_ary = $album_moderators = array();
 
 		if ($album_id !== false)
 		{
@@ -280,7 +280,7 @@ class display
 		}
 		$this->db->sql_freeresult($result);
 
-		return;
+		return $album_moderators;
 	}
 
 	/**
