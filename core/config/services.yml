@@ -1,6 +1,7 @@
 parameters:
     tables.phpbbgallery.albums: %core.table_prefix%gallery_albums
     tables.phpbbgallery.contests: %core.table_prefix%gallery_contests
+    tables.phpbbgallery.images: %core.table_prefix%gallery_images
     tables.phpbbgallery.moderators: %core.table_prefix%gallery_modscache
     tables.phpbbgallery.permissions: %core.table_prefix%gallery_permissions
     tables.phpbbgallery.roles: %core.table_prefix%gallery_roles
@@ -54,6 +55,12 @@ services:
         arguments:
             - @cache
             - @dbal.conn
+    phpbbgallery.core.image:
+        class: phpbbgallery\core\image\image
+        arguments:
+            - @dbal.conn
+            - @dispatcher
+            - %tables.phpbbgallery.images%
     phpbbgallery.core.listener:
         class: phpbbgallery\core\event\main_listener
         arguments:
@@ -75,12 +82,15 @@ services:
         arguments:
             - @config
             - @controller.helper
+            - @dbal.conn
+            - @pagination
             - @template
             - @user
             - @phpbbgallery.core.album.display
             - @phpbbgallery.core.album.loader
             - @phpbbgallery.core.auth
             - @phpbbgallery.core.auth.level
+            - %tables.phpbbgallery.images%
     phpbbgallery.core.controller.index:
         class: phpbbgallery\core\controller\index
         arguments:

@@ -1,0 +1,29 @@
+<!-- BEGIN imageblock -->
+<span class="clear"></span>
+<!-- IF imageblock.U_BLOCK --><h2><a href="{imageblock.U_BLOCK}">{imageblock.BLOCK_NAME}</a></h2><!-- ENDIF -->
+
+<!-- BEGIN image -->
+<div class="polaroid">
+	<a href="{imageblock.image.U_VIEWALBUM}" style="font-weight: bold; font-size: 1.2em;<!-- IF S_PERSONAL_GALLERY and imageblock.image.ALBUM_COLOUR --> color: {imageblock.image.ALBUM_COLOUR};<!-- ENDIF -->">{imageblock.image.ALBUM_NAME}</a>
+	<hr />
+	<!-- IF imageblock.image.UC_THUMBNAIL -->{imageblock.image.UC_THUMBNAIL}<!-- ENDIF -->
+	<img src="{ROOT_PATH}../../test.png" alt="Island" title="Island" />
+
+	<hr />
+	{L_IMAGES}{L_COLON} <strong>{imageblock.image.IMAGES}</strong><br />
+
+	<!-- IF imageblock.image.LAST_IMAGE_TIME -->
+		<span>
+			<!-- IF imageblock.image.UC_IMAGE_NAME -->{imageblock.image.UC_IMAGE_NAME}<br /><!-- ENDIF -->
+			{L_LAST_IMAGE_BY}{L_COLON} {imageblock.image.LAST_USER_FULL} {imageblock.image.UC_LASTIMAGE_ICON}<br />
+			{imageblock.image.LAST_IMAGE_TIME}
+		</span>
+	<!-- ENDIF -->
+	<br />
+</div>
+
+<!-- IF imageblock.image.S_LAST_ROW -->
+	<span class="clear"></span>
+<!-- ENDIF -->
+<!-- END image -->
+<!-- END imageblock -->

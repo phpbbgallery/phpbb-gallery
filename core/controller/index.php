@@ -85,6 +85,11 @@ class index
 		$this->display_brithdays();
 		$this->assign_dropdown_links('phpbbgallery_index');
 
+		$this->template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $this->user->lang('GALLERY'),
+			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_index'),
+		));
+
 		return $this->helper->render('gallery/index_body.html', $this->user->lang('GALLERY'));
 	}
 
@@ -112,6 +117,15 @@ class index
 
 		$this->template->assign_vars(array(
 			'S_CHAR_OPTIONS'				=> $s_char_options,
+		));
+
+		$this->template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $this->user->lang('GALLERY'),
+			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_index'),
+		));
+		$this->template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $this->user->lang('PERSONAL_ALBUMS'),
+			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_personal'),
 		));
 
 		return $this->helper->render('gallery/index_body.html', $this->user->lang('PERSONAL_ALBUMS'));

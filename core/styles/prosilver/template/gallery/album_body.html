@@ -68,7 +68,7 @@
 	<!-- IF S_IN_GALLERY_POPUP -->
 		<!-- INCLUDE gallery/imageblock_popup.html -->
 	<!-- ELSE -->
-		<!-- INCLUDE gallery/imageblock_body.html -->
+		<!-- INCLUDE gallery/imageblock_polaroid.html -->
 	<!-- ENDIF -->
 <!-- ELSE -->
 	<!-- IF S_IS_POSTABLE -->
@@ -81,15 +81,19 @@
 <!-- ENDIF -->
 
 <!-- IF S_IS_POSTABLE -->
+	<!-- IF S_SELECT_SORT_KEY or PREVIOUS_PAGE or NEXT_PAGE -->
 	<form action="{S_ALBUM_ACTION}" method="post">
 	<fieldset class="display-options">
-			<!-- IF PREVIOUS_PAGE --><a href="{PREVIOUS_PAGE}" class="left-box {S_CONTENT_FLOW_BEGIN}">{L_PREVIOUS}</a><!-- ENDIF -->
-			<!-- IF NEXT_PAGE --><a href="{NEXT_PAGE}" class="right-box {S_CONTENT_FLOW_END}">{L_NEXT}</a><!-- ENDIF -->
-		<label>{L_SORT_BY} {S_SELECT_SORT_KEY}</label>
-		<label>{S_SELECT_SORT_DIR} <input type="submit" name="sort" value="{L_GO}" class="button2" /></label>
+		<!-- IF PREVIOUS_PAGE --><a href="{PREVIOUS_PAGE}" class="left-box {S_CONTENT_FLOW_BEGIN}">{L_PREVIOUS}</a><!-- ENDIF -->
+		<!-- IF NEXT_PAGE --><a href="{NEXT_PAGE}" class="right-box {S_CONTENT_FLOW_END}">{L_NEXT}</a><!-- ENDIF -->
+		<!-- IF S_SELECT_SORT_KEY -->
+			<label>{L_SORT_BY} {S_SELECT_SORT_KEY}</label>
+			<label>{S_SELECT_SORT_DIR} <input type="submit" name="sort" value="{L_GO}" class="button2" /></label>
+		<!-- ENDIF -->
 	</fieldset>
 	</form>
 	<hr />
+	<!-- ENDIF -->
 	<!-- IF .imageblock -->
 	<div class="topic-actions">
 		<!-- IF U_UPLOAD_IMAGE -->
@@ -113,8 +117,8 @@
 	<!-- ENDIF -->
 <!-- ENDIF -->
 
-<!-- IF not S_IN_GALLERY_POPUP -->
-	<p></p><p><a href="{U_RETURN_LINK}" class="left-box {S_CONTENT_FLOW_BEGIN}" accesskey="r">{L_RETURN_LINK}</a></p>
+<p class="jumpbox-return"><a href="{U_RETURN_LINK}" class="left-box arrow-{S_CONTENT_FLOW_BEGIN}" accesskey="r">{L_RETURN_LINK}</a></p>
+<!-- IF ALBUM_JUMPBOX -->
 	<form method="post" id="jumpbox" action="{S_JUMPBOX_ACTION}" onsubmit="if(this.album_id.value == -1){return false;}">
 		<fieldset class="jumpbox">
 			<label for="album_id" accesskey="album_id">{L_JUMP_TO}:</label>
@@ -124,6 +128,8 @@
 			<input type="submit" value="{L_GO}" class="button2" />
 		</fieldset>
 	</form>
+<!-- ELSE -->
+	<br /><br />
 <!-- ENDIF -->
 
 <!-- IF not S_IN_GALLERY_POPUP and S_DISPLAY_ONLINE_LIST -->
