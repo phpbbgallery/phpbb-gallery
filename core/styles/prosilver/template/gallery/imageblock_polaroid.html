@@ -4,22 +4,16 @@
 
 <!-- BEGIN image -->
 <div class="polaroid">
-	<a href="{imageblock.image.U_VIEWALBUM}" style="font-weight: bold; font-size: 1.2em;<!-- IF S_PERSONAL_GALLERY and imageblock.image.ALBUM_COLOUR --> color: {imageblock.image.ALBUM_COLOUR};<!-- ENDIF -->">{imageblock.image.ALBUM_NAME}</a>
+	<a href="{imageblock.image.U_IMAGE}" style="font-weight: bold; font-size: 1.2em;">{imageblock.image.UC_IMAGE_NAME}</a>
 	<hr />
-	<!-- IF imageblock.image.UC_THUMBNAIL -->{imageblock.image.UC_THUMBNAIL}<!-- ENDIF -->
-	<img src="{ROOT_PATH}../../test.png" alt="Island" title="Island" />
+	<img src="{imageblock.image.UC_THUMBNAIL}" alt="{imageblock.image.UC_IMAGE_NAME}" title="{imageblock.image.UC_IMAGE_NAME}" />
 
 	<hr />
-	{L_IMAGES}{L_COLON} <strong>{imageblock.image.IMAGES}</strong><br />
-
-	<!-- IF imageblock.image.LAST_IMAGE_TIME -->
-		<span>
-			<!-- IF imageblock.image.UC_IMAGE_NAME -->{imageblock.image.UC_IMAGE_NAME}<br /><!-- ENDIF -->
-			{L_LAST_IMAGE_BY}{L_COLON} {imageblock.image.LAST_USER_FULL} {imageblock.image.UC_LASTIMAGE_ICON}<br />
-			{imageblock.image.LAST_IMAGE_TIME}
-		</span>
-	<!-- ENDIF -->
-	<br />
+	<!-- IF imageblock.image.U_ALBUM -->{L_ALBUM_NAME}{L_COLON} <a href="{imageblock.image.U_ALBUM}" style="font-weight: bold;" title="{imageblock.image.ALBUM_NAME_FULL}">{imageblock.image.ALBUM_NAME}</a><br /><!-- ENDIF -->
+	<!-- IF imageblock.image.POSTER -->{L_UPLOADED_BY_USER}{L_COLON} {imageblock.image.POSTER}<br /><!-- ENDIF -->
+	<!-- IF imageblock.image.TIME -->{L_UPLOADED_ON_DATE}{L_COLON} {imageblock.image.TIME}<br /><!-- ENDIF -->
+	<!-- IF imageblock.image.S_RATINGS -->{L_RATING}{L_COLON} <a href="{imageblock.image.U_RATINGS}">{imageblock.image.S_RATINGS}</a><br /><!-- ENDIF -->
+	<!-- IF imageblock.image.S_COMMENTS -->{imageblock.image.L_COMMENTS}{L_COLON} <a href="{imageblock.image.U_COMMENTS}">{imageblock.image.S_COMMENTS}</a><br /><!-- ENDIF -->
 </div>
 
 <!-- IF imageblock.image.S_LAST_ROW -->

@@ -1,4 +1,7 @@
 parameters:
+    phpbbgallery.core.file.source: %core.root_path%files/phpbbgallery/core/source/
+    phpbbgallery.core.file.watermark: %core.root_path%files/phpbbgallery/core/watermark.png
+
     tables.phpbbgallery.albums: %core.table_prefix%gallery_albums
     tables.phpbbgallery.contests: %core.table_prefix%gallery_contests
     tables.phpbbgallery.images: %core.table_prefix%gallery_images
@@ -90,6 +93,17 @@ services:
             - @phpbbgallery.core.album.loader
             - @phpbbgallery.core.auth
             - @phpbbgallery.core.auth.level
+            - %tables.phpbbgallery.images%
+    phpbbgallery.core.controller.file:
+        class: phpbbgallery\core\controller\file
+        arguments:
+            - @config
+            - @dbal.conn
+            - @user
+            - @phpbbgallery.core.auth
+            - %phpbbgallery.core.file.source%
+            - %phpbbgallery.core.file.watermark%
+            - %tables.phpbbgallery.albums%
             - %tables.phpbbgallery.images%
     phpbbgallery.core.controller.index:
         class: phpbbgallery\core\controller\index

@@ -1,28 +1,21 @@
 <?php
+
 /**
 *
-* @package NV Image Tools
-* @version $Id$
-* @copyright (c) 2009 nickvergessen nickvergessen@gmx.de http://www.flying-bits.org/
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @package phpBB Gallery Core
+* @copyright (c) 2014 nickvergessen
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
-/**
-* @ignore
-*/
-
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
+namespace phpbbgallery\core\file;
 
 /**
 * A little class for all the actions that the gallery does on images.
 *
 * resize, rotate, watermark, create thumbnail, write to hdd, send to browser
 */
-class phpbb_ext_gallery_core_file
+class file
 {
 	const THUMBNAIL_INFO_HEIGHT = 16;
 	const GDLIB1 = 1;
@@ -426,7 +419,7 @@ class phpbb_ext_gallery_core_file
 
 	/**
 	* Rotate the image
-	* Usage optimized for 0°, 90°, 180° and 270° because of the height and width
+	* Usage optimized for 0ï¿½, 90ï¿½, 180ï¿½ and 270ï¿½ because of the height and width
 	*/
 	public function rotate_image($angle, $ignore_dimensions)
 	{

@@ -22,6 +22,9 @@ phpbbgallery_moderate_album:
 phpbbgallery_image:
     pattern: /gallery/image/{image_id}
     defaults: { _controller: phpbbgallery.core.controller.image:base }
+phpbbgallery_image_file:
+    pattern: /gallery/image/{image_id}/file
+    defaults: { _controller: phpbbgallery.core.controller.file:base }
 
 phpbbgallery_search:
     pattern: /gallery/search
