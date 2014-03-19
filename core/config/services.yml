@@ -1,5 +1,6 @@
 parameters:
     phpbbgallery.core.file.source: %core.root_path%files/phpbbgallery/core/source/
+    phpbbgallery.core.file.mini: %core.root_path%files/phpbbgallery/core/mini/
     phpbbgallery.core.file.watermark: %core.root_path%files/phpbbgallery/core/watermark.png
 
     tables.phpbbgallery.albums: %core.table_prefix%gallery_albums
@@ -58,6 +59,10 @@ services:
         arguments:
             - @cache
             - @dbal.conn
+    phpbbgallery.core.file.tool:
+        class: phpbbgallery\core\file\file
+        arguments:
+            - 2
     phpbbgallery.core.image:
         class: phpbbgallery\core\image\image
         arguments:
@@ -101,7 +106,9 @@ services:
             - @dbal.conn
             - @user
             - @phpbbgallery.core.auth
+            - @phpbbgallery.core.file.tool
             - %phpbbgallery.core.file.source%
+            - %phpbbgallery.core.file.mini%
             - %phpbbgallery.core.file.watermark%
             - %tables.phpbbgallery.albums%
             - %tables.phpbbgallery.images%
