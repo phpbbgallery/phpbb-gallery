@@ -145,6 +145,7 @@ class file
 		}
 
 		$this->resize($image_id, $this->config['phpbb_gallery_thumbnail_width'], $this->config['phpbb_gallery_thumbnail_height'], 'filesize_cache');
+
 		return $this->display(false);
 	}
 

@@ -233,30 +233,6 @@ class file
 	}
 
 	/**
-	* Check if the browser has the file already and set the appropriate headers.
-	* @returns false if a resend is in order.
-	*/
-	function set_modified_headers($browser)
-	{
-		// let's see if we have to send the file at all
-		$last_load = phpbb_parse_if_modified_since();
-		if (strpos(strtolower($browser), 'msie 6.0') === false)
-		{
-			if ($last_load !== false && $last_load >= $this->last_modified)
-			{
-				send_status_line(304, 'Not Modified');
-				return true;
-			}
-			else
-			{
-				header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $this->last_modified) . ' GMT');
-				header('Cache-Control: max-age=1, must-revalidate');
-			}
-		}
-		return false;
-	}
-
-	/**
 	* Sending the image to the browser.
 	* Mostly copied from phpBB::download/file.php
 	*/
@@ -310,7 +286,12 @@ class file
 		if ($this->browser_cache)
 		{
 			$this->set_last_modified(@filemtime($this->image_source));
-			$cached = $this->set_modified_headers($user->browser);
+			if (!function_exists('\set_modified_headers'))
+			{
+				global $phpbb_root_path, $phpEx;
+				include($phpbb_root_path . 'includes/functions_download.' . $phpEx);
+			}
+			$cached = \set_modified_headers($this->last_modified, $user->browser);
 		}
 
 		if ($cached)
