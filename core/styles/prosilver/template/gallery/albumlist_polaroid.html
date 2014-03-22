@@ -11,20 +11,22 @@
 	<!-- IF not albumrow.S_IS_CAT -->
 		<div class="polaroid">
 			<a href="{albumrow.U_VIEWALBUM}" style="font-weight: bold; font-size: 1.2em;<!-- IF S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR --> color: {albumrow.ALBUM_COLOUR};<!-- ENDIF -->">{albumrow.ALBUM_NAME}</a>
-				<hr />
-				<!-- IF albumrow.UC_THUMBNAIL -->{albumrow.UC_THUMBNAIL}<!-- ENDIF -->
-				<img src="{ROOT_PATH}../../test.png" alt="Island" title="Island" />
+			<hr />
+			<!-- IF albumrow.UC_THUMBNAIL -->
+				<img src="{albumrow.UC_THUMBNAIL}" alt="{albumrow.UC_IMAGE_NAME}" title="{albumrow.UC_IMAGE_NAME}" />
+			<!-- ENDIF -->
 
-				<hr />
-				{L_IMAGES}{L_COLON} <strong>{albumrow.IMAGES} <!-- IF albumrow.UNAPPROVED_IMAGES --> + <span class="reported-images-number">{albumrow.UNAPPROVED_IMAGES}</span><!-- ENDIF --></strong><br />
+			<hr />
+			{L_IMAGES}{L_COLON} <strong>{albumrow.IMAGES} <!-- IF albumrow.UNAPPROVED_IMAGES --> + <span class="reported-images-number">{albumrow.UNAPPROVED_IMAGES}</span><!-- ENDIF --></strong><br />
 
-					<!-- IF albumrow.LAST_IMAGE_TIME -->
-						<span>
-							<!-- IF albumrow.UC_IMAGE_NAME -->{albumrow.UC_IMAGE_NAME}<br /><!-- ENDIF -->
-							{L_LAST_IMAGE_BY}{L_COLON} {albumrow.LAST_USER_FULL} {albumrow.UC_LASTIMAGE_ICON}<br />
-							{albumrow.LAST_IMAGE_TIME}
-						</span>
-					<!-- ENDIF -->
+			<!-- IF albumrow.LAST_IMAGE_TIME -->
+				<span>
+					<!-- IF albumrow.UC_IMAGE_NAME -->{albumrow.UC_IMAGE_NAME}<br /><!-- ENDIF -->
+					{L_LAST_IMAGE_BY}{L_COLON} {albumrow.LAST_USER_FULL} {albumrow.UC_LASTIMAGE_ICON}<br />
+					{albumrow.LAST_IMAGE_TIME}
+				</span>
+			<!-- ENDIF -->
+
 			<!-- IF EXTENDED_POLAROID and albumrow.MODERATORS -->
 				<hr />
 				<strong>{albumrow.L_MODERATOR_STR}{L_COLON}</strong> {albumrow.MODERATORS}

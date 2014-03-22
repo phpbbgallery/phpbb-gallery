@@ -1,5 +1,6 @@
 parameters:
     phpbbgallery.core.file.source: %core.root_path%files/phpbbgallery/core/source/
+    phpbbgallery.core.file.medium: %core.root_path%files/phpbbgallery/core/medium/
     phpbbgallery.core.file.mini: %core.root_path%files/phpbbgallery/core/mini/
     phpbbgallery.core.file.watermark: %core.root_path%files/phpbbgallery/core/watermark.png
 
@@ -106,12 +107,32 @@ services:
             - @dbal.conn
             - @user
             - @phpbbgallery.core.auth
+            - @phpbbgallery.core.user
             - @phpbbgallery.core.file.tool
             - %phpbbgallery.core.file.source%
+            - %phpbbgallery.core.file.medium%
             - %phpbbgallery.core.file.mini%
             - %phpbbgallery.core.file.watermark%
             - %tables.phpbbgallery.albums%
             - %tables.phpbbgallery.images%
+    phpbbgallery.core.controller.image:
+        class: phpbbgallery\core\controller\image
+        arguments:
+            - @auth
+            - @config
+            - @controller.helper
+            - @dbal.conn
+            - @dispatcher
+            - @pagination
+            - @template
+            - @user
+            - @phpbbgallery.core.album.display
+            - @phpbbgallery.core.album.loader
+            - @phpbbgallery.core.auth
+            - @phpbbgallery.core.auth.level
+            - %tables.phpbbgallery.albums%
+            - %tables.phpbbgallery.images%
+            - %tables.phpbbgallery.users%
     phpbbgallery.core.controller.index:
         class: phpbbgallery\core\controller\index
         arguments:

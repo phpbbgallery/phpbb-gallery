@@ -24,8 +24,14 @@ class file
 	/* @var \phpbbgallery\core\auth\auth */
 	protected $auth;
 
+	/* @var \phpbbgallery\core\user */
+	protected $gallery_user;
+
 	/* @var string */
 	protected $path_source;
+
+	/* @var string */
+	protected $path_medium;
 
 	/* @var string */
 	protected $path_mini;
@@ -62,15 +68,18 @@ class file
 	* @param \phpbb\user				$user		User object
 	* @param \phpbbgallery\core\album\display	$display	Albums display object
 	* @param \phpbbgallery\core\auth\auth	$gallery_auth	Gallery auth object
+	* @param \phpbbgallery\core\user	$gallery_user	Gallery user object
 	*/
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver $db, \phpbb\user $user, \phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\file\file $tool, $source_path, $mini_path, $watermark_file, $albums_table, $images_table)
+	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver $db, \phpbb\user $user, \phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\user $gallery_user, \phpbbgallery\core\file\file $tool, $source_path, $medium_path, $mini_path, $watermark_file, $albums_table, $images_table)
 	{
 		$this->config = $config;
 		$this->db = $db;
 		$this->user = $user;
 		$this->auth = $gallery_auth;
+		$this->gallery_user = $gallery_user;
 		$this->tool = $tool;
 		$this->path_source = $source_path;
+		$this->path_medium = $medium_path;
 		$this->path_mini = $mini_path;
 		$this->path_watermark = $watermark_file;
 		$this->table_albums = $albums_table;
@@ -119,6 +128,32 @@ class file
 				WHERE image_id = ' . $image_id;
 			$this->db->sql_query($sql);
 		}
+
+		return $this->display(false);
+	}
+
+	/**
+	* Image File Controller
+	*	Route: gallery/image/{image_id}/medium
+	*
+	* @param	int		$image_id
+	* @return Symfony\Component\HttpFoundation\Response A Symfony Response object
+	*/
+	public function medium($image_id)
+	{
+		$this->path = $this->path_medium;
+		$this->load_data($image_id);
+		$this->check_auth();
+		$this->generate_image_src();
+
+		$this->tool->set_image_options($this->config['phpbb_gallery_max_filesize'], $this->config['phpbb_gallery_max_height'], $this->config['phpbb_gallery_max_width']);
+		$this->tool->set_image_data($this->image_src, $this->data['image_name']);
+		if ($this->error || !$this->user->data['is_registered'])
+		{
+			$this->tool->disable_browser_cache();
+		}
+
+		$this->resize($image_id, $this->config['phpbb_gallery_medium_width'], $this->config['phpbb_gallery_medium_height'], 'filesize_medium');
 
 		return $this->display(false);
 	}
@@ -215,16 +250,15 @@ class file
 	}
 
 	/**
-	 * Image File Controller
-	 *	Route: gallery/image/{image_id}/x
-	 *
-	 * @param	int		$image_id		ID of the image
-	 * @return Symfony\Component\HttpFoundation\Response A Symfony Response object
-	 */
+	* Image File Controller
+	*	Route: gallery/image/{image_id}/x
+	*
+	* @return Symfony\Component\HttpFoundation\Response A Symfony Response object
+	*/
 	public function display()
 	{
-//		$this->tool->set_last_modified($phpbb_ext_gallery->user->get_data('user_permissions_changed'));
-//		$this->tool->set_last_modified($phpbb_ext_gallery->config->get('watermark_changed'));
+		$this->tool->set_last_modified($this->gallery_user->get_data('user_permissions_changed'));
+		$this->tool->set_last_modified($this->config['phpbb_gallery_watermark_changed']);
 
 		// Watermark
 		if ($this->use_watermark)

@@ -4,9 +4,8 @@
 
 <div class="post bg2<!-- IF S_IMAGE_REPORTED --> reported<!-- ENDIF -->">
 	<div class="inner"><span class="corners-top"><span></span></span>
-		<!-- IF UC_PREVIOUS --><p style="float: left; text-align: left;">{UC_PREVIOUS_IMAGE}<br />{UC_PREVIOUS}</p><!-- ENDIF -->
-		<!-- IF UC_NEXT --><p style="float: right; text-align: right;">{UC_NEXT_IMAGE}<br />{UC_NEXT}</p><!-- ENDIF -->
-		<div style="text-align: center; padding: 20px;">{UC_IMAGE}
+		<div style="text-align: center; padding: 20px;">
+			<img src="{UC_IMAGE}" alt="{IMAGE_NAME}" />
 			<!-- IF S_IMAGE_REPORTED --><br /><br /><a href="{U_IMAGE_REPORTED}"><span class="error">{L_IMAGE_REPORTED}</span></a><!-- ENDIF -->
 		</div>
 	<span class="corners-bottom"><span></span></span></div>
@@ -345,7 +344,8 @@
 <!-- ENDIF -->
 <!-- ENDIF -->
 
-<p></p><p><a href="{U_RETURN_LINK}" class="left-box {S_CONTENT_FLOW_BEGIN}" accesskey="r">{L_RETURN_TO} {S_RETURN_LINK}</a></p>
+<p class="jumpbox-return"><a href="{U_RETURN_LINK}" class="left-box arrow-{S_CONTENT_FLOW_BEGIN}" accesskey="r">{S_RETURN_LINK}</a></p>
+<!-- IF ALBUM_JUMPBOX -->
 <form method="post" id="jumpbox" action="{S_JUMPBOX_ACTION}" onsubmit="if(document.jumpbox.album_id.value == -1){return false;}">
 	<fieldset class="jumpbox">
 		<label for="album_id" accesskey="album_id">{L_JUMP_TO}:</label>
@@ -355,5 +355,8 @@
 		<input type="submit" value="{L_GO}" class="button2" />
 	</fieldset>
 </form>
+<!-- ELSE -->
+<br /><br />
+<!-- ENDIF -->
 
 <!-- INCLUDE gallery/gallery_footer.html -->
